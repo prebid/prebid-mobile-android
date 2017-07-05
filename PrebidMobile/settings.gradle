@@ -1,0 +1,3 @@
+include ':PrebidMobileCore', ':DemoApp'
+include ':UnitTestUtils'
+include ':PrebidServerAdapter'
