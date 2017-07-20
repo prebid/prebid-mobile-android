@@ -6,6 +6,7 @@ public class Constants {
     public static final int APPNEXUS_PLACEMENT_ID_1 = 9373413;
     public static final String DFP_BANNER_ADUNIT_300x250 = "/19968336/PriceCheck_300x250";
     public static final int APPNEXUS_PLACEMENT_ID_2 = 9373416;
+    public static final String MOPUB_BANNER_ADUNIT_ID = "random1";
     // Video Content
     public static final int APPNEXUS_PLACEMENT_VIDEO = 5778861;
     public static final String DFP_INTERSTITIAL_AD_UNIT = "/19968336/PriceCheck_Interstitial";

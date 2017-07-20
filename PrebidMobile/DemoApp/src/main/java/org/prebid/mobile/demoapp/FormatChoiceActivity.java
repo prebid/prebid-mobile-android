@@ -41,7 +41,24 @@ public class FormatChoiceActivity extends AppCompatActivity {
                     }
                 }));
             } else if ("mopub".equals(adServerName)) {
-                // todo to be added
+                rootView.addView(getTextView("Show Banner Example", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
+                        intent.putExtra(Constants.ADSERVER, "mopub");
+                        intent.putExtra(Constants.ADFORMAT, "banner");
+                        startActivity(intent);
+                    }
+                }));
+                rootView.addView(getTextView("Show Interstitial Example", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
+                        intent.putExtra(Constants.ADSERVER, "mopub");
+                        intent.putExtra(Constants.ADFORMAT, "interstitial");
+                        startActivity(intent);
+                    }
+                }));
             } else {
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(FormatChoiceActivity.this);
                 alertBuilder.setTitle("You should never see this alert, something's wrong.");

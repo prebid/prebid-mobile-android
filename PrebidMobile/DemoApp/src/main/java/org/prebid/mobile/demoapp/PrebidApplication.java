@@ -53,11 +53,14 @@ public class PrebidApplication extends Application {
         adUnit1.addSize(320, 50);
 
         //Configure Ad-Slot2 with the same demand source
-        BannerAdUnit adUnit2 = new BannerAdUnit(DFP_BANNER_ADUNIT_300x250, "0c286d00-b3ee-4550-b15d-f71f8e746865");
+        BannerAdUnit adUnit2 = new BannerAdUnit(DFP_BANNER_ADUNIT_300x250, "eebc307d-7f76-45d6-a7a7-68985169b138");
         adUnit2.addSize(300, 250);
 
+        BannerAdUnit adUnit4 = new BannerAdUnit("random1", "eebc307d-7f76-45d6-a7a7-68985169b138");
+        adUnit4.addSize(300, 250);
+
         //Configure Interstitial Ad Unit
-        InterstitialAdUnit adUnit3 = new InterstitialAdUnit("Interstitial", "35f1d17d-c99a-4d55-800e-062b80750d65");
+        InterstitialAdUnit adUnit3 = new InterstitialAdUnit("Interstitial", "eebc307d-7f76-45d6-a7a7-68985169b138");
 
         //Configure Native Ad Unit
 //        BannerAdUnit adUnit4 = new BannerAdUnit("Native");
@@ -67,7 +70,7 @@ public class PrebidApplication extends Application {
 //        adUnits.add(adUnit1);
         adUnits.add(adUnit2); // FIXME add the ad units back when done testing
         adUnits.add(adUnit3);
-//        adUnits.add(adUnit4);
+        adUnits.add(adUnit4);
 
         // Set targeting
         TargetingParams.setGender(TargetingParams.GENDER.FEMALE);

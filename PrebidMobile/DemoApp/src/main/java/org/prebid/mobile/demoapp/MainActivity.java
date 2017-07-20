@@ -26,7 +26,9 @@ public class MainActivity extends AppCompatActivity {
         mopubButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO to be implemented
+                Intent intent = new Intent(MainActivity.this, FormatChoiceActivity.class);
+                intent.putExtra(Constants.ADSERVER, "mopub");
+                startActivity(intent);
             }
         });
     }
