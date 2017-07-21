@@ -27,10 +27,6 @@ android {
     }
 }
 
-repositories {
-    jcenter()
-}
-
 dependencies {
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.google.android.gms:play-services-ads:10.2.0'
