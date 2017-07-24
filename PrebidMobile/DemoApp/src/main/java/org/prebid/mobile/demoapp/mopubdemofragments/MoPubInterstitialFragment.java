@@ -14,6 +14,7 @@ import com.mopub.mobileads.MoPubInterstitial;
 
 import org.prebid.mobile.core.Prebid;
 import org.prebid.mobile.demoapp.R;
+import org.prebid.mobile.demoapp.Constants;
 
 /**
  * Created by nhedley on 7/19/17.
@@ -43,7 +44,7 @@ public class MoPubInterstitialFragment extends Fragment implements Prebid.OnAtta
     }
 
     public void loadInterstitial(View view) {
-        Prebid.attachBids(interstitialAdView, "Interstitial", getContext());
+        Prebid.attachBids(interstitialAdView, Constants.INTERSTITIAL_ADUNIT_ID, getContext());
         interstitialAdView.setInterstitialAdListener(this);
         interstitialAdView.load();
         Prebid.detachUsedBid(interstitialAdView);

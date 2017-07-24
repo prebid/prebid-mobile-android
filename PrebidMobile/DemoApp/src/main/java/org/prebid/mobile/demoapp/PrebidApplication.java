@@ -13,8 +13,7 @@ import org.prebid.mobile.core.TargetingParams;
 
 import java.util.ArrayList;
 
-import static org.prebid.mobile.demoapp.Constants.DFP_BANNER_ADUNIT_300x250;
-import static org.prebid.mobile.demoapp.Constants.DFP_BANNER_ADUNIT_320x50;
+import static org.prebid.mobile.demoapp.Constants.*;
 
 public class PrebidApplication extends Application {
     /**
@@ -49,18 +48,18 @@ public class PrebidApplication extends Application {
         ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
 
         //Configure Ad-Slot1
-        BannerAdUnit adUnit1 = new BannerAdUnit(DFP_BANNER_ADUNIT_320x50, "138c4d03-0efb-4498-9dc6-cb5a9acb2ea4");
+        BannerAdUnit adUnit1 = new BannerAdUnit(DFP_BANNER_ADUNIT_320x50, PBS_CONFIG_APPNEXUS_DEMAND);
         adUnit1.addSize(320, 50);
 
         //Configure Ad-Slot2 with the same demand source
-        BannerAdUnit adUnit2 = new BannerAdUnit(DFP_BANNER_ADUNIT_300x250, "eebc307d-7f76-45d6-a7a7-68985169b138");
+        BannerAdUnit adUnit2 = new BannerAdUnit(DFP_BANNER_ADUNIT_300x250, PBS_CONFIG_APPNEXUS_DEMAND);
         adUnit2.addSize(300, 250);
 
-        BannerAdUnit adUnit4 = new BannerAdUnit("random1", "eebc307d-7f76-45d6-a7a7-68985169b138");
+        BannerAdUnit adUnit4 = new BannerAdUnit(MOPUB_BANNER_ADUNIT_ID, PBS_CONFIG_APPNEXUS_DEMAND);
         adUnit4.addSize(300, 250);
 
         //Configure Interstitial Ad Unit
-        InterstitialAdUnit adUnit3 = new InterstitialAdUnit("Interstitial", "eebc307d-7f76-45d6-a7a7-68985169b138");
+        InterstitialAdUnit adUnit3 = new InterstitialAdUnit(INTERSTITIAL_ADUNIT_ID, PBS_CONFIG_APPNEXUS_DEMAND);
 
         //Configure Native Ad Unit
 //        BannerAdUnit adUnit4 = new BannerAdUnit("Native");
@@ -85,7 +84,7 @@ public class PrebidApplication extends Application {
 
         // Register  adslots for prebid.
         try {
-            Prebid.init(getApplicationContext(), adUnits, "bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+            Prebid.init(getApplicationContext(), adUnits, PBS_ACCOUNT_ID);
         } catch (PrebidException e) {
             e.printStackTrace();
         }

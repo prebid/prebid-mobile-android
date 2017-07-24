@@ -63,7 +63,7 @@ public class MoPubBannerFragment extends Fragment implements Prebid.OnAttachComp
 
         adFrame.addView(adView);
 
-        Prebid.attachBids(adView, "random1", this.getActivity());
+        Prebid.attachBids(adView, Constants.MOPUB_BANNER_ADUNIT_ID, this.getActivity());
         adView.loadAd();
     }
 
