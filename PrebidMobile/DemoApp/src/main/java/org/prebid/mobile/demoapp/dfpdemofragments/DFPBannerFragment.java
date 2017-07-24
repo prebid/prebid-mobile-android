@@ -76,9 +76,9 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
             }
         };
 
-//        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-//        request1 = builder.build();
-//        setupBannerWithoutWait(request1);
+        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        request1 = builder.build();
+        setupBannerWithoutWait(request1);
 
 //        PublisherAdRequest.Builder builder2 = new PublisherAdRequest.Builder();
 //        request2 = builder2.build();
