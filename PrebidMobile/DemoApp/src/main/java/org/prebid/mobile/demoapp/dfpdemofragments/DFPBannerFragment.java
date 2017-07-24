@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 
@@ -74,6 +75,15 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
                 LogUtil.d("DPF-Banner", "onAdLoaded");
             }
         };
+
+//        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+//        request1 = builder.build();
+//        setupBannerWithoutWait(request1);
+
+//        PublisherAdRequest.Builder builder2 = new PublisherAdRequest.Builder();
+//        request2 = builder2.build();
+//        setupBannerWithWait(request2, 500);
+
         return root;
     }
 
@@ -93,7 +103,28 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
         adView1.loadAd(request);
     }
 
+
+    public String getDFPWebViewName() {
+        int count = adView2.getChildCount();
+        for (int i = 0; i < count; i++) {
+            ViewGroup nextChild = (ViewGroup) adView2.getChildAt(i);
+            int secondCount = nextChild.getChildCount();
+            for (int j = 0; j < secondCount; j++) {
+                ViewGroup thirdChild = (ViewGroup) nextChild.getChildAt(j);
+                int thirdCount = thirdChild.getChildCount();
+                for (int k = 0; k < thirdCount; k++) {
+                    System.out.println(thirdChild.getChildAt(k));
+                    if (thirdChild.getChildAt(k) instanceof WebView) {
+                        return thirdChild.getChildAt(k).getClass().getName();
+                    }
+                }
+            }
+        }
+        return "undefined";
+    }
+    
     private void setupBannerWithWait(final int waitTime) {
+
         FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame2);
         adFrame.removeAllViews();
         adView2 = new PublisherAdView(getActivity());

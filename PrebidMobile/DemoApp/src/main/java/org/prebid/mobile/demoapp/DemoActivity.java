@@ -44,6 +44,12 @@ public class DemoActivity extends AppCompatActivity {
 
     }
 
+    // This is used in the calabash tests to grab the obfuscated web view class name from DFP
+    public String getDFPWebViewName() {
+        DFPBannerFragment fragment = (DFPBannerFragment) getSupportFragmentManager().findFragmentById(R.id.demoRoot);
+        return fragment.getDFPWebViewName();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

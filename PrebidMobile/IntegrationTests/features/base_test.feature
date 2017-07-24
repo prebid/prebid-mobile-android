@@ -6,7 +6,7 @@ Scenario: Load DFP Banner Ad
     Then I press "Show Banner Example"
     Then I press "Refresh Banner"
     Then I wait for 5 seconds
-    Then I should see AppNexus creative in PublisherAdView number 1
+    Then I should see AppNexus creative
 
 Scenario: Load DFP Interstitial Ad
     Given I wait for the "MainActivity" screen to appear
@@ -29,6 +29,7 @@ Scenario: Load MoPub Interstitial Ad
     Given I wait for the "MainActivity" screen to appear
     Then I press "MoPub"
     Then I press "Show Interstitial Example"
+    Then I press "loadInterstitial"
     Then I press "loadInterstitial"
     Then I wait for 5 seconds
     Then I should see AppNexus creative in MraidBridgeMraidWebView
