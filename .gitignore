@@ -1,5 +1,6 @@
 # Calabash Test
 .irb-history
+screenshot_*
 
 # System 
 .DS_Store
