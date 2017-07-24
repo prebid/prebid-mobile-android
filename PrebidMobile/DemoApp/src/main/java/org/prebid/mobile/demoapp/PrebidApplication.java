@@ -13,8 +13,7 @@ import org.prebid.mobile.core.TargetingParams;
 
 import java.util.ArrayList;
 
-import static org.prebid.mobile.demoapp.Constants.DFP_BANNER_ADUNIT_300x250;
-import static org.prebid.mobile.demoapp.Constants.DFP_BANNER_ADUNIT_320x50;
+import static org.prebid.mobile.demoapp.Constants.*;
 
 public class PrebidApplication extends Application {
     /**
@@ -49,15 +48,18 @@ public class PrebidApplication extends Application {
         ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
 
         //Configure Ad-Slot1
-        BannerAdUnit adUnit1 = new BannerAdUnit(DFP_BANNER_ADUNIT_320x50, "138c4d03-0efb-4498-9dc6-cb5a9acb2ea4");
+        BannerAdUnit adUnit1 = new BannerAdUnit(DFP_BANNER_ADUNIT_320x50, PBS_CONFIG_APPNEXUS_DEMAND);
         adUnit1.addSize(320, 50);
 
         //Configure Ad-Slot2 with the same demand source
-        BannerAdUnit adUnit2 = new BannerAdUnit(DFP_BANNER_ADUNIT_300x250, "0c286d00-b3ee-4550-b15d-f71f8e746865");
+        BannerAdUnit adUnit2 = new BannerAdUnit(DFP_BANNER_ADUNIT_300x250, PBS_CONFIG_APPNEXUS_DEMAND);
         adUnit2.addSize(300, 250);
 
+        BannerAdUnit adUnit4 = new BannerAdUnit(MOPUB_BANNER_ADUNIT_ID, PBS_CONFIG_APPNEXUS_DEMAND);
+        adUnit4.addSize(300, 250);
+
         //Configure Interstitial Ad Unit
-        InterstitialAdUnit adUnit3 = new InterstitialAdUnit("Interstitial", "35f1d17d-c99a-4d55-800e-062b80750d65");
+        InterstitialAdUnit adUnit3 = new InterstitialAdUnit(INTERSTITIAL_ADUNIT_ID, PBS_CONFIG_APPNEXUS_DEMAND);
 
         //Configure Native Ad Unit
 //        BannerAdUnit adUnit4 = new BannerAdUnit("Native");
@@ -67,7 +69,7 @@ public class PrebidApplication extends Application {
 //        adUnits.add(adUnit1);
         adUnits.add(adUnit2); // FIXME add the ad units back when done testing
         adUnits.add(adUnit3);
-//        adUnits.add(adUnit4);
+        adUnits.add(adUnit4);
 
         // Set targeting
         TargetingParams.setGender(TargetingParams.GENDER.FEMALE);
@@ -82,7 +84,7 @@ public class PrebidApplication extends Application {
 
         // Register  adslots for prebid.
         try {
-            Prebid.init(getApplicationContext(), adUnits, "bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+            Prebid.init(getApplicationContext(), adUnits, PBS_ACCOUNT_ID);
         } catch (PrebidException e) {
             e.printStackTrace();
         }

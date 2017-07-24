@@ -15,6 +15,7 @@ import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
 
 import org.prebid.mobile.core.LogUtil;
 import org.prebid.mobile.core.Prebid;
+import org.prebid.mobile.demoapp.Constants;
 import org.prebid.mobile.demoapp.R;
 
 public class DFPInterstitialFragment extends Fragment {
@@ -63,7 +64,7 @@ public class DFPInterstitialFragment extends Fragment {
     }
 
     public void loadInterstitial(View view) {
-        Prebid.attachBids(request, "Interstitial", getContext());
+        Prebid.attachBids(request, Constants.INTERSTITIAL_ADUNIT_ID, getContext());
         mPublisherInterstitialAd.loadAd(request);
         Prebid.detachUsedBid(request);
     }
