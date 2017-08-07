@@ -23,8 +23,6 @@ import org.prebid.mobile.demoapp.R;
 public class DFPBannerFragment extends Fragment implements Prebid.OnAttachCompleteListener {
     PublisherAdView adView1;
     PublisherAdView adView2;
-    PublisherAdRequest request1;
-    PublisherAdRequest request2;
     private View root;
     private AdListener adListener;
 
@@ -33,19 +31,16 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         root = inflater.inflate(R.layout.fragment_banner, null);
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        request1 = builder.build();
-        setupBannerWithoutWait(request1);
 
-        PublisherAdRequest.Builder builder2 = new PublisherAdRequest.Builder();
-        request2 = builder2.build();
-        setupBannerWithWait(request2, 500);
+        setupBannerWithoutWait();
+
+        setupBannerWithWait(500);
 
         Button btnLoad = (Button) root.findViewById(R.id.loadBanner);
         btnLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadBanner(v);
+                loadBanner();
             }
         });
         adListener = new AdListener() {
@@ -82,7 +77,7 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
         return root;
     }
 
-    private void setupBannerWithoutWait(PublisherAdRequest request) {
+    private void setupBannerWithoutWait() {
         FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame);
         adFrame.removeAllViews();
         adView1 = new PublisherAdView(getActivity());
@@ -91,12 +86,14 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
         adView1.setAdListener(adListener);
         adFrame.addView(adView1);
         //region PriceCheckForDFP API usage
-        Prebid.attachBids(request, Constants.DFP_BANNER_ADUNIT_320x50, this.getActivity());
+        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        PublisherAdRequest request = builder.build();
+        Prebid.attachBids(request, Constants.BANNER_320x50, this.getActivity());
         //endregion
         adView1.loadAd(request);
     }
 
-    private void setupBannerWithWait(final PublisherAdRequest request, final int waitTime) {
+    private void setupBannerWithWait(final int waitTime) {
         FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame2);
         adFrame.removeAllViews();
         adView2 = new PublisherAdView(getActivity());
@@ -106,25 +103,20 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
         adFrame.addView(adView2);
         //region PriceCheckForDFP API usage
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        request1 = builder.build();
-        Prebid.attachBids(request1, Constants.DFP_BANNER_ADUNIT_300x250, this.getActivity());
-        adView2.loadAd(request1);
-        //PrebidMobileForDFP.attachTopBidWhenReady(request, Constants.DFP_BANNER_ADUNIT_300x250, getContext(), waitTime, this);
+        PublisherAdRequest request = builder.build();
+        Prebid.attachBidsWhenReady(request, Constants.BANNER_300x250, this, waitTime, this.getActivity());
         //endregion
 
     }
 
-    public void loadBanner(View view) {
-        if (adView1 != null && request1 != null) {
-//            PrebidMobileForDFP.attachTopBid(request1, Constants.DFP_BANNER_ADUNIT_320x50, getContext());
+    public void loadBanner() {
+        if (adView1 != null) {
             adView1.destroy();
-            setupBannerWithoutWait(request1);
+            setupBannerWithoutWait();
         }
-        if (adView2 != null && request2 != null) {
-//            PrebidMobileForDFP.attachTopBid(request2, Constants.DFP_BANNER_ADUNIT_300x250, getContext());
-//            adView2.loadAd(request2);
+        if (adView2 != null) {
             adView2.destroy();
-            setupBannerWithWait(request2, 500);
+            setupBannerWithWait(500);
         }
     }
 
