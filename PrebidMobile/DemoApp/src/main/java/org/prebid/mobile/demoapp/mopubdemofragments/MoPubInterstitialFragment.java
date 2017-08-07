@@ -13,12 +13,9 @@ import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 
 import org.prebid.mobile.core.Prebid;
-import org.prebid.mobile.demoapp.R;
 import org.prebid.mobile.demoapp.Constants;
+import org.prebid.mobile.demoapp.R;
 
-/**
- * Created by nhedley on 7/19/17.
- */
 
 public class MoPubInterstitialFragment extends Fragment implements Prebid.OnAttachCompleteListener, MoPubInterstitial.InterstitialAdListener {
     MoPubInterstitial interstitialAdView;
