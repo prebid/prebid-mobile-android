@@ -35,4 +35,6 @@ dependencies {
     }
     compile project(":PrebidMobileCore")
     compile project(":PrebidServerAdapter")
+    compile project(":MediationAdaptersForDFP")
+    compile project(":MediationAdaptersForMoPub")
 }
