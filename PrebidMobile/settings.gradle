@@ -1,3 +1,6 @@
-include ':PrebidMobileCore', ':DemoApp'
+include ':DemoApp'
+include ':PrebidMobileCore'
 include ':UnitTestUtils'
 include ':PrebidServerAdapter'
+include ':MediationAdaptersForDFP'
+include ':MediationAdaptersForMoPub'
