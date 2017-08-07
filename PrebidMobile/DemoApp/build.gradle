@@ -22,10 +22,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
+    lintOptions {
+        abortOnError false
+    }
 
-repositories {
-    jcenter()
 }
 
 dependencies {
@@ -36,4 +36,6 @@ dependencies {
     }
     compile project(":PrebidMobileCore")
     compile project(":PrebidServerAdapter")
+    compile project(":MediationAdaptersForDFP")
+    compile project(":MediationAdaptersForMoPub")
 }
