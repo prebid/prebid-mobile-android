@@ -93,7 +93,6 @@ public class Prebid {
             BidManager.registerAdUnit(adUnit);
         }
         // set up demand adapter
-
         try {
             Class<?> adapterClass = Class.forName(PREBID_SERVER);
             DemandAdapter adapter = (DemandAdapter) adapterClass.newInstance();
@@ -104,6 +103,12 @@ public class Prebid {
             }
         } catch (Exception e) {
             throw new PrebidException(PrebidException.PrebidError.UNABLE_TO_INITIALIZE_DEMAND_SOURCE);
+        }
+        // enable fb demand
+        Class fb_bidder_token = getClassFromString("com.facebook.ads.BidderTokenProvider");
+        if (fb_bidder_token != null) {
+            String token = (String) callMethodOnClass(fb_bidder_token, "getBidderToken", context);
+            TargetingParams.setCustomTargeting("fb_token", token); // todo sync this with Nicole, it has been to be the same when requesting and rendering
         }
         // set up bid manager
         BidManager.setBidsExpirationRunnable(context);
@@ -157,6 +162,29 @@ public class Prebid {
         return null;
     }
 
+    // call static class methods
+    private static Object callMethodOnClass(Class<?> className, String methodName, Object... params) {
+        try {
+            int len = params.length;
+            Class<?>[] classes = new Class[len];
+            for (int i = 0; i < len; i++) {
+                classes[i] = params[i].getClass();
+            }
+            Method method = className.getMethod(methodName, classes);
+            return method.invoke(null, params);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // call instance methods
     private static Object callMethodOnObject(Object object, String methodName, Object... params) {
         try {
             int len = params.length;
@@ -240,8 +268,23 @@ public class Prebid {
                 for (Pair<String, String> keywordPair : prebidKeywords) {
                     bundle.putString(keywordPair.first, keywordPair.second);
                     usedKeywordKeys.add(keywordPair.first);
+                    // todo custom extras has to be enabled by the developer
+                    if ("hb_cache_id".equals(keywordPair.first)) {
+                        Class fb_adapter = getClassFromString("org.prebid.mediationadapters.dfp.FBCustomEventBanner");
+                        if (fb_adapter != null) {
+                            Bundle customEventExtras = (Bundle) callMethodOnObject(adRequestObj, "getCustomEventExtrasBundle", fb_adapter);
+                            if (customEventExtras != null) {
+                                customEventExtras.putString("hb_cache_id", keywordPair.second);
+                            } else {
+                                LogUtil.e("To get Facebook demand, enable custom event extras before building your publisher ad requests");
+                            }
+                        }
+                    }
                 }
             }
+            // todo formalize the following lines. probably through prebid server
+            bundle.putString("hb_creative_type", "mediation");
+            usedKeywordKeys.add("hb_creative_type");
         }
     }
 
