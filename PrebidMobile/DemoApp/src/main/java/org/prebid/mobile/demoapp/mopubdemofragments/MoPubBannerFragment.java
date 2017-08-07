@@ -97,20 +97,10 @@ public class MoPubBannerFragment extends Fragment implements Prebid.OnAttachComp
     // MoPub Banner Listeners
     @Override
     public void onBannerLoaded(MoPubView banner) {
-//        Log.d("SampleActivity", "onBannerLoaded");
-//        if (banner.getAdUnitId() == Constants.MOPUB_BANNER_ADUNIT_ID) {
-//            //To handle auto-refresh, enable prebid again for the current banner adView to load next ad.
-//            Prebid.attachBids(banner, Constants.MOPUB_BANNER_ADUNIT_ID, this.getActivity());
-//        }
     }
 
     @Override
     public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
-//        Log.d("SampleActivity", "onBannerFailed");
-//        if (banner.getAdUnitId() == Constants.MOPUB_BANNER_ADUNIT_ID) {
-//            //To handle auto-refresh, enable prebid again for the current banner adView to load next ad.
-//            Prebid.attachBids(banner, Constants.MOPUB_BANNER_ADUNIT_ID, this.getActivity());
-//        }
     }
 
     @Override
