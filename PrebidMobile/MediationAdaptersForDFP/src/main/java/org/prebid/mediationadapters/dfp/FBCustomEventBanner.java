@@ -8,6 +8,7 @@ import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.AdView;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.mediation.MediationAdRequest;
 import com.google.android.gms.ads.mediation.customevent.CustomEventBanner;
@@ -24,12 +25,14 @@ public class FBCustomEventBanner implements CustomEventBanner, AdListener {
         this.customEventBannerListener = customEventBannerListener;
         if (bundle != null) {
             String cacheId = (String) bundle.get("hb_cache_id");
+            // todo how to get the facebook adview id
+            // todo check if there's any other things to be added for loading
             adView = new AdView(context, "id", new com.facebook.ads.AdSize(adSize.getWidth(), adSize.getHeight()));
             adView.setAdListener(this);
-            adView.loadAdFromBid(cacheId); // todo check if there's any other things to be added for loading
+            adView.loadAdFromBid(cacheId);
         } else {
             if (customEventBannerListener != null) {
-                customEventBannerListener.onAdFailedToLoad(0); // todo error code matching
+                customEventBannerListener.onAdFailedToLoad(AdRequest.ERROR_CODE_INVALID_REQUEST);
             }
         }
         Log.d("FB-Integration", "finish requesting");
@@ -60,7 +63,31 @@ public class FBCustomEventBanner implements CustomEventBanner, AdListener {
     @Override
     public void onError(Ad ad, AdError adError) {
         if (customEventBannerListener != null) {
-            customEventBannerListener.onAdFailedToLoad(0); // todo error code parsing
+            if (adError != null) {
+                switch (adError.getErrorCode()) {
+                    case 1000:
+                        customEventBannerListener.onAdFailedToLoad(AdRequest.ERROR_CODE_NETWORK_ERROR);
+                        break;
+                    case 1001:
+                        customEventBannerListener.onAdFailedToLoad(AdRequest.ERROR_CODE_NO_FILL);
+                        break;
+                    case 1002:
+                        customEventBannerListener.onAdFailedToLoad(AdRequest.ERROR_CODE_INVALID_REQUEST);
+                        break;
+                    case 2000:
+                        customEventBannerListener.onAdFailedToLoad(AdRequest.ERROR_CODE_INTERNAL_ERROR);
+                        break;
+                    case 2001:
+                        customEventBannerListener.onAdFailedToLoad(AdRequest.ERROR_CODE_INTERNAL_ERROR);
+                        break;
+                    case 3001:
+                        customEventBannerListener.onAdFailedToLoad(AdRequest.ERROR_CODE_INTERNAL_ERROR);
+                        break;
+                }
+            } else {
+                customEventBannerListener.onAdFailedToLoad(AdRequest.ERROR_CODE_INTERNAL_ERROR);
+            }
+
         }
     }
 
