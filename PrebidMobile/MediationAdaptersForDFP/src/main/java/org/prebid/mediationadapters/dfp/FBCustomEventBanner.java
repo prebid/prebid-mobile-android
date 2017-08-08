@@ -20,7 +20,6 @@ public class FBCustomEventBanner implements CustomEventBanner, AdListener {
 
     @Override
     public void requestBannerAd(Context context, CustomEventBannerListener customEventBannerListener, String s, AdSize adSize, MediationAdRequest mediationAdRequest, Bundle bundle) {
-        // todo use fan sdk to load banner from extra
         Log.d("FB-Integration", "Load Prebid content for Facebook");
         this.customEventBannerListener = customEventBannerListener;
         if (bundle != null) {
@@ -35,9 +34,6 @@ public class FBCustomEventBanner implements CustomEventBanner, AdListener {
                 customEventBannerListener.onAdFailedToLoad(AdRequest.ERROR_CODE_INVALID_REQUEST);
             }
         }
-        Log.d("FB-Integration", "finish requesting");
-
-
     }
 
     // Google custom event banner implementation
