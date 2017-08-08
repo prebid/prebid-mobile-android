@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -215,7 +216,19 @@ public class Prebid {
             StringBuilder keywords = new StringBuilder();
             for (Pair<String, String> p : keywordPairs) {
                 keywords.append(p.first).append(":").append(p.second).append(",");
+                if ("hb_cache_id".equals(p.first)) {
+                    Class fb_adapter = getClassFromString("org.prebid.mediationadapters.mopub.FBCustomEventBanner");
+                    if (fb_adapter != null) {
+                        Map<String, Object> localExtras = (Map) callMethodOnObject(adViewObj, "getLocalExtras");
+                        if (localExtras != null) {
+                            localExtras.put("hb_cache_id", p.second);
+                        } else {
+                            LogUtil.e("To get facebook demand, enable local extras on MoPubView.");
+                        }
+                    }
+                }
             }
+            keywords.append("hb_creative_type:mediation,");
             String prebidKeywords = keywords.toString();
             String adViewKeywords = (String) callMethodOnObject(adViewObj, "getKeywords");
             // retrieve keywords from mopub adview
