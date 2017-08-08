@@ -8,6 +8,9 @@ public class Constants {
     public static final String MOPUB_AD_UNIT_ID_1 = "1819c823abe34641812d1fc2d1c78920";
     public static final String MOPUB_AD_UNIT_ID_2 = "a9cb8ff85fef4b50b457e3b11119aabf";
     public static final String MOPUB_BANNER_ADUNIT_ID = "Mopub_Ad_Unit_ID";
+
+//    public static final String MOPUB_AD_UNIT_ID_2 = "bcef78630d754295a1a7757b434941d1";
+
     public static final String INTERSTITIAL_ADUNIT_ID = "Interstitial_Ad_Unit_ID";
     // DFP Banner
     public static final String DFP_BANNER_ADUNIT_320x50 = "/19968336/PriceCheck_320x50";
