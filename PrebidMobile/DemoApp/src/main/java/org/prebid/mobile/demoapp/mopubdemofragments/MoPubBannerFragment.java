@@ -17,6 +17,8 @@ import org.prebid.mobile.core.Prebid;
 import org.prebid.mobile.demoapp.Constants;
 import org.prebid.mobile.demoapp.R;
 
+import java.util.HashMap;
+
 public class MoPubBannerFragment extends Fragment implements Prebid.OnAttachCompleteListener, MoPubView.BannerAdListener {
 
     private MoPubView adView;
@@ -33,7 +35,7 @@ public class MoPubBannerFragment extends Fragment implements Prebid.OnAttachComp
         btnLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadBanner(v);
+                loadBanner();
             }
         });
         setupBannerWithoutWait();
@@ -71,12 +73,13 @@ public class MoPubBannerFragment extends Fragment implements Prebid.OnAttachComp
         adView2.setLayoutParams(lp);
         adFrame.addView(adView2);
         //region Prebid API usage
+        adView2.setLocalExtras(new HashMap<String, Object>()); // add this line for FB demand
         Prebid.attachBidsWhenReady(adView2, Constants.BANNER_300x250, this, waitTime, this.getActivity());
         //endregion
 
     }
 
-    public void loadBanner(View view) {
+    public void loadBanner() {
         if (adView != null) {
             adView.destroy();
             setupBannerWithoutWait();
