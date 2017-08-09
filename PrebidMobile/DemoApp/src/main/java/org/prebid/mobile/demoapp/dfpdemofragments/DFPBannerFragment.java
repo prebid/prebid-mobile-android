@@ -15,6 +15,7 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
+import org.prebid.mediationadapters.dfp.FBCustomEventBanner;
 import org.prebid.mobile.core.LogUtil;
 import org.prebid.mobile.core.Prebid;
 import org.prebid.mobile.demoapp.Constants;
@@ -126,6 +127,7 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
         adFrame.addView(adView2);
         //region PriceCheckForDFP API usage
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        builder.addCustomEventExtrasBundle(FBCustomEventBanner.class, new Bundle());
         PublisherAdRequest request = builder.build();
         Prebid.attachBidsWhenReady(request, Constants.BANNER_300x250, this, waitTime, this.getActivity());
         //endregion
