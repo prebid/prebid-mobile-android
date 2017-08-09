@@ -11,6 +11,8 @@
 ######################
 # Helper Methods
 ######################
+set -e
+
 function echoX {
 echo -e "PREBID BUILDLOG: $@"
 }
@@ -35,6 +37,8 @@ printf "    \b\b\b\b"
 
 bold=$(tput bold)
 normal=$(tput sgr0)
+
+die() { echoX "$@" 1>&2 ; echoX "End Script"; exit 1;  }
 
 ######################
 # Build Settings
@@ -81,7 +85,7 @@ mkdir $TEMPDIR
 ###########################
 echoX "Run unit tests"
 cd $LIBDIR
-(./gradlew -i clean test > $LOGPATH/testResults.log 2>&1) || (echoX "Unit tests failed, check log in $LOGPATH/testResults.log" && echoX "End Script" && exit 1 ) &
+(./gradlew -i clean test > $LOGPATH/testResults.log 2>&1) || (gradle --stop; die "Unit tests failed, check log in $LOGPATH/testResults.log") &
 PID=$!
 spinner $PID &
 wait $PID
@@ -89,11 +93,10 @@ wait $PID
 echoX "Assemble builds"
 cd $LIBDIR
 # clean existing build results, exclude test task, and assemble new release build
-(./gradlew -i -x test build > $LOGPATH/build.log 2>&1 || { echoX "Build failed, check log in $LOGPATH/build.log"; echoX "End Script"; exit 1; } ) &
+(./gradlew -i -x test build > $LOGPATH/build.log 2>&1 || gradle --stop; die "Build failed, check log in $LOGPATH/build.log" ) &
 PID=$!
 spinner $PID &
 wait $PID
-echoX "Build succeeded"
 
 echoX "Start packaging product"
 cd $TEMPDIR
