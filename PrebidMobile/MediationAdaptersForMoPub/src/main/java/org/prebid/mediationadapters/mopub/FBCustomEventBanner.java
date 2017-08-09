@@ -58,7 +58,7 @@ public class FBCustomEventBanner extends CustomEventBanner implements AdListener
                         customEventBannerListener.onBannerFailed(MoPubErrorCode.INTERNAL_ERROR);
                         break;
                     case 2000:
-                        customEventBannerListener.onBannerFailed(MoPubErrorCode.INTERNAL_ERROR);
+                        customEventBannerListener.onBannerFailed(MoPubErrorCode.SERVER_ERROR);
                         break;
                     case 2001:
                         customEventBannerListener.onBannerFailed(MoPubErrorCode.INTERNAL_ERROR);
