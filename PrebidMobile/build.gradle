@@ -29,7 +29,7 @@ allprojects {
     repositories {
         jcenter()
         flatDir {
-            dirs 'libs'
+            dirs project(':ExternalLibs').file('libs')
         }
     }
 }

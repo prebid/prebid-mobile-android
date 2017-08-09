@@ -32,8 +32,9 @@ public class Constants {
     public static final String DFP_INTERSTITIAL_ADUNIT_ID_FULLSCREEN = "/19968336/PriceCheck_Interstitial";
 
     // PBS Config
-    public static final String PBS_CONFIG_APPNEXUS_DEMAND = "eebc307d-7f76-45d6-a7a7-68985169b138";
+    public static final String PBS_CONFIG_320x50_APPNEXUS_DEMAND = "eebc307d-7f76-45d6-a7a7-68985169b138"; // todo update this one
     public static final String PBS_CONFIG_300x250_APPNEXUS_DEMAND = "0c286d00-b3ee-4550-b15d-f71f8e746865";
+    public static final String PBS_CONFIG_INTERSTITIAL_DEMAND = "35f1d17d-c99a-4d55-800e-062b80750d65";
     public static final String PBS_ACCOUNT_ID = "bfa84af2-bd16-4d35-96ad-31c6bb888df0";
     // App Constants
     public static final String ADSERVER = "AdServerName";

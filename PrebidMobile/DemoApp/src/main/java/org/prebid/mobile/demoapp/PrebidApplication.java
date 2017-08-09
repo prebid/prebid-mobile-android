@@ -53,7 +53,7 @@ public class PrebidApplication extends Application {
         ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
 
         //Configure Ad-Slot1
-        BannerAdUnit adUnit1 = new BannerAdUnit(BANNER_320x50, PBS_CONFIG_APPNEXUS_DEMAND);
+        BannerAdUnit adUnit1 = new BannerAdUnit(BANNER_320x50, PBS_CONFIG_320x50_APPNEXUS_DEMAND);
         adUnit1.addSize(320, 50);
 
         //Configure Ad-Slot2 with the same demand source
