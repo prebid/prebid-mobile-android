@@ -85,7 +85,7 @@ mkdir $TEMPDIR
 ###########################
 echoX "Run unit tests"
 cd $LIBDIR
-(./gradlew -i clean test > $LOGPATH/testResults.log 2>&1) || (gradle --stop; die "Unit tests failed, check log in $LOGPATH/testResults.log") &
+(./gradlew -i --no-daemon clean test > $LOGPATH/testResults.log 2>&1) || (die "Unit tests failed, check log in $LOGPATH/testResults.log") &
 PID=$!
 spinner $PID &
 wait $PID
@@ -93,7 +93,7 @@ wait $PID
 echoX "Assemble builds"
 cd $LIBDIR
 # clean existing build results, exclude test task, and assemble new release build
-(./gradlew -i -x test build > $LOGPATH/build.log 2>&1 || gradle --stop; die "Build failed, check log in $LOGPATH/build.log" ) &
+(./gradlew -i --no-daemon -x test build > $LOGPATH/build.log 2>&1 || die "Build failed, check log in $LOGPATH/build.log" ) &
 PID=$!
 spinner $PID &
 wait $PID
@@ -236,7 +236,6 @@ done
 
 cd $OUTDIR
 javadoc -d Javadoc -protected $FINAL_CLASSES >/dev/null 2>/dev/null
-rm -rf logs
 
 #######
 # End
