@@ -95,6 +95,8 @@ class ServerConnector extends AsyncTask<Object, Object, JSONObject> {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace(); // catches SocketTimeOutException, etc
         }
         return null;
     }
