@@ -15,7 +15,7 @@ public class Settings {
     // connection settings
     public static final String REQUEST_URL_NON_SECURE = "http://prebid.adnxs.com/pbs/v1/auction";
     public static final String REQUEST_URL_SECURE = "https://prebid.adnxs.com/pbs/v1/auction";
-    public static int REQUEST_TIME_OUR_MILLIS = 500;
+    public static int REQUEST_TIME_OUT_MILLIS = 500;
     // request keys
     public static final String REQUEST_CACHE_MARKUP = "cache_markup";
     public static final String REQUEST_SORT_BIDS = "sort_bids";
@@ -88,6 +88,14 @@ public class Settings {
 
     static {
         // todo set user agent
+    }
+
+    public static synchronized int getRequestTimeOutMillis() {
+        return REQUEST_TIME_OUT_MILLIS;
+    }
+
+    public static synchronized void setRequestTimeOutMillis(int timeOutMillis) {
+        REQUEST_TIME_OUT_MILLIS = timeOutMillis;
     }
 
     public static synchronized int getMCC() {
