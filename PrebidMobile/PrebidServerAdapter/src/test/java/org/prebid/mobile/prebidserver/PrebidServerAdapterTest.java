@@ -43,9 +43,9 @@ public class PrebidServerAdapterTest extends BaseSetup {
     @Test
     public void testRequestTimeOutMillis() {
         // assert default value
-        assertEquals(500, Settings.REQUEST_TIME_OUT_MILLIS);
+        assertEquals(500, Settings.connectionTimeOutMillis);
         // test setter
-        Settings.setRequestTimeOutMillis(1000);
-        assertEquals(1000, Settings.getRequestTimeOutMillis());
+        Settings.setConnectionTimeOutMillis(1000);
+        assertEquals(1000, Settings.getConnectionTimeOutMillis());
     }
 }
