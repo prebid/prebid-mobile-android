@@ -58,7 +58,7 @@ class ServerConnector extends AsyncTask<Object, Object, JSONObject> {
                 conn.setRequestProperty(Settings.COOKIE_HEADER, existingCookie);
             } // todo still pass cookie if limit ad tracking?
             conn.setRequestMethod("POST");
-            conn.setConnectTimeout(Settings.REQUEST_TIME_OUR_MILLIS);
+            conn.setConnectTimeout(Settings.getConnectionTimeOutMillis());
 
             // Add post data
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
@@ -95,6 +95,8 @@ class ServerConnector extends AsyncTask<Object, Object, JSONObject> {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace(); // catches SocketTimeOutException, etc
         }
         return null;
     }

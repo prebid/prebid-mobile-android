@@ -14,6 +14,7 @@ import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
@@ -37,5 +38,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertTrue(postData.has(Settings.REQUEST_DEVICE));
         assertTrue(postData.has(Settings.REQUEST_APP));
         assertTrue(postData.has(Settings.REQUEST_USER));
+    }
+
+    @Test
+    public void testRequestTimeOutMillis() {
+        // assert default value
+        assertEquals(500, Settings.connectionTimeOutMillis);
+        // test setter
+        Settings.setConnectionTimeOutMillis(1000);
+        assertEquals(1000, Settings.getConnectionTimeOutMillis());
     }
 }
