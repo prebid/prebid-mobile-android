@@ -6,6 +6,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
@@ -145,6 +146,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
     JSONObject getPostData(Context context, ArrayList<AdUnit> adUnits) {
         if (context != null) {
             AdvertisingIDUtil.retrieveAndSetAAID(context);
+            Settings.update(context);
         }
         JSONObject postData = new JSONObject();
         try {
@@ -241,12 +243,14 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             // Device model
             if (!TextUtils.isEmpty(Settings.deviceModel))
                 device.put(Settings.REQUEST_DEVICE_MODEL, Settings.deviceModel);
+            // Default User Agent
+            if (!TextUtils.isEmpty(Settings.userAgent)) {
+                device.put(Settings.REQUEST_USERAGENT, Settings.userAgent);
+            }
             // POST data that requires context
             if (context != null) {
-                // Default User Agent
-                if (!TextUtils.isEmpty(Settings.userAgent)) {
-                    device.put(Settings.REQUEST_USERAGENT, Settings.userAgent);
-                }
+                device.put(Settings.REQUEST_DEVICE_WIDTH, context.getResources().getConfiguration().screenWidthDp);
+                device.put(Settings.REQUEST_DEVICE_HEIGHT, context.getResources().getConfiguration().screenHeightDp);
 
                 TelephonyManager telephonyManager = (TelephonyManager) context
                         .getSystemService(Context.TELEPHONY_SERVICE);
@@ -383,6 +387,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
 
             // os
             device.put(Settings.REQUEST_OS, Settings.os);
+            device.put(Settings.REQUEST_OS_VERSION, String.valueOf(Build.VERSION.SDK_INT));
         } catch (JSONException e) {
         }
         return device;
@@ -398,7 +403,12 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         JSONObject app = new JSONObject();
         try {
             app.put(Settings.REQUEST_APP_BUNDLE, Settings.getAppID());
-            // todo get name, store url, domain, ver, privacypolicy, paid, keywords
+            app.put(Settings.REQUEST_APP_VERSION, Settings.pkgVersion);
+            app.put(Settings.REQUEST_APP_NAME, Settings.appName);
+            app.put(Settings.REQUEST_APP_DOMAIN, Settings.getDomain());
+            app.put(Settings.REQUEST_APP_STOREURL, Settings.getStoreUrl());
+            app.put(Settings.REQUEST_APP_PRIVACY, Settings.getPrivacyPolicy());
+            // todo get paid, keywords
         } catch (JSONException e) {
         }
         return app;
@@ -412,16 +422,16 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 user.put(Settings.REQUEST_AGE, TargetingParams.getAge());
             }
             TargetingParams.GENDER gender = TargetingParams.getGender();
-            int g = 0;
+            String g = "O";
             switch (gender) {
                 case FEMALE:
-                    g = 2;
+                    g = "F";
                     break;
                 case MALE:
-                    g = 1;
+                    g = "M";
                     break;
                 case UNKNOWN:
-                    g = 0;
+                    g = "O";
                     break;
             }
             user.put(Settings.REQUEST_GENDER, g);
