@@ -109,8 +109,8 @@ public class Prebid {
         Class fb_bidder_token = getClassFromString("com.facebook.ads.BidderTokenProvider");
         if (fb_bidder_token != null) {
             String token = (String) callMethodOnClass(fb_bidder_token, "getBidderToken", context);
-            TargetingParams.setCustomTargeting("fb_token", token); // todo sync this with Nicole, it has been to be the same when requesting and rendering
-        }
+            TargetingParams.setCustomTargeting("fb_token", token); // todo sync this with Nicole, where to pass it
+        } // todo test this, not returning bidder token correctly
         // set up bid manager
         BidManager.setBidsExpirationRunnable(context);
         // start ad requests
