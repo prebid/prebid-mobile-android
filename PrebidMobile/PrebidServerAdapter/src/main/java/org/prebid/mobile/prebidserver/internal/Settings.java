@@ -128,7 +128,13 @@ public class Settings {
         if (TextUtils.isEmpty(appName)) {
             ApplicationInfo applicationInfo = context.getApplicationInfo();
             int stringId = applicationInfo.labelRes;
-            appName = stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : context.getString(stringId);
+            if (stringId == 0) {
+                if (applicationInfo.nonLocalizedLabel != null) {
+                    appName = applicationInfo.nonLocalizedLabel.toString();
+                }
+            } else {
+                appName = context.getString(stringId);
+            }
         }
     }
 
