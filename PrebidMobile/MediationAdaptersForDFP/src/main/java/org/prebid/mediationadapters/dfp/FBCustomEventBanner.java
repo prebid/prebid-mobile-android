@@ -24,6 +24,7 @@ public class FBCustomEventBanner implements CustomEventBanner, AdListener {
         this.customEventBannerListener = customEventBannerListener;
         if (bundle != null) {
             String cacheId = (String) bundle.get("hb_cache_id");
+            // todo get the adm by calling pbs cache service
             // todo how to get the facebook adview id
             // todo check if there's any other things to be added for loading
             adView = new AdView(context, "id", new com.facebook.ads.AdSize(adSize.getWidth(), adSize.getHeight()));
