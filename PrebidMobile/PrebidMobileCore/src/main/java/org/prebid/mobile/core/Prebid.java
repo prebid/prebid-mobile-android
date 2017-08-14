@@ -22,8 +22,6 @@ import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Pair;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -106,9 +104,9 @@ public class Prebid {
             throw new PrebidException(PrebidException.PrebidError.UNABLE_TO_INITIALIZE_DEMAND_SOURCE);
         }
         // enable fb demand
-        Class fb_bidder_token = getClassFromString("com.facebook.ads.BidderTokenProvider");
+        Class fb_bidder_token = Utils.getClassFromString("com.facebook.ads.BidderTokenProvider");
         if (fb_bidder_token != null) {
-            String token = (String) callMethodOnClass(fb_bidder_token, "getBidderToken", context);
+            String token = (String) Utils.callMethodOnClass(fb_bidder_token, "getBidderToken", context);
             TargetingParams.setCustomTargeting("fb_token", token); // todo sync this with Nicole, where to pass it
         } // todo test this, not returning bidder token correctly
         // set up bid manager
@@ -123,10 +121,10 @@ public class Prebid {
         } else {
             detachUsedBid(adObj);
 
-            if (adObj.getClass() == getClassFromString(MOPUB_ADVIEW_CLASS)
-                    || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)) {
+            if (adObj.getClass() == Utils.getClassFromString(MOPUB_ADVIEW_CLASS)
+                    || adObj.getClass() == Utils.getClassFromString(MOPUB_INTERSTITIAL_CLASS)) {
                 handleMoPubKeywordsUpdate(adObj, adUnitCode, context);
-            } else if (adObj.getClass() == getClassFromString(DFP_ADREQUEST_CLASS)) {
+            } else if (adObj.getClass() == Utils.getClassFromString(DFP_ADREQUEST_CLASS)) {
                 handleDFPCustomTargetingUpdate(adObj, adUnitCode, context);
             }
         }
@@ -134,9 +132,9 @@ public class Prebid {
 
     public static void detachUsedBid(Object adObj) {
         if (adObj != null) {
-            if (adObj.getClass() == getClassFromString(MOPUB_ADVIEW_CLASS)) {
+            if (adObj.getClass() == Utils.getClassFromString(MOPUB_ADVIEW_CLASS)) {
                 removeUsedKeywordsForMoPub(adObj);
-            } else if (adObj.getClass() == getClassFromString(DFP_ADREQUEST_CLASS)) {
+            } else if (adObj.getClass() == Utils.getClassFromString(DFP_ADREQUEST_CLASS)) {
                 removeUsedCustomTargetingForDFP(adObj);
             }
         }
@@ -155,58 +153,6 @@ public class Prebid {
     //endregion
 
     //region helper methods
-    private static Class getClassFromString(String className) {
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-        }
-        return null;
-    }
-
-    // call static class methods
-    private static Object callMethodOnClass(Class<?> className, String methodName, Object... params) {
-        try {
-            int len = params.length;
-            Class<?>[] classes = new Class[len];
-            for (int i = 0; i < len; i++) {
-                classes[i] = params[i].getClass();
-            }
-            Method method = className.getMethod(methodName, classes);
-            return method.invoke(null, params);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    // call instance methods
-    private static Object callMethodOnObject(Object object, String methodName, Object... params) {
-        try {
-            int len = params.length;
-            Class<?>[] classes = new Class[len];
-            for (int i = 0; i < len; i++) {
-                classes[i] = params[i].getClass();
-            }
-            Method method = object.getClass().getMethod(methodName, classes);
-            return method.invoke(object, params);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     private static final LinkedList<String> usedKeywordsList = new LinkedList<String>();
 
     private static void handleMoPubKeywordsUpdate(Object adViewObj, String adUnitCode, Context context) {
@@ -217,11 +163,12 @@ public class Prebid {
             for (Pair<String, String> p : keywordPairs) {
                 keywords.append(p.first).append(":").append(p.second).append(",");
                 if ("hb_cache_id".equals(p.first)) {
-                    Class fb_adapter = getClassFromString("org.prebid.mediationadapters.mopub.FBCustomEventBanner");
+                    Class fb_adapter = Utils.getClassFromString("org.prebid.mediationadapters.mopub.FBCustomEventBanner");
                     if (fb_adapter != null) {
-                        Map<String, Object> localExtras = (Map) callMethodOnObject(adViewObj, "getLocalExtras");
+                        Map<String, Object> localExtras = (Map) Utils.callMethodOnObject(adViewObj, "getLocalExtras");
                         if (localExtras != null) {
                             localExtras.put("hb_cache_id", p.second);
+                            // todo cache the placement id here, which means for FB demand, it should return placement id in the keywords response
                         } else {
                             LogUtil.e("To get facebook demand, enable local extras on MoPubView.");
                         }
@@ -230,7 +177,7 @@ public class Prebid {
             }
             keywords.append("hb_creative_type:mediation,");
             String prebidKeywords = keywords.toString();
-            String adViewKeywords = (String) callMethodOnObject(adViewObj, "getKeywords");
+            String adViewKeywords = (String) Utils.callMethodOnObject(adViewObj, "getKeywords");
             // retrieve keywords from mopub adview
             if (!TextUtils.isEmpty(adViewKeywords)) {
                 adViewKeywords = prebidKeywords + adViewKeywords;
@@ -242,13 +189,13 @@ public class Prebid {
                 synchronized (usedKeywordsList) {
                     usedKeywordsList.add(prebidKeywords);
                 }
-                callMethodOnObject(adViewObj, "setKeywords", adViewKeywords);
+                Utils.callMethodOnObject(adViewObj, "setKeywords", adViewKeywords);
             }
         }
     }
 
     private static void removeUsedKeywordsForMoPub(Object adViewObj) {
-        String adViewKeywords = (String) callMethodOnObject(adViewObj, "getKeywords");
+        String adViewKeywords = (String) Utils.callMethodOnObject(adViewObj, "getKeywords");
         if (!TextUtils.isEmpty(adViewKeywords) && !usedKeywordsList.isEmpty()) {
             // Copy used keywords to a temporary list to avoid concurrent modification
             // while iterating through the list
@@ -259,7 +206,7 @@ public class Prebid {
                     tempUsedKeywords.add(usedKeyword);
                 }
             }
-            callMethodOnObject(adViewObj, "setKeywords", adViewKeywords);
+            Utils.callMethodOnObject(adViewObj, "setKeywords", adViewKeywords);
 
             for (String string : tempUsedKeywords) {
                 synchronized (usedKeywordsList) {
@@ -273,7 +220,7 @@ public class Prebid {
     private static final Set<String> usedKeywordKeys = new HashSet<String>();
 
     private static void handleDFPCustomTargetingUpdate(Object adRequestObj, String adUnitCode, Context context) {
-        Bundle bundle = (Bundle) callMethodOnObject(adRequestObj, "getCustomTargeting");
+        Bundle bundle = (Bundle) Utils.callMethodOnObject(adRequestObj, "getCustomTargeting");
         if (bundle != null) {
             ArrayList<Pair<String, String>> prebidKeywords = BidManager.getKeywordsForAdUnit(adUnitCode, context);
             if (prebidKeywords != null && !prebidKeywords.isEmpty()) {
@@ -283,9 +230,9 @@ public class Prebid {
                     usedKeywordKeys.add(keywordPair.first);
                     // todo custom extras has to be enabled by the developer
                     if ("hb_cache_id".equals(keywordPair.first)) {
-                        Class fb_adapter = getClassFromString("org.prebid.mediationadapters.dfp.FBCustomEventBanner");
+                        Class fb_adapter = Utils.getClassFromString("org.prebid.mediationadapters.dfp.FBCustomEventBanner");
                         if (fb_adapter != null) {
-                            Bundle customEventExtras = (Bundle) callMethodOnObject(adRequestObj, "getCustomEventExtrasBundle", fb_adapter);
+                            Bundle customEventExtras = (Bundle) Utils.callMethodOnObject(adRequestObj, "getCustomEventExtrasBundle", fb_adapter);
                             if (customEventExtras != null) {
                                 customEventExtras.putString("hb_cache_id", keywordPair.second);
                             } else {
@@ -302,7 +249,7 @@ public class Prebid {
     }
 
     private static void removeUsedCustomTargetingForDFP(Object adRequestObj) {
-        Bundle bundle = (Bundle) callMethodOnObject(adRequestObj, "getCustomTargeting");
+        Bundle bundle = (Bundle) Utils.callMethodOnObject(adRequestObj, "getCustomTargeting");
         if (bundle != null) {
             for (String key : usedKeywordKeys) {
                 bundle.remove(key);
@@ -332,7 +279,7 @@ public class Prebid {
      */
     public static void shouldLoadOverSecureConnection(boolean secureConnection) {
         // Only enables overrides for MoPub, DFP should always load over secured connection
-        if (getClassFromString(MOPUB_ADVIEW_CLASS) != null) {
+        if (Utils.getClassFromString(MOPUB_ADVIEW_CLASS) != null) {
             Prebid.secureConnection = secureConnection;
         }
     }
