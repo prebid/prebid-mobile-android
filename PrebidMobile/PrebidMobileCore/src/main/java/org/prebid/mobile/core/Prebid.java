@@ -162,20 +162,17 @@ public class Prebid {
             StringBuilder keywords = new StringBuilder();
             for (Pair<String, String> p : keywordPairs) {
                 keywords.append(p.first).append(":").append(p.second).append(",");
-                if ("hb_cache_id".equals(p.first)) {
-                    Class fb_adapter = Utils.getClassFromString("org.prebid.mediationadapters.mopub.FBCustomEventBanner");
-                    if (fb_adapter != null) {
-                        Map<String, Object> localExtras = (Map) Utils.callMethodOnObject(adViewObj, "getLocalExtras");
-                        if (localExtras != null) {
-                            localExtras.put("hb_cache_id", p.second);
-                            // todo cache the placement id here, which means for FB demand, it should return placement id in the keywords response
-                        } else {
-                            LogUtil.e("To get facebook demand, enable local extras on MoPubView.");
-                        }
+                Class mopub_fb_adapter = Utils.getClassFromString("org.prebid.mediationadapters.mopub.FBCustomEventBanner");
+                if (mopub_fb_adapter != null) {
+                    Map<String, Object> localExtras = (Map) Utils.callMethodOnObject(adViewObj, "getLocalExtras");
+                    if (localExtras != null) {
+                        localExtras.put(p.first, p.second);
+                    } else {
+                        LogUtil.e("To get facebook demand, enable local extras on MoPubView.");
                     }
                 }
             }
-            keywords.append("hb_creative_type:mediation,");
+            keywords.append("hb_creative_type:mediation,"); // todo this should be returned by prebid server, and called webview_rendering, native_rendering
             String prebidKeywords = keywords.toString();
             String adViewKeywords = (String) Utils.callMethodOnObject(adViewObj, "getKeywords");
             // retrieve keywords from mopub adview
@@ -228,16 +225,13 @@ public class Prebid {
                 for (Pair<String, String> keywordPair : prebidKeywords) {
                     bundle.putString(keywordPair.first, keywordPair.second);
                     usedKeywordKeys.add(keywordPair.first);
-                    // todo custom extras has to be enabled by the developer
-                    if ("hb_cache_id".equals(keywordPair.first)) {
-                        Class fb_adapter = Utils.getClassFromString("org.prebid.mediationadapters.dfp.FBCustomEventBanner");
-                        if (fb_adapter != null) {
-                            Bundle customEventExtras = (Bundle) Utils.callMethodOnObject(adRequestObj, "getCustomEventExtrasBundle", fb_adapter);
-                            if (customEventExtras != null) {
-                                customEventExtras.putString("hb_cache_id", keywordPair.second);
-                            } else {
-                                LogUtil.e("To get Facebook demand, enable custom event extras before building your publisher ad requests");
-                            }
+                    Class dfp_fb_adapter = Utils.getClassFromString("org.prebid.mediationadapters.dfp.FBCustomEventBanner");
+                    if (dfp_fb_adapter != null) {
+                        Bundle customEventExtras = (Bundle) Utils.callMethodOnObject(adRequestObj, "getCustomEventExtrasBundle", dfp_fb_adapter);
+                        if (customEventExtras != null) {
+                            customEventExtras.putString(keywordPair.first, keywordPair.second);
+                        } else {
+                            LogUtil.e("To get Facebook demand, enable custom event extras before building your publisher ad requests");
                         }
                     }
                 }
