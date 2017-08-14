@@ -1,6 +1,14 @@
 package org.prebid.mobile.prebidserver.internal;
 
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.TextUtils;
+import android.webkit.WebView;
 
 import java.util.Locale;
 
@@ -38,9 +46,13 @@ public class Settings {
     public static final String REQUEST_APP_BUNDLE = "bundle";
     public static final String REQUEST_APP_DOMAIN = "domain";
     public static final String REQUEST_APP_STOREURL = "storeurl";
+    public static final String REQUEST_APP_PRIVACY = "privacypolicy";
+    public static final String REQUEST_APP_VERSION = "ver";
     public static final String REQUEST_KEYWORDS = "keywords";
     public static final String REQUEST_DEVICE_MAKE = "make";
     public static final String REQUEST_DEVICE_MODEL = "model";
+    public static final String REQUEST_DEVICE_WIDTH = "w";
+    public static final String REQUEST_DEVICE_HEIGHT = "h";
     public static final String REQUEST_MCC_MNC = "mccmnc";
     public static final String REQUEST_LMT = "lmt";
     public static final String REQUEST_CONNECTION_TYPE = "connectiontype";
@@ -54,6 +66,7 @@ public class Settings {
     public static final String REQUEST_DEVTIME = "devtime";
     public static final String REQUEST_IFA = "ifa";
     public static final String REQUEST_OS = "os";
+    public static final String REQUEST_OS_VERSION = "osv";
     public static final String REQUEST_KEY = "key";
     public static final String REQUEST_VALUE = "value";
     public static final String REQUEST_SDK = "sdk";
@@ -80,14 +93,49 @@ public class Settings {
     public static final String deviceModel = Build.MODEL;
     public static final String os = "android";
     public static String userAgent = null;
+    public static String sdk_version = "0.0.0";
+    public static String pkgVersion = "";
+    public static String appName = "";
     static int mnc = -1;
     static int mcc = -1;
     static String carrierName = null;
     static String app_id = null;
-    public static String sdk_version = "0.0.0";
+    static String domain = "";
+    static String storeUrl = "";
+    static int privacyPolicy = 0;
 
-    static {
-        // todo set user agent
+    public static synchronized void update(final Context context) {
+        if (userAgent == null) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+
+                    WebView wv = new WebView(context);
+                    userAgent = wv.getSettings().getUserAgentString();
+
+                }
+            });
+        }
+        if (TextUtils.isEmpty(pkgVersion)) {
+            try {
+                PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+                pkgVersion = pInfo.versionName;
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (TextUtils.isEmpty(appName)) {
+            ApplicationInfo applicationInfo = context.getApplicationInfo();
+            int stringId = applicationInfo.labelRes;
+            if (stringId == 0) {
+                if (applicationInfo.nonLocalizedLabel != null) {
+                    appName = applicationInfo.nonLocalizedLabel.toString();
+                }
+            } else {
+                appName = context.getString(stringId);
+            }
+        }
     }
 
     public static synchronized int getConnectionTimeOutMillis() {
@@ -130,5 +178,28 @@ public class Settings {
         Settings.app_id = app_id;
     }
 
+    public static synchronized void setDomain(String domain) {
+        Settings.domain = domain;
+    }
+
+    public static synchronized String getStoreUrl() {
+        return storeUrl;
+    }
+
+    public static synchronized void setPrivacyPolicy(int privacyPolicy) {
+        Settings.privacyPolicy = privacyPolicy;
+    }
+
+    public static synchronized int getPrivacyPolicy() {
+        return privacyPolicy;
+    }
+
+    public static synchronized void setStoreUrl(String storeUrl) {
+        Settings.storeUrl = storeUrl;
+    }
+
+    public static synchronized String getDomain() {
+        return domain;
+    }
 }
 
