@@ -1,8 +1,6 @@
 package org.prebid.mobile.demoapp.dummyfragments;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,8 +12,8 @@ import android.widget.FrameLayout;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
+import com.facebook.ads.AdSize;
 import com.facebook.ads.AdView;
-import com.facebook.ads.InterstitialAd;
 import com.facebook.ads.InterstitialAdListener;
 
 import org.json.JSONArray;
@@ -52,30 +50,21 @@ public class DummyFragment extends Fragment implements FBRequest.FBListener, AdL
         if (adView != null) {
             adView.destroy();
         }
-//        adView = new AdView(this.getActivity(), "1959066997713356_1959836684303054", AdSize.RECTANGLE_HEIGHT_250); //new AdSize(300, 250)
-//        adView.setAdListener(this);
-//        adFrame.addView(adView);
-        final InterstitialAd ad = new InterstitialAd(this.getActivity(), "1959066997713356_1960406244246098");
-        ad.setAdListener(this);
+        adView = new AdView(this.getActivity(), "1959066997713356_1959836684303054", new AdSize(300, 250));
+        adView.setAdListener(this);
+        adFrame.addView(adView);
         try {
             JSONArray seat = jsonObject.getJSONArray("seatbid");
             JSONArray b = seat.getJSONObject(0).getJSONArray("bid");
             JSONObject r = b.getJSONObject(0);
             bid = r.getString("adm");
+            JSONObject jsonObject1 = new JSONObject(bid);
+//            jsonObject1.put("template", 7);
+            bid = jsonObject1.toString();
         } catch (JSONException e) {
             bid = "";
         }
-        ad.loadAdFromBid(bid);
-//        adView.loadAdFromBid(bid);
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (ad.isAdLoaded()) {
-                    ad.show();
-                }
-            }
-        }, 2000);
+        adView.loadAdFromBid(bid);
     }
 
     @Override
