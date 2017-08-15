@@ -28,6 +28,7 @@ import org.prebid.mobile.prebidserver.internal.AdvertisingIDUtil;
 import org.prebid.mobile.prebidserver.internal.Settings;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -213,7 +214,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             }
             // add user
             // todo should we provide api for developers to pass in user's location (zip, city, address etc, not real time location)
-            JSONObject user = getUserObject();
+            JSONObject user = getUserObject(context);
             if (user != null && user.length() > 0) {
                 postData.put(Settings.REQUEST_USER, user);
             }
@@ -495,7 +496,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
 
     }
 
-    private JSONObject getUserObject() {
+    private JSONObject getUserObject(Context context) {
         JSONObject user = new JSONObject();
         try {
             if (TargetingParams.getYearOfBirth() > 0) {
@@ -526,6 +527,16 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 user.put("keywords", toBeAdded);
             }
         } catch (JSONException e) {
+        }
+        try {
+            Class fb_Class = Class.forName("com.facebook.ads.BidderTokenProvider");
+            Method method = fb_Class.getMethod("getBidderToken", Context.class);
+            String bidderToken = (String) method.invoke(null, context);
+            if (!TextUtils.isEmpty(bidderToken)) {
+                user.put(Settings.REQUEST_BUYERUID, bidderToken);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return user;
     }
