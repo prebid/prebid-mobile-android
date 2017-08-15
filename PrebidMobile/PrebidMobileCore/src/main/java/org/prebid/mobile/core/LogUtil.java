@@ -40,7 +40,7 @@ public class LogUtil {
     static final String BASE_TAG = "Prebid";
 
     /**
-     * Helper method to get Prebid log tag that is <= 23
+     * Helper method to get Prebid log tag that is shorter than 23 characters
      *
      * @param tagSuffix specific tag description
      * @return log tag with "Prebid" prefix

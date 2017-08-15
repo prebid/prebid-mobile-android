@@ -217,7 +217,6 @@ CORE_CLASSES+=("BidResponse.java")
 CORE_CLASSES+=("DemandAdapter.java")
 CORE_CLASSES+=("ErrorCode.java")
 CORE_CLASSES+=("InterstitialAdUnit.java")
-CORE_CLASSES+=("KeywordUtil.java")
 CORE_CLASSES+=("LogUtil.java")
 CORE_CLASSES+=("Prebid.java")
 CORE_CLASSES+=("PrebidException.java")
@@ -236,7 +235,7 @@ done
 
 cd $OUTDIR
 # disable Javadoc for illegal pacakge name error
-# javadoc -d Javadoc -protected $FINAL_CLASSES -verbose $LOGPATH/javadoc.log 2>&1 || die "Build Javadoc failed, check log in $LOGPATH/javadoc.log"
+javadoc -d Javadoc -protected $FINAL_CLASSES>$LOGPATH/javadoc.log 2>&1 || die "Build Javadoc failed, check log in $LOGPATH/javadoc.log"
 
 #######
 # End
