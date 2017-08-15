@@ -31,4 +31,5 @@ dependencies {
     compile('com.mopub:mopub-sdk:4.15.0@aar') {
         transitive = true
     }
+    compile project(':PrebidServerAdapter')
 }
