@@ -14,22 +14,25 @@ import com.google.android.gms.ads.mediation.MediationAdRequest;
 import com.google.android.gms.ads.mediation.customevent.CustomEventBanner;
 import com.google.android.gms.ads.mediation.customevent.CustomEventBannerListener;
 
-public class FBCustomEventBanner implements CustomEventBanner, AdListener {
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.prebid.mobile.prebidserver.CacheService;
+
+public class FBCustomEventBanner implements CustomEventBanner, AdListener, CacheService.CacheListener {
     private CustomEventBannerListener customEventBannerListener;
     private AdView adView;
+    private Context context;
+    private AdSize adSize;
 
     @Override
     public void requestBannerAd(Context context, CustomEventBannerListener customEventBannerListener, String s, AdSize adSize, MediationAdRequest mediationAdRequest, Bundle bundle) {
         Log.d("FB-Integration", "Load Prebid content for Facebook");
         this.customEventBannerListener = customEventBannerListener;
+        this.adSize = adSize;
         if (bundle != null) {
             String cacheId = (String) bundle.get("hb_cache_id");
-            // todo get the adm by calling pbs cache service
-            // todo how to get the facebook adview id
-            // todo check if there's any other things to be added for loading
-            adView = new AdView(context, "id", new com.facebook.ads.AdSize(adSize.getWidth(), adSize.getHeight()));
-            adView.setAdListener(this);
-            adView.loadAdFromBid(cacheId);
+            CacheService cs = new CacheService(this, cacheId);
+            cs.execute();
         } else {
             if (customEventBannerListener != null) {
                 customEventBannerListener.onAdFailedToLoad(AdRequest.ERROR_CODE_INVALID_REQUEST);
@@ -42,6 +45,7 @@ public class FBCustomEventBanner implements CustomEventBanner, AdListener {
     @Override
     public void onDestroy() {
         customEventBannerListener = null;
+        context = null;
         if (adView != null) {
             adView.destroy();
         }
@@ -105,4 +109,20 @@ public class FBCustomEventBanner implements CustomEventBanner, AdListener {
     @Override
     public void onLoggingImpression(Ad ad) {
     }
+
+    @Override
+    public void onResponded(JSONObject jsonObject) {
+        String adm = null;
+        String placementID = "";
+        try {
+            adm = jsonObject.getString("adm");
+            JSONObject bid = new JSONObject(adm);
+            placementID = bid.getString("placement_id");
+        } catch (JSONException e) {
+        }
+        adView = new AdView(context, placementID, new com.facebook.ads.AdSize(adSize.getWidth(), adSize.getHeight()));
+        adView.setAdListener(this);
+        adView.loadAdFromBid(adm);
+    }
+
 }
