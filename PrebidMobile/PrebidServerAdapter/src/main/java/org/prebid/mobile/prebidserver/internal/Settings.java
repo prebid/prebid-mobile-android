@@ -37,6 +37,7 @@ public class Settings {
     public static final String REQUEST_HEIGHT = "h";
     public static final String REQUEST_SIZES = "sizes";
     public static final String REQUEST_USER = "user";
+    public static final String REQUEST_BUYERUID = "buyeruid";
     public static final String REQUEST_AGE = "age";
     public static final String REQUEST_GENDER = "gender";
     public static final String REQUEST_LANGUAGE = "language";
