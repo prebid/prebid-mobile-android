@@ -3,14 +3,15 @@
 #################################
 # Update Maven Release folder
 #################################
+set -e 
+
 rm PrebidMobile.jar >/dev/null 2>/dev/null
-rm PrebidMobile-sources.jar >/dev/null 2>/dev/null
 rm PrebidMobile-sources.jar >/dev/null 2>/dev/null
 cp ../out/PrebidMobile.jar .
 cp ../out/PrebidMobile.jar PrebidMobile-sources.jar
 
 function echoX {
-echo -e "APPNEXUS DEPLOY-LOG: $@"
+echo -e "PREBID DEPLOY-LOG: $@"
 }
 
 spinner()
@@ -37,7 +38,7 @@ echoX "Deploying Prebid Mobile SDK on Maven..."
 #######
 # Deploy
 #######
-(mvn gpg:sign-and-deploy-file "-DpomFile=pom.xml" "-Dfile=PrebidMobile.jar" "-DrepositoryId=ossrh" "-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/" "-DstagingRepositoryId=ossrh" "-Dsources=PrebidMobile-sources.jar" "-Djavadoc=PrebidMobile-javadoc.jar" || { echoX "Deploy failed!"; echoX "End Script"; exit 1; } ) & spinner $!
+(mvn gpg:sign-and-deploy-file "-DpomFile=pom.xml" "-Dfile=PrebidMobile.jar" "-DrepositoryId=ossrh" "-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/" "-DstagingRepositoryId=ossrh" "-Dsources=PrebidMobile-sources.jar" || { echoX "Deploy failed!"; echoX "End Script"; exit 1; } ) & spinner $!
 
 
 
