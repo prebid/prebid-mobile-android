@@ -75,15 +75,7 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
                 LogUtil.d("DPF-Banner", "onAdLoaded");
             }
         };
-
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        request1 = builder.build();
-        setupBannerWithoutWait(request1);
-
-//        PublisherAdRequest.Builder builder2 = new PublisherAdRequest.Builder();
-//        request2 = builder2.build();
-//        setupBannerWithWait(request2, 500);
-
+        
         return root;
     }
 
