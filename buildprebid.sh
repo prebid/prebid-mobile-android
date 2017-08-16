@@ -217,7 +217,6 @@ CORE_CLASSES+=("BidResponse.java")
 CORE_CLASSES+=("DemandAdapter.java")
 CORE_CLASSES+=("ErrorCode.java")
 CORE_CLASSES+=("InterstitialAdUnit.java")
-CORE_CLASSES+=("KeywordUtil.java")
 CORE_CLASSES+=("LogUtil.java")
 CORE_CLASSES+=("Prebid.java")
 CORE_CLASSES+=("PrebidException.java")
@@ -235,7 +234,8 @@ for classes in "${PREBID_SERVER_CLASSES[@]}"; do
 done
 
 cd $OUTDIR
-javadoc -d Javadoc -protected $FINAL_CLASSES >/dev/null 2>/dev/null
+# disable Javadoc for illegal pacakge name error
+javadoc -d Javadoc -protected $FINAL_CLASSES>$LOGPATH/javadoc.log 2>&1 || die "Build Javadoc failed, check log in $LOGPATH/javadoc.log"
 
 #######
 # End
