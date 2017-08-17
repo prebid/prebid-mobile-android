@@ -1,4 +1,5 @@
 #! /bin/bash
+set -e
 
 cd PrebidMobile
 ./gradlew clean test

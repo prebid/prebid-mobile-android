@@ -5,7 +5,7 @@ Scenario: Load DFP Banner Ad
     Then I press "DFP"
     Then I press "Show Banner Example"
     Then I press "Refresh Banner"
-    Then I wait for 5 seconds
+    Then I wait for 10 seconds
     Then I should see AppNexus creative
 
 #Scenario: Load DFP Interstitial Ad
@@ -22,7 +22,7 @@ Scenario: Load MoPub Banner Ad
     Then I press "MoPub"
     Then I press "Show Banner Example"
     Then I press "Refresh Banner"
-    Then I wait for 5 seconds
+    Then I wait for 10 seconds
     Then I should see AppNexus creative in HTMLBannerWebView
 
 #Scenario: Load MoPub Interstitial Ad
