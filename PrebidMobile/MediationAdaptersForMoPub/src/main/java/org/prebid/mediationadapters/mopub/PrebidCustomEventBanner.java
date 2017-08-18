@@ -17,12 +17,13 @@ import org.prebid.mobile.prebidserver.CacheService;
 
 import java.util.Map;
 
-public class FBCustomEventBanner extends CustomEventBanner implements AdListener, CacheService.CacheListener {
+public class PrebidCustomEventBanner extends CustomEventBanner implements AdListener, CacheService.CacheListener {
     private CustomEventBannerListener customEventBannerListener;
     private AdView adView;
     private Context context;
     private int width;
     private int height;
+    private String bidder;
 
     @Override
     protected void loadBanner(Context context, CustomEventBannerListener customEventBannerListener, Map<String, Object> localExtras, Map<String, String> serverExtras) {
@@ -30,6 +31,7 @@ public class FBCustomEventBanner extends CustomEventBanner implements AdListener
         this.customEventBannerListener = customEventBannerListener;
         if (localExtras != null) {
             String cache_id = (String) localExtras.get("hb_cache_id");
+            bidder = (String) localExtras.get("hb_bidder");
             width = (int) localExtras.get("com_mopub_ad_width");
             height = (int) localExtras.get("com_mopub_ad_height");
             CacheService cs = new CacheService(this, cache_id);
@@ -110,8 +112,12 @@ public class FBCustomEventBanner extends CustomEventBanner implements AdListener
             placementID = bid.getString("placement_id");
         } catch (JSONException e) {
         }
-        adView = new AdView(context, placementID, new AdSize(width, height));
-        adView.setAdListener(this);
-        adView.loadAdFromBid(adm);
+        if ("audienceNetwork".equals(bidder)) {
+
+            adView = new AdView(context, placementID, new AdSize(width, height));
+            adView.setAdListener(this); // todo figure out how to send notification back more generically
+            adView.loadAdFromBid(adm);
+        }
+
     }
 }
