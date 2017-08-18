@@ -178,7 +178,7 @@ public class Prebid {
         }
         return null;
     }
-    
+
     private static final LinkedList<String> usedKeywordsList = new LinkedList<String>();
 
     private static void handleMoPubKeywordsUpdate(Object adViewObj, String adUnitCode, Context context) {
@@ -192,7 +192,9 @@ public class Prebid {
                 if (mopub_fb_adapter != null) {
                     Map<String, Object> localExtras = (Map) callMethodOnObject(adViewObj, "getLocalExtras");
                     if (localExtras != null) {
-                        localExtras.put(p.first, p.second);
+                        if ("hb_cache_id".equals(p.first) || "hb_bidder".equals(p.first)) {
+                            localExtras.put(p.first, p.second);
+                        }
                     } else {
                         LogUtil.e("To get facebook demand, enable local extras on MoPubView.");
                     }
@@ -255,7 +257,9 @@ public class Prebid {
                     if (dfp_fb_adapter != null) {
                         Bundle customEventExtras = (Bundle) callMethodOnObject(adRequestObj, "getCustomEventExtrasBundle", dfp_fb_adapter);
                         if (customEventExtras != null) {
-                            customEventExtras.putString(keywordPair.first, keywordPair.second);
+                            if ("hb_cache_id".equals(keywordPair.first) || "hb_bidder".equals(keywordPair.first)) {
+                                customEventExtras.putString(keywordPair.first, keywordPair.second);
+                            }
                         } else {
                             LogUtil.e("To get Facebook demand, enable custom event extras before building your publisher ad requests");
                         }
