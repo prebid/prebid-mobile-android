@@ -17,7 +17,7 @@ import org.prebid.mobile.prebidserver.CacheService;
 
 import java.util.Map;
 
-public class PrebidCustomEventBanner extends CustomEventBanner implements AdListener, CacheService.CacheListener {
+public class PrebidCustomEventBanner extends CustomEventBanner implements CacheService.CacheListener {
     private CustomEventBannerListener customEventBannerListener;
     private AdView adView;
     private Context context;
@@ -53,56 +53,6 @@ public class PrebidCustomEventBanner extends CustomEventBanner implements AdList
     }
 
     @Override
-    public void onError(Ad ad, AdError adError) {
-        if (customEventBannerListener != null) {
-            if (adError != null) {
-                switch (adError.getErrorCode()) {
-                    case 1000:
-                        customEventBannerListener.onBannerFailed(MoPubErrorCode.NO_CONNECTION);
-                        break;
-                    case 1001:
-                        customEventBannerListener.onBannerFailed(MoPubErrorCode.NO_FILL);
-                        break;
-                    case 1002:
-                        customEventBannerListener.onBannerFailed(MoPubErrorCode.INTERNAL_ERROR);
-                        break;
-                    case 2000:
-                        customEventBannerListener.onBannerFailed(MoPubErrorCode.SERVER_ERROR);
-                        break;
-                    case 2001:
-                        customEventBannerListener.onBannerFailed(MoPubErrorCode.INTERNAL_ERROR);
-                        break;
-                    case 3001:
-                        customEventBannerListener.onBannerFailed(MoPubErrorCode.INTERNAL_ERROR);
-                        break;
-                }
-            } else {
-                customEventBannerListener.onBannerFailed(MoPubErrorCode.INTERNAL_ERROR);
-            }
-
-        }
-    }
-
-    @Override
-    public void onAdLoaded(Ad ad) {
-        if (customEventBannerListener != null) {
-            customEventBannerListener.onBannerLoaded(adView);
-        }
-    }
-
-    @Override
-    public void onAdClicked(Ad ad) {
-        if (customEventBannerListener != null) {
-            customEventBannerListener.onBannerClicked();
-        }
-    }
-
-    @Override
-    public void onLoggingImpression(Ad ad) {
-
-    }
-
-    @Override
     public void onResponded(JSONObject jsonObject) {
         String adm = null;
         String placementID = "";
@@ -113,9 +63,58 @@ public class PrebidCustomEventBanner extends CustomEventBanner implements AdList
         } catch (JSONException e) {
         }
         if ("audienceNetwork".equals(bidder)) {
-
             adView = new AdView(context, placementID, new AdSize(width, height));
-            adView.setAdListener(this); // todo figure out how to send notification back more generically
+            adView.setAdListener(new AdListener() {
+                @Override
+                public void onError(Ad ad, AdError adError) {
+                    if (customEventBannerListener != null) {
+                        if (adError != null) {
+                            switch (adError.getErrorCode()) {
+                                case 1000:
+                                    customEventBannerListener.onBannerFailed(MoPubErrorCode.NO_CONNECTION);
+                                    break;
+                                case 1001:
+                                    customEventBannerListener.onBannerFailed(MoPubErrorCode.NO_FILL);
+                                    break;
+                                case 1002:
+                                    customEventBannerListener.onBannerFailed(MoPubErrorCode.INTERNAL_ERROR);
+                                    break;
+                                case 2000:
+                                    customEventBannerListener.onBannerFailed(MoPubErrorCode.SERVER_ERROR);
+                                    break;
+                                case 2001:
+                                    customEventBannerListener.onBannerFailed(MoPubErrorCode.INTERNAL_ERROR);
+                                    break;
+                                case 3001:
+                                    customEventBannerListener.onBannerFailed(MoPubErrorCode.INTERNAL_ERROR);
+                                    break;
+                            }
+                        } else {
+                            customEventBannerListener.onBannerFailed(MoPubErrorCode.INTERNAL_ERROR);
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onAdLoaded(Ad ad) {
+                    if (customEventBannerListener != null) {
+                        customEventBannerListener.onBannerLoaded(adView);
+                    }
+                }
+
+                @Override
+                public void onAdClicked(Ad ad) {
+                    if (customEventBannerListener != null) {
+                        customEventBannerListener.onBannerClicked();
+                    }
+                }
+
+                @Override
+                public void onLoggingImpression(Ad ad) {
+
+                }
+            });
             adView.loadAdFromBid(adm);
         }
 
