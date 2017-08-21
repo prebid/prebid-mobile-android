@@ -159,7 +159,7 @@ buildToolsVersion '25.0.0'
 
 defaultConfig {
 applicationId 'org.prebid.mobile.demoapp'
-minSdkVersion 14
+minSdkVersion 16
 targetSdkVersion 25
 versionCode 1
 versionName '1.0'
@@ -180,6 +180,11 @@ dependencies {
 compile 'com.android.support:appcompat-v7:23.1.1'
 // For aaid
 compile 'com.google.android.gms:play-services-ads:9.2.1'
+
+// From MoPub Android SDK docs
+compile('com.mopub:mopub-sdk:4.15.0@aar') {
+transitive = true
+}
 
 // Build from compiled libs
 compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -242,4 +247,3 @@ javadoc -d Javadoc -protected $FINAL_CLASSES>$LOGPATH/javadoc.log 2>&1 || die "B
 #######
 echoX "Please find Prebid Mobile product in $OUTDIR"
 echoX "Build finished."
-
