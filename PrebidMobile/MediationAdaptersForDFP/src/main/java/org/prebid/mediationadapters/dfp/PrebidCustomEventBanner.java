@@ -18,7 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.prebidserver.CacheService;
 
-public class FBCustomEventBanner implements CustomEventBanner, AdListener, CacheService.CacheListener {
+public class PrebidCustomEventBanner implements CustomEventBanner, AdListener, CacheService.CacheListener {
     private CustomEventBannerListener customEventBannerListener;
     private AdView adView;
     private Context context;

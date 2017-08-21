@@ -25,6 +25,7 @@ import android.util.Pair;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
@@ -188,15 +189,24 @@ public class Prebid {
             StringBuilder keywords = new StringBuilder();
             for (Pair<String, String> p : keywordPairs) {
                 keywords.append(p.first).append(":").append(p.second).append(",");
-                Class mopub_fb_adapter = getClassFromString("org.prebid.mediationadapters.mopub.FBCustomEventBanner");
-                if (mopub_fb_adapter != null) {
-                    Map<String, Object> localExtras = (Map) callMethodOnObject(adViewObj, "getLocalExtras");
-                    if (localExtras != null) {
-                        if ("hb_cache_id".equals(p.first) || "hb_bidder".equals(p.first)) {
-                            localExtras.put(p.first, p.second);
+                if ("hb_cache_id".equals(p.first) || "hb_bidder".equals(p.first)) {
+                    Class mediation_adapter = getClassFromString("org.prebid.mediationadapters.mopub.PrebidCustomEventBanner");
+                    if (mediation_adapter != null) {
+                        Map<String, Object> localExtras = (Map) callMethodOnObject(adViewObj, "getLocalExtras");
+                        Map newExtras = new HashMap();
+                        if (localExtras != null) {
+                            for (String s : localExtras.keySet()) {
+                                newExtras.put(s, localExtras.get(s));
+                            }
                         }
-                    } else {
-                        LogUtil.e("To get facebook demand, enable local extras on MoPubView.");
+                        newExtras.put(p.first, p.second);
+                        try {
+                            Method method = adViewObj.getClass().getMethod("setLocalExtras", Map.class);
+                            method.invoke(adViewObj, newExtras);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            LogUtil.e("Client side demand won't be working since setting localExtras failed for MoPubView");
+                        }
                     }
                 }
             }
@@ -253,9 +263,9 @@ public class Prebid {
                 for (Pair<String, String> keywordPair : prebidKeywords) {
                     bundle.putString(keywordPair.first, keywordPair.second);
                     usedKeywordKeys.add(keywordPair.first);
-                    Class dfp_fb_adapter = getClassFromString("org.prebid.mediationadapters.dfp.FBCustomEventBanner");
-                    if (dfp_fb_adapter != null) {
-                        Bundle customEventExtras = (Bundle) callMethodOnObject(adRequestObj, "getCustomEventExtrasBundle", dfp_fb_adapter);
+                    Class mediation_adapter = getClassFromString("org.prebid.mediationadapters.dfp.PrebidCustomEventBanner");
+                    if (mediation_adapter != null) {
+                        Bundle customEventExtras = (Bundle) callMethodOnObject(adRequestObj, "getCustomEventExtrasBundle", mediation_adapter);
                         if (customEventExtras != null) {
                             if ("hb_cache_id".equals(keywordPair.first) || "hb_bidder".equals(keywordPair.first)) {
                                 customEventExtras.putString(keywordPair.first, keywordPair.second);
