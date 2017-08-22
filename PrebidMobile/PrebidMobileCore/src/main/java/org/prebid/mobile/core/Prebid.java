@@ -257,13 +257,23 @@ public class Prebid {
     private static void handleDFPCustomTargetingUpdate(Object adRequestObj, String adUnitCode, Context context) {
         Bundle bundle = (Bundle) callMethodOnObject(adRequestObj, "getCustomTargeting");
         if (bundle != null) {
+            // get mediation adapter for requested type
+            Class mediation_adapter = null;
+            Set<String> keywords = (Set) callMethodOnObject(adRequestObj, "getKeywords");
+            for (String keyword : keywords) {
+                if ("prebid_interstitial".equals(keyword)) {
+                    mediation_adapter = getClassFromString("org.prebid.mediationadapters.dfp.PrebidCustomEventInterstitial");
+                } else if ("prebid_banner".equals(keyword)) {
+                    mediation_adapter = getClassFromString("org.prebid.mediationadapters.dfp.PrebidCustomEventBanner");
+                }
+            }
             ArrayList<Pair<String, String>> prebidKeywords = BidManager.getKeywordsForAdUnit(adUnitCode, context);
             if (prebidKeywords != null && !prebidKeywords.isEmpty()) {
                 // retrieve keywords from mopub adview
                 for (Pair<String, String> keywordPair : prebidKeywords) {
                     bundle.putString(keywordPair.first, keywordPair.second);
                     usedKeywordKeys.add(keywordPair.first);
-                    Class mediation_adapter = getClassFromString("org.prebid.mediationadapters.dfp.PrebidCustomEventBanner");
+                    // set custom event extras for the requested type
                     if (mediation_adapter != null) {
                         Bundle customEventExtras = (Bundle) callMethodOnObject(adRequestObj, "getCustomEventExtrasBundle", mediation_adapter);
                         if (customEventExtras != null) {
