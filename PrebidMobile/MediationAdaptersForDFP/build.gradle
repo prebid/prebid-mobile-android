@@ -23,7 +23,6 @@ android {
 }
 
 dependencies {
-    compile(name: 'ads-release', ext: 'aar')
     compile project(":PrebidServerAdapter")
     compile 'com.google.android.gms:play-services-ads:10.2.0'
     testCompile 'junit:junit:4.12'

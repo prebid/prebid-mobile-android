@@ -37,4 +37,5 @@ dependencies {
     compile project(":PrebidServerAdapter")
     compile project(":MediationAdaptersForDFP")
     compile project(":MediationAdaptersForMoPub")
+    compile(name: 'ads-release', ext: 'aar')
 }

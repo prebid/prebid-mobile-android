@@ -28,10 +28,6 @@ public class CacheService extends AsyncTask<Object, Object, JSONObject> {
             URL url = new URL(sb.toString());
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Accept", "application/json");
             conn.setRequestMethod("GET");
 
             // Start the connection

@@ -26,7 +26,6 @@ android {
 }
 
 dependencies {
-    compile(name: 'ads-release', ext:'aar')
     testCompile 'junit:junit:4.12'
     compile('com.mopub:mopub-sdk:4.15.0@aar') {
         transitive = true
