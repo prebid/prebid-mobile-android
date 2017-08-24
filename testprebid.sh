@@ -13,6 +13,7 @@ curl -O 'http://calabash-ci.macminicolo.net:8080/view/Uploader/job/Uploader%20ma
 tar -xvzf xtc.osx.10.10-x64.tar.gz
 cd xtc
 export PATH=$PATH:`pwd`
+echo $PATH
 xtc help
 
 # upload the test apk to xamarin test cloud
