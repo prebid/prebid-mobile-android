@@ -16,6 +16,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Map;
 
+import static org.prebid.mediationadapters.mopub.PrebidCustomEventSettings.*;
+
 public class PrebidCustomEventBanner extends CustomEventBanner {
     private String bidderName;
     private Object adObject;
@@ -24,11 +26,11 @@ public class PrebidCustomEventBanner extends CustomEventBanner {
     protected void loadBanner(final Context context, final CustomEventBannerListener customEventBannerListener, Map<String, Object> localExtras, Map<String, String> serverExtras) {
         Log.d("FB-Integration", "Load Prebid content for Facebook");
         if (localExtras != null) {
-            String cache_id = (String) localExtras.get("hb_cache_id");
-            bidderName = (String) localExtras.get("hb_bidder");
-            int width = (int) localExtras.get("com_mopub_ad_width");
-            int height = (int) localExtras.get("com_mopub_ad_height");
-            if ("audienceNetwork".equals(bidderName)) {
+            String cache_id = (String) localExtras.get(PREBID_CACHE_ID);
+            bidderName = (String) localExtras.get(PREBID_BIDDER);
+            int width = (int) localExtras.get(MOPUB_WIDTH);
+            int height = (int) localExtras.get(MOPUB_HEIGHT);
+            if (FACEBOOK_BIDDER_NAME.equals(bidderName) && demandSet.contains(PrebidCustomEventSettings.Demand.FACEBOOK)) {
                 loadFacebookBanner(context, cache_id, width, height, customEventBannerListener);
             } else {
                 if (customEventBannerListener != null) {
@@ -44,9 +46,9 @@ public class PrebidCustomEventBanner extends CustomEventBanner {
 
     @Override
     protected void onInvalidate() {
-        if ("audienceNetwork".equals(bidderName)) {
+        if (FACEBOOK_BIDDER_NAME.equals(bidderName)) {
             try {
-                adObject.getClass().getMethod("destroy").invoke(adObject);
+                adObject.getClass().getMethod(FACEBOOK_DESTROY_METHOD).invoke(adObject);
             } catch (Exception e) {
             }
         }
@@ -57,22 +59,22 @@ public class PrebidCustomEventBanner extends CustomEventBanner {
             @Override
             public void onResponded(JSONObject jsonObject) {
                 try {
-                    String adm = jsonObject.getString("adm");
+                    String adm = jsonObject.getString(PREBID_ADM);
                     JSONObject bid = new JSONObject(adm);
-                    String placementID = bid.getString("placement_id");
-                    Class<?> adViewClass = Class.forName("com.facebook.ads.AdView");
-                    Class<?> adSizeClass = Class.forName("com.facebook.ads.AdSize");
+                    String placementID = bid.getString(FACEBOOK_PLACEMENT_ID);
+                    Class<?> adViewClass = Class.forName(FACEBOOK_ADVIEW_CLASS);
+                    Class<?> adSizeClass = Class.forName(FACEBOOK_ADSIZE_CLASS);
                     Constructor<?> adSizeConstructor = adSizeClass.getConstructor(int.class, int.class);
                     Object adSize = adSizeConstructor.newInstance(width, height);
                     Constructor<?> adViewConstructor = adViewClass.getConstructor(Context.class, String.class, adSizeClass);
                     adObject = adViewConstructor.newInstance(context, placementID, adSize);
-                    Class<?> adListenerInterface = Class.forName("com.facebook.ads.AdListener");
+                    Class<?> adListenerInterface = Class.forName(FACEBOOK_ADLISTENER_INTERFACE);
                     Object newAdListener = Proxy.newProxyInstance(adListenerInterface.getClassLoader(), new Class<?>[]{adListenerInterface}, new InvocationHandler() {
                         @Override
                         public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-                            if (method.getName().equals("onError")) {
+                            if (method.getName().equals(FACEBOOK_ON_ERROR_METHOD)) {
                                 try {
-                                    Method getErrorCode = objects[1].getClass().getMethod("getErrorCode");
+                                    Method getErrorCode = objects[1].getClass().getMethod(FACEBOOK_GET_ERROR_CODE_METHOD);
                                     switch ((int) getErrorCode.invoke(objects[1])) {
                                         case 1000:
                                             customEventBannerListener.onBannerFailed(MoPubErrorCode.NO_CONNECTION);
@@ -97,11 +99,11 @@ public class PrebidCustomEventBanner extends CustomEventBanner {
 
                                 }
 
-                            } else if (method.getName().equals("onAdLoaded")) {
+                            } else if (method.getName().equals(FACEBOOK_ON_AD_LOADED_METHOD)) {
                                 if (customEventBannerListener != null) {
                                     customEventBannerListener.onBannerLoaded((View) adObject);
                                 }
-                            } else if (method.getName().equals("onAdClicked")) {
+                            } else if (method.getName().equals(FACEBOOK_ON_AD_CLICKED_METHOD)) {
                                 if (customEventBannerListener != null) {
                                     customEventBannerListener.onBannerClicked();
                                 }
@@ -109,9 +111,9 @@ public class PrebidCustomEventBanner extends CustomEventBanner {
                             return null;
                         }
                     });
-                    Method setAdListener = adViewClass.getMethod("setAdListener", adListenerInterface);
+                    Method setAdListener = adViewClass.getMethod(FACEBOOK_SET_AD_LISTENER_METHOD, adListenerInterface);
                     setAdListener.invoke(adObject, newAdListener);
-                    Method loadAdFromBid = adViewClass.getMethod("loadAdFromBid", String.class);
+                    Method loadAdFromBid = adViewClass.getMethod(FACEBOOK_LOAD_AD_FROM_BID_METHOD, String.class);
                     loadAdFromBid.invoke(adObject, adm);
                 } catch (Exception e) {
                     if (customEventBannerListener != null) {

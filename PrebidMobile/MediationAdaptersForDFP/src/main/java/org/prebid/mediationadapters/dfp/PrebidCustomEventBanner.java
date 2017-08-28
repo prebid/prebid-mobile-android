@@ -19,6 +19,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.*;
+
 public class PrebidCustomEventBanner implements CustomEventBanner {
     private String bidderName;
     private Object adObject;
@@ -27,9 +29,9 @@ public class PrebidCustomEventBanner implements CustomEventBanner {
     public void requestBannerAd(Context context, CustomEventBannerListener customEventBannerListener, String s, AdSize adSize, MediationAdRequest mediationAdRequest, Bundle bundle) {
         Log.d("FB-Integration", "Load Prebid content for Facebook");
         if (bundle != null) {
-            String cacheId = (String) bundle.get("hb_cache_id");
-            bidderName = (String) bundle.get("hb_bidder");
-            if ("audienceNetwork".equals(bidderName)) {
+            String cacheId = (String) bundle.get(PREBID_CACHE_ID);
+            bidderName = (String) bundle.get(PREBID_BIDDER);
+            if (FACEBOOK_BIDDER_NAME.equals(bidderName) && demandSet.contains(PrebidCustomEventSettings.Demand.FACEBOOK)) {
                 loadFacebookBanner(context, cacheId, adSize, customEventBannerListener);
             } else {
                 if (customEventBannerListener != null) {
@@ -48,22 +50,22 @@ public class PrebidCustomEventBanner implements CustomEventBanner {
             @Override
             public void onResponded(JSONObject jsonObject) {
                 try {
-                    String adm = jsonObject.getString("adm");
+                    String adm = jsonObject.getString(PREBID_ADM);
                     JSONObject bid = new JSONObject(adm);
-                    String placementID = bid.getString("placement_id");
-                    Class<?> adViewClass = Class.forName("com.facebook.ads.AdView");
-                    Class<?> adSizeClass = Class.forName("com.facebook.ads.AdSize");
+                    String placementID = bid.getString(FACEBOOK_PLACEMENT_ID);
+                    Class<?> adViewClass = Class.forName(FACEBOOK_ADVIEW_CLASS);
+                    Class<?> adSizeClass = Class.forName(FACEBOOK_ADSIZE_CLASS);
                     Constructor<?> adSizeConstructor = adSizeClass.getConstructor(int.class, int.class);
                     Object adSize = adSizeConstructor.newInstance(dfpAdSize.getWidth(), dfpAdSize.getHeight());
                     Constructor<?> adViewConstructor = adViewClass.getConstructor(Context.class, String.class, adSizeClass);
                     adObject = adViewConstructor.newInstance(context, placementID, adSize);
-                    Class<?> adListenerInterface = Class.forName("com.facebook.ads.AdListener");
+                    Class<?> adListenerInterface = Class.forName(FACEBOOK_ADLISTENER_INTERFACE);
                     Object newAdListener = Proxy.newProxyInstance(adListenerInterface.getClassLoader(), new Class<?>[]{adListenerInterface}, new InvocationHandler() {
                         @Override
                         public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-                            if (method.getName().equals("onError")) {
+                            if (method.getName().equals(FACEBOOK_ON_ERROR_METHOD)) {
                                 try {
-                                    Method getErrorCode = objects[1].getClass().getMethod("getErrorCode");
+                                    Method getErrorCode = objects[1].getClass().getMethod(FACEBOOK_GET_ERROR_CODE_METHOD);
                                     switch ((int) getErrorCode.invoke(objects[1])) {
                                         case 1000:
                                             customEventBannerListener.onAdFailedToLoad(AdRequest.ERROR_CODE_NETWORK_ERROR);
@@ -88,11 +90,11 @@ public class PrebidCustomEventBanner implements CustomEventBanner {
 
                                 }
 
-                            } else if (method.getName().equals("onAdLoaded")) {
+                            } else if (method.getName().equals(FACEBOOK_ON_AD_LOADED_METHOD)) {
                                 if (customEventBannerListener != null) {
                                     customEventBannerListener.onAdLoaded((View) adObject);
                                 }
-                            } else if (method.getName().equals("onAdClicked")) {
+                            } else if (method.getName().equals(FACEBOOK_ON_AD_CLICKED_METHOD)) {
                                 if (customEventBannerListener != null) {
                                     customEventBannerListener.onAdClicked();
                                 }
@@ -100,9 +102,9 @@ public class PrebidCustomEventBanner implements CustomEventBanner {
                             return null;
                         }
                     });
-                    Method setAdListener = adViewClass.getMethod("setAdListener", adListenerInterface);
+                    Method setAdListener = adViewClass.getMethod(FACEBOOK_SET_AD_LISTENER_METHOD, adListenerInterface);
                     setAdListener.invoke(adObject, newAdListener);
-                    Method loadAdFromBid = adViewClass.getMethod("loadAdFromBid", String.class);
+                    Method loadAdFromBid = adViewClass.getMethod(FACEBOOK_LOAD_AD_FROM_BID_METHOD, String.class);
                     loadAdFromBid.invoke(adObject, adm);
                 } catch (Exception e) {
                     if (customEventBannerListener != null) {
@@ -117,9 +119,9 @@ public class PrebidCustomEventBanner implements CustomEventBanner {
     // Google custom event banner implementation
     @Override
     public void onDestroy() {
-        if ("audienceNetwork".equals(bidderName)) {
+        if (FACEBOOK_BIDDER_NAME.equals(bidderName)) {
             try {
-                adObject.getClass().getMethod("destroy").invoke(adObject);
+                adObject.getClass().getMethod(FACEBOOK_DESTROY_METHOD).invoke(adObject);
             } catch (Exception e) {
             }
         }

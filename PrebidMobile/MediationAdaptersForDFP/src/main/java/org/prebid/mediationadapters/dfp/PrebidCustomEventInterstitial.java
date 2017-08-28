@@ -17,6 +17,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
+import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.*;
+
 public class PrebidCustomEventInterstitial implements CustomEventInterstitial {
     private String bidderName;
     private Object adObject;
@@ -24,9 +26,9 @@ public class PrebidCustomEventInterstitial implements CustomEventInterstitial {
     @Override
     public void requestInterstitialAd(Context context, CustomEventInterstitialListener customEventInterstitialListener, String s, MediationAdRequest mediationAdRequest, Bundle bundle) {
         if (bundle != null) {
-            String cacheId = (String) bundle.get("hb_cache_id");
-            bidderName = (String) bundle.get("hb_bidder");
-            if ("audienceNetwork".equals(bidderName)) {
+            String cacheId = (String) bundle.get(PREBID_CACHE_ID);
+            bidderName = (String) bundle.get(PREBID_BIDDER);
+            if (FACEBOOK_BIDDER_NAME.equals(bidderName) && demandSet.contains(PrebidCustomEventSettings.Demand.FACEBOOK)) {
                 loadFacebookInterstitial(context, cacheId, customEventInterstitialListener);
             } else {
                 if (customEventInterstitialListener != null) {
@@ -42,9 +44,9 @@ public class PrebidCustomEventInterstitial implements CustomEventInterstitial {
 
     @Override
     public void showInterstitial() {
-        if ("audienceNetwork".equals(bidderName)) {
+        if (FACEBOOK_BIDDER_NAME.equals(bidderName)) {
             try {
-                adObject.getClass().getMethod("show").invoke(adObject);
+                adObject.getClass().getMethod(FACEBOOK_SHOW_METHOD).invoke(adObject);
             } catch (Exception e) {
             }
         }
@@ -52,9 +54,9 @@ public class PrebidCustomEventInterstitial implements CustomEventInterstitial {
 
     @Override
     public void onDestroy() {
-        if ("audienceNetwork".equals(bidderName)) {
+        if (FACEBOOK_BIDDER_NAME.equals(bidderName)) {
             try {
-                adObject.getClass().getMethod("destroy").invoke(adObject);
+                adObject.getClass().getMethod(FACEBOOK_DESTROY_METHOD).invoke(adObject);
             } catch (Exception e) {
             }
         }
@@ -76,22 +78,22 @@ public class PrebidCustomEventInterstitial implements CustomEventInterstitial {
             public void onResponded(JSONObject jsonObject) {
                 try {
 
-                    String adm = jsonObject.getString("adm");
+                    String adm = jsonObject.getString(PREBID_ADM);
                     JSONObject bid = new JSONObject(adm);
-                    String placementID = bid.getString("placement_id");
-                    Class<?> interstitialClass = Class.forName("com.facebook.ads.InterstitialAd");
+                    String placementID = bid.getString(FACEBOOK_PLACEMENT_ID);
+                    Class<?> interstitialClass = Class.forName(FACEBOOK_INTERSTITIAL_CLASS);
                     Constructor<?> interstitialContructor = interstitialClass.getConstructor(Context.class, String.class);
                     adObject = interstitialContructor.newInstance(context, placementID);
-                    Class<?> adLisenterInterface = Class.forName("com.facebook.ads.InterstitialAdListener");
+                    Class<?> adLisenterInterface = Class.forName(FACEBOOK_INTERSTITIAL_ADLISTENER_INTERFACE);
                     Object newAdListener = Proxy.newProxyInstance(adLisenterInterface.getClassLoader(), new Class[]{adLisenterInterface}, new InvocationHandler() {
                         @Override
                         public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-                            if (method.getName().equals("onInterstitialDisplayed")) {
+                            if (method.getName().equals(FACEBOOK_ON_INTERSTITIAL_DISPLAYED_METHOD)) {
                                 customEventInterstitialListener.onAdOpened();
-                            } else if (method.getName().equals("onInterstitialDismissed")) {
+                            } else if (method.getName().equals(FACEBOOK_ON_INTERSTITIAL_DISMISSED_METHOD)) {
                                 customEventInterstitialListener.onAdClosed();
-                            } else if (method.getName().equals("onError")) {
-                                Method getErrorCode = objects[1].getClass().getMethod("getErrorCode");
+                            } else if (method.getName().equals(FACEBOOK_ON_ERROR_METHOD)) {
+                                Method getErrorCode = objects[1].getClass().getMethod(FACEBOOK_GET_ERROR_CODE_METHOD);
                                 switch ((int) getErrorCode.invoke(objects[1])) {
                                     case 1000:
                                         customEventInterstitialListener.onAdFailedToLoad(AdRequest.ERROR_CODE_NETWORK_ERROR);
@@ -112,17 +114,17 @@ public class PrebidCustomEventInterstitial implements CustomEventInterstitial {
                                         customEventInterstitialListener.onAdFailedToLoad(AdRequest.ERROR_CODE_INTERNAL_ERROR);
                                         break;
                                 }
-                            } else if (method.getName().equals("onAdLoaded")) {
+                            } else if (method.getName().equals(FACEBOOK_ON_AD_LOADED_METHOD)) {
                                 customEventInterstitialListener.onAdLoaded();
-                            } else if (method.getName().equals("onAdClicked")) {
+                            } else if (method.getName().equals(FACEBOOK_ON_AD_CLICKED_METHOD)) {
                                 customEventInterstitialListener.onAdClicked();
                             }
                             return null;
                         }
                     });
-                    Method setAdListener = interstitialClass.getMethod("setAdListener", adLisenterInterface);
+                    Method setAdListener = interstitialClass.getMethod(FACEBOOK_SET_AD_LISTENER_METHOD, adLisenterInterface);
                     setAdListener.invoke(adObject, newAdListener);
-                    Method loadAdFromBid = interstitialClass.getMethod("loadAdFromBid", String.class);
+                    Method loadAdFromBid = interstitialClass.getMethod(FACEBOOK_LOAD_AD_FROM_BID_METHOD, String.class);
                     loadAdFromBid.invoke(adObject, adm);
                 } catch (Exception e) {
                     if (customEventInterstitialListener != null) {
