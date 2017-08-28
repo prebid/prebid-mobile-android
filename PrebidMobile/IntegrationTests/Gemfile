@@ -1,0 +1,6 @@
+source "https://rubygems.org"
+
+gem "xamarin-test-cloud"
+gem "calabash-android"
+gem "calabash-cucumber"
+gem "rspec"

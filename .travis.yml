@@ -23,5 +23,7 @@ android:
 jdk:
   - oraclejdk8
 
+before_install:
+   - rvm install 2.0.0
 script:
     - ./testprebid.sh
