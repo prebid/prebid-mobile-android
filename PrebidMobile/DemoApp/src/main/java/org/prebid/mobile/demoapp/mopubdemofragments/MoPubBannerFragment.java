@@ -73,7 +73,6 @@ public class MoPubBannerFragment extends Fragment implements Prebid.OnAttachComp
         adView2.setLayoutParams(lp);
         adFrame.addView(adView2);
         //region Prebid API usage
-        adView2.setLocalExtras(new HashMap<String, Object>()); // add this line for FB demand
         Prebid.attachBidsWhenReady(adView2, Constants.BANNER_300x250, this, waitTime, this.getActivity());
         //endregion
 
