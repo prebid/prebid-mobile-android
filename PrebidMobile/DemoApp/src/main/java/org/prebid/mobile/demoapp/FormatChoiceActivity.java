@@ -50,6 +50,16 @@ public class FormatChoiceActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 }));
+                // todo remove this
+                rootView.addView(getTextView("Show Facebook Demand", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
+                        intent.putExtra(Constants.ADSERVER, "dfp");
+                        intent.putExtra(Constants.ADFORMAT, "facebook");
+                        startActivity(intent);
+                    }
+                }));
             } else if ("mopub".equals(adServerName)) {
                 rootView.addView(getTextView("Show Banner Example", new View.OnClickListener() {
                     @Override

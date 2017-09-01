@@ -210,7 +210,7 @@ public class Prebid {
                     }
                 }
             }
-            keywords.append("hb_creative_load_method:demand_sdk,"); // todo this should be returned by prebid server, and called webview_rendering, native_rendering
+            keywords.append("hb_creative_loadtype:demand_sdk,"); // todo this should be returned by prebid server, and called webview_rendering, native_rendering
             String prebidKeywords = keywords.toString();
             String adViewKeywords = (String) callMethodOnObject(adViewObj, "getKeywords");
             // retrieve keywords from mopub adview
@@ -287,8 +287,8 @@ public class Prebid {
                 }
             }
             // todo formalize the following lines. probably through prebid server
-            bundle.putString("hb_creative_load_method", "demand_sdk");
-            usedKeywordKeys.add("hb_creative_load_method");
+            bundle.putString("hb_creative_loadtype", "demand_sdk");
+            usedKeywordKeys.add("hb_creative_loadtype");
         }
     }
 
