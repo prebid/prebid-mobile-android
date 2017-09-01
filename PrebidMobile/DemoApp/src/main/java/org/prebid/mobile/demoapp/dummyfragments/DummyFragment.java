@@ -50,7 +50,7 @@ public class DummyFragment extends Fragment implements FBRequest.FBListener, AdL
         if (adView != null) {
             adView.destroy();
         }
-        adView = new AdView(this.getActivity(), "1959066997713356_1959836684303054", new AdSize(300, 250));
+        adView = new AdView(this.getActivity(), "1959066997713356_1959836684303054", new AdSize(-1, 250));
         adView.setAdListener(this);
         adFrame.addView(adView);
         try {

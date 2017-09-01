@@ -6,15 +6,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
-import org.prebid.mobile.core.TargetingParams;
 import org.prebid.mobile.demoapp.dfpdemofragments.DFPBannerFragment;
 import org.prebid.mobile.demoapp.dfpdemofragments.DFPInterstitialFragment;
+import org.prebid.mobile.demoapp.dfpdemofragments.FacebookForDFPFragment;
 import org.prebid.mobile.demoapp.dummyfragments.DummyFragment;
 import org.prebid.mobile.demoapp.mopubdemofragments.MoPubBannerFragment;
 import org.prebid.mobile.demoapp.mopubdemofragments.MoPubInterstitialFragment;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class DemoActivity extends AppCompatActivity {
     private Fragment demoFragment;
@@ -34,6 +31,8 @@ public class DemoActivity extends AppCompatActivity {
                     demoFragment = new DFPInterstitialFragment();
                 } else if ("dummy".equals(adFormat)) {
                     demoFragment = new DummyFragment();
+                } else if ("facebook".equals(adFormat)) {
+                    demoFragment = new FacebookForDFPFragment();
                 }
             } else if ("mopub".equals(adServerName)) {
                 String adFormat = intent.getExtras().getString(Constants.ADFORMAT);

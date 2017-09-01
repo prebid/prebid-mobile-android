@@ -15,7 +15,6 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
-import org.prebid.mediationadapters.dfp.PrebidCustomEventBanner;
 import org.prebid.mobile.core.LogUtil;
 import org.prebid.mobile.core.Prebid;
 import org.prebid.mobile.demoapp.Constants;
@@ -76,7 +75,7 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
                 LogUtil.d("DFP-Banner", "onAdLoaded");
             }
         };
-        
+
         return root;
     }
 
@@ -115,7 +114,7 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
         }
         return "undefined";
     }
-    
+
     private void setupBannerWithWait(final int waitTime) {
 
         FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame2);
@@ -126,10 +125,7 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
         adView2.setAdListener(adListener);
         adFrame.addView(adView2);
         //region PriceCheckForDFP API usage
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        builder.addCustomEventExtrasBundle(PrebidCustomEventBanner.class, new Bundle());
-        PublisherAdRequest request = builder.build();
-        Prebid.attachBidsWhenReady(request, Constants.BANNER_300x250, this, waitTime, this.getActivity());
+        Prebid.attachBidsWhenReady(new PublisherAdRequest.Builder().build(), Constants.BANNER_300x250, this, waitTime, this.getActivity());
         //endregion
 
     }

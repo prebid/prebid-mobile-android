@@ -15,10 +15,19 @@ import java.util.ArrayList;
 
 import static org.prebid.mobile.demoapp.Constants.BANNER_300x250;
 import static org.prebid.mobile.demoapp.Constants.BANNER_320x50;
+
 import static org.prebid.mobile.demoapp.Constants.INTERSTITIAL_FULLSCREEN;
 import static org.prebid.mobile.demoapp.Constants.PBS_ACCOUNT_ID;
 import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_300x250_APPNEXUS_DEMAND;
 import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_APPNEXUS_DEMAND;
+
+import static org.prebid.mobile.demoapp.Constants.FACEBOOK_300x250;
+import static org.prebid.mobile.demoapp.Constants.INTERSTITIAL_ADUNIT_ID;
+import static org.prebid.mobile.demoapp.Constants.PBS_ACCOUNT_ID;
+import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_300x250_APPNEXUS_DEMAND;
+import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_300x250_FACEBOOK_DEMAND;
+import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_320x50_APPNEXUS_DEMAND;
+
 
 public class PrebidApplication extends Application {
     /**
@@ -64,10 +73,14 @@ public class PrebidApplication extends Application {
         //Configure Interstitial Ad Unit
         InterstitialAdUnit adUnit3 = new InterstitialAdUnit(INTERSTITIAL_FULLSCREEN, PBS_CONFIG_APPNEXUS_DEMAND);
 
+        //Configure Ad Unit with facebook demand source
+        BannerAdUnit adUnit4 = new BannerAdUnit(FACEBOOK_300x250, PBS_CONFIG_300x250_FACEBOOK_DEMAND);
+        adUnit4.addSize(300, 250);
         // Add Configuration
         adUnits.add(adUnit1);
         adUnits.add(adUnit2);
         adUnits.add(adUnit3);
+        adUnits.add(adUnit4);
 
         // Set targeting
         TargetingParams.setGender(TargetingParams.GENDER.FEMALE);

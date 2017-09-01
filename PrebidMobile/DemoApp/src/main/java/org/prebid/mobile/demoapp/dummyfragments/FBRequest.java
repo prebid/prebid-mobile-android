@@ -37,7 +37,7 @@ public class FBRequest extends AsyncTask<Object, Object, JSONObject> {
                     "      { \n" +
                     "         \"id\":\"Interstitial Ad\",\n" +
                     "         \"banner\":{ \n" +
-                    "            \"w\":300,\n" +
+                    "            \"w\":-1,\n" +
                     "            \"h\":250\n" +
                     "         },\n" +
                     "         \"tagid\":\"1959066997713356_1959836684303054\",\n" +
