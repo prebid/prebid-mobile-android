@@ -1,4 +1,4 @@
-package org.prebid.mediationadapters.mopub;
+package org.prebid.demandsdkadapters.mopub;
 
 import android.content.Context;
 

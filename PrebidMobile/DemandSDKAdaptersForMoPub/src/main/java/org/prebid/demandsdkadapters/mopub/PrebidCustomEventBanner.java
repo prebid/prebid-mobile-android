@@ -1,4 +1,4 @@
-package org.prebid.mediationadapters.mopub;
+package org.prebid.demandsdkadapters.mopub;
 
 import android.content.Context;
 import android.util.Log;
@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Map;
 
-import static org.prebid.mediationadapters.mopub.PrebidCustomEventSettings.*;
+import static org.prebid.demandsdkadapters.mopub.PrebidCustomEventSettings.*;
 
 public class PrebidCustomEventBanner extends CustomEventBanner {
     private String bidderName;

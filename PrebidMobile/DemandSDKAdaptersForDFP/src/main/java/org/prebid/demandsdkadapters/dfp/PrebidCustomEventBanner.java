@@ -1,4 +1,4 @@
-package org.prebid.mediationadapters.dfp;
+package org.prebid.demandsdkadapters.dfp;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -19,22 +19,22 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.FACEBOOK_ADLISTENER_INTERFACE;
-import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.FACEBOOK_ADSIZE_CLASS;
-import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.FACEBOOK_ADVIEW_CLASS;
-import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.FACEBOOK_BIDDER_NAME;
-import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.FACEBOOK_DESTROY_METHOD;
-import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.FACEBOOK_GET_ERROR_CODE_METHOD;
-import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.FACEBOOK_LOAD_AD_FROM_BID_METHOD;
-import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.FACEBOOK_ON_AD_CLICKED_METHOD;
-import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.FACEBOOK_ON_AD_LOADED_METHOD;
-import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.FACEBOOK_ON_ERROR_METHOD;
-import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.FACEBOOK_PLACEMENT_ID;
-import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.FACEBOOK_SET_AD_LISTENER_METHOD;
-import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.PREBID_ADM;
-import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.PREBID_BIDDER;
-import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.PREBID_CACHE_ID;
-import static org.prebid.mediationadapters.dfp.PrebidCustomEventSettings.demandSet;
+import static org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings.FACEBOOK_ADLISTENER_INTERFACE;
+import static org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings.FACEBOOK_ADSIZE_CLASS;
+import static org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings.FACEBOOK_ADVIEW_CLASS;
+import static org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings.FACEBOOK_BIDDER_NAME;
+import static org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings.FACEBOOK_DESTROY_METHOD;
+import static org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings.FACEBOOK_GET_ERROR_CODE_METHOD;
+import static org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings.FACEBOOK_LOAD_AD_FROM_BID_METHOD;
+import static org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings.FACEBOOK_ON_AD_CLICKED_METHOD;
+import static org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings.FACEBOOK_ON_AD_LOADED_METHOD;
+import static org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings.FACEBOOK_ON_ERROR_METHOD;
+import static org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings.FACEBOOK_PLACEMENT_ID;
+import static org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings.FACEBOOK_SET_AD_LISTENER_METHOD;
+import static org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings.PREBID_ADM;
+import static org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings.PREBID_BIDDER;
+import static org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings.PREBID_CACHE_ID;
+import static org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings.demandSet;
 
 public class PrebidCustomEventBanner implements CustomEventBanner {
     private String bidderName;

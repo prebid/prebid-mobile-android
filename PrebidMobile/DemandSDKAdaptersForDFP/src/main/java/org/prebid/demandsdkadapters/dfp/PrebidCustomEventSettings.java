@@ -1,4 +1,4 @@
-package org.prebid.mediationadapters.dfp;
+package org.prebid.demandsdkadapters.dfp;
 
 import android.content.Context;
 

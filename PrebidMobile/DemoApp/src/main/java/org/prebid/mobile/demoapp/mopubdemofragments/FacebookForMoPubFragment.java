@@ -1,22 +1,20 @@
 package org.prebid.mobile.demoapp.mopubdemofragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
 
+import org.prebid.demandsdkadapters.mopub.PrebidCustomEventSettings;
 import org.prebid.mobile.core.Prebid;
 import org.prebid.mobile.demoapp.Constants;
 import org.prebid.mobile.demoapp.R;
@@ -31,6 +29,11 @@ public class FacebookForMoPubFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         root = inflater.inflate(R.layout.fragment_facebook, null);
+        try {
+            PrebidCustomEventSettings.enableDemand(PrebidCustomEventSettings.Demand.FACEBOOK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Button btnLoad = (Button) root.findViewById(R.id.loadBanner);
         btnLoad.setOnClickListener(new View.OnClickListener() {
             @Override
