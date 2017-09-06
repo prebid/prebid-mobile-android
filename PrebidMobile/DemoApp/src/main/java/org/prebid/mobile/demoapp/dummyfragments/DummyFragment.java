@@ -14,6 +14,7 @@ import com.facebook.ads.AdError;
 import com.facebook.ads.AdListener;
 import com.facebook.ads.AdSize;
 import com.facebook.ads.AdView;
+import com.facebook.ads.InterstitialAd;
 import com.facebook.ads.InterstitialAdListener;
 
 import org.json.JSONArray;
@@ -25,6 +26,7 @@ import org.prebid.mobile.demoapp.R;
 public class DummyFragment extends Fragment implements FBRequest.FBListener, AdListener, InterstitialAdListener {
     private View root;
     private AdView adView;
+    private InterstitialAd interstitialAd;
     private String bid;
 
     @Nullable
@@ -32,12 +34,20 @@ public class DummyFragment extends Fragment implements FBRequest.FBListener, AdL
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         super.onCreateView(inflater, container, savedInstanceState);
-        root = inflater.inflate(R.layout.fragment_banner, null);
+        root = inflater.inflate(R.layout.fragment_facebook, null);
         Button btnLoad = (Button) root.findViewById(R.id.loadBanner);
         btnLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FBRequest rq = new FBRequest(DummyFragment.this, DummyFragment.this.getActivity());
+                FBRequest rq = new FBRequest("banner", DummyFragment.this, DummyFragment.this.getActivity());
+                rq.execute();
+            }
+        });
+        Button btnLoadInterstitial = (Button) root.findViewById(R.id.loadInterstitial);
+        btnLoadInterstitial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FBRequest rq = new FBRequest("interstitial", DummyFragment.this, DummyFragment.this.getActivity());
                 rq.execute();
             }
         });
@@ -59,12 +69,30 @@ public class DummyFragment extends Fragment implements FBRequest.FBListener, AdL
             JSONObject r = b.getJSONObject(0);
             bid = r.getString("adm");
             JSONObject jsonObject1 = new JSONObject(bid);
-//            jsonObject1.put("template", 7);
             bid = jsonObject1.toString();
         } catch (JSONException e) {
             bid = "";
         }
         adView.loadAdFromBid(bid);
+    }
+
+    private void loadInterstitial(JSONObject jsonObject) {
+        if (interstitialAd != null) {
+            interstitialAd.destroy();
+        }
+        interstitialAd = new InterstitialAd(this.getActivity(), "1959066997713356_1960406244246098");
+        interstitialAd.setAdListener(this);
+        try {
+            JSONArray seat = jsonObject.getJSONArray("seatbid");
+            JSONArray b = seat.getJSONObject(0).getJSONArray("bid");
+            JSONObject r = b.getJSONObject(0);
+            bid = r.getString("adm");
+            JSONObject jsonObject1 = new JSONObject(bid);
+            bid = jsonObject1.toString();
+        } catch (JSONException e) {
+            bid = "";
+        }
+        interstitialAd.loadAdFromBid(bid);
     }
 
     @Override
@@ -89,7 +117,20 @@ public class DummyFragment extends Fragment implements FBRequest.FBListener, AdL
 
     @Override
     public void onFBResponded(JSONObject jsonObject) {
-        loadBanner(jsonObject);
+        try {
+            String type = jsonObject.getString("type");
+            switch (type) {
+                case "banner":
+                    loadBanner(jsonObject);
+                    break;
+                case "interstitial":
+                    loadInterstitial(jsonObject);
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

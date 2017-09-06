@@ -50,7 +50,6 @@ public class FormatChoiceActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 }));
-                // todo remove this
                 rootView.addView(getTextView("Show Facebook Demand", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -76,6 +75,15 @@ public class FormatChoiceActivity extends AppCompatActivity {
                         Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
                         intent.putExtra(Constants.ADSERVER, "mopub");
                         intent.putExtra(Constants.ADFORMAT, "interstitial");
+                        startActivity(intent);
+                    }
+                }));
+                rootView.addView(getTextView("Show Facebook Demand", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
+                        intent.putExtra(Constants.ADSERVER, "mopub");
+                        intent.putExtra(Constants.ADFORMAT, "facebook");
                         startActivity(intent);
                     }
                 }));

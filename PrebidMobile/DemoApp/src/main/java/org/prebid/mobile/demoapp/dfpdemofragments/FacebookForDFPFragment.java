@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
@@ -18,6 +19,7 @@ import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
 
 import org.prebid.mediationadapters.dfp.PrebidCustomEventBanner;
 import org.prebid.mediationadapters.dfp.PrebidCustomEventInterstitial;
+import org.prebid.mediationadapters.dfp.PrebidCustomEventSettings;
 import org.prebid.mobile.core.Prebid;
 import org.prebid.mobile.demoapp.Constants;
 import org.prebid.mobile.demoapp.R;
@@ -30,6 +32,11 @@ public class FacebookForDFPFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         root = inflater.inflate(R.layout.fragment_facebook, null);
+        try {
+            PrebidCustomEventSettings.enableDemand(PrebidCustomEventSettings.Demand.FACEBOOK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Button btnLoad = (Button) root.findViewById(R.id.loadBanner);
         btnLoad.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,7 +44,7 @@ public class FacebookForDFPFragment extends Fragment {
                 loadDFPBanner();
             }
         });
-        Button buttonLoadInterstitial = (Button) root.findViewById(R.id.loadInterstitial);
+        TextView buttonLoadInterstitial = (Button) root.findViewById(R.id.loadInterstitial);
         buttonLoadInterstitial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,9 +65,10 @@ public class FacebookForDFPFragment extends Fragment {
         //region enable custom event
         builder.addCustomEventExtrasBundle(PrebidCustomEventBanner.class, new Bundle());
         builder.addKeyword("prebid_banner");
-        //endregion
         PublisherAdRequest request = builder.build();
-        Prebid.attachBids(request, Constants.FACEBOOK_300x250, this.getActivity());
+//        Prebid.attachBids(request, Constants.FACEBOOK_300x250, this.getActivity());
+        Prebid.attachBids(request, Constants.BANNER_300x250, this.getActivity()); // todo change this back to test facebook adapter
+        //endregion
         adView.loadAd(request);
     }
 
@@ -78,9 +86,9 @@ public class FacebookForDFPFragment extends Fragment {
         //region enable custom event
         builder.addCustomEventExtrasBundle(PrebidCustomEventInterstitial.class, new Bundle());
         builder.addKeyword("prebid_interstitial");
-        //endregion
         PublisherAdRequest request = builder.build();
         Prebid.attachBids(request, Constants.BANNER_300x250, this.getActivity());
+        //endregion
         interstitialAd.loadAd(request);
     }
 }
