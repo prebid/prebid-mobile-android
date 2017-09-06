@@ -27,57 +27,114 @@ public class FBRequest extends AsyncTask<Object, Object, JSONObject> {
 
     private JSONObject postData;
     private FBListener listener;
+    private String type;
 
-    public FBRequest(FBListener listener, Context context) {
+    public FBRequest(String type, FBListener listener, Context context) {
         this.listener = listener;
-        try {
-            postData = new JSONObject("{ \n" +
-                    "   \"id\":\"d3013e9e-ca55-4a86-9baa-d44e31355e1d\",\n" +
-                    "   \"imp\":[ \n" +
-                    "      { \n" +
-                    "         \"id\":\"Interstitial Ad\",\n" +
-                    "         \"banner\":{ \n" +
-                    "            \"w\":-1,\n" +
-                    "            \"h\":250\n" +
-                    "         },\n" +
-                    "         \"tagid\":\"1959066997713356_1959836684303054\",\n" +
-                    "         \"instl\":0\n" +
-                    "      }\n" +
-                    "   ],\n" +
-                    "   \"app\":{ \n" +
-                    "      \"bundle\":\"org.prebid.mobile.demoapp\",\n" +
-                    "      \"ver\":\"0.0.1\",\n" +
-                    "      \"publisher\":{ \n" +
-                    "         \"id\":\"1959066997713356\"\n" +
-                    "      }\n" +
-                    "   },\n" +
-                    "   \"device\":{\n" +
-                    "      \"ifa\":\"19e7a8e3-4544-49f4-bfb1-99370ecfbc73\",\n" +
-                    "      \"ip\":\"10.6.252.173\",\n" +
-                    "      \"ua\": \"Mozilla/5.0 (Linux; Android 7.0; SM-G935U Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/59.0.3071.125 Mobile Safari/537.36\",\n" +
-                    "      \"dnt\":0,\n" +
-                    "      \"make\":\"samsung\",\n" +
-                    "      \"model\":\"SM-G935U\",\n" +
-                    "      \"os\":\"android\",\n" +
-                    "      \"osv\": \"24\",\n" +
-                    "      \"h\":\"568\",\n" +
-                    "      \"w\":\"320\"\n" +
-                    "   },\n" +
-                    "   \"user\":{\n" +
-                    "      \"buyeruid\":\"eJxNUV1rgzAU/S8+a8g1ps69pZqtodZIElfGGKLTjsL6QctgMPbfd1O7srfk5OTcc879DuZNVZQyuA8Op3dyPI39diC7Q7/9GMkw7g7d8RiEQS6MUdIgCy82N1JW7VoVboEIm1EPFsv2SRqrdIVYQmJOaISf9+PX55mg6LDdv195uajFXJXKPSP1hYVJyMM0BAhhFkL6iizxUONTNzLoNgOwmHIKlGWQ8YTTnkLaQfbWI1Fb5In9cDpsB68urXfQqgLhWZokPeNJBJu4i/DIogyGt4jC2ANNs4FuMj+rrr1x/EAJ/NNwauVrAU5jdkdZCmTGY3xvqsn4pvs4j3hfiaXnnbvd+fMSsdS5uDQ67tvGIqCK1urG5HLqDwfOG1V6izA14rPeMqx0IUtE7Cp6zBhvvEBlnSjLvwVoezWcEl+90drJm9q0nIVUjwvnS0g8RThn1Lxxt24mG5W4RCxwz+Ky50q6tTbL1j3X8ipYyMpOgRlO+/kFU76RQA==\"\n" +
-                    "   },\n" +
-                    "   \"ext\":{ \n" +
-                    "      \"platformid\":442648859414574\n" +
-                    "   },\n" +
-                    "   \"at\":1,\n" +
-                    "   \"tmax\":1000,\n" +
-                    "   \"test\":1\n" +
-                    "}");
-            JSONObject obj = (JSONObject) postData.get("user");
-            obj.put("buyeruid", BidderTokenProvider.getBidderToken(context));
-        } catch (JSONException e) {
-            postData = new JSONObject();
+        this.type = type;
+        switch (type) {
+            case "banner":
+                try {
+                    postData = new JSONObject("{ \n" +
+                            "   \"id\":\"d3013e9e-ca55-4a86-9baa-d44e31355e1d\",\n" +
+                            "   \"imp\":[ \n" +
+                            "      { \n" +
+                            "         \"id\":\"Interstitial Ad\",\n" +
+                            "         \"banner\":{ \n" +
+                            "            \"w\":-1,\n" +
+                            "            \"h\":250\n" +
+                            "         },\n" +
+                            "         \"tagid\":\"1959066997713356_1959836684303054\",\n" +
+                            "         \"instl\":0\n" +
+                            "      }\n" +
+                            "   ],\n" +
+                            "   \"app\":{ \n" +
+                            "      \"bundle\":\"org.prebid.mobile.demoapp\",\n" +
+                            "      \"ver\":\"0.0.1\",\n" +
+                            "      \"publisher\":{ \n" +
+                            "         \"id\":\"1959066997713356\"\n" +
+                            "      }\n" +
+                            "   },\n" +
+                            "   \"device\":{\n" +
+                            "      \"ifa\":\"19e7a8e3-4544-49f4-bfb1-99370ecfbc73\",\n" +
+                            "      \"ip\":\"10.6.252.173\",\n" +
+                            "      \"ua\": \"Mozilla/5.0 (Linux; Android 7.0; SM-G935U Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/59.0.3071.125 Mobile Safari/537.36\",\n" +
+                            "      \"dnt\":0,\n" +
+                            "      \"make\":\"samsung\",\n" +
+                            "      \"model\":\"SM-G935U\",\n" +
+                            "      \"os\":\"android\",\n" +
+                            "      \"osv\": \"24\",\n" +
+                            "      \"h\":\"568\",\n" +
+                            "      \"w\":\"320\"\n" +
+                            "   },\n" +
+                            "   \"user\":{\n" +
+                            "      \"buyeruid\":\"eJxNUV1rgzAU/S8+a8g1ps69pZqtodZIElfGGKLTjsL6QctgMPbfd1O7srfk5OTcc879DuZNVZQyuA8Op3dyPI39diC7Q7/9GMkw7g7d8RiEQS6MUdIgCy82N1JW7VoVboEIm1EPFsv2SRqrdIVYQmJOaISf9+PX55mg6LDdv195uajFXJXKPSP1hYVJyMM0BAhhFkL6iizxUONTNzLoNgOwmHIKlGWQ8YTTnkLaQfbWI1Fb5In9cDpsB68urXfQqgLhWZokPeNJBJu4i/DIogyGt4jC2ANNs4FuMj+rrr1x/EAJ/NNwauVrAU5jdkdZCmTGY3xvqsn4pvs4j3hfiaXnnbvd+fMSsdS5uDQ67tvGIqCK1urG5HLqDwfOG1V6izA14rPeMqx0IUtE7Cp6zBhvvEBlnSjLvwVoezWcEl+90drJm9q0nIVUjwvnS0g8RThn1Lxxt24mG5W4RCxwz+Ky50q6tTbL1j3X8ipYyMpOgRlO+/kFU76RQA==\"\n" +
+                            "   },\n" +
+                            "   \"ext\":{ \n" +
+                            "      \"platformid\":442648859414574\n" +
+                            "   },\n" +
+                            "   \"at\":1,\n" +
+                            "   \"tmax\":1000,\n" +
+                            "   \"test\":1\n" +
+                            "}");
+                    JSONObject obj = (JSONObject) postData.get("user");
+                    obj.put("buyeruid", BidderTokenProvider.getBidderToken(context));
+                } catch (JSONException e) {
+                    postData = new JSONObject();
+                }
+                break;
+            case "interstitial":
+                try {
+                    postData = new JSONObject("{ \n" +
+                            "   \"id\":\"d3013e9e-ca55-4a86-9baa-d44e31355e1d\",\n" +
+                            "   \"imp\":[ \n" +
+                            "      { \n" +
+                            "         \"id\":\"Interstitial Ad\",\n" +
+                            "         \"banner\":{ \n" +
+                            "            \"w\":-1,\n" +
+                            "            \"h\":250\n" +
+                            "         },\n" +
+                            "         \"tagid\":\"1959066997713356_1960406244246098\",\n" +
+                            "         \"instl\":1\n" +
+                            "      }\n" +
+                            "   ],\n" +
+                            "   \"app\":{ \n" +
+                            "      \"bundle\":\"org.prebid.mobile.demoapp\",\n" +
+                            "      \"ver\":\"0.0.1\",\n" +
+                            "      \"publisher\":{ \n" +
+                            "         \"id\":\"1959066997713356\"\n" +
+                            "      }\n" +
+                            "   },\n" +
+                            "   \"device\":{\n" +
+                            "      \"ifa\":\"19e7a8e3-4544-49f4-bfb1-99370ecfbc73\",\n" +
+                            "      \"ip\":\"10.6.252.173\",\n" +
+                            "      \"ua\": \"Mozilla/5.0 (Linux; Android 7.0; SM-G935U Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/59.0.3071.125 Mobile Safari/537.36\",\n" +
+                            "      \"dnt\":0,\n" +
+                            "      \"make\":\"samsung\",\n" +
+                            "      \"model\":\"SM-G935U\",\n" +
+                            "      \"os\":\"android\",\n" +
+                            "      \"osv\": \"24\",\n" +
+                            "      \"h\":\"568\",\n" +
+                            "      \"w\":\"320\"\n" +
+                            "   },\n" +
+                            "   \"user\":{\n" +
+                            "      \"buyeruid\":\"eJxNUV1rgzAU/S8+a8g1ps69pZqtodZIElfGGKLTjsL6QctgMPbfd1O7srfk5OTcc879DuZNVZQyuA8Op3dyPI39diC7Q7/9GMkw7g7d8RiEQS6MUdIgCy82N1JW7VoVboEIm1EPFsv2SRqrdIVYQmJOaISf9+PX55mg6LDdv195uajFXJXKPSP1hYVJyMM0BAhhFkL6iizxUONTNzLoNgOwmHIKlGWQ8YTTnkLaQfbWI1Fb5In9cDpsB68urXfQqgLhWZokPeNJBJu4i/DIogyGt4jC2ANNs4FuMj+rrr1x/EAJ/NNwauVrAU5jdkdZCmTGY3xvqsn4pvs4j3hfiaXnnbvd+fMSsdS5uDQ67tvGIqCK1urG5HLqDwfOG1V6izA14rPeMqx0IUtE7Cp6zBhvvEBlnSjLvwVoezWcEl+90drJm9q0nIVUjwvnS0g8RThn1Lxxt24mG5W4RCxwz+Ky50q6tTbL1j3X8ipYyMpOgRlO+/kFU76RQA==\"\n" +
+                            "   },\n" +
+                            "   \"ext\":{ \n" +
+                            "      \"platformid\":442648859414574\n" +
+                            "   },\n" +
+                            "   \"at\":1,\n" +
+                            "   \"tmax\":1000,\n" +
+                            "   \"test\":1\n" +
+                            "}");
+                    JSONObject obj = (JSONObject) postData.get("user");
+                    obj.put("buyeruid", BidderTokenProvider.getBidderToken(context));
+                } catch (JSONException e) {
+                    postData = new JSONObject();
+                }
+                break;
         }
+
 
     }
 
@@ -134,6 +191,11 @@ public class FBRequest extends AsyncTask<Object, Object, JSONObject> {
     @Override
     protected void onPostExecute(JSONObject jsonObject) {
         if (listener != null) {
+            try {
+                jsonObject.put("type", type);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             listener.onFBResponded(jsonObject);
         }
     }

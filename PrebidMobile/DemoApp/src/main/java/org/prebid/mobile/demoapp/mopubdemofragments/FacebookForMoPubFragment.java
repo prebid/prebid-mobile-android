@@ -1,14 +1,17 @@
 package org.prebid.mobile.demoapp.mopubdemofragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
@@ -35,8 +38,8 @@ public class FacebookForMoPubFragment extends Fragment {
                 loadMoPubBanner();
             }
         });
-        Button buttonLoadInterstitial = (Button) root.findViewById(R.id.loadInterstitial);
-        buttonLoadInterstitial.setOnClickListener(new View.OnClickListener() {
+        Button loadInterstitial = (Button) root.findViewById(R.id.loadInterstitial);
+        loadInterstitial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 loadMoPubInterstitial();
@@ -52,7 +55,7 @@ public class FacebookForMoPubFragment extends Fragment {
             adView.destroy();
         }
         adView = new MoPubView(this.getActivity());
-        adView.setAdUnitId(Constants.MOPUB_AD_UNIT_ID_1); // todo update this
+        adView.setAdUnitId("bcef78630d754295a1a7757b434941d1");
         adView.setAutorefreshEnabled(true);
         adView.setMinimumWidth(300);
         adView.setMinimumHeight(250);
@@ -66,7 +69,7 @@ public class FacebookForMoPubFragment extends Fragment {
         if (interstitialAdView != null) {
             interstitialAdView.destroy();
         }
-        interstitialAdView = new MoPubInterstitial(this.getActivity(), "fc82df5c964945c79cceef4c5666e1e2");
+        interstitialAdView = new MoPubInterstitial(this.getActivity(), "1bfc4a07a3054cac9d349a072a171173");
         Prebid.attachBids(interstitialAdView, Constants.INTERSTITIAL_ADUNIT_ID, getContext()); // todo update this
         interstitialAdView.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
             @Override

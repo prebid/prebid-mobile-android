@@ -10,6 +10,7 @@ import org.prebid.mobile.demoapp.dfpdemofragments.DFPBannerFragment;
 import org.prebid.mobile.demoapp.dfpdemofragments.DFPInterstitialFragment;
 import org.prebid.mobile.demoapp.dfpdemofragments.FacebookForDFPFragment;
 import org.prebid.mobile.demoapp.dummyfragments.DummyFragment;
+import org.prebid.mobile.demoapp.mopubdemofragments.FacebookForMoPubFragment;
 import org.prebid.mobile.demoapp.mopubdemofragments.MoPubBannerFragment;
 import org.prebid.mobile.demoapp.mopubdemofragments.MoPubInterstitialFragment;
 
@@ -40,6 +41,8 @@ public class DemoActivity extends AppCompatActivity {
                     demoFragment = new MoPubBannerFragment();
                 } else if ("interstitial".equals(adFormat)) {
                     demoFragment = new MoPubInterstitialFragment();
+                } else if ("facebook".equals(adFormat)) {
+                    demoFragment = new FacebookForMoPubFragment();
                 }
             }
         }
