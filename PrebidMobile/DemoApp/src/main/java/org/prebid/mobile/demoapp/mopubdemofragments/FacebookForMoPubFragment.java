@@ -28,11 +28,6 @@ public class FacebookForMoPubFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         root = inflater.inflate(R.layout.fragment_facebook, null);
-        try {
-            PrebidCustomEventSettings.enableDemand(PrebidCustomEventSettings.Demand.FACEBOOK);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         Button btnLoad = (Button) root.findViewById(R.id.loadBanner);
         btnLoad.setOnClickListener(new View.OnClickListener() {
             @Override

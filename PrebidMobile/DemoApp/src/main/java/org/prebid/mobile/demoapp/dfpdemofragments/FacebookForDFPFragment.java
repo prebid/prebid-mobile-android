@@ -19,7 +19,6 @@ import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
 
 import org.prebid.demandsdkadapters.dfp.PrebidCustomEventBanner;
 import org.prebid.demandsdkadapters.dfp.PrebidCustomEventInterstitial;
-import org.prebid.demandsdkadapters.common.PrebidCustomEventSettings;
 import org.prebid.mobile.core.Prebid;
 import org.prebid.mobile.demoapp.Constants;
 import org.prebid.mobile.demoapp.R;
@@ -32,11 +31,6 @@ public class FacebookForDFPFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         root = inflater.inflate(R.layout.fragment_facebook, null);
-        try {
-            PrebidCustomEventSettings.enableDemand(PrebidCustomEventSettings.Demand.FACEBOOK);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         Button btnLoad = (Button) root.findViewById(R.id.loadBanner);
         btnLoad.setOnClickListener(new View.OnClickListener() {
             @Override
