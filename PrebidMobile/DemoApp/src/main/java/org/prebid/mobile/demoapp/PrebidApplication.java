@@ -4,6 +4,7 @@ import android.app.Application;
 import android.os.Build;
 import android.webkit.WebView;
 
+import org.prebid.demandsdkadapters.common.PrebidCustomEventSettings;
 import org.prebid.mobile.core.AdUnit;
 import org.prebid.mobile.core.BannerAdUnit;
 import org.prebid.mobile.core.InterstitialAdUnit;
@@ -89,6 +90,11 @@ public class PrebidApplication extends Application {
         try {
             Prebid.init(getApplicationContext(), adUnits, PBS_ACCOUNT_ID);
         } catch (PrebidException e) {
+            e.printStackTrace();
+        }
+        try {
+            PrebidCustomEventSettings.enableDemand(PrebidCustomEventSettings.Demand.FACEBOOK);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
