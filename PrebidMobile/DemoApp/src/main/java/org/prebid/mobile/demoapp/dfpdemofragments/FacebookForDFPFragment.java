@@ -19,7 +19,7 @@ import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
 
 import org.prebid.demandsdkadapters.dfp.PrebidCustomEventBanner;
 import org.prebid.demandsdkadapters.dfp.PrebidCustomEventInterstitial;
-import org.prebid.demandsdkadapters.dfp.PrebidCustomEventSettings;
+import org.prebid.demandsdkadapters.common.PrebidCustomEventSettings;
 import org.prebid.mobile.core.Prebid;
 import org.prebid.mobile.demoapp.Constants;
 import org.prebid.mobile.demoapp.R;
