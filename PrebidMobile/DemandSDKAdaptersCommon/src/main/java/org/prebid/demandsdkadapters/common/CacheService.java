@@ -1,4 +1,4 @@
-package org.prebid.mobile.prebidserver;
+package org.prebid.demandsdkadapters.common;
 
 import android.os.AsyncTask;
 
