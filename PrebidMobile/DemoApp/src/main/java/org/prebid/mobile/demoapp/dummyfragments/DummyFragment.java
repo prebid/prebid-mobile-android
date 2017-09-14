@@ -97,12 +97,14 @@ public class DummyFragment extends Fragment implements FBRequest.FBListener, AdL
 
     @Override
     public void onError(Ad ad, AdError adError) {
-
+        adError.getErrorMessage();
     }
 
     @Override
     public void onAdLoaded(Ad ad) {
-
+        if (ad instanceof InterstitialAd) {
+            ((InterstitialAd) ad).show();
+        }
     }
 
     @Override

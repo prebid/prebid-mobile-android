@@ -1,35 +1,39 @@
 package org.prebid.demandsdkadapters.common;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
 
 import org.json.JSONObject;
 import org.prebid.mobile.core.ErrorCode;
+import org.prebid.mobile.core.PrebidDemandSettings;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_ADLISTENER_INTERFACE;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_ADSIZE_CLASS;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_ADVIEW_CLASS;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_DESTROY_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_GET_ERROR_CODE_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_LOAD_AD_FROM_BID_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_ON_AD_CLICKED_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_ON_AD_LOADED_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_ON_ERROR_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_PLACEMENT_ID;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_SET_AD_LISTENER_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.PREBID_ADM;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ADLISTENER_INTERFACE;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ADSIZE_CLASS;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ADVIEW_CLASS;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_DESTROY_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_GET_ERROR_CODE_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_LOAD_AD_FROM_BID_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ON_AD_CLICKED_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ON_AD_LOADED_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ON_ERROR_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_PLACEMENT_ID;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_SET_AD_LISTENER_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_ADM;
 
 public class BannerController {
     private Object adObject;
-    private PrebidCustomEventSettings.Demand demand;
+    private PrebidDemandSettings.Demand demand;
     private String cacheId;
 
-    public BannerController(String cacheId, PrebidCustomEventSettings.Demand demand) {
+    public BannerController(String cacheId, PrebidDemandSettings.Demand demand) {
         this.demand = demand;
         this.cacheId = cacheId;
     }
@@ -40,7 +44,7 @@ public class BannerController {
             public void onResponded(JSONObject jsonObject) {
                 switch (demand) {
                     case FACEBOOK:
-                        loadFacebookBanner(context, jsonObject, width, height, listener);
+                        loadFacebookBanner(context, jsonObject, height, listener);
                         break;
                 }
             }
@@ -49,21 +53,19 @@ public class BannerController {
 
     }
 
-    private void loadFacebookBanner(Context context, JSONObject cacheResponse, int width, int height, final AdListener listener) { // todo retrieve this from cache response
+    private void loadFacebookBanner(Context context, JSONObject cacheResponse, int height, final AdListener listener) {
         try {
             String adm = cacheResponse.getString(PREBID_ADM);
-            // todo remove hack
-            adm = "{\"type\":\"ID\",\"bid_id\":\"5684915014742322033\",\"placement_id\":\"1959066997713356_1959836684303054\",\"resolved_placement_id\":\"1959066997713356_1959836684303054\",\"sdk_version\":\"4.26.1-alpha-AppNexus\",\"device_id\":\"19e7a8e3-4544-49f4-bfb1-99370ecfbc73\",\"template\":7,\"payload\":\"null\"}";
             JSONObject bid = new JSONObject(adm);
             String placementID = bid.getString(FACEBOOK_PLACEMENT_ID);
             Class<?> adViewClass = Class.forName(FACEBOOK_ADVIEW_CLASS);
             Class<?> adSizeClass = Class.forName(FACEBOOK_ADSIZE_CLASS);
             Constructor<?> adSizeConstructor = adSizeClass.getConstructor(int.class, int.class);
-            // todo add this back when facebook fixes it
-//                    Object adSize = adSizeConstructor.newInstance(dfpAdSize.getWidth(), dfpAdSize.getHeight());
             Object adSize = adSizeConstructor.newInstance(-1, height);
             Constructor<?> adViewConstructor = adViewClass.getConstructor(Context.class, String.class, adSizeClass);
             adObject = adViewConstructor.newInstance(context, placementID, adSize);
+            ((Activity) context).getWindow().addContentView((View) adObject, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            ((View) adObject).setVisibility(View.GONE);
             Class<?> adListenerInterface = Class.forName(FACEBOOK_ADLISTENER_INTERFACE);
             Object newAdListener = Proxy.newProxyInstance(adListenerInterface.getClassLoader(), new Class<?>[]{adListenerInterface}, new InvocationHandler() {
                 @Override
@@ -99,6 +101,7 @@ public class BannerController {
                         }
 
                     } else if (method.getName().equals(FACEBOOK_ON_AD_LOADED_METHOD)) {
+                        ((View) adObject).setVisibility(View.VISIBLE);
                         listener.onAdLoaded(adObject);
                     } else if (method.getName().equals(FACEBOOK_ON_AD_CLICKED_METHOD)) {
                         listener.onAdClicked(adObject);

@@ -35,6 +35,7 @@ public class Settings {
     public static final String REQUEST_GENDER = "gender";
     public static final String REQUEST_LANGUAGE = "language";
     public static final String REQUEST_DEVICE = "device";
+    public static final String REQUEST_IP = "ip";
     public static final String REQUEST_APP = "app";
     public static final String REQUEST_DEVICE_MAKE = "make";
     public static final String REQUEST_DEVICE_MODEL = "model";

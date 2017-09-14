@@ -29,9 +29,13 @@ import org.prebid.mobile.prebidserver.internal.Settings;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -427,6 +431,32 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 device.put(Settings.REQUEST_GEO, geo);
             }
 
+            // ip address
+            String ip = "";
+            try {
+                List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+                for (NetworkInterface intf : interfaces) {
+                    List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                    for (InetAddress addr : addrs) {
+                        if (!addr.isLoopbackAddress()) {
+                            String sAddr = addr.getHostAddress();
+                            //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
+                            boolean isIPv4 = sAddr.indexOf(':') < 0;
+
+                            if (isIPv4) {
+                                ip = sAddr;
+                            } else {
+                                int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
+                                ip = delim < 0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
+                            }
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+            }
+            device.put(Settings.REQUEST_IP, ip);
+
+
             // limited ad tracking
             device.put(Settings.REQUEST_LMT, AdvertisingIDUtil.isLimitAdTracking() ? 1 : 0);
             if (!AdvertisingIDUtil.isLimitAdTracking() && !TextUtils.isEmpty(AdvertisingIDUtil.getAAID())) {
@@ -437,11 +467,11 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             // os
             device.put(Settings.REQUEST_OS, Settings.os);
             device.put(Settings.REQUEST_OS_VERSION, String.valueOf(Build.VERSION.SDK_INT));
-            // language
-            if (!TextUtils.isEmpty(Settings.language)) {
-                device.put(Settings.REQUEST_LANGUAGE, Settings.language);
-            }
-        } catch (JSONException e) {
+
+        } catch (
+                JSONException e)
+
+        {
         }
         return device;
     }

@@ -26,6 +26,7 @@ public class PrebidException extends Exception {
         UNABLE_TO_INITIALIZE_DEMAND_SOURCE("Unable to instantiating the adapter."),
         INVALID_ACCOUNT_ID("Invalid input of account id.");
 
+
         private String error;
 
         PrebidError(String error) {

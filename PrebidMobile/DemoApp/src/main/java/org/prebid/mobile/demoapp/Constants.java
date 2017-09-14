@@ -10,6 +10,7 @@ public class Constants {
     public static final String INTERSTITIAL_FULLSCREEN = "Interstitial_FullScreen";
 
     public static final String FACEBOOK_300x250 = "Facebook_300x250";
+    public static final String FACEBOOK_INTERSTITIAL = "Facebook_Interstitial";
     // MoPub Banner
     public static final String MOPUB_BANNER_ADUNIT_ID_320x50 = "1819c823abe34641812d1fc2d1c78920";
     public static final String MOPUB_BANNER_ADUNIT_ID_300x250 = "a9cb8ff85fef4b50b457e3b11119aabf";
@@ -33,6 +34,7 @@ public class Constants {
     public static final String PBS_CONFIG_300x250_APPNEXUS_DEMAND = "0c286d00-b3ee-4550-b15d-f71f8e746865";
     public static final String PBS_CONFIG_INTERSTITIAL_DEMAND = "35f1d17d-c99a-4d55-800e-062b80750d65";
     public static final String PBS_CONFIG_300x250_FACEBOOK_DEMAND = "56412d4d-dc12-4d79-b072-cf498fed287c";
+    public static final String PBS_CONFIG_INTERSTITIAL_FACEBOOK_DEMAND = "56d7891b-31b4-452f-8ee5-b0f4ade5c3e0";
     public static final String PBS_ACCOUNT_ID = "bfa84af2-bd16-4d35-96ad-31c6bb888df0";
     // App Constants
     public static final String ADSERVER = "AdServerName";

@@ -11,13 +11,13 @@ import com.google.android.gms.ads.mediation.customevent.CustomEventInterstitialL
 
 import org.prebid.demandsdkadapters.common.AdListener;
 import org.prebid.demandsdkadapters.common.InterstitialController;
-import org.prebid.demandsdkadapters.common.PrebidCustomEventSettings;
+import org.prebid.mobile.core.PrebidDemandSettings;
 import org.prebid.mobile.core.ErrorCode;
 
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_BIDDER_NAME;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.PREBID_BIDDER;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.PREBID_CACHE_ID;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.isDemandEnabled;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_BIDDER_NAME;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_BIDDER;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_CACHE_ID;
+import static org.prebid.mobile.core.PrebidDemandSettings.isDemandEnabled;
 
 public class PrebidCustomEventInterstitial implements CustomEventInterstitial, AdListener {
     private InterstitialController controller;
@@ -29,8 +29,8 @@ public class PrebidCustomEventInterstitial implements CustomEventInterstitial, A
         if (bundle != null) {
             String cacheId = (String) bundle.get(PREBID_CACHE_ID);
             String bidderName = (String) bundle.get(PREBID_BIDDER);
-            if (FACEBOOK_BIDDER_NAME.equals(bidderName) && isDemandEnabled(PrebidCustomEventSettings.Demand.FACEBOOK)) {
-                controller = new InterstitialController(PrebidCustomEventSettings.Demand.FACEBOOK, cacheId);
+            if (FACEBOOK_BIDDER_NAME.equals(bidderName) && isDemandEnabled(PrebidDemandSettings.Demand.FACEBOOK)) {
+                controller = new InterstitialController(PrebidDemandSettings.Demand.FACEBOOK, cacheId);
                 controller.loadAd(context, this);
             } else {
                 if (customEventInterstitialListener != null) {
