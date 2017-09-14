@@ -184,33 +184,53 @@ public class Prebid {
 
     private static void handleMoPubKeywordsUpdate(Object adViewObj, String adUnitCode, Context context) {
         ArrayList<Pair<String, String>> keywordPairs = BidManager.getKeywordsForAdUnit(adUnitCode, context);
-
         if (keywordPairs != null && !keywordPairs.isEmpty()) {
             StringBuilder keywords = new StringBuilder();
+            // check if the bid should be load in demand sdk or MoPub ad view/interstitial object
+            boolean bidShouldBeLoadedInDemandSdk = false;
+            String bidder = "";
             for (Pair<String, String> p : keywordPairs) {
-                keywords.append(p.first).append(":").append(p.second).append(",");
-                if ("hb_cache_id".equals(p.first) || "hb_bidder".equals(p.first)) {
-                    Class mediation_adapter = getClassFromString("org.prebid.mediationadapters.mopub.PrebidCustomEventBanner");
-                    if (mediation_adapter != null) {
-                        Map<String, Object> localExtras = (Map) callMethodOnObject(adViewObj, "getLocalExtras");
-                        Map newExtras = new HashMap();
-                        if (localExtras != null) {
-                            for (String s : localExtras.keySet()) {
-                                newExtras.put(s, localExtras.get(s));
+                if ("hb_creative_loadtype".equals(p.first)) {
+                    if ("demand_sdk".equals(p.second)) {
+                        bidShouldBeLoadedInDemandSdk = true;
+                    }
+                }
+                if ("hb_bidder".equals(p.first)) {
+                    bidder = p.second;
+                }
+            }
+            if (bidShouldBeLoadedInDemandSdk) {
+                // pass bids that require demand sdk only when rendering is enabled
+                // save the cache id locally on the ad object for later use
+                Class mediation_adapter = getClassFromString("org.prebid.demandsdkadapters.mopub.PrebidCustomEventBanner");
+                if (mediation_adapter != null && PrebidDemandSettings.isDemandEnabled(bidder)) {
+                    for (Pair<String, String> p : keywordPairs) {
+                        keywords.append(p.first).append(":").append(p.second).append(",");
+                        if ("hb_cache_id".equals(p.first) || "hb_bidder".equals(p.first)) {
+                            Map<String, Object> localExtras = (Map) callMethodOnObject(adViewObj, "getLocalExtras");
+                            Map newExtras = new HashMap();
+                            if (localExtras != null) {
+                                for (String s : localExtras.keySet()) {
+                                    newExtras.put(s, localExtras.get(s));
+                                }
                             }
-                        }
-                        newExtras.put(p.first, p.second);
-                        try {
-                            Method method = adViewObj.getClass().getMethod("setLocalExtras", Map.class);
-                            method.invoke(adViewObj, newExtras);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            LogUtil.e("Client side demand won't be working since setting localExtras failed for MoPubView");
+                            newExtras.put(p.first, p.second);
+                            try {
+                                Method method = adViewObj.getClass().getMethod("setLocalExtras", Map.class);
+                                method.invoke(adViewObj, newExtras);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                LogUtil.e("Client side demand won't be working since setting localExtras failed for MoPubView");
+                            }
                         }
                     }
                 }
+            } else {
+                // pass all bids that do not require demand sdk
+                for (Pair<String, String> p : keywordPairs) {
+                    keywords.append(p.first).append(":").append(p.second).append(",");
+                }
             }
-            keywords.append("hb_creative_loadtype:demand_sdk,"); // todo this should be returned by prebid server, and called webview_rendering, native_rendering
             String prebidKeywords = keywords.toString();
             String adViewKeywords = (String) callMethodOnObject(adViewObj, "getKeywords");
             // retrieve keywords from mopub adview
@@ -248,7 +268,6 @@ public class Prebid {
                     usedKeywordsList.remove(string);
                 }
             }
-
         }
     }
 
@@ -257,38 +276,57 @@ public class Prebid {
     private static void handleDFPCustomTargetingUpdate(Object adRequestObj, String adUnitCode, Context context) {
         Bundle bundle = (Bundle) callMethodOnObject(adRequestObj, "getCustomTargeting");
         if (bundle != null) {
-            // get mediation adapter for requested type
-            Class mediation_adapter = null;
-            Set<String> keywords = (Set) callMethodOnObject(adRequestObj, "getKeywords");
-            for (String keyword : keywords) {
-                if ("prebid_interstitial".equals(keyword)) {
-                    mediation_adapter = getClassFromString("org.prebid.mediationadapters.dfp.PrebidCustomEventInterstitial");
-                } else if ("prebid_banner".equals(keyword)) {
-                    mediation_adapter = getClassFromString("org.prebid.mediationadapters.dfp.PrebidCustomEventBanner");
-                }
-            }
             ArrayList<Pair<String, String>> prebidKeywords = BidManager.getKeywordsForAdUnit(adUnitCode, context);
             if (prebidKeywords != null && !prebidKeywords.isEmpty()) {
-                // retrieve keywords from mopub adview
-                for (Pair<String, String> keywordPair : prebidKeywords) {
-                    bundle.putString(keywordPair.first, keywordPair.second);
-                    usedKeywordKeys.add(keywordPair.first);
-                    // set custom event extras for the requested type
-                    if (mediation_adapter != null) {
-                        Bundle customEventExtras = (Bundle) callMethodOnObject(adRequestObj, "getCustomEventExtrasBundle", mediation_adapter);
-                        if (customEventExtras != null) {
-                            if ("hb_cache_id".equals(keywordPair.first) || "hb_bidder".equals(keywordPair.first)) {
-                                customEventExtras.putString(keywordPair.first, keywordPair.second);
-                            }
-                        } else {
-                            LogUtil.e("To get Facebook demand, enable custom event extras before building your publisher ad requests");
+                boolean bidShouldBeLoadedInDemandSdk = false;
+                String bidder = "";
+                for (Pair<String, String> p : prebidKeywords) {
+                    if ("hb_creative_loadtype".equals(p.first)) {
+                        if ("demand_sdk".equals(p.second)) {
+                            bidShouldBeLoadedInDemandSdk = true;
                         }
+                    }
+                    if ("hb_bidder".equals(p.first)) {
+                        bidder = p.second;
+                    }
+                }
+                if (bidShouldBeLoadedInDemandSdk) {
+                    // pass bids that require demand sdk only when rendering is enabled
+                    // save the cache id locally on the ad object for later use
+                    Class mediation_adapter = null;
+                    Set<String> keywords = (Set) callMethodOnObject(adRequestObj, "getKeywords");
+                    for (String keyword : keywords) {
+                        if ("prebid_interstitial".equals(keyword)) {
+                            mediation_adapter = getClassFromString("org.prebid.demandsdkadapters.dfp.PrebidCustomEventInterstitial");
+                        } else if ("prebid_banner".equals(keyword)) {
+                            mediation_adapter = getClassFromString("org.prebid.demandsdkadapters.dfp.PrebidCustomEventBanner");
+                        }
+                    }
+                    if (mediation_adapter != null && PrebidDemandSettings.isDemandEnabled(bidder)) {
+                        for (Pair<String, String> keywordPair : prebidKeywords) {
+                            bundle.putString(keywordPair.first, keywordPair.second);
+                            usedKeywordKeys.add(keywordPair.first);
+                            // set custom event extras for the requested type
+                            if (mediation_adapter != null) {
+                                Bundle customEventExtras = (Bundle) callMethodOnObject(adRequestObj, "getCustomEventExtrasBundle", mediation_adapter);
+                                if (customEventExtras != null) {
+                                    if ("hb_cache_id".equals(keywordPair.first) || "hb_bidder".equals(keywordPair.first)) {
+                                        customEventExtras.putString(keywordPair.first, keywordPair.second);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                } else {
+                    // pass all bids that do not require demand sdk
+                    for (Pair<String, String> keywordPair : prebidKeywords) {
+                        bundle.putString(keywordPair.first, keywordPair.second);
+                        usedKeywordKeys.add(keywordPair.first);
                     }
                 }
             }
-            // todo formalize the following lines. probably through prebid server
-            bundle.putString("hb_creative_loadtype", "demand_sdk");
-            usedKeywordKeys.add("hb_creative_loadtype");
+
         }
     }
 

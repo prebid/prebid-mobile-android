@@ -1,4 +1,4 @@
-package org.prebid.demandsdkadapters.common;
+package org.prebid.mobile.core;
 
 import android.content.Context;
 
@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Locale;
 
-public class PrebidCustomEventSettings {
+public class PrebidDemandSettings {
     // Prebid constants
     public static final String PREBID_CACHE_ID = "hb_cache_id";
     public static final String PREBID_BIDDER = "hb_bidder";
@@ -38,13 +38,30 @@ public class PrebidCustomEventSettings {
 
     // Demand constants
     public enum Demand {
-        FACEBOOK
+        FACEBOOK("audienceNetwork");
+
+        Demand(String bidderName) {
+            this.name = bidderName;
+        }
+
+        String name;
+
+        public String getBidderName() {
+            return name;
+        }
     }
 
     static HashSet<Demand> demandSet = new HashSet<Demand>();
 
     public static boolean isDemandEnabled(Demand demand) {
         return demandSet.contains(demand);
+    }
+
+    public static boolean isDemandEnabled(String bidderName) {
+        for (Demand demand : demandSet) {
+            if (demand.getBidderName().equals(bidderName)) return true;
+        }
+        return false;
     }
 
     public static void enableDemand(Demand demand) throws Exception {

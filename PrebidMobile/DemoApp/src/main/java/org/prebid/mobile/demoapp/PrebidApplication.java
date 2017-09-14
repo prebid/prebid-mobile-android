@@ -4,11 +4,11 @@ import android.app.Application;
 import android.os.Build;
 import android.webkit.WebView;
 
-import org.prebid.demandsdkadapters.common.PrebidCustomEventSettings;
 import org.prebid.mobile.core.AdUnit;
 import org.prebid.mobile.core.BannerAdUnit;
 import org.prebid.mobile.core.InterstitialAdUnit;
 import org.prebid.mobile.core.Prebid;
+import org.prebid.mobile.core.PrebidDemandSettings;
 import org.prebid.mobile.core.PrebidException;
 import org.prebid.mobile.core.TargetingParams;
 
@@ -17,11 +17,13 @@ import java.util.ArrayList;
 import static org.prebid.mobile.demoapp.Constants.BANNER_300x250;
 import static org.prebid.mobile.demoapp.Constants.BANNER_320x50;
 import static org.prebid.mobile.demoapp.Constants.FACEBOOK_300x250;
+import static org.prebid.mobile.demoapp.Constants.FACEBOOK_INTERSTITIAL;
 import static org.prebid.mobile.demoapp.Constants.INTERSTITIAL_ADUNIT_ID;
 import static org.prebid.mobile.demoapp.Constants.PBS_ACCOUNT_ID;
 import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_300x250_APPNEXUS_DEMAND;
 import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_300x250_FACEBOOK_DEMAND;
 import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_320x50_APPNEXUS_DEMAND;
+import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_INTERSTITIAL_FACEBOOK_DEMAND;
 
 public class PrebidApplication extends Application {
     /**
@@ -69,11 +71,13 @@ public class PrebidApplication extends Application {
         //Configure Ad Unit with facebook demand source
         BannerAdUnit adUnit4 = new BannerAdUnit(FACEBOOK_300x250, PBS_CONFIG_300x250_FACEBOOK_DEMAND);
         adUnit4.addSize(300, 250);
+        InterstitialAdUnit adUnit5 = new InterstitialAdUnit(FACEBOOK_INTERSTITIAL, PBS_CONFIG_INTERSTITIAL_FACEBOOK_DEMAND);
         // Add Configuration
         adUnits.add(adUnit1);
         adUnits.add(adUnit2);
         adUnits.add(adUnit3);
         adUnits.add(adUnit4);
+        adUnits.add(adUnit5);
 
         // Set targeting
         TargetingParams.setGender(TargetingParams.GENDER.FEMALE);
@@ -93,7 +97,7 @@ public class PrebidApplication extends Application {
             e.printStackTrace();
         }
         try {
-            PrebidCustomEventSettings.enableDemand(PrebidCustomEventSettings.Demand.FACEBOOK);
+            PrebidDemandSettings.enableDemand(PrebidDemandSettings.Demand.FACEBOOK);
         } catch (Exception e) {
             e.printStackTrace();
         }

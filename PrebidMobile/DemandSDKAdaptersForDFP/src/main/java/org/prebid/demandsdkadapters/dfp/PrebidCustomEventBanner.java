@@ -13,13 +13,13 @@ import com.google.android.gms.ads.mediation.customevent.CustomEventBannerListene
 
 import org.prebid.demandsdkadapters.common.AdListener;
 import org.prebid.demandsdkadapters.common.BannerController;
-import org.prebid.demandsdkadapters.common.PrebidCustomEventSettings;
+import org.prebid.mobile.core.PrebidDemandSettings;
 import org.prebid.mobile.core.ErrorCode;
 
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_BIDDER_NAME;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.PREBID_BIDDER;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.PREBID_CACHE_ID;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.isDemandEnabled;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_BIDDER_NAME;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_BIDDER;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_CACHE_ID;
+import static org.prebid.mobile.core.PrebidDemandSettings.isDemandEnabled;
 
 public class PrebidCustomEventBanner implements CustomEventBanner, AdListener {
     private BannerController controller;
@@ -32,9 +32,8 @@ public class PrebidCustomEventBanner implements CustomEventBanner, AdListener {
         if (bundle != null) {
             String cacheId = (String) bundle.get(PREBID_CACHE_ID);
             String bidderName = (String) bundle.get(PREBID_BIDDER);
-//            if ("appnexus".equals(bidderName) && isDemandEnabled(PrebidCustomEventSettings.Demand.FACEBOOK)) {
-            if (FACEBOOK_BIDDER_NAME.equals(bidderName) && isDemandEnabled(PrebidCustomEventSettings.Demand.FACEBOOK)) {
-                controller = new BannerController(cacheId, PrebidCustomEventSettings.Demand.FACEBOOK);
+            if (FACEBOOK_BIDDER_NAME.equals(bidderName) && isDemandEnabled(PrebidDemandSettings.Demand.FACEBOOK)) {
+                controller = new BannerController(cacheId, PrebidDemandSettings.Demand.FACEBOOK);
                 controller.loadAd(context, adSize.getWidth(), adSize.getHeight(), this);
             } else {
                 if (customEventBannerListener != null) {

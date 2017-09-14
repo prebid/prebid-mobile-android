@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
@@ -60,20 +61,24 @@ public class FacebookForDFPFragment extends Fragment {
         builder.addCustomEventExtrasBundle(PrebidCustomEventBanner.class, new Bundle());
         builder.addKeyword("prebid_banner");
         PublisherAdRequest request = builder.build();
-//        Prebid.attachBids(request, Constants.FACEBOOK_300x250, this.getActivity());
-        Prebid.attachBids(request, Constants.BANNER_300x250, this.getActivity()); // todo change this back to test facebook adapter
+        Prebid.attachBids(request, Constants.FACEBOOK_300x250, this.getActivity());
         //endregion
         adView.loadAd(request);
     }
 
     private void loadDFPInterstitial() {
         final PublisherInterstitialAd interstitialAd = new PublisherInterstitialAd(getContext());
-        interstitialAd.setAdUnitId("/19968336/PriceCheck_Interstitial");
+        interstitialAd.setAdUnitId("/19968336/Prebid_Interstitial");
         interstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
                 interstitialAd.show();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
             }
         });
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
@@ -81,7 +86,7 @@ public class FacebookForDFPFragment extends Fragment {
         builder.addCustomEventExtrasBundle(PrebidCustomEventInterstitial.class, new Bundle());
         builder.addKeyword("prebid_interstitial");
         PublisherAdRequest request = builder.build();
-        Prebid.attachBids(request, Constants.BANNER_300x250, this.getActivity());
+        Prebid.attachBids(request, Constants.FACEBOOK_INTERSTITIAL, this.getActivity());
         //endregion
         interstitialAd.loadAd(request);
     }

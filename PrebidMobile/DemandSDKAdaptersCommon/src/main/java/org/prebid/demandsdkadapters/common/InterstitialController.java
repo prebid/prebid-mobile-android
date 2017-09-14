@@ -4,33 +4,34 @@ import android.content.Context;
 
 import org.json.JSONObject;
 import org.prebid.mobile.core.ErrorCode;
+import org.prebid.mobile.core.PrebidDemandSettings;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_DESTROY_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_GET_ERROR_CODE_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_INTERSTITIAL_ADLISTENER_INTERFACE;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_INTERSTITIAL_CLASS;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_LOAD_AD_FROM_BID_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_ON_AD_CLICKED_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_ON_AD_LOADED_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_ON_ERROR_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_ON_INTERSTITIAL_DISMISSED_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_ON_INTERSTITIAL_DISPLAYED_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_PLACEMENT_ID;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_SET_AD_LISTENER_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_SHOW_METHOD;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.PREBID_ADM;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_DESTROY_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_GET_ERROR_CODE_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_INTERSTITIAL_ADLISTENER_INTERFACE;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_INTERSTITIAL_CLASS;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_LOAD_AD_FROM_BID_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ON_AD_CLICKED_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ON_AD_LOADED_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ON_ERROR_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ON_INTERSTITIAL_DISMISSED_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ON_INTERSTITIAL_DISPLAYED_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_PLACEMENT_ID;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_SET_AD_LISTENER_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_SHOW_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_ADM;
 
 public class InterstitialController {
     private Object adObject;
-    private PrebidCustomEventSettings.Demand demand;
+    private PrebidDemandSettings.Demand demand;
     private String cacheId;
 
-    public InterstitialController(PrebidCustomEventSettings.Demand demand, String cacheId) {
+    public InterstitialController(PrebidDemandSettings.Demand demand, String cacheId) {
         this.demand = demand;
         this.cacheId = cacheId;
     }

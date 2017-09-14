@@ -8,15 +8,15 @@ import com.mopub.mobileads.MoPubErrorCode;
 
 import org.prebid.demandsdkadapters.common.AdListener;
 import org.prebid.demandsdkadapters.common.InterstitialController;
-import org.prebid.demandsdkadapters.common.PrebidCustomEventSettings;
+import org.prebid.mobile.core.PrebidDemandSettings;
 import org.prebid.mobile.core.ErrorCode;
 
 import java.util.Map;
 
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_BIDDER_NAME;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.PREBID_BIDDER;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.PREBID_CACHE_ID;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.isDemandEnabled;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_BIDDER_NAME;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_BIDDER;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_CACHE_ID;
+import static org.prebid.mobile.core.PrebidDemandSettings.isDemandEnabled;
 
 public class PrebidCustomEventInterstitial extends CustomEventInterstitial implements AdListener {
     private String bidder;
@@ -30,9 +30,9 @@ public class PrebidCustomEventInterstitial extends CustomEventInterstitial imple
         if (localExtras != null) {
             String cache_id = (String) localExtras.get(PREBID_CACHE_ID);
             bidder = (String) localExtras.get(PREBID_BIDDER);
-            if (FACEBOOK_BIDDER_NAME.equals(bidder) && isDemandEnabled(PrebidCustomEventSettings.Demand.FACEBOOK)) {
+            if (FACEBOOK_BIDDER_NAME.equals(bidder) && isDemandEnabled(PrebidDemandSettings.Demand.FACEBOOK)) {
 //            if ("appnexus".equals(bidder)) {
-                controller = new InterstitialController(PrebidCustomEventSettings.Demand.FACEBOOK, cache_id);
+                controller = new InterstitialController(PrebidDemandSettings.Demand.FACEBOOK, cache_id);
                 controller.loadAd(context, this);
             } else {
                 if (customEventInterstitialListener != null) {

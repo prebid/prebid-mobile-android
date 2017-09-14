@@ -9,17 +9,17 @@ import com.mopub.mobileads.MoPubErrorCode;
 
 import org.prebid.demandsdkadapters.common.AdListener;
 import org.prebid.demandsdkadapters.common.BannerController;
-import org.prebid.demandsdkadapters.common.PrebidCustomEventSettings;
+import org.prebid.mobile.core.PrebidDemandSettings;
 import org.prebid.mobile.core.ErrorCode;
 
 import java.util.Map;
 
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.FACEBOOK_BIDDER_NAME;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.MOPUB_HEIGHT;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.MOPUB_WIDTH;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.PREBID_BIDDER;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.PREBID_CACHE_ID;
-import static org.prebid.demandsdkadapters.common.PrebidCustomEventSettings.isDemandEnabled;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_BIDDER_NAME;
+import static org.prebid.mobile.core.PrebidDemandSettings.MOPUB_HEIGHT;
+import static org.prebid.mobile.core.PrebidDemandSettings.MOPUB_WIDTH;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_BIDDER;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_CACHE_ID;
+import static org.prebid.mobile.core.PrebidDemandSettings.isDemandEnabled;
 
 
 public class PrebidCustomEventBanner extends CustomEventBanner implements AdListener {
@@ -35,8 +35,8 @@ public class PrebidCustomEventBanner extends CustomEventBanner implements AdList
             String bidderName = (String) localExtras.get(PREBID_BIDDER);
             int width = (int) localExtras.get(MOPUB_WIDTH);
             int height = (int) localExtras.get(MOPUB_HEIGHT);
-            if (FACEBOOK_BIDDER_NAME.equals(bidderName) && isDemandEnabled(PrebidCustomEventSettings.Demand.FACEBOOK)) {
-                controller = new BannerController(cache_id, PrebidCustomEventSettings.Demand.FACEBOOK);
+            if (FACEBOOK_BIDDER_NAME.equals(bidderName) && isDemandEnabled(PrebidDemandSettings.Demand.FACEBOOK)) {
+                controller = new BannerController(cache_id, PrebidDemandSettings.Demand.FACEBOOK);
                 controller.loadAd(context, width, height, this);
             } else {
                 if (customEventBannerListener != null) {
