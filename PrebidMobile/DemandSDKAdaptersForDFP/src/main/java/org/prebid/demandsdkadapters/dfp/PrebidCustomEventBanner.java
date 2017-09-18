@@ -13,6 +13,7 @@ import com.google.android.gms.ads.mediation.customevent.CustomEventBannerListene
 
 import org.prebid.demandsdkadapters.common.AdListener;
 import org.prebid.demandsdkadapters.common.BannerController;
+import org.prebid.mobile.core.LogUtil;
 import org.prebid.mobile.core.PrebidDemandSettings;
 import org.prebid.mobile.core.ErrorCode;
 
@@ -27,7 +28,7 @@ public class PrebidCustomEventBanner implements CustomEventBanner, AdListener {
 
     @Override
     public void requestBannerAd(Context context, CustomEventBannerListener customEventBannerListener, String s, AdSize adSize, MediationAdRequest mediationAdRequest, Bundle bundle) {
-        Log.d("FB-Integration", "Load Prebid content for Facebook");
+        LogUtil.d("Facebook demand custom event called for DFP.");
         this.listener = customEventBannerListener;
         if (bundle != null) {
             String cacheId = (String) bundle.get(PREBID_CACHE_ID);
