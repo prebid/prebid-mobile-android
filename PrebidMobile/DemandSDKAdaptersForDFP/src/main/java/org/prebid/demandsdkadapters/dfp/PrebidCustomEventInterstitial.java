@@ -11,8 +11,9 @@ import com.google.android.gms.ads.mediation.customevent.CustomEventInterstitialL
 
 import org.prebid.demandsdkadapters.common.AdListener;
 import org.prebid.demandsdkadapters.common.InterstitialController;
-import org.prebid.mobile.core.PrebidDemandSettings;
 import org.prebid.mobile.core.ErrorCode;
+import org.prebid.mobile.core.LogUtil;
+import org.prebid.mobile.core.PrebidDemandSettings;
 
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_BIDDER_NAME;
 import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_BIDDER;
@@ -25,6 +26,7 @@ public class PrebidCustomEventInterstitial implements CustomEventInterstitial, A
 
     @Override
     public void requestInterstitialAd(Context context, CustomEventInterstitialListener customEventInterstitialListener, String s, MediationAdRequest mediationAdRequest, Bundle bundle) {
+        LogUtil.d("Facebook demand custom event called for DFP.");
         this.listener = customEventInterstitialListener;
         if (bundle != null) {
             String cacheId = (String) bundle.get(PREBID_CACHE_ID);

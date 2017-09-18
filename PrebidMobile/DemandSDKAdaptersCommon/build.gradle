@@ -1,28 +1,30 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "26.0.1"
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        minSdkVersion rootProject.minSDKVersion
+        targetSdkVersion rootProject.targetSDKVersion
+        versionCode rootProject.prebidVersionCode
+        versionName rootProject.prebidVersionName
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled rootProject.releaseProguardEnabled
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled rootProject.debugProguardEnabled
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
     }
 }
 
 dependencies {
     compile project(':PrebidMobileCore')
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    testCompile 'junit:junit:4.12'
 }

@@ -8,8 +8,9 @@ import com.mopub.mobileads.MoPubErrorCode;
 
 import org.prebid.demandsdkadapters.common.AdListener;
 import org.prebid.demandsdkadapters.common.InterstitialController;
-import org.prebid.mobile.core.PrebidDemandSettings;
 import org.prebid.mobile.core.ErrorCode;
+import org.prebid.mobile.core.LogUtil;
+import org.prebid.mobile.core.PrebidDemandSettings;
 
 import java.util.Map;
 
@@ -19,19 +20,17 @@ import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_CACHE_ID;
 import static org.prebid.mobile.core.PrebidDemandSettings.isDemandEnabled;
 
 public class PrebidCustomEventInterstitial extends CustomEventInterstitial implements AdListener {
-    private String bidder;
-    private Object adObject;
     private InterstitialController controller;
     private CustomEventInterstitialListener listener;
 
     @Override
     protected void loadInterstitial(Context context, CustomEventInterstitialListener customEventInterstitialListener, Map<String, Object> localExtras, Map<String, String> serverExtras) {
+        LogUtil.d("Facebook demand custom event called for MoPub.");
         this.listener = customEventInterstitialListener;
         if (localExtras != null) {
             String cache_id = (String) localExtras.get(PREBID_CACHE_ID);
-            bidder = (String) localExtras.get(PREBID_BIDDER);
+            String bidder = (String) localExtras.get(PREBID_BIDDER);
             if (FACEBOOK_BIDDER_NAME.equals(bidder) && isDemandEnabled(PrebidDemandSettings.Demand.FACEBOOK)) {
-//            if ("appnexus".equals(bidder)) {
                 controller = new InterstitialController(PrebidDemandSettings.Demand.FACEBOOK, cache_id);
                 controller.loadAd(context, this);
             } else {
