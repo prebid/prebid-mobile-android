@@ -73,6 +73,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 }
                 if (status == null) {
                     LogUtil.e("Response status is null");
+                    return;
                 } else if (!status.equals(Settings.RESPONSE_STATUS_OK)) {
                     LogUtil.e("Response status is not OK, it is \"" + status + "\"");
                     return;

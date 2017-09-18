@@ -12,6 +12,14 @@ public class PrebidDemandSettings {
     public static final String PREBID_CACHE_ID = "hb_cache_id";
     public static final String PREBID_BIDDER = "hb_bidder";
     public static final String PREBID_ADM = "adm";
+    public static final String PREBID_CREATIVE_LOAD_TYPE = "hb_creative_loadtype";
+    public static final String PREBID_DEMAND_SDK = "demand_sdk";
+    public static final String PREBID_INTERSTITIAL = "prebid_interstitial";
+    public static final String PREBID_BANNER = "prebid_banner";
+    // non final for testing purpose
+    public static String PREBID_MOPUB_CUSTOM_EVENT_BANNER = "org.prebid.demandsdkadapters.mopub.PrebidCustomEventBanner";
+    public static String PREBID_DFP_CUSTOM_EVENT_BANNER = "org.prebid.demandsdkadapters.dfp.PrebidCustomEventBanner";
+    public static String PREBID_DFP_CUSTOM_EVENT_INTERSTITIAL = "org.prebid.demandsdkadapters.dfp.PrebidCustomEventInterstitial";
     // MoPub constants
     public static final String MOPUB_WIDTH = "com_mopub_ad_width";
     public static final String MOPUB_HEIGHT = "com_mopub_ad_height";

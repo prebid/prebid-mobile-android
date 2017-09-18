@@ -31,6 +31,16 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_BANNER;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_BIDDER;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_CACHE_ID;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_CREATIVE_LOAD_TYPE;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_DEMAND_SDK;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_DFP_CUSTOM_EVENT_BANNER;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_DFP_CUSTOM_EVENT_INTERSTITIAL;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_INTERSTITIAL;
+import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_MOPUB_CUSTOM_EVENT_BANNER;
+
 /**
  * Prebid class is the Entry point for Apps in the Prebid Module.
  */
@@ -129,7 +139,8 @@ public class Prebid {
 
     public static void detachUsedBid(Object adObj) {
         if (adObj != null) {
-            if (adObj.getClass() == getClassFromString(MOPUB_ADVIEW_CLASS)) {
+            if (adObj.getClass() == getClassFromString(MOPUB_ADVIEW_CLASS)
+                    || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)) {
                 removeUsedKeywordsForMoPub(adObj);
             } else if (adObj.getClass() == getClassFromString(DFP_ADREQUEST_CLASS)) {
                 removeUsedCustomTargetingForDFP(adObj);
@@ -190,23 +201,23 @@ public class Prebid {
             boolean bidShouldBeLoadedInDemandSdk = false;
             String bidder = "";
             for (Pair<String, String> p : keywordPairs) {
-                if ("hb_creative_loadtype".equals(p.first)) {
-                    if ("demand_sdk".equals(p.second)) {
+                if (PREBID_CREATIVE_LOAD_TYPE.equals(p.first)) {
+                    if (PREBID_DEMAND_SDK.equals(p.second)) {
                         bidShouldBeLoadedInDemandSdk = true;
                     }
                 }
-                if ("hb_bidder".equals(p.first)) {
+                if (PREBID_BIDDER.equals(p.first)) {
                     bidder = p.second;
                 }
             }
             if (bidShouldBeLoadedInDemandSdk) {
                 // pass bids that require demand sdk only when rendering is enabled
                 // save the cache id locally on the ad object for later use
-                Class mediation_adapter = getClassFromString("org.prebid.demandsdkadapters.mopub.PrebidCustomEventBanner");
+                Class mediation_adapter = getClassFromString(PREBID_MOPUB_CUSTOM_EVENT_BANNER);
                 if (mediation_adapter != null && PrebidDemandSettings.isDemandEnabled(bidder)) {
                     for (Pair<String, String> p : keywordPairs) {
                         keywords.append(p.first).append(":").append(p.second).append(",");
-                        if ("hb_cache_id".equals(p.first) || "hb_bidder".equals(p.first)) {
+                        if (PREBID_CACHE_ID.equals(p.first) || PREBID_BIDDER.equals(p.first)) {
                             Map<String, Object> localExtras = (Map) callMethodOnObject(adViewObj, "getLocalExtras");
                             Map newExtras = new HashMap();
                             if (localExtras != null) {
@@ -281,12 +292,12 @@ public class Prebid {
                 boolean bidShouldBeLoadedInDemandSdk = false;
                 String bidder = "";
                 for (Pair<String, String> p : prebidKeywords) {
-                    if ("hb_creative_loadtype".equals(p.first)) {
-                        if ("demand_sdk".equals(p.second)) {
+                    if (PREBID_CREATIVE_LOAD_TYPE.equals(p.first)) {
+                        if (PREBID_DEMAND_SDK.equals(p.second)) {
                             bidShouldBeLoadedInDemandSdk = true;
                         }
                     }
-                    if ("hb_bidder".equals(p.first)) {
+                    if (PREBID_BIDDER.equals(p.first)) {
                         bidder = p.second;
                     }
                 }
@@ -296,10 +307,10 @@ public class Prebid {
                     Class mediation_adapter = null;
                     Set<String> keywords = (Set) callMethodOnObject(adRequestObj, "getKeywords");
                     for (String keyword : keywords) {
-                        if ("prebid_interstitial".equals(keyword)) {
-                            mediation_adapter = getClassFromString("org.prebid.demandsdkadapters.dfp.PrebidCustomEventInterstitial");
-                        } else if ("prebid_banner".equals(keyword)) {
-                            mediation_adapter = getClassFromString("org.prebid.demandsdkadapters.dfp.PrebidCustomEventBanner");
+                        if (PREBID_INTERSTITIAL.equals(keyword)) {
+                            mediation_adapter = getClassFromString(PREBID_DFP_CUSTOM_EVENT_INTERSTITIAL);
+                        } else if (PREBID_BANNER.equals(keyword)) {
+                            mediation_adapter = getClassFromString(PREBID_DFP_CUSTOM_EVENT_BANNER);
                         }
                     }
                     if (mediation_adapter != null && PrebidDemandSettings.isDemandEnabled(bidder)) {
@@ -310,7 +321,7 @@ public class Prebid {
                             if (mediation_adapter != null) {
                                 Bundle customEventExtras = (Bundle) callMethodOnObject(adRequestObj, "getCustomEventExtrasBundle", mediation_adapter);
                                 if (customEventExtras != null) {
-                                    if ("hb_cache_id".equals(keywordPair.first) || "hb_bidder".equals(keywordPair.first)) {
+                                    if (PREBID_CACHE_ID.equals(keywordPair.first) || PREBID_BIDDER.equals(keywordPair.first)) {
                                         customEventExtras.putString(keywordPair.first, keywordPair.second);
                                     }
                                 }
