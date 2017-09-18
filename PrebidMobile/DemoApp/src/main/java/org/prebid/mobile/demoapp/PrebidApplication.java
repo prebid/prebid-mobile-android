@@ -23,6 +23,7 @@ import static org.prebid.mobile.demoapp.Constants.PBS_ACCOUNT_ID;
 import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_300x250_APPNEXUS_DEMAND;
 import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_300x250_FACEBOOK_DEMAND;
 import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_320x50_APPNEXUS_DEMAND;
+import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_INTERSTITIAL_APPNEXUS_DEMAND;
 import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_INTERSTITIAL_FACEBOOK_DEMAND;
 
 public class PrebidApplication extends Application {
@@ -66,7 +67,7 @@ public class PrebidApplication extends Application {
         adUnit2.addSize(300, 250);
 
         //Configure Interstitial Ad Unit
-        InterstitialAdUnit adUnit3 = new InterstitialAdUnit(INTERSTITIAL_ADUNIT_ID, PBS_CONFIG_320x50_APPNEXUS_DEMAND);
+        InterstitialAdUnit adUnit3 = new InterstitialAdUnit(INTERSTITIAL_ADUNIT_ID, PBS_CONFIG_INTERSTITIAL_APPNEXUS_DEMAND);
 
         //Configure Ad Unit with facebook demand source
         BannerAdUnit adUnit4 = new BannerAdUnit(FACEBOOK_300x250, PBS_CONFIG_300x250_FACEBOOK_DEMAND);
