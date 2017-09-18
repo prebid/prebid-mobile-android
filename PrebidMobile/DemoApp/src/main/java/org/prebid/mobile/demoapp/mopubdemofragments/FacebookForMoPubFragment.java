@@ -67,7 +67,7 @@ public class FacebookForMoPubFragment extends Fragment {
             interstitialAdView.destroy();
         }
         interstitialAdView = new MoPubInterstitial(this.getActivity(), "1bfc4a07a3054cac9d349a072a171173");
-        Prebid.attachBids(interstitialAdView, Constants.INTERSTITIAL_ADUNIT_ID, getContext()); // todo update this
+        Prebid.attachBids(interstitialAdView, Constants.FACEBOOK_INTERSTITIAL, getContext()); // todo update this
         interstitialAdView.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
             @Override
             public void onInterstitialLoaded(MoPubInterstitial interstitial) {

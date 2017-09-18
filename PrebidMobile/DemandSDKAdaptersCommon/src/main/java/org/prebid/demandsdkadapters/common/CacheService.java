@@ -23,7 +23,7 @@ public class CacheService extends AsyncTask<Object, Object, JSONObject> {
     @Override
     protected JSONObject doInBackground(Object... objects) {
         try {
-            StringBuilder sb = new StringBuilder("http://prebid.adnxs.com/pbc/v1/get?uuid=");
+            StringBuilder sb = new StringBuilder("http://prebid.adnxs.com/pbc/v1/cache?uuid=");
             sb.append(this.cacheId);
             URL url = new URL(sb.toString());
 
