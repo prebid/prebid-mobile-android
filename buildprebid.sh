@@ -56,6 +56,10 @@ LIBDIR=$BASEDIR/PrebidMobile
 PREBIDCORE=("PrebidMobileCore")
 DEMANDSOURCES=()
 DEMANDSOURCES+=("PrebidServerAdapter")
+DEMANDADAPTERSCOMMON="DemandSDKAdaptersCommon"
+DEMANDADAPTERSDFP="DemandSDKAdaptersForDFP"
+DEMANDADAPTERSMOPUB="DemandSDKAdaptersForMoPub"
+
 
 # set the default release version to what's in the project's build.gradle file
 RELEASE_VERSION=""
@@ -98,7 +102,7 @@ PID=$!
 spinner $PID &
 wait $PID
 
-echoX "Start packaging product"
+echoX "Start packaging core product"
 cd $TEMPDIR
 mkdir output
 echoX "Move library core to output"
@@ -124,89 +128,32 @@ mv PrebidMobile.jar $OUTDIR
 # clean tmp dir
 rm -r $TEMPDIR
 
-echoX "Prepare Demo App"
-APPNAME="DemoApp"
-cp -r $LIBDIR/$APPNAME $OUTDIR/$APPNAME
-# update build.gradle
-cd $OUTDIR/$APPNAME
-rm build.gradle
-cat > build.gradle << EOL
-buildscript {
-repositories {
-jcenter()
-}
-dependencies {
-classpath 'com.android.tools.build:gradle:2.3.0'
-
-// NOTE: Do not place your application dependencies here; they belong
-// in the individual module build.gradle files
-}
-}
-
-apply plugin: 'com.android.application'
-
-repositories {
-mavenCentral()
-jcenter()
-flatDir {
-dirs 'libs'
-}
-}
-
-android {
-compileSdkVersion 25
-buildToolsVersion '25.0.0'
-
-defaultConfig {
-applicationId 'org.prebid.mobile.demoapp'
-minSdkVersion 16
-targetSdkVersion 25
-versionCode 1
-versionName '1.0'
-}
-buildTypes {
-release {
-minifyEnabled true
-proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-}
-debug {
-minifyEnabled false
-proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-}
-}
-}
-
-dependencies {
-compile 'com.android.support:appcompat-v7:23.1.1'
-// For aaid
-compile 'com.google.android.gms:play-services-ads:9.2.1'
-
-// From MoPub Android SDK docs
-compile('com.mopub:mopub-sdk:4.15.0@aar') {
-transitive = true
-}
-
-// Build from compiled libs
-compile fileTree(dir: 'libs', include: ['*.jar'])
-compile 'org.apache.commons:commons-text:1.1'
-}
-
-EOL
-
-if [ ! -d libs ]; then
-mkdir libs
-fi
-
-# add libs
-cp ../PrebidMobile.jar libs/
-# move gradlew here
-cp -r $LIBDIR/gradle .
-cp -r $LIBDIR/gradlew .
-cp -r $LIBDIR/gradlew.bat .
-cp -r $LIBDIR/gradle.properties .
-chmod +x gradlew
-./gradlew clean >/dev/null
-# TODO maybe launch the app with an emulator for developer to test directly
+echoX "Start packaging demand sdk adapters"
+mkdir $TEMPDIR
+# package for DFP 
+cd $LIBDIR/$DEMANDADAPTERSCOMMON/$AARPATH
+unzip -q -o $DEMANDADAPTERSCOMMON-release.aar
+cd $TEMPDIR
+jar xf $LIBDIR/$DEMANDADAPTERSCOMMON/$AARPATH/classes.jar
+cd $LIBDIR/$DEMANDADAPTERSDFP/$AARPATH
+unzip -q -o $DEMANDADAPTERSDFP-release.aar
+cd $TEMPDIR
+jar xf $LIBDIR/$DEMANDADAPTERSDFP/$AARPATH/classes.jar
+jar cf DemandSDKAdaptersForDFP.jar org*
+rm -rf org
+mv DemandSDKAdaptersForDFP.jar $OUTDIR
+# package for MoPub
+cd $LIBDIR/$DEMANDADAPTERSCOMMON/$AARPATH
+unzip -q -o $DEMANDADAPTERSCOMMON-release.aar
+cd $TEMPDIR
+jar xf $LIBDIR/$DEMANDADAPTERSCOMMON/$AARPATH/classes.jar
+cd $LIBDIR/$DEMANDADAPTERSMOPUB/$AARPATH
+unzip -q -o $DEMANDADAPTERSMOPUB-release.aar
+cd $TEMPDIR
+jar xf $LIBDIR/$DEMANDADAPTERSMOPUB/$AARPATH/classes.jar
+jar cf DemandSDKAdaptersForMoPub.jar org*
+rm -rf org
+mv DemandSDKAdaptersForMoPub.jar $OUTDIR
 
 # javadoc
 echoX "Prepare Javedoc"
@@ -226,6 +173,7 @@ CORE_CLASSES+=("InterstitialAdUnit.java")
 CORE_CLASSES+=("LogUtil.java")
 CORE_CLASSES+=("Prebid.java")
 CORE_CLASSES+=("PrebidException.java")
+CORE_CLASSES+=("PrebidDemandSettings.java")
 CORE_CLASSES+=("TargetingParams.java")
 PREBID_SERVER_PATH="PrebidServerAdapter/src/main/java/org/prebid/mobile/prebidserver"
 PREBID_SERVER_CLASSES=()
