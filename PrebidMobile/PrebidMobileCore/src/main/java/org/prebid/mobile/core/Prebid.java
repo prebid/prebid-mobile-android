@@ -30,14 +30,12 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_BANNER;
 import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_BIDDER;
 import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_CACHE_ID;
 import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_CREATIVE_LOAD_TYPE;
 import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_DEMAND_SDK;
 import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_DFP_CUSTOM_EVENT_BANNER;
 import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_DFP_CUSTOM_EVENT_INTERSTITIAL;
-import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_INTERSTITIAL;
 import static org.prebid.mobile.core.PrebidDemandSettings.PREBID_MOPUB_CUSTOM_EVENT_BANNER;
 
 /**
@@ -461,13 +459,11 @@ public class Prebid {
                     // pass bids that require demand sdk only when rendering is enabled
                     // save the cache id locally on the ad object for later use
                     Class mediation_adapter = null;
-                    Set<String> keywords = (Set) callMethodOnObject(adRequestObj, "getKeywords");
-                    for (String keyword : keywords) {
-                        if (PREBID_INTERSTITIAL.equals(keyword)) {
-                            mediation_adapter = getClassFromString(PREBID_DFP_CUSTOM_EVENT_INTERSTITIAL);
-                        } else if (PREBID_BANNER.equals(keyword)) {
-                            mediation_adapter = getClassFromString(PREBID_DFP_CUSTOM_EVENT_BANNER);
-                        }
+                    AdUnit adUnit = BidManager.getAdUnitByCode(adUnitCode);
+                    if (AdType.BANNER.equals(adUnit.getAdType())) {
+                        mediation_adapter = getClassFromString(PREBID_DFP_CUSTOM_EVENT_BANNER);
+                    } else if (AdType.INTERSTITIAL.equals(adUnit.getAdType())) {
+                        mediation_adapter = getClassFromString(PREBID_DFP_CUSTOM_EVENT_INTERSTITIAL);
                     }
                     if (mediation_adapter != null && PrebidDemandSettings.isDemandEnabled(bidder)) {
                         for (Pair<String, String> keywordPair : prebidKeywords) {

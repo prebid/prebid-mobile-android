@@ -59,7 +59,6 @@ public class FacebookForDFPFragment extends Fragment {
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
         //region enable custom event
         builder.addCustomEventExtrasBundle(PrebidCustomEventBanner.class, new Bundle());
-        builder.addKeyword("prebid_banner");
         PublisherAdRequest request = builder.build();
         Prebid.attachBids(request, Constants.FACEBOOK_300x250, this.getActivity());
         //endregion
@@ -84,7 +83,6 @@ public class FacebookForDFPFragment extends Fragment {
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
         //region enable custom event
         builder.addCustomEventExtrasBundle(PrebidCustomEventInterstitial.class, new Bundle());
-        builder.addKeyword("prebid_interstitial");
         PublisherAdRequest request = builder.build();
         Prebid.attachBids(request, Constants.FACEBOOK_INTERSTITIAL, this.getActivity());
         //endregion
