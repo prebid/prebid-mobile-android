@@ -26,7 +26,7 @@ public class PrebidCustomEventInterstitial implements CustomEventInterstitial, A
 
     @Override
     public void requestInterstitialAd(Context context, CustomEventInterstitialListener customEventInterstitialListener, String s, MediationAdRequest mediationAdRequest, Bundle bundle) {
-        LogUtil.d("Facebook demand custom event called for DFP.");
+        LogUtil.i("Requesting custom event interstitial through DFP.");
         this.listener = customEventInterstitialListener;
         if (bundle != null) {
             String cacheId = (String) bundle.get(PREBID_CACHE_ID);

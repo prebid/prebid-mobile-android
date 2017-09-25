@@ -8,18 +8,21 @@ import android.view.ViewGroup;
 
 import org.json.JSONObject;
 import org.prebid.mobile.core.ErrorCode;
+import org.prebid.mobile.core.LogUtil;
 import org.prebid.mobile.core.PrebidDemandSettings;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Locale;
 
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ADLISTENER_INTERFACE;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ADSIZE_CLASS;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ADVIEW_CLASS;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_DESTROY_METHOD;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_GET_ERROR_CODE_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_GET_ERROR_MESSAGE_METHOD;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_LOAD_AD_FROM_BID_METHOD;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ON_AD_CLICKED_METHOD;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ON_AD_LOADED_METHOD;
@@ -39,11 +42,13 @@ public class BannerController {
     }
 
     public void loadAd(final Context context, final int width, final int height, final AdListener listener) {
+        LogUtil.i("Retrieving cached adm from server.");
         CacheService cs = new CacheService(new CacheService.CacheListener() {
             @Override
             public void onResponded(JSONObject jsonObject) {
                 switch (demand) {
                     case FACEBOOK:
+                        LogUtil.i("Loading Facebook banner demand.");
                         loadFacebookBanner(context, jsonObject, height, listener);
                         break;
                 }
@@ -73,7 +78,11 @@ public class BannerController {
                     if (method.getName().equals(FACEBOOK_ON_ERROR_METHOD)) {
                         try {
                             Method getErrorCode = objects[1].getClass().getMethod(FACEBOOK_GET_ERROR_CODE_METHOD);
-                            switch ((int) getErrorCode.invoke(objects[1])) {
+                            int errorCode = (int) getErrorCode.invoke(objects[1]);
+                            Method getErrorMessage = objects[1].getClass().getMethod(FACEBOOK_GET_ERROR_MESSAGE_METHOD);
+                            String errorMessage = (String) getErrorMessage.invoke(objects[1]);
+                            LogUtil.i(String.format(Locale.ENGLISH, "Facebook demand failed to load because of %s, error code is %d.", errorMessage, errorCode));
+                            switch (errorCode) {
                                 case 1000:
                                     listener.onAdFailed(adObject, ErrorCode.NETWORK_ERROR);
                                     break;
@@ -102,8 +111,10 @@ public class BannerController {
 
                     } else if (method.getName().equals(FACEBOOK_ON_AD_LOADED_METHOD)) {
                         ((View) adObject).setVisibility(View.VISIBLE);
+                        LogUtil.i("Facebook demand ad loaded.");
                         listener.onAdLoaded(adObject);
                     } else if (method.getName().equals(FACEBOOK_ON_AD_CLICKED_METHOD)) {
+                        LogUtil.i("Facebook demand ad clicked.");
                         listener.onAdClicked(adObject);
                     }
                     return null;
@@ -114,6 +125,7 @@ public class BannerController {
             Method loadAdFromBid = adViewClass.getMethod(FACEBOOK_LOAD_AD_FROM_BID_METHOD, String.class);
             loadAdFromBid.invoke(adObject, adm);
         } catch (Exception e) {
+            LogUtil.i(String.format(Locale.ENGLISH, "Facebook demand failed to load because of %s.", e.getMessage()));
             if (listener != null) {
                 listener.onAdFailed(adObject, ErrorCode.INTERNAL_ERROR);
             }

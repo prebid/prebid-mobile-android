@@ -39,6 +39,7 @@ public class PrebidDemandSettings {
     public static final String FACEBOOK_ON_INTERSTITIAL_DISPLAYED_METHOD = "onInterstitialDisplayed";
     public static final String FACEBOOK_ON_INTERSTITIAL_DISMISSED_METHOD = "onInterstitialDismissed";
     public static final String FACEBOOK_GET_ERROR_CODE_METHOD = "getErrorCode";
+    public static final String FACEBOOK_GET_ERROR_MESSAGE_METHOD = "getErrorMessage";
     public static final String FACEBOOK_SET_AD_LISTENER_METHOD = "setAdListener";
     public static final String FACEBOOK_LOAD_AD_FROM_BID_METHOD = "loadAdFromBid";
     public static final String FACEBOOK_DESTROY_METHOD = "destroy";

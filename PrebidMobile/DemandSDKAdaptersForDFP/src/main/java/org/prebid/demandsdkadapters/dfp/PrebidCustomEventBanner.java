@@ -28,7 +28,7 @@ public class PrebidCustomEventBanner implements CustomEventBanner, AdListener {
 
     @Override
     public void requestBannerAd(Context context, CustomEventBannerListener customEventBannerListener, String s, AdSize adSize, MediationAdRequest mediationAdRequest, Bundle bundle) {
-        LogUtil.d("Facebook demand custom event called for DFP.");
+        LogUtil.i("Requesting custom event banner through DFP.");
         this.listener = customEventBannerListener;
         if (bundle != null) {
             String cacheId = (String) bundle.get(PREBID_CACHE_ID);

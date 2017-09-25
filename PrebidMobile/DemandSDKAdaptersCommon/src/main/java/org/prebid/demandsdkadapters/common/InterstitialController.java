@@ -4,15 +4,18 @@ import android.content.Context;
 
 import org.json.JSONObject;
 import org.prebid.mobile.core.ErrorCode;
+import org.prebid.mobile.core.LogUtil;
 import org.prebid.mobile.core.PrebidDemandSettings;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Locale;
 
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_DESTROY_METHOD;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_GET_ERROR_CODE_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_GET_ERROR_MESSAGE_METHOD;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_INTERSTITIAL_ADLISTENER_INTERFACE;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_INTERSTITIAL_CLASS;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_LOAD_AD_FROM_BID_METHOD;
@@ -37,11 +40,13 @@ public class InterstitialController {
     }
 
     public void loadAd(final Context context, final AdListener listener) {
+        LogUtil.i("Retrieving cached adm from server.");
         CacheService cs = new CacheService(new CacheService.CacheListener() {
             @Override
             public void onResponded(JSONObject jsonObject) {
                 switch (demand) {
                     case FACEBOOK:
+                        LogUtil.i("Loading Facebook interstitial demand.");
                         loadFacebookIntersitial(context, jsonObject, listener);
                         break;
                 }
@@ -63,12 +68,18 @@ public class InterstitialController {
                 @Override
                 public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
                     if (method.getName().equals(FACEBOOK_ON_INTERSTITIAL_DISPLAYED_METHOD)) {
+                        LogUtil.i("Facebook interstitial shown.");
                         listener.onInterstitialShown(adObject);
                     } else if (method.getName().equals(FACEBOOK_ON_INTERSTITIAL_DISMISSED_METHOD)) {
+                        LogUtil.i("Facebook interstitial closed.");
                         listener.onInterstitialClosed(adObject);
                     } else if (method.getName().equals(FACEBOOK_ON_ERROR_METHOD)) {
                         Method getErrorCode = objects[1].getClass().getMethod(FACEBOOK_GET_ERROR_CODE_METHOD);
-                        switch ((int) getErrorCode.invoke(objects[1])) {
+                        int errorCode = (int) getErrorCode.invoke(objects[1]);
+                        Method getErrorMessage = objects[1].getClass().getMethod(FACEBOOK_GET_ERROR_MESSAGE_METHOD);
+                        String errorMessage = (String) getErrorMessage.invoke(objects[1]);
+                        LogUtil.i(String.format(Locale.ENGLISH, "Facebook demand failed to load because of %s, error code is %d.", errorMessage, errorCode));
+                        switch (errorCode) {
                             case 1000:
                                 listener.onAdFailed(adObject, ErrorCode.NETWORK_ERROR);
                                 break;
@@ -92,8 +103,10 @@ public class InterstitialController {
                                 break;
                         }
                     } else if (method.getName().equals(FACEBOOK_ON_AD_LOADED_METHOD)) {
+                        LogUtil.i("Facebook demand ad loaded.");
                         listener.onAdLoaded(adObject);
                     } else if (method.getName().equals(FACEBOOK_ON_AD_CLICKED_METHOD)) {
+                        LogUtil.i("Facebook demand ad clicked.");
                         listener.onAdClicked(adObject);
                     }
                     return null;
@@ -104,6 +117,7 @@ public class InterstitialController {
             Method loadAdFromBid = interstitialClass.getMethod(FACEBOOK_LOAD_AD_FROM_BID_METHOD, String.class);
             loadAdFromBid.invoke(adObject, adm);
         } catch (Exception e) {
+            LogUtil.i(String.format(Locale.ENGLISH, "Facebook demand failed to load because of %s.", e.getMessage()));
             if (listener != null) {
                 listener.onAdFailed(adObject, ErrorCode.INTERNAL_ERROR);
             }

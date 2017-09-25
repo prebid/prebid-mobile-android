@@ -25,7 +25,7 @@ public class PrebidCustomEventInterstitial extends CustomEventInterstitial imple
 
     @Override
     protected void loadInterstitial(Context context, CustomEventInterstitialListener customEventInterstitialListener, Map<String, Object> localExtras, Map<String, String> serverExtras) {
-        LogUtil.d("Facebook demand custom event called for MoPub.");
+        LogUtil.i("Requesting custom event interstitial through MoPub.");
         this.listener = customEventInterstitialListener;
         if (localExtras != null) {
             String cache_id = (String) localExtras.get(PREBID_CACHE_ID);
