@@ -29,7 +29,7 @@ public class PrebidCustomEventBanner extends CustomEventBanner implements AdList
 
     @Override
     protected void loadBanner(final Context context, final CustomEventBannerListener customEventBannerListener, Map<String, Object> localExtras, Map<String, String> serverExtras) {
-        LogUtil.d("Facebook demand custom event called for MoPub.");
+        LogUtil.i("Requesting custom event banner through MoPub.");
         this.listener = customEventBannerListener;
         if (localExtras != null) {
             String cache_id = (String) localExtras.get(PREBID_CACHE_ID);
