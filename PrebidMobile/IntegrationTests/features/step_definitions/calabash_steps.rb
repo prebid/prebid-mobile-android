@@ -20,9 +20,14 @@ Then(/^I should see AppNexus creative in PublisherAdView number (\d+)$/) do |arg
 end
 
 Then(/^I should see AppNexus creative in HTMLBannerWebView$/) do
-    @query_results = query("HTMLBannerWebView css:'body'")
-    unless @query_results[1]['html'].include?('pbm.js')
-        raise "Pbm.js not found, prebid creative was not served"
+    @query_results = query("HTMLBannerWebView css:'div'")
+    contains_header_bidding_ad = false
+    len = @query_results.length
+    for counter in 0..len-1
+        contains_header_bidding_ad = contains_header_bidding_ad || @query_results[counter]['textContent'].include?("A Header Bidding Ad.")
+    end
+    unless contains_header_bidding_ad
+        raise "Prebid creative was not served"
     end
 end
 
