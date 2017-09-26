@@ -93,7 +93,7 @@ public class Settings {
     public static final String deviceModel = Build.MODEL;
     public static final String os = "android";
     public static String userAgent = null;
-    public static String sdk_version = "0.0.0";
+    public static String sdk_version = "0.1.0";
     public static String pkgVersion = "";
     public static String appName = "";
     static int mnc = -1;
