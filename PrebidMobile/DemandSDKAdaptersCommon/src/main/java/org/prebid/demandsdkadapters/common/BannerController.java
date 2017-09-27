@@ -110,8 +110,9 @@ public class BannerController {
                         }
 
                     } else if (method.getName().equals(FACEBOOK_ON_AD_LOADED_METHOD)) {
-                        ((View) adObject).setVisibility(View.VISIBLE);
                         LogUtil.i("Facebook demand ad loaded.");
+                        ((ViewGroup) ((View) adObject).getParent()).removeView((View) adObject);
+                        ((View) adObject).setVisibility(View.VISIBLE);
                         listener.onAdLoaded(adObject);
                     } else if (method.getName().equals(FACEBOOK_ON_AD_CLICKED_METHOD)) {
                         LogUtil.i("Facebook demand ad clicked.");
