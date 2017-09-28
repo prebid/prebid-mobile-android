@@ -28,6 +28,10 @@ public class PrebidDemandSettings {
     public static final String FACEBOOK_BIDDER_NAME = "audienceNetwork";
     public static final String FACEBOOK_ADVIEW_CLASS = "com.facebook.ads.AdView";
     public static final String FACEBOOK_ADSIZE_CLASS = "com.facebook.ads.AdSize";
+    public static final String FACEBOOK_ADSIZE_BANNER_320_50 = "BANNER_320_50";
+    public static final String FACEBOOK_ADSIZE_BANNER_HEIGHT_50 = "BANNER_HEIGHT_50";
+    public static final String FACEBOOK_ADSIZE_BANNER_HEIGHT_90 = "BANNER_HEIGHT_90";
+    public static final String FACEBOOK_ADSIZE_RECTANGLE_HEIGHT_250 = "RECTANGLE_HEIGHT_250";
     public static final String FACEBOOK_ADLISTENER_INTERFACE = "com.facebook.ads.AdListener";
     public static final String FACEBOOK_AD_INTERFACE = "com.facebook.ads.Ad";
     public static final String FACEBOOK_ADERROR_CLASS = "com.facebook.ads.AdError";
@@ -81,6 +85,10 @@ public class PrebidDemandSettings {
                     Class adViewClass = Class.forName(FACEBOOK_ADVIEW_CLASS);
                     Class adSizeClass = Class.forName(FACEBOOK_ADSIZE_CLASS);
                     Constructor<?> adSizeConstructor = adSizeClass.getConstructor(int.class, int.class);
+                    Object adsize = adSizeClass.getDeclaredField(FACEBOOK_ADSIZE_BANNER_320_50).get(null);
+                    adsize = adSizeClass.getDeclaredField(FACEBOOK_ADSIZE_BANNER_HEIGHT_50).get(null);
+                    adsize = adSizeClass.getDeclaredField(FACEBOOK_ADSIZE_BANNER_HEIGHT_90).get(null);
+                    adsize = adSizeClass.getDeclaredField(FACEBOOK_ADSIZE_RECTANGLE_HEIGHT_250).get(null);
                     Constructor adViewContructor = adViewClass.getConstructor(Context.class, String.class, adSizeClass);
                     Class<?> adListenerInterface = Class.forName(FACEBOOK_ADLISTENER_INTERFACE);
                     Class<?> adClass = Class.forName(FACEBOOK_AD_INTERFACE);
