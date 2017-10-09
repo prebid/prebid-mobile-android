@@ -46,6 +46,7 @@ public class PrebidDemandSettings {
     public static final String FACEBOOK_GET_ERROR_MESSAGE_METHOD = "getErrorMessage";
     public static final String FACEBOOK_SET_AD_LISTENER_METHOD = "setAdListener";
     public static final String FACEBOOK_LOAD_AD_FROM_BID_METHOD = "loadAdFromBid";
+    public static final String FACEBOOK_DISABLE_AUTOREFRESH = "disableAutoRefresh";
     public static final String FACEBOOK_DESTROY_METHOD = "destroy";
     public static final String FACEBOOK_SHOW_METHOD = "show";
 
@@ -78,46 +79,50 @@ public class PrebidDemandSettings {
     }
 
     public static void enableDemand(Demand demand) throws Exception {
-        String errorMessage = "Prebid SDK uses %s that's not compatible with the version you're using.";
         switch (demand) {
             case FACEBOOK:
-                try {
-                    Class adViewClass = Class.forName(FACEBOOK_ADVIEW_CLASS);
-                    Class adSizeClass = Class.forName(FACEBOOK_ADSIZE_CLASS);
-                    Constructor<?> adSizeConstructor = adSizeClass.getConstructor(int.class, int.class);
-                    Object adsize = adSizeClass.getDeclaredField(FACEBOOK_ADSIZE_BANNER_320_50).get(null);
-                    adsize = adSizeClass.getDeclaredField(FACEBOOK_ADSIZE_BANNER_HEIGHT_50).get(null);
-                    adsize = adSizeClass.getDeclaredField(FACEBOOK_ADSIZE_BANNER_HEIGHT_90).get(null);
-                    adsize = adSizeClass.getDeclaredField(FACEBOOK_ADSIZE_RECTANGLE_HEIGHT_250).get(null);
-                    Constructor adViewContructor = adViewClass.getConstructor(Context.class, String.class, adSizeClass);
-                    Class<?> adListenerInterface = Class.forName(FACEBOOK_ADLISTENER_INTERFACE);
-                    Class<?> adClass = Class.forName(FACEBOOK_AD_INTERFACE);
-                    Class<?> adErrorClass = Class.forName(FACEBOOK_ADERROR_CLASS);
-                    Method onError = adListenerInterface.getMethod(FACEBOOK_ON_ERROR_METHOD, adClass, adErrorClass);
-                    Method onAdLoaded = adListenerInterface.getMethod(FACEBOOK_ON_AD_LOADED_METHOD, adClass);
-                    Method onAdClicked = adListenerInterface.getMethod(FACEBOOK_ON_AD_CLICKED_METHOD, adClass);
-                    Method getErrorCode = adErrorClass.getMethod(FACEBOOK_GET_ERROR_CODE_METHOD);
-                    Method setAdListener = adViewClass.getMethod(FACEBOOK_SET_AD_LISTENER_METHOD, adListenerInterface);
-                    Method loadAdFromBid = adViewClass.getMethod(FACEBOOK_LOAD_AD_FROM_BID_METHOD, String.class);
-                    Method destroy = adViewClass.getMethod(FACEBOOK_DESTROY_METHOD);
-                    Class<?> interstitialClass = Class.forName(FACEBOOK_INTERSTITIAL_CLASS);
-                    Constructor<?> interstitialContructor = interstitialClass.getConstructor(Context.class, String.class);
-                    Class<?> interstitialAdListenerInterface = Class.forName(FACEBOOK_INTERSTITIAL_ADLISTENER_INTERFACE);
-                    onError = interstitialAdListenerInterface.getMethod(FACEBOOK_ON_ERROR_METHOD, adClass, adErrorClass);
-                    onAdLoaded = interstitialAdListenerInterface.getMethod(FACEBOOK_ON_AD_LOADED_METHOD, adClass);
-                    onAdClicked = interstitialAdListenerInterface.getMethod(FACEBOOK_ON_AD_CLICKED_METHOD, adClass);
-                    Method onInterstitialDisplayed = interstitialAdListenerInterface.getMethod(FACEBOOK_ON_INTERSTITIAL_DISPLAYED_METHOD, adClass);
-                    Method onInterstitialDismissed = interstitialAdListenerInterface.getMethod(FACEBOOK_ON_INTERSTITIAL_DISMISSED_METHOD, adClass);
-                    setAdListener = interstitialClass.getMethod(FACEBOOK_SET_AD_LISTENER_METHOD, interstitialAdListenerInterface);
-                    loadAdFromBid = interstitialClass.getMethod(FACEBOOK_LOAD_AD_FROM_BID_METHOD, String.class);
-                    destroy = interstitialClass.getMethod(FACEBOOK_DESTROY_METHOD);
-                    Method show = interstitialClass.getMethod(FACEBOOK_SHOW_METHOD);
-                } catch (Exception e) {
-                    throw new Exception(String.format(Locale.ENGLISH, errorMessage, "facebook audience network sdk"));
-                }
+                validateFacebookAudienceNetworkSDK();
                 break;
         }
         demandSet.add(demand);
+    }
+
+    public static void validateFacebookAudienceNetworkSDK() throws Exception {
+        try {
+            Class adViewClass = Class.forName(FACEBOOK_ADVIEW_CLASS);
+            Class adSizeClass = Class.forName(FACEBOOK_ADSIZE_CLASS);
+            Constructor<?> adSizeConstructor = adSizeClass.getConstructor(int.class, int.class);
+            Object adsize = adSizeClass.getDeclaredField(FACEBOOK_ADSIZE_BANNER_320_50).get(null);
+            adsize = adSizeClass.getDeclaredField(FACEBOOK_ADSIZE_BANNER_HEIGHT_50).get(null);
+            adsize = adSizeClass.getDeclaredField(FACEBOOK_ADSIZE_BANNER_HEIGHT_90).get(null);
+            adsize = adSizeClass.getDeclaredField(FACEBOOK_ADSIZE_RECTANGLE_HEIGHT_250).get(null);
+            Constructor adViewContructor = adViewClass.getConstructor(Context.class, String.class, adSizeClass);
+            Class<?> adListenerInterface = Class.forName(FACEBOOK_ADLISTENER_INTERFACE);
+            Class<?> adClass = Class.forName(FACEBOOK_AD_INTERFACE);
+            Class<?> adErrorClass = Class.forName(FACEBOOK_ADERROR_CLASS);
+            Method onError = adListenerInterface.getMethod(FACEBOOK_ON_ERROR_METHOD, adClass, adErrorClass);
+            Method onAdLoaded = adListenerInterface.getMethod(FACEBOOK_ON_AD_LOADED_METHOD, adClass);
+            Method onAdClicked = adListenerInterface.getMethod(FACEBOOK_ON_AD_CLICKED_METHOD, adClass);
+            Method getErrorCode = adErrorClass.getMethod(FACEBOOK_GET_ERROR_CODE_METHOD);
+            Method setAdListener = adViewClass.getMethod(FACEBOOK_SET_AD_LISTENER_METHOD, adListenerInterface);
+            Method loadAdFromBid = adViewClass.getMethod(FACEBOOK_LOAD_AD_FROM_BID_METHOD, String.class);
+            Method disableAutoRefresh = adViewClass.getMethod(FACEBOOK_DISABLE_AUTOREFRESH);
+            Method destroy = adViewClass.getMethod(FACEBOOK_DESTROY_METHOD);
+            Class<?> interstitialClass = Class.forName(FACEBOOK_INTERSTITIAL_CLASS);
+            Constructor<?> interstitialContructor = interstitialClass.getConstructor(Context.class, String.class);
+            Class<?> interstitialAdListenerInterface = Class.forName(FACEBOOK_INTERSTITIAL_ADLISTENER_INTERFACE);
+            onError = interstitialAdListenerInterface.getMethod(FACEBOOK_ON_ERROR_METHOD, adClass, adErrorClass);
+            onAdLoaded = interstitialAdListenerInterface.getMethod(FACEBOOK_ON_AD_LOADED_METHOD, adClass);
+            onAdClicked = interstitialAdListenerInterface.getMethod(FACEBOOK_ON_AD_CLICKED_METHOD, adClass);
+            Method onInterstitialDisplayed = interstitialAdListenerInterface.getMethod(FACEBOOK_ON_INTERSTITIAL_DISPLAYED_METHOD, adClass);
+            Method onInterstitialDismissed = interstitialAdListenerInterface.getMethod(FACEBOOK_ON_INTERSTITIAL_DISMISSED_METHOD, adClass);
+            setAdListener = interstitialClass.getMethod(FACEBOOK_SET_AD_LISTENER_METHOD, interstitialAdListenerInterface);
+            loadAdFromBid = interstitialClass.getMethod(FACEBOOK_LOAD_AD_FROM_BID_METHOD, String.class);
+            destroy = interstitialClass.getMethod(FACEBOOK_DESTROY_METHOD);
+            Method show = interstitialClass.getMethod(FACEBOOK_SHOW_METHOD);
+        } catch (Exception e) {
+            throw new Exception("Prebid SDK uses facebook audience network sdk that's not compatible with the version you're using.");
+        }
     }
 
 }
