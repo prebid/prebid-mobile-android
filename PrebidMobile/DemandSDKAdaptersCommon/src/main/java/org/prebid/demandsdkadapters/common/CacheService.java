@@ -3,6 +3,7 @@ package org.prebid.demandsdkadapters.common;
 import android.os.AsyncTask;
 
 import org.json.JSONObject;
+import org.prebid.mobile.core.LogUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -47,8 +48,8 @@ public class CacheService extends AsyncTask<Object, Object, JSONObject> {
                 reader.close();
                 is.close();
                 String result = builder.toString();
+                LogUtil.i(String.format("For cache id %s, Prebid cache returned response %s", cacheId, result));
                 JSONObject response = new JSONObject(result);
-                // in the future, this can be improved to parse response base on request versions
                 return response;
             }
         } catch (Exception e) {

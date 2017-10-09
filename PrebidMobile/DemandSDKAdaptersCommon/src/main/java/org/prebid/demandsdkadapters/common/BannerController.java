@@ -25,6 +25,7 @@ import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ADSIZE_CLASS;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ADSIZE_RECTANGLE_HEIGHT_250;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_ADVIEW_CLASS;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_DESTROY_METHOD;
+import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_DISABLE_AUTOREFRESH;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_GET_ERROR_CODE_METHOD;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_GET_ERROR_MESSAGE_METHOD;
 import static org.prebid.mobile.core.PrebidDemandSettings.FACEBOOK_LOAD_AD_FROM_BID_METHOD;
@@ -82,6 +83,8 @@ public class BannerController {
             if (adSize != null) {
                 Constructor<?> adViewConstructor = adViewClass.getConstructor(Context.class, String.class, adSizeClass);
                 adObject = adViewConstructor.newInstance(context, placementID, adSize);
+                Method disableAutoRefresh = adViewClass.getMethod(FACEBOOK_DISABLE_AUTOREFRESH);
+                disableAutoRefresh.invoke(adObject);
                 ((Activity) context).getWindow().addContentView((View) adObject, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 ((View) adObject).setVisibility(View.GONE);
                 Class<?> adListenerInterface = Class.forName(FACEBOOK_ADLISTENER_INTERFACE);
