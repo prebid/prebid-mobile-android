@@ -49,6 +49,8 @@ public class PrebidDemandSettings {
     public static final String FACEBOOK_DISABLE_AUTOREFRESH = "disableAutoRefresh";
     public static final String FACEBOOK_DESTROY_METHOD = "destroy";
     public static final String FACEBOOK_SHOW_METHOD = "show";
+    public static final String FACEBOOK_BIDDER_TOKEN_PROVIDER = "com.facebook.ads.BidderTokenProvider";
+    public static final String FACEBOOK_GET_BIDDER_TOKEN = "getBidderToken";
 
     // Demand constants
     public enum Demand {
@@ -120,6 +122,8 @@ public class PrebidDemandSettings {
             loadAdFromBid = interstitialClass.getMethod(FACEBOOK_LOAD_AD_FROM_BID_METHOD, String.class);
             destroy = interstitialClass.getMethod(FACEBOOK_DESTROY_METHOD);
             Method show = interstitialClass.getMethod(FACEBOOK_SHOW_METHOD);
+            Class bidderTokenProvider = Class.forName(FACEBOOK_BIDDER_TOKEN_PROVIDER);
+            Method getBidderToken = bidderTokenProvider.getMethod(FACEBOOK_GET_BIDDER_TOKEN, Context.class);
         } catch (Exception e) {
             throw new Exception("Prebid SDK uses facebook audience network sdk that's not compatible with the version you're using.");
         }
