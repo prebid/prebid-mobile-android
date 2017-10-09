@@ -23,6 +23,7 @@ import org.prebid.mobile.core.DemandAdapter;
 import org.prebid.mobile.core.ErrorCode;
 import org.prebid.mobile.core.LogUtil;
 import org.prebid.mobile.core.Prebid;
+import org.prebid.mobile.core.PrebidDemandSettings;
 import org.prebid.mobile.core.TargetingParams;
 import org.prebid.mobile.prebidserver.internal.AdvertisingIDUtil;
 import org.prebid.mobile.prebidserver.internal.Settings;
@@ -525,15 +526,17 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             }
         } catch (JSONException e) {
         }
-        try {
-            Class fb_Class = Class.forName("com.facebook.ads.BidderTokenProvider");
-            Method method = fb_Class.getMethod("getBidderToken", Context.class);
-            String bidderToken = (String) method.invoke(null, context);
-            if (!TextUtils.isEmpty(bidderToken)) {
-                user.put(Settings.REQUEST_BUYERUID, bidderToken);
+        if (PrebidDemandSettings.isDemandEnabled(PrebidDemandSettings.Demand.FACEBOOK)) {
+            try {
+                Class fb_Class = Class.forName(PrebidDemandSettings.FACEBOOK_BIDDER_TOKEN_PROVIDER);
+                Method method = fb_Class.getMethod(PrebidDemandSettings.FACEBOOK_GET_BIDDER_TOKEN, Context.class);
+                String bidderToken = (String) method.invoke(null, context);
+                if (!TextUtils.isEmpty(bidderToken)) {
+                    user.put(Settings.REQUEST_BUYERUID, bidderToken);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return user;
     }
