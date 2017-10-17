@@ -1,6 +1,5 @@
 package org.prebid.mobile.demoapp.mopubdemofragments;
 
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,6 @@ import org.prebid.mobile.core.Prebid;
 import org.prebid.mobile.demoapp.Constants;
 import org.prebid.mobile.demoapp.R;
 
-
 public class MoPubInterstitialFragment extends Fragment implements Prebid.OnAttachCompleteListener, MoPubInterstitial.InterstitialAdListener {
     MoPubInterstitial interstitialAdView;
     private View root;
@@ -27,7 +25,7 @@ public class MoPubInterstitialFragment extends Fragment implements Prebid.OnAtta
         super.onCreateView(inflater, container, savedInstanceState);
         root = inflater.inflate(R.layout.fragment_interstitial, null);
 
-        interstitialAdView = new MoPubInterstitial(this.getActivity(), "fc82df5c964945c79cceef4c5666e1e2");
+        interstitialAdView = new MoPubInterstitial(this.getActivity(), Constants.MOPUB_INTERSTITIAL_AD_UNIT_ID);
 
         Button btnLoad = (Button) root.findViewById(R.id.loadInterstitial);
         btnLoad.setOnClickListener(new View.OnClickListener() {
