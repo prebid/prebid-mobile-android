@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.core.AdSize;
+import org.prebid.mobile.core.AdType;
 import org.prebid.mobile.core.AdUnit;
 import org.prebid.mobile.core.BidManager;
 import org.prebid.mobile.core.BidResponse;
@@ -232,6 +233,11 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                     sizes.put(sizeConfig);
                 }
                 adUnitConfig.put(Settings.REQUEST_SIZES, sizes);
+                if (adUnit.getAdType().equals(AdType.INTERSTITIAL)) {
+                    adUnitConfig.put(Settings.REQUEST_INSTL, 1);
+                } else if (AdType.BANNER.equals(adUnit.getAdType())) {
+                    adUnitConfig.put(Settings.REQUEST_INSTL, 0);
+                }
                 adUnitConfigs.put(adUnitConfig);
             } catch (JSONException e) {
             }

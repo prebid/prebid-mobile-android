@@ -36,6 +36,7 @@ public class Settings {
     public static final String REQUEST_WIDTH = "w";
     public static final String REQUEST_HEIGHT = "h";
     public static final String REQUEST_SIZES = "sizes";
+    public static final String REQUEST_INSTL = "instl";
     public static final String REQUEST_USER = "user";
     public static final String REQUEST_BUYERUID = "buyeruid";
     public static final String REQUEST_AGE = "age";
