@@ -251,7 +251,8 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             if (context != null) {
                 device.put(Settings.REQUEST_DEVICE_WIDTH, context.getResources().getConfiguration().screenWidthDp);
                 device.put(Settings.REQUEST_DEVICE_HEIGHT, context.getResources().getConfiguration().screenHeightDp);
-                device.put(Settings.REQUEST_DEVICE_PIXEL_RATIO, context.getResources().getDisplayMetrics().density);
+
+                device.put(Settings.REQUEST_DEVICE_PIXEL_RATIO, String.valueOf(context.getResources().getDisplayMetrics().density));
 
                 TelephonyManager telephonyManager = (TelephonyManager) context
                         .getSystemService(Context.TELEPHONY_SERVICE);
