@@ -252,6 +252,8 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 device.put(Settings.REQUEST_DEVICE_WIDTH, context.getResources().getConfiguration().screenWidthDp);
                 device.put(Settings.REQUEST_DEVICE_HEIGHT, context.getResources().getConfiguration().screenHeightDp);
 
+                device.put(Settings.REQUEST_DEVICE_PIXEL_RATIO, String.valueOf(context.getResources().getDisplayMetrics().density));
+
                 TelephonyManager telephonyManager = (TelephonyManager) context
                         .getSystemService(Context.TELEPHONY_SERVICE);
                 // Get mobile country codes

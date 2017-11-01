@@ -53,6 +53,7 @@ public class Settings {
     public static final String REQUEST_DEVICE_MODEL = "model";
     public static final String REQUEST_DEVICE_WIDTH = "w";
     public static final String REQUEST_DEVICE_HEIGHT = "h";
+    public static final String REQUEST_DEVICE_PIXEL_RATIO = "pixelratio";
     public static final String REQUEST_MCC_MNC = "mccmnc";
     public static final String REQUEST_LMT = "lmt";
     public static final String REQUEST_CONNECTION_TYPE = "connectiontype";
