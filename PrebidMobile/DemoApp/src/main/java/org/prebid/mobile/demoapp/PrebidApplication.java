@@ -59,8 +59,8 @@ public class PrebidApplication extends Application {
         ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
 
         //Configure Ad-Slot1
-        BannerAdUnit adUnit1 = new BannerAdUnit(BANNER_320x50, PBS_CONFIG_320x50_APPNEXUS_DEMAND);
-        adUnit1.addSize(320, 50);
+//        BannerAdUnit adUnit1 = new BannerAdUnit(BANNER_320x50, PBS_CONFIG_320x50_APPNEXUS_DEMAND);
+//        adUnit1.addSize(320, 50);
 
         //Configure Ad-Slot2 with the same demand source
         BannerAdUnit adUnit2 = new BannerAdUnit(BANNER_300x250, PBS_CONFIG_300x250_APPNEXUS_DEMAND);
@@ -71,10 +71,11 @@ public class PrebidApplication extends Application {
 
         //Configure Ad Unit with facebook demand source
         BannerAdUnit adUnit4 = new BannerAdUnit(FACEBOOK_300x250, PBS_CONFIG_300x250_FACEBOOK_DEMAND);
+//        BannerAdUnit adUnit4 = new BannerAdUnit(FACEBOOK_300x250, "7767e961-6ead-45e0-856e-d82c75010dd7");
         adUnit4.addSize(300, 250);
         InterstitialAdUnit adUnit5 = new InterstitialAdUnit(FACEBOOK_INTERSTITIAL, PBS_CONFIG_INTERSTITIAL_FACEBOOK_DEMAND);
         // Add Configuration
-        adUnits.add(adUnit1);
+//        adUnits.add(adUnit1);
         adUnits.add(adUnit2);
         adUnits.add(adUnit3);
         adUnits.add(adUnit4);

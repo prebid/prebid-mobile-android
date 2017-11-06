@@ -32,6 +32,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -84,10 +85,11 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                     LogUtil.e("Unable to retrieve tid from response.");
                     return;
                 }
-                if (tid == null || !tid.equals(currentTID)) {
-                    // todo, think about when the request method is called multiple times?
+                if (tid == null || !requestedTIDs.contains(tid)) {
                     LogUtil.e("tid in response does not match the one in request.");
                     return;
+                } else {
+                    requestedTIDs.remove(tid);
                 }
                 JSONArray bids = null;
                 try {
@@ -198,11 +200,12 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         return postData;
     }
 
-    private String currentTID = null;
+    private List<String> requestedTIDs = new ArrayList<String>();
 
     private String generateTID() {
-        currentTID = UUID.randomUUID().toString();
-        return currentTID;
+        String tid = UUID.randomUUID().toString();
+        requestedTIDs.add(tid);
+        return tid;
     }
 
     private JSONObject getSDKVersion() {

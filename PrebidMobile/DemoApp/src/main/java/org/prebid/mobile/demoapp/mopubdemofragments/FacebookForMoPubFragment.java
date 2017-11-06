@@ -1,6 +1,7 @@
 package org.prebid.mobile.demoapp.mopubdemofragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -32,17 +33,101 @@ public class FacebookForMoPubFragment extends Fragment {
         btnLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadMoPubBanner();
+                refreshBannerBidUntilReady();
             }
         });
         Button loadInterstitial = (Button) root.findViewById(R.id.loadInterstitial);
         loadInterstitial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadMoPubInterstitial();
+                refreshInterstitialBidUntilReady();
             }
         });
         return root;
+    }
+
+    private void refreshBannerBidUntilReady() {
+        FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame);
+        adFrame.removeAllViews();
+        if (adView != null) {
+            adView.destroy();
+        }
+        adView = new MoPubView(this.getActivity());
+        adView.setAdUnitId("bcef78630d754295a1a7757b434941d1");
+        adView.setAutorefreshEnabled(true);
+        adView.setMinimumWidth(300);
+        adView.setMinimumHeight(250);
+        adView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.TOP | Gravity.CENTER_HORIZONTAL));
+        adFrame.addView(adView);
+        final Handler handler = new Handler();
+        final Runnable attachBids = new Runnable() {
+            int count = 0;
+
+            @Override
+            public void run() {
+                Prebid.attachBids(adView, Constants.FACEBOOK_300x250, FacebookForMoPubFragment.this.getActivity());
+                if ((adView.getKeywords() == null || !adView.getKeywords().contains("hb_pb")) && count < 10) {
+                    count++;
+                    handler.postDelayed(this, 1000);
+                } else {
+                    adView.loadAd();
+                }
+            }
+        };
+        handler.post(attachBids);
+
+    }
+
+    private void refreshInterstitialBidUntilReady() {
+        if (interstitialAdView != null) {
+            interstitialAdView.destroy();
+        }
+        interstitialAdView = new MoPubInterstitial(this.getActivity(), "1bfc4a07a3054cac9d349a072a171173");
+        interstitialAdView.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
+            @Override
+            public void onInterstitialLoaded(MoPubInterstitial interstitial) {
+                if (interstitialAdView.isReady()) {
+                    interstitialAdView.show();
+                }
+            }
+
+            @Override
+            public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
+
+            }
+
+            @Override
+            public void onInterstitialShown(MoPubInterstitial interstitial) {
+
+            }
+
+            @Override
+            public void onInterstitialClicked(MoPubInterstitial interstitial) {
+
+            }
+
+            @Override
+            public void onInterstitialDismissed(MoPubInterstitial interstitial) {
+
+            }
+        });
+        final Handler handler = new Handler();
+        final Runnable attachBids = new Runnable() {
+            int count = 0;
+
+            @Override
+            public void run() {
+                Prebid.attachBids(interstitialAdView, Constants.FACEBOOK_INTERSTITIAL, getContext());
+                if ((interstitialAdView.getKeywords() == null || !interstitialAdView.getKeywords().contains("hb_pb")) && count < 10) {
+                    count++;
+                    handler.postDelayed(this, 1000);
+                } else {
+                    interstitialAdView.load();
+                }
+            }
+        };
+        handler.post(attachBids);
+
     }
 
     private void loadMoPubBanner() {
@@ -67,7 +152,7 @@ public class FacebookForMoPubFragment extends Fragment {
             interstitialAdView.destroy();
         }
         interstitialAdView = new MoPubInterstitial(this.getActivity(), "1bfc4a07a3054cac9d349a072a171173");
-        Prebid.attachBids(interstitialAdView, Constants.FACEBOOK_INTERSTITIAL, getContext()); // todo update this
+        Prebid.attachBids(interstitialAdView, Constants.FACEBOOK_INTERSTITIAL, getContext());
         interstitialAdView.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
             @Override
             public void onInterstitialLoaded(MoPubInterstitial interstitial) {

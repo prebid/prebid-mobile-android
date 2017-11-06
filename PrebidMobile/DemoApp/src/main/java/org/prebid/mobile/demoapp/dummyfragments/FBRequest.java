@@ -205,7 +205,7 @@ public class FBRequest extends AsyncTask<Object, Object, JSONObject> {
         if (listener != null) {
             try {
                 jsonObject.put("type", type);
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             listener.onFBResponded(jsonObject);
