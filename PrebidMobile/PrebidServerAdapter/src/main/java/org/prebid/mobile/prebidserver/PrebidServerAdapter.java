@@ -33,6 +33,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -104,8 +105,10 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             if (response == null || response.length() == 0) {
                 LogUtil.e("empty server response.");
             } else {
+
                 // check if seatbid is presented in the response first
                 JSONArray seatbid = null;
+
                 try {
                     seatbid = response.getJSONArray("seatbid");
                 } catch (JSONException e) {
@@ -229,9 +232,11 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         return postData;
     }
 
+
     private JSONObject getRequestExtData() {
         JSONObject ext = new JSONObject();
         JSONObject prebid = new JSONObject();
+
         try {
             if (!Prebid.useLocalCache()) {
                 JSONObject bids = new JSONObject();

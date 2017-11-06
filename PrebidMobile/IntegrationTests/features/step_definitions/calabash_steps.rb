@@ -38,3 +38,9 @@ Then(/^I should see AppNexus creative in MraidBridgeMraidWebView$/) do
     end
 end
 
+Then(/^I should see Facebook creative$/) do
+    unless query('AdView')[0]['class'] == "com.facebook.ads.AdView"
+        raise "Facebook AdView is not in the view hierarchy."
+    end
+end
+
