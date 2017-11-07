@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.Button;
 
 import com.google.android.gms.ads.AdListener;
@@ -31,7 +30,7 @@ public class DFPInterstitialFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_interstitial, null);
         // interstitial set up
         mPublisherInterstitialAd = new PublisherInterstitialAd(getContext());
-        mPublisherInterstitialAd.setAdUnitId(Constants.DFP_INTERSTITIAL_ADUNIT_FULLSCREEN);
+        mPublisherInterstitialAd.setAdUnitId(Constants.DFP_INTERSTITIAL_ADUNIT_ID_FULLSCREEN);
         mPublisherInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(int i) {
