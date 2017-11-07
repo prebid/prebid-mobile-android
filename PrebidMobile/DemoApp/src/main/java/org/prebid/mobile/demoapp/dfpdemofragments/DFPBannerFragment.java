@@ -48,34 +48,34 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
-                LogUtil.d("DPF-Banner", "OnAdClosed");
+                LogUtil.d("DFP-Banner", "OnAdClosed");
             }
 
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
-                LogUtil.d("DPF-Banner", "OnAdFailedToLoad");
+                LogUtil.d("DFP-Banner", "OnAdFailedToLoad");
             }
 
             @Override
             public void onAdLeftApplication() {
                 super.onAdLeftApplication();
-                LogUtil.d("DPF-Banner", "onAdLeftApplication");
+                LogUtil.d("DFP-Banner", "onAdLeftApplication");
             }
 
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
-                LogUtil.d("DPF-Banner", "onAdOpened");
+                LogUtil.d("DFP-Banner", "onAdOpened");
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                LogUtil.d("DPF-Banner", "onAdLoaded");
+                LogUtil.d("DFP-Banner", "onAdLoaded");
             }
         };
-        
+
         return root;
     }
 
@@ -114,7 +114,7 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
         }
         return "undefined";
     }
-    
+
     private void setupBannerWithWait(final int waitTime) {
 
         FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame2);
@@ -125,9 +125,7 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
         adView2.setAdListener(adListener);
         adFrame.addView(adView2);
         //region PriceCheckForDFP API usage
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        PublisherAdRequest request = builder.build();
-        Prebid.attachBidsWhenReady(request, Constants.BANNER_300x250, this, waitTime, this.getActivity());
+        Prebid.attachBidsWhenReady(new PublisherAdRequest.Builder().build(), Constants.BANNER_300x250, this, waitTime, this.getActivity());
         //endregion
 
     }

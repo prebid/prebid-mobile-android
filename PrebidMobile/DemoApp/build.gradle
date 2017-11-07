@@ -35,4 +35,7 @@ dependencies {
     }
     compile project(":PrebidMobileCore")
     compile project(":PrebidServerAdapter")
+    compile project(":DemandSDKAdaptersForDFP")
+    compile project(":DemandSDKAdaptersForMoPub")
+    compile(name: 'ads-release', ext: 'aar')
 }

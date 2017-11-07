@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.prebid.mobile.demoapp.dfpdemofragments.DFPBannerFragment;
 import org.prebid.mobile.demoapp.dfpdemofragments.DFPInterstitialFragment;
+import org.prebid.mobile.demoapp.dfpdemofragments.FacebookForDFPFragment;
+import org.prebid.mobile.demoapp.dummyfragments.DummyFragment;
+import org.prebid.mobile.demoapp.mopubdemofragments.FacebookForMoPubFragment;
 import org.prebid.mobile.demoapp.mopubdemofragments.MoPubBannerFragment;
 import org.prebid.mobile.demoapp.mopubdemofragments.MoPubInterstitialFragment;
 
@@ -27,6 +30,10 @@ public class DemoActivity extends AppCompatActivity {
                     demoFragment = new DFPBannerFragment();
                 } else if ("interstitial".equals(adFormat)) {
                     demoFragment = new DFPInterstitialFragment();
+                } else if ("dummy".equals(adFormat)) {
+                    demoFragment = new DummyFragment();
+                } else if ("facebook".equals(adFormat)) {
+                    demoFragment = new FacebookForDFPFragment();
                 }
             } else if ("mopub".equals(adServerName)) {
                 String adFormat = intent.getExtras().getString(Constants.ADFORMAT);
@@ -34,6 +41,8 @@ public class DemoActivity extends AppCompatActivity {
                     demoFragment = new MoPubBannerFragment();
                 } else if ("interstitial".equals(adFormat)) {
                     demoFragment = new MoPubInterstitialFragment();
+                } else if ("facebook".equals(adFormat)) {
+                    demoFragment = new FacebookForMoPubFragment();
                 }
             }
         }
@@ -41,7 +50,8 @@ public class DemoActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.demoRoot, demoFragment).commit();
         }
-
+        String token = com.facebook.ads.BidderTokenProvider.getBidderToken(this);
+        String.valueOf(token); // todo remove this when done testing
     }
 
     // This is used in the calabash tests to grab the obfuscated web view class name from DFP

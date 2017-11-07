@@ -9,6 +9,10 @@ rm PrebidMobile-sources.jar >/dev/null 2>/dev/null
 rm PrebidMobile-javadoc.jar >/dev/null 2>/dev/null
 cp ../out/PrebidMobile.jar .
 cp ../out/PrebidMobile.jar PrebidMobile-sources.jar
+cp ../out/DemandSDKAdaptersForDFP.jar .
+cp ../out/DemandSDKAdaptersForDFP.jar DemandSDKAdaptersForDFP-sources.jar
+cp ../out/DemandSDKAdaptersForMoPub.jar .
+cp ../out/DemandSDKAdaptersForMoPub.jar DemandSDKAdaptersForMoPub-sources.jar
 cp -r ../out/Javadoc Javadoc
 jar cf PrebidMobile-javadoc.jar Javadoc
 
@@ -27,7 +31,9 @@ echoX "Deploying Prebid Mobile SDK on Maven..."
 #######
 mvn gpg:sign-and-deploy-file "-DpomFile=pom.xml" "-Dfile=PrebidMobile.jar" "-DrepositoryId=ossrh" "-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/" "-DstagingRepositoryId=ossrh" "-Dsources=PrebidMobile-sources.jar" "-Djavadoc=PrebidMobile-javadoc.jar" || { echoX "Deploy failed!"; echoX "End Script"; exit 1; } 
 
+mvn gpg:sign-and-deploy-file "-DpomFile=pom-demand-for-mopub.xml" "-Dfile=DemandSDKAdaptersForMoPub.jar" "-DrepositoryId=ossrh" "-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/" "-DstagingRepositoryId=ossrh" "-Dsources=DemandSDKAdaptersForMoPub-sources.jar" "-Djavadoc=PrebidMobile-javadoc.jar" || { echoX "Deploy failed!"; echoX "End Script"; exit 1; } 
 
+mvn gpg:sign-and-deploy-file "-DpomFile=pom-demand-for-dfp.xml" "-Dfile=DemandSDKAdaptersForDFP.jar" "-DrepositoryId=ossrh" "-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/" "-DstagingRepositoryId=ossrh" "-Dsources=DemandSDKAdaptersForDFP-sources.jar" "-Djavadoc=PrebidMobile-javadoc.jar" || { echoX "Deploy failed!"; echoX "End Script"; exit 1; } 
 
 #######
 # End

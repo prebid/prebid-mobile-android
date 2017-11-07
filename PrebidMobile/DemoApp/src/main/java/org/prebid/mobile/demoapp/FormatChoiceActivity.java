@@ -40,6 +40,25 @@ public class FormatChoiceActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 }));
+                // todo remove this
+                rootView.addView(getTextView("Dummy", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
+                        intent.putExtra(Constants.ADSERVER, "dfp");
+                        intent.putExtra(Constants.ADFORMAT, "dummy");
+                        startActivity(intent);
+                    }
+                }));
+                rootView.addView(getTextView("Show Facebook Demand", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
+                        intent.putExtra(Constants.ADSERVER, "dfp");
+                        intent.putExtra(Constants.ADFORMAT, "facebook");
+                        startActivity(intent);
+                    }
+                }));
             } else if ("mopub".equals(adServerName)) {
                 rootView.addView(getTextView("Show Banner Example", new View.OnClickListener() {
                     @Override
@@ -56,6 +75,15 @@ public class FormatChoiceActivity extends AppCompatActivity {
                         Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
                         intent.putExtra(Constants.ADSERVER, "mopub");
                         intent.putExtra(Constants.ADFORMAT, "interstitial");
+                        startActivity(intent);
+                    }
+                }));
+                rootView.addView(getTextView("Show Facebook Demand", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
+                        intent.putExtra(Constants.ADSERVER, "mopub");
+                        intent.putExtra(Constants.ADFORMAT, "facebook");
                         startActivity(intent);
                     }
                 }));

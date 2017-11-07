@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.core.AdSize;
+import org.prebid.mobile.core.AdType;
 import org.prebid.mobile.core.AdUnit;
 import org.prebid.mobile.core.BidManager;
 import org.prebid.mobile.core.BidResponse;
@@ -21,14 +22,17 @@ import org.prebid.mobile.core.DemandAdapter;
 import org.prebid.mobile.core.ErrorCode;
 import org.prebid.mobile.core.LogUtil;
 import org.prebid.mobile.core.Prebid;
+import org.prebid.mobile.core.PrebidDemandSettings;
 import org.prebid.mobile.core.TargetingParams;
 import org.prebid.mobile.prebidserver.internal.AdvertisingIDUtil;
 import org.prebid.mobile.prebidserver.internal.Settings;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -66,8 +70,11 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                     LogUtil.e("Unable to retrieve response status.");
                     return;
                 }
-                if (status == null || !status.equals(Settings.RESPONSE_STATUS_OK)) {
-                    LogUtil.e("Response status is not OK.");
+                if (status == null) {
+                    LogUtil.e("Response status is null");
+                    return;
+                } else if (!status.equals(Settings.RESPONSE_STATUS_OK)) {
+                    LogUtil.e("Response status is not OK, it is \"" + status + "\"");
                     return;
                 }
                 // check response tid
@@ -78,10 +85,11 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                     LogUtil.e("Unable to retrieve tid from response.");
                     return;
                 }
-                if (tid == null || !tid.equals(currentTID)) {
-                    // todo, think about when the request method is called multiple times?
+                if (tid == null || !requestedTIDs.contains(tid)) {
                     LogUtil.e("tid in response does not match the one in request.");
                     return;
+                } else {
+                    requestedTIDs.remove(tid);
                 }
                 JSONArray bids = null;
                 try {
@@ -174,7 +182,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             // todo the following are not in pbs_request.json, add request to support this?
             // add user
             // todo should we provide api for developers to pass in user's location (zip, city, address etc, not real time location)
-            JSONObject user = getUserObject();
+            JSONObject user = getUserObject(context);
             if (user != null && user.length() > 0) {
                 postData.put(Settings.REQUEST_USER, user);
             }
@@ -192,11 +200,12 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         return postData;
     }
 
-    private String currentTID = null;
+    private List<String> requestedTIDs = new ArrayList<String>();
 
     private String generateTID() {
-        currentTID = UUID.randomUUID().toString();
-        return currentTID;
+        String tid = UUID.randomUUID().toString();
+        requestedTIDs.add(tid);
+        return tid;
     }
 
     private JSONObject getSDKVersion() {
@@ -227,6 +236,11 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                     sizes.put(sizeConfig);
                 }
                 adUnitConfig.put(Settings.REQUEST_SIZES, sizes);
+                if (adUnit.getAdType().equals(AdType.INTERSTITIAL)) {
+                    adUnitConfig.put(Settings.REQUEST_INSTL, 1);
+                } else if (AdType.BANNER.equals(adUnit.getAdType())) {
+                    adUnitConfig.put(Settings.REQUEST_INSTL, 0);
+                }
                 adUnitConfigs.put(adUnitConfig);
             } catch (JSONException e) {
             }
@@ -417,7 +431,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
 
     }
 
-    private JSONObject getUserObject() {
+    private JSONObject getUserObject(Context context) {
         JSONObject user = new JSONObject();
         try {
             if (TargetingParams.getAge() > 0) {
@@ -441,6 +455,18 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 user.put(Settings.REQUEST_LANGUAGE, Settings.language);
             }
         } catch (JSONException e) {
+        }
+        if (PrebidDemandSettings.isDemandEnabled(PrebidDemandSettings.Demand.FACEBOOK)) {
+            try {
+                Class fb_Class = Class.forName(PrebidDemandSettings.FACEBOOK_BIDDER_TOKEN_PROVIDER);
+                Method method = fb_Class.getMethod(PrebidDemandSettings.FACEBOOK_GET_BIDDER_TOKEN, Context.class);
+                String bidderToken = (String) method.invoke(null, context);
+                if (!TextUtils.isEmpty(bidderToken)) {
+                    user.put(Settings.REQUEST_BUYERUID, bidderToken);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return user;
     }
