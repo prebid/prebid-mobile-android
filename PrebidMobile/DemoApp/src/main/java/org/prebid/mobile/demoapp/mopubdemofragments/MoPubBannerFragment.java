@@ -45,7 +45,7 @@ public class MoPubBannerFragment extends Fragment implements Prebid.OnAttachComp
         adView = new MoPubView(this.getActivity());
         FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame);
         adFrame.removeAllViews();
-        adView.setAdUnitId(Constants.MOPUB_AD_UNIT_ID_1);
+        adView.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_1);
         adView.setBannerAdListener(this);
         adView.setAutorefreshEnabled(true);
         adView.setMinimumWidth(320);
@@ -61,7 +61,7 @@ public class MoPubBannerFragment extends Fragment implements Prebid.OnAttachComp
         FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame2);
         adFrame.removeAllViews();
         adView2 = new MoPubView(this.getActivity());
-        adView2.setAdUnitId(Constants.MOPUB_AD_UNIT_ID_2);
+        adView2.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_2);
         adView2.setBannerAdListener(this);
         adView2.setAutorefreshEnabled(true);
         adView2.setMinimumWidth(300);
