@@ -30,7 +30,7 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.google.android.gms:play-services-ads:10.2.0'
-    compile('com.mopub:mopub-sdk:4.7.0@aar') {
+    compile('com.mopub:mopub-sdk:4.15.0@aar') {
         transitive = true
     }
     compile project(":PrebidMobileCore")
