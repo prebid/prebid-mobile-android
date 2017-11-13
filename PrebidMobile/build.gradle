@@ -5,7 +5,7 @@ ext {
     debugProguardEnabled = false
     prebidVersionName = "0.1.0"
     prebidVersionCode = 1
-    minSDKVersion = 14
+    minSDKVersion = 16
     targetSDKVersion = 25
     compileSdkVersion = 25
     buildToolsVersion = "25.0.0"

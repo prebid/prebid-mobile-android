@@ -56,7 +56,7 @@ public class PrebidApplication extends Application {
         adUnit2.addSize(300, 250);
 
         //Configure Interstitial Ad Unit
-        InterstitialAdUnit adUnit3 = new InterstitialAdUnit(INTERSTITIAL_ADUNIT_ID, PBS_CONFIG_APPNEXUS_DEMAND);
+        InterstitialAdUnit adUnit3 = new InterstitialAdUnit(INTERSTITIAL_FULLSCREEN, PBS_CONFIG_APPNEXUS_DEMAND);
 
         // Add Configuration
         adUnits.add(adUnit1);

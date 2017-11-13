@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.Button;
 
 import com.google.android.gms.ads.AdListener;
@@ -31,7 +30,7 @@ public class DFPInterstitialFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_interstitial, null);
         // interstitial set up
         mPublisherInterstitialAd = new PublisherInterstitialAd(getContext());
-        mPublisherInterstitialAd.setAdUnitId("/19968336/PriceCheck_Interstitial");
+        mPublisherInterstitialAd.setAdUnitId(Constants.DFP_INTERSTITIAL_ADUNIT_ID_FULLSCREEN);
         mPublisherInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(int i) {
@@ -65,7 +64,7 @@ public class DFPInterstitialFragment extends Fragment {
     }
 
     public void loadInterstitial(View view) {
-        Prebid.attachBids(request, Constants.INTERSTITIAL_ADUNIT_ID, getContext());
+        Prebid.attachBids(request, Constants.INTERSTITIAL_FULLSCREEN, getContext());
         mPublisherInterstitialAd.loadAd(request);
         Prebid.detachUsedBid(request);
     }

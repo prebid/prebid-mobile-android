@@ -83,7 +83,7 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
         FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame);
         adFrame.removeAllViews();
         adView1 = new PublisherAdView(getActivity());
-        adView1.setAdUnitId(Constants.DFP_BANNER_ADUNIT_320x50);
+        adView1.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_320x50);
         adView1.setAdSizes(new AdSize(320, 50));
         adView1.setAdListener(adListener);
         adFrame.addView(adView1);
@@ -120,7 +120,7 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
         FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame2);
         adFrame.removeAllViews();
         adView2 = new PublisherAdView(getActivity());
-        adView2.setAdUnitId(Constants.DFP_BANNER_ADUNIT_300x250);
+        adView2.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_300x250);
         adView2.setAdSizes(new AdSize(300, 250));
         adView2.setAdListener(adListener);
         adFrame.addView(adView2);

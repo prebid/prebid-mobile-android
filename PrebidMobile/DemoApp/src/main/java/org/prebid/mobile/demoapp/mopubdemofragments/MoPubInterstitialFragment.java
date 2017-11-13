@@ -27,7 +27,7 @@ public class MoPubInterstitialFragment extends Fragment implements Prebid.OnAtta
         super.onCreateView(inflater, container, savedInstanceState);
         root = inflater.inflate(R.layout.fragment_interstitial, null);
 
-        interstitialAdView = new MoPubInterstitial(this.getActivity(), "fc82df5c964945c79cceef4c5666e1e2");
+        interstitialAdView = new MoPubInterstitial(this.getActivity(), Constants.MOPUB_INTERSTITIAL_ADUNIT_ID_FULLSCREEN);
 
         Button btnLoad = (Button) root.findViewById(R.id.loadInterstitial);
         btnLoad.setOnClickListener(new View.OnClickListener() {
@@ -41,7 +41,7 @@ public class MoPubInterstitialFragment extends Fragment implements Prebid.OnAtta
     }
 
     public void loadInterstitial(View view) {
-        Prebid.attachBids(interstitialAdView, Constants.INTERSTITIAL_ADUNIT_ID, getContext());
+        Prebid.attachBids(interstitialAdView, Constants.INTERSTITIAL_FULLSCREEN, getContext());
         interstitialAdView.setInterstitialAdListener(this);
         interstitialAdView.load();
         Prebid.detachUsedBid(interstitialAdView);
