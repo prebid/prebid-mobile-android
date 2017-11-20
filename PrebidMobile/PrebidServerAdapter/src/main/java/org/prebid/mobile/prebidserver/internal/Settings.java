@@ -81,12 +81,13 @@ public class Settings {
     public static final String RESPONSE_TID = "tid";
     public static final String RESPONSE_BIDS = "bids";
     public static final String RESPONSE_CODE = "code";
-    public static final String RESPONSE_CACHE_ID = "cache_id";
     public static final String RESPONSE_PRICE = "price";
     public static final String RESPONSE_BIDDER = "bidder";
     public static final String RESPONSE_STATUS = "status";
     public static final String RESPONSE_STATUS_OK = "OK";
     public static final String RESPONSE_TARGETING = "ad_server_targeting";
+    public static final String RESPONSE_CREATIVE = "hb_creative_loadtype";
+    public static final String RESPONSE_CACHE_ID = "hb_cache_id";
 
     // Settings
     public static final String language = Locale.getDefault().getLanguage();

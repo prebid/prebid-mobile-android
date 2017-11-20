@@ -107,6 +107,8 @@ public class Prebid {
         }
         // set up bid manager
         BidManager.setBidsExpirationRunnable(context);
+        // set up cache manager
+        CacheManager.init(context);
         // start ad requests
         BidManager.requestBidsForAdUnits(context, adUnits);
     }

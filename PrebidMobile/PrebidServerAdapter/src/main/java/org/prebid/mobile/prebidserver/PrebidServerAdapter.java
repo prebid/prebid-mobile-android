@@ -17,6 +17,7 @@ import org.prebid.mobile.core.AdSize;
 import org.prebid.mobile.core.AdUnit;
 import org.prebid.mobile.core.BidManager;
 import org.prebid.mobile.core.BidResponse;
+import org.prebid.mobile.core.CacheManager;
 import org.prebid.mobile.core.DemandAdapter;
 import org.prebid.mobile.core.ErrorCode;
 import org.prebid.mobile.core.LogUtil;
@@ -97,16 +98,18 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                             String code = bid.getString(Settings.RESPONSE_CODE);
                             AdUnit adUnit = getAdUnitByCode(code);
                             if (adUnit != null) {
-                                String cacheId = bid.getString(Settings.RESPONSE_CACHE_ID);
                                 final double bidPrice = bid.getDouble(Settings.RESPONSE_PRICE);
                                 String bidder = bid.getString(Settings.RESPONSE_BIDDER);
                                 ArrayList<BidResponse> responseList = responses.get(adUnit);
                                 if (responseList == null) {
                                     responseList = new ArrayList<BidResponse>();
                                 }
+                                JSONObject targetingKeywords = bid.getJSONObject(Settings.RESPONSE_TARGETING);
+                                String format = targetingKeywords.getString(Settings.RESPONSE_CREATIVE);
+                                String cacheId = CacheManager.getCacheManager().saveCache(bid.toString(), format);
                                 BidResponse newBid = new BidResponse(bidPrice, cacheId);
                                 newBid.setBidderCode(bidder);
-                                JSONObject targetingKeywords = bid.getJSONObject(Settings.RESPONSE_TARGETING);
+                                newBid.addCustomKeyword(Settings.RESPONSE_CACHE_ID, cacheId);
                                 Iterator<?> keys = targetingKeywords.keys();
                                 while (keys.hasNext()) {
                                     String key = (String) keys.next();
@@ -150,7 +153,6 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         }
         JSONObject postData = new JSONObject();
         try {
-            postData.put(Settings.REQUEST_CACHE_MARKUP, 1);
             postData.put(Settings.REQUEST_SORT_BIDS, 1);
             postData.put(Settings.REQUEST_TID, generateTID());
             postData.put(Settings.REQUEST_ACCOUNT_ID, Prebid.getAccountId());
