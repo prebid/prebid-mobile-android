@@ -76,7 +76,7 @@ public class PrebidApplication extends Application {
 
         // Register  adslots for prebid.
         try {
-            Prebid.init(getApplicationContext(), adUnits, PBS_ACCOUNT_ID);
+            Prebid.init(getApplicationContext(), adUnits, PBS_ACCOUNT_ID, Prebid.HOST.APP_NEXUS);
         } catch (PrebidException e) {
             e.printStackTrace();
         }
