@@ -1,9 +1,11 @@
 package org.prebid.mobile.core;
 
 import android.content.Context;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.webkit.WebView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -13,11 +15,44 @@ public class CacheManager {
     private WebView mopubWebCache;
     private HashMap<String, String> sdkCache;
     private static CacheManager cache;
+    private HashMap<String, Long> cachedIds = new HashMap<String, Long>();
 
     private CacheManager(Context context) {
+        setupBidCleanUpRunnable();
         setupDFPCache(context);
         setupMoPubCache(context);
         setupSDKCache();
+    }
+
+    private void setupBidCleanUpRunnable() {
+        final Handler handler = new Handler();
+        final Runnable cleanCache = new Runnable() {
+            @Override
+            public void run() {
+                long now = System.currentTimeMillis();
+                ArrayList<String> toBeRemoved = new ArrayList<String>();
+                for (String key : cachedIds.keySet()) {
+                    if ((now - cachedIds.get(key)) > 270000) {
+                        toBeRemoved.add(key);
+                        String removeCache = "<html><script>localStorage.removeItem(\"" + key + "\");</script><html>";
+                        if (dfpWebCache != null) {
+                            dfpWebCache.loadDataWithBaseURL("https://pubads.g.doubleclick.net/", removeCache, "text/html", null, null);
+                        }
+                        if (mopubWebCache != null) {
+                            mopubWebCache.loadDataWithBaseURL("http://ads.mopub.com", removeCache, "text/html", null, null);
+                        }
+                        if (sdkCache != null) {
+                            sdkCache.remove(key);
+                        }
+                    }
+                }
+                for (String key : toBeRemoved) {
+                    cachedIds.remove(key);
+                }
+                handler.postDelayed(this, 270000);
+            }
+        };
+        handler.post(cleanCache);
     }
 
     static void init(Context context) {
@@ -34,7 +69,9 @@ public class CacheManager {
         if (TextUtils.isEmpty(bid)) {
             return null;
         }
-        String cacheId = UUID.randomUUID().toString();
+        String cacheId = "local_" + UUID.randomUUID().toString();
+        cachedIds.put(cacheId, System.currentTimeMillis());
+
         if ("html".equals(format)) {
             saveCacheForDFP(cacheId, bid);
             saveCacheForMoPub(cacheId, bid);
