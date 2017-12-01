@@ -109,11 +109,14 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                                 String cacheId = CacheManager.getCacheManager().saveCache(bid.toString(), format);
                                 BidResponse newBid = new BidResponse(bidPrice, cacheId);
                                 newBid.setBidderCode(bidder);
-                                newBid.addCustomKeyword(Settings.RESPONSE_CACHE_ID, cacheId);
                                 Iterator<?> keys = targetingKeywords.keys();
                                 while (keys.hasNext()) {
                                     String key = (String) keys.next();
-                                    newBid.addCustomKeyword(key, targetingKeywords.getString(key));
+                                    if (key.startsWith("hb_cache_id")) {
+                                        newBid.addCustomKeyword(key, cacheId);
+                                    } else {
+                                        newBid.addCustomKeyword(key, targetingKeywords.getString(key));
+                                    }
                                 }
                                 responseList.add(newBid);
                                 responses.put(adUnit, responseList);
