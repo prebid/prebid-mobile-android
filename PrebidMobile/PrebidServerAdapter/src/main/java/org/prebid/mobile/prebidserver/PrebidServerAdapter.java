@@ -104,18 +104,30 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                                 if (responseList == null) {
                                     responseList = new ArrayList<BidResponse>();
                                 }
-                                JSONObject targetingKeywords = bid.getJSONObject(Settings.RESPONSE_TARGETING);
-                                String format = targetingKeywords.getString(Settings.RESPONSE_CREATIVE);
-                                String cacheId = CacheManager.getCacheManager().saveCache(bid.toString(), format);
-                                BidResponse newBid = new BidResponse(bidPrice, cacheId);
-                                newBid.setBidderCode(bidder);
-                                Iterator<?> keys = targetingKeywords.keys();
-                                while (keys.hasNext()) {
-                                    String key = (String) keys.next();
-                                    if (key.startsWith("hb_cache_id")) {
-                                        newBid.addCustomKeyword(key, cacheId);
-                                    } else {
+                                BidResponse newBid;
+                                if (Prebid.getAdServer() == Prebid.AdServer.MOPUB) {
+                                    String cacheId = bid.getString(Settings.RESPONSE_CACHE_ID);
+                                    newBid = new BidResponse(bidPrice, cacheId);
+                                    JSONObject targetingKeywords = bid.getJSONObject(Settings.RESPONSE_TARGETING);
+                                    Iterator<?> keys = targetingKeywords.keys();
+                                    while (keys.hasNext()) {
+                                        String key = (String) keys.next();
                                         newBid.addCustomKeyword(key, targetingKeywords.getString(key));
+                                    }
+                                } else {
+                                    JSONObject targetingKeywords = bid.getJSONObject(Settings.RESPONSE_TARGETING);
+                                    String format = targetingKeywords.getString(Settings.RESPONSE_CREATIVE);
+                                    String cacheId = CacheManager.getCacheManager().saveCache(bid.toString(), format);
+                                    newBid = new BidResponse(bidPrice, cacheId);
+                                    newBid.setBidderCode(bidder);
+                                    Iterator<?> keys = targetingKeywords.keys();
+                                    while (keys.hasNext()) {
+                                        String key = (String) keys.next();
+                                        if (key.startsWith("hb_cache_id")) {
+                                            newBid.addCustomKeyword(key, cacheId);
+                                        } else {
+                                            newBid.addCustomKeyword(key, targetingKeywords.getString(key));
+                                        }
                                     }
                                 }
                                 responseList.add(newBid);
@@ -160,7 +172,11 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             postData.put(Settings.REQUEST_TID, generateTID());
             postData.put(Settings.REQUEST_ACCOUNT_ID, Prebid.getAccountId());
             postData.put(Settings.REQUEST_MAX_KEY, 20);
-
+            if (Prebid.getAdServer() == Prebid.AdServer.MOPUB) {
+                postData.put(Settings.REQUEST_CACHE_MARKUP, 1);
+            } else {
+                postData.put(Settings.REQUEST_CACHE_MARKUP, 0);
+            }
             // add ad units
             JSONArray adUnitConfigs = getAdUnitConfigs(adUnits);
             if (adUnitConfigs != null && adUnitConfigs.length() > 0) {

@@ -43,6 +43,12 @@ public class Prebid {
     private static String accountId;
     private static final int kMoPubQueryStringLimit = 4000;
 
+    public enum AdServer {
+        DFP,
+        MOPUB,
+        UNKNOWN
+    }
+
     //region Public APIs
 
     /**
@@ -67,7 +73,13 @@ public class Prebid {
      * @throws PrebidException
      */
 
-    public static void init(Context context, ArrayList<AdUnit> adUnits, String accountId) throws PrebidException {
+    private static AdServer adServer = AdServer.UNKNOWN;
+
+    public static AdServer getAdServer() {
+        return adServer;
+    }
+
+    public static void init(Context context, ArrayList<AdUnit> adUnits, String accountId, AdServer adServer) throws PrebidException {
         LogUtil.i("Initializing with a list of AdUnits");
         // validate context
         if (context == null) {
@@ -78,6 +90,7 @@ public class Prebid {
             throw new PrebidException(PrebidException.PrebidError.INVALID_ACCOUNT_ID);
         }
         Prebid.accountId = accountId;
+        Prebid.adServer = adServer;
         // validate ad units and register them
         if (adUnits == null || adUnits.isEmpty()) {
             throw new PrebidException(PrebidException.PrebidError.EMPTY_ADUNITS);
