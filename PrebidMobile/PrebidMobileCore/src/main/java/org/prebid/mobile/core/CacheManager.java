@@ -49,8 +49,8 @@ public class CacheManager {
     }
 
     private void removeCache(long now) {
-        String removeWebCache = "var currentTime = " + String.valueOf(now) +
-                "var toBeDeleted = [];\n" +
+        String removeWebCache = "<html><script>var currentTime = " + String.valueOf(now) + ";" +
+                "\nvar toBeDeleted = [];\n" +
                 "\n" +
                 "for(i = 0; i< localStorage.length; i ++) {\n" +
                 "\tif (localStorage.key(i).startsWith('Prebid_')) {\n" +
@@ -63,20 +63,25 @@ public class CacheManager {
                 "\n" +
                 "for ( i = 0; i< toBeDeleted.length; i ++) {\n" +
                 "\tlocalStorage.removeItem(toBeDeleted[i]);\n" +
-                "}";
-        dfpWebCache.loadDataWithBaseURL("https://pubads.g.doubleclick.net", removeWebCache, "text/html", null, null);
-        mopubWebCache.loadDataWithBaseURL("http://ads.mopub.com", removeWebCache, "text/html", null, null);
-        ArrayList<String> toBeDeleted = new ArrayList<String>();
-        for (String key : sdkCache.keySet()) {
-            long createdTime = Long.valueOf(key.split("_")[2]);
-            if ((now - createdTime) > 270000) { // todo change it back
-                toBeDeleted.add(key);
+                "}</script></html>";
+        if (dfpWebCache != null) {
+            dfpWebCache.loadDataWithBaseURL("https://pubads.g.doubleclick.net", removeWebCache, "text/html", null, null);
+        }
+        if (mopubWebCache != null) {
+            mopubWebCache.loadDataWithBaseURL("http://ads.mopub.com", removeWebCache, "text/html", null, null);
+        }
+        if (sdkCache != null) {
+            ArrayList<String> toBeDeleted = new ArrayList<String>();
+            for (String key : sdkCache.keySet()) {
+                long createdTime = Long.valueOf(key.split("_")[2]);
+                if ((now - createdTime) > 270000) {
+                    toBeDeleted.add(key);
+                }
+            }
+            for (String key : toBeDeleted) {
+                sdkCache.remove(key);
             }
         }
-        for (String key : toBeDeleted) {
-            sdkCache.remove(key);
-        }
-
     }
 
     public String saveCache(String bid, String format) {
@@ -117,8 +122,12 @@ public class CacheManager {
             public void run() {
                 String escapedBid = StringEscapeUtils.escapeEcmaScript(bid);
                 String result = "<html><script> localStorage.setItem('" + cacheId + "', '" + escapedBid + "');</script></html>";
-                dfpWebCache.loadDataWithBaseURL("https://pubads.g.doubleclick.net", result, "text/html", null, null);
-                mopubWebCache.loadDataWithBaseURL("http://ads.mopub.com", result, "text/html", null, null);
+                if (dfpWebCache != null) {
+                    dfpWebCache.loadDataWithBaseURL("https://pubads.g.doubleclick.net", result, "text/html", null, null);
+                }
+                if (mopubWebCache != null) {
+                    mopubWebCache.loadDataWithBaseURL("http://ads.mopub.com", result, "text/html", null, null);
+                }
             }
         });
     }
@@ -130,10 +139,15 @@ public class CacheManager {
     }
 
     private void saveCacheForSDK(String cacheId, String bid) {
-        sdkCache.put(cacheId, bid);
+        if (sdkCache != null) {
+            sdkCache.put(cacheId, bid);
+        }
     }
 
     private String getCacheForSDK(String cacheId) {
-        return sdkCache.remove(cacheId);
+        if (sdkCache != null) {
+            return sdkCache.remove(cacheId);
+        }
+        return null;
     }
 }
