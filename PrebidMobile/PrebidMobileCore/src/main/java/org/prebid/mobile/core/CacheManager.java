@@ -15,7 +15,6 @@ import java.util.HashMap;
 public class CacheManager {
     // This is the class that manages three cache instances, one for DFP, one for MoPub and one for SDK rendered ad
     private WebView dfpWebCache;
-    private WebView mopubWebCache;
     private HashMap<String, String> sdkCache;
     private static CacheManager cache;
 
@@ -67,9 +66,6 @@ public class CacheManager {
         if (dfpWebCache != null) {
             dfpWebCache.loadDataWithBaseURL("https://pubads.g.doubleclick.net", removeWebCache, "text/html", null, null);
         }
-        if (mopubWebCache != null) {
-            mopubWebCache.loadDataWithBaseURL("http://ads.mopub.com", removeWebCache, "text/html", null, null);
-        }
         if (sdkCache != null) {
             ArrayList<String> toBeDeleted = new ArrayList<String>();
             for (String key : sdkCache.keySet()) {
@@ -108,9 +104,6 @@ public class CacheManager {
                 dfpWebCache = new WebView(context);
                 dfpWebCache.getSettings().setDomStorageEnabled(true);
                 dfpWebCache.getSettings().setJavaScriptEnabled(true);
-                mopubWebCache = new WebView(context);
-                mopubWebCache.getSettings().setDomStorageEnabled(true);
-                mopubWebCache.getSettings().setJavaScriptEnabled(true);
             }
         });
     }
@@ -124,9 +117,6 @@ public class CacheManager {
                 String result = "<html><script> localStorage.setItem('" + cacheId + "', '" + escapedBid + "');</script></html>";
                 if (dfpWebCache != null) {
                     dfpWebCache.loadDataWithBaseURL("https://pubads.g.doubleclick.net", result, "text/html", null, null);
-                }
-                if (mopubWebCache != null) {
-                    mopubWebCache.loadDataWithBaseURL("http://ads.mopub.com", result, "text/html", null, null);
                 }
             }
         });
