@@ -290,6 +290,19 @@ public class BidManager {
         }
     }
 
+    static void refreshBids(Context context) {
+        if (bidMap != null) {
+            bidMap.clear();
+        }
+        ArrayList<AdUnit> toBeRequested = new ArrayList<AdUnit>();
+        if (adUnits != null) {
+            for (AdUnit adUnit : adUnits) {
+                toBeRequested.add(adUnit);
+            }
+        }
+        requestBidsForAdUnits(context, toBeRequested);
+    }
+
     static void setPeriodToCheckExpiration(long period) {
         periodToCheckExpiration = period;
     }
