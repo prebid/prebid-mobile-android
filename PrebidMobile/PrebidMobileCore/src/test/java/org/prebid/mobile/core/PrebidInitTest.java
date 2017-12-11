@@ -39,7 +39,7 @@ public class PrebidInitTest extends BaseSetup {
         adUnits.add(adUnit2);
         adUnits.add(adUnit3);
         // Init
-        Prebid.init(activity.getApplicationContext(), adUnits, TestConstants.accountId, Prebid.HOST.APP_NEXUS);
+        Prebid.init(activity.getApplicationContext(), adUnits, TestConstants.accountId, Prebid.HOST.APPNEXUS);
         // Assertion
         assertEquals(adUnit1, BidManager.getAdUnitByCode(TestConstants.bannerAdUnit1));
         assertEquals(adUnit2, BidManager.getAdUnitByCode(TestConstants.bannerAdUnit2));
@@ -53,7 +53,7 @@ public class PrebidInitTest extends BaseSetup {
         BannerAdUnit adUnit1 = new BannerAdUnit(TestConstants.bannerAdUnit1, TestConstants.configID1);
         adUnit1.addSize(320, 50);
         try {
-            Prebid.init(null, adUnits, TestConstants.accountId, Prebid.HOST.APP_NEXUS);
+            Prebid.init(null, adUnits, TestConstants.accountId, Prebid.HOST.APPNEXUS);
         } catch (Exception e) {
             Assert.assertEquals(PrebidException.PrebidError.NULL_CONTEXT.getDetailMessage(), e.getMessage());
         }
@@ -63,7 +63,7 @@ public class PrebidInitTest extends BaseSetup {
     public void testInitWithEmptyAdUnits() {
         ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
         try {
-            Prebid.init(activity.getApplicationContext(), adUnits, TestConstants.accountId, Prebid.HOST.APP_NEXUS);
+            Prebid.init(activity.getApplicationContext(), adUnits, TestConstants.accountId, Prebid.HOST.APPNEXUS);
         } catch (Exception e) {
             Assert.assertEquals(PrebidException.PrebidError.EMPTY_ADUNITS.getDetailMessage(), e.getMessage());
         }
@@ -88,7 +88,7 @@ public class PrebidInitTest extends BaseSetup {
         ArrayList<AdUnit> adUnits = new ArrayList<>();
         adUnits.add(adUnit);
         try {
-            Prebid.init(activity.getApplicationContext(), adUnits, TestConstants.accountId, Prebid.HOST.APP_NEXUS);
+            Prebid.init(activity.getApplicationContext(), adUnits, TestConstants.accountId, Prebid.HOST.APPNEXUS);
         } catch (Exception e) {
             Assert.assertEquals(PrebidException.PrebidError.BANNER_AD_UNIT_NO_SIZE.getDetailMessage(), e.getMessage());
         }
@@ -102,7 +102,7 @@ public class PrebidInitTest extends BaseSetup {
         adUnit.addSize(320, 50);
         adUnits.add(adUnit);
         try {
-            Prebid.init(activity.getApplicationContext(), adUnits, TestConstants.accountId, Prebid.HOST.APP_NEXUS);
+            Prebid.init(activity.getApplicationContext(), adUnits, TestConstants.accountId, Prebid.HOST.APPNEXUS);
         } catch (Exception e) {
             Assert.assertEquals(PrebidException.PrebidError.UNABLE_TO_INITIALIZE_DEMAND_SOURCE.getDetailMessage(), e.getMessage());
         }

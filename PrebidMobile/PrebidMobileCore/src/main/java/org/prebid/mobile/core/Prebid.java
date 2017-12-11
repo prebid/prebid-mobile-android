@@ -52,7 +52,7 @@ public class Prebid {
     private static final String RUBICON_REQUEST_URL_SECURE = "https://prebid-server.rubiconproject.com/auction";
 
     public enum HOST {
-        APP_NEXUS,
+        APPNEXUS,
         RUBICON
     }
     //region Public APIs
@@ -118,7 +118,7 @@ public class Prebid {
             throw new PrebidException(PrebidException.PrebidError.NULL_PREBID_HOST);
         } else {
             switch (prebidHost) {
-                case APP_NEXUS:
+                case APPNEXUS:
                     REQUEST_URL_NON_SECURE = APPNEXUS_REQUEST_URL_NON_SECURE;
                     REQUEST_URL_SECURE = APPNEXUS_REQUEST_URL_SECURE;
                     break;
