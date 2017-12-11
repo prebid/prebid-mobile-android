@@ -19,10 +19,7 @@ public class Settings {
     public static final String VERSION_ZERO_HEADER = "Set-cookie";
     public static final String VERSION_ONE_HEADER = "Set-cookie2";
     public static final String COOKIE_DOMAIN = "http://prebid.adnxs.com";
-    // Prebid Server Constants
     // connection settings
-    public static final String REQUEST_URL_NON_SECURE = "http://prebid.adnxs.com/pbs/v1/auction";
-    public static final String REQUEST_URL_SECURE = "https://prebid.adnxs.com/pbs/v1/auction";
     public static int connectionTimeOutMillis = 500;
     // request keys
     public static final String REQUEST_CACHE_MARKUP = "cache_markup";

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2016 APPNEXUS INC
+ *    Copyright 2016 Prebid.org, Inc.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -43,6 +43,18 @@ public class Prebid {
     private static String accountId;
     private static final int kMoPubQueryStringLimit = 4000;
 
+    private static String REQUEST_URL_NON_SECURE = null;
+    private static String REQUEST_URL_SECURE = null;
+
+    private static final String APPNEXUS_REQUEST_URL_NON_SECURE = "http://prebid.adnxs.com/pbs/v1/auction";
+    private static final String APPNEXUS_REQUEST_URL_SECURE = "https://prebid.adnxs.com/pbs/v1/auction";
+    private static final String RUBICON_REQUEST_URL_NON_SECURE = "http://prebid-server.rubiconproject.com/auction";
+    private static final String RUBICON_REQUEST_URL_SECURE = "https://prebid-server.rubiconproject.com/auction";
+
+    public enum HOST {
+        APPNEXUS,
+        RUBICON
+    }
     //region Public APIs
 
     /**
@@ -64,10 +76,18 @@ public class Prebid {
      *
      * @param context Application context
      * @param adUnits List of Ad Slot Configurations to register
+     * @param accountId account id to register
+     * @param prebidHost prebid request host
      * @throws PrebidException
+     *      NULL_CONTEXT: Raised if the context is passed in as Null.
+            EMPTY_ADUNITS: Raised if Empty AdUnits passed in.
+            NULL_PREBID_HOST: Raised if Prebid host not set.
+            BANNER_AD_UNIT_NO_SIZE: Raised if the BannerAdUnit size is not set.
+            UNABLE_TO_INITIALIZE_DEMAND_SOURCE: Raised if the SDK fails to instantiate the adapter.
+            INVALID_ACCOUNT_ID: Raised if an invalid account id is passed in.
      */
 
-    public static void init(Context context, ArrayList<AdUnit> adUnits, String accountId) throws PrebidException {
+    public static void init(Context context, ArrayList<AdUnit> adUnits, String accountId, HOST prebidHost) throws PrebidException {
         LogUtil.i("Initializing with a list of AdUnits");
         // validate context
         if (context == null) {
@@ -92,8 +112,24 @@ public class Prebid {
             }
             BidManager.registerAdUnit(adUnit);
         }
-        // set up demand adapter
 
+        // set the prebid host
+        if (prebidHost == null) {
+            throw new PrebidException(PrebidException.PrebidError.NULL_PREBID_HOST);
+        } else {
+            switch (prebidHost) {
+                case APPNEXUS:
+                    REQUEST_URL_NON_SECURE = APPNEXUS_REQUEST_URL_NON_SECURE;
+                    REQUEST_URL_SECURE = APPNEXUS_REQUEST_URL_SECURE;
+                    break;
+                case RUBICON:
+                    REQUEST_URL_NON_SECURE = RUBICON_REQUEST_URL_NON_SECURE;
+                    REQUEST_URL_SECURE = RUBICON_REQUEST_URL_SECURE;
+                    break;
+            }
+        }
+
+        // set up demand adapter
         try {
             Class<?> adapterClass = Class.forName(PREBID_SERVER);
             DemandAdapter adapter = (DemandAdapter) adapterClass.newInstance();
@@ -258,6 +294,14 @@ public class Prebid {
 
     public static String getAccountId() {
         return accountId;
+    }
+
+    public static String getNonSecurePrebidHost() {
+        return REQUEST_URL_NON_SECURE;
+    }
+
+    public static String getSecurePrebidHost() {
+        return REQUEST_URL_SECURE;
     }
 
     /**

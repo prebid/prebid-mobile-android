@@ -1,5 +1,5 @@
 /*
- *    Copyright 2016 APPNEXUS INC
+ *    Copyright 2016 Prebid.org, Inc.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ public class PrebidException extends Exception {
     public enum PrebidError {
         NULL_CONTEXT("Null context passed in."),
         EMPTY_ADUNITS("Empty AdUnits passed in."),
+        NULL_PREBID_HOST("Prebid host not set."),
         BANNER_AD_UNIT_NO_SIZE("BannerAdUnit requires size information to check the price for the impression."),
         UNABLE_TO_INITIALIZE_DEMAND_SOURCE("Unable to instantiating the adapter."),
         INVALID_ACCOUNT_ID("Invalid input of account id.");
