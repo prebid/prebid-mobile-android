@@ -44,9 +44,9 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         this.weakReferenceLisenter = new WeakReference<BidManager.BidResponseListener>(bidResponseListener);
         JSONObject postData = getPostData(context, adUnits);
         if (Prebid.isSecureConnection()) {
-            new ServerConnector(postData, this, Prebid.getSecurePrebidHost(), context).execute();
+            new ServerConnector(postData, this, Settings.REQUEST_URL_SECURE, context).execute();
         } else {
-            new ServerConnector(postData, this, Prebid.getNonSecurePrebidHost(), context).execute();
+            new ServerConnector(postData, this, Settings.REQUEST_URL_NON_SECURE, context).execute();
         }
     }
 

@@ -74,7 +74,7 @@ public class BidManagerTest extends BaseSetup {
         MockServer.addTestSetup(TestConstants.configID1, bids);
         MockServer.addTestSetup(TestConstants.configID2, bids2);
         // Init prebid with ad units
-        Prebid.init(activity.getApplicationContext(), adUnits, TestConstants.accountId, Prebid.HOST.APPNEXUS);
+        Prebid.init(activity.getApplicationContext(), adUnits, TestConstants.accountId);
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
 
@@ -94,7 +94,7 @@ public class BidManagerTest extends BaseSetup {
         // Cache a bid
         ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
         adUnits.add(adUnit1);
-        Prebid.init(activity.getApplicationContext(), adUnits, TestConstants.accountId, Prebid.HOST.APPNEXUS);
+        Prebid.init(activity.getApplicationContext(), adUnits, TestConstants.accountId);
 
         // Here is where we call start new Auction.
         ArrayList<BidResponse> bids = new ArrayList<>();
@@ -134,7 +134,7 @@ public class BidManagerTest extends BaseSetup {
         MockServer.addTestSetup(TestConstants.configID1, bids);
         ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
         adUnits.add(adUnit1);
-        Prebid.init(activity.getApplicationContext(), adUnits, TestConstants.accountId, Prebid.HOST.APPNEXUS);
+        Prebid.init(activity.getApplicationContext(), adUnits, TestConstants.accountId);
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         ArrayList<BidResponse> bidForAdUnit = BidManager.getWinningBids(adUnit1.getCode());
@@ -158,7 +158,7 @@ public class BidManagerTest extends BaseSetup {
         MockServer.addTestSetup(TestConstants.configID1, bids);
         ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
         adUnits.add(adUnit1);
-        Prebid.init(activity.getApplicationContext(), adUnits, TestConstants.accountId, Prebid.HOST.APPNEXUS);
+        Prebid.init(activity.getApplicationContext(), adUnits, TestConstants.accountId);
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         ArrayList<Pair<String, String>> keywords = BidManager.getKeywordsForAdUnit(adUnit1.getCode(), activity.getApplicationContext());
