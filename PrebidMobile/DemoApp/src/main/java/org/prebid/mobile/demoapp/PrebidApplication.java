@@ -13,7 +13,12 @@ import org.prebid.mobile.core.TargetingParams;
 
 import java.util.ArrayList;
 
-import static org.prebid.mobile.demoapp.Constants.*;
+import static org.prebid.mobile.demoapp.Constants.BANNER_300x250;
+import static org.prebid.mobile.demoapp.Constants.BANNER_320x50;
+import static org.prebid.mobile.demoapp.Constants.INTERSTITIAL_FULLSCREEN;
+import static org.prebid.mobile.demoapp.Constants.PBS_ACCOUNT_ID;
+import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_300x250_APPNEXUS_DEMAND;
+import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_APPNEXUS_DEMAND;
 
 public class PrebidApplication extends Application {
     /**
@@ -74,12 +79,14 @@ public class PrebidApplication extends Application {
         values.add("Prebid-Custom-2");
         TargetingParams.setCustomTargeting("Test2", values);
 
-        // Register  adslots for prebid.
+        // Register ad units for prebid.
         try {
-            Prebid.init(getApplicationContext(), adUnits, PBS_ACCOUNT_ID);
+            // Start the initialization with DFP ad server
+            Prebid.init(getApplicationContext(), adUnits, PBS_ACCOUNT_ID, Prebid.AdServer.DFP);
         } catch (PrebidException e) {
             e.printStackTrace();
         }
-
     }
+
+
 }
