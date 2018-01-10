@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.prebid.mobile.core.AdSize;
 import org.prebid.mobile.core.AdUnit;
 import org.prebid.mobile.core.BidManager;
 import org.prebid.mobile.core.BidResponse;
@@ -59,82 +58,65 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             if (response == null || response.length() == 0) {
                 LogUtil.e("empty server response.");
             } else {
-                // check response status first
-                String status;
+                // check if seatbid is presented in the response first
+                JSONArray seatbid = null;
                 try {
-                    status = response.getString(Settings.RESPONSE_STATUS);
+                    seatbid = response.getJSONArray("seatbid");
                 } catch (JSONException e) {
-                    LogUtil.e("Unable to retrieve response status.");
-                    return;
                 }
-                if (status == null || !status.equals(Settings.RESPONSE_STATUS_OK)) {
-                    LogUtil.e("Response status is not OK.");
-                    return;
-                }
-                // check response tid
-                String tid;
-                try {
-                    tid = response.getString(Settings.RESPONSE_TID);
-                } catch (JSONException e) {
-                    LogUtil.e("Unable to retrieve tid from response.");
-                    return;
-                }
-                if (tid == null || !tid.equals(currentTID)) {
-                    // todo, think about when the request method is called multiple times?
-                    LogUtil.e("tid in response does not match the one in request.");
-                    return;
-                }
-                JSONArray bids = null;
-                try {
-                    bids = response.getJSONArray(Settings.RESPONSE_BIDS);
-                } catch (JSONException e) {
-                    LogUtil.e("Server response does not contain bids array");
-                }
-                if (bids != null && bids.length() != 0) {
-                    int length = bids.length();
-                    for (int i = 0; i < length; i++) {
+                if (seatbid != null && seatbid.length() > 0) {
+                    int len = seatbid.length();
+                    for (int i = 0; i < len; i++) {
                         try {
-                            JSONObject bid = bids.getJSONObject(i);
-                            String code = bid.getString(Settings.RESPONSE_CODE);
-                            AdUnit adUnit = getAdUnitByCode(code);
-                            if (adUnit != null) {
-                                final double bidPrice = bid.getDouble(Settings.RESPONSE_PRICE);
-                                String bidder = bid.getString(Settings.RESPONSE_BIDDER);
-                                ArrayList<BidResponse> responseList = responses.get(adUnit);
-                                if (responseList == null) {
-                                    responseList = new ArrayList<BidResponse>();
-                                }
-                                BidResponse newBid;
-                                if (Prebid.getAdServer() == Prebid.AdServer.DFP) {
-                                    JSONObject targetingKeywords = bid.getJSONObject(Settings.RESPONSE_TARGETING);
-                                    String format = targetingKeywords.getString(Settings.RESPONSE_CREATIVE);
-                                    String cacheId = CacheManager.getCacheManager().saveCache(bid.toString(), format);
-                                    newBid = new BidResponse(bidPrice, cacheId);
-                                    newBid.setBidderCode(bidder);
-                                    Iterator<?> keys = targetingKeywords.keys();
-                                    while (keys.hasNext()) {
-                                        String key = (String) keys.next();
-                                        if (key.startsWith("hb_cache_id")) {
-                                            newBid.addCustomKeyword(key, cacheId);
-                                        } else {
-                                            newBid.addCustomKeyword(key, targetingKeywords.getString(key));
+                            JSONObject seat = seatbid.getJSONObject(i);
+                            String bidderName = seat.getString("seat");
+                            JSONArray bids = seat.getJSONArray("bid");
+                            if (bids != null && bids.length() > 0) {
+                                int bidLen = bids.length();
+                                for (int j = 0; j < bidLen; j++) {
+                                    JSONObject bid = bids.getJSONObject(j);
+                                    String impId = bid.getString("impid");
+                                    AdUnit adUnit = getAdUnitByCode(impId);
+                                    if (adUnit != null) {
+                                        final double bidPrice = bid.getDouble("price");
+                                        ArrayList<BidResponse> responseList = responses.get(adUnit);
+                                        if (responseList == null) {
+                                            responseList = new ArrayList<BidResponse>();
                                         }
-                                    }
-                                } else {
-                                    JSONObject targetingKeywords = bid.getJSONObject(Settings.RESPONSE_TARGETING);
-                                    String cacheId = targetingKeywords.getString(Settings.RESPONSE_CACHE_ID);
-                                    newBid = new BidResponse(bidPrice, cacheId);
-                                    Iterator<?> keys = targetingKeywords.keys();
-                                    while (keys.hasNext()) {
-                                        String key = (String) keys.next();
-                                        newBid.addCustomKeyword(key, targetingKeywords.getString(key));
+                                        BidResponse newBid;
+                                        if (Prebid.getAdServer() == Prebid.AdServer.DFP) {
+                                            // todo get targeting keywords from ORTB response
+                                            JSONObject targetingKeywords = bid.getJSONObject(Settings.RESPONSE_TARGETING);
+                                            String format = targetingKeywords.getString(Settings.RESPONSE_CREATIVE);
+                                            String cacheId = CacheManager.getCacheManager().saveCache(bid.toString(), format);
+                                            newBid = new BidResponse(bidPrice, cacheId);
+                                            newBid.setBidderCode(bidderName);
+                                            Iterator<?> keys = targetingKeywords.keys();
+                                            while (keys.hasNext()) {
+                                                String key = (String) keys.next();
+                                                if (key.startsWith("hb_cache_id")) {
+                                                    newBid.addCustomKeyword(key, cacheId);
+                                                } else {
+                                                    newBid.addCustomKeyword(key, targetingKeywords.getString(key));
+                                                }
+                                            }
+                                        } else {
+                                            JSONObject targetingKeywords = bid.getJSONObject(Settings.RESPONSE_TARGETING);
+                                            String cacheId = targetingKeywords.getString(Settings.RESPONSE_CACHE_ID);
+                                            newBid = new BidResponse(bidPrice, cacheId);
+                                            newBid.setBidderCode(bidderName);
+                                            Iterator<?> keys = targetingKeywords.keys();
+                                            while (keys.hasNext()) {
+                                                String key = (String) keys.next();
+                                                newBid.addCustomKeyword(key, targetingKeywords.getString(key));
+                                            }
+                                        }
+                                        responseList.add(newBid);
+                                        responses.put(adUnit, responseList);
                                     }
                                 }
-                                responseList.add(newBid);
-                                responses.put(adUnit, responseList);
                             }
                         } catch (JSONException e) {
-                            LogUtil.e(String.format(Locale.ENGLISH, "Error parsing bids array: %s", bids.toString()));
                         }
                     }
                 }
@@ -168,6 +150,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         }
         JSONObject postData = new JSONObject();
         try {
+            // todo check ORTB sort bids and cache markup
             postData.put(Settings.REQUEST_SORT_BIDS, 1);
             postData.put(Settings.REQUEST_TID, generateTID());
             postData.put(Settings.REQUEST_ACCOUNT_ID, Prebid.getAccountId());
@@ -178,9 +161,9 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 postData.put(Settings.REQUEST_CACHE_MARKUP, 1);
             }
             // add ad units
-            JSONArray adUnitConfigs = getAdUnitConfigs(adUnits);
-            if (adUnitConfigs != null && adUnitConfigs.length() > 0) {
-                postData.put(Settings.REQUEST_AD_UNITS, adUnitConfigs);
+            JSONArray imps = getImps(adUnits);
+            if (imps != null && imps.length() > 0) {
+                postData.put("imp", imps);
             }
             // add device
             JSONObject device = getDeviceObject(context);
@@ -231,28 +214,26 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         return version;
     }
 
-    private JSONArray getAdUnitConfigs(ArrayList<AdUnit> adUnits) {
-        JSONArray adUnitConfigs = new JSONArray();
+    private JSONArray getImps(ArrayList<AdUnit> adUnits) {
+        JSONArray impConfigs = new JSONArray();
         for (AdUnit adUnit : adUnits) {
             // takes information from the ad units
             // look up the configuration of the ad unit
             try {
-                JSONObject adUnitConfig = new JSONObject();
-                adUnitConfig.put(Settings.REQUEST_CONFIG_ID, adUnit.getConfigId());
-                adUnitConfig.put(Settings.REQUEST_CODE, adUnit.getCode());
-                JSONArray sizes = new JSONArray();
-                for (AdSize size : adUnit.getSizes()) {
-                    JSONObject sizeConfig = new JSONObject();
-                    sizeConfig.put(Settings.REQUEST_WIDTH, size.getWidth());
-                    sizeConfig.put(Settings.REQUEST_HEIGHT, size.getHeight());
-                    sizes.put(sizeConfig);
-                }
-                adUnitConfig.put(Settings.REQUEST_SIZES, sizes);
-                adUnitConfigs.put(adUnitConfig);
+                JSONObject imp = new JSONObject();
+                JSONObject ext = new JSONObject();
+                imp.put("ext", ext);
+                JSONObject prebid = new JSONObject();
+                ext.put("prebid", prebid);
+                JSONObject storedrequest = new JSONObject();
+                prebid.put("storedrequest", storedrequest);
+                storedrequest.put("id", adUnit.getConfigId());
+                imp.put(Settings.REQUEST_CODE, adUnit.getCode());
+                impConfigs.put(imp);
             } catch (JSONException e) {
             }
         }
-        return adUnitConfigs;
+        return impConfigs;
     }
 
     private JSONObject getDeviceObject(Context context) {
