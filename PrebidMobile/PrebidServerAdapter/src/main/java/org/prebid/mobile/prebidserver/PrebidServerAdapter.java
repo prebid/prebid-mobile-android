@@ -84,9 +84,8 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                                             responseList = new ArrayList<BidResponse>();
                                         }
                                         BidResponse newBid;
+                                        JSONObject targetingKeywords = bid.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting");
                                         if (Prebid.getAdServer() == Prebid.AdServer.DFP) {
-                                            // todo get targeting keywords from ORTB response
-                                            JSONObject targetingKeywords = bid.getJSONObject(Settings.RESPONSE_TARGETING);
                                             String format = targetingKeywords.getString(Settings.RESPONSE_CREATIVE);
                                             String cacheId = CacheManager.getCacheManager().saveCache(bid.toString(), format);
                                             newBid = new BidResponse(bidPrice, cacheId);
@@ -95,13 +94,14 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                                             while (keys.hasNext()) {
                                                 String key = (String) keys.next();
                                                 if (key.startsWith("hb_cache_id")) {
+                                                    // todo how to handle cache id saving here since for DFP we don't request for cache?
+                                                    // todo need to see david's implementation on this one.
                                                     newBid.addCustomKeyword(key, cacheId);
                                                 } else {
                                                     newBid.addCustomKeyword(key, targetingKeywords.getString(key));
                                                 }
                                             }
                                         } else {
-                                            JSONObject targetingKeywords = bid.getJSONObject(Settings.RESPONSE_TARGETING);
                                             String cacheId = targetingKeywords.getString(Settings.RESPONSE_CACHE_ID);
                                             newBid = new BidResponse(bidPrice, cacheId);
                                             newBid.setBidderCode(bidderName);
@@ -191,9 +191,27 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             if (version != null && version.length() > 0) {
                 postData.put(Settings.REQUEST_SDK, version);
             }
+            // add targeting keywords request
+            JSONObject prebid = getRequestExtData();
+            if (prebid != null && prebid.length() > 0) {
+                postData.put("ext", prebid);
+            }
         } catch (JSONException e) {
         }
         return postData;
+    }
+
+    private JSONObject getRequestExtData() {
+        JSONObject prebid = new JSONObject();
+        try {
+            JSONObject targeting = new JSONObject();
+            targeting.put("pricegranularity", "medium");
+            targeting.put("lengthmax", 40);
+            prebid.put("targeting", targeting);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return prebid;
     }
 
     private String currentTID = null;
