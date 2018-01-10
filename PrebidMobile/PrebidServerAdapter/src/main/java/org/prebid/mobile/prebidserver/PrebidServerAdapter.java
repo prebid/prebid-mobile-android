@@ -44,7 +44,8 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         this.weakReferenceLisenter = new WeakReference<BidManager.BidResponseListener>(bidResponseListener);
         JSONObject postData = getPostData(context, adUnits);
         if (Prebid.isSecureConnection()) {
-            new ServerConnector(postData, this, Settings.REQUEST_URL_SECURE, context).execute();
+//            new ServerConnector(postData, this, Settings.REQUEST_URL_SECURE, context).execute();
+            new ServerConnector(postData, this, "http://10.0.2.2:8000/openrtb2/auction", context).execute();
         } else {
             new ServerConnector(postData, this, Settings.REQUEST_URL_NON_SECURE, context).execute();
         }
@@ -151,8 +152,9 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         JSONObject postData = new JSONObject();
         try {
             // todo check ORTB sort bids and cache markup
+            postData.put("test", 1);
             postData.put(Settings.REQUEST_SORT_BIDS, 1);
-            postData.put(Settings.REQUEST_TID, generateTID());
+            postData.put("id", generateID()); // random id for the request
             postData.put(Settings.REQUEST_ACCOUNT_ID, Prebid.getAccountId());
             postData.put(Settings.REQUEST_MAX_KEY, 20);
             if (Prebid.getAdServer() == Prebid.AdServer.DFP) {
@@ -192,9 +194,9 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 postData.put(Settings.REQUEST_SDK, version);
             }
             // add targeting keywords request
-            JSONObject prebid = getRequestExtData();
-            if (prebid != null && prebid.length() > 0) {
-                postData.put("ext", prebid);
+            JSONObject ext = getRequestExtData();
+            if (ext != null && ext.length() > 0) {
+                postData.put("ext", ext);
             }
         } catch (JSONException e) {
         }
@@ -202,21 +204,23 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
     }
 
     private JSONObject getRequestExtData() {
+        JSONObject ext = new JSONObject();
         JSONObject prebid = new JSONObject();
         try {
             JSONObject targeting = new JSONObject();
             targeting.put("pricegranularity", "medium");
             targeting.put("lengthmax", 40);
             prebid.put("targeting", targeting);
+            ext.put("prebid", prebid);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return prebid;
+        return ext;
     }
 
     private String currentTID = null;
 
-    private String generateTID() {
+    private String generateID() {
         currentTID = UUID.randomUUID().toString();
         return currentTID;
     }
