@@ -240,13 +240,13 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             try {
                 JSONObject imp = new JSONObject();
                 JSONObject ext = new JSONObject();
+                imp.put("id", adUnit.getCode());
                 imp.put("ext", ext);
                 JSONObject prebid = new JSONObject();
                 ext.put("prebid", prebid);
                 JSONObject storedrequest = new JSONObject();
                 prebid.put("storedrequest", storedrequest);
                 storedrequest.put("id", adUnit.getConfigId());
-                imp.put(Settings.REQUEST_CODE, adUnit.getCode());
                 impConfigs.put(imp);
             } catch (JSONException e) {
             }
