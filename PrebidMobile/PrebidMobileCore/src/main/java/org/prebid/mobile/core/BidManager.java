@@ -149,6 +149,12 @@ public class BidManager {
             bidMap.remove(adUnit.getCode());
             // save the bids sorted
             Collections.sort(bidResponses, new BidComparator());
+            if (Prebid.getAdServer() == Prebid.AdServer.DFP) {
+                BidResponse topBid = bidResponses.get(0);
+                if (topBid != null) {
+                    topBid.addCustomKeyword("hb_cache_id", topBid.getCreative());
+                }
+            }
             bidMap.put(adUnit.getCode(), bidResponses);
         }
 

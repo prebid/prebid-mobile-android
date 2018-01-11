@@ -76,6 +76,7 @@ public class Settings {
     public static final String REQUEST_SDK_PLATFORM = "platform";
     public static final String REQUEST_SDK_MOBILE = "prebid-mobile";
     public static final String REQUEST_SDK_ANDROID = "android";
+    public static final int REQUEST_KEY_LENGTH_MAX = 40;
 
     // response
     public static final String RESPONSE_TID = "tid";

@@ -94,14 +94,11 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                                             Iterator<?> keys = targetingKeywords.keys();
                                             while (keys.hasNext()) {
                                                 String key = (String) keys.next();
-                                                if (key.startsWith("hb_cache_id")) {
-                                                    // todo how to handle cache id saving here since for DFP we don't request for cache?
-                                                    // todo need to see david's implementation on this one.
-                                                    newBid.addCustomKeyword(key, cacheId);
-                                                } else {
-                                                    newBid.addCustomKeyword(key, targetingKeywords.getString(key));
-                                                }
+                                                newBid.addCustomKeyword(key, targetingKeywords.getString(key));
                                             }
+                                            String cacheIdKey = "hb_cache_id_" + bidderName;
+                                            cacheIdKey = cacheIdKey.substring(0, Math.min(cacheIdKey.length(), Settings.REQUEST_KEY_LENGTH_MAX));
+                                            newBid.addCustomKeyword(cacheIdKey, cacheId);
                                         } else {
                                             String cacheId = targetingKeywords.getString(Settings.RESPONSE_CACHE_ID);
                                             newBid = new BidResponse(bidPrice, cacheId);
@@ -151,7 +148,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         }
         JSONObject postData = new JSONObject();
         try {
-            // todo check ORTB sort bids and cache markup
+            // todo check ORTB cache markup
             postData.put("test", 1);
             postData.put(Settings.REQUEST_SORT_BIDS, 1);
             postData.put("id", generateID()); // random id for the request
@@ -209,7 +206,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         try {
             JSONObject targeting = new JSONObject();
             targeting.put("pricegranularity", "medium");
-            targeting.put("lengthmax", 40);
+            targeting.put("lengthmax", Settings.REQUEST_KEY_LENGTH_MAX);
             prebid.put("targeting", targeting);
             ext.put("prebid", prebid);
         } catch (JSONException e) {
