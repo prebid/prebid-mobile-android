@@ -147,17 +147,9 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         }
         JSONObject postData = new JSONObject();
         try {
-            // todo check ORTB cache markup
             postData.put("test", 1);
-            postData.put(Settings.REQUEST_SORT_BIDS, 1);
             postData.put("id", generateID()); // random id for the request
             postData.put(Settings.REQUEST_ACCOUNT_ID, Prebid.getAccountId());
-            postData.put(Settings.REQUEST_MAX_KEY, 20);
-            if (Prebid.getAdServer() == Prebid.AdServer.DFP) {
-                postData.put(Settings.REQUEST_CACHE_MARKUP, 0);
-            } else {
-                postData.put(Settings.REQUEST_CACHE_MARKUP, 1);
-            }
             // add ad units
             JSONArray imps = getImps(adUnits);
             if (imps != null && imps.length() > 0) {
@@ -207,6 +199,12 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             targeting.put("pricegranularity", "medium");
             targeting.put("lengthmax", Settings.REQUEST_KEY_LENGTH_MAX);
             prebid.put("targeting", targeting);
+            if (Prebid.AdServer.MOPUB.equals(Prebid.getAdServer())) {
+                JSONObject bids = new JSONObject();
+                JSONObject cache = new JSONObject();
+                cache.put("bids", bids);
+                prebid.put("cache", cache);
+            }
             ext.put("prebid", prebid);
         } catch (JSONException e) {
             e.printStackTrace();
