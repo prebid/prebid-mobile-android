@@ -147,7 +147,6 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         }
         JSONObject postData = new JSONObject();
         try {
-            postData.put("test", 1);
             postData.put("id", generateID()); // random id for the request
             postData.put(Settings.REQUEST_ACCOUNT_ID, Prebid.getAccountId());
             // add ad units
