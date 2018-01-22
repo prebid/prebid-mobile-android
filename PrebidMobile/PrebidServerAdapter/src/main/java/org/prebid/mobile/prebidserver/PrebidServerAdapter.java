@@ -44,9 +44,9 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         this.weakReferenceLisenter = new WeakReference<BidManager.BidResponseListener>(bidResponseListener);
         JSONObject postData = getPostData(context, adUnits);
         if (Prebid.isSecureConnection()) {
-            new ServerConnector(postData, this, Settings.REQUEST_URL_SECURE, context).execute();
+            new ServerConnector(postData, this, Settings.REQUEST_OPENRTB_ENDPOINT_SECURE, context).execute();
         } else {
-            new ServerConnector(postData, this, Settings.REQUEST_URL_NON_SECURE, context).execute();
+            new ServerConnector(postData, this, Settings.REQUEST_OPENRTB_ENDPOINT_NON_SECURE, context).execute();
         }
     }
 
@@ -238,12 +238,26 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 JSONObject imp = new JSONObject();
                 JSONObject ext = new JSONObject();
                 imp.put("id", adUnit.getCode());
+                if (Prebid.isSecureConnection()) {
+                    imp.put("secure", 1);
+                }
+//                imp.put("ext", ext);
+//                JSONObject prebid = new JSONObject();
+//                ext.put("prebid", prebid);
+//                JSONObject storedrequest = new JSONObject();
+//                prebid.put("storedrequest", storedrequest);
+//                storedrequest.put("id", adUnit.getConfigId());
+                // todo change it back after testing
+                JSONObject banner = new JSONObject();
+                JSONArray format = new JSONArray();
+                format.put(new JSONObject().put("w", 300).put("h", 250));
+                format.put(new JSONObject().put("w", 300).put("h", 600));
+                banner.put("format", format);
                 imp.put("ext", ext);
-                JSONObject prebid = new JSONObject();
-                ext.put("prebid", prebid);
-                JSONObject storedrequest = new JSONObject();
-                prebid.put("storedrequest", storedrequest);
-                storedrequest.put("id", adUnit.getConfigId());
+                imp.put("banner", banner);
+                JSONObject appnexus = new JSONObject();
+                appnexus.put("placementId", 10433394);
+                ext.put("appnexus", appnexus);
                 impConfigs.put(imp);
             } catch (JSONException e) {
             }

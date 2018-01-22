@@ -23,6 +23,9 @@ public class Settings {
     // connection settings
     public static final String REQUEST_URL_NON_SECURE = "http://prebid.adnxs.com/pbs/v1/auction";
     public static final String REQUEST_URL_SECURE = "https://prebid.adnxs.com/pbs/v1/auction";
+    public static final String REQUEST_OPENRTB_ENDPOINT_NON_SECURE = "http://prebid.adnxs.com/pbs/v1/openrtb2/auction";
+    public static final String REQUEST_OPENRTB_ENDPOINT_SECURE = "https://prebid.adnxs.com/pbs/v1/openrtb2/auction";
+
     public static int connectionTimeOutMillis = 500;
     // request keys
     public static final String REQUEST_CACHE_MARKUP = "cache_markup";
