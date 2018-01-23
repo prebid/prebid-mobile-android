@@ -43,12 +43,46 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
     public void requestBid(final Context context, final BidManager.BidResponseListener bidResponseListener, final ArrayList<AdUnit> adUnits) {
         this.adUnits = adUnits;
         this.weakReferenceLisenter = new WeakReference<BidManager.BidResponseListener>(bidResponseListener);
-        JSONObject postData = getPostData(context, adUnits);
-        if (Prebid.isSecureConnection()) {
-            new ServerConnector(postData, this, Settings.REQUEST_URL_SECURE, context).execute();
-        } else {
-            new ServerConnector(postData, this, Settings.REQUEST_URL_NON_SECURE, context).execute();
+        // Batch 10 calls for each request to server
+
+        ArrayList<ArrayList<AdUnit>> adUnitsList = getAdUnitLists(adUnits);
+        if (adUnitsList != null && !adUnitsList.isEmpty()) {
+            for (ArrayList toBeRequested : adUnitsList) {
+                JSONObject postData = getPostData(context, toBeRequested);
+                if (Prebid.isSecureConnection())
+
+                {
+                    new ServerConnector(postData, this, Settings.REQUEST_URL_SECURE, context).execute();
+                } else
+
+                {
+                    new ServerConnector(postData, this, Settings.REQUEST_URL_NON_SECURE, context).execute();
+                }
+            }
         }
+    }
+
+    ArrayList<ArrayList<AdUnit>> getAdUnitLists(ArrayList<AdUnit> adUnits) {
+        ArrayList<ArrayList<AdUnit>> adUnitsList = new ArrayList<>();
+        int len = adUnits.size();
+        int i = len / 10;
+        int j = len % 10;
+
+        for (int m = 0; m < i; m++) {
+            ArrayList<AdUnit> toBeAdded = new ArrayList<>();
+            for (int n = 0; n < 10; n++) {
+                toBeAdded.add(adUnits.get(m * 10 + n));
+            }
+            adUnitsList.add(toBeAdded);
+        }
+        if (j > 0) {
+            ArrayList<AdUnit> toBeAdded = new ArrayList<>();
+            for (int n = 0; n < j; n++) {
+                toBeAdded.add(adUnits.get(i * 10 + n));
+            }
+            adUnitsList.add(toBeAdded);
+        }
+        return adUnitsList;
     }
 
     @Override
