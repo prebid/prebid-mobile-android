@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 21, manifest = Config.NONE)
@@ -50,6 +51,36 @@ public class BidManagerTest extends BaseSetup {
         TargetingParams.setLocationEnabled(true);
         TargetingParams.setCustomTargeting("Test", "Prebid-Custom-1");
         TargetingParams.setCustomTargeting("Test2", "Prebid-Custom-2");
+    }
+
+    @Test
+    public void testBidManagerAddingCacheIdToTopBid() throws Exception {
+        Prebid.setAdServer(Prebid.AdServer.DFP);
+        BannerAdUnit adUnit = new BannerAdUnit("Banner", "12345");
+        adUnit.addSize(300, 250);
+        ArrayList<BidResponse> responses = new ArrayList<BidResponse>();
+        BidResponse topBid = new BidResponse(0.5, "Prebid_12345");
+        BidResponse bid2 = new BidResponse(0.4, "Prebid_23456");
+        BidResponse bid3 = new BidResponse(0.3, "Prebid_34567");
+        responses.add(bid3);
+        responses.add(bid2);
+        responses.add(topBid);
+        // test that for DFP, a hb_cache_id will be added to the top bid
+        BidManager.bidResponseListener.onBidSuccess(adUnit, responses);
+        ArrayList<BidResponse> sortedResponses = BidManager.getBidMap().get(adUnit.getCode());
+        assertTrue(sortedResponses.size() == 3);
+        assertTrue(sortedResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id", "Prebid_12345")));
+        assertTrue(sortedResponses.get(1).getCustomKeywords().size() == 0);
+        assertTrue(sortedResponses.get(2).getCustomKeywords().size() == 0);
+        // test that for MoPub, nothing will be added for the bids
+        Prebid.setAdServer(Prebid.AdServer.MOPUB);
+        topBid.getCustomKeywords().clear();
+        BidManager.bidResponseListener.onBidSuccess(adUnit, responses);
+        sortedResponses = BidManager.getBidMap().get(adUnit.getCode());
+        assertTrue(sortedResponses.size() == 3);
+        assertTrue(sortedResponses.get(0).getCustomKeywords().size() == 0);
+        assertTrue(sortedResponses.get(1).getCustomKeywords().size() == 0);
+        assertTrue(sortedResponses.get(2).getCustomKeywords().size() == 0);
     }
 
     // Test case for checking the init call

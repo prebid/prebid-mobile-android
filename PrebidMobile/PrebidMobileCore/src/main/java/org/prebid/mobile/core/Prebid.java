@@ -69,6 +69,11 @@ public class Prebid {
         return adServer;
     }
 
+    // for testing purpose
+    public static void setAdServer(AdServer adServer) {
+        Prebid.adServer = adServer;
+    }
+
 
     /**
      * This method is used to
@@ -349,7 +354,7 @@ public class Prebid {
      */
     public static void shouldLoadOverSecureConnection(boolean secureConnection) {
         // Only enables overrides for MoPub, DFP should always load over secured connection
-        if (getClassFromString(MOPUB_ADVIEW_CLASS) != null) {
+        if (Prebid.adServer.equals(AdServer.MOPUB)) {
             Prebid.secureConnection = secureConnection;
         }
     }

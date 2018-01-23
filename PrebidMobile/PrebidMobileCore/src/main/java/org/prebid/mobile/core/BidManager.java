@@ -132,7 +132,7 @@ public class BidManager {
         void onBidFailure(AdUnit bidRequest, ErrorCode reason);
     }
 
-    private static BidResponseListener bidResponseListener = new BidResponseListener() {
+    static BidResponseListener bidResponseListener = new BidResponseListener() {
         @Override
         public void onBidSuccess(AdUnit adUnit, ArrayList<BidResponse> bidResponses) {
             //First iterate through the List of AdUnits.

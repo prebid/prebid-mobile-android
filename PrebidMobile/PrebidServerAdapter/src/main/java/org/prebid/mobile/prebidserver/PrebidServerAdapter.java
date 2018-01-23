@@ -148,7 +148,6 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         JSONObject postData = new JSONObject();
         try {
             postData.put("id", generateID()); // random id for the request
-            postData.put(Settings.REQUEST_ACCOUNT_ID, Prebid.getAccountId());
             // add ad units
             JSONArray imps = getImps(adUnits);
             if (imps != null && imps.length() > 0) {
@@ -441,7 +440,9 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             app.put(Settings.REQUEST_APP_DOMAIN, Settings.getDomain());
             app.put(Settings.REQUEST_APP_STOREURL, Settings.getStoreUrl());
             app.put(Settings.REQUEST_APP_PRIVACY, Settings.getPrivacyPolicy());
-            // todo get paid, keywords
+            JSONObject publisher = new JSONObject();
+            publisher.put("id", Prebid.getAccountId());
+            app.put("publisher", publisher);
         } catch (JSONException e) {
         }
         return app;
