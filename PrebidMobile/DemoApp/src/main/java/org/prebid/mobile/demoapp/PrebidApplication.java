@@ -70,14 +70,11 @@ public class PrebidApplication extends Application {
 
         // Set targeting
         TargetingParams.setGender(TargetingParams.GENDER.FEMALE);
-        TargetingParams.setAge(25);
+        TargetingParams.setYearOfBirth(1992);
         TargetingParams.setLocationDecimalDigits(2);
         TargetingParams.setLocationEnabled(true);
-        TargetingParams.setCustomTargeting("Test", "Prebid-Custom-1");
-        TargetingParams.setCustomTargeting("Test", "Prebid-Custom-2");
-        ArrayList<String> values = new ArrayList<String>();
-        values.add("Prebid-Custom-2");
-        TargetingParams.setCustomTargeting("Test2", values);
+        TargetingParams.addAppKeywords("PrebidKeyword1");
+        TargetingParams.addUserKeyword("PrebidKeyword2");
 
         // Register ad units for prebid.
         try {
