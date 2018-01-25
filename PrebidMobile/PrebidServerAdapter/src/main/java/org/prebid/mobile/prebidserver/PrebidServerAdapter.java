@@ -193,8 +193,6 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 cache.put("bids", bids);
                 prebid.put("cache", cache);
             }
-            prebid.put("source", "prebid-mobile");
-            prebid.put("version", Settings.sdk_version);
             ext.put("prebid", prebid);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -438,6 +436,12 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             if (!TextUtils.isEmpty(toBeAdded)) {
                 app.put("keywords", toBeAdded);
             }
+            JSONObject prebid = new JSONObject();
+            prebid.put("source", "prebid-mobile");
+            prebid.put("version", Settings.sdk_version);
+            JSONObject ext = new JSONObject();
+            ext.put("prebid", prebid);
+            app.put("ext", ext);
         } catch (JSONException e) {
         }
         return app;
