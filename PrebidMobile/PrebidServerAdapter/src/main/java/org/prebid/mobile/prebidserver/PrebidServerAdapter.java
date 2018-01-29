@@ -13,6 +13,8 @@ import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.core.AdSize;
+import org.prebid.mobile.core.AdType;
 import org.prebid.mobile.core.AdUnit;
 import org.prebid.mobile.core.BidManager;
 import org.prebid.mobile.core.BidResponse;
@@ -213,23 +215,22 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 if (Prebid.isSecureConnection()) {
                     imp.put("secure", 1);
                 }
-//                imp.put("ext", ext);
-//                JSONObject prebid = new JSONObject();
-//                ext.put("prebid", prebid);
-//                JSONObject storedrequest = new JSONObject();
-//                prebid.put("storedrequest", storedrequest);
-//                storedrequest.put("id", adUnit.getConfigId());
-                // todo change it back after testing
-                JSONObject banner = new JSONObject();
-                JSONArray format = new JSONArray();
-                format.put(new JSONObject().put("w", 300).put("h", 250));
-                format.put(new JSONObject().put("w", 300).put("h", 600));
-                banner.put("format", format);
                 imp.put("ext", ext);
-                imp.put("banner", banner);
-                JSONObject appnexus = new JSONObject();
-                appnexus.put("placementId", 10433394);
-                ext.put("appnexus", appnexus);
+                JSONObject prebid = new JSONObject();
+                ext.put("prebid", prebid);
+                JSONObject storedrequest = new JSONObject();
+                prebid.put("storedrequest", storedrequest);
+                storedrequest.put("id", adUnit.getConfigId());
+                imp.put("ext", ext);
+                if (adUnit.getAdType().equals(AdType.BANNER)) {
+                    JSONObject banner = new JSONObject();
+                    JSONArray format = new JSONArray();
+                    for (AdSize size : adUnit.getSizes()) {
+                        format.put(new JSONObject().put("w", size.getWidth()).put("h", size.getHeight()));
+                    }
+                    banner.put("format", format);
+                    imp.put("banner", banner);
+                }
                 impConfigs.put(imp);
             } catch (JSONException e) {
             }
