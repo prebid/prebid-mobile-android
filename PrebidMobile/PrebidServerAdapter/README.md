@@ -2,6 +2,9 @@ A sample Open RTB 2.5 spec compliant request that Prebid Server Adapter would se
 ```
 {
   "id": "1a31e229-9e6f-4a4b-87be-8a19a650bd9b",
+  "source": {
+    "tid": "123"
+  },
   "imp": [
     {
       "id": "Banner_320x50",
@@ -9,9 +12,17 @@ A sample Open RTB 2.5 spec compliant request that Prebid Server Adapter would se
       "ext": {
         "prebid": {
           "storedrequest": {
-            "id": "123456"
+            "id": "eebc307d-7f76-45d6-a7a7-68985169b138"
           }
         }
+      },
+      "banner":{
+        "format":[
+          {
+            "w": 300,
+            "h": 250
+          }
+        ]
       }
     }
   ],
@@ -37,7 +48,7 @@ A sample Open RTB 2.5 spec compliant request that Prebid Server Adapter would se
     "publisher": {
       "id": "bfa84af2-bd16-4d35-96ad-31c6bb888df0"
     },
-    "keywords": "PrebidKeyword1;",
+    "keywords": "PrebidKeyword1,",
     "ext": {
       "prebid": {
         "source": "prebid-mobile",
@@ -48,7 +59,7 @@ A sample Open RTB 2.5 spec compliant request that Prebid Server Adapter would se
   "user": {
     "yob": 1992,
     "gender": "F",
-    "keywords": "PrebidKeyword2;"
+    "keywords": "PrebidKeyword2,"
   },
   "ext": {
     "prebid": {

@@ -432,7 +432,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             ArrayList<String> keywords = TargetingParams.getAppKeywords();
             for (String keyword : keywords) {
                 if (!TextUtils.isEmpty(keyword)) {
-                    toBeAdded = toBeAdded + keyword + ";";
+                    toBeAdded = toBeAdded + keyword + ",";
                 }
             }
             if (!TextUtils.isEmpty(toBeAdded)) {
@@ -474,7 +474,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             ArrayList<String> keywords = TargetingParams.getUserKeywords();
             for (String keyword : keywords) {
                 if (!TextUtils.isEmpty(keyword)) {
-                    toBeAdded = toBeAdded + keyword + ";";
+                    toBeAdded = toBeAdded + keyword + ",";
                 }
             }
             if (!TextUtils.isEmpty(toBeAdded)) {
