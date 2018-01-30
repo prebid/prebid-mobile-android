@@ -59,6 +59,7 @@ public class PrebidApplication extends Application {
         //Configure Ad-Slot2 with the same demand source
         BannerAdUnit adUnit2 = new BannerAdUnit(BANNER_300x250, PBS_CONFIG_300x250_APPNEXUS_DEMAND);
         adUnit2.addSize(300, 250);
+        adUnit2.addSize(300, 600);
 
         //Configure Interstitial Ad Unit
         InterstitialAdUnit adUnit3 = new InterstitialAdUnit(INTERSTITIAL_FULLSCREEN, PBS_CONFIG_APPNEXUS_DEMAND);

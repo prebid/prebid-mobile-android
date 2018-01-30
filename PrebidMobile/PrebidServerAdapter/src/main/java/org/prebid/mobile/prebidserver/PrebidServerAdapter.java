@@ -14,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.core.AdSize;
-import org.prebid.mobile.core.AdType;
 import org.prebid.mobile.core.AdUnit;
 import org.prebid.mobile.core.BidManager;
 import org.prebid.mobile.core.BidResponse;
@@ -149,7 +148,11 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         }
         JSONObject postData = new JSONObject();
         try {
-            postData.put("id", UUID.randomUUID().toString()); // random id for the request
+            String id = UUID.randomUUID().toString();
+            postData.put("id", id);
+            JSONObject source = new JSONObject();
+            source.put("tid", id);
+            postData.put("source", source);
             // add ad units
             JSONArray imps = getImps(adUnits);
             if (imps != null && imps.length() > 0) {
@@ -222,15 +225,13 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 prebid.put("storedrequest", storedrequest);
                 storedrequest.put("id", adUnit.getConfigId());
                 imp.put("ext", ext);
-                if (adUnit.getAdType().equals(AdType.BANNER)) {
-                    JSONObject banner = new JSONObject();
-                    JSONArray format = new JSONArray();
-                    for (AdSize size : adUnit.getSizes()) {
-                        format.put(new JSONObject().put("w", size.getWidth()).put("h", size.getHeight()));
-                    }
-                    banner.put("format", format);
-                    imp.put("banner", banner);
+                JSONObject banner = new JSONObject();
+                JSONArray format = new JSONArray();
+                for (AdSize size : adUnit.getSizes()) {
+                    format.put(new JSONObject().put("w", size.getWidth()).put("h", size.getHeight()));
                 }
+                banner.put("format", format);
+                imp.put("banner", banner);
                 impConfigs.put(imp);
             } catch (JSONException e) {
             }

@@ -21,6 +21,21 @@ import android.content.Context;
 import java.util.ArrayList;
 
 public class InterstitialAdUnit extends AdUnit {
+    private static ArrayList<AdSize> standardSizes = new ArrayList<>();
+
+    static {
+        standardSizes.add(new AdSize(300, 250));
+        standardSizes.add(new AdSize(300, 600));
+        standardSizes.add(new AdSize(320, 250));
+        standardSizes.add(new AdSize(254, 133));
+        standardSizes.add(new AdSize(580, 400));
+        standardSizes.add(new AdSize(320, 320));
+        standardSizes.add(new AdSize(320, 160));
+        standardSizes.add(new AdSize(320, 480));
+        standardSizes.add(new AdSize(336, 280));
+        standardSizes.add(new AdSize(320, 400));
+        standardSizes.add(new AdSize(1, 1));
+    }
 
     public InterstitialAdUnit(String code, String configId) {
         super(code, configId);
@@ -35,19 +50,6 @@ public class InterstitialAdUnit extends AdUnit {
         if (context != null) {
             int width = context.getResources().getDisplayMetrics().widthPixels;
             int height = context.getResources().getDisplayMetrics().heightPixels;
-            ArrayList<AdSize> standardSizes = new ArrayList<>();
-            standardSizes.add(new AdSize(300, 250));
-            standardSizes.add(new AdSize(300, 600));
-            standardSizes.add(new AdSize(320, 250));
-            standardSizes.add(new AdSize(254, 133));
-            standardSizes.add(new AdSize(580, 400));
-            standardSizes.add(new AdSize(320, 320));
-            standardSizes.add(new AdSize(320, 160));
-            standardSizes.add(new AdSize(320, 480));
-            standardSizes.add(new AdSize(336, 280));
-            standardSizes.add(new AdSize(320, 400));
-            standardSizes.add(new AdSize(1, 1));
-
             for (AdSize size : standardSizes) {
                 if (size.getWidth() <= width && size.getHeight() <= height) {
                     sizes.add(size);
