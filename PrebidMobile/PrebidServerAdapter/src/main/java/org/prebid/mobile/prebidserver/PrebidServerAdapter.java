@@ -188,16 +188,15 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         JSONObject ext = new JSONObject();
         JSONObject prebid = new JSONObject();
         try {
-            JSONObject targeting = new JSONObject();
-            targeting.put("pricegranularity", "medium");
-            targeting.put("lengthmax", Settings.REQUEST_KEY_LENGTH_MAX);
-            prebid.put("targeting", targeting);
             if (Prebid.AdServer.MOPUB.equals(Prebid.getAdServer())) {
                 JSONObject bids = new JSONObject();
                 JSONObject cache = new JSONObject();
                 cache.put("bids", bids);
                 prebid.put("cache", cache);
             }
+            JSONObject storedRequest = new JSONObject();
+            storedRequest.put("id", Prebid.getAccountId());
+            prebid.put("storedrequest", storedRequest);
             ext.put("prebid", prebid);
         } catch (JSONException e) {
             e.printStackTrace();
