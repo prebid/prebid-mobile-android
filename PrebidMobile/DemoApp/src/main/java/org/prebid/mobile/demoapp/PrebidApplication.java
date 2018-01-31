@@ -82,7 +82,7 @@ public class PrebidApplication extends Application {
         // Register ad units for prebid.
         try {
             // Start the initialization with DFP ad server
-            Prebid.init(getApplicationContext(), adUnits, PBS_ACCOUNT_ID, Prebid.AdServer.DFP);
+            Prebid.init(getApplicationContext(), adUnits, PBS_ACCOUNT_ID, Prebid.AdServer.DFP, Prebid.Host.APPNEXUS);
         } catch (PrebidException e) {
             e.printStackTrace();
         }
