@@ -38,7 +38,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         InterstitialAdUnit interstitialAdUnit = new InterstitialAdUnit("interstitial", "23456");
         adUnits.add(interstitialAdUnit);
         // Test with DFP settings
-        Prebid.setAdServer(Prebid.AdServer.DFP);
+        Prebid.init(activity, adUnits, "34567", Prebid.AdServer.DFP, Prebid.Host.APPNEXUS);
         JSONObject postData = adapter.getPostData(activity, adUnits);
         assertTrue(postData.has(Settings.REQUEST_DEVICE));
         assertTrue(postData.has(Settings.REQUEST_APP));
@@ -48,26 +48,23 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertTrue("'imp' array should have 2 objects", postData.getJSONArray("imp").length() == 2);
         assertTrue(postData.getJSONArray("imp").getJSONObject(0).get("id").equals("banner"));
         assertTrue(postData.getJSONArray("imp").getJSONObject(0).has("ext"));
-        assertTrue(postData.getJSONArray("imp").getJSONObject(0).has("secure"));
-        // todo add test back after stored request is added in production
-//        assertTrue(postData.getJSONArray("imp").getJSONObject(0).getJSONObject("ext").has("prebid"));
-//        assertTrue(postData.getJSONArray("imp").getJSONObject(0).getJSONObject("ext").getJSONObject("prebid").has("storedrequest"));
-//        assertTrue(postData.getJSONArray("imp").getJSONObject(0).getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").get("id").equals("12345"));
+        assertTrue(postData.getJSONArray("imp").getJSONObject(1).has("secure"));
+        assertTrue(postData.getJSONArray("imp").getJSONObject(0).getJSONObject("ext").has("prebid"));
+        assertTrue(postData.getJSONArray("imp").getJSONObject(0).getJSONObject("ext").getJSONObject("prebid").has("storedrequest"));
+        assertTrue(postData.getJSONArray("imp").getJSONObject(0).getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").get("id").equals("12345"));
         assertTrue(postData.getJSONArray("imp").getJSONObject(1).get("id").equals("interstitial"));
         assertTrue(postData.getJSONArray("imp").getJSONObject(1).has("ext"));
         assertTrue(postData.getJSONArray("imp").getJSONObject(1).has("secure"));
-        // todo add test back after stored request is added in production
-//        assertTrue(postData.getJSONArray("imp").getJSONObject(1).getJSONObject("ext").has("prebid"));
-//        assertTrue(postData.getJSONArray("imp").getJSONObject(1).getJSONObject("ext").getJSONObject("prebid").has("storedrequest"));
-//        assertTrue(postData.getJSONArray("imp").getJSONObject(1).getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").get("id").equals("23456"));
+        assertTrue(postData.getJSONArray("imp").getJSONObject(1).has("instl"));
+        assertTrue(postData.getJSONArray("imp").getJSONObject(1).getJSONObject("ext").has("prebid"));
+        assertTrue(postData.getJSONArray("imp").getJSONObject(1).getJSONObject("ext").getJSONObject("prebid").has("storedrequest"));
+        assertTrue(postData.getJSONArray("imp").getJSONObject(1).getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").get("id").equals("23456"));
         assertTrue(postData.has("ext"));
         assertTrue(postData.getJSONObject("ext").has("prebid"));
-        assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").has("targeting"));
-        assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting").getString("pricegranularity").equals("medium"));
-        assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting").getInt("lengthmax") == Settings.REQUEST_KEY_LENGTH_MAX);
-//        assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").has("cache"));
+        assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").has("storedrequest"));
+        assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").getString("id").equals(Prebid.getAccountId()));
         // Test with MoPub settings
-        Prebid.setAdServer(Prebid.AdServer.MOPUB);
+        Prebid.init(activity, adUnits, "12345", Prebid.AdServer.MOPUB, Prebid.Host.APPNEXUS);
         Prebid.shouldLoadOverSecureConnection(false);
         postData = adapter.getPostData(activity, adUnits);
         assertTrue(postData.has(Settings.REQUEST_DEVICE));
@@ -79,22 +76,19 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertTrue(postData.getJSONArray("imp").getJSONObject(0).get("id").equals("banner"));
         assertTrue(postData.getJSONArray("imp").getJSONObject(0).has("ext"));
         assertTrue(!postData.getJSONArray("imp").getJSONObject(0).has("secure"));
-        // todo add test back after stored request is added in production
-//        assertTrue(postData.getJSONArray("imp").getJSONObject(0).getJSONObject("ext").has("prebid"));
-//        assertTrue(postData.getJSONArray("imp").getJSONObject(0).getJSONObject("ext").getJSONObject("prebid").has("storedrequest"));
-//        assertTrue(postData.getJSONArray("imp").getJSONObject(0).getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").get("id").equals("12345"));
+        assertTrue(postData.getJSONArray("imp").getJSONObject(0).getJSONObject("ext").has("prebid"));
+        assertTrue(postData.getJSONArray("imp").getJSONObject(0).getJSONObject("ext").getJSONObject("prebid").has("storedrequest"));
+        assertTrue(postData.getJSONArray("imp").getJSONObject(0).getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").get("id").equals("12345"));
         assertTrue(postData.getJSONArray("imp").getJSONObject(1).get("id").equals("interstitial"));
         assertTrue(postData.getJSONArray("imp").getJSONObject(1).has("ext"));
         assertTrue(!postData.getJSONArray("imp").getJSONObject(1).has("secure"));
-        // todo add test back after stored request is added in production
-//        assertTrue(postData.getJSONArray("imp").getJSONObject(1).getJSONObject("ext").has("prebid"));
-//        assertTrue(postData.getJSONArray("imp").getJSONObject(1).getJSONObject("ext").getJSONObject("prebid").has("storedrequest"));
-//        assertTrue(postData.getJSONArray("imp").getJSONObject(1).getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").get("id").equals("23456"));
+        assertTrue(postData.getJSONArray("imp").getJSONObject(1).getJSONObject("ext").has("prebid"));
+        assertTrue(postData.getJSONArray("imp").getJSONObject(1).getJSONObject("ext").getJSONObject("prebid").has("storedrequest"));
+        assertTrue(postData.getJSONArray("imp").getJSONObject(1).getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").get("id").equals("23456"));
         assertTrue(postData.has("ext"));
         assertTrue(postData.getJSONObject("ext").has("prebid"));
-        assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").has("targeting"));
-        assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting").getString("pricegranularity").equals("medium"));
-        assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting").getInt("lengthmax") == Settings.REQUEST_KEY_LENGTH_MAX);
+        assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").has("storedrequest"));
+        assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").getString("id").equals(Prebid.getAccountId()));
         assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").has("cache"));
         assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("cache").has("bids"));
         assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("cache").getJSONObject("bids").length() == 0);

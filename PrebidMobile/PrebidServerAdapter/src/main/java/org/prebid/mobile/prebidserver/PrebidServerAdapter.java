@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.core.AdSize;
+import org.prebid.mobile.core.AdType;
 import org.prebid.mobile.core.AdUnit;
 import org.prebid.mobile.core.BidManager;
 import org.prebid.mobile.core.BidResponse;
@@ -46,16 +47,16 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         JSONObject postData = getPostData(context, adUnits);
         new ServerConnector(postData, this, getHost(), context).execute();
     }
-  
+
     private String getHost() {
         String host = null;
         switch (Prebid.getHost()) {
             case APPNEXUS:
-                host = (Prebid.isSecureConnection()) ? Settings.APPNEXUS_REQUEST_URL_SECURE:
-                    Settings.APPNEXUS_REQUEST_URL_NON_SECURE;
+                host = (Prebid.isSecureConnection()) ? Settings.APPNEXUS_REQUEST_URL_SECURE :
+                        Settings.APPNEXUS_REQUEST_URL_NON_SECURE;
                 break;
             case RUBICON:
-                host = (Prebid.isSecureConnection()) ? Settings.RUBICON_REQUEST_URL_SECURE:
+                host = (Prebid.isSecureConnection()) ? Settings.RUBICON_REQUEST_URL_SECURE :
                         Settings.RUBICON_REQUEST_URL_NON_SECURE;
                 break;
         }
@@ -227,6 +228,9 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 imp.put("id", adUnit.getCode());
                 if (Prebid.isSecureConnection()) {
                     imp.put("secure", 1);
+                }
+                if (adUnit.getAdType().equals(AdType.INTERSTITIAL)) {
+                    imp.put("instl", 1);
                 }
                 imp.put("ext", ext);
                 JSONObject prebid = new JSONObject();
