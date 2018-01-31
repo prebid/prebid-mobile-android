@@ -1,10 +1,26 @@
 #! /bin/bash
+function echoX {
+echo -e "PREBID TESTLOG: $@"
+}
+
+echoX "start unit tests"
 cd PrebidMobile
 ./gradlew clean test
 
+echoX "assemble debug apk"
 ./gradlew clean assembleDebug
-mkdir -p IntegrationTests/apk && cp DemoApp/build/outputs/apk/DemoApp-debug.apk IntegrationTests/apk/DemoApp.apk
+if [ ! -e DemoApp/build/outputs/apk/debug/DemoApp-debug.apk ];then
+	echoX "apk creation unsuccessful"
+fi
 
+
+echoX "copy debug apk to destination path"
+mkdir -p IntegrationTests/apk && cp DemoApp/build/outputs/apk/debug/DemoApp-debug.apk IntegrationTests/apk/DemoApp.apk
+if [ ! -e IntegrationTests/apk/DemoApp.apk ]; then
+	echoX "file copy unsuccessful"
+fi
+
+echoX "start integration tests"
 cd IntegrationTests
 bundle install
 
