@@ -21,10 +21,10 @@ public class Settings {
     public static final String COOKIE_DOMAIN = "http://prebid.adnxs.com";
     // Prebid Server Constants
     // connection settings
-    public static final String REQUEST_URL_NON_SECURE = "http://prebid.adnxs.com/pbs/v1/auction";
-    public static final String REQUEST_URL_SECURE = "https://prebid.adnxs.com/pbs/v1/auction";
-    public static final String REQUEST_OPENRTB_ENDPOINT_NON_SECURE = "http://prebid.adnxs.com/pbs/v1/openrtb2/auction";
-    public static final String REQUEST_OPENRTB_ENDPOINT_SECURE = "https://prebid.adnxs.com/pbs/v1/openrtb2/auction";
+    public static final String APPNEXUS_REQUEST_URL_NON_SECURE = "http://prebid.adnxs.com/pbs/v1/openrtb2/auction";
+    public static final String APPNEXUS_REQUEST_URL_SECURE = "https://prebid.adnxs.com/pbs/v1/openrtb2/auction";
+    public static final String RUBICON_REQUEST_URL_NON_SECURE = "http://prebid-server.rubiconproject.com/auction";
+    public static final String RUBICON_REQUEST_URL_SECURE = "https://prebid-server.rubiconproject.com/auction";
 
     public static int connectionTimeOutMillis = 500;
     // request keys

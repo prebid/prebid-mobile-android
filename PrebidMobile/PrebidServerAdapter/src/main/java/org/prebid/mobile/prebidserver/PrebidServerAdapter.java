@@ -44,11 +44,22 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         this.adUnits = adUnits;
         this.weakReferenceLisenter = new WeakReference<BidManager.BidResponseListener>(bidResponseListener);
         JSONObject postData = getPostData(context, adUnits);
-        if (Prebid.isSecureConnection()) {
-            new ServerConnector(postData, this, Settings.REQUEST_OPENRTB_ENDPOINT_SECURE, context).execute();
-        } else {
-            new ServerConnector(postData, this, Settings.REQUEST_OPENRTB_ENDPOINT_NON_SECURE, context).execute();
+        new ServerConnector(postData, this, getHost(), context).execute();
+    }
+  
+    private String getHost() {
+        String host = null;
+        switch (Prebid.getHost()) {
+            case APPNEXUS:
+                host = (Prebid.isSecureConnection()) ? Settings.APPNEXUS_REQUEST_URL_SECURE:
+                    Settings.APPNEXUS_REQUEST_URL_NON_SECURE;
+                break;
+            case RUBICON:
+                host = (Prebid.isSecureConnection()) ? Settings.RUBICON_REQUEST_URL_SECURE:
+                        Settings.RUBICON_REQUEST_URL_NON_SECURE;
+                break;
         }
+        return host;
     }
 
     @Override
