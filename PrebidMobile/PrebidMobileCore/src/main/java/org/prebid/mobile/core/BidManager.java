@@ -289,26 +289,5 @@ public class BidManager {
             expireBids = null;
         }
     }
-
-    static void refreshBids(Context context) {
-        if (bidMap != null) {
-            bidMap.clear();
-        }
-        ArrayList<AdUnit> toBeRequested = new ArrayList<AdUnit>();
-        if (adUnits != null) {
-            for (AdUnit adUnit : adUnits) {
-                toBeRequested.add(adUnit);
-            }
-        }
-        requestBidsForAdUnits(context, toBeRequested);
-    }
-
-    static void setPeriodToCheckExpiration(long period) {
-        periodToCheckExpiration = period;
-    }
-
-    static ConcurrentHashMap<String, ArrayList<BidResponse>> getBidMap() {
-        return bidMap;
-    } // TODO check where this is being used, delete when confirm not being used
     //endregion
 }
