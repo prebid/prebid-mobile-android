@@ -21,6 +21,7 @@ public class PrebidException extends Exception {
     public enum PrebidError {
         NULL_CONTEXT("Null context passed in."),
         EMPTY_ADUNITS("Empty AdUnits passed in."),
+        NULL_HOST("Null host passed in."),
         BANNER_AD_UNIT_NO_SIZE("BannerAdUnit requires size information to check the price for the impression."),
         UNABLE_TO_INITIALIZE_DEMAND_SOURCE("Unable to instantiating the adapter."),
         INVALID_ACCOUNT_ID("Invalid input of account id.");

@@ -49,6 +49,11 @@ public class Prebid {
         UNKNOWN
     }
 
+    public enum Host {
+        APPNEXUS,
+        RUBICON
+    }
+
     //region Public APIs
 
     /**
@@ -69,6 +74,11 @@ public class Prebid {
         return adServer;
     }
 
+    private static Host host = Host.APPNEXUS;
+
+    public static Host getHost() {
+        return host;
+    }
 
     /**
      * This method is used to
@@ -136,6 +146,8 @@ public class Prebid {
      * @param accountId Prebid Server account
      * @param adServer  Primary AdServer you're using for you app
      * @throws PrebidException
+     *
+     * @deprecated this method will be removed in the future, please use {@link #init(Context, ArrayList, String, AdServer, Host)} instead for better performance
      */
     public static void init(Context context, ArrayList<AdUnit> adUnits, String accountId, AdServer adServer) throws PrebidException {
         LogUtil.i("Initializing with a list of AdUnits");
@@ -149,6 +161,69 @@ public class Prebid {
         }
         Prebid.accountId = accountId;
         Prebid.adServer = adServer;
+        // validate ad units and register them
+        if (adUnits == null || adUnits.isEmpty()) {
+            throw new PrebidException(PrebidException.PrebidError.EMPTY_ADUNITS);
+        }
+        for (AdUnit adUnit : adUnits) {
+            if (adUnit.getAdType().equals(AdType.BANNER) && adUnit.getSizes().isEmpty()) {
+                LogUtil.e("Sizes are not added to BannerAdUnit with code: " + adUnit.getCode());
+                throw new PrebidException(PrebidException.PrebidError.BANNER_AD_UNIT_NO_SIZE);
+            }
+            if (adUnit.getAdType().equals(AdType.INTERSTITIAL)) {
+                ((InterstitialAdUnit) adUnit).setInterstitialSizes(context);
+            }
+            BidManager.registerAdUnit(adUnit);
+        }
+        // set up demand adapter
+
+        try {
+            Class<?> adapterClass = Class.forName(PREBID_SERVER);
+            DemandAdapter adapter = (DemandAdapter) adapterClass.newInstance();
+            if (adapter != null) {
+                BidManager.adapter = adapter;
+            } else {
+                throw new PrebidException(PrebidException.PrebidError.UNABLE_TO_INITIALIZE_DEMAND_SOURCE);
+            }
+        } catch (Exception e) {
+            throw new PrebidException(PrebidException.PrebidError.UNABLE_TO_INITIALIZE_DEMAND_SOURCE);
+        }
+        // set up bid manager
+        BidManager.setBidsExpirationRunnable(context);
+        // set up cache manager
+        CacheManager.init(context);
+        // start ad requests
+        BidManager.requestBidsForAdUnits(context, adUnits);
+    }
+
+    /**
+     * This method is used to:
+     * - Validate inputs of ad units
+     * - Validate the setup of the demand adapter
+     * - Start the bid manager
+     *
+     * @param context   Application context
+     * @param adUnits   List of Ad Slot Configurations to register
+     * @param accountId Prebid Server account
+     * @param adServer  Primary AdServer you're using for your app
+     * @param host      Host you're using for your app
+     * @throws PrebidException
+     */
+    public static void init(Context context, ArrayList<AdUnit> adUnits, String accountId, AdServer adServer, Host host) throws PrebidException {
+        LogUtil.i("Initializing with a list of AdUnits");
+        // validate context
+        if (context == null) {
+            throw new PrebidException(PrebidException.PrebidError.NULL_CONTEXT);
+        }
+        // validate account id
+        if (TextUtils.isEmpty(accountId)) {
+            throw new PrebidException(PrebidException.PrebidError.INVALID_ACCOUNT_ID);
+        }
+        Prebid.accountId = accountId;
+        Prebid.adServer = adServer;
+        if (host == null)
+            throw new PrebidException(PrebidException.PrebidError.NULL_HOST);
+        Prebid.host = host;
         // validate ad units and register them
         if (adUnits == null || adUnits.isEmpty()) {
             throw new PrebidException(PrebidException.PrebidError.EMPTY_ADUNITS);
