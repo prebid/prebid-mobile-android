@@ -200,7 +200,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         JSONObject ext = new JSONObject();
         JSONObject prebid = new JSONObject();
         try {
-            if (Prebid.AdServer.MOPUB.equals(Prebid.getAdServer())) {
+            if (!Prebid.useLocalCache()) {
                 JSONObject bids = new JSONObject();
                 JSONObject cache = new JSONObject();
                 cache.put("bids", bids);

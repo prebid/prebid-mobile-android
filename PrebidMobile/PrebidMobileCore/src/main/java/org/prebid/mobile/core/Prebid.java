@@ -42,6 +42,7 @@ public class Prebid {
     private static boolean secureConnection = true; //by default, always use secured connection
     private static String accountId;
     private static final int kMoPubQueryStringLimit = 4000;
+    private static boolean useLocalCache = true;
 
     public enum AdServer {
         DFP,
@@ -83,6 +84,10 @@ public class Prebid {
 
     public static Host getHost() {
         return host;
+    }
+
+    public static boolean useLocalCache() {
+        return useLocalCache;
     }
 
     /**
@@ -151,7 +156,6 @@ public class Prebid {
      * @param accountId Prebid Server account
      * @param adServer  Primary AdServer you're using for you app
      * @throws PrebidException
-     *
      * @deprecated this method will be removed in the future, please use {@link #init(Context, ArrayList, String, AdServer, Host)} instead for better performance
      */
     public static void init(Context context, ArrayList<AdUnit> adUnits, String accountId, AdServer adServer) throws PrebidException {
@@ -166,6 +170,9 @@ public class Prebid {
         }
         Prebid.accountId = accountId;
         Prebid.adServer = adServer;
+        if (AdServer.MOPUB.equals(Prebid.adServer)) {
+            useLocalCache = false;
+        }
         // validate ad units and register them
         if (adUnits == null || adUnits.isEmpty()) {
             throw new PrebidException(PrebidException.PrebidError.EMPTY_ADUNITS);
@@ -226,6 +233,9 @@ public class Prebid {
         }
         Prebid.accountId = accountId;
         Prebid.adServer = adServer;
+        if (AdServer.MOPUB.equals(Prebid.adServer)) {
+            Prebid.useLocalCache = false;
+        }
         if (host == null)
             throw new PrebidException(PrebidException.PrebidError.NULL_HOST);
         Prebid.host = host;
