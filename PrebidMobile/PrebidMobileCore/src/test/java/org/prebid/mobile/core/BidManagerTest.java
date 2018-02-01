@@ -12,11 +12,13 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 21, manifest = Config.NONE)
@@ -31,8 +33,18 @@ public class BidManagerTest extends BaseSetup {
         initializePrebid();
     }
 
+    private void setTestServer(String serverName) {
+        try {
+            Field prebidServerField = Prebid.class.getDeclaredField("PREBID_SERVER");
+            prebidServerField.setAccessible(true);
+            prebidServerField.set(null, serverName);
+        } catch (NoSuchFieldException e) {
+        } catch (IllegalAccessException e) {
+        }
+    }
+
     private void initializePrebid() {
-        Prebid.setTestServer(MockServer.class.getName());
+        setTestServer(MockServer.class.getName());
         //Configure Banner Ad-Units
         adUnit1 = new BannerAdUnit(TestConstants.bannerAdUnit1, TestConstants.configID1);
         adUnit1.addSize(320, 50);
@@ -45,11 +57,49 @@ public class BidManagerTest extends BaseSetup {
         adUnit3 = new InterstitialAdUnit(TestConstants.interstitialAdUnit, TestConstants.configID3);
 
         TargetingParams.setGender(TargetingParams.GENDER.FEMALE);
-        TargetingParams.setAge(25);
+        TargetingParams.setYearOfBirth(1992);
         TargetingParams.setLocationDecimalDigits(2);
         TargetingParams.setLocationEnabled(true);
-        TargetingParams.setCustomTargeting("Test", "Prebid-Custom-1");
-        TargetingParams.setCustomTargeting("Test2", "Prebid-Custom-2");
+    }
+
+    private void setAdServer(Prebid.AdServer adServer) {
+        try {
+            Field adServerField = Prebid.class.getDeclaredField("adServer");
+            adServerField.setAccessible(true);
+            adServerField.set(null, adServer);
+        } catch (IllegalAccessException e) {
+        } catch (NoSuchFieldException e) {
+        }
+    }
+
+    @Test
+    public void testBidManagerAddingCacheIdToTopBid() throws Exception {
+        setAdServer(Prebid.AdServer.DFP);
+        BannerAdUnit adUnit = new BannerAdUnit("Banner", "12345");
+        adUnit.addSize(300, 250);
+        ArrayList<BidResponse> responses = new ArrayList<BidResponse>();
+        BidResponse topBid = new BidResponse(0.5, "Prebid_12345");
+        BidResponse bid2 = new BidResponse(0.4, "Prebid_23456");
+        BidResponse bid3 = new BidResponse(0.3, "Prebid_34567");
+        responses.add(bid3);
+        responses.add(bid2);
+        responses.add(topBid);
+        // test that for DFP, a hb_cache_id will be added to the top bid
+        BidManager.bidResponseListener.onBidSuccess(adUnit, responses);
+        ArrayList<BidResponse> sortedResponses = BidManager.getBidMap().get(adUnit.getCode());
+        assertTrue(sortedResponses.size() == 3);
+        assertTrue(sortedResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id", "Prebid_12345")));
+        assertTrue(sortedResponses.get(1).getCustomKeywords().size() == 0);
+        assertTrue(sortedResponses.get(2).getCustomKeywords().size() == 0);
+        // test that for MoPub, nothing will be added for the bids
+        setAdServer(Prebid.AdServer.MOPUB);
+        topBid.getCustomKeywords().clear();
+        BidManager.bidResponseListener.onBidSuccess(adUnit, responses);
+        sortedResponses = BidManager.getBidMap().get(adUnit.getCode());
+        assertTrue(sortedResponses.size() == 3);
+        assertTrue(sortedResponses.get(0).getCustomKeywords().size() == 0);
+        assertTrue(sortedResponses.get(1).getCustomKeywords().size() == 0);
+        assertTrue(sortedResponses.get(2).getCustomKeywords().size() == 0);
     }
 
     // Test case for checking the init call
@@ -179,7 +229,8 @@ public class BidManagerTest extends BaseSetup {
         super.tearDown();
 
         // Clear targeting since these are static settings
-        TargetingParams.clearCustomKeywords();
+        TargetingParams.clearAppKeywords();
+        TargetingParams.clearUserKeywords();
         TargetingParams.setLocation(null);
         TargetingParams.setLocationDecimalDigits(-1);
         TargetingParams.setGender(TargetingParams.GENDER.UNKNOWN);

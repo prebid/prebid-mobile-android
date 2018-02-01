@@ -132,7 +132,7 @@ public class BidManager {
         void onBidFailure(AdUnit bidRequest, ErrorCode reason);
     }
 
-    private static BidResponseListener bidResponseListener = new BidResponseListener() {
+    static BidResponseListener bidResponseListener = new BidResponseListener() {
         @Override
         public void onBidSuccess(AdUnit adUnit, ArrayList<BidResponse> bidResponses) {
             //First iterate through the List of AdUnits.
@@ -149,6 +149,12 @@ public class BidManager {
             bidMap.remove(adUnit.getCode());
             // save the bids sorted
             Collections.sort(bidResponses, new BidComparator());
+            if (Prebid.getAdServer() == Prebid.AdServer.DFP) {
+                BidResponse topBid = bidResponses.get(0);
+                if (topBid != null) {
+                    topBid.addCustomKeyword("hb_cache_id", topBid.getCreative());
+                }
+            }
             bidMap.put(adUnit.getCode(), bidResponses);
         }
 
