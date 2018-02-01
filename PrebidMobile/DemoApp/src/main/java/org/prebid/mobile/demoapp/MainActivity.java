@@ -47,6 +47,16 @@ public class MainActivity extends AppCompatActivity {
             Field field = Prebid.class.getDeclaredField("adServer");
             field.setAccessible(true);
             field.set(null, adServer);
+            Field useLocalCache = Prebid.class.getDeclaredField("useLocalCache");
+            useLocalCache.setAccessible(true);
+            switch (adServer) {
+                case DFP:
+                    useLocalCache.set(null, true);
+                    break;
+                case MOPUB:
+                    useLocalCache.set(null, false);
+                    break;
+            }
             // refreshBids
             Method refreshBids = BidManager.class.getDeclaredMethod("refreshBids", Context.class);
             refreshBids.setAccessible(true);
