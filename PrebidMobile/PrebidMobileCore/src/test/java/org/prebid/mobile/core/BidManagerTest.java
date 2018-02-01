@@ -12,6 +12,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import static junit.framework.Assert.assertEquals;
@@ -32,8 +33,18 @@ public class BidManagerTest extends BaseSetup {
         initializePrebid();
     }
 
+    private void setTestServer(String serverName) {
+        try {
+            Field prebidServerField = Prebid.class.getDeclaredField("PREBID_SERVER");
+            prebidServerField.setAccessible(true);
+            prebidServerField.set(null, serverName);
+        } catch (NoSuchFieldException e) {
+        } catch (IllegalAccessException e) {
+        }
+    }
+
     private void initializePrebid() {
-        Prebid.setTestServer(MockServer.class.getName());
+        setTestServer(MockServer.class.getName());
         //Configure Banner Ad-Units
         adUnit1 = new BannerAdUnit(TestConstants.bannerAdUnit1, TestConstants.configID1);
         adUnit1.addSize(320, 50);
@@ -51,9 +62,19 @@ public class BidManagerTest extends BaseSetup {
         TargetingParams.setLocationEnabled(true);
     }
 
+    private void setAdServer(Prebid.AdServer adServer) {
+        try {
+            Field adServerField = Prebid.class.getDeclaredField("adServer");
+            adServerField.setAccessible(true);
+            adServerField.set(null, adServer);
+        } catch (IllegalAccessException e) {
+        } catch (NoSuchFieldException e) {
+        }
+    }
+
     @Test
     public void testBidManagerAddingCacheIdToTopBid() throws Exception {
-        Prebid.setAdServer(Prebid.AdServer.DFP);
+        setAdServer(Prebid.AdServer.DFP);
         BannerAdUnit adUnit = new BannerAdUnit("Banner", "12345");
         adUnit.addSize(300, 250);
         ArrayList<BidResponse> responses = new ArrayList<BidResponse>();
@@ -71,7 +92,7 @@ public class BidManagerTest extends BaseSetup {
         assertTrue(sortedResponses.get(1).getCustomKeywords().size() == 0);
         assertTrue(sortedResponses.get(2).getCustomKeywords().size() == 0);
         // test that for MoPub, nothing will be added for the bids
-        Prebid.setAdServer(Prebid.AdServer.MOPUB);
+        setAdServer(Prebid.AdServer.MOPUB);
         topBid.getCustomKeywords().clear();
         BidManager.bidResponseListener.onBidSuccess(adUnit, responses);
         sortedResponses = BidManager.getBidMap().get(adUnit.getCode());

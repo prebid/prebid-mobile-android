@@ -11,6 +11,7 @@ import org.prebid.mobile.unittestutils.TestConstants;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
@@ -22,7 +23,17 @@ public class PrebidInitTest extends BaseSetup {
     @Before
     public void setUp() {
         super.setup();
-        Prebid.setTestServer(MockServer.class.getName());
+        setTestServer(MockServer.class.getName());
+    }
+
+    private void setTestServer(String serverName) {
+        try {
+            Field prebidServerField = Prebid.class.getDeclaredField("PREBID_SERVER");
+            prebidServerField.setAccessible(true);
+            prebidServerField.set(null, serverName);
+        } catch (NoSuchFieldException e) {
+        } catch (IllegalAccessException e) {
+        }
     }
 
     // Check if the ad units passed in are stored correctly in the BidManager after init.
@@ -83,7 +94,7 @@ public class PrebidInitTest extends BaseSetup {
 
     @Test
     public void testUnableToInitDemandAdapterException() {
-        Prebid.setTestServer("random value");
+        setTestServer("random value");
         ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
         BannerAdUnit adUnit = new BannerAdUnit(TestConstants.bannerAdUnit1, TestConstants.configID1);
         adUnit.addSize(320, 50);
@@ -97,7 +108,7 @@ public class PrebidInitTest extends BaseSetup {
 
     @Test
     public void testUnableToInitNullHostException() {
-        Prebid.setTestServer("random value");
+        setTestServer("random value");
         ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
         BannerAdUnit adUnit = new BannerAdUnit(TestConstants.bannerAdUnit1, TestConstants.configID1);
         adUnit.addSize(320, 50);
