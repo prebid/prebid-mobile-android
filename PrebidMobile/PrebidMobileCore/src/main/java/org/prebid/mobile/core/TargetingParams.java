@@ -20,15 +20,13 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.text.TextUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.Calendar;
 
 
 /**
- * TargetingParams class sets the Targeting parameters like age, gender, location
+ * TargetingParams class sets the Targeting parameters like yob, gender, location
  * and other custom parameters for the adUnits to be made available in the auction.
  */
 public class TargetingParams {
@@ -40,12 +38,17 @@ public class TargetingParams {
         TAG = LogUtil.getTagWithBase("TP");
     }
 
-    private static int age;
+    private static int yob = 0;
     private static GENDER gender = GENDER.UNKNOWN;
     private static boolean locationEnabled = false; // default location access is disabled
     private static int locationDecimalDigits = -1;
-    private static HashMap<String, ArrayList<String>> customKeywords = new HashMap<String, ArrayList<String>>();
+    private static ArrayList<String> appKeywords = new ArrayList<String>();
+    private static ArrayList<String> userKeywords = new ArrayList<String>();
     private static Location location;
+    private static String domain = "";
+    private static String storeUrl = "";
+    private static int privacyPolicy = 0;
+    private static String bundleName = null;
     //endregion
 
     //region Private Constructor
@@ -109,21 +112,23 @@ public class TargetingParams {
     //region Public APIs
 
     /**
-     * Get the age for targeting
+     * Get the year of birth for targeting
      *
-     * @return age
+     * @return yob
      */
-    public static int getAge() {
-        return age;
+    public static int getYearOfBirth() {
+        return yob;
     }
 
     /**
-     * Set the age for targeting
+     * Set the year of birth for targeting
      *
-     * @param age age of the user
+     * @param yob yob of the user
      */
-    public static void setAge(int age) {
-        TargetingParams.age = age;
+    public static void setYearOfBirth(int yob) {
+        if (yob > 0 && yob <= Calendar.getInstance().get(Calendar.YEAR)) {
+            TargetingParams.yob = yob;
+        }
     }
 
     public enum GENDER {
@@ -219,76 +224,166 @@ public class TargetingParams {
     }
 
     /**
-     * Retrieve the array of custom keywords that will passed to demand sources.
+     * Set the keywords that're related to the app
      *
-     * @return The current list of key-value pairs of custom keywords.
+     * @param appKeywords list of keywords
      */
-    public synchronized static HashMap<String, ArrayList<String>> getCustomKeywords() {
-        HashMap<String, ArrayList<String>> result = new HashMap<String, ArrayList<String>>();
-        Set<String> keys = customKeywords.keySet();
-        for (String key : keys) {
-            ArrayList<String> values = new ArrayList<>();
-            ArrayList<String> originalValues = customKeywords.get(key);
-            if (originalValues != null) {
-                for (String value : originalValues) {
-                    values.add(value);
-                }
-            }
-            result.put(key, values);
+    public static void setAppKeywords(ArrayList<String> appKeywords) {
+        if (appKeywords != null) {
+            TargetingParams.appKeywords = appKeywords;
         }
-        return result;
+    }
+
+    public static ArrayList<String> getAppKeywords() {
+        return appKeywords;
+    }
+
+
+    /**
+     * Clear all the keywords that're related to the app
+     */
+    public static void clearAppKeywords() {
+        TargetingParams.appKeywords.clear();
     }
 
     /**
-     * Remove a custom keyword from the targeting params. Use this to remove a keyword
-     * previously set using addCustomKeywords.
+     * Add one keyword to app related keywords
      *
-     * @param key The key to remove; this should not be null or empty.
+     * @param keyword keyword to be added
      */
-    public synchronized static void removeCustomKeyword(String key) {
-        if (TextUtils.isEmpty(key))
-            return;
-        customKeywords.remove(key);
-    }
-
-    /**
-     * Set a custom key/value pair for customized targeting.
-     * Note this will override existing values for the same key.
-     *
-     * @param key   The key to add; this should not be null or empty.
-     * @param value The value to add; this should not be null or empty.
-     */
-    public synchronized static void setCustomTargeting(String key, String value) {
-        if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
-            LogUtil.w("Null/empty values passed in for custom targeting.");
-        } else {
-            ArrayList<String> values = new ArrayList<String>();
-            values.add(value);
-            customKeywords.put(key, values);
+    public static void addAppKeywords(String keyword) {
+        if (!appKeywords.contains(keyword)) {
+            appKeywords.add(keyword);
         }
     }
 
     /**
-     * Set a custom key/values pair for customized targeting.
-     * Note this will override existing values for the same key.
+     * Remove one keyword to app related keywords
      *
-     * @param key    The key to add; this should not be null or empty.
-     * @param values The values to add; this should not be null or empty.
+     * @param keyword keyword to be added
      */
-    public synchronized static void setCustomTargeting(String key, ArrayList<String> values) {
-        if (TextUtils.isEmpty(key) || values == null || values.isEmpty()) {
-            LogUtil.w("Null/empty values passed in for custom targeting.");
-        } else {
-            customKeywords.put(key, values);
+    public static void removeAppKeyword(String keyword) {
+        appKeywords.remove(keyword);
+    }
+
+    /**
+     * Set the keywords that're related to the
+     *
+     * @param userKeywords
+     */
+    public static void setUserKeywords(ArrayList<String> userKeywords) {
+        if (userKeywords != null) {
+            TargetingParams.userKeywords = userKeywords;
         }
     }
 
     /**
-     * Clear all custom keywords.
+     * Get the keywords for user
+     *
+     * @return a list of keywords
      */
-    public synchronized static void clearCustomKeywords() {
-        customKeywords.clear();
+    public static ArrayList<String> getUserKeywords() {
+        return userKeywords;
     }
 
-    //endregion
+    /**
+     * Clear the keywords for user
+     */
+    public static void clearUserKeywords() {
+        userKeywords.clear();
+    }
+
+    /**
+     * Add one keyword to user related keywords
+     *
+     * @param keyword keyword to be added
+     */
+    public static void addUserKeyword(String keyword) {
+        if (!userKeywords.contains(keyword)) {
+            userKeywords.add(keyword);
+        }
+    }
+
+    /**
+     * Remove one keyword to user related keywords
+     *
+     * @param keyword keyword to be removed
+     */
+    public static void removeUserKeyword(String keyword) {
+        userKeywords.remove(keyword);
+    }
+
+    /**
+     * Get the platform-specific identifier, should be bundle/package name
+     */
+    public static synchronized String getBundleName() {
+        return bundleName;
+    }
+
+    /**
+     * Set the platform-specific identifier for targeting purpose
+     * Should be bundle/package name
+     */
+    public static synchronized void setBundleName(String bundleName) {
+        TargetingParams.bundleName = bundleName;
+    }
+
+    /**
+     * Set the domain of your app for targeting purpose
+     *
+     * @param domain domain of your app
+     */
+    public static synchronized void setDomain(String domain) {
+        TargetingParams.domain = domain;
+    }
+
+    /**
+     * Get the domain of your app
+     *
+     * @return domain of your app
+     */
+    public static synchronized String getDomain() {
+        return domain;
+    }
+
+    /**
+     * Set the store url of your app
+     *
+     * @param storeUrl store url
+     */
+    public static synchronized void setStoreUrl(String storeUrl) {
+        TargetingParams.storeUrl = storeUrl;
+    }
+
+    /**
+     * Get the store url of your app
+     *
+     * @return store url
+     */
+    public static synchronized String getStoreUrl() {
+        return storeUrl;
+    }
+
+    /**
+     * Set whether the app has a privacy policy, where 0 = no, 1 = yes
+     *
+     * @param privacyPolicy default value is 0
+     */
+    public static synchronized void setPrivacyPolicy(int privacyPolicy) {
+        if (privacyPolicy == 0 || privacyPolicy == 1) {
+            TargetingParams.privacyPolicy = privacyPolicy;
+        }
+    }
+
+    /**
+     * Get whether the app has a privacy policy
+     *
+     * @return 1 if it has one
+     */
+    public static synchronized int getPrivacyPolicy() {
+        return privacyPolicy;
+    }
+
+
+//endregion
 }

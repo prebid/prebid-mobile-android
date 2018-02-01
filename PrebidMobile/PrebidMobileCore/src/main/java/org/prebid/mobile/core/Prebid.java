@@ -18,7 +18,6 @@ package org.prebid.mobile.core;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Pair;
 
@@ -42,6 +41,9 @@ public class Prebid {
     private static boolean secureConnection = true; //by default, always use secured connection
     private static String accountId;
     private static final int kMoPubQueryStringLimit = 4000;
+    private static boolean useLocalCache = true;
+    private static Host host = Host.APPNEXUS;
+    private static AdServer adServer = AdServer.UNKNOWN;
 
     public enum AdServer {
         DFP,
@@ -67,17 +69,17 @@ public class Prebid {
         void onAttachComplete(Object adObj);
     }
 
-
-    private static AdServer adServer = AdServer.UNKNOWN;
-
     public static AdServer getAdServer() {
         return adServer;
     }
 
-    private static Host host = Host.APPNEXUS;
 
     public static Host getHost() {
         return host;
+    }
+
+    public static boolean useLocalCache() {
+        return useLocalCache;
     }
 
     /**
@@ -146,9 +148,9 @@ public class Prebid {
      * @param accountId Prebid Server account
      * @param adServer  Primary AdServer you're using for you app
      * @throws PrebidException
-     *
      * @deprecated this method will be removed in the future, please use {@link #init(Context, ArrayList, String, AdServer, Host)} instead for better performance
      */
+    @Deprecated
     public static void init(Context context, ArrayList<AdUnit> adUnits, String accountId, AdServer adServer) throws PrebidException {
         LogUtil.i("Initializing with a list of AdUnits");
         // validate context
@@ -161,6 +163,9 @@ public class Prebid {
         }
         Prebid.accountId = accountId;
         Prebid.adServer = adServer;
+        if (AdServer.MOPUB.equals(Prebid.adServer)) {
+            useLocalCache = false;
+        }
         // validate ad units and register them
         if (adUnits == null || adUnits.isEmpty()) {
             throw new PrebidException(PrebidException.PrebidError.EMPTY_ADUNITS);
@@ -221,6 +226,9 @@ public class Prebid {
         }
         Prebid.accountId = accountId;
         Prebid.adServer = adServer;
+        if (AdServer.MOPUB.equals(Prebid.adServer)) {
+            Prebid.useLocalCache = false;
+        }
         if (host == null)
             throw new PrebidException(PrebidException.PrebidError.NULL_HOST);
         Prebid.host = host;
@@ -424,13 +432,8 @@ public class Prebid {
      */
     public static void shouldLoadOverSecureConnection(boolean secureConnection) {
         // Only enables overrides for MoPub, DFP should always load over secured connection
-        if (getClassFromString(MOPUB_ADVIEW_CLASS) != null) {
+        if (Prebid.adServer.equals(AdServer.MOPUB)) {
             Prebid.secureConnection = secureConnection;
         }
-    }
-
-    @VisibleForTesting
-    public static void setTestServer(String serverAdapter) {
-        PREBID_SERVER = serverAdapter;
     }
 }

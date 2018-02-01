@@ -24,7 +24,7 @@ public class CacheManager {
         setupSDKCache();
     }
 
-    static void init(Context context) {
+    public static void init(Context context) {
         if (cache == null) {
             cache = new CacheManager(context);
         }
