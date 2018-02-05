@@ -59,6 +59,7 @@ public class PrebidApplication extends Application {
         //Configure Ad-Slot2 with the same demand source
         BannerAdUnit adUnit2 = new BannerAdUnit(BANNER_300x250, PBS_CONFIG_300x250_APPNEXUS_DEMAND);
         adUnit2.addSize(300, 250);
+        adUnit2.addSize(300, 600);
 
         //Configure Interstitial Ad Unit
         InterstitialAdUnit adUnit3 = new InterstitialAdUnit(INTERSTITIAL_FULLSCREEN, PBS_CONFIG_APPNEXUS_DEMAND);
@@ -70,19 +71,16 @@ public class PrebidApplication extends Application {
 
         // Set targeting
         TargetingParams.setGender(TargetingParams.GENDER.FEMALE);
-        TargetingParams.setAge(25);
+        TargetingParams.setYearOfBirth(1992);
         TargetingParams.setLocationDecimalDigits(2);
         TargetingParams.setLocationEnabled(true);
-        TargetingParams.setCustomTargeting("Test", "Prebid-Custom-1");
-        TargetingParams.setCustomTargeting("Test", "Prebid-Custom-2");
-        ArrayList<String> values = new ArrayList<String>();
-        values.add("Prebid-Custom-2");
-        TargetingParams.setCustomTargeting("Test2", values);
+        TargetingParams.addAppKeywords("PrebidKeyword1");
+        TargetingParams.addUserKeyword("PrebidKeyword2");
 
         // Register ad units for prebid.
         try {
             // Start the initialization with DFP ad server
-            Prebid.init(getApplicationContext(), adUnits, PBS_ACCOUNT_ID, Prebid.AdServer.DFP);
+            Prebid.init(getApplicationContext(), adUnits, PBS_ACCOUNT_ID, Prebid.AdServer.DFP, Prebid.Host.APPNEXUS);
         } catch (PrebidException e) {
             e.printStackTrace();
         }
