@@ -50,7 +50,8 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         if (adUnitsList != null && !adUnitsList.isEmpty()) {
             for (ArrayList toBeRequested : adUnitsList) {
                 JSONObject postData = getPostData(context, toBeRequested);
-        new ServerConnector(postData, this, getHost(), context).execute();
+                new ServerConnector(postData, this, getHost(), context).execute();
+            }
         }
     }
 
@@ -77,7 +78,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         return adUnitsList;
     }
 
-    private String getHost() {
+    String getHost() {
         String host = null;
         switch (Prebid.getHost()) {
             case APPNEXUS:

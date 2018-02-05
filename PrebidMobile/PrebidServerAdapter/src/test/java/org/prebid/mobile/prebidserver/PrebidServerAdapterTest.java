@@ -274,4 +274,21 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertTrue(results.get(0).size() == 10);
         assertTrue(results.get(1).size() == 10);
     }
+
+    @Test
+    public void testGetHost() throws Exception {
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        // default value is AppNexus Secure host
+        assertEquals(Settings.APPNEXUS_REQUEST_URL_SECURE, adapter.getHost());
+        Field shouldSecureField = Prebid.class.getDeclaredField("secureConnection");
+        shouldSecureField.setAccessible(true);
+        shouldSecureField.set(null, false);
+        assertEquals(Settings.APPNEXUS_REQUEST_URL_NON_SECURE, adapter.getHost());
+        Field host = Prebid.class.getDeclaredField("host");
+        host.setAccessible(true);
+        host.set(null, Prebid.Host.RUBICON);
+        assertEquals(Settings.RUBICON_REQUEST_URL_NON_SECURE, adapter.getHost());
+        shouldSecureField.set(null, true);
+        assertEquals(Settings.RUBICON_REQUEST_URL_SECURE, adapter.getHost());
+    }
 }
