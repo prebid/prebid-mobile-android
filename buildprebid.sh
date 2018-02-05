@@ -188,6 +188,7 @@ transitive = true
 
 // Build from compiled libs
 compile fileTree(dir: 'libs', include: ['*.jar'])
+compile 'org.apache.commons:commons-text:1.1'
 }
 
 EOL
