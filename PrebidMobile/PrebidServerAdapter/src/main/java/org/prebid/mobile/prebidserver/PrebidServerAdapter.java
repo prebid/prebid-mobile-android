@@ -39,6 +39,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
     //region instance members
     private ArrayList<AdUnit> adUnits; // list of current ad units in the flight
     private WeakReference<BidManager.BidResponseListener> weakReferenceLisenter;
+    private final int ADUNITS_PER_REQUEST = 10;
 
     @Override
     public void requestBid(final Context context, final BidManager.BidResponseListener bidResponseListener, final ArrayList<AdUnit> adUnits) {
@@ -46,34 +47,34 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         this.weakReferenceLisenter = new WeakReference<BidManager.BidResponseListener>(bidResponseListener);
         // Batch 10 calls for each request to server
 
-        ArrayList<ArrayList<AdUnit>> adUnitsList = getAdUnitLists(adUnits);
+        ArrayList<ArrayList<AdUnit>> adUnitsList = batchAdUnits(adUnits);
         if (adUnitsList != null && !adUnitsList.isEmpty()) {
-            for (ArrayList toBeRequested : adUnitsList) {
-                JSONObject postData = getPostData(context, toBeRequested);
+            for (ArrayList batchedAdUnits : adUnitsList) {
+                JSONObject postData = getPostData(context, batchedAdUnits);
                 new ServerConnector(postData, this, getHost(), context).execute();
             }
         }
     }
 
-    ArrayList<ArrayList<AdUnit>> getAdUnitLists(ArrayList<AdUnit> adUnits) {
+    ArrayList<ArrayList<AdUnit>> batchAdUnits(ArrayList<AdUnit> adUnits) {
         ArrayList<ArrayList<AdUnit>> adUnitsList = new ArrayList<>();
         int len = adUnits.size();
-        int i = len / 10;
-        int j = len % 10;
+        int i = len / ADUNITS_PER_REQUEST;
+        int j = len % ADUNITS_PER_REQUEST;
 
         for (int m = 0; m < i; m++) {
-            ArrayList<AdUnit> toBeAdded = new ArrayList<>();
-            for (int n = 0; n < 10; n++) {
-                toBeAdded.add(adUnits.get(m * 10 + n));
+            ArrayList<AdUnit> splitAdUnitsList = new ArrayList<>();
+            for (int n = 0; n < ADUNITS_PER_REQUEST; n++) {
+                splitAdUnitsList.add(adUnits.get(m * 10 + n));
             }
-            adUnitsList.add(toBeAdded);
+            adUnitsList.add(splitAdUnitsList);
         }
         if (j > 0) {
-            ArrayList<AdUnit> toBeAdded = new ArrayList<>();
+            ArrayList<AdUnit> splitAdUnitsList = new ArrayList<>();
             for (int n = 0; n < j; n++) {
-                toBeAdded.add(adUnits.get(i * 10 + n));
+                splitAdUnitsList.add(adUnits.get(i * ADUNITS_PER_REQUEST + n));
             }
-            adUnitsList.add(toBeAdded);
+            adUnitsList.add(splitAdUnitsList);
         }
         return adUnitsList;
     }

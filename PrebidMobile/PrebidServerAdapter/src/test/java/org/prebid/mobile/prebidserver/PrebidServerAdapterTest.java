@@ -204,7 +204,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         adUnit.addSize(300, 250);
         ArrayList<AdUnit> adUnits = new ArrayList<>();
         adUnits.add(adUnit);
-        ArrayList<ArrayList<AdUnit>> results = adapter.getAdUnitLists(adUnits);
+        ArrayList<ArrayList<AdUnit>> results = adapter.batchAdUnits(adUnits);
         assertTrue(results.size() == 1);
         assertTrue(results.get(0).size() == 1);
         // pass in 13 ad units
@@ -247,7 +247,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         adUnits.add(adUnit11);
         adUnits.add(adUnit12);
         adUnits.add(adUnit13);
-        results = adapter.getAdUnitLists(adUnits);
+        results = adapter.batchAdUnits(adUnits);
         assertTrue(results.size() == 2);
         assertTrue(results.get(0).size() == 10);
         assertTrue(results.get(1).size() == 4);
@@ -269,7 +269,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         adUnits.add(adUnit17);
         adUnits.add(adUnit18);
         adUnits.add(adUnit19);
-        results = adapter.getAdUnitLists(adUnits);
+        results = adapter.batchAdUnits(adUnits);
         assertTrue(results.size() == 2);
         assertTrue(results.get(0).size() == 10);
         assertTrue(results.get(1).size() == 10);
