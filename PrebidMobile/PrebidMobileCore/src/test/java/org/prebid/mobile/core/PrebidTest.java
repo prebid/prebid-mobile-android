@@ -18,6 +18,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
@@ -32,8 +33,18 @@ public class PrebidTest extends BaseSetup {
     @Before
     public void setUp() {
         super.setup();
-        Prebid.setTestServer(MockServer.class.getName());
+        setTestServer(MockServer.class.getName());
 
+    }
+
+    private void setTestServer(String serverName) {
+        try {
+            Field prebidServerField = Prebid.class.getDeclaredField("PREBID_SERVER");
+            prebidServerField.setAccessible(true);
+            prebidServerField.set(null, serverName);
+        } catch (NoSuchFieldException e) {
+        } catch (IllegalAccessException e) {
+        }
     }
 
     @Test
