@@ -18,7 +18,7 @@ import org.prebid.mobile.core.Prebid;
 import org.prebid.mobile.demoapp.Constants;
 import org.prebid.mobile.demoapp.R;
 
-public class DFPInterstitialFragment extends Fragment {
+public class AppNexusInterstitialDemandFragment extends Fragment {
     View root;
     PublisherAdRequest request;
     PublisherInterstitialAd mPublisherInterstitialAd;
@@ -27,7 +27,7 @@ public class DFPInterstitialFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        root = inflater.inflate(R.layout.fragment_interstitial, null);
+        root = inflater.inflate(R.layout.fragment_loadad, null);
         // interstitial set up
         mPublisherInterstitialAd = new PublisherInterstitialAd(getContext());
         mPublisherInterstitialAd.setAdUnitId(Constants.DFP_INTERSTITIAL_ADUNIT_ID_FULLSCREEN);
@@ -53,17 +53,17 @@ public class DFPInterstitialFragment extends Fragment {
             }
         });
         request = new PublisherAdRequest.Builder().build();
-        Button btnLoad = (Button) root.findViewById(R.id.loadInterstitial);
+        Button btnLoad = (Button) root.findViewById(R.id.load);
         btnLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadInterstitial(v);
+                loadInterstitial();
             }
         });
         return root;
     }
 
-    public void loadInterstitial(View view) {
+    public void loadInterstitial() {
         Prebid.attachBids(request, Constants.INTERSTITIAL_FULLSCREEN, getContext());
         mPublisherInterstitialAd.loadAd(request);
         Prebid.detachUsedBid(request);

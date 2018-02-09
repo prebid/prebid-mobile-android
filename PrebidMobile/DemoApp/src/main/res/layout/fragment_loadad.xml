@@ -9,25 +9,18 @@
         android:id="@+id/adFrame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true">
-
-    </FrameLayout>
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="2dp"
+        android:background="@android:color/background_light" />
 
     <Button
-        android:id="@+id/loadInterstitial"
+        android:id="@+id/load"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:text="Load Interstitial" />
-
-    <Button
-        android:id="@+id/loadBanner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/loadInterstitial"
-        android:layout_centerHorizontal="true"
-        android:text="Load Banner" />
-
-
+        android:text="Load Ad" />
 </RelativeLayout>

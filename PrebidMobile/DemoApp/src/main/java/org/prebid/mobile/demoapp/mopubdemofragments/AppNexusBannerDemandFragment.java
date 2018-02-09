@@ -17,76 +17,56 @@ import org.prebid.mobile.core.Prebid;
 import org.prebid.mobile.demoapp.Constants;
 import org.prebid.mobile.demoapp.R;
 
-import java.util.HashMap;
-
-public class MoPubBannerFragment extends Fragment implements Prebid.OnAttachCompleteListener, MoPubView.BannerAdListener {
+public class AppNexusBannerDemandFragment extends Fragment implements Prebid.OnAttachCompleteListener, MoPubView.BannerAdListener {
 
     private MoPubView adView;
-    private MoPubView adView2;
     private View root;
+    int w;
+    int h;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        root = inflater.inflate(R.layout.fragment_banner, null);
-
-        Button btnLoad = (Button) root.findViewById(R.id.loadBanner);
+        root = inflater.inflate(R.layout.fragment_loadad, null);
+        w = getArguments().getInt(Constants.WIDTH);
+        h = getArguments().getInt(Constants.HEIGHT);
+        Button btnLoad = (Button) root.findViewById(R.id.load);
         btnLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadBanner();
             }
         });
-        setupBannerWithoutWait();
         setupBannerWithWait(500);
         return root;
     }
 
-    private void setupBannerWithoutWait() {
-        adView = new MoPubView(this.getActivity());
-        FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame);
-        adFrame.removeAllViews();
-        adView.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_320x50);
-        adView.setBannerAdListener(this);
-        adView.setAutorefreshEnabled(true);
-        adView.setMinimumWidth(320);
-        adView.setMinimumHeight(50);
-        adView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.TOP | Gravity.CENTER_HORIZONTAL));
-        adFrame.addView(adView);
-        Prebid.attachBids(adView, Constants.BANNER_320x50, this.getActivity());
-        adView.loadAd();
-    }
-
 
     private void setupBannerWithWait(final int waitTime) {
-        FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame2);
+        FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame);
         adFrame.removeAllViews();
-        adView2 = new MoPubView(this.getActivity());
-        adView2.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
-        adView2.setBannerAdListener(this);
-        adView2.setAutorefreshEnabled(true);
-        adView2.setMinimumWidth(300);
-        adView2.setMinimumHeight(250);
+        adView = new MoPubView(this.getActivity());
+        adView.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+        adView.setBannerAdListener(this);
+        adView.setAutorefreshEnabled(true);
+        adView.setMinimumWidth(w);
+        adView.setMinimumHeight(h);
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER;
-        adView2.setLayoutParams(lp);
-        adFrame.addView(adView2);
+        adView.setLayoutParams(lp);
+        adFrame.addView(adView);
         //region Prebid API usage
-        Prebid.attachBidsWhenReady(adView2, Constants.BANNER_300x250, this, waitTime, this.getActivity());
+        Prebid.attachBidsWhenReady(adView, Constants.BANNER_300x250, this, waitTime, this.getActivity());
         //endregion
-
     }
 
     public void loadBanner() {
         if (adView != null) {
             adView.destroy();
-            setupBannerWithoutWait();
+            adView = null;
         }
-        if (adView2 != null) {
-            adView2.destroy();
-            setupBannerWithWait(500);
-        }
+        setupBannerWithWait(500);
     }
 
     @Override
@@ -123,9 +103,6 @@ public class MoPubBannerFragment extends Fragment implements Prebid.OnAttachComp
 
         if (adView != null) {
             adView.destroy();
-        }
-        if (adView2 != null) {
-            adView2.destroy();
         }
     }
 }

@@ -21,69 +21,108 @@ public class FormatChoiceActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             String adServerName = (String) intent.getExtras().get(Constants.ADSERVER);
-            if ("dfp".equals(adServerName)) {
-                rootView.addView(getTextView("Show Banner Example", new View.OnClickListener() {
+            if (Constants.DFP.equals(adServerName)) {
+                rootView.addView(getTextView("AppNexus Banner 300x250", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
-                        intent.putExtra(Constants.ADSERVER, "dfp");
-                        intent.putExtra(Constants.ADFORMAT, "banner");
+                        intent.putExtra(Constants.ADSERVER, Constants.DFP);
+                        intent.putExtra(Constants.DEMAND, Constants.APN_BANNER);
+                        intent.putExtra(Constants.WIDTH, 300);
+                        intent.putExtra(Constants.HEIGHT, 250);
                         startActivity(intent);
                     }
                 }));
-                rootView.addView(getTextView("Show Interstitial Example", new View.OnClickListener() {
+                rootView.addView(getTextView("AppNexus Banner 320x50", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
-                        intent.putExtra(Constants.ADSERVER, "dfp");
-                        intent.putExtra(Constants.ADFORMAT, "interstitial");
+                        intent.putExtra(Constants.ADSERVER, Constants.DFP);
+                        intent.putExtra(Constants.DEMAND, Constants.APN_BANNER);
+                        intent.putExtra(Constants.WIDTH, 320);
+                        intent.putExtra(Constants.HEIGHT, 50);
                         startActivity(intent);
                     }
                 }));
-                // todo remove this
-                rootView.addView(getTextView("Dummy", new View.OnClickListener() {
+                rootView.addView(getTextView("AppNexus Interstitial", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
-                        intent.putExtra(Constants.ADSERVER, "dfp");
-                        intent.putExtra(Constants.ADFORMAT, "dummy");
+                        intent.putExtra(Constants.ADSERVER, Constants.DFP);
+                        intent.putExtra(Constants.DEMAND, Constants.APN_INTERSTITIAL);
                         startActivity(intent);
                     }
                 }));
-                rootView.addView(getTextView("Show Facebook Demand", new View.OnClickListener() {
+                rootView.addView(getTextView("Facebook Banner 300x250", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
-                        intent.putExtra(Constants.ADSERVER, "dfp");
-                        intent.putExtra(Constants.ADFORMAT, "facebook");
+                        intent.putExtra(Constants.ADSERVER, Constants.DFP);
+                        intent.putExtra(Constants.DEMAND, Constants.FB_BANNER);
+                        intent.putExtra(Constants.WIDTH, 300);
+                        intent.putExtra(Constants.HEIGHT, 250);
                         startActivity(intent);
                     }
                 }));
-            } else if ("mopub".equals(adServerName)) {
-                rootView.addView(getTextView("Show Banner Example", new View.OnClickListener() {
+                rootView.addView(getTextView("Facebook Interstitial", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
-                        intent.putExtra(Constants.ADSERVER, "mopub");
-                        intent.putExtra(Constants.ADFORMAT, "banner");
+                        intent.putExtra(Constants.ADSERVER, Constants.DFP);
+                        intent.putExtra(Constants.DEMAND, Constants.FB_INTERSTITIAL);
                         startActivity(intent);
                     }
                 }));
-                rootView.addView(getTextView("Show Interstitial Example", new View.OnClickListener() {
+            } else if (Constants.MOPUB.equals(adServerName)) {
+                rootView.addView(getTextView("AppNexus Banner 300x250", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
-                        intent.putExtra(Constants.ADSERVER, "mopub");
-                        intent.putExtra(Constants.ADFORMAT, "interstitial");
+                        intent.putExtra(Constants.ADSERVER, Constants.MOPUB);
+                        intent.putExtra(Constants.DEMAND, Constants.APN_BANNER);
+                        intent.putExtra(Constants.WIDTH, 300);
+                        intent.putExtra(Constants.HEIGHT, 250);
                         startActivity(intent);
                     }
                 }));
-                rootView.addView(getTextView("Show Facebook Demand", new View.OnClickListener() {
+                rootView.addView(getTextView("AppNexus Banner 320x50", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
-                        intent.putExtra(Constants.ADSERVER, "mopub");
-                        intent.putExtra(Constants.ADFORMAT, "facebook");
+                        intent.putExtra(Constants.ADSERVER, Constants.MOPUB);
+                        intent.putExtra(Constants.DEMAND, Constants.APN_BANNER);
+                        intent.putExtra(Constants.WIDTH, 320);
+                        intent.putExtra(Constants.HEIGHT, 50);
+                        startActivity(intent);
+                    }
+                }));
+                rootView.addView(getTextView("AppNexus Interstitial", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
+                        intent.putExtra(Constants.ADSERVER, Constants.MOPUB);
+                        intent.putExtra(Constants.DEMAND, Constants.APN_INTERSTITIAL);
+                        startActivity(intent);
+                    }
+                }));
+                rootView.addView(getTextView("Facebook Banner 300x250", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
+                        intent.putExtra(Constants.ADSERVER, Constants.MOPUB);
+                        intent.putExtra(Constants.DEMAND, Constants.FB_BANNER);
+                        intent.putExtra(Constants.WIDTH, 300);
+                        intent.putExtra(Constants.HEIGHT, 250);
+                        startActivity(intent);
+
+                    }
+                }));
+                rootView.addView(getTextView("Facebook Interstitial", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(FormatChoiceActivity.this, DemoActivity.class);
+                        intent.putExtra(Constants.ADSERVER, Constants.MOPUB);
+                        intent.putExtra(Constants.DEMAND, Constants.FB_INTERSTITIAL);
                         startActivity(intent);
                     }
                 }));

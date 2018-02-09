@@ -21,27 +21,28 @@ import org.prebid.mobile.demoapp.Constants;
 import org.prebid.mobile.demoapp.R;
 
 
-public class DFPBannerFragment extends Fragment implements Prebid.OnAttachCompleteListener {
+public class AppNexusBannerDemandFragment extends Fragment implements Prebid.OnAttachCompleteListener {
     PublisherAdView adView1;
-    PublisherAdView adView2;
+    PublisherAdView adView;
     private View root;
     private AdListener adListener;
+    private int w;
+    private int h;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        root = inflater.inflate(R.layout.fragment_banner, null);
-
-        setupBannerWithoutWait();
-
+        w = getArguments().getInt(Constants.WIDTH);
+        h = getArguments().getInt(Constants.HEIGHT);
+        root = inflater.inflate(R.layout.fragment_loadad, null);
         setupBannerWithWait(500);
-
-        Button btnLoad = (Button) root.findViewById(R.id.loadBanner);
+        Button btnLoad = (Button) root.findViewById(R.id.load);
         btnLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadBanner();
+                loadAd();
             }
         });
         adListener = new AdListener() {
@@ -79,27 +80,11 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
         return root;
     }
 
-    private void setupBannerWithoutWait() {
-        FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame);
-        adFrame.removeAllViews();
-        adView1 = new PublisherAdView(getActivity());
-        adView1.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_320x50);
-        adView1.setAdSizes(new AdSize(320, 50));
-        adView1.setAdListener(adListener);
-        adFrame.addView(adView1);
-        //region PriceCheckForDFP API usage
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        PublisherAdRequest request = builder.build();
-        Prebid.attachBids(request, Constants.BANNER_320x50, this.getActivity());
-        //endregion
-        adView1.loadAd(request);
-    }
-
 
     public String getDFPWebViewName() {
-        int count = adView2.getChildCount();
+        int count = adView.getChildCount();
         for (int i = 0; i < count; i++) {
-            ViewGroup nextChild = (ViewGroup) adView2.getChildAt(i);
+            ViewGroup nextChild = (ViewGroup) adView.getChildAt(i);
             int secondCount = nextChild.getChildCount();
             for (int j = 0; j < secondCount; j++) {
                 ViewGroup thirdChild = (ViewGroup) nextChild.getChildAt(j);
@@ -116,35 +101,37 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
     }
 
     private void setupBannerWithWait(final int waitTime) {
-
-        FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame2);
+        FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame);
         adFrame.removeAllViews();
-        adView2 = new PublisherAdView(getActivity());
-        adView2.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_300x250);
-        adView2.setAdSizes(new AdSize(300, 250));
-        adView2.setAdListener(adListener);
-        adFrame.addView(adView2);
+        adView = new PublisherAdView(getActivity());
+        adView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_300x250);
+        adView.setAdSizes(new AdSize(w, h));
+        adView.setAdListener(adListener);
+        adFrame.addView(adView);
         //region PriceCheckForDFP API usage
-        Prebid.attachBidsWhenReady(new PublisherAdRequest.Builder().build(), Constants.BANNER_300x250, this, waitTime, this.getActivity());
+        String code = "";
+        if (w == 300 && h == 250) {
+            code = Constants.BANNER_300x250;
+        } else if (w == 320 && h == 250) {
+            code = Constants.BANNER_320x50;
+        }
+        Prebid.attachBidsWhenReady(new PublisherAdRequest.Builder().build(), code, this, waitTime, this.getActivity());
         //endregion
 
     }
 
-    public void loadBanner() {
-        if (adView1 != null) {
-            adView1.destroy();
-            setupBannerWithoutWait();
+    public void loadAd() {
+        if (adView != null) {
+            adView.destroy();
+            adView = null;
         }
-        if (adView2 != null) {
-            adView2.destroy();
-            setupBannerWithWait(500);
-        }
+        setupBannerWithWait(500);
     }
 
     @Override
     public void onAttachComplete(Object adObj) {
-        if (adView2 != null && adObj != null && adObj instanceof PublisherAdRequest) {
-            adView2.loadAd((PublisherAdRequest) adObj);
+        if (adView != null && adObj != null && adObj instanceof PublisherAdRequest) {
+            adView.loadAd((PublisherAdRequest) adObj);
             Prebid.detachUsedBid(adObj);
         }
     }

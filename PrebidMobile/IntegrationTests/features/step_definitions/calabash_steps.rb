@@ -6,7 +6,7 @@ Then(/^I should see AppNexus creative$/) do
     len = names.length
     short_name = names[len-1]
     @query_results = query(short_name + " css:'body'")
-    unless @query_results[1]['html'].include?('pbm.js')
+    unless @query_results[0]['html'].include?('pbm.js')
         raise "Pbm.js not found, prebid creative was not served"
     end
 end

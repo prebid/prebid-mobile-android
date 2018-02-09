@@ -34,5 +34,13 @@ public class Constants {
     public static final String PBS_ACCOUNT_ID = "bfa84af2-bd16-4d35-96ad-31c6bb888df0";
     // App Constants
     public static final String ADSERVER = "AdServerName";
-    public static final String ADFORMAT = "AdFormat";
+    public static final String DFP = "dfp";
+    public static final String MOPUB = "mopub";
+    public static final String DEMAND = "Demand";
+    public static final String APN_BANNER = "appnexus_banner";
+    public static final String APN_INTERSTITIAL = "appnexus_interstitial";
+    public static final String FB_BANNER = "facebook_banner";
+    public static final String FB_INTERSTITIAL = "facebook_interstitial";
+    public static final String WIDTH = "Width";
+    public static final String HEIGHT = "Height";
 }

@@ -17,7 +17,7 @@ import org.prebid.mobile.demoapp.Constants;
 import org.prebid.mobile.demoapp.R;
 
 
-public class MoPubInterstitialFragment extends Fragment implements Prebid.OnAttachCompleteListener, MoPubInterstitial.InterstitialAdListener {
+public class AppNexusInterstitialDemandFragment extends Fragment implements Prebid.OnAttachCompleteListener, MoPubInterstitial.InterstitialAdListener {
     MoPubInterstitial interstitialAdView;
     private View root;
 
@@ -25,11 +25,11 @@ public class MoPubInterstitialFragment extends Fragment implements Prebid.OnAtta
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        root = inflater.inflate(R.layout.fragment_interstitial, null);
+        root = inflater.inflate(R.layout.fragment_loadad, null);
 
         interstitialAdView = new MoPubInterstitial(this.getActivity(), Constants.MOPUB_INTERSTITIAL_ADUNIT_ID_FULLSCREEN);
 
-        Button btnLoad = (Button) root.findViewById(R.id.loadInterstitial);
+        Button btnLoad = (Button) root.findViewById(R.id.load);
         btnLoad.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
