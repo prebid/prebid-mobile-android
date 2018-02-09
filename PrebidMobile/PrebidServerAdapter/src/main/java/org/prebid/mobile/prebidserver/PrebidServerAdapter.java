@@ -441,7 +441,10 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             // os
             device.put(Settings.REQUEST_OS, Settings.os);
             device.put(Settings.REQUEST_OS_VERSION, String.valueOf(Build.VERSION.SDK_INT));
-
+            // language		 +
+            if (!TextUtils.isEmpty(Settings.language)) {
+                device.put(Settings.REQUEST_LANGUAGE, Settings.language);
+            }
         } catch (JSONException e) {
         }
         return device;

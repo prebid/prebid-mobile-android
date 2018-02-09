@@ -29,7 +29,7 @@ public class Settings {
     public static int connectionTimeOutMillis = 500;
     // request keys
     public static final String REQUEST_USER = "user";
-
+    public static final String REQUEST_LANGUAGE = "language";
     public static final String REQUEST_BUYERUID = "buyeruid";
     public static final String REQUEST_DEVICE = "device";
     public static final String REQUEST_APP = "app";
