@@ -3,6 +3,7 @@ package org.prebid.demandsdkadapters.common;
 import android.content.Context;
 
 import org.json.JSONObject;
+import org.prebid.mobile.core.CacheManager;
 import org.prebid.mobile.core.ErrorCode;
 import org.prebid.mobile.core.LogUtil;
 import org.prebid.mobile.core.PrebidDemandSettings;
@@ -41,7 +42,7 @@ public class InterstitialController {
 
     public void loadAd(final Context context, final AdListener listener) {
         LogUtil.i("Retrieving cached adm from server.");
-        CacheService cs = new CacheService(new CacheService.CacheListener() {
+        CacheManager.CacheListener cacheListener = new CacheManager.CacheListener() {
             @Override
             public void onResponded(JSONObject jsonObject) {
                 switch (demand) {
@@ -51,8 +52,8 @@ public class InterstitialController {
                         break;
                 }
             }
-        }, cacheId);
-        cs.execute();
+        };
+        CacheManager.getCacheManager().getCache(cacheId, cacheListener);
     }
 
     private void loadFacebookIntersitial(Context context, JSONObject cacheResponse, final AdListener listener) {

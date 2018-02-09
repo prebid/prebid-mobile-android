@@ -33,7 +33,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -105,7 +104,6 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             if (response == null || response.length() == 0) {
                 LogUtil.e("empty server response.");
             } else {
-
                 // check if seatbid is presented in the response first
                 JSONArray seatbid = null;
 

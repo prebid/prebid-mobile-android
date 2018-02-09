@@ -63,7 +63,7 @@ public class PrebidTest extends BaseSetup {
         adUnit.addSize(300, 250);
         ArrayList<AdUnit> adUnits = new ArrayList<>();
         adUnits.add(adUnit);
-        Prebid.init(activity, adUnits, TestConstants.accountId);
+        Prebid.init(activity, adUnits, TestConstants.accountId, Prebid.AdServer.MOPUB, Prebid.Host.APPNEXUS);
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         // call API to apply bids
@@ -156,7 +156,7 @@ public class PrebidTest extends BaseSetup {
         adUnit.addSize(300, 250);
         ArrayList<AdUnit> adUnits = new ArrayList<>();
         adUnits.add(adUnit);
-        Prebid.init(activity, adUnits, TestConstants.accountId);
+        Prebid.init(activity, adUnits, TestConstants.accountId, Prebid.AdServer.MOPUB, Prebid.Host.APPNEXUS);
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         // call API to apply bids
@@ -196,7 +196,7 @@ public class PrebidTest extends BaseSetup {
         adUnit.addSize(300, 250);
         ArrayList<AdUnit> adUnits = new ArrayList<>();
         adUnits.add(adUnit);
-        Prebid.init(activity, adUnits, TestConstants.accountId);
+        Prebid.init(activity, adUnits, TestConstants.accountId, Prebid.AdServer.MOPUB, Prebid.Host.APPNEXUS);
         uiScheduler.unPause();
         bgScheduler.unPause();
         // call API to apply bids
@@ -222,8 +222,7 @@ public class PrebidTest extends BaseSetup {
     @Test
     public void testPrebidAttachForDFP() throws Exception {
         ArrayList<BidResponse> bids = new ArrayList<>();
-        BidResponse testBid = new BidResponse(TestConstants.cpm1, ServerResponsesBuilder.ut_url);
-        testBid.addCustomKeyword("hb_cache_id", "14y3834yq5iu5");
+        BidResponse testBid = new BidResponse(TestConstants.cpm1, "14y3834yq5iu5");
         testBid.addCustomKeyword("hb_pb", "1.37");
         testBid.addCustomKeyword("hb_bidder", "mock_bidder");
         testBid.addCustomKeyword("hb_creative_loadtype", "html");
@@ -234,7 +233,7 @@ public class PrebidTest extends BaseSetup {
         adUnit.addSize(300, 250);
         ArrayList<AdUnit> adUnits = new ArrayList<>();
         adUnits.add(adUnit);
-        Prebid.init(activity, adUnits, TestConstants.accountId);
+        Prebid.init(activity, adUnits, TestConstants.accountId, Prebid.AdServer.DFP, Prebid.Host.APPNEXUS);
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         // call API to apply bids
@@ -248,8 +247,7 @@ public class PrebidTest extends BaseSetup {
         assertEquals("html", customTargeting.getString("hb_creative_loadtype"));
         // Update mock server
         bids.remove(testBid);
-        testBid = new BidResponse(TestConstants.cpm2, ServerResponsesBuilder.ut_url);
-        testBid.addCustomKeyword("hb_cache_id", "airuq3948u9qu9");
+        testBid = new BidResponse(TestConstants.cpm2, "airuq3948u9qu9");
         testBid.addCustomKeyword("hb_pb", "0.51");
         testBid.addCustomKeyword("hb_bidder", "mock_bidder");
         testBid.addCustomKeyword("hb_creative_loadtype", "html");
@@ -265,8 +263,7 @@ public class PrebidTest extends BaseSetup {
         assertEquals("html", customTargeting.getString("hb_creative_loadtype"));
         // Update mock server
         bids.remove(testBid);
-        testBid = new BidResponse(TestConstants.cpm3, ServerResponsesBuilder.ut_url);
-        testBid.addCustomKeyword("hb_cache_id", "yq3rhuh3c88");
+        testBid = new BidResponse(TestConstants.cpm3, "yq3rhuh3c88");
         testBid.addCustomKeyword("hb_pb", "0.54");
         testBid.addCustomKeyword("hb_bidder", "audienceNetwork");
         testBid.addCustomKeyword("hb_creative_loadtype", "demand_sdk");

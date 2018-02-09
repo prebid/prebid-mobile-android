@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.json.JSONObject;
+import org.prebid.mobile.core.CacheManager;
 import org.prebid.mobile.core.ErrorCode;
 import org.prebid.mobile.core.LogUtil;
 import org.prebid.mobile.core.PrebidDemandSettings;
@@ -48,7 +49,7 @@ public class BannerController {
 
     public void loadAd(final Context context, final int width, final int height, final AdListener listener) {
         LogUtil.i("Retrieving cached adm from server.");
-        CacheService cs = new CacheService(new CacheService.CacheListener() {
+        CacheManager.CacheListener cacheListener = new CacheManager.CacheListener() {
             @Override
             public void onResponded(JSONObject jsonObject) {
                 switch (demand) {
@@ -58,9 +59,8 @@ public class BannerController {
                         break;
                 }
             }
-        }, cacheId);
-        cs.execute();
-
+        };
+        CacheManager.getCacheManager().getCache(cacheId, cacheListener);
     }
 
     private void loadFacebookBanner(Context context, JSONObject cacheResponse, int width, int height, final AdListener listener) {

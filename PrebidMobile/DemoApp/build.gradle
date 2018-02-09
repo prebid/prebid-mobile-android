@@ -37,5 +37,5 @@ dependencies {
     compile project(":PrebidServerAdapter")
     compile project(":DemandSDKAdaptersForDFP")
     compile project(":DemandSDKAdaptersForMoPub")
-    compile(name: 'ads-release', ext: 'aar')
+    compile 'com.facebook.android:audience-network-sdk:4.+'
 }
