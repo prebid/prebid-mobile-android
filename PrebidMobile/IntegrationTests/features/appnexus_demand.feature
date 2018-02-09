@@ -1,4 +1,4 @@
-Feature: AppNexus Demand test
+Feature: AppNexus Demand Test
 
 Scenario: Load DFP Banner Ad
     Given I wait for the "MainActivity" screen to appear

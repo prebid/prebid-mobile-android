@@ -1,4 +1,4 @@
-Feature: Facebook Demand test
+Feature: Facebook Demand Test
 
 Scenario: Load Facebook Banner Ad in DFP
     Given I wait for the "MainActivity" screen to appear
