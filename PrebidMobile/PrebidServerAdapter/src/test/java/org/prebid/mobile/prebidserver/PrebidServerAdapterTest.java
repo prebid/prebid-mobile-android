@@ -195,4 +195,100 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Settings.setConnectionTimeOutMillis(1000);
         assertEquals(1000, Settings.getConnectionTimeOutMillis());
     }
+
+    @Test
+    public void testGetArrayListForBatchCall() throws Exception {
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        // pass in a single ad unit
+        BannerAdUnit adUnit = new BannerAdUnit("B", "0");
+        adUnit.addSize(300, 250);
+        ArrayList<AdUnit> adUnits = new ArrayList<>();
+        adUnits.add(adUnit);
+        ArrayList<ArrayList<AdUnit>> results = adapter.batchAdUnits(adUnits);
+        assertTrue(results.size() == 1);
+        assertTrue(results.get(0).size() == 1);
+        // pass in 13 ad units
+        BannerAdUnit adUnit1 = new BannerAdUnit("B1", "1");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit2 = new BannerAdUnit("B2", "2");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit3 = new BannerAdUnit("B3", "3");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit4 = new BannerAdUnit("B4", "4");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit5 = new BannerAdUnit("B5", "5");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit6 = new BannerAdUnit("B6", "6");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit7 = new BannerAdUnit("B7", "7");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit8 = new BannerAdUnit("B8", "8");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit9 = new BannerAdUnit("B9", "9");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit10 = new BannerAdUnit("B10", "10");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit11 = new BannerAdUnit("B11", "11");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit12 = new BannerAdUnit("B12", "12");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit13 = new BannerAdUnit("B13", "13");
+        adUnit.addSize(300, 250);
+        adUnits.add(adUnit1);
+        adUnits.add(adUnit2);
+        adUnits.add(adUnit3);
+        adUnits.add(adUnit4);
+        adUnits.add(adUnit5);
+        adUnits.add(adUnit6);
+        adUnits.add(adUnit7);
+        adUnits.add(adUnit8);
+        adUnits.add(adUnit9);
+        adUnits.add(adUnit10);
+        adUnits.add(adUnit11);
+        adUnits.add(adUnit12);
+        adUnits.add(adUnit13);
+        results = adapter.batchAdUnits(adUnits);
+        assertTrue(results.size() == 2);
+        assertTrue(results.get(0).size() == 10);
+        assertTrue(results.get(1).size() == 4);
+        BannerAdUnit adUnit14 = new BannerAdUnit("B1", "1");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit15 = new BannerAdUnit("B2", "2");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit16 = new BannerAdUnit("B3", "3");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit17 = new BannerAdUnit("B4", "4");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit18 = new BannerAdUnit("B5", "5");
+        adUnit.addSize(300, 250);
+        BannerAdUnit adUnit19 = new BannerAdUnit("B6", "6");
+        adUnit.addSize(300, 250);
+        adUnits.add(adUnit14);
+        adUnits.add(adUnit15);
+        adUnits.add(adUnit16);
+        adUnits.add(adUnit17);
+        adUnits.add(adUnit18);
+        adUnits.add(adUnit19);
+        results = adapter.batchAdUnits(adUnits);
+        assertTrue(results.size() == 2);
+        assertTrue(results.get(0).size() == 10);
+        assertTrue(results.get(1).size() == 10);
+    }
+
+    @Test
+    public void testGetHost() throws Exception {
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        // default value is AppNexus Secure host
+        assertEquals(Settings.APPNEXUS_REQUEST_URL_SECURE, adapter.getHost());
+        Field shouldSecureField = Prebid.class.getDeclaredField("secureConnection");
+        shouldSecureField.setAccessible(true);
+        shouldSecureField.set(null, false);
+        assertEquals(Settings.APPNEXUS_REQUEST_URL_NON_SECURE, adapter.getHost());
+        Field host = Prebid.class.getDeclaredField("host");
+        host.setAccessible(true);
+        host.set(null, Prebid.Host.RUBICON);
+        assertEquals(Settings.RUBICON_REQUEST_URL_NON_SECURE, adapter.getHost());
+        shouldSecureField.set(null, true);
+        assertEquals(Settings.RUBICON_REQUEST_URL_SECURE, adapter.getHost());
+    }
 }

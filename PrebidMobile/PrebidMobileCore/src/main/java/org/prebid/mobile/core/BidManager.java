@@ -315,6 +315,6 @@ public class BidManager {
 
     static ConcurrentHashMap<String, ArrayList<BidResponse>> getBidMap() {
         return bidMap;
-    } // TODO check where this is being used, delete when confirm not being used
+    }
     //endregion
 }
