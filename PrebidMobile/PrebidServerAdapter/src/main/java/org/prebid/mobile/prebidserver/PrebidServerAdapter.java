@@ -473,15 +473,16 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             JSONObject publisher = new JSONObject();
             publisher.put("id", Prebid.getAccountId());
             app.put("publisher", publisher);
-            String toBeAdded = "";
+            StringBuilder builder = new StringBuilder();
             ArrayList<String> keywords = TargetingParams.getAppKeywords();
             for (String keyword : keywords) {
                 if (!TextUtils.isEmpty(keyword)) {
-                    toBeAdded = toBeAdded + keyword + ",";
+                    builder.append(keyword).append(",");
                 }
             }
-            if (!TextUtils.isEmpty(toBeAdded)) {
-                app.put("keywords", toBeAdded);
+            String finalKeywords = builder.toString();
+            if (!TextUtils.isEmpty(finalKeywords)) {
+                app.put("keywords", finalKeywords);
             }
             JSONObject prebid = new JSONObject();
             prebid.put("source", "prebid-mobile");
@@ -515,15 +516,16 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                     break;
             }
             user.put("gender", g);
-            String toBeAdded = "";
             ArrayList<String> keywords = TargetingParams.getUserKeywords();
+            StringBuilder builder = new StringBuilder();
             for (String keyword : keywords) {
                 if (!TextUtils.isEmpty(keyword)) {
-                    toBeAdded = toBeAdded + keyword + ",";
+                    builder.append(keyword).append(",");
                 }
             }
-            if (!TextUtils.isEmpty(toBeAdded)) {
-                user.put("keywords", toBeAdded);
+            String finalKeywords = builder.toString();
+            if (!TextUtils.isEmpty(finalKeywords)) {
+                user.put("keywords", finalKeywords);
             }
         } catch (JSONException e) {
         }
