@@ -159,12 +159,16 @@ public class CacheManager {
                 return;
             }
 
-            cacheManager.dfpWebCache = new WebView(context);
-            WebSettings webSettings = cacheManager.dfpWebCache.getSettings();
-
-            if (webSettings != null) {
-                webSettings.setDomStorageEnabled(true);
-                webSettings.setJavaScriptEnabled(true);
+            try {
+                cacheManager.dfpWebCache = new WebView(context);
+                WebSettings webSettings = cacheManager.dfpWebCache.getSettings();
+                if (webSettings != null) {
+                    webSettings.setDomStorageEnabled(true);
+                    webSettings.setJavaScriptEnabled(true);
+                }
+            } catch (Throwable t) {
+                // possible AndroidRuntime thrown at android.webkit.WebViewFactory.getFactoryClass
+                // stemming from WebView's constructor, manifests itself in Android 5.0 and 5.1.
             }
         }
     }
