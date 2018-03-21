@@ -4,11 +4,13 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,8 +21,9 @@ public class CacheManager {
     private static CacheManager cache;
 
     private CacheManager(Context context) {
-        setupBidCleanUpRunnable();
-        setupWebCache(context);
+        Handler handler = new Handler(Looper.getMainLooper());
+        setupBidCleanUpRunnable(handler);
+        setupWebCache(context, handler);
         setupSDKCache();
     }
 
@@ -34,17 +37,8 @@ public class CacheManager {
         return cache;
     }
 
-    private void setupBidCleanUpRunnable() {
-        final Handler handler = new Handler(Looper.getMainLooper());
-        final Runnable cleanCache = new Runnable() {
-            @Override
-            public void run() {
-                long now = System.currentTimeMillis();
-                removeCache(now);
-                handler.postDelayed(this, 270000);
-            }
-        };
-        handler.post(cleanCache);
+    private void setupBidCleanUpRunnable(final Handler handler) {
+        handler.post(new BidCleanUpRunnable(this, handler));
     }
 
     private void removeCache(long now) {
@@ -96,30 +90,13 @@ public class CacheManager {
     }
 
 
-    private void setupWebCache(final Context context) {
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.postAtFrontOfQueue(new Runnable() {
-            @Override
-            public void run() {
-                dfpWebCache = new WebView(context);
-                dfpWebCache.getSettings().setDomStorageEnabled(true);
-                dfpWebCache.getSettings().setJavaScriptEnabled(true);
-            }
-        });
+    private void setupWebCache(final Context context, final Handler handler) {
+        handler.postAtFrontOfQueue(new WebCacheInitializer(this, context));
     }
 
     private void saveCacheForWeb(final String cacheId, final String bid) {
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.postAtFrontOfQueue(new Runnable() {
-            @Override
-            public void run() {
-                String escapedBid = StringEscapeUtils.escapeEcmaScript(bid);
-                String result = "<html><script> localStorage.setItem('" + cacheId + "', '" + escapedBid + "');</script></html>";
-                if (dfpWebCache != null) {
-                    dfpWebCache.loadDataWithBaseURL("https://pubads.g.doubleclick.net", result, "text/html", null, null);
-                }
-            }
-        });
+        handler.postAtFrontOfQueue(new SaveCacheForWebRunnable(this, cacheId, bid));
     }
 
     private void setupSDKCache() {
@@ -139,5 +116,82 @@ public class CacheManager {
             return sdkCache.remove(cacheId);
         }
         return null;
+    }
+
+    private static class BidCleanUpRunnable implements Runnable {
+        private final WeakReference<CacheManager> cacheManagerWeakRef;
+        private final Handler handler;
+
+        BidCleanUpRunnable(final CacheManager cacheManager, final Handler handler) {
+            cacheManagerWeakRef = new WeakReference<>(cacheManager);
+            this.handler = handler;
+        }
+
+        @Override
+        public void run() {
+            CacheManager cacheManager = cacheManagerWeakRef.get();
+            if (cacheManager == null) {
+                return;
+            }
+            cacheManager.removeCache(System.currentTimeMillis());
+            handler.postDelayed(this, 270000);
+        }
+    }
+
+    private static class WebCacheInitializer implements Runnable {
+        private final WeakReference<CacheManager> cacheManagerWeakRef;
+        private final WeakReference<Context> contextWeakRef;
+
+        WebCacheInitializer(final CacheManager cacheManager,final  Context context) {
+            cacheManagerWeakRef = new WeakReference<>(cacheManager);
+            contextWeakRef = new WeakReference<>(context);
+        }
+
+        @Override
+        public void run() {
+            CacheManager cacheManager = cacheManagerWeakRef.get();
+            if (cacheManager == null) {
+                return;
+            }
+
+            Context context = contextWeakRef.get();
+            if (context == null) {
+                return;
+            }
+
+            cacheManager.dfpWebCache = new WebView(context);
+            WebSettings webSettings = cacheManager.dfpWebCache.getSettings();
+
+            if (webSettings != null) {
+                webSettings.setDomStorageEnabled(true);
+                webSettings.setJavaScriptEnabled(true);
+            }
+        }
+    }
+
+    private static class SaveCacheForWebRunnable implements Runnable {
+        private final WeakReference<CacheManager> cacheManagerWeakRef;
+        private final String cacheId;
+        private final String bid;
+
+        SaveCacheForWebRunnable(CacheManager cacheManager, final String cacheId, final String bid) {
+            cacheManagerWeakRef = new WeakReference<>(cacheManager);
+            this.cacheId = cacheId;
+            this.bid = bid;
+        }
+
+        @Override
+        public void run() {
+            CacheManager cacheManager = cacheManagerWeakRef.get();
+            if (cacheManager == null) {
+                return;
+            }
+            if (cacheManager.dfpWebCache == null) {
+                return;
+            }
+            String escapedBid = StringEscapeUtils.escapeEcmaScript(bid);
+            String result = "<html><script> localStorage.setItem('" + cacheId + "', '" + escapedBid + "');</script></html>";
+            cacheManager.dfpWebCache.loadDataWithBaseURL("https://pubads.g.doubleclick.net", result, "text/html", null, null);
+        }
     }
 }
