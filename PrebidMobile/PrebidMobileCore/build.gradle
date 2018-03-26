@@ -25,7 +25,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-annotations:25.2.0'
-    compile 'org.apache.commons:commons-text:1.1'
+    implementation 'com.android.support:support-annotations:25.2.0'
+    implementation 'org.apache.commons:commons-lang3:3.7'
     testCompile project(':UnitTestUtils')
 }
