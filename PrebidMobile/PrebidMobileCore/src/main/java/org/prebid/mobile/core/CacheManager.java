@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.lang.ref.WeakReference;
@@ -79,7 +78,7 @@ public class CacheManager {
             return null;
         }
 
-        String cacheId = "Prebid_" + RandomStringUtils.randomAlphabetic(8) + "_" + String.valueOf(System.currentTimeMillis());
+        String cacheId = "Prebid_" + StringUtils.randomLowercaseAlphabetic(8) + "_" + String.valueOf(System.currentTimeMillis());
 
         if ("html".equals(format)) {
             saveCacheForWeb(cacheId, bid);
