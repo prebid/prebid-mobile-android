@@ -7,6 +7,9 @@ import java.util.Random;
  */
 final class StringUtils {
 
+    private StringUtils() {
+    }
+
     private static final Random RANDOM = new Random();
 
     /**
