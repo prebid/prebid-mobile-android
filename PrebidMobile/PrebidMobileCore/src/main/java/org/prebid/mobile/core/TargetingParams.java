@@ -23,6 +23,8 @@ import android.location.LocationManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
 
 
 /**
@@ -264,6 +266,63 @@ public class TargetingParams {
      */
     public static void removeAppKeyword(String keyword) {
         appKeywords.remove(keyword);
+    }
+
+    static HashMap<String, HashSet<String>> customKeywords = new HashMap<>();
+
+    /**
+     * API to add custom targeting in the key-value pair format, note the keywords will be sent in the
+     * following format: key=value,value1,key2=value2
+     * Duplicate values will be removed
+     *
+     * @param key   of the keyword pair
+     * @param value of the keyword pair
+     */
+    public static void addCustomTageting(String key, String value) {
+        if (customKeywords == null) {
+            customKeywords = new HashMap<>();
+        }
+        HashSet<String> values = customKeywords.get(key);
+        if (values == null) {
+            values = new HashSet<>();
+        }
+        values.add(value);
+        customKeywords.put(key, values);
+    }
+
+    /**
+     * API to remove all keywords associated with the key
+     *
+     * @param key to be removed
+     */
+    public static void removeCustomTargeting(String key) {
+        if (customKeywords != null) {
+            customKeywords.remove(key);
+        }
+    }
+
+    /**
+     * API to remove key-value pair from the targeting params
+     *
+     * @param key   to be removed
+     * @param value to be removed
+     */
+    public static void removeCustomTargeting(String key, String value) {
+        if (customKeywords != null) {
+            HashSet<String> values = customKeywords.get(key);
+            if (values != null) values.remove(value);
+            customKeywords.put(key, values);
+        }
+    }
+
+    public static HashMap<String, HashSet<String>> getCustomKeywords() {
+        return customKeywords;
+    }
+
+    public void clearCustomKeywords() {
+        if (customKeywords != null) {
+            customKeywords.clear();
+        }
     }
 
     /**

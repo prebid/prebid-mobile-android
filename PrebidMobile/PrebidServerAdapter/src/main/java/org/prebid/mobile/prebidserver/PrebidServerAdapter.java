@@ -30,6 +30,7 @@ import org.prebid.mobile.prebidserver.internal.Settings;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.UUID;
@@ -516,11 +517,15 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                     break;
             }
             user.put("gender", g);
-            ArrayList<String> keywords = TargetingParams.getUserKeywords();
             StringBuilder builder = new StringBuilder();
-            for (String keyword : keywords) {
-                if (!TextUtils.isEmpty(keyword)) {
-                    builder.append(keyword).append(",");
+            HashMap<String, HashSet<String>> customTargeting = TargetingParams.getCustomKeywords();
+            for (String key : customTargeting.keySet()) {
+                HashSet<String> values = customTargeting.get(key);
+                if (values != null && !values.isEmpty()) {
+                    builder.append(key).append("=");
+                    for (String value : values) {
+                        builder.append(value).append(",");
+                    }
                 }
             }
             String finalKeywords = builder.toString();
