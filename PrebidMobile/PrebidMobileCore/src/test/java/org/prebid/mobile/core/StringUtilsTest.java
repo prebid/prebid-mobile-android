@@ -8,6 +8,7 @@ import org.robolectric.annotation.Config;
 import java.util.Random;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
@@ -34,5 +35,19 @@ public class StringUtilsTest {
                 assertTrue(Character.isLowerCase(str.charAt(j)));
             }
         }
+    }
+
+    @Test
+    public void testEscapeEcmaScript() {
+        // tests copied from apache commons text
+        assertNull(StringUtils.escapeEcmaScript(null));
+
+        assertEquals("He didn\\'t say, \\\"stop!\\\"", StringUtils.escapeEcmaScript("He didn't say, \"stop!\""));
+        assertEquals("document.getElementById(\\\"test\\\").value = \\'<script>alert(\\'aaa\\');<\\/script>\\';",
+                StringUtils.escapeEcmaScript("document.getElementById(\"test\").value = '<script>alert('aaa');</script>';"));
+
+        // test unicode
+        assertEquals("\\u03a5\\u03b4\\u03c1\\u03cc\\u03b3\\u03b5\\u03b9\\u03bf\\u03c2 is Globe",
+                StringUtils.escapeEcmaScript("Υδρόγειος is Globe"));
     }
 }
