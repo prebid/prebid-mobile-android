@@ -20,11 +20,10 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.HashSet;
 
 
 /**
@@ -230,12 +229,14 @@ public class TargetingParams {
      *
      * @param appKeywords list of keywords
      */
+    @Deprecated
     public static void setAppKeywords(ArrayList<String> appKeywords) {
         if (appKeywords != null) {
             TargetingParams.appKeywords = appKeywords;
         }
     }
 
+    @Deprecated
     public static ArrayList<String> getAppKeywords() {
         return appKeywords;
     }
@@ -244,6 +245,7 @@ public class TargetingParams {
     /**
      * Clear all the keywords that're related to the app
      */
+    @Deprecated
     public static void clearAppKeywords() {
         TargetingParams.appKeywords.clear();
     }
@@ -253,6 +255,7 @@ public class TargetingParams {
      *
      * @param keyword keyword to be added
      */
+    @Deprecated
     public static void addAppKeywords(String keyword) {
         if (!appKeywords.contains(keyword)) {
             appKeywords.add(keyword);
@@ -264,75 +267,52 @@ public class TargetingParams {
      *
      * @param keyword keyword to be added
      */
+    @Deprecated
     public static void removeAppKeyword(String keyword) {
         appKeywords.remove(keyword);
-    }
-
-    static HashMap<String, HashSet<String>> customKeywords = new HashMap<>();
-
-    /**
-     * API to add custom targeting in the key-value pair format, note the keywords will be sent in the
-     * following format: key=value,value1,key2=value2
-     * Duplicate values will be removed
-     *
-     * @param key   of the keyword pair
-     * @param value of the keyword pair
-     */
-    public static void addCustomTageting(String key, String value) {
-        if (customKeywords == null) {
-            customKeywords = new HashMap<>();
-        }
-        HashSet<String> values = customKeywords.get(key);
-        if (values == null) {
-            values = new HashSet<>();
-        }
-        values.add(value);
-        customKeywords.put(key, values);
-    }
-
-    /**
-     * API to remove all keywords associated with the key
-     *
-     * @param key to be removed
-     */
-    public static void removeCustomTargeting(String key) {
-        if (customKeywords != null) {
-            customKeywords.remove(key);
-        }
-    }
-
-    /**
-     * API to remove key-value pair from the targeting params
-     *
-     * @param key   to be removed
-     * @param value to be removed
-     */
-    public static void removeCustomTargeting(String key, String value) {
-        if (customKeywords != null) {
-            HashSet<String> values = customKeywords.get(key);
-            if (values != null) values.remove(value);
-            customKeywords.put(key, values);
-        }
-    }
-
-    public static HashMap<String, HashSet<String>> getCustomKeywords() {
-        return customKeywords;
-    }
-
-    public void clearCustomKeywords() {
-        if (customKeywords != null) {
-            customKeywords.clear();
-        }
     }
 
     /**
      * Set the keywords that're related to the
      *
      * @param userKeywords
+     * @deprecated use {@link TargetingParams#setUserTargeting(String, String)} instead
      */
+    @Deprecated
     public static void setUserKeywords(ArrayList<String> userKeywords) {
         if (userKeywords != null) {
             TargetingParams.userKeywords = userKeywords;
+        }
+    }
+
+    /**
+     * Add one keyword to user related keywords
+     *
+     * @param keyword keyword to be added
+     * @deprecated use {@link TargetingParams#setUserTargeting(String, String)} instead
+     */
+    @Deprecated
+    public static void addUserKeyword(String keyword) {
+        if (!userKeywords.contains(keyword)) {
+            userKeywords.add(keyword);
+        }
+    }
+
+    /**
+     * Set a key-value pair as a keyword, this will be sent in the user object in the ORTB request
+     * An exmpale, if you call setUserTargeting("key1", "value1") and setUserTargeting("key2", null),
+     * values that will be sent are "key1=value1,key2,"
+     *
+     * @param key   key in the key-value pair, should not be null
+     * @param value value in the key-value pair, can be null
+     */
+    public static void setUserTargeting(String key, String value) {
+        if (userKeywords != null) {
+            if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
+                userKeywords.add(key + "=" + value);
+            } else if (!TextUtils.isEmpty(key)) {
+                userKeywords.add(key);
+            }
         }
     }
 
@@ -352,16 +332,6 @@ public class TargetingParams {
         userKeywords.clear();
     }
 
-    /**
-     * Add one keyword to user related keywords
-     *
-     * @param keyword keyword to be added
-     */
-    public static void addUserKeyword(String keyword) {
-        if (!userKeywords.contains(keyword)) {
-            userKeywords.add(keyword);
-        }
-    }
 
     /**
      * Remove one keyword to user related keywords
@@ -369,7 +339,16 @@ public class TargetingParams {
      * @param keyword keyword to be removed
      */
     public static void removeUserKeyword(String keyword) {
-        userKeywords.remove(keyword);
+        if (userKeywords != null) {
+            ArrayList<String> toBeRemoved = new ArrayList<String>();
+            for (String key : userKeywords) {
+                String[] keyValuePair = key.split("=");
+                if (!TextUtils.isEmpty(keyword) && keyword.equals(keyValuePair[0])) {
+                    toBeRemoved.add(key);
+                }
+            }
+            userKeywords.removeAll(toBeRemoved);
+        }
     }
 
     /**

@@ -41,8 +41,8 @@ public class PrebidServerAdapterTest extends BaseSetup {
         InterstitialAdUnit interstitialAdUnit = new InterstitialAdUnit("interstitial", "23456");
         adUnits.add(interstitialAdUnit);
         // add keywords for user
-        TargetingParams.addUserKeyword("state=ny");
-        TargetingParams.addUserKeyword("state=nj");
+        TargetingParams.setUserTargeting("state", "ny");
+        TargetingParams.setUserTargeting("state", "nj");
         // Test with DFP settings
         Prebid.init(activity, adUnits, "34567", Prebid.AdServer.DFP, Prebid.Host.APPNEXUS);
         JSONObject postData = adapter.getPostData(activity, adUnits);
@@ -52,40 +52,13 @@ public class PrebidServerAdapterTest extends BaseSetup {
         } catch (JSONException e) {
             assertEquals("No value for keywords", e.getMessage());
         }
-        TargetingParams.removeUserKeyword("state=ny");
-        postData = adapter.getPostData(activity, adUnits);
-        assertEquals("state=nj,", postData.getJSONObject("user").getString("keywords"));
-        TargetingParams.clearUserKeywords();
+        TargetingParams.removeUserKeyword("state");
         postData = adapter.getPostData(activity, adUnits);
         try {
             postData.getJSONObject("user").getString("keywords");
         } catch (JSONException e) {
             assertEquals("No value for keywords", e.getMessage());
         }
-        // set up keywords for app
-        TargetingParams.addAppKeywords("hello");
-        TargetingParams.addAppKeywords("world");
-        postData = adapter.getPostData(activity, adUnits);
-        assertEquals("hello,world,", postData.getJSONObject("app").getString("keywords"));
-        // check that user keywords are not added
-        try {
-            postData.getJSONObject("user").getString("keywords");
-        } catch (JSONException e) {
-            assertEquals("No value for keywords", e.getMessage());
-        }
-        // remove one keyword for app
-        TargetingParams.removeAppKeyword("world");
-        postData = adapter.getPostData(activity, adUnits);
-        assertEquals("hello,", postData.getJSONObject("app").getString("keywords"));
-        // clear keywords for app
-        TargetingParams.clearAppKeywords();
-        postData = adapter.getPostData(activity, adUnits);
-        try {
-            postData.getJSONObject("app").getString("keywords");
-        } catch (JSONException e) {
-            assertEquals("No value for keywords", e.getMessage());
-        }
-
     }
 
     @Test

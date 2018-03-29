@@ -74,8 +74,10 @@ public class PrebidApplication extends Application {
         TargetingParams.setYearOfBirth(1992);
         TargetingParams.setLocationDecimalDigits(2);
         TargetingParams.setLocationEnabled(true);
-        TargetingParams.addAppKeywords("PrebidKeyword1");
-        TargetingParams.addUserKeyword("PrebidKeyword2");
+        TargetingParams.setUserTargeting("PrebidKey", "PrebidValue"); // this should add "Prebidkey=PrebidValue" in user.keywords in ortb request
+        TargetingParams.setUserTargeting("PrebidKey2", null); // this should add "PrebidKey2" in user.keywords in ortb request
+        TargetingParams.setUserTargeting(null, "PrebidValue2"); // this should add nothing
+        TargetingParams.setUserTargeting(null, null); // this should add nothing
 
         // Register ad units for prebid.
         try {

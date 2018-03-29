@@ -60,40 +60,22 @@ public class TargetingParamsTest {
     }
 
     @Test
-    public void testSetAppKeywords() throws Exception {
-        TargetingParams.clearAppKeywords();
-        TargetingParams.addAppKeywords("keyword1");
-        TargetingParams.addAppKeywords("keyword2");
-        assertEquals(2, TargetingParams.getAppKeywords().size());
-        assertEquals("keyword1", TargetingParams.getAppKeywords().get(0));
-        assertEquals("keyword2", TargetingParams.getAppKeywords().get(1));
-        TargetingParams.removeAppKeyword("keyword");
-        assertEquals(2, TargetingParams.getAppKeywords().size());
-        assertEquals("keyword1", TargetingParams.getAppKeywords().get(0));
-        assertEquals("keyword2", TargetingParams.getAppKeywords().get(1));
-        TargetingParams.removeAppKeyword("keyword1");
-        assertEquals(1, TargetingParams.getAppKeywords().size());
-        assertEquals("keyword2", TargetingParams.getAppKeywords().get(0));
-        TargetingParams.clearAppKeywords();
-        assertEquals(0, TargetingParams.getAppKeywords().size());
-    }
-
-    @Test
     public void testSetUserKeywords() throws Exception {
         TargetingParams.clearUserKeywords();
-        TargetingParams.addUserKeyword("keyword1");
-        TargetingParams.addUserKeyword("keyword2");
-        assertEquals(2, TargetingParams.getUserKeywords().size());
-        assertEquals("keyword1", TargetingParams.getUserKeywords().get(0));
-        assertEquals("keyword2", TargetingParams.getUserKeywords().get(1));
-        TargetingParams.removeUserKeyword("keyword");
-        assertEquals(2, TargetingParams.getUserKeywords().size());
-        assertEquals("keyword1", TargetingParams.getUserKeywords().get(0));
-        assertEquals("keyword2", TargetingParams.getUserKeywords().get(1));
-        TargetingParams.removeUserKeyword("keyword1");
+        TargetingParams.setUserTargeting("key1", "value2");
         assertEquals(1, TargetingParams.getUserKeywords().size());
-        assertEquals("keyword2", TargetingParams.getUserKeywords().get(0));
-        TargetingParams.clearUserKeywords();
+        assertEquals("key1=value2", TargetingParams.getUserKeywords().get(0));
+        TargetingParams.removeUserKeyword("key1");
+        assertEquals(0, TargetingParams.getUserKeywords().size());
+        TargetingParams.setUserTargeting("key2",null);
+        assertEquals(1, TargetingParams.getUserKeywords().size());
+        assertEquals("key2", TargetingParams.getUserKeywords().get(0));
+        TargetingParams.setUserTargeting(null,"value2");
+        assertEquals(1, TargetingParams.getUserKeywords().size());
+        assertEquals("key2", TargetingParams.getUserKeywords().get(0));
+        TargetingParams.removeUserKeyword("key2");
+        assertEquals(0, TargetingParams.getUserKeywords().size());
+        TargetingParams.setUserTargeting(null, null);
         assertEquals(0, TargetingParams.getUserKeywords().size());
     }
 
