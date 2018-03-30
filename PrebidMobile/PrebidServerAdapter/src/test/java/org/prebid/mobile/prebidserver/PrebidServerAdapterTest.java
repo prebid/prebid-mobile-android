@@ -3,6 +3,7 @@ package org.prebid.mobile.prebidserver;
 
 import android.util.Pair;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +15,7 @@ import org.prebid.mobile.core.CacheManager;
 import org.prebid.mobile.core.ErrorCode;
 import org.prebid.mobile.core.InterstitialAdUnit;
 import org.prebid.mobile.core.Prebid;
+import org.prebid.mobile.core.TargetingParams;
 import org.prebid.mobile.prebidserver.internal.Settings;
 import org.prebid.mobile.unittestutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
@@ -28,6 +30,36 @@ import static org.junit.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 21, manifest = Config.NONE)
 public class PrebidServerAdapterTest extends BaseSetup {
+
+    @Test
+    public void testPostDataGenerationKeywords() throws Exception {
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        ArrayList<AdUnit> adUnits = new ArrayList<>();
+        BannerAdUnit bannerAdUnit = new BannerAdUnit("banner", "12345");
+        bannerAdUnit.addSize(320, 50);
+        adUnits.add(bannerAdUnit);
+        InterstitialAdUnit interstitialAdUnit = new InterstitialAdUnit("interstitial", "23456");
+        adUnits.add(interstitialAdUnit);
+        // add keywords for user
+        TargetingParams.setUserTargeting("state", "ny");
+        TargetingParams.setUserTargeting("state", "nj");
+        // Test with DFP settings
+        Prebid.init(activity, adUnits, "34567", Prebid.AdServer.DFP, Prebid.Host.APPNEXUS);
+        JSONObject postData = adapter.getPostData(activity, adUnits);
+        assertEquals("state=ny,state=nj,", postData.getJSONObject("user").getString("keywords"));
+        try {
+            postData.getJSONObject("app").getString("keywords");
+        } catch (JSONException e) {
+            assertEquals("No value for keywords", e.getMessage());
+        }
+        TargetingParams.removeUserKeyword("state");
+        postData = adapter.getPostData(activity, adUnits);
+        try {
+            postData.getJSONObject("user").getString("keywords");
+        } catch (JSONException e) {
+            assertEquals("No value for keywords", e.getMessage());
+        }
+    }
 
     @Test
     public void testPostDataGeneration() throws Exception {
@@ -94,8 +126,6 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").has("cache"));
         assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("cache").has("bids"));
         assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("cache").getJSONObject("bids").length() == 0);
-
-
     }
 
     private void setAdServer(Prebid.AdServer adServer) {
