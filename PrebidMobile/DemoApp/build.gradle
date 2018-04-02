@@ -27,19 +27,12 @@ android {
     }
 }
 
-repositories {
-    maven {
-        url 'https://oss.sonatype.org/service/local/repositories/orgprebid-1010/content'
-    }
-}
-
 dependencies {
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.google.android.gms:play-services-ads:10.2.0'
     compile('com.mopub:mopub-sdk:4.15.0@aar') {
         transitive = true
     }
-    compile 'org.prebid:prebid-mobile-sdk:0.2.1'
-//    compile project(":PrebidMobileCore")
-//    compile project(":PrebidServerAdapter")
+    compile project(":PrebidMobileCore")
+    compile project(":PrebidServerAdapter")
 }
