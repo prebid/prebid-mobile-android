@@ -7,9 +7,6 @@ import android.text.TextUtils;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,7 +76,7 @@ public class CacheManager {
             return null;
         }
 
-        String cacheId = "Prebid_" + RandomStringUtils.randomAlphabetic(8) + "_" + String.valueOf(System.currentTimeMillis());
+        String cacheId = "Prebid_" + StringUtils.randomLowercaseAlphabetic(8) + "_" + String.valueOf(System.currentTimeMillis());
 
         if ("html".equals(format)) {
             saveCacheForWeb(cacheId, bid);
@@ -193,7 +190,7 @@ public class CacheManager {
             if (cacheManager.dfpWebCache == null) {
                 return;
             }
-            String escapedBid = StringEscapeUtils.escapeEcmaScript(bid);
+            String escapedBid = StringUtils.escapeEcmaScript(bid);
             String result = "<html><script> localStorage.setItem('" + cacheId + "', '" + escapedBid + "');</script></html>";
             cacheManager.dfpWebCache.loadDataWithBaseURL("https://pubads.g.doubleclick.net", result, "text/html", null, null);
         }
