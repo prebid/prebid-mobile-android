@@ -120,8 +120,16 @@ public class TargetingParams {
         }
     }
 
-    public static void setGDPR(boolean consent) {
+    public static ArrayList<String> getGDPSConsentStrings() {
+        return GDPSConsentStrings;
+    }
+
+    public static void setUnderGDPR(boolean consent) {
         GDPR = consent;
+    }
+
+    public static boolean isUnderGDPR() {
+        return GDPR;
     }
 
     /**
