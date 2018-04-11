@@ -111,6 +111,18 @@ public class TargetingParams {
     //endregion
 
     //region Public APIs
+    static ArrayList<String> GDPSConsentStrings = new ArrayList<>();
+    static boolean GDPR = false;
+
+    public static void setGDPRConsentStrings(ArrayList<String> strings) {
+        if (strings != null) {
+            GDPSConsentStrings = strings;
+        }
+    }
+
+    public static void setGDPR(boolean consent) {
+        GDPR = consent;
+    }
 
     /**
      * Get the year of birth for targeting
