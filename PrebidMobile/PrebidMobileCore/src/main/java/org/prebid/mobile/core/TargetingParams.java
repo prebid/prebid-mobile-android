@@ -17,13 +17,16 @@ package org.prebid.mobile.core;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 
 /**
@@ -111,25 +114,47 @@ public class TargetingParams {
     //endregion
 
     //region Public APIs
-    static ArrayList<String> GDPSConsentStrings = new ArrayList<>();
-    static boolean GDPR = false;
 
-    public static void setGDPRConsentStrings(ArrayList<String> strings) {
-        if (strings != null) {
-            GDPSConsentStrings = strings;
+    public static void setGDPRConsentStrings(Context context, ArrayList<String> strings) {
+        if (strings != null && context != null) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("Prebid_GDPR_consent_strings", strings.toString());
+            editor.apply();
         }
     }
 
-    public static ArrayList<String> getGDPSConsentStrings() {
-        return GDPSConsentStrings;
+    public static ArrayList<String> getGDPSConsentStrings(Context context) {
+        if (context != null) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+            String strings = pref.getString("Prebid_GDPR_consent_strings", "");
+            // deserialize strings
+            ArrayList<String> res = new ArrayList<>();
+            strings = strings.substring(1, strings.length() - 1);
+            String[] array = strings.split(",");
+            Collections.addAll(res, array);
+            return res;
+        } else {
+            return new ArrayList<>();
+        }
     }
 
-    public static void setUnderGDPR(boolean consent) {
-        GDPR = consent;
+    public static void setUnderGDPR(Context context, boolean consent) {
+        if (context != null) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean("Prebid_GDPR", consent);
+            editor.apply();
+        }
     }
 
-    public static boolean isUnderGDPR() {
-        return GDPR;
+    public static boolean isUnderGDPR(Context context) {
+        if (context != null) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+            return pref.getBoolean("Prebid_GDPR", false);
+        } else {
+            return false;
+        }
     }
 
     /**

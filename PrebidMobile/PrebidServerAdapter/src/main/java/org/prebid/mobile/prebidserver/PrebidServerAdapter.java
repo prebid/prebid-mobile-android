@@ -213,12 +213,12 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             }
             // add user
             // todo should we provide api for developers to pass in user's location (zip, city, address etc, not real time location)
-            JSONObject user = getUserObject();
+            JSONObject user = getUserObject(context);
             if (user != null && user.length() > 0) {
                 postData.put(Settings.REQUEST_USER, user);
             }
             // add regs
-            JSONObject regs = getRegsObject();
+            JSONObject regs = getRegsObject(context);
             if (regs != null && regs.length() > 0) {
                 postData.put("regs", regs);
             }
@@ -490,7 +490,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
 
     }
 
-    private JSONObject getUserObject() {
+    private JSONObject getUserObject(Context context) {
         JSONObject user = new JSONObject();
         try {
             if (TargetingParams.getYearOfBirth() > 0) {
@@ -521,7 +521,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             }
             JSONObject ext = new JSONObject();
             JSONArray consentStrings = new JSONArray();
-            for (String s : TargetingParams.getGDPSConsentStrings()) {
+            for (String s : TargetingParams.getGDPSConsentStrings(context)) {
                 consentStrings.put(s);
             }
             user.put("ext", ext);
@@ -530,11 +530,11 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         return user;
     }
 
-    private JSONObject getRegsObject() {
+    private JSONObject getRegsObject(Context context) {
         JSONObject regs = new JSONObject();
         try {
             JSONObject ext = new JSONObject();
-            if (TargetingParams.isUnderGDPR()) {
+            if (TargetingParams.isUnderGDPR(context)) {
                 ext.put("gdpr", 1);
             } else {
                 ext.put("gdpr", 0);
