@@ -519,10 +519,12 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             if (!TextUtils.isEmpty(finalKeywords)) {
                 user.put("keywords", finalKeywords);
             }
-            JSONObject ext = new JSONObject();
             String s = TargetingParams.getGDPSConsentStrings(context);
-            ext.put("consent", s);
-            user.put("ext", ext);
+            if (s != null) {
+                JSONObject ext = new JSONObject();
+                ext.put("consent", s);
+                user.put("ext", ext);
+            }
         } catch (JSONException e) {
         }
         return user;
@@ -532,15 +534,17 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         JSONObject regs = new JSONObject();
         try {
             JSONObject ext = new JSONObject();
-            if (TargetingParams.isUnderGDPR(context)) {
-                ext.put("gdpr", 1);
-            } else {
-                ext.put("gdpr", 0);
+            if (TargetingParams.isUnderGDPR(context) != null) {
+                if (TargetingParams.isUnderGDPR(context)) {
+                    ext.put("gdpr", 1);
+                } else {
+                    ext.put("gdpr", 0);
+                }
             }
             regs.put("ext", ext);
         } catch (JSONException e) {
-
         }
+        return regs;
     }
     //endregion
 }

@@ -30,6 +30,35 @@ import static org.junit.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 21, manifest = Config.NONE)
 public class PrebidServerAdapterTest extends BaseSetup {
+    @Test
+    public void testGDPRSettings() throws Exception {
+        // init state, no GDPR settings
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        ArrayList<AdUnit> adUnits = new ArrayList<>();
+        BannerAdUnit bannerAdUnit = new BannerAdUnit("banner", "12345");
+        bannerAdUnit.addSize(320, 50);
+        adUnits.add(bannerAdUnit);
+        InterstitialAdUnit interstitialAdUnit = new InterstitialAdUnit("interstitial", "23456");
+        adUnits.add(interstitialAdUnit);
+        Prebid.init(activity, adUnits, "34567", Prebid.AdServer.DFP, Prebid.Host.APPNEXUS);
+        JSONObject postData = adapter.getPostData(activity, adUnits);
+        try {
+            postData.getJSONObject("user").getJSONObject("ext");
+        } catch (JSONException e) {
+            assertEquals("No value for ext", e.getMessage());
+        }
+        try {
+            postData.getJSONObject("regs").getJSONObject("ext").getBoolean("gdpr");
+        } catch (JSONException e) {
+            assertEquals("No value for gdpr", e.getMessage());
+        }
+        // set GDPR values
+        TargetingParams.setUnderGDPR(activity, true);
+        TargetingParams.setGDPRConsentStrings(activity, "hello world");
+        postData = adapter.getPostData(activity, adUnits);
+        assertEquals(1, postData.getJSONObject("regs").getJSONObject("ext").getInt("gdpr"));
+        assertEquals("hello world", postData.getJSONObject("user").getJSONObject("ext").getString("consent"));
+    }
 
     @Test
     public void testPostDataGenerationKeywords() throws Exception {

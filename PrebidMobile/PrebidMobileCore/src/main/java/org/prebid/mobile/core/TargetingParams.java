@@ -127,10 +127,11 @@ public class TargetingParams {
     public static String getGDPSConsentStrings(Context context) {
         if (context != null) {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-            return pref.getString(consentStringKey, "");
-        } else {
-            return "";
+            if (pref.contains(consentStringKey)) {
+                return pref.getString(consentStringKey, "");
+            }
         }
+        return null;
     }
 
     static final String GDPRKey = "Prebid_GDPR";
@@ -144,13 +145,14 @@ public class TargetingParams {
         }
     }
 
-    public static boolean isUnderGDPR(Context context) {
+    public static Boolean isUnderGDPR(Context context) {
         if (context != null) {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-            return pref.getBoolean(GDPRKey, false);
-        } else {
-            return false;
+            if (pref.contains(GDPRKey)) {
+                return pref.getBoolean(GDPRKey, false);
+            }
         }
+        return null;
     }
 
     /**
