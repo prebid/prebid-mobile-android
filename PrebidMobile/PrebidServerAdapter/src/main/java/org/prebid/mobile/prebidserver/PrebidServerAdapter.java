@@ -520,10 +520,8 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 user.put("keywords", finalKeywords);
             }
             JSONObject ext = new JSONObject();
-            JSONArray consentStrings = new JSONArray();
-            for (String s : TargetingParams.getGDPSConsentStrings(context)) {
-                consentStrings.put(s);
-            }
+            String s = TargetingParams.getGDPSConsentStrings(context);
+            ext.put("consent", s);
             user.put("ext", ext);
         } catch (JSONException e) {
         }
