@@ -53,8 +53,8 @@ public class PrebidServerAdapterTest extends BaseSetup {
             assertEquals("No value for gdpr", e.getMessage());
         }
         // set GDPR values
-        TargetingParams.setUnderGDPR(activity, true);
-        TargetingParams.setGDPRConsentStrings(activity, "hello world");
+        TargetingParams.setSubjectToGDPR(activity, true);
+        TargetingParams.setGDPRConsentString(activity, "hello world");
         postData = adapter.getPostData(activity, adUnits);
         assertEquals(1, postData.getJSONObject("regs").getJSONObject("ext").getInt("gdpr"));
         assertEquals("hello world", postData.getJSONObject("user").getJSONObject("ext").getString("consent"));

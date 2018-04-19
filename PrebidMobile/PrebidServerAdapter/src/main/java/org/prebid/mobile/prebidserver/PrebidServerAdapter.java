@@ -519,7 +519,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             if (!TextUtils.isEmpty(finalKeywords)) {
                 user.put("keywords", finalKeywords);
             }
-            String s = TargetingParams.getGDPSConsentStrings(context);
+            String s = TargetingParams.getGDPRConsentString(context);
             if (s != null) {
                 JSONObject ext = new JSONObject();
                 ext.put("consent", s);
@@ -534,8 +534,8 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         JSONObject regs = new JSONObject();
         try {
             JSONObject ext = new JSONObject();
-            if (TargetingParams.isUnderGDPR(context) != null) {
-                if (TargetingParams.isUnderGDPR(context)) {
+            if (TargetingParams.isSubjectToGDPR(context) != null) {
+                if (TargetingParams.isSubjectToGDPR(context)) {
                     ext.put("gdpr", 1);
                 } else {
                     ext.put("gdpr", 0);

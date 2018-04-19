@@ -113,43 +113,49 @@ public class TargetingParams {
     //endregion
 
     //region Public APIs
-    static final String consentStringKey = "Prebid_GDPR_consent_strings";
+    static final String APN_CONSENT_STRING_KEY = "Prebid_GDPR_consent_strings";
+    static final String IABConsent_ConsentString = "IABConsent_ConsentString";
 
-    public static void setGDPRConsentStrings(Context context, String string) {
+    public static void setGDPRConsentString(Context context, String string) {
         if (!TextUtils.isEmpty(string) && context != null) {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = pref.edit();
-            editor.putString(consentStringKey, string);
+            editor.putString(APN_CONSENT_STRING_KEY, string);
             editor.apply();
         }
     }
 
-    public static String getGDPSConsentStrings(Context context) {
+    public static String getGDPRConsentString(Context context) {
         if (context != null) {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-            if (pref.contains(consentStringKey)) {
-                return pref.getString(consentStringKey, "");
+            if (pref.contains(APN_CONSENT_STRING_KEY)) {
+                return pref.getString(APN_CONSENT_STRING_KEY, "");
+            } else if (pref.contains(IABConsent_ConsentString)) {
+                return pref.getString(IABConsent_ConsentString, "");
             }
         }
         return null;
     }
 
-    static final String GDPRKey = "Prebid_GDPR";
+    static final String APN_GDPR_KEY = "Prebid_GDPR";
+    static final String IABConsent_SubjectToGDPR = "IABConsent_SubjectToGDPR";
 
-    public static void setUnderGDPR(Context context, boolean consent) {
+    public static void setSubjectToGDPR(Context context, boolean consent) {
         if (context != null) {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = pref.edit();
-            editor.putBoolean(GDPRKey, consent);
+            editor.putBoolean(APN_GDPR_KEY, consent);
             editor.apply();
         }
     }
 
-    public static Boolean isUnderGDPR(Context context) {
+    public static Boolean isSubjectToGDPR(Context context) {
         if (context != null) {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-            if (pref.contains(GDPRKey)) {
-                return pref.getBoolean(GDPRKey, false);
+            if (pref.contains(APN_GDPR_KEY)) {
+                return pref.getBoolean(APN_GDPR_KEY, false);
+            } else if (pref.contains(IABConsent_SubjectToGDPR)) {
+                return pref.getBoolean(IABConsent_SubjectToGDPR, false);
             }
         }
         return null;
