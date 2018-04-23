@@ -18,9 +18,5 @@ public class AdSizeTest {
         AdSize size = new AdSize(320, 50);
         assertEquals(320, size.getWidth());
         assertEquals(50, size.getHeight());
-        ArrayList<String> s = new ArrayList<>();
-//        s.add("hello");
-        String dsf = s.toString();
-        dsf = dsf.substring(1, dsf.length()-1);
     }
 }
