@@ -519,10 +519,9 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             if (!TextUtils.isEmpty(finalKeywords)) {
                 user.put("keywords", finalKeywords);
             }
-            String s = TargetingParams.getGDPRConsentString(context);
-            if (s != null) {
+            if (TargetingParams.isSubjectToGDPR(context) != null) {
                 JSONObject ext = new JSONObject();
-                ext.put("consent", s);
+                ext.put("consent", TargetingParams.getGDPRConsentString(context));
                 user.put("ext", ext);
             }
         } catch (JSONException e) {

@@ -155,7 +155,12 @@ public class TargetingParams {
             if (pref.contains(PREBID_GDPR_KEY)) {
                 return pref.getBoolean(PREBID_GDPR_KEY, false);
             } else if (pref.contains(IABConsent_SubjectToGDPR)) {
-                return pref.getBoolean(IABConsent_SubjectToGDPR, false);
+                String value = pref.getString(IABConsent_SubjectToGDPR, "");
+                if ("1".equals(value)) {
+                    return true;
+                } else if ("0".equals(value)) {
+                    return false;
+                }
             }
         }
         return null;
