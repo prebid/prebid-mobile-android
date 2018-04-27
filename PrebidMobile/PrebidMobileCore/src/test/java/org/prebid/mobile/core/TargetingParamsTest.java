@@ -1,9 +1,12 @@
 package org.prebid.mobile.core;
 
+import android.content.SharedPreferences;
 import android.location.Location;
+import android.preference.PreferenceManager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.unittestutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -14,7 +17,34 @@ import static junit.framework.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 21)
-public class TargetingParamsTest {
+public class TargetingParamsTest extends BaseSetup {
+    @Test
+    public void testIsSubjectToGDPR() {
+        assertEquals(null, TargetingParams.isSubjectToGDPR(activity));
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString(TargetingParams.IABConsent_SubjectToGDPR, "1");
+        editor.commit();
+        assertEquals(Boolean.TRUE, TargetingParams.isSubjectToGDPR(activity));
+        TargetingParams.setSubjectToGDPR(activity, false);
+        assertEquals(Boolean.FALSE, TargetingParams.isSubjectToGDPR(activity));
+        TargetingParams.setSubjectToGDPR(activity, true);
+        assertEquals(Boolean.TRUE, TargetingParams.isSubjectToGDPR(activity));
+        editor = pref.edit();
+        // test that PREBID GDPR settings have higher priority than IAB settings
+        editor.putString(TargetingParams.IABConsent_SubjectToGDPR, "0");
+        editor.commit();
+        assertEquals(Boolean.TRUE, TargetingParams.isSubjectToGDPR(activity));
+        assertEquals(null, TargetingParams.getGDPRConsentString(activity));
+        editor.putString(TargetingParams.IABConsent_ConsentString, "Hello");
+        editor.commit();
+        assertEquals("Hello", TargetingParams.getGDPRConsentString(activity));
+        TargetingParams.setGDPRConsentString(activity, "World");
+        assertEquals("World", TargetingParams.getGDPRConsentString(activity));
+        editor.putString(TargetingParams.IABConsent_ConsentString, "Hahaha");
+        editor.commit();
+        assertEquals("World", TargetingParams.getGDPRConsentString(activity));
+    }
 
     @Test
     public void testSetYearOfBirth() throws Exception {
@@ -67,10 +97,10 @@ public class TargetingParamsTest {
         assertEquals("key1=value2", TargetingParams.getUserKeywords().get(0));
         TargetingParams.removeUserKeyword("key1");
         assertEquals(0, TargetingParams.getUserKeywords().size());
-        TargetingParams.setUserTargeting("key2",null);
+        TargetingParams.setUserTargeting("key2", null);
         assertEquals(1, TargetingParams.getUserKeywords().size());
         assertEquals("key2", TargetingParams.getUserKeywords().get(0));
-        TargetingParams.setUserTargeting(null,"value2");
+        TargetingParams.setUserTargeting(null, "value2");
         assertEquals(1, TargetingParams.getUserKeywords().size());
         assertEquals("key2", TargetingParams.getUserKeywords().get(0));
         TargetingParams.removeUserKeyword("key2");

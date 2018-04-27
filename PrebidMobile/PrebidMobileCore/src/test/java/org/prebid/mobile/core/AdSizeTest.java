@@ -6,6 +6,8 @@ import org.prebid.mobile.core.AdSize;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
+
 import static junit.framework.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)

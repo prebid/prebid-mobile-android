@@ -213,9 +213,14 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             }
             // add user
             // todo should we provide api for developers to pass in user's location (zip, city, address etc, not real time location)
-            JSONObject user = getUserObject();
+            JSONObject user = getUserObject(context);
             if (user != null && user.length() > 0) {
                 postData.put(Settings.REQUEST_USER, user);
+            }
+            // add regs
+            JSONObject regs = getRegsObject(context);
+            if (regs != null && regs.length() > 0) {
+                postData.put("regs", regs);
             }
             // add targeting keywords request
             JSONObject ext = getRequestExtData();
@@ -485,7 +490,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
 
     }
 
-    private JSONObject getUserObject() {
+    private JSONObject getUserObject(Context context) {
         JSONObject user = new JSONObject();
         try {
             if (TargetingParams.getYearOfBirth() > 0) {
@@ -514,9 +519,31 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             if (!TextUtils.isEmpty(finalKeywords)) {
                 user.put("keywords", finalKeywords);
             }
+            if (TargetingParams.isSubjectToGDPR(context) != null) {
+                JSONObject ext = new JSONObject();
+                ext.put("consent", TargetingParams.getGDPRConsentString(context));
+                user.put("ext", ext);
+            }
         } catch (JSONException e) {
         }
         return user;
+    }
+
+    private JSONObject getRegsObject(Context context) {
+        JSONObject regs = new JSONObject();
+        try {
+            JSONObject ext = new JSONObject();
+            if (TargetingParams.isSubjectToGDPR(context) != null) {
+                if (TargetingParams.isSubjectToGDPR(context)) {
+                    ext.put("gdpr", 1);
+                } else {
+                    ext.put("gdpr", 0);
+                }
+            }
+            regs.put("ext", ext);
+        } catch (JSONException e) {
+        }
+        return regs;
     }
     //endregion
 }

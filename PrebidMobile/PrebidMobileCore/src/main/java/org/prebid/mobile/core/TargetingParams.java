@@ -17,9 +17,11 @@ package org.prebid.mobile.core;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
@@ -111,6 +113,58 @@ public class TargetingParams {
     //endregion
 
     //region Public APIs
+    static final String PREBID_CONSENT_STRING_KEY = "Prebid_GDPR_consent_strings";
+    static final String IABConsent_ConsentString = "IABConsent_ConsentString";
+
+    public static void setGDPRConsentString(Context context, String string) {
+        if (!TextUtils.isEmpty(string) && context != null) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString(PREBID_CONSENT_STRING_KEY, string);
+            editor.apply();
+        }
+    }
+
+    public static String getGDPRConsentString(Context context) {
+        if (context != null) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+            if (pref.contains(PREBID_CONSENT_STRING_KEY)) {
+                return pref.getString(PREBID_CONSENT_STRING_KEY, "");
+            } else if (pref.contains(IABConsent_ConsentString)) {
+                return pref.getString(IABConsent_ConsentString, "");
+            }
+        }
+        return null;
+    }
+
+    static final String PREBID_GDPR_KEY = "Prebid_GDPR";
+    static final String IABConsent_SubjectToGDPR = "IABConsent_SubjectToGDPR";
+
+    public static void setSubjectToGDPR(Context context, boolean consent) {
+        if (context != null) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean(PREBID_GDPR_KEY, consent);
+            editor.apply();
+        }
+    }
+
+    public static Boolean isSubjectToGDPR(Context context) {
+        if (context != null) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+            if (pref.contains(PREBID_GDPR_KEY)) {
+                return pref.getBoolean(PREBID_GDPR_KEY, false);
+            } else if (pref.contains(IABConsent_SubjectToGDPR)) {
+                String value = pref.getString(IABConsent_SubjectToGDPR, "");
+                if ("1".equals(value)) {
+                    return true;
+                } else if ("0".equals(value)) {
+                    return false;
+                }
+            }
+        }
+        return null;
+    }
 
     /**
      * Get the year of birth for targeting
