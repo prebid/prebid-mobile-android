@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.AndroidRuntimeException;
 import android.webkit.WebView;
 
 import java.util.Locale;
@@ -72,10 +73,12 @@ public class Settings {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-
-                    WebView wv = new WebView(context);
-                    userAgent = wv.getSettings().getUserAgentString();
-
+                    try {
+                        WebView wv = new WebView(context);
+                        userAgent = wv.getSettings().getUserAgentString();
+                    } catch (AndroidRuntimeException e) {
+                        userAgent = "unavailable";
+                    }
                 }
             });
         }
