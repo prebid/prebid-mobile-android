@@ -51,7 +51,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         if (adUnitsList != null && !adUnitsList.isEmpty()) {
             for (ArrayList batchedAdUnits : adUnitsList) {
                 JSONObject postData = getPostData(context, batchedAdUnits);
-                LogUtil.d("Prebid Mobile send request with: " + postData.toString());
+                LogUtil.d(Settings.TAG, "Prebid Mobile send request with: " + postData.toString());
                 new ServerConnector(postData, this, getHost(), context).execute();
             }
         }
@@ -101,9 +101,9 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         if (bidResponseListener != null) {
             HashMap<AdUnit, ArrayList<BidResponse>> responses = new HashMap<AdUnit, ArrayList<BidResponse>>();
             if (response == null || response.length() == 0) {
-                LogUtil.e("Server responded with empty response.");
+                LogUtil.e(Settings.TAG, "Server responded with empty response.");
             } else {
-                LogUtil.d("Server responded with: " + response.toString());
+                LogUtil.d(Settings.TAG, "Server responded with: " + response.toString());
                 // check if seatbid is presented in the response first
                 JSONArray seatbid = null;
                 try {
