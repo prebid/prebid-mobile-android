@@ -25,7 +25,7 @@ public class Constants {
 
     // PBS Config
     public static final String PBS_CONFIG_APPNEXUS_DEMAND = "eebc307d-7f76-45d6-a7a7-68985169b138";
-    public static final String PBS_CONFIG_300x250_APPNEXUS_DEMAND = "0c286d00-b3ee-4550-b15d-f71f8e746865";
+    public static final String PBS_CONFIG_300x250_APPNEXUS_DEMAND = "6ace8c7d-88c0-4623-8117-75bc3f0a2e45";
     public static final String PBS_ACCOUNT_ID = "bfa84af2-bd16-4d35-96ad-31c6bb888df0";
     // App Constants
     public static final String ADSERVER = "AdServerName";
