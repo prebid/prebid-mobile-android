@@ -129,7 +129,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                                         if (responseList == null) {
                                             responseList = new ArrayList<BidResponse>();
                                         }
-                                        BidResponse newBid;
+                                        BidResponse newBid = null;
                                         JSONObject targetingKeywords = bid.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting");
                                         if (Prebid.getAdServer() == Prebid.AdServer.DFP) {
                                             String format = targetingKeywords.getString("hb_creative_loadtype");
@@ -145,16 +145,24 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                                             cacheIdKey = cacheIdKey.substring(0, Math.min(cacheIdKey.length(), Settings.REQUEST_KEY_LENGTH_MAX));
                                             newBid.addCustomKeyword(cacheIdKey, cacheId);
                                         } else {
-                                            String cacheId = targetingKeywords.getString("hb_cache_id");
-                                            newBid = new BidResponse(bidPrice, cacheId);
-                                            newBid.setBidderCode(bidderName);
-                                            Iterator<?> keys = targetingKeywords.keys();
-                                            while (keys.hasNext()) {
-                                                String key = (String) keys.next();
-                                                newBid.addCustomKeyword(key, targetingKeywords.getString(key));
+                                            String cacheId = null;
+                                            try{
+                                                cacheId = targetingKeywords.getString("hb_cache_id");
+                                            } catch (Exception e) {
+                                            }
+                                            if (cacheId != null) {
+                                                newBid = new BidResponse(bidPrice, cacheId);
+                                                newBid.setBidderCode(bidderName);
+                                                Iterator<?> keys = targetingKeywords.keys();
+                                                while (keys.hasNext()) {
+                                                    String key = (String) keys.next();
+                                                    newBid.addCustomKeyword(key, targetingKeywords.getString(key));
+                                                }
                                             }
                                         }
-                                        responseList.add(newBid);
+                                        if (newBid != null) {
+                                            responseList.add(newBid);
+                                        }
                                         responses.put(adUnit, responseList);
                                     }
                                 }
