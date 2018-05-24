@@ -167,6 +167,33 @@ public class PrebidServerAdapterTest extends BaseSetup {
         }
     }
 
+
+    @Test
+    public void testNoCacheIdForMoPub() throws Exception {
+        setAdServer(Prebid.AdServer.MOPUB);
+        // cached bid response
+        String serverResponse = "{\"id\":\"c7043990-2ac9-4ee5-a3d5-f3c032edeb4f\",\"seatbid\":[{\"bid\":[{\"id\":\"6051533834469542107\",\"impid\":\"Banner_300x250\",\"price\":0.5,\"adm\":\"<script type=\\\"application/javascript\\\" src=\\\"https://nym1-ib.adnxs.com/ab?e=wqT_3QLsB6DsAwAAAwDWAAUBCKHJmdMFEKCGu4213fG-KRi2sNeng8GDl0AqNgkAAAECCOA_EQEHNAAA4D8ZAAAAgOtR4D8hERIAKREJADERG6Aw8ub8BDi-B0C-B0gCUNbLkw5Y4YBIYABokUB4y9EEgAEBigEDVVNEkgUG8FKYAawCoAH6AagBAbABALgBAsABA8gBAtABAtgBAOABAPABAIoCOnVmKCdhJywgNDk0NDcyLCAxNTE2NjU5ODczKTt1ZigncicsIDI5NjgxMTEwLDIeAPCQkgL9ASFvamFvMHdpNjBJY0VFTmJMa3c0WUFDRGhnRWd3QURnQVFBUkl2Z2RROHViOEJGZ0FZTllCYUFCd0pIakdod0dBQVNTSUFjYUhBWkFCQVpnQkFhQUJBYWdCQTdBQkFMa0JLWXVJZ3dBQTREX0JBU21MaUlNQUFPQV95UUZUSEs5RHZNdnhQOWtCQUFBQQEDJDhEX2dBUUQxQVEBDixDWUFnQ2dBZ0MxQWcFEAA5CQjwUERBQWdESUFnRGdBZ0RvQWdENEFnQ0FBd1NRQXdDWUF3R29BN3JRaHdTNkF4RmtaV1poZFd4MEkwNVpUVEk2TXpnek1BLi6aAjkhX2d0c19naTIAAfBMNFlCSUlBUW9BRG9SWkdWbVlYVnNkQ05PV1UweU9qTTRNekEu0gJ2NzcxODkxNSw3ODY5OTM5LDc4OTQzNTEsMTgyMjk1LDIzMzg2OTkFCAg3MDAJCAAyCQgIODAzBRAIODA3BQgEOTQJEAg5NDQJEAA1CSgIOTUyCRAJUGg5MDAz2ALoB-ACx9MB8gIQCgZBRFZfSUQSBjQl_hzyAhEKBkNQRwETHAcxOTc3OTMzAScIBUNQBRPwtzg1MTM1OTSAAwGIAwGQAwCYAxSgAwGqAwDAA6wCyAMA2AMA4AMA6AMC-AMAgAQAkgQJL29wZW5ydGIymAQAogQPMjA3LjIzNy4xNTAuMjQ2qASetA-yBAwIABAAGAAgADAAOAC4BADABADIBADSBBFkZWZhdWx0I05ZTTI6MzgzMNoEAggB4AQA8ATWy5MOggUZb3JnLnByZWJpZC5tb2JpbGUuZGVtb2FwcIgFAZgFAKAF______8BA7ABqgUkYzcwNDM5OTAtMmFjOS00ZWU1LWEzZDUtZjNjMDMyZWRlYjRmwAUAyQVpehTwP9IFCQkJDFAAANgFAeAFAfAFAfoFBAgAEACQBgA.&s=66498e1c32a2420c27f1e24d1d279a9577bdbcde&pp=${AUCTION_PRICE}&\\\"></script>\",\"adid\":\"29681110\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=29681110\",\"cid\":\"958\",\"crid\":\"29681110\",\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"targeting\":{\"hb_bidder\":\"appnexus\",\"hb_bidder_appnexus\":\"appnexus\",\"hb_cache_id_appnexus\":\"8d472803-909b-40d9-8dc9-916433c810f0\",\"hb_creative_loadtype\":\"html\",\"hb_pb\":\"0.50\",\"hb_pb_appnexus\":\"0.50\",\"hb_size\":\"300x250\",\"hb_size_appnexus\":\"300x250\"},\"type\":\"banner\"},\"bidder\":{\"appnexus\":{\"brand_id\":1,\"auction_id\":2989764441633899500,\"bidder_id\":2}}}}],\"seat\":\"appnexus\"}],\"ext\":{\"responsetimemillis\":{\"appnexus\":38}}}";
+        JSONObject serverResponseJson = new JSONObject(serverResponse);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        ArrayList<AdUnit> units = new ArrayList<>();
+        final BannerAdUnit bannerAdUnit = new BannerAdUnit("Banner_300x250", "12345");
+        bannerAdUnit.addSize(300, 250);
+        units.add(bannerAdUnit);
+        BidManager.BidResponseListener listener = new BidManager.BidResponseListener() {
+            @Override
+            public void onBidSuccess(AdUnit bidRequest, ArrayList<BidResponse> bidResponses) {
+                assertTrue(bidRequest.equals(bannerAdUnit));
+                assertTrue(bidResponses.size() == 0);
+            }
+
+            @Override
+            public void onBidFailure(AdUnit bidRequest, ErrorCode reason) {
+
+            }
+        };
+        adapter.requestBid(activity, listener, units);
+        adapter.onServerResponded(serverResponseJson);
+    }
     @Test
     public void testResponseProcessingForMoPub() throws Exception {
         setAdServer(Prebid.AdServer.MOPUB);
