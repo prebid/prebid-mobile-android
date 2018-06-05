@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 case MOPUB:
                 case ADFORM:
                     useLocalCache.set(null, false);
+                    break;
             }
             // refreshBids
             Method refreshBids = BidManager.class.getDeclaredMethod("refreshBids", Context.class);
