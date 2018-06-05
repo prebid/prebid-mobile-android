@@ -40,6 +40,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        TextView adformButton = (TextView) findViewById(R.id.Adform);
+        adformButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                switchAdServer(Prebid.AdServer.ADFORM);
+                Intent intent = new Intent(MainActivity.this, FormatChoiceActivity.class);
+                intent.putExtra(Constants.ADSERVER, "adform");
+                startActivity(intent);
+            }
+        });
     }
 
     private void switchAdServer(Prebid.AdServer adServer) {
@@ -54,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
                     useLocalCache.set(null, true);
                     break;
                 case MOPUB:
+                case ADFORM:
                     useLocalCache.set(null, false);
-                    break;
             }
             // refreshBids
             Method refreshBids = BidManager.class.getDeclaredMethod("refreshBids", Context.class);

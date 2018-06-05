@@ -4,6 +4,8 @@ import android.app.Application;
 import android.os.Build;
 import android.webkit.WebView;
 
+import com.adform.sdk.utils.AdApplicationService;
+
 import org.prebid.mobile.core.AdUnit;
 import org.prebid.mobile.core.BannerAdUnit;
 import org.prebid.mobile.core.InterstitialAdUnit;
@@ -20,7 +22,10 @@ import static org.prebid.mobile.demoapp.Constants.PBS_ACCOUNT_ID;
 import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_300x250_APPNEXUS_DEMAND;
 import static org.prebid.mobile.demoapp.Constants.PBS_CONFIG_APPNEXUS_DEMAND;
 
-public class PrebidApplication extends Application {
+public class PrebidApplication extends Application implements AdApplicationService.ServiceListener {
+
+    private AdApplicationService adApplicationService;
+
     /**
      * Called when the application is starting, before any activity, service,
      * or receiver objects (excluding content providers) have been created.
@@ -46,6 +51,7 @@ public class PrebidApplication extends Application {
          * Initialise prebid for DFP ad unit
          */
         initialisePrebidForDFP();
+        adApplicationService = AdApplicationService.init();
     }
 
     private void initialisePrebidForDFP() {
@@ -88,5 +94,8 @@ public class PrebidApplication extends Application {
         }
     }
 
-
+    @Override
+    public AdApplicationService getAdService() {
+        return adApplicationService;
+    }
 }

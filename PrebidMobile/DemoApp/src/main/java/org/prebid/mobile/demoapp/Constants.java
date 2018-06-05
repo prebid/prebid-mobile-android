@@ -23,6 +23,9 @@ public class Constants {
     // DFP Interstitial
     public static final String DFP_INTERSTITIAL_ADUNIT_ID_FULLSCREEN = "/19968336/PriceCheck_Interstitial";
 
+    //Adform
+    public static final int ADFORM_BANNER_MASTER_TAG = 142493;
+
     // PBS Config
     public static final String PBS_CONFIG_APPNEXUS_DEMAND = "625c6125-f19e-4d5b-95c5-55501526b2a4";
     public static final String PBS_CONFIG_300x250_APPNEXUS_DEMAND = "6ace8c7d-88c0-4623-8117-75bc3f0a2e45";

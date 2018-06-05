@@ -24,6 +24,7 @@ import android.util.Pair;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -37,6 +38,8 @@ public class Prebid {
     private static String MOPUB_ADVIEW_CLASS = "com.mopub.mobileads.MoPubView";
     private static String MOPUB_INTERSTITIAL_CLASS = "com.mopub.mobileads.MoPubInterstitial";
     private static String DFP_ADREQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
+    private static String ADFORM_ADVIEW_CLASS = "com.adform.sdk.pub.views.AdInline";
+    private static String ADFORM_INTERSTITIAL_CLASS = "com.adform.sdk.pub.AdOverlay";
 
     private static boolean secureConnection = true; //by default, always use secured connection
     private static String accountId;
@@ -48,6 +51,7 @@ public class Prebid {
     public enum AdServer {
         DFP,
         MOPUB,
+        ADFORM,
         UNKNOWN
     }
 
@@ -159,6 +163,9 @@ public class Prebid {
                 handleMoPubKeywordsUpdate(adObj, adUnitCode, context);
             } else if (adObj.getClass() == getClassFromString(DFP_ADREQUEST_CLASS)) {
                 handleDFPCustomTargetingUpdate(adObj, adUnitCode, context);
+            } else if (adObj.getClass() == getClassFromString(ADFORM_ADVIEW_CLASS)
+                    || adObj.getClass() == getClassFromString(ADFORM_INTERSTITIAL_CLASS)){
+                handleAdformCustomTargetingUpdate(adObj, adUnitCode, context);
             }
         }
     }
@@ -290,6 +297,54 @@ public class Prebid {
             }
         }
     }
+
+    private static void handleAdformCustomTargetingUpdate(Object adViewObj, String adUnitCode, Context context) {
+
+        final String HB_CACHE_ID = "hb_cache_id";
+        final String HB_PB = "hb_pb";
+        final String HB_BIDDER = "hb_bidder";
+        final String HB_SIZE = "hb_size";
+
+        ArrayList<Pair<String, String>> keywordPairs = BidManager.getKeywordsForAdUnit(adUnitCode, context);
+        if (keywordPairs != null && !keywordPairs.isEmpty()) {
+
+            String cacheId = null;
+            String price = null;
+            String bidder = null;
+            String size = null;
+
+            for (Pair<String, String> p : keywordPairs) {
+                if(p.first.equals(HB_CACHE_ID)){
+                    cacheId = p.second;
+                } else if(p.first.equals(HB_PB)){
+                    price = p.second;
+                } else if(p.first.equals(HB_BIDDER)){
+                    bidder = p.second;
+                } else if(p.first.equals(HB_SIZE)){
+                    size = p.second;
+                }
+            }
+
+            HashMap<String, String> customData = (HashMap<String, String>) callMethodOnObject(adViewObj, "getCustomData");
+            if(cacheId != null){
+                if(customData == null){
+                    customData = new HashMap<>();
+                }
+                customData.put(HB_CACHE_ID, cacheId);
+                callMethodOnObject(adViewObj, "setCustomData", customData);
+            }
+            if(price != null){
+                callMethodOnObject(adViewObj, "setPrice", new Double(price));
+            }
+            if(bidder != null){
+                callMethodOnObject(adViewObj, "addKeyValue", HB_BIDDER, bidder);
+            }
+            if(size != null){
+                callMethodOnObject(adViewObj, "addKeyValue", HB_SIZE, size);
+            }
+        }
+    }
+
     //endregion
 
 

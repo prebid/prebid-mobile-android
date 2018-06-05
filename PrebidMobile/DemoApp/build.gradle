@@ -33,6 +33,7 @@ dependencies {
     compile('com.mopub:mopub-sdk:4.15.0@aar') {
         transitive = true
     }
+    compile 'com.adform.advertising.sdk:advertising-sdk:2.13.1@aar'
     compile project(":PrebidMobileCore")
     compile project(":PrebidServerAdapter")
 }

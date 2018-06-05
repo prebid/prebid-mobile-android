@@ -28,6 +28,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven { url "https://github.com/adform/adform-android-sdk/raw/master/releases/" }
     }
 }
 

@@ -33,6 +33,7 @@
         <activity android:name="com.mopub.mobileads.MraidActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
         <activity android:name="com.mopub.common.MoPubBrowser" android:configChanges="keyboardHidden|orientation|screenSize"/>
         <activity android:name="com.mopub.mobileads.MraidVideoPlayerActivity" android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:theme="@android:style/Theme.Translucent.NoTitleBar" android:name="com.adform.sdk.activities.AdActivity" android:configChanges="orientation|keyboard|keyboardHidden|screenSize|screenLayout|uiMode" />
     </application>
 
 </manifest>
