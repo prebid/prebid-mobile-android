@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Pair;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,6 +30,8 @@ import org.prebid.mobile.prebidserver.internal.Settings;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -131,7 +134,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                                         }
                                         BidResponse newBid = null;
                                         JSONObject targetingKeywords = bid.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting");
-                                        if (Prebid.getAdServer() == Prebid.AdServer.DFP) {
+                                        if (Prebid.useLocalCache()) {
                                             String format = targetingKeywords.getString("hb_creative_loadtype");
                                             String cacheId = CacheManager.getCacheManager().saveCache(bid.toString(), format);
                                             newBid = new BidResponse(bidPrice, cacheId);
@@ -146,9 +149,12 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                                             newBid.addCustomKeyword(cacheIdKey, cacheId);
                                         } else {
                                             String cacheId = null;
-                                            try{
-                                                cacheId = targetingKeywords.getString("hb_cache_id");
-                                            } catch (Exception e) {
+                                            Iterator keyIterator = targetingKeywords.keys();
+                                            while (keyIterator.hasNext()) {
+                                                String key = (String) keyIterator.next();
+                                                if (key.startsWith("hb_cache_id_")) {
+                                                    cacheId = targetingKeywords.getString(key);
+                                                }
                                             }
                                             if (cacheId != null) {
                                                 newBid = new BidResponse(bidPrice, cacheId);
@@ -175,11 +181,43 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             for (AdUnit adUnit : adUnits) {
                 ArrayList<BidResponse> results = responses.get(adUnit);
                 if (results != null && !results.isEmpty()) {
-                    bidResponseListener.onBidSuccess(adUnit, results);
+                    // save the bids sorted
+                    Collections.sort(results, new BidComparator());
+                    if (Prebid.useLocalCache()) {
+                        BidResponse topBid = results.get(0);
+                        if (topBid != null) {
+                            topBid.addCustomKeyword("hb_cache_id", topBid.getCreative());
+                        }
+                        bidResponseListener.onBidSuccess(adUnit, results);
+                    } else {
+                        // in the case that `hb_cache_id` is not present in any bids, do not pass the response back to publisher
+                        String topCacheId = null;
+                        for (BidResponse bid : results) {
+                            ArrayList<Pair<String,String>> keywords = bid.getCustomKeywords();
+                            for (Pair<String, String> pair : keywords) {
+                                if (pair.first.equals("hb_cache_id")) topCacheId = pair.second;
+                            }
+                        }
+                        if (topCacheId != null) {
+                            bidResponseListener.onBidSuccess(adUnit, results);
+                        } else {
+                            bidResponseListener.onBidFailure(adUnit, ErrorCode.NO_BIDS);
+                        }
+                    }
                 } else {
                     bidResponseListener.onBidFailure(adUnit, ErrorCode.NO_BIDS);
                 }
             }
+        }
+    }
+
+    private static class BidComparator implements Comparator<BidResponse> {
+        @Override
+        public int compare(BidResponse firstBid, BidResponse secondBid) {
+            if (firstBid == null || secondBid == null) {
+                return 0;
+            }
+            return secondBid.getCpm().compareTo(firstBid.getCpm());
         }
     }
 
