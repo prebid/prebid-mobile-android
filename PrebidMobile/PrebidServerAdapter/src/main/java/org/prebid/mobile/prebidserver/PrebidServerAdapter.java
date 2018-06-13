@@ -30,8 +30,6 @@ import org.prebid.mobile.prebidserver.internal.Settings;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -216,7 +214,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             }
         }
     }
-    
+
     private AdUnit getAdUnitByCode(String code) {
         if (adUnits != null && !adUnits.isEmpty()) {
             for (AdUnit adUnit : adUnits) {
