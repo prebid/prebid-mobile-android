@@ -182,7 +182,6 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 ArrayList<BidResponse> results = responses.get(adUnit);
                 if (results != null && !results.isEmpty()) {
                     // save the bids sorted
-                    Collections.sort(results, new BidComparator());
                     if (Prebid.useLocalCache()) {
                         BidResponse topBid = null;
                         for (int i = 0; i< results.size(); i++) {
@@ -217,17 +216,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             }
         }
     }
-
-    private static class BidComparator implements Comparator<BidResponse> {
-        @Override
-        public int compare(BidResponse firstBid, BidResponse secondBid) {
-            if (firstBid == null || secondBid == null) {
-                return 0;
-            }
-            return secondBid.getCpm().compareTo(firstBid.getCpm());
-        }
-    }
-
+    
     private AdUnit getAdUnitByCode(String code) {
         if (adUnits != null && !adUnits.isEmpty()) {
             for (AdUnit adUnit : adUnits) {
