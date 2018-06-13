@@ -184,7 +184,14 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                     // save the bids sorted
                     Collections.sort(results, new BidComparator());
                     if (Prebid.useLocalCache()) {
-                        BidResponse topBid = results.get(0);
+                        BidResponse topBid = null;
+                        for (int i = 0; i< results.size(); i++) {
+                            for (Pair<String, String> pair : results.get(i).getCustomKeywords()) {
+                                if (pair.first.equals("hb_bidder")) {
+                                    topBid = results.get(i);
+                                }
+                            }
+                        }
                         if (topBid != null) {
                             topBid.addCustomKeyword("hb_cache_id", topBid.getCreative());
                         }
