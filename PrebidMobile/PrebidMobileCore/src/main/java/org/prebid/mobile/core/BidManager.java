@@ -147,14 +147,6 @@ public class BidManager {
                 adUnit.setTimeThatShouldExpireAllBids(System.currentTimeMillis() + bidResponse.getExpiryTime());
             }
             bidMap.remove(adUnit.getCode());
-            // save the bids sorted
-            Collections.sort(bidResponses, new BidComparator());
-            if (Prebid.getAdServer() == Prebid.AdServer.DFP) {
-                BidResponse topBid = bidResponses.get(0);
-                if (topBid != null) {
-                    topBid.addCustomKeyword("hb_cache_id", topBid.getCreative());
-                }
-            }
             bidMap.put(adUnit.getCode(), bidResponses);
         }
 
@@ -165,16 +157,6 @@ public class BidManager {
             LogUtil.e(TAG, "Request failed because of " + reason.toString().toLowerCase(Locale.getDefault()) + " for AdUnit code: " + adUnit.getCode());
         }
     };
-
-    private static class BidComparator implements Comparator<BidResponse> {
-        @Override
-        public int compare(BidResponse firstBid, BidResponse secondBid) {
-            if (firstBid == null || secondBid == null) {
-                return 0;
-            }
-            return secondBid.getCpm().compareTo(firstBid.getCpm());
-        }
-    }
 
     //endregion
 

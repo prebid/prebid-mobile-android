@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 21, manifest = Config.NONE)
@@ -162,13 +163,20 @@ public class PrebidServerAdapterTest extends BaseSetup {
             Field adServerField = Prebid.class.getDeclaredField("adServer");
             adServerField.setAccessible(true);
             adServerField.set(null, adServer);
+            Field useLocalCacheField = Prebid.class.getDeclaredField("useLocalCache");
+            useLocalCacheField.setAccessible(true);
+            if (adServer == Prebid.AdServer.MOPUB) {
+                useLocalCacheField.set(null, false);
+            } else {
+                useLocalCacheField.set(null, true);
+            }
         } catch (NoSuchFieldException e) {
         } catch (IllegalAccessException e) {
         }
     }
 
     @Test
-    public void testResponseProcessingForMoPub() throws Exception {
+    public void testSingleBidResponseProcessingForMoPub() throws Exception {
         setAdServer(Prebid.AdServer.MOPUB);
         // cached bid response
         String serverResponse = "{\"id\":\"c7043990-2ac9-4ee5-a3d5-f3c032edeb4f\",\"seatbid\":[{\"bid\":[{\"id\":\"6051533834469542107\",\"impid\":\"Banner_300x250\",\"price\":0.5,\"adm\":\"<script type=\\\"application/javascript\\\" src=\\\"https://nym1-ib.adnxs.com/ab?e=wqT_3QLsB6DsAwAAAwDWAAUBCKHJmdMFEKCGu4213fG-KRi2sNeng8GDl0AqNgkAAAECCOA_EQEHNAAA4D8ZAAAAgOtR4D8hERIAKREJADERG6Aw8ub8BDi-B0C-B0gCUNbLkw5Y4YBIYABokUB4y9EEgAEBigEDVVNEkgUG8FKYAawCoAH6AagBAbABALgBAsABA8gBAtABAtgBAOABAPABAIoCOnVmKCdhJywgNDk0NDcyLCAxNTE2NjU5ODczKTt1ZigncicsIDI5NjgxMTEwLDIeAPCQkgL9ASFvamFvMHdpNjBJY0VFTmJMa3c0WUFDRGhnRWd3QURnQVFBUkl2Z2RROHViOEJGZ0FZTllCYUFCd0pIakdod0dBQVNTSUFjYUhBWkFCQVpnQkFhQUJBYWdCQTdBQkFMa0JLWXVJZ3dBQTREX0JBU21MaUlNQUFPQV95UUZUSEs5RHZNdnhQOWtCQUFBQQEDJDhEX2dBUUQxQVEBDixDWUFnQ2dBZ0MxQWcFEAA5CQjwUERBQWdESUFnRGdBZ0RvQWdENEFnQ0FBd1NRQXdDWUF3R29BN3JRaHdTNkF4RmtaV1poZFd4MEkwNVpUVEk2TXpnek1BLi6aAjkhX2d0c19naTIAAfBMNFlCSUlBUW9BRG9SWkdWbVlYVnNkQ05PV1UweU9qTTRNekEu0gJ2NzcxODkxNSw3ODY5OTM5LDc4OTQzNTEsMTgyMjk1LDIzMzg2OTkFCAg3MDAJCAAyCQgIODAzBRAIODA3BQgEOTQJEAg5NDQJEAA1CSgIOTUyCRAJUGg5MDAz2ALoB-ACx9MB8gIQCgZBRFZfSUQSBjQl_hzyAhEKBkNQRwETHAcxOTc3OTMzAScIBUNQBRPwtzg1MTM1OTSAAwGIAwGQAwCYAxSgAwGqAwDAA6wCyAMA2AMA4AMA6AMC-AMAgAQAkgQJL29wZW5ydGIymAQAogQPMjA3LjIzNy4xNTAuMjQ2qASetA-yBAwIABAAGAAgADAAOAC4BADABADIBADSBBFkZWZhdWx0I05ZTTI6MzgzMNoEAggB4AQA8ATWy5MOggUZb3JnLnByZWJpZC5tb2JpbGUuZGVtb2FwcIgFAZgFAKAF______8BA7ABqgUkYzcwNDM5OTAtMmFjOS00ZWU1LWEzZDUtZjNjMDMyZWRlYjRmwAUAyQVpehTwP9IFCQkJDFAAANgFAeAFAfAFAfoFBAgAEACQBgA.&s=66498e1c32a2420c27f1e24d1d279a9577bdbcde&pp=${AUCTION_PRICE}&\\\"></script>\",\"adid\":\"29681110\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=29681110\",\"cid\":\"958\",\"crid\":\"29681110\",\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"targeting\":{\"hb_bidder\":\"appnexus\",\"hb_bidder_appnexus\":\"appnexus\",\"hb_cache_id\":\"8d472803-909b-40d9-8dc9-916433c810f0\",\"hb_cache_id_appnexus\":\"8d472803-909b-40d9-8dc9-916433c810f0\",\"hb_creative_loadtype\":\"html\",\"hb_pb\":\"0.50\",\"hb_pb_appnexus\":\"0.50\",\"hb_size\":\"300x250\",\"hb_size_appnexus\":\"300x250\"},\"type\":\"banner\"},\"bidder\":{\"appnexus\":{\"brand_id\":1,\"auction_id\":2989764441633899500,\"bidder_id\":2}}}}],\"seat\":\"appnexus\"}],\"ext\":{\"responsetimemillis\":{\"appnexus\":38}}}";
@@ -199,7 +207,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
             @Override
             public void onBidFailure(AdUnit bidRequest, ErrorCode reason) {
-
+                fail("this should never be called.");
             }
         };
         adapter.requestBid(activity, listener, units);
@@ -207,7 +215,112 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
-    public void testResponseProcessingForDFP() throws Exception {
+    public void testMultipleBidsResponseProcessingForMoPub() throws Exception {
+        setAdServer(Prebid.AdServer.MOPUB);
+        // cached bid response
+        String serverResponse = "{\"id\":\"3dc76667-a500-4e01-a43b-368e36d6c7cc\",\"seatbid\":[{\"bid\":[{\"id\":\"4009307468250838284\",\"impid\":\"Banner_300x250\",\"price\":0.5,\"adm\":\"<script></script>\",\"adid\":\"73501515\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=73501515\",\"cid\":\"958\",\"crid\":\"73501515\",\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"targeting\":{\"hb_bidder\":\"appnexus\",\"hb_cache_id\":\"random-value-appnexus\",\"hb_cache_id_appnexus\":\"random-value-appnexus\",\"hb_bidder_appnexus\":\"appnexus\",\"hb_creative_loadtype\":\"html\",\"hb_env\":\"mobile-app\",\"hb_env_appnexus\":\"mobile-app\",\"hb_pb\":\"0.50\",\"hb_pb_appnexus\":\"0.50\",\"hb_size\":\"300x250\",\"hb_size_appnexus\":\"300x250\"},\"type\":\"banner\"},\"bidder\":{\"appnexus\":{\"brand_id\":1,\"auction_id\":7466795334738195000,\"bidder_id\":2,\"bid_ad_type\":0}}}}],\"seat\":\"appnexus\"},{\"bid\":[{\"id\":\"4009307468250838284\",\"impid\":\"Banner_300x250\",\"price\":0.4,\"adm\":\"<script></script>\",\"adid\":\"73501515\",\"adomain\":[\"rubicon.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=73501515\",\"cid\":\"958\",\"crid\":\"73501515\",\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"targeting\":{\"hb_cache_id_rubicon\":\"random-value-rubicon\",\"hb_bidder_rubicon\":\"rubicon\",\"hb_creative_loadtype\":\"html\",\"hb_env_rubicon\":\"mobile-app\",\"hb_pb_rubicon\":\"0.40\",\"hb_size_rubicon\":\"300x250\"},\"type\":\"banner\"}}}],\"seat\":\"rubicon\"}],\"ext\":{\"responsetimemillis\":{\"appnexus\":19}}}";
+        JSONObject serverResponseJson = new JSONObject(serverResponse);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        ArrayList<AdUnit> units = new ArrayList<>();
+        final BannerAdUnit bannerAdUnit = new BannerAdUnit("Banner_300x250", "12345");
+        bannerAdUnit.addSize(300, 250);
+        units.add(bannerAdUnit);
+        BidManager.BidResponseListener listener = new BidManager.BidResponseListener() {
+            @Override
+            public void onBidSuccess(AdUnit bidRequest, ArrayList<BidResponse> bidResponses) {
+                assertTrue(bidRequest.equals(bannerAdUnit));
+                assertTrue(bidResponses.size() == 2);
+                assertTrue(bidResponses.get(0).getCreative().equals("random-value-appnexus"));
+                assertTrue(bidResponses.get(1).getCreative().equals("random-value-rubicon"));
+                assertTrue(bidResponses.get(0).getCpm() == 0.50);
+                assertTrue(bidResponses.get(1).getCpm() == 0.40);
+                assertTrue(bidResponses.get(0).getCustomKeywords().size() == 11);
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_bidder", "appnexus")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_bidder_appnexus", "appnexus")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id", "random-value-appnexus")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id_appnexus", "random-value-appnexus")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_creative_loadtype", "html")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_pb", "0.50")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_pb_appnexus", "0.50")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_size", "300x250")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_size_appnexus", "300x250")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_env", "mobile-app")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_env_appnexus", "mobile-app")));
+                assertTrue(bidResponses.get(1).getCustomKeywords().size() == 6);
+                assertTrue(bidResponses.get(1).getCustomKeywords().contains(new Pair<String, String>("hb_bidder_rubicon", "rubicon")));
+                assertTrue(bidResponses.get(1).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id_rubicon", "random-value-rubicon")));
+                assertTrue(bidResponses.get(1).getCustomKeywords().contains(new Pair<String, String>("hb_creative_loadtype", "html")));
+                assertTrue(bidResponses.get(1).getCustomKeywords().contains(new Pair<String, String>("hb_pb_rubicon", "0.40")));
+                assertTrue(bidResponses.get(1).getCustomKeywords().contains(new Pair<String, String>("hb_size_rubicon", "300x250")));
+
+            }
+
+            @Override
+            public void onBidFailure(AdUnit bidRequest, ErrorCode reason) {
+                fail("this should never be called.");
+            }
+        };
+        adapter.requestBid(activity, listener, units);
+        adapter.onServerResponded(serverResponseJson);
+    }
+
+    @Test
+    public void testNoCacheIdResponseProcessingForMoPub() throws Exception {
+        setAdServer(Prebid.AdServer.MOPUB);
+        // cached bid response
+        String serverResponse = "{\"id\":\"3dc76667-a500-4e01-a43b-368e36d6c7cc\",\"seatbid\":[{\"bid\":[{\"id\":\"4009307468250838284\",\"impid\":\"Banner_300x250\",\"price\":0.5,\"adm\":\"<script></script>\",\"adid\":\"73501515\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=73501515\",\"cid\":\"958\",\"crid\":\"73501515\",\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"targeting\":{\"hb_bidder\":\"appnexus\",\"hb_bidder_appnexus\":\"appnexus\",\"hb_creative_loadtype\":\"html\",\"hb_env\":\"mobile-app\",\"hb_env_appnexus\":\"mobile-app\",\"hb_pb\":\"0.50\",\"hb_pb_appnexus\":\"0.50\",\"hb_size\":\"300x250\",\"hb_size_appnexus\":\"300x250\"},\"type\":\"banner\"},\"bidder\":{\"appnexus\":{\"brand_id\":1,\"auction_id\":7466795334738195000,\"bidder_id\":2,\"bid_ad_type\":0}}}}],\"seat\":\"appnexus\"},{\"bid\":[{\"id\":\"4009307468250838284\",\"impid\":\"Banner_300x250\",\"price\":0.4,\"adm\":\"<script></script>\",\"adid\":\"73501515\",\"adomain\":[\"rubicon.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=73501515\",\"cid\":\"958\",\"crid\":\"73501515\",\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"targeting\":{\"hb_bidder\":\"rubicon\",\"hb_bidder_rubicon\":\"rubicon\",\"hb_creative_loadtype\":\"html\",\"hb_env\":\"mobile-app\",\"hb_env_rubicon\":\"mobile-app\",\"hb_pb\":\"0.50\",\"hb_pb_rubicon\":\"0.50\",\"hb_size\":\"300x250\",\"hb_size_rubicon\":\"300x250\"},\"type\":\"banner\"}}}],\"seat\":\"rubicon\"}],\"ext\":{\"responsetimemillis\":{\"appnexus\":19}}}";
+        JSONObject serverResponseJson = new JSONObject(serverResponse);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        ArrayList<AdUnit> units = new ArrayList<>();
+        final BannerAdUnit bannerAdUnit = new BannerAdUnit("Banner_300x250", "12345");
+        bannerAdUnit.addSize(300, 250);
+        units.add(bannerAdUnit);
+        BidManager.BidResponseListener listener = new BidManager.BidResponseListener() {
+            @Override
+            public void onBidSuccess(AdUnit bidRequest, ArrayList<BidResponse> bidResponses) {
+                fail("this should never be called.");
+            }
+
+            @Override
+            public void onBidFailure(AdUnit bidRequest, ErrorCode reason) {
+                assertTrue(bidRequest.equals(bannerAdUnit));
+                assertEquals(ErrorCode.NO_BIDS, reason);
+            }
+        };
+        adapter.requestBid(activity, listener, units);
+        adapter.onServerResponded(serverResponseJson);
+
+    }
+
+    @Test
+    public void testNoCacheIdForTopBidButHasCacheIdForLowerBidsResponseProcessingForMoPub() throws Exception {
+        setAdServer(Prebid.AdServer.MOPUB);
+        // cached bid response
+        String serverResponse = "{\"id\":\"3dc76667-a500-4e01-a43b-368e36d6c7cc\",\"seatbid\":[{\"bid\":[{\"id\":\"4009307468250838284\",\"impid\":\"Banner_300x250\",\"price\":0.5,\"adm\":\"<script></script>\",\"adid\":\"73501515\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=73501515\",\"cid\":\"958\",\"crid\":\"73501515\",\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"targeting\":{\"hb_bidder\":\"appnexus\",\"hb_cache_id_appnexus\":\"random-value-appnexus\",\"hb_bidder_appnexus\":\"appnexus\",\"hb_creative_loadtype\":\"html\",\"hb_env\":\"mobile-app\",\"hb_env_appnexus\":\"mobile-app\",\"hb_pb\":\"0.50\",\"hb_pb_appnexus\":\"0.50\",\"hb_size\":\"300x250\",\"hb_size_appnexus\":\"300x250\"},\"type\":\"banner\"},\"bidder\":{\"appnexus\":{\"brand_id\":1,\"auction_id\":7466795334738195000,\"bidder_id\":2,\"bid_ad_type\":0}}}}],\"seat\":\"appnexus\"},{\"bid\":[{\"id\":\"4009307468250838284\",\"impid\":\"Banner_300x250\",\"price\":0.4,\"adm\":\"<script></script>\",\"adid\":\"73501515\",\"adomain\":[\"rubicon.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=73501515\",\"cid\":\"958\",\"crid\":\"73501515\",\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"targeting\":{\"hb_cache_id_rubicon\":\"random-value-rubicon\",\"hb_bidder_rubicon\":\"rubicon\",\"hb_creative_loadtype\":\"html\",\"hb_env_rubicon\":\"mobile-app\",\"hb_pb_rubicon\":\"0.40\",\"hb_size_rubicon\":\"300x250\"},\"type\":\"banner\"}}}],\"seat\":\"rubicon\"}],\"ext\":{\"responsetimemillis\":{\"appnexus\":19}}}";
+        JSONObject serverResponseJson = new JSONObject(serverResponse);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        ArrayList<AdUnit> units = new ArrayList<>();
+        final BannerAdUnit bannerAdUnit = new BannerAdUnit("Banner_300x250", "12345");
+        bannerAdUnit.addSize(300, 250);
+        units.add(bannerAdUnit);
+        BidManager.BidResponseListener listener = new BidManager.BidResponseListener() {
+            @Override
+            public void onBidSuccess(AdUnit bidRequest, ArrayList<BidResponse> bidResponses) {
+                fail("this should never be called.");
+            }
+
+            @Override
+            public void onBidFailure(AdUnit bidRequest, ErrorCode reason) {
+                assertTrue(bidRequest.equals(bannerAdUnit));
+                assertEquals(ErrorCode.NO_BIDS, reason);
+            }
+        };
+        adapter.requestBid(activity, listener, units);
+        adapter.onServerResponded(serverResponseJson);
+    }
+
+    @Test
+    public void testSingleResponseProcessingForDFP() throws Exception {
         // cached bid response
         setAdServer(Prebid.AdServer.DFP);
         CacheManager.init(activity);
@@ -226,8 +339,9 @@ public class PrebidServerAdapterTest extends BaseSetup {
                 assertTrue(bidResponses.get(0).getCreative().startsWith("Prebid_"));
                 String creativeId = bidResponses.get(0).getCreative();
                 assertTrue(bidResponses.get(0).getCpm() == 0.50);
-                assertTrue(bidResponses.get(0).getCustomKeywords().size() == 8);
+                assertTrue(bidResponses.get(0).getCustomKeywords().size() == 9);
                 assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_bidder", "appnexus")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id", creativeId)));
                 assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_bidder_appnexus", "appnexus")));
                 assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id_appnexus", creativeId)));
                 assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_creative_loadtype", "html")));
@@ -239,7 +353,127 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
             @Override
             public void onBidFailure(AdUnit bidRequest, ErrorCode reason) {
+                fail("this should never be called.");
+            }
+        };
+        adapter.requestBid(activity, listener, units);
+        adapter.onServerResponded(serverResponseJson);
+    }
 
+    @Test
+    public void testMultipleResponseProcessingForDFP() throws Exception {
+        // cached bid response
+        setAdServer(Prebid.AdServer.DFP);
+        CacheManager.init(activity);
+        String serverResponse = "{\"id\":\"3dc76667-a500-4e01-a43b-368e36d6c7cc\",\"seatbid\":[{\"bid\":[{\"id\":\"4009307468250838284\",\"impid\":\"Banner_300x250\",\"price\":0.5,\"adm\":\"<script></script>\",\"adid\":\"73501515\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=73501515\",\"cid\":\"958\",\"crid\":\"73501515\",\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"targeting\":{\"hb_bidder\":\"appnexus\",\"hb_bidder_appnexus\":\"appnexus\",\"hb_creative_loadtype\":\"html\",\"hb_env\":\"mobile-app\",\"hb_env_appnexus\":\"mobile-app\",\"hb_pb\":\"0.50\",\"hb_pb_appnexus\":\"0.50\",\"hb_size\":\"300x250\",\"hb_size_appnexus\":\"300x250\"},\"type\":\"banner\"},\"bidder\":{\"appnexus\":{\"brand_id\":1,\"auction_id\":7466795334738195000,\"bidder_id\":2,\"bid_ad_type\":0}}}}],\"seat\":\"appnexus\"},{\"bid\":[{\"id\":\"4009307468250838284\",\"impid\":\"Banner_300x250\",\"price\":0.4,\"adm\":\"<script></script>\",\"adid\":\"73501515\",\"adomain\":[\"rubicon.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=73501515\",\"cid\":\"958\",\"crid\":\"73501515\",\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"targeting\":{\"hb_bidder_rubicon\":\"rubicon\",\"hb_creative_loadtype\":\"html\",\"hb_env_rubicon\":\"mobile-app\",\"hb_pb_rubicon\":\"0.40\",\"hb_size_rubicon\":\"300x250\"},\"type\":\"banner\"}}}],\"seat\":\"rubicon\"}],\"ext\":{\"responsetimemillis\":{\"appnexus\":19}}}";
+        JSONObject serverResponseJson = new JSONObject(serverResponse);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        ArrayList<AdUnit> units = new ArrayList<>();
+        final BannerAdUnit bannerAdUnit = new BannerAdUnit("Banner_300x250", "12345");
+        bannerAdUnit.addSize(300, 250);
+        units.add(bannerAdUnit);
+        BidManager.BidResponseListener listener = new BidManager.BidResponseListener() {
+            @Override
+            public void onBidSuccess(AdUnit bidRequest, ArrayList<BidResponse> bidResponses) {
+                assertTrue(bidRequest.equals(bannerAdUnit));
+                assertTrue(bidResponses.size() == 2);
+                assertTrue(bidResponses.get(0).getCreative().startsWith("Prebid_"));
+                assertTrue(bidResponses.get(1).getCreative().startsWith("Prebid_"));
+                assertTrue(bidResponses.get(0).getCpm() == 0.50);
+                assertTrue(bidResponses.get(1).getCpm() == 0.40);
+                assertTrue(bidResponses.get(0).getCustomKeywords().size() == 11);
+                String creativeId = bidResponses.get(0).getCreative();
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_bidder", "appnexus")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_bidder_appnexus", "appnexus")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id", creativeId)));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id_appnexus", creativeId)));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_creative_loadtype", "html")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_env", "mobile-app")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_env_appnexus", "mobile-app")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_pb", "0.50")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_pb_appnexus", "0.50")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_size", "300x250")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_size_appnexus", "300x250")));
+                assertTrue(bidResponses.get(1).getCustomKeywords().size() == 6);
+                creativeId = bidResponses.get(1).getCreative();
+                assertTrue(bidResponses.get(1).getCustomKeywords().contains(new Pair<String, String>("hb_bidder_rubicon", "rubicon")));
+                assertTrue(bidResponses.get(1).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id_rubicon", creativeId)));
+                assertTrue(bidResponses.get(1).getCustomKeywords().contains(new Pair<String, String>("hb_creative_loadtype", "html")));
+                assertTrue(bidResponses.get(1).getCustomKeywords().contains(new Pair<String, String>("hb_env_rubicon", "mobile-app")));
+                assertTrue(bidResponses.get(1).getCustomKeywords().contains(new Pair<String, String>("hb_pb_rubicon", "0.40")));
+                assertTrue(bidResponses.get(1).getCustomKeywords().contains(new Pair<String, String>("hb_size_rubicon", "300x250")));
+                assertTrue(!bidResponses.get(1).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id", creativeId)));
+            }
+
+            @Override
+            public void onBidFailure(AdUnit bidRequest, ErrorCode reason) {
+                fail("this should never be called.");
+            }
+        };
+        adapter.requestBid(activity, listener, units);
+        adapter.onServerResponded(serverResponseJson);
+    }
+
+    @Test
+    public void testMultipleBidsWithSamePriceResponseProcessingForDFP() throws Exception {
+        // cached bid response
+        setAdServer(Prebid.AdServer.DFP);
+        CacheManager.init(activity);
+        String serverResponse = "{\"id\":\"3dc76667-a500-4e01-a43b-368e36d6c7cc\",\"seatbid\":[{\"bid\":[{\"id\":\"4009307468250838284\",\"impid\":\"Banner_300x250\",\"price\":0.5,\"adm\":\"<script></script>\",\"adid\":\"73501515\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=73501515\",\"cid\":\"958\",\"crid\":\"73501515\",\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"targeting\":{\"hb_bidder\":\"appnexus\",\"hb_bidder_appnexus\":\"appnexus\",\"hb_creative_loadtype\":\"html\",\"hb_env\":\"mobile-app\",\"hb_env_appnexus\":\"mobile-app\",\"hb_pb\":\"0.50\",\"hb_pb_appnexus\":\"0.50\",\"hb_size\":\"300x250\",\"hb_size_appnexus\":\"300x250\"},\"type\":\"banner\"},\"bidder\":{\"appnexus\":{\"brand_id\":1,\"auction_id\":7466795334738195000,\"bidder_id\":2,\"bid_ad_type\":0}}}}],\"seat\":\"appnexus\"},{\"bid\":[{\"id\":\"4009307468250838284\",\"impid\":\"Banner_300x250\",\"price\":0.5,\"adm\":\"<script></script>\",\"adid\":\"73501515\",\"adomain\":[\"rubicon.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=73501515\",\"cid\":\"958\",\"crid\":\"73501515\",\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"targeting\":{\"hb_bidder_rubicon\":\"rubicon\",\"hb_creative_loadtype\":\"html\",\"hb_env_rubicon\":\"mobile-app\",\"hb_pb_rubicon\":\"0.50\",\"hb_size_rubicon\":\"300x250\"},\"type\":\"banner\"}}}],\"seat\":\"rubicon\"}],\"ext\":{\"responsetimemillis\":{\"appnexus\":19}}}s";
+        JSONObject serverResponseJson = new JSONObject(serverResponse);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        ArrayList<AdUnit> units = new ArrayList<>();
+        final BannerAdUnit bannerAdUnit = new BannerAdUnit("Banner_300x250", "12345");
+        bannerAdUnit.addSize(300, 250);
+        units.add(bannerAdUnit);
+        BidManager.BidResponseListener listener = new BidManager.BidResponseListener() {
+            @Override
+            public void onBidSuccess(AdUnit bidRequest, ArrayList<BidResponse> bidResponses) {
+                assertTrue(bidRequest.equals(bannerAdUnit));
+                assertTrue(bidResponses.size() == 2);
+                assertTrue(bidResponses.get(0).getCreative().startsWith("Prebid_"));
+                assertTrue(bidResponses.get(1).getCreative().startsWith("Prebid_"));
+                assertTrue(bidResponses.get(0).getCpm() == 0.50);
+                assertTrue(bidResponses.get(1).getCpm() == 0.50);
+                for (int i = 0; i < bidResponses.size(); i++) {
+                    boolean isTopBid = false;
+                    for (Pair<String, String> pair : bidResponses.get(i).getCustomKeywords()) {
+                        if (pair.first.equals("hb_bidder")) {
+                            isTopBid = true;
+                        }
+                    }
+                    String creativeId = bidResponses.get(i).getCreative();
+                    if (isTopBid) {
+                        assertTrue(bidResponses.get(i).getCustomKeywords().size() == 11);
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_bidder", "appnexus")));
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_bidder_appnexus", "appnexus")));
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id", creativeId)));
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id_appnexus", creativeId)));
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_creative_loadtype", "html")));
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_env", "mobile-app")));
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_env_appnexus", "mobile-app")));
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_pb", "0.50")));
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_pb_appnexus", "0.50")));
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_size", "300x250")));
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_size_appnexus", "300x250")));
+                    } else {
+                        assertTrue(bidResponses.get(i).getCustomKeywords().size() == 6);
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_bidder_rubicon", "rubicon")));
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id_rubicon", creativeId)));
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_creative_loadtype", "html")));
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_env_rubicon", "mobile-app")));
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_pb_rubicon", "0.50")));
+                        assertTrue(bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_size_rubicon", "300x250")));
+                        assertTrue(!bidResponses.get(i).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id", creativeId)));
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onBidFailure(AdUnit bidRequest, ErrorCode reason) {
+                fail("this should never be called.");
             }
         };
         adapter.requestBid(activity, listener, units);
