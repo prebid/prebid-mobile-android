@@ -178,7 +178,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             }
             for (AdUnit adUnit : adUnits) {
                 ArrayList<BidResponse> results = responses.get(adUnit);
-                LogUtil.d(Settings.TAG, "Prebid Mobile receive for the adUnit " + adUnit.getCode() + " the response: " + String.valueOf(results));
+                LogUtil.d(Settings.TAG, "Prebid Mobile receive for the adUnit " + adUnit.getCode() + " the following responses: " + String.valueOf(results));
                 if (results != null && !results.isEmpty()) {
                     // save the bids sorted
                     if (Prebid.useLocalCache()) {
