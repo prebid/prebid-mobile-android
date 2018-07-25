@@ -43,6 +43,7 @@ public class Prebid {
     private static final int kMoPubQueryStringLimit = 4000;
     private static boolean useLocalCache = true;
     private static Host host = Host.APPNEXUS;
+    private static PriceGranularity priceGranularity = PriceGranularity.UNKNOWN;
     private static AdServer adServer = AdServer.UNKNOWN;
 
     public enum AdServer {
