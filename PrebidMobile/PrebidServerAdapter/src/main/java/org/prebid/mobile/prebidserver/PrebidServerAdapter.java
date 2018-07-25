@@ -284,9 +284,20 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 cache.put("bids", bids);
                 prebid.put("cache", cache);
             }
-            JSONObject storedRequest = new JSONObject();
-            storedRequest.put("id", Prebid.getAccountId());
-            prebid.put("storedrequest", storedRequest);
+            String _priceGranularity = Prebid.getPriceGranularity().toString();
+            if (_priceGranularity == "SERVER") {
+                JSONObject targeting = new JSONObject();
+                prebid.put("targeting", targeting);
+            } else if (_priceGranularity != "UNKNOWN") {
+                JSONObject targeting = new JSONObject();
+                targeting.put("lengthmax", 20);
+                targeting.put("pricegranularity", _priceGranularity.toLowerCase());
+                prebid.put("targeting", targeting);
+            } else {
+                JSONObject storedRequest = new JSONObject();
+                storedRequest.put("id", Prebid.getAccountId());
+                prebid.put("storedrequest", storedRequest);
+            }
             ext.put("prebid", prebid);
         } catch (JSONException e) {
             e.printStackTrace();
