@@ -54,7 +54,9 @@ public class Prebid {
 
     public enum PriceGranularity {
         LOW,
-        MEDIUM,
+        MED,
+        HIGH,
+        AUTO,
         DENSE,
         UNKNOWN,
         SERVER
