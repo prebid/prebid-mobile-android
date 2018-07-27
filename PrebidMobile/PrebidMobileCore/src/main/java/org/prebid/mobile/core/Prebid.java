@@ -108,7 +108,7 @@ public class Prebid {
      * @param accountId             Prebid Server account
      * @param adServer              Primary AdServer you're using for your app
      * @param host                  Host you're using for your app
-     * @param priceGranularity      Price granulairty you're using for your app
+     * @param priceGranularity      Price granularity you're using for your app
      * @throws PrebidException
      */
     public static void init(Context context, ArrayList<AdUnit> adUnits, String accountId, AdServer adServer, Host host, PriceGranularity priceGranularity) throws PrebidException {
