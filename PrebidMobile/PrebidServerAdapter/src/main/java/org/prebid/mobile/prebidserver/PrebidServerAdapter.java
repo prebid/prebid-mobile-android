@@ -285,9 +285,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 cache.put("bids", bids);
                 prebid.put("cache", cache);
             }
-
             parseAndAppendPriceGranularity(prebid);
-
             ext.put("prebid", prebid);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -304,28 +302,21 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         String keyPriceGranularity = "pricegranularity";
 
         Prebid.PriceGranularity priceGranularity = Prebid.getPriceGranularity();
-
         switch (priceGranularity) {
-
             case UNKNOWN:
                 JSONObject storedRequest = new JSONObject();
                 storedRequest.put(keyId, Prebid.getAccountId());
                 prebid.put(keyStoredRequest, storedRequest);
-
                 break;
-
             case SERVER:
                 JSONObject targetingEmpty = new JSONObject();
                 prebid.put(keyTargeting, targetingEmpty);
-
                 break;
-
             default:
                 JSONObject targeting = new JSONObject();
                 targeting.put(keyLengthMax, 20);
                 targeting.put(keyPriceGranularity, priceGranularity.toString().toLowerCase());
                 prebid.put(keyTargeting, targeting);
-
                 break;
         }
     }
