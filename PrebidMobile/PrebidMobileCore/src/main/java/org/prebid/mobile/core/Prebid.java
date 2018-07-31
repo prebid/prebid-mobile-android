@@ -43,6 +43,7 @@ public class Prebid {
     private static final int kMoPubQueryStringLimit = 4000;
     private static boolean useLocalCache = true;
     private static Host host = Host.APPNEXUS;
+    private static PriceGranularity priceGranularity = PriceGranularity.UNKNOWN;
     private static AdServer adServer = AdServer.UNKNOWN;
 
     public enum AdServer {
@@ -51,6 +52,16 @@ public class Prebid {
         UNKNOWN
     }
 
+    public enum PriceGranularity {
+        LOW,
+        MED,
+        HIGH,
+        AUTO,
+        DENSE,
+        UNKNOWN,
+        SERVER
+    }
+    
     public enum Host {
         APPNEXUS,
         RUBICON
@@ -77,7 +88,11 @@ public class Prebid {
     public static Host getHost() {
         return host;
     }
-
+    
+    public static PriceGranularity getPriceGranularity() {
+        return priceGranularity;
+    }
+    
     public static boolean useLocalCache() {
         return useLocalCache;
     }
@@ -88,14 +103,15 @@ public class Prebid {
      * - Validate the setup of the demand adapter
      * - Start the bid manager
      *
-     * @param context   Application context
-     * @param adUnits   List of Ad Slot Configurations to register
-     * @param accountId Prebid Server account
-     * @param adServer  Primary AdServer you're using for your app
-     * @param host      Host you're using for your app
+     * @param context               Application context
+     * @param adUnits               List of Ad Slot Configurations to register
+     * @param accountId             Prebid Server account
+     * @param adServer              Primary AdServer you're using for your app
+     * @param host                  Host you're using for your app
+     * @param priceGranularity      Price granularity you're using for your app
      * @throws PrebidException
      */
-    public static void init(Context context, ArrayList<AdUnit> adUnits, String accountId, AdServer adServer, Host host) throws PrebidException {
+    public static void init(Context context, ArrayList<AdUnit> adUnits, String accountId, AdServer adServer, Host host, PriceGranularity priceGranularity) throws PrebidException {
         LogUtil.i("Initializing with a list of AdUnits");
         // validate context
         if (context == null) {
@@ -113,6 +129,10 @@ public class Prebid {
         if (host == null)
             throw new PrebidException(PrebidException.PrebidError.NULL_HOST);
         Prebid.host = host;
+        if (priceGranularity == null) {
+            throw new PrebidException(PrebidException.PrebidError.NULL_PRICE_GRANULARITY);
+        }
+        Prebid.priceGranularity = priceGranularity;
         // validate ad units and register them
         if (adUnits == null || adUnits.isEmpty()) {
             throw new PrebidException(PrebidException.PrebidError.EMPTY_ADUNITS);
@@ -148,6 +168,10 @@ public class Prebid {
         BidManager.requestBidsForAdUnits(context, adUnits);
     }
 
+    public static void init(Context context, ArrayList<AdUnit> adUnits, String accountId, AdServer adServer, Host host) throws PrebidException {
+        init(context, adUnits, accountId, adServer, host, PriceGranularity.UNKNOWN);
+    }
+    
     public static void attachBids(Object adObj, String adUnitCode, Context context) {
         if (adObj == null) {
             //LogUtil.e(TAG, "Request is null, unable to set keywords");

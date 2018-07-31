@@ -178,6 +178,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             }
             for (AdUnit adUnit : adUnits) {
                 ArrayList<BidResponse> results = responses.get(adUnit);
+                LogUtil.d(Settings.TAG, "Prebid Mobile receive for the adUnit " + adUnit.getCode() + " the following responses: " + String.valueOf(results));
                 if (results != null && !results.isEmpty()) {
                     // save the bids sorted
                     if (Prebid.useLocalCache()) {
@@ -284,9 +285,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 cache.put("bids", bids);
                 prebid.put("cache", cache);
             }
-            JSONObject storedRequest = new JSONObject();
-            storedRequest.put("id", Prebid.getAccountId());
-            prebid.put("storedrequest", storedRequest);
+            parseAndAppendPriceGranularity(prebid);
             ext.put("prebid", prebid);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -294,6 +293,32 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         return ext;
     }
 
+    private void parseAndAppendPriceGranularity(JSONObject prebid) throws JSONException {
+
+        String keyId = "id";
+        String keyStoredRequest = "storedrequest";
+        String keyTargeting = "targeting";
+        String keyLengthMax = "lengthmax";
+        String keyPriceGranularity = "pricegranularity";
+        JSONObject storedRequest = new JSONObject();
+        storedRequest.put(keyId, Prebid.getAccountId());
+        prebid.put(keyStoredRequest, storedRequest);
+        
+        Prebid.PriceGranularity priceGranularity = Prebid.getPriceGranularity();
+        switch (priceGranularity) {
+            case UNKNOWN:
+            case SERVER:
+                JSONObject targetingEmpty = new JSONObject();
+                prebid.put(keyTargeting, targetingEmpty);
+                break;
+            default:
+                JSONObject targeting = new JSONObject();
+                targeting.put(keyLengthMax, 20);
+                targeting.put(keyPriceGranularity, priceGranularity.toString().toLowerCase());
+                prebid.put(keyTargeting, targeting);
+                break;
+        }
+    }
 
     private JSONArray getImps(ArrayList<AdUnit> adUnits) {
         JSONArray impConfigs = new JSONArray();
