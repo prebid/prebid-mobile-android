@@ -300,14 +300,13 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         String keyTargeting = "targeting";
         String keyLengthMax = "lengthmax";
         String keyPriceGranularity = "pricegranularity";
-
+        JSONObject storedRequest = new JSONObject();
+        storedRequest.put(keyId, Prebid.getAccountId());
+        prebid.put(keyStoredRequest, storedRequest);
+        
         Prebid.PriceGranularity priceGranularity = Prebid.getPriceGranularity();
         switch (priceGranularity) {
             case UNKNOWN:
-                JSONObject storedRequest = new JSONObject();
-                storedRequest.put(keyId, Prebid.getAccountId());
-                prebid.put(keyStoredRequest, storedRequest);
-                break;
             case SERVER:
                 JSONObject targetingEmpty = new JSONObject();
                 prebid.put(keyTargeting, targetingEmpty);
