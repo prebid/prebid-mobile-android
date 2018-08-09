@@ -130,31 +130,17 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                                         if (responseList == null) {
                                             responseList = new ArrayList<BidResponse>();
                                         }
-                                        BidResponse newBid = null;
-                                        JSONObject targetingKeywords = bid.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting");
-                                        if (Prebid.useLocalCache()) {
-                                            String format = targetingKeywords.getString("hb_creative_loadtype");
-                                            String cacheId = CacheManager.getCacheManager().saveCache(bid.toString(), format);
-                                            newBid = new BidResponse(bidPrice, cacheId);
-                                            newBid.setBidderCode(bidderName);
-                                            Iterator<?> keys = targetingKeywords.keys();
-                                            while (keys.hasNext()) {
-                                                String key = (String) keys.next();
-                                                newBid.addCustomKeyword(key, targetingKeywords.getString(key));
-                                            }
-                                            String cacheIdKey = "hb_cache_id_" + bidderName;
-                                            cacheIdKey = cacheIdKey.substring(0, Math.min(cacheIdKey.length(), Settings.REQUEST_KEY_LENGTH_MAX));
-                                            newBid.addCustomKeyword(cacheIdKey, cacheId);
-                                        } else {
-                                            String cacheId = null;
-                                            Iterator keyIterator = targetingKeywords.keys();
-                                            while (keyIterator.hasNext()) {
-                                                String key = (String) keyIterator.next();
-                                                if (key.startsWith("hb_cache_id_")) {
-                                                    cacheId = targetingKeywords.getString(key);
-                                                }
-                                            }
-                                            if (cacheId != null) {
+                                        JSONObject targetingKeywords = null;
+                                        try {
+                                            targetingKeywords = bid.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting");
+                                        } catch (JSONException e) {
+
+                                        }
+                                        if (targetingKeywords != null && targetingKeywords.length() > 0) {
+                                            BidResponse newBid = null;
+                                            if (Prebid.useLocalCache()) {
+                                                String format = targetingKeywords.getString("hb_creative_loadtype");
+                                                String cacheId = CacheManager.getCacheManager().saveCache(bid.toString(), format);
                                                 newBid = new BidResponse(bidPrice, cacheId);
                                                 newBid.setBidderCode(bidderName);
                                                 Iterator<?> keys = targetingKeywords.keys();
@@ -162,10 +148,31 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                                                     String key = (String) keys.next();
                                                     newBid.addCustomKeyword(key, targetingKeywords.getString(key));
                                                 }
+                                                String cacheIdKey = "hb_cache_id_" + bidderName;
+                                                cacheIdKey = cacheIdKey.substring(0, Math.min(cacheIdKey.length(), Settings.REQUEST_KEY_LENGTH_MAX));
+                                                newBid.addCustomKeyword(cacheIdKey, cacheId);
+                                            } else {
+                                                String cacheId = null;
+                                                Iterator keyIterator = targetingKeywords.keys();
+                                                while (keyIterator.hasNext()) {
+                                                    String key = (String) keyIterator.next();
+                                                    if (key.startsWith("hb_cache_id_")) {
+                                                        cacheId = targetingKeywords.getString(key);
+                                                    }
+                                                }
+                                                if (cacheId != null) {
+                                                    newBid = new BidResponse(bidPrice, cacheId);
+                                                    newBid.setBidderCode(bidderName);
+                                                    Iterator<?> keys = targetingKeywords.keys();
+                                                    while (keys.hasNext()) {
+                                                        String key = (String) keys.next();
+                                                        newBid.addCustomKeyword(key, targetingKeywords.getString(key));
+                                                    }
+                                                }
                                             }
-                                        }
-                                        if (newBid != null) {
-                                            responseList.add(newBid);
+                                            if (newBid != null) {
+                                                responseList.add(newBid);
+                                            }
                                         }
                                         responses.put(adUnit, responseList);
                                     }
@@ -182,7 +189,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                     // save the bids sorted
                     if (Prebid.useLocalCache()) {
                         BidResponse topBid = null;
-                        for (int i = 0; i< results.size(); i++) {
+                        for (int i = 0; i < results.size(); i++) {
                             for (Pair<String, String> pair : results.get(i).getCustomKeywords()) {
                                 if (pair.first.equals("hb_bidder")) {
                                     topBid = results.get(i);
@@ -197,7 +204,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                         // in the case that `hb_cache_id` is not present in any bids, do not pass the response back to publisher
                         String topCacheId = null;
                         for (BidResponse bid : results) {
-                            ArrayList<Pair<String,String>> keywords = bid.getCustomKeywords();
+                            ArrayList<Pair<String, String>> keywords = bid.getCustomKeywords();
                             for (Pair<String, String> pair : keywords) {
                                 if (pair.first.equals("hb_cache_id")) topCacheId = pair.second;
                             }

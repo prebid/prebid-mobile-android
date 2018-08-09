@@ -265,6 +265,47 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
+    public void testMultipleBidsForTheSameBidderResponseProcessingForMoPub() throws Exception {
+        setAdServer(Prebid.AdServer.MOPUB);
+        // cached bid response
+        String serverResponse = "{\"id\":\"3dc76667-a500-4e01-a43b-368e36d6c7cc\",\"seatbid\":[{\"bid\":[{\"id\":\"964206900338444811\",\"impid\":\"Banner_300x250\",\"price\":15,\"adm\":\"hello world\",\"adid\":\"28477710\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=28477710\",\"cid\":\"958\",\"crid\":\"28477710\",\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"targeting\":{\"hb_bidder\":\"appnexus\",\"hb_bidder_appnexus\":\"appnexus\",\"hb_cache_id\":\"random-value-appnexus\",\"hb_cache_id_appnexus\":\"random-value-appnexus\",\"hb_creative_loadtype\":\"html\",\"hb_env\":\"mobile-app\",\"hb_env_appnexus\":\"mobile-app\",\"hb_pb\":\"15.00\",\"hb_pb_appnexus\":\"15.00\",\"hb_size\":\"300x250\",\"hb_size_appnexus\":\"300x250\"},\"type\":\"banner\"},\"bidder\":{\"appnexus\":{\"brand_id\":1,\"auction_id\":7451460372041783000,\"bidder_id\":2,\"bid_ad_type\":0}}}},{\"id\":\"6786335593489123644\",\"impid\":\"Banner_300x250\",\"price\":0.5,\"adm\":\"hello world\",\"adid\":\"68501584\",\"adomain\":[\"peugeot.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=68501584\",\"cid\":\"958\",\"crid\":\"68501584\",\"cat\":[\"IAB2-8\",\"IAB2-1\",\"IAB2-2\",\"IAB2-19\",\"IAB2-5\",\"IAB2-18\",\"IAB2-23\",\"IAB2-11\",\"IAB2\",\"IAB2-15\",\"IAB2-9\",\"IAB2-12\",\"IAB2-7\",\"IAB2-21\",\"IAB2-22\",\"IAB2-14\",\"IAB2-17\",\"IAB2-6\",\"IAB2-20\",\"IAB2-10\",\"IAB2-13\",\"IAB2-16\",\"IAB2-4\",\"IAB2-3\"],\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"type\":\"banner\"},\"bidder\":{\"appnexus\":{\"brand_id\":3264,\"auction_id\":7451460372041783000,\"bidder_id\":2,\"bid_ad_type\":0}}}}],\"seat\":\"appnexus\"}],\"ext\":{\"responsetimemillis\":{\"appnexus\":235}}}";
+        JSONObject serverResponseJson = new JSONObject(serverResponse);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        ArrayList<AdUnit> units = new ArrayList<>();
+        final BannerAdUnit bannerAdUnit = new BannerAdUnit("Banner_300x250", "12345");
+        bannerAdUnit.addSize(300, 250);
+        units.add(bannerAdUnit);
+        BidManager.BidResponseListener listener = new BidManager.BidResponseListener() {
+            @Override
+            public void onBidSuccess(AdUnit bidRequest, ArrayList<BidResponse> bidResponses) {
+                assertTrue(bidRequest.equals(bannerAdUnit));
+                assertTrue(bidResponses.size() == 1);
+                assertTrue(bidResponses.get(0).getCreative().equals("random-value-appnexus"));
+                assertTrue(bidResponses.get(0).getCpm() == 15);
+                assertTrue(bidResponses.get(0).getCustomKeywords().size() == 11);
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_bidder", "appnexus")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_bidder_appnexus", "appnexus")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id", "random-value-appnexus")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id_appnexus", "random-value-appnexus")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_creative_loadtype", "html")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_pb", "15.00")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_pb_appnexus", "15.00")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_size", "300x250")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_size_appnexus", "300x250")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_env", "mobile-app")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_env_appnexus", "mobile-app")));
+            }
+
+            @Override
+            public void onBidFailure(AdUnit bidRequest, ErrorCode reason) {
+                fail("this should never be called.");
+            }
+        };
+        adapter.requestBid(activity, listener, units);
+        adapter.onServerResponded(serverResponseJson);
+    }
+
+    @Test
     public void testNoCacheIdResponseProcessingForMoPub() throws Exception {
         setAdServer(Prebid.AdServer.MOPUB);
         // cached bid response
@@ -413,6 +454,50 @@ public class PrebidServerAdapterTest extends BaseSetup {
         adapter.requestBid(activity, listener, units);
         adapter.onServerResponded(serverResponseJson);
     }
+
+    @Test
+    public void testMultipleResponseForTheSameBidderProcessingForDFP() throws Exception {
+        // cached bid response
+        setAdServer(Prebid.AdServer.DFP);
+        CacheManager.init(activity);
+        String serverResponse = "{\"id\":\"3dc76667-a500-4e01-a43b-368e36d6c7cc\",\"seatbid\":[{\"bid\":[{\"id\":\"3829649260126183529\",\"impid\":\"Banner_300x250\",\"price\":15,\"adm\":\"hello world\",\"adid\":\"68501584\",\"adomain\":[\"peugeot.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=68501584\",\"cid\":\"958\",\"crid\":\"68501584\",\"cat\":[\"IAB2-3\",\"IAB2-6\",\"IAB2-15\",\"IAB2-10\",\"IAB2-11\",\"IAB2-12\",\"IAB2-19\",\"IAB2-4\",\"IAB2-13\",\"IAB2\",\"IAB2-17\",\"IAB2-8\",\"IAB2-16\",\"IAB2-18\",\"IAB2-9\",\"IAB2-22\",\"IAB2-14\",\"IAB2-7\",\"IAB2-20\",\"IAB2-1\",\"IAB2-2\",\"IAB2-5\",\"IAB2-23\",\"IAB2-21\"],\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"targeting\":{\"hb_bidder\":\"appnexus\",\"hb_bidder_appnexus\":\"appnexus\",\"hb_creative_loadtype\":\"html\",\"hb_env\":\"mobile-app\",\"hb_env_appnexus\":\"mobile-app\",\"hb_pb\":\"15.00\",\"hb_pb_appnexus\":\"15.00\",\"hb_size\":\"300x250\",\"hb_size_appnexus\":\"300x250\"},\"type\":\"banner\"},\"bidder\":{\"appnexus\":{\"brand_id\":3264,\"auction_id\":8160292782530908000,\"bidder_id\":2,\"bid_ad_type\":0}}}},{\"id\":\"1389685956420146597\",\"impid\":\"Banner_300x250\",\"price\":3.21,\"adm\":\"hello world\",\"adid\":\"28477710\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=28477710\",\"cid\":\"958\",\"crid\":\"28477710\",\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"type\":\"banner\"},\"bidder\":{\"appnexus\":{\"brand_id\":1,\"auction_id\":8160292782530908000,\"bidder_id\":2,\"bid_ad_type\":0}}}},{\"id\":\"1106673435110511367\",\"impid\":\"Banner_300x250\",\"price\":0.033505,\"adm\":\"Hello world\",\"adid\":\"103077040\",\"adomain\":[\"audible.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=103077040\",\"cid\":\"1437\",\"crid\":\"103077040\",\"cat\":[\"IAB22-4\",\"IAB22\"],\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"type\":\"banner\"},\"bidder\":{\"appnexus\":{\"brand_id\":12,\"auction_id\":8160292782530908000,\"bidder_id\":101,\"bid_ad_type\":0}}}}],\"seat\":\"appnexus\"}],\"ext\":{\"responsetimemillis\":{\"appnexus\":258}}}";
+        JSONObject serverResponseJson = new JSONObject(serverResponse);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        ArrayList<AdUnit> units = new ArrayList<>();
+        final BannerAdUnit bannerAdUnit = new BannerAdUnit("Banner_300x250", "12345");
+        bannerAdUnit.addSize(300, 250);
+        units.add(bannerAdUnit);
+        BidManager.BidResponseListener listener = new BidManager.BidResponseListener() {
+            @Override
+            public void onBidSuccess(AdUnit bidRequest, ArrayList<BidResponse> bidResponses) {
+                assertTrue(bidRequest.equals(bannerAdUnit));
+                assertTrue(bidResponses.size() == 1);
+                assertTrue(bidResponses.get(0).getCreative().startsWith("Prebid_"));
+                assertTrue(bidResponses.get(0).getCpm() == 15);
+                assertTrue(bidResponses.get(0).getCustomKeywords().size() == 11);
+                String creativeId = bidResponses.get(0).getCreative();
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_bidder", "appnexus")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_bidder_appnexus", "appnexus")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id", creativeId)));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_cache_id_appnexus", creativeId)));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_creative_loadtype", "html")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_env", "mobile-app")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_env_appnexus", "mobile-app")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_pb", "15.00")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_pb_appnexus", "15.00")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_size", "300x250")));
+                assertTrue(bidResponses.get(0).getCustomKeywords().contains(new Pair<String, String>("hb_size_appnexus", "300x250")));
+            }
+
+            @Override
+            public void onBidFailure(AdUnit bidRequest, ErrorCode reason) {
+                fail("this should never be called.");
+            }
+        };
+        adapter.requestBid(activity, listener, units);
+        adapter.onServerResponded(serverResponseJson);
+    }
+
 
     @Test
     public void testMultipleBidsWithSamePriceResponseProcessingForDFP() throws Exception {
