@@ -102,6 +102,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         adUnits.add(interstitialAdUnit);
         // Test with DFP settings
         Prebid.init(activity, adUnits, "34567", Prebid.AdServer.DFP, Prebid.Host.APPNEXUS);
+        setAdServer(Prebid.AdServer.DFP);
         JSONObject postData = adapter.getPostData(activity, adUnits);
         assertTrue(postData.has(Settings.REQUEST_DEVICE));
         assertTrue(postData.has(Settings.REQUEST_APP));
@@ -129,6 +130,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").getString("id").equals(Prebid.getAccountId()));
         // Test with MoPub settings
         Prebid.init(activity, adUnits, "12345", Prebid.AdServer.MOPUB, Prebid.Host.APPNEXUS);
+        setAdServer(Prebid.AdServer.MOPUB);
         Prebid.shouldLoadOverSecureConnection(false);
         postData = adapter.getPostData(activity, adUnits);
         assertTrue(postData.has(Settings.REQUEST_DEVICE));
