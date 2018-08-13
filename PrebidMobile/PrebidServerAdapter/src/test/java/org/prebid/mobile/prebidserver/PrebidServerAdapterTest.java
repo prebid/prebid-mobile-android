@@ -16,6 +16,7 @@ import org.prebid.mobile.core.ErrorCode;
 import org.prebid.mobile.core.InterstitialAdUnit;
 import org.prebid.mobile.core.Prebid;
 import org.prebid.mobile.core.TargetingParams;
+import org.prebid.mobile.core.ConfigSettings;
 import org.prebid.mobile.prebidserver.internal.Settings;
 import org.prebid.mobile.unittestutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
@@ -154,6 +155,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").has("storedrequest"));
         assertTrue(!postData.getJSONObject("ext").getJSONObject("prebid").has("cache"));
         assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").getString("id").equals(Prebid.getAccountId()));
+        assertTrue(!postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting").has("pricegranularity"));
         // Test with MoPub settings
         Prebid.init(activity, adUnits, "12345", Prebid.AdServer.MOPUB, Prebid.Host.APPNEXUS);
         Prebid.shouldLoadOverSecureConnection(false);
