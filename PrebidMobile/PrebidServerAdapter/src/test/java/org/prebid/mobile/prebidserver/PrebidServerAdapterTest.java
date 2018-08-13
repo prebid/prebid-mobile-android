@@ -90,7 +90,34 @@ public class PrebidServerAdapterTest extends BaseSetup {
             assertEquals("No value for keywords", e.getMessage());
         }
     }
-
+    
+    @Test
+    public void testConfigSettings() throws Exception {
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        ArrayList<AdUnit> adUnits = new ArrayList<>();
+        BannerAdUnit bannerAdUnit = new BannerAdUnit("banner", "12345");
+        bannerAdUnit.addSize(320, 50);
+        adUnits.add(bannerAdUnit);
+        InterstitialAdUnit interstitialAdUnit = new InterstitialAdUnit("interstitial", "23456");
+        adUnits.add(interstitialAdUnit);
+        // add keywords for user
+        ConfigSettings.setPriceGranularity(ConfigSettings.PriceGranularity.DENSE);
+        ConfigSettings.setStoreRequestId("test1234");
+        // Test with DFP settings
+        Prebid.init(activity, adUnits, "34567", Prebid.AdServer.DFP, Prebid.Host.APPNEXUS);
+        JSONObject postData = adapter.getPostData(activity, adUnits);
+        try {
+            postData.getJSONObject("ext").getString("prebid");
+        } catch (JSONException e) {
+            assertEquals("No value for ext prebid", e.getMessage());
+        }
+        assertEquals("test1234", postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").getString("id"));
+        assertEquals("dense", postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting").getString("pricegranularity"));
+        // reset configs
+        ConfigSettings.setPriceGranularity(ConfigSettings.PriceGranularity.UNKNOWN);
+        ConfigSettings.setStoreRequestId(null);
+    }
+    
     @Test
     public void testPostDataGeneration() throws Exception {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
