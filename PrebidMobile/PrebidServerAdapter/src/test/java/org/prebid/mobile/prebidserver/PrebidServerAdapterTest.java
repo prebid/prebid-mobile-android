@@ -101,8 +101,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         adUnits.add(bannerAdUnit);
         InterstitialAdUnit interstitialAdUnit = new InterstitialAdUnit("interstitial", "23456");
         adUnits.add(interstitialAdUnit);
-        // add keywords for user
-        ConfigSettings.setPriceGranularity(ConfigSettings.PriceGranularity.DENSE);
+        // Test ConfigSetting 
         ConfigSettings.setStoreRequestId("test1234");
         // Test with DFP settings
         Prebid.init(activity, adUnits, "34567", Prebid.AdServer.DFP, Prebid.Host.APPNEXUS);
@@ -113,9 +112,8 @@ public class PrebidServerAdapterTest extends BaseSetup {
             assertEquals("No value for ext prebid", e.getMessage());
         }
         assertEquals("test1234", postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").getString("id"));
-        assertEquals("dense", postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting").getString("pricegranularity"));
-        // reset configs
-        ConfigSettings.setPriceGranularity(ConfigSettings.PriceGranularity.UNKNOWN);
+        assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").has("targeting"));
+        // reset ConfigSetting
         ConfigSettings.setStoreRequestId(null);
     }
     
@@ -155,7 +153,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").has("storedrequest"));
         assertTrue(!postData.getJSONObject("ext").getJSONObject("prebid").has("cache"));
         assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").getString("id").equals(Prebid.getAccountId()));
-        assertTrue(!postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting").has("pricegranularity"));
+        assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").has("targeting"));
         // Test with MoPub settings
         Prebid.init(activity, adUnits, "12345", Prebid.AdServer.MOPUB, Prebid.Host.APPNEXUS);
         Prebid.shouldLoadOverSecureConnection(false);

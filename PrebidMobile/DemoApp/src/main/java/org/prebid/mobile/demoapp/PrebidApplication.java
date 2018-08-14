@@ -80,8 +80,7 @@ public class PrebidApplication extends Application {
         TargetingParams.setUserTargeting(null, "PrebidValue2"); // this should add nothing
         TargetingParams.setUserTargeting(null, null); // this should add nothing
 
-        ConfigSettings.setPriceGranularity(ConfigSettings.PriceGranularity.DENSE);
-        ConfigSettings.setStoreRequestId("1500");
+        //ConfigSettings.setStoreRequestId("testStoreRequestId");
         
         // Register ad units for prebid.
         try {

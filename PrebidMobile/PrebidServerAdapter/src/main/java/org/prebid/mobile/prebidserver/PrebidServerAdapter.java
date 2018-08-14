@@ -285,7 +285,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 cache.put("bids", bids);
                 prebid.put("cache", cache);
             }
-            parseAndAppendPriceGranularity(prebid);
+            parseAndAppendStoreRequestId(prebid);
             ext.put("prebid", prebid);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -293,44 +293,22 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         return ext;
     }
 
-    private void parseAndAppendPriceGranularity(JSONObject prebid) throws JSONException {
-
+    private void parseAndAppendStoreRequestId(JSONObject prebid) throws JSONException {
         String keyId = "id";
         String keyStoredRequest = "storedrequest";
         String keyTargeting = "targeting";
-        String keyLengthMax = "lengthmax";
-        String keyPriceGranularity = "pricegranularity";
         String storeRequestId = ConfigSettings.getStoreRequestIdtoreRequestId();
-
         JSONObject storedRequest = new JSONObject();
-
         if (storeRequestId != null) {
             storedRequest.put(keyId, storeRequestId);
         } else {
             storedRequest.put(keyId, Prebid.getAccountId());
         }
-
         prebid.put(keyStoredRequest, storedRequest);
-
-        ConfigSettings.PriceGranularity priceGranularity = ConfigSettings.getPriceGranularity();
-
-        switch (priceGranularity) {
-
-            case UNKNOWN:
-                JSONObject targetingEmpty = new JSONObject();
-                prebid.put(keyTargeting, targetingEmpty);
-
-                break;
-
-            default:
-                JSONObject targeting = new JSONObject();
-                targeting.put(keyLengthMax, 20);
-                targeting.put(keyPriceGranularity, priceGranularity.toString().toLowerCase());
-                prebid.put(keyTargeting, targeting);
-
-                break;
-        }
+        JSONObject targetingEmpty = new JSONObject();
+        prebid.put(keyTargeting, targetingEmpty);                      
     }
+    
     private JSONArray getImps(ArrayList<AdUnit> adUnits) {
         JSONArray impConfigs = new JSONArray();
         for (AdUnit adUnit : adUnits) {
