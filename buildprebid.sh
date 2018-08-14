@@ -144,6 +144,7 @@ CORE_CLASSES+=("LogUtil.java")
 CORE_CLASSES+=("Prebid.java")
 CORE_CLASSES+=("PrebidException.java")
 CORE_CLASSES+=("TargetingParams.java")
+CORE_CLASSES+=("ConfigSettings.java")
 PREBID_SERVER_PATH="PrebidServerAdapter/src/main/java/org/prebid/mobile/prebidserver"
 PREBID_SERVER_CLASSES=()
 PREBID_SERVER_CLASSES+=("PrebidServerAdapter.java")

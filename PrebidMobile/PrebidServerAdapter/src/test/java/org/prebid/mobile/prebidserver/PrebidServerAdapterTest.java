@@ -16,6 +16,7 @@ import org.prebid.mobile.core.ErrorCode;
 import org.prebid.mobile.core.InterstitialAdUnit;
 import org.prebid.mobile.core.Prebid;
 import org.prebid.mobile.core.TargetingParams;
+import org.prebid.mobile.core.ConfigSettings;
 import org.prebid.mobile.prebidserver.internal.Settings;
 import org.prebid.mobile.unittestutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
@@ -90,7 +91,32 @@ public class PrebidServerAdapterTest extends BaseSetup {
             assertEquals("No value for keywords", e.getMessage());
         }
     }
-
+    
+    @Test
+    public void testConfigSettings() throws Exception {
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        ArrayList<AdUnit> adUnits = new ArrayList<>();
+        BannerAdUnit bannerAdUnit = new BannerAdUnit("banner", "12345");
+        bannerAdUnit.addSize(320, 50);
+        adUnits.add(bannerAdUnit);
+        InterstitialAdUnit interstitialAdUnit = new InterstitialAdUnit("interstitial", "23456");
+        adUnits.add(interstitialAdUnit);
+        // Test ConfigSetting 
+        ConfigSettings.setStoreRequestId("test1234");
+        // Test with DFP settings
+        Prebid.init(activity, adUnits, "34567", Prebid.AdServer.DFP, Prebid.Host.APPNEXUS);
+        JSONObject postData = adapter.getPostData(activity, adUnits);
+        try {
+            postData.getJSONObject("ext").getString("prebid");
+        } catch (JSONException e) {
+            assertEquals("No value for ext prebid", e.getMessage());
+        }
+        assertEquals("test1234", postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").getString("id"));
+        assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").has("targeting"));
+        // reset ConfigSetting
+        ConfigSettings.setStoreRequestId(null);
+    }
+    
     @Test
     public void testPostDataGeneration() throws Exception {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
@@ -127,6 +153,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").has("storedrequest"));
         assertTrue(!postData.getJSONObject("ext").getJSONObject("prebid").has("cache"));
         assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").getString("id").equals(Prebid.getAccountId()));
+        assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").has("targeting"));
         // Test with MoPub settings
         Prebid.init(activity, adUnits, "12345", Prebid.AdServer.MOPUB, Prebid.Host.APPNEXUS);
         Prebid.shouldLoadOverSecureConnection(false);
