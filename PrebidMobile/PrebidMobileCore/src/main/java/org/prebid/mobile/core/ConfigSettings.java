@@ -20,21 +20,6 @@ import static junit.framework.Assert.assertTrue;
 public class ConfigSettingsTest extends BaseSetup {
 
     @Test
-    public void testSetPriceGranularity() {
-        assertEquals(ConfigSettings.PriceGranularity.UNKNOWN, ConfigSettings.getPriceGranularity());
-        ConfigSettings.setPriceGranularity(ConfigSettings.PriceGranularity.LOW);
-        assertEquals(ConfigSettings.PriceGranularity.LOW, ConfigSettings.getPriceGranularity());
-        ConfigSettings.setPriceGranularity(ConfigSettings.PriceGranularity.MED);
-        assertEquals(ConfigSettings.PriceGranularity.MED, ConfigSettings.getPriceGranularity());
-        ConfigSettings.setPriceGranularity(ConfigSettings.PriceGranularity.HIGH);
-        assertEquals(ConfigSettings.PriceGranularity.HIGH, ConfigSettings.getPriceGranularity());
-        ConfigSettings.setPriceGranularity(ConfigSettings.PriceGranularity.DENSE);
-        assertEquals(ConfigSettings.PriceGranularity.DENSE, ConfigSettings.getPriceGranularity());
-        ConfigSettings.setPriceGranularity(ConfigSettings.PriceGranularity.AUTO);
-        assertEquals(ConfigSettings.PriceGranularity.AUTO, ConfigSettings.getPriceGranularity());
-    }
-
-    @Test
     public void testSetStoreRequestId() {
         assertEquals(null, ConfigSettings.getStoreRequestIdtoreRequestId());
         ConfigSettings.setStoreRequestId("testStoredRequestId");
