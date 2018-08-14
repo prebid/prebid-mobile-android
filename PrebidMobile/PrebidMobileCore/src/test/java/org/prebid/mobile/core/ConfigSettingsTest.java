@@ -22,6 +22,6 @@ public class ConfigSettingsTest extends BaseSetup {
     @Test
     public void testSetStoreRequestId() {
         ConfigSettings.setStoreRequestId("testStoredRequestId");
-        assertEquals("testStoredRequestId2", ConfigSettings.getStoreRequestIdtoreRequestId());
+        assertEquals("testStoredRequestId", ConfigSettings.getStoreRequestIdtoreRequestId());
     }
 }
