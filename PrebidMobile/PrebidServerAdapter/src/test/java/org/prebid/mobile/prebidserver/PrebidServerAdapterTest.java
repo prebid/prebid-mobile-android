@@ -128,6 +128,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").has("storedrequest"));
         assertTrue(!postData.getJSONObject("ext").getJSONObject("prebid").has("cache"));
         assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").getString("id").equals(Prebid.getAccountId()));
+        assertTrue(postData.getJSONObject("ext").getJSONObject("prebid").has("targeting"));
         // Test with MoPub settings
         Prebid.init(activity, adUnits, "12345", Prebid.AdServer.MOPUB, Prebid.Host.APPNEXUS);
         setAdServer(Prebid.AdServer.MOPUB);
