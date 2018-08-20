@@ -294,6 +294,8 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
             JSONObject storedRequest = new JSONObject();
             storedRequest.put("id", Prebid.getAccountId());
             prebid.put("storedrequest", storedRequest);
+            JSONObject targetingEmpty = new JSONObject();
+            prebid.put("targeting", targetingEmpty); 
             ext.put("prebid", prebid);
         } catch (JSONException e) {
             e.printStackTrace();
