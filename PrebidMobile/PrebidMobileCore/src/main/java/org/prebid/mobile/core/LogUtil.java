@@ -68,15 +68,13 @@ public class LogUtil {
     }
 
     public static void v(final String tag, String message, Throwable cause) {
-        if (BuildConfig.DEBUG) {
-            if (TextUtils.isEmpty(tag)) {
-                if (Log.isLoggable(BASE_TAG, Log.VERBOSE)) {
-                    Log.v(BASE_TAG, message, cause);
-                }
-            } else {
-                if (Log.isLoggable(tag, Log.VERBOSE)) {
-                    Log.v(tag, message, cause);
-                }
+        if (TextUtils.isEmpty(tag)) {
+            if (Log.isLoggable(BASE_TAG, Log.VERBOSE)) {
+                Log.v(BASE_TAG, message, cause);
+            }
+        } else {
+            if (Log.isLoggable(tag, Log.VERBOSE)) {
+                Log.v(tag, message, cause);
             }
         }
     }
@@ -92,17 +90,15 @@ public class LogUtil {
     }
 
     public static void d(final String tag, String message, Throwable cause) {
-        if (BuildConfig.DEBUG) {
-            try {
-                if (Log.isLoggable(tag, Log.DEBUG)) {
-                    Log.d(tag, message, cause);
-                    return;
-                }
-            } catch (IllegalArgumentException e) {
-                Log.e(BASE_TAG, "Tried to log a message with tag length >23: " + tag);
+        try {
+            if (Log.isLoggable(tag, Log.DEBUG)) {
+                Log.d(tag, message, cause);
+                return;
             }
-            Log.d(BASE_TAG, message, cause);
+        } catch (IllegalArgumentException e) {
+            Log.e(BASE_TAG, "Tried to log a message with tag length >23: " + tag);
         }
+        Log.d(BASE_TAG, message, cause);
     }
     //endregion
 

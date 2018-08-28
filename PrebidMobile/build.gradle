@@ -3,7 +3,7 @@
 ext {
     releaseProguardEnabled = false
     debugProguardEnabled = false
-    prebidVersionName = "0.4"
+    prebidVersionName = "0.5"
     prebidVersionCode = 1
     minSDKVersion = 16
     targetSDKVersion = 25
