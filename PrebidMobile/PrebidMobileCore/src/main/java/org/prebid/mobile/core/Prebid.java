@@ -52,8 +52,33 @@ public class Prebid {
     }
 
     public enum Host {
-        APPNEXUS,
-        RUBICON
+        APPNEXUS("http://prebid.adnxs.com/pbs/v1/openrtb2/auction", "https://prebid.adnxs.com/pbs/v1/openrtb2/auction"),
+        RUBICON("http://prebid-server.rubiconproject.com/openrtb2/auction", "https://prebid-server.rubiconproject.com/openrtb2/auction"),
+        CUSTOM("", "");
+
+        private String nonSecureUrl;
+        private String secureUrl;
+
+        Host(String nonSecureUrl, String secureUrl) {
+            this.nonSecureUrl = nonSecureUrl;
+            this.secureUrl = secureUrl;
+        }
+
+        public String getNonSecureUrl() {
+            return this.nonSecureUrl;
+        }
+
+        public String getSecureUrl() {
+            return this.secureUrl;
+        }
+
+        public void setNonSecureUrl(String url) {
+            this.nonSecureUrl = url;
+        }
+
+        public void setSecureUrl(String url) {
+            this.secureUrl = url;
+        }
     }
 
     //region Public APIs
@@ -112,6 +137,9 @@ public class Prebid {
         }
         if (host == null)
             throw new PrebidException(PrebidException.PrebidError.NULL_HOST);
+        if (TextUtils.isEmpty(host.getNonSecureUrl()) && TextUtils.isEmpty(host.getSecureUrl())) {
+            throw new PrebidException(PrebidException.PrebidError.EMPTY_HOST_URL);
+        }
         Prebid.host = host;
         // validate ad units and register them
         if (adUnits == null || adUnits.isEmpty()) {

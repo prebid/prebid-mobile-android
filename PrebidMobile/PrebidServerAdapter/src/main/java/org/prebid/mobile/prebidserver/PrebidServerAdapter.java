@@ -85,13 +85,16 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         String host = null;
         switch (Prebid.getHost()) {
             case APPNEXUS:
-                host = (Prebid.isSecureConnection()) ? Settings.APPNEXUS_REQUEST_URL_SECURE :
-                        Settings.APPNEXUS_REQUEST_URL_NON_SECURE;
+                host = (Prebid.isSecureConnection()) ? Prebid.Host.APPNEXUS.getSecureUrl() :
+                        Prebid.Host.APPNEXUS.getNonSecureUrl();
                 break;
             case RUBICON:
-                host = (Prebid.isSecureConnection()) ? Settings.RUBICON_REQUEST_URL_SECURE :
-                        Settings.RUBICON_REQUEST_URL_NON_SECURE;
+                host = (Prebid.isSecureConnection()) ? Prebid.Host.RUBICON.getSecureUrl() :
+                        Prebid.Host.RUBICON.getNonSecureUrl();
                 break;
+            case CUSTOM:
+                host = (Prebid.isSecureConnection()) ? Prebid.Host.CUSTOM.getSecureUrl() :
+                        Prebid.Host.CUSTOM.getNonSecureUrl();
         }
         return host;
     }
