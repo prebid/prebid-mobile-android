@@ -16,6 +16,10 @@ import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
 import org.prebid.mobile.core.LogUtil;
+import org.prebid.mobile.core.NewBannerAdUnit;
+import org.prebid.mobile.core.NewOnCompleteListener;
+import org.prebid.mobile.core.NewPrebid;
+import org.prebid.mobile.core.NewResultCode;
 import org.prebid.mobile.core.Prebid;
 import org.prebid.mobile.demoapp.Constants;
 import org.prebid.mobile.demoapp.R;
@@ -23,7 +27,7 @@ import org.prebid.mobile.demoapp.R;
 
 public class DFPBannerFragment extends Fragment implements Prebid.OnAttachCompleteListener {
     PublisherAdView adView1;
-    PublisherAdView adView2;
+    PublisherAdView dfpAdView;
     private View root;
     private AdListener adListener;
 
@@ -75,7 +79,7 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
                 LogUtil.d("DPF-Banner", "onAdLoaded");
             }
         };
-        
+
         return root;
     }
 
@@ -97,9 +101,9 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
 
 
     public String getDFPWebViewName() {
-        int count = adView2.getChildCount();
+        int count = dfpAdView.getChildCount();
         for (int i = 0; i < count; i++) {
-            ViewGroup nextChild = (ViewGroup) adView2.getChildAt(i);
+            ViewGroup nextChild = (ViewGroup) dfpAdView.getChildAt(i);
             int secondCount = nextChild.getChildCount();
             for (int j = 0; j < secondCount; j++) {
                 ViewGroup thirdChild = (ViewGroup) nextChild.getChildAt(j);
@@ -114,20 +118,32 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
         }
         return "undefined";
     }
-    
+
     private void setupBannerWithWait(final int waitTime) {
 
         FrameLayout adFrame = (FrameLayout) root.findViewById(R.id.adFrame2);
         adFrame.removeAllViews();
-        adView2 = new PublisherAdView(getActivity());
-        adView2.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_300x250);
-        adView2.setAdSizes(new AdSize(300, 250));
-        adView2.setAdListener(adListener);
-        adFrame.addView(adView2);
-        //region PriceCheckForDFP API usage
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        PublisherAdRequest request = builder.build();
-        Prebid.attachBidsWhenReady(request, Constants.BANNER_300x250, this, waitTime, this.getActivity());
+        dfpAdView = new PublisherAdView(getActivity());
+        dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_300x250);
+        dfpAdView.setAdSizes(new AdSize(300, 250));
+        dfpAdView.setAdListener(adListener);
+        adFrame.addView(dfpAdView);
+        //region Prebid Mobile API usage
+        NewPrebid.setAccountId("your-account-id");
+        NewPrebid.setHost(Prebid.Host.APPNEXUS);
+        NewPrebid.setShouldUseSecureConnection(true);
+        NewPrebid.setTimeOUt(600);
+        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        final PublisherAdRequest request = builder.build();
+        NewBannerAdUnit bannerAdUnit = new NewBannerAdUnit("random-id");
+        bannerAdUnit.addSize(300, 250);
+        bannerAdUnit.fetchDemand(request, DFPBannerFragment.this.getContext(), new NewOnCompleteListener() {
+            @Override
+            public void onComplete(NewResultCode resultCode) {
+                dfpAdView.loadAd(request);
+            }
+        });
+//        Prebid.attachBidsWhenReady(request, Constants.BANNER_300x250, this, waitTime, this.getActivity());
         //endregion
 
     }
@@ -137,16 +153,16 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
             adView1.destroy();
             setupBannerWithoutWait();
         }
-        if (adView2 != null) {
-            adView2.destroy();
+        if (dfpAdView != null) {
+            dfpAdView.destroy();
             setupBannerWithWait(500);
         }
     }
 
     @Override
     public void onAttachComplete(Object adObj) {
-        if (adView2 != null && adObj != null && adObj instanceof PublisherAdRequest) {
-            adView2.loadAd((PublisherAdRequest) adObj);
+        if (dfpAdView != null && adObj != null && adObj instanceof PublisherAdRequest) {
+            dfpAdView.loadAd((PublisherAdRequest) adObj);
             Prebid.detachUsedBid(adObj);
         }
     }

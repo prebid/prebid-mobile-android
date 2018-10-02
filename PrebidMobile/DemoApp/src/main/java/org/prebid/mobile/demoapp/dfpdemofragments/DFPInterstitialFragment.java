@@ -52,7 +52,8 @@ public class DFPInterstitialFragment extends Fragment {
                 mPublisherInterstitialAd.show();
             }
         });
-        request = new PublisherAdRequest.Builder().build();
+        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        request = builder.build();
         Button btnLoad = (Button) root.findViewById(R.id.loadInterstitial);
         btnLoad.setOnClickListener(new View.OnClickListener() {
             @Override
