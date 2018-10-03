@@ -12,6 +12,7 @@ public interface NewDemandAdapter {
 
     interface NewDemandAdapterListener {
         void onDemandReady(HashMap<String, String> demand);
+
         void onDemandFailed(NewResultCode resultCode);
 
     }

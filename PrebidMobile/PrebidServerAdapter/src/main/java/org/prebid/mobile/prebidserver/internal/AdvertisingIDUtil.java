@@ -56,7 +56,7 @@ public class AdvertisingIDUtil {
 
     /**
      * Starts an AsyncTask to retrieve and set the AAID.
-     * Does nothing if Settings.aaid is already set for the SDK.
+     * Does nothing if NewPrebidServerAdapterSettings.aaid is already set for the SDK.
      *
      * @param context context to retrieve the AAID on.
      */

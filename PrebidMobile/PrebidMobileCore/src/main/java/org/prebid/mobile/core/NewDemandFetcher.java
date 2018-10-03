@@ -3,6 +3,8 @@ package org.prebid.mobile.core;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -35,7 +37,9 @@ class NewDemandFetcher {
         this.period = 0;
         this.adObject = adObj;
         this.listener = listener;
-        this.handler = new Handler();
+        HandlerThread fetcherThread = new HandlerThread("FetcherThread");
+        fetcherThread.start();
+        this.handler = new Handler(fetcherThread.getLooper());
         this.weakReference = new WeakReference<Context>(context);
         this.configId = configId;
         this.sizes = sizes;
@@ -53,7 +57,7 @@ class NewDemandFetcher {
     }
 
     void stop() {
-        requestRunnable.stopRequest();
+        requestRunnable.cancelRequest();
         handler.removeCallbacks(requestRunnable);
         // cancel existing requests
         timePausedAt = System.currentTimeMillis();
@@ -97,73 +101,110 @@ class NewDemandFetcher {
         return this.adObject;
     }
 
-    class RequestRunnable implements Runnable {
-        private NewDemandAdapter demandAdapter;
-
-        RequestRunnable() {
-            this.demandAdapter = new TestDemand();
-        }
-
-        void stopRequest() {
-            this.demandAdapter.stopRequest();
-        }
-
-        @Override
-        public void run() {
-            lastFetchTime = System.currentTimeMillis();
-            Context context = NewDemandFetcher.this.weakReference.get();
-            if (TextUtils.isEmpty(configId) || context == null) {
-                if (listener != null) {
-                    listener.onComplete(NewResultCode.INVALID_REQUEST);
-                }
-                return;
-            }
-            if (adType == AdType.BANNER) {
-                if (sizes == null || sizes.isEmpty()) {
-                    if (listener != null) {
-                        listener.onComplete(NewResultCode.INVALID_REQUEST);
-                    }
-                    return;
-                }
-            }
-            RequestParams requestParams = new RequestParams(configId, adType, sizes);
-            this.demandAdapter.requestDemand(context, requestParams, new NewDemandAdapter.NewDemandAdapterListener() {
+    private void notifyListener(final NewResultCode resultCode) {
+        if (listener != null) {
+            Handler uiThread = new Handler(Looper.getMainLooper());
+            uiThread.post(new Runnable() {
                 @Override
-                public void onDemandReady(HashMap<String, String> demand) {
-                    NewAdUnit.apply(demand, NewDemandFetcher.this.adObject);
-                    if (NewDemandFetcher.this.listener != null) {
-                        NewDemandFetcher.this.listener.onComplete(NewResultCode.SUCCESS);
-                    }
-                }
-
-                @Override
-                public void onDemandFailed(NewResultCode resultCode) {
-                    if (NewDemandFetcher.this.listener != null) {
-                        NewDemandFetcher.this.listener.onComplete(resultCode);
-                    }
+                public void run() {
+                    listener.onComplete(resultCode);
                 }
             });
-            if (state == STATE.AUTO_REFRESH) {
-                handler.postDelayed(this, period * 1000);
-            }
         }
     }
 
-    class TestDemand implements NewDemandAdapter {
 
+    enum DEMAND_STATUS {
+        NOT_STARTED,
+        REQUESTED,
+        RESPONDED,
+        CANCELLED
+    }
+
+    class Test implements NewDemandAdapter {
         @Override
         public void requestDemand(Context context, RequestParams params, NewDemandAdapterListener listener) {
-            if (listener != null) {
-                HashMap<String, String> keywords = new HashMap<>();
-                keywords.put("hb_cache_id", "fake-id");
-                keywords.put("hb_pb", "0.50");
-                listener.onDemandReady(keywords);
-            }
+
         }
 
         @Override
         public void stopRequest() {
 
+        }
+    }
+
+    class RequestRunnable implements Runnable {
+        private NewDemandAdapter demandAdapter;
+        private DEMAND_STATUS demandStatus;
+        private Runnable timeOutRunnable;
+
+        RequestRunnable() {
+            this.demandAdapter = new NewPrebidServerAdapter();
+            this.demandStatus = DEMAND_STATUS.NOT_STARTED;
+            this.timeOutRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    if (demandStatus != DEMAND_STATUS.RESPONDED) {
+                        cancelRequest();
+                        notifyListener(NewResultCode.TIME_OUT);
+                    }
+                }
+            };
+        }
+
+        void cancelRequest() {
+            this.demandAdapter.stopRequest();
+            demandStatus = DEMAND_STATUS.CANCELLED;
+        }
+
+        @Override
+        public void run() {
+            // reset state
+            demandStatus = DEMAND_STATUS.NOT_STARTED;
+            handler.removeCallbacks(timeOutRunnable);
+            lastFetchTime = System.currentTimeMillis();
+            // check input values
+            Context context = weakReference.get();
+            if (TextUtils.isEmpty(configId) || context == null) {
+                notifyListener(NewResultCode.INVALID_REQUEST);
+                return;
+            }
+            if (adType == AdType.BANNER) {
+                if (sizes == null || sizes.isEmpty()) {
+                    notifyListener(NewResultCode.INVALID_REQUEST);
+                    return;
+                }
+            }
+            // make actual demand request
+            // by default use server side cache, use local cache for DFP
+            RequestParams requestParams = new RequestParams(configId, adType, sizes, false);
+            if (adObject.getClass() == Util.getClassFromString("com.google.android.gms.ads.doubleclick.PublisherAdRequest")) {
+                requestParams = new RequestParams(configId, adType, sizes, true);
+            }
+            this.demandAdapter.requestDemand(context, requestParams, new NewDemandAdapter.NewDemandAdapterListener() {
+                @Override
+                public void onDemandReady(final HashMap<String, String> demand) {
+                    if (demandStatus != DEMAND_STATUS.CANCELLED && demandStatus != DEMAND_STATUS.RESPONDED) {
+                        NewAdUnit.apply(demand, NewDemandFetcher.this.adObject);
+                        notifyListener(NewResultCode.SUCCESS);
+                        demandStatus = DEMAND_STATUS.RESPONDED;
+                    }
+                }
+
+                @Override
+                public void onDemandFailed(NewResultCode resultCode) {
+                    if (demandStatus != DEMAND_STATUS.CANCELLED && demandStatus != DEMAND_STATUS.RESPONDED) {
+                        notifyListener(resultCode);
+                        demandStatus = DEMAND_STATUS.RESPONDED;
+                    }
+                }
+            });
+            demandStatus = DEMAND_STATUS.REQUESTED;
+            // cancel request after timeout
+            handler.postDelayed(timeOutRunnable, NewPrebid.getTimeOut());
+            if (state == STATE.AUTO_REFRESH) {
+                handler.postDelayed(this, period * 1000);
+            }
         }
     }
 }

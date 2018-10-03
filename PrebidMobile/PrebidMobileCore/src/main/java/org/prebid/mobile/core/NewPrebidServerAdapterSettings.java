@@ -1,4 +1,4 @@
-package org.prebid.mobile.prebidserver.internal;
+package org.prebid.mobile.core;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -13,7 +13,7 @@ import android.webkit.WebView;
 
 import java.util.Locale;
 
-public class Settings {
+public class NewPrebidServerAdapterSettings {
     public static final String TAG = "PrebidServer";
     public static final String AN_UUID = "uuid2";
     public static final String COOKIE_HEADER = "Cookie";
@@ -103,7 +103,7 @@ public class Settings {
     }
 
     public static synchronized void setConnectionTimeOutMillis(int timeOutMillis) {
-        Settings.connectionTimeOutMillis = timeOutMillis;
+        NewPrebidServerAdapterSettings.connectionTimeOutMillis = timeOutMillis;
     }
 
     public static synchronized int getMCC() {
@@ -111,7 +111,7 @@ public class Settings {
     }
 
     public static synchronized void setMCC(int mcc) {
-        Settings.mcc = mcc;
+        NewPrebidServerAdapterSettings.mcc = mcc;
     }
 
     public static synchronized int getMNC() {
@@ -119,7 +119,7 @@ public class Settings {
     }
 
     public static synchronized void setMNC(int mnc) {
-        Settings.mnc = mnc;
+        NewPrebidServerAdapterSettings.mnc = mnc;
     }
 
     public static synchronized String getCarrierName() {
@@ -127,7 +127,7 @@ public class Settings {
     }
 
     public static synchronized void setCarrierName(String carrierName) {
-        Settings.carrierName = carrierName;
+        NewPrebidServerAdapterSettings.carrierName = carrierName;
     }
 
 }

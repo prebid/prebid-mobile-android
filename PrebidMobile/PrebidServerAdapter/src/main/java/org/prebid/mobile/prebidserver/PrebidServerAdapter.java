@@ -408,7 +408,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 }
                 device.put(Settings.REQUEST_CONNECTION_TYPE, connection_type);
             }
-            // Location Settings
+            // Location NewPrebidServerAdapterSettings
             Double lat, lon;
             Integer locDataAge, locDataPrecision;
             Location lastLocation = null;

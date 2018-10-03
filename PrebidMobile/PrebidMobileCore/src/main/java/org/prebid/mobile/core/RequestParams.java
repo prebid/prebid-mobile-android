@@ -7,8 +7,9 @@ public class RequestParams {
     private String configId = "";
     private AdType adType = AdType.BANNER;
     private ArrayList<AdSize> sizes = new ArrayList<>();
+    private boolean localCache = false;
 
-    RequestParams(String configId, AdType adType, ArrayList<AdSize> sizes) {
+    RequestParams(String configId, AdType adType, ArrayList<AdSize> sizes, boolean localCache) {
         this.configId = configId;
         this.adType = adType;
         if (this.adType.equals(AdType.INTERSTITIAL)) {
@@ -16,6 +17,7 @@ public class RequestParams {
         } else {
             this.sizes = sizes;
         }
+        this.localCache = localCache;
     }
 
     public String getConfigId() {
@@ -30,4 +32,7 @@ public class RequestParams {
         return this.sizes;
     }
 
+    public boolean useLocalCache() {
+        return localCache;
+    }
 }

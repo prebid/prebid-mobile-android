@@ -21,6 +21,10 @@ public enum NewResultCode {
      */
     INTERNAL_ERROR,
     /**
+     * The ad request took longer than set time out
+     */
+    TIME_OUT,
+    /**
      * No bids available from demand source
      */
     NO_BIDS
