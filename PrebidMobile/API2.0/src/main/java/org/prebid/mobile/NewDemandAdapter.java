@@ -1,4 +1,4 @@
-package org.prebid.mobile.core;
+package org.prebid.mobile;
 
 import android.content.Context;
 

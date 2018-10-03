@@ -1,4 +1,4 @@
-package org.prebid.mobile.core;
+package org.prebid.mobile;
 
 
 import android.content.Context;
@@ -137,18 +137,18 @@ public class NewPrebidServerAdapter extends AsyncTask<Object, Object, JSONObject
 
     String getHost() {
         String host = null;
-        switch (Prebid.getHost()) {
+        switch (NewPrebid.getHost()) {
             case APPNEXUS:
-                host = (Prebid.isSecureConnection()) ? Prebid.Host.APPNEXUS.getSecureUrl() :
-                        Prebid.Host.APPNEXUS.getNonSecureUrl();
+                host = (NewPrebid.shouldUseSecureConnection()) ? NewPrebid.Host.APPNEXUS.getSecureUrl() :
+                        NewPrebid.Host.APPNEXUS.getNonSecureUrl();
                 break;
             case RUBICON:
-                host = (Prebid.isSecureConnection()) ? Prebid.Host.RUBICON.getSecureUrl() :
-                        Prebid.Host.RUBICON.getNonSecureUrl();
+                host = (NewPrebid.shouldUseSecureConnection()) ? NewPrebid.Host.RUBICON.getSecureUrl() :
+                        NewPrebid.Host.RUBICON.getNonSecureUrl();
                 break;
             case CUSTOM:
-                host = (Prebid.isSecureConnection()) ? Prebid.Host.CUSTOM.getSecureUrl() :
-                        Prebid.Host.CUSTOM.getNonSecureUrl();
+                host = (NewPrebid.shouldUseSecureConnection()) ? NewPrebid.Host.CUSTOM.getSecureUrl() :
+                        NewPrebid.Host.CUSTOM.getNonSecureUrl();
         }
         return host;
     }
@@ -285,7 +285,7 @@ public class NewPrebidServerAdapter extends AsyncTask<Object, Object, JSONObject
                 prebid.put("cache", cache);
             }
             JSONObject storedRequest = new JSONObject();
-            storedRequest.put("id", Prebid.getAccountId());
+            storedRequest.put("id", NewPrebid.getAccountId());
             prebid.put("storedrequest", storedRequest);
             JSONObject targetingEmpty = new JSONObject();
             prebid.put("targeting", targetingEmpty);
@@ -523,7 +523,7 @@ public class NewPrebidServerAdapter extends AsyncTask<Object, Object, JSONObject
             }
             app.put("privacypolicy", TargetingParams.getPrivacyPolicy());
             JSONObject publisher = new JSONObject();
-            publisher.put("id", Prebid.getAccountId());
+            publisher.put("id", NewPrebid.getAccountId());
             app.put("publisher", publisher);
             JSONObject prebid = new JSONObject();
             prebid.put("source", "prebid-mobile");

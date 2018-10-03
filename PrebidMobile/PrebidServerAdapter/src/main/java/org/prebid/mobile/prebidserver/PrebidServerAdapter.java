@@ -85,16 +85,13 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
         String host = null;
         switch (Prebid.getHost()) {
             case APPNEXUS:
-                host = (Prebid.isSecureConnection()) ? Prebid.Host.APPNEXUS.getSecureUrl() :
-                        Prebid.Host.APPNEXUS.getNonSecureUrl();
+                host = (Prebid.isSecureConnection()) ? Settings.APPNEXUS_REQUEST_URL_SECURE :
+                        Settings.APPNEXUS_REQUEST_URL_NON_SECURE;
                 break;
             case RUBICON:
-                host = (Prebid.isSecureConnection()) ? Prebid.Host.RUBICON.getSecureUrl() :
-                        Prebid.Host.RUBICON.getNonSecureUrl();
+                host = (Prebid.isSecureConnection()) ? Settings.RUBICON_REQUEST_URL_SECURE :
+                        Settings.RUBICON_REQUEST_URL_NON_SECURE;
                 break;
-            case CUSTOM:
-                host = (Prebid.isSecureConnection()) ? Prebid.Host.CUSTOM.getSecureUrl() :
-                        Prebid.Host.CUSTOM.getNonSecureUrl();
         }
         return host;
     }
@@ -408,7 +405,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                 }
                 device.put(Settings.REQUEST_CONNECTION_TYPE, connection_type);
             }
-            // Location NewPrebidServerAdapterSettings
+            // Location Settings
             Double lat, lon;
             Integer locDataAge, locDataPrecision;
             Location lastLocation = null;

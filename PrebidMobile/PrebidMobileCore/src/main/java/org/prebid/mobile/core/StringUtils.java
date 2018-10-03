@@ -1,46 +1,16 @@
 package org.prebid.mobile.core;
 
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Random;
 
-class Util {
+/**
+ * Utility class to host small essentials string routines.
+ */
+final class StringUtils {
 
-    static final Random RANDOM = new Random();
-
-    private Util() {
-
+    private StringUtils() {
     }
 
-    static Class getClassFromString(String className) {
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-        }
-        return null;
-    }
-
-    static Object callMethodOnObject(Object object, String methodName, Object... params) {
-        try {
-            int len = params.length;
-            Class<?>[] classes = new Class[len];
-            for (int i = 0; i < len; i++) {
-                classes[i] = params[i].getClass();
-            }
-            Method method = object.getClass().getMethod(methodName, classes);
-            return method.invoke(object, params);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+    private static final Random RANDOM = new Random();
 
     /**
      * Creates a random lowercase string whose length is the number
@@ -52,7 +22,7 @@ class Util {
      * @param count the length of random string to create
      * @return the random string
      */
-    static String randomLowercaseAlphabetic(int count) {
+    public static String randomLowercaseAlphabetic(int count) {
         return randomLowercaseAlphabetic(count, RANDOM);
     }
 
@@ -93,7 +63,7 @@ class Util {
      * @param str String to escape values in, may be null
      * @return String with escaped values, {@code null} if null string input
      */
-    static String escapeEcmaScript(String str) {
+    public static String escapeEcmaScript(String str) {
         if (str == null) return null;
 
         StringBuilder sb = new StringBuilder(str.length() + 50); // optimistic initial size

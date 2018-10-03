@@ -37,10 +37,10 @@ public class BidResponse {
     //endregion
 
     //region Constructor
-    public BidResponse(Double cpm, String cacheId) {
+    public BidResponse(Double cpm, String creative) {
         this.createdTime = System.currentTimeMillis();
         this.cpm = cpm;
-        this.creative = cacheId;
+        this.creative = creative;
     }
     //endregion
 
@@ -91,7 +91,7 @@ public class BidResponse {
      *
      * @param expiryTime in milliseconds
      */
-    void setExpiryTime(long expiryTime) {
+    public void setExpiryTime(long expiryTime) {
         this.expiryTime = expiryTime;
     }
 

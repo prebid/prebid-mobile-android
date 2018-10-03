@@ -16,11 +16,11 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
+import org.prebid.mobile.NewBannerAdUnit;
+import org.prebid.mobile.NewOnCompleteListener;
+import org.prebid.mobile.NewPrebid;
+import org.prebid.mobile.NewResultCode;
 import org.prebid.mobile.core.LogUtil;
-import org.prebid.mobile.core.NewBannerAdUnit;
-import org.prebid.mobile.core.NewOnCompleteListener;
-import org.prebid.mobile.core.NewPrebid;
-import org.prebid.mobile.core.NewResultCode;
 import org.prebid.mobile.core.Prebid;
 import org.prebid.mobile.demoapp.Constants;
 import org.prebid.mobile.demoapp.R;
@@ -130,22 +130,9 @@ public class DFPBannerFragment extends Fragment implements Prebid.OnAttachComple
         dfpAdView.setAdListener(adListener);
         adFrame.addView(dfpAdView);
         //region Prebid Mobile API usage
-        NewPrebid.setAccountId("your-account-id");
-        NewPrebid.setHost(Prebid.Host.APPNEXUS);
-        NewPrebid.setShouldUseSecureConnection(true);
-        NewPrebid.setTimeOUt(600);
         final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
         final PublisherAdRequest request = builder.build();
-        NewBannerAdUnit bannerAdUnit = new NewBannerAdUnit("random-id");
-        bannerAdUnit.addSize(300, 250);
-        bannerAdUnit.fetchDemand(request, DFPBannerFragment.this.getContext(), new NewOnCompleteListener() {
-            @Override
-            public void onComplete(NewResultCode resultCode) {
-                Log.d(NewPrebid.TAG, resultCode.name());
-                dfpAdView.loadAd(request);
-            }
-        });
-//        Prebid.attachBidsWhenReady(request, Constants.BANNER_300x250, this, waitTime, this.getActivity());
+        Prebid.attachBidsWhenReady(request, Constants.BANNER_300x250, this, waitTime, this.getActivity());
         //endregion
 
     }

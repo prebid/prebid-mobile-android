@@ -21,6 +21,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Pair;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -50,37 +52,8 @@ public class Prebid {
     }
 
     public enum Host {
-        APPNEXUS("http://prebid.adnxs.com/pbs/v1/openrtb2/auction", "https://prebid.adnxs.com/pbs/v1/openrtb2/auction"),
-        RUBICON("http://prebid-server.rubiconproject.com/openrtb2/auction", "https://prebid-server.rubiconproject.com/openrtb2/auction"),
-        CUSTOM("", "");
-
-        private String nonSecureUrl;
-        private String secureUrl;
-
-        Host(String nonSecureUrl, String secureUrl) {
-            this.nonSecureUrl = nonSecureUrl;
-            this.secureUrl = secureUrl;
-        }
-
-        public String getNonSecureUrl() {
-            return this.nonSecureUrl;
-        }
-
-        public String getSecureUrl() {
-            return this.secureUrl;
-        }
-
-        public void setNonSecureUrl(String url) {
-            if (this.equals(CUSTOM)) {
-                this.nonSecureUrl = url;
-            }
-        }
-
-        public void setSecureUrl(String url) {
-            if (this.equals(CUSTOM)) {
-                this.secureUrl = url;
-            }
-        }
+        APPNEXUS,
+        RUBICON
     }
 
     //region Public APIs
@@ -139,9 +112,6 @@ public class Prebid {
         }
         if (host == null)
             throw new PrebidException(PrebidException.PrebidError.NULL_HOST);
-        if (TextUtils.isEmpty(host.getNonSecureUrl()) && TextUtils.isEmpty(host.getSecureUrl())) {
-            throw new PrebidException(PrebidException.PrebidError.EMPTY_HOST_URL);
-        }
         Prebid.host = host;
         // validate ad units and register them
         if (adUnits == null || adUnits.isEmpty()) {
@@ -184,10 +154,10 @@ public class Prebid {
         } else {
             detachUsedBid(adObj);
 
-            if (adObj.getClass() == Util.getClassFromString(MOPUB_ADVIEW_CLASS)
-                    || adObj.getClass() == Util.getClassFromString(MOPUB_INTERSTITIAL_CLASS)) {
+            if (adObj.getClass() == getClassFromString(MOPUB_ADVIEW_CLASS)
+                    || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)) {
                 handleMoPubKeywordsUpdate(adObj, adUnitCode, context);
-            } else if (adObj.getClass() == Util.getClassFromString(DFP_ADREQUEST_CLASS)) {
+            } else if (adObj.getClass() == getClassFromString(DFP_ADREQUEST_CLASS)) {
                 handleDFPCustomTargetingUpdate(adObj, adUnitCode, context);
             }
         }
@@ -195,9 +165,9 @@ public class Prebid {
 
     public static void detachUsedBid(Object adObj) {
         if (adObj != null) {
-            if (adObj.getClass() == Util.getClassFromString(MOPUB_ADVIEW_CLASS)) {
+            if (adObj.getClass() == getClassFromString(MOPUB_ADVIEW_CLASS)) {
                 removeUsedKeywordsForMoPub(adObj);
-            } else if (adObj.getClass() == Util.getClassFromString(DFP_ADREQUEST_CLASS)) {
+            } else if (adObj.getClass() == getClassFromString(DFP_ADREQUEST_CLASS)) {
                 removeUsedCustomTargetingForDFP(adObj);
             }
         }
@@ -215,6 +185,36 @@ public class Prebid {
 
     //endregion
 
+    //region helper methods
+    private static Class getClassFromString(String className) {
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+        }
+        return null;
+    }
+
+    private static Object callMethodOnObject(Object object, String methodName, Object... params) {
+        try {
+            int len = params.length;
+            Class<?>[] classes = new Class[len];
+            for (int i = 0; i < len; i++) {
+                classes[i] = params[i].getClass();
+            }
+            Method method = object.getClass().getMethod(methodName, classes);
+            return method.invoke(object, params);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private static final LinkedList<String> usedKeywordsList = new LinkedList<String>();
 
     private static void handleMoPubKeywordsUpdate(Object adViewObj, String adUnitCode, Context context) {
@@ -226,7 +226,7 @@ public class Prebid {
                 keywords.append(p.first).append(":").append(p.second).append(",");
             }
             String prebidKeywords = keywords.toString();
-            String adViewKeywords = (String) Util.callMethodOnObject(adViewObj, "getKeywords");
+            String adViewKeywords = (String) callMethodOnObject(adViewObj, "getKeywords");
             // retrieve keywords from mopub adview
             if (!TextUtils.isEmpty(adViewKeywords)) {
                 adViewKeywords = prebidKeywords + adViewKeywords;
@@ -238,13 +238,13 @@ public class Prebid {
                 synchronized (usedKeywordsList) {
                     usedKeywordsList.add(prebidKeywords);
                 }
-                Util.callMethodOnObject(adViewObj, "setKeywords", adViewKeywords);
+                callMethodOnObject(adViewObj, "setKeywords", adViewKeywords);
             }
         }
     }
 
     private static void removeUsedKeywordsForMoPub(Object adViewObj) {
-        String adViewKeywords = (String) Util.callMethodOnObject(adViewObj, "getKeywords");
+        String adViewKeywords = (String) callMethodOnObject(adViewObj, "getKeywords");
         if (!TextUtils.isEmpty(adViewKeywords) && !usedKeywordsList.isEmpty()) {
             // Copy used keywords to a temporary list to avoid concurrent modification
             // while iterating through the list
@@ -255,7 +255,7 @@ public class Prebid {
                     tempUsedKeywords.add(usedKeyword);
                 }
             }
-            Util.callMethodOnObject(adViewObj, "setKeywords", adViewKeywords);
+            callMethodOnObject(adViewObj, "setKeywords", adViewKeywords);
 
             for (String string : tempUsedKeywords) {
                 synchronized (usedKeywordsList) {
@@ -269,7 +269,7 @@ public class Prebid {
     private static final Set<String> usedKeywordKeys = new HashSet<String>();
 
     private static void handleDFPCustomTargetingUpdate(Object adRequestObj, String adUnitCode, Context context) {
-        Bundle bundle = (Bundle) Util.callMethodOnObject(adRequestObj, "getCustomTargeting");
+        Bundle bundle = (Bundle) callMethodOnObject(adRequestObj, "getCustomTargeting");
         if (bundle != null) {
             ArrayList<Pair<String, String>> prebidKeywords = BidManager.getKeywordsForAdUnit(adUnitCode, context);
             if (prebidKeywords != null && !prebidKeywords.isEmpty()) {
@@ -283,13 +283,14 @@ public class Prebid {
     }
 
     private static void removeUsedCustomTargetingForDFP(Object adRequestObj) {
-        Bundle bundle = (Bundle) Util.callMethodOnObject(adRequestObj, "getCustomTargeting");
+        Bundle bundle = (Bundle) callMethodOnObject(adRequestObj, "getCustomTargeting");
         if (bundle != null) {
             for (String key : usedKeywordKeys) {
                 bundle.remove(key);
             }
         }
     }
+    //endregion
 
 
     public static String getAccountId() {

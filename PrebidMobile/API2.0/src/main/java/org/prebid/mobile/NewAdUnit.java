@@ -1,4 +1,4 @@
-package org.prebid.mobile.core;
+package org.prebid.mobile;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -156,3 +156,4 @@ public abstract class NewAdUnit {
     }
     // endregion
 }
+

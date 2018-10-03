@@ -5,7 +5,7 @@ android {
     buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
-        applicationId "org.prebid.mobile.demoapp"
+        applicationId "org.prebid.mobile.api2demo"
         minSdkVersion rootProject.minSDKVersion
         targetSdkVersion rootProject.targetSDKVersion
         versionCode rootProject.prebidVersionCode
@@ -29,11 +29,9 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.google.android.gms:play-services-ads:10.2.0'
+    compile 'com.google.android.gms:play-services-ads:16.0.0'
     compile('com.mopub:mopub-sdk:4.15.0@aar') {
         transitive = true
     }
     compile project(":API2.0")
-    compile project(":PrebidMobileCore")
-    compile project(":PrebidServerAdapter")
 }
