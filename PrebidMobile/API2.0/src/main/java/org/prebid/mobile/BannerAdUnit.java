@@ -4,10 +4,10 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
-public class NewBannerAdUnit extends NewAdUnit {
+public class BannerAdUnit extends AdUnit {
     private ArrayList<AdSize> sizes;
 
-    public NewBannerAdUnit(@NonNull String configId) {
+    public BannerAdUnit(@NonNull String configId) {
         super(configId, AdType.BANNER);
         this.sizes = new ArrayList<>();
     }

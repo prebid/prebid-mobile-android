@@ -11,10 +11,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-public abstract class NewAdUnit {
+public abstract class AdUnit {
     private String configId;
-    AdType adType;
-    private static HashSet<NewDemandFetcher> fetcherReference;
+    private AdType adType;
+    private static HashSet<DemandFetcher> fetcherReference;
     private int period;
 
     static {
@@ -22,45 +22,66 @@ public abstract class NewAdUnit {
     }
 
 
-    NewAdUnit(@NonNull String configId, @NonNull AdType adType) {
+    AdUnit(@NonNull String configId, @NonNull AdType adType) {
         this.configId = configId;
         this.adType = adType;
         this.period = 0; // by default no auto refresh
     }
 
     public void setAutoRefreshPeriod(int period) {
+        if (period > 0 && period < 30) {
+            return;
+        }
         this.period = period;
-        for (NewDemandFetcher fetcher : fetcherReference) {
+        for (DemandFetcher fetcher : fetcherReference) {
             fetcher.setPeriod(this.period);
         }
     }
 
-    public void fetchDemand(@NonNull Object adObj, @NonNull Context context, NewOnCompleteListener listener) {
-        NewDemandFetcher fetcher = null;
-        for (NewDemandFetcher tmp : fetcherReference) {
+    public void fetchDemand(@NonNull Object adObj, @NonNull Context context, OnCompleteListener listener) {
+        if (adObj == null) {
+            if (listener != null) {
+                listener.onComplete(ResultCode.INVALID_REQUEST);
+            }
+        }
+        if (TextUtils.isEmpty(configId)) {
+            if (listener != null) {
+                listener.onComplete(ResultCode.INVALID_REQUEST);
+            }
+            return;
+        }
+        ArrayList<AdSize> sizes = null;
+        if (adType == AdType.BANNER) {
+            sizes = ((BannerAdUnit) this).getSizes();
+            if (sizes == null || sizes.isEmpty()) {
+                if (listener != null) {
+                    listener.onComplete(ResultCode.INVALID_REQUEST);
+                }
+                return;
+            }
+        }
+        DemandFetcher fetcher = null;
+        for (DemandFetcher tmp : fetcherReference) {
             if (tmp.getAdObject().equals(adObj)) {
                 fetcher = tmp;
             }
         }
         if (fetcher == null) {
             if (adType == AdType.BANNER) {
-                fetcher = new NewDemandFetcher(adObj, context, listener, configId, ((NewBannerAdUnit) this).getSizes(), adType);
+                fetcher = new DemandFetcher(adObj, context);
             } else {
-                fetcher = new NewDemandFetcher(adObj, context, listener, configId, null, adType);
+                fetcher = new DemandFetcher(adObj, context);
             }
         }
+        RequestParams requestParams = new RequestParams(configId, adType, sizes, false);
+        if (adObj.getClass() == Util.getClassFromString("com.google.android.gms.ads.doubleclick.PublisherAdRequest")) {
+            requestParams = new RequestParams(configId, adType, sizes, true);
+        }
+        fetcher.setRequestParams(requestParams);
+        fetcher.setListener(listener);
         fetcher.setPeriod(period);
         fetcherReference.add(fetcher);
         fetcher.start();
-    }
-
-    public void stopDemand(@NonNull Object adObj) {
-        for (NewDemandFetcher tmp : fetcherReference) {
-            if (tmp.getAdObject().equals(adObj)) {
-                tmp.stop();
-                fetcherReference.remove(tmp);
-            }
-        }
     }
 
     // region Helper methods

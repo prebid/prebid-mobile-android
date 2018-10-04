@@ -3,7 +3,6 @@ package org.prebid.mobile.demoapp.dfpdemofragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +15,6 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
-import org.prebid.mobile.NewBannerAdUnit;
-import org.prebid.mobile.NewOnCompleteListener;
-import org.prebid.mobile.NewPrebid;
-import org.prebid.mobile.NewResultCode;
 import org.prebid.mobile.core.LogUtil;
 import org.prebid.mobile.core.Prebid;
 import org.prebid.mobile.demoapp.Constants;

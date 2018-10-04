@@ -13,7 +13,7 @@ import android.webkit.WebView;
 
 import java.util.Locale;
 
-public class NewPrebidServerAdapterSettings {
+public class PrebidServerAdapterSettings {
     public static final String TAG = "PrebidServer";
     public static final String AN_UUID = "uuid2";
     public static final String COOKIE_HEADER = "Cookie";
@@ -48,7 +48,7 @@ public class NewPrebidServerAdapterSettings {
     public static final String REQUEST_OS_VERSION = "osv";
     public static final int REQUEST_KEY_LENGTH_MAX = 20;
 
-    // NewPrebidServerAdapterSettings
+    // PrebidServerAdapterSettings
     public static final String language = Locale.getDefault().getLanguage();
     public static final String deviceMake = Build.MANUFACTURER;
     public static final String deviceModel = Build.MODEL;
@@ -103,7 +103,7 @@ public class NewPrebidServerAdapterSettings {
     }
 
     public static synchronized void setConnectionTimeOutMillis(int timeOutMillis) {
-        NewPrebidServerAdapterSettings.connectionTimeOutMillis = timeOutMillis;
+        PrebidServerAdapterSettings.connectionTimeOutMillis = timeOutMillis;
     }
 
     public static synchronized int getMCC() {
@@ -111,7 +111,7 @@ public class NewPrebidServerAdapterSettings {
     }
 
     public static synchronized void setMCC(int mcc) {
-        NewPrebidServerAdapterSettings.mcc = mcc;
+        PrebidServerAdapterSettings.mcc = mcc;
     }
 
     public static synchronized int getMNC() {
@@ -119,7 +119,7 @@ public class NewPrebidServerAdapterSettings {
     }
 
     public static synchronized void setMNC(int mnc) {
-        NewPrebidServerAdapterSettings.mnc = mnc;
+        PrebidServerAdapterSettings.mnc = mnc;
     }
 
     public static synchronized String getCarrierName() {
@@ -127,7 +127,7 @@ public class NewPrebidServerAdapterSettings {
     }
 
     public static synchronized void setCarrierName(String carrierName) {
-        NewPrebidServerAdapterSettings.carrierName = carrierName;
+        PrebidServerAdapterSettings.carrierName = carrierName;
     }
 
 }

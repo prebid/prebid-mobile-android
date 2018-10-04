@@ -1,6 +1,6 @@
 package org.prebid.mobile;
 
-public enum NewResultCode {
+public enum ResultCode {
     /**
      * The attaching keywords was successful, which means
      * there was demand and the demand was set on the ad object.

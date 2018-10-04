@@ -33,7 +33,6 @@ dependencies {
     compile('com.mopub:mopub-sdk:4.15.0@aar') {
         transitive = true
     }
-    compile project(":API2.0")
     compile project(":PrebidMobileCore")
     compile project(":PrebidServerAdapter")
 }

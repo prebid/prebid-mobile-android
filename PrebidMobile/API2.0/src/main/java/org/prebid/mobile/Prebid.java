@@ -1,7 +1,7 @@
 package org.prebid.mobile;
 
-public class NewPrebid {
-    private NewPrebid() {
+public class Prebid {
+    private Prebid() {
     }
 
     public enum Host {
@@ -43,7 +43,7 @@ public class NewPrebid {
     private static String accountId = "";
 
     public static void setAccountId(String accountId) {
-        NewPrebid.accountId = accountId;
+        Prebid.accountId = accountId;
     }
 
     public static String getAccountId() {
@@ -53,7 +53,7 @@ public class NewPrebid {
     private static Host host = Host.APPNEXUS;
 
     public static void setHost(Host host) {
-        NewPrebid.host = host;
+        Prebid.host = host;
     }
 
     public static Host getHost() {
@@ -63,7 +63,7 @@ public class NewPrebid {
     private static boolean shouldUseSecureConnection = false;
 
     public static void setShouldUseSecureConnection(boolean should) {
-        NewPrebid.shouldUseSecureConnection = should;
+        Prebid.shouldUseSecureConnection = should;
     }
 
     public static boolean shouldUseSecureConnection() {
@@ -73,10 +73,10 @@ public class NewPrebid {
     private static int timeOut = 500; // by default wait 500 milliseconds for response to come back
 
     public static void setTimeOUt(int timeOut) {
-        NewPrebid.timeOut = timeOut;
+        Prebid.timeOut = timeOut;
     }
 
     public static int getTimeOut() {
-        return NewPrebid.timeOut;
+        return Prebid.timeOut;
     }
 }
