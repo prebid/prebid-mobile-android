@@ -14,12 +14,12 @@ import java.util.UUID;
 class DemandFetcher {
     enum STATE {
         STOPPED,
-        SINGLE_REQUEST,
-        AUTO_REFRESH
+        RUNNING,
+        DESTROYED
     }
 
     private STATE state;
-    private int period;
+    private int periodMillis;
     private Object adObject;
     private OnCompleteListener listener;
     private Handler fetcherHandler;
@@ -31,7 +31,7 @@ class DemandFetcher {
 
     DemandFetcher(@NonNull Object adObj, @NonNull Context context) {
         this.state = STATE.STOPPED;
-        this.period = 0;
+        this.periodMillis = 0;
         this.adObject = adObj;
         HandlerThread fetcherThread = new HandlerThread("FetcherThread");
         fetcherThread.start();
@@ -49,16 +49,16 @@ class DemandFetcher {
     }
 
 
-    void setPeriod(int period) {
-        boolean periodChanged = this.period != period;
-        this.period = period;
+    void setPeriodMillis(int periodMillis) {
+        boolean periodChanged = this.periodMillis != periodMillis;
+        this.periodMillis = periodMillis;
         if ((periodChanged) && !state.equals(STATE.STOPPED)) {
             stop();
             start();
         }
     }
 
-    void stop() {
+    private void stop() {
         this.requestRunnable.cancelRequest();
         this.fetcherHandler.removeCallbacks(requestRunnable);
         // cancel existing requests
@@ -69,30 +69,31 @@ class DemandFetcher {
     void start() {
         switch (state) {
             case STOPPED:
-                if (this.period <= 0) {
+                if (this.periodMillis <= 0) {
                     // start a single request
                     fetcherHandler.post(requestRunnable);
-                    state = STATE.SINGLE_REQUEST;
                 } else {
                     // Start recurring ad requests
-                    final int msPeriod = period; // refresh period
+                    final int msPeriod = periodMillis; // refresh periodMillis
                     final long stall; // delay millis for the initial request
                     if (timePausedAt != -1 && lastFetchTime != -1) {
-                        //Clamp the stall between 0 and the period. Ads should never be requested on
-                        //a delay longer than the period
+                        //Clamp the stall between 0 and the periodMillis. Ads should never be requested on
+                        //a delay longer than the periodMillis
                         stall = Math.min(msPeriod, Math.max(0, msPeriod - (timePausedAt - lastFetchTime)));
                     } else {
                         stall = 0;
                     }
                     fetcherHandler.postDelayed(requestRunnable, stall * 1000);
-                    state = STATE.AUTO_REFRESH;
+                }
+                state = STATE.RUNNING;
+                break;
+            case RUNNING:
+                if (this.periodMillis <= 0) {
+                    // start a single request
+                    fetcherHandler.post(requestRunnable);
                 }
                 break;
-            case SINGLE_REQUEST:
-                // start a single request
-                fetcherHandler.post(requestRunnable);
-                break;
-            case AUTO_REFRESH:
+            case DESTROYED:
                 break;
         }
     }
@@ -101,15 +102,32 @@ class DemandFetcher {
         return this.adObject;
     }
 
+    void destroy() {
+        this.adObject = null;
+        this.listener = null;
+        this.requestRunnable.cancelRequest();
+        this.fetcherHandler.removeCallbacks(requestRunnable);
+        this.requestRunnable = null;
+        state = STATE.DESTROYED;
+    }
+
     private void notifyListener(final ResultCode resultCode) {
         if (listener != null) {
+            final OnCompleteListener listenerFinal = listener;
             Handler uiThread = new Handler(Looper.getMainLooper());
             uiThread.post(new Runnable() {
                 @Override
                 public void run() {
-                    listener.onComplete(resultCode);
+                    listenerFinal.onComplete(resultCode);
+
                 }
             });
+        }
+        // for single request, if done, finish current fetcher,
+        // let ad unit create a new fetcher for next request
+        if (periodMillis <= 0) {
+            destroy();
+            AdUnit.removeFetcher(DemandFetcher.this);
         }
     }
 
@@ -169,8 +187,8 @@ class DemandFetcher {
                     }, auctionIdFinal);
                 }
             });
-            if (state == STATE.AUTO_REFRESH) {
-                fetcherHandler.postDelayed(this, period * 1000);
+            if (periodMillis > 0) {
+                fetcherHandler.postDelayed(this, periodMillis);
             }
             while (!finished) {
                 long currentTime = System.currentTimeMillis();

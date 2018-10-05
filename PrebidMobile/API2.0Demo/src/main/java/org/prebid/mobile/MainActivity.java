@@ -93,10 +93,12 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+
+
     }
 
     public void showAd(View view) {
-        Intent demoActivityIntent = new Intent(this, DemoActivity.class);
+        Intent demoActivityIntent = new Intent(this, MemoryTestActivity.class);
         demoActivityIntent.putExtra(Constants.AD_SERVER_NAME, adServer);
         demoActivityIntent.putExtra(Constants.AD_TYPE_NAME, adType);
         if (adType.equals("Banner")) {
@@ -104,6 +106,4 @@ public class MainActivity extends AppCompatActivity {
         }
         startActivity(demoActivityIntent);
     }
-
-
 }

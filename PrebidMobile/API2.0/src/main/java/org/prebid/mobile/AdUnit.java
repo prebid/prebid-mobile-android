@@ -14,36 +14,35 @@ import java.util.LinkedList;
 public abstract class AdUnit {
     private String configId;
     private AdType adType;
-    private static HashSet<DemandFetcher> fetcherReference;
-    private int period;
+    private int periodMillis;
+    private final static HashSet<DemandFetcher> fetcherReference;
+    private static final HashSet<String> reservedKeys;
+    private static final int MoPubQueryStringLimit = 4000;
+
 
     static {
         fetcherReference = new HashSet<>();
+        reservedKeys = new HashSet<>();
     }
 
 
     AdUnit(@NonNull String configId, @NonNull AdType adType) {
         this.configId = configId;
         this.adType = adType;
-        this.period = 0; // by default no auto refresh
+        this.periodMillis = 0; // by default no auto refresh
     }
 
-    public void setAutoRefreshPeriod(int period) {
-        if (period > 0 && period < 30) {
+    public void setAutoRefreshPeriodMillis(int periodMillis) {
+        if (this.periodMillis > 0 && this.periodMillis < 10000) { // todo change it to 30000 for production
             return;
         }
-        this.period = period;
+        this.periodMillis = periodMillis;
         for (DemandFetcher fetcher : fetcherReference) {
-            fetcher.setPeriod(this.period);
+            fetcher.setPeriodMillis(this.periodMillis);
         }
     }
 
     public void fetchDemand(@NonNull Object adObj, @NonNull Context context, OnCompleteListener listener) {
-        if (adObj == null) {
-            if (listener != null) {
-                listener.onComplete(ResultCode.INVALID_REQUEST);
-            }
-        }
         if (TextUtils.isEmpty(configId)) {
             if (listener != null) {
                 listener.onComplete(ResultCode.INVALID_REQUEST);
@@ -79,14 +78,31 @@ public abstract class AdUnit {
         }
         fetcher.setRequestParams(requestParams);
         fetcher.setListener(listener);
-        fetcher.setPeriod(period);
-        fetcherReference.add(fetcher);
+        fetcher.setPeriodMillis(periodMillis);
+        synchronized (fetcherReference) {
+            fetcherReference.add(fetcher);
+        }
         fetcher.start();
     }
 
-    // region Helper methods
-    private static HashSet<String> reservedKeys;
-    private static final int MoPubQueryStringLimit = 4000;
+    public static void stopAutoRefersh(@NonNull Object object) {
+        synchronized (fetcherReference) {
+            ArrayList<DemandFetcher> fetchersToRemove = new ArrayList<>();
+            for (DemandFetcher fetcher : fetcherReference) {
+                if (fetcher.getAdObject().equals(object)) {
+                    fetcher.destroy();
+                    fetchersToRemove.add(fetcher);
+                }
+            }
+            fetcherReference.removeAll(fetchersToRemove);
+        }
+    }
+
+    static void removeFetcher(DemandFetcher demandFetcher) {
+        synchronized (fetcherReference) {
+            fetcherReference.remove(demandFetcher);
+        }
+    }
 
     static void apply(HashMap<String, String> bids, Object adObj) {
         if (adObj == null) return;
@@ -135,9 +151,6 @@ public abstract class AdUnit {
     }
 
     private static void addReservedKeys(String key) {
-        if (reservedKeys == null) {
-            reservedKeys = new HashSet<>();
-        }
         synchronized (reservedKeys) {
             reservedKeys.add(key);
         }
@@ -175,6 +188,5 @@ public abstract class AdUnit {
             }
         }
     }
-    // endregion
 }
 

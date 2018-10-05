@@ -3,6 +3,7 @@ package org.prebid.mobile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
@@ -11,7 +12,6 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
-import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubView;
 
 import static org.prebid.mobile.Constants.MOPUB_BANNER_ADUNIT_ID_300x250;
@@ -70,8 +70,9 @@ public class DemoActivity extends AppCompatActivity {
         final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
         final PublisherAdRequest request = builder.build();
         //region Prebid Mobile API 2.0 usage
-        BannerAdUnit adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND);
+        final BannerAdUnit adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND);
         adUnit.addSize(width, height);
+        adUnit.setAutoRefreshPeriodMillis(30000);
         adUnit.fetchDemand(request, this, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
@@ -98,14 +99,13 @@ public class DemoActivity extends AppCompatActivity {
         adFrame.addView(adView);
         final BannerAdUnit adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND);
         adUnit.addSize(width, height);
-        adUnit.setAutoRefreshPeriod(30);
+        adUnit.setAutoRefreshPeriodMillis(3000);
         adUnit.fetchDemand(adView, this, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
                 adView.loadAd();
             }
         });
-
     }
 
     void createMoPubInterstitial() {
