@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
 import android.webkit.WebView;
+import android.webkit.WebSettings;
 
 import java.util.Locale;
 
@@ -69,18 +70,26 @@ public class Settings {
 
     public static synchronized void update(final Context context) {
         if (userAgent == null) {
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        WebView wv = new WebView(context);
-                        userAgent = wv.getSettings().getUserAgentString();
-                    } catch (AndroidRuntimeException e) {
-                        userAgent = "unavailable";
-                    }
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                try {
+                    userAgent = WebSettings.getDefaultUserAgent(context);
+                } catch (AndroidRuntimeException e) {
+                    userAgent = "unavailable";
                 }
-            });
+            } else {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                                WebView wv = new WebView(context);
+                                userAgent = wv.getSettings().getUserAgentString();
+                            } catch (AndroidRuntimeException e) {
+                                userAgent = "unavailable";
+                            }
+                    }
+                });
+            }
         }
         if (TextUtils.isEmpty(pkgVersion)) {
             try {
