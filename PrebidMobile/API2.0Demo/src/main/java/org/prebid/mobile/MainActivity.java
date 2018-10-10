@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showAd(View view) {
-        Intent demoActivityIntent = new Intent(this, MemoryTestActivity.class);
+        Intent demoActivityIntent = new Intent(this, DemoActivity.class);
         demoActivityIntent.putExtra(Constants.AD_SERVER_NAME, adServer);
         demoActivityIntent.putExtra(Constants.AD_TYPE_NAME, adType);
         if (adType.equals("Banner")) {

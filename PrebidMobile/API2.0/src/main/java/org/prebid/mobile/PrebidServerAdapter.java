@@ -91,7 +91,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                 } // todo still pass cookie if limit ad tracking?
 
                 conn.setRequestMethod("POST");
-                conn.setConnectTimeout(Prebid.getTimeOut());
+                conn.setConnectTimeout(PrebidMobile.getTimeout());
 
                 // Add post data
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
@@ -164,18 +164,18 @@ public class PrebidServerAdapter implements DemandAdapter {
 
         private String getHost() {
             String host = null;
-            switch (Prebid.getHost()) {
+            switch (PrebidMobile.getHost()) {
                 case APPNEXUS:
-                    host = (Prebid.shouldUseSecureConnection()) ? Prebid.Host.APPNEXUS.getSecureUrl() :
-                            Prebid.Host.APPNEXUS.getNonSecureUrl();
+                    host = (PrebidMobile.shouldUseSecureConnection()) ? PrebidMobile.Host.APPNEXUS.getSecureUrl() :
+                            PrebidMobile.Host.APPNEXUS.getNonSecureUrl();
                     break;
                 case RUBICON:
-                    host = (Prebid.shouldUseSecureConnection()) ? Prebid.Host.RUBICON.getSecureUrl() :
-                            Prebid.Host.RUBICON.getNonSecureUrl();
+                    host = (PrebidMobile.shouldUseSecureConnection()) ? PrebidMobile.Host.RUBICON.getSecureUrl() :
+                            PrebidMobile.Host.RUBICON.getNonSecureUrl();
                     break;
                 case CUSTOM:
-                    host = (Prebid.shouldUseSecureConnection()) ? Prebid.Host.CUSTOM.getSecureUrl() :
-                            Prebid.Host.CUSTOM.getNonSecureUrl();
+                    host = (PrebidMobile.shouldUseSecureConnection()) ? PrebidMobile.Host.CUSTOM.getSecureUrl() :
+                            PrebidMobile.Host.CUSTOM.getNonSecureUrl();
             }
             return host;
         }
@@ -282,7 +282,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                 }
                 // add user
                 // todo should we provide api for developers to pass in user's location (zip, city, address etc, not real time location)
-                JSONObject user = getUserObject(context);
+                JSONObject user = getUserObject(requestParams, context);
                 if (user != null && user.length() > 0) {
                     postData.put(PrebidServerAdapterSettings.REQUEST_USER, user);
                 }
@@ -312,7 +312,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                     prebid.put("cache", cache);
                 }
                 JSONObject storedRequest = new JSONObject();
-                storedRequest.put("id", Prebid.getAccountId());
+                storedRequest.put("id", PrebidMobile.getAccountId());
                 prebid.put("storedrequest", storedRequest);
                 JSONObject targetingEmpty = new JSONObject();
                 prebid.put("targeting", targetingEmpty);
@@ -332,7 +332,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                 JSONObject imp = new JSONObject();
                 JSONObject ext = new JSONObject();
                 imp.put("id", "PrebidMobile");
-                if (Prebid.shouldUseSecureConnection()) {
+                if (PrebidMobile.shouldUseSecureConnection()) {
                     imp.put("secure", 1);
                 }
                 if (requestParams.getAdType().equals(AdType.INTERSTITIAL)) {
@@ -550,7 +550,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                 }
                 app.put("privacypolicy", TargetingParams.getPrivacyPolicy());
                 JSONObject publisher = new JSONObject();
-                publisher.put("id", Prebid.getAccountId());
+                publisher.put("id", PrebidMobile.getAccountId());
                 app.put("publisher", publisher);
                 JSONObject prebid = new JSONObject();
                 prebid.put("source", "prebid-mobile");
@@ -564,7 +564,7 @@ public class PrebidServerAdapter implements DemandAdapter {
 
         }
 
-        private JSONObject getUserObject(Context context) {
+        private JSONObject getUserObject(RequestParams requestParams, Context context) {
             JSONObject user = new JSONObject();
             try {
                 if (TargetingParams.getYearOfBirth() > 0) {
@@ -585,9 +585,11 @@ public class PrebidServerAdapter implements DemandAdapter {
                 }
                 user.put("gender", g);
                 StringBuilder builder = new StringBuilder();
-                ArrayList<String> keywords = TargetingParams.getUserKeywords();
-                for (String key : keywords) {
-                    builder.append(key).append(",");
+                HashMap<String, String> keywords = requestParams.getKeywords();
+                for (String key : keywords.keySet()) {
+                    // todo validate this logic
+                    String keyword = key + "=" + keywords.get(key);
+                    builder.append(keyword).append(",");
                 }
                 String finalKeywords = builder.toString();
                 if (!TextUtils.isEmpty(finalKeywords)) {

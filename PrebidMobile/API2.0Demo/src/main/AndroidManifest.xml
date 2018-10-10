@@ -17,7 +17,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".DemoActivity" />
-        <activity android:name=".MemoryTestActivity" />
         <!--MoPub Activities-->
         <activity
             android:name="com.mopub.mobileads.MoPubActivity"

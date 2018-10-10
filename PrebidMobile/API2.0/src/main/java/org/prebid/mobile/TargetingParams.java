@@ -36,17 +36,8 @@ public class TargetingParams {
 
     //region Static Variables
     private static final String TAG;
-
-    static {
-        TAG = LogUtil.getTagWithBase("TP");
-    }
-
-    private static int yob = 0;
-    private static GENDER gender = GENDER.UNKNOWN;
     private static boolean locationEnabled = false; // default location access is disabled
     private static int locationDecimalDigits = -1;
-    private static ArrayList<String> appKeywords = new ArrayList<String>();
-    private static ArrayList<String> userKeywords = new ArrayList<String>();
     private static Location location;
     private static String domain = "";
     private static String storeUrl = "";
@@ -214,7 +205,7 @@ public class TargetingParams {
 
     /**
      * Sets whether or not location (latitude, longitude) is retrieved through provider and
-     * shared with 3rd party networks. True means Prebid SDK will try to get the latest
+     * shared with 3rd party networks. True means PrebidMobile SDK will try to get the latest
      * location data from either developer or location provider and pass it to demand sources.
      *
      * @param enabled default is false.
@@ -224,7 +215,7 @@ public class TargetingParams {
     }
 
     /**
-     * Returns true if the Prebid sdk is allowed to use location information
+     * Returns true if the PrebidMobile sdk is allowed to use location information
      * or false otherwise.
      */
     public static boolean getLocationEnabled() {
@@ -275,133 +266,6 @@ public class TargetingParams {
         } else {
             locationDecimalDigits = -1;
             LogUtil.w(TAG, "Invalid input " + digitsAfterDecimal + ", set location digits after decimal to default");
-        }
-    }
-
-    /**
-     * Set the keywords that're related to the app
-     *
-     * @param appKeywords list of keywords
-     */
-    @Deprecated
-    public static void setAppKeywords(ArrayList<String> appKeywords) {
-        if (appKeywords != null) {
-            TargetingParams.appKeywords = appKeywords;
-        }
-    }
-
-    @Deprecated
-    public static ArrayList<String> getAppKeywords() {
-        return appKeywords;
-    }
-
-
-    /**
-     * Clear all the keywords that're related to the app
-     */
-    @Deprecated
-    public static void clearAppKeywords() {
-        TargetingParams.appKeywords.clear();
-    }
-
-    /**
-     * Add one keyword to app related keywords
-     *
-     * @param keyword keyword to be added
-     */
-    @Deprecated
-    public static void addAppKeywords(String keyword) {
-        if (!appKeywords.contains(keyword)) {
-            appKeywords.add(keyword);
-        }
-    }
-
-    /**
-     * Remove one keyword to app related keywords
-     *
-     * @param keyword keyword to be added
-     */
-    @Deprecated
-    public static void removeAppKeyword(String keyword) {
-        appKeywords.remove(keyword);
-    }
-
-    /**
-     * Set the keywords that're related to the
-     *
-     * @param userKeywords
-     * @deprecated use {@link TargetingParams#setUserTargeting(String, String)} instead
-     */
-    @Deprecated
-    public static void setUserKeywords(ArrayList<String> userKeywords) {
-        if (userKeywords != null) {
-            TargetingParams.userKeywords = userKeywords;
-        }
-    }
-
-    /**
-     * Add one keyword to user related keywords
-     *
-     * @param keyword keyword to be added
-     * @deprecated use {@link TargetingParams#setUserTargeting(String, String)} instead
-     */
-    @Deprecated
-    public static void addUserKeyword(String keyword) {
-        if (!userKeywords.contains(keyword)) {
-            userKeywords.add(keyword);
-        }
-    }
-
-    /**
-     * Set a key-value pair as a keyword, this will be sent in the user object in the ORTB request
-     * An exmpale, if you call setUserTargeting("key1", "value1") and setUserTargeting("key2", null),
-     * values that will be sent are "key1=value1,key2,"
-     *
-     * @param key   key in the key-value pair, should not be null
-     * @param value value in the key-value pair, can be null
-     */
-    public static void setUserTargeting(String key, String value) {
-        if (userKeywords != null) {
-            if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
-                userKeywords.add(key + "=" + value);
-            } else if (!TextUtils.isEmpty(key)) {
-                userKeywords.add(key);
-            }
-        }
-    }
-
-    /**
-     * Get the keywords for user
-     *
-     * @return a list of keywords
-     */
-    public static ArrayList<String> getUserKeywords() {
-        return userKeywords;
-    }
-
-    /**
-     * Clear the keywords for user
-     */
-    public static void clearUserKeywords() {
-        userKeywords.clear();
-    }
-
-
-    /**
-     * Remove one keyword to user related keywords
-     *
-     * @param keyword keyword to be removed
-     */
-    public static void removeUserKeyword(String keyword) {
-        if (userKeywords != null) {
-            ArrayList<String> toBeRemoved = new ArrayList<String>();
-            for (String key : userKeywords) {
-                String[] keyValuePair = key.split("=");
-                if (!TextUtils.isEmpty(keyword) && keyword.equals(keyValuePair[0])) {
-                    toBeRemoved.add(key);
-                }
-            }
-            userKeywords.removeAll(toBeRemoved);
         }
     }
 
@@ -475,6 +339,13 @@ public class TargetingParams {
     public static synchronized int getPrivacyPolicy() {
         return privacyPolicy;
     }
+    static {
+        TAG = LogUtil.getTagWithBase("TP");
+    }
+
+    private static int yob = 0;
+    private static GENDER gender = GENDER.UNKNOWN;
+
 
 
 //endregion

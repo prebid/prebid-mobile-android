@@ -98,17 +98,15 @@ class DemandFetcher {
         }
     }
 
-    Object getAdObject() {
-        return this.adObject;
-    }
-
     void destroy() {
-        this.adObject = null;
-        this.listener = null;
-        this.requestRunnable.cancelRequest();
-        this.fetcherHandler.removeCallbacks(requestRunnable);
-        this.requestRunnable = null;
-        state = STATE.DESTROYED;
+        if (state != STATE.DESTROYED) {
+            this.adObject = null;
+            this.listener = null;
+            this.requestRunnable.cancelRequest();
+            this.fetcherHandler.removeCallbacks(requestRunnable);
+            this.requestRunnable = null;
+            state = STATE.DESTROYED;
+        }
     }
 
     private void notifyListener(final ResultCode resultCode) {
@@ -127,7 +125,6 @@ class DemandFetcher {
         // let ad unit create a new fetcher for next request
         if (periodMillis <= 0) {
             destroy();
-            AdUnit.removeFetcher(DemandFetcher.this);
         }
     }
 
@@ -192,7 +189,7 @@ class DemandFetcher {
             }
             while (!finished) {
                 long currentTime = System.currentTimeMillis();
-                if (currentTime - lastFetchTime >= Prebid.getTimeOut()) {
+                if (currentTime - lastFetchTime >= PrebidMobile.getTimeout()) {
                     finished = true;
                     notifyListener(ResultCode.TIME_OUT);
                 }

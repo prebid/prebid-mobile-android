@@ -5,14 +5,14 @@ import android.content.Context;
 import java.util.HashMap;
 
 /**
- * This class defines the contract between Prebid Mobile core logic and the demand adapter
- * Prebid Mobile will instantiate the class that implements this interface, and then call
+ * This class defines the contract between PrebidMobile Mobile core logic and the demand adapter
+ * PrebidMobile Mobile will instantiate the class that implements this interface, and then call
  * the methods when needed.
  */
 public interface DemandAdapter {
 
     /**
-     * Prebid Mobile will create a DemandAdapterListener and pass it to this method
+     * PrebidMobile Mobile will create a DemandAdapterListener and pass it to this method
      * when requesting for demand. It will pass in an auction id for unique identifying
      * a request. When this method is called, the Demand Adpater should proceed to fetch
      * demand for the RequestParams, and call the listener with returned response, whether

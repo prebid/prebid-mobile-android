@@ -7,19 +7,25 @@ public enum ResultCode {
      */
     SUCCESS,
     /**
-     * The ad request failed due to an invalid configuration (for example, size
-     * or placement ID not set).
+     * The ad request failed due to sizes not passed for banner ad unit
      */
-    INVALID_REQUEST,
+    NO_SIZE_FOR_BANNER,
+    /**
+     * The ad request failed due to empty account id
+     */
+    INVALID_ACCOUNT_ID,
+    /**
+     * The ad request failed due to empty config id on the ad unit
+     */
+    INVALID_CONFIG_ID,
+    /**
+     * For MoPub banner view, we don't support multi-size request
+     */
+    INVALID_SIZE,
     /**
      * The ad request failed due to a network error.
      */
     NETWORK_ERROR,
-    /**
-     * An internal error is detected in the interacting with the
-     * third-party SDK.
-     */
-    INTERNAL_ERROR,
     /**
      * The ad request took longer than set time out
      */

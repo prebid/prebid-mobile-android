@@ -3,7 +3,6 @@ package org.prebid.mobile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
@@ -23,7 +22,7 @@ public class DemoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
-        Prebid.setTimeOUt(10000);
+        PrebidMobile.setTimeout(10000);
         Intent intent = getIntent();
         if (intent.getStringExtra(Constants.AD_SERVER_NAME).equals("DFP") && intent.getStringExtra(Constants.AD_TYPE_NAME).equals("Banner")) {
             createDFPBanner(intent.getStringExtra(Constants.AD_SIZE_NAME));
@@ -69,13 +68,17 @@ public class DemoActivity extends AppCompatActivity {
         adFrame.addView(dfpAdView);
         final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
         final PublisherAdRequest request = builder.build();
-        //region Prebid Mobile API 2.0 usage
+        //region PrebidMobile Mobile API 2.0 usage
+        PrebidMobile.setAccountId("123456789");
+        PrebidMobile.setHost(PrebidMobile.Host.APPNEXUS);
+        PrebidMobile.setTimeout(600);
         final BannerAdUnit adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND);
         adUnit.addSize(width, height);
         adUnit.setAutoRefreshPeriodMillis(30000);
         adUnit.fetchDemand(request, this, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
+                LogUtil.d("Load ad " + resultCode.name());
                 dfpAdView.loadAd(request);
             }
         });

@@ -8,6 +8,9 @@ import java.util.Random;
 class Util {
 
     static final Random RANDOM = new Random();
+    static final String MOPUB_BANNER_VIEW_CLASS = "com.mopub.mobileads.MoPubView";
+    static final String MOPUB_INTERSTITIAL_CLASS = "com.mopub.mobileads.MoPubInterstitial";
+    static final String DFP_AD_REQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
 
     private Util() {
 

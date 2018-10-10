@@ -14,14 +14,13 @@ import java.util.LinkedList;
 public abstract class AdUnit {
     private String configId;
     private AdType adType;
-    private int periodMillis;
-    private final static HashSet<DemandFetcher> fetcherReference;
+    private HashMap<String, String> keywords;
     private static final HashSet<String> reservedKeys;
     private static final int MoPubQueryStringLimit = 4000;
-
+    DemandFetcher fetcher;
+    int periodMillis;
 
     static {
-        fetcherReference = new HashSet<>();
         reservedKeys = new HashSet<>();
     }
 
@@ -30,22 +29,20 @@ public abstract class AdUnit {
         this.configId = configId;
         this.adType = adType;
         this.periodMillis = 0; // by default no auto refresh
+        this.keywords = new HashMap<>();
     }
 
-    public void setAutoRefreshPeriodMillis(int periodMillis) {
-        if (this.periodMillis > 0 && this.periodMillis < 10000) { // todo change it to 30000 for production
-            return;
-        }
-        this.periodMillis = periodMillis;
-        for (DemandFetcher fetcher : fetcherReference) {
-            fetcher.setPeriodMillis(this.periodMillis);
-        }
-    }
 
     public void fetchDemand(@NonNull Object adObj, @NonNull Context context, OnCompleteListener listener) {
+        if (TextUtils.isEmpty(PrebidMobile.getAccountId())) {
+            if (listener != null) {
+                listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);
+            }
+            return;
+        }
         if (TextUtils.isEmpty(configId)) {
             if (listener != null) {
-                listener.onComplete(ResultCode.INVALID_REQUEST);
+                listener.onComplete(ResultCode.INVALID_CONFIG_ID);
             }
             return;
         }
@@ -54,62 +51,52 @@ public abstract class AdUnit {
             sizes = ((BannerAdUnit) this).getSizes();
             if (sizes == null || sizes.isEmpty()) {
                 if (listener != null) {
-                    listener.onComplete(ResultCode.INVALID_REQUEST);
+                    listener.onComplete(ResultCode.NO_SIZE_FOR_BANNER);
                 }
                 return;
             }
-        }
-        DemandFetcher fetcher = null;
-        for (DemandFetcher tmp : fetcherReference) {
-            if (tmp.getAdObject().equals(adObj)) {
-                fetcher = tmp;
+            if (adObj.getClass() == Util.getClassFromString(Util.MOPUB_BANNER_VIEW_CLASS) && sizes.size() > 1) {
+                if (listener != null) {
+                    listener.onComplete(ResultCode.INVALID_SIZE);
+                }
             }
         }
-        if (fetcher == null) {
-            if (adType == AdType.BANNER) {
-                fetcher = new DemandFetcher(adObj, context);
-            } else {
-                fetcher = new DemandFetcher(adObj, context);
-            }
-        }
+        fetcher = new DemandFetcher(adObj, context);
         RequestParams requestParams = new RequestParams(configId, adType, sizes, false);
-        if (adObj.getClass() == Util.getClassFromString("com.google.android.gms.ads.doubleclick.PublisherAdRequest")) {
+        if (adObj.getClass() == Util.getClassFromString(Util.DFP_AD_REQUEST_CLASS)) {
             requestParams = new RequestParams(configId, adType, sizes, true);
         }
+        if (!keywords.isEmpty()) {
+            for (String key : keywords.keySet()) {
+                requestParams.addKeyword(key, keywords.get(key));
+            }
+        }
+        fetcher.setPeriodMillis(periodMillis);
         fetcher.setRequestParams(requestParams);
         fetcher.setListener(listener);
-        fetcher.setPeriodMillis(periodMillis);
-        synchronized (fetcherReference) {
-            fetcherReference.add(fetcher);
-        }
         fetcher.start();
     }
 
-    public static void stopAutoRefersh(@NonNull Object object) {
-        synchronized (fetcherReference) {
-            ArrayList<DemandFetcher> fetchersToRemove = new ArrayList<>();
-            for (DemandFetcher fetcher : fetcherReference) {
-                if (fetcher.getAdObject().equals(object)) {
-                    fetcher.destroy();
-                    fetchersToRemove.add(fetcher);
-                }
-            }
-            fetcherReference.removeAll(fetchersToRemove);
-        }
+
+    public void setUserKeyword(String key, String value) {
+        keywords.put(key, value);
     }
 
-    static void removeFetcher(DemandFetcher demandFetcher) {
-        synchronized (fetcherReference) {
-            fetcherReference.remove(demandFetcher);
-        }
+    public void removeUserKeyword(String key) {
+        keywords.remove(key);
     }
+
+    public void removeUserKeywords() {
+        keywords.clear();
+    }
+
 
     static void apply(HashMap<String, String> bids, Object adObj) {
         if (adObj == null) return;
-        if (adObj.getClass() == Util.getClassFromString("com.mopub.mobileads.MoPubView")
-                || adObj.getClass() == Util.getClassFromString("com.mopub.mobileads.MoPubInterstitial")) {
+        if (adObj.getClass() == Util.getClassFromString(Util.MOPUB_BANNER_VIEW_CLASS)
+                || adObj.getClass() == Util.getClassFromString(Util.MOPUB_INTERSTITIAL_CLASS)) {
             handleMoPubKeywordsUpdate(bids, adObj);
-        } else if (adObj.getClass() == Util.getClassFromString("com.google.android.gms.ads.doubleclick.PublisherAdRequest")) {
+        } else if (adObj.getClass() == Util.getClassFromString(Util.DFP_AD_REQUEST_CLASS)) {
             handleDFPCustomTargetingUpdate(bids, adObj);
         }
     }

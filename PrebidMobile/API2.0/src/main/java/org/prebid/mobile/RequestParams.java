@@ -2,37 +2,46 @@ package org.prebid.mobile;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class RequestParams {
+class RequestParams {
     private String configId = "";
     private AdType adType = AdType.BANNER;
     private ArrayList<AdSize> sizes = new ArrayList<>();
     private boolean localCache = false;
+    private HashMap<String, String> keywords;
 
     RequestParams(String configId, AdType adType, ArrayList<AdSize> sizes, boolean localCache) {
         this.configId = configId;
         this.adType = adType;
-        if (this.adType.equals(AdType.INTERSTITIAL)) {
-            this.sizes = new ArrayList<>();
-        } else {
-            this.sizes = sizes;
-        }
+        this.sizes = sizes; // for Interstitial this will be null, will use screen width & height in the request
         this.localCache = localCache;
+        this.keywords = new HashMap<>();
     }
 
-    public String getConfigId() {
+    String getConfigId() {
         return this.configId;
     }
 
-    public AdType getAdType() {
+    AdType getAdType() {
         return this.adType;
     }
 
-    public ArrayList<AdSize> getAdSizes() {
+    ArrayList<AdSize> getAdSizes() {
         return this.sizes;
     }
 
-    public boolean useLocalCache() {
+    boolean useLocalCache() {
         return localCache;
     }
+
+    HashMap<String, String> getKeywords() {
+        return keywords;
+    }
+
+    void addKeyword(String key, String value) {
+        keywords.put(key, value);
+    }
+
+
 }
