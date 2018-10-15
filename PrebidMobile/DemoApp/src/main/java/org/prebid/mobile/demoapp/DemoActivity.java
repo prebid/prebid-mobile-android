@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
 import org.prebid.mobile.demoapp.adformdemofragments.AdformBannerFragment;
-import org.prebid.mobile.demoapp.adformdemofragments.AdformInterstitialFragment;
 import org.prebid.mobile.demoapp.dfpdemofragments.DFPBannerFragment;
 import org.prebid.mobile.demoapp.dfpdemofragments.DFPInterstitialFragment;
 import org.prebid.mobile.demoapp.mopubdemofragments.MoPubBannerFragment;
@@ -41,8 +40,6 @@ public class DemoActivity extends AppCompatActivity {
                 String adFormat = intent.getExtras().getString(Constants.ADFORMAT);
                 if ("banner".equals(adFormat)) {
                     demoFragment = new AdformBannerFragment();
-                } else if ("interstitial".equals(adFormat)){
-                    demoFragment = new AdformInterstitialFragment();
                 }
             }
         }

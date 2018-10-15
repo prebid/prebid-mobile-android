@@ -39,7 +39,6 @@ public class Prebid {
     private static String MOPUB_INTERSTITIAL_CLASS = "com.mopub.mobileads.MoPubInterstitial";
     private static String DFP_ADREQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
     private static String ADFORM_ADVIEW_CLASS = "com.adform.sdk.pub.views.AdInline";
-    private static String ADFORM_INTERSTITIAL_CLASS = "com.adform.sdk.pub.AdOverlay";
 
     private static boolean secureConnection = true; //by default, always use secured connection
     private static String accountId;
@@ -163,8 +162,7 @@ public class Prebid {
                 handleMoPubKeywordsUpdate(adObj, adUnitCode, context);
             } else if (adObj.getClass() == getClassFromString(DFP_ADREQUEST_CLASS)) {
                 handleDFPCustomTargetingUpdate(adObj, adUnitCode, context);
-            } else if (adObj.getClass() == getClassFromString(ADFORM_ADVIEW_CLASS)
-                    || adObj.getClass() == getClassFromString(ADFORM_INTERSTITIAL_CLASS)){
+            } else if (adObj.getClass() == getClassFromString(ADFORM_ADVIEW_CLASS)){
                 handleAdformCustomTargetingUpdate(adObj, adUnitCode, context);
             }
         }
