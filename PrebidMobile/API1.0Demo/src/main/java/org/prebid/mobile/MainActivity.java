@@ -94,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
+        PrebidMobile.setAccountId("123456789");
+        PrebidMobile.setHost(Host.APPNEXUS);
     }
 
     public void showAd(View view) {

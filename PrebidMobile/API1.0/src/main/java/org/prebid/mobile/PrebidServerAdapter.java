@@ -87,11 +87,11 @@ public class PrebidServerAdapter implements DemandAdapter {
                 conn.setRequestProperty("Accept", "application/json");
                 String existingCookie = getExistingCookie();
                 if (existingCookie != null) {
-                    conn.setRequestProperty(PrebidServerAdapterSettings.COOKIE_HEADER, existingCookie);
+                    conn.setRequestProperty(PrebidServerSettings.COOKIE_HEADER, existingCookie);
                 } // todo still pass cookie if limit ad tracking?
 
                 conn.setRequestMethod("POST");
-                conn.setConnectTimeout(PrebidMobile.getTimeout());
+                conn.setConnectTimeout(DemandFetcher.timeoutMillis);
 
                 // Add post data
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
@@ -163,21 +163,7 @@ public class PrebidServerAdapter implements DemandAdapter {
         }
 
         private String getHost() {
-            String host = null;
-            switch (PrebidMobile.getHost()) {
-                case APPNEXUS:
-                    host = (PrebidMobile.shouldUseSecureConnection()) ? PrebidMobile.Host.APPNEXUS.getSecureUrl() :
-                            PrebidMobile.Host.APPNEXUS.getNonSecureUrl();
-                    break;
-                case RUBICON:
-                    host = (PrebidMobile.shouldUseSecureConnection()) ? PrebidMobile.Host.RUBICON.getSecureUrl() :
-                            PrebidMobile.Host.RUBICON.getNonSecureUrl();
-                    break;
-                case CUSTOM:
-                    host = (PrebidMobile.shouldUseSecureConnection()) ? PrebidMobile.Host.CUSTOM.getSecureUrl() :
-                            PrebidMobile.Host.CUSTOM.getNonSecureUrl();
-            }
-            return host;
+            return PrebidMobile.getHost().getHostUrl();
         }
 
         /**
@@ -200,20 +186,20 @@ public class PrebidServerAdapter implements DemandAdapter {
                 for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
                     String key = entry.getKey();
                     // Only "Set-cookie" and "Set-cookie2" pair will be parsed
-                    if (key != null && (key.equalsIgnoreCase(PrebidServerAdapterSettings.VERSION_ZERO_HEADER)
-                            || key.equalsIgnoreCase(PrebidServerAdapterSettings.VERSION_ONE_HEADER))) {
+                    if (key != null && (key.equalsIgnoreCase(PrebidServerSettings.VERSION_ZERO_HEADER)
+                            || key.equalsIgnoreCase(PrebidServerSettings.VERSION_ONE_HEADER))) {
                         for (String cookieStr : entry.getValue()) {
-                            if (!TextUtils.isEmpty(cookieStr) && cookieStr.contains(PrebidServerAdapterSettings.AN_UUID)) {
+                            if (!TextUtils.isEmpty(cookieStr) && cookieStr.contains(PrebidServerSettings.AN_UUID)) {
                                 // pass uuid2 to WebView Cookie jar if it's empty or outdated
                                 if (existingUUID == null || !cookieStr.contains(existingUUID)) {
-                                    cm.setCookie(PrebidServerAdapterSettings.COOKIE_DOMAIN, cookieStr);
+                                    cm.setCookie(PrebidServerSettings.COOKIE_DOMAIN, cookieStr);
                                     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                                         // CookieSyncManager is deprecated in API 21 Lollipop
                                         Context context = contextWeakReference.get();
                                         CookieSyncManager.createInstance(context);
                                         CookieSyncManager csm = CookieSyncManager.getInstance();
                                         if (csm == null) {
-                                            LogUtil.i(PrebidServerAdapterSettings.TAG, "Unable to find a CookieSyncManager");
+                                            LogUtil.i(PrebidServerSettings.TAG, "Unable to find a CookieSyncManager");
                                             return;
                                         }
                                         csm.sync();
@@ -236,11 +222,11 @@ public class PrebidServerAdapter implements DemandAdapter {
                 CookieSyncManager.createInstance(context);
                 CookieManager cm = CookieManager.getInstance();
                 if (cm != null) {
-                    String wvcookie = cm.getCookie(PrebidServerAdapterSettings.COOKIE_DOMAIN);
+                    String wvcookie = cm.getCookie(PrebidServerSettings.COOKIE_DOMAIN);
                     if (!TextUtils.isEmpty(wvcookie)) {
                         String[] existingCookies = wvcookie.split("; ");
                         for (String cookie : existingCookies) {
-                            if (cookie != null && cookie.contains(PrebidServerAdapterSettings.AN_UUID)) {
+                            if (cookie != null && cookie.contains(PrebidServerSettings.AN_UUID)) {
                                 return cookie;
                             }
                         }
@@ -256,7 +242,7 @@ public class PrebidServerAdapter implements DemandAdapter {
             Context context = contextWeakReference.get();
             if (context != null) {
 //            AdvertisingIDUtil.retrieveAndSetAAID(context);
-                PrebidServerAdapterSettings.update(context);
+                PrebidServerSettings.update(context);
             }
             JSONObject postData = new JSONObject();
             try {
@@ -273,18 +259,18 @@ public class PrebidServerAdapter implements DemandAdapter {
                 // add device
                 JSONObject device = getDeviceObject(context);
                 if (device != null && device.length() > 0) {
-                    postData.put(PrebidServerAdapterSettings.REQUEST_DEVICE, device);
+                    postData.put(PrebidServerSettings.REQUEST_DEVICE, device);
                 }
                 // add app
                 JSONObject app = getAppObject(context);
                 if (device != null && device.length() > 0) {
-                    postData.put(PrebidServerAdapterSettings.REQUEST_APP, app);
+                    postData.put(PrebidServerSettings.REQUEST_APP, app);
                 }
                 // add user
                 // todo should we provide api for developers to pass in user's location (zip, city, address etc, not real time location)
                 JSONObject user = getUserObject(requestParams, context);
                 if (user != null && user.length() > 0) {
-                    postData.put(PrebidServerAdapterSettings.REQUEST_USER, user);
+                    postData.put(PrebidServerSettings.REQUEST_USER, user);
                 }
                 // add regs
                 JSONObject regs = getRegsObject(context);
@@ -305,12 +291,6 @@ public class PrebidServerAdapter implements DemandAdapter {
             JSONObject ext = new JSONObject();
             JSONObject prebid = new JSONObject();
             try {
-                if (!requestParams.useLocalCache()) {
-                    JSONObject bids = new JSONObject();
-                    JSONObject cache = new JSONObject();
-                    cache.put("bids", bids);
-                    prebid.put("cache", cache);
-                }
                 JSONObject storedRequest = new JSONObject();
                 storedRequest.put("id", PrebidMobile.getAccountId());
                 prebid.put("storedrequest", storedRequest);
@@ -332,9 +312,9 @@ public class PrebidServerAdapter implements DemandAdapter {
                 JSONObject imp = new JSONObject();
                 JSONObject ext = new JSONObject();
                 imp.put("id", "PrebidMobile");
-                if (PrebidMobile.shouldUseSecureConnection()) {
-                    imp.put("secure", 1);
-                }
+//                if (PrebidMobile.shouldUseSecureConnection()) {
+                imp.put("secure", 1);
+//                }
                 if (requestParams.getAdType().equals(AdType.INTERSTITIAL)) {
                     imp.put("instl", 1);
                 } else {
@@ -365,53 +345,53 @@ public class PrebidServerAdapter implements DemandAdapter {
             JSONObject device = new JSONObject();
             try {
                 // Device make
-                if (!TextUtils.isEmpty(PrebidServerAdapterSettings.deviceMake))
-                    device.put(PrebidServerAdapterSettings.REQUEST_DEVICE_MAKE, PrebidServerAdapterSettings.deviceMake);
+                if (!TextUtils.isEmpty(PrebidServerSettings.deviceMake))
+                    device.put(PrebidServerSettings.REQUEST_DEVICE_MAKE, PrebidServerSettings.deviceMake);
                 // Device model
-                if (!TextUtils.isEmpty(PrebidServerAdapterSettings.deviceModel))
-                    device.put(PrebidServerAdapterSettings.REQUEST_DEVICE_MODEL, PrebidServerAdapterSettings.deviceModel);
+                if (!TextUtils.isEmpty(PrebidServerSettings.deviceModel))
+                    device.put(PrebidServerSettings.REQUEST_DEVICE_MODEL, PrebidServerSettings.deviceModel);
                 // Default User Agent
-                if (!TextUtils.isEmpty(PrebidServerAdapterSettings.userAgent)) {
-                    device.put(PrebidServerAdapterSettings.REQUEST_USERAGENT, PrebidServerAdapterSettings.userAgent);
+                if (!TextUtils.isEmpty(PrebidServerSettings.userAgent)) {
+                    device.put(PrebidServerSettings.REQUEST_USERAGENT, PrebidServerSettings.userAgent);
                 }
                 // POST data that requires context
                 if (context != null) {
-                    device.put(PrebidServerAdapterSettings.REQUEST_DEVICE_WIDTH, context.getResources().getConfiguration().screenWidthDp);
-                    device.put(PrebidServerAdapterSettings.REQUEST_DEVICE_HEIGHT, context.getResources().getConfiguration().screenHeightDp);
+                    device.put(PrebidServerSettings.REQUEST_DEVICE_WIDTH, context.getResources().getConfiguration().screenWidthDp);
+                    device.put(PrebidServerSettings.REQUEST_DEVICE_HEIGHT, context.getResources().getConfiguration().screenHeightDp);
 
-                    device.put(PrebidServerAdapterSettings.REQUEST_DEVICE_PIXEL_RATIO, context.getResources().getDisplayMetrics().density);
+                    device.put(PrebidServerSettings.REQUEST_DEVICE_PIXEL_RATIO, context.getResources().getDisplayMetrics().density);
 
                     TelephonyManager telephonyManager = (TelephonyManager) context
                             .getSystemService(Context.TELEPHONY_SERVICE);
                     // Get mobile country codes
-                    if (PrebidServerAdapterSettings.getMCC() < 0 || PrebidServerAdapterSettings.getMNC() < 0) {
+                    if (PrebidServerSettings.getMCC() < 0 || PrebidServerSettings.getMNC() < 0) {
                         String networkOperator = telephonyManager.getNetworkOperator();
                         if (!TextUtils.isEmpty(networkOperator)) {
                             try {
-                                PrebidServerAdapterSettings.setMCC(Integer.parseInt(networkOperator.substring(0, 3)));
-                                PrebidServerAdapterSettings.setMNC(Integer.parseInt(networkOperator.substring(3)));
+                                PrebidServerSettings.setMCC(Integer.parseInt(networkOperator.substring(0, 3)));
+                                PrebidServerSettings.setMNC(Integer.parseInt(networkOperator.substring(3)));
                             } catch (Exception e) {
                                 // Catches NumberFormatException and StringIndexOutOfBoundsException
-                                PrebidServerAdapterSettings.setMCC(-1);
-                                PrebidServerAdapterSettings.setMNC(-1);
+                                PrebidServerSettings.setMCC(-1);
+                                PrebidServerSettings.setMNC(-1);
                             }
                         }
                     }
-                    if (PrebidServerAdapterSettings.getMCC() > 0 && PrebidServerAdapterSettings.getMNC() > 0) {
-                        device.put(PrebidServerAdapterSettings.REQUEST_MCC_MNC, String.format(Locale.ENGLISH, "%d-%d", PrebidServerAdapterSettings.getMCC(), PrebidServerAdapterSettings.getMNC()));
+                    if (PrebidServerSettings.getMCC() > 0 && PrebidServerSettings.getMNC() > 0) {
+                        device.put(PrebidServerSettings.REQUEST_MCC_MNC, String.format(Locale.ENGLISH, "%d-%d", PrebidServerSettings.getMCC(), PrebidServerSettings.getMNC()));
                     }
 
                     // Get carrier
-                    if (PrebidServerAdapterSettings.getCarrierName() == null) {
+                    if (PrebidServerSettings.getCarrierName() == null) {
                         try {
-                            PrebidServerAdapterSettings.setCarrierName(telephonyManager.getNetworkOperatorName());
+                            PrebidServerSettings.setCarrierName(telephonyManager.getNetworkOperatorName());
                         } catch (SecurityException ex) {
                             // Some phones require READ_PHONE_STATE permission just ignore name
-                            PrebidServerAdapterSettings.setCarrierName("");
+                            PrebidServerSettings.setCarrierName("");
                         }
                     }
-                    if (!TextUtils.isEmpty(PrebidServerAdapterSettings.getCarrierName()))
-                        device.put(PrebidServerAdapterSettings.REQUEST_CARRIER, PrebidServerAdapterSettings.getCarrierName());
+                    if (!TextUtils.isEmpty(PrebidServerSettings.getCarrierName()))
+                        device.put(PrebidServerSettings.REQUEST_CARRIER, PrebidServerSettings.getCarrierName());
 
                     // check connection type
                     int connection_type = 0;
@@ -424,9 +404,9 @@ public class PrebidServerAdapter implements DemandAdapter {
                             connection_type = wifi.isConnected() ? 1 : 2;
                         }
                     }
-                    device.put(PrebidServerAdapterSettings.REQUEST_CONNECTION_TYPE, connection_type);
+                    device.put(PrebidServerSettings.REQUEST_CONNECTION_TYPE, connection_type);
                 }
-                // Location PrebidServerAdapterSettings
+                // Location PrebidServerSettings
                 Double lat, lon;
                 Integer locDataAge, locDataPrecision;
                 Location lastLocation = null;
@@ -463,7 +443,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                             }
                         }
                     } else {
-                        LogUtil.w(PrebidServerAdapterSettings.TAG,
+                        LogUtil.w(PrebidServerSettings.TAG,
                                 "Location permissions ACCESS_COARSE_LOCATION and/or ACCESS_FINE_LOCATION aren\\'t set in the host app. This may affect demand.");
                     }
                 }
@@ -493,31 +473,30 @@ public class PrebidServerAdapter implements DemandAdapter {
                 }
                 JSONObject geo = new JSONObject();
                 if (lat != null && lon != null) {
-                    geo.put(PrebidServerAdapterSettings.REQEUST_GEO_LAT, lat);
-                    geo.put(PrebidServerAdapterSettings.REQUEST_GEO_LON, lon);
+                    geo.put(PrebidServerSettings.REQEUST_GEO_LAT, lat);
+                    geo.put(PrebidServerSettings.REQUEST_GEO_LON, lon);
                     if (locDataAge != null)
-                        geo.put(PrebidServerAdapterSettings.REQUEST_GEO_AGE, locDataAge);
+                        geo.put(PrebidServerSettings.REQUEST_GEO_AGE, locDataAge);
                     if (locDataPrecision != null)
-                        geo.put(PrebidServerAdapterSettings.REQUEST_GEO_ACCURACY, locDataPrecision);
+                        geo.put(PrebidServerSettings.REQUEST_GEO_ACCURACY, locDataPrecision);
                 }
                 if (geo.length() > 0) {
-                    device.put(PrebidServerAdapterSettings.REQUEST_GEO, geo);
+                    device.put(PrebidServerSettings.REQUEST_GEO, geo);
                 }
 
                 // limited ad tracking
-                // todo uncomment this
-//            device.put(PrebidServerAdapterSettings.REQUEST_LMT, AdvertisingIDUtil.isLimitAdTracking() ? 1 : 0);
-//            if (!AdvertisingIDUtil.isLimitAdTracking() && !TextUtils.isEmpty(AdvertisingIDUtil.getAAID())) {
-//                // put ifa
-//                device.put(PrebidServerAdapterSettings.REQUEST_IFA, AdvertisingIDUtil.getAAID());
-//            }
+                device.put(PrebidServerSettings.REQUEST_LMT, AdvertisingIDUtil.isLimitAdTracking() ? 1 : 0);
+                if (!AdvertisingIDUtil.isLimitAdTracking() && !TextUtils.isEmpty(AdvertisingIDUtil.getAAID())) {
+                    // put ifa
+                    device.put(PrebidServerSettings.REQUEST_IFA, AdvertisingIDUtil.getAAID());
+                }
 
                 // os
-                device.put(PrebidServerAdapterSettings.REQUEST_OS, PrebidServerAdapterSettings.os);
-                device.put(PrebidServerAdapterSettings.REQUEST_OS_VERSION, String.valueOf(Build.VERSION.SDK_INT));
+                device.put(PrebidServerSettings.REQUEST_OS, PrebidServerSettings.os);
+                device.put(PrebidServerSettings.REQUEST_OS_VERSION, String.valueOf(Build.VERSION.SDK_INT));
                 // language
-                if (!TextUtils.isEmpty(PrebidServerAdapterSettings.language)) {
-                    device.put(PrebidServerAdapterSettings.REQUEST_LANGUAGE, PrebidServerAdapterSettings.language);
+                if (!TextUtils.isEmpty(PrebidServerSettings.language)) {
+                    device.put(PrebidServerSettings.REQUEST_LANGUAGE, PrebidServerSettings.language);
                 }
             } catch (JSONException e) {
             }
@@ -536,11 +515,11 @@ public class PrebidServerAdapter implements DemandAdapter {
                 if (!TextUtils.isEmpty(TargetingParams.getBundleName())) {
                     app.put("bundle", TargetingParams.getBundleName());
                 }
-                if (!TextUtils.isEmpty(PrebidServerAdapterSettings.pkgVersion)) {
-                    app.put("ver", PrebidServerAdapterSettings.pkgVersion);
+                if (!TextUtils.isEmpty(PrebidServerSettings.pkgVersion)) {
+                    app.put("ver", PrebidServerSettings.pkgVersion);
                 }
-                if (!TextUtils.isEmpty(PrebidServerAdapterSettings.appName)) {
-                    app.put("name", PrebidServerAdapterSettings.appName);
+                if (!TextUtils.isEmpty(PrebidServerSettings.appName)) {
+                    app.put("name", PrebidServerSettings.appName);
                 }
                 if (!TextUtils.isEmpty(TargetingParams.getDomain())) {
                     app.put("domain", TargetingParams.getDomain());
@@ -554,7 +533,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                 app.put("publisher", publisher);
                 JSONObject prebid = new JSONObject();
                 prebid.put("source", "prebid-mobile");
-                prebid.put("version", PrebidServerAdapterSettings.sdk_version);
+                prebid.put("version", PrebidServerSettings.sdk_version);
                 JSONObject ext = new JSONObject();
                 ext.put("prebid", prebid);
                 app.put("ext", ext);
@@ -585,11 +564,9 @@ public class PrebidServerAdapter implements DemandAdapter {
                 }
                 user.put("gender", g);
                 StringBuilder builder = new StringBuilder();
-                HashMap<String, String> keywords = requestParams.getKeywords();
-                for (String key : keywords.keySet()) {
-                    // todo validate this logic
-                    String keyword = key + "=" + keywords.get(key);
-                    builder.append(keyword).append(",");
+                ArrayList<String> keywords = requestParams.getKeywords();
+                for (String key : keywords) {
+                    builder.append(key).append(",");
                 }
                 String finalKeywords = builder.toString();
                 if (!TextUtils.isEmpty(finalKeywords)) {

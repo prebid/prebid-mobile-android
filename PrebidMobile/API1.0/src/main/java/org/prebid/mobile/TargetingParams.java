@@ -24,7 +24,6 @@ import android.location.LocationManager;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 

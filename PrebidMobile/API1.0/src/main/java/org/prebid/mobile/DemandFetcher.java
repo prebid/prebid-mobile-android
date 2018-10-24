@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 class DemandFetcher {
+    static int timeoutMillis = 10000; // by default use 10000 milliseconds as timeout
+
     enum STATE {
         STOPPED,
         RUNNING,
@@ -167,7 +169,7 @@ class DemandFetcher {
                         @Override
                         public void onDemandReady(final HashMap<String, String> demand, String auctionId) {
                             if (!finished && RequestRunnable.this.auctionId.equals(auctionId)) {
-                                AdUnit.apply(demand, DemandFetcher.this.adObject);
+                                Util.apply(demand, DemandFetcher.this.adObject);
                                 notifyListener(ResultCode.SUCCESS);
                                 finished = true;
                             }
@@ -189,7 +191,7 @@ class DemandFetcher {
             }
             while (!finished) {
                 long currentTime = System.currentTimeMillis();
-                if (currentTime - lastFetchTime >= PrebidMobile.getTimeout()) {
+                if (currentTime - lastFetchTime >= timeoutMillis) {
                     finished = true;
                     notifyListener(ResultCode.TIME_OUT);
                 }

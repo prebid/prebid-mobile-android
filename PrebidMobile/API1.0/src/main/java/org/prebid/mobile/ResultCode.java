@@ -19,6 +19,10 @@ public enum ResultCode {
      */
     INVALID_CONFIG_ID,
     /**
+     * The ad request failed because a CUSTOM host used without providing host url
+     */
+    INVALID_HOST_URL,
+    /**
      * For MoPub banner view, we don't support multi-size request
      */
     INVALID_SIZE,

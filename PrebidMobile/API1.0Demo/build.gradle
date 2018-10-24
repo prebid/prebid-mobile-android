@@ -5,7 +5,7 @@ android {
     buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
-        applicationId "org.prebid.mobile.api2demo"
+        applicationId "org.prebid.mobile.api1demo"
         minSdkVersion rootProject.minSDKVersion
         targetSdkVersion rootProject.targetSDKVersion
         versionCode rootProject.prebidVersionCode
@@ -33,5 +33,5 @@ dependencies {
     compile('com.mopub:mopub-sdk:4.15.0@aar') {
         transitive = true
     }
-    compile project(":API2.0")
+    compile project(':API1.0')
 }
