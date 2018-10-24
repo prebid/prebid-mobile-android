@@ -2,41 +2,23 @@ package org.prebid.mobile;
 
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 public class BannerAdUnit extends AdUnit {
-    private ArrayList<AdSize> sizes;
+    private HashSet<AdSize> sizes;
 
 
-    public BannerAdUnit(@NonNull String configId) {
+    public BannerAdUnit(@NonNull String configId, int width, int height) {
         super(configId, AdType.BANNER);
-        this.sizes = new ArrayList<>();
+        this.sizes = new HashSet<>();
+        this.sizes.add(new AdSize(width, height));
     }
 
-    // region BannerAdUnit only methods
-    public void addSize(int width, int height) {
+    public void addAdditionalSize(int width, int height) {
         sizes.add(new AdSize(width, height));
     }
 
-    public void setAutoRefreshPeriodMillis(int periodMillis) {
-        if (periodMillis < 30000) {
-            return;
-        }
-        this.periodMillis = periodMillis;
-        if (fetcher != null) {
-            fetcher.setPeriodMillis(periodMillis);
-        }
-    }
-
-    public void stopAutoRefersh() {
-        if (fetcher != null) {
-            fetcher.destroy();
-            fetcher = null;
-        }
-    }
-
-    // endregion
-    ArrayList<AdSize> getSizes() {
+    HashSet<AdSize> getSizes() {
         return this.sizes;
     }
 

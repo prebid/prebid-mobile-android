@@ -5,20 +5,37 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public abstract class AdUnit {
     private String configId;
     private AdType adType;
     private ArrayList<String> keywords;
-
-    DemandFetcher fetcher;
-    int periodMillis;
+    private DemandFetcher fetcher;
+    private int periodMillis;
 
     AdUnit(@NonNull String configId, @NonNull AdType adType) {
         this.configId = configId;
         this.adType = adType;
         this.periodMillis = 0; // by default no auto refresh
         this.keywords = new ArrayList<>();
+    }
+
+    public void setAutoRefreshPeriodMillis(int periodMillis) {
+        if (periodMillis < 30000) {
+            return;
+        }
+        this.periodMillis = periodMillis;
+        if (fetcher != null) {
+            fetcher.setPeriodMillis(periodMillis);
+        }
+    }
+
+    public void stopAutoRefersh() {
+        if (fetcher != null) {
+            fetcher.destroy();
+            fetcher = null;
+        }
     }
 
 
@@ -32,12 +49,12 @@ public abstract class AdUnit {
             return;
         }
         if (PrebidMobile.getHost().equals(Host.CUSTOM)) {
-            if (!TextUtils.isEmpty(PrebidMobile.getHost().getHostUrl())) {
+            if (TextUtils.isEmpty(PrebidMobile.getHost().getHostUrl())) {
                 listener.onComplete(ResultCode.INVALID_HOST_URL);
                 return;
             }
         }
-        ArrayList<AdSize> sizes = null;
+        HashSet<AdSize> sizes = null;
         if (adType == AdType.BANNER) {
             sizes = ((BannerAdUnit) this).getSizes();
             if (sizes == null || sizes.isEmpty()) {

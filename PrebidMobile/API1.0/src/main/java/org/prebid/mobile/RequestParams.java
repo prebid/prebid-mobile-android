@@ -2,14 +2,15 @@ package org.prebid.mobile;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class RequestParams {
     private String configId = "";
     private AdType adType = AdType.BANNER;
-    private ArrayList<AdSize> sizes = new ArrayList<>();
+    private HashSet<AdSize> sizes = new HashSet<>();
     private ArrayList<String> keywords;
 
-    RequestParams(String configId, AdType adType, ArrayList<AdSize> sizes, ArrayList<String> keywords) {
+    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, ArrayList<String> keywords) {
         this.configId = configId;
         this.adType = adType;
         this.sizes = sizes; // for Interstitial this will be null, will use screen width & height in the request
@@ -24,7 +25,7 @@ public class RequestParams {
         return this.adType;
     }
 
-    public ArrayList<AdSize> getAdSizes() {
+    public HashSet<AdSize> getAdSizes() {
         return this.sizes;
     }
 

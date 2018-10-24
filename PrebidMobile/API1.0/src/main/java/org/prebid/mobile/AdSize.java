@@ -35,4 +35,21 @@ public class AdSize {
     public int getHeight() {
         return height;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AdSize adSize = (AdSize) o;
+
+        if (width != adSize.width) return false;
+        return height == adSize.height;
+    }
+
+    @Override
+    public int hashCode() {
+        String size = width + "x" + height;
+        return size.hashCode();
+    }
 }
