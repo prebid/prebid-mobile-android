@@ -165,7 +165,7 @@ class DemandFetcher {
 
                 @Override
                 public void run() {
-                    demandAdapter.requestDemand(context, requestParams, new DemandAdapter.DemandAdapterListener() {
+                    demandAdapter.requestDemand(requestParams, new DemandAdapter.DemandAdapterListener() {
                         @Override
                         public void onDemandReady(final HashMap<String, String> demand, String auctionId) {
                             if (!finished && RequestRunnable.this.auctionId.equals(auctionId)) {

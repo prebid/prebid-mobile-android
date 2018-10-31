@@ -1,6 +1,11 @@
 package org.prebid.mobile;
 
+import android.content.Context;
+
+import java.lang.ref.WeakReference;
+
 public class PrebidMobile {
+
     private PrebidMobile() {
     }
 
@@ -32,5 +37,18 @@ public class PrebidMobile {
 
     public static boolean isShareGeoLocation() {
         return shareGeoLocation;
+    }
+
+    private static WeakReference<Context> applicationContextWeak;
+
+    public static void setApplicationContext(Context context) {
+        applicationContextWeak = new WeakReference<Context>(context);
+    }
+
+    public static Context getApplicationContext() {
+        if (applicationContextWeak != null) {
+            return applicationContextWeak.get();
+        }
+        return null;
     }
 }

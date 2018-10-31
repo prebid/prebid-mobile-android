@@ -272,6 +272,12 @@ public class TargetingParams {
      * Get the platform-specific identifier, should be bundle/package name
      */
     public static synchronized String getBundleName() {
+        if (TextUtils.isEmpty(bundleName)) {
+            Context context = PrebidMobile.getApplicationContext();
+            if (context != null) {
+                return context.getPackageName();
+            }
+        }
         return bundleName;
     }
 
@@ -338,13 +344,13 @@ public class TargetingParams {
     public static synchronized int getPrivacyPolicy() {
         return privacyPolicy;
     }
+
     static {
         TAG = LogUtil.getTagWithBase("TP");
     }
 
     private static int yob = 0;
     private static GENDER gender = GENDER.UNKNOWN;
-
 
 
 //endregion

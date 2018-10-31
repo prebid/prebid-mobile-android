@@ -14,7 +14,6 @@ import android.webkit.WebView;
 import java.util.Locale;
 
 class PrebidServerSettings {
-    static final String TAG = "PrebidServer";
     static final String AN_UUID = "uuid2";
     static final String COOKIE_HEADER = "Cookie";
     static final String VERSION_ZERO_HEADER = "Set-cookie";
@@ -62,6 +61,7 @@ class PrebidServerSettings {
 
     static synchronized void update(final Context context) {
         if (userAgent == null) {
+            // todo update this to latest method in API 0.5.1
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(new Runnable() {
                 @Override

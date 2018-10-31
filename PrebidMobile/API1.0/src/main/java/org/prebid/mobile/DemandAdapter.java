@@ -1,7 +1,5 @@
 package org.prebid.mobile;
 
-import android.content.Context;
-
 import java.util.HashMap;
 
 /**
@@ -18,13 +16,12 @@ public interface DemandAdapter {
      * demand for the RequestParams, and call the listener with returned response, whether
      * successful or failure.
      *
-     * @param context   Context of the apps
      * @param params    request paras for targeting
      * @param listener  Demand Adapter listener to be called upon demand ready
      * @param auctionId an unique identifier
      */
 
-    void requestDemand(Context context, RequestParams params, DemandAdapterListener listener, String auctionId);
+    void requestDemand(RequestParams params, DemandAdapterListener listener, String auctionId);
 
     void stopRequest(String auctionId);
 

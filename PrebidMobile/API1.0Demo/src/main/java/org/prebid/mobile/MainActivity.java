@@ -94,8 +94,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        PrebidMobile.setAccountId("123456789");
+        //region PrebidMobile API
+        PrebidMobile.setAccountId(Constants.PBS_ACCOUNT_ID);
         PrebidMobile.setHost(Host.APPNEXUS);
+        PrebidMobile.setShareGeoLocation(true);
+        PrebidMobile.setApplicationContext(getApplicationContext());
+        //endregion
     }
 
     public void showAd(View view) {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">API2.0Demo</string>
+    <string name="app_name">API1.0Demo</string>
     <string name="adTypeText">Ad Type</string>
     <string-array name="adTypeArray">
         <item>Banner</item>
