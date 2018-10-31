@@ -61,7 +61,7 @@ public class PrebidServerAdapter implements DemandAdapter {
         serverConnectors.removeAll(toRemove);
     }
 
-    static class ServerConnector extends AsyncTask<Object, Object, JSONObject> {
+    class ServerConnector extends AsyncTask<Object, Object, JSONObject> {
         private DemandAdapterListener listener;
         private RequestParams requestParams;
         private String auctionId;
@@ -92,7 +92,7 @@ public class PrebidServerAdapter implements DemandAdapter {
 
                 // Add post data
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
-                JSONObject postData = getPostData(this.requestParams);
+                JSONObject postData = getPostData();
                 LogUtil.d("Sending request for auction " + auctionId + " with post data: " + postData.toString());
                 wr.write(postData.toString());
                 wr.flush();
@@ -507,7 +507,6 @@ public class PrebidServerAdapter implements DemandAdapter {
                 if (!TextUtils.isEmpty(TargetingParams.getStoreUrl())) {
                     app.put("storeurl", TargetingParams.getStoreUrl());
                 }
-                app.put("privacypolicy", TargetingParams.getPrivacyPolicy());
                 JSONObject publisher = new JSONObject();
                 publisher.put("id", PrebidMobile.getAccountId());
                 app.put("publisher", publisher);
