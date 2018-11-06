@@ -5,7 +5,7 @@ import com.mopub.mobileads.MoPubView;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.unittestutils.BaseSetup;
+import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
