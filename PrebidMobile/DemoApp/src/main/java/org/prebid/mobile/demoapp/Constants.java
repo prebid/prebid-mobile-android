@@ -10,11 +10,11 @@ public class Constants {
     public static final String INTERSTITIAL_FULLSCREEN = "Interstitial_FullScreen";
 
     // MoPub Banner
-    public static final String MOPUB_BANNER_ADUNIT_ID_320x50 = "1819c823abe34641812d1fc2d1c78920";
-    public static final String MOPUB_BANNER_ADUNIT_ID_300x250 = "a9cb8ff85fef4b50b457e3b11119aabf";
+    public static final String MOPUB_BANNER_ADUNIT_ID_320x50 = "32111d40151b400f9b70f45ed88e6ee9";
+    public static final String MOPUB_BANNER_ADUNIT_ID_300x250 = "a935eac11acd416f92640411234fbba6";
 
     // MoPub Interstitial
-    public static final String MOPUB_INTERSTITIAL_ADUNIT_ID_FULLSCREEN = "fc82df5c964945c79cceef4c5666e1e2";
+    public static final String MOPUB_INTERSTITIAL_ADUNIT_ID_FULLSCREEN = "b75185a84336479c94eb22e5c0ca67db";
 
     // DFP Banner
     public static final String DFP_BANNER_ADUNIT_ID_320x50 = "/19968336/PriceCheck_320x50";
