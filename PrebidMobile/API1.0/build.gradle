@@ -26,7 +26,6 @@ android {
 
 dependencies {
     implementation 'com.android.support:support-annotations:28.0.0'
-//    testCompile project(':UnitTestUtils')
     testCompile 'org.apache.commons:commons-lang3:3.7'
     testCompile 'com.google.android.gms:play-services-ads:17.0.0'
     testCompile('com.mopub:mopub-sdk:4.15.0@aar') {

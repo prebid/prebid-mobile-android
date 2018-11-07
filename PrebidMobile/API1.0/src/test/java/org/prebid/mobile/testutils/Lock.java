@@ -3,8 +3,8 @@ package org.prebid.mobile.testutils;
 import android.util.Log;
 
 public class Lock {
-    public static final Object lock = new Object();
-    public static boolean notified = false;
+    private static final Object lock = new Object();
+    private static boolean notified = false;
 
     public static void pause() {
         synchronized (lock) {

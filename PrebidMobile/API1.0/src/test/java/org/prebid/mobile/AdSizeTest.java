@@ -2,13 +2,14 @@ package org.prebid.mobile;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 21)
+@Config(sdk = BaseSetup.testSDK)
 public class AdSizeTest {
     @Test
     public void testAdSizeCreation() throws Exception {

@@ -82,6 +82,18 @@ public abstract class AdUnit {
         }
     }
 
+    public void setUserKeywords(String key, String[] values) {
+        if (!TextUtils.isEmpty(key) && values.length > 0) {
+            keywords.clear();
+            for (String value : values) {
+                keywords.add(key + "=" + value);
+            }
+        } else if (!TextUtils.isEmpty(key)) {
+            keywords.clear();
+            keywords.add(key);
+        }
+    }
+
     public void removeUserKeyword(String key) {
         ArrayList<String> toBeRemoved = new ArrayList<>();
         for (String keyword : keywords) {

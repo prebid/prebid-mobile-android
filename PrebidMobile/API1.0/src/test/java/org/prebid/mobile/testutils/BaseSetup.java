@@ -15,6 +15,8 @@ import okhttp3.mockwebserver.MockWebServer;
 import static org.robolectric.Shadows.shadowOf;
 
 public class BaseSetup {
+    public static final int testSDK = 21;
+
     protected MockWebServer server;
     protected boolean successfulMockServerStarted = false;
     protected Scheduler uiScheduler, bgScheduler;

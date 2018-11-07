@@ -13,28 +13,17 @@ import static junit.framework.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
-public class BannerAdUnitTest {
+public class InterstItialAdUnitTest {
     @Test
-    public void testBannerAdUnitCreation() throws Exception {
-        BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
-        assertEquals(1, adUnit.getSizes().size());
-        assertEquals("123456", FieldUtils.readField(adUnit, "configId", true));
-        assertEquals(AdType.BANNER, FieldUtils.readField(adUnit, "adType", true));
-        assertEquals(0, FieldUtils.readField(adUnit, "periodMillis", true));
-    }
-
-    @Test
-    public void testBannerAdUnitAddSize() throws Exception {
-        BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
-        adUnit.addAdditionalSize(300, 250);
-        assertEquals(2, adUnit.getSizes().size());
-        adUnit.addAdditionalSize(320, 50);
-        assertEquals(2, adUnit.getSizes().size());
+    public void testInterstitialAdUnitCreation() throws Exception {
+        InterstitialAdUnit adUnit = new InterstitialAdUnit("12345");
+        assertEquals("12345", FieldUtils.readField(adUnit, "configId", true));
+        assertEquals(AdType.INTERSTITIAL, FieldUtils.readField(adUnit, "adType", true));
     }
 
     @Test
     public void testSetUserKeyword() throws Exception {
-        BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
+        InterstitialAdUnit adUnit = new InterstitialAdUnit("12345");
         adUnit.setUserKeyword("key", "value");
         adUnit.setUserKeyword("key1", null);
         @SuppressWarnings("unchecked")
@@ -56,7 +45,7 @@ public class BannerAdUnitTest {
 
     @Test
     public void testSetUserKeywords() throws Exception {
-        BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
+        InterstitialAdUnit adUnit = new InterstitialAdUnit("123456");
         adUnit.setUserKeyword("key1", "value1");
         String[] values = {"value1", "value2"};
         adUnit.setUserKeywords("key2", values);

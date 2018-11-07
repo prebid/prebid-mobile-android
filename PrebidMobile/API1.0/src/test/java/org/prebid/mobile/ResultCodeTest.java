@@ -14,7 +14,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 21)
+@Config(sdk = BaseSetup.testSDK)
 public class ResultCodeTest extends BaseSetup {
     @Test
     public void testInvalidAccountId() throws Exception {
@@ -39,6 +39,7 @@ public class ResultCodeTest extends BaseSetup {
     @Test
     public void testInvalidHostUrl() throws Exception {
         PrebidMobile.setAccountId("123456");
+        Host.CUSTOM.setHostUrl("");
         PrebidMobile.setHost(Host.CUSTOM);
         BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
         MoPubView testView = new MoPubView(activity);

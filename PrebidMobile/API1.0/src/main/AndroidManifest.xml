@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.appnexus.api20" />
+<manifest package="org.prebid.mobile" />

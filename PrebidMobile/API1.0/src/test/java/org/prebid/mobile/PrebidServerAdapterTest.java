@@ -1,12 +1,16 @@
 package org.prebid.mobile;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.testutils.BaseSetup;
+import org.prebid.mobile.testutils.Lock;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.util.Transcript;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.util.ArrayList;
@@ -14,6 +18,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
@@ -25,8 +30,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 21)
+@Config(sdk = BaseSetup.testSDK, manifest = Config.NONE)
 public class PrebidServerAdapterTest extends BaseSetup {
+    // todo add more mocks of potential Prebid Server responses
     @Test
     public void testNoBidResponse() {
         if (successfulMockServerStarted) {
@@ -177,6 +183,34 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
+    public void testStopRequest() throws Exception {
+        if (successfulMockServerStarted) {
+            MockResponse response = new MockResponse();
+            response.setBody("{}");
+            response.setBodyDelay(1, TimeUnit.SECONDS);
+            server.enqueue(response);
+            HttpUrl hostUrl = server.url("/");
+            Host.CUSTOM.setHostUrl(hostUrl.toString());
+            PrebidMobile.setHost(Host.CUSTOM);
+            PrebidMobile.setAccountId("12345");
+            PrebidMobile.setShareGeoLocation(true);
+            PrebidMobile.setApplicationContext(activity.getApplicationContext());
+            final DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+            final PrebidServerAdapter adapter = new PrebidServerAdapter();
+            HashSet<AdSize> sizes = new HashSet<>();
+            sizes.add(new AdSize(320, 50));
+            final RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            final String uuid = UUID.randomUUID().toString();
+            adapter.requestDemand(requestParams, mockListener, uuid);
+            bgScheduler.runOneTask();
+            adapter.stopRequest(uuid);
+            verify(mockListener, never()).onDemandFailed(ResultCode.NO_BIDS, uuid);
+        } else {
+            assertTrue("Server failed to start, unable to test.", false);
+        }
+    }
+
+    @Test
     public void testPostDataValidation() throws Exception {
         if (successfulMockServerStarted) {
             server.enqueue(new MockResponse().setResponseCode(200).setBody("{}"));
@@ -193,10 +227,11 @@ public class PrebidServerAdapterTest extends BaseSetup {
             RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
-            ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) org.prebid.mobile.testutils.Util.getPrivateField(adapter, "serverConnectors");
+            @SuppressWarnings("unchecked")
+            ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
             PrebidServerAdapter.ServerConnector connector = connectors.get(0);
             assertEquals(uuid, connector.getAuctionId());
-            JSONObject postData = (JSONObject) org.prebid.mobile.testutils.Util.callPrivateMethodOnObject(connector, "getPostData");
+            JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
             Iterator it = postData.keys();
             HashSet<String> keys = new HashSet<>();
             keys.add("id");
@@ -253,13 +288,13 @@ public class PrebidServerAdapterTest extends BaseSetup {
                     "        \"version\": \"0.5\"\n" +
                     "      }\n" +
                     "    }\n" +
-                    "  }", postData.getJSONObject("app"),false);
+                    "  }", postData.getJSONObject("app"), false);
             JSONAssert.assertEquals("{\n" +
                     "    \"gender\": \"O\"\n" +
-                    "  }", postData.getJSONObject("user"),false);
+                    "  }", postData.getJSONObject("user"), false);
             JSONAssert.assertEquals("{\n" +
                     "    \"ext\": {}\n" +
-                    "  }", postData.getJSONObject("regs"),false);
+                    "  }", postData.getJSONObject("regs"), false);
             JSONAssert.assertEquals("{\n" +
                     "    \"prebid\": {\n" +
                     "      \"cache\": {\n" +
@@ -270,7 +305,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
                     "      },\n" +
                     "      \"targeting\": {}\n" +
                     "    }\n" +
-                    "  }", postData.getJSONObject("ext"),false);
+                    "  }", postData.getJSONObject("ext"), false);
         } else {
             assertTrue("Server failed to start, unable to test.", false);
         }
