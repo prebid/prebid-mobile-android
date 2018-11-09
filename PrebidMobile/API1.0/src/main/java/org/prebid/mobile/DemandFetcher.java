@@ -1,13 +1,11 @@
 package org.prebid.mobile;
 
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -28,17 +26,15 @@ class DemandFetcher {
     private RequestRunnable requestRunnable;
     private long lastFetchTime = -1;
     private long timePausedAt = -1;
-    private WeakReference<Context> weakReference;
     private RequestParams requestParams;
 
-    DemandFetcher(@NonNull Object adObj, @NonNull Context context) {
+    DemandFetcher(@NonNull Object adObj) {
         this.state = STATE.STOPPED;
         this.periodMillis = 0;
         this.adObject = adObj;
         HandlerThread fetcherThread = new HandlerThread("FetcherThread");
         fetcherThread.start();
         this.fetcherHandler = new Handler(fetcherThread.getLooper());
-        this.weakReference = new WeakReference<Context>(context);
         this.requestRunnable = new RequestRunnable();
     }
 
@@ -156,10 +152,6 @@ class DemandFetcher {
             finished = false;
             lastFetchTime = System.currentTimeMillis();
             // check input values
-            final Context context = weakReference.get();
-            if (context == null) {
-                return;
-            }
             demandHandler.post(new Runnable() {
                 final String auctionIdFinal = auctionId;
 
@@ -189,7 +181,7 @@ class DemandFetcher {
             if (periodMillis > 0) {
                 fetcherHandler.postDelayed(this, periodMillis);
             }
-            while (!finished) {
+            while (!finished && !testMode) {
                 long currentTime = System.currentTimeMillis();
                 if (currentTime - lastFetchTime >= timeoutMillis) {
                     finished = true;
@@ -201,6 +193,23 @@ class DemandFetcher {
             }
         }
     }
+
+    //region exposed for testing
+    Handler getHandler() {
+        return this.fetcherHandler;
+    }
+
+    Handler getDemandHandler() {
+        RequestRunnable runnable = this.requestRunnable;
+        return runnable.demandHandler;
+    }
+
+    private boolean testMode = false;
+
+    void enableTestMode() {
+        this.testMode = true;
+    }
+    //endregion
 }
 
 

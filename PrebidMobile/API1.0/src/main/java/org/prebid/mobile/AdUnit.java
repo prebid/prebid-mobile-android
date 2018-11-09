@@ -1,6 +1,5 @@
 package org.prebid.mobile;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -39,7 +38,7 @@ public abstract class AdUnit {
     }
 
 
-    public void fetchDemand(@NonNull Object adObj, @NonNull Context context, @NonNull OnCompleteListener listener) {
+    public void fetchDemand(@NonNull Object adObj, @NonNull OnCompleteListener listener) {
         if (TextUtils.isEmpty(PrebidMobile.getAccountId())) {
             listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);
             return;
@@ -65,7 +64,7 @@ public abstract class AdUnit {
                 listener.onComplete(ResultCode.INVALID_SIZE);
             }
         }
-        fetcher = new DemandFetcher(adObj, context);
+        fetcher = new DemandFetcher(adObj);
         RequestParams requestParams = new RequestParams(configId, adType, sizes, keywords);
         fetcher.setPeriodMillis(periodMillis);
         fetcher.setRequestParams(requestParams);

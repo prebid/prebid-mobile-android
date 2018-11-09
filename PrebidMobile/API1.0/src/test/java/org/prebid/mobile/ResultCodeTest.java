@@ -22,7 +22,7 @@ public class ResultCodeTest extends BaseSetup {
         BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
         MoPubView testView = new MoPubView(activity);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
-        adUnit.fetchDemand(testView, activity, mockListener);
+        adUnit.fetchDemand(testView, mockListener);
         verify(mockListener).onComplete(ResultCode.INVALID_ACCOUNT_ID);
     }
 
@@ -32,7 +32,7 @@ public class ResultCodeTest extends BaseSetup {
         BannerAdUnit adUnit = new BannerAdUnit("", 320, 50);
         MoPubView testView = new MoPubView(activity);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
-        adUnit.fetchDemand(testView, activity, mockListener);
+        adUnit.fetchDemand(testView, mockListener);
         verify(mockListener).onComplete(ResultCode.INVALID_CONFIG_ID);
     }
 
@@ -44,7 +44,7 @@ public class ResultCodeTest extends BaseSetup {
         BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
         MoPubView testView = new MoPubView(activity);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
-        adUnit.fetchDemand(testView, activity, mockListener);
+        adUnit.fetchDemand(testView, mockListener);
         verify(mockListener).onComplete(ResultCode.INVALID_HOST_URL);
     }
 
@@ -55,7 +55,7 @@ public class ResultCodeTest extends BaseSetup {
         adUnit.addAdditionalSize(300, 250);
         MoPubView testView = new MoPubView(activity);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
-        adUnit.fetchDemand(testView, activity, mockListener);
+        adUnit.fetchDemand(testView, mockListener);
         verify(mockListener).onComplete(ResultCode.INVALID_SIZE);
     }
 
@@ -66,7 +66,7 @@ public class ResultCodeTest extends BaseSetup {
         adUnit.addAdditionalSize(300, 250);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        adUnit.fetchDemand(builder.build(), activity, mockListener);
+        adUnit.fetchDemand(builder.build(), mockListener);
         verify(mockListener, never()).onComplete(ResultCode.INVALID_SIZE);
     }
 }
