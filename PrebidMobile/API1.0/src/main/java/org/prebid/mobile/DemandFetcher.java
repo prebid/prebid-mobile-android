@@ -171,6 +171,7 @@ class DemandFetcher {
                         public void onDemandFailed(ResultCode resultCode, String auctionId) {
 
                             if (!finished && RequestRunnable.this.auctionId.equals(auctionId)) {
+                                Util.apply(null, DemandFetcher.this.adObject); // this removes old bids
                                 notifyListener(resultCode);
                                 finished = true;
                             }
