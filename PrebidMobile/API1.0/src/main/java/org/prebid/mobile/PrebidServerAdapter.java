@@ -552,9 +552,9 @@ public class PrebidServerAdapter implements DemandAdapter {
                 if (!TextUtils.isEmpty(finalKeywords)) {
                     user.put("keywords", finalKeywords);
                 }
-                if (TargetingParams.isSubjectToGDPR(PrebidMobile.getApplicationContext()) != null) {
+                if (TargetingParams.isSubjectToGDPR() != null) {
                     JSONObject ext = new JSONObject();
-                    ext.put("consent", TargetingParams.getGDPRConsentString(PrebidMobile.getApplicationContext()));
+                    ext.put("consent", TargetingParams.getGDPRConsentString());
                     user.put("ext", ext);
                 }
             } catch (JSONException e) {
@@ -567,8 +567,8 @@ public class PrebidServerAdapter implements DemandAdapter {
             JSONObject regs = new JSONObject();
             try {
                 JSONObject ext = new JSONObject();
-                if (TargetingParams.isSubjectToGDPR(PrebidMobile.getApplicationContext()) != null) {
-                    if (TargetingParams.isSubjectToGDPR(PrebidMobile.getApplicationContext())) {
+                if (TargetingParams.isSubjectToGDPR() != null) {
+                    if (TargetingParams.isSubjectToGDPR()) {
                         ext.put("gdpr", 1);
                     } else {
                         ext.put("gdpr", 0);

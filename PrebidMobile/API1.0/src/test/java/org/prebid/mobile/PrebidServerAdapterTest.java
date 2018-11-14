@@ -6,17 +6,13 @@ import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.testutils.BaseSetup;
-import org.prebid.mobile.testutils.Lock;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.util.Transcript;
-import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -211,7 +207,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
-    public void testPostDataValidation() throws Exception {
+    public void testTargetingParamsInPostData() throws Exception {
         if (successfulMockServerStarted) {
             server.enqueue(new MockResponse().setResponseCode(200).setBody("{}"));
             HttpUrl hostUrl = server.url("/");
@@ -220,6 +216,13 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidMobile.setAccountId("12345");
             PrebidMobile.setShareGeoLocation(true);
             PrebidMobile.setApplicationContext(activity.getApplicationContext());
+            TargetingParams.setYearOfBirth(1989);
+            TargetingParams.setGender(TargetingParams.GENDER.FEMALE);
+            TargetingParams.setBundleName("org.prebid.mobile");
+            TargetingParams.setDomain("prebid.org");
+            TargetingParams.setStoreUrl("store://app");
+            TargetingParams.setSubjectToGDPR(true);
+            TargetingParams.setGDPRConsentString("testGDPR");
             DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
@@ -232,80 +235,54 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter.ServerConnector connector = connectors.get(0);
             assertEquals(uuid, connector.getAuctionId());
             JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
-            Iterator it = postData.keys();
-            HashSet<String> keys = new HashSet<>();
-            keys.add("id");
-            keys.add("source");
-            keys.add("imp");
-            keys.add("device");
-            keys.add("app");
-            keys.add("user");
-            keys.add("regs");
-            keys.add("ext");
-            while (it.hasNext()) {
-                keys.remove(it.next());
-            }
-            assertEquals(0, keys.size());
-            JSONAssert.assertEquals("{\n" +
-                    "  \"id\": \"PrebidMobile\",\n" +
-                    "  \"secure\": 1,\n" +
-                    "  \"banner\": {\n" +
-                    "    \"format\": [\n" +
-                    "      {\n" +
-                    "        \"w\": 320,\n" +
-                    "        \"h\": 50\n" +
-                    "      }\n" +
-                    "    ]\n" +
-                    "  },\n" +
-                    "  \"ext\": {\n" +
-                    "    \"prebid\": {\n" +
-                    "      \"storedrequest\": {\n" +
-                    "        \"id\": \"67890\"\n" +
-                    "      }\n" +
-                    "    }\n" +
-                    "  }\n" +
-                    "}", postData.getJSONArray("imp").getJSONObject(0), false);
-            JSONAssert.assertEquals("{\n" +
-                    "  \"make\": \"unknown\",\n" +
-                    "  \"model\": \"unknown\",\n" +
-                    "  \"lmt\": 0,\n" +
-                    "  \"os\": \"android\",\n" +
-                    "  \"osv\": \"21\",\n" +
-                    "  \"language\": \"en\",\n" +
-                    "  \"w\": 320,\n" +
-                    "  \"h\": 0,\n" +
-                    "  \"pxratio\": 1,\n" +
-                    "  \"connectiontype\": 2\n" +
-                    "}", postData.getJSONObject("device"), false);
-            JSONAssert.assertEquals("{\n" +
-                    "    \"bundle\": \"org.robolectric.default\",\n" +
-                    "    \"publisher\": {\n" +
-                    "      \"id\": \"12345\"\n" +
-                    "    },\n" +
-                    "    \"ext\": {\n" +
-                    "      \"prebid\": {\n" +
-                    "        \"source\": \"prebid-mobile\",\n" +
-                    "        \"version\": \"0.5\"\n" +
-                    "      }\n" +
-                    "    }\n" +
-                    "  }", postData.getJSONObject("app"), false);
-            JSONAssert.assertEquals("{\n" +
-                    "    \"gender\": \"O\"\n" +
-                    "  }", postData.getJSONObject("user"), false);
-            JSONAssert.assertEquals("{\n" +
-                    "    \"ext\": {}\n" +
-                    "  }", postData.getJSONObject("regs"), false);
-            JSONAssert.assertEquals("{\n" +
-                    "    \"prebid\": {\n" +
-                    "      \"cache\": {\n" +
-                    "        \"bids\": {}\n" +
-                    "      },\n" +
-                    "      \"storedrequest\": {\n" +
-                    "        \"id\": \"12345\"\n" +
-                    "      },\n" +
-                    "      \"targeting\": {}\n" +
-                    "    }\n" +
-                    "  }", postData.getJSONObject("ext"), false);
+            assertEquals(8, postData.length());
+            assertTrue(postData.has("id"));
+            assertTrue(postData.has("source"));
+            assertTrue(postData.has("imp"));
+            assertTrue(postData.has("device"));
+            assertTrue(postData.has("app"));
+            assertTrue(postData.has("user"));
+            assertTrue(postData.has("regs"));
+            assertTrue(postData.has("ext"));
+            JSONObject imp = postData.getJSONArray("imp").getJSONObject(0);
+            assertEquals("PrebidMobile", imp.getString("id"));
+            assertEquals(1, imp.getInt("secure"));
+            assertEquals(1, imp.getJSONObject("banner").getJSONArray("format").length());
+            assertEquals(320, imp.getJSONObject("banner").getJSONArray("format").getJSONObject(0).getInt("w"));
+            assertEquals(50, imp.getJSONObject("banner").getJSONArray("format").getJSONObject(0).getInt("h"));
+            assertEquals(67890, imp.getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").getInt("id"));
+            JSONObject device = postData.getJSONObject("device");
+            assertEquals(10, device.length());
+            assertEquals(PrebidServerSettings.deviceMake, device.getString("make"));
+            assertEquals(PrebidServerSettings.deviceModel, device.getString("model"));
+            assertEquals(0, device.getInt("lmt"));
+            assertEquals(PrebidServerSettings.os, device.getString("os"));
+            assertEquals(PrebidServerSettings.language, device.getString("language"));
+            assertEquals(String.valueOf(BaseSetup.testSDK), device.getString("osv"));
+            assertEquals(320, device.getInt("w"));
+            assertEquals(0, device.getInt("h"));
+            assertEquals(1, device.getInt("pxratio"));
+            assertEquals(2, device.getInt("connectiontype"));
+            JSONObject app = postData.getJSONObject("app");
+            assertEquals("org.prebid.mobile", app.getString("bundle"));
+            assertEquals("prebid.org", app.getString("domain"));
+            assertEquals("store://app", app.getString("storeurl"));
+            assertEquals("12345", app.getJSONObject("publisher").getString("id"));
+            assertEquals("prebid-mobile", app.getJSONObject("ext").getJSONObject("prebid").getString("source"));
+            assertEquals(PrebidServerSettings.sdk_version, app.getJSONObject("ext").getJSONObject("prebid").getString("version"));
+            JSONObject user = postData.getJSONObject("user");
+            assertEquals(3, user.length());
+            assertEquals(1989, user.getInt("yob"));
+            assertEquals("F", user.getString("gender"));
+            assertEquals("testGDPR", user.getJSONObject("ext").getString("consent"));
+            JSONObject regs = postData.getJSONObject("regs");
+            assertEquals(1, regs.getJSONObject("ext").getInt("gdpr"));
+            JSONObject ext = postData.getJSONObject("ext");
+            assertTrue(ext.getJSONObject("prebid").has("cache"));
+            assertTrue(ext.getJSONObject("prebid").getJSONObject("cache").has("bids"));
+            assertEquals(0, ext.getJSONObject("prebid").getJSONObject("cache").getJSONObject("bids").length());
+            assertEquals("12345", ext.getJSONObject("prebid").getJSONObject("storedrequest").getString("id"));
+            assertTrue(ext.getJSONObject("prebid").has("targeting"));
         } else {
             assertTrue("Server failed to start, unable to test.", false);
         }

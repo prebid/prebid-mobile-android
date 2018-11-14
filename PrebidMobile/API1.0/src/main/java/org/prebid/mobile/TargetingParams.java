@@ -47,7 +47,8 @@ public class TargetingParams {
 
     //region Public APIs
 
-    public static void setGDPRConsentString(Context context, String string) {
+    public static void setGDPRConsentString(String string) {
+        Context context = PrebidMobile.getApplicationContext();
         if (!TextUtils.isEmpty(string) && context != null) {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = pref.edit();
@@ -56,7 +57,8 @@ public class TargetingParams {
         }
     }
 
-    public static String getGDPRConsentString(Context context) {
+    public static String getGDPRConsentString() {
+        Context context = PrebidMobile.getApplicationContext();
         if (context != null) {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
             if (pref.contains(PREBID_CONSENT_STRING_KEY)) {
@@ -68,7 +70,8 @@ public class TargetingParams {
         return null;
     }
 
-    public static void setSubjectToGDPR(Context context, boolean consent) {
+    public static void setSubjectToGDPR(boolean consent) {
+        Context context = PrebidMobile.getApplicationContext();
         if (context != null) {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = pref.edit();
@@ -77,7 +80,8 @@ public class TargetingParams {
         }
     }
 
-    public static Boolean isSubjectToGDPR(Context context) {
+    public static Boolean isSubjectToGDPR() {
+        Context context = PrebidMobile.getApplicationContext();
         if (context != null) {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
             if (pref.contains(PREBID_GDPR_KEY)) {

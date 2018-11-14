@@ -35,12 +35,9 @@ public class UtilTest extends BaseSetup {
 
     @Test
     public void testGetClassFromString() throws Exception {
-        Class mopubClass = MoPubView.class;
-        assertEquals(mopubClass, Util.getClassFromString(Util.MOPUB_BANNER_VIEW_CLASS));
-        Class mopubInstlClass = MoPubInterstitial.class;
-        assertEquals(mopubInstlClass, Util.getClassFromString(Util.MOPUB_INTERSTITIAL_CLASS));
-        Class dfpAdRequestClass = PublisherAdRequest.class;
-        assertEquals(dfpAdRequestClass, Util.getClassFromString(Util.DFP_AD_REQUEST_CLASS));
+        assertEquals(MoPubView.class, Util.getClassFromString(Util.MOPUB_BANNER_VIEW_CLASS));
+        assertEquals(MoPubInterstitial.class, Util.getClassFromString(Util.MOPUB_INTERSTITIAL_CLASS));
+        assertEquals(PublisherAdRequest.class, Util.getClassFromString(Util.DFP_AD_REQUEST_CLASS));
     }
 
     @Test
