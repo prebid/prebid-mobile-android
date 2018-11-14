@@ -146,13 +146,14 @@ public class PrebidServerAdapter implements DemandAdapter {
                             JSONArray bids = seat.getJSONArray("bid");
                             if (bids != null) {
                                 for (int j = 0; j < bids.length(); j++) {
-                                    JSONObject bid = bids.getJSONObject(i);
+                                    JSONObject bid = bids.getJSONObject(j);
                                     JSONObject hb_key_values = bid.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting");
                                     Iterator it = hb_key_values.keys();
                                     while (it.hasNext()) {
                                         String key = (String) it.next();
                                         keywords.put(key, hb_key_values.getString(key));
                                     }
+
                                 }
                             }
                         }
