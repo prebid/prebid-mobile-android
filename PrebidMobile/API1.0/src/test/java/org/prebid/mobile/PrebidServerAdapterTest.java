@@ -147,6 +147,85 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
+    public void testSuccessfulBidResponseWithoutCacheId() {
+        if (successfulMockServerStarted) {
+            server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
+                    "  \"id\": \"3dc76667-a500-4e01-a43b-368e36d6c7cc\",\n" +
+                    "  \"seatbid\": [\n" +
+                    "    {\n" +
+                    "      \"bid\": [\n" +
+                    "        {\n" +
+                    "          \"id\": \"1644265211331914430\",\n" +
+                    "          \"impid\": \"Banner_300x250\",\n" +
+                    "          \"price\": 0.5,\n" +
+                    "          \"adm\": \"<script src=\\\"hello world\\\">this is an mock ad</script>\",\n" +
+                    "          \"adid\": \"113276871\",\n" +
+                    "          \"adomain\": [\n" +
+                    "            \"appnexus.com\"\n" +
+                    "          ],\n" +
+                    "          \"iurl\": \"https://nym1-ib.adnxs.com/cr?id=113276871\",\n" +
+                    "          \"cid\": \"9325\",\n" +
+                    "          \"crid\": \"113276871\",\n" +
+                    "          \"w\": 300,\n" +
+                    "          \"h\": 250,\n" +
+                    "          \"ext\": {\n" +
+                    "            \"prebid\": {\n" +
+                    "              \"targeting\": {\n" +
+                    "                \"hb_bidder\": \"appnexus\",\n" +
+                    "                \"hb_bidder_appnexus\": \"appnexus\",\n" +
+                    "                \"hb_creative_loadtype\": \"html\",\n" +
+                    "                \"hb_env\": \"mobile-app\",\n" +
+                    "                \"hb_env_appnexus\": \"mobile-app\",\n" +
+                    "                \"hb_pb\": \"0.50\",\n" +
+                    "                \"hb_pb_appnexus\": \"0.50\",\n" +
+                    "                \"hb_size\": \"300x250\",\n" +
+                    "                \"hb_size_appnexus\": \"300x250\"\n" +
+                    "              },\n" +
+                    "              \"type\": \"banner\"\n" +
+                    "            },\n" +
+                    "            \"bidder\": {\n" +
+                    "              \"appnexus\": {\n" +
+                    "                \"brand_id\": 1,\n" +
+                    "                \"auction_id\": 7888349588523321000,\n" +
+                    "                \"bidder_id\": 2,\n" +
+                    "                \"bid_ad_type\": 0\n" +
+                    "              }\n" +
+                    "            }\n" +
+                    "          }\n" +
+                    "        }\n" +
+                    "      ],\n" +
+                    "      \"seat\": \"appnexus\"\n" +
+                    "    }\n" +
+                    "  ],\n" +
+                    "  \"ext\": {\n" +
+                    "    \"responsetimemillis\": {\n" +
+                    "      \"appnexus\": 213\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}"));
+            HttpUrl hostUrl = server.url("/");
+            Host.CUSTOM.setHostUrl(hostUrl.toString());
+            PrebidMobile.setHost(Host.CUSTOM);
+            PrebidMobile.setAccountId("12345");
+            PrebidMobile.setShareGeoLocation(true);
+            PrebidMobile.setApplicationContext(activity.getApplicationContext());
+            DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+            PrebidServerAdapter adapter = new PrebidServerAdapter();
+            HashSet<AdSize> sizes = new HashSet<>();
+            sizes.add(new AdSize(300, 250));
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            String uuid = UUID.randomUUID().toString();
+            adapter.requestDemand(requestParams, mockListener, uuid);
+            Robolectric.flushBackgroundThreadScheduler();
+            Robolectric.flushForegroundThreadScheduler();
+            verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
+        } else {
+            assertTrue("Server failed to start, unable to test.", false);
+        }
+    }
+
+
+    @Test
     public void testMergingBidsFromDifferentSeats() {
         if (successfulMockServerStarted) {
             server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
@@ -394,7 +473,6 @@ public class PrebidServerAdapterTest extends BaseSetup {
             assertEquals(50, imp.getJSONObject("banner").getJSONArray("format").getJSONObject(0).getInt("h"));
             assertEquals(67890, imp.getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").getInt("id"));
             JSONObject device = postData.getJSONObject("device");
-            assertEquals(10, device.length());
             assertEquals(PrebidServerSettings.deviceMake, device.getString("make"));
             assertEquals(PrebidServerSettings.deviceModel, device.getString("model"));
             assertEquals(0, device.getInt("lmt"));
