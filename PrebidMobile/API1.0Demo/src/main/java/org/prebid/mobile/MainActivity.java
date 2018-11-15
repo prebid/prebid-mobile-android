@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.util.Arrays;
@@ -108,6 +110,12 @@ public class MainActivity extends AppCompatActivity {
         demoActivityIntent.putExtra(Constants.AD_TYPE_NAME, adType);
         if (adType.equals("Banner")) {
             demoActivityIntent.putExtra(Constants.AD_SIZE_NAME, adSize);
+        }
+        EditText autoRefreshMillis = (EditText) findViewById(R.id.autoRefreshInput);
+        String refreshMillisString = autoRefreshMillis.getText().toString();
+        if (!TextUtils.isEmpty(refreshMillisString)) {
+            int refreshMillis = Integer.valueOf(refreshMillisString);
+            demoActivityIntent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
         }
         startActivity(demoActivityIntent);
     }

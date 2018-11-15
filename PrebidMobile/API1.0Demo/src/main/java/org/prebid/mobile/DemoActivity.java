@@ -11,14 +11,13 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
-import com.mopub.mobileads.MoPubErrorCode;
-import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
 
 import static org.prebid.mobile.Constants.MOPUB_BANNER_ADUNIT_ID_300x250;
 
 public class DemoActivity extends AppCompatActivity {
     int count = 0;
+    AdUnit adUnit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,8 +71,10 @@ public class DemoActivity extends AppCompatActivity {
         final PublisherAdRequest request = builder.build();
 
         //region PrebidMobile Mobile API 2.0 usage
-        final BannerAdUnit adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND, width, height);
-        adUnit.fetchDemand(request, this, new OnCompleteListener() {
+        adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND, width, height);
+        int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
+        adUnit.setAutoRefreshPeriodMillis(millis);
+        adUnit.fetchDemand(request, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
                 LogUtil.d("onComplete: " + resultCode.name());
@@ -98,8 +99,9 @@ public class DemoActivity extends AppCompatActivity {
         adView.setMinimumWidth(width);
         adView.setMinimumHeight(height);
         adFrame.addView(adView);
-        final BannerAdUnit adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND, 300, 250);
-        adUnit.fetchDemand(adView, this, new OnCompleteListener() {
+        adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND, 300, 250);
+        adUnit.setAutoRefreshPeriodMillis(getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0));
+        adUnit.fetchDemand(adView, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
                 LogUtil.d("onComplete: " + resultCode.name());
@@ -109,35 +111,14 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     void createMoPubInterstitial() {
-        MoPubInterstitial interstitial = new MoPubInterstitial(this, "3acf42c3c06a4d93a512b51881f8ac60");
-        interstitial.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
-            @Override
-            public void onInterstitialLoaded(MoPubInterstitial interstitial) {
-                interstitial.show();
-            }
+    }
 
-            @Override
-            public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
-                LogUtil.d(errorCode.toString());
-
-            }
-
-            @Override
-            public void onInterstitialShown(MoPubInterstitial interstitial) {
-
-            }
-
-            @Override
-            public void onInterstitialClicked(MoPubInterstitial interstitial) {
-
-            }
-
-            @Override
-            public void onInterstitialDismissed(MoPubInterstitial interstitial) {
-
-            }
-        });
-        interstitial.load();
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (adUnit != null) {
+            adUnit.stopAutoRefersh();
+            adUnit = null;
+        }
     }
 }

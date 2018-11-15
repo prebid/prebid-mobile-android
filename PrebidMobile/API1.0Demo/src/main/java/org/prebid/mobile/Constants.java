@@ -8,6 +8,7 @@ public class Constants {
     static final String AD_TYPE_NAME = "adType";
     static final String AD_SERVER_NAME = "adServer";
     static final String AD_SIZE_NAME = "adSize";
+    static final String AUTO_REFRESH_NAME = "autoRefresh";
 
     // Prebid server config ids
     static final String PBS_ACCOUNT_ID = "bfa84af2-bd16-4d35-96ad-31c6bb888df0";

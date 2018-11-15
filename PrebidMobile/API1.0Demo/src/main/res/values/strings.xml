@@ -16,4 +16,5 @@
         <item>320x50</item>
     </string-array>
     <string name="buttonText">Show Ad</string>
+    <string name="autoRefreshText">Refresh Millis</string>
 </resources>
