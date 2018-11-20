@@ -138,6 +138,7 @@ public class PrebidServerAdapter implements DemandAdapter {
             super.onPostExecute(jsonObject);
             HashMap<String, String> keywords = new HashMap<>();
             if (jsonObject != null) {
+                LogUtil.d("Getting response for auction " + getAuctionId() + ": " + jsonObject.toString());
                 try {
                     JSONArray seatbid = jsonObject.getJSONArray("seatbid");
                     if (seatbid != null) {
@@ -149,11 +150,20 @@ public class PrebidServerAdapter implements DemandAdapter {
                                     JSONObject bid = bids.getJSONObject(j);
                                     JSONObject hb_key_values = bid.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting");
                                     Iterator it = hb_key_values.keys();
+                                    boolean containBids = false;
                                     while (it.hasNext()) {
                                         String key = (String) it.next();
-                                        keywords.put(key, hb_key_values.getString(key));
+                                        if (key.startsWith("hb_cache_id")) {
+                                            containBids = true;
+                                        }
                                     }
-
+                                    it = hb_key_values.keys();
+                                    if (containBids) {
+                                        while (it.hasNext()) {
+                                            String key = (String) it.next();
+                                            keywords.put(key, hb_key_values.getString(key));
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -161,9 +171,11 @@ public class PrebidServerAdapter implements DemandAdapter {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            } else {
+                LogUtil.d("Getting null response for auction " + getAuctionId());
             }
             if (listener != null) {
-                if (!keywords.isEmpty() && keywords.keySet().contains("hb_cache_id")) {
+                if (!keywords.isEmpty()) {
                     listener.onDemandReady(keywords, auctionId);
                 } else {
                     listener.onDemandFailed(ResultCode.NO_BIDS, auctionId);

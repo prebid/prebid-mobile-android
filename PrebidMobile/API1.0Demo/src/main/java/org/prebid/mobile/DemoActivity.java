@@ -16,7 +16,6 @@ import com.mopub.mobileads.MoPubView;
 import static org.prebid.mobile.Constants.MOPUB_BANNER_ADUNIT_ID_300x250;
 
 public class DemoActivity extends AppCompatActivity {
-    int count = 0;
     AdUnit adUnit;
 
     @Override
@@ -49,22 +48,6 @@ public class DemoActivity extends AppCompatActivity {
             dfpAdView.setAdUnitId("asizelessadunitidhaha");
         }
         dfpAdView.setAdSizes(new AdSize(width, height));
-        dfpAdView.setAdListener(new AdListener() {
-
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                count++;
-                LogUtil.d("ad failed " + count);
-            }
-
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                count++;
-                LogUtil.d("ad loaded " + count);
-            }
-        });
         adFrame.addView(dfpAdView);
         final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
 
@@ -77,7 +60,6 @@ public class DemoActivity extends AppCompatActivity {
         adUnit.fetchDemand(request, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
-                LogUtil.d("onComplete: " + resultCode.name());
                 dfpAdView.loadAd(request);
             }
         });
@@ -104,7 +86,6 @@ public class DemoActivity extends AppCompatActivity {
         adUnit.fetchDemand(adView, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
-                LogUtil.d("onComplete: " + resultCode.name());
                 adView.loadAd();
             }
         });

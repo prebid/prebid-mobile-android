@@ -31,6 +31,7 @@ public abstract class AdUnit {
     }
 
     public void stopAutoRefersh() {
+        LogUtil.v("Stopping auto refresh...");
         if (fetcher != null) {
             fetcher.destroy();
             fetcher = null;
@@ -40,15 +41,18 @@ public abstract class AdUnit {
 
     public void fetchDemand(@NonNull Object adObj, @NonNull OnCompleteListener listener) {
         if (TextUtils.isEmpty(PrebidMobile.getAccountId())) {
+            LogUtil.e("Invalid account id.");
             listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);
             return;
         }
         if (TextUtils.isEmpty(configId)) {
+            LogUtil.e("Invalid config id.");
             listener.onComplete(ResultCode.INVALID_CONFIG_ID);
             return;
         }
         if (PrebidMobile.getHost().equals(Host.CUSTOM)) {
             if (TextUtils.isEmpty(PrebidMobile.getHost().getHostUrl())) {
+                LogUtil.e("Empty host url for custom Prebid Server host.");
                 listener.onComplete(ResultCode.INVALID_HOST_URL);
                 return;
             }
@@ -57,10 +61,12 @@ public abstract class AdUnit {
         if (adType == AdType.BANNER) {
             sizes = ((BannerAdUnit) this).getSizes();
             if (sizes == null || sizes.isEmpty()) {
+                LogUtil.e("No size set for banner ad unit.");
                 listener.onComplete(ResultCode.NO_SIZE_FOR_BANNER);
                 return;
             }
             if (adObj.getClass() == Util.getClassFromString(Util.MOPUB_BANNER_VIEW_CLASS) && sizes.size() > 1) {
+                LogUtil.e("More than one size passed for MoPub ad view.");
                 listener.onComplete(ResultCode.INVALID_SIZE);
             }
         }
@@ -69,6 +75,11 @@ public abstract class AdUnit {
         fetcher.setPeriodMillis(periodMillis);
         fetcher.setRequestParams(requestParams);
         fetcher.setListener(listener);
+        if (periodMillis >= 30000) {
+            LogUtil.v("Start fetching bids with auto refresh millis: " + periodMillis);
+        } else {
+            LogUtil.v("Start a single fetching.");
+        }
         fetcher.start();
     }
 

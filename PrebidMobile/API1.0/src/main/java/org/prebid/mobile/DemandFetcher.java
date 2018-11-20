@@ -162,6 +162,7 @@ class DemandFetcher {
                         public void onDemandReady(final HashMap<String, String> demand, String auctionId) {
                             if (!finished && RequestRunnable.this.auctionId.equals(auctionId)) {
                                 Util.apply(demand, DemandFetcher.this.adObject);
+                                LogUtil.i("Successfully set the following keywords: " + demand.toString());
                                 notifyListener(ResultCode.SUCCESS);
                                 finished = true;
                             }
@@ -169,9 +170,9 @@ class DemandFetcher {
 
                         @Override
                         public void onDemandFailed(ResultCode resultCode, String auctionId) {
-
                             if (!finished && RequestRunnable.this.auctionId.equals(auctionId)) {
-                                Util.apply(null, DemandFetcher.this.adObject); // this removes old bids
+                                Util.apply(null, DemandFetcher.this.adObject);
+                                LogUtil.i("Removed all used keywords from the ad object");
                                 notifyListener(resultCode);
                                 finished = true;
                             }
