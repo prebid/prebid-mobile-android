@@ -169,7 +169,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                         }
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    LogUtil.e("Error processing JSON response.");
                 }
             } else {
                 LogUtil.d("Getting null response for auction " + getAuctionId());
