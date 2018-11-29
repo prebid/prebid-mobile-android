@@ -28,6 +28,6 @@ android {
 }
 
 dependencies {
-    compile project(':PrebidMobileCore')
-    testCompile project(':UnitTestUtils')
+    implementation project(':PrebidMobileCore')
+    testImplementation project(':UnitTestUtils')
 }

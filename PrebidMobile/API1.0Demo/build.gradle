@@ -28,10 +28,10 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.google.android.gms:play-services-ads:10.2.0'
-    compile('com.mopub:mopub-sdk:4.15.0@aar') {
+    implementation 'com.android.support:appcompat-v7:25.2.0'
+    implementation 'com.google.android.gms:play-services-ads:10.2.0'
+    implementation('com.mopub:mopub-sdk:4.15.0@aar') {
         transitive = true
     }
-    compile project(':API1.0')
+    implementation project(':API1.0')
 }

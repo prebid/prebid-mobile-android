@@ -27,14 +27,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    buildToolsVersion '26.0.2'
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'junit:junit:4.12'
-    compile 'org.assertj:assertj-core:1.7.0'
-    compile 'org.robolectric:robolectric:3.0'
-    compile 'org.robolectric:shadows-httpclient:3.0'
-    compile 'com.squareup.okhttp:mockwebserver:2.5.0'
+    implementation 'com.android.support:appcompat-v7:25.2.0'
+    implementation 'junit:junit:4.12'
+    implementation 'org.assertj:assertj-core:1.7.0'
+    implementation 'org.robolectric:robolectric:3.0'
+    implementation 'org.robolectric:shadows-httpclient:3.0'
+    implementation 'com.squareup.okhttp:mockwebserver:2.5.0'
 }
