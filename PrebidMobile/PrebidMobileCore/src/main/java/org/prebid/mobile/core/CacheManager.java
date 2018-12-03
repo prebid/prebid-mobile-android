@@ -71,18 +71,13 @@ public class CacheManager {
         }
     }
 
-    public String saveCache(String bid, String format) {
+    public String saveCache(String bid) {
         if (TextUtils.isEmpty(bid)) {
             return null;
         }
 
         String cacheId = "Prebid_" + StringUtils.randomLowercaseAlphabetic(8) + "_" + String.valueOf(System.currentTimeMillis());
-
-        if ("html".equals(format)) {
-            saveCacheForWeb(cacheId, bid);
-        } else if ("demand_sdk".equals(format)) {
-            saveCacheForSDK(cacheId, bid);
-        }
+        saveCacheForWeb(cacheId, bid);
         return cacheId;
     }
 

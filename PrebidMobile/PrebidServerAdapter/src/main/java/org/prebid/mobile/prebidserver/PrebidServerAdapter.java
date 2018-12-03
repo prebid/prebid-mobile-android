@@ -139,7 +139,7 @@ public class PrebidServerAdapter implements DemandAdapter, ServerConnector.Serve
                                         if (targetingKeywords != null && targetingKeywords.length() > 0) {
                                             BidResponse newBid = null;
                                             if (Prebid.useLocalCache()) {
-                                                String cacheId = CacheManager.getCacheManager().saveCache(bid.toString(), "html");
+                                                String cacheId = CacheManager.getCacheManager().saveCache(bid.toString());
                                                 newBid = new BidResponse(bidPrice, cacheId);
                                                 newBid.setBidderCode(bidderName);
                                                 Iterator<?> keys = targetingKeywords.keys();
