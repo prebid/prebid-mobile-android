@@ -70,17 +70,22 @@ public abstract class AdUnit {
                 listener.onComplete(ResultCode.INVALID_SIZE);
             }
         }
-        fetcher = new DemandFetcher(adObj);
-        RequestParams requestParams = new RequestParams(configId, adType, sizes, keywords);
-        fetcher.setPeriodMillis(periodMillis);
-        fetcher.setRequestParams(requestParams);
-        fetcher.setListener(listener);
-        if (periodMillis >= 30000) {
-            LogUtil.v("Start fetching bids with auto refresh millis: " + periodMillis);
+        if (Util.supportedAdObject(adObj)) {
+            fetcher = new DemandFetcher(adObj);
+            RequestParams requestParams = new RequestParams(configId, adType, sizes, keywords);
+            fetcher.setPeriodMillis(periodMillis);
+            fetcher.setRequestParams(requestParams);
+            fetcher.setListener(listener);
+            if (periodMillis >= 30000) {
+                LogUtil.v("Start fetching bids with auto refresh millis: " + periodMillis);
+            } else {
+                LogUtil.v("Start a single fetching.");
+            }
+            fetcher.start();
         } else {
-            LogUtil.v("Start a single fetching.");
+            listener.onComplete(ResultCode.INVALID_AD_OBJECT);
         }
-        fetcher.start();
+
     }
 
 

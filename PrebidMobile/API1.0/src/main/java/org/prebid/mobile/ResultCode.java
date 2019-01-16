@@ -27,6 +27,10 @@ public enum ResultCode {
      */
     INVALID_SIZE,
     /**
+     * Currently, we only support MoPub Banner, Interstitial, DFP Banner, Interstitial
+     */
+    INVALID_AD_OBJECT,
+    /**
      * The ad request failed due to a network error.
      */
     NETWORK_ERROR,

@@ -173,6 +173,15 @@ class Util {
         return sb.toString();
     }
 
+    static boolean supportedAdObject(Object adObj) {
+        if (adObj == null) return false;
+        if (adObj.getClass() == getClassFromString(MOPUB_BANNER_VIEW_CLASS)
+                || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)
+                || adObj.getClass() == getClassFromString(DFP_AD_REQUEST_CLASS))
+            return true;
+        return false;
+    }
+
     static void apply(HashMap<String, String> bids, Object adObj) {
         if (adObj == null) return;
         if (adObj.getClass() == getClassFromString(MOPUB_BANNER_VIEW_CLASS)

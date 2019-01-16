@@ -13,6 +13,7 @@ import org.robolectric.annotation.Config;
 import java.util.HashMap;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
 
@@ -80,5 +81,18 @@ public class UtilTest extends BaseSetup {
         assertEquals(1, request.getCustomTargeting().size());
         assertTrue(request.getCustomTargeting().containsKey("Key"));
         assertEquals("Value", request.getCustomTargeting().get("Key"));
+    }
+
+    @Test
+    public void testSupportedAdObject() throws Exception {
+        MoPubView testView = new MoPubView(activity);
+        assertTrue(Util.supportedAdObject(testView));
+        assertFalse(Util.supportedAdObject(null));
+        MoPubInterstitial interstitial = new MoPubInterstitial(activity, "");
+        assertTrue(Util.supportedAdObject(interstitial));
+        PublisherAdRequest request = new PublisherAdRequest.Builder().build();
+        assertTrue(Util.supportedAdObject(request));
+        Object object = new Object();
+        assertFalse(Util.supportedAdObject(object));
     }
 }
