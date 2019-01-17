@@ -348,6 +348,18 @@ public class PrebidServerAdapter implements DemandAdapter {
                 imp.put("secure", 1);
                 if (requestParams.getAdType().equals(AdType.INTERSTITIAL)) {
                     imp.put("instl", 1);
+                    JSONObject banner = new JSONObject();
+                    JSONArray format = new JSONArray();
+                    Context context = PrebidMobile.getApplicationContext();
+                    if (context != null) {
+                        format.put(new JSONObject().put("w", context.getResources().getConfiguration().screenWidthDp).put("h", context.getResources().getConfiguration().screenHeightDp));
+                    } else {
+                        // this should never happen since we won't make request if context is null
+                        // adding this fall back just in case the developer did something wrong
+                        format.put(new JSONObject().put("w", 320).put("h", 480));
+                    }
+                    banner.put("format", format);
+                    imp.put("banner", banner);
                 } else {
                     JSONObject banner = new JSONObject();
                     JSONArray format = new JSONArray();

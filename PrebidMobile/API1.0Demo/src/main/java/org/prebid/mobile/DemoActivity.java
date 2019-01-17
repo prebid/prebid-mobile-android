@@ -2,8 +2,10 @@ package org.prebid.mobile;
 
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
 
@@ -11,6 +13,9 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
+import com.mopub.mobileads.MoPubErrorCode;
+import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
 
 import static org.prebid.mobile.Constants.MOPUB_BANNER_ADUNIT_ID_300x250;
@@ -53,7 +58,7 @@ public class DemoActivity extends AppCompatActivity {
 
         final PublisherAdRequest request = builder.build();
 
-        //region PrebidMobile Mobile API 2.0 usage
+        //region PrebidMobile Mobile API 1.0 usage
         adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND, width, height);
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
@@ -67,6 +72,42 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     void createDFPInterstitial() {
+        final PublisherInterstitialAd interstitialAd = new PublisherInterstitialAd(this);
+        interstitialAd.setAdUnitId(Constants.DFP_INTERSTITIAL_ADUNIT_ID);
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                interstitialAd.show();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(DemoActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(DemoActivity.this);
+                }
+                builder.setTitle("Failed to load DFP interstitial ad")
+                        .setMessage("Error code: " + i)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
+        adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL_APPNEXUS_DEMAND);
+        int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
+        adUnit.setAutoRefreshPeriodMillis(millis);
+        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        final PublisherAdRequest request = builder.build();
+        adUnit.fetchDemand(request, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+                LogUtil.i(resultCode.toString());
+                interstitialAd.loadAd(request);
+            }
+        });
 
     }
 
@@ -92,6 +133,52 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     void createMoPubInterstitial() {
+        final MoPubInterstitial interstitial = new MoPubInterstitial(this, Constants.MOPUB_INTERSTITIAL_ADUNIT_ID);
+        interstitial.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
+            @Override
+            public void onInterstitialLoaded(MoPubInterstitial interstitial) {
+                interstitial.show();
+            }
+
+            @Override
+            public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(DemoActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                } else {
+                    builder = new AlertDialog.Builder(DemoActivity.this);
+                }
+                builder.setTitle("Failed to load DFP interstitial ad")
+                        .setMessage("Error code: " + errorCode.toString())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+
+            @Override
+            public void onInterstitialShown(MoPubInterstitial interstitial) {
+
+            }
+
+            @Override
+            public void onInterstitialClicked(MoPubInterstitial interstitial) {
+
+            }
+
+            @Override
+            public void onInterstitialDismissed(MoPubInterstitial interstitial) {
+
+            }
+        });
+        adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL_APPNEXUS_DEMAND);
+        int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
+        adUnit.setAutoRefreshPeriodMillis(millis);
+        adUnit.fetchDemand(interstitial, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+                LogUtil.i(resultCode.toString());
+                interstitial.load();
+            }
+        });
     }
 
     @Override

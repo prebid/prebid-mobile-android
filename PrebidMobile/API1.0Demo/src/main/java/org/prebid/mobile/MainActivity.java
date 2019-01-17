@@ -10,6 +10,7 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import java.util.Arrays;
@@ -29,8 +30,9 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
-        // Ad Type Spinner
+        // Get all the components
         Spinner adTypeSpinner = (Spinner) findViewById(R.id.adTypeSpinner);
+        // Ad Type Spinner set up
         ArrayAdapter<CharSequence> adTypeAdapter = ArrayAdapter.createFromResource(
                 this, R.array.adTypeArray,
                 android.R.layout.simple_spinner_item);
@@ -45,6 +47,15 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 adType = adTypes.get(pos);
+                if (adType.equals("Banner")) {
+                    // show size and refresh millis
+                    LinearLayout adSizeRow = (LinearLayout) findViewById(R.id.adSizeRow);
+                    adSizeRow.setVisibility(View.VISIBLE);
+                } else {
+                    // hide size selection and refresh millis
+                    LinearLayout adSizeRow = (LinearLayout) findViewById(R.id.adSizeRow);
+                    adSizeRow.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -95,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-
         //region PrebidMobile API
         PrebidMobile.setAccountId(Constants.PBS_ACCOUNT_ID);
         PrebidMobile.setHost(Host.APPNEXUS);
