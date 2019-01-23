@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -197,10 +198,12 @@ class DemandFetcher {
     }
 
     //region exposed for testing
+    @VisibleForTesting
     Handler getHandler() {
         return this.fetcherHandler;
     }
 
+    @VisibleForTesting
     Handler getDemandHandler() {
         RequestRunnable runnable = this.requestRunnable;
         return runnable.demandHandler;
@@ -208,6 +211,7 @@ class DemandFetcher {
 
     private boolean testMode = false;
 
+    @VisibleForTesting
     void enableTestMode() {
         this.testMode = true;
     }

@@ -10,6 +10,7 @@ import org.robolectric.annotation.Config;
 import java.util.Calendar;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -57,5 +58,21 @@ public class TargetingParamsTest extends BaseSetup {
     public void testStoreUrl() throws Exception {
         TargetingParams.setStoreUrl("store://testapp");
         assertEquals("store://testapp", TargetingParams.getStoreUrl());
+    }
+
+    @Test
+    public void testGDPRFlag() throws Exception{
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        TargetingParams.setSubjectToGDPR(true);
+        assertTrue(TargetingParams.isSubjectToGDPR());
+        TargetingParams.setSubjectToGDPR(false);
+        assertTrue(!TargetingParams.isSubjectToGDPR());
+    }
+
+    @Test
+    public void testGDPRConsentString() {
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        TargetingParams.setGDPRConsentString("testString");
+        assertEquals("testString", TargetingParams.getGDPRConsentString());
     }
 }

@@ -9,6 +9,7 @@ import com.mopub.mobileads.MoPubView;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -91,6 +92,47 @@ public class DemandFetcherTest extends BaseSetup {
             Robolectric.flushForegroundThreadScheduler();
             verify(mockListener).onComplete(ResultCode.NO_BIDS);
             assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
+        } else {
+            assertTrue("Mock server was not started", false);
+        }
+    }
+
+    @Test
+    public void testDestroyAutoRefresh() throws Exception{
+        if (successfulMockServerStarted) {
+            HttpUrl httpUrl = server.url("/");
+            Host.CUSTOM.setHostUrl(httpUrl.toString());
+            PrebidMobile.setHost(Host.CUSTOM);
+            server.enqueue(new MockResponse().setResponseCode(200).setBody("{}"));
+            server.enqueue(new MockResponse().setResponseCode(200).setBody("{}"));
+            server.enqueue(new MockResponse().setResponseCode(200).setBody("{}"));
+            PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+            PublisherAdRequest request = builder.build();
+            DemandFetcher demandFetcher = new DemandFetcher(request);
+            demandFetcher.enableTestMode();
+            demandFetcher.setPeriodMillis(30);
+            HashSet<AdSize> sizes = new HashSet<>();
+            sizes.add(new AdSize(300, 250));
+            ArrayList<String> keywords = new ArrayList<>();
+            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes, keywords);
+            demandFetcher.setRequestParams(requestParams);
+            OnCompleteListener mockListener = mock(OnCompleteListener.class);
+            demandFetcher.setListener(mockListener);
+            assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
+            demandFetcher.start();
+            assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
+            ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
+            fetcherLooper.runOneTask();
+            ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
+            demandLooper.runOneTask();
+            Robolectric.flushBackgroundThreadScheduler();
+            Robolectric.flushForegroundThreadScheduler();
+            assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
+            demandFetcher.destroy();
+            assertTrue(!Robolectric.getForegroundThreadScheduler().areAnyRunnable());
+            assertTrue(!Robolectric.getBackgroundThreadScheduler().areAnyRunnable());
+            assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
+            verify(mockListener, Mockito.times(1)).onComplete(ResultCode.NO_BIDS);
         } else {
             assertTrue("Mock server was not started", false);
         }
