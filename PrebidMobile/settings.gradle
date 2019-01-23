@@ -1,3 +1,1 @@
-include ':DemoApp', ':API1.0', ':PrebidMobileCore', ':API1.0Demo'
-include ':UnitTestUtils'
-include ':PrebidServerAdapter'
+include ':API1.0', ':API1.0Demo'

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="org.prebid.mobile.MainActivity">
+    tools:context="org.prebid.mobile.app.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -119,6 +119,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/buttonText"
+        android:id="@+id/showAd"
         android:onClick="showAd"/>
 
 </LinearLayout>
