@@ -21,18 +21,19 @@ import com.mopub.mobileads.MoPubView;
 import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.InterstitialAdUnit;
-import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.ResultCode;
 
 import static org.prebid.mobile.app.Constants.MOPUB_BANNER_ADUNIT_ID_300x250;
 
 public class DemoActivity extends AppCompatActivity {
+    int refreshCount;
     AdUnit adUnit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        refreshCount = 0;
         setContentView(R.layout.activity_demo);
         Intent intent = getIntent();
         if (intent.getStringExtra(Constants.AD_SERVER_NAME).equals("DFP") && intent.getStringExtra(Constants.AD_TYPE_NAME).equals("Banner")) {
@@ -44,7 +45,6 @@ public class DemoActivity extends AppCompatActivity {
         } else if (intent.getStringExtra(Constants.AD_SERVER_NAME).equals("MoPub") && intent.getStringExtra(Constants.AD_TYPE_NAME).equals("Interstitial")) {
             createMoPubInterstitial();
         }
-
     }
 
     void createDFPBanner(String size) {
@@ -73,6 +73,7 @@ public class DemoActivity extends AppCompatActivity {
             @Override
             public void onComplete(ResultCode resultCode) {
                 dfpAdView.loadAd(request);
+                refreshCount++;
             }
         });
         //endregion
@@ -111,8 +112,8 @@ public class DemoActivity extends AppCompatActivity {
         adUnit.fetchDemand(request, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
-                LogUtil.i(resultCode.toString());
                 interstitialAd.loadAd(request);
+                refreshCount++;
             }
         });
 
@@ -135,6 +136,7 @@ public class DemoActivity extends AppCompatActivity {
             @Override
             public void onComplete(ResultCode resultCode) {
                 adView.loadAd();
+                refreshCount++;
             }
         });
     }
@@ -182,8 +184,8 @@ public class DemoActivity extends AppCompatActivity {
         adUnit.fetchDemand(interstitial, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
-                LogUtil.i(resultCode.toString());
                 interstitial.load();
+                refreshCount++;
             }
         });
     }
