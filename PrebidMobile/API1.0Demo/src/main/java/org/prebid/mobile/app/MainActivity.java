@@ -109,12 +109,6 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-        //region PrebidMobile API
-        PrebidMobile.setAccountId(Constants.PBS_ACCOUNT_ID);
-        PrebidMobile.setHost(Host.APPNEXUS);
-        PrebidMobile.setShareGeoLocation(true);
-        PrebidMobile.setApplicationContext(getApplicationContext());
-        //endregion
     }
 
     public void showAd(View view) {

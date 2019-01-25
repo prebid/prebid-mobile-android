@@ -31,8 +31,8 @@ android {
 dependencies {
     implementation 'com.android.support:support-annotations:28.0.0'
     testImplementation 'org.apache.commons:commons-lang3:3.7'
-    testImplementation 'com.google.android.gms:play-services-ads:10.2.0'
-    testImplementation('com.mopub:mopub-sdk:4.15.0@aar') {
+    testImplementation 'com.google.android.gms:play-services-ads:17.1.2'
+    implementation('com.mopub:mopub-sdk:5.4.1@aar') {
         transitive = true
     }
     testImplementation "org.mockito:mockito-core:2.7.22"
