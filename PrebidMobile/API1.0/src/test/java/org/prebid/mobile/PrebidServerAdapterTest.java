@@ -32,13 +32,13 @@ import static org.mockito.Mockito.verify;
 public class PrebidServerAdapterTest extends BaseSetup {
     @Test
     public void testUpdateTimeoutMillis() {
-        assertEquals(10000, PrebidMobile.timeoutMillis);
-        assertFalse(PrebidMobile.timeoutMillisUpdated);
         if (successfulMockServerStarted) {
             server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()).throttleBody(40, 100, TimeUnit.MILLISECONDS));
             HttpUrl hostUrl = server.url("/");
             Host.CUSTOM.setHostUrl(hostUrl.toString());
             PrebidMobile.setHost(Host.CUSTOM);
+            assertEquals(10000, PrebidMobile.timeoutMillis);
+            assertFalse(PrebidMobile.timeoutMillisUpdated);
             PrebidMobile.setAccountId("12345");
             PrebidMobile.setShareGeoLocation(true);
             PrebidMobile.setApplicationContext(activity.getApplicationContext());
@@ -52,7 +52,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             Robolectric.flushBackgroundThreadScheduler();
             Robolectric.flushForegroundThreadScheduler();
             verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
-            assertTrue(PrebidMobile.timeoutMillis < 2500 && PrebidMobile.timeoutMillis > 2300);
+            assertTrue("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, PrebidMobile.timeoutMillis < 3000 && PrebidMobile.timeoutMillis > 2000);
             assertTrue(PrebidMobile.timeoutMillisUpdated);
         } else {
             assertTrue("Server failed to start, unable to test.", false);

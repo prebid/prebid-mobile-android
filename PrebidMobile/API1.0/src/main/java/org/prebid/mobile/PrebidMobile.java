@@ -26,7 +26,7 @@ public class PrebidMobile {
 
     public static void setHost(Host host) {
         PrebidMobile.host = host;
-        timeoutMillisUpdated = false; // each time a developer sets a new Host for the SDK, we should re-calculate the time our millis
+        timeoutMillisUpdated = false; // each time a developer sets a new Host for the SDK, we should re-calculate the time out millis
         timeoutMillis = 10000;
     }
 
