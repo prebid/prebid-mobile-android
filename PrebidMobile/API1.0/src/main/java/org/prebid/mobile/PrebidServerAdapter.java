@@ -75,8 +75,8 @@ public class PrebidServerAdapter implements DemandAdapter {
         @Override
         protected JSONObject doInBackground(Object... objects) {
             try {
+                long demandFetchStartTime = System.currentTimeMillis();
                 URL url = new URL(getHost());
-
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
@@ -88,7 +88,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                 } // todo still pass cookie if limit ad tracking?
 
                 conn.setRequestMethod("POST");
-                conn.setConnectTimeout(DemandFetcher.timeoutMillis);
+                conn.setConnectTimeout(PrebidMobile.timeoutMillis);
 
                 // Add post data
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
@@ -102,7 +102,7 @@ public class PrebidServerAdapter implements DemandAdapter {
 
                 // Read request response
                 int httpResult = conn.getResponseCode();
-
+                long demandFetchEndTime = System.currentTimeMillis();
                 if (httpResult == HttpURLConnection.HTTP_OK) {
                     StringBuilder builder = new StringBuilder();
                     InputStream is = conn.getInputStream();
@@ -117,6 +117,12 @@ public class PrebidServerAdapter implements DemandAdapter {
                     JSONObject response = new JSONObject(result);
                     httpCookieSync(conn.getHeaderFields());
                     // in the future, this can be improved to parse response base on request versions
+                    if (!PrebidMobile.timeoutMillisUpdated) {
+                        int tmaxRequest = response.getJSONObject("ext").getInt("tmaxrequest");
+                        PrebidMobile.timeoutMillis = (int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200; // adding 200ms as safe time
+                        PrebidMobile.timeoutMillisUpdated = true;
+                    }
+
                     return response;
                 }
             } catch (MalformedURLException e) {
@@ -193,6 +199,7 @@ public class PrebidServerAdapter implements DemandAdapter {
             this.cancel(true);
             this.listener = null;
         }
+
 
         private String getHost() {
             return PrebidMobile.getHost().getHostUrl();

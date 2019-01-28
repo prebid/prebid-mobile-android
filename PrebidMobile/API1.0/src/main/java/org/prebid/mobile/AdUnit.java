@@ -1,5 +1,8 @@
 package org.prebid.mobile;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -68,6 +71,15 @@ public abstract class AdUnit {
             if (adObj.getClass() == Util.getClassFromString(Util.MOPUB_BANNER_VIEW_CLASS) && sizes.size() > 1) {
                 LogUtil.e("More than one size passed for MoPub ad view.");
                 listener.onComplete(ResultCode.INVALID_SIZE);
+            }
+        }
+        Context context = PrebidMobile.getApplicationContext();
+        if (context != null) {
+            ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = conMgr.getActiveNetworkInfo();
+            if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+                listener.onComplete(ResultCode.NETWORK_ERROR);
+                return;
             }
         }
         if (Util.supportedAdObject(adObj)) {

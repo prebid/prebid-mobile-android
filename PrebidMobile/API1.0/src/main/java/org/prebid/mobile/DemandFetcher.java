@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.UUID;
 
 class DemandFetcher {
-    static int timeoutMillis = 10000; // by default use 10000 milliseconds as timeout
 
     enum STATE {
         STOPPED,
@@ -186,7 +185,7 @@ class DemandFetcher {
             }
             while (!finished && !testMode) {
                 long currentTime = System.currentTimeMillis();
-                if (currentTime - lastFetchTime >= timeoutMillis) {
+                if (currentTime - lastFetchTime >= PrebidMobile.timeoutMillis) {
                     finished = true;
                     notifyListener(ResultCode.TIME_OUT);
                 }
