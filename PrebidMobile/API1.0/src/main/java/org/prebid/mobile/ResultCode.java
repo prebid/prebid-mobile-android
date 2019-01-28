@@ -27,6 +27,10 @@ public enum ResultCode {
      */
     INVALID_SIZE,
     /**
+     * Unable to obtain the Application Context, check if you have set it through PrebidMobile.setApplicationContext()
+     */
+    INVALID_CONTEXT,
+    /**
      * Currently, we only support MoPub Banner, Interstitial, DFP Banner, Interstitial
      */
     INVALID_AD_OBJECT,

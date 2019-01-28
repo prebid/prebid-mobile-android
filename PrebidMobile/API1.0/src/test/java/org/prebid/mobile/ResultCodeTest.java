@@ -7,8 +7,6 @@ import android.os.Bundle;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.mopub.mobileads.MoPubView;
 
-import junit.framework.Assert;
-
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +31,33 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
 public class ResultCodeTest extends BaseSetup {
+    @Test
+    public void testInvalidContext() throws Exception {
+        if (successfulMockServerStarted) {
+            HttpUrl httpUrl = server.url("/");
+            Host.CUSTOM.setHostUrl(httpUrl.toString());
+            PrebidMobile.setHost(Host.CUSTOM);
+            PrebidMobile.setAccountId("123456");
+            PrebidMobile.setApplicationContext(null);
+            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
+            InterstitialAdUnit adUnit = new InterstitialAdUnit("123456");
+            MoPubView testView = new MoPubView(activity);
+            OnCompleteListener mockListener = mock(OnCompleteListener.class);
+            adUnit.fetchDemand(testView, mockListener);
+            DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
+            fetcher.enableTestMode();
+            ShadowLooper fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
+            fetcherLooper.runOneTask();
+            ShadowLooper demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
+            demandLooper.runOneTask();
+            Robolectric.flushBackgroundThreadScheduler();
+            Robolectric.flushForegroundThreadScheduler();
+            verify(mockListener).onComplete(ResultCode.INVALID_CONTEXT);
+        } else {
+            assertTrue("Mock server not started", false);
+        }
+    }
+
     @Test
     public void testSuccessForMoPub() throws Exception {
         if (successfulMockServerStarted) {
@@ -84,30 +109,29 @@ public class ResultCodeTest extends BaseSetup {
             Robolectric.flushForegroundThreadScheduler();
             verify(mockListener).onComplete(ResultCode.SUCCESS);
             Bundle bundle = testRequest.getCustomTargeting();
-            Assert.assertEquals(11, bundle.size());
-            Assert.assertTrue(bundle.containsKey("hb_pb"));
-            Assert.assertEquals("0.50", bundle.get("hb_pb"));
-            Assert.assertTrue(bundle.containsKey("hb_bidder"));
-            Assert.assertEquals("appnexus", bundle.get("hb_bidder"));
-            Assert.assertTrue(bundle.containsKey("hb_bidder_appnexus"));
-            Assert.assertEquals("appnexus", bundle.get("hb_bidder_appnexus"));
-            Assert.assertTrue(bundle.containsKey("hb_cache_id"));
-            Assert.assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id"));
-            Assert.assertTrue(bundle.containsKey("hb_cache_id_appnexus"));
-            Assert.assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id_appnexus"));
-            Assert.assertTrue(bundle.containsKey("hb_creative_loadtype"));
-            Assert.assertEquals("html", bundle.get("hb_creative_loadtype"));
-            Assert.assertTrue(bundle.containsKey("hb_env"));
-            Assert.assertEquals("mobile-app", bundle.get("hb_env"));
-            Assert.assertTrue(bundle.containsKey("hb_env_appnexus"));
-            Assert.assertEquals("mobile-app", bundle.get("hb_env_appnexus"));
-            Assert.assertTrue(bundle.containsKey("hb_pb_appnexus"));
-            Assert.assertEquals("0.50", bundle.get("hb_pb_appnexus"));
-            Assert.assertTrue(bundle.containsKey("hb_size"));
-            Assert.assertEquals("300x250", bundle.get("hb_size"));
-            Assert.assertTrue(bundle.containsKey("hb_size_appnexus"));
-            Assert.assertEquals("300x250", bundle.get("hb_size_appnexus"));
-
+            assertEquals(11, bundle.size());
+            assertTrue(bundle.containsKey("hb_pb"));
+            assertEquals("0.50", bundle.get("hb_pb"));
+            assertTrue(bundle.containsKey("hb_bidder"));
+            assertEquals("appnexus", bundle.get("hb_bidder"));
+            assertTrue(bundle.containsKey("hb_bidder_appnexus"));
+            assertEquals("appnexus", bundle.get("hb_bidder_appnexus"));
+            assertTrue(bundle.containsKey("hb_cache_id"));
+            assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id"));
+            assertTrue(bundle.containsKey("hb_cache_id_appnexus"));
+            assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id_appnexus"));
+            assertTrue(bundle.containsKey("hb_creative_loadtype"));
+            assertEquals("html", bundle.get("hb_creative_loadtype"));
+            assertTrue(bundle.containsKey("hb_env"));
+            assertEquals("mobile-app", bundle.get("hb_env"));
+            assertTrue(bundle.containsKey("hb_env_appnexus"));
+            assertEquals("mobile-app", bundle.get("hb_env_appnexus"));
+            assertTrue(bundle.containsKey("hb_pb_appnexus"));
+            assertEquals("0.50", bundle.get("hb_pb_appnexus"));
+            assertTrue(bundle.containsKey("hb_size"));
+            assertEquals("300x250", bundle.get("hb_size"));
+            assertTrue(bundle.containsKey("hb_size_appnexus"));
+            assertEquals("300x250", bundle.get("hb_size_appnexus"));
         } else {
             assertTrue("Mock server not started", false);
         }

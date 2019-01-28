@@ -200,6 +200,14 @@ public class PrebidServerAdapter implements DemandAdapter {
             this.listener = null;
         }
 
+        void finishWithResultCode(ResultCode code) {
+            this.cancel(true);
+            if (this.listener != null) {
+                this.listener.onDemandFailed(code, getAuctionId());
+            }
+            serverConnectors.remove(this);
+        }
+
 
         private String getHost() {
             return PrebidMobile.getHost().getHostUrl();
@@ -361,9 +369,8 @@ public class PrebidServerAdapter implements DemandAdapter {
                     if (context != null) {
                         format.put(new JSONObject().put("w", context.getResources().getConfiguration().screenWidthDp).put("h", context.getResources().getConfiguration().screenHeightDp));
                     } else {
-                        // this should never happen since we won't make request if context is null
-                        // adding this fall back just in case the developer did something wrong
-                        format.put(new JSONObject().put("w", 320).put("h", 480));
+                        // Unlikely this is being called, if so, please check if you've set up the SDK properly
+                        finishWithResultCode(ResultCode.INVALID_CONTEXT);
                     }
                     banner.put("format", format);
                     imp.put("banner", banner);
