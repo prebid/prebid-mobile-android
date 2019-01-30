@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
@@ -30,6 +32,94 @@ import static org.mockito.Mockito.verify;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK, manifest = Config.NONE)
 public class PrebidServerAdapterTest extends BaseSetup {
+    @Test
+    public void testRegexMatch() {
+        Pattern p = Pattern.compile("^Invalid request: Stored Request with ID=\".*\" not found.");
+        String s = "Invalid request: Stored Request with ID=\"6ace8c7d-88c0-4623-8117-75bc3f0a2edd\" not found.";
+        Matcher m = p.matcher(s);
+        assertTrue(m.find());
+        Pattern p2 = Pattern.compile("^Invalid request: Stored Imp with ID=\".*\" not found.");
+        String s2 = "Invalid request: Stored Imp with ID=\"6ace8c7d-88c0-4623-8117-75bc3f0a2edd\" not found.";
+        Matcher m2 = p2.matcher(s2);
+        assertTrue(m2.find());
+        Pattern p3 = Pattern.compile("^Invalid request: pq: invalid input syntax for uuid: \".*\"");
+        String s3 = "Invalid request: pq: invalid input syntax for uuid: \"6ace8c7d-88c0-4623-8117-75bc3f0a\"";
+        Matcher m3 = p3.matcher(s3);
+        assertTrue(m3.find());
+    }
+
+    @Test
+    public void testInvalidPrebidServerAccountIdForAppNexusHostedPrebidServer() {
+        PrebidMobile.setHost(Host.APPNEXUS);
+        PrebidMobile.setAccountId("bfa84af2-bd16-4d35-96ad-ffffffffffff"); // This has the correct length and pattern of an account id but invalid value for AppNexus hosted Prebid Server
+        PrebidMobile.setShareGeoLocation(true);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(320, 50));
+        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e45", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onDemandFailed(ResultCode.INVALID_ACCOUNT_ID, uuid);
+    }
+
+    @Test
+    public void testInvalidPrebidServerAccountIdForAppNexusHostedPrebidServer2() {
+        PrebidMobile.setHost(Host.APPNEXUS);
+        PrebidMobile.setAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888"); // This has invalid pattern of account id for AppNexus hosted Prebid Server
+        PrebidMobile.setShareGeoLocation(true);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(320, 50));
+        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e45", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onDemandFailed(ResultCode.INVALID_ACCOUNT_ID, uuid);
+    }
+
+    @Test
+    public void testInvalidPrebidServerConfigIdForAppNexusHostedPrebidServer() {
+        PrebidMobile.setHost(Host.APPNEXUS);
+        PrebidMobile.setAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+        PrebidMobile.setShareGeoLocation(true);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(320, 50));
+        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-ffffffffffff", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onDemandFailed(ResultCode.INVALID_CONFIG_ID, uuid);
+    }
+
+    @Test
+    public void testInvalidPrebidServerConfigIdForAppNexusHostedPrebidServer2() {
+        PrebidMobile.setHost(Host.APPNEXUS);
+        PrebidMobile.setAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+        PrebidMobile.setShareGeoLocation(true);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(320, 50));
+        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onDemandFailed(ResultCode.INVALID_CONFIG_ID, uuid);
+    }
+
     @Test
     public void testUpdateTimeoutMillis() {
         if (successfulMockServerStarted) {

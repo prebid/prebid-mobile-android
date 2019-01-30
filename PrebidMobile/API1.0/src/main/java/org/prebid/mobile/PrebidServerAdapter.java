@@ -34,6 +34,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PrebidServerAdapter implements DemandAdapter {
     private ArrayList<ServerConnector> serverConnectors;
@@ -122,9 +124,41 @@ public class PrebidServerAdapter implements DemandAdapter {
                         PrebidMobile.timeoutMillis = (int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200; // adding 200ms as safe time
                         PrebidMobile.timeoutMillisUpdated = true;
                     }
-
                     return response;
+                } else if (httpResult == HttpURLConnection.HTTP_BAD_REQUEST) {
+                    StringBuilder builder = new StringBuilder();
+                    InputStream is = conn.getErrorStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        builder.append(line);
+                    }
+                    reader.close();
+                    is.close();
+                    String result = builder.toString();
+                    LogUtil.d("Getting response for auction " + getAuctionId() + ": " + result);
+                    Pattern storedRequestNotFound = Pattern.compile("^Invalid request: Stored Request with ID=\".*\" not found.");
+                    Pattern storedImpNotFound = Pattern.compile("^Invalid request: Stored Imp with ID=\".*\" not found.");
+                    Pattern invalidUUIDInput = Pattern.compile("^Invalid request: pq: invalid input syntax for uuid: \".*\"");
+                    Matcher m = storedRequestNotFound.matcher(result);
+                    Matcher m2 = invalidUUIDInput.matcher(result);
+                    Matcher m3 = storedImpNotFound.matcher(result);
+                    boolean returned = false;
+                    if (m.find() || m2.find() || m3.find()) {
+                        String[] tmp = result.split("\"");
+                        if (tmp[1].equals(PrebidMobile.getAccountId())) {
+                            failWithResultCode(ResultCode.INVALID_ACCOUNT_ID);
+                            returned = true;
+                        } else if (tmp[1].equals(this.requestParams.getConfigId())) {
+                            failWithResultCode(ResultCode.INVALID_CONFIG_ID);
+                            returned = true;
+                        }
+                    }
+                    if (!returned) {
+                        failWithResultCode(ResultCode.PREBID_SERVER_ERROR);
+                    }
                 }
+
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (UnsupportedEncodingException e) {
@@ -177,8 +211,6 @@ public class PrebidServerAdapter implements DemandAdapter {
                 } catch (JSONException e) {
                     LogUtil.e("Error processing JSON response.");
                 }
-            } else {
-                LogUtil.d("Getting null response for auction " + getAuctionId());
             }
             if (listener != null) {
                 if (!keywords.isEmpty()) {
@@ -200,7 +232,7 @@ public class PrebidServerAdapter implements DemandAdapter {
             this.listener = null;
         }
 
-        void finishWithResultCode(ResultCode code) {
+        void failWithResultCode(ResultCode code) {
             this.cancel(true);
             if (this.listener != null) {
                 this.listener.onDemandFailed(code, getAuctionId());
@@ -370,7 +402,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                         format.put(new JSONObject().put("w", context.getResources().getConfiguration().screenWidthDp).put("h", context.getResources().getConfiguration().screenHeightDp));
                     } else {
                         // Unlikely this is being called, if so, please check if you've set up the SDK properly
-                        finishWithResultCode(ResultCode.INVALID_CONTEXT);
+                        failWithResultCode(ResultCode.INVALID_CONTEXT);
                     }
                     banner.put("format", format);
                     imp.put("banner", banner);
