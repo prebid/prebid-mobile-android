@@ -56,7 +56,7 @@ public class DemandFetcherTest extends BaseSetup {
             fetcherLooper.runOneTask();
             Robolectric.flushBackgroundThreadScheduler();
             Robolectric.flushForegroundThreadScheduler();
-            verify(mockListener).onComplete(ResultCode.TIME_OUT);
+            verify(mockListener).onComplete(ResultCode.TIMEOUT);
             assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
         } else {
             assertTrue("Mock server was not started", false);

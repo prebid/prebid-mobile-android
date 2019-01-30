@@ -187,7 +187,7 @@ class DemandFetcher {
                 long currentTime = System.currentTimeMillis();
                 if (currentTime - lastFetchTime >= PrebidMobile.timeoutMillis) {
                     finished = true;
-                    notifyListener(ResultCode.TIME_OUT);
+                    notifyListener(ResultCode.TIMEOUT);
                 }
                 if (Thread.interrupted()) {
                     return;

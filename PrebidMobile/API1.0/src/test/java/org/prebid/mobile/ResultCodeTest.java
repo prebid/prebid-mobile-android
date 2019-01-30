@@ -171,7 +171,7 @@ public class ResultCodeTest extends BaseSetup {
             fetcherLooper.runOneTask();
             Robolectric.flushBackgroundThreadScheduler();
             Robolectric.flushForegroundThreadScheduler();
-            verify(mockListener).onComplete(ResultCode.TIME_OUT);
+            verify(mockListener).onComplete(ResultCode.TIMEOUT);
             assertEquals(null, testView.getKeywords());
         } else {
             assertTrue("Mock server not started", false);

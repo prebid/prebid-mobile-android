@@ -41,7 +41,7 @@ public enum ResultCode {
     /**
      * The ad request took longer than set time out
      */
-    TIME_OUT,
+    TIMEOUT,
     /**
      * No bids available from demand source
      */
