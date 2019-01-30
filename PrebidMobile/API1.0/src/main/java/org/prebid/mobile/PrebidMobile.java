@@ -14,23 +14,23 @@ public class PrebidMobile {
 
     private static String accountId = "";
 
-    public static void setAccountId(String accountId) {
+    public static void setPrebidServerAccountId(String accountId) {
         PrebidMobile.accountId = accountId;
     }
 
-    public static String getAccountId() {
+    public static String getPrebidServerAccountId() {
         return accountId;
     }
 
     private static Host host = Host.APPNEXUS;
 
-    public static void setHost(Host host) {
+    public static void setPrebidServerHost(Host host) {
         PrebidMobile.host = host;
         timeoutMillisUpdated = false; // each time a developer sets a new Host for the SDK, we should re-calculate the time out millis
         timeoutMillis = 10000;
     }
 
-    public static Host getHost() {
+    public static Host getPrebidServerHost() {
         return host;
     }
 

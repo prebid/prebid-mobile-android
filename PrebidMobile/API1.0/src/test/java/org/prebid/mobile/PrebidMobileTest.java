@@ -14,13 +14,13 @@ import static org.junit.Assert.assertTrue;
 public class PrebidMobileTest extends BaseSetup {
     @Test
     public void testAccountId() throws Exception {
-        PrebidMobile.setAccountId("123456");
-        assertEquals("123456", PrebidMobile.getAccountId());
+        PrebidMobile.setPrebidServerAccountId("123456");
+        assertEquals("123456", PrebidMobile.getPrebidServerAccountId());
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         assertEquals(activity.getApplicationContext(), PrebidMobile.getApplicationContext());
         PrebidMobile.setShareGeoLocation(true);
         assertTrue(PrebidMobile.isShareGeoLocation());
-        PrebidMobile.setHost(Host.RUBICON);
-        assertEquals(Host.RUBICON, PrebidMobile.getHost());
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        assertEquals(Host.RUBICON, PrebidMobile.getPrebidServerHost());
     }
 }

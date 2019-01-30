@@ -43,7 +43,7 @@ public abstract class AdUnit {
 
 
     public void fetchDemand(@NonNull Object adObj, @NonNull OnCompleteListener listener) {
-        if (TextUtils.isEmpty(PrebidMobile.getAccountId())) {
+        if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
             LogUtil.e("Invalid account id.");
             listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);
             return;
@@ -53,8 +53,8 @@ public abstract class AdUnit {
             listener.onComplete(ResultCode.INVALID_CONFIG_ID);
             return;
         }
-        if (PrebidMobile.getHost().equals(Host.CUSTOM)) {
-            if (TextUtils.isEmpty(PrebidMobile.getHost().getHostUrl())) {
+        if (PrebidMobile.getPrebidServerHost().equals(Host.CUSTOM)) {
+            if (TextUtils.isEmpty(PrebidMobile.getPrebidServerHost().getHostUrl())) {
                 LogUtil.e("Empty host url for custom Prebid Server host.");
                 listener.onComplete(ResultCode.INVALID_HOST_URL);
                 return;
@@ -101,7 +101,7 @@ public abstract class AdUnit {
     }
 
 
-    public void setUserKeyword(String key, String value) {
+    public void addUserKeyword(String key, String value) {
         if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
             keywords.add(key + "=" + value);
         } else if (!TextUtils.isEmpty(key)) {
@@ -109,7 +109,7 @@ public abstract class AdUnit {
         }
     }
 
-    public void setUserKeywords(String key, String[] values) {
+    public void addUserKeywords(String key, String[] values) {
         if (!TextUtils.isEmpty(key) && values.length > 0) {
             keywords.clear();
             for (String value : values) {
@@ -136,7 +136,7 @@ public abstract class AdUnit {
         keywords.removeAll(toBeRemoved);
     }
 
-    public void removeUserKeywords() {
+    public void clearUserKeywords() {
         keywords.clear();
     }
 

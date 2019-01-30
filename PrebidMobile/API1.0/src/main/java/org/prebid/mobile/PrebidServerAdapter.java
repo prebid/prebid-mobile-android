@@ -210,7 +210,7 @@ public class PrebidServerAdapter implements DemandAdapter {
 
 
         private String getHost() {
-            return PrebidMobile.getHost().getHostUrl();
+            return PrebidMobile.getPrebidServerHost().getHostUrl();
         }
 
         /**
@@ -340,7 +340,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                 cache.put("bids", bids);
                 prebid.put("cache", cache);
                 JSONObject storedRequest = new JSONObject();
-                storedRequest.put("id", PrebidMobile.getAccountId());
+                storedRequest.put("id", PrebidMobile.getPrebidServerAccountId());
                 prebid.put("storedrequest", storedRequest);
                 JSONObject targetingEmpty = new JSONObject();
                 prebid.put("targeting", targetingEmpty);
@@ -547,7 +547,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                     app.put("storeurl", TargetingParams.getStoreUrl());
                 }
                 JSONObject publisher = new JSONObject();
-                publisher.put("id", PrebidMobile.getAccountId());
+                publisher.put("id", PrebidMobile.getPrebidServerAccountId());
                 app.put("publisher", publisher);
                 JSONObject prebid = new JSONObject();
                 prebid.put("source", "prebid-mobile");
