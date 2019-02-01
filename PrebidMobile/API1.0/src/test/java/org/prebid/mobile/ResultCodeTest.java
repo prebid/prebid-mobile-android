@@ -36,8 +36,8 @@ public class ResultCodeTest extends BaseSetup {
         if (successfulMockServerStarted) {
             HttpUrl httpUrl = server.url("/");
             Host.CUSTOM.setHostUrl(httpUrl.toString());
-            PrebidMobile.setHost(Host.CUSTOM);
-            PrebidMobile.setAccountId("123456");
+            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+            PrebidMobile.setPrebidServerAccountId("123456");
             PrebidMobile.setApplicationContext(null);
             server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
             InterstitialAdUnit adUnit = new InterstitialAdUnit("123456");
@@ -63,9 +63,9 @@ public class ResultCodeTest extends BaseSetup {
         if (successfulMockServerStarted) {
             HttpUrl httpUrl = server.url("/");
             Host.CUSTOM.setHostUrl(httpUrl.toString());
-            PrebidMobile.setHost(Host.CUSTOM);
+            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
             PrebidMobile.setApplicationContext(activity.getApplicationContext());
-            PrebidMobile.setAccountId("123456");
+            PrebidMobile.setPrebidServerAccountId("123456");
             server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
             BannerAdUnit adUnit = new BannerAdUnit("123456", 300, 250);
             MoPubView testView = new MoPubView(activity);
@@ -91,9 +91,9 @@ public class ResultCodeTest extends BaseSetup {
         if (successfulMockServerStarted) {
             HttpUrl httpUrl = server.url("/");
             Host.CUSTOM.setHostUrl(httpUrl.toString());
-            PrebidMobile.setHost(Host.CUSTOM);
+            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
             PrebidMobile.setApplicationContext(activity.getApplicationContext());
-            PrebidMobile.setAccountId("123456");
+            PrebidMobile.setPrebidServerAccountId("123456");
             server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
             BannerAdUnit adUnit = new BannerAdUnit("123456", 300, 250);
             PublisherAdRequest testRequest = new PublisherAdRequest.Builder().build();
@@ -139,9 +139,9 @@ public class ResultCodeTest extends BaseSetup {
 
     @Test
     public void testNetworkError() {
-        PrebidMobile.setHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
-        PrebidMobile.setAccountId("123456");
+        PrebidMobile.setPrebidServerAccountId("123456");
         ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         ShadowNetworkInfo shadowOfActiveNetworkInfo = shadowOf(connectivityManager.getActiveNetworkInfo());
         shadowOfActiveNetworkInfo.setConnectionStatus(false);
@@ -157,9 +157,9 @@ public class ResultCodeTest extends BaseSetup {
         if (successfulMockServerStarted) {
             HttpUrl httpUrl = server.url("/");
             Host.CUSTOM.setHostUrl(httpUrl.toString());
-            PrebidMobile.setHost(Host.CUSTOM);
+            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
             PrebidMobile.setApplicationContext(activity.getApplicationContext());
-            PrebidMobile.setAccountId("123456");
+            PrebidMobile.setPrebidServerAccountId("123456");
             server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
             BannerAdUnit adUnit = new BannerAdUnit("123456", 300, 250);
             MoPubView testView = new MoPubView(activity);
@@ -171,7 +171,7 @@ public class ResultCodeTest extends BaseSetup {
             fetcherLooper.runOneTask();
             Robolectric.flushBackgroundThreadScheduler();
             Robolectric.flushForegroundThreadScheduler();
-            verify(mockListener).onComplete(ResultCode.TIME_OUT);
+            verify(mockListener).onComplete(ResultCode.TIMEOUT);
             assertEquals(null, testView.getKeywords());
         } else {
             assertTrue("Mock server not started", false);
@@ -183,9 +183,9 @@ public class ResultCodeTest extends BaseSetup {
         if (successfulMockServerStarted) {
             HttpUrl httpUrl = server.url("/");
             Host.CUSTOM.setHostUrl(httpUrl.toString());
-            PrebidMobile.setHost(Host.CUSTOM);
+            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
             PrebidMobile.setApplicationContext(activity.getApplicationContext());
-            PrebidMobile.setAccountId("123456");
+            PrebidMobile.setPrebidServerAccountId("123456");
             server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
             BannerAdUnit adUnit = new BannerAdUnit("123456", 300, 250);
             MoPubView testView = new MoPubView(activity);
@@ -208,7 +208,7 @@ public class ResultCodeTest extends BaseSetup {
 
     @Test
     public void testInvalidAccountId() throws Exception {
-        PrebidMobile.setAccountId("");
+        PrebidMobile.setPrebidServerAccountId("");
         BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
         MoPubView testView = new MoPubView(activity);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
@@ -218,7 +218,7 @@ public class ResultCodeTest extends BaseSetup {
 
     @Test
     public void testInvalidConfigId() throws Exception {
-        PrebidMobile.setAccountId("123456");
+        PrebidMobile.setPrebidServerAccountId("123456");
         BannerAdUnit adUnit = new BannerAdUnit("", 320, 50);
         MoPubView testView = new MoPubView(activity);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
@@ -228,9 +228,9 @@ public class ResultCodeTest extends BaseSetup {
 
     @Test
     public void testInvalidHostUrl() throws Exception {
-        PrebidMobile.setAccountId("123456");
+        PrebidMobile.setPrebidServerAccountId("123456");
         Host.CUSTOM.setHostUrl("");
-        PrebidMobile.setHost(Host.CUSTOM);
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
         BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
         MoPubView testView = new MoPubView(activity);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
@@ -240,7 +240,7 @@ public class ResultCodeTest extends BaseSetup {
 
     @Test
     public void testDoNotSupportMultipleSizesForMoPubBanner() throws Exception {
-        PrebidMobile.setAccountId("123456");
+        PrebidMobile.setPrebidServerAccountId("123456");
         BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
         adUnit.addAdditionalSize(300, 250);
         MoPubView testView = new MoPubView(activity);
@@ -251,7 +251,7 @@ public class ResultCodeTest extends BaseSetup {
 
     @Test
     public void testSupportMultipleSizesForDFPBanner() throws Exception {
-        PrebidMobile.setAccountId("123456");
+        PrebidMobile.setPrebidServerAccountId("123456");
         BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
         adUnit.addAdditionalSize(300, 250);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);

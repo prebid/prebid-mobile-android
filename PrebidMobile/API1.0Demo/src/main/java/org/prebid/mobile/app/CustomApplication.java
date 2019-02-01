@@ -24,8 +24,8 @@ public class CustomApplication extends Application {
         MoPub.initializeSdk(this, sdkConfiguration, null);
         //set Prebid Mobile global Settings
         //region PrebidMobile API
-        PrebidMobile.setAccountId(Constants.PBS_ACCOUNT_ID);
-        PrebidMobile.setHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID);
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(getApplicationContext());
         //endregion
