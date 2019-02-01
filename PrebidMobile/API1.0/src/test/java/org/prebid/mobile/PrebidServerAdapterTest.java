@@ -169,7 +169,6 @@ public class PrebidServerAdapterTest extends BaseSetup {
             bids.put("hb_bidder_rubicon", "rubicon");
             bids.put("hb_cache_id", "bd8d6eeb-8ad1-402c-a1f8-09565bb0bda7");
             bids.put("hb_cache_id_rubicon", "bd8d6eeb-8ad1-402c-a1f8-09565bb0bda7");
-            bids.put("hb_creative_loadtype", "html");
             bids.put("hb_env", "mobile-app");
             bids.put("hb_env_rubicon", "mobile-app");
             bids.put("hb_pb", "1.20");

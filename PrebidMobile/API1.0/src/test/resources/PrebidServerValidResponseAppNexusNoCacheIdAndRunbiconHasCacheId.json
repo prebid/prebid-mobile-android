@@ -21,7 +21,6 @@
             "prebid": {
               "targeting": {
                 "hb_bidder_appnexus": "appnexus",
-                "hb_creative_loadtype": "html",
                 "hb_env_appnexus": "mobile-app",
                 "hb_pb_appnexus": "0.50",
                 "hb_size_appnexus": "300x250"
@@ -58,7 +57,6 @@
                 "hb_bidder_rubicon": "rubicon",
                 "hb_cache_id": "bd8d6eeb-8ad1-402c-a1f8-09565bb0bda7",
                 "hb_cache_id_rubicon": "bd8d6eeb-8ad1-402c-a1f8-09565bb0bda7",
-                "hb_creative_loadtype": "html",
                 "hb_env": "mobile-app",
                 "hb_env_rubicon": "mobile-app",
                 "hb_pb": "1.20",
