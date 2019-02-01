@@ -26,6 +26,9 @@ public class BaseSetup {
     public void setup() {
         activity = Robolectric.buildActivity(MockMainActivity.class).create().get();
         shadowOf(activity).grantPermissions("android.permission.INTERNET");
+        shadowOf(activity).grantPermissions("android.permission.CHANGE_NETWORK_STATE");
+        shadowOf(activity).grantPermissions("android.permission.MODIFY_PHONE_STATE");
+        shadowOf(activity).grantPermissions("android.permission.ACCESS_NETWORK_STATE");
         server = new MockWebServer();
         try {
             server.start();

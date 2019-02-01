@@ -1,21 +1,22 @@
 package org.prebid.mobile;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.mopub.mobileads.MoPubView;
 
-import junit.framework.Assert;
-
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.testutils.BaseSetup;
+import org.prebid.mobile.testutils.MockPrebidServerResponses;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLooper;
+import org.robolectric.shadows.ShadowNetworkInfo;
 
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
@@ -25,10 +26,38 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
 public class ResultCodeTest extends BaseSetup {
+    @Test
+    public void testInvalidContext() throws Exception {
+        if (successfulMockServerStarted) {
+            HttpUrl httpUrl = server.url("/");
+            Host.CUSTOM.setHostUrl(httpUrl.toString());
+            PrebidMobile.setHost(Host.CUSTOM);
+            PrebidMobile.setAccountId("123456");
+            PrebidMobile.setApplicationContext(null);
+            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
+            InterstitialAdUnit adUnit = new InterstitialAdUnit("123456");
+            MoPubView testView = new MoPubView(activity);
+            OnCompleteListener mockListener = mock(OnCompleteListener.class);
+            adUnit.fetchDemand(testView, mockListener);
+            DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
+            fetcher.enableTestMode();
+            ShadowLooper fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
+            fetcherLooper.runOneTask();
+            ShadowLooper demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
+            demandLooper.runOneTask();
+            Robolectric.flushBackgroundThreadScheduler();
+            Robolectric.flushForegroundThreadScheduler();
+            verify(mockListener).onComplete(ResultCode.INVALID_CONTEXT);
+        } else {
+            assertTrue("Mock server not started", false);
+        }
+    }
+
     @Test
     public void testSuccessForMoPub() throws Exception {
         if (successfulMockServerStarted) {
@@ -37,71 +66,16 @@ public class ResultCodeTest extends BaseSetup {
             PrebidMobile.setHost(Host.CUSTOM);
             PrebidMobile.setApplicationContext(activity.getApplicationContext());
             PrebidMobile.setAccountId("123456");
-            server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
-                    "  \"id\": \"3dc76667-a500-4e01-a43b-368e36d6c7cc\",\n" +
-                    "  \"seatbid\": [\n" +
-                    "    {\n" +
-                    "      \"bid\": [\n" +
-                    "        {\n" +
-                    "          \"id\": \"1644265211331914430\",\n" +
-                    "          \"impid\": \"Banner_300x250\",\n" +
-                    "          \"price\": 0.5,\n" +
-                    "          \"adm\": \"<script src=\\\"hello world\\\">this is an mock ad</script>\",\n" +
-                    "          \"adid\": \"113276871\",\n" +
-                    "          \"adomain\": [\n" +
-                    "            \"appnexus.com\"\n" +
-                    "          ],\n" +
-                    "          \"iurl\": \"https://nym1-ib.adnxs.com/cr?id=113276871\",\n" +
-                    "          \"cid\": \"9325\",\n" +
-                    "          \"crid\": \"113276871\",\n" +
-                    "          \"w\": 300,\n" +
-                    "          \"h\": 250,\n" +
-                    "          \"ext\": {\n" +
-                    "            \"prebid\": {\n" +
-                    "              \"targeting\": {\n" +
-                    "                \"hb_bidder\": \"appnexus\",\n" +
-                    "                \"hb_bidder_appnexus\": \"appnexus\",\n" +
-                    "                \"hb_cache_id\": \"df4aba04-5e69-44b8-8608-058ab21600b8\",\n" +
-                    "                \"hb_cache_id_appnexus\": \"df4aba04-5e69-44b8-8608-058ab21600b8\",\n" +
-                    "                \"hb_creative_loadtype\": \"html\",\n" +
-                    "                \"hb_env\": \"mobile-app\",\n" +
-                    "                \"hb_env_appnexus\": \"mobile-app\",\n" +
-                    "                \"hb_pb\": \"0.50\",\n" +
-                    "                \"hb_pb_appnexus\": \"0.50\",\n" +
-                    "                \"hb_size\": \"300x250\",\n" +
-                    "                \"hb_size_appnexus\": \"300x250\"\n" +
-                    "              },\n" +
-                    "              \"type\": \"banner\"\n" +
-                    "            },\n" +
-                    "            \"bidder\": {\n" +
-                    "              \"appnexus\": {\n" +
-                    "                \"brand_id\": 1,\n" +
-                    "                \"auction_id\": 7888349588523321000,\n" +
-                    "                \"bidder_id\": 2,\n" +
-                    "                \"bid_ad_type\": 0\n" +
-                    "              }\n" +
-                    "            }\n" +
-                    "          }\n" +
-                    "        }\n" +
-                    "      ],\n" +
-                    "      \"seat\": \"appnexus\"\n" +
-                    "    }\n" +
-                    "  ],\n" +
-                    "  \"ext\": {\n" +
-                    "    \"responsetimemillis\": {\n" +
-                    "      \"appnexus\": 213\n" +
-                    "    }\n" +
-                    "  }\n" +
-                    "}"));
+            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
             BannerAdUnit adUnit = new BannerAdUnit("123456", 300, 250);
             MoPubView testView = new MoPubView(activity);
             OnCompleteListener mockListener = mock(OnCompleteListener.class);
             adUnit.fetchDemand(testView, mockListener);
             DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
             fetcher.enableTestMode();
-            ShadowLooper fetcherLooper = Shadows.shadowOf(fetcher.getHandler().getLooper());
+            ShadowLooper fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
             fetcherLooper.runOneTask();
-            ShadowLooper demandLooper = Shadows.shadowOf(fetcher.getDemandHandler().getLooper());
+            ShadowLooper demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
             demandLooper.runOneTask();
             Robolectric.flushBackgroundThreadScheduler();
             Robolectric.flushForegroundThreadScheduler();
@@ -120,103 +94,62 @@ public class ResultCodeTest extends BaseSetup {
             PrebidMobile.setHost(Host.CUSTOM);
             PrebidMobile.setApplicationContext(activity.getApplicationContext());
             PrebidMobile.setAccountId("123456");
-            server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
-                    "  \"id\": \"3dc76667-a500-4e01-a43b-368e36d6c7cc\",\n" +
-                    "  \"seatbid\": [\n" +
-                    "    {\n" +
-                    "      \"bid\": [\n" +
-                    "        {\n" +
-                    "          \"id\": \"1644265211331914430\",\n" +
-                    "          \"impid\": \"Banner_300x250\",\n" +
-                    "          \"price\": 0.5,\n" +
-                    "          \"adm\": \"<script src=\\\"hello world\\\">this is an mock ad</script>\",\n" +
-                    "          \"adid\": \"113276871\",\n" +
-                    "          \"adomain\": [\n" +
-                    "            \"appnexus.com\"\n" +
-                    "          ],\n" +
-                    "          \"iurl\": \"https://nym1-ib.adnxs.com/cr?id=113276871\",\n" +
-                    "          \"cid\": \"9325\",\n" +
-                    "          \"crid\": \"113276871\",\n" +
-                    "          \"w\": 300,\n" +
-                    "          \"h\": 250,\n" +
-                    "          \"ext\": {\n" +
-                    "            \"prebid\": {\n" +
-                    "              \"targeting\": {\n" +
-                    "                \"hb_bidder\": \"appnexus\",\n" +
-                    "                \"hb_bidder_appnexus\": \"appnexus\",\n" +
-                    "                \"hb_cache_id\": \"df4aba04-5e69-44b8-8608-058ab21600b8\",\n" +
-                    "                \"hb_cache_id_appnexus\": \"df4aba04-5e69-44b8-8608-058ab21600b8\",\n" +
-                    "                \"hb_creative_loadtype\": \"html\",\n" +
-                    "                \"hb_env\": \"mobile-app\",\n" +
-                    "                \"hb_env_appnexus\": \"mobile-app\",\n" +
-                    "                \"hb_pb\": \"0.50\",\n" +
-                    "                \"hb_pb_appnexus\": \"0.50\",\n" +
-                    "                \"hb_size\": \"300x250\",\n" +
-                    "                \"hb_size_appnexus\": \"300x250\"\n" +
-                    "              },\n" +
-                    "              \"type\": \"banner\"\n" +
-                    "            },\n" +
-                    "            \"bidder\": {\n" +
-                    "              \"appnexus\": {\n" +
-                    "                \"brand_id\": 1,\n" +
-                    "                \"auction_id\": 7888349588523321000,\n" +
-                    "                \"bidder_id\": 2,\n" +
-                    "                \"bid_ad_type\": 0\n" +
-                    "              }\n" +
-                    "            }\n" +
-                    "          }\n" +
-                    "        }\n" +
-                    "      ],\n" +
-                    "      \"seat\": \"appnexus\"\n" +
-                    "    }\n" +
-                    "  ],\n" +
-                    "  \"ext\": {\n" +
-                    "    \"responsetimemillis\": {\n" +
-                    "      \"appnexus\": 213\n" +
-                    "    }\n" +
-                    "  }\n" +
-                    "}"));
+            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
             BannerAdUnit adUnit = new BannerAdUnit("123456", 300, 250);
             PublisherAdRequest testRequest = new PublisherAdRequest.Builder().build();
             OnCompleteListener mockListener = mock(OnCompleteListener.class);
             adUnit.fetchDemand(testRequest, mockListener);
             DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
             fetcher.enableTestMode();
-            ShadowLooper fetcherLooper = Shadows.shadowOf(fetcher.getHandler().getLooper());
+            ShadowLooper fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
             fetcherLooper.runOneTask();
-            ShadowLooper demandLooper = Shadows.shadowOf(fetcher.getDemandHandler().getLooper());
+            ShadowLooper demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
             demandLooper.runOneTask();
             Robolectric.flushBackgroundThreadScheduler();
             Robolectric.flushForegroundThreadScheduler();
             verify(mockListener).onComplete(ResultCode.SUCCESS);
             Bundle bundle = testRequest.getCustomTargeting();
-            Assert.assertEquals(11, bundle.size());
-            Assert.assertTrue(bundle.containsKey("hb_pb"));
-            Assert.assertEquals("0.50", bundle.get("hb_pb"));
-            Assert.assertTrue(bundle.containsKey("hb_bidder"));
-            Assert.assertEquals("appnexus", bundle.get("hb_bidder"));
-            Assert.assertTrue(bundle.containsKey("hb_bidder_appnexus"));
-            Assert.assertEquals("appnexus", bundle.get("hb_bidder_appnexus"));
-            Assert.assertTrue(bundle.containsKey("hb_cache_id"));
-            Assert.assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id"));
-            Assert.assertTrue(bundle.containsKey("hb_cache_id_appnexus"));
-            Assert.assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id_appnexus"));
-            Assert.assertTrue(bundle.containsKey("hb_creative_loadtype"));
-            Assert.assertEquals("html", bundle.get("hb_creative_loadtype"));
-            Assert.assertTrue(bundle.containsKey("hb_env"));
-            Assert.assertEquals("mobile-app", bundle.get("hb_env"));
-            Assert.assertTrue(bundle.containsKey("hb_env_appnexus"));
-            Assert.assertEquals("mobile-app", bundle.get("hb_env_appnexus"));
-            Assert.assertTrue(bundle.containsKey("hb_pb_appnexus"));
-            Assert.assertEquals("0.50", bundle.get("hb_pb_appnexus"));
-            Assert.assertTrue(bundle.containsKey("hb_size"));
-            Assert.assertEquals("300x250", bundle.get("hb_size"));
-            Assert.assertTrue(bundle.containsKey("hb_size_appnexus"));
-            Assert.assertEquals("300x250", bundle.get("hb_size_appnexus"));
-
+            assertEquals(11, bundle.size());
+            assertTrue(bundle.containsKey("hb_pb"));
+            assertEquals("0.50", bundle.get("hb_pb"));
+            assertTrue(bundle.containsKey("hb_bidder"));
+            assertEquals("appnexus", bundle.get("hb_bidder"));
+            assertTrue(bundle.containsKey("hb_bidder_appnexus"));
+            assertEquals("appnexus", bundle.get("hb_bidder_appnexus"));
+            assertTrue(bundle.containsKey("hb_cache_id"));
+            assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id"));
+            assertTrue(bundle.containsKey("hb_cache_id_appnexus"));
+            assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id_appnexus"));
+            assertTrue(bundle.containsKey("hb_creative_loadtype"));
+            assertEquals("html", bundle.get("hb_creative_loadtype"));
+            assertTrue(bundle.containsKey("hb_env"));
+            assertEquals("mobile-app", bundle.get("hb_env"));
+            assertTrue(bundle.containsKey("hb_env_appnexus"));
+            assertEquals("mobile-app", bundle.get("hb_env_appnexus"));
+            assertTrue(bundle.containsKey("hb_pb_appnexus"));
+            assertEquals("0.50", bundle.get("hb_pb_appnexus"));
+            assertTrue(bundle.containsKey("hb_size"));
+            assertEquals("300x250", bundle.get("hb_size"));
+            assertTrue(bundle.containsKey("hb_size_appnexus"));
+            assertEquals("300x250", bundle.get("hb_size_appnexus"));
         } else {
             assertTrue("Mock server not started", false);
         }
+    }
+
+    @Test
+    public void testNetworkError() {
+        PrebidMobile.setHost(Host.APPNEXUS);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        PrebidMobile.setAccountId("123456");
+        ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ShadowNetworkInfo shadowOfActiveNetworkInfo = shadowOf(connectivityManager.getActiveNetworkInfo());
+        shadowOfActiveNetworkInfo.setConnectionStatus(false);
+        BannerAdUnit adUnit = new BannerAdUnit("123456", 300, 250);
+        MoPubView testView = new MoPubView(activity);
+        OnCompleteListener mockListener = mock(OnCompleteListener.class);
+        adUnit.fetchDemand(testView, mockListener);
+        verify(mockListener).onComplete(ResultCode.NETWORK_ERROR);
     }
 
     @Test
@@ -227,69 +160,14 @@ public class ResultCodeTest extends BaseSetup {
             PrebidMobile.setHost(Host.CUSTOM);
             PrebidMobile.setApplicationContext(activity.getApplicationContext());
             PrebidMobile.setAccountId("123456");
-            server.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
-                    "  \"id\": \"3dc76667-a500-4e01-a43b-368e36d6c7cc\",\n" +
-                    "  \"seatbid\": [\n" +
-                    "    {\n" +
-                    "      \"bid\": [\n" +
-                    "        {\n" +
-                    "          \"id\": \"1644265211331914430\",\n" +
-                    "          \"impid\": \"Banner_300x250\",\n" +
-                    "          \"price\": 0.5,\n" +
-                    "          \"adm\": \"<script src=\\\"hello world\\\">this is an mock ad</script>\",\n" +
-                    "          \"adid\": \"113276871\",\n" +
-                    "          \"adomain\": [\n" +
-                    "            \"appnexus.com\"\n" +
-                    "          ],\n" +
-                    "          \"iurl\": \"https://nym1-ib.adnxs.com/cr?id=113276871\",\n" +
-                    "          \"cid\": \"9325\",\n" +
-                    "          \"crid\": \"113276871\",\n" +
-                    "          \"w\": 300,\n" +
-                    "          \"h\": 250,\n" +
-                    "          \"ext\": {\n" +
-                    "            \"prebid\": {\n" +
-                    "              \"targeting\": {\n" +
-                    "                \"hb_bidder\": \"appnexus\",\n" +
-                    "                \"hb_bidder_appnexus\": \"appnexus\",\n" +
-                    "                \"hb_cache_id\": \"df4aba04-5e69-44b8-8608-058ab21600b8\",\n" +
-                    "                \"hb_cache_id_appnexus\": \"df4aba04-5e69-44b8-8608-058ab21600b8\",\n" +
-                    "                \"hb_creative_loadtype\": \"html\",\n" +
-                    "                \"hb_env\": \"mobile-app\",\n" +
-                    "                \"hb_env_appnexus\": \"mobile-app\",\n" +
-                    "                \"hb_pb\": \"0.50\",\n" +
-                    "                \"hb_pb_appnexus\": \"0.50\",\n" +
-                    "                \"hb_size\": \"300x250\",\n" +
-                    "                \"hb_size_appnexus\": \"300x250\"\n" +
-                    "              },\n" +
-                    "              \"type\": \"banner\"\n" +
-                    "            },\n" +
-                    "            \"bidder\": {\n" +
-                    "              \"appnexus\": {\n" +
-                    "                \"brand_id\": 1,\n" +
-                    "                \"auction_id\": 7888349588523321000,\n" +
-                    "                \"bidder_id\": 2,\n" +
-                    "                \"bid_ad_type\": 0\n" +
-                    "              }\n" +
-                    "            }\n" +
-                    "          }\n" +
-                    "        }\n" +
-                    "      ],\n" +
-                    "      \"seat\": \"appnexus\"\n" +
-                    "    }\n" +
-                    "  ],\n" +
-                    "  \"ext\": {\n" +
-                    "    \"responsetimemillis\": {\n" +
-                    "      \"appnexus\": 213\n" +
-                    "    }\n" +
-                    "  }\n" +
-                    "}"));
+            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
             BannerAdUnit adUnit = new BannerAdUnit("123456", 300, 250);
             MoPubView testView = new MoPubView(activity);
             OnCompleteListener mockListener = mock(OnCompleteListener.class);
             adUnit.fetchDemand(testView, mockListener);
             DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
-            DemandFetcher.timeoutMillis = 30;
-            ShadowLooper fetcherLooper = Shadows.shadowOf(fetcher.getHandler().getLooper());
+            PrebidMobile.timeoutMillis = 30;
+            ShadowLooper fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
             fetcherLooper.runOneTask();
             Robolectric.flushBackgroundThreadScheduler();
             Robolectric.flushForegroundThreadScheduler();
@@ -308,16 +186,16 @@ public class ResultCodeTest extends BaseSetup {
             PrebidMobile.setHost(Host.CUSTOM);
             PrebidMobile.setApplicationContext(activity.getApplicationContext());
             PrebidMobile.setAccountId("123456");
-            server.enqueue(new MockResponse().setResponseCode(200).setBody("{}"));
+            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
             BannerAdUnit adUnit = new BannerAdUnit("123456", 300, 250);
             MoPubView testView = new MoPubView(activity);
             OnCompleteListener mockListener = mock(OnCompleteListener.class);
             adUnit.fetchDemand(testView, mockListener);
             DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
             fetcher.enableTestMode();
-            ShadowLooper fetcherLooper = Shadows.shadowOf(fetcher.getHandler().getLooper());
+            ShadowLooper fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
             fetcherLooper.runOneTask();
-            ShadowLooper demandLooper = Shadows.shadowOf(fetcher.getDemandHandler().getLooper());
+            ShadowLooper demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
             demandLooper.runOneTask();
             Robolectric.flushBackgroundThreadScheduler();
             Robolectric.flushForegroundThreadScheduler();

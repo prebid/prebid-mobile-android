@@ -75,8 +75,8 @@ public class PrebidServerAdapter implements DemandAdapter {
         @Override
         protected JSONObject doInBackground(Object... objects) {
             try {
+                long demandFetchStartTime = System.currentTimeMillis();
                 URL url = new URL(getHost());
-
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
@@ -88,7 +88,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                 } // todo still pass cookie if limit ad tracking?
 
                 conn.setRequestMethod("POST");
-                conn.setConnectTimeout(DemandFetcher.timeoutMillis);
+                conn.setConnectTimeout(PrebidMobile.timeoutMillis);
 
                 // Add post data
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
@@ -102,7 +102,7 @@ public class PrebidServerAdapter implements DemandAdapter {
 
                 // Read request response
                 int httpResult = conn.getResponseCode();
-
+                long demandFetchEndTime = System.currentTimeMillis();
                 if (httpResult == HttpURLConnection.HTTP_OK) {
                     StringBuilder builder = new StringBuilder();
                     InputStream is = conn.getInputStream();
@@ -117,6 +117,12 @@ public class PrebidServerAdapter implements DemandAdapter {
                     JSONObject response = new JSONObject(result);
                     httpCookieSync(conn.getHeaderFields());
                     // in the future, this can be improved to parse response base on request versions
+                    if (!PrebidMobile.timeoutMillisUpdated) {
+                        int tmaxRequest = response.getJSONObject("ext").getInt("tmaxrequest");
+                        PrebidMobile.timeoutMillis = (int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200; // adding 200ms as safe time
+                        PrebidMobile.timeoutMillisUpdated = true;
+                    }
+
                     return response;
                 }
             } catch (MalformedURLException e) {
@@ -193,6 +199,15 @@ public class PrebidServerAdapter implements DemandAdapter {
             this.cancel(true);
             this.listener = null;
         }
+
+        void finishWithResultCode(ResultCode code) {
+            this.cancel(true);
+            if (this.listener != null) {
+                this.listener.onDemandFailed(code, getAuctionId());
+            }
+            serverConnectors.remove(this);
+        }
+
 
         private String getHost() {
             return PrebidMobile.getHost().getHostUrl();
@@ -354,9 +369,8 @@ public class PrebidServerAdapter implements DemandAdapter {
                     if (context != null) {
                         format.put(new JSONObject().put("w", context.getResources().getConfiguration().screenWidthDp).put("h", context.getResources().getConfiguration().screenHeightDp));
                     } else {
-                        // this should never happen since we won't make request if context is null
-                        // adding this fall back just in case the developer did something wrong
-                        format.put(new JSONObject().put("w", 320).put("h", 480));
+                        // Unlikely this is being called, if so, please check if you've set up the SDK properly
+                        finishWithResultCode(ResultCode.INVALID_CONTEXT);
                     }
                     banner.put("format", format);
                     imp.put("banner", banner);
