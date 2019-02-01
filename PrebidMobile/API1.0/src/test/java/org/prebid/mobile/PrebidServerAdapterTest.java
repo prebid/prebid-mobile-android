@@ -108,7 +108,6 @@ public class PrebidServerAdapterTest extends BaseSetup {
             bids.put("hb_bidder_appnexus", "appnexus");
             bids.put("hb_cache_id", "df4aba04-5e69-44b8-8608-058ab21600b8");
             bids.put("hb_cache_id_appnexus", "df4aba04-5e69-44b8-8608-058ab21600b8");
-            bids.put("hb_creative_loadtype", "html");
             bids.put("hb_env", "mobile-app");
             bids.put("hb_env_appnexus", "mobile-app");
             bids.put("hb_pb", "0.50");
