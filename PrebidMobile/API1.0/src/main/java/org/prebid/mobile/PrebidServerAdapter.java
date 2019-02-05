@@ -143,6 +143,7 @@ public class PrebidServerAdapter implements DemandAdapter {
         protected void onPostExecute(JSONObject jsonObject) {
             super.onPostExecute(jsonObject);
             HashMap<String, String> keywords = new HashMap<>();
+            boolean containTopBid = false;
             if (jsonObject != null) {
                 LogUtil.d("Getting response for auction " + getAuctionId() + ": " + jsonObject.toString());
                 try {
@@ -159,6 +160,9 @@ public class PrebidServerAdapter implements DemandAdapter {
                                     boolean containBids = false;
                                     while (it.hasNext()) {
                                         String key = (String) it.next();
+                                        if (key.equals("hb_cache_id")) {
+                                            containTopBid = true;
+                                        }
                                         if (key.startsWith("hb_cache_id")) {
                                             containBids = true;
                                         }
@@ -181,7 +185,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                 LogUtil.d("Getting null response for auction " + getAuctionId());
             }
             if (listener != null) {
-                if (!keywords.isEmpty()) {
+                if (!keywords.isEmpty() && containTopBid) {
                     listener.onDemandReady(keywords, auctionId);
                 } else {
                     listener.onDemandFailed(ResultCode.NO_BIDS, auctionId);

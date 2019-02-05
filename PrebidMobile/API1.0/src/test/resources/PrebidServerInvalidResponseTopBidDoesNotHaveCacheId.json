@@ -23,8 +23,8 @@
                 "hb_bidder_appnexus": "appnexus",
                 "hb_env_appnexus": "mobile-app",
                 "hb_pb_appnexus": "0.50",
-                "hb_size_appnexus": "300x250"
-                "hb_cache_id_appnexus": "bd8d6eeb-8ad1-402c-a1f8-09565bb0bda7",
+                "hb_size_appnexus": "300x250",
+                "hb_cache_id_appnexus": "bd8d6eeb-8ad1-402c-a1f8-09565bb0bda7"
               },
               "type": "banner"
             },
