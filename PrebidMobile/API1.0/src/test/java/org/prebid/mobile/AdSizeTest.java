@@ -27,9 +27,4 @@ public class AdSizeTest {
         assertEquals(size1, size2);
         assertEquals(size1.hashCode(), size2.hashCode());
     }
-
-    @Test
-    public void testTest() {
-        
-    }
 }
