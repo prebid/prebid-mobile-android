@@ -171,7 +171,7 @@ public class DemandFetcherTest extends BaseSetup {
             verify(mockListener).onComplete(ResultCode.SUCCESS);
             assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
             Bundle bundle = request.getCustomTargeting();
-            assertEquals(11, bundle.size());
+            assertEquals(10, bundle.size());
             assertTrue(bundle.containsKey("hb_pb"));
             assertEquals("0.50", bundle.get("hb_pb"));
             assertTrue(bundle.containsKey("hb_bidder"));
@@ -182,8 +182,6 @@ public class DemandFetcherTest extends BaseSetup {
             assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id"));
             assertTrue(bundle.containsKey("hb_cache_id_appnexus"));
             assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id_appnexus"));
-            assertTrue(bundle.containsKey("hb_creative_loadtype"));
-            assertEquals("html", bundle.get("hb_creative_loadtype"));
             assertTrue(bundle.containsKey("hb_env"));
             assertEquals("mobile-app", bundle.get("hb_env"));
             assertTrue(bundle.containsKey("hb_env_appnexus"));
@@ -230,7 +228,7 @@ public class DemandFetcherTest extends BaseSetup {
             verify(mockListener).onComplete(ResultCode.SUCCESS);
             assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
             String adViewKeywords = adView.getKeywords();
-            assertEquals("hb_pb:0.50,hb_env:mobile-app,hb_pb_appnexus:0.50,hb_size:300x250,hb_bidder_appnexus:appnexus,hb_bidder:appnexus,hb_cache_id:df4aba04-5e69-44b8-8608-058ab21600b8,hb_env_appnexus:mobile-app,hb_creative_loadtype:html,hb_size_appnexus:300x250,hb_cache_id_appnexus:df4aba04-5e69-44b8-8608-058ab21600b8,", adViewKeywords);
+            assertEquals("hb_pb:0.50,hb_env:mobile-app,hb_pb_appnexus:0.50,hb_size:300x250,hb_bidder_appnexus:appnexus,hb_bidder:appnexus,hb_cache_id:df4aba04-5e69-44b8-8608-058ab21600b8,hb_env_appnexus:mobile-app,hb_size_appnexus:300x250,hb_cache_id_appnexus:df4aba04-5e69-44b8-8608-058ab21600b8,", adViewKeywords);
         } else {
             assertTrue("Mock server was not started", false);
         }
@@ -268,7 +266,7 @@ public class DemandFetcherTest extends BaseSetup {
             verify(mockListener).onComplete(ResultCode.SUCCESS);
             assertNotSame(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
             String adViewKeywords = adView.getKeywords();
-            assertEquals("hb_pb:0.50,hb_env:mobile-app,hb_pb_appnexus:0.50,hb_size:300x250,hb_bidder_appnexus:appnexus,hb_bidder:appnexus,hb_cache_id:df4aba04-5e69-44b8-8608-058ab21600b8,hb_env_appnexus:mobile-app,hb_creative_loadtype:html,hb_size_appnexus:300x250,hb_cache_id_appnexus:df4aba04-5e69-44b8-8608-058ab21600b8,", adViewKeywords);
+            assertEquals("hb_pb:0.50,hb_env:mobile-app,hb_pb_appnexus:0.50,hb_size:300x250,hb_bidder_appnexus:appnexus,hb_bidder:appnexus,hb_cache_id:df4aba04-5e69-44b8-8608-058ab21600b8,hb_env_appnexus:mobile-app,hb_size_appnexus:300x250,hb_cache_id_appnexus:df4aba04-5e69-44b8-8608-058ab21600b8,", adViewKeywords);
             fetcherLooper.runOneTask();
             demandLooper.runOneTask();
             Robolectric.flushBackgroundThreadScheduler();
@@ -314,7 +312,7 @@ public class DemandFetcherTest extends BaseSetup {
             verify(mockListener).onComplete(ResultCode.SUCCESS);
             assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
             Bundle bundle = request.getCustomTargeting();
-            assertEquals(11, bundle.size());
+            assertEquals(10, bundle.size());
             assertTrue(bundle.containsKey("hb_pb"));
             assertEquals("0.50", bundle.get("hb_pb"));
             assertTrue(bundle.containsKey("hb_bidder"));
@@ -325,8 +323,6 @@ public class DemandFetcherTest extends BaseSetup {
             assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id"));
             assertTrue(bundle.containsKey("hb_cache_id_appnexus"));
             assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id_appnexus"));
-            assertTrue(bundle.containsKey("hb_creative_loadtype"));
-            assertEquals("html", bundle.get("hb_creative_loadtype"));
             assertTrue(bundle.containsKey("hb_env"));
             assertEquals("mobile-app", bundle.get("hb_env"));
             assertTrue(bundle.containsKey("hb_env_appnexus"));

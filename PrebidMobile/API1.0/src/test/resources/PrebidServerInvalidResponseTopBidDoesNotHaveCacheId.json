@@ -1,0 +1,95 @@
+{
+  "id": "3dc76667-a500-4e01-a43b-368e36d6c7cc",
+  "seatbid": [
+    {
+      "bid": [
+        {
+          "id": "5805621923512124230",
+          "impid": "Banner_300x250",
+          "price": 0.5,
+          "adm": "<script src=\"hello world\">this is an mock ad<script>",
+          "adid": "113276871",
+          "adomain": [
+            "appnexus.com"
+          ],
+          "iurl": "https://ams1-ib.adnxs.com/cr?id=113276871",
+          "cid": "9325",
+          "crid": "113276871",
+          "w": 300,
+          "h": 250,
+          "ext": {
+            "prebid": {
+              "targeting": {
+                "hb_bidder_appnexus": "appnexus",
+                "hb_env_appnexus": "mobile-app",
+                "hb_pb_appnexus": "0.50",
+                "hb_size_appnexus": "300x250",
+                "hb_cache_id_appnexus": "bd8d6eeb-8ad1-402c-a1f8-09565bb0bda7"
+              },
+              "type": "banner"
+            },
+            "bidder": {
+              "appnexus": {
+                "brand_id": 1,
+                "auction_id": 5880969551537342000,
+                "bidder_id": 2,
+                "bid_ad_type": 0
+              }
+            }
+          }
+        }
+      ],
+      "seat": "appnexus"
+    },
+    {
+      "bid": [
+        {
+          "id": "0",
+          "impid": "Banner_300x250",
+          "price": 1.23,
+          "adm": "<script src=\"hello world\">this is an mock ad<script>",
+          "crid": "4458534",
+          "w": 300,
+          "h": 250,
+          "ext": {
+            "prebid": {
+              "targeting": {
+                "hb_bidder": "rubicon",
+                "hb_bidder_rubicon": "rubicon",
+                "hb_env": "mobile-app",
+                "hb_env_rubicon": "mobile-app",
+                "hb_pb": "1.20",
+                "hb_pb_rubicon": "1.20",
+                "hb_size": "300x250",
+                "hb_size_rubicon": "300x250"
+              },
+              "type": "banner"
+            },
+            "bidder": {
+              "rp": {
+                "targeting": [
+                  {
+                    "key": "rpfl_1001",
+                    "values": [
+                      "15_tier0100"
+                    ]
+                  }
+                ],
+                "mime": "text/html",
+                "size_id": 15
+              }
+            }
+          }
+        }
+      ],
+      "seat": "rubicon"
+    }
+  ],
+  "ext": {
+    "responsetimemillis": {
+      "appnexus": 76,
+      "rubicon": 4
+    },
+    "tmaxrequest": 500
+  }
+}

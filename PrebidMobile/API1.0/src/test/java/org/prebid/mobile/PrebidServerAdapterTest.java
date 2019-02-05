@@ -108,7 +108,6 @@ public class PrebidServerAdapterTest extends BaseSetup {
             bids.put("hb_bidder_appnexus", "appnexus");
             bids.put("hb_cache_id", "df4aba04-5e69-44b8-8608-058ab21600b8");
             bids.put("hb_cache_id_appnexus", "df4aba04-5e69-44b8-8608-058ab21600b8");
-            bids.put("hb_creative_loadtype", "html");
             bids.put("hb_env", "mobile-app");
             bids.put("hb_env_appnexus", "mobile-app");
             bids.put("hb_pb", "0.50");
@@ -170,7 +169,6 @@ public class PrebidServerAdapterTest extends BaseSetup {
             bids.put("hb_bidder_rubicon", "rubicon");
             bids.put("hb_cache_id", "bd8d6eeb-8ad1-402c-a1f8-09565bb0bda7");
             bids.put("hb_cache_id_rubicon", "bd8d6eeb-8ad1-402c-a1f8-09565bb0bda7");
-            bids.put("hb_creative_loadtype", "html");
             bids.put("hb_env", "mobile-app");
             bids.put("hb_env_rubicon", "mobile-app");
             bids.put("hb_pb", "1.20");
@@ -183,6 +181,30 @@ public class PrebidServerAdapterTest extends BaseSetup {
         }
     }
 
+    @Test
+    public void testSuccessfulBidResponseWithoutCacheId3() {
+        if (successfulMockServerStarted) {
+            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.invalidBidResponseTopBidNoCacheId()));
+            HttpUrl hostUrl = server.url("/");
+            Host.CUSTOM.setHostUrl(hostUrl.toString());
+            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+            PrebidMobile.setPrebidServerAccountId("12345");
+            PrebidMobile.setShareGeoLocation(true);
+            PrebidMobile.setApplicationContext(activity.getApplicationContext());
+            DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+            PrebidServerAdapter adapter = new PrebidServerAdapter();
+            HashSet<AdSize> sizes = new HashSet<>();
+            sizes.add(new AdSize(300, 250));
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            String uuid = UUID.randomUUID().toString();
+            adapter.requestDemand(requestParams, mockListener, uuid);
+            Robolectric.flushBackgroundThreadScheduler();
+            Robolectric.flushForegroundThreadScheduler();
+            verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
+        } else {
+            assertTrue("Server failed to start, unable to test.", false);
+        }
+    }
 
     @Test
     public void testMergingBidsFromDifferentSeats() {

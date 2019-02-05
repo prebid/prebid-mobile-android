@@ -1,0 +1,55 @@
+{
+  "id": "3dc76667-a500-4e01-a43b-368e36d6c7cc",
+  "seatbid": [
+    {
+      "bid": [
+        {
+          "id": "1644265211331914430",
+          "impid": "Banner_300x250",
+          "price": 0.5,
+          "adm": "<script src=\"hello world\">this is an mock ad</script>",
+          "adid": "113276871",
+          "adomain": [
+            "appnexus.com"
+          ],
+          "iurl": "https://nym1-ib.adnxs.com/cr?id=113276871",
+          "cid": "9325",
+          "crid": "113276871",
+          "w": 300,
+          "h": 250,
+          "ext": {
+            "prebid": {
+              "targeting": {
+                "hb_bidder": "appnexus",
+                "hb_bidder_appnexus": "appnexus",
+                "hb_creative_loadtype": "html",
+                "hb_env": "mobile-app",
+                "hb_env_appnexus": "mobile-app",
+                "hb_pb": "0.50",
+                "hb_pb_appnexus": "0.50",
+                "hb_size": "300x250",
+                "hb_size_appnexus": "300x250"
+              },
+              "type": "banner"
+            },
+            "bidder": {
+              "appnexus": {
+                "brand_id": 1,
+                "auction_id": 7888349588523321000,
+                "bidder_id": 2,
+                "bid_ad_type": 0
+              }
+            }
+          }
+        }
+      ],
+      "seat": "appnexus"
+    }
+  ],
+  "ext": {
+    "responsetimemillis": {
+      "appnexus": 213
+    },
+    "tmaxrequest": 500
+  }
+}
