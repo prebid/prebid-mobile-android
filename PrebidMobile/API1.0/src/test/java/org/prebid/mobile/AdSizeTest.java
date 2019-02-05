@@ -6,6 +6,8 @@ import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.Arrays;
+
 import static junit.framework.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
@@ -24,5 +26,10 @@ public class AdSizeTest {
         AdSize size2 = new AdSize(300, 250);
         assertEquals(size1, size2);
         assertEquals(size1.hashCode(), size2.hashCode());
+    }
+
+    @Test
+    public void testTest() {
+        
     }
 }

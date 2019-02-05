@@ -181,6 +181,30 @@ public class PrebidServerAdapterTest extends BaseSetup {
         }
     }
 
+    @Test
+    public void testSuccessfulBidResponseWithoutCacheId3() {
+        if (successfulMockServerStarted) {
+            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.invalidBidResponseTopBidNoCacheId()));
+            HttpUrl hostUrl = server.url("/");
+            Host.CUSTOM.setHostUrl(hostUrl.toString());
+            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+            PrebidMobile.setPrebidServerAccountId("12345");
+            PrebidMobile.setShareGeoLocation(true);
+            PrebidMobile.setApplicationContext(activity.getApplicationContext());
+            DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+            PrebidServerAdapter adapter = new PrebidServerAdapter();
+            HashSet<AdSize> sizes = new HashSet<>();
+            sizes.add(new AdSize(300, 250));
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            String uuid = UUID.randomUUID().toString();
+            adapter.requestDemand(requestParams, mockListener, uuid);
+            Robolectric.flushBackgroundThreadScheduler();
+            Robolectric.flushForegroundThreadScheduler();
+            verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
+        } else {
+            assertTrue("Server failed to start, unable to test.", false);
+        }
+    }
 
     @Test
     public void testMergingBidsFromDifferentSeats() {

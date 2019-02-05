@@ -31,6 +31,11 @@ public class MockPrebidServerResponses {
         return inputStreamToString(in);
     }
 
+    public static String invalidBidResponseTopBidNoCacheId(){
+        InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerInvalidResponseTopBidDoesNotHaveCacheId.json");
+        return inputStreamToString(in);
+    }
+
     public static String inputStreamToString(InputStream is) {
         try {
             StringBuilder builder = new StringBuilder();
