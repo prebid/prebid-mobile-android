@@ -44,14 +44,6 @@ public class ResultCodeTest extends BaseSetup {
             MoPubView testView = new MoPubView(activity);
             OnCompleteListener mockListener = mock(OnCompleteListener.class);
             adUnit.fetchDemand(testView, mockListener);
-            DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
-            fetcher.enableTestMode();
-            ShadowLooper fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
-            fetcherLooper.runOneTask();
-            ShadowLooper demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
-            demandLooper.runOneTask();
-            Robolectric.flushBackgroundThreadScheduler();
-            Robolectric.flushForegroundThreadScheduler();
             verify(mockListener).onComplete(ResultCode.INVALID_CONTEXT);
         } else {
             assertTrue("Mock server not started", false);
@@ -205,7 +197,7 @@ public class ResultCodeTest extends BaseSetup {
     }
 
     @Test
-    public void testInvalidAccountId() throws Exception {
+    public void testEmptyAccountId() throws Exception {
         PrebidMobile.setPrebidServerAccountId("");
         BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
         MoPubView testView = new MoPubView(activity);
@@ -215,7 +207,7 @@ public class ResultCodeTest extends BaseSetup {
     }
 
     @Test
-    public void testInvalidConfigId() throws Exception {
+    public void testEmptyConfigId() throws Exception {
         PrebidMobile.setPrebidServerAccountId("123456");
         BannerAdUnit adUnit = new BannerAdUnit("", 320, 50);
         MoPubView testView = new MoPubView(activity);
@@ -225,7 +217,7 @@ public class ResultCodeTest extends BaseSetup {
     }
 
     @Test
-    public void testInvalidHostUrl() throws Exception {
+    public void testEmptyHostUrl() throws Exception {
         PrebidMobile.setPrebidServerAccountId("123456");
         Host.CUSTOM.setHostUrl("");
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
@@ -256,5 +248,16 @@ public class ResultCodeTest extends BaseSetup {
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
         adUnit.fetchDemand(builder.build(), mockListener);
         verify(mockListener, never()).onComplete(ResultCode.INVALID_SIZE);
+    }
+
+    @Test
+    public void testNoNegativeSizeForBanner() {
+        PrebidMobile.setPrebidServerAccountId("123456");
+        BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
+        adUnit.addAdditionalSize(-1, 250);
+        MoPubView testView = new MoPubView(activity);
+        OnCompleteListener mockListener = mock(OnCompleteListener.class);
+        adUnit.fetchDemand(testView, mockListener);
+        verify(mockListener).onComplete(ResultCode.INVALID_SIZE);
     }
 }

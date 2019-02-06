@@ -71,6 +71,13 @@ public abstract class AdUnit {
             if (adObj.getClass() == Util.getClassFromString(Util.MOPUB_BANNER_VIEW_CLASS) && sizes.size() > 1) {
                 LogUtil.e("More than one size passed for MoPub ad view.");
                 listener.onComplete(ResultCode.INVALID_SIZE);
+                return;
+            }
+            for (AdSize size : sizes) {
+                if (size.getWidth() <= 0 || size.getHeight() <= 0) {
+                    listener.onComplete(ResultCode.INVALID_SIZE);
+                    return;
+                }
             }
         }
         Context context = PrebidMobile.getApplicationContext();
@@ -81,6 +88,9 @@ public abstract class AdUnit {
                 listener.onComplete(ResultCode.NETWORK_ERROR);
                 return;
             }
+        } else {
+            listener.onComplete(ResultCode.INVALID_CONTEXT);
+            return;
         }
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
