@@ -40,6 +40,24 @@ public class MoPubBannerTest {
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
+        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        Thread.sleep(30000);
+        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+    }
+
+    @Test
+    public void testMoPubWithoutAutoRefreshAndSize320x50() throws Exception {
+        onView(withId(R.id.adServerSpinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("MoPub"))).perform(click());
+        onView(withId(R.id.adSizeSpinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("320x50"))).perform(click());
+        onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
+        onView(withId(R.id.showAd)).perform(click());
+        Thread.sleep(5000);
+        onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
+        onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
+        onWebView().check(webContent(containingTextInBody("pbm.showAdFromCacheId")));
+        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         Thread.sleep(30000);
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
@@ -54,7 +72,11 @@ public class MoPubBannerTest {
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
+        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         Thread.sleep(30000);
+        assertEquals(2, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        ((DemoActivity) TestUtil.getCurrentActivity()).stopAutoRefresh();
+        Thread.sleep(35000);
         assertEquals(2, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 }
