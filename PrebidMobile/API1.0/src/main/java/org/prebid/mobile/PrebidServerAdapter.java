@@ -139,22 +139,13 @@ public class PrebidServerAdapter implements DemandAdapter {
                     LogUtil.d("Getting response for auction " + getAuctionId() + ": " + result);
                     Pattern storedRequestNotFound = Pattern.compile("^Invalid request: Stored Request with ID=\".*\" not found.");
                     Pattern storedImpNotFound = Pattern.compile("^Invalid request: Stored Imp with ID=\".*\" not found.");
-                    Pattern invalidUUIDInput = Pattern.compile("^Invalid request: pq: invalid input syntax for uuid: \".*\"");
                     Matcher m = storedRequestNotFound.matcher(result);
-                    Matcher m2 = invalidUUIDInput.matcher(result);
                     Matcher m3 = storedImpNotFound.matcher(result);
-                    boolean returned = false;
-                    if (m.find() || m2.find() || m3.find()) {
-                        String[] tmp = result.split("\"");
-                        if (tmp[1].equals(PrebidMobile.getAccountId())) {
-                            failWithResultCode(ResultCode.INVALID_ACCOUNT_ID);
-                            returned = true;
-                        } else if (tmp[1].equals(this.requestParams.getConfigId())) {
-                            failWithResultCode(ResultCode.INVALID_CONFIG_ID);
-                            returned = true;
-                        }
-                    }
-                    if (!returned) {
+                    if (m.find()) {
+                        failWithResultCode(ResultCode.INVALID_ACCOUNT_ID);
+                    } else if (m3.find()) {
+                        failWithResultCode(ResultCode.INVALID_CONFIG_ID);
+                    } else {
                         failWithResultCode(ResultCode.PREBID_SERVER_ERROR);
                     }
                 }
