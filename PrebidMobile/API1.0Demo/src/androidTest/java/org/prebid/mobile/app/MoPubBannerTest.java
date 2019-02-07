@@ -41,7 +41,7 @@ public class MoPubBannerTest {
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
-        Thread.sleep(30000);
+        Thread.sleep(120000);
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 

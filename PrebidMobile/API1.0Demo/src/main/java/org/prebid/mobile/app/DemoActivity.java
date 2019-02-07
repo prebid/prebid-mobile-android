@@ -37,13 +37,13 @@ public class DemoActivity extends AppCompatActivity {
         refreshCount = 0;
         setContentView(R.layout.activity_demo);
         Intent intent = getIntent();
-        if (intent.getStringExtra(Constants.AD_SERVER_NAME).equals("DFP") && intent.getStringExtra(Constants.AD_TYPE_NAME).equals("Banner")) {
+        if ("DFP".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Banner".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
             createDFPBanner(intent.getStringExtra(Constants.AD_SIZE_NAME));
-        } else if (intent.getStringExtra(Constants.AD_SERVER_NAME).equals("DFP") && intent.getStringExtra(Constants.AD_TYPE_NAME).equals("Interstitial")) {
+        } else if ("DFP".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Interstitial".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
             createDFPInterstitial();
-        } else if (intent.getStringExtra(Constants.AD_SERVER_NAME).equals("MoPub") && intent.getStringExtra(Constants.AD_TYPE_NAME).equals("Banner")) {
+        } else if ("MoPub".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Banner".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
             createMoPubBanner(intent.getStringExtra(Constants.AD_SIZE_NAME));
-        } else if (intent.getStringExtra(Constants.AD_SERVER_NAME).equals("MoPub") && intent.getStringExtra(Constants.AD_TYPE_NAME).equals("Interstitial")) {
+        } else if ("MoPub".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Interstitial".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
             createMoPubInterstitial();
         }
     }
