@@ -119,7 +119,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                     JSONObject response = new JSONObject(result);
                     httpCookieSync(conn.getHeaderFields());
                     // in the future, this can be improved to parse response base on request versions
-                    if (!PrebidMobile.timeoutMillisUpdated) {
+                    if (!PrebidMobile.timeoutMillisUpdated && PrebidMobile.getPrebidServerHost().equals(Host.APPNEXUS)) {
                         int tmaxRequest = response.getJSONObject("ext").getInt("tmaxrequest");
                         PrebidMobile.timeoutMillis = (int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200; // adding 200ms as safe time
                         PrebidMobile.timeoutMillisUpdated = true;

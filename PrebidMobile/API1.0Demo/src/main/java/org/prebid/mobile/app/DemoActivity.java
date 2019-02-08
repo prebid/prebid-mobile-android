@@ -25,6 +25,7 @@ import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.ResultCode;
 
 import static org.prebid.mobile.app.Constants.MOPUB_BANNER_ADUNIT_ID_300x250;
+import static org.prebid.mobile.app.Constants.MOPUB_BANNER_ADUNIT_ID_320x50;
 
 public class DemoActivity extends AppCompatActivity {
     int refreshCount;
@@ -36,13 +37,13 @@ public class DemoActivity extends AppCompatActivity {
         refreshCount = 0;
         setContentView(R.layout.activity_demo);
         Intent intent = getIntent();
-        if (intent.getStringExtra(Constants.AD_SERVER_NAME).equals("DFP") && intent.getStringExtra(Constants.AD_TYPE_NAME).equals("Banner")) {
+        if ("DFP".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Banner".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
             createDFPBanner(intent.getStringExtra(Constants.AD_SIZE_NAME));
-        } else if (intent.getStringExtra(Constants.AD_SERVER_NAME).equals("DFP") && intent.getStringExtra(Constants.AD_TYPE_NAME).equals("Interstitial")) {
+        } else if ("DFP".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Interstitial".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
             createDFPInterstitial();
-        } else if (intent.getStringExtra(Constants.AD_SERVER_NAME).equals("MoPub") && intent.getStringExtra(Constants.AD_TYPE_NAME).equals("Banner")) {
+        } else if ("MoPub".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Banner".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
             createMoPubBanner(intent.getStringExtra(Constants.AD_SIZE_NAME));
-        } else if (intent.getStringExtra(Constants.AD_SERVER_NAME).equals("MoPub") && intent.getStringExtra(Constants.AD_TYPE_NAME).equals("Interstitial")) {
+        } else if ("MoPub".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Interstitial".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
             createMoPubInterstitial();
         }
     }
@@ -56,8 +57,13 @@ public class DemoActivity extends AppCompatActivity {
         int height = Integer.valueOf(wAndH[1]);
         if (width == 300 && height == 250) {
             dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_300x250);
+            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND, width, height);
+        } else if (width == 320 && height == 50) {
+            dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_300x250);
+            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50_APPNEXUS_DEMAND, width, height);
         } else {
-            dfpAdView.setAdUnitId("asizelessadunitidhaha");
+            dfpAdView.setAdUnitId(Constants.DFP_BANNER_ALL_SIZES);
+            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50_APPNEXUS_DEMAND, width, height);
         }
         dfpAdView.setAdSizes(new AdSize(width, height));
         adFrame.addView(dfpAdView);
@@ -66,7 +72,6 @@ public class DemoActivity extends AppCompatActivity {
         final PublisherAdRequest request = builder.build();
 
         //region PrebidMobile Mobile API 1.0 usage
-        adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND, width, height);
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
         adUnit.fetchDemand(request, new OnCompleteListener() {
@@ -126,11 +131,17 @@ public class DemoActivity extends AppCompatActivity {
         int width = Integer.valueOf(wAndH[0]);
         int height = Integer.valueOf(wAndH[1]);
         final MoPubView adView = new MoPubView(this);
-        adView.setAdUnitId(MOPUB_BANNER_ADUNIT_ID_300x250);
+        if (width == 300 && height == 250) {
+            adView.setAdUnitId(MOPUB_BANNER_ADUNIT_ID_300x250);
+            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND, 300, 250);
+        } else {
+            adView.setAdUnitId(MOPUB_BANNER_ADUNIT_ID_320x50);
+            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50_APPNEXUS_DEMAND, 320, 50);
+        }
         adView.setMinimumWidth(width);
         adView.setMinimumHeight(height);
         adFrame.addView(adView);
-        adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND, 300, 250);
+
         adUnit.setAutoRefreshPeriodMillis(getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0));
         adUnit.fetchDemand(adView, new OnCompleteListener() {
             @Override
@@ -157,7 +168,7 @@ public class DemoActivity extends AppCompatActivity {
                 } else {
                     builder = new AlertDialog.Builder(DemoActivity.this);
                 }
-                builder.setTitle("Failed to load DFP interstitial ad")
+                builder.setTitle("Failed to load MoPub interstitial ad")
                         .setMessage("Error code: " + errorCode.toString())
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
@@ -196,6 +207,12 @@ public class DemoActivity extends AppCompatActivity {
         if (adUnit != null) {
             adUnit.stopAutoRefersh();
             adUnit = null;
+        }
+    }
+
+    void stopAutoRefresh() {
+        if (adUnit != null) {
+            adUnit.stopAutoRefersh();
         }
     }
 }
