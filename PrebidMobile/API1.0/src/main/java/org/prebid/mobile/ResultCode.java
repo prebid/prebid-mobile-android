@@ -45,5 +45,9 @@ public enum ResultCode {
     /**
      * No bids available from demand source
      */
-    NO_BIDS
+    NO_BIDS,
+    /**
+     * Prebid Server responded with some error messages
+     */
+    PREBID_SERVER_ERROR
 }
