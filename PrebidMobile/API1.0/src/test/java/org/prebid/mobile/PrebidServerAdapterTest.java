@@ -42,12 +42,21 @@ public class PrebidServerAdapterTest extends BaseSetup {
         String s2 = "Invalid request: Stored Imp with ID=\"6ace8c7d-88c0-4623-8117-75bc3f0a2edd\" not found.";
         Matcher m2 = p2.matcher(s2);
         assertTrue(m2.find());
+        Pattern p3 = Pattern.compile("^Invalid request: Request imp\\[\\d\\].banner.format\\[\\d\\] must define non-zero \"h\" and \"w\" properties.");
+        String s3 = "Invalid request: Request imp[0].banner.format[0] must define non-zero \"h\" and \"w\" properties.";
+        Matcher m3 = p3.matcher(s3);
+        assertTrue(m3.find());
+        Pattern p4 = Pattern.compile("^Invalid request: Unable to set interstitial size list");
+        String s4 = "Invalid request: Unable to set interstitial size list for Imp id=PrebidMobile (No valid sizes between 0x10 and 1x25)";
+        Matcher m4 = p4.matcher(s4);
+        assertTrue(m4.find());
+
     }
 
     @Test
     public void testInvalidPrebidServerAccountIdForAppNexusHostedPrebidServer() {
-        PrebidMobile.setHost(Host.APPNEXUS);
-        PrebidMobile.setAccountId("bfa84af2-bd16-4d35-96ad-ffffffffffff");
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-ffffffffffff");
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
@@ -65,8 +74,8 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
     @Test
     public void testInvalidPrebidServerConfigIdForAppNexusHostedPrebidServer() {
-        PrebidMobile.setHost(Host.APPNEXUS);
-        PrebidMobile.setAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
@@ -83,8 +92,8 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
     @Test
     public void testInvalidPrebidServerIdSyntaxForAppNexusHostedPrebidServer() {
-        PrebidMobile.setHost(Host.APPNEXUS);
-        PrebidMobile.setAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888d");
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888d");
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
@@ -101,8 +110,8 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
     @Test
     public void testInvalidPrebidServerIdSyntaxForAppNexusHostedPrebidServer2() {
-        PrebidMobile.setHost(Host.APPNEXUS);
-        PrebidMobile.setAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
@@ -119,31 +128,24 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
     @Test
     public void testUpdateTimeoutMillis() {
-        if (successfulMockServerStarted) {
-            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()).throttleBody(40, 100, TimeUnit.MILLISECONDS));
-            HttpUrl hostUrl = server.url("/");
-            Host.CUSTOM.setHostUrl(hostUrl.toString());
-            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-            assertEquals(10000, PrebidMobile.timeoutMillis);
-            assertFalse(PrebidMobile.timeoutMillisUpdated);
-            PrebidMobile.setPrebidServerAccountId("12345");
-            PrebidMobile.setShareGeoLocation(true);
-            PrebidMobile.setApplicationContext(activity.getApplicationContext());
-            DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
-            PrebidServerAdapter adapter = new PrebidServerAdapter();
-            HashSet<AdSize> sizes = new HashSet<>();
-            sizes.add(new AdSize(320, 50));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
-            String uuid = UUID.randomUUID().toString();
-            adapter.requestDemand(requestParams, mockListener, uuid);
-            Robolectric.flushBackgroundThreadScheduler();
-            Robolectric.flushForegroundThreadScheduler();
-            verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
-            assertTrue("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, PrebidMobile.timeoutMillis < 3000 && PrebidMobile.timeoutMillis > 2000);
-            assertTrue(PrebidMobile.timeoutMillisUpdated);
-        } else {
-            assertTrue("Server failed to start, unable to test.", false);
-        }
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        assertEquals(10000, PrebidMobile.timeoutMillis);
+        assertFalse(PrebidMobile.timeoutMillisUpdated);
+        PrebidMobile.setPrebidServerAccountId("b7adad2c-e042-4126-8ca1-b3caac7d3e5c");
+        PrebidMobile.setShareGeoLocation(true);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+        RequestParams requestParams = new RequestParams("e2edc23f-0b3b-4203-81b5-7cc97132f418", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
+        assertTrue("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, PrebidMobile.timeoutMillis <= 10000 && PrebidMobile.timeoutMillis > 700);
+        assertTrue(PrebidMobile.timeoutMillisUpdated);
     }
 
     @Test

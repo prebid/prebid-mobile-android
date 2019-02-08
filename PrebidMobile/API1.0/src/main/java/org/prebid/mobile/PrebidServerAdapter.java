@@ -121,7 +121,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                     // in the future, this can be improved to parse response base on request versions
                     if (!PrebidMobile.timeoutMillisUpdated && PrebidMobile.getPrebidServerHost().equals(Host.APPNEXUS)) {
                         int tmaxRequest = response.getJSONObject("ext").getInt("tmaxrequest");
-                        PrebidMobile.timeoutMillis = (int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200; // adding 200ms as safe time
+                        PrebidMobile.timeoutMillis = Math.max((int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200, 10000); // adding 200ms as safe time
                         PrebidMobile.timeoutMillisUpdated = true;
                     }
                     return response;
@@ -139,12 +139,18 @@ public class PrebidServerAdapter implements DemandAdapter {
                     LogUtil.d("Getting response for auction " + getAuctionId() + ": " + result);
                     Pattern storedRequestNotFound = Pattern.compile("^Invalid request: Stored Request with ID=\".*\" not found.");
                     Pattern storedImpNotFound = Pattern.compile("^Invalid request: Stored Imp with ID=\".*\" not found.");
+                    Pattern invalidBannerSize = Pattern.compile("^Invalid request: Request imp\\[\\d\\].banner.format\\[\\d\\] must define non-zero \"h\" and \"w\" properties.");
+                    Pattern invalidInterstitialSize = Pattern.compile("Invalid request: Unable to set interstitial size list");
                     Matcher m = storedRequestNotFound.matcher(result);
+                    Matcher m2 = invalidBannerSize.matcher(result);
                     Matcher m3 = storedImpNotFound.matcher(result);
+                    Matcher m4 = invalidInterstitialSize.matcher(result);
                     if (m.find()) {
                         failWithResultCode(ResultCode.INVALID_ACCOUNT_ID);
                     } else if (m3.find()) {
                         failWithResultCode(ResultCode.INVALID_CONFIG_ID);
+                    } else if (m2.find() || m4.find()) {
+                        failWithResultCode(ResultCode.INVALID_SIZE);
                     } else {
                         failWithResultCode(ResultCode.PREBID_SERVER_ERROR);
                     }
