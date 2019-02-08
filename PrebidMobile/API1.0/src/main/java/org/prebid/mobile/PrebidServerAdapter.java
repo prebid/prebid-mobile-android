@@ -119,10 +119,17 @@ public class PrebidServerAdapter implements DemandAdapter {
                     JSONObject response = new JSONObject(result);
                     httpCookieSync(conn.getHeaderFields());
                     // in the future, this can be improved to parse response base on request versions
-                    if (!PrebidMobile.timeoutMillisUpdated && PrebidMobile.getPrebidServerHost().equals(Host.APPNEXUS)) {
-                        int tmaxRequest = response.getJSONObject("ext").getInt("tmaxrequest");
-                        PrebidMobile.timeoutMillis = Math.max((int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200, 10000); // adding 200ms as safe time
-                        PrebidMobile.timeoutMillisUpdated = true;
+                    if (!PrebidMobile.timeoutMillisUpdated) {
+                        int tmaxRequest = -1;
+                        try {
+                            tmaxRequest = response.getJSONObject("ext").getInt("tmaxrequest");
+                        } catch (JSONException e) {
+                            // ignore this
+                        }
+                        if (tmaxRequest >= 0) {
+                            PrebidMobile.timeoutMillis = Math.min((int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200, 10000); // adding 200ms as safe time
+                            PrebidMobile.timeoutMillisUpdated = true;
+                        }
                     }
                     return response;
                 } else if (httpResult == HttpURLConnection.HTTP_BAD_REQUEST) {
@@ -186,23 +193,30 @@ public class PrebidServerAdapter implements DemandAdapter {
                             if (bids != null) {
                                 for (int j = 0; j < bids.length(); j++) {
                                     JSONObject bid = bids.getJSONObject(j);
-                                    JSONObject hb_key_values = bid.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting");
-                                    Iterator it = hb_key_values.keys();
-                                    boolean containBids = false;
-                                    while (it.hasNext()) {
-                                        String key = (String) it.next();
-                                        if (key.equals("hb_cache_id")) {
-                                            containTopBid = true;
-                                        }
-                                        if (key.startsWith("hb_cache_id")) {
-                                            containBids = true;
-                                        }
+                                    JSONObject hb_key_values = null;
+                                    try {
+                                        hb_key_values = bid.getJSONObject("ext").getJSONObject("prebid").getJSONObject("targeting");
+                                    } catch (JSONException e) {
+                                        // this can happen if lower bids exist on the same seat
                                     }
-                                    it = hb_key_values.keys();
-                                    if (containBids) {
+                                    if (hb_key_values != null) {
+                                        Iterator it = hb_key_values.keys();
+                                        boolean containBids = false;
                                         while (it.hasNext()) {
                                             String key = (String) it.next();
-                                            keywords.put(key, hb_key_values.getString(key));
+                                            if (key.equals("hb_cache_id")) {
+                                                containTopBid = true;
+                                            }
+                                            if (key.startsWith("hb_cache_id")) {
+                                                containBids = true;
+                                            }
+                                        }
+                                        it = hb_key_values.keys();
+                                        if (containBids) {
+                                            while (it.hasNext()) {
+                                                String key = (String) it.next();
+                                                keywords.put(key, hb_key_values.getString(key));
+                                            }
                                         }
                                     }
                                 }

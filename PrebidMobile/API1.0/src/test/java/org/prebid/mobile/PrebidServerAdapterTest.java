@@ -149,6 +149,38 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
+    public void testUpdateTimeoutMillis2() {
+        if (successfulMockServerStarted) {
+            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBidResponseNoTmax()));
+            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBidResponseTmaxTooLarge()));
+            HttpUrl hostUrl = server.url("/");
+            Host.CUSTOM.setHostUrl(hostUrl.toString());
+            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+            PrebidMobile.setPrebidServerAccountId("12345");
+            PrebidMobile.setShareGeoLocation(true);
+            PrebidMobile.setApplicationContext(activity.getApplicationContext());
+            DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+            PrebidServerAdapter adapter = new PrebidServerAdapter();
+            HashSet<AdSize> sizes = new HashSet<>();
+            sizes.add(new AdSize(300, 250));
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            String uuid = UUID.randomUUID().toString();
+            adapter.requestDemand(requestParams, mockListener, uuid);
+            Robolectric.flushBackgroundThreadScheduler();
+            Robolectric.flushForegroundThreadScheduler();
+            assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, 10000, PrebidMobile.timeoutMillis);
+            assertTrue(!PrebidMobile.timeoutMillisUpdated);
+            adapter.requestDemand(requestParams, mockListener, uuid);
+            Robolectric.flushBackgroundThreadScheduler();
+            Robolectric.flushForegroundThreadScheduler();
+            assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, 10000, PrebidMobile.timeoutMillis);
+            assertTrue(PrebidMobile.timeoutMillisUpdated);
+        } else {
+            assertTrue("Server failed to start, unable to test.", false);
+        }
+    }
+
+    @Test
     public void testNoBidResponse() {
         if (successfulMockServerStarted) {
             server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
@@ -229,6 +261,42 @@ public class PrebidServerAdapterTest extends BaseSetup {
             Robolectric.flushBackgroundThreadScheduler();
             Robolectric.flushForegroundThreadScheduler();
             verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
+        } else {
+            assertTrue("Server failed to start, unable to test.", false);
+        }
+    }
+
+    @Test
+    public void testSuccessfulBidResponseTwoBidsOnTheSameSeat() {
+        if (successfulMockServerStarted) {
+            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.validBidResponseTwoBidsOnTheSameSeat()));
+            HttpUrl hostUrl = server.url("/");
+            Host.CUSTOM.setHostUrl(hostUrl.toString());
+            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+            PrebidMobile.setPrebidServerAccountId("12345");
+            PrebidMobile.setShareGeoLocation(true);
+            PrebidMobile.setApplicationContext(activity.getApplicationContext());
+            DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+            PrebidServerAdapter adapter = new PrebidServerAdapter();
+            HashSet<AdSize> sizes = new HashSet<>();
+            sizes.add(new AdSize(300, 250));
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            String uuid = UUID.randomUUID().toString();
+            adapter.requestDemand(requestParams, mockListener, uuid);
+            Robolectric.flushBackgroundThreadScheduler();
+            Robolectric.flushForegroundThreadScheduler();
+            HashMap<String, String> bids = new HashMap<String, String>();
+            bids.put("hb_bidder", "appnexus");
+            bids.put("hb_bidder_appnexus", "appnexus");
+            bids.put("hb_cache_id", "fdc4a3b1-ecdd-4c0a-b043-7ed66dca0553");
+            bids.put("hb_cache_id_appnexus", "fdc4a3b1-ecdd-4c0a-b043-7ed66dca0553");
+            bids.put("hb_env", "mobile-app");
+            bids.put("hb_env_appnexus", "mobile-app");
+            bids.put("hb_pb", "0.08");
+            bids.put("hb_pb_appnexus", "0.08");
+            bids.put("hb_size", "300x250");
+            bids.put("hb_size_appnexus", "300x250");
+            verify(mockListener).onDemandReady(bids, uuid);
         } else {
             assertTrue("Server failed to start, unable to test.", false);
         }
