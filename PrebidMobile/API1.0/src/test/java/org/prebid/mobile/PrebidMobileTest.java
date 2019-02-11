@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 @Config(sdk = BaseSetup.testSDK)
 public class PrebidMobileTest extends BaseSetup {
     @Test
-    public void testAccountId() throws Exception {
+    public void testPrebidMobileSettings() {
         PrebidMobile.setPrebidServerAccountId("123456");
         assertEquals("123456", PrebidMobile.getPrebidServerAccountId());
         PrebidMobile.setApplicationContext(activity.getApplicationContext());

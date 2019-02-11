@@ -1,6 +1,7 @@
 package org.prebid.mobile;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
@@ -63,11 +64,6 @@ public abstract class AdUnit {
         HashSet<AdSize> sizes = null;
         if (adType == AdType.BANNER) {
             sizes = ((BannerAdUnit) this).getSizes();
-            if (sizes == null || sizes.isEmpty()) {
-                LogUtil.e("No size set for banner ad unit.");
-                listener.onComplete(ResultCode.NO_SIZE_FOR_BANNER);
-                return;
-            }
             if (adObj.getClass() == Util.getClassFromString(Util.MOPUB_BANNER_VIEW_CLASS) && sizes.size() > 1) {
                 LogUtil.e("More than one size passed for MoPub ad view.");
                 listener.onComplete(ResultCode.INVALID_SIZE);
@@ -83,10 +79,12 @@ public abstract class AdUnit {
         Context context = PrebidMobile.getApplicationContext();
         if (context != null) {
             ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo activeNetworkInfo = conMgr.getActiveNetworkInfo();
-            if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
-                listener.onComplete(ResultCode.NETWORK_ERROR);
-                return;
+            if (conMgr != null && context.checkCallingOrSelfPermission("android.permission.ACCESS_NETWORK_STATE") == PackageManager.PERMISSION_GRANTED) {
+                NetworkInfo activeNetworkInfo = conMgr.getActiveNetworkInfo();
+                if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+                    listener.onComplete(ResultCode.NETWORK_ERROR);
+                    return;
+                }
             }
         } else {
             listener.onComplete(ResultCode.INVALID_CONTEXT);

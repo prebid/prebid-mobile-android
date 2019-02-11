@@ -7,10 +7,6 @@ public enum ResultCode {
      */
     SUCCESS,
     /**
-     * The ad request failed due to sizes not passed for banner ad unit
-     */
-    NO_SIZE_FOR_BANNER,
-    /**
      * The ad request failed due to empty account id
      */
     INVALID_ACCOUNT_ID,

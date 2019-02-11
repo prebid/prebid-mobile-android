@@ -1,24 +1,41 @@
 package org.prebid.mobile.app;
 
 import android.app.Activity;
-import android.view.View;
+import android.os.Build;
 
-import androidx.test.espresso.NoMatchingViewException;
-import androidx.test.espresso.ViewAssertion;
+import java.util.Collection;
+import java.util.Iterator;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
+import androidx.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import androidx.test.runner.lifecycle.Stage;
+
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 
 class TestUtil {
 
     static Activity getCurrentActivity() {
-        final Activity[] activity = new Activity[1];
-        onView(isRoot()).check(new ViewAssertion() {
-            @Override
-            public void check(View view, NoMatchingViewException noViewFoundException) {
-                activity[0] = (Activity) view.getContext();
+        final Activity[] currentActivity = {null};
+
+        getInstrumentation().runOnMainSync(new Runnable() {
+            public void run() {
+                Collection<Activity> resumedActivity = ActivityLifecycleMonitorRegistry.getInstance().getActivitiesInStage(Stage.RESUMED);
+                Iterator<Activity> it = resumedActivity.iterator();
+                currentActivity[0] = it.next();
             }
         });
-        return activity[0];
+
+        return currentActivity[0];
+    }
+
+
+    static boolean isEmulator() {
+        return Build.FINGERPRINT.startsWith("generic")
+                || Build.FINGERPRINT.startsWith("unknown")
+                || Build.MODEL.contains("google_sdk")
+                || Build.MODEL.contains("Emulator")
+                || Build.MODEL.contains("Android SDK built for x86")
+                || Build.MANUFACTURER.contains("Genymotion")
+                || (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
+                || "google_sdk".equals(Build.PRODUCT);
     }
 }
