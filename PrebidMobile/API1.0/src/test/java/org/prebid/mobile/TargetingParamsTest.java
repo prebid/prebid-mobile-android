@@ -20,10 +20,22 @@ public class TargetingParamsTest extends BaseSetup {
         // force initial state since it's static might be changed from other tests
         FieldUtils.writeStaticField(TargetingParams.class, "yob", 0, true);
         assertEquals(0, TargetingParams.getYearOfBirth());
-        TargetingParams.setYearOfBirth(-1);
-        assertEquals(0, TargetingParams.getYearOfBirth());
-        TargetingParams.setYearOfBirth(Calendar.getInstance().get(Calendar.YEAR) + 5);
-        assertEquals(0, TargetingParams.getYearOfBirth());
+        boolean errorThrown1 = false;
+        try {
+            TargetingParams.setYearOfBirth(-1);
+        } catch (Exception e) {
+            errorThrown1 = true;
+            assertEquals(0, TargetingParams.getYearOfBirth());
+        }
+        assertTrue(errorThrown1);
+        boolean errorThrown2 = false;
+        try {
+            TargetingParams.setYearOfBirth(Calendar.getInstance().get(Calendar.YEAR) + 5);
+        } catch (Exception e) {
+            errorThrown2 = true;
+            assertEquals(0, TargetingParams.getYearOfBirth());
+        }
+        assertTrue(errorThrown2);
         int yearOfBirth = Calendar.getInstance().get(Calendar.YEAR) - 20;
         TargetingParams.setYearOfBirth(yearOfBirth);
         assertEquals(yearOfBirth, TargetingParams.getYearOfBirth());
@@ -61,7 +73,7 @@ public class TargetingParamsTest extends BaseSetup {
     }
 
     @Test
-    public void testGDPRFlag() throws Exception{
+    public void testGDPRFlag() throws Exception {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         TargetingParams.setSubjectToGDPR(true);
         assertTrue(TargetingParams.isSubjectToGDPR());
