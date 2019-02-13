@@ -606,6 +606,14 @@ public class ExtraTests {
     // Passing year 1855 is invalid yob, should not send yob and get back a no bid
     @Test
     public void testAppNexusAgeTargeting1() throws Exception {
+        boolean errorThrown = false;
+        try {
+            TargetingParams.setYearOfBirth(1855);
+        } catch (Exception e) {
+            errorThrown = true;
+            assertEquals(0, TargetingParams.getYearOfBirth());
+        }
+        assertTrue(errorThrown);
         server.setDispatcher(new Dispatcher() {
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
@@ -622,7 +630,6 @@ public class ExtraTests {
         Host.CUSTOM.setHostUrl(server.url("/").toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
         PrebidMobile.setShareGeoLocation(true);
-        TargetingParams.setYearOfBirth(1855);
         final OnCompleteListener[] listener = new OnCompleteListener[1];
         mHandler.post(new Runnable() {
             @Override
@@ -654,6 +661,14 @@ public class ExtraTests {
     // Passing year -1 is invalid yob, should not send yob and get back a no bid
     @Test
     public void testAppNexusAgeTargeting2() throws Exception {
+        boolean errorThrown = false;
+        try {
+            TargetingParams.setYearOfBirth(-1);
+        } catch (Exception e) {
+            errorThrown = true;
+            assertEquals(0, TargetingParams.getYearOfBirth());
+        }
+        assertTrue(errorThrown);
         server.setDispatcher(new Dispatcher() {
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
@@ -670,7 +685,6 @@ public class ExtraTests {
         Host.CUSTOM.setHostUrl(server.url("/").toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
         PrebidMobile.setShareGeoLocation(true);
-        TargetingParams.setYearOfBirth(-1);
         final OnCompleteListener[] listener = new OnCompleteListener[1];
         mHandler.post(new Runnable() {
             @Override

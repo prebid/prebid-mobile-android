@@ -113,11 +113,11 @@ public class TargetingParams {
      *
      * @param yob yob of the user
      */
-    public static void setYearOfBirth(int yob) {
-        if (yob >= 1900 && yob <= Calendar.getInstance().get(Calendar.YEAR)) {
+    public static void setYearOfBirth(int yob) throws Exception {
+        if (yob >= 1900 && yob < Calendar.getInstance().get(Calendar.YEAR)) {
             TargetingParams.yob = yob;
         } else {
-            TargetingParams.yob = 0;
+            throw new Exception("Year of birth must be between 1900 and " + Calendar.getInstance().get(Calendar.YEAR));
         }
     }
 
