@@ -31,10 +31,25 @@ public class MockPrebidServerResponses {
         return inputStreamToString(in);
     }
 
-    public static String invalidBidResponseTopBidNoCacheId(){
+    public static String invalidBidResponseTopBidNoCacheId() {
         InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerInvalidResponseTopBidDoesNotHaveCacheId.json");
         return inputStreamToString(in);
     }
+
+    public static String validBidResponseTwoBidsOnTheSameSeat() {
+        InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerValidBidResponseTwoBidsOnTheSameSeat.json");
+        return inputStreamToString(in);
+    }
+
+    public static String noBidResponseNoTmax() {
+        InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerNoBidNoTmax.json");
+        return inputStreamToString(in);
+    }
+    public static String noBidResponseTmaxTooLarge() {
+        InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerNoBidTmaxTooLarge.json");
+        return inputStreamToString(in);
+    }
+
 
     public static String inputStreamToString(InputStream is) {
         try {

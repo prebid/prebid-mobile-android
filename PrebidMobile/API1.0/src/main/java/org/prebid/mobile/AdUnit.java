@@ -74,7 +74,7 @@ public abstract class AdUnit {
                 return;
             }
             for (AdSize size : sizes) {
-                if (size.getWidth() <= 0 || size.getHeight() <= 0) {
+                if (size.getWidth() < 0 || size.getHeight() < 0) {
                     listener.onComplete(ResultCode.INVALID_SIZE);
                     return;
                 }
