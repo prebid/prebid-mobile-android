@@ -1,5 +1,10 @@
 package org.prebid.mobile.app;
 
+import android.widget.FrameLayout;
+
+import com.mopub.mobileads.MoPubInterstitial;
+import com.mopub.mobileads.MoPubView;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
@@ -7,7 +12,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.AdUnit;
+import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.Host;
+import org.prebid.mobile.InterstitialAdUnit;
+import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 
@@ -18,7 +27,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
+import androidx.test.espresso.Espresso;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
@@ -31,6 +42,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.web.assertion.WebViewAssertions.webContent;
 import static androidx.test.espresso.web.assertion.WebViewAssertions.webMatches;
 import static androidx.test.espresso.web.matcher.DomMatchers.containingTextInBody;
@@ -40,6 +52,9 @@ import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(AndroidJUnit4.class)
 public class ExtraTests {
@@ -64,6 +79,189 @@ public class ExtraTests {
     public void tearDown() throws Exception {
         server.shutdown();
         server = null;
+    }
+
+    @Test
+    public void testMultipleAdUnitsAllDemandFetched() throws Exception {
+        final ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
+        final ArrayList<OnCompleteListener> spies = new ArrayList<>();
+        final ArrayList<MoPubInterstitial> moPubInterstitials = new ArrayList<>();
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setShareGeoLocation(true);
+        m.getActivity().post(new Runnable() {
+            @Override
+            public void run() {
+                // set up Banner test 1
+                final MoPubView mopubTest1 = new MoPubView(m.getActivity());
+                mopubTest1.setAdUnitId("9a8c2ccd3dae405bb925397d35eed8f9");
+                mopubTest1.setMinimumHeight(50);
+                mopubTest1.setMinimumWidth(320);
+                BannerAdUnit adUnit1 = new BannerAdUnit("7cd2c7c8-cebe-4206-b5a4-97b9e840729e", 320, 50);
+                adUnits.add(adUnit1);
+                OnCompleteListener listener1 = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(mopubTest1);
+                        mopubTest1.setId(1);
+                        mopubTest1.loadAd();
+                    }
+                };
+                listener1 = spy(listener1);
+                spies.add(listener1);
+                adUnit1.fetchDemand(mopubTest1, listener1);
+                // set up Banner test 2
+                final MoPubView mopubTest2 = new MoPubView(m.getActivity());
+                mopubTest2.setAdUnitId("50564379db734ebbb347849221a1081e");
+                mopubTest2.setMinimumHeight(50);
+                mopubTest2.setMinimumWidth(320);
+                BannerAdUnit adUnit2 = new BannerAdUnit("525a5fee-ffbb-4f16-935d-3717c56e7aeb", 320, 50);
+                adUnits.add(adUnit2);
+                OnCompleteListener listener2 = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(mopubTest2);
+                        mopubTest2.setId(2);
+                        mopubTest2.loadAd();
+                    }
+                };
+                listener2 = spy(listener2);
+                spies.add(listener2);
+                adUnit2.fetchDemand(mopubTest2, listener2);
+                // set up Banner test 3
+                final MoPubView mopubTest3 = new MoPubView(m.getActivity());
+                mopubTest3.setAdUnitId("5ff9556b05964e65b684ec54013df59d");
+                mopubTest2.setMinimumHeight(250);
+                mopubTest2.setMinimumWidth(300);
+                BannerAdUnit adUnit3 = new BannerAdUnit("511c39f2-b527-41af-811a-adac6911bdfc", 300, 250);
+                adUnits.add(adUnit3);
+                OnCompleteListener listener3 = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(mopubTest3);
+                        mopubTest3.setId(3);
+                        mopubTest3.loadAd();
+                    }
+                };
+                listener3 = spy(listener3);
+                spies.add(listener3);
+                adUnit3.fetchDemand(mopubTest3, listener3);
+                // set up Banner test 4
+                final MoPubView mopubTest4 = new MoPubView(m.getActivity());
+                mopubTest4.setAdUnitId("c5c9267bcf6247cb91a116d1ef6c7487");
+                mopubTest4.setMinimumHeight(250);
+                mopubTest4.setMinimumWidth(300);
+                BannerAdUnit adUnit4 = new BannerAdUnit("42ad4418-9b36-4e39-ae54-2f7a13ad8616", 300, 250);
+                adUnits.add(adUnit4);
+                OnCompleteListener listener4 = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(mopubTest4);
+                        mopubTest4.setId(4);
+                        mopubTest4.loadAd();
+                    }
+                };
+                listener4 = spy(listener4);
+                spies.add(listener4);
+                adUnit4.fetchDemand(mopubTest4, listener4);
+                // set up Banner test 5
+                final MoPubView mopubTest5 = new MoPubView(m.getActivity());
+                mopubTest5.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                mopubTest5.setMinimumHeight(250);
+                mopubTest5.setMinimumWidth(300);
+                BannerAdUnit adUnit5 = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND, 300, 250);
+                adUnits.add(adUnit5);
+                OnCompleteListener listener5 = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(mopubTest5);
+                        mopubTest5.setId(5);
+                        mopubTest5.loadAd();
+                    }
+                };
+                listener5 = spy(listener5);
+                spies.add(listener5);
+                adUnit4.fetchDemand(mopubTest5, listener5);
+                // set up Interstitial test 1
+                final MoPubInterstitial mopubInstl1 = new MoPubInterstitial(m.getActivity(), Constants.MOPUB_INTERSTITIAL_ADUNIT_ID);
+                moPubInterstitials.add(mopubInstl1);
+                InterstitialAdUnit adUnit6 = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL_APPNEXUS_DEMAND);
+                adUnits.add(adUnit6);
+                OnCompleteListener listener6 = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        mopubInstl1.load();
+                    }
+                };
+                listener6 = spy(listener6);
+                spies.add(listener6);
+                adUnit6.fetchDemand(mopubInstl1, listener6);
+                // set up Interstitial test 2
+                final MoPubInterstitial mopubInstl2 = new MoPubInterstitial(m.getActivity(), "c3fca03154a540bfa7f0971fb984e3e8");
+                moPubInterstitials.add(mopubInstl2);
+                InterstitialAdUnit adUnit7 = new InterstitialAdUnit("bde00f49-0a1b-483a-9716-e2dd427b794c");
+                adUnits.add(adUnit7);
+                OnCompleteListener listener7 = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        mopubInstl2.load();
+                    }
+                };
+                listener7 = spy(listener7);
+                spies.add(listener7);
+                adUnit7.fetchDemand(mopubInstl2, listener7);
+                // set up Interstitial test 3
+                final MoPubInterstitial mopubInstl3 = new MoPubInterstitial(m.getActivity(), "12ecf78eb8314f8bb36192a6286adc56");
+                moPubInterstitials.add(mopubInstl3);
+                InterstitialAdUnit adUnit8 = new InterstitialAdUnit("6ceca3d4-f5b8-4717-b4d9-178843f873f8");
+                adUnits.add(adUnit8);
+                OnCompleteListener listener8 = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        mopubInstl3.load();
+                    }
+                };
+                listener8 = spy(listener8);
+                spies.add(listener8);
+                adUnit8.fetchDemand(mopubInstl3, listener8);
+            }
+        });
+        Thread.sleep(10000);
+        // verify line by line for easier debug
+        verify(spies.get(0), times(1)).onComplete(ResultCode.SUCCESS);
+        verify(spies.get(1), times(1)).onComplete(ResultCode.SUCCESS);
+        verify(spies.get(2), times(1)).onComplete(ResultCode.SUCCESS);
+        verify(spies.get(3), times(1)).onComplete(ResultCode.SUCCESS);
+        verify(spies.get(4), times(1)).onComplete(ResultCode.SUCCESS);
+        verify(spies.get(5), times(1)).onComplete(ResultCode.SUCCESS);
+        verify(spies.get(6), times(1)).onComplete(ResultCode.SUCCESS);
+        verify(spies.get(7), times(1)).onComplete(ResultCode.SUCCESS);
+        onWebView(withParent(withId(1))).check(webContent(containingTextInBody("143135824")));
+        onWebView(withParent(withId(2))).check(webContent(containingTextInBody("143208584")));
+        onWebView(withParent(withId(3))).check(webContent(containingTextInBody("143208598")));
+        onWebView(withParent(withId(4))).check(webContent(containingTextInBody("143208640")));
+        onWebView(withParent(withId(5))).check(webContent(containingTextInBody("ucTag.renderAd")));
+        moPubInterstitials.get(0).show();
+        Thread.sleep(2000);
+        assertEquals("com.mopub.mobileads.MoPubActivity", TestUtil.getCurrentActivity().getClass().getName());
+        onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
+        Espresso.pressBack();
+        moPubInterstitials.get(1).show();
+        Thread.sleep(2000);
+        assertEquals("com.mopub.mobileads.MoPubActivity", TestUtil.getCurrentActivity().getClass().getName());
+        onWebView().check(webContent(containingTextInBody("143393807")));
+        Espresso.pressBack();
+        moPubInterstitials.get(2).show();
+        Thread.sleep(5000);
+        assertEquals("com.mopub.mobileads.MoPubActivity", TestUtil.getCurrentActivity().getClass().getName());
+        onWebView().check(webContent(containingTextInBody("143393864")));
+        Espresso.pressBack();
     }
 
     @Test

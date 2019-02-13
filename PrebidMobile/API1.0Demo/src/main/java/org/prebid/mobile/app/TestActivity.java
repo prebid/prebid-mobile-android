@@ -26,13 +26,16 @@ public class TestActivity extends AppCompatActivity implements OnCompleteListene
     Object adObject = null;
     AdUnit adUnit = null;
     private Handler mHandler = null;
-    private int loadCount = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         mHandler = new Handler(Looper.getMainLooper());
+    }
+
+    public void post(Runnable r) {
+        mHandler.post(r);
     }
 
     public void setUpRunbiconDemandTest() {
@@ -234,7 +237,6 @@ public class TestActivity extends AppCompatActivity implements OnCompleteListene
 
     @Override
     public void onComplete(ResultCode resultCode) {
-        this.loadCount++;
         this.resultCode = resultCode;
         displayAd();
     }
