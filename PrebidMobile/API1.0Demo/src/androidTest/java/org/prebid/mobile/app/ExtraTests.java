@@ -19,6 +19,7 @@ import org.prebid.mobile.InterstitialAdUnit;
 import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.TargetingParams;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -266,9 +267,33 @@ public class ExtraTests {
 
     @Test
     public void testRubiconDemand() throws Exception {
-        m.getActivity().setUpRunbiconDemandTest();
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("1001");
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setShareGeoLocation(true);
+        final OnCompleteListener[] listener = new OnCompleteListener[1];
+        m.getActivity().post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setMinimumHeight(250);
+                adObject.setMinimumWidth(300);
+                BannerAdUnit adUnit = new BannerAdUnit("1001-2", 300, 250);
+                OnCompleteListener l = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject);
+                        adObject.loadAd();
+                    }
+                };
+                listener[0] = spy(l);
+                adUnit.fetchDemand(adObject, listener[0]);
+            }
+        });
         Thread.sleep(10000);
-        assertEquals(ResultCode.SUCCESS, m.getActivity().resultCode);
+        verify(listener[0], times(1)).onComplete(ResultCode.SUCCESS);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
@@ -276,9 +301,34 @@ public class ExtraTests {
 
     @Test
     public void testAppNexusKeyValueTargeting() throws Exception {
-        m.getActivity().setUpAppNexusKeyValueTargetingTest();
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setShareGeoLocation(true);
+        final OnCompleteListener[] listener = new OnCompleteListener[1];
+        m.getActivity().post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setMinimumHeight(250);
+                adObject.setMinimumWidth(300);
+                BannerAdUnit adUnit = new BannerAdUnit("67bac530-9832-4f78-8c94-fbf88ac7bd14", 300, 250);
+                adUnit.addUserKeyword("pbm_key", "pbm_value1");
+                OnCompleteListener l = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject);
+                        adObject.loadAd();
+                    }
+                };
+                listener[0] = spy(l);
+                adUnit.fetchDemand(adObject, listener[0]);
+            }
+        });
         Thread.sleep(10000);
-        assertEquals(ResultCode.SUCCESS, m.getActivity().resultCode);
+        verify(listener[0], times(1)).onComplete(ResultCode.SUCCESS);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
@@ -286,9 +336,34 @@ public class ExtraTests {
 
     @Test
     public void testAppNexusKeyValueTargeting2() throws Exception {
-        m.getActivity().setUpAppNexusKeyValueTargetingTest2();
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setShareGeoLocation(true);
+        final OnCompleteListener[] listener = new OnCompleteListener[1];
+        m.getActivity().post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setMinimumHeight(250);
+                adObject.setMinimumWidth(300);
+                BannerAdUnit adUnit = new BannerAdUnit("67bac530-9832-4f78-8c94-fbf88ac7bd14", 300, 250);
+                adUnit.addUserKeyword("pbm_key", "pbm_value2");
+                OnCompleteListener l = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject);
+                        adObject.loadAd();
+                    }
+                };
+                listener[0] = spy(l);
+                adUnit.fetchDemand(adObject, listener[0]);
+            }
+        });
         Thread.sleep(10000);
-        assertEquals(ResultCode.NO_BIDS, m.getActivity().resultCode);
+        verify(listener[0], times(1)).onComplete(ResultCode.NO_BIDS);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("Hello, I'm not a Prebid ad.")));
@@ -296,18 +371,67 @@ public class ExtraTests {
 
     @Test
     public void testEmptyInvalidPrebidServerAccountId() throws Exception {
-        m.getActivity().setUpEmptyPrebidServerAccountID();
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("");
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setShareGeoLocation(true);
+        final OnCompleteListener[] listener = new OnCompleteListener[1];
+        m.getActivity().post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setMinimumHeight(250);
+                adObject.setMinimumWidth(300);
+                BannerAdUnit adUnit = new BannerAdUnit("67bac530-9832-4f78-8c94-fbf88ac7bd14", 300, 250);
+                OnCompleteListener l = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject);
+                        adObject.loadAd();
+                    }
+                };
+                listener[0] = spy(l);
+                adUnit.fetchDemand(adObject, listener[0]);
+            }
+        });
         Thread.sleep(1000);
-        assertEquals(ResultCode.INVALID_ACCOUNT_ID, m.getActivity().resultCode);
+        verify(listener[0], times(1)).onComplete(ResultCode.INVALID_ACCOUNT_ID);
     }
 
     @Test
     public void testAppNexusInvalidPrebidServerAccountId() throws Exception {
-        m.getActivity().setUpAppNexusInvalidPrebidServerAccountID();
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-ffffffffffff");
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setShareGeoLocation(true);
+        final OnCompleteListener[] listener = new OnCompleteListener[1];
+        m.getActivity().post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setMinimumHeight(250);
+                adObject.setMinimumWidth(300);
+                BannerAdUnit adUnit = new BannerAdUnit("6ace8c7d-88c0-4623-8117-75bc3f0a2e45", 300, 250);
+                OnCompleteListener l = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject);
+                        adObject.loadAd();
+                    }
+                };
+                listener[0] = spy(l);
+                adUnit.fetchDemand(adObject, listener[0]);
+            }
+        });
         Thread.sleep(10000);
-        assertEquals(ResultCode.INVALID_ACCOUNT_ID, m.getActivity().resultCode);
+        verify(listener[0], times(1)).onComplete(ResultCode.INVALID_ACCOUNT_ID);
     }
 
+    // Passing year 1855 is invalid yob, should not send yob and get back a no bid
     @Test
     public void testAppNexusAgeTargeting1() throws Exception {
         server.setDispatcher(new Dispatcher() {
@@ -321,14 +445,41 @@ public class ExtraTests {
                 return new MockResponse().setResponseCode(404);
             }
         });
-        m.getActivity().setUpAppNexusAgeTargeting1(server.url("/").toString());
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+        Host.CUSTOM.setHostUrl(server.url("/").toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setShareGeoLocation(true);
+        TargetingParams.setYearOfBirth(1855);
+        final OnCompleteListener[] listener = new OnCompleteListener[1];
+        m.getActivity().post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setMinimumHeight(250);
+                adObject.setMinimumWidth(300);
+                BannerAdUnit adUnit = new BannerAdUnit("47706260-ee91-4cd7-b656-2185aca89f59", 300, 250);
+                OnCompleteListener l = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject);
+                        adObject.loadAd();
+                    }
+                };
+                listener[0] = spy(l);
+                adUnit.fetchDemand(adObject, listener[0]);
+            }
+        });
         Thread.sleep(10000);
-        assertEquals(ResultCode.NO_BIDS, m.getActivity().resultCode);
+        verify(listener[0], times(1)).onComplete(ResultCode.NO_BIDS);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("Hello, I'm not a Prebid ad.")));
     }
 
+    // Passing year -1 is invalid yob, should not send yob and get back a no bid
     @Test
     public void testAppNexusAgeTargeting2() throws Exception {
         server.setDispatcher(new Dispatcher() {
@@ -342,14 +493,41 @@ public class ExtraTests {
                 return new MockResponse().setResponseCode(404);
             }
         });
-        m.getActivity().setUpAppNexusAgeTargeting2(server.url("/").toString());
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+        Host.CUSTOM.setHostUrl(server.url("/").toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setShareGeoLocation(true);
+        TargetingParams.setYearOfBirth(-1);
+        final OnCompleteListener[] listener = new OnCompleteListener[1];
+        m.getActivity().post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setMinimumHeight(250);
+                adObject.setMinimumWidth(300);
+                BannerAdUnit adUnit = new BannerAdUnit("47706260-ee91-4cd7-b656-2185aca89f59", 300, 250);
+                OnCompleteListener l = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject);
+                        adObject.loadAd();
+                    }
+                };
+                listener[0] = spy(l);
+                adUnit.fetchDemand(adObject, listener[0]);
+            }
+        });
         Thread.sleep(10000);
-        assertEquals(ResultCode.NO_BIDS, m.getActivity().resultCode);
+        verify(listener[0], times(1)).onComplete(ResultCode.NO_BIDS);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("Hello, I'm not a Prebid ad.")));
     }
 
+    // Passing year 2018 is valid yob, should send yob and but get back a no bid, since campaign targeting 25-34
     @Test
     public void testAppNexusAgeTargeting3() throws Exception {
         server.setDispatcher(new Dispatcher() {
@@ -363,9 +541,35 @@ public class ExtraTests {
                 return new MockResponse().setResponseCode(404);
             }
         });
-        m.getActivity().setUpAppNexusAgeTargeting3(server.url("/").toString());
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+        Host.CUSTOM.setHostUrl(server.url("/").toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setShareGeoLocation(true);
+        TargetingParams.setYearOfBirth(2018);
+        final OnCompleteListener[] listener = new OnCompleteListener[1];
+        m.getActivity().post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setMinimumHeight(250);
+                adObject.setMinimumWidth(300);
+                BannerAdUnit adUnit = new BannerAdUnit("47706260-ee91-4cd7-b656-2185aca89f59", 300, 250);
+                OnCompleteListener l = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject);
+                        adObject.loadAd();
+                    }
+                };
+                listener[0] = spy(l);
+                adUnit.fetchDemand(adObject, listener[0]);
+            }
+        });
         Thread.sleep(10000);
-        assertEquals(ResultCode.NO_BIDS, m.getActivity().resultCode);
+        verify(listener[0], times(1)).onComplete(ResultCode.NO_BIDS);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("Hello, I'm not a Prebid ad.")));
@@ -384,9 +588,35 @@ public class ExtraTests {
                 return new MockResponse().setResponseCode(404);
             }
         });
-        m.getActivity().setUpAppNexusAgeTargeting4(server.url("/").toString());
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+        Host.CUSTOM.setHostUrl(server.url("/").toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setShareGeoLocation(true);
+        TargetingParams.setYearOfBirth(1989);
+        final OnCompleteListener[] listener = new OnCompleteListener[1];
+        m.getActivity().post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setMinimumHeight(250);
+                adObject.setMinimumWidth(300);
+                BannerAdUnit adUnit = new BannerAdUnit("47706260-ee91-4cd7-b656-2185aca89f59", 300, 250);
+                OnCompleteListener l = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject);
+                        adObject.loadAd();
+                    }
+                };
+                listener[0] = spy(l);
+                adUnit.fetchDemand(adObject, listener[0]);
+            }
+        });
         Thread.sleep(10000);
-        assertEquals(ResultCode.SUCCESS, m.getActivity().resultCode);
+        verify(listener[0], times(1)).onComplete(ResultCode.SUCCESS);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
@@ -394,67 +624,104 @@ public class ExtraTests {
 
     // This test should be run with a real device located in New York City, New York, USA
     @Test
-    public void testLocationTargeting() {
+    public void testLocationTargeting() throws Exception {
         if (!TestUtil.isEmulator()) {
-            try {
-                server.setDispatcher(new Dispatcher() {
-                    int lastfix = -1;
+            server.setDispatcher(new Dispatcher() {
+                int lastfix = -1;
 
-                    @Override
-                    public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
-                        String postData = request.getBody().readUtf8();
-                        if (request.getPath().equals("/sharerealgeo")) {
-                            assertTrue(postData.contains("geo"));
-                            try {
-                                JSONObject data = new JSONObject(postData);
-                                lastfix = data.getJSONObject("device").getJSONObject("geo").getInt("lastfix");
-                            } catch (JSONException e) {
-                            }
-                            return getAppNexusDemand(postData);
-                        } else if (request.getPath().equals("/sharefakegeo")) {
-                            assertTrue(!postData.contains("geo"));
-                            // add a shanghai location to the request
-                            try {
-                                JSONObject data = new JSONObject(postData);
-                                JSONObject device = data.getJSONObject("device");
-                                JSONObject geo = new JSONObject();
-                                geo.put("lat", 31.2304);
-                                geo.put("lon", 121.4737);
-                                geo.put("accuracy", 19);
-                                if (lastfix > 0) {
-                                    geo.put("lastfix", lastfix);
-                                }
-                                device.put("geo", geo);
-                                data.put("device", device);
-                                return getAppNexusDemand(data.toString());
-                            } catch (JSONException e) {
-                            }
+                @Override
+                public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
+                    String postData = request.getBody().readUtf8();
+                    if (request.getPath().equals("/sharerealgeo")) {
+                        assertTrue(postData.contains("geo"));
+                        try {
+                            JSONObject data = new JSONObject(postData);
+                            lastfix = data.getJSONObject("device").getJSONObject("geo").getInt("lastfix");
+                        } catch (JSONException e) {
                         }
-                        return new MockResponse().setResponseCode(404);
+                        return getAppNexusDemand(postData);
+                    } else if (request.getPath().equals("/sharefakegeo")) {
+                        assertTrue(!postData.contains("geo"));
+                        // add a shanghai location to the request
+                        try {
+                            JSONObject data = new JSONObject(postData);
+                            JSONObject device = data.getJSONObject("device");
+                            JSONObject geo = new JSONObject();
+                            geo.put("lat", 31.2304);
+                            geo.put("lon", 121.4737);
+                            geo.put("accuracy", 19);
+                            if (lastfix > 0) {
+                                geo.put("lastfix", lastfix);
+                            }
+                            device.put("geo", geo);
+                            data.put("device", device);
+                            return getAppNexusDemand(data.toString());
+                        } catch (JSONException e) {
+                        }
                     }
-                });
-                // Global Settings
-                PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
-                PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
-                // Share location
-                PrebidMobile.setShareGeoLocation(true);
-                Host.CUSTOM.setHostUrl(server.url("/sharerealgeo").toString());
-                PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-                m.getActivity().setUpLocationTargeting();
-                Thread.sleep(10000);
-                assertEquals(ResultCode.SUCCESS, m.getActivity().resultCode);
-                onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
-                // Do not share location
-                PrebidMobile.setShareGeoLocation(false);
-                Host.CUSTOM.setHostUrl(server.url("/sharefakegeo").toString());
-                PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-                m.getActivity().setUpLocationTargeting();
-                Thread.sleep(10000);
-                assertEquals(ResultCode.NO_BIDS, m.getActivity().resultCode);
-                onWebView().check(webContent(containingTextInBody("Hello, I'm not a Prebid ad.")));
-            } catch (InterruptedException e) {
-                fail("Mock server take request interruption exception.");
-            }
+                    return new MockResponse().setResponseCode(404);
+                }
+            });
+            // Global Settings
+            PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+            PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+            // Share location
+            PrebidMobile.setShareGeoLocation(true);
+            Host.CUSTOM.setHostUrl(server.url("/sharerealgeo").toString());
+            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+            final OnCompleteListener[] listener = new OnCompleteListener[2];
+            m.getActivity().post(new Runnable() {
+                @Override
+                public void run() {
+                    final MoPubView adObject = new MoPubView(m.getActivity());
+                    adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                    adObject.setMinimumHeight(250);
+                    adObject.setMinimumWidth(300);
+                    BannerAdUnit adUnit = new BannerAdUnit("8522cead-1eb4-4f09-b6e2-083fa3a6e6ce", 300, 250);
+                    OnCompleteListener l = new OnCompleteListener() {
+                        @Override
+                        public void onComplete(ResultCode resultCode) {
+
+                            FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                            adFrame.addView(adObject);
+                            adObject.loadAd();
+                        }
+                    };
+                    listener[0] = spy(l);
+                    adUnit.fetchDemand(adObject, listener[0]);
+                }
+            });
+            Thread.sleep(10000);
+            verify(listener[0], times(1)).onComplete(ResultCode.SUCCESS);
+            onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
+            // Do not share location
+            PrebidMobile.setShareGeoLocation(false);
+            Host.CUSTOM.setHostUrl(server.url("/sharefakegeo").toString());
+            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+            m.getActivity().post(new Runnable() {
+                @Override
+                public void run() {
+                    final MoPubView adObject = new MoPubView(m.getActivity());
+                    adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                    adObject.setMinimumHeight(250);
+                    adObject.setMinimumWidth(300);
+                    BannerAdUnit adUnit = new BannerAdUnit("8522cead-1eb4-4f09-b6e2-083fa3a6e6ce", 300, 250);
+                    OnCompleteListener l = new OnCompleteListener() {
+                        @Override
+                        public void onComplete(ResultCode resultCode) {
+
+                            FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                            adFrame.addView(adObject);
+                            adObject.loadAd();
+                        }
+                    };
+                    listener[1] = spy(l);
+                    adUnit.fetchDemand(adObject, listener[1]);
+                }
+            });
+            Thread.sleep(10000);
+            verify(listener[1], times(1)).onComplete(ResultCode.NO_BIDS);
+            onWebView().check(webContent(containingTextInBody("Hello, I'm not a Prebid ad.")));
         }
     }
 
