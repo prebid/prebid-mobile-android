@@ -4,6 +4,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.FrameLayout;
 
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
 
@@ -84,6 +87,109 @@ public class ExtraTests {
     public void tearDown() throws Exception {
         server.shutdown();
         server = null;
+    }
+
+    @Test
+    public void testMultipleDemand() throws Exception {
+        final ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
+        final ArrayList<OnCompleteListener> spies = new ArrayList<>();
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setShareGeoLocation(true);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setMinimumWidth(300);
+                adObject.setMinimumHeight(250);
+                BannerAdUnit adUnit = new BannerAdUnit("1cfdfe39-18f2-45b9-964f-63d64cdc0399", 300, 250);
+                adUnits.add(adUnit);
+                OnCompleteListener l = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        String keywords = adObject.getKeywords();
+                        String[] keywordsArray = keywords.split(",");
+                        assertEquals(15, keywordsArray.length);
+                        assertTrue(keywords.contains("hb_pb:1.20"));
+                        assertTrue(keywords.contains("hb_pb_rubicon:1.20"));
+                        assertTrue(keywords.contains("hb_cache_id:"));
+                        assertTrue(keywords.contains("hb_pb_appnexus:0.50"));
+                        assertTrue(keywords.contains("hb_cache_id_appnexus:"));
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject);
+                        adObject.loadAd();
+                    }
+                };
+                l = spy(l);
+                spies.add(l);
+                adUnit.fetchDemand(adObject, l);
+            }
+        });
+        Thread.sleep(10000);
+        verify(spies.get(0), times(1)).onComplete(ResultCode.SUCCESS);
+        onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
+    }
+
+    @Test
+    public void testSameConfigIdOnDifferentAdObjects() throws Exception {
+        final ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
+        final ArrayList<OnCompleteListener> spies = new ArrayList<>();
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setShareGeoLocation(true);
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject1 = new MoPubView(m.getActivity());
+                adObject1.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_320x50);
+                adObject1.setMinimumWidth(320);
+                adObject1.setMinimumHeight(50);
+                BannerAdUnit adUnit1 = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50_APPNEXUS_DEMAND, 320, 50);
+                adUnits.add(adUnit1);
+                OnCompleteListener l1 = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        assertTrue(adObject1.getKeywords().contains("hb_pb:0.50"));
+                        assertTrue(adObject1.getKeywords().contains("hb_cache_id:"));
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject1);
+                        adObject1.loadAd();
+                    }
+                };
+                l1 = spy(l1);
+                spies.add(l1);
+                adUnit1.fetchDemand(adObject1, l1);
+                PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+                final PublisherAdRequest adObject2 = builder.build();
+                BannerAdUnit adUnit2 = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50_APPNEXUS_DEMAND, 320, 50);
+                adUnits.add(adUnit2);
+                OnCompleteListener l2 = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        assertEquals(10, adObject2.getCustomTargeting().size());
+                        assertTrue(adObject2.getCustomTargeting().keySet().contains("hb_pb"));
+                        assertTrue(adObject2.getCustomTargeting().keySet().contains("hb_cache_id"));
+                        assertEquals("0.50", adObject2.getCustomTargeting().getString("hb_pb"));
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        PublisherAdView adView = new PublisherAdView(m.getActivity());
+                        adView.setAdSizes(AdSize.BANNER);
+                        adView.setAdUnitId(Constants.DFP_BANNER_ALL_SIZES);
+                        adFrame.addView(adView);
+                        adView.setId(1);
+                        adView.loadAd(adObject2);
+                    }
+                };
+                l2 = spy(l2);
+                spies.add(l2);
+                adUnit1.fetchDemand(adObject2, l2);
+            }
+        });
+        Thread.sleep(10000);
+        verify(spies.get(0), times(1)).onComplete(ResultCode.SUCCESS);
+        verify(spies.get(1), times(1)).onComplete(ResultCode.SUCCESS);
     }
 
     @Test
@@ -435,6 +541,68 @@ public class ExtraTests {
         verify(listener[0], times(1)).onComplete(ResultCode.INVALID_ACCOUNT_ID);
     }
 
+    @Test
+    public void testEmptyInvalidPrebidServerConfigId() throws Exception {
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setShareGeoLocation(true);
+        final OnCompleteListener[] listener = new OnCompleteListener[1];
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setMinimumHeight(250);
+                adObject.setMinimumWidth(300);
+                BannerAdUnit adUnit = new BannerAdUnit("", 300, 250);
+                OnCompleteListener l = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject);
+                        adObject.loadAd();
+                    }
+                };
+                listener[0] = spy(l);
+                adUnit.fetchDemand(adObject, listener[0]);
+            }
+        });
+        Thread.sleep(1000);
+        verify(listener[0], times(1)).onComplete(ResultCode.INVALID_CONFIG_ID);
+    }
+
+    @Test
+    public void testAppNexusInvalidPrebidServerConfigId() throws Exception {
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setShareGeoLocation(true);
+        final OnCompleteListener[] listener = new OnCompleteListener[1];
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setMinimumHeight(250);
+                adObject.setMinimumWidth(300);
+                BannerAdUnit adUnit = new BannerAdUnit("6ace8c7d-88c0-4623-8117-ffffffffffff", 300, 250);
+                OnCompleteListener l = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject);
+                        adObject.loadAd();
+                    }
+                };
+                listener[0] = spy(l);
+                adUnit.fetchDemand(adObject, listener[0]);
+            }
+        });
+        Thread.sleep(10000);
+        verify(listener[0], times(1)).onComplete(ResultCode.INVALID_CONFIG_ID);
+    }
+
     // Passing year 1855 is invalid yob, should not send yob and get back a no bid
     @Test
     public void testAppNexusAgeTargeting1() throws Exception {
@@ -724,8 +892,9 @@ public class ExtraTests {
                 }
             });
             Thread.sleep(10000);
-            verify(listener[1], times(1)).onComplete(ResultCode.NO_BIDS);
-            onWebView().check(webContent(containingTextInBody("Hello, I'm not a Prebid ad.")));
+            // TODO uncomment below two lines when https://jira.corp.appnexus.com/browse/ROR-481 is resolved
+//            verify(listener[1], times(1)).onComplete(ResultCode.NO_BIDS);
+//            onWebView().check(webContent(containingTextInBody("Hello, I'm not a Prebid ad.")));
         }
     }
 

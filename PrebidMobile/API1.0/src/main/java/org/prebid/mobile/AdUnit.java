@@ -45,12 +45,12 @@ public abstract class AdUnit {
 
     public void fetchDemand(@NonNull Object adObj, @NonNull OnCompleteListener listener) {
         if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
-            LogUtil.e("Invalid account id.");
+            LogUtil.e("Empty account id.");
             listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);
             return;
         }
         if (TextUtils.isEmpty(configId)) {
-            LogUtil.e("Invalid config id.");
+            LogUtil.e("Empty config id.");
             listener.onComplete(ResultCode.INVALID_CONFIG_ID);
             return;
         }
