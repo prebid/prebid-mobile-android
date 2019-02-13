@@ -1,5 +1,7 @@
 package org.prebid.mobile.app;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.FrameLayout;
 
 import com.mopub.mobileads.MoPubInterstitial;
@@ -65,9 +67,11 @@ public class ExtraTests {
     @Rule
     public GrantPermissionRule mGrant = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
     MockWebServer server;
+    Handler mHandler;
 
     @Before
     public void setUp() {
+        mHandler = new Handler(Looper.getMainLooper());
         server = new MockWebServer();
         try {
             server.start();
@@ -91,7 +95,7 @@ public class ExtraTests {
         PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setShareGeoLocation(true);
-        m.getActivity().post(new Runnable() {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 // set up Banner test 1
@@ -272,7 +276,7 @@ public class ExtraTests {
         PrebidMobile.setPrebidServerHost(Host.RUBICON);
         PrebidMobile.setShareGeoLocation(true);
         final OnCompleteListener[] listener = new OnCompleteListener[1];
-        m.getActivity().post(new Runnable() {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
@@ -306,7 +310,7 @@ public class ExtraTests {
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setShareGeoLocation(true);
         final OnCompleteListener[] listener = new OnCompleteListener[1];
-        m.getActivity().post(new Runnable() {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
@@ -341,7 +345,7 @@ public class ExtraTests {
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setShareGeoLocation(true);
         final OnCompleteListener[] listener = new OnCompleteListener[1];
-        m.getActivity().post(new Runnable() {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
@@ -376,7 +380,7 @@ public class ExtraTests {
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setShareGeoLocation(true);
         final OnCompleteListener[] listener = new OnCompleteListener[1];
-        m.getActivity().post(new Runnable() {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
@@ -407,7 +411,7 @@ public class ExtraTests {
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setShareGeoLocation(true);
         final OnCompleteListener[] listener = new OnCompleteListener[1];
-        m.getActivity().post(new Runnable() {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
@@ -452,7 +456,7 @@ public class ExtraTests {
         PrebidMobile.setShareGeoLocation(true);
         TargetingParams.setYearOfBirth(1855);
         final OnCompleteListener[] listener = new OnCompleteListener[1];
-        m.getActivity().post(new Runnable() {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
@@ -500,7 +504,7 @@ public class ExtraTests {
         PrebidMobile.setShareGeoLocation(true);
         TargetingParams.setYearOfBirth(-1);
         final OnCompleteListener[] listener = new OnCompleteListener[1];
-        m.getActivity().post(new Runnable() {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
@@ -548,7 +552,7 @@ public class ExtraTests {
         PrebidMobile.setShareGeoLocation(true);
         TargetingParams.setYearOfBirth(2018);
         final OnCompleteListener[] listener = new OnCompleteListener[1];
-        m.getActivity().post(new Runnable() {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
@@ -595,7 +599,7 @@ public class ExtraTests {
         PrebidMobile.setShareGeoLocation(true);
         TargetingParams.setYearOfBirth(1989);
         final OnCompleteListener[] listener = new OnCompleteListener[1];
-        m.getActivity().post(new Runnable() {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
@@ -670,7 +674,7 @@ public class ExtraTests {
             Host.CUSTOM.setHostUrl(server.url("/sharerealgeo").toString());
             PrebidMobile.setPrebidServerHost(Host.CUSTOM);
             final OnCompleteListener[] listener = new OnCompleteListener[2];
-            m.getActivity().post(new Runnable() {
+            mHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     final MoPubView adObject = new MoPubView(m.getActivity());
@@ -698,7 +702,7 @@ public class ExtraTests {
             PrebidMobile.setShareGeoLocation(false);
             Host.CUSTOM.setHostUrl(server.url("/sharefakegeo").toString());
             PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-            m.getActivity().post(new Runnable() {
+            mHandler.post(new Runnable() {
                 @Override
                 public void run() {
                     final MoPubView adObject = new MoPubView(m.getActivity());
