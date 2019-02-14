@@ -1,8 +1,11 @@
 package org.prebid.mobile;
 
+import com.mopub.mobileads.MoPubView;
+
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.testutils.BaseSetup;
@@ -10,6 +13,7 @@ import org.prebid.mobile.testutils.MockPrebidServerResponses;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowLooper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,14 +25,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.RecordedRequest;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK, manifest = Config.NONE)
@@ -467,6 +476,68 @@ public class PrebidServerAdapterTest extends BaseSetup {
         } else {
             assertTrue("Server failed to start, unable to test.", false);
         }
+    }
+
+    @Test
+    public void testAdUnitKeyValuesInPostData() throws Exception {
+        if (!successfulMockServerStarted) {
+            fail("Mock server failed to start, unable to test.");
+        }
+        server.setDispatcher(new Dispatcher() {
+            @Override
+            public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
+                if (request.getPath().equals("/withKeywords")) {
+                    String postData = request.getBody().readUtf8();
+                    Assert.assertTrue("Post data does not contain key values: " + postData, postData.contains("key1=value1,key1=value2,key2=value1,key2=value2,key3=value1,key3=value2,key4=value1,key4=value2,key5=value1,key5=value2,"));
+                } else if (request.getPath().equals("/clearKeywords")) {
+                    String postData = request.getBody().readUtf8();
+                    Assert.assertTrue("Post data should not contain key values: " + postData, !postData.contains("key1=value1,key1=value2,key2=value1,key2=value2,key3=value1,key3=value2,key4=value1,key4=value2,key5=value1,key5=value2,"));
+                }
+                return new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid());
+            }
+        });
+        HttpUrl httpUrl = server.url("/withKeywords");
+        Host.CUSTOM.setHostUrl(httpUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("123456");
+        BannerAdUnit adUnit = new BannerAdUnit("123456", 300, 250);
+        adUnit.addUserKeyword("key1", "value1");
+        adUnit.addUserKeyword("key1", "value2");
+        adUnit.addUserKeyword("key2", "value1");
+        adUnit.addUserKeyword("key2", "value2");
+        adUnit.addUserKeyword("key3", "value1");
+        adUnit.addUserKeyword("key3", "value2");
+        adUnit.addUserKeyword("key4", "value1");
+        adUnit.addUserKeyword("key4", "value2");
+        adUnit.addUserKeyword("key5", "value1");
+        adUnit.addUserKeyword("key5", "value2");
+        MoPubView testView = new MoPubView(activity);
+        OnCompleteListener mockListener = mock(OnCompleteListener.class);
+        adUnit.fetchDemand(testView, mockListener);
+        DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
+        fetcher.enableTestMode();
+        ShadowLooper fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
+        fetcherLooper.runOneTask();
+        ShadowLooper demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
+        demandLooper.runOneTask();
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        Host.CUSTOM.setHostUrl(server.url("/clearKeywords").toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        adUnit.clearUserKeywords();
+        OnCompleteListener mockListenerNoKV = mock(OnCompleteListener.class);
+        adUnit.fetchDemand(testView, mockListenerNoKV);
+        fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
+        fetcher.enableTestMode();
+        fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
+        fetcherLooper.runOneTask();
+        demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
+        demandLooper.runOneTask();
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener, times(1)).onComplete(ResultCode.NO_BIDS);
+        verify(mockListenerNoKV, times(1)).onComplete(ResultCode.NO_BIDS);
     }
 
     @Test
