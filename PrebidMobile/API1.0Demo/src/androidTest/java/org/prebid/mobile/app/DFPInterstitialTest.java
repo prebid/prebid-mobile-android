@@ -35,7 +35,7 @@ public class DFPInterstitialTest {
         onData(allOf(is(instanceOf(String.class)), is("Interstitial"))).perform(click());
         onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
         onView(withId(R.id.showAd)).perform(click());
-        Thread.sleep(5000);
+        Thread.sleep(10000);
         assertEquals("com.google.android.gms.ads.AdActivity", TestUtil.getCurrentActivity().getClass().getName());
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
@@ -50,7 +50,7 @@ public class DFPInterstitialTest {
         onData(allOf(is(instanceOf(String.class)), is("Interstitial"))).perform(click());
         onView(withId(R.id.autoRefreshInput)).perform(typeText("30000"));
         onView(withId(R.id.showAd)).perform(click());
-        Thread.sleep(5000);
+        Thread.sleep(10000);
         assertEquals("com.google.android.gms.ads.AdActivity", TestUtil.getCurrentActivity().getClass().getName());
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
@@ -63,7 +63,7 @@ public class DFPInterstitialTest {
         Espresso.pressBack();
         assertEquals(2, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         ((DemoActivity) TestUtil.getCurrentActivity()).stopAutoRefresh();
-        Thread.sleep(35000);
+        Thread.sleep(30000);
         assertEquals(2, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 }

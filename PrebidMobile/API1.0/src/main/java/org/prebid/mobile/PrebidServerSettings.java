@@ -46,7 +46,6 @@ class PrebidServerSettings {
     static final int REQUEST_KEY_LENGTH_MAX = 20;
 
     // PrebidServerSettings
-    static final String language = Locale.getDefault().getLanguage();
     static final String deviceMake = Build.MANUFACTURER;
     static final String deviceModel = Build.MODEL;
     static final String os = "android";

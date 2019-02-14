@@ -14,6 +14,7 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -518,7 +519,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             assertEquals(PrebidServerSettings.deviceModel, device.getString("model"));
             assertEquals(0, device.getInt("lmt"));
             assertEquals(PrebidServerSettings.os, device.getString("os"));
-            assertEquals(PrebidServerSettings.language, device.getString("language"));
+            assertEquals(Locale.getDefault().getLanguage(), device.getString("language"));
             assertEquals(String.valueOf(BaseSetup.testSDK), device.getString("osv"));
             assertEquals(320, device.getInt("w"));
             assertEquals(0, device.getInt("h"));

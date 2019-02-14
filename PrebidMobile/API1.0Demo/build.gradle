@@ -14,18 +14,26 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
-    buildTypes {
-        release {
-            minifyEnabled rootProject.releaseProguardEnabled
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    flavorDimensions "version"
+    productFlavors {
+        sourceCode {
+            dimension "version"
         }
-        debug {
-            minifyEnabled rootProject.debugProguardEnabled
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        localJar {
+            dimension "version"
+        }
+        maven {
+            dimension "version"
         }
     }
     lintOptions {
         abortOnError false
+    }
+}
+
+repositories{
+    maven {
+        url 'https://oss.sonatype.org/service/local/repositories/orgprebid-1018/content'
     }
 }
 
@@ -35,7 +43,9 @@ dependencies {
     implementation('com.mopub:mopub-sdk:5.4.1@aar') {
         transitive = true
     }
-    implementation project(':API1.0')
+    sourceCodeImplementation project(':API1.0')
+    localJarImplementation fileTree(dir: 'libs', include: ['*.jar'])
+    mavenImplementation 'org.prebid:prebid-mobile-sdk:1.0'
     androidTestImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test:rules:1.1.1'
