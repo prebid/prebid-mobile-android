@@ -64,11 +64,6 @@ public abstract class AdUnit {
         HashSet<AdSize> sizes = null;
         if (adType == AdType.BANNER) {
             sizes = ((BannerAdUnit) this).getSizes();
-            if (adObj.getClass() == Util.getClassFromString(Util.MOPUB_BANNER_VIEW_CLASS) && sizes.size() > 1) {
-                LogUtil.e("More than one size passed for MoPub ad view.");
-                listener.onComplete(ResultCode.INVALID_SIZE);
-                return;
-            }
             for (AdSize size : sizes) {
                 if (size.getWidth() < 0 || size.getHeight() < 0) {
                     listener.onComplete(ResultCode.INVALID_SIZE);

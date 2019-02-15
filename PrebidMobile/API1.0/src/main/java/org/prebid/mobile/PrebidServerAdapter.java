@@ -37,10 +37,10 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PrebidServerAdapter implements DemandAdapter {
+class PrebidServerAdapter implements DemandAdapter {
     private ArrayList<ServerConnector> serverConnectors;
 
-    public PrebidServerAdapter() {
+    PrebidServerAdapter() {
         serverConnectors = new ArrayList<>();
     }
 
@@ -469,8 +469,8 @@ public class PrebidServerAdapter implements DemandAdapter {
                 device.put(PrebidServerSettings.REQUEST_OS, PrebidServerSettings.os);
                 device.put(PrebidServerSettings.REQUEST_OS_VERSION, String.valueOf(Build.VERSION.SDK_INT));
                 // language
-                if (!TextUtils.isEmpty(PrebidServerSettings.language)) {
-                    device.put(PrebidServerSettings.REQUEST_LANGUAGE, PrebidServerSettings.language);
+                if (!TextUtils.isEmpty(Locale.getDefault().getLanguage())) {
+                    device.put(PrebidServerSettings.REQUEST_LANGUAGE, Locale.getDefault().getLanguage());
                 }
                 // POST data that requires context
                 Context context = PrebidMobile.getApplicationContext();

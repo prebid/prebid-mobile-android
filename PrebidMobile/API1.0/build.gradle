@@ -14,18 +14,18 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled rootProject.releaseProguardEnabled
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles 'proguard-rules.pro'
         }
         debug {
-            minifyEnabled rootProject.debugProguardEnabled
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            proguardFiles 'proguard-rules.pro'
         }
     }
     lintOptions {
         abortOnError false
     }
-0
+    0
 }
 
 dependencies {

@@ -3,6 +3,7 @@ package org.prebid.mobile.app;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.ResultCode;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -34,7 +35,8 @@ public class DFPBannerTest {
     public void testDFPBannerWithoutAutoRefreshAndSize300x250() throws Exception {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
         onView(withId(R.id.showAd)).perform(click());
-        Thread.sleep(5000);
+        Thread.sleep(10000);
+        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
@@ -49,7 +51,8 @@ public class DFPBannerTest {
         onView(withId(R.id.adSizeSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("320x50"))).perform(click());
         onView(withId(R.id.showAd)).perform(click());
-        Thread.sleep(5000);
+        Thread.sleep(10000);
+        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
@@ -62,7 +65,8 @@ public class DFPBannerTest {
     public void testDFPBannerWithAutoRefreshAndSize300x250() throws Exception {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("30000"));
         onView(withId(R.id.showAd)).perform(click());
-        Thread.sleep(5000);
+        Thread.sleep(10000);
+        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));

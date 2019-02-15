@@ -17,10 +17,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.InterstitialAdUnit;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
@@ -204,7 +206,7 @@ public class ExtraTests {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                // set up Banner test 1
+                // test 0 set up Banner
                 final MoPubView mopubTest1 = new MoPubView(m.getActivity());
                 mopubTest1.setAdUnitId("9a8c2ccd3dae405bb925397d35eed8f9");
                 mopubTest1.setMinimumHeight(50);
@@ -223,7 +225,7 @@ public class ExtraTests {
                 listener1 = spy(listener1);
                 spies.add(listener1);
                 adUnit1.fetchDemand(mopubTest1, listener1);
-                // set up Banner test 2
+                // test 1 set up Banner
                 final MoPubView mopubTest2 = new MoPubView(m.getActivity());
                 mopubTest2.setAdUnitId("50564379db734ebbb347849221a1081e");
                 mopubTest2.setMinimumHeight(50);
@@ -242,7 +244,7 @@ public class ExtraTests {
                 listener2 = spy(listener2);
                 spies.add(listener2);
                 adUnit2.fetchDemand(mopubTest2, listener2);
-                // set up Banner test 3
+                // test 2 set up Banner
                 final MoPubView mopubTest3 = new MoPubView(m.getActivity());
                 mopubTest3.setAdUnitId("5ff9556b05964e65b684ec54013df59d");
                 mopubTest2.setMinimumHeight(250);
@@ -261,7 +263,7 @@ public class ExtraTests {
                 listener3 = spy(listener3);
                 spies.add(listener3);
                 adUnit3.fetchDemand(mopubTest3, listener3);
-                // set up Banner test 4
+                // test 3 set up Banner
                 final MoPubView mopubTest4 = new MoPubView(m.getActivity());
                 mopubTest4.setAdUnitId("c5c9267bcf6247cb91a116d1ef6c7487");
                 mopubTest4.setMinimumHeight(250);
@@ -280,7 +282,7 @@ public class ExtraTests {
                 listener4 = spy(listener4);
                 spies.add(listener4);
                 adUnit4.fetchDemand(mopubTest4, listener4);
-                // set up Banner test 5
+                // test 4 set up Banner
                 final MoPubView mopubTest5 = new MoPubView(m.getActivity());
                 mopubTest5.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
                 mopubTest5.setMinimumHeight(250);
@@ -299,7 +301,7 @@ public class ExtraTests {
                 listener5 = spy(listener5);
                 spies.add(listener5);
                 adUnit4.fetchDemand(mopubTest5, listener5);
-                // set up Interstitial test 1
+                // test 5 set up Interstitial
                 final MoPubInterstitial mopubInstl1 = new MoPubInterstitial(m.getActivity(), Constants.MOPUB_INTERSTITIAL_ADUNIT_ID);
                 moPubInterstitials.add(mopubInstl1);
                 InterstitialAdUnit adUnit6 = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL_APPNEXUS_DEMAND);
@@ -313,7 +315,7 @@ public class ExtraTests {
                 listener6 = spy(listener6);
                 spies.add(listener6);
                 adUnit6.fetchDemand(mopubInstl1, listener6);
-                // set up Interstitial test 2
+                // test 6 set up Interstitial
                 final MoPubInterstitial mopubInstl2 = new MoPubInterstitial(m.getActivity(), "c3fca03154a540bfa7f0971fb984e3e8");
                 moPubInterstitials.add(mopubInstl2);
                 InterstitialAdUnit adUnit7 = new InterstitialAdUnit("bde00f49-0a1b-483a-9716-e2dd427b794c");
@@ -327,7 +329,7 @@ public class ExtraTests {
                 listener7 = spy(listener7);
                 spies.add(listener7);
                 adUnit7.fetchDemand(mopubInstl2, listener7);
-                // set up Interstitial test 3
+                // test 7 set up Interstitial
                 final MoPubInterstitial mopubInstl3 = new MoPubInterstitial(m.getActivity(), "12ecf78eb8314f8bb36192a6286adc56");
                 moPubInterstitials.add(mopubInstl3);
                 InterstitialAdUnit adUnit8 = new InterstitialAdUnit("6ceca3d4-f5b8-4717-b4d9-178843f873f8");
@@ -345,34 +347,74 @@ public class ExtraTests {
         });
         Thread.sleep(10000);
         // verify line by line for easier debug
-        verify(spies.get(0), times(1)).onComplete(ResultCode.SUCCESS);
-        verify(spies.get(1), times(1)).onComplete(ResultCode.SUCCESS);
-        verify(spies.get(2), times(1)).onComplete(ResultCode.SUCCESS);
-        verify(spies.get(3), times(1)).onComplete(ResultCode.SUCCESS);
-        verify(spies.get(4), times(1)).onComplete(ResultCode.SUCCESS);
-        verify(spies.get(5), times(1)).onComplete(ResultCode.SUCCESS);
-        verify(spies.get(6), times(1)).onComplete(ResultCode.SUCCESS);
-        verify(spies.get(7), times(1)).onComplete(ResultCode.SUCCESS);
-        onWebView(withParent(withId(1))).check(webContent(containingTextInBody("143135824")));
-        onWebView(withParent(withId(2))).check(webContent(containingTextInBody("143208584")));
-        onWebView(withParent(withId(3))).check(webContent(containingTextInBody("143208598")));
-        onWebView(withParent(withId(4))).check(webContent(containingTextInBody("143208640")));
-        onWebView(withParent(withId(5))).check(webContent(containingTextInBody("ucTag.renderAd")));
-        moPubInterstitials.get(0).show();
-        Thread.sleep(2000);
-        assertEquals("com.mopub.mobileads.MoPubActivity", TestUtil.getCurrentActivity().getClass().getName());
-        onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
-        Espresso.pressBack();
-        moPubInterstitials.get(1).show();
-        Thread.sleep(2000);
-        assertEquals("com.mopub.mobileads.MoPubActivity", TestUtil.getCurrentActivity().getClass().getName());
-        onWebView().check(webContent(containingTextInBody("143393807")));
-        Espresso.pressBack();
-        moPubInterstitials.get(2).show();
-        Thread.sleep(5000);
-        assertEquals("com.mopub.mobileads.MoPubActivity", TestUtil.getCurrentActivity().getClass().getName());
-        onWebView().check(webContent(containingTextInBody("143393864")));
-        Espresso.pressBack();
+        ArgumentCaptor<ResultCode> resultCode = ArgumentCaptor.forClass(ResultCode.class);
+        verify(spies.get(0), times(1)).onComplete(resultCode.capture());
+        if (ResultCode.SUCCESS.equals(resultCode.getValue())) {
+            onWebView(withParent(withId(1))).check(webContent(containingTextInBody("143135824")));
+        } else {
+            LogUtil.e("MultipleAdUnits", "For test 0, actual result code is " + resultCode.getValue());
+        }
+        ArgumentCaptor<ResultCode> resultCode1 = ArgumentCaptor.forClass(ResultCode.class);
+        verify(spies.get(1), times(1)).onComplete(resultCode1.capture());
+        if (ResultCode.SUCCESS.equals(resultCode1.getValue())) {
+            onWebView(withParent(withId(2))).check(webContent(containingTextInBody("143208584")));
+        } else {
+            LogUtil.e("MultipleAdUnits", "For test 1, actual result code is " + resultCode1.getValue());
+        }
+        ArgumentCaptor<ResultCode> resultCode2 = ArgumentCaptor.forClass(ResultCode.class);
+        verify(spies.get(2), times(1)).onComplete(resultCode2.capture());
+        if (ResultCode.SUCCESS.equals(resultCode2.getValue())) {
+            onWebView(withParent(withId(3))).check(webContent(containingTextInBody("143208598")));
+        } else {
+            LogUtil.e("MultipleAdUnits", "For test 2, actual result code is " + resultCode2.getValue());
+        }
+        ArgumentCaptor<ResultCode> resultCode3 = ArgumentCaptor.forClass(ResultCode.class);
+        verify(spies.get(3), times(1)).onComplete(resultCode3.capture());
+        if (ResultCode.SUCCESS.equals(resultCode3.getValue())) {
+            onWebView(withParent(withId(4))).check(webContent(containingTextInBody("143208640")));
+        } else {
+            LogUtil.e("MultipleAdUnits", "For test 3, actual result code is " + resultCode3.getValue());
+        }
+        ArgumentCaptor<ResultCode> resultCode4 = ArgumentCaptor.forClass(ResultCode.class);
+        verify(spies.get(4), times(1)).onComplete(resultCode4.capture());
+        if (ResultCode.SUCCESS.equals(resultCode4.getValue())) {
+            onWebView(withParent(withId(5))).check(webContent(containingTextInBody("ucTag.renderAd")));
+        } else {
+            LogUtil.e("MultipleAdUnits", "For test 4, actual result code is " + resultCode4.getValue());
+        }
+        ArgumentCaptor<ResultCode> resultCode5 = ArgumentCaptor.forClass(ResultCode.class);
+        verify(spies.get(5), times(1)).onComplete(resultCode5.capture());
+        if (ResultCode.SUCCESS.equals(resultCode5.getValue())) {
+            moPubInterstitials.get(0).show();
+            Thread.sleep(2000);
+            assertEquals("com.mopub.mobileads.MoPubActivity", TestUtil.getCurrentActivity().getClass().getName());
+            onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
+            Espresso.pressBack();
+        } else {
+            LogUtil.e("MultipleAdUnits", "For test 5, actual result code is " + resultCode5.getValue());
+        }
+        ArgumentCaptor<ResultCode> resultCode6 = ArgumentCaptor.forClass(ResultCode.class);
+        verify(spies.get(6), times(1)).onComplete(resultCode6.capture());
+        if (ResultCode.SUCCESS.equals(resultCode6.getValue())) {
+            moPubInterstitials.get(1).show();
+            Thread.sleep(2000);
+            assertEquals("com.mopub.mobileads.MoPubActivity", TestUtil.getCurrentActivity().getClass().getName());
+            onWebView().check(webContent(containingTextInBody("143393807")));
+            Espresso.pressBack();
+        } else {
+            LogUtil.e("MultipleAdUnits", "For test 6, actual result code is " + resultCode6.getValue());
+        }
+        ArgumentCaptor<ResultCode> resultCode7 = ArgumentCaptor.forClass(ResultCode.class);
+        verify(spies.get(7), times(1)).onComplete(resultCode7.capture());
+        if (ResultCode.SUCCESS.equals(resultCode7.getValue())) {
+            moPubInterstitials.get(2).show();
+            Thread.sleep(5000);
+            assertEquals("com.mopub.mobileads.MoPubActivity", TestUtil.getCurrentActivity().getClass().getName());
+            onWebView().check(webContent(containingTextInBody("143393864")));
+            Espresso.pressBack();
+        } else {
+            LogUtil.e("MultipleAdUnits", "For test 7, actual result code is " + resultCode7.getValue());
+        }
     }
 
     @Test

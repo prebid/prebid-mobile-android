@@ -3,6 +3,7 @@ package org.prebid.mobile.app;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.ResultCode;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -36,7 +37,8 @@ public class MoPubBannerTest {
         onData(allOf(is(instanceOf(String.class)), is("MoPub"))).perform(click());
         onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
         onView(withId(R.id.showAd)).perform(click());
-        Thread.sleep(5000);
+        Thread.sleep(10000);
+        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
@@ -53,7 +55,8 @@ public class MoPubBannerTest {
         onData(allOf(is(instanceOf(String.class)), is("320x50"))).perform(click());
         onView(withId(R.id.autoRefreshInput)).perform(typeText("15000"));
         onView(withId(R.id.showAd)).perform(click());
-        Thread.sleep(5000);
+        Thread.sleep(10000);
+        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("pbm.showAdFromCacheId")));
@@ -68,7 +71,8 @@ public class MoPubBannerTest {
         onData(allOf(is(instanceOf(String.class)), is("MoPub"))).perform(click());
         onView(withId(R.id.autoRefreshInput)).perform(typeText("30000"));
         onView(withId(R.id.showAd)).perform(click());
-        Thread.sleep(5000);
+        Thread.sleep(10000);
+        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));

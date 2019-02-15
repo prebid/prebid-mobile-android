@@ -4,7 +4,7 @@ package org.prebid.mobile;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class RequestParams {
+class RequestParams {
     private String configId = "";
     private AdType adType = AdType.BANNER;
     private HashSet<AdSize> sizes = new HashSet<>();
@@ -17,19 +17,19 @@ public class RequestParams {
         this.keywords = keywords;
     }
 
-    public String getConfigId() {
+    String getConfigId() {
         return this.configId;
     }
 
-    public AdType getAdType() {
+    AdType getAdType() {
         return this.adType;
     }
 
-    public HashSet<AdSize> getAdSizes() {
+    HashSet<AdSize> getAdSizes() {
         return this.sizes;
     }
 
-    public ArrayList<String> getKeywords() {
+    ArrayList<String> getKeywords() {
         return keywords;
     }
 

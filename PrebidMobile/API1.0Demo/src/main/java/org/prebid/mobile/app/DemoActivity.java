@@ -30,6 +30,7 @@ import static org.prebid.mobile.app.Constants.MOPUB_BANNER_ADUNIT_ID_320x50;
 public class DemoActivity extends AppCompatActivity {
     int refreshCount;
     AdUnit adUnit;
+    ResultCode resultCode;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +78,7 @@ public class DemoActivity extends AppCompatActivity {
         adUnit.fetchDemand(request, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
+                DemoActivity.this.resultCode = resultCode;
                 dfpAdView.loadAd(request);
                 refreshCount++;
             }
@@ -117,6 +119,7 @@ public class DemoActivity extends AppCompatActivity {
         adUnit.fetchDemand(request, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
+                DemoActivity.this.resultCode = resultCode;
                 interstitialAd.loadAd(request);
                 refreshCount++;
             }
@@ -146,6 +149,7 @@ public class DemoActivity extends AppCompatActivity {
         adUnit.fetchDemand(adView, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
+                DemoActivity.this.resultCode = resultCode;
                 adView.loadAd();
                 refreshCount++;
             }
@@ -195,6 +199,7 @@ public class DemoActivity extends AppCompatActivity {
         adUnit.fetchDemand(interstitial, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
+                DemoActivity.this.resultCode = resultCode;
                 interstitial.load();
                 refreshCount++;
             }
