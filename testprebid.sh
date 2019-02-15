@@ -12,5 +12,5 @@ echoX "clean previous build"
 echoX "start unit tests"
 ./gradlew API1.0:testDebugUnitTest
 
-echoX "start UI tests"
-./gradlew API1.0Demo:connectedSourceCodeDebugAndroidTest
+# echoX "start UI tests"
+# ./gradlew API1.0Demo:connectedSourceCodeDebugAndroidTest
