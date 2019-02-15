@@ -233,17 +233,6 @@ public class ResultCodeTest extends BaseSetup {
     }
 
     @Test
-    public void testDoNotSupportMultipleSizesForMoPubBanner() throws Exception {
-        PrebidMobile.setPrebidServerAccountId("123456");
-        BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
-        adUnit.addAdditionalSize(300, 250);
-        MoPubView testView = new MoPubView(activity);
-        OnCompleteListener mockListener = mock(OnCompleteListener.class);
-        adUnit.fetchDemand(testView, mockListener);
-        verify(mockListener).onComplete(ResultCode.INVALID_SIZE);
-    }
-
-    @Test
     public void testSupportMultipleSizesForDFPBanner() throws Exception {
         PrebidMobile.setPrebidServerAccountId("123456");
         BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
