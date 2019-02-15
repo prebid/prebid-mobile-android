@@ -6,7 +6,7 @@ env:
     - ANDROID_BUILD_TOOLS_VERSION=23.0.2
     - ANDROID_ABI=armeabi-v7a
     - ANDROID_TAG=google_apis
-    - ADB_INSTALL_TIMEOUT=20
+    - ADB_INSTALL_TIMEOUT=2
 android:
   components:
     - tools
