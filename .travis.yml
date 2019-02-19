@@ -33,7 +33,7 @@ jdk:
 
 before_install:
     # the following is to spin up an emulator for integration tests
-    - android -s create avd -f -n test -t android-$EMULATOR_API_LEVEL
+    - android -s create avd -f -n test -t android-$EMULATOR_API_LEVEL --tag $ANDROID_TAG
     - emulator -avd test -no-audio -no-window &
     - android-wait-for-emulator
 
