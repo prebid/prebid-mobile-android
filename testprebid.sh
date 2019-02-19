@@ -13,4 +13,4 @@ echoX "start unit tests"
 ./gradlew API1.0:testDebugUnitTest
 
 echoX "start UI tests"
-./gradlew API1.0Demo:connectedSourceCodeDebugAndroidTest
+./gradlew API1.0Demo:connectedSourceCodeDebugAndroidTest --info
