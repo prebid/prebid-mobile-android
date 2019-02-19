@@ -36,4 +36,4 @@ before_install:
     - android-wait-for-emulator
 
 script:
-    - ./testprebid.sh
+    - TERM=dumb ./testprebid.sh
