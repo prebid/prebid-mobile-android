@@ -32,7 +32,7 @@ jdk:
 before_install:
     # the following is to spin up an emulator for integration tests
     - echo no | android -s create avd -f -n test -t android-$EMULATOR_API_LEVEL --tag $ANDROID_TAG
-    - export QEMU_AUDIO_DRV=none && emulator -avd test -no-window &
+    - emulator -avd test -no-skin -no-window &
     - android-wait-for-emulator
 
 script:
