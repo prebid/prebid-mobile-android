@@ -1,6 +1,5 @@
 language: android
 env:
-    - TERM=dumb 
   global:
     - ANDROID_API_LEVEL=28
     - EMULATOR_API_LEVEL=21
@@ -37,4 +36,4 @@ before_install:
     - android-wait-for-emulator
 
 script:
-    - ./testprebid.sh
+    - TERM=dumb ./testprebid.sh
