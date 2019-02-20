@@ -40,9 +40,6 @@ import org.prebid.mobile.InterstitialAdUnit;
 import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.ResultCode;
 
-import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
-import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
-import static android.view.WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
 import static org.prebid.mobile.app.Constants.MOPUB_BANNER_ADUNIT_ID_300x250;
 import static org.prebid.mobile.app.Constants.MOPUB_BANNER_ADUNIT_ID_320x50;
 
@@ -54,9 +51,6 @@ public class DemoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (BuildConfig.DEBUG) {
-//            getWindow().addFlags(FLAG_TURN_SCREEN_ON | FLAG_SHOW_WHEN_LOCKED | FLAG_KEEP_SCREEN_ON);
-//        }
         refreshCount = 0;
         setContentView(R.layout.activity_demo);
         Intent intent = getIntent();
