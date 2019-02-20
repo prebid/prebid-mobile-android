@@ -63,7 +63,7 @@ public class DFPInterstitialTest {
             assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         } else if ("org.prebid.mobile.app.DemoActivity".equals(activityName)) {
             assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
-            fail("Prebid Demand was fetched successfully, but MoPub interstitial not loaded and show successfully");
+            fail("Prebid Demand was fetched successfully, but DFP interstitial not loaded and show successfully");
         } else {
             fail("Demo app not working properly.");
         }
@@ -95,14 +95,14 @@ public class DFPInterstitialTest {
             } else if ("org.prebid.mobile.app.DemoActivity".equals(activityName)) {
                 assertEquals("Auto refresh not happening", 2, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
                 assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
-                fail("Prebid Demand was fetched successfully, but MoPub interstitial not loaded and show successfully");
+                fail("Prebid Demand was fetched successfully, but DFP interstitial not loaded and show successfully");
             } else {
                 fail("Demo app not working properly.");
             }
 
         } else if ("org.prebid.mobile.app.DemoActivity".equals(activityName)) {
             assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
-            fail("Prebid Demand was fetched successfully, but MoPub interstitial not loaded and show successfully");
+            fail("Prebid Demand was fetched successfully, but DFP interstitial not loaded and show successfully");
         } else {
             fail("Demo app not working properly.");
         }
