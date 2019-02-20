@@ -18,6 +18,7 @@ package org.prebid.mobile.app;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.mopub.common.MoPub;
@@ -52,6 +53,7 @@ public class CustomApplication extends Application {
         PrebidMobile.setApplicationContext(getApplicationContext());
         //endregion
         if (BuildConfig.DEBUG) {
+            sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
             this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
                 @Override
                 public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
