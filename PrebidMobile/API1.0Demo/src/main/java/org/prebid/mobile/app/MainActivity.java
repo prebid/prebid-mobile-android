@@ -139,4 +139,12 @@ public class MainActivity extends AppCompatActivity {
         }
         startActivity(demoActivityIntent);
     }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (!hasFocus) {
+            sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+        }
+    }
 }
