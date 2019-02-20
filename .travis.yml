@@ -31,6 +31,7 @@ jdk:
 
 before_install:
     # the following is to spin up an emulator for integration tests
+    - echo yes | android update sdk --all --filter build-tools-$ANDROID_BUILD_TOOLS_VERSION --no-ui --force
     - echo no | android -s create avd -f -n test -t android-$EMULATOR_API_LEVEL --tag $ANDROID_TAG
     - emulator -avd test -no-window &
     - android-wait-for-emulator
