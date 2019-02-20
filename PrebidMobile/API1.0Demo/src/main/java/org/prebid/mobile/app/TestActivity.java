@@ -30,9 +30,9 @@ public class TestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (BuildConfig.DEBUG) {
-            getWindow().addFlags(FLAG_TURN_SCREEN_ON | FLAG_SHOW_WHEN_LOCKED | FLAG_KEEP_SCREEN_ON);
-        }
+//        if (BuildConfig.DEBUG) {
+//            getWindow().addFlags(FLAG_TURN_SCREEN_ON | FLAG_SHOW_WHEN_LOCKED | FLAG_KEEP_SCREEN_ON);
+//        }
         setContentView(R.layout.activity_test);
     }
 
