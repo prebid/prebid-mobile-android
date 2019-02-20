@@ -29,11 +29,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-import org.prebid.mobile.Host;
-import org.prebid.mobile.PrebidMobile;
-
 import java.util.Arrays;
 import java.util.List;
+
+import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
+import static android.view.WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (BuildConfig.DEBUG) {
+            this.getWindow().addFlags(FLAG_TURN_SCREEN_ON | FLAG_SHOW_WHEN_LOCKED | FLAG_KEEP_SCREEN_ON);
+        }
         setContentView(R.layout.activity_main);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);

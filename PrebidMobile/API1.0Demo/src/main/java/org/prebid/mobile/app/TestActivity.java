@@ -21,11 +21,18 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
+import static android.view.WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
+
 public class TestActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (BuildConfig.DEBUG) {
+            getWindow().addFlags(FLAG_TURN_SCREEN_ON | FLAG_SHOW_WHEN_LOCKED | FLAG_KEEP_SCREEN_ON);
+        }
         setContentView(R.layout.activity_test);
     }
 

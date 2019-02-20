@@ -41,7 +41,6 @@ public class SanityTest {
     public void testDemoActivityLaunch() {
         onView(withId(R.id.showAd)).perform(click());
         intended(hasComponent(DemoActivity.class.getName()));
-
     }
 }
 
