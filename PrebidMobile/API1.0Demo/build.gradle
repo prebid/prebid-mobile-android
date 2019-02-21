@@ -33,7 +33,7 @@ android {
 
 repositories{
     maven {
-        url 'https://oss.sonatype.org/service/local/repositories/orgprebid-1018/content'
+        url 'https://oss.sonatype.org/service/local/repositories/orgprebid-1020/content'
     }
 }
 
@@ -45,7 +45,7 @@ dependencies {
     }
     sourceCodeImplementation project(':API1.0')
     localJarImplementation fileTree(dir: 'libs', include: ['*.jar'])
-    mavenImplementation 'org.prebid:prebid-mobile-sdk:1.0'
+    mavenImplementation 'org.prebid:prebid-mobile-sdk:[1,2)'
     androidTestImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test:rules:1.1.1'
