@@ -41,3 +41,4 @@ script:
     - TravisScripts/setup.sh
     - TravisScripts/unit_tests.sh
     - travis_retry TravisScripts/integration_tests_sanity_check.sh
+    - travis_retry TravisScripts/integration_tests_4.sh
