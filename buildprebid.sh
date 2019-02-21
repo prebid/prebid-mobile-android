@@ -53,9 +53,7 @@ LOGPATH=$OUTDIR/logs
 AARPATH=build/outputs/aar
 TEMPDIR=$BASEDIR/temp
 LIBDIR=$BASEDIR/PrebidMobile
-PREBIDCORE=("PrebidMobileCore")
-DEMANDSOURCES=()
-DEMANDSOURCES+=("PrebidServerAdapter")
+PREBIDCORE=API1.0
 
 # set the default release version to what's in the project's build.gradle file
 RELEASE_VERSION=""
@@ -79,13 +77,15 @@ mkdir $OUTDIR
 mkdir $LOGPATH
 rm -rf $TEMPDIR
 mkdir $TEMPDIR
+cd $LIBDIR
+./gradlew -i --no-daemon clean >$LOGPATH/clean.log 2>&1
 
 ###########################
 # Test and Build
 ###########################
 echoX "Run unit tests"
 cd $LIBDIR
-(./gradlew -i --no-daemon clean test > $LOGPATH/testResults.log 2>&1) || (die "Unit tests failed, check log in $LOGPATH/testResults.log") &
+(./gradlew -i --no-daemon API1.0:test > $LOGPATH/testResults.log 2>&1) || (die "Unit tests failed, check log in $LOGPATH/testResults.log") &
 PID=$!
 spinner $PID &
 wait $PID
@@ -93,7 +93,7 @@ wait $PID
 echoX "Assemble builds"
 cd $LIBDIR
 # clean existing build results, exclude test task, and assemble new release build
-(./gradlew -i --no-daemon -x test build > $LOGPATH/build.log 2>&1 || die "Build failed, check log in $LOGPATH/build.log" ) &
+(./gradlew -i --no-daemon API1.0:assembleRelease > $LOGPATH/build.log 2>&1 || die "Build failed, check log in $LOGPATH/build.log" ) &
 PID=$!
 spinner $PID &
 wait $PID
@@ -107,16 +107,6 @@ unzip -q -o $PREBIDCORE-release.aar
 cd $TEMPDIR/output
 jar xf $LIBDIR/$PREBIDCORE/$AARPATH/classes.jar
 rm $LIBDIR/$PREBIDCORE/$AARPATH/classes.jar
-# combine demand sources with the prebid core
-echoX "Move demand library to output"
-for i in "${DEMANDSOURCES[@]}";
-do
-cd $LIBDIR/$i/$AARPATH
-unzip -q -o $i-release.aar
-cd $TEMPDIR/output
-jar xf $LIBDIR/$i/$AARPATH/classes.jar
-rm $LIBDIR/$i/$AARPATH/classes.jar
-done
 cd $TEMPDIR/output
 jar cf PrebidMobile.jar org*
 
@@ -128,32 +118,23 @@ rm -r $TEMPDIR
 echoX "Prepare Javedoc"
 
 # class paths
-CORE_API_PATH="PrebidMobileCore/src/main/java/org/prebid/mobile/core"
+CORE_API_PATH="API1.0/src/main/java/org/prebid/mobile"
 CORE_CLASSES=()
-CORE_CLASSES+=("AdSize.java")
 CORE_CLASSES+=("AdType.java")
 CORE_CLASSES+=("AdUnit.java")
 CORE_CLASSES+=("BannerAdUnit.java")
-CORE_CLASSES+=("BidManager.java")
-CORE_CLASSES+=("BidResponse.java")
-CORE_CLASSES+=("CacheManager.java")
 CORE_CLASSES+=("DemandAdapter.java")
-CORE_CLASSES+=("ErrorCode.java")
+CORE_CLASSES+=("Host.java")
+CORE_CLASSES+=("ResultCode.java")
 CORE_CLASSES+=("InterstitialAdUnit.java")
 CORE_CLASSES+=("LogUtil.java")
-CORE_CLASSES+=("Prebid.java")
-CORE_CLASSES+=("PrebidException.java")
+CORE_CLASSES+=("OnCompleteListener.java")
+CORE_CLASSES+=("PrebidMobile.java")
 CORE_CLASSES+=("TargetingParams.java")
-PREBID_SERVER_PATH="PrebidServerAdapter/src/main/java/org/prebid/mobile/prebidserver"
-PREBID_SERVER_CLASSES=()
-PREBID_SERVER_CLASSES+=("PrebidServerAdapter.java")
 
 FINAL_CLASSES=""
 for classes in "${CORE_CLASSES[@]}"; do
     FINAL_CLASSES="$FINAL_CLASSES $LIBDIR/$CORE_API_PATH/$classes"
-done
-for classes in "${PREBID_SERVER_CLASSES[@]}"; do
-    FINAL_CLASSES="$FINAL_CLASSES $LIBDIR/$PREBID_SERVER_PATH/$classes"
 done
 
 cd $OUTDIR

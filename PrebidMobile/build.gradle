@@ -1,14 +1,12 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 ext {
-    releaseProguardEnabled = false
-    debugProguardEnabled = false
-    prebidVersionName = "0.5.3"
+    prebidVersionName = "1.0"
     prebidVersionCode = 1
     minSDKVersion = 16
-    targetSDKVersion = 25
-    compileSdkVersion = 25
-    buildToolsVersion = "26.0.2"
+    targetSDKVersion = 28
+    compileSdkVersion = 28
+    buildToolsVersion = "28.0.3"
 }
 
 buildscript {
@@ -18,8 +16,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
-
+        classpath 'com.android.tools.build:gradle:3.3.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -27,10 +24,9 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
+        google()
+        jcenter() // includes the MoPub SDK and AVID library
+        maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
+        maven { url 'https://maven.google.com' } // necessary for Android API 26
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
