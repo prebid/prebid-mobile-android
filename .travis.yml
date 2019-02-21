@@ -39,6 +39,6 @@ before_install:
 script:
     - set -e
     - TravisScripts/setup.sh
-    # - TravisScripts/unit_tests.sh
-    # - travis_retry TravisScripts/integration_tests_sanity_check.sh
+    - TravisScripts/unit_tests.sh
+    - travis_retry TravisScripts/integration_tests_sanity_check.sh
     - travis_retry TravisScripts/integration_tests_1.sh
