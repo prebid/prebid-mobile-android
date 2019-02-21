@@ -37,4 +37,4 @@ before_install:
     - android-wait-for-emulator
 
 script:
-    - travis_retry ./testprebid.sh
+    - ./testprebid-travis.sh
