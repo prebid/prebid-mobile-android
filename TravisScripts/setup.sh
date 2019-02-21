@@ -9,5 +9,5 @@ export -f echoX
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR/../PrebidMobile
 
-echoX "clean previous build"
+echoX "clean project"
 ./gradlew clean
