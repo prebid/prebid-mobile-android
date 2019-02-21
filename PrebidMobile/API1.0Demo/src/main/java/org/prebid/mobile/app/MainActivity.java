@@ -29,9 +29,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-import org.prebid.mobile.Host;
-import org.prebid.mobile.PrebidMobile;
-
 import java.util.Arrays;
 import java.util.List;
 
