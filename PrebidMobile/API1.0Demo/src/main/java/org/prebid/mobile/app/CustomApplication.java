@@ -48,7 +48,9 @@ public class CustomApplication extends Application {
         //set Prebid Mobile global Settings
         //region PrebidMobile API
         PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID);
-        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        Host sortable = Host.CUSTOM;
+        sortable.setHostUrl("http://10.0.2.2:8000/openrtb2/auction");
+        PrebidMobile.setPrebidServerHost(sortable);
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(getApplicationContext());
         //endregion
