@@ -1,4 +1,4 @@
-[![Build Status](https://api.travis-ci.org/prebid/prebid-mobile-android.svg?branch=master)](https://travis-ci.org/prebid/prebid-mobile-android)
+[![CircleCI](https://circleci.com/gh/prebid/prebid-mobile-android/tree/circleci.svg?style=svg)](https://circleci.com/gh/prebid/prebid-mobile-android/tree/circleci)
 
 # Prebid Mobile Android SDK
 
