@@ -1,9 +1,17 @@
 version: 2.1
-
-orbs:
-    hello: circleci/hello-build@0.0.7 # uses the circleci/buildpack-deps Docker image
-
+jobs:
+  unit_test:
+    steps:
+      - checkout
+      - run: cd PrebidMobile
+      - run: ./gradlew API1.0:testDebugUnitTest
+  integration_test:
+    steps:
+      - checkout
+      - run: echo "Hello World"
 workflows:
-    "Hello Workflow":
-        jobs:
-          - hello/hello-build
+  version: 2.1
+  build_and_test:
+    jobs:
+      - unit_test
+      - integration_test

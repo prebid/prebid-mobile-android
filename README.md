@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/prebid/prebid-mobile-android/tree/circleci.svg?style=svg)](https://circleci.com/gh/prebid/prebid-mobile-android/tree/circleci)
+[![CircleCI](https://circleci.com/gh/prebid/prebid-mobile-android.svg?style=svg)](https://circleci.com/gh/prebid/prebid-mobile-android)
 
 # Prebid Mobile Android SDK
 
