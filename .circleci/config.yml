@@ -7,13 +7,13 @@ jobs:
       - checkout
       - run: 
           name: Run Unit Tests
-          command: cd PrebidMobile && ./gradlew API1.0:testDebugUnitTest
+          command: 
   integration_test:
-    docker:
-      - image: circleci/android:api-28-alpha 
+    macos:
+      xcode: "10.0.0"
     steps:
       - checkout
-      - run: echo "Hello World"
+      - run: cd PrebidMobile && ./gradlew API1.0:testDebugUnitTest
 workflows:
   version: 2.1
   tests:
