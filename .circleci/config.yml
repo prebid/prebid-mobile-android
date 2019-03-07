@@ -1,11 +1,15 @@
 version: 2.1
 jobs:
   unit_test:
+    docker:
+      - image: circleci/node:4.8.2
     steps:
       - checkout
       - run: cd PrebidMobile
       - run: ./gradlew API1.0:testDebugUnitTest
   integration_test:
+    docker:
+      - image: circleci/node:4.8.2
     steps:
       - checkout
       - run: echo "Hello World"
