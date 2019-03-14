@@ -4,6 +4,6 @@
     "responsetimemillis": {
       "appnexus": 142
     },
-    "tmaxrequest": 10000
+    "tmaxrequest": 2000
   }
 }
