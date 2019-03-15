@@ -155,7 +155,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
     @Test
     public void testUpdateTimeoutMillis() {
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
-        assertEquals(10000, PrebidMobile.timeoutMillis);
+        assertEquals(2000, PrebidMobile.timeoutMillis);
         assertFalse(PrebidMobile.timeoutMillisUpdated);
         PrebidMobile.setPrebidServerAccountId("b7adad2c-e042-4126-8ca1-b3caac7d3e5c");
         PrebidMobile.setShareGeoLocation(true);
@@ -170,7 +170,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
-        assertTrue("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, PrebidMobile.timeoutMillis <= 10000 && PrebidMobile.timeoutMillis > 700);
+        assertTrue("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, PrebidMobile.timeoutMillis <= 2000 && PrebidMobile.timeoutMillis > 700);
         assertTrue(PrebidMobile.timeoutMillisUpdated);
     }
 
@@ -194,12 +194,12 @@ public class PrebidServerAdapterTest extends BaseSetup {
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
             Robolectric.flushForegroundThreadScheduler();
-            assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, 10000, PrebidMobile.timeoutMillis);
+            assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, 2000, PrebidMobile.timeoutMillis);
             assertTrue(!PrebidMobile.timeoutMillisUpdated);
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
             Robolectric.flushForegroundThreadScheduler();
-            assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, 10000, PrebidMobile.timeoutMillis);
+            assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, 2000, PrebidMobile.timeoutMillis);
             assertTrue(PrebidMobile.timeoutMillisUpdated);
         } else {
             assertTrue("Server failed to start, unable to test.", false);

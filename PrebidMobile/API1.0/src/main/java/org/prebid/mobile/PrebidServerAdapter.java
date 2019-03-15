@@ -142,7 +142,7 @@ class PrebidServerAdapter implements DemandAdapter {
                             // ignore this
                         }
                         if (tmaxRequest >= 0) {
-                            PrebidMobile.timeoutMillis = Math.min((int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200, 10000); // adding 200ms as safe time
+                            PrebidMobile.timeoutMillis = Math.min((int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200, 2000); // adding 200ms as safe time
                             PrebidMobile.timeoutMillisUpdated = true;
                         }
                     }
