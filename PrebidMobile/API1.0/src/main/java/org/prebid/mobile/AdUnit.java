@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -27,6 +28,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public abstract class AdUnit {
+    private static final int MIN_AUTO_REFRESH_PERIOD_MILLIS = 30_000;
+
     private String configId;
     private AdType adType;
     private ArrayList<String> keywords;
@@ -40,8 +43,9 @@ public abstract class AdUnit {
         this.keywords = new ArrayList<>();
     }
 
-    public void setAutoRefreshPeriodMillis(int periodMillis) {
-        if (periodMillis < 30000) {
+    public void setAutoRefreshPeriodMillis(@IntRange(from = MIN_AUTO_REFRESH_PERIOD_MILLIS) int periodMillis) {
+        if (periodMillis < MIN_AUTO_REFRESH_PERIOD_MILLIS) {
+            LogUtil.w("periodMillis less then:" + MIN_AUTO_REFRESH_PERIOD_MILLIS);
             return;
         }
         this.periodMillis = periodMillis;
@@ -50,7 +54,7 @@ public abstract class AdUnit {
         }
     }
 
-    public void stopAutoRefersh() {
+    public void stopAutoRefresh() {
         LogUtil.v("Stopping auto refresh...");
         if (fetcher != null) {
             fetcher.destroy();
