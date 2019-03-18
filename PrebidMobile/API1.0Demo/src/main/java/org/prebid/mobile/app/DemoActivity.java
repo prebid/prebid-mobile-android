@@ -226,14 +226,14 @@ public class DemoActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (adUnit != null) {
-            adUnit.stopAutoRefersh();
+            adUnit.stopAutoRefresh();
             adUnit = null;
         }
     }
 
     void stopAutoRefresh() {
         if (adUnit != null) {
-            adUnit.stopAutoRefersh();
+            adUnit.stopAutoRefresh();
         }
     }
 }

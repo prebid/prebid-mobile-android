@@ -54,7 +54,7 @@ public abstract class AdUnit {
         }
     }
 
-    public void stopAutoRefersh() {
+    public void stopAutoRefresh() {
         LogUtil.v("Stopping auto refresh...");
         if (fetcher != null) {
             fetcher.destroy();
