@@ -167,11 +167,11 @@ class PrebidServerAdapter implements DemandAdapter {
                     Matcher m2 = invalidBannerSize.matcher(result);
                     Matcher m3 = storedImpNotFound.matcher(result);
                     Matcher m4 = invalidInterstitialSize.matcher(result);
-                    if (m.find()) {
+                    if (m.find() || result.contains("No stored request found")) {
                         failWithResultCode(ResultCode.INVALID_ACCOUNT_ID);
-                    } else if (m3.find()) {
+                    } else if (m3.find() || result.contains("No stored imp found")) {
                         failWithResultCode(ResultCode.INVALID_CONFIG_ID);
-                    } else if (m2.find() || m4.find()) {
+                    } else if (m2.find() || m4.find() || result.contains("Request imp[0].banner.format")) {
                         failWithResultCode(ResultCode.INVALID_SIZE);
                     } else {
                         failWithResultCode(ResultCode.PREBID_SERVER_ERROR);
