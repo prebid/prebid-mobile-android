@@ -24,6 +24,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.webkit.CookieManager;
@@ -39,6 +40,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -61,7 +63,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
     @Override
     public void requestDemand(RequestParams params, DemandAdapterListener listener, String auctionId) {
-        ServerConnector connector = new ServerConnector(listener, params, auctionId);
+        ServerConnector connector = new ServerConnector(this, listener, params, auctionId);
         serverConnectors.add(connector);
         connector.execute();
     }
@@ -78,12 +80,15 @@ class PrebidServerAdapter implements DemandAdapter {
         serverConnectors.removeAll(toRemove);
     }
 
-    class ServerConnector extends AsyncTask<Object, Object, JSONObject> {
+    static class ServerConnector extends AsyncTask<Object, Object, JSONObject> {
+        private WeakReference<PrebidServerAdapter> prebidServerAdapter;
+
         private DemandAdapterListener listener;
         private RequestParams requestParams;
         private String auctionId;
 
-        ServerConnector(DemandAdapterListener listener, RequestParams requestParams, String auctionId) {
+        ServerConnector(PrebidServerAdapter prebidServerAdapter, DemandAdapterListener listener, RequestParams requestParams, String auctionId) {
+            this.prebidServerAdapter = new WeakReference<>(prebidServerAdapter);
             this.listener = listener;
             this.requestParams = requestParams;
             this.auctionId = auctionId;
@@ -250,7 +255,17 @@ class PrebidServerAdapter implements DemandAdapter {
                 }
 
             }
-            serverConnectors.remove(this);
+            removeThisTask();
+        }
+
+        private void removeThisTask() {
+            @Nullable
+            PrebidServerAdapter prebidServerAdapter = this.prebidServerAdapter.get();
+            if (prebidServerAdapter == null) {
+                return;
+            }
+
+            prebidServerAdapter.serverConnectors.remove(this);
         }
 
         String getAuctionId() {
@@ -267,7 +282,8 @@ class PrebidServerAdapter implements DemandAdapter {
             if (this.listener != null) {
                 this.listener.onDemandFailed(code, getAuctionId());
             }
-            serverConnectors.remove(this);
+
+            removeThisTask();
         }
 
 
