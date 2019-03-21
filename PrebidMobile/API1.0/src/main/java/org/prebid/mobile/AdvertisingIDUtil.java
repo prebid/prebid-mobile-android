@@ -16,6 +16,7 @@
 
 package org.prebid.mobile;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -60,6 +61,7 @@ class AdvertisingIDUtil {
      *
      * @param context context to retrieve the AAID on.
      */
+    @SuppressLint("ObsoleteSdkInt")
     static void retrieveAndSetAAID(Context context) {
         if (STATE.FETCHED.equals(state) || STATE.FETCHING.equals(state) || context == null) {
             return;
