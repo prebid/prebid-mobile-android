@@ -22,7 +22,9 @@ import java.lang.ref.WeakReference;
 
 public class PrebidMobile {
 
-    static int timeoutMillis = 2000; // by default use 10000 milliseconds as timeout
+    public static final int TIMEOUT_MILLIS = 2_000;
+
+    static int timeoutMillis = TIMEOUT_MILLIS; // by default use 10000 milliseconds as timeout
     static boolean timeoutMillisUpdated = false;
 
     private PrebidMobile() {
@@ -43,7 +45,7 @@ public class PrebidMobile {
     public static void setPrebidServerHost(Host host) {
         PrebidMobile.host = host;
         timeoutMillisUpdated = false; // each time a developer sets a new Host for the SDK, we should re-calculate the time out millis
-        timeoutMillis = 2000;
+        timeoutMillis = TIMEOUT_MILLIS;
     }
 
     public static Host getPrebidServerHost() {
