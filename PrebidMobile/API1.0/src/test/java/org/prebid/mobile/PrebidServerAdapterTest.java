@@ -532,7 +532,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         adUnit.fetchDemand(testView, mockListener);
         DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
-        fetcher.enableTestMode();
+        PrebidMobile.timeoutMillis = Integer.MAX_VALUE;
         ShadowLooper fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
         fetcherLooper.runOneTask();
         ShadowLooper demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
@@ -545,7 +545,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         OnCompleteListener mockListenerNoKV = mock(OnCompleteListener.class);
         adUnit.fetchDemand(testView, mockListenerNoKV);
         fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
-        fetcher.enableTestMode();
+        PrebidMobile.timeoutMillis = Integer.MAX_VALUE;
         fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
         fetcherLooper.runOneTask();
         demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());

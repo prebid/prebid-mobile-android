@@ -16,6 +16,8 @@
 
 package org.prebid.mobile;
 
+import android.support.annotation.MainThread;
+
 import java.util.HashMap;
 
 /**
@@ -42,8 +44,10 @@ interface DemandAdapter {
     void stopRequest(String auctionId);
 
     interface DemandAdapterListener {
+        @MainThread
         void onDemandReady(HashMap<String, String> demand, String auctionId);
 
+        @MainThread
         void onDemandFailed(ResultCode resultCode, String auctionId);
 
     }

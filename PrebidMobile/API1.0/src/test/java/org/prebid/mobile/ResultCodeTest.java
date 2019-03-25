@@ -84,7 +84,7 @@ public class ResultCodeTest extends BaseSetup {
             OnCompleteListener mockListener = mock(OnCompleteListener.class);
             adUnit.fetchDemand(testView, mockListener);
             DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
-            fetcher.enableTestMode();
+            PrebidMobile.timeoutMillis = Integer.MAX_VALUE;
             ShadowLooper fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
             fetcherLooper.runOneTask();
             ShadowLooper demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
@@ -112,7 +112,7 @@ public class ResultCodeTest extends BaseSetup {
             OnCompleteListener mockListener = mock(OnCompleteListener.class);
             adUnit.fetchDemand(testRequest, mockListener);
             DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
-            fetcher.enableTestMode();
+            PrebidMobile.timeoutMillis = Integer.MAX_VALUE;
             ShadowLooper fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
             fetcherLooper.runOneTask();
             ShadowLooper demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
@@ -164,28 +164,28 @@ public class ResultCodeTest extends BaseSetup {
 
     @Test
     public void testTimeOut() throws Exception {
-        if (successfulMockServerStarted) {
-            HttpUrl httpUrl = server.url("/");
-            Host.CUSTOM.setHostUrl(httpUrl.toString());
-            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-            PrebidMobile.setApplicationContext(activity.getApplicationContext());
-            PrebidMobile.setPrebidServerAccountId("123456");
-            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
-            BannerAdUnit adUnit = new BannerAdUnit("123456", 300, 250);
-            MoPubView testView = new MoPubView(activity);
-            OnCompleteListener mockListener = mock(OnCompleteListener.class);
-            adUnit.fetchDemand(testView, mockListener);
-            DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
-            PrebidMobile.timeoutMillis = 30;
-            ShadowLooper fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
-            fetcherLooper.runOneTask();
-            Robolectric.flushBackgroundThreadScheduler();
-            Robolectric.flushForegroundThreadScheduler();
-            verify(mockListener).onComplete(ResultCode.TIMEOUT);
-            assertEquals(null, testView.getKeywords());
-        } else {
-            assertTrue("Mock server not started", false);
-        }
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.timeoutMillis = 30;
+        PrebidMobile.setPrebidServerAccountId("b7adad2c-e042-4126-8ca1-b3caac7d3e5c");
+        PrebidMobile.setShareGeoLocation(true);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(0, 250));
+        RequestParams requestParams = new RequestParams("e2edc23f-0b3b-4203-81b5-7cc97132f418", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+
+        @SuppressWarnings("unchecked")
+        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+        PrebidServerAdapter.ServerConnector.TimeoutCountDownTimer timeoutCountDownTimer = (PrebidServerAdapter.ServerConnector.TimeoutCountDownTimer) FieldUtils.readDeclaredField(connector, "timeoutCountDownTimer", true);
+        shadowOf(timeoutCountDownTimer).invokeFinish();
+
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onDemandFailed(ResultCode.TIMEOUT, uuid);
     }
 
     @Test
@@ -202,7 +202,7 @@ public class ResultCodeTest extends BaseSetup {
             OnCompleteListener mockListener = mock(OnCompleteListener.class);
             adUnit.fetchDemand(testView, mockListener);
             DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
-            fetcher.enableTestMode();
+            PrebidMobile.timeoutMillis = Integer.MAX_VALUE;
             ShadowLooper fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
             fetcherLooper.runOneTask();
             ShadowLooper demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
