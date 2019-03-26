@@ -482,7 +482,7 @@ public class ExtraTests {
                 adObject.setMinimumHeight(250);
                 adObject.setMinimumWidth(300);
                 BannerAdUnit adUnit = new BannerAdUnit("67bac530-9832-4f78-8c94-fbf88ac7bd14", 300, 250);
-                adUnit.addUserKeyword("pbm_key", "pbm_value1");
+                TargetingParams.addUserKeyword("pbm_key", "pbm_value1");
                 OnCompleteListener l = new OnCompleteListener() {
                     @Override
                     public void onComplete(ResultCode resultCode) {
@@ -517,7 +517,7 @@ public class ExtraTests {
                 adObject.setMinimumHeight(250);
                 adObject.setMinimumWidth(300);
                 BannerAdUnit adUnit = new BannerAdUnit("67bac530-9832-4f78-8c94-fbf88ac7bd14", 300, 250);
-                adUnit.addUserKeyword("pbm_key", "pbm_value2");
+                TargetingParams.addUserKeyword("pbm_key", "pbm_value2");
                 OnCompleteListener l = new OnCompleteListener() {
                     @Override
                     public void onComplete(ResultCode resultCode) {
