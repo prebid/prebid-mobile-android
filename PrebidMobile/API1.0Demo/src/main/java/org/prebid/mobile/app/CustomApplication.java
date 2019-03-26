@@ -49,7 +49,7 @@ public class CustomApplication extends Application {
         //set Prebid Mobile global Settings
         //region PrebidMobile API
         PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID);
-        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         //TargetingParams.addInvKeyword("testKeyInv", "testValueInv");
         //TargetingParams.addUserKeyword("testKeyUser", "testValueUser");
         PrebidMobile.setShareGeoLocation(true);
