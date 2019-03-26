@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 
@@ -40,6 +41,8 @@ public class TargetingParams {
     private static final String IABConsent_ConsentString = "IABConsent_ConsentString";
     private static final String PREBID_GDPR_KEY = "Prebid_GDPR";
     private static final String IABConsent_SubjectToGDPR = "IABConsent_SubjectToGDPR";
+    private static ArrayList<String> userKeywords = new ArrayList<String>();
+    private static ArrayList<String> invKeywords = new ArrayList<String>();
     //endregion
 
     //region Private Constructor
@@ -204,6 +207,102 @@ public class TargetingParams {
      */
     public static synchronized String getStoreUrl() {
         return storeUrl;
+    }
+
+    /**
+     * Get the user keyword targeting of your app
+     *
+     * @return userKeywords
+     */
+    public static synchronized ArrayList<String> getUserKeywords() {
+        return userKeywords;
+    }
+
+    /**
+     * Get the inventory keyword targeting of your app
+     *
+     * @return invKeywords
+     */
+    public static synchronized ArrayList<String> getInvKeywords() {
+        return invKeywords;
+    }
+
+    public static void addUserKeyword(String key, String value) {
+        if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
+            TargetingParams.userKeywords.add(key + "=" + value);
+        } else if (!TextUtils.isEmpty(key)) {
+            TargetingParams.userKeywords.add(key);
+        }
+    }
+
+    public static void addInvKeyword(String key, String value) {
+        if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
+            TargetingParams.invKeywords.add(key + "=" + value);
+        } else if (!TextUtils.isEmpty(key)) {
+            TargetingParams.invKeywords.add(key);
+        }
+    }
+
+    public static void addUserKeywords(String key, String[] values) {
+        if (!TextUtils.isEmpty(key) && values.length > 0) {
+            TargetingParams.userKeywords.clear();
+            for (String value : values) {
+                TargetingParams.userKeywords.add(key + "=" + value);
+            }
+        } else if (!TextUtils.isEmpty(key)) {
+            TargetingParams.userKeywords.clear();
+            TargetingParams.userKeywords.add(key);
+        }
+    }
+
+    public static void addInvKeywords(String key, String[] values) {
+        if (!TextUtils.isEmpty(key) && values.length > 0) {
+            TargetingParams.invKeywords.clear();
+            for (String value : values) {
+                TargetingParams.invKeywords.add(key + "=" + value);
+            }
+        } else if (!TextUtils.isEmpty(key)) {
+            TargetingParams.invKeywords.clear();
+            TargetingParams.invKeywords.add(key);
+        }
+    }
+
+    public static void removeUserKeyword(String key) {
+        ArrayList<String> toBeRemoved = new ArrayList<>();
+        for (String keyword : TargetingParams.userKeywords) {
+            if (keyword.equals(key)) {
+                toBeRemoved.add(keyword);
+            } else {
+                String[] keyValuePair = keyword.split("=");
+                if (keyValuePair[0].equals(key)) {
+                    toBeRemoved.add(keyword);
+                }
+            }
+        }
+        TargetingParams.userKeywords.removeAll(toBeRemoved);
+    }
+
+    public static void removeInvKeyword(String key) {
+        ArrayList<String> toBeRemoved = new ArrayList<>();
+        for (String keyword : TargetingParams.invKeywords) {
+            if (keyword.equals(key)) {
+                toBeRemoved.add(keyword);
+            } else {
+                String[] keyValuePair = keyword.split("=");
+                if (keyValuePair[0].equals(key)) {
+                    toBeRemoved.add(keyword);
+                }
+            }
+        }
+        TargetingParams.invKeywords.removeAll(toBeRemoved);
+    }
+
+    public static void clearUserKeywords() {
+        TargetingParams.userKeywords.clear();
+    }
+
+    public static void clearInvKeywords() {
+        TargetingParams.invKeywords.clear();
     }
 
 

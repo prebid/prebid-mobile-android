@@ -685,6 +685,15 @@ class PrebidServerAdapter implements DemandAdapter {
                 if (!TextUtils.isEmpty(TargetingParams.getStoreUrl())) {
                     app.put("storeurl", TargetingParams.getStoreUrl());
                 }
+                StringBuilder builderInv = new StringBuilder();
+                ArrayList<String> invKeywords = TargetingParams.getInvKeywords();
+                for (String key : invKeywords) {
+                    builderInv.append(key).append(",");
+                }
+                String finalInvKeywords = builderInv.toString();
+                if (!TextUtils.isEmpty(finalInvKeywords)) {
+                    app.put("keywords", finalInvKeywords);
+                }
                 JSONObject publisher = new JSONObject();
                 publisher.put("id", PrebidMobile.getPrebidServerAccountId());
                 app.put("publisher", publisher);
@@ -721,14 +730,14 @@ class PrebidServerAdapter implements DemandAdapter {
                         break;
                 }
                 user.put("gender", g);
-                StringBuilder builder = new StringBuilder();
-                ArrayList<String> keywords = this.requestParams.getKeywords();
-                for (String key : keywords) {
-                    builder.append(key).append(",");
+                StringBuilder builderUser = new StringBuilder();
+                ArrayList<String> userKeywords = TargetingParams.getUserKeywords();
+                for (String key : userKeywords) {
+                    builderUser.append(key).append(",");
                 }
-                String finalKeywords = builder.toString();
-                if (!TextUtils.isEmpty(finalKeywords)) {
-                    user.put("keywords", finalKeywords);
+                String finalUserKeywords = builderUser.toString();
+                if (!TextUtils.isEmpty(finalUserKeywords)) {
+                    user.put("keywords", finalUserKeywords);
                 }
                 if (TargetingParams.isSubjectToGDPR() != null) {
                     JSONObject ext = new JSONObject();

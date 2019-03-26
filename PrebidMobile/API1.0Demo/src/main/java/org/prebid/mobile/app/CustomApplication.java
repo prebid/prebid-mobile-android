@@ -26,6 +26,7 @@ import com.mopub.common.SdkConfiguration;
 
 import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.TargetingParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,9 @@ public class CustomApplication extends Application {
         //set Prebid Mobile global Settings
         //region PrebidMobile API
         PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID);
-        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        //TargetingParams.addInvKeyword("testKeyInv", "testValueInv");
+        //TargetingParams.addUserKeyword("testKeyUser", "testValueUser");
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(getApplicationContext());
         //endregion

@@ -24,7 +24,6 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 public abstract class AdUnit {
@@ -32,7 +31,6 @@ public abstract class AdUnit {
 
     private String configId;
     private AdType adType;
-    private ArrayList<String> keywords;
     private DemandFetcher fetcher;
     private int periodMillis;
 
@@ -40,7 +38,6 @@ public abstract class AdUnit {
         this.configId = configId;
         this.adType = adType;
         this.periodMillis = 0; // by default no auto refresh
-        this.keywords = new ArrayList<>();
     }
 
     public void setAutoRefreshPeriodMillis(@IntRange(from = MIN_AUTO_REFRESH_PERIOD_MILLIS) int periodMillis) {
@@ -107,7 +104,7 @@ public abstract class AdUnit {
         }
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
-            RequestParams requestParams = new RequestParams(configId, adType, sizes, keywords);
+            RequestParams requestParams = new RequestParams(configId, adType, sizes);
             fetcher.setPeriodMillis(periodMillis);
             fetcher.setRequestParams(requestParams);
             fetcher.setListener(listener);
@@ -122,47 +119,6 @@ public abstract class AdUnit {
         }
 
     }
-
-
-    public void addUserKeyword(String key, String value) {
-        if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
-            keywords.add(key + "=" + value);
-        } else if (!TextUtils.isEmpty(key)) {
-            keywords.add(key);
-        }
-    }
-
-    public void addUserKeywords(String key, String[] values) {
-        if (!TextUtils.isEmpty(key) && values.length > 0) {
-            keywords.clear();
-            for (String value : values) {
-                keywords.add(key + "=" + value);
-            }
-        } else if (!TextUtils.isEmpty(key)) {
-            keywords.clear();
-            keywords.add(key);
-        }
-    }
-
-    public void removeUserKeyword(String key) {
-        ArrayList<String> toBeRemoved = new ArrayList<>();
-        for (String keyword : keywords) {
-            if (keyword.equals(key)) {
-                toBeRemoved.add(keyword);
-            } else {
-                String[] keyValuePair = keyword.split("=");
-                if (keyValuePair[0].equals(key)) {
-                    toBeRemoved.add(keyword);
-                }
-            }
-        }
-        keywords.removeAll(toBeRemoved);
-    }
-
-    public void clearUserKeywords() {
-        keywords.clear();
-    }
-
 
 }
 

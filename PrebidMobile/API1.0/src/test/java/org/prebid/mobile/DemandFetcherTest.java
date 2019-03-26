@@ -34,7 +34,6 @@ import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLooper;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import okhttp3.HttpUrl;
@@ -59,8 +58,7 @@ public class DemandFetcherTest extends BaseSetup {
             demandFetcher.setPeriodMillis(0);
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            ArrayList<String> keywords = new ArrayList<>();
-            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes, keywords);
+            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
             demandFetcher.setRequestParams(requestParams);
             assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
             demandFetcher.start();
@@ -90,8 +88,7 @@ public class DemandFetcherTest extends BaseSetup {
             demandFetcher.setPeriodMillis(0);
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            ArrayList<String> keywords = new ArrayList<>();
-            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes, keywords);
+            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
             demandFetcher.setRequestParams(requestParams);
             OnCompleteListener mockListener = mock(OnCompleteListener.class);
             demandFetcher.setListener(mockListener);
@@ -128,8 +125,7 @@ public class DemandFetcherTest extends BaseSetup {
             demandFetcher.setPeriodMillis(30);
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            ArrayList<String> keywords = new ArrayList<>();
-            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes, keywords);
+            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
             demandFetcher.setRequestParams(requestParams);
             OnCompleteListener mockListener = mock(OnCompleteListener.class);
             demandFetcher.setListener(mockListener);
@@ -167,8 +163,7 @@ public class DemandFetcherTest extends BaseSetup {
             demandFetcher.setPeriodMillis(0);
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            ArrayList<String> keywords = new ArrayList<>();
-            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes, keywords);
+            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
             demandFetcher.setRequestParams(requestParams);
             OnCompleteListener mockListener = mock(OnCompleteListener.class);
             demandFetcher.setListener(mockListener);
@@ -224,8 +219,7 @@ public class DemandFetcherTest extends BaseSetup {
             demandFetcher.setPeriodMillis(0);
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            ArrayList<String> keywords = new ArrayList<>();
-            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes, keywords);
+            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
             demandFetcher.setRequestParams(requestParams);
             OnCompleteListener mockListener = mock(OnCompleteListener.class);
             demandFetcher.setListener(mockListener);
@@ -262,8 +256,7 @@ public class DemandFetcherTest extends BaseSetup {
             demandFetcher.setPeriodMillis(2000);
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            ArrayList<String> keywords = new ArrayList<>();
-            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes, keywords);
+            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
             demandFetcher.setRequestParams(requestParams);
             OnCompleteListener mockListener = mock(OnCompleteListener.class);
             demandFetcher.setListener(mockListener);
@@ -308,8 +301,7 @@ public class DemandFetcherTest extends BaseSetup {
             demandFetcher.setPeriodMillis(2000);
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            ArrayList<String> keywords = new ArrayList<>();
-            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes, keywords);
+            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
             demandFetcher.setRequestParams(requestParams);
             OnCompleteListener mockListener = mock(OnCompleteListener.class);
             demandFetcher.setListener(mockListener);

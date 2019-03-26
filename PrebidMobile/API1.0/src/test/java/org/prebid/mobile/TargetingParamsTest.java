@@ -23,6 +23,7 @@ import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import static junit.framework.Assert.assertEquals;
@@ -102,5 +103,87 @@ public class TargetingParamsTest extends BaseSetup {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         TargetingParams.setGDPRConsentString("testString");
         assertEquals("testString", TargetingParams.getGDPRConsentString());
+    }
+
+    @Test
+    public void testSetUserKeyword() throws Exception {
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        FieldUtils.writeStaticField(TargetingParams.class, "userKeywords", new ArrayList<String>(), true);
+        TargetingParams.addUserKeyword("key", "value");
+        TargetingParams.addUserKeyword("key1", null);
+        @SuppressWarnings("unchecked")
+        ArrayList<String> keywords = TargetingParams.getUserKeywords();
+        assertEquals(2, keywords.size());
+        assertEquals("key=value", keywords.get(0));
+        assertEquals("key1", keywords.get(1));
+        TargetingParams.addUserKeyword("key", "value2");
+        assertEquals(3, keywords.size());
+        assertEquals("key=value", keywords.get(0));
+        assertEquals("key1", keywords.get(1));
+        assertEquals("key=value2", keywords.get(2));
+        TargetingParams.removeUserKeyword("key");
+        assertEquals(1, keywords.size());
+        assertEquals("key1", keywords.get(0));
+        TargetingParams.clearUserKeywords();
+        assertEquals(0, keywords.size());
+    }
+
+    @Test
+    public void testSetUserKeywords() throws Exception {
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        FieldUtils.writeStaticField(TargetingParams.class, "userKeywords", new ArrayList<String>(), true);
+        TargetingParams.addUserKeyword("key1", "value1");
+        String[] values = {"value1", "value2"};
+        TargetingParams.addUserKeywords("key2", values);
+        @SuppressWarnings("unchecked")
+        ArrayList<String> keywords = TargetingParams.getUserKeywords();
+        assertEquals(2, keywords.size());
+        assertEquals("key2=value1", keywords.get(0));
+        assertEquals("key2=value2", keywords.get(1));
+        TargetingParams.addUserKeywords("key1", values);
+        assertEquals(2, keywords.size());
+        assertEquals("key1=value1", keywords.get(0));
+        assertEquals("key1=value2", keywords.get(1));
+    }
+
+    @Test
+    public void testSetInvKeyword() throws Exception {
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        FieldUtils.writeStaticField(TargetingParams.class, "invKeywords", new ArrayList<String>(), true);
+        TargetingParams.addInvKeyword("key", "value");
+        TargetingParams.addInvKeyword("key1", null);
+        @SuppressWarnings("unchecked")
+        ArrayList<String> keywords = TargetingParams.getInvKeywords();
+        assertEquals(2, keywords.size());
+        assertEquals("key=value", keywords.get(0));
+        assertEquals("key1", keywords.get(1));
+        TargetingParams.addInvKeyword("key", "value2");
+        assertEquals(3, keywords.size());
+        assertEquals("key=value", keywords.get(0));
+        assertEquals("key1", keywords.get(1));
+        assertEquals("key=value2", keywords.get(2));
+        TargetingParams.removeInvKeyword("key");
+        assertEquals(1, keywords.size());
+        assertEquals("key1", keywords.get(0));
+        TargetingParams.clearInvKeywords();
+        assertEquals(0, keywords.size());
+    }
+
+    @Test
+    public void testSetInvKeywords() throws Exception {
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        FieldUtils.writeStaticField(TargetingParams.class, "invKeywords", new ArrayList<String>(), true);
+        TargetingParams.addInvKeyword("key1", "value1");
+        String[] values = {"value1", "value2"};
+        TargetingParams.addInvKeywords("key2", values);
+        @SuppressWarnings("unchecked")
+        ArrayList<String> keywords = TargetingParams.getInvKeywords();
+        assertEquals(2, keywords.size());
+        assertEquals("key2=value1", keywords.get(0));
+        assertEquals("key2=value2", keywords.get(1));
+        TargetingParams.addInvKeywords("key1", values);
+        assertEquals(2, keywords.size());
+        assertEquals("key1=value1", keywords.get(0));
+        assertEquals("key1=value2", keywords.get(1));
     }
 }
