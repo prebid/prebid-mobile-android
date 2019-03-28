@@ -1,0 +1,67 @@
+{
+  "id": "914092c6-e619-4d75-9bde-4c7dbff99c42",
+  "seatbid": [
+    {
+      "bid": [
+        {
+          "id": "0",
+          "impid": "Banner_300x250",
+          "price": 1.230000,
+          "adm": "<script src=\"hello world\">this is a mock ad</script>",
+          "crid": "4458534",
+          "w": 300,
+          "h": 250,
+          "ext": {
+            "prebid": {
+              "targeting": {
+                "hb_env": "mobile-app",
+                "hb_cache_hostpath": "https://prebid-cache-europe.rubiconproject.com/cache",
+                "hb_size_rubicon": "300x250",
+                "hb_cache_id": "a2f41588-4727-425c-9ef0-3b382debef1e",
+                "hb_cache_path_rubicon": "/cache",
+                "hb_cache_host_rubicon": "prebid-cache-europe.rubiconproject.com",
+                "hb_pb": "1.20",
+                "hb_pb_rubicon": "1.20",
+                "hb_cache_id_rubicon": "a2f41588-4727-425c-9ef0-3b382debef1e",
+                "hb_cache_path": "/cache",
+                "hb_size": "300x250",
+                "hb_cache_hostpath_rubicon": "https://prebid-cache-europe.rubiconproject.com/cache",
+                "hb_env_rubicon": "mobile-app",
+                "hb_bidder": "rubicon",
+                "hb_bidder_rubicon": "rubicon",
+                "hb_cache_host": "prebid-cache-europe.rubiconproject.com"
+              },
+              "cache": {
+                "bids": {
+                  "url": "https://prebid-cache-europe.rubiconproject.com/cache?uuid=a2f41588-4727-425c-9ef0-3b382debef1e",
+                  "cacheId": "a2f41588-4727-425c-9ef0-3b382debef1e"
+                }
+              }
+            },
+            "bidder": {
+              "rp": {
+                "targeting": [{
+                  "key": "rpfl_1001",
+                  "values": ["15_tier0100"]
+                }],
+                "mime": "text/html",
+                "size_id": 15
+              }
+            }
+          }
+        }
+      ],
+      "seat": "rubicon",
+      "group": 0
+    }
+  ],
+  "cur": "USD",
+  "ext": {
+    "responsetimemillis": {
+      "cache": 6,
+      "appnexus": 108,
+      "rubicon": 10
+    },
+    "tmaxrequest": 2000
+  }
+}
