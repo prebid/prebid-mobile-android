@@ -74,13 +74,13 @@ public class DemoActivity extends AppCompatActivity {
         int height = Integer.valueOf(wAndH[1]);
         if (width == 300 && height == 250) {
             dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_300x250);
-            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND, width, height);
+            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250, width, height);
         } else if (width == 320 && height == 50) {
             dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_300x250);
-            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50_APPNEXUS_DEMAND, width, height);
+            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
         } else {
-            dfpAdView.setAdUnitId(Constants.DFP_BANNER_ALL_SIZES);
-            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50_APPNEXUS_DEMAND, width, height);
+            dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES);
+            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
         }
         dfpAdView.setAdSizes(new AdSize(width, height));
         adFrame.addView(dfpAdView);
@@ -127,7 +127,7 @@ public class DemoActivity extends AppCompatActivity {
                         .show();
             }
         });
-        adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL_APPNEXUS_DEMAND);
+        adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL);
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
@@ -152,10 +152,10 @@ public class DemoActivity extends AppCompatActivity {
         final MoPubView adView = new MoPubView(this);
         if (width == 300 && height == 250) {
             adView.setAdUnitId(MOPUB_BANNER_ADUNIT_ID_300x250);
-            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND, 300, 250);
+            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250, 300, 250);
         } else {
             adView.setAdUnitId(MOPUB_BANNER_ADUNIT_ID_320x50);
-            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50_APPNEXUS_DEMAND, 320, 50);
+            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, 320, 50);
         }
         adView.setMinimumWidth(width);
         adView.setMinimumHeight(height);
@@ -209,7 +209,7 @@ public class DemoActivity extends AppCompatActivity {
 
             }
         });
-        adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL_APPNEXUS_DEMAND);
+        adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL);
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
         adUnit.fetchDemand(interstitial, new OnCompleteListener() {
