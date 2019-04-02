@@ -170,24 +170,6 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
-    public void testInvalidPrebidServerIdSyntaxForRubiconHostedPrebidServer() {
-        PrebidMobile.setPrebidServerHost(Host.RUBICON);
-        PrebidMobile.setPrebidServerAccountId("1001");
-        PrebidMobile.setShareGeoLocation(true);
-        PrebidMobile.setApplicationContext(activity.getApplicationContext());
-        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
-        PrebidServerAdapter adapter = new PrebidServerAdapter();
-        HashSet<AdSize> sizes = new HashSet<>();
-        sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("1001-1%", AdType.BANNER, sizes, new ArrayList<String>());
-        String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
-        Robolectric.flushBackgroundThreadScheduler();
-        Robolectric.flushForegroundThreadScheduler();
-        verify(mockListener).onDemandFailed(ResultCode.PREBID_SERVER_ERROR, uuid);
-    }
-
-    @Test
     public void testInvalidPrebidServerIdSyntaxForAppNexusHostedPrebidServer2() {
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
