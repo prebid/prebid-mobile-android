@@ -6,7 +6,6 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 public class ViewMinSizeMatcher extends TypeSafeMatcher<View> {
-    // field to store values
     private final int expectedMinWith;
     private final int expectedMinHeight;
 
@@ -18,15 +17,9 @@ public class ViewMinSizeMatcher extends TypeSafeMatcher<View> {
 
     @Override
     protected boolean matchesSafely(View target) {
-        // stop executing if target is not textview
-//            if (!(target instanceof TextView)){
-//                return false;
-//            }
-        // target is a text view so apply casting then retrieve and test the desired value
-//            TextView targetEditText = (TextView) target;
-
         int targetWidth = target.getWidth();
         int targetHeight = target.getHeight();
+
         return targetWidth >= expectedMinWith && targetHeight >= expectedMinHeight;
     }
 
