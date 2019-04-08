@@ -22,6 +22,7 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.testutils.ViewMinSizeMatcher;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -55,7 +56,9 @@ public class DFPBannerTest {
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
-        onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
+        onView(withId(R.id.adFrame))
+                .check(matches(isDisplayed()))
+                .check(matches(new ViewMinSizeMatcher(300, 250)));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
@@ -74,7 +77,9 @@ public class DFPBannerTest {
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
-        onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
+        onView(withId(R.id.adFrame))
+                .check(matches(isDisplayed()))
+                .check(matches(new ViewMinSizeMatcher(300, 250)));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
 
@@ -89,7 +94,9 @@ public class DFPBannerTest {
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
-        onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
+        onView(withId(R.id.adFrame))
+                .check(matches(isDisplayed()))
+                .check(matches(new ViewMinSizeMatcher(320, 50)));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
@@ -103,7 +110,9 @@ public class DFPBannerTest {
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
-        onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
+        onView(withId(R.id.adFrame))
+                .check(matches(isDisplayed()))
+                .check(matches(new ViewMinSizeMatcher(300, 250)));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
