@@ -58,7 +58,7 @@ public class DFPBannerTest {
         assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame))
                 .check(matches(isDisplayed()))
-                .check(matches(new ViewMinSizeMatcher(300, 250)));
+                .check(matches(new ViewMinSizeMatcher(2, 2)));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
@@ -79,7 +79,7 @@ public class DFPBannerTest {
         assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame))
                 .check(matches(isDisplayed()))
-                .check(matches(new ViewMinSizeMatcher(300, 250)));
+                .check(matches(new ViewMinSizeMatcher(2, 2)));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
 
@@ -96,7 +96,7 @@ public class DFPBannerTest {
         assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame))
                 .check(matches(isDisplayed()))
-                .check(matches(new ViewMinSizeMatcher(320, 50)));
+                .check(matches(new ViewMinSizeMatcher(2, 2)));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
@@ -112,7 +112,7 @@ public class DFPBannerTest {
         assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame))
                 .check(matches(isDisplayed()))
-                .check(matches(new ViewMinSizeMatcher(300, 250)));
+                .check(matches(new ViewMinSizeMatcher(2, 2)));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
