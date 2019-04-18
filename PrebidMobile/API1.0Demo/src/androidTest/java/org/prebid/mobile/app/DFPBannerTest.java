@@ -19,7 +19,10 @@ package org.prebid.mobile.app;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.Host;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.testutils.ViewMinSizeMatcher;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
@@ -53,11 +56,33 @@ public class DFPBannerTest {
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
-        onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
+        onView(withId(R.id.adFrame))
+                .check(matches(isDisplayed()))
+                .check(matches(new ViewMinSizeMatcher(2, 2)));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         Thread.sleep(120000);
+        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+    }
+
+    @Test
+    public void testRubiconDFPBannerWithoutAutoRefreshAndSize300x250() throws Exception {
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
+        Constants.PBS_CONFIG_ID_300x250 = Constants.PBS_CONFIG_ID_300x250_RUBICON;
+        Constants.DFP_BANNER_ADUNIT_ID_300x250 = Constants.DFP_BANNER_ADUNIT_ID_300x250_RUBICON;
+
+        onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
+        onView(withId(R.id.showAd)).perform(click());
+        Thread.sleep(10000);
+        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
+        onView(withId(R.id.adFrame))
+                .check(matches(isDisplayed()))
+                .check(matches(new ViewMinSizeMatcher(2, 2)));
+        onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
+        onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
+
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
@@ -69,7 +94,9 @@ public class DFPBannerTest {
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
-        onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
+        onView(withId(R.id.adFrame))
+                .check(matches(isDisplayed()))
+                .check(matches(new ViewMinSizeMatcher(2, 2)));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
@@ -83,7 +110,9 @@ public class DFPBannerTest {
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
-        onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
+        onView(withId(R.id.adFrame))
+                .check(matches(isDisplayed()))
+                .check(matches(new ViewMinSizeMatcher(2, 2)));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);

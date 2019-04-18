@@ -192,9 +192,9 @@ class PrebidServerAdapter implements DemandAdapter {
                     Matcher m2 = invalidBannerSize.matcher(result);
                     Matcher m3 = storedImpNotFound.matcher(result);
                     Matcher m4 = invalidInterstitialSize.matcher(result);
-                    if (m.find() || result.contains("No stored request found")) {
+                    if (m.find() || result.contains("No stored request")) {
                         return new AsyncTaskResult<>(ResultCode.INVALID_ACCOUNT_ID);
-                    } else if (m3.find() || result.contains("No stored imp found")) {
+                    } else if (m3.find() || result.contains("No stored imp")) {
                         return new AsyncTaskResult<>(ResultCode.INVALID_CONFIG_ID);
                     } else if (m2.find() || m4.find() || result.contains("Request imp[0].banner.format")) {
                         return new AsyncTaskResult<>(ResultCode.INVALID_SIZE);

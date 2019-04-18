@@ -97,6 +97,23 @@ public class PrebidServerAdapterTest extends BaseSetup {
         verify(mockListener).onDemandFailed(ResultCode.INVALID_ACCOUNT_ID, uuid);
     }
 
+    @Test
+    public void testInvalidPrebidServerAccountIdForRubiconHostedPrebidServer() {
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setPrebidServerAccountId("1001_INVALID_ACCOUNT_ID");
+        PrebidMobile.setShareGeoLocation(true);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+        RequestParams requestParams = new RequestParams("1001-1", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onDemandFailed(ResultCode.INVALID_ACCOUNT_ID, uuid);
+    }
 
     @Test
     public void testInvalidPrebidServerConfigIdForAppNexusHostedPrebidServer() {
@@ -109,6 +126,24 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
         RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-ffffffffffff", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onDemandFailed(ResultCode.INVALID_CONFIG_ID, uuid);
+    }
+
+    @Test
+    public void testInvalidPrebidServerConfigIdForRubiconHostedPrebidServer() {
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setPrebidServerAccountId("1001");
+        PrebidMobile.setShareGeoLocation(true);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+        RequestParams requestParams = new RequestParams("1001-1_INVALID_CONFIG_ID", AdType.BANNER, sizes, new ArrayList<String>());
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -232,6 +267,32 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
+    public void testNoBidRubiconResponse() {
+        if (!successfulMockServerStarted) {
+            fail("Server failed to start, unable to test.");
+        }
+
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBidFromRubicon()));
+        HttpUrl hostUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(hostUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setPrebidServerAccountId("12345");
+        PrebidMobile.setShareGeoLocation(true);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(320, 50));
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
+
+    }
+
+    @Test
     public void testSuccessfulBidResponse() {
         if (successfulMockServerStarted) {
             server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
@@ -268,6 +329,50 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
+    public void testSuccessfulBidRubiconResponse() {
+        if (!successfulMockServerStarted) {
+            fail("Server failed to start, unable to test.");
+        }
+
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromRubicon()));
+        HttpUrl hostUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(hostUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setPrebidServerAccountId("12345");
+        PrebidMobile.setShareGeoLocation(true);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        HashMap<String, String> bids = new HashMap<String, String>();
+        bids.put("hb_bidder", "rubicon");
+        bids.put("hb_bidder_rubicon", "rubicon");
+        bids.put("hb_cache_id", "a2f41588-4727-425c-9ef0-3b382debef1e");
+        bids.put("hb_cache_id_rubicon", "a2f41588-4727-425c-9ef0-3b382debef1e");
+        bids.put("hb_env", "mobile-app");
+        bids.put("hb_env_rubicon", "mobile-app");
+        bids.put("hb_pb", "1.20");
+        bids.put("hb_pb_rubicon", "1.20");
+        bids.put("hb_size", "300x250");
+        bids.put("hb_size_rubicon", "300x250");
+
+        bids.put("hb_cache_hostpath", "https://prebid-cache-europe.rubiconproject.com/cache");
+        bids.put("hb_cache_hostpath_rubicon", "https://prebid-cache-europe.rubiconproject.com/cache");
+        bids.put("hb_cache_path", "/cache");
+        bids.put("hb_cache_path_rubicon", "/cache");
+        bids.put("hb_cache_host", "prebid-cache-europe.rubiconproject.com");
+        bids.put("hb_cache_host_rubicon", "prebid-cache-europe.rubiconproject.com");
+        verify(mockListener).onDemandReady(bids, uuid);
+
+    }
+
+    @Test
     public void testSuccessfulBidResponseWithoutCacheId() {
         if (successfulMockServerStarted) {
             server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.invalidBidResponseWithoutCacheId()));
@@ -290,6 +395,31 @@ public class PrebidServerAdapterTest extends BaseSetup {
         } else {
             assertTrue("Server failed to start, unable to test.", false);
         }
+    }
+
+    @Test
+    public void testSuccessfulBidRubiconResponseWithoutCacheId() {
+        if (!successfulMockServerStarted) {
+            fail("Server failed to start, unable to test.");
+        }
+
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.invalidBidRubiconResponseWithoutCacheId()));
+        HttpUrl hostUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(hostUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setPrebidServerAccountId("12345");
+        PrebidMobile.setShareGeoLocation(true);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
     }
 
     @Test

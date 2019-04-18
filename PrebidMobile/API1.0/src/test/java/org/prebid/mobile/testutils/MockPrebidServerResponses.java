@@ -27,8 +27,18 @@ public class MockPrebidServerResponses {
         return inputStreamToString(in);
     }
 
+    public static String noBidFromRubicon() {
+        InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerNoBidFromRubiconResponse.json");
+        return inputStreamToString(in);
+    }
+
     public static String oneBidFromAppNexus() {
         InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerOneBidFromAppNexusResponse.json");
+        return inputStreamToString(in);
+    }
+
+    public static String oneBidFromRubicon() {
+        InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerOneBidFromRubiconResponse.json");
         return inputStreamToString(in);
     }
 
@@ -39,6 +49,11 @@ public class MockPrebidServerResponses {
 
     public static String invalidBidResponseWithoutCacheId() {
         InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerInvalidBidResponseWithoutCacheId.json");
+        return inputStreamToString(in);
+    }
+
+    public static String invalidBidRubiconResponseWithoutCacheId() {
+        InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerInvalidBidRubiconResponseWithoutCacheId.json");
         return inputStreamToString(in);
     }
 

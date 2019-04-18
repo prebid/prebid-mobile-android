@@ -23,6 +23,7 @@ import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.mopub.mobileads.MoPubView;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -43,6 +44,7 @@ import okhttp3.mockwebserver.MockResponse;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -211,6 +213,93 @@ public class DemandFetcherTest extends BaseSetup {
     }
 
     @Test
+    public void testSingleRequestOneBidRubiconResponseForDFPAdObject() throws Exception {
+        if (!successfulMockServerStarted) {
+            fail("Mock server was not started");
+        }
+
+        HttpUrl httpUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(httpUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromRubicon()));
+        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        PublisherAdRequest request = builder.build();
+        DemandFetcher demandFetcher = new DemandFetcher(request);
+        PrebidMobile.timeoutMillis = Integer.MAX_VALUE;
+        demandFetcher.setPeriodMillis(0);
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+        ArrayList<String> keywords = new ArrayList<>();
+        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes, keywords);
+        demandFetcher.setRequestParams(requestParams);
+        OnCompleteListener mockListener = mock(OnCompleteListener.class);
+        demandFetcher.setListener(mockListener);
+        assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
+        demandFetcher.start();
+        assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
+        ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
+        fetcherLooper.runOneTask();
+        ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
+        demandLooper.runOneTask();
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onComplete(ResultCode.SUCCESS);
+        assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
+
+        Bundle bundle = request.getCustomTargeting();
+        Assert.assertEquals(16, bundle.size());
+        String hb_pb = "hb_pb";
+        Assert.assertTrue(bundle.containsKey(hb_pb));
+        Assert.assertEquals("1.20", bundle.get(hb_pb));
+        String hb_pb_rubicon = "hb_pb_rubicon";
+        Assert.assertTrue(bundle.containsKey(hb_pb_rubicon));
+        Assert.assertEquals("1.20", bundle.get(hb_pb_rubicon));
+        String hb_bidder = "hb_bidder";
+        Assert.assertTrue(bundle.containsKey(hb_bidder));
+        Assert.assertEquals("rubicon", bundle.get(hb_bidder));
+        String hb_bidder_rubicon = "hb_bidder_rubicon";
+        Assert.assertTrue(bundle.containsKey(hb_bidder_rubicon));
+        Assert.assertEquals("rubicon", bundle.get(hb_bidder_rubicon));
+        String hb_cache_id = "hb_cache_id";
+        Assert.assertTrue(bundle.containsKey(hb_cache_id));
+        Assert.assertEquals("a2f41588-4727-425c-9ef0-3b382debef1e", bundle.get(hb_cache_id));
+        String hb_cache_id_rubicon = "hb_cache_id_rubicon";
+        Assert.assertTrue(bundle.containsKey(hb_cache_id_rubicon));
+        Assert.assertEquals("a2f41588-4727-425c-9ef0-3b382debef1e", bundle.get(hb_cache_id_rubicon));
+        String hb_env = "hb_env";
+        Assert.assertTrue(bundle.containsKey(hb_env));
+        Assert.assertEquals("mobile-app", bundle.get(hb_env));
+        String hb_env_rubicon = "hb_env_rubicon";
+        Assert.assertTrue(bundle.containsKey(hb_env_rubicon));
+        Assert.assertEquals("mobile-app", bundle.get(hb_env_rubicon));
+        String hb_size = "hb_size";
+        Assert.assertTrue(bundle.containsKey(hb_size));
+        Assert.assertEquals("300x250", bundle.get(hb_size));
+        String hb_size_rubicon = "hb_size_rubicon";
+        Assert.assertTrue(bundle.containsKey(hb_size_rubicon));
+        Assert.assertEquals("300x250", bundle.get(hb_size_rubicon));
+
+        String hb_cache_hostpath = "hb_cache_hostpath";
+        Assert.assertTrue(bundle.containsKey(hb_cache_hostpath));
+        Assert.assertEquals("https://prebid-cache-europe.rubiconproject.com/cache", bundle.get(hb_cache_hostpath));
+        String hb_cache_hostpath_rubicon = "hb_cache_hostpath_rubicon";
+        Assert.assertTrue(bundle.containsKey(hb_cache_hostpath_rubicon));
+        Assert.assertEquals("https://prebid-cache-europe.rubiconproject.com/cache", bundle.get(hb_cache_hostpath_rubicon));
+        String hb_cache_path = "hb_cache_path";
+        Assert.assertTrue(bundle.containsKey(hb_cache_path));
+        Assert.assertEquals("/cache", bundle.get(hb_cache_path));
+        String hb_cache_path_rubicon = "hb_cache_path_rubicon";
+        Assert.assertTrue(bundle.containsKey(hb_cache_path_rubicon));
+        Assert.assertEquals("/cache", bundle.get(hb_cache_path_rubicon));
+        String hb_cache_host = "hb_cache_host";
+        Assert.assertTrue(bundle.containsKey(hb_cache_host));
+        Assert.assertEquals("prebid-cache-europe.rubiconproject.com", bundle.get(hb_cache_host));
+        String hb_cache_host_rubicon = "hb_cache_host_rubicon";
+        Assert.assertTrue(bundle.containsKey(hb_cache_host_rubicon));
+        Assert.assertEquals("prebid-cache-europe.rubiconproject.com", bundle.get(hb_cache_host_rubicon));
+    }
+
+    @Test
     public void testSingleRequestOneBidResponseForMoPubAdObject() throws Exception {
         if (successfulMockServerStarted) {
             HttpUrl httpUrl = server.url("/");
@@ -245,6 +334,43 @@ public class DemandFetcherTest extends BaseSetup {
         } else {
             assertTrue("Mock server was not started", false);
         }
+    }
+
+    @Test
+    public void testSingleRequestOneBidRubiconResponseForMoPubAdObject() throws Exception {
+        if (!successfulMockServerStarted) {
+            fail("Mock server was not started");
+        }
+
+        HttpUrl httpUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(httpUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromRubicon()));
+        MoPubView adView = new MoPubView(activity);
+        adView.setAdUnitId("123456789");
+        DemandFetcher demandFetcher = new DemandFetcher(adView);
+        PrebidMobile.timeoutMillis = Integer.MAX_VALUE;
+        demandFetcher.setPeriodMillis(0);
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+        ArrayList<String> keywords = new ArrayList<>();
+        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes, keywords);
+        demandFetcher.setRequestParams(requestParams);
+        OnCompleteListener mockListener = mock(OnCompleteListener.class);
+        demandFetcher.setListener(mockListener);
+        assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
+        demandFetcher.start();
+        assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
+        ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
+        fetcherLooper.runOneTask();
+        ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
+        demandLooper.runOneTask();
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onComplete(ResultCode.SUCCESS);
+        assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
+        String adViewKeywords = adView.getKeywords();
+        assertEquals("hb_env:mobile-app,hb_cache_hostpath:https://prebid-cache-europe.rubiconproject.com/cache,hb_size_rubicon:300x250,hb_cache_id:a2f41588-4727-425c-9ef0-3b382debef1e,hb_cache_path_rubicon:/cache,hb_cache_host_rubicon:prebid-cache-europe.rubiconproject.com,hb_pb:1.20,hb_pb_rubicon:1.20,hb_cache_id_rubicon:a2f41588-4727-425c-9ef0-3b382debef1e,hb_cache_path:/cache,hb_size:300x250,hb_cache_hostpath_rubicon:https://prebid-cache-europe.rubiconproject.com/cache,hb_env_rubicon:mobile-app,hb_bidder:rubicon,hb_bidder_rubicon:rubicon,hb_cache_host:prebid-cache-europe.rubiconproject.com,", adViewKeywords);
     }
 
     @Test

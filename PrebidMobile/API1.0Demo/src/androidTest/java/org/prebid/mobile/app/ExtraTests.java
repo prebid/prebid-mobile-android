@@ -119,7 +119,7 @@ public class ExtraTests {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
-                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS);
                 adObject.setMinimumWidth(300);
                 adObject.setMinimumHeight(250);
                 BannerAdUnit adUnit = new BannerAdUnit("1cfdfe39-18f2-45b9-964f-63d64cdc0399", 300, 250);
@@ -162,10 +162,10 @@ public class ExtraTests {
             @Override
             public void run() {
                 final MoPubView adObject1 = new MoPubView(m.getActivity());
-                adObject1.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_320x50);
+                adObject1.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_320x50_APPNEXUS);
                 adObject1.setMinimumWidth(320);
                 adObject1.setMinimumHeight(50);
-                BannerAdUnit adUnit1 = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50_APPNEXUS_DEMAND, 320, 50);
+                BannerAdUnit adUnit1 = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50_APPNEXUS, 320, 50);
                 adUnits.add(adUnit1);
                 OnCompleteListener l1 = new OnCompleteListener() {
                     @Override
@@ -182,7 +182,7 @@ public class ExtraTests {
                 adUnit1.fetchDemand(adObject1, l1);
                 PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
                 final PublisherAdRequest adObject2 = builder.build();
-                BannerAdUnit adUnit2 = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50_APPNEXUS_DEMAND, 320, 50);
+                BannerAdUnit adUnit2 = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50_APPNEXUS, 320, 50);
                 adUnits.add(adUnit2);
                 OnCompleteListener l2 = new OnCompleteListener() {
                     @Override
@@ -194,7 +194,7 @@ public class ExtraTests {
                         FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
                         PublisherAdView adView = new PublisherAdView(m.getActivity());
                         adView.setAdSizes(AdSize.BANNER);
-                        adView.setAdUnitId(Constants.DFP_BANNER_ALL_SIZES);
+                        adView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES_APPNEXUS);
                         adFrame.addView(adView);
                         adView.setId(1);
                         adView.loadAd(adObject2);
@@ -300,10 +300,10 @@ public class ExtraTests {
                 adUnit4.fetchDemand(mopubTest4, listener4);
                 // test 4 set up Banner
                 final MoPubView mopubTest5 = new MoPubView(m.getActivity());
-                mopubTest5.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                mopubTest5.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS);
                 mopubTest5.setMinimumHeight(250);
                 mopubTest5.setMinimumWidth(300);
-                BannerAdUnit adUnit5 = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS_DEMAND, 300, 250);
+                BannerAdUnit adUnit5 = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS, 300, 250);
                 adUnits.add(adUnit5);
                 OnCompleteListener listener5 = new OnCompleteListener() {
                     @Override
@@ -318,9 +318,9 @@ public class ExtraTests {
                 spies.add(listener5);
                 adUnit4.fetchDemand(mopubTest5, listener5);
                 // test 5 set up Interstitial
-                final MoPubInterstitial mopubInstl1 = new MoPubInterstitial(m.getActivity(), Constants.MOPUB_INTERSTITIAL_ADUNIT_ID);
+                final MoPubInterstitial mopubInstl1 = new MoPubInterstitial(m.getActivity(), Constants.MOPUB_INTERSTITIAL_ADUNIT_ID_APPNEXUS);
                 moPubInterstitials.add(mopubInstl1);
-                InterstitialAdUnit adUnit6 = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL_APPNEXUS_DEMAND);
+                InterstitialAdUnit adUnit6 = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL_APPNEXUS);
                 adUnits.add(adUnit6);
                 OnCompleteListener listener6 = new OnCompleteListener() {
                     @Override
@@ -444,7 +444,7 @@ public class ExtraTests {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
-                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS);
                 adObject.setMinimumHeight(250);
                 adObject.setMinimumWidth(300);
                 BannerAdUnit adUnit = new BannerAdUnit("1001-2", 300, 250);
@@ -478,7 +478,7 @@ public class ExtraTests {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
-                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS);
                 adObject.setMinimumHeight(250);
                 adObject.setMinimumWidth(300);
                 BannerAdUnit adUnit = new BannerAdUnit("67bac530-9832-4f78-8c94-fbf88ac7bd14", 300, 250);
@@ -513,7 +513,7 @@ public class ExtraTests {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
-                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS);
                 adObject.setMinimumHeight(250);
                 adObject.setMinimumWidth(300);
                 BannerAdUnit adUnit = new BannerAdUnit("67bac530-9832-4f78-8c94-fbf88ac7bd14", 300, 250);
@@ -548,7 +548,7 @@ public class ExtraTests {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
-                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS);
                 adObject.setMinimumHeight(250);
                 adObject.setMinimumWidth(300);
                 BannerAdUnit adUnit = new BannerAdUnit("67bac530-9832-4f78-8c94-fbf88ac7bd14", 300, 250);
@@ -569,6 +569,38 @@ public class ExtraTests {
     }
 
     @Test
+    public void testRubiconEmptyInvalidPrebidServerAccountId() throws Exception {
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("");
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setShareGeoLocation(true);
+
+        final OnCompleteListener[] listener = new OnCompleteListener[1];
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_RUBICON);
+                adObject.setMinimumHeight(250);
+                adObject.setMinimumWidth(300);
+                BannerAdUnit adUnit = new BannerAdUnit("1001-1", 300, 250);
+                OnCompleteListener l = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject);
+                        adObject.loadAd();
+                    }
+                };
+                listener[0] = spy(l);
+                adUnit.fetchDemand(adObject, listener[0]);
+            }
+        });
+        Thread.sleep(2000);
+        verify(listener[0], times(1)).onComplete(ResultCode.INVALID_ACCOUNT_ID);
+    }
+
+    @Test
     public void testAppNexusInvalidPrebidServerAccountId() throws Exception {
         PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-ffffffffffff");
@@ -579,7 +611,7 @@ public class ExtraTests {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
-                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS);
                 adObject.setMinimumHeight(250);
                 adObject.setMinimumWidth(300);
                 BannerAdUnit adUnit = new BannerAdUnit("6ace8c7d-88c0-4623-8117-75bc3f0a2e45", 300, 250);
@@ -600,6 +632,38 @@ public class ExtraTests {
     }
 
     @Test
+    public void testRubiconInvalidPrebidServerAccountId() throws Exception {
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("1001_ERROR");
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setShareGeoLocation(true);
+
+        final OnCompleteListener[] listener = new OnCompleteListener[1];
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_RUBICON);
+                adObject.setMinimumHeight(250);
+                adObject.setMinimumWidth(300);
+                BannerAdUnit adUnit = new BannerAdUnit("1001-1", 300, 250);
+                OnCompleteListener l = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject);
+                        adObject.loadAd();
+                    }
+                };
+                listener[0] = spy(l);
+                adUnit.fetchDemand(adObject, listener[0]);
+            }
+        });
+        Thread.sleep(2000);
+        verify(listener[0], times(1)).onComplete(ResultCode.INVALID_ACCOUNT_ID);
+    }
+
+    @Test
     public void testEmptyInvalidPrebidServerConfigId() throws Exception {
         PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
@@ -610,7 +674,7 @@ public class ExtraTests {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
-                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS);
                 adObject.setMinimumHeight(250);
                 adObject.setMinimumWidth(300);
                 BannerAdUnit adUnit = new BannerAdUnit("", 300, 250);
@@ -631,6 +695,38 @@ public class ExtraTests {
     }
 
     @Test
+    public void testRubiconEmptyInvalidPrebidServerConfigId() throws Exception {
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("1001");
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setShareGeoLocation(true);
+
+        final OnCompleteListener[] listener = new OnCompleteListener[1];
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_RUBICON);
+                adObject.setMinimumHeight(250);
+                adObject.setMinimumWidth(300);
+                BannerAdUnit adUnit = new BannerAdUnit("", 300, 250);
+                OnCompleteListener l = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject);
+                        adObject.loadAd();
+                    }
+                };
+                listener[0] = spy(l);
+                adUnit.fetchDemand(adObject, listener[0]);
+            }
+        });
+        Thread.sleep(2000);
+        verify(listener[0], times(1)).onComplete(ResultCode.INVALID_CONFIG_ID);
+    }
+
+    @Test
     public void testAppNexusInvalidPrebidServerConfigId() throws Exception {
         PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
@@ -641,7 +737,7 @@ public class ExtraTests {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
-                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS);
                 adObject.setMinimumHeight(250);
                 adObject.setMinimumWidth(300);
                 BannerAdUnit adUnit = new BannerAdUnit("6ace8c7d-88c0-4623-8117-ffffffffffff", 300, 250);
@@ -658,6 +754,38 @@ public class ExtraTests {
             }
         });
         Thread.sleep(10000);
+        verify(listener[0], times(1)).onComplete(ResultCode.INVALID_CONFIG_ID);
+    }
+
+    @Test
+    public void testRubiconInvalidPrebidServerConfigId() throws Exception {
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("1001");
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setShareGeoLocation(true);
+
+        final OnCompleteListener[] listener = new OnCompleteListener[1];
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_RUBICON);
+                adObject.setMinimumHeight(250);
+                adObject.setMinimumWidth(300);
+                BannerAdUnit adUnit = new BannerAdUnit("1001-1_ERROR", 300, 250);
+                OnCompleteListener l = new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+                        FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
+                        adFrame.addView(adObject);
+                        adObject.loadAd();
+                    }
+                };
+                listener[0] = spy(l);
+                adUnit.fetchDemand(adObject, listener[0]);
+            }
+        });
+        Thread.sleep(2000);
         verify(listener[0], times(1)).onComplete(ResultCode.INVALID_CONFIG_ID);
     }
 
@@ -693,7 +821,7 @@ public class ExtraTests {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
-                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS);
                 adObject.setMinimumHeight(250);
                 adObject.setMinimumWidth(300);
                 BannerAdUnit adUnit = new BannerAdUnit("47706260-ee91-4cd7-b656-2185aca89f59", 300, 250);
@@ -748,7 +876,7 @@ public class ExtraTests {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
-                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS);
                 adObject.setMinimumHeight(250);
                 adObject.setMinimumWidth(300);
                 BannerAdUnit adUnit = new BannerAdUnit("47706260-ee91-4cd7-b656-2185aca89f59", 300, 250);
@@ -796,7 +924,7 @@ public class ExtraTests {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
-                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS);
                 adObject.setMinimumHeight(250);
                 adObject.setMinimumWidth(300);
                 BannerAdUnit adUnit = new BannerAdUnit("47706260-ee91-4cd7-b656-2185aca89f59", 300, 250);
@@ -843,7 +971,7 @@ public class ExtraTests {
             @Override
             public void run() {
                 final MoPubView adObject = new MoPubView(m.getActivity());
-                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS);
                 adObject.setMinimumHeight(250);
                 adObject.setMinimumWidth(300);
                 BannerAdUnit adUnit = new BannerAdUnit("47706260-ee91-4cd7-b656-2185aca89f59", 300, 250);
@@ -918,7 +1046,7 @@ public class ExtraTests {
                 @Override
                 public void run() {
                     final MoPubView adObject = new MoPubView(m.getActivity());
-                    adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                    adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS);
                     adObject.setMinimumHeight(250);
                     adObject.setMinimumWidth(300);
                     BannerAdUnit adUnit = new BannerAdUnit("8522cead-1eb4-4f09-b6e2-083fa3a6e6ce", 300, 250);
@@ -946,7 +1074,7 @@ public class ExtraTests {
                 @Override
                 public void run() {
                     final MoPubView adObject = new MoPubView(m.getActivity());
-                    adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
+                    adObject.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS);
                     adObject.setMinimumHeight(250);
                     adObject.setMinimumWidth(300);
                     BannerAdUnit adUnit = new BannerAdUnit("8522cead-1eb4-4f09-b6e2-083fa3a6e6ce", 300, 250);

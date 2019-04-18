@@ -1,0 +1,19 @@
+{
+    "id": "914092c6-e619-4d75-9bde-4c7dbff99c42",
+    "seatbid": [],
+    "cur": "USD",
+    "ext": {
+        "errors": {
+            "rubicon": [{
+                "code": 2,
+                "message": "No valid sizes"
+            }]
+        },
+        "responsetimemillis": {
+            "cache": 0,
+            "appnexus": 47,
+            "rubicon": 1
+        },
+        "tmaxrequest": 2000
+    }
+}

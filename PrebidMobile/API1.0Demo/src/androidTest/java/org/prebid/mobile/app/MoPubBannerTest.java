@@ -19,6 +19,8 @@ package org.prebid.mobile.app;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.Host;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -60,6 +62,25 @@ public class MoPubBannerTest {
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         Thread.sleep(120000);
+        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+    }
+
+    @Test
+    public void testRubiconMoPubWithoutAutoRefreshAndSize300x250() throws Exception {
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
+        Constants.PBS_CONFIG_ID_300x250 = Constants.PBS_CONFIG_ID_300x250_RUBICON;
+        Constants.DFP_BANNER_ADUNIT_ID_300x250 = Constants.MOPUB_BANNER_ADUNIT_ID_300x250_RUBICON;
+
+        onView(withId(R.id.adServerSpinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("MoPub"))).perform(click());
+        onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
+        onView(withId(R.id.showAd)).perform(click());
+        Thread.sleep(10000);
+        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
+        onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
+        onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
+        onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
