@@ -40,7 +40,7 @@ public class PrebidMobile {
         return accountId;
     }
 
-    private static Host host = Host.APPNEXUS;
+    private static Host host = Host.CUSTOM;
 
     public static void setPrebidServerHost(Host host) {
         PrebidMobile.host = host;
