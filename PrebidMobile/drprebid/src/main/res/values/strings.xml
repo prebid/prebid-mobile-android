@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Dr Prebid</string>
+
+    <!-- Welcome Activity -->
+    <string name="welcome_image">Welcome activity image</string>
+    <string name="action_skip">Skip</string>
+    <string name="action_continue">Continue</string>
 </resources>
