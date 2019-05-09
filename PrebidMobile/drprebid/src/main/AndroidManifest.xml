@@ -26,6 +26,10 @@
         <activity
             android:name=".ui.activities.WelcomeActivity"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.InfoActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

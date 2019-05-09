@@ -8,8 +8,8 @@ android {
         applicationId "org.prebid.validation.drprebid"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode rootProject.prebidVersionCode
+        versionName rootProject.prebidVersionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

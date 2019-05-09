@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">Dr Prebid</string>
 
+    <!-- Help screens -->
+    <string name="about">About</string>
+    <string name="about_file">about.html</string>
+    <string name="general_info">General Info</string>
+    <string name="general_info_file">info-general.html</string>
+    <string name="ad_server_info">Ad Server Info</string>
+    <string name="ad_server_info_file">info-ad-server.html</string>
+    <string name="prebid_server_info">Prebid Server Info</string>
+    <string name="prebid_server_info_file">info-prebid-server.html</string>
+
     <!-- Welcome Activity -->
     <string name="welcome_image">Welcome activity image</string>
     <string name="action_skip">Skip</string>
