@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Dr Prebid</string>
 
-    <!-- Help screens -->
+    <string name="action_done">Done</string>
+    <string name="action_run_tests">Run tests</string>
+
+    <!-- Info Activity -->
     <string name="about">About</string>
     <string name="about_file">about.html</string>
     <string name="general_info">General Info</string>
@@ -15,4 +18,31 @@
     <string name="welcome_image">Welcome activity image</string>
     <string name="action_skip">Skip</string>
     <string name="action_continue">Continue</string>
+
+    <!-- Settings Activity -->
+    <string name="general">General</string>
+    <string name="ad_server">Ad Server</string>
+    <string name="prebid_server">Prebid Server</string>
+
+    <string name="banner">Banner</string>
+    <string name="interstitial">Interstitial</string>
+    <string name="ad_format">Ad Format</string>
+    <string name="ad_size">Ad Size</string>
+
+    <string name="ad_size_300_250">300x250</string>
+    <string name="ad_size_300_600">300x600</string>
+    <string name="ad_size_320_50">320x50</string>
+    <string name="ad_size_320_100">320x100</string>
+    <string name="ad_size_320_480">320x480</string>
+    <string name="ad_size_728_90">728x90</string>
+
+    <string-array name="ad_sizes">
+        <item>@string/ad_size_300_250</item>
+        <item>@string/ad_size_300_600</item>
+        <item>@string/ad_size_320_50</item>
+        <item>@string/ad_size_320_100</item>
+        <item>@string/ad_size_320_480</item>
+        <item>@string/ad_size_728_90</item>
+    </string-array>
+
 </resources>
