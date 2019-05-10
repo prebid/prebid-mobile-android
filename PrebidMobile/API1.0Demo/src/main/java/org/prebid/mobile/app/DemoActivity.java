@@ -82,6 +82,17 @@ public class DemoActivity extends AppCompatActivity {
             dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES);
             adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
         }
+
+        dfpAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+
+                dfpAdView.setAdSizes(dfpAdView.getAdSize());
+
+            }
+        });
+
         dfpAdView.setAdSizes(new AdSize(width, height));
         adFrame.addView(dfpAdView);
         final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
