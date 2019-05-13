@@ -22,7 +22,9 @@
     <!-- Settings Activity -->
     <string name="general">General</string>
     <string name="ad_server">Ad Server</string>
+    <string name="ad_server_settings">Ad server settings</string>
     <string name="prebid_server">Prebid Server</string>
+    <string name="prebid_server_settings">Prebid server settings</string>
 
     <string name="banner">Banner</string>
     <string name="interstitial">Interstitial</string>
@@ -44,5 +46,14 @@
         <item>@string/ad_size_320_480</item>
         <item>@string/ad_size_728_90</item>
     </string-array>
+
+    <string name="google_ad_manager">Google Ad Manager</string>
+    <string name="mopub">MoPub</string>
+
+    <string name="bid_price">Bid price</string>
+    <string name="ad_unit_id">Ad unit id</string>
+
+    <string name="account_id">Account ID</string>
+    <string name="config_id">Config ID</string>
 
 </resources>
