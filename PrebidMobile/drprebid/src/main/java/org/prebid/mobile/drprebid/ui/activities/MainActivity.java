@@ -4,6 +4,9 @@ import android.content.Intent;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,10 +16,14 @@ import android.view.MenuItem;
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.managers.UserPrefsManager;
 import org.prebid.mobile.drprebid.model.HelpScreen;
+import org.prebid.mobile.drprebid.ui.adapters.SettingsAdapter;
 import org.prebid.mobile.drprebid.util.HelpScreenUtil;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_WELCOME = 2000;
+
+    private RecyclerView mListView;
+    private SettingsAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +35,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(new Intent(this, WelcomeActivity.class), REQUEST_WELCOME);
             }
         }
+
+        mListView = findViewById(R.id.list_settings);
+        setupSettingsList();
+
+    }
+
+    private void setupSettingsList() {
+        mAdapter = new SettingsAdapter();
+
+        mListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        mListView.setItemAnimator(new DefaultItemAnimator());
+        mListView.setAdapter(mAdapter);
     }
 
     @Override

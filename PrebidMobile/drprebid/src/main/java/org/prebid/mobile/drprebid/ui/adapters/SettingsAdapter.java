@@ -1,6 +1,5 @@
 package org.prebid.mobile.drprebid.ui.adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -14,10 +13,13 @@ import org.prebid.mobile.drprebid.model.GeneralSettings;
 import org.prebid.mobile.drprebid.model.PrebidServerSettings;
 import org.prebid.mobile.drprebid.model.SettingsDivider;
 import org.prebid.mobile.drprebid.model.SettingsItem;
+import org.prebid.mobile.drprebid.model.SubmitSettings;
 import org.prebid.mobile.drprebid.ui.viewholders.AdServerSettingsViewHolder;
 import org.prebid.mobile.drprebid.ui.viewholders.DividerViewHolder;
 import org.prebid.mobile.drprebid.ui.viewholders.GeneralSettingsViewHolder;
 import org.prebid.mobile.drprebid.ui.viewholders.PrebidServerSettingsViewholder;
+import org.prebid.mobile.drprebid.ui.viewholders.SettingsViewHolder;
+import org.prebid.mobile.drprebid.ui.viewholders.SubmitViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int VIEW_TYPE_GENERAL_SETTINGS = 1;
     private static final int VIEW_TYPE_AD_SERVER_SETTINGS = 2;
     private static final int VIEW_TYPE_PREBID_SERVER_SETTINGS = 3;
+    private static final int VIEW_TYPE_SUBMIT = 4;
 
     private final List<SettingsItem> mItems;
 
@@ -46,6 +49,8 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 return new AdServerSettingsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_ad_server_settings, parent, false));
             case VIEW_TYPE_PREBID_SERVER_SETTINGS:
                 return new PrebidServerSettingsViewholder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_prebid_server_settings, parent, false));
+            case VIEW_TYPE_SUBMIT:
+                return new SubmitViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_submit, parent, false));
             default:
                 return new DividerViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_divider, parent, false));
         }
@@ -60,6 +65,8 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return VIEW_TYPE_AD_SERVER_SETTINGS;
         } else if (item instanceof PrebidServerSettings) {
             return VIEW_TYPE_PREBID_SERVER_SETTINGS;
+        } else if (item instanceof SubmitSettings) {
+            return VIEW_TYPE_SUBMIT;
         } else {
             return VIEW_TYPE_DIVIDER;
         }
@@ -67,7 +74,8 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
+        SettingsViewHolder viewHolder = (SettingsViewHolder) holder;
+        viewHolder.bind();
     }
 
     @Override
@@ -77,9 +85,8 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private void setupSettings() {
         mItems.add(SettingsManager.getInstance().getGeneralSettings());
-        mItems.add(new SettingsDivider());
         mItems.add(SettingsManager.getInstance().getAdServerSettings());
-        mItems.add(new SettingsDivider());
         mItems.add(SettingsManager.getInstance().getPrebidServerSettings());
+        mItems.add(new SubmitSettings());
     }
 }

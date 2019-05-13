@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardElevation="2dp">
+    app:cardElevation="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -13,28 +13,29 @@
 
         <ImageButton
             android:id="@+id/button_info"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:background="@android:color/transparent"
+            android:background="?selectableItemBackgroundBorderless"
             android:scaleType="fitCenter"
-            android:src="@android:drawable/ic_dialog_info"
-            android:tint="@android:color/black" />
+            android:src="@drawable/outline_info_black_24"
+            android:tint="@color/colorAccent" />
 
         <TextView
             android:id="@+id/view_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_toStartOf="@id/button_info"
             android:maxLines="1"
             android:text="@string/prebid_server_settings"
             android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/title_prebid_server"
@@ -46,8 +47,8 @@
             android:layout_marginEnd="16dp"
             android:maxLines="1"
             android:text="@string/prebid_server"
-            android:textColor="@android:color/black"
-            android:textSize="12sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
@@ -55,16 +56,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/title_prebid_server"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:background="?selectableItemBackground"
             android:clickable="true"
+            android:drawableEnd="@drawable/baseline_chevron_right_black_24"
+            android:drawableTint="@color/colorPrimaryDark"
             android:focusable="true"
             android:maxLines="1"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp"
             android:text="@string/prebid_server"
             android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/title_account_id"
@@ -76,8 +83,8 @@
             android:layout_marginEnd="16dp"
             android:maxLines="1"
             android:text="@string/account_id"
-            android:textColor="@android:color/black"
-            android:textSize="12sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
@@ -85,16 +92,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/title_account_id"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:background="?selectableItemBackground"
             android:clickable="true"
+            android:drawableEnd="@drawable/baseline_chevron_right_black_24"
+            android:drawableTint="@color/colorPrimaryDark"
             android:focusable="true"
             android:maxLines="1"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp"
             android:text="@string/account_id"
             android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/title_config_id"
@@ -106,8 +119,8 @@
             android:layout_marginEnd="16dp"
             android:maxLines="1"
             android:text="@string/config_id"
-            android:textColor="@android:color/black"
-            android:textSize="12sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
@@ -115,17 +128,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/title_config_id"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="10dp"
             android:background="?selectableItemBackground"
             android:clickable="true"
+            android:drawableEnd="@drawable/baseline_chevron_right_black_24"
+            android:drawableTint="@color/colorPrimaryDark"
             android:focusable="true"
             android:maxLines="1"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp"
             android:text="@string/config_id"
             android:textColor="@android:color/black"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
