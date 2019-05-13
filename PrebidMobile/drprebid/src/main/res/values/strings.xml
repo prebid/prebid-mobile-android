@@ -57,6 +57,13 @@
     <string name="config_id">Config ID</string>
 
     <string name="click_to_choose">Choose …</string>
-
     <string name="run_tests">Run tests</string>
+
+    <string name="action_accept">Accept</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="type_here">Type here …</string>
+
+    <string name="prebid_server_rubicon">Rubicon</string>
+    <string name="prebid_server_appnexus">AppNexus</string>
+    <string name="prebid_server_custom">Custom server</string>
 </resources>

@@ -51,7 +51,7 @@
             android:textStyle="bold" />
 
         <RadioGroup
-            android:id="@+id/group_size"
+            android:id="@+id/group_format"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/title_ad_format"
@@ -83,7 +83,7 @@
             android:id="@+id/title_ad_size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/group_size"
+            android:layout_below="@id/group_format"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="16dp"
