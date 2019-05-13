@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_WELCOME = 2000;
 
     private RecyclerView mListView;
-    private SettingsAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +41,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupSettingsList() {
-        mAdapter = new SettingsAdapter();
+        SettingsAdapter adapter = new SettingsAdapter();
 
         mListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         mListView.setItemAnimator(new DefaultItemAnimator());
-        mListView.setAdapter(mAdapter);
+        mListView.setAdapter(adapter);
     }
 
     @Override

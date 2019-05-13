@@ -143,7 +143,7 @@
             android:paddingTop="8dp"
             android:paddingEnd="8dp"
             android:paddingBottom="8dp"
-            android:text="@string/ad_unit_id"
+            android:text="@string/click_to_choose"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
 

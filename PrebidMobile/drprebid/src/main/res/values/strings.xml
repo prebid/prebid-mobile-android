@@ -56,5 +56,7 @@
     <string name="account_id">Account ID</string>
     <string name="config_id">Config ID</string>
 
+    <string name="click_to_choose">Choose …</string>
+
     <string name="run_tests">Run tests</string>
 </resources>
