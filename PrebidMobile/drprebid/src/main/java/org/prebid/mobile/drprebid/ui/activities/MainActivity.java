@@ -12,6 +12,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
 
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.managers.UserPrefsManager;

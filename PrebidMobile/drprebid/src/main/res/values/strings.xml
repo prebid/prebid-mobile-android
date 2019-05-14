@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Dr Prebid</string>
+    <string name="app_name">Dr. Prebid</string>
 
     <string name="action_done">Done</string>
     <string name="action_run_tests">Run tests</string>
@@ -61,9 +61,20 @@
 
     <string name="action_accept">Accept</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_ok">Ok</string>
     <string name="type_here">Type here …</string>
 
     <string name="prebid_server_rubicon">Rubicon</string>
     <string name="prebid_server_appnexus">AppNexus</string>
     <string name="prebid_server_custom">Custom server</string>
+
+    <!-- QR code scanning -->
+    <string name="qr_code_scan_title">Dr. Prebid QR Code Scanner</string>
+    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
+    <string name="no_camera_permission">This feature cannot run because it does not have the camera permission.</string>
+    <string name="low_storage_error">QR Code detector dependencies cannot be downloaded due to low device storage</string>
+
+    <string name="barcode_success">QR code read successfully</string>
+    <string name="barcode_failure">No QR code captured</string>
+    <string name="barcode_error">"Error reading QR code: %1$s"</string>
 </resources>
