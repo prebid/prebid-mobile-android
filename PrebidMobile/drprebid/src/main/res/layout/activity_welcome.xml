@@ -19,6 +19,7 @@
 
     <Button
         android:id="@+id/button_skip"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"

@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Dr Prebid</string>
 
-    <!-- Help screens -->
+    <string name="action_done">Done</string>
+    <string name="action_run_tests">Run tests</string>
+
+    <!-- Info Activity -->
     <string name="about">About</string>
     <string name="about_file">about.html</string>
     <string name="general_info">General Info</string>
@@ -15,4 +18,52 @@
     <string name="welcome_image">Welcome activity image</string>
     <string name="action_skip">Skip</string>
     <string name="action_continue">Continue</string>
+
+    <!-- Settings Activity -->
+    <string name="general">General</string>
+    <string name="ad_server">Ad Server</string>
+    <string name="ad_server_settings">Ad server settings</string>
+    <string name="prebid_server">Prebid Server</string>
+    <string name="prebid_server_settings">Prebid server settings</string>
+
+    <string name="banner">Banner</string>
+    <string name="interstitial">Interstitial</string>
+    <string name="ad_format">Ad Format</string>
+    <string name="ad_size">Ad Size</string>
+
+    <string name="ad_size_300_250">300x250</string>
+    <string name="ad_size_300_600">300x600</string>
+    <string name="ad_size_320_50">320x50</string>
+    <string name="ad_size_320_100">320x100</string>
+    <string name="ad_size_320_480">320x480</string>
+    <string name="ad_size_728_90">728x90</string>
+
+    <string-array name="ad_sizes">
+        <item>@string/ad_size_300_250</item>
+        <item>@string/ad_size_300_600</item>
+        <item>@string/ad_size_320_50</item>
+        <item>@string/ad_size_320_100</item>
+        <item>@string/ad_size_320_480</item>
+        <item>@string/ad_size_728_90</item>
+    </string-array>
+
+    <string name="google_ad_manager">Google Ad Manager</string>
+    <string name="mopub">MoPub</string>
+
+    <string name="bid_price">Bid price</string>
+    <string name="ad_unit_id">Ad unit id</string>
+
+    <string name="account_id">Account ID</string>
+    <string name="config_id">Config ID</string>
+
+    <string name="click_to_choose">Choose …</string>
+    <string name="run_tests">Run tests</string>
+
+    <string name="action_accept">Accept</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="type_here">Type here …</string>
+
+    <string name="prebid_server_rubicon">Rubicon</string>
+    <string name="prebid_server_appnexus">AppNexus</string>
+    <string name="prebid_server_custom">Custom server</string>
 </resources>

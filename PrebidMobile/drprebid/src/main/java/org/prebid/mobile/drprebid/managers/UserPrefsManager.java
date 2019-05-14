@@ -10,7 +10,7 @@ public class UserPrefsManager {
     private final SharedPreferences mSharedPreferences;
 
     private static volatile UserPrefsManager sInstance;
-    private static Object mutex = new Object();
+    private static final Object mutex = new Object();
 
     public static UserPrefsManager getInstance(Context context) {
         UserPrefsManager result = sInstance;
