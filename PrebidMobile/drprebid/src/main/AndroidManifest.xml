@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="org.prebid.mobile.drprebid">
 
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:name=".DrPrebidApplication"
         android:allowBackup="true"
@@ -29,6 +33,10 @@
 
         <activity
             android:name=".ui.activities.InfoActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.activities.QrCodeCaptureActivity"
             android:screenOrientation="portrait" />
     </application>
 
