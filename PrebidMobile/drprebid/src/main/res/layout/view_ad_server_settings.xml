@@ -105,6 +105,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
             android:hint="@string/bid_price"
+            android:imeOptions="actionDone"
             android:inputType="numberDecimal"
             android:maxLines="1"
             android:textColor="@android:color/black"
