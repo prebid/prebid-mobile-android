@@ -1,8 +1,10 @@
 package org.prebid.mobile.drprebid.model;
 
+import org.prebid.mobile.drprebid.Constants;
+
 public enum AdFormat {
-    BANNER(1),
-    INTERSTITIAL(2);
+    BANNER(Constants.Settings.AdFormatCodes.BANNER),
+    INTERSTITIAL(Constants.Settings.AdFormatCodes.INTERSTITIAL);
 
     private int code;
 
