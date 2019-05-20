@@ -1,5 +1,6 @@
 package org.prebid.mobile.drprebid.ui.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -11,7 +12,6 @@ import org.prebid.mobile.drprebid.managers.SettingsManager;
 import org.prebid.mobile.drprebid.model.AdServerSettings;
 import org.prebid.mobile.drprebid.model.GeneralSettings;
 import org.prebid.mobile.drprebid.model.PrebidServerSettings;
-import org.prebid.mobile.drprebid.model.SettingsDivider;
 import org.prebid.mobile.drprebid.model.SettingsItem;
 import org.prebid.mobile.drprebid.model.SubmitSettings;
 import org.prebid.mobile.drprebid.ui.viewholders.AdServerSettingsViewHolder;
@@ -33,10 +33,10 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private final List<SettingsItem> mItems;
 
-    public SettingsAdapter() {
+    public SettingsAdapter(Context context) {
         mItems = new ArrayList<>();
 
-        setupSettings();
+        setupSettings(context);
     }
 
     @NonNull
@@ -83,10 +83,10 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mItems.size();
     }
 
-    private void setupSettings() {
-        mItems.add(SettingsManager.getInstance().getGeneralSettings());
-        mItems.add(SettingsManager.getInstance().getAdServerSettings());
-        mItems.add(SettingsManager.getInstance().getPrebidServerSettings());
+    private void setupSettings(Context context) {
+        mItems.add(SettingsManager.getInstance(context).getGeneralSettings());
+        mItems.add(SettingsManager.getInstance(context).getAdServerSettings());
+        mItems.add(SettingsManager.getInstance(context).getPrebidServerSettings());
         mItems.add(new SubmitSettings());
     }
 }

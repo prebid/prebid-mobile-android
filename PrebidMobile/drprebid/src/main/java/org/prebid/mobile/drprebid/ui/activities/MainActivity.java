@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupSettingsList() {
-        SettingsAdapter adapter = new SettingsAdapter();
+        SettingsAdapter adapter = new SettingsAdapter(this);
 
         mListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         mListView.setItemAnimator(new DefaultItemAnimator());
