@@ -1,6 +1,7 @@
 package org.prebid.mobile.drprebid.ui.viewholders;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -14,6 +15,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.prebid.mobile.drprebid.Constants;
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.managers.SettingsManager;
 import org.prebid.mobile.drprebid.model.AdServer;
@@ -29,7 +31,7 @@ import java.util.Locale;
 public class AdServerSettingsViewHolder extends RecyclerView.ViewHolder implements SettingsViewHolder, LifecycleOwner {
     private RadioGroup mAdServerGroup;
     private TextView mAdUnitIdView;
-    private EditText mBidPriceView;
+    private TextView mBidPriceView;
     private SettingsViewModel mSettingsViewModel;
 
     public AdServerSettingsViewHolder(@NonNull final View itemView) {
@@ -41,11 +43,21 @@ public class AdServerSettingsViewHolder extends RecyclerView.ViewHolder implemen
             itemView.getContext().startActivity(intent);
         });
 
-        mBidPriceView = itemView.findViewById(R.id.field_bid_price);
+        mBidPriceView = itemView.findViewById(R.id.view_bid_price);
+        mBidPriceView.setOnClickListener(v -> {
+            FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
+            InputDialog dialog = InputDialog.newInstance(itemView.getContext().getString(R.string.bid_price),
+                    Constants.Params.TYPE_BID_PRICE,
+                    Constants.Params.FORMAT_FLOAT, false);
+            dialog.show(fragmentManager, InputDialog.TAG);
+        });
+
         mAdUnitIdView = itemView.findViewById(R.id.view_ad_unit_id);
         mAdUnitIdView.setOnClickListener(v -> {
             FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
-            InputDialog dialog = InputDialog.newInstance(itemView.getContext().getString(R.string.ad_unit_id));
+            InputDialog dialog = InputDialog.newInstance(itemView.getContext().getString(R.string.ad_unit_id),
+                    Constants.Params.TYPE_AD_UNIT_ID,
+                    Constants.Params.FORMAT_TEXT, true);
             dialog.show(fragmentManager, InputDialog.TAG);
         });
 
@@ -70,8 +82,10 @@ public class AdServerSettingsViewHolder extends RecyclerView.ViewHolder implemen
         });
 
         mSettingsViewModel.getAdUnitId().observe(this, adUnitId -> {
-            if (adUnitId != null) {
+            if (!TextUtils.isEmpty(adUnitId)) {
                 mAdUnitIdView.setText(adUnitId);
+            } else {
+                mAdUnitIdView.setText(R.string.click_to_choose);
             }
         });
     }
@@ -100,6 +114,9 @@ public class AdServerSettingsViewHolder extends RecyclerView.ViewHolder implemen
         }
 
         mBidPriceView.setText(String.format(Locale.ENGLISH, "$ %.2f", settings.getBidPrice()));
-        mAdUnitIdView.setText(settings.getAdUnitId());
+
+        if (!TextUtils.isEmpty(settings.getAdUnitId())) {
+            mAdUnitIdView.setText(settings.getAdUnitId());
+        }
     }
 }

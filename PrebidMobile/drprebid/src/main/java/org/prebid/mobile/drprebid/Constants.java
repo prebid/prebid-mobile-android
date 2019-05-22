@@ -42,4 +42,22 @@ public final class Constants {
             public static final int CUSTOM = 3;
         }
     }
+
+    public static final class Params {
+        public static final String INPUT_TITLE = "input_title";
+        public static final String INPUT_TYPE = "input_type";
+        public static final String INPUT_FORMAT = "input_format";
+        public static final String INPUT_SHOW_QR_SCANNER = "input_show_qr_scanner";
+
+        public static final int TYPE_AD_UNIT_ID = 0;
+        public static final int TYPE_BID_PRICE = 1;
+        public static final int TYPE_ACCOUNT_ID = 2;
+        public static final int TYPE_CONFIG_ID = 3;
+
+        public static final int FORMAT_TEXT = 0;
+        public static final int FORMAT_INT = 1;
+        public static final int FORMAT_FLOAT = 2;
+
+
+    }
 }

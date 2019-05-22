@@ -1,7 +1,6 @@
 package org.prebid.mobile.drprebid.ui.dialog;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.widget.RadioGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -47,8 +45,11 @@ public class AdSizeDialog extends DialogFragment {
 
             mSettingsViewModel = ViewModelProviders.of(getActivity()).get(SettingsViewModel.class);
             mSizeGroup = view.findViewById(R.id.group_size);
-            mSizeGroup.setOnCheckedChangeListener((group, checkedId) -> {
-                switch (checkedId) {
+
+            fillValues();
+
+            builder.setPositiveButton(R.string.action_accept, (dialog, which) -> {
+                switch (mSizeGroup.getCheckedRadioButtonId()) {
                     case R.id.radio_300_250:
                         mSettingsViewModel.setAdSize(AdSize.BANNER_300x250);
                         SettingsManager.getInstance(getActivity()).setAdSize(AdSize.BANNER_300x250);
@@ -74,49 +75,41 @@ public class AdSizeDialog extends DialogFragment {
                         SettingsManager.getInstance(getActivity()).setAdSize(AdSize.BANNER_728x90);
                         break;
                 }
+
+                dismiss();
             });
 
-            GeneralSettings generalSettings = SettingsManager.getInstance(getActivity()).getGeneralSettings();
-            switch (generalSettings.getAdSize()) {
-                case BANNER_300x250:
-                    mSizeGroup.check(R.id.radio_300_250);
-                    break;
-                case BANNER_300x600:
-                    mSizeGroup.check(R.id.radio_300_600);
-                    break;
-                case BANNER_320x50:
-                    mSizeGroup.check(R.id.radio_320_50);
-                    break;
-                case BANNER_320x100:
-                    mSizeGroup.check(R.id.radio_320_100);
-                    break;
-                case BANNER_320x480:
-                    mSizeGroup.check(R.id.radio_320_480);
-                    break;
-                case BANNER_728x90:
-                    mSizeGroup.check(R.id.radio_728_90);
-                    break;
-                default:
-                    mSizeGroup.check(R.id.radio_300_250);
-            }
-
-            builder.setPositiveButton(R.string.action_accept, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dismiss();
-                }
-            });
-
-            builder.setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dismiss();
-                }
-            });
+            builder.setNegativeButton(R.string.action_cancel, (dialog, which) -> dismiss());
 
             return builder.create();
         }
 
         return super.onCreateDialog(savedInstanceState);
+    }
+
+    private void fillValues() {
+        GeneralSettings generalSettings = SettingsManager.getInstance(getActivity()).getGeneralSettings();
+        switch (generalSettings.getAdSize()) {
+            case BANNER_300x250:
+                mSizeGroup.check(R.id.radio_300_250);
+                break;
+            case BANNER_300x600:
+                mSizeGroup.check(R.id.radio_300_600);
+                break;
+            case BANNER_320x50:
+                mSizeGroup.check(R.id.radio_320_50);
+                break;
+            case BANNER_320x100:
+                mSizeGroup.check(R.id.radio_320_100);
+                break;
+            case BANNER_320x480:
+                mSizeGroup.check(R.id.radio_320_480);
+                break;
+            case BANNER_728x90:
+                mSizeGroup.check(R.id.radio_728_90);
+                break;
+            default:
+                mSizeGroup.check(R.id.radio_300_250);
+        }
     }
 }

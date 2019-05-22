@@ -1,6 +1,7 @@
 package org.prebid.mobile.drprebid.ui.viewholders;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.prebid.mobile.drprebid.Constants;
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.managers.SettingsManager;
 import org.prebid.mobile.drprebid.model.HelpScreen;
@@ -50,14 +52,18 @@ public class PrebidServerSettingsViewholder extends RecyclerView.ViewHolder impl
         });
 
         mSettingsViewModel.getAccountId().observe(this, accountId -> {
-            if (accountId != null) {
-                mConfigIdView.setText(accountId);
+            if (!TextUtils.isEmpty(accountId)) {
+                mAccountIdView.setText(accountId);
+            } else {
+                mAccountIdView.setText(R.string.click_to_choose);
             }
         });
 
         mSettingsViewModel.getConfigId().observe(this, configId -> {
-            if (configId != null) {
+            if (!TextUtils.isEmpty(configId)) {
                 mConfigIdView.setText(configId);
+            } else {
+                mConfigIdView.setText(R.string.click_to_choose);
             }
         });
     }
@@ -77,8 +83,14 @@ public class PrebidServerSettingsViewholder extends RecyclerView.ViewHolder impl
         PrebidServerSettings settings = SettingsManager.getInstance(itemView.getContext()).getPrebidServerSettings();
 
         fillPrebidServer(settings.getPrebidServer());
-        mAccountIdView.setText(settings.getAccountId());
-        mConfigIdView.setText(settings.getConfigId());
+
+        if (!TextUtils.isEmpty(settings.getAccountId())) {
+            mAccountIdView.setText(settings.getAccountId());
+        }
+
+        if (!TextUtils.isEmpty(settings.getConfigId())) {
+            mConfigIdView.setText(settings.getConfigId());
+        }
     }
 
     private void fillPrebidServer(PrebidServer prebidServer) {
@@ -107,17 +119,21 @@ public class PrebidServerSettingsViewholder extends RecyclerView.ViewHolder impl
                 openPrebidServerDialog();
                 break;
             case R.id.view_account_id:
-                openInputDialog(itemView.getContext().getString(R.string.account_id));
+                openInputDialog(itemView.getContext().getString(R.string.account_id),
+                        Constants.Params.TYPE_ACCOUNT_ID,
+                        Constants.Params.FORMAT_TEXT, true);
                 break;
             case R.id.view_config_id:
-                openInputDialog(itemView.getContext().getString(R.string.config_id));
+                openInputDialog(itemView.getContext().getString(R.string.config_id),
+                        Constants.Params.TYPE_CONFIG_ID,
+                        Constants.Params.FORMAT_TEXT, true);
                 break;
         }
     }
 
-    private void openInputDialog(String title) {
+    private void openInputDialog(String title, int type, int format, boolean shouldShowQrScanner) {
         FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
-        InputDialog dialog = InputDialog.newInstance(title);
+        InputDialog dialog = InputDialog.newInstance(title, type, format, shouldShowQrScanner);
         dialog.show(fragmentManager, InputDialog.TAG);
     }
 
