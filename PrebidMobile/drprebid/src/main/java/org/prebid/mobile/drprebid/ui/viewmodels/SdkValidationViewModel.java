@@ -13,12 +13,12 @@ public class SdkValidationViewModel extends ViewModel {
     private final MutableLiveData<Boolean> mCreativeServed;
 
     public SdkValidationViewModel() {
-        mAdUnitRegistered = new MutableLiveData<>()
-        mPrebidRequestSent = new MutableLiveData<>()
-        mPrebidResponseReceived = new MutableLiveData<>()
-        mCreativeContentCached = new MutableLiveData<>()
-        mAdServerRequestSent = new MutableLiveData<>()
-        mCreativeServed = new MutableLiveData<>()
+        mAdUnitRegistered = new MutableLiveData<>();
+        mPrebidRequestSent = new MutableLiveData<>();
+        mPrebidResponseReceived = new MutableLiveData<>();
+        mCreativeContentCached = new MutableLiveData<>();
+        mAdServerRequestSent = new MutableLiveData<>();
+        mCreativeServed = new MutableLiveData<>();
     }
 
     public LiveData<Boolean> getAdUnitRegistered() {

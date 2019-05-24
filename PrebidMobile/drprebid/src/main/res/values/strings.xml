@@ -77,4 +77,7 @@
     <string name="barcode_success">QR code read successfully</string>
     <string name="barcode_failure">No QR code captured</string>
     <string name="barcode_error">"Error reading QR code: %1$s"</string>
+
+    <!-- Results activity -->
+
 </resources>

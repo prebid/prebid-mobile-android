@@ -1,4 +1,4 @@
 package org.prebid.mobile.drprebid.model;
 
-public class ResultsItem {
+public class ResultItem {
 }
