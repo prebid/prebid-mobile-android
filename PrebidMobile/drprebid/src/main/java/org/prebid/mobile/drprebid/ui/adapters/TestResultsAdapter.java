@@ -1,15 +1,21 @@
 package org.prebid.mobile.drprebid.ui.adapters;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.model.AdServerValidationResult;
 import org.prebid.mobile.drprebid.model.PrebidServerValidationResult;
 import org.prebid.mobile.drprebid.model.ResultItem;
 import org.prebid.mobile.drprebid.model.SdkValidationResult;
+import org.prebid.mobile.drprebid.ui.viewholders.AdServerValidationViewHolder;
+import org.prebid.mobile.drprebid.ui.viewholders.DividerViewHolder;
+import org.prebid.mobile.drprebid.ui.viewholders.PrebidServerValidationViewHolder;
+import org.prebid.mobile.drprebid.ui.viewholders.SdkValidationViewHolder;
 import org.prebid.mobile.drprebid.ui.viewholders.TestResultViewHolder;
 
 import java.util.ArrayList;
@@ -32,7 +38,16 @@ public class TestResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        switch (viewType) {
+            case VIEW_TYPE_AD_SERVER_RESULTS:
+                return new AdServerValidationViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_ad_server_results, parent, false));
+            case VIEW_TYPE_PREBID_SERVER_RESULTS:
+                return new PrebidServerValidationViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_prebid_server_results, parent, false));
+            case VIEW_TYPE_SDK_RESULTS:
+                return new SdkValidationViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_sdk_results, parent, false));
+            default:
+                return new DividerViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_divider, parent, false));
+        }
     }
 
     @Override
@@ -61,6 +76,8 @@ public class TestResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private void setupItems(Context context) {
-
+        mItems.add(new AdServerValidationResult());
+        mItems.add(new PrebidServerValidationResult());
+        mItems.add(new SdkValidationResult());
     }
 }

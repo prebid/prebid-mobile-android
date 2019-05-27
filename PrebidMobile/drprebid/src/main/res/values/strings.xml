@@ -79,5 +79,18 @@
     <string name="barcode_error">"Error reading QR code: %1$s"</string>
 
     <!-- Results activity -->
-
+    <string name="summary">Summary</string>
+    <string name="ad_server_setup_validation">Ad Server Setup Validation</string>
+    <string name="ad_server_targeting_request_sent">Ad server request sent and Key-Value targeting sent</string>
+    <string name="prebid_mobile_creative_served">Prebid Mobile creative HTML served</string>
+    <string name="real_time_demand_validation">Real-Time Demand Validation</string>
+    <string name="bid_requests_sent">%d bid requests sent</string>
+    <string name="bid_responses_received">%d bid responses received</string>
+    <string name="average_cpm">%.2f Average CPM</string>
+    <string name="average_response_time">%d ms avg response time</string>
+    <string name="sdk_validation">End-to-End SDK Validation</string>
+    <string name="ad_unit_registered">Ad unit registered</string>
+    <string name="request_prebid_server_sent">Request to Prebid Server Sent</string>
+    <string name="prebid_server_response_received">Prebid Server response received</string>
+    <string name="creative_content_cached">Creative content cached</string>
 </resources>
