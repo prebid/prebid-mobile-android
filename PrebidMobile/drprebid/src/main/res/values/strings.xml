@@ -13,6 +13,12 @@
     <string name="ad_server_info_file">info-ad-server.html</string>
     <string name="prebid_server_info">Prebid Server Info</string>
     <string name="prebid_server_info_file">info-prebid-server.html</string>
+    <string name="ad_server_test_info">Ad Server Setup Validation</string>
+    <string name="ad_server_test_info_file">test-ad-server.html</string>
+    <string name="real_time_demand_test_info">Real-Time Demand Validation</string>
+    <string name="real_time_demand_test_info_file">test-real-time-demand.html</string>
+    <string name="sdk_test_info">End-to-End SDK Validation</string>
+    <string name="sdk_test_info_file">test-full-sdk.html</string>
 
     <!-- Welcome Activity -->
     <string name="welcome_image">Welcome activity image</string>
@@ -77,4 +83,20 @@
     <string name="barcode_success">QR code read successfully</string>
     <string name="barcode_failure">No QR code captured</string>
     <string name="barcode_error">"Error reading QR code: %1$s"</string>
+
+    <!-- Results activity -->
+    <string name="summary">Summary</string>
+    <string name="ad_server_setup_validation">Ad Server Setup Validation</string>
+    <string name="ad_server_targeting_request_sent">Ad server request sent and Key-Value targeting sent</string>
+    <string name="prebid_mobile_creative_served">Prebid Mobile creative HTML served</string>
+    <string name="real_time_demand_validation">Real-Time Demand Validation</string>
+    <string name="bid_requests_sent">%d bid requests sent</string>
+    <string name="bid_responses_received">%d bid responses received</string>
+    <string name="average_cpm">%.2f Average CPM</string>
+    <string name="average_response_time">%d ms avg response time</string>
+    <string name="sdk_validation">End-to-End SDK Validation</string>
+    <string name="ad_unit_registered">Ad unit registered</string>
+    <string name="request_prebid_server_sent">Request to Prebid Server Sent</string>
+    <string name="prebid_server_response_received">Prebid Server response received</string>
+    <string name="creative_content_cached">Creative content cached</string>
 </resources>

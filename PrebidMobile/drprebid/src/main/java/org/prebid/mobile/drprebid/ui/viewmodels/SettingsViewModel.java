@@ -8,17 +8,23 @@ import org.prebid.mobile.drprebid.model.AdSize;
 import org.prebid.mobile.drprebid.model.PrebidServer;
 
 public class SettingsViewModel extends ViewModel {
-    private MutableLiveData<AdSize> mAdSize;
-    private MutableLiveData<Float> mBidPrice;
-    private MutableLiveData<String> mAdUnitId;
-    private MutableLiveData<PrebidServer> mPrebidServer;
-    private MutableLiveData<String> mAccountId;
-    private MutableLiveData<String> mConfigId;
+    private final MutableLiveData<AdSize> mAdSize;
+    private final MutableLiveData<Float> mBidPrice;
+    private final MutableLiveData<String> mAdUnitId;
+    private final MutableLiveData<PrebidServer> mPrebidServer;
+    private final MutableLiveData<String> mAccountId;
+    private final MutableLiveData<String> mConfigId;
+
+    public SettingsViewModel() {
+        mAdSize = new MutableLiveData<>();
+        mBidPrice = new MutableLiveData<>();
+        mAdUnitId = new MutableLiveData<>();
+        mPrebidServer = new MutableLiveData<>();
+        mAccountId = new MutableLiveData<>();
+        mConfigId = new MutableLiveData<>();
+    }
 
     public LiveData<AdSize> getAdSize() {
-        if (mAdSize == null) {
-            mAdSize = new MutableLiveData<>();
-        }
         return mAdSize;
     }
 
@@ -27,9 +33,6 @@ public class SettingsViewModel extends ViewModel {
     }
 
     public LiveData<Float> getBidPrice() {
-        if (mBidPrice == null) {
-            mBidPrice = new MutableLiveData<>();
-        }
         return mBidPrice;
     }
 
@@ -38,9 +41,6 @@ public class SettingsViewModel extends ViewModel {
     }
 
     public LiveData<String> getAdUnitId() {
-        if (mAdUnitId == null) {
-            mAdUnitId = new MutableLiveData<>();
-        }
         return mAdUnitId;
     }
 
@@ -49,9 +49,6 @@ public class SettingsViewModel extends ViewModel {
     }
 
     public LiveData<PrebidServer> getPrebidServer() {
-        if (mPrebidServer == null) {
-            mPrebidServer = new MutableLiveData<>();
-        }
         return mPrebidServer;
     }
 
@@ -60,9 +57,6 @@ public class SettingsViewModel extends ViewModel {
     }
 
     public LiveData<String> getAccountId() {
-        if (mAccountId == null) {
-            mAccountId = new MutableLiveData<>();
-        }
         return mAccountId;
     }
 
@@ -71,9 +65,6 @@ public class SettingsViewModel extends ViewModel {
     }
 
     public LiveData<String> getConfigId() {
-        if (mConfigId == null) {
-            mConfigId = new MutableLiveData<>();
-        }
         return mConfigId;
     }
 

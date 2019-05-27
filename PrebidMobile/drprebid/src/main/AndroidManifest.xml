@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="org.prebid.mobile.drprebid">
 
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <uses-permission android:name="android.permission.CAMERA" />
 
@@ -28,6 +30,10 @@
         </activity>
 
         <activity
+            android:name=".ui.activities.TestResultsActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".ui.activities.WelcomeActivity"
             android:screenOrientation="portrait" />
 
@@ -38,6 +44,10 @@
         <activity
             android:name=".ui.activities.QrCodeCaptureActivity"
             android:screenOrientation="portrait" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
+            android:value="true" />
     </application>
 
 </manifest>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardElevation="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/container_total_result"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp">
+
+            <ProgressBar
+                android:id="@+id/progress_total_result"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageView
+                android:id="@+id/image_total_result"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:visibility="gone" />
+        </FrameLayout>
+
+
+        <ImageButton
+            android:id="@+id/button_info"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:scaleType="fitCenter"
+            android:src="@drawable/outline_info_black_24"
+            android:tint="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/view_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_toStartOf="@id/button_info"
+            android:layout_toEndOf="@id/container_total_result"
+            android:maxLines="1"
+            android:text="@string/ad_server_setup_validation"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:id="@+id/layout_ad_server_request_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/container_total_result"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="20dp"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/container_ad_server_request_result"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical">
+
+                <ProgressBar
+                    android:id="@+id/progress_ad_server_request_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:id="@+id/image_ad_server_request_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/view_ad_server_request_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:drawableEnd="@drawable/baseline_chevron_right_black_24"
+                android:drawableTint="@color/colorPrimaryDark"
+                android:maxLines="1"
+                android:text="@string/ad_server_targeting_request_sent"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_prebid_creative_served_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_ad_server_request_result"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="16dp"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:id="@+id/container_prebid_creative_served_result"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical">
+
+                <ProgressBar
+                    android:id="@+id/progress_prebid_creative_served_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:id="@+id/image_prebid_creative_served_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/view_prebid_creative_served_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:drawableEnd="@drawable/baseline_chevron_right_black_24"
+                android:drawableTint="@color/colorPrimaryDark"
+                android:maxLines="1"
+                android:text="@string/prebid_mobile_creative_served"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
