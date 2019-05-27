@@ -232,6 +232,9 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <FrameLayout
@@ -276,6 +279,9 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="16dp"
+            android:background="?selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
             android:orientation="horizontal">
 
             <FrameLayout
