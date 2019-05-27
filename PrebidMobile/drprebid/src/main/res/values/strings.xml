@@ -13,6 +13,12 @@
     <string name="ad_server_info_file">info-ad-server.html</string>
     <string name="prebid_server_info">Prebid Server Info</string>
     <string name="prebid_server_info_file">info-prebid-server.html</string>
+    <string name="ad_server_test_info">Ad Server Setup Validation</string>
+    <string name="ad_server_test_info_file">test-ad-server.html</string>
+    <string name="real_time_demand_test_info">Real-Time Demand Validation</string>
+    <string name="real_time_demand_test_info_file">test-real-time-demand.html</string>
+    <string name="sdk_test_info">End-to-End SDK Validation</string>
+    <string name="sdk_test_info_file">test-full-sdk.html</string>
 
     <!-- Welcome Activity -->
     <string name="welcome_image">Welcome activity image</string>
