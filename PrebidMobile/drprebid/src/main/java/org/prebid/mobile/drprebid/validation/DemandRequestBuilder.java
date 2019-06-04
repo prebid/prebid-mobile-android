@@ -264,6 +264,12 @@ public class DemandRequestBuilder {
     }
 
     public String getKeywords(Map<String, String> keywords) {
-        return "";
+        String keywordString = "";
+
+        for (String key : keywords.keySet()) {
+
+        }
+
+        return keywordString;
     }
 }
