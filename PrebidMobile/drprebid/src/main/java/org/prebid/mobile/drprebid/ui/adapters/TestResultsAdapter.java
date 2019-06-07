@@ -76,7 +76,7 @@ public class TestResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private void setupItems(Context context) {
-        mItems.add(new AdServerValidationResult());
+        //mItems.add(new AdServerValidationResult());
         mItems.add(new PrebidServerValidationResult());
         mItems.add(new SdkValidationResult());
     }

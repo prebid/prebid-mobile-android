@@ -20,9 +20,9 @@ import org.prebid.mobile.InterstitialAdUnit;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.drprebid.model.AdSize;
 
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,18 +32,21 @@ public class DemandRequestBuilder {
     private final Context context;
     private final String configId;
     private final List<AdSize> adSizes;
-    private final String hostUrl;
 
-    public DemandRequestBuilder(Context context, String configId, AdSize adSize, String hostUrl) {
+    public DemandRequestBuilder(Context context, String configId, AdSize adSize) {
         this.context = context;
         this.configId = configId;
         this.adSizes = new ArrayList<>();
         this.adSizes.add(adSize);
-        this.hostUrl = hostUrl;
     }
 
-    public URLConnection buildRequest(List<AdUnit> adUnits, String accountId, boolean secureParams) {
-        return null;
+    public String buildRequest(List<AdUnit> adUnits, String accountId, boolean secureParams) {
+        try {
+            return openRtbRequestBody(adUnits, accountId, secureParams).toString();
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            return "";
+        }
     }
 
     private JSONObject openRtbRequestBody(List<AdUnit> adUnits, String accountId, boolean secureParams) {
@@ -263,13 +266,30 @@ public class DemandRequestBuilder {
         return object;
     }
 
-    public String getKeywords(Map<String, String> keywords) {
-        String keywordString = "";
+    public String getKeywords(Map<String, List<String>> keywords) {
+        StringBuilder keywordString = new StringBuilder();
 
         for (String key : keywords.keySet()) {
+            List<String> values = keywords.get(key);
+            if (values != null) {
+                for (String value : values) {
+                    String keyvalue = "";
 
+                    if (TextUtils.isEmpty(value)) {
+                        keyvalue = key;
+                    } else {
+                        keyvalue = String.format(Locale.ENGLISH, "%s=%s", key, value);
+                    }
+
+                    if (keywordString.length() > 0) {
+                        keywordString.append(",");
+                    }
+
+                    keywordString.append(keyvalue);
+                }
+            }
         }
 
-        return keywordString;
+        return keywordString.toString();
     }
 }

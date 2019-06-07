@@ -57,7 +57,10 @@ public final class Constants {
         public static final int FORMAT_TEXT = 0;
         public static final int FORMAT_INT = 1;
         public static final int FORMAT_FLOAT = 2;
+    }
 
-
+    public static final class EndpointUrls {
+        public static final String APPNEXUS_PREBID_SERVER = "https://prebid.adnxs.com/pbs/v1/openrtb2/auction";
+        public static final String RUBICON_PREBID_SERVER = "https://prebid-server.rubiconproject.com/openrtb2/auction";
     }
 }

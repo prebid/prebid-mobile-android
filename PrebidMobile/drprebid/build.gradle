@@ -44,6 +44,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-vision:17.0.2'
     implementation 'com.google.android.gms:play-services-ads:17.2.1'
 
+    implementation 'com.squareup.okhttp3:okhttp:3.14.2'
+
     implementation('com.mopub:mopub-sdk:5.7.0@aar') {
         transitive = true
     }
