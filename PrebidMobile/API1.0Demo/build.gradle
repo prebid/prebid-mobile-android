@@ -31,6 +31,12 @@ android {
     }
 }
 
+project.gradle.taskGraph.whenReady {
+    connectedSourceCodeDebugAndroidTest {
+        ignoreFailures = true
+    }
+}
+
 repositories{
     maven {
         url 'https://oss.sonatype.org/service/local/repositories/orgprebid-1020/content'
