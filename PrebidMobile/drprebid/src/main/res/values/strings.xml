@@ -92,7 +92,7 @@
     <string name="real_time_demand_validation">Real-Time Demand Validation</string>
     <string name="bid_requests_sent">%d bid requests sent</string>
     <string name="bid_responses_received">%d bid responses received</string>
-    <string name="average_cpm">%.2f Average CPM</string>
+    <string name="average_cpm">%.02f Average CPM</string>
     <string name="average_response_time">%d ms avg response time</string>
     <string name="sdk_validation">End-to-End SDK Validation</string>
     <string name="ad_unit_registered">Ad unit registered</string>

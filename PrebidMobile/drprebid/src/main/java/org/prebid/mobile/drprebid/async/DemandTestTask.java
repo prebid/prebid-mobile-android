@@ -3,7 +3,6 @@ package org.prebid.mobile.drprebid.async;
 import android.util.Log;
 
 import org.prebid.mobile.drprebid.managers.DemandTestManager;
-import org.prebid.mobile.drprebid.model.DemandTestResponse;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -30,7 +29,8 @@ public class DemandTestTask implements Runnable {
     @Override
     public void run() {
         if (resultTask != null) {
-            DemandTestResponse demandTestResponse = new DemandTestResponse();
+            String responseText = "";
+            int responseCode = 0;
 
             try {
                 OkHttpClient client = new OkHttpClient();
@@ -38,25 +38,20 @@ public class DemandTestTask implements Runnable {
 
                 Response response = client.newCall(request).execute();
 
-                String responseBody = "";
                 if (response.body() != null) {
                     InputStream inputStream = response.body().byteStream();
-                    responseBody = getStringFromStream(inputStream);
+                    responseText = getStringFromStream(inputStream);
                     inputStream.close();
                 }
 
-                if (response.code() == 200) {
-                    demandTestResponse = DemandTestResponse.fromRtbResponse(responseBody);
-                } else {
-                    demandTestResponse.setStatusCode(response.code());
-                    demandTestResponse.setResponseText(responseBody);
-                }
+                responseCode = response.code();
 
             } catch (Exception exception) {
                 Log.e(TAG, exception.getMessage());
             }
 
-            resultTask.setResponse(demandTestResponse);
+            resultTask.setResponse(responseText);
+            resultTask.setResponseCode(responseCode);
             DemandTestManager.getInstance().getMainThreadExecutor().execute(resultTask);
         }
     }

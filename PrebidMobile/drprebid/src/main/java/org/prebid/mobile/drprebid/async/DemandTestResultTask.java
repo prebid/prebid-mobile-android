@@ -1,14 +1,13 @@
 package org.prebid.mobile.drprebid.async;
 
-import org.prebid.mobile.drprebid.model.DemandTestResponse;
-
 public class DemandTestResultTask implements Runnable {
     public interface RequestCompletionListener {
-        void onRequestCompleted(DemandTestResponse response);
+        void onRequestCompleted(String response, int responseCode);
     }
 
     private final RequestCompletionListener listener;
-    private DemandTestResponse response;
+    private String response;
+    private int responseCode;
 
     public DemandTestResultTask(RequestCompletionListener listener) {
         this.listener = listener;
@@ -17,11 +16,15 @@ public class DemandTestResultTask implements Runnable {
     @Override
     public void run() {
         if (listener != null) {
-            listener.onRequestCompleted(response);
+            listener.onRequestCompleted(response, responseCode);
         }
     }
 
-    public void setResponse(DemandTestResponse response) {
+    public void setResponse(String response) {
         this.response = response;
+    }
+
+    public void setResponseCode(int responseCode) {
+        this.responseCode = responseCode;
     }
 }

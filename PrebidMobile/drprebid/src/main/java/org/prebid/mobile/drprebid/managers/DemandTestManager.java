@@ -15,8 +15,13 @@ public class DemandTestManager {
     private static final int MAX_POOL_SIZE = 5;
     private static final int KEEP_ALIVE_TIME = 50;
 
-    private static DemandTestManager testManager = null;
+    private static DemandTestManager testManager;
     private static MainThreadExecutor handler;
+
+    static {
+        testManager = new DemandTestManager();
+        handler = new MainThreadExecutor();
+    }
 
     private DemandTestManager() {
         requestQueue = new LinkedBlockingQueue<>();

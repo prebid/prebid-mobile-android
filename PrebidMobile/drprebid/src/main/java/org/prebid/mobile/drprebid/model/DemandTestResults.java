@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DemandTestResults {
-    private Map<String, String> bidders;
+    private Map<String, Bidder> bidders;
     private Exception error;
     private int responseStatus;
     private String request;
     private int totalBids;
+    private float avgEcpm;
+    private long avgResponseTime;
 
     public DemandTestResults(String request) {
         this.bidders = new HashMap<>();
@@ -16,9 +18,11 @@ public class DemandTestResults {
         this.responseStatus = 200;
         this.request = request;
         this.totalBids = 0;
+        this.avgEcpm = 0.0f;
+        this.avgResponseTime = 0;
     }
 
-    public Map<String, String> getBidders() {
+    public Map<String, Bidder> getBidders() {
         return bidders;
     }
 
@@ -52,5 +56,21 @@ public class DemandTestResults {
 
     public void setTotalBids(int totalBids) {
         this.totalBids = totalBids;
+    }
+
+    public float getAvgEcpm() {
+        return avgEcpm;
+    }
+
+    public void setAvgEcpm(float avgEcpm) {
+        this.avgEcpm = avgEcpm;
+    }
+
+    public long getAvgResponseTime() {
+        return avgResponseTime;
+    }
+
+    public void setAvgResponseTime(long avgResponseTime) {
+        this.avgResponseTime = avgResponseTime;
     }
 }
