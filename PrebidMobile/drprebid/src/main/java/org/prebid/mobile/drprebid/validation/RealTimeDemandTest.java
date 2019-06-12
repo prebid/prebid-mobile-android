@@ -75,6 +75,7 @@ public class RealTimeDemandTest {
             case CUSTOM:
                 PrebidMobile.setPrebidServerHost(Host.CUSTOM);
                 hostUrl = prebidServerSettings.getCustomPrebidServerUrl();
+                Host.CUSTOM.setHostUrl(hostUrl);
                 break;
             default:
                 PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
@@ -231,7 +232,7 @@ public class RealTimeDemandTest {
             float totalCpm = 0.0f;
             int averageResponseTime = 0;
 
-            for (String key: testResults.getBidders().keySet()) {
+            for (String key : testResults.getBidders().keySet()) {
                 Bidder bidder = testResults.getBidders().get(key);
                 double totalPrice = bidder.getCpm();
                 int bids = bidder.getBid();
