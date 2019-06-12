@@ -26,6 +26,13 @@ android {
         abortOnError false
     }
     0
+
+    testOptions.unitTests.all {
+        testLogging {
+            events "passed", "skipped", "failed", "standardOut", "standardError"
+            exceptionFormat = "full"
+        }
+    }
 }
 
 dependencies {

@@ -1,40 +1,35 @@
 language: android
+jdk:
+  - oraclejdk8
 env:
   global:
-    - TERM=dumb
-    - ANDROID_API_LEVEL=28
-    - EMULATOR_API_LEVEL=21
-    - ANDROID_BUILD_TOOLS_VERSION=28.0.3
-    - ANDROID_ABI=armeabi-v7a
-    - ANDROID_TAG=google_apis
-    - ADB_INSTALL_TIMEOUT=20
+    - secure: "ESbreW4FNMPQhV1zbFb9iBvhFWFbVHecaig3Si3+4nrJCMn9x4nqB18ZcU+Aviw67WQNcuSH4I0Hl08uknl+kzE/xKEfPLmu28bptXRCSued49aL11i2aQmRj5nqP2yxkinhtRGOQxzIo56NmFt7sIcEXODM3D5a6q7s9tlvPfw="
+    - secure: "JWEeqx0CWBqAkjcREHUg3Ei8wxqp59HZag8EidSLwmekgPJQwipwuEeXMZyPCGJCP+4ijUirtS/hRApi37BW0LYdt+XR7dI1TSZ0HFLTLqSPfWfsUcjmGpmoqVUv8FLVhC+KA42YeEhqkEaCUW92gJeAyK8swxDqGHAPT/sfKRA="
+
 android:
   components:
-    # The BuildTools version used by your project
-    - build-tools-$ANDROID_BUILD_TOOLS_VERSION
-    # The SDK version used to compile your project
-    - android-$ANDROID_API_LEVEL
-    - android-$EMULATOR_API_LEVEL
-    # Additional components
-    - extra-google-google_play_services
-    - extra-android-support
-    - extra-google-m2repository
-    - extra-android-m2repository
-    - addon-google_apis-google-$ANDROID_API_LEVEL
-    - addon-google_apis-google-$EMULATOR_API_LEVEL
-    - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API_LEVEL
-    - sys-img-armeabi-v7a-google_apis-$EMULATOR_API_LEVEL
+
   licenses:
     - 'android-sdk-license-.+'
 
-jdk:
-  - oraclejdk8
-
 before_install:
-    # the following is to spin up an emulator for integration tests
-    - echo no | android -s create avd -f -n test -t android-$EMULATOR_API_LEVEL --tag $ANDROID_TAG
-    - emulator -avd test -no-window &
-    - android-wait-for-emulator
+  # Install SDK license so Android Gradle plugin can install deps.
+  - mkdir "$ANDROID_HOME/licenses" || true
+  - echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" >> "$ANDROID_HOME/licenses/android-sdk-license"
+  # Install the rest of tools (e.g., avdmanager)
+  - sdkmanager tools
+  # Install the system image
+  - sdkmanager "system-images;android-18;default;armeabi-v7a"
+
+  - avdmanager list
+
+  # Create and start emulator for the script. Meant to race the install task.
+  - echo no | avdmanager create avd --force -n test -k "system-images;android-18;default;armeabi-v7a"
+  - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82
 
 script:
-    - travis_retry ./testprebid.sh
+  - ./testPrebidSDK.sh
+  - ./testPrebidDemo.sh
