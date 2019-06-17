@@ -29,10 +29,10 @@ public class TestResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private final List<ResultItem> mItems;
 
-    public TestResultsAdapter(Context context) {
+    public TestResultsAdapter() {
         mItems = new ArrayList<>();
 
-        setupItems(context);
+        setupItems();
     }
 
     @NonNull
@@ -75,8 +75,8 @@ public class TestResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return mItems.size();
     }
 
-    private void setupItems(Context context) {
-        //mItems.add(new AdServerValidationResult());
+    private void setupItems() {
+        mItems.add(new AdServerValidationResult());
         mItems.add(new PrebidServerValidationResult());
         mItems.add(new SdkValidationResult());
     }

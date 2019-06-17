@@ -1,10 +1,13 @@
 package org.prebid.mobile.drprebid;
 
-import android.app.Application;
+import androidx.multidex.MultiDexApplication;
 
-public class DrPrebidApplication extends Application {
+import org.prebid.mobile.PrebidMobile;
+
+public class DrPrebidApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        PrebidMobile.setApplicationContext(this);
     }
 }
