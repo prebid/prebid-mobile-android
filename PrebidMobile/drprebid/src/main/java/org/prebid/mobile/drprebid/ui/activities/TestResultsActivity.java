@@ -8,7 +8,15 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.ads.MobileAds;
+import com.mopub.common.MoPub;
+import com.mopub.common.SdkConfiguration;
+import com.mopub.common.logging.MoPubLog;
+
 import org.prebid.mobile.drprebid.R;
+import org.prebid.mobile.drprebid.managers.SettingsManager;
+import org.prebid.mobile.drprebid.model.AdServer;
+import org.prebid.mobile.drprebid.model.AdServerSettings;
 import org.prebid.mobile.drprebid.model.SdkTestResults;
 import org.prebid.mobile.drprebid.ui.adapters.TestResultsAdapter;
 import org.prebid.mobile.drprebid.ui.viewmodels.AdServerValidationViewModel;
@@ -38,6 +46,24 @@ public class TestResultsActivity extends AppCompatActivity {
         mDemandValidationViewModel = ViewModelProviders.of(this).get(PrebidServerValidationViewModel.class);
         mSdkValidationViewModel = ViewModelProviders.of(this).get(SdkValidationViewModel.class);
 
+        AdServerSettings adServerSettings = SettingsManager.getInstance(this).getAdServerSettings();
+
+        if (adServerSettings.getAdServer() == AdServer.MOPUB) {
+            initMoPub(adServerSettings.getAdUnitId());
+        } else {
+            initGoogleAdsManager();
+        }
+
+        runTests();
+    }
+
+    private void initMoPub(String adUnitId) {
+        SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(adUnitId).build();
+        MoPub.initializeSdk(this, sdkConfiguration, this::runTests);
+    }
+
+    private void initGoogleAdsManager() {
+        MobileAds.initialize(this.getApplication());
         runTests();
     }
 
@@ -50,7 +76,7 @@ public class TestResultsActivity extends AppCompatActivity {
     }
 
     private void runTests() {
-        runDemandValidationTest();
+        runAdServerValidationTest();
     }
 
     private void runAdServerValidationTest() {

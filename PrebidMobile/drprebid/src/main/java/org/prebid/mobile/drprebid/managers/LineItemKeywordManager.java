@@ -112,4 +112,68 @@ public class LineItemKeywordManager {
 
         return stringBuilder.toString();
     }
+
+    public Map<String, String> getMapKeywords(float bidPrice, AdSize adSize, AdFormat adFormat, PrebidServer prebidServer) {
+        Map<String, String> keywords = new HashMap<>();
+
+        if (prebidServer == PrebidServer.RUBICON) {
+            if (mRubiconCacheIds != null) {
+                if (adFormat == AdFormat.INTERSTITIAL) {
+                    String cacheId = mRubiconCacheIds.get("320x480");
+                    if (!TextUtils.isEmpty(cacheId)) {
+                        keywords.put(KEYWORD_CACHE_ID, cacheId);
+                    }
+                } else {
+                    String cacheId = mRubiconCacheIds.get(String.format(Locale.ENGLISH, "%dx%d", adSize.getWidth(), adSize.getHeight()));
+                    if (!TextUtils.isEmpty(cacheId)) {
+                        keywords.put(KEYWORD_CACHE_ID, cacheId);
+                    }
+                }
+            } else {
+                keywords.put(KEYWORD_CACHE_ID, FAKE_CACHE_ID);
+            }
+        } else if (prebidServer == PrebidServer.APPNEXUS) {
+            if (mAppNexusCacheIds != null) {
+                if (adFormat == AdFormat.INTERSTITIAL) {
+                    String cacheId = mAppNexusCacheIds.get("320x480");
+                    if (!TextUtils.isEmpty(cacheId)) {
+                        keywords.put(KEYWORD_CACHE_ID, cacheId);
+                    }
+                } else {
+                    String cacheId = mAppNexusCacheIds.get(String.format(Locale.ENGLISH, "%dx%d", adSize.getWidth(), adSize.getHeight()));
+                    if (!TextUtils.isEmpty(cacheId)) {
+                        keywords.put(KEYWORD_CACHE_ID, cacheId);
+                    }
+                }
+            } else {
+                keywords.put(KEYWORD_CACHE_ID, FAKE_CACHE_ID);
+            }
+        } else {
+            if (mCustomServerCacheIds != null) {
+                if (adFormat == AdFormat.INTERSTITIAL) {
+                    String cacheId = mCustomServerCacheIds.get("320x480");
+                    if (!TextUtils.isEmpty(cacheId)) {
+                        keywords.put(KEYWORD_CACHE_ID, cacheId);
+                    }
+                } else {
+                    String cacheId = mCustomServerCacheIds.get(String.format(Locale.ENGLISH, "%dx%d", adSize.getWidth(), adSize.getHeight()));
+                    if (!TextUtils.isEmpty(cacheId)) {
+                        keywords.put(KEYWORD_CACHE_ID, cacheId);
+                    }
+                }
+            } else {
+                keywords.put(KEYWORD_CACHE_ID, FAKE_CACHE_ID);
+            }
+        }
+
+        keywords.put(KEYWORD_PRICE, String.format(Locale.ENGLISH, "%.02f", bidPrice));
+
+        if (adFormat == AdFormat.INTERSTITIAL) {
+            keywords.put(KEYWORD_SIZE_KEY, "320x480");
+        } else {
+            keywords.put(KEYWORD_SIZE_KEY, String.format(Locale.ENGLISH, "%dx%d", adSize.getWidth(), adSize.getHeight()));
+        }
+
+        return keywords;
+    }
 }

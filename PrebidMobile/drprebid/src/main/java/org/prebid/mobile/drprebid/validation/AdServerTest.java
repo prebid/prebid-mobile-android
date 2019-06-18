@@ -156,15 +156,20 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
     private String createStringKeywords() {
         StringBuilder stringBuilder = new StringBuilder();
 
+        for (String key : mKeywords.keySet()) {
+            if (stringBuilder.length() > 0) {
+                stringBuilder.append(LineItemKeywordManager.KEYWORD_COMMA);
+            }
 
+            String keyword = String.format(Locale.ENGLISH, "%s:%s", key, mKeywords.get(key));
+            stringBuilder.append(keyword);
+        }
 
         return stringBuilder.toString();
     }
 
     private Map<String, String> createMapKeywords(float bidPrice, AdSize adSize, AdFormat adFormat, PrebidServer prebidServer) {
-        Map<String, String> keywords = new HashMap<>();
-
-        //stringBuilder.append(LineItemKeywordManager.getInstance().getStringKeywords(bidPrice, adSize, adFormat, prebidServer));
+        Map<String, String> keywords = new HashMap<>(LineItemKeywordManager.getInstance().getMapKeywords(bidPrice, adSize, adFormat, prebidServer));
 
         mRequestId = UUID.randomUUID().toString();
 
