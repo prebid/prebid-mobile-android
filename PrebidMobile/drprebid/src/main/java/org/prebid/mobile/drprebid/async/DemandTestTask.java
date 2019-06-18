@@ -5,8 +5,6 @@ import android.util.Log;
 import org.prebid.mobile.drprebid.managers.DemandTestManager;
 import org.prebid.mobile.drprebid.util.IOUtil;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 import okhttp3.MediaType;
@@ -21,13 +19,13 @@ public class DemandTestTask implements Runnable {
     private static final MediaType MEDIA_TYPE = MediaType.parse("application/json");
 
     private final String url;
-    private final String request;
+    private final String requestBody;
     private final DemandTestResultTask resultTask;
 
 
     public DemandTestTask(String hostUrl, String requestBody, DemandTestResultTask resultTask) {
         this.url = hostUrl;
-        this.request = requestBody;
+        this.requestBody = requestBody;
         this.resultTask = resultTask;
     }
 
@@ -40,7 +38,7 @@ public class DemandTestTask implements Runnable {
             try {
                 OkHttpClient client = new OkHttpClient.Builder().build();
 
-                RequestBody body = RequestBody.create(MEDIA_TYPE, request);
+                RequestBody body = RequestBody.create(MEDIA_TYPE, requestBody);
 
                 Request request = new Request.Builder()
                         .url(url)
