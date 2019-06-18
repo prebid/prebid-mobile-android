@@ -85,6 +85,7 @@
                     android:id="@+id/image_bid_requests_sent_result"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="4dp"
                     android:scaleType="fitCenter"
                     android:visibility="gone" />
             </FrameLayout>
@@ -129,6 +130,7 @@
                     android:id="@+id/image_bid_responses_received_result"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="4dp"
                     android:scaleType="fitCenter"
                     android:visibility="gone" />
             </FrameLayout>

@@ -85,6 +85,7 @@
                     android:id="@+id/image_ad_unit_registered_result"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="4dp"
                     android:scaleType="fitCenter"
                     android:visibility="gone" />
             </FrameLayout>
@@ -126,6 +127,7 @@
                     android:id="@+id/image_prebid_request_sent_result"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="4dp"
                     android:scaleType="fitCenter"
                     android:visibility="gone" />
             </FrameLayout>
@@ -167,6 +169,7 @@
                     android:id="@+id/image_prebid_response_received_result"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="4dp"
                     android:scaleType="fitCenter"
                     android:visibility="gone" />
             </FrameLayout>
@@ -208,6 +211,7 @@
                     android:id="@+id/image_creative_cached_result"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="4dp"
                     android:scaleType="fitCenter"
                     android:visibility="gone" />
             </FrameLayout>
@@ -252,6 +256,7 @@
                     android:id="@+id/image_ad_server_request_result"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="4dp"
                     android:scaleType="fitCenter"
                     android:visibility="gone" />
             </FrameLayout>
@@ -299,6 +304,7 @@
                     android:id="@+id/image_prebid_creative_served_result"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="4dp"
                     android:scaleType="fitCenter"
                     android:visibility="gone" />
             </FrameLayout>

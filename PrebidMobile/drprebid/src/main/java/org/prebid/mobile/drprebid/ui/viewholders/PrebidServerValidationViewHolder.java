@@ -50,19 +50,19 @@ public class PrebidServerValidationViewHolder extends RecyclerView.ViewHolder im
             itemView.getContext().startActivity(intent);
         });
 
-        final ProgressBar totalProgress = itemView.findViewById(R.id.progress_total_result);
-        final ImageView totalIcon = itemView.findViewById(R.id.image_total_result);
+        totalProgress = itemView.findViewById(R.id.progress_total_result);
+        totalIcon = itemView.findViewById(R.id.image_total_result);
 
-        final TextView sendRequestView = itemView.findViewById(R.id.view_bid_requests_sent_result);
-        final ProgressBar sendRequestProgress = itemView.findViewById(R.id.progress_bid_requests_sent_result);
-        final ImageView sendRequestIcon = itemView.findViewById(R.id.image_bid_requests_sent_result);
+        sendRequestView = itemView.findViewById(R.id.view_bid_requests_sent_result);
+        sendRequestProgress = itemView.findViewById(R.id.progress_bid_requests_sent_result);
+        sendRequestIcon = itemView.findViewById(R.id.image_bid_requests_sent_result);
 
-        final TextView responseReceivedView = itemView.findViewById(R.id.view_bid_responses_received_result);
-        final ProgressBar responseReceivedProgress = itemView.findViewById(R.id.progress_bid_responses_received_result);
-        final ImageView responseReceivedIcon = itemView.findViewById(R.id.image_bid_responses_received_result);
+        responseReceivedView = itemView.findViewById(R.id.view_bid_responses_received_result);
+        responseReceivedProgress = itemView.findViewById(R.id.progress_bid_responses_received_result);
+        responseReceivedIcon = itemView.findViewById(R.id.image_bid_responses_received_result);
 
-        final TextView avgCpmView = itemView.findViewById(R.id.view_average_cpm);
-        final TextView avgResponseTimeView = itemView.findViewById(R.id.view_average_response_time);
+        avgCpmView = itemView.findViewById(R.id.view_average_cpm);
+        avgResponseTimeView = itemView.findViewById(R.id.view_average_response_time);
 
         PrebidServerValidationViewModel mViewModel = ViewModelProviders.of((AppCompatActivity) itemView.getContext()).get(PrebidServerValidationViewModel.class);
 

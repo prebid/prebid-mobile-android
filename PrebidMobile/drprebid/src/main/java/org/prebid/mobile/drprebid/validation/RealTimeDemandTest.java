@@ -32,6 +32,7 @@ import java.util.Map;
 
 public class RealTimeDemandTest {
     private static final String TAG = RealTimeDemandTest.class.getSimpleName();
+    private static final int REQUEST_MAX = 100;
 
     public interface Listener {
         void onTestFinished(DemandTestResults results);
@@ -88,7 +89,7 @@ public class RealTimeDemandTest {
         testResponseCount = 0;
         testResults = new DemandTestResults(request);
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < REQUEST_MAX; i++) {
             runTest(hostUrl, request, requestCompletionListener);
         }
     }
@@ -122,7 +123,7 @@ public class RealTimeDemandTest {
                         bidderDetails.setError(0);
                         bidderDetails.setCpm(0);
                         bidderDetails.setServerResponse("");
-                        bidderDetails.setResponseTime(responseMillis.getInt("responseTime"));
+                        bidderDetails.setResponseTime(responseMillis.getInt(key));
 
                         testResults.getBidders().put(key, bidderDetails);
                     }
@@ -140,7 +141,7 @@ public class RealTimeDemandTest {
                                     for (int j = 0; j < bids.length(); j++) {
                                         JSONObject bid = bids.getJSONObject(j);
                                         containsBids = true;
-                                        String bidderName = bid.getString("seat");
+                                        String bidderName = seatbid.getString("seat");
                                         bidderResponseStatuses.put(bidderName, "3");
 
                                         Bidder bidderDetails = testResults.getBidders().get(bidderName);
@@ -197,23 +198,25 @@ public class RealTimeDemandTest {
 
                 for (String key : bidderResponseStatuses.keySet()) {
                     Bidder bidderDetails = testResults.getBidders().get(key);
-                    switch (bidderResponseStatuses.get(key)) {
-                        case "0":
-                            bidderDetails.setNobid(bidderDetails.getNobid() + 1);
-                            break;
-                        case "1":
-                            bidderDetails.setTimeout(bidderDetails.getTimeout() + 1);
-                            break;
-                        case "2":
-                            bidderDetails.setError(bidderDetails.getError() + 1);
-                            break;
+                    if (bidderDetails != null) {
+                        switch (bidderResponseStatuses.get(key)) {
+                            case "0":
+                                bidderDetails.setNobid(bidderDetails.getNobid() + 1);
+                                break;
+                            case "1":
+                                bidderDetails.setTimeout(bidderDetails.getTimeout() + 1);
+                                break;
+                            case "2":
+                                bidderDetails.setError(bidderDetails.getError() + 1);
+                                break;
+                        }
                     }
                 }
 
-                if (testResponseCount == 100) {
+                if (testResponseCount == REQUEST_MAX) {
                     for (String key : bidderResponseStatuses.keySet()) {
                         Bidder bidderDetails = testResults.getBidders().get(key);
-                        if (TextUtils.isEmpty(bidderDetails.getServerResponse())) {
+                        if (bidderDetails != null && TextUtils.isEmpty(bidderDetails.getServerResponse())) {
                             bidderDetails.setServerResponse(response);
                         }
                     }
@@ -227,7 +230,7 @@ public class RealTimeDemandTest {
             testResults.setError(new Exception(response));
         }
 
-        if (testResponseCount == 100) {
+        if (testResponseCount == REQUEST_MAX) {
             int totalBids = 0;
             float totalCpm = 0.0f;
             int averageResponseTime = 0;
@@ -241,9 +244,16 @@ public class RealTimeDemandTest {
                 averageResponseTime += bidder.getResponseTime();
             }
 
-            averageResponseTime = averageResponseTime / testResults.getBidders().size();
-            float averageCpm = totalCpm / totalBids;
-            testResults.setAvgEcpm(averageCpm);
+            if (testResults.getBidders().size() > 0) {
+                averageResponseTime = averageResponseTime / testResults.getBidders().size();
+            }
+
+            if (totalBids > 0) {
+                testResults.setAvgEcpm(totalCpm / totalBids);
+            } else {
+                testResults.setAvgEcpm(0);
+            }
+
             testResults.setAvgResponseTime(averageResponseTime);
             if (mListener != null) {
                 mListener.onTestFinished(testResults);

@@ -7,17 +7,21 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.model.HelpScreen;
 import org.prebid.mobile.drprebid.ui.activities.InfoActivity;
+import org.prebid.mobile.drprebid.ui.viewmodels.AdServerValidationViewModel;
 import org.prebid.mobile.drprebid.util.HelpScreenUtil;
 
 public class AdServerValidationViewHolder extends RecyclerView.ViewHolder implements TestResultViewHolder, LifecycleOwner {
 
     public AdServerValidationViewHolder(@NonNull final View itemView) {
         super(itemView);
+
+        AdServerValidationViewModel mViewModel = ViewModelProviders.of((AppCompatActivity) itemView.getContext()).get(AdServerValidationViewModel.class);
 
         itemView.findViewById(R.id.button_info).setOnClickListener(v -> {
             HelpScreen aboutScreen = HelpScreenUtil.getAdServerTestInfo(itemView.getContext());
