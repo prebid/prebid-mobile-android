@@ -16,8 +16,15 @@
 
 package org.prebid.mobile;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.ValueCallback;
+import android.webkit.WebView;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,9 +33,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-class Util {
+public class Util {
 
     private static final Random RANDOM = new Random();
     static final String MOPUB_BANNER_VIEW_CLASS = "com.mopub.mobileads.MoPubView";
@@ -43,6 +53,170 @@ class Util {
 
     private Util() {
 
+    }
+
+    public static void findPrebidCreativeSize(View adView, CreativeSizeCompletionHandler completionHandler) {
+
+        WebView view = recursivelyFindWebView(adView);
+        if (view == null) {
+            LogUtil.w("adView doesn't include WebView");
+            return;
+        }
+
+        findSizeInWebViewAsync(view, completionHandler);
+    }
+
+    public interface CreativeSizeCompletionHandler {
+        void onSize(@Nullable Size size);
+    }
+
+    @Nullable
+    static WebView recursivelyFindWebView(View view) {
+        if (view instanceof ViewGroup) {
+            //ViewGroup
+            ViewGroup viewGroup = (ViewGroup)view;
+
+            if (!(viewGroup instanceof WebView)) {
+                for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                    WebView result = recursivelyFindWebView(viewGroup.getChildAt(i));
+
+                    if (result != null) {
+                        return result;
+                    }
+                }
+            } else {
+                //WebView
+
+                WebView webView = (WebView)viewGroup;
+                return webView;
+            }
+
+        }
+
+        return null;
+    }
+
+    static void findSizeInWebViewAsync(final WebView webView, final CreativeSizeCompletionHandler completionHandler) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            webView.evaluateJavascript("document.body.innerHTML", new ValueCallback<String>() {
+                @Override
+                public void onReceiveValue(String html) {
+
+                    Size adSize = findSizeInJavaScript(html);
+                    completionHandler.onSize(adSize);
+
+                    webView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            webView.getSettings().setLoadWithOverviewMode(true);
+                        }
+                    });
+
+                }
+            });
+
+        } else  {
+            LogUtil.w("AndroidSDK < KITKAT");
+            completionHandler.onSize(null);
+        }
+
+    }
+
+    @Nullable
+    static Size findSizeInJavaScript(@Nullable String jsCode) {
+
+        if (jsCode == null) {
+            LogUtil.w("jsCode is null");
+            return null;
+        }
+
+        if (TextUtils.isEmpty(jsCode)) {
+            LogUtil.w("jsCode is empty");
+            return null;
+        }
+
+        String hbSizeKeyValue = findHbSizeKeyValue(jsCode);
+        if (hbSizeKeyValue == null) {
+            LogUtil.w("HbSizeKeyValue is null");
+            return null;
+        }
+
+        String hbSizeValue = findHbSizeValue(hbSizeKeyValue);
+        if (hbSizeValue == null) {
+            LogUtil.w("HbSizeValue is null");
+            return null;
+        }
+
+        return stringToSize(hbSizeValue);
+    }
+
+    @Nullable
+    static String findHbSizeKeyValue(String text) {
+        return matchAndCheck("hb_size\\W+[0-9]+x[0-9]+", text);
+    }
+
+    @Nullable
+    static String findHbSizeValue(String text) {
+        return matchAndCheck("[0-9]+x[0-9]+", text);
+    }
+
+    @NonNull
+    static String[] matches(String regex, String text) {
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(text);
+
+        List<String> allMatches = new ArrayList<>();
+        while (matcher.find()) {
+            allMatches.add(matcher.group());
+        }
+
+        return allMatches.toArray(new String[0]);
+    }
+
+    @Nullable
+    static String matchAndCheck(String regex, String text) {
+
+        String[] matched = matches(regex, text);
+
+        if (matched.length == 0) {
+            return null;
+        }
+
+        String firstResult = matched[0];
+        return firstResult;
+    }
+
+    @Nullable
+    static Size stringToSize(String size) {
+        String[] sizeArr = size.split("x");
+
+        if (sizeArr.length != 2) {
+            LogUtil.w(size + "has a wrong format");
+            return null;
+        }
+
+        String widthString = sizeArr[0];
+        String heightString = sizeArr[1];
+
+        int width;
+        int height;
+        try {
+            width = Integer.parseInt(widthString);
+        } catch (NumberFormatException e) {
+            LogUtil.w(size + "can not be converted to Size");
+            return null;
+        }
+
+        try {
+            height = Integer.parseInt(heightString);
+        } catch (NumberFormatException e) {
+            LogUtil.w(size + "can not be converted to Size");
+            return null;
+        }
+
+        return new Size(width, height);
     }
 
     static Class getClassFromString(String className) {
@@ -279,6 +453,60 @@ class Util {
             for (String key : reservedKeys) {
                 bundle.remove(key);
             }
+        }
+    }
+
+    /**
+     * Utility Size class
+     */
+    public static class Size {
+        private int width;
+        private int height;
+
+        /**
+         * Creates an ad size object with width and height as specified
+         *
+         * @param width  width of the ad container
+         * @param height height of the ad container
+         */
+        public Size(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
+
+        /**
+         * Returns the width of the ad container
+         *
+         * @return width
+         */
+        public int getWidth() {
+            return width;
+        }
+
+        /**
+         * Returns the height of the ad container
+         *
+         * @return height
+         */
+        public int getHeight() {
+            return height;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Size adSize = (Size) o;
+
+            if (width != adSize.width) return false;
+            return height == adSize.height;
+        }
+
+        @Override
+        public int hashCode() {
+            String size = width + "x" + height;
+            return size.hashCode();
         }
     }
 }
