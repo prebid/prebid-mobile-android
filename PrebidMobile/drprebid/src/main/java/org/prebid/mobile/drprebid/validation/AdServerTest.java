@@ -109,11 +109,17 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
                 moPubBanner.setAutorefreshEnabled(false);
                 moPubBanner.setBannerAdListener(this);
                 moPubBanner.setKeywords(keywords);
+
+                Networking.getRequestQueue(mContext).addRequestFinishedListener(mMoPubRequestFinishedListener);
+
                 moPubBanner.loadAd();
             } else if (generalSettings.getAdFormat() == AdFormat.INTERSTITIAL) {
                 MoPubInterstitial moPubInterstitial = new MoPubInterstitial(mContext, adServerSettings.getAdUnitId());
                 moPubInterstitial.setInterstitialAdListener(this);
                 moPubInterstitial.setKeywords(keywords);
+
+                Networking.getRequestQueue(mContext).addRequestFinishedListener(mMoPubRequestFinishedListener);
+
                 moPubInterstitial.load();
             }
         } else if (adServerSettings.getAdServer() == AdServer.GOOGLE_AD_MANAGER) {
@@ -343,19 +349,23 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
     }
 
     private void invokeContainsPrebidCreative() {
-        if (mListener != null) {
-            mListener.onServerRespondedWithPrebidCreative();
-        }
+        mContext.runOnUiThread(() -> {
+            if (mListener != null) {
+                mListener.onServerRespondedWithPrebidCreative();
+            }
 
-        invokeTestFinished();
+            invokeTestFinished();
+        });
     }
 
     private void invokeDoesNotContainPrebidCreative() {
-        if (mListener != null) {
-            mListener.onServerNotRespondedWithPrebidCreative();
-        }
+        mContext.runOnUiThread(() -> {
+            if (mListener != null) {
+                mListener.onServerNotRespondedWithPrebidCreative();
+            }
 
-        invokeTestFinished();
+            invokeTestFinished();
+        });
     }
 
     private void invokeTestFinished() {

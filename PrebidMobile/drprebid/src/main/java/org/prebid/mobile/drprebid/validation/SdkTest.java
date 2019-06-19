@@ -136,8 +136,6 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
         GeneralSettings generalSettings = SettingsManager.getInstance(mContext).getGeneralSettings();
         AdServerSettings adServerSettings = SettingsManager.getInstance(mContext).getAdServerSettings();
 
-        mMoPubRequestQueue.addRequestFinishedListener(mMoPubRequestFinishedListener);
-
         if (adServerSettings.getAdServer() == AdServer.MOPUB) {
             if (generalSettings.getAdFormat() == AdFormat.BANNER) {
                 AdSize adSize = generalSettings.getAdSize();
@@ -148,6 +146,7 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
                 mMoPubBanner.setLayoutParams(layoutParams);
                 mMoPubBanner.setAutorefreshEnabled(false);
                 mMoPubBanner.setBannerAdListener(this);
+                mMoPubBanner.setAdUnitId(adServerSettings.getAdUnitId());
 
                 if (mAdUnit != null) {
                     Networking.getRequestQueue(mContext).addRequestFinishedListener(mMoPubRequestFinishedListener);
@@ -340,9 +339,12 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
                     }
                 });
 
-                if (mListener != null) {
-                    mListener.requestSentToAdServer(url, postBody);
-                }
+                mContext.runOnUiThread(() -> {
+                    if (mListener != null) {
+                        mListener.requestSentToAdServer(url, postBody);
+                    }
+                });
+
             }
         } catch (Exception exception) {
             Log.e(TAG, exception.getMessage());
@@ -358,10 +360,12 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
     }
 
     private void invokeContainsPrebidCreative(boolean contains) {
-        if (mListener != null) {
-            mListener.adServerResponseContainsPrebidCreative(contains);
+        mContext.runOnUiThread(() -> {
+            if (mListener != null) {
+                mListener.adServerResponseContainsPrebidCreative(contains);
 
-            mListener.onTestFinished();
-        }
+                mListener.onTestFinished();
+            }
+        });
     }
 }

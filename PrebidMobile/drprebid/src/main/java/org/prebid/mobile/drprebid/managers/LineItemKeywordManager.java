@@ -115,7 +115,7 @@ public class LineItemKeywordManager {
                     .post(body)
                     .build();
 
-            client.newCall(appNexusRequest).enqueue(new Callback() {
+            /*client.newCall(appNexusRequest).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
 
@@ -132,6 +132,24 @@ public class LineItemKeywordManager {
                     int responseCode = response.code();
                 }
             });
+
+            client.newCall(rubiconRequest).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.body() != null) {
+                        InputStream inputStream = response.body().byteStream();
+                        String responseText = IOUtil.getStringFromStream(inputStream);
+                        inputStream.close();
+                    }
+
+                    int responseCode = response.code();
+                }
+            });*/
         } catch (Exception exception) {
             Log.e(TAG, exception.getMessage());
         }
