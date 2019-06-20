@@ -40,11 +40,6 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
 
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-
 @RunWith(AndroidJUnit4.class)
 public class DFPBannerComplexTest {
     @Rule
@@ -207,13 +202,10 @@ public class DFPBannerComplexTest {
 
         bannerAdUnit.fetchDemand(request, completeListener);
 
-        synchronized (syncObject){
-            syncObject.wait();
-        }
+//        synchronized (syncObject){
+//            syncObject.wait();
+//        }
 
-        Thread.sleep(1_000);
-        onView(withId(R.id.adFrame))
-                .check(matches(isDisplayed()));
     }
 
     private static class IntegerWrapper {
