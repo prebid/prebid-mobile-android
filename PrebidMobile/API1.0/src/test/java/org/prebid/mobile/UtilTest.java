@@ -166,9 +166,9 @@ public class UtilTest extends BaseSetup {
 
     @Test
     public void testStringToCGSize() {
-        Util.Size result = Util.stringToSize("300x250");
+        Util.CreativeSize result = Util.stringToSize("300x250");
         assertNotNull(result);
-        assertEquals(new Util.Size(300, 250), result);
+        assertEquals(new Util.CreativeSize(300, 250), result);
 
         result = Util.stringToSize("300x250x1");
         assertNull(result);
@@ -182,7 +182,7 @@ public class UtilTest extends BaseSetup {
 
     @Test
     public void testFindSizeInJavaScript() {
-        Util.Size result = Util.findSizeInJavaScript(null);
+        Util.CreativeSize result = Util.findSizeInJavaScript(null);
         assertNull(result);
 
         result = Util.findSizeInJavaScript("<script> \n </script>");
@@ -193,7 +193,7 @@ public class UtilTest extends BaseSetup {
 
         result = Util.findSizeInJavaScript("<script> \n \"hb_size\":[\"728x90\"] \n </script>");
         assertNotNull(result);
-        assertEquals(new Util.Size(728, 90), result);
+        assertEquals(new Util.CreativeSize(728, 90), result);
     }
 
 }

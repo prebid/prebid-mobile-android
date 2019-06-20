@@ -17,7 +17,6 @@
 package org.prebid.mobile.app;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -35,12 +34,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.Host;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
 
 import java.util.concurrent.CountDownLatch;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class DFPBannerComplexTest {
@@ -74,8 +76,15 @@ public class DFPBannerComplexTest {
         });
 
         final PublisherAdView dfpAdView = new PublisherAdView(demoActivity);
+        //Programmatic fix
         dfpAdView.setAdUnitId("/5300653/test_adunit_pavliuchyk_300x250_puc_ucTagData_prebid-server.rubiconproject.com");
+        dfpAdView.setAdSizes(new AdSize(300, 250));
+
+        //Targeting creative
+        /*
+        dfpAdView.setAdUnitId("/5300653/Banner_PUC_b397711");
         dfpAdView.setAdSizes(new AdSize(300, 250), new AdSize(728, 90));
+        */
 
         final BannerAdUnit bannerAdUnit = new BannerAdUnit("1001-1", 300, 250);
 
@@ -143,9 +152,10 @@ public class DFPBannerComplexTest {
             public void onAdLoaded() {
                 super.onAdLoaded();
 
+                //Programmatic fix
                 Util.findPrebidCreativeSize(dfpAdView, new Util.CreativeSizeCompletionHandler() {
                     @Override
-                    public void onSize(final Util.Size size) {
+                    public void onSize(final Util.CreativeSize size) {
                         if (size != null) {
 
                             dfpAdView.setAdSizes(new AdSize(size.getWidth(), size.getHeight()));
@@ -167,8 +177,8 @@ public class DFPBannerComplexTest {
                                         e.printStackTrace();
                                     }
 
-                                    Assert.assertEquals((int)dpW, size.getWidth());
-                                    Assert.assertEquals((int)dpH, size.getHeight());
+                                    assertEquals((int)dpW, size.getWidth());
+                                    assertEquals((int)dpH, size.getHeight());
 
                                     update(true);
 
@@ -176,18 +186,27 @@ public class DFPBannerComplexTest {
                             });
 
                         } else {
-                            Log.d("TAG", "size is null");
+                            LogUtil.w("size is null");
                             update(false);
                         }
                     }
                 });
 
+                //Targeting creative
+                /*
+                try {
+                    Thread.sleep(screenshotDelayMillis);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                update(true);
+                */
             }
 
             @Override
             public void onAdFailedToLoad(int i) {
                 super.onAdFailedToLoad(i);
-                Log.d("TAG", "onAdFailedToLoad");
+                LogUtil.w("onAdFailedToLoad:" + i);
 
                 update(false);
             }
@@ -202,7 +221,20 @@ public class DFPBannerComplexTest {
 
         bannerAdUnit.fetchDemand(request, completeListener);
 
-        lock.await();
+        //TravisCI fix
+        Thread.sleep(2 * transactionFailRepeatCount * transactionFailDelayMillis + 2 * screenshotDelayMillis);
+        //local test
+//        lock.await();
+
+        try {
+            Thread.sleep(screenshotDelayMillis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(-1, firstTransactionCount.getValue());
+        assertEquals(-1, secondTransactionCount.getValue());
+
 
     }
 

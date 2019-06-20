@@ -16,10 +16,12 @@
 
 package org.prebid.mobile;
 
+import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.Size;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,10 +42,10 @@ import java.util.regex.Pattern;
 
 public class Util {
 
-    private static final Random RANDOM = new Random();
     static final String MOPUB_BANNER_VIEW_CLASS = "com.mopub.mobileads.MoPubView";
     static final String MOPUB_INTERSTITIAL_CLASS = "com.mopub.mobileads.MoPubInterstitial";
     static final String DFP_AD_REQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
+    private static final Random RANDOM = new Random();
     private static final HashSet<String> reservedKeys;
     private static final int MoPubQueryStringLimit = 4000;
 
@@ -57,55 +59,44 @@ public class Util {
 
     public static void findPrebidCreativeSize(View adView, CreativeSizeCompletionHandler completionHandler) {
 
-        WebView view = recursivelyFindWebView(adView);
-        if (view == null) {
+        List<WebView> webViewList = new ArrayList<>(2);
+        recursivelyFindWebView(adView, webViewList);
+        if (webViewList.size() == 0) {
             LogUtil.w("adView doesn't include WebView");
             return;
         }
 
-        findSizeInWebViewAsync(view, completionHandler);
-    }
-
-    public interface CreativeSizeCompletionHandler {
-        void onSize(@Nullable Size size);
+        findSizeInWebViewListAsync(webViewList, completionHandler);
     }
 
     @Nullable
-    static WebView recursivelyFindWebView(View view) {
+    static void recursivelyFindWebView(View view, List<WebView> webViewList) {
         if (view instanceof ViewGroup) {
             //ViewGroup
-            ViewGroup viewGroup = (ViewGroup)view;
+            ViewGroup viewGroup = (ViewGroup) view;
 
             if (!(viewGroup instanceof WebView)) {
                 for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                    WebView result = recursivelyFindWebView(viewGroup.getChildAt(i));
-
-                    if (result != null) {
-                        return result;
-                    }
+                    recursivelyFindWebView(viewGroup.getChildAt(i), webViewList);
                 }
             } else {
                 //WebView
-
-                WebView webView = (WebView)viewGroup;
-                return webView;
+                final WebView webView = (WebView) viewGroup;
+                webViewList.add(webView);
             }
 
         }
-
-        return null;
     }
 
-    static void findSizeInWebViewAsync(final WebView webView, final CreativeSizeCompletionHandler completionHandler) {
+    static void findSizeInWebViewListAsync(@Size(min = 1) final List<WebView> webViewList, final CreativeSizeCompletionHandler completionHandler) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            LogUtil.d("webViewList size:" + webViewList.size());
 
-            webView.evaluateJavascript("document.body.innerHTML", new ValueCallback<String>() {
+            iterateWebViewListAsync(webViewList, webViewList.size() - 1, new WebViewPrebidCallback() {
                 @Override
-                public void onReceiveValue(String html) {
+                public void success(final WebView webView, @NonNull CreativeSize adSize) {
 
-                    Size adSize = findSizeInJavaScript(html);
                     completionHandler.onSize(adSize);
-
                     webView.post(new Runnable() {
                         @Override
                         public void run() {
@@ -114,22 +105,65 @@ public class Util {
                     });
 
                 }
+
+                @Override
+                public void failure() {
+                    completionHandler.onSize(null);
+                }
             });
 
-        } else  {
+
+        } else {
             LogUtil.w("AndroidSDK < KITKAT");
             completionHandler.onSize(null);
         }
 
     }
 
-    @Nullable
-    static Size findSizeInJavaScript(@Nullable String jsCode) {
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    static void iterateWebViewListAsync(@Size(min = 1) final List<WebView> webViewList, final int index, final WebViewPrebidCallback webViewPrebidCallback) {
 
-        if (jsCode == null) {
-            LogUtil.w("jsCode is null");
-            return null;
-        }
+        final WebView webView = webViewList.get(index);
+
+        webView.evaluateJavascript("document.body.innerHTML", new ValueCallback<String>() {
+
+            private void repeatOrFail() {
+                int nextIndex = index - 1;
+
+                if (nextIndex >= 0) {
+                    iterateWebViewListAsync(webViewList, nextIndex, webViewPrebidCallback);
+                } else {
+                    webViewPrebidCallback.failure();
+                }
+            }
+
+            @Override
+            public void onReceiveValue(@Nullable String html) {
+
+                if (html == null) {
+                    LogUtil.w("webView jsCode is null");
+
+                    repeatOrFail();
+                } else {
+
+                    @Nullable
+                    CreativeSize adSize = findSizeInJavaScript(html);
+
+                    if (adSize == null) {
+                        LogUtil.w("adSize is null");
+                        repeatOrFail();
+                    } else {
+                        webViewPrebidCallback.success(webView, adSize);
+                    }
+
+                }
+
+            }
+        });
+    }
+
+    @Nullable
+    static CreativeSize findSizeInJavaScript(@Nullable String jsCode) {
 
         if (TextUtils.isEmpty(jsCode)) {
             LogUtil.w("jsCode is empty");
@@ -189,7 +223,7 @@ public class Util {
     }
 
     @Nullable
-    static Size stringToSize(String size) {
+    static CreativeSize stringToSize(String size) {
         String[] sizeArr = size.split("x");
 
         if (sizeArr.length != 2) {
@@ -216,7 +250,7 @@ public class Util {
             return null;
         }
 
-        return new Size(width, height);
+        return new CreativeSize(width, height);
     }
 
     static Class getClassFromString(String className) {
@@ -456,10 +490,20 @@ public class Util {
         }
     }
 
+    public interface CreativeSizeCompletionHandler {
+        void onSize(@Nullable CreativeSize size);
+    }
+
+    private interface WebViewPrebidCallback {
+        void success(WebView webView, CreativeSize adSize);
+
+        void failure();
+    }
+
     /**
      * Utility Size class
      */
-    public static class Size {
+    public static class CreativeSize {
         private int width;
         private int height;
 
@@ -469,7 +513,7 @@ public class Util {
          * @param width  width of the ad container
          * @param height height of the ad container
          */
-        public Size(int width, int height) {
+        public CreativeSize(int width, int height) {
             this.width = width;
             this.height = height;
         }
@@ -497,7 +541,7 @@ public class Util {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            Size adSize = (Size) o;
+            CreativeSize adSize = (CreativeSize) o;
 
             if (width != adSize.width) return false;
             return height == adSize.height;
