@@ -30,7 +30,6 @@ import org.prebid.mobile.drprebid.model.AdServerSettings;
 import org.prebid.mobile.drprebid.model.AdSize;
 import org.prebid.mobile.drprebid.model.GeneralSettings;
 import org.prebid.mobile.drprebid.model.PrebidServerSettings;
-import org.prebid.mobile.drprebid.model.SdkTestResults;
 import org.prebid.mobile.drprebid.util.DimenUtil;
 import org.prebid.mobile.drprebid.util.IOUtil;
 

@@ -3,6 +3,8 @@ package org.prebid.mobile.drprebid.managers;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.drprebid.model.AdFormat;
 import org.prebid.mobile.drprebid.model.AdSize;
@@ -37,7 +39,7 @@ public class LineItemKeywordManager {
 
     public static final String CACHE_ENDPOINT_APPNEXUS = "https://prebid.adnxs.com/pbc/v1/cache";
     public static final String CACHE_ENDPOINT_RUBICON = "https://prebid-server.rubiconproject.com/cache";
-    public static final String CACHE_ENDPOINT_CUSTOM = "";
+    public static final String CACHE_ENDPOINT_CUSTOM = "https://prebid.va.pubnative.io/cache";
 
     public static final String CREATIVE_300x250 = "{\\\"id\\\":\\\"7438652069000399098\\\",\\\"impid\\\":\\\"Home\\\",\\\"price\\\":0.5,\\\"adm\\\":\\\"<script type=\\\\\\\"text\\/javascript\\\\\\\">document.write('<a href=\\\\\\\"http:\\/\\/prebid.org\\\\\\\" target=\\\\\\\"_blank\\\\\\\"><img width=\\\\\\\"300\\\\\\\" height=\\\\\\\"250\\\\\\\" style=\\\\\\\"border-style: none\\\\\\\" src=\\\\\\\"https:\\/\\/vcdn.adnxs.com\\/p\\/creative-image\\/27\\/c0\\/52\\/67\\/27c05267-5a6d-4874-834e-18e218493c32.png\\\\\\\"\\/><\\/a>');<\\/script>\\\",\\\"adid\\\":\\\"29681110\\\",\\\"adomain\\\":[\\\"appnexus.com\\\"],\\\"iurl\\\":\\\"https:\\/\\/nym1-ib.adnxs.com\\/cr?id=29681110\\\",\\\"cid\\\":\\\"958\\\",\\\"crid\\\":\\\"29681110\\\",\\\"w\\\":300,\\\"h\\\":250}";
     public static final String CREATIVE_300x600 = "{\\\"id\\\":\\\"7438652069000399098\\\",\\\"impid\\\":\\\"Home\\\",\\\"price\\\":0.5,\\\"adm\\\":\\\"<script type=\\\\\\\"text\\/javascript\\\\\\\">document.write('<a href=\\\\\\\"http:\\/\\/prebid.org\\\\\\\" target=\\\\\\\"_blank\\\\\\\"><img width=\\\\\\\"300\\\\\\\" height=\\\\\\\"600\\\\\\\" style=\\\\\\\"border-style: none\\\\\\\" src=\\\\\\\"https:\\/\\/vcdn.adnxs.com\\/p\\/creative-image\\/79\\/0f\\/47\\/8f\\/790f478f-7de1-4472-9496-d21182055f90.png\\\\\\\"\\/><\\/a>');<\\/script>\\\",\\\"adid\\\":\\\"29681110\\\",\\\"adomain\\\":[\\\"appnexus.com\\\"],\\\"iurl\\\":\\\"https:\\/\\/nym1-ib.adnxs.com\\/cr?id=29681110\\\",\\\"cid\\\":\\\"958\\\",\\\"crid\\\":\\\"29681110\\\",\\\"w\\\":300,\\\"h\\\":600}";
@@ -99,7 +101,18 @@ public class LineItemKeywordManager {
             content728x90.put("type", "json");
             content728x90.put("value", creative728x90);
 
-            String postBody = "";
+            JSONArray contentArray = new JSONArray();
+            contentArray.put(content300x250);
+            contentArray.put(content300x600);
+            contentArray.put(content320x50);
+            contentArray.put(content320x100);
+            contentArray.put(content320x480);
+            contentArray.put(content728x90);
+
+            JSONObject postObject = new JSONObject();
+            postObject.put("puts", contentArray);
+
+            String postBody = postObject.toString();
 
             MediaType jsonMediaType = MediaType.parse("application/json");
             OkHttpClient client = new OkHttpClient.Builder().build();
@@ -115,10 +128,10 @@ public class LineItemKeywordManager {
                     .post(body)
                     .build();
 
-            /*client.newCall(appNexusRequest).enqueue(new Callback() {
+            client.newCall(appNexusRequest).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-
+                    Log.e(TAG, e.getMessage());
                 }
 
                 @Override
@@ -127,16 +140,29 @@ public class LineItemKeywordManager {
                         InputStream inputStream = response.body().byteStream();
                         String responseText = IOUtil.getStringFromStream(inputStream);
                         inputStream.close();
-                    }
 
-                    int responseCode = response.code();
+                        try {
+                            JSONObject responseJson = new JSONObject(responseText);
+                            JSONArray uuids = responseJson.getJSONArray("responses");
+
+                            mAppNexusCacheIds.put("300x250", uuids.getJSONObject(0).getString("uuid"));
+                            mAppNexusCacheIds.put("300x600", uuids.getJSONObject(1).getString("uuid"));
+                            mAppNexusCacheIds.put("320x50", uuids.getJSONObject(2).getString("uuid"));
+                            mAppNexusCacheIds.put("320x100", uuids.getJSONObject(3).getString("uuid"));
+                            mAppNexusCacheIds.put("320x480", uuids.getJSONObject(4).getString("uuid"));
+                            mAppNexusCacheIds.put("728x90", uuids.getJSONObject(5).getString("uuid"));
+
+                        } catch (JSONException exception) {
+                            Log.e(TAG, exception.getMessage());
+                        }
+                    }
                 }
             });
 
             client.newCall(rubiconRequest).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-
+                    Log.e(TAG, e.getMessage());
                 }
 
                 @Override
@@ -145,11 +171,62 @@ public class LineItemKeywordManager {
                         InputStream inputStream = response.body().byteStream();
                         String responseText = IOUtil.getStringFromStream(inputStream);
                         inputStream.close();
+
+                        try {
+                            JSONObject responseJson = new JSONObject(responseText);
+                            JSONArray uuids = responseJson.getJSONArray("responses");
+
+                            mRubiconCacheIds.put("300x250", uuids.getJSONObject(0).getString("uuid"));
+                            mRubiconCacheIds.put("300x600", uuids.getJSONObject(1).getString("uuid"));
+                            mRubiconCacheIds.put("320x50", uuids.getJSONObject(2).getString("uuid"));
+                            mRubiconCacheIds.put("320x100", uuids.getJSONObject(3).getString("uuid"));
+                            mRubiconCacheIds.put("320x480", uuids.getJSONObject(4).getString("uuid"));
+                            mRubiconCacheIds.put("728x90", uuids.getJSONObject(5).getString("uuid"));
+
+                        } catch (JSONException exception) {
+                            Log.e(TAG, exception.getMessage());
+                        }
+                    }
+                }
+            });
+
+            if (!TextUtils.isEmpty(CACHE_ENDPOINT_CUSTOM)) {
+                Request customRequest = new Request.Builder()
+                        .url(CACHE_ENDPOINT_CUSTOM)
+                        .post(body)
+                        .build();
+
+                client.newCall(customRequest).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.e(TAG, e.getMessage());
                     }
 
-                    int responseCode = response.code();
-                }
-            });*/
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if (response.body() != null) {
+                            InputStream inputStream = response.body().byteStream();
+                            String responseText = IOUtil.getStringFromStream(inputStream);
+                            inputStream.close();
+
+                            try {
+                                JSONObject responseJson = new JSONObject(responseText);
+                                JSONArray uuids = responseJson.getJSONArray("responses");
+
+                                mCustomServerCacheIds.put("300x250", uuids.getJSONObject(0).getString("uuid"));
+                                mCustomServerCacheIds.put("300x600", uuids.getJSONObject(1).getString("uuid"));
+                                mCustomServerCacheIds.put("320x50", uuids.getJSONObject(2).getString("uuid"));
+                                mCustomServerCacheIds.put("320x100", uuids.getJSONObject(3).getString("uuid"));
+                                mCustomServerCacheIds.put("320x480", uuids.getJSONObject(4).getString("uuid"));
+                                mCustomServerCacheIds.put("728x90", uuids.getJSONObject(5).getString("uuid"));
+
+                            } catch (JSONException exception) {
+                                Log.e(TAG, exception.getMessage());
+                            }
+                        }
+                    }
+                });
+            }
         } catch (Exception exception) {
             Log.e(TAG, exception.getMessage());
         }
