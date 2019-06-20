@@ -40,6 +40,8 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
 
+import java.util.concurrent.CountDownLatch;
+
 @RunWith(AndroidJUnit4.class)
 public class DFPBannerComplexTest {
     @Rule
@@ -49,7 +51,7 @@ public class DFPBannerComplexTest {
     @Test
     public void testRubiconDFPBannerResizeSanityAppCheckTest() throws Exception {
 
-        final Object syncObject = new Object();
+        final CountDownLatch lock = new CountDownLatch(1);
 
         PrebidMobile.setPrebidServerHost(Host.RUBICON);
         PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
@@ -88,9 +90,7 @@ public class DFPBannerComplexTest {
         dfpAdView.setAdListener(new AdListener() {
 
             private void notifyResult() {
-                synchronized (syncObject) {
-                    syncObject.notify();
-                }
+                lock.countDown();
             }
 
             private void update(boolean isSuccess) {
@@ -202,9 +202,7 @@ public class DFPBannerComplexTest {
 
         bannerAdUnit.fetchDemand(request, completeListener);
 
-//        synchronized (syncObject){
-//            syncObject.wait();
-//        }
+        lock.await();
 
     }
 
