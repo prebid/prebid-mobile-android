@@ -30,7 +30,9 @@ import java.util.HashMap;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -111,4 +113,87 @@ public class UtilTest extends BaseSetup {
         Object object = new Object();
         assertFalse(Util.supportedAdObject(object));
     }
+
+    @Test
+    public void testRegexMatches() {
+        String[] result = Util.matches("^a", "aaa aaa");
+        assertEquals(1, result.length);
+        assertEquals("a", result[0]);
+
+        result = Util.matches("^b", "aaa aaa");
+        assertEquals(0, result.length);
+
+        result = Util.matches("aaa aaa", "^a");
+        assertEquals(0, result.length);
+
+        result = Util.matches("[0-9]+x[0-9]+", "{ \n adManagerResponse:\"hb_size\":[\"728x90\"],\"hb_size_rubicon\":[\"1x1\"],moPubResponse:\"hb_size:300x250\" \n }");
+        assertEquals(3, result.length);
+        assertEquals("728x90", result[0]);
+        assertEquals("1x1", result[1]);
+        assertEquals("300x250", result[2]);
+
+        result = Util.matches("hb_size\\W+[0-9]+x[0-9]+", "{ \n adManagerResponse:\"hb_size\":[\"728x90\"],\"hb_size_rubicon\":[\"1x1\"],moPubResponse:\"hb_size:300x250\" \n }");
+        assertEquals(2, result.length);
+        assertEquals("hb_size\":[\"728x90", result[0]);
+        assertEquals("hb_size:300x250", result[1]);
+    }
+
+    @Test
+    public void testRegexMatchAndCheck() {
+        String result = Util.matchAndCheck("^a", "aaa aaa");
+
+        assertNotNull(result);
+        assertEquals("a", result);
+
+        result = Util.matchAndCheck("^b", "aaa aaa");
+        assertNull(result);
+    }
+
+
+    @Test
+    public void testFindHbSizeValue() {
+        String result = Util.findHbSizeValue("{ \n adManagerResponse:\"hb_size\":[\"728x90\"],\"hb_size_rubicon\":[\"728x90\"],moPubResponse:\"hb_size:300x250\" \n }");
+        assertNotNull(result);
+        assertEquals("728x90", result);
+    }
+
+    @Test
+    public void testFindHbSizeKeyValue() {
+        String result = Util.findHbSizeKeyValue("{ \n adManagerResponse:\"hb_size\":[\"728x90\"],\"hb_size_rubicon\":[\"728x90\"],moPubResponse:\"hb_size:300x250\" \n }");
+        assertNotNull(result);
+        assertEquals("hb_size\":[\"728x90", result);
+    }
+
+    @Test
+    public void testStringToCGSize() {
+        Util.CreativeSize result = Util.stringToSize("300x250");
+        assertNotNull(result);
+        assertEquals(new Util.CreativeSize(300, 250), result);
+
+        result = Util.stringToSize("300x250x1");
+        assertNull(result);
+
+        result = Util.stringToSize("ERROR");
+        assertNull(result);
+
+        result = Util.stringToSize("300x250ERROR");
+        assertNull(result);
+    }
+
+    @Test
+    public void testFindSizeInJavaScript() {
+        Util.CreativeSize result = Util.findSizeInJavaScript(null);
+        assertNull(result);
+
+        result = Util.findSizeInJavaScript("<script> \n </script>");
+        assertNull(result);
+
+        result = Util.findSizeInJavaScript("<script> \n \"hb_size\":ERROR \n </script>");
+        assertNull(result);
+
+        result = Util.findSizeInJavaScript("<script> \n \"hb_size\":[\"728x90\"] \n </script>");
+        assertNotNull(result);
+        assertEquals(new Util.CreativeSize(728, 90), result);
+    }
+
 }
