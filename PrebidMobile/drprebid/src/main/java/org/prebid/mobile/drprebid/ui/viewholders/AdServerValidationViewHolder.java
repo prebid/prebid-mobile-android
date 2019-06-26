@@ -55,9 +55,9 @@ public class AdServerValidationViewHolder extends RecyclerView.ViewHolder implem
         responseReceivedProgress = itemView.findViewById(R.id.progress_prebid_creative_served_result);
         responseReceivedIcon = itemView.findViewById(R.id.image_prebid_creative_served_result);
 
-        AdServerValidationViewModel mViewModel = ViewModelProviders.of((AppCompatActivity) itemView.getContext()).get(AdServerValidationViewModel.class);
+        AdServerValidationViewModel viewModel = ViewModelProviders.of((AppCompatActivity) itemView.getContext()).get(AdServerValidationViewModel.class);
 
-        mViewModel.getRequestSent().observe(this, sent -> {
+        viewModel.getRequestSent().observe(this, sent -> {
             sendRequestProgress.setVisibility(View.GONE);
             sendRequestIcon.setVisibility(View.VISIBLE);
 
@@ -74,7 +74,7 @@ public class AdServerValidationViewHolder extends RecyclerView.ViewHolder implem
             updateTotal();
         });
 
-        mViewModel.getCreativeServed().observe(this, served -> {
+        viewModel.getCreativeServed().observe(this, served -> {
             responseReceivedProgress.setVisibility(View.GONE);
             responseReceivedIcon.setVisibility(View.VISIBLE);
 

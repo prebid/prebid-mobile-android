@@ -19,6 +19,7 @@ import com.mopub.volley.RequestQueue;
 
 import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.BannerAdUnit;
+import org.prebid.mobile.BidLog;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.InterstitialAdUnit;
 import org.prebid.mobile.PrebidMobile;
@@ -36,6 +37,8 @@ import org.prebid.mobile.drprebid.util.IOUtil;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -67,9 +70,7 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
     private Activity mContext;
 
     private AdUnit mAdUnit;
-    private boolean mInitialPrebidServerRequestReceived;
     private boolean mInitialPrebidServerResponseReceived;
-    private boolean mBidReceived;
     private String mAdServerResponse = "";
 
     private PublisherAdView mGoogleBanner;
@@ -149,7 +150,10 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
 
                 if (mAdUnit != null) {
                     Networking.getRequestQueue(mContext).addRequestFinishedListener(mMoPubRequestFinishedListener);
-                    mAdUnit.fetchDemand(mMoPubBanner, resultCode -> mMoPubBanner.loadAd());
+                    mAdUnit.fetchDemand(mMoPubBanner, resultCode -> {
+                        checkPrebidLog();
+                        mMoPubBanner.loadAd();
+                    });
 
                     if (mListener != null) {
                         mListener.requestToPrebidServerSent(true);
@@ -162,7 +166,10 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
 
                 if (mAdUnit != null) {
                     Networking.getRequestQueue(mContext).addRequestFinishedListener(mMoPubRequestFinishedListener);
-                    mAdUnit.fetchDemand(mMoPubInterstitial, resultCode -> mMoPubInterstitial.load());
+                    mAdUnit.fetchDemand(mMoPubInterstitial, resultCode -> {
+                        checkPrebidLog();
+                        mMoPubInterstitial.load();
+                    });
 
                     if (mListener != null) {
                         mListener.requestToPrebidServerSent(true);
@@ -201,6 +208,35 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
                     }
                 }
             }
+        }
+    }
+
+    private void checkPrebidLog() {
+        if (!mInitialPrebidServerResponseReceived) {
+            BidLog.BidLogEntry entry = BidLog.getInstance().getLastBid();
+
+            if (mListener != null) {
+                if (entry != null) {
+                    if (entry.getResponseCode() == HttpsURLConnection.HTTP_OK) {
+                        mListener.responseFromPrebidServerReceived(true);
+                        if (entry.containsTopBid()) {
+                            mListener.bidReceivedAndCached(true);
+                        } else {
+                            mListener.bidReceivedAndCached(false);
+                        }
+                    } else {
+                        mListener.responseFromPrebidServerReceived(false);
+                        mListener.bidReceivedAndCached(false);
+                    }
+                } else {
+                    mListener.responseFromPrebidServerReceived(false);
+                    mListener.bidReceivedAndCached(false);
+                }
+            }
+
+            BidLog.getInstance().cleanLog();
+
+            mInitialPrebidServerResponseReceived = true;
         }
     }
 
@@ -264,13 +300,11 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
         @Override
         public void onAdLoaded() {
             super.onAdLoaded();
-            checkResponseForPrebidCreative();
         }
 
         @Override
         public void onAdFailedToLoad(int errorCode) {
             super.onAdFailedToLoad(errorCode);
-            invokeContainsPrebidCreative(false);
         }
     };
 
@@ -280,13 +314,11 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
         @Override
         public void onAdLoaded() {
             super.onAdLoaded();
-            checkResponseForPrebidCreative();
         }
 
         @Override
         public void onAdFailedToLoad(int errorCode) {
             super.onAdFailedToLoad(errorCode);
-            invokeContainsPrebidCreative(false);
         }
     };
 

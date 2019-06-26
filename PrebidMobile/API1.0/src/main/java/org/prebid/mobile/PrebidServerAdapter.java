@@ -25,10 +25,12 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
+
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.webkit.CookieManager;
@@ -118,7 +120,12 @@ class PrebidServerAdapter implements DemandAdapter {
         protected AsyncTaskResult<JSONObject> doInBackground(Object... objects) {
             try {
                 long demandFetchStartTime = System.currentTimeMillis();
+
+                BidLog.BidLogEntry entry = new BidLog.BidLogEntry();
+
                 URL url = new URL(getHost());
+                entry.setRequestUrl(getHost());
+
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
@@ -135,9 +142,12 @@ class PrebidServerAdapter implements DemandAdapter {
                 // Add post data
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
                 JSONObject postData = getPostData();
-                LogUtil.d("Sending request for auction " + auctionId + " with post data: " + postData.toString());
-                wr.write(postData.toString());
+                String postString = postData.toString();
+                LogUtil.d("Sending request for auction " + auctionId + " with post data: " + postString);
+                wr.write(postString);
                 wr.flush();
+
+                entry.setRequestBody(postString);
 
                 // Start the connection
                 conn.connect();
@@ -145,6 +155,9 @@ class PrebidServerAdapter implements DemandAdapter {
                 // Read request response
                 int httpResult = conn.getResponseCode();
                 long demandFetchEndTime = System.currentTimeMillis();
+
+                entry.setResponseCode(httpResult);
+
                 if (httpResult == HttpURLConnection.HTTP_OK) {
                     StringBuilder builder = new StringBuilder();
                     InputStream is = conn.getInputStream();
@@ -156,6 +169,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     reader.close();
                     is.close();
                     String result = builder.toString();
+                    entry.setResponse(result);
                     JSONObject response = new JSONObject(result);
                     httpCookieSync(conn.getHeaderFields());
                     // in the future, this can be improved to parse response base on request versions
@@ -171,6 +185,9 @@ class PrebidServerAdapter implements DemandAdapter {
                             PrebidMobile.timeoutMillisUpdated = true;
                         }
                     }
+
+                    BidLog.getInstance().setLastEntry(entry);
+
                     return new AsyncTaskResult<>(response);
                 } else if (httpResult == HttpURLConnection.HTTP_BAD_REQUEST) {
                     StringBuilder builder = new StringBuilder();
@@ -183,6 +200,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     reader.close();
                     is.close();
                     String result = builder.toString();
+                    entry.setResponse(result);
                     LogUtil.d("Getting response for auction " + getAuctionId() + ": " + result);
                     Pattern storedRequestNotFound = Pattern.compile("^Invalid request: Stored Request with ID=\".*\" not found.");
                     Pattern storedImpNotFound = Pattern.compile("^Invalid request: Stored Imp with ID=\".*\" not found.");
@@ -192,6 +210,9 @@ class PrebidServerAdapter implements DemandAdapter {
                     Matcher m2 = invalidBannerSize.matcher(result);
                     Matcher m3 = storedImpNotFound.matcher(result);
                     Matcher m4 = invalidInterstitialSize.matcher(result);
+
+                    BidLog.getInstance().setLastEntry(entry);
+
                     if (m.find() || result.contains("No stored request")) {
                         return new AsyncTaskResult<>(ResultCode.INVALID_ACCOUNT_ID);
                     } else if (m3.find() || result.contains("No stored imp")) {
@@ -291,8 +312,10 @@ class PrebidServerAdapter implements DemandAdapter {
             }
 
             if (!keywords.isEmpty() && containTopBid) {
+                notifyContainsTopBid(true);
                 notifyDemandReady(keywords);
             } else {
+                notifyContainsTopBid(false);
                 notifyDemandFailed(ResultCode.NO_BIDS);
             }
 
@@ -347,6 +370,13 @@ class PrebidServerAdapter implements DemandAdapter {
             }
 
             listener.onDemandFailed(code, getAuctionId());
+        }
+
+        private void notifyContainsTopBid(boolean contains) {
+            BidLog.BidLogEntry entry = BidLog.getInstance().getLastBid();
+            if (entry != null) {
+                entry.setContainsTopBid(contains);
+            }
         }
 
         private String getHost() {

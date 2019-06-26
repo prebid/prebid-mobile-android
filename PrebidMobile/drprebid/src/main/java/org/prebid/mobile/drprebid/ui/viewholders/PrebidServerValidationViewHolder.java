@@ -64,9 +64,9 @@ public class PrebidServerValidationViewHolder extends RecyclerView.ViewHolder im
         avgCpmView = itemView.findViewById(R.id.view_average_cpm);
         avgResponseTimeView = itemView.findViewById(R.id.view_average_response_time);
 
-        PrebidServerValidationViewModel mViewModel = ViewModelProviders.of((AppCompatActivity) itemView.getContext()).get(PrebidServerValidationViewModel.class);
+        PrebidServerValidationViewModel viewModel = ViewModelProviders.of((AppCompatActivity) itemView.getContext()).get(PrebidServerValidationViewModel.class);
 
-        mViewModel.getBidRequestsSent().observe(this, sent -> {
+        viewModel.getBidRequestsSent().observe(this, sent -> {
             sendRequestProgress.setVisibility(View.GONE);
             sendRequestIcon.setVisibility(View.VISIBLE);
 
@@ -85,7 +85,7 @@ public class PrebidServerValidationViewHolder extends RecyclerView.ViewHolder im
             updateTotal();
         });
 
-        mViewModel.getBidResponsesReceived().observe(this, count -> {
+        viewModel.getBidResponsesReceived().observe(this, count -> {
             responseReceivedProgress.setVisibility(View.GONE);
             responseReceivedIcon.setVisibility(View.VISIBLE);
 
@@ -104,11 +104,11 @@ public class PrebidServerValidationViewHolder extends RecyclerView.ViewHolder im
             updateTotal();
         });
 
-        mViewModel.getAverageResponseTime().observe(this, averageResponseTime -> {
+        viewModel.getAverageResponseTime().observe(this, averageResponseTime -> {
             avgResponseTimeView.setText(String.format(Locale.ENGLISH, itemView.getContext().getString(R.string.average_response_time), averageResponseTime));
         });
 
-        mViewModel.getAverageCpm().observe(this, averageCpm -> {
+        viewModel.getAverageCpm().observe(this, averageCpm -> {
             avgCpmView.setText(String.format(Locale.ENGLISH, itemView.getContext().getString(R.string.average_cpm), averageCpm));
         });
     }
