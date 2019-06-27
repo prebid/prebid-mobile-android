@@ -22,7 +22,7 @@ import java.lang.ref.WeakReference;
 
 public class PrebidMobile {
 
-    static final int TIMEOUT_MILLIS = 2_000;
+    private static final int TIMEOUT_MILLIS = 2_000;
 
     public static int timeoutMillis = TIMEOUT_MILLIS; // by default use 10000 milliseconds as timeout
     static boolean timeoutMillisUpdated = false;
