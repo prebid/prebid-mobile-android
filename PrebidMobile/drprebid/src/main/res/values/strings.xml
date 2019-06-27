@@ -73,6 +73,8 @@
     <string name="prebid_server_rubicon">Rubicon</string>
     <string name="prebid_server_appnexus">AppNexus</string>
     <string name="prebid_server_custom">Custom server</string>
+    
+    <string name="settings_validation_failed">Invalid configuration settings found. Please check that all fields are filled.</string>
 
     <!-- QR code scanning -->
     <string name="qr_code_scan_title">Dr. Prebid QR Code Scanner</string>

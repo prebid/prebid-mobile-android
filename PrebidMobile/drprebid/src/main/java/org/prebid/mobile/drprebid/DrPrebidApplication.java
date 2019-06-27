@@ -11,6 +11,6 @@ public class DrPrebidApplication extends MultiDexApplication {
         super.onCreate();
         PrebidMobile.setApplicationContext(this);
 
-        LineItemKeywordManager.getInstance().refreshCacheIds();
+        LineItemKeywordManager.getInstance().refreshCacheIds(this);
     }
 }

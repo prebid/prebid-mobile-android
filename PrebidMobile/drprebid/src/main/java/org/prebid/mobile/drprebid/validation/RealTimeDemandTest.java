@@ -1,6 +1,7 @@
 package org.prebid.mobile.drprebid.validation;
 
 import android.content.Context;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -75,7 +76,7 @@ public class RealTimeDemandTest {
                 break;
             case CUSTOM:
                 PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-                hostUrl = prebidServerSettings.getCustomPrebidServerUrl();
+                hostUrl = buildCustomServerEndpoint(prebidServerSettings.getCustomPrebidServerUrl());
                 Host.CUSTOM.setHostUrl(hostUrl);
                 break;
             default:
@@ -91,6 +92,18 @@ public class RealTimeDemandTest {
 
         for (int i = 0; i < REQUEST_MAX; i++) {
             runTest(hostUrl, request, requestCompletionListener);
+        }
+    }
+
+    private String buildCustomServerEndpoint(String url) {
+        if (!TextUtils.isEmpty(url)) {
+            Uri.Builder uriBuilder = Uri.parse(url).buildUpon();
+            uriBuilder.appendPath("openrtb2");
+            uriBuilder.appendPath("auction");
+
+            return uriBuilder.build().toString();
+        } else {
+            return "";
         }
     }
 

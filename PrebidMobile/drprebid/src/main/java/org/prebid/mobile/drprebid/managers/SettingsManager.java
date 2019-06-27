@@ -88,7 +88,7 @@ public class SettingsManager {
                 settings.setAdServer(AdServer.MOPUB);
                 break;
             default:
-                settings.setAdServer(AdServer.GOOGLE_AD_MANAGER);
+                settings.setAdServer(AdServer.MOPUB);
         }
 
         settings.setBidPrice(mSharedPreferences.getFloat(Constants.Settings.BID_PRICE, 0.0f));

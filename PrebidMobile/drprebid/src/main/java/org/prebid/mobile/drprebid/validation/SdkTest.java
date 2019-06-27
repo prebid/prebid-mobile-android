@@ -1,6 +1,7 @@
 package org.prebid.mobile.drprebid.validation;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.FrameLayout;
@@ -114,12 +115,24 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
                 break;
             case CUSTOM:
                 PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-                Host.CUSTOM.setHostUrl(prebidServerSettings.getCustomPrebidServerUrl());
+                Host.CUSTOM.setHostUrl(buildCustomServerEndpoint(prebidServerSettings.getCustomPrebidServerUrl()));
                 break;
         }
 
         if (mListener != null) {
             mListener.onAdUnitRegistered();
+        }
+    }
+
+    private String buildCustomServerEndpoint(String url) {
+        if (!TextUtils.isEmpty(url)) {
+            Uri.Builder uriBuilder = Uri.parse(url).buildUpon();
+            uriBuilder.appendPath("openrtb2");
+            uriBuilder.appendPath("auction");
+
+            return uriBuilder.build().toString();
+        } else {
+            return "";
         }
     }
 
