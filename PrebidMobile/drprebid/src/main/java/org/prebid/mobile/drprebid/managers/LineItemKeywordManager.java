@@ -1,5 +1,7 @@
 package org.prebid.mobile.drprebid.managers;
 
+import android.content.Context;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -9,6 +11,7 @@ import org.json.JSONObject;
 import org.prebid.mobile.drprebid.model.AdFormat;
 import org.prebid.mobile.drprebid.model.AdSize;
 import org.prebid.mobile.drprebid.model.PrebidServer;
+import org.prebid.mobile.drprebid.model.PrebidServerSettings;
 import org.prebid.mobile.drprebid.util.IOUtil;
 
 import java.io.IOException;
@@ -39,14 +42,13 @@ public class LineItemKeywordManager {
 
     public static final String CACHE_ENDPOINT_APPNEXUS = "https://prebid.adnxs.com/pbc/v1/cache";
     public static final String CACHE_ENDPOINT_RUBICON = "https://prebid-server.rubiconproject.com/cache";
-    public static final String CACHE_ENDPOINT_CUSTOM = "https://prebid.va.pubnative.io/cache";
 
-    public static final String CREATIVE_300x250 =   "{\"id\":\"7438652069000399098\",\"impid\":\"Home\",\"price\":0.5,\"adm\":\"<script type=\\\"text/javascript\\\">document.write('<a href=\\\"http://prebid.org\\\" target=\\\"_blank\\\"><img width=\\\"300\\\" height=\\\"250\\\" style=\\\"border-style: none\\\" src=\\\"https://vcdn.adnxs.com/p/creative-image/27/c0/52/67/27c05267-5a6d-4874-834e-18e218493c32.png\\\"/></a>');</script>\",\"adid\":\"29681110\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=29681110\",\"cid\":\"958\",\"crid\":\"29681110\",\"w\":300,\"h\":250}";
-    public static final String CREATIVE_300x600 =   "{\"id\":\"7438652069000399098\",\"impid\":\"Home\",\"price\":0.5,\"adm\":\"<script type=\\\"text/javascript\\\">document.write('<a href=\\\"http://prebid.org\\\" target=\\\"_blank\\\"><img width=\\\"300\\\" height=\\\"600\\\" style=\\\"border-style: none\\\" src=\\\"https://vcdn.adnxs.com/p/creative-image/27/c0/52/67/27c05267-5a6d-4874-834e-18e218493c32.png\\\"/></a>');</script>\",\"adid\":\"29681110\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=29681110\",\"cid\":\"958\",\"crid\":\"29681110\",\"w\":300,\"h\":600}";
-    public static final String CREATIVE_320x50 =    "{\"id\":\"7438652069000399098\",\"impid\":\"Home\",\"price\":0.5,\"adm\":\"<script type=\\\"text/javascript\\\">document.write('<a href=\\\"http://prebid.org\\\" target=\\\"_blank\\\"><img width=\\\"320\\\" height=\\\"50\\\" style=\\\"border-style: none\\\" src=\\\"https://vcdn.adnxs.com/p/creative-image/27/c0/52/67/27c05267-5a6d-4874-834e-18e218493c32.png\\\"/></a>');</script>\",\"adid\":\"29681110\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=29681110\",\"cid\":\"958\",\"crid\":\"29681110\",\"w\":320,\"h\":50}";
-    public static final String CREATIVE_320x100 =   "{\"id\":\"7438652069000399098\",\"impid\":\"Home\",\"price\":0.5,\"adm\":\"<script type=\\\"text/javascript\\\">document.write('<a href=\\\"http://prebid.org\\\" target=\\\"_blank\\\"><img width=\\\"320\\\" height=\\\"100\\\" style=\\\"border-style: none\\\" src=\\\"https://vcdn.adnxs.com/p/creative-image/27/c0/52/67/27c05267-5a6d-4874-834e-18e218493c32.png\\\"/></a>');</script>\",\"adid\":\"29681110\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=29681110\",\"cid\":\"958\",\"crid\":\"29681110\",\"w\":320,\"h\":100}";
-    public static final String CREATIVE_320x480 =   "{\"id\":\"7438652069000399098\",\"impid\":\"Home\",\"price\":0.5,\"adm\":\"<script type=\\\"text/javascript\\\">document.write('<a href=\\\"http://prebid.org\\\" target=\\\"_blank\\\"><img width=\\\"320\\\" height=\\\"480\\\" style=\\\"border-style: none\\\" src=\\\"https://vcdn.adnxs.com/p/creative-image/27/c0/52/67/27c05267-5a6d-4874-834e-18e218493c32.png\\\"/></a>');</script>\",\"adid\":\"29681110\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=29681110\",\"cid\":\"958\",\"crid\":\"29681110\",\"w\":320,\"h\":480}";
-    public static final String CREATIVE_728x90 =    "{\"id\":\"7438652069000399098\",\"impid\":\"Home\",\"price\":0.5,\"adm\":\"<script type=\\\"text/javascript\\\">document.write('<a href=\\\"http://prebid.org\\\" target=\\\"_blank\\\"><img width=\\\"7280\\\" height=\\\"90\\\" style=\\\"border-style: none\\\" src=\\\"https://vcdn.adnxs.com/p/creative-image/27/c0/52/67/27c05267-5a6d-4874-834e-18e218493c32.png\\\"/></a>');</script>\",\"adid\":\"29681110\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=29681110\",\"cid\":\"958\",\"crid\":\"29681110\",\"w\":728,\"h\":90}";
+    public static final String CREATIVE_300x250 = "{\"id\":\"7438652069000399098\",\"impid\":\"Home\",\"price\":0.5,\"adm\":\"<script type=\\\"text/javascript\\\">document.write('<a href=\\\"http://prebid.org\\\" target=\\\"_blank\\\"><img width=\\\"300\\\" height=\\\"250\\\" style=\\\"border-style: none\\\" src=\\\"https://vcdn.adnxs.com/p/creative-image/27/c0/52/67/27c05267-5a6d-4874-834e-18e218493c32.png\\\"/></a>');</script>\",\"adid\":\"29681110\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=29681110\",\"cid\":\"958\",\"crid\":\"29681110\",\"w\":300,\"h\":250}";
+    public static final String CREATIVE_300x600 = "{\"id\":\"7438652069000399098\",\"impid\":\"Home\",\"price\":0.5,\"adm\":\"<script type=\\\"text/javascript\\\">document.write('<a href=\\\"http://prebid.org\\\" target=\\\"_blank\\\"><img width=\\\"300\\\" height=\\\"600\\\" style=\\\"border-style: none\\\" src=\\\"https://vcdn.adnxs.com/p/creative-image/27/c0/52/67/27c05267-5a6d-4874-834e-18e218493c32.png\\\"/></a>');</script>\",\"adid\":\"29681110\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=29681110\",\"cid\":\"958\",\"crid\":\"29681110\",\"w\":300,\"h\":600}";
+    public static final String CREATIVE_320x50 = "{\"id\":\"7438652069000399098\",\"impid\":\"Home\",\"price\":0.5,\"adm\":\"<script type=\\\"text/javascript\\\">document.write('<a href=\\\"http://prebid.org\\\" target=\\\"_blank\\\"><img width=\\\"320\\\" height=\\\"50\\\" style=\\\"border-style: none\\\" src=\\\"https://vcdn.adnxs.com/p/creative-image/27/c0/52/67/27c05267-5a6d-4874-834e-18e218493c32.png\\\"/></a>');</script>\",\"adid\":\"29681110\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=29681110\",\"cid\":\"958\",\"crid\":\"29681110\",\"w\":320,\"h\":50}";
+    public static final String CREATIVE_320x100 = "{\"id\":\"7438652069000399098\",\"impid\":\"Home\",\"price\":0.5,\"adm\":\"<script type=\\\"text/javascript\\\">document.write('<a href=\\\"http://prebid.org\\\" target=\\\"_blank\\\"><img width=\\\"320\\\" height=\\\"100\\\" style=\\\"border-style: none\\\" src=\\\"https://vcdn.adnxs.com/p/creative-image/27/c0/52/67/27c05267-5a6d-4874-834e-18e218493c32.png\\\"/></a>');</script>\",\"adid\":\"29681110\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=29681110\",\"cid\":\"958\",\"crid\":\"29681110\",\"w\":320,\"h\":100}";
+    public static final String CREATIVE_320x480 = "{\"id\":\"7438652069000399098\",\"impid\":\"Home\",\"price\":0.5,\"adm\":\"<script type=\\\"text/javascript\\\">document.write('<a href=\\\"http://prebid.org\\\" target=\\\"_blank\\\"><img width=\\\"320\\\" height=\\\"480\\\" style=\\\"border-style: none\\\" src=\\\"https://vcdn.adnxs.com/p/creative-image/27/c0/52/67/27c05267-5a6d-4874-834e-18e218493c32.png\\\"/></a>');</script>\",\"adid\":\"29681110\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=29681110\",\"cid\":\"958\",\"crid\":\"29681110\",\"w\":320,\"h\":480}";
+    public static final String CREATIVE_728x90 = "{\"id\":\"7438652069000399098\",\"impid\":\"Home\",\"price\":0.5,\"adm\":\"<script type=\\\"text/javascript\\\">document.write('<a href=\\\"http://prebid.org\\\" target=\\\"_blank\\\"><img width=\\\"7280\\\" height=\\\"90\\\" style=\\\"border-style: none\\\" src=\\\"https://vcdn.adnxs.com/p/creative-image/27/c0/52/67/27c05267-5a6d-4874-834e-18e218493c32.png\\\"/></a>');</script>\",\"adid\":\"29681110\",\"adomain\":[\"appnexus.com\"],\"iurl\":\"https://nym1-ib.adnxs.com/cr?id=29681110\",\"cid\":\"958\",\"crid\":\"29681110\",\"w\":728,\"h\":90}";
 
     private Map<String, String> mAppNexusCacheIds;
     private Map<String, String> mRubiconCacheIds;
@@ -65,10 +67,19 @@ public class LineItemKeywordManager {
         return sInstance;
     }
 
-    public void refreshCacheIds() {
+    public void refreshCacheIds(Context context) {
         mAppNexusCacheIds = new HashMap<>();
         mRubiconCacheIds = new HashMap<>();
         mCustomServerCacheIds = new HashMap<>();
+
+        PrebidServerSettings serverSettings = SettingsManager.getInstance(context).getPrebidServerSettings();
+        String customServerCacheUrl = null;
+        if (TextUtils.isEmpty(serverSettings.getCustomPrebidServerUrl())) {
+            Uri.Builder uriBuilder = Uri.parse(serverSettings.getCustomPrebidServerUrl()).buildUpon();
+            uriBuilder.appendPath("cache");
+
+            customServerCacheUrl = uriBuilder.build().toString();
+        }
 
         try {
             JSONObject creative300x250 = new JSONObject(CREATIVE_300x250);
@@ -190,9 +201,9 @@ public class LineItemKeywordManager {
                 }
             });
 
-            if (!TextUtils.isEmpty(CACHE_ENDPOINT_CUSTOM)) {
+            if (!TextUtils.isEmpty(customServerCacheUrl)) {
                 Request customRequest = new Request.Builder()
-                        .url(CACHE_ENDPOINT_CUSTOM)
+                        .url(customServerCacheUrl)
                         .post(body)
                         .build();
 
