@@ -39,6 +39,7 @@ import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.InterstitialAdUnit;
 import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.Util;
 
 import static org.prebid.mobile.app.Constants.MOPUB_BANNER_ADUNIT_ID_300x250;
 import static org.prebid.mobile.app.Constants.MOPUB_BANNER_ADUNIT_ID_320x50;
@@ -82,6 +83,24 @@ public class DemoActivity extends AppCompatActivity {
             dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES);
             adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
         }
+
+        dfpAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+
+                Util.findPrebidCreativeSize(dfpAdView, new Util.CreativeSizeCompletionHandler() {
+                    @Override
+                    public void onSize(final Util.CreativeSize size) {
+                        if (size != null) {
+                            dfpAdView.setAdSizes(new AdSize(size.getWidth(), size.getHeight()));
+                        }
+                    }
+                });
+
+            }
+        });
+
         dfpAdView.setAdSizes(new AdSize(width, height));
         adFrame.addView(dfpAdView);
         final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
