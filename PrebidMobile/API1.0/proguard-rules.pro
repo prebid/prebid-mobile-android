@@ -20,6 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-keepattributes InnerClasses
 -keep public class * {
     public *;
 }
