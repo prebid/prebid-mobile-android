@@ -21,6 +21,9 @@
 #-renamesourcefileattribute SourceFile
 
 -keepattributes InnerClasses
+-keep public enum org.prebid.mobile.TargetingParams$** {
+    *;
+}
 -keep public class * {
     public *;
 }
