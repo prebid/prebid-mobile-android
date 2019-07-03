@@ -231,6 +231,9 @@ class PrebidServerAdapter implements DemandAdapter {
             if (asyncTaskResult.getError() != null) {
                 asyncTaskResult.getError().printStackTrace();
 
+                //Default error
+                notifyDemandFailed(ResultCode.PREBID_SERVER_ERROR);
+
                 removeThisTask();
                 return;
             } else if (asyncTaskResult.getResultCode() != null) {
