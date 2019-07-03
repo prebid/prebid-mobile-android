@@ -771,57 +771,56 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
     @Test
     public void testPostDataWithCOPPA() throws Exception {
-
-        if (successfulMockServerStarted) {
-            PrebidMobile.setApplicationContext(activity.getApplicationContext());
-
-            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
-            TargetingParams.setSubjectToCOPPA(true);
-
-            DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
-            PrebidServerAdapter adapter = new PrebidServerAdapter();
-            HashSet<AdSize> sizes = new HashSet<>();
-            sizes.add(new AdSize(320, 50));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
-            String uuid = UUID.randomUUID().toString();
-            adapter.requestDemand(requestParams, mockListener, uuid);
-            @SuppressWarnings("unchecked")
-            ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
-            PrebidServerAdapter.ServerConnector connector = connectors.get(0);
-
-            JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
-            assertTrue(postData.has("regs"));
-            JSONObject regs = postData.getJSONObject("regs");
-            assertEquals(1, regs.getInt("coppa"));
-        } else {
+        if (!successfulMockServerStarted) {
             fail("Server failed to start, unable to test.");
         }
+
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        TargetingParams.setSubjectToCOPPA(true);
+
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(320, 50));
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        @SuppressWarnings("unchecked")
+        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+
+        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+        assertTrue(postData.has("regs"));
+        JSONObject regs = postData.getJSONObject("regs");
+        assertEquals(1, regs.getInt("coppa"));
+
     }
 
     @Test
     public void testPostDataWithoutCOPPA() throws Exception {
-
-        if (successfulMockServerStarted) {
-            PrebidMobile.setApplicationContext(activity.getApplicationContext());
-
-            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
-            TargetingParams.setSubjectToCOPPA(false);
-
-            DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
-            PrebidServerAdapter adapter = new PrebidServerAdapter();
-            HashSet<AdSize> sizes = new HashSet<>();
-            sizes.add(new AdSize(320, 50));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
-            String uuid = UUID.randomUUID().toString();
-            adapter.requestDemand(requestParams, mockListener, uuid);
-            @SuppressWarnings("unchecked")
-            ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
-            PrebidServerAdapter.ServerConnector connector = connectors.get(0);
-
-            JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
-            assertFalse(postData.has("regs"));
-        } else {
+        if (!successfulMockServerStarted) {
             fail("Server failed to start, unable to test.");
         }
+
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        TargetingParams.setSubjectToCOPPA(false);
+
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(320, 50));
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        @SuppressWarnings("unchecked")
+        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+
+        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+        assertFalse(postData.has("regs"));
     }
 }
