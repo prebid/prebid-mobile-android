@@ -745,14 +745,17 @@ class PrebidServerAdapter implements DemandAdapter {
             JSONObject regs = new JSONObject();
             try {
                 JSONObject ext = new JSONObject();
-                if (TargetingParams.isSubjectToGDPR() != null) {
-                    if (TargetingParams.isSubjectToGDPR()) {
-                        ext.put("gdpr", 1);
-                    } else {
-                        ext.put("gdpr", 0);
-                    }
+                Boolean isSubjectToGDPR = TargetingParams.isSubjectToGDPR();
+
+                if (isSubjectToGDPR != null && isSubjectToGDPR) {
+                    ext.put("gdpr", 1);
+                    regs.put("ext", ext);
                 }
-                regs.put("ext", ext);
+
+                if (TargetingParams.isSubjectToCOPPA()) {
+                    regs.put("coppa", 1);
+                }
+
             } catch (JSONException e) {
                 LogUtil.d("PrebidServerAdapter getRegsObject() " + e.getMessage());
             }

@@ -702,6 +702,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             TargetingParams.setDomain("prebid.org");
             TargetingParams.setStoreUrl("store://app");
             TargetingParams.setSubjectToGDPR(true);
+            TargetingParams.setSubjectToCOPPA(true);
             TargetingParams.setGDPRConsentString("testGDPR");
             DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
             PrebidServerAdapter adapter = new PrebidServerAdapter();
@@ -755,6 +756,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             assertEquals("F", user.getString("gender"));
             assertEquals("testGDPR", user.getJSONObject("ext").getString("consent"));
             JSONObject regs = postData.getJSONObject("regs");
+            assertEquals(1, regs.getInt("coppa"));
             assertEquals(1, regs.getJSONObject("ext").getInt("gdpr"));
             JSONObject ext = postData.getJSONObject("ext");
             assertTrue(ext.getJSONObject("prebid").has("cache"));
@@ -764,6 +766,62 @@ public class PrebidServerAdapterTest extends BaseSetup {
             assertTrue(ext.getJSONObject("prebid").has("targeting"));
         } else {
             assertTrue("Server failed to start, unable to test.", false);
+        }
+    }
+
+    @Test
+    public void testPostDataWithCOPPA() throws Exception {
+
+        if (successfulMockServerStarted) {
+            PrebidMobile.setApplicationContext(activity.getApplicationContext());
+
+            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+            TargetingParams.setSubjectToCOPPA(true);
+
+            DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+            PrebidServerAdapter adapter = new PrebidServerAdapter();
+            HashSet<AdSize> sizes = new HashSet<>();
+            sizes.add(new AdSize(320, 50));
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            String uuid = UUID.randomUUID().toString();
+            adapter.requestDemand(requestParams, mockListener, uuid);
+            @SuppressWarnings("unchecked")
+            ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+            PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+
+            JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+            assertTrue(postData.has("regs"));
+            JSONObject regs = postData.getJSONObject("regs");
+            assertEquals(1, regs.getInt("coppa"));
+        } else {
+            fail("Server failed to start, unable to test.");
+        }
+    }
+
+    @Test
+    public void testPostDataWithoutCOPPA() throws Exception {
+
+        if (successfulMockServerStarted) {
+            PrebidMobile.setApplicationContext(activity.getApplicationContext());
+
+            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+            TargetingParams.setSubjectToCOPPA(false);
+
+            DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+            PrebidServerAdapter adapter = new PrebidServerAdapter();
+            HashSet<AdSize> sizes = new HashSet<>();
+            sizes.add(new AdSize(320, 50));
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            String uuid = UUID.randomUUID().toString();
+            adapter.requestDemand(requestParams, mockListener, uuid);
+            @SuppressWarnings("unchecked")
+            ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+            PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+
+            JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+            assertFalse(postData.has("regs"));
+        } else {
+            fail("Server failed to start, unable to test.");
         }
     }
 }
