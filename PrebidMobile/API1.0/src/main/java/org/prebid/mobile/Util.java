@@ -57,7 +57,26 @@ public class Util {
 
     }
 
-    public static void findPrebidCreativeSize(View adView, CreativeSizeCompletionHandler completionHandler) {
+    @SuppressWarnings("deprecation")
+    public static void findPrebidCreativeSize(@NonNull View adView, final CreativeSizeResultHandler handler) {
+        findPrebidCreativeSize(adView, new CreativeSizeCompletionHandler() {
+            @Override
+            public void onSize(@Nullable CreativeSize size) {
+                if (size == null) {
+                    handler.failure(new CreativeSizeError(0, "Can not get size"));
+                } else {
+                    handler.success(size);
+                }
+            }
+        });
+    }
+
+    /**
+     *@deprecated Please migrate to - Util.findPrebidCreativeSize(View, CreativeSizeResultHandler)
+     *@see Util#findPrebidCreativeSize(View, CreativeSizeResultHandler)
+     */
+    @Deprecated
+    public static void findPrebidCreativeSize(@Nullable View adView, CreativeSizeCompletionHandler completionHandler) {
 
         List<WebView> webViewList = new ArrayList<>(2);
         recursivelyFindWebView(adView, webViewList);
@@ -71,7 +90,7 @@ public class Util {
     }
 
     @Nullable
-    static void recursivelyFindWebView(View view, List<WebView> webViewList) {
+    static void recursivelyFindWebView(@Nullable View view, List<WebView> webViewList) {
         if (view instanceof ViewGroup) {
             //ViewGroup
             ViewGroup viewGroup = (ViewGroup) view;
@@ -491,6 +510,11 @@ public class Util {
         }
     }
 
+    public interface CreativeSizeResultHandler {
+        void success(@NonNull CreativeSize size);
+        void failure(@NonNull CreativeSizeError error);
+    }
+
     public interface CreativeSizeCompletionHandler {
         void onSize(@Nullable CreativeSize size);
     }
@@ -501,6 +525,26 @@ public class Util {
         void failure();
     }
 
+    /**
+     * Utility error class
+     */
+    public static class CreativeSizeError {
+        private final int code;
+        private final String message;
+
+        public CreativeSizeError(int code, String message) {
+            this.code = code;
+            this.message = message;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+    }
     /**
      * Utility Size class
      */
