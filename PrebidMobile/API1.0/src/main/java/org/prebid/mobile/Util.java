@@ -63,6 +63,7 @@ public class Util {
         recursivelyFindWebView(adView, webViewList);
         if (webViewList.size() == 0) {
             LogUtil.w("adView doesn't include WebView");
+            completionHandler.onSize(null);
             return;
         }
 
