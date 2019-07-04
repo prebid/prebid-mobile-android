@@ -20,9 +20,11 @@ package org.prebid.mobile.app;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.ads.AdListener;
@@ -89,12 +91,15 @@ public class DemoActivity extends AppCompatActivity {
             public void onAdLoaded() {
                 super.onAdLoaded();
 
-                Util.findPrebidCreativeSize(dfpAdView, new Util.CreativeSizeCompletionHandler() {
+                Util.findPrebidCreativeSize(dfpAdView, new Util.CreativeSizeResultHandler() {
                     @Override
-                    public void onSize(final Util.CreativeSize size) {
-                        if (size != null) {
-                            dfpAdView.setAdSizes(new AdSize(size.getWidth(), size.getHeight()));
-                        }
+                    public void success(@NonNull Util.CreativeSize size) {
+                        dfpAdView.setAdSizes(new AdSize(size.getWidth(), size.getHeight()));
+                    }
+
+                    @Override
+                    public void failure(@NonNull Util.CreativeSizeError error) {
+                        Log.d("MyTag", "error: " + error.getMessage());
                     }
                 });
 
