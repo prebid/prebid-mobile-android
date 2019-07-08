@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public abstract class AdUnit {
@@ -91,6 +92,13 @@ public abstract class AdUnit {
                 }
             }
         }
+        AdSize minSizePerc = null;
+        if (this instanceof InterstitialAdUnit) {
+            InterstitialAdUnit interstitialAdUnit = (InterstitialAdUnit) this;
+
+            minSizePerc = interstitialAdUnit.getMinSizePerc();
+        }
+
         Context context = PrebidMobile.getApplicationContext();
         if (context != null) {
             ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -107,7 +115,11 @@ public abstract class AdUnit {
         }
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
-            RequestParams requestParams = new RequestParams(configId, adType, sizes, keywords);
+
+            HashMap<String, Object> additionalMap = new HashMap<>(1);
+            additionalMap.put(RequestParams.INSTL_MIN_SIZE_PERC_KEY, minSizePerc);
+
+            RequestParams requestParams = new RequestParams(configId, adType, sizes, keywords, additionalMap);
             fetcher.setPeriodMillis(periodMillis);
             fetcher.setRequestParams(requestParams);
             fetcher.setListener(listener);
