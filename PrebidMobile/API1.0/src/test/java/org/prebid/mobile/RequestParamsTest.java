@@ -75,8 +75,8 @@ public class RequestParamsTest {
 
         assertTrue(object instanceof AdSize);
 
-        AdSize adSize = (AdSize)object;
+        AdSize minAdSizePerc = (AdSize)object;
 
-        assertTrue(adSize.getWidth() == 500 && adSize.getHeight() == 700);
+        assertTrue(minAdSizePerc.getWidth() == 50 && minAdSizePerc.getHeight() == 70);
     }
 }
