@@ -26,6 +26,8 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -35,6 +37,16 @@ public class InterstItialAdUnitTest {
         InterstitialAdUnit adUnit = new InterstitialAdUnit("12345");
         assertEquals("12345", FieldUtils.readField(adUnit, "configId", true));
         assertEquals(AdType.INTERSTITIAL, FieldUtils.readField(adUnit, "adType", true));
+    }
+
+
+    @Test
+    public void testAdvancedInterstitialAdUnitCreation() throws Exception {
+        InterstitialAdUnit adUnit = new InterstitialAdUnit("12345", 50, 70);
+        assertEquals(AdType.INTERSTITIAL, FieldUtils.readField(adUnit, "adType", true));
+
+        assertNotNull(adUnit.getMinSizePerc());
+        assertTrue(adUnit.getMinSizePerc().getWidth() == 50 && adUnit.getMinSizePerc().getHeight() == 70);
     }
 
     @Test
@@ -75,4 +87,5 @@ public class InterstItialAdUnitTest {
         assertEquals("key1=value1", keywords.get(0));
         assertEquals("key1=value2", keywords.get(1));
     }
+
 }

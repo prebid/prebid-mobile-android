@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -765,5 +766,122 @@ public class PrebidServerAdapterTest extends BaseSetup {
         } else {
             assertTrue("Server failed to start, unable to test.", false);
         }
+    }
+
+    @Test
+    public void testPostDataWithAdvancedInterstitial() throws Exception {
+        if (!successfulMockServerStarted) {
+            fail("Server failed to start, unable to test.");
+        }
+
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(500, 700));
+        Map<String, Object> additionalMap = new HashMap<>(1);
+        AdSize minSizePerc = new AdSize(50, 70);
+        additionalMap.put(RequestParams.INSTL_MIN_SIZE_PERC_KEY, minSizePerc);
+
+        RequestParams requestParams = new RequestParams("67890", AdType.INTERSTITIAL, sizes, new ArrayList<String>(), additionalMap);
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        @SuppressWarnings("unchecked")
+        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+
+        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+        JSONObject interstitial = postData.getJSONObject("device").getJSONObject("ext").getJSONObject("prebid").getJSONObject("interstitial");
+        assertTrue(interstitial.getInt("minwidthperc") == 50 && interstitial.getInt("minheightperc") == 70);
+
+        JSONObject banner = postData.getJSONArray("imp").getJSONObject(0).getJSONObject("banner").getJSONArray("format").getJSONObject(0);
+
+        assertTrue(banner.has("w"));
+        assertTrue(banner.has("h"));
+
+        assertEquals(1, postData.getJSONArray("imp").getJSONObject(0).getInt("instl"));
+
+    }
+
+    @Test
+    public void testPostDataWithoutAdvancedInterstitial() throws Exception {
+        if (!successfulMockServerStarted) {
+            fail("Server failed to start, unable to test.");
+        }
+
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(500, 700));
+
+        RequestParams requestParams = new RequestParams("67890", AdType.INTERSTITIAL, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        @SuppressWarnings("unchecked")
+        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+
+        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+
+        try {
+            JSONObject interstitial = postData.getJSONObject("device").getJSONObject("ext").getJSONObject("prebid").getJSONObject("interstitial");
+            assertFalse(interstitial.has("minwidthperc"));
+            assertFalse(interstitial.has("minheightperc"));
+        } catch (Exception ex) {
+
+        }
+
+        assertEquals(1, postData.getJSONArray("imp").getJSONObject(0).getInt("instl"));
+
+    }
+
+    @Test
+    public void testPostDataWithoutAdvancedBannerInterstitial() throws Exception {
+        if (!successfulMockServerStarted) {
+            fail("Server failed to start, unable to test.");
+        }
+
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+        Map<String, Object> additionalMap = new HashMap<>(1);
+        AdSize minSizePerc = new AdSize(50, 70);
+        additionalMap.put(RequestParams.INSTL_MIN_SIZE_PERC_KEY, minSizePerc);
+
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>(), additionalMap);
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        @SuppressWarnings("unchecked")
+        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+
+        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+
+        try {
+            JSONObject interstitial = postData.getJSONObject("device").getJSONObject("ext").getJSONObject("prebid").getJSONObject("interstitial");
+            assertFalse(interstitial.has("minwidthperc"));
+            assertFalse(interstitial.has("minheightperc"));
+        } catch (Exception ex) {
+
+        }
+
+        try {
+            assertEquals(0, postData.getJSONArray("imp").getJSONObject(0).getInt("instl"));
+        } catch (Exception ex) {
+
+        }
+
     }
 }
