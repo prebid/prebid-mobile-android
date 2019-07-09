@@ -277,34 +277,29 @@ public class Util {
         return result;
     }
 
-    private static Object removeEntryWithoutValue(@NonNull Object object) {
-        if (object instanceof JSONObject) {
-            JSONObject jsonObject = (JSONObject) object;
-            removeEntryWithoutValue(jsonObject);
-        } else if (object instanceof JSONArray) {
-            JSONArray jsonArray = (JSONArray) object;
-            object = removeEntryWithoutValue(jsonArray);
-        }
-
-        return object;
-    }
-
     private static void removeEntryWithoutValue(@NonNull JSONObject jsonObject) {
         Iterator<String> iterator = jsonObject.keys();
 
         while (iterator.hasNext()) {
             String key = iterator.next();
 
-            Object object = jsonObject.opt(key);
-            if (object != null) {
-                object = removeEntryWithoutValue(object);
+            Object objectValue = jsonObject.opt(key);
+            if (objectValue != null) {
 
-                if (object instanceof JSONObject) {
-                    if (((JSONObject) object).length() == 0) {
+                if (objectValue instanceof JSONObject) {
+
+                    JSONObject jsonObjectValue = (JSONObject)objectValue;
+                    removeEntryWithoutValue(jsonObjectValue);
+
+                    if (jsonObjectValue.length() == 0) {
                         iterator.remove();
                     }
-                } else if (object instanceof JSONArray) {
-                    if (((JSONArray) object).length() == 0) {
+                } else if (objectValue instanceof JSONArray) {
+
+                    JSONArray jsonArrayValue = (JSONArray)objectValue;
+                    JSONArray removeResult = removeEntryWithoutValue(jsonArrayValue);
+
+                    if (removeResult.length() == 0) {
                         iterator.remove();
                     }
                 }
@@ -318,16 +313,17 @@ public class Util {
 
             Object object = jsonArray.opt(i);
             if (object != null) {
-                object = removeEntryWithoutValue(object);
 
                 if (object instanceof JSONObject) {
+                    removeEntryWithoutValue((JSONObject)object);
+
                     if (((JSONObject) object).length() == 0) {
                         jsonArray = getJsonArrayWithoutEntryByIndex(jsonArray, i);
                     }
-                }
+                } else if (object instanceof JSONArray) {
+                    JSONArray removeResult = removeEntryWithoutValue((JSONArray)object);
 
-                if (object instanceof JSONArray) {
-                    if (((JSONArray) object).length() == 0) {
+                    if (removeResult.length() == 0) {
                         jsonArray = getJsonArrayWithoutEntryByIndex(jsonArray, i);
                     }
                 }
