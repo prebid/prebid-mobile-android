@@ -28,12 +28,17 @@ import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -251,6 +256,104 @@ public class Util {
         }
 
         return new CreativeSize(width, height);
+    }
+
+    @Nullable
+    static JSONObject getJsonObjectWithoutEmptyValues(@NonNull JSONObject jsonObject) {
+
+        JSONObject result = null;
+        try {
+            JSONObject clone = new JSONObject(jsonObject.toString());
+            removeEntryWithoutValue(clone);
+
+            if (clone.length() > 0) {
+                result = clone;
+            }
+
+        } catch (JSONException e) {
+            LogUtil.e("message:" + e.getMessage());
+        }
+
+        return result;
+    }
+
+    private static Object removeEntryWithoutValue(@NonNull Object object) {
+        if (object instanceof JSONObject) {
+            JSONObject jsonObject = (JSONObject) object;
+            removeEntryWithoutValue(jsonObject);
+        } else if (object instanceof JSONArray) {
+            JSONArray jsonArray = (JSONArray) object;
+            object = removeEntryWithoutValue(jsonArray);
+        }
+
+        return object;
+    }
+
+    private static void removeEntryWithoutValue(@NonNull JSONObject jsonObject) {
+        Iterator<String> iterator = jsonObject.keys();
+
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+
+            Object object = jsonObject.opt(key);
+            if (object != null) {
+                object = removeEntryWithoutValue(object);
+            }
+
+            if (object instanceof JSONObject) {
+                if (((JSONObject) object).length() == 0) {
+                    iterator.remove();
+                }
+            }
+
+            if (object instanceof JSONArray) {
+                if (((JSONArray) object).length() == 0) {
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
+    private static JSONArray removeEntryWithoutValue(@NonNull JSONArray jsonArray) {
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+
+            Object object = jsonArray.opt(i);
+            if (object != null) {
+                object = removeEntryWithoutValue(object);
+            }
+
+            if (object instanceof JSONObject) {
+                if (((JSONObject) object).length() == 0) {
+                    jsonArray = getJsonArrayWithoutEntryByIndex(jsonArray, i);
+                }
+            }
+
+            if (object instanceof JSONArray) {
+                if (((JSONArray) object).length() == 0) {
+                    jsonArray = getJsonArrayWithoutEntryByIndex(jsonArray, i);
+                }
+            }
+
+        }
+
+        return jsonArray;
+
+    }
+
+    private static JSONArray getJsonArrayWithoutEntryByIndex(JSONArray jsonArray, int pos){
+        JSONArray result = new JSONArray();
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                if (i != pos) {
+                    jsonArray.put(jsonArray.get(i));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
     static Class getClassFromString(String className) {

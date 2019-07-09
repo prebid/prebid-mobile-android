@@ -567,8 +567,6 @@ class PrebidServerAdapter implements DemandAdapter {
 
                 if (requestParams.getAdType().equals(AdType.INTERSTITIAL)) {
 
-                    boolean hasValue = false;
-
                     Integer minSizePercWidth = null;
                     Integer minSizePercHeight = null;
 
@@ -583,8 +581,6 @@ class PrebidServerAdapter implements DemandAdapter {
 
                                 minSizePercWidth = adSize.getWidth();
                                 minSizePercHeight = adSize.getHeight();
-
-                                hasValue = true;
                             }
 
                         }
@@ -594,12 +590,14 @@ class PrebidServerAdapter implements DemandAdapter {
                     JSONObject deviceExtPrebid = new JSONObject();
                     JSONObject deviceExt = new JSONObject();
 
-                    device.put("ext", hasValue ? deviceExt : null);
+                    device.put("ext", deviceExt);
                     deviceExt.put("prebid", deviceExtPrebid);
                     deviceExtPrebid.put("interstitial", deviceExtPrebidInstl);
                     deviceExtPrebidInstl.put("minwidthperc", minSizePercWidth);
                     deviceExtPrebidInstl.put("minheightperc", minSizePercHeight);
 
+                    JSONObject deviceExtWithoutEmptyValues = Util.getJsonObjectWithoutEmptyValues(deviceExt);
+                    device.put("ext", deviceExtWithoutEmptyValues);
                 }
 
                 // POST data that requires context
