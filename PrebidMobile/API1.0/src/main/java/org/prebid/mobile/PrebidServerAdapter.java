@@ -586,9 +586,9 @@ class PrebidServerAdapter implements DemandAdapter {
                         }
                     }
 
-                    JSONObject deviceExtPrebidInstl = new JSONObject();
-                    JSONObject deviceExtPrebid = new JSONObject();
                     JSONObject deviceExt = new JSONObject();
+                    JSONObject deviceExtPrebid = new JSONObject();
+                    JSONObject deviceExtPrebidInstl = new JSONObject();
 
                     device.put("ext", deviceExt);
                     deviceExt.put("prebid", deviceExtPrebid);
