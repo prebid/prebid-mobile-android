@@ -259,7 +259,7 @@ public class Util {
     }
 
     @Nullable
-    static JSONObject getJsonObjectWithoutEmptyValues(@NonNull JSONObject jsonObject) {
+    static JSONObject getObjectWithoutEmptyValues(@NonNull JSONObject jsonObject) {
 
         JSONObject result = null;
         try {
@@ -298,17 +298,15 @@ public class Util {
             Object object = jsonObject.opt(key);
             if (object != null) {
                 object = removeEntryWithoutValue(object);
-            }
 
-            if (object instanceof JSONObject) {
-                if (((JSONObject) object).length() == 0) {
-                    iterator.remove();
-                }
-            }
-
-            if (object instanceof JSONArray) {
-                if (((JSONArray) object).length() == 0) {
-                    iterator.remove();
+                if (object instanceof JSONObject) {
+                    if (((JSONObject) object).length() == 0) {
+                        iterator.remove();
+                    }
+                } else if (object instanceof JSONArray) {
+                    if (((JSONArray) object).length() == 0) {
+                        iterator.remove();
+                    }
                 }
             }
         }
@@ -321,17 +319,17 @@ public class Util {
             Object object = jsonArray.opt(i);
             if (object != null) {
                 object = removeEntryWithoutValue(object);
-            }
 
-            if (object instanceof JSONObject) {
-                if (((JSONObject) object).length() == 0) {
-                    jsonArray = getJsonArrayWithoutEntryByIndex(jsonArray, i);
+                if (object instanceof JSONObject) {
+                    if (((JSONObject) object).length() == 0) {
+                        jsonArray = getJsonArrayWithoutEntryByIndex(jsonArray, i);
+                    }
                 }
-            }
 
-            if (object instanceof JSONArray) {
-                if (((JSONArray) object).length() == 0) {
-                    jsonArray = getJsonArrayWithoutEntryByIndex(jsonArray, i);
+                if (object instanceof JSONArray) {
+                    if (((JSONArray) object).length() == 0) {
+                        jsonArray = getJsonArrayWithoutEntryByIndex(jsonArray, i);
+                    }
                 }
             }
 

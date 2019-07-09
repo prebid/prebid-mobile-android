@@ -596,7 +596,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     deviceExtPrebidInstl.put("minwidthperc", minSizePercWidth);
                     deviceExtPrebidInstl.put("minheightperc", minSizePercHeight);
 
-                    JSONObject deviceExtWithoutEmptyValues = Util.getJsonObjectWithoutEmptyValues(deviceExt);
+                    JSONObject deviceExtWithoutEmptyValues = Util.getObjectWithoutEmptyValues(deviceExt);
                     device.put("ext", deviceExtWithoutEmptyValues);
                 }
 

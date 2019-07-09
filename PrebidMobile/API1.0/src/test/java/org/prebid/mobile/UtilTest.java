@@ -201,7 +201,7 @@ public class UtilTest extends BaseSetup {
     }
 
     @Test
-    public void testRemoveNodesWithoutValue() throws JSONException {
+    public void testGetObjectWithoutEmptyValues() throws JSONException {
 
         //Test 1
         JSONObject node1111 = new JSONObject();
@@ -215,13 +215,13 @@ public class UtilTest extends BaseSetup {
         JSONObject node1 = new JSONObject();
         node1.put("key1", node11);
 
-        JSONObject result1 = Util.getJsonObjectWithoutEmptyValues(node1);
+        JSONObject result1 = Util.getObjectWithoutEmptyValues(node1);
 
         Assert.assertNull(result1);
 
         //Test 2
         node1111.put("key1111", "value1111");
-        JSONObject result2 = Util.getJsonObjectWithoutEmptyValues(node1);
+        JSONObject result2 = Util.getObjectWithoutEmptyValues(node1);
         Assert.assertEquals("{\"key1\":{\"key11\":{\"key111\":{\"key1111\":\"value1111\"}}}}", result2.toString());
 
         //Test 3
@@ -230,32 +230,32 @@ public class UtilTest extends BaseSetup {
         node121.put("key121", "value121");
         node11.put("key12", node121);
 
-        JSONObject result3 = Util.getJsonObjectWithoutEmptyValues(node1);
+        JSONObject result3 = Util.getObjectWithoutEmptyValues(node1);
         Assert.assertEquals("{\"key1\":{\"key12\":{\"key121\":\"value121\"}}}", result3.toString());
 
         //Test 4
         node11.remove("key12");
         JSONArray node21 = new JSONArray();
         node1.put("key2", node21);
-        JSONObject result4 = Util.getJsonObjectWithoutEmptyValues(node1);
+        JSONObject result4 = Util.getObjectWithoutEmptyValues(node1);
         Assert.assertNull(result4);
 
         //Test5
         node21.put("value21");
-        JSONObject result5 = Util.getJsonObjectWithoutEmptyValues(node1);
+        JSONObject result5 = Util.getObjectWithoutEmptyValues(node1);
         Assert.assertEquals("{\"key2\":[\"value21\"]}", result5.toString());
 
         //Test6
         node21.remove(0);
         JSONObject node211 = new JSONObject();
         node21.put(node211);
-        JSONObject result6 = Util.getJsonObjectWithoutEmptyValues(node1);
+        JSONObject result6 = Util.getObjectWithoutEmptyValues(node1);
         Assert.assertNull(result6);
 
 
         //Test7
         node211.put("key211", "value211");
-        JSONObject result7 = Util.getJsonObjectWithoutEmptyValues(node1);
+        JSONObject result7 = Util.getObjectWithoutEmptyValues(node1);
         Assert.assertEquals("{\"key2\":[{\"key211\":\"value211\"}]}", result7.toString());
 
 
@@ -263,7 +263,7 @@ public class UtilTest extends BaseSetup {
         node21.remove(0);
         JSONArray node212 = new JSONArray();
         node21.put(node212);
-        JSONObject result8 = Util.getJsonObjectWithoutEmptyValues(node1);
+        JSONObject result8 = Util.getObjectWithoutEmptyValues(node1);
         Assert.assertNull(result8);
     }
 
