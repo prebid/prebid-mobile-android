@@ -263,6 +263,28 @@ public class UtilTest extends BaseSetup {
         node21.put(node212);
         JSONObject result8 = Util.getObjectWithoutEmptyValues(node1);
         Assert.assertNull(result8);
+
+        //Test9
+        JSONArray node31 = new JSONArray();
+        node1.put("key3", node31);
+        JSONObject node311 = new JSONObject();
+        node31.put(node311);
+        JSONObject node312 = new JSONObject();
+        node312.put("key312", "value312");
+        node31.put(node312);
+        JSONObject result9 = Util.getObjectWithoutEmptyValues(node1);
+        Assert.assertEquals("{\"key3\":[{\"key312\":\"value312\"}]}", result9.toString());
+
+        //Test10
+        JSONArray node313 = new JSONArray();
+        JSONObject node3131 = new JSONObject();
+        node3131.put("key3131", "value3131");
+        node313.put(node3131);
+        JSONObject node3132 = new JSONObject();
+        node313.put(node3132);
+        node31.put(node313);
+        JSONObject result10 = Util.getObjectWithoutEmptyValues(node1);
+        Assert.assertEquals("{\"key3\":[{\"key312\":\"value312\"},[{\"key3131\":\"value3131\"}]]}", result10.toString());
     }
 
 }

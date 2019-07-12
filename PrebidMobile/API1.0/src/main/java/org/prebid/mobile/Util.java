@@ -19,6 +19,7 @@ package org.prebid.mobile;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.Size;
@@ -277,29 +278,31 @@ public class Util {
         return result;
     }
 
-    private static void removeEntryWithoutValue(@NonNull JSONObject jsonObject) {
-        Iterator<String> iterator = jsonObject.keys();
+    private static void removeEntryWithoutValue(@NonNull JSONObject map) throws JSONException {
+        Iterator<String> iterator = map.keys();
 
         while (iterator.hasNext()) {
             String key = iterator.next();
 
-            Object objectValue = jsonObject.opt(key);
-            if (objectValue != null) {
+            Object value = map.opt(key);
+            if (value != null) {
 
-                if (objectValue instanceof JSONObject) {
+                if (value instanceof JSONObject) {
 
-                    JSONObject jsonObjectValue = (JSONObject)objectValue;
-                    removeEntryWithoutValue(jsonObjectValue);
+                    JSONObject mapValue = (JSONObject)value;
+                    removeEntryWithoutValue(mapValue);
 
-                    if (jsonObjectValue.length() == 0) {
+                    if (mapValue.length() == 0) {
                         iterator.remove();
                     }
-                } else if (objectValue instanceof JSONArray) {
+                } else if (value instanceof JSONArray) {
 
-                    JSONArray jsonArrayValue = (JSONArray)objectValue;
-                    JSONArray removeResult = removeEntryWithoutValue(jsonArrayValue);
+                    JSONArray arrayValue = (JSONArray)value;
+                    arrayValue = removeEntryWithoutValue(arrayValue);
 
-                    if (removeResult.length() == 0) {
+                    map.put(key, arrayValue);
+
+                    if (arrayValue.length() == 0) {
                         iterator.remove();
                     }
                 }
@@ -307,40 +310,46 @@ public class Util {
         }
     }
 
-    private static JSONArray removeEntryWithoutValue(@NonNull JSONArray jsonArray) {
+    @CheckResult
+    private static JSONArray removeEntryWithoutValue(@NonNull JSONArray array) throws JSONException {
 
-        for (int i = 0; i < jsonArray.length(); i++) {
+        for (int i = 0; i < array.length(); i++) {
 
-            Object object = jsonArray.opt(i);
-            if (object != null) {
+            Object value = array.opt(i);
+            if (value != null) {
 
-                if (object instanceof JSONObject) {
-                    removeEntryWithoutValue((JSONObject)object);
+                if (value instanceof JSONObject) {
 
-                    if (((JSONObject) object).length() == 0) {
-                        jsonArray = getJsonArrayWithoutEntryByIndex(jsonArray, i);
+                    JSONObject mapValue = (JSONObject)value;
+                    removeEntryWithoutValue(mapValue);
+
+                    if (mapValue.length() == 0) {
+                        array = getJsonArrayWithoutEntryByIndex(array, i);
                     }
-                } else if (object instanceof JSONArray) {
-                    JSONArray removeResult = removeEntryWithoutValue((JSONArray)object);
+                } else if (value instanceof JSONArray) {
+                    JSONArray arrayValue = (JSONArray)value;
+                    arrayValue = removeEntryWithoutValue(arrayValue);
 
-                    if (removeResult.length() == 0) {
-                        jsonArray = getJsonArrayWithoutEntryByIndex(jsonArray, i);
+                    array.put(i, arrayValue);
+
+                    if (arrayValue.length() == 0) {
+                        array = getJsonArrayWithoutEntryByIndex(array, i);
                     }
                 }
             }
 
         }
 
-        return jsonArray;
-
+        return array;
     }
 
+    @CheckResult
     private static JSONArray getJsonArrayWithoutEntryByIndex(JSONArray jsonArray, int pos){
         JSONArray result = new JSONArray();
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
                 if (i != pos) {
-                    jsonArray.put(jsonArray.get(i));
+                    result.put(jsonArray.get(i));
                 }
             }
         } catch (Exception e) {
