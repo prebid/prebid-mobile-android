@@ -81,6 +81,10 @@ public class MockPrebidServerResponses {
         return inputStreamToString(in);
     }
 
+    public static String htmlUnreachableFromRubicon() {
+        InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerHtmlUnreachableFromRubiconInvalidResponse.html");
+        return inputStreamToString(in);
+    }
 
     public static String inputStreamToString(InputStream is) {
         try {

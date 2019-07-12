@@ -781,4 +781,29 @@ public class PrebidServerAdapterTest extends BaseSetup {
             assertTrue("Server failed to start, unable to test.", false);
         }
     }
+
+    @Test
+    public void testRubiconDefaultError() {
+        if (!successfulMockServerStarted) {
+            fail("Server failed to start, unable to test.");
+        }
+
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.htmlUnreachableFromRubicon()));
+        HttpUrl hostUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(hostUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setPrebidServerAccountId("12345");
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(320, 50));
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onDemandFailed(ResultCode.PREBID_SERVER_ERROR, uuid);
+
+    }
 }
