@@ -344,16 +344,13 @@ public class Util {
     }
 
     @CheckResult
-    private static JSONArray getJsonArrayWithoutEntryByIndex(JSONArray jsonArray, int pos){
+    private static JSONArray getJsonArrayWithoutEntryByIndex(JSONArray jsonArray, int pos) throws JSONException {
         JSONArray result = new JSONArray();
-        try {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                if (i != pos) {
-                    result.put(jsonArray.get(i));
-                }
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            if (i != pos) {
+                result.put(jsonArray.get(i));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return result;
