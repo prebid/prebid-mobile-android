@@ -384,7 +384,7 @@ public class DemandFetcherTest extends BaseSetup {
             MoPubView adView = new MoPubView(activity);
             adView.setAdUnitId("123456789");
             DemandFetcher demandFetcher = new DemandFetcher(adView);
-            PrebidMobile.timeoutMillis = Integer.MAX_VALUE;
+            PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
             demandFetcher.setPeriodMillis(2000);
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
@@ -430,7 +430,7 @@ public class DemandFetcherTest extends BaseSetup {
             PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
             PublisherAdRequest request = builder.build();
             DemandFetcher demandFetcher = new DemandFetcher(request);
-            PrebidMobile.timeoutMillis = Integer.MAX_VALUE;
+            PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
             demandFetcher.setPeriodMillis(2000);
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
