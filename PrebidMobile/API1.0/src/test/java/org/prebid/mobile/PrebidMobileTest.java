@@ -33,7 +33,7 @@ public class PrebidMobileTest extends BaseSetup {
         PrebidMobile.setPrebidServerAccountId("123456");
         assertEquals("123456", PrebidMobile.getPrebidServerAccountId());
         PrebidMobile.setTimeoutMillis(2500);
-        assertEquals(2500, PrebidMobile.getTimeoutMillis());        
+        assertEquals(2500, PrebidMobile.getTimeoutMillis());
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         assertEquals(activity.getApplicationContext(), PrebidMobile.getApplicationContext());
         PrebidMobile.setShareGeoLocation(true);
