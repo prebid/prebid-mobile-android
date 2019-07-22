@@ -41,7 +41,8 @@ import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.InterstitialAdUnit;
 import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.ResultCode;
-import org.prebid.mobile.Util;
+import org.prebid.mobile.addendum.AdViewUtils;
+import org.prebid.mobile.addendum.PbFindSizeError;
 
 import static org.prebid.mobile.app.Constants.MOPUB_BANNER_ADUNIT_ID_300x250;
 import static org.prebid.mobile.app.Constants.MOPUB_BANNER_ADUNIT_ID_320x50;
@@ -76,10 +77,10 @@ public class DemoActivity extends AppCompatActivity {
         int width = Integer.valueOf(wAndH[0]);
         int height = Integer.valueOf(wAndH[1]);
         if (width == 300 && height == 250) {
-            dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_300x250);
+            dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES);
             adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250, width, height);
         } else if (width == 320 && height == 50) {
-            dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_300x250);
+            dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES);
             adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
         } else {
             dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES);
@@ -91,15 +92,16 @@ public class DemoActivity extends AppCompatActivity {
             public void onAdLoaded() {
                 super.onAdLoaded();
 
-                Util.findPrebidCreativeSize(dfpAdView, new Util.CreativeSizeResultHandler() {
+                AdViewUtils.findPrebidCreativeSize(dfpAdView, new AdViewUtils.PbFindSizeListener() {
                     @Override
-                    public void success(@NonNull Util.CreativeSize size) {
-                        dfpAdView.setAdSizes(new AdSize(size.getWidth(), size.getHeight()));
+                    public void success(int width, int height) {
+                        dfpAdView.setAdSizes(new AdSize(width, height));
+
                     }
 
                     @Override
-                    public void failure(@NonNull Util.CreativeSizeError error) {
-                        Log.d("MyTag", "error: " + error.getMessage());
+                    public void failure(@NonNull PbFindSizeError error) {
+                        Log.d("MyTag", "error: " + error);
                     }
                 });
 
