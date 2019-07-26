@@ -13,7 +13,7 @@ implementation 'org.prebid:prebid-mobile-sdk:[1,2)'
 ```
 If you want explicit stable vesion, please use the following:
 ```
-implementation 'org.prebid:prebid-mobile-sdk:1.1.1'
+implementation 'org.prebid:prebid-mobile-sdk:1.1.2'
 ```
 
 
