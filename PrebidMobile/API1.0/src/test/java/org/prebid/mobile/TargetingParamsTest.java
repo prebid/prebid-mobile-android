@@ -89,6 +89,15 @@ public class TargetingParamsTest extends BaseSetup {
     }
 
     @Test
+    public void testCOPPAFlag() throws Exception {
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        TargetingParams.setSubjectToCOPPA(true);
+        assertTrue(TargetingParams.isSubjectToCOPPA());
+        TargetingParams.setSubjectToCOPPA(false);
+        assertTrue(!TargetingParams.isSubjectToCOPPA());
+    }
+
+    @Test
     public void testGDPRFlag() throws Exception {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         TargetingParams.setSubjectToGDPR(true);
