@@ -190,7 +190,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
     @Test
     public void testUpdateTimeoutMillis() {
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
-        assertEquals(2000, PrebidMobile.timeoutMillis);
+        assertEquals(2000, PrebidMobile.getTimeoutMillis());
         assertFalse(PrebidMobile.timeoutMillisUpdated);
         PrebidMobile.setPrebidServerAccountId("b7adad2c-e042-4126-8ca1-b3caac7d3e5c");
         PrebidMobile.setShareGeoLocation(true);
@@ -205,7 +205,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
-        assertTrue("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, PrebidMobile.timeoutMillis <= 2000 && PrebidMobile.timeoutMillis > 700);
+        assertTrue("Actual Prebid Mobile timeout is " + PrebidMobile.getTimeoutMillis(), PrebidMobile.getTimeoutMillis() <= 2000 && PrebidMobile.getTimeoutMillis() > 700);
         assertTrue(PrebidMobile.timeoutMillisUpdated);
     }
 
@@ -229,12 +229,12 @@ public class PrebidServerAdapterTest extends BaseSetup {
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
             Robolectric.flushForegroundThreadScheduler();
-            assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, 2000, PrebidMobile.timeoutMillis);
+            assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.getTimeoutMillis(), 2000, PrebidMobile.getTimeoutMillis());
             assertTrue(!PrebidMobile.timeoutMillisUpdated);
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
             Robolectric.flushForegroundThreadScheduler();
-            assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, 2000, PrebidMobile.timeoutMillis);
+            assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.getTimeoutMillis(), 2000, PrebidMobile.getTimeoutMillis());
             assertTrue(PrebidMobile.timeoutMillisUpdated);
         } else {
             assertTrue("Server failed to start, unable to test.", false);
@@ -662,7 +662,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         adUnit.fetchDemand(testView, mockListener);
         DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
-        PrebidMobile.timeoutMillis = Integer.MAX_VALUE;
+        PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
         ShadowLooper fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
         fetcherLooper.runOneTask();
         ShadowLooper demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
@@ -675,7 +675,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         OnCompleteListener mockListenerNoKV = mock(OnCompleteListener.class);
         adUnit.fetchDemand(testView, mockListenerNoKV);
         fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
-        PrebidMobile.timeoutMillis = Integer.MAX_VALUE;
+        PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
         fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
         fetcherLooper.runOneTask();
         demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
