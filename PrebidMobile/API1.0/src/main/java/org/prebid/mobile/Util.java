@@ -52,7 +52,7 @@ public class Util {
     }
 
     /**
-     *@deprecated Please migrate to - Util.findPrebidCreativeSize(View, CreativeSizeResultHandler)
+     *@deprecated Please migrate to - AdViewUtils.findPrebidCreativeSize(View, AdViewUtils.PbFindSizeListener)
      *@see AdViewUtils#findPrebidCreativeSize(View, AdViewUtils.PbFindSizeListener)
      */
     @Deprecated
