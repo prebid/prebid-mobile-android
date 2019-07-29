@@ -20,12 +20,10 @@ import com.mopub.mobileads.MoPubView;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
-import org.hamcrest.Matchers;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
 import org.robolectric.Robolectric;
@@ -51,7 +49,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -102,7 +99,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
     @Test
     public void testInvalidPrebidServerAccountIdForRubiconHostedPrebidServer() {
-        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        if (!successfulMockServerStarted) {
+            fail("Mock server was not started");
+        }
+        server.enqueue(new MockResponse().setResponseCode(400).setBody("Invalid request format: No stored request found for id: 1001_INVALID_ACCOUNT_ID"));
+        HttpUrl hostUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(hostUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+
         PrebidMobile.setPrebidServerAccountId("1001_INVALID_ACCOUNT_ID");
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
@@ -116,11 +120,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
 
-        ArgumentCaptor<ResultCode> resultCodeAC = ArgumentCaptor.forClass(ResultCode.class);
-        ArgumentCaptor<String> uuidAC = ArgumentCaptor.forClass(String.class);
-
-        verify(mockListener).onDemandFailed(resultCodeAC.capture(), uuidAC.capture());
-        assertThat(resultCodeAC.getValue(), Matchers.either(Matchers.is(ResultCode.INVALID_ACCOUNT_ID)).or(Matchers.is(ResultCode.PREBID_SERVER_ERROR)));
+        verify(mockListener).onDemandFailed(ResultCode.INVALID_ACCOUNT_ID, uuid);
 
     }
 
@@ -144,7 +144,15 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
     @Test
     public void testInvalidPrebidServerConfigIdForRubiconHostedPrebidServer() {
-        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+
+        if (!successfulMockServerStarted) {
+            fail("Mock server was not started");
+        }
+        server.enqueue(new MockResponse().setResponseCode(400).setBody("Invalid request format: No stored imp found for id: 1001-1_INVALID_CONFIG_ID"));
+        HttpUrl hostUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(hostUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+
         PrebidMobile.setPrebidServerAccountId("1001");
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
@@ -158,12 +166,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
 
-        ArgumentCaptor<ResultCode> resultCodeAC = ArgumentCaptor.forClass(ResultCode.class);
-        ArgumentCaptor<String> uuidAC = ArgumentCaptor.forClass(String.class);
-
-        verify(mockListener).onDemandFailed(resultCodeAC.capture(), uuidAC.capture());
-        assertThat(resultCodeAC.getValue(), Matchers.either(Matchers.is(ResultCode.INVALID_CONFIG_ID)).or(Matchers.is(ResultCode.PREBID_SERVER_ERROR)));
-
+        verify(mockListener).onDemandFailed(ResultCode.INVALID_CONFIG_ID, uuid);
     }
 
     @Test
