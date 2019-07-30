@@ -1,17 +1,16 @@
 package org.prebid.mobile.drprebid.ui.viewholders;
 
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.RecyclerView;
 
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.model.HelpScreen;
@@ -78,7 +77,7 @@ public class PrebidServerValidationViewHolder extends RecyclerView.ViewHolder im
                 sentPassed = false;
             }
 
-            sendRequestView.setText(String.format(Locale.ENGLISH, itemView.getContext().getString(R.string.bid_requests_sent), 100));
+            sendRequestView.setText(String.format(Locale.ENGLISH, itemView.getContext().getString(R.string.bid_requests_sent_value), 100));
 
             sentFinished = true;
 
@@ -97,7 +96,7 @@ public class PrebidServerValidationViewHolder extends RecyclerView.ViewHolder im
                 receivedPassed = false;
             }
 
-            responseReceivedView.setText(String.format(Locale.ENGLISH, itemView.getContext().getString(R.string.bid_responses_received), count));
+            responseReceivedView.setText(String.format(Locale.ENGLISH, itemView.getContext().getString(R.string.bid_responses_received_value), count));
 
             receivedFinished = true;
 
@@ -105,11 +104,11 @@ public class PrebidServerValidationViewHolder extends RecyclerView.ViewHolder im
         });
 
         viewModel.getAverageResponseTime().observe(this, averageResponseTime -> {
-            avgResponseTimeView.setText(String.format(Locale.ENGLISH, itemView.getContext().getString(R.string.average_response_time), averageResponseTime));
+            avgResponseTimeView.setText(String.format(Locale.ENGLISH, itemView.getContext().getString(R.string.average_response_time_value), averageResponseTime));
         });
 
         viewModel.getAverageCpm().observe(this, averageCpm -> {
-            avgCpmView.setText(String.format(Locale.ENGLISH, itemView.getContext().getString(R.string.average_cpm), averageCpm));
+            avgCpmView.setText(String.format(Locale.ENGLISH, itemView.getContext().getString(R.string.average_cpm_value), averageCpm));
         });
     }
 

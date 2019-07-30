@@ -16,7 +16,7 @@
 
 package org.prebid.mobile;
 
-import androidx.annotation.NonNull;
+import android.support.annotation.NonNull;
 
 public class InterstitialAdUnit extends AdUnit {
     public InterstitialAdUnit(@NonNull String configId) {

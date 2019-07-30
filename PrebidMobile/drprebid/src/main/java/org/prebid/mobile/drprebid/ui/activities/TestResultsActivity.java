@@ -1,23 +1,20 @@
 package org.prebid.mobile.drprebid.ui.activities;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import com.google.android.gms.ads.MobileAds;
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
-import com.mopub.common.logging.MoPubLog;
 
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.managers.SettingsManager;
 import org.prebid.mobile.drprebid.model.AdServer;
 import org.prebid.mobile.drprebid.model.AdServerSettings;
-import org.prebid.mobile.drprebid.model.SdkTestResults;
 import org.prebid.mobile.drprebid.ui.adapters.TestResultsAdapter;
 import org.prebid.mobile.drprebid.ui.viewmodels.AdServerValidationViewModel;
 import org.prebid.mobile.drprebid.ui.viewmodels.PrebidServerValidationViewModel;
@@ -53,8 +50,6 @@ public class TestResultsActivity extends AppCompatActivity {
         } else {
             initGoogleAdsManager();
         }
-
-        runTests();
     }
 
     private void initMoPub(String adUnitId) {

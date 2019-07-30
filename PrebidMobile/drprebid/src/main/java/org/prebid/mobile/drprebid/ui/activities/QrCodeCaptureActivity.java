@@ -12,6 +12,11 @@ import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -19,18 +24,12 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.managers.QrCodeScanCacheManager;
@@ -118,13 +117,8 @@ public class QrCodeCaptureActivity extends AppCompatActivity implements CodeGrap
 
         final Activity thisActivity = this;
 
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ActivityCompat.requestPermissions(thisActivity, permissions,
-                        RC_HANDLE_CAMERA_PERM);
-            }
-        };
+        View.OnClickListener listener = view -> ActivityCompat.requestPermissions(thisActivity, permissions,
+                RC_HANDLE_CAMERA_PERM);
 
         findViewById(R.id.topLayout).setOnClickListener(listener);
         Snackbar.make(mGraphicOverlay, R.string.permission_camera_rationale,
@@ -275,11 +269,7 @@ public class QrCodeCaptureActivity extends AppCompatActivity implements CodeGrap
         Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
                 " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
 
-        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                finish();
-            }
-        };
+        DialogInterface.OnClickListener listener = (dialog, id) -> finish();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.app_name)

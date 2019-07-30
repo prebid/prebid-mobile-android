@@ -1,17 +1,15 @@
 package org.prebid.mobile.drprebid.ui.viewholders;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.managers.SettingsManager;
 import org.prebid.mobile.drprebid.model.AdServerSettings;
-import org.prebid.mobile.drprebid.model.GeneralSettings;
 import org.prebid.mobile.drprebid.model.PrebidServer;
 import org.prebid.mobile.drprebid.model.PrebidServerSettings;
 import org.prebid.mobile.drprebid.ui.activities.TestResultsActivity;

@@ -1,8 +1,7 @@
 package org.prebid.mobile.drprebid.qrscanning;
 
 import android.content.Context;
-
-import androidx.annotation.UiThread;
+import android.support.annotation.UiThread;
 
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Tracker;

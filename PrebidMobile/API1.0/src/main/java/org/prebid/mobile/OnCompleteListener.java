@@ -16,7 +16,7 @@
 
 package org.prebid.mobile;
 
-import androidx.annotation.MainThread;
+import android.support.annotation.MainThread;
 
 public interface OnCompleteListener {
     /**
