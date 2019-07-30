@@ -81,6 +81,20 @@ public class MockPrebidServerResponses {
         return inputStreamToString(in);
     }
 
+    public static String htmlUnreachableFromRubicon() {
+        InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerHtmlUnreachableFromRubiconInvalidResponse.html");
+        return inputStreamToString(in);
+    }
+
+    public static String invalidAccountIdFromRubicon() {
+        InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerInvalidAccountIdFromRubicon.json");
+        return inputStreamToString(in);
+    }
+
+    public static String invalidConfigIdFromRubicon() {
+        InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerInvalidConfigIdFromRubicon.json");
+        return inputStreamToString(in);
+    }
 
     public static String inputStreamToString(InputStream is) {
         try {
