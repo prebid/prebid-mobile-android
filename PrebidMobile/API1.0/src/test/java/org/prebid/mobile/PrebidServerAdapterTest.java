@@ -102,7 +102,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         if (!successfulMockServerStarted) {
             fail("Mock server was not started");
         }
-        server.enqueue(new MockResponse().setResponseCode(400).setBody("Invalid request format: No stored request found for id: 1001_INVALID_ACCOUNT_ID"));
+        server.enqueue(new MockResponse().setResponseCode(400).setBody(MockPrebidServerResponses.invalidAccountIdFromRubicon()));
         HttpUrl hostUrl = server.url("/");
         Host.CUSTOM.setHostUrl(hostUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
@@ -148,7 +148,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         if (!successfulMockServerStarted) {
             fail("Mock server was not started");
         }
-        server.enqueue(new MockResponse().setResponseCode(400).setBody("Invalid request format: No stored imp found for id: 1001-1_INVALID_CONFIG_ID"));
+        server.enqueue(new MockResponse().setResponseCode(400).setBody(MockPrebidServerResponses.invalidConfigIdFromRubicon()));
         HttpUrl hostUrl = server.url("/");
         Host.CUSTOM.setHostUrl(hostUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
