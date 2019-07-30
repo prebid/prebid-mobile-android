@@ -24,12 +24,30 @@ class RequestParams {
     private AdType adType = AdType.BANNER;
     private HashSet<AdSize> sizes = new HashSet<>();
     private ArrayList<String> keywords;
+    private NativeAdUnit.NATIVE_REQUEST_VERSION request_version = NativeAdUnit.NATIVE_REQUEST_VERSION.VERSION_1_1;
+    private HashSet<NativeAdUnit.NATIVE_REQUEST_ASSET> assets = new HashSet<>();
 
     RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, ArrayList<String> keywords) {
         this.configId = configId;
         this.adType = adType;
         this.sizes = sizes; // for Interstitial this will be null, will use screen width & height in the request
         this.keywords = keywords;
+    }
+
+    void setNativeRequestVersion(NativeAdUnit.NATIVE_REQUEST_VERSION version){
+        this.request_version = version;
+    }
+
+    void setNativeRequestAssets(HashSet<NativeAdUnit.NATIVE_REQUEST_ASSET> assets){
+        this.assets = assets;
+    }
+
+    HashSet<NativeAdUnit.NATIVE_REQUEST_ASSET> getNativeRequestAssets() {
+        return assets;
+    }
+
+    public NativeAdUnit.NATIVE_REQUEST_VERSION getNativeRequestVersion() {
+        return request_version;
     }
 
     String getConfigId() {

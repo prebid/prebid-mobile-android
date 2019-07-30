@@ -516,7 +516,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     }
                     banner.put("format", format);
                     imp.put("banner", banner);
-                } else {
+                } else if (requestParams.getAdType().equals(AdType.BANNER)){
                     JSONObject banner = new JSONObject();
                     JSONArray format = new JSONArray();
                     for (AdSize size : requestParams.getAdSizes()) {
@@ -524,6 +524,52 @@ class PrebidServerAdapter implements DemandAdapter {
                     }
                     banner.put("format", format);
                     imp.put("banner", banner);
+                } else {
+                    // add native request
+                    JSONObject nativeObj = new JSONObject();
+                    JSONObject request = new JSONObject();
+                    JSONArray assets = new JSONArray();
+                    for (NativeAdUnit.NATIVE_REQUEST_ASSET asset: requestParams.getNativeRequestAssets()){
+                        JSONObject assetObj = new JSONObject();
+                        assetObj.put("required", 1);
+                        switch (asset){
+                            case DATA:
+                                JSONObject data = new JSONObject();
+                                data.put("type",1);
+                                data.put("len", 25);
+                                assetObj.put("data", data);
+                            case ICON:
+                                break;
+                            case IMAGE:
+                                JSONObject image = new JSONObject();
+                                image.put("type", 3);
+                                image.put("wmin", 200);
+                                image.put("hmin", 200);
+                                assetObj.put("img", image);
+                            case TITLE:
+                                JSONObject len = new JSONObject();
+                                len.put("len", 90);
+                                assetObj.put("title", len);
+                                break;
+                        }
+                        assets.put(assetObj);
+                    }
+                    request.put("assets", assets);
+                    request.put("context", 2);
+                    request.put("contextsubtype", 20);
+                    request.put("plcmttype", 1);
+                    switch (requestParams.getNativeRequestVersion()){
+                        case VERSION_1_1:
+                            request.put("ver", "1.1");
+                            nativeObj.put("request", request.toString());
+                            nativeObj.put("ver", "1.1");
+                            break;
+                        case VERSION_1_2:
+                            request.put("ver", "1.2");
+                            nativeObj.put("request", request.toString());
+                            nativeObj.put("ver", "1.2");
+                    }
+                    imp.put("native", nativeObj);
                 }
                 imp.put("ext", ext);
                 JSONObject prebid = new JSONObject();
