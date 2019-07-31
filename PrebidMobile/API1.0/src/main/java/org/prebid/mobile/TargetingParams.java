@@ -38,6 +38,7 @@ public class TargetingParams {
     private static String bundleName = null;
     private static final String PREBID_CONSENT_STRING_KEY = "Prebid_GDPR_consent_strings";
     private static final String IABConsent_ConsentString = "IABConsent_ConsentString";
+    private static final String PREBID_COPPA_KEY = "Prebid_COPPA";
     private static final String PREBID_GDPR_KEY = "Prebid_GDPR";
     private static final String IABConsent_SubjectToGDPR = "IABConsent_SubjectToGDPR";
     //endregion
@@ -70,6 +71,28 @@ public class TargetingParams {
             }
         }
         return null;
+    }
+
+    public static void setSubjectToCOPPA(boolean consent) {
+        Context context = PrebidMobile.getApplicationContext();
+        if (context != null) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean(PREBID_COPPA_KEY, consent);
+            editor.apply();
+        }
+    }
+
+    public static boolean isSubjectToCOPPA() {
+        boolean result = false;
+        Context context = PrebidMobile.getApplicationContext();
+        if (context != null) {
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+            if (pref.contains(PREBID_COPPA_KEY)) {
+                result = pref.getBoolean(PREBID_COPPA_KEY, false);
+            }
+        }
+        return result;
     }
 
     public static void setSubjectToGDPR(boolean consent) {

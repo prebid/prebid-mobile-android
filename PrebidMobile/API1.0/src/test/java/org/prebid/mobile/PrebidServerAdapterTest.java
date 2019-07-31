@@ -100,7 +100,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
     @Test
     public void testInvalidPrebidServerAccountIdForRubiconHostedPrebidServer() {
-        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        if (!successfulMockServerStarted) {
+            fail("Mock server was not started");
+        }
+        server.enqueue(new MockResponse().setResponseCode(400).setBody(MockPrebidServerResponses.invalidAccountIdFromRubicon()));
+        HttpUrl hostUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(hostUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+
         PrebidMobile.setPrebidServerAccountId("1001_INVALID_ACCOUNT_ID");
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
@@ -113,7 +120,9 @@ public class PrebidServerAdapterTest extends BaseSetup {
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
+
         verify(mockListener).onDemandFailed(ResultCode.INVALID_ACCOUNT_ID, uuid);
+
     }
 
     @Test
@@ -136,7 +145,15 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
     @Test
     public void testInvalidPrebidServerConfigIdForRubiconHostedPrebidServer() {
-        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+
+        if (!successfulMockServerStarted) {
+            fail("Mock server was not started");
+        }
+        server.enqueue(new MockResponse().setResponseCode(400).setBody(MockPrebidServerResponses.invalidConfigIdFromRubicon()));
+        HttpUrl hostUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(hostUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+
         PrebidMobile.setPrebidServerAccountId("1001");
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
@@ -149,6 +166,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
+
         verify(mockListener).onDemandFailed(ResultCode.INVALID_CONFIG_ID, uuid);
     }
 
@@ -191,7 +209,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
     @Test
     public void testUpdateTimeoutMillis() {
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
-        assertEquals(2000, PrebidMobile.timeoutMillis);
+        assertEquals(2000, PrebidMobile.getTimeoutMillis());
         assertFalse(PrebidMobile.timeoutMillisUpdated);
         PrebidMobile.setPrebidServerAccountId("b7adad2c-e042-4126-8ca1-b3caac7d3e5c");
         PrebidMobile.setShareGeoLocation(true);
@@ -206,7 +224,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
-        assertTrue("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, PrebidMobile.timeoutMillis <= 2000 && PrebidMobile.timeoutMillis > 700);
+        assertTrue("Actual Prebid Mobile timeout is " + PrebidMobile.getTimeoutMillis(), PrebidMobile.getTimeoutMillis() <= 2000 && PrebidMobile.getTimeoutMillis() > 700);
         assertTrue(PrebidMobile.timeoutMillisUpdated);
     }
 
@@ -230,12 +248,12 @@ public class PrebidServerAdapterTest extends BaseSetup {
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
             Robolectric.flushForegroundThreadScheduler();
-            assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, 2000, PrebidMobile.timeoutMillis);
+            assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.getTimeoutMillis(), 2000, PrebidMobile.getTimeoutMillis());
             assertTrue(!PrebidMobile.timeoutMillisUpdated);
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
             Robolectric.flushForegroundThreadScheduler();
-            assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.timeoutMillis, 2000, PrebidMobile.timeoutMillis);
+            assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.getTimeoutMillis(), 2000, PrebidMobile.getTimeoutMillis());
             assertTrue(PrebidMobile.timeoutMillisUpdated);
         } else {
             assertTrue("Server failed to start, unable to test.", false);
@@ -663,7 +681,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         adUnit.fetchDemand(testView, mockListener);
         DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
-        PrebidMobile.timeoutMillis = Integer.MAX_VALUE;
+        PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
         ShadowLooper fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
         fetcherLooper.runOneTask();
         ShadowLooper demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
@@ -676,7 +694,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         OnCompleteListener mockListenerNoKV = mock(OnCompleteListener.class);
         adUnit.fetchDemand(testView, mockListenerNoKV);
         fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
-        PrebidMobile.timeoutMillis = Integer.MAX_VALUE;
+        PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
         fetcherLooper = shadowOf(fetcher.getHandler().getLooper());
         fetcherLooper.runOneTask();
         demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
@@ -703,6 +721,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             TargetingParams.setDomain("prebid.org");
             TargetingParams.setStoreUrl("store://app");
             TargetingParams.setSubjectToGDPR(true);
+            TargetingParams.setSubjectToCOPPA(true);
             TargetingParams.setGDPRConsentString("testGDPR");
             DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
             PrebidServerAdapter adapter = new PrebidServerAdapter();
@@ -756,6 +775,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             assertEquals("F", user.getString("gender"));
             assertEquals("testGDPR", user.getJSONObject("ext").getString("consent"));
             JSONObject regs = postData.getJSONObject("regs");
+            assertEquals(1, regs.getInt("coppa"));
             assertEquals(1, regs.getJSONObject("ext").getInt("gdpr"));
             JSONObject ext = postData.getJSONObject("ext");
             assertTrue(ext.getJSONObject("prebid").has("cache"));
@@ -766,6 +786,86 @@ public class PrebidServerAdapterTest extends BaseSetup {
         } else {
             assertTrue("Server failed to start, unable to test.", false);
         }
+    }
+
+    @Test
+    public void testRubiconDefaultError() {
+        if (!successfulMockServerStarted) {
+            fail("Server failed to start, unable to test.");
+        }
+
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.htmlUnreachableFromRubicon()));
+        HttpUrl hostUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(hostUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setPrebidServerAccountId("12345");
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(320, 50));
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onDemandFailed(ResultCode.PREBID_SERVER_ERROR, uuid);
+
+    }
+
+    @Test
+    public void testPostDataWithCOPPA() throws Exception {
+        if (!successfulMockServerStarted) {
+            fail("Server failed to start, unable to test.");
+        }
+
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        TargetingParams.setSubjectToCOPPA(true);
+
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(320, 50));
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        @SuppressWarnings("unchecked")
+        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+
+        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+        assertTrue(postData.has("regs"));
+        JSONObject regs = postData.getJSONObject("regs");
+        assertEquals(1, regs.getInt("coppa"));
+
+    }
+
+    @Test
+    public void testPostDataWithoutCOPPA() throws Exception {
+        if (!successfulMockServerStarted) {
+            fail("Server failed to start, unable to test.");
+        }
+
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        TargetingParams.setSubjectToCOPPA(false);
+
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(320, 50));
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        @SuppressWarnings("unchecked")
+        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+
+        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+        assertFalse(postData.has("regs"));
     }
 
     @Test

@@ -103,7 +103,7 @@ class PrebidServerAdapter implements DemandAdapter {
             this.listener = listener;
             this.requestParams = requestParams;
             this.auctionId = auctionId;
-            timeoutCountDownTimer = new TimeoutCountDownTimer(PrebidMobile.timeoutMillis, TIMEOUT_COUNT_DOWN_INTERVAL);
+            timeoutCountDownTimer = new TimeoutCountDownTimer(PrebidMobile.getTimeoutMillis(), TIMEOUT_COUNT_DOWN_INTERVAL);
         }
 
         @Override
@@ -130,7 +130,7 @@ class PrebidServerAdapter implements DemandAdapter {
                 } // todo still pass cookie if limit ad tracking?
 
                 conn.setRequestMethod("POST");
-                conn.setConnectTimeout(PrebidMobile.timeoutMillis);
+                conn.setConnectTimeout(PrebidMobile.getTimeoutMillis());
 
                 // Add post data
                 OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
@@ -167,7 +167,7 @@ class PrebidServerAdapter implements DemandAdapter {
                             // ignore this
                         }
                         if (tmaxRequest >= 0) {
-                            PrebidMobile.timeoutMillis = Math.min((int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200, 2000); // adding 200ms as safe time
+                            PrebidMobile.setTimeoutMillis(Math.min((int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200, 2000)); // adding 200ms as safe time
                             PrebidMobile.timeoutMillisUpdated = true;
                         }
                     }
@@ -230,6 +230,9 @@ class PrebidServerAdapter implements DemandAdapter {
 
             if (asyncTaskResult.getError() != null) {
                 asyncTaskResult.getError().printStackTrace();
+
+                //Default error
+                notifyDemandFailed(ResultCode.PREBID_SERVER_ERROR);
 
                 removeThisTask();
                 return;
@@ -781,14 +784,17 @@ class PrebidServerAdapter implements DemandAdapter {
             JSONObject regs = new JSONObject();
             try {
                 JSONObject ext = new JSONObject();
-                if (TargetingParams.isSubjectToGDPR() != null) {
-                    if (TargetingParams.isSubjectToGDPR()) {
-                        ext.put("gdpr", 1);
-                    } else {
-                        ext.put("gdpr", 0);
-                    }
+                Boolean isSubjectToGDPR = TargetingParams.isSubjectToGDPR();
+
+                if (isSubjectToGDPR != null && isSubjectToGDPR) {
+                    ext.put("gdpr", 1);
+                    regs.put("ext", ext);
                 }
-                regs.put("ext", ext);
+
+                if (TargetingParams.isSubjectToCOPPA()) {
+                    regs.put("coppa", 1);
+                }
+
             } catch (JSONException e) {
                 LogUtil.d("PrebidServerAdapter getRegsObject() " + e.getMessage());
             }
