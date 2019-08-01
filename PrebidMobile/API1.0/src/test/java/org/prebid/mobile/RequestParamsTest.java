@@ -24,14 +24,11 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -62,20 +59,11 @@ public class RequestParamsTest {
         keywords.add("test=1");
 
         AdSize minSizePerc = new AdSize(50, 70);
-        Map<String, Object> additionalMap = new HashMap<>(1);
-        additionalMap.put(RequestParams.INSTL_MIN_SIZE_PERC_KEY, minSizePerc);
 
-        RequestParams requestParams = new RequestParams("123456", AdType.INTERSTITIAL, sizes, keywords, additionalMap);
+        RequestParams requestParams = new RequestParams("123456", AdType.INTERSTITIAL, sizes, keywords, minSizePerc);
 
-        assertNotNull(requestParams.getAdditionalMap());
-        assertFalse(requestParams.getAdditionalMap().isEmpty());
-
-        Object object = requestParams.getAdditionalMap().get(RequestParams.INSTL_MIN_SIZE_PERC_KEY);
-        assertNotNull(object);
-
-        assertTrue(object instanceof AdSize);
-
-        AdSize minAdSizePerc = (AdSize)object;
+        AdSize minAdSizePerc = requestParams.getMinSizePerc();
+        assertNotNull(minAdSizePerc);
 
         assertTrue(minAdSizePerc.getWidth() == 50 && minAdSizePerc.getHeight() == 70);
     }

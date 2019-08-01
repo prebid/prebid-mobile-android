@@ -20,17 +20,15 @@ import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Map;
 
 class RequestParams {
-
-    static final String INSTL_MIN_SIZE_PERC_KEY = "INSTL_MIN_SIZE_PERC_KEY";
 
     private String configId = "";
     private AdType adType = AdType.BANNER;
     private HashSet<AdSize> sizes = new HashSet<>();
     private ArrayList<String> keywords;
-    private Map<String, Object> additionalMap;
+    @Nullable
+    private AdSize minSizePerc; //non null only for InterstitialAdUnit(String, int, int)
 
     RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, ArrayList<String> keywords) {
         this.configId = configId;
@@ -39,9 +37,9 @@ class RequestParams {
         this.keywords = keywords;
     }
 
-    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, ArrayList<String> keywords, @Nullable Map<String, Object> additionalMap) {
+    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, ArrayList<String> keywords, @Nullable AdSize minSizePerc) {
         this(configId, adType, sizes, keywords);
-        this.additionalMap = additionalMap;
+        this.minSizePerc = minSizePerc;
     }
 
     String getConfigId() {
@@ -60,7 +58,8 @@ class RequestParams {
         return keywords;
     }
 
-    Map<String, Object> getAdditionalMap() {
-        return additionalMap;
+    @Nullable
+    AdSize getMinSizePerc() {
+        return minSizePerc;
     }
 }

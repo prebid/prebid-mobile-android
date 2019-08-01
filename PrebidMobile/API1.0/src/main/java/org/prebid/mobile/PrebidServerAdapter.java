@@ -573,20 +573,11 @@ class PrebidServerAdapter implements DemandAdapter {
                     Integer minSizePercWidth = null;
                     Integer minSizePercHeight = null;
 
-                    Map<String, Object> additionalMap = requestParams.getAdditionalMap();
+                    AdSize minSizePerc = requestParams.getMinSizePerc();
+                    if (minSizePerc != null) {
 
-                    if (additionalMap != null) {
-                        Object object = additionalMap.get(RequestParams.INSTL_MIN_SIZE_PERC_KEY);
-                        if (object != null) {
-
-                            if (object instanceof AdSize) {
-                                AdSize adSize = (AdSize) object;
-
-                                minSizePercWidth = adSize.getWidth();
-                                minSizePercHeight = adSize.getHeight();
-                            }
-
-                        }
+                        minSizePercWidth = minSizePerc.getWidth();
+                        minSizePercHeight = minSizePerc.getHeight();
                     }
 
                     JSONObject deviceExt = new JSONObject();

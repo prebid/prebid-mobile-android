@@ -25,7 +25,6 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 
 public abstract class AdUnit {
@@ -116,10 +115,7 @@ public abstract class AdUnit {
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
 
-            HashMap<String, Object> additionalMap = new HashMap<>(1);
-            additionalMap.put(RequestParams.INSTL_MIN_SIZE_PERC_KEY, minSizePerc);
-
-            RequestParams requestParams = new RequestParams(configId, adType, sizes, keywords, additionalMap);
+            RequestParams requestParams = new RequestParams(configId, adType, sizes, keywords, minSizePerc);
             fetcher.setPeriodMillis(periodMillis);
             fetcher.setRequestParams(requestParams);
             fetcher.setListener(listener);

@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -882,11 +881,9 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
-        Map<String, Object> additionalMap = new HashMap<>(1);
         AdSize minSizePerc = new AdSize(50, 70);
-        additionalMap.put(RequestParams.INSTL_MIN_SIZE_PERC_KEY, minSizePerc);
 
-        RequestParams requestParams = new RequestParams("67890", AdType.INTERSTITIAL, sizes, new ArrayList<String>(), additionalMap);
+        RequestParams requestParams = new RequestParams("67890", AdType.INTERSTITIAL, sizes, new ArrayList<String>(), minSizePerc);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
@@ -956,11 +953,9 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        Map<String, Object> additionalMap = new HashMap<>(1);
         AdSize minSizePerc = new AdSize(50, 70);
-        additionalMap.put(RequestParams.INSTL_MIN_SIZE_PERC_KEY, minSizePerc);
 
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>(), additionalMap);
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>(), minSizePerc);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
