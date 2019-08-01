@@ -17,8 +17,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.InterstitialAdUnit;
+import org.prebid.mobile.ServerRequestSettings;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.drprebid.model.AdSize;
+import org.prebid.mobile.drprebid.model.PrebidServerSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -185,6 +187,7 @@ public class DemandRequestBuilder {
         object.put("model", Build.MODEL);
         object.put("os", "Android");
         object.put("osv", Build.VERSION.RELEASE);
+        object.put("ua", ServerRequestSettings.getUserAgent());
 
         Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
         Point size = new Point();
