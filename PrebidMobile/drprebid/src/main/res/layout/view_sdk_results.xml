@@ -56,7 +56,7 @@
             android:layout_toStartOf="@id/button_info"
             android:layout_toEndOf="@id/container_total_result"
             android:maxLines="1"
-            android:text="@string/ad_server_setup_validation"
+            android:text="@string/sdk_validation"
             android:textColor="@android:color/black"
             android:textSize="20sp" />
 
@@ -236,9 +236,6 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
-            android:background="?selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
             android:orientation="horizontal">
 
             <FrameLayout
@@ -267,8 +264,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="16dp"
-                android:drawableEnd="@drawable/baseline_chevron_right_black_24"
-                android:drawableTint="@color/colorPrimaryDark"
                 android:maxLines="1"
                 android:text="@string/ad_server_targeting_request_sent"
                 android:textColor="@color/colorPrimaryDark"
@@ -284,9 +279,6 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="16dp"
-            android:background="?selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
             android:orientation="horizontal">
 
             <FrameLayout
@@ -315,8 +307,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="16dp"
-                android:drawableEnd="@drawable/baseline_chevron_right_black_24"
-                android:drawableTint="@color/colorPrimaryDark"
                 android:maxLines="1"
                 android:text="@string/prebid_mobile_creative_served"
                 android:textColor="@color/colorPrimaryDark"
