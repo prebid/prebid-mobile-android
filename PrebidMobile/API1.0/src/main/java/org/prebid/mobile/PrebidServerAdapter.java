@@ -567,6 +567,33 @@ class PrebidServerAdapter implements DemandAdapter {
                 if (!TextUtils.isEmpty(Locale.getDefault().getLanguage())) {
                     device.put(PrebidServerSettings.REQUEST_LANGUAGE, Locale.getDefault().getLanguage());
                 }
+
+                if (requestParams.getAdType().equals(AdType.INTERSTITIAL)) {
+
+                    Integer minSizePercWidth = null;
+                    Integer minSizePercHeight = null;
+
+                    AdSize minSizePerc = requestParams.getMinSizePerc();
+                    if (minSizePerc != null) {
+
+                        minSizePercWidth = minSizePerc.getWidth();
+                        minSizePercHeight = minSizePerc.getHeight();
+                    }
+
+                    JSONObject deviceExt = new JSONObject();
+                    JSONObject deviceExtPrebid = new JSONObject();
+                    JSONObject deviceExtPrebidInstl = new JSONObject();
+
+                    device.put("ext", deviceExt);
+                    deviceExt.put("prebid", deviceExtPrebid);
+                    deviceExtPrebid.put("interstitial", deviceExtPrebidInstl);
+                    deviceExtPrebidInstl.put("minwidthperc", minSizePercWidth);
+                    deviceExtPrebidInstl.put("minheightperc", minSizePercHeight);
+
+                    JSONObject deviceExtWithoutEmptyValues = Util.getObjectWithoutEmptyValues(deviceExt);
+                    device.put("ext", deviceExtWithoutEmptyValues);
+                }
+
                 // POST data that requires context
                 Context context = PrebidMobile.getApplicationContext();
                 if (context != null) {

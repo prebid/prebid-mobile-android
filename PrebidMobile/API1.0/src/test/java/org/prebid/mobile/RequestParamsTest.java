@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -47,5 +49,22 @@ public class RequestParamsTest {
         assertEquals(AdType.INTERSTITIAL, FieldUtils.readField(requestParams, "adType", true));
         assertEquals(null, FieldUtils.readField(requestParams, "sizes", true));
         assertEquals(keywords, FieldUtils.readField(requestParams, "keywords", true));
+    }
+
+    @Test
+    public void testCreationWithAdditionalMap() throws Exception {
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(500, 700));
+        ArrayList<String> keywords = new ArrayList<>();
+        keywords.add("test=1");
+
+        AdSize minSizePerc = new AdSize(50, 70);
+
+        RequestParams requestParams = new RequestParams("123456", AdType.INTERSTITIAL, sizes, keywords, minSizePerc);
+
+        AdSize minAdSizePerc = requestParams.getMinSizePerc();
+        assertNotNull(minAdSizePerc);
+
+        assertTrue(minAdSizePerc.getWidth() == 50 && minAdSizePerc.getHeight() == 70);
     }
 }

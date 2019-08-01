@@ -17,9 +17,25 @@
 package org.prebid.mobile;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public class InterstitialAdUnit extends AdUnit {
+
+    @Nullable
+    private AdSize minSizePerc = null;
+
     public InterstitialAdUnit(@NonNull String configId) {
         super(configId, AdType.INTERSTITIAL);
+    }
+
+    public InterstitialAdUnit(@NonNull String configId, int minWidthPerc, int minHeightPerc) {
+
+        this(configId);
+        minSizePerc = new AdSize(minWidthPerc, minHeightPerc);
+    }
+
+    @Nullable
+    AdSize getMinSizePerc() {
+        return minSizePerc;
     }
 }

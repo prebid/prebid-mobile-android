@@ -17,6 +17,7 @@
 package org.prebid.mobile;
 
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -25,12 +26,17 @@ import android.view.View;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.addendum.PbFindSizeError;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -71,6 +77,103 @@ public class Util {
             }
         });
 
+    }
+
+    @Nullable
+    static JSONObject getObjectWithoutEmptyValues(@NonNull JSONObject jsonObject) {
+
+        JSONObject result = null;
+        try {
+            JSONObject clone = new JSONObject(jsonObject.toString());
+            removeEntryWithoutValue(clone);
+
+            if (clone.length() > 0) {
+                result = clone;
+            }
+
+        } catch (JSONException e) {
+            LogUtil.e("message:" + e.getMessage());
+        }
+
+        return result;
+    }
+
+    private static void removeEntryWithoutValue(@NonNull JSONObject map) throws JSONException {
+        Iterator<String> iterator = map.keys();
+
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+
+            Object value = map.opt(key);
+            if (value != null) {
+
+                if (value instanceof JSONObject) {
+
+                    JSONObject mapValue = (JSONObject)value;
+                    removeEntryWithoutValue(mapValue);
+
+                    if (mapValue.length() == 0) {
+                        iterator.remove();
+                    }
+                } else if (value instanceof JSONArray) {
+
+                    JSONArray arrayValue = (JSONArray)value;
+                    arrayValue = removeEntryWithoutValue(arrayValue);
+
+                    map.put(key, arrayValue);
+
+                    if (arrayValue.length() == 0) {
+                        iterator.remove();
+                    }
+                }
+            }
+        }
+    }
+
+    @CheckResult
+    private static JSONArray removeEntryWithoutValue(@NonNull JSONArray array) throws JSONException {
+
+        for (int i = 0; i < array.length(); i++) {
+
+            Object value = array.opt(i);
+            if (value != null) {
+
+                if (value instanceof JSONObject) {
+
+                    JSONObject mapValue = (JSONObject)value;
+                    removeEntryWithoutValue(mapValue);
+
+                    if (mapValue.length() == 0) {
+                        array = getJsonArrayWithoutEntryByIndex(array, i);
+                    }
+                } else if (value instanceof JSONArray) {
+                    JSONArray arrayValue = (JSONArray)value;
+                    arrayValue = removeEntryWithoutValue(arrayValue);
+
+                    array.put(i, arrayValue);
+
+                    if (arrayValue.length() == 0) {
+                        array = getJsonArrayWithoutEntryByIndex(array, i);
+                    }
+                }
+            }
+
+        }
+
+        return array;
+    }
+
+    @CheckResult
+    private static JSONArray getJsonArrayWithoutEntryByIndex(JSONArray jsonArray, int pos) throws JSONException {
+        JSONArray result = new JSONArray();
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            if (i != pos) {
+                result.put(jsonArray.get(i));
+            }
+        }
+
+        return result;
     }
 
     static Class getClassFromString(String className) {

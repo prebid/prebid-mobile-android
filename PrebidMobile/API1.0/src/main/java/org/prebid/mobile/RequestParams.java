@@ -16,20 +16,30 @@
 
 package org.prebid.mobile;
 
+import android.support.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
 class RequestParams {
+
     private String configId = "";
     private AdType adType = AdType.BANNER;
     private HashSet<AdSize> sizes = new HashSet<>();
     private ArrayList<String> keywords;
+    @Nullable
+    private AdSize minSizePerc; //non null only for InterstitialAdUnit(String, int, int)
 
     RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, ArrayList<String> keywords) {
         this.configId = configId;
         this.adType = adType;
         this.sizes = sizes; // for Interstitial this will be null, will use screen width & height in the request
         this.keywords = keywords;
+    }
+
+    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, ArrayList<String> keywords, @Nullable AdSize minSizePerc) {
+        this(configId, adType, sizes, keywords);
+        this.minSizePerc = minSizePerc;
     }
 
     String getConfigId() {
@@ -48,4 +58,8 @@ class RequestParams {
         return keywords;
     }
 
+    @Nullable
+    AdSize getMinSizePerc() {
+        return minSizePerc;
+    }
 }
