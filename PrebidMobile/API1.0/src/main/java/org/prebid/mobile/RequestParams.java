@@ -16,29 +16,42 @@
 
 package org.prebid.mobile;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 class RequestParams {
 
     private String configId = "";
     private AdType adType = AdType.BANNER;
     private HashSet<AdSize> sizes = new HashSet<>();
-    private ArrayList<String> keywords;
+
+    @Deprecated
+    private final ArrayList<String> userKeywords;
+    @Nullable
+    private Map<String, Set<String>> contextDataDictionary;
+    @Nullable
+    private Set<String> contextKeywordsSet;
+
     @Nullable
     private AdSize minSizePerc; //non null only for InterstitialAdUnit(String, int, int)
 
-    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, ArrayList<String> keywords) {
+    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, ArrayList<String> userKeywords) {
         this.configId = configId;
         this.adType = adType;
         this.sizes = sizes; // for Interstitial this will be null, will use screen width & height in the request
-        this.keywords = keywords;
+        this.userKeywords = userKeywords;
     }
 
-    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, ArrayList<String> keywords, @Nullable AdSize minSizePerc) {
-        this(configId, adType, sizes, keywords);
+    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, ArrayList<String> userKeywords, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc) {
+        this(configId, adType, sizes, userKeywords);
+        this.contextDataDictionary = contextDataDictionary;
+        this.contextKeywordsSet = contextKeywordsSet;
         this.minSizePerc = minSizePerc;
     }
 
@@ -54,8 +67,18 @@ class RequestParams {
         return this.sizes;
     }
 
-    ArrayList<String> getKeywords() {
-        return keywords;
+    ArrayList<String> getUserKeywords() {
+        return userKeywords;
+    }
+
+    @NonNull
+    public Map<String, Set<String>> getContextDataDictionary() {
+        return contextDataDictionary != null ? contextDataDictionary : new HashMap<String, Set<String>>();
+    }
+
+    @NonNull
+    public Set<String> getContextKeywordsSet() {
+        return contextKeywordsSet != null ? contextKeywordsSet : new HashSet<String>();
     }
 
     @Nullable

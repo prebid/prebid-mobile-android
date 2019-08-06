@@ -30,7 +30,9 @@ import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -130,6 +132,11 @@ public class UtilTest extends BaseSetup {
 
         JSONObject node1 = new JSONObject();
         node1.put("key1", node11);
+
+        node1.put("emptyObject", "");
+        List<String> array = new ArrayList<>();
+        array.add("");
+        node1.put("emptyArray", new JSONArray(array));
 
         JSONObject result1 = Util.getObjectWithoutEmptyValues(node1);
 

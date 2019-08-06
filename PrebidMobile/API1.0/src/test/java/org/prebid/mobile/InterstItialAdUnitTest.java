@@ -55,7 +55,7 @@ public class InterstItialAdUnitTest {
         adUnit.addUserKeyword("key", "value");
         adUnit.addUserKeyword("key1", null);
         @SuppressWarnings("unchecked")
-        ArrayList<String> keywords = (ArrayList<String>) FieldUtils.readField(adUnit, "keywords", true);
+        ArrayList<String> keywords = (ArrayList<String>) FieldUtils.readField(adUnit, "userKeywords", true);
         assertEquals(2, keywords.size());
         assertEquals("key=value", keywords.get(0));
         assertEquals("key1", keywords.get(1));
@@ -78,7 +78,7 @@ public class InterstItialAdUnitTest {
         String[] values = {"value1", "value2"};
         adUnit.addUserKeywords("key2", values);
         @SuppressWarnings("unchecked")
-        ArrayList<String> keywords = (ArrayList<String>) FieldUtils.readField(adUnit, "keywords", true);
+        ArrayList<String> keywords = (ArrayList<String>) FieldUtils.readField(adUnit, "userKeywords", true);
         assertEquals(2, keywords.size());
         assertEquals("key2=value1", keywords.get(0));
         assertEquals("key2=value2", keywords.get(1));

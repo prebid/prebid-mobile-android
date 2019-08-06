@@ -43,12 +43,12 @@ public class RequestParamsTest {
         assertEquals("123456", FieldUtils.readField(requestParams, "configId", true));
         assertEquals(AdType.BANNER, FieldUtils.readField(requestParams, "adType", true));
         assertEquals(sizes, FieldUtils.readField(requestParams, "sizes", true));
-        assertEquals(keywords, FieldUtils.readField(requestParams, "keywords", true));
+        assertEquals(keywords, FieldUtils.readField(requestParams, "userKeywords", true));
         requestParams = new RequestParams("123456", AdType.INTERSTITIAL, null, keywords);
         assertEquals("123456", FieldUtils.readField(requestParams, "configId", true));
         assertEquals(AdType.INTERSTITIAL, FieldUtils.readField(requestParams, "adType", true));
         assertEquals(null, FieldUtils.readField(requestParams, "sizes", true));
-        assertEquals(keywords, FieldUtils.readField(requestParams, "keywords", true));
+        assertEquals(keywords, FieldUtils.readField(requestParams, "userKeywords", true));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class RequestParamsTest {
 
         AdSize minSizePerc = new AdSize(50, 70);
 
-        RequestParams requestParams = new RequestParams("123456", AdType.INTERSTITIAL, sizes, keywords, minSizePerc);
+        RequestParams requestParams = new RequestParams("123456", AdType.INTERSTITIAL, sizes, keywords, null, null, minSizePerc);
 
         AdSize minAdSizePerc = requestParams.getMinSizePerc();
         assertNotNull(minAdSizePerc);
