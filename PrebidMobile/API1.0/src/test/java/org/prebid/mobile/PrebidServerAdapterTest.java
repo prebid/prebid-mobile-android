@@ -810,7 +810,11 @@ public class PrebidServerAdapterTest extends BaseSetup {
             assertEquals(1, regs.getInt("coppa"));
             assertEquals(1, regs.getJSONObject("ext").getInt("gdpr"));
             JSONObject ext = postData.getJSONObject("ext");
+            assertTrue(ext.getJSONObject("prebid").has("cache"));
+            assertTrue(ext.getJSONObject("prebid").getJSONObject("cache").has("bids"));
+            assertEquals(0, ext.getJSONObject("prebid").getJSONObject("cache").getJSONObject("bids").length());
             assertEquals("12345", ext.getJSONObject("prebid").getJSONObject("storedrequest").getString("id"));
+            assertTrue(ext.getJSONObject("prebid").has("targeting"));
         } else {
             assertTrue("Server failed to start, unable to test.", false);
         }

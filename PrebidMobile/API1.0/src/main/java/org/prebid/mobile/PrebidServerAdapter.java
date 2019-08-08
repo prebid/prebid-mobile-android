@@ -469,24 +469,36 @@ class PrebidServerAdapter implements DemandAdapter {
                 if (ext != null && ext.length() > 0) {
                     postData.put("ext", ext);
                 }
+
+                JSONObject objectWithoutEmptyValues = Util.getObjectWithoutEmptyValues(postData);
+
+                if (objectWithoutEmptyValues != null) {
+                    postData = objectWithoutEmptyValues;
+
+                    JSONObject prebid = postData.getJSONObject("ext").getJSONObject("prebid");
+
+                    JSONObject cache = new JSONObject();
+                    JSONObject bids = new JSONObject();
+                    cache.put("bids", bids);
+                    prebid.put("cache", cache);
+
+                    JSONObject targetingEmpty = new JSONObject();
+                    prebid.put("targeting", targetingEmpty);
+                }
+
             } catch (JSONException e) {
             }
-            return Util.getObjectWithoutEmptyValues(postData);
+
+            return postData;
         }
 
         private JSONObject getRequestExtData() {
             JSONObject ext = new JSONObject();
             JSONObject prebid = new JSONObject();
             try {
-                JSONObject cache = new JSONObject();
-                JSONObject bids = new JSONObject();
-                cache.put("bids", bids);
-                prebid.put("cache", cache);
                 JSONObject storedRequest = new JSONObject();
                 storedRequest.put("id", PrebidMobile.getPrebidServerAccountId());
                 prebid.put("storedrequest", storedRequest);
-                JSONObject targetingEmpty = new JSONObject();
-                prebid.put("targeting", targetingEmpty);
 
                 JSONObject data = new JSONObject().put("bidders", new JSONArray(TargetingParams.getAccessControlList()));
                 prebid.put("data", data);
