@@ -244,7 +244,8 @@ public class UtilTest extends BaseSetup {
         //then
         Assert.assertEquals(2, map.size());
         Assert.assertEquals(2, map.get("key1").size());
-        Assert.assertTrue(map.get("key2").contains("value10") && map.get("key2").contains("value11"));
+        Assert.assertTrue(map.get("key1").contains("value10") && map.get("key1").contains("value11"));
+        Assert.assertTrue(map.get("key2").contains("value20"));
     }
 
     @Test
