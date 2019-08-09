@@ -101,7 +101,7 @@ public class PrebidMobile {
         storedBidResponses.put(bidder, responseId);
     }
 
-    public static void cleanStoredBidResponses() {
+    public static void clearStoredBidResponses() {
         storedBidResponses.clear();
     }
 

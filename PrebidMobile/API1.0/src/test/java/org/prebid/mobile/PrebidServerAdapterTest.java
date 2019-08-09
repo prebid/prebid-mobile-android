@@ -714,6 +714,9 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidMobile.setPrebidServerAccountId("12345");
             PrebidMobile.setShareGeoLocation(true);
             PrebidMobile.setApplicationContext(activity.getApplicationContext());
+            PrebidMobile.setStoredAuctionResponse("111122223333");
+            PrebidMobile.addStoredBidResponse("appnexus", "221144");
+            PrebidMobile.addStoredBidResponse("rubicon", "221155");
             TargetingParams.setYearOfBirth(1989);
             TargetingParams.setGender(TargetingParams.GENDER.FEMALE);
             TargetingParams.setBundleName("org.prebid.mobile");
@@ -750,6 +753,11 @@ public class PrebidServerAdapterTest extends BaseSetup {
             assertEquals(320, imp.getJSONObject("banner").getJSONArray("format").getJSONObject(0).getInt("w"));
             assertEquals(50, imp.getJSONObject("banner").getJSONArray("format").getJSONObject(0).getInt("h"));
             assertEquals(67890, imp.getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedrequest").getInt("id"));
+            assertEquals("111122223333", imp.getJSONObject("ext").getJSONObject("prebid").getJSONObject("storedauctionresponse").getString("id"));
+            assertEquals("appnexus", imp.getJSONObject("ext").getJSONObject("prebid").getJSONArray("storedbidresponse").getJSONObject(0).getString("bidder"));
+            assertEquals("221144", imp.getJSONObject("ext").getJSONObject("prebid").getJSONArray("storedbidresponse").getJSONObject(0).getString("id"));
+            assertEquals("rubicon", imp.getJSONObject("ext").getJSONObject("prebid").getJSONArray("storedbidresponse").getJSONObject(1).getString("bidder"));
+            assertEquals("221155", imp.getJSONObject("ext").getJSONObject("prebid").getJSONArray("storedbidresponse").getJSONObject(1).getString("id"));
             JSONObject device = postData.getJSONObject("device");
             assertEquals(PrebidServerSettings.deviceMake, device.getString("make"));
             assertEquals(PrebidServerSettings.deviceModel, device.getString("model"));
