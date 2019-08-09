@@ -20,6 +20,10 @@ import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.testutils.BaseSetup;
@@ -30,9 +34,7 @@ import java.util.HashMap;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertNull;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -115,85 +117,90 @@ public class UtilTest extends BaseSetup {
     }
 
     @Test
-    public void testRegexMatches() {
-        String[] result = Util.matches("^a", "aaa aaa");
-        assertEquals(1, result.length);
-        assertEquals("a", result[0]);
+    public void testGetObjectWithoutEmptyValues() throws JSONException {
 
-        result = Util.matches("^b", "aaa aaa");
-        assertEquals(0, result.length);
+        //Test 1
+        JSONObject node1111 = new JSONObject();
 
-        result = Util.matches("aaa aaa", "^a");
-        assertEquals(0, result.length);
+        JSONObject node111 = new JSONObject();
+        node111.put("key111", node1111);
 
-        result = Util.matches("[0-9]+x[0-9]+", "{ \n adManagerResponse:\"hb_size\":[\"728x90\"],\"hb_size_rubicon\":[\"1x1\"],moPubResponse:\"hb_size:300x250\" \n }");
-        assertEquals(3, result.length);
-        assertEquals("728x90", result[0]);
-        assertEquals("1x1", result[1]);
-        assertEquals("300x250", result[2]);
+        JSONObject node11 = new JSONObject();
+        node11.put("key11", node111);
 
-        result = Util.matches("hb_size\\W+[0-9]+x[0-9]+", "{ \n adManagerResponse:\"hb_size\":[\"728x90\"],\"hb_size_rubicon\":[\"1x1\"],moPubResponse:\"hb_size:300x250\" \n }");
-        assertEquals(2, result.length);
-        assertEquals("hb_size\":[\"728x90", result[0]);
-        assertEquals("hb_size:300x250", result[1]);
-    }
+        JSONObject node1 = new JSONObject();
+        node1.put("key1", node11);
 
-    @Test
-    public void testRegexMatchAndCheck() {
-        String result = Util.matchAndCheck("^a", "aaa aaa");
+        JSONObject result1 = Util.getObjectWithoutEmptyValues(node1);
 
-        assertNotNull(result);
-        assertEquals("a", result);
+        Assert.assertNull(result1);
 
-        result = Util.matchAndCheck("^b", "aaa aaa");
-        assertNull(result);
-    }
+        //Test 2
+        node1111.put("key1111", "value1111");
+        JSONObject result2 = Util.getObjectWithoutEmptyValues(node1);
+        Assert.assertEquals("{\"key1\":{\"key11\":{\"key111\":{\"key1111\":\"value1111\"}}}}", result2.toString());
 
+        //Test 3
+        node1111.remove("key1111");
+        JSONObject node121 = new JSONObject();
+        node121.put("key121", "value121");
+        node11.put("key12", node121);
 
-    @Test
-    public void testFindHbSizeValue() {
-        String result = Util.findHbSizeValue("{ \n adManagerResponse:\"hb_size\":[\"728x90\"],\"hb_size_rubicon\":[\"728x90\"],moPubResponse:\"hb_size:300x250\" \n }");
-        assertNotNull(result);
-        assertEquals("728x90", result);
-    }
+        JSONObject result3 = Util.getObjectWithoutEmptyValues(node1);
+        Assert.assertEquals("{\"key1\":{\"key12\":{\"key121\":\"value121\"}}}", result3.toString());
 
-    @Test
-    public void testFindHbSizeKeyValue() {
-        String result = Util.findHbSizeKeyValue("{ \n adManagerResponse:\"hb_size\":[\"728x90\"],\"hb_size_rubicon\":[\"728x90\"],moPubResponse:\"hb_size:300x250\" \n }");
-        assertNotNull(result);
-        assertEquals("hb_size\":[\"728x90", result);
-    }
+        //Test 4
+        node11.remove("key12");
+        JSONArray node21 = new JSONArray();
+        node1.put("key2", node21);
+        JSONObject result4 = Util.getObjectWithoutEmptyValues(node1);
+        Assert.assertNull(result4);
 
-    @Test
-    public void testStringToCGSize() {
-        Util.CreativeSize result = Util.stringToSize("300x250");
-        assertNotNull(result);
-        assertEquals(new Util.CreativeSize(300, 250), result);
+        //Test5
+        node21.put("value21");
+        JSONObject result5 = Util.getObjectWithoutEmptyValues(node1);
+        Assert.assertEquals("{\"key2\":[\"value21\"]}", result5.toString());
 
-        result = Util.stringToSize("300x250x1");
-        assertNull(result);
+        //Test6
+        node21.remove(0);
+        JSONObject node211 = new JSONObject();
+        node21.put(node211);
+        JSONObject result6 = Util.getObjectWithoutEmptyValues(node1);
+        Assert.assertNull(result6);
 
-        result = Util.stringToSize("ERROR");
-        assertNull(result);
+        //Test7
+        node211.put("key211", "value211");
+        JSONObject result7 = Util.getObjectWithoutEmptyValues(node1);
+        Assert.assertEquals("{\"key2\":[{\"key211\":\"value211\"}]}", result7.toString());
 
-        result = Util.stringToSize("300x250ERROR");
-        assertNull(result);
-    }
+        //Test8
+        node21.remove(0);
+        JSONArray node212 = new JSONArray();
+        node21.put(node212);
+        JSONObject result8 = Util.getObjectWithoutEmptyValues(node1);
+        Assert.assertNull(result8);
 
-    @Test
-    public void testFindSizeInJavaScript() {
-        Util.CreativeSize result = Util.findSizeInJavaScript(null);
-        assertNull(result);
+        //Test9
+        JSONArray node31 = new JSONArray();
+        node1.put("key3", node31);
+        JSONObject node311 = new JSONObject();
+        node31.put(node311);
+        JSONObject node312 = new JSONObject();
+        node312.put("key312", "value312");
+        node31.put(node312);
+        JSONObject result9 = Util.getObjectWithoutEmptyValues(node1);
+        Assert.assertEquals("{\"key3\":[{\"key312\":\"value312\"}]}", result9.toString());
 
-        result = Util.findSizeInJavaScript("<script> \n </script>");
-        assertNull(result);
-
-        result = Util.findSizeInJavaScript("<script> \n \"hb_size\":ERROR \n </script>");
-        assertNull(result);
-
-        result = Util.findSizeInJavaScript("<script> \n \"hb_size\":[\"728x90\"] \n </script>");
-        assertNotNull(result);
-        assertEquals(new Util.CreativeSize(728, 90), result);
+        //Test10
+        JSONArray node313 = new JSONArray();
+        JSONObject node3131 = new JSONObject();
+        node3131.put("key3131", "value3131");
+        node313.put(node3131);
+        JSONObject node3132 = new JSONObject();
+        node313.put(node3132);
+        node31.put(node313);
+        JSONObject result10 = Util.getObjectWithoutEmptyValues(node1);
+        Assert.assertEquals("{\"key3\":[{\"key312\":\"value312\"},[{\"key3131\":\"value3131\"}]]}", result10.toString());
     }
 
 }

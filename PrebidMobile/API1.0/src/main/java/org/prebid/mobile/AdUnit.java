@@ -91,6 +91,13 @@ public abstract class AdUnit {
                 }
             }
         }
+        AdSize minSizePerc = null;
+        if (this instanceof InterstitialAdUnit) {
+            InterstitialAdUnit interstitialAdUnit = (InterstitialAdUnit) this;
+
+            minSizePerc = interstitialAdUnit.getMinSizePerc();
+        }
+
         Context context = PrebidMobile.getApplicationContext();
         if (context != null) {
             ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -107,7 +114,8 @@ public abstract class AdUnit {
         }
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
-            RequestParams requestParams = new RequestParams(configId, adType, sizes, keywords);
+
+            RequestParams requestParams = new RequestParams(configId, adType, sizes, keywords, minSizePerc);
             fetcher.setPeriodMillis(periodMillis);
             fetcher.setRequestParams(requestParams);
             fetcher.setListener(listener);

@@ -16,17 +16,19 @@
 
 package org.prebid.mobile;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.Size;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.ValueCallback;
-import android.webkit.WebView;
+
+import org.prebid.mobile.addendum.AdViewUtils;
+import org.prebid.mobile.addendum.PbFindSizeError;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -34,11 +36,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Util {
 
@@ -57,200 +57,123 @@ public class Util {
 
     }
 
-    public static void findPrebidCreativeSize(View adView, CreativeSizeCompletionHandler completionHandler) {
+    /**
+     *@deprecated Please migrate to - AdViewUtils.findPrebidCreativeSize(View, AdViewUtils.PbFindSizeListener)
+     *@see AdViewUtils#findPrebidCreativeSize(View, AdViewUtils.PbFindSizeListener)
+     */
+    @Deprecated
+    public static void findPrebidCreativeSize(@Nullable View adView, final CreativeSizeCompletionHandler completionHandler) {
+        AdViewUtils.findPrebidCreativeSize(adView, new AdViewUtils.PbFindSizeListener() {
+            @Override
+            public void success(int width, int height) {
+                completionHandler.onSize(new CreativeSize(width, height));
 
-        List<WebView> webViewList = new ArrayList<>(2);
-        recursivelyFindWebView(adView, webViewList);
-        if (webViewList.size() == 0) {
-            LogUtil.w("adView doesn't include WebView");
-            return;
-        }
-
-        findSizeInWebViewListAsync(webViewList, completionHandler);
-    }
-
-    @Nullable
-    static void recursivelyFindWebView(View view, List<WebView> webViewList) {
-        if (view instanceof ViewGroup) {
-            //ViewGroup
-            ViewGroup viewGroup = (ViewGroup) view;
-
-            if (!(viewGroup instanceof WebView)) {
-                for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                    recursivelyFindWebView(viewGroup.getChildAt(i), webViewList);
-                }
-            } else {
-                //WebView
-                final WebView webView = (WebView) viewGroup;
-                webViewList.add(webView);
-            }
-
-        }
-    }
-
-    static void findSizeInWebViewListAsync(@Size(min = 1) final List<WebView> webViewList, final CreativeSizeCompletionHandler completionHandler) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            LogUtil.d("webViewList size:" + webViewList.size());
-
-            iterateWebViewListAsync(webViewList, webViewList.size() - 1, new WebViewPrebidCallback() {
-                @Override
-                public void success(final WebView webView, @NonNull CreativeSize adSize) {
-
-                    completionHandler.onSize(adSize);
-                    webView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            webView.getSettings().setLoadWithOverviewMode(true);
-                        }
-                    });
-
-                }
-
-                @Override
-                public void failure() {
-                    completionHandler.onSize(null);
-                }
-            });
-
-
-        } else {
-            LogUtil.w("AndroidSDK < KITKAT");
-            completionHandler.onSize(null);
-        }
-
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    static void iterateWebViewListAsync(@Size(min = 1) final List<WebView> webViewList, final int index, final WebViewPrebidCallback webViewPrebidCallback) {
-
-        final WebView webView = webViewList.get(index);
-
-        webView.evaluateJavascript("document.body.innerHTML", new ValueCallback<String>() {
-
-            private void repeatOrFail() {
-                int nextIndex = index - 1;
-
-                if (nextIndex >= 0) {
-                    iterateWebViewListAsync(webViewList, nextIndex, webViewPrebidCallback);
-                } else {
-                    webViewPrebidCallback.failure();
-                }
             }
 
             @Override
-            public void onReceiveValue(@Nullable String html) {
-
-                if (html == null) {
-                    LogUtil.w("webView jsCode is null");
-
-                    repeatOrFail();
-                } else {
-
-                    @Nullable
-                    CreativeSize adSize = findSizeInJavaScript(html);
-
-                    if (adSize == null) {
-                        LogUtil.w("adSize is null");
-                        repeatOrFail();
-                    } else {
-                        webViewPrebidCallback.success(webView, adSize);
-                    }
-
-                }
-
+            public void failure(@NonNull PbFindSizeError error) {
+                LogUtil.w("Missing failure handler, please migrate to - Util.findPrebidCreativeSize(View, CreativeSizeResultHandler)");
+                completionHandler.onSize(null); // backwards compatibility
             }
         });
+
     }
 
     @Nullable
-    static CreativeSize findSizeInJavaScript(@Nullable String jsCode) {
+    static JSONObject getObjectWithoutEmptyValues(@NonNull JSONObject jsonObject) {
 
-        if (TextUtils.isEmpty(jsCode)) {
-            LogUtil.w("jsCode is empty");
-            return null;
-        }
-
-        String hbSizeKeyValue = findHbSizeKeyValue(jsCode);
-        if (hbSizeKeyValue == null) {
-            LogUtil.w("HbSizeKeyValue is null");
-            return null;
-        }
-
-        String hbSizeValue = findHbSizeValue(hbSizeKeyValue);
-        if (hbSizeValue == null) {
-            LogUtil.w("HbSizeValue is null");
-            return null;
-        }
-
-        return stringToSize(hbSizeValue);
-    }
-
-    @Nullable
-    static String findHbSizeKeyValue(String text) {
-        return matchAndCheck("hb_size\\W+[0-9]+x[0-9]+", text);
-    }
-
-    @Nullable
-    static String findHbSizeValue(String text) {
-        return matchAndCheck("[0-9]+x[0-9]+", text);
-    }
-
-    @NonNull
-    static String[] matches(String regex, String text) {
-
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(text);
-
-        List<String> allMatches = new ArrayList<>();
-        while (matcher.find()) {
-            allMatches.add(matcher.group());
-        }
-
-        return allMatches.toArray(new String[0]);
-    }
-
-    @Nullable
-    static String matchAndCheck(String regex, String text) {
-
-        String[] matched = matches(regex, text);
-
-        if (matched.length == 0) {
-            return null;
-        }
-
-        String firstResult = matched[0];
-        return firstResult;
-    }
-
-    @Nullable
-    static CreativeSize stringToSize(String size) {
-        String[] sizeArr = size.split("x");
-
-        if (sizeArr.length != 2) {
-            LogUtil.w(size + "has a wrong format");
-            return null;
-        }
-
-        String widthString = sizeArr[0];
-        String heightString = sizeArr[1];
-
-        int width;
-        int height;
+        JSONObject result = null;
         try {
-            width = Integer.parseInt(widthString);
-        } catch (NumberFormatException e) {
-            LogUtil.w(size + "can not be converted to Size");
-            return null;
+            JSONObject clone = new JSONObject(jsonObject.toString());
+            removeEntryWithoutValue(clone);
+
+            if (clone.length() > 0) {
+                result = clone;
+            }
+
+        } catch (JSONException e) {
+            LogUtil.e("message:" + e.getMessage());
         }
 
-        try {
-            height = Integer.parseInt(heightString);
-        } catch (NumberFormatException e) {
-            LogUtil.w(size + "can not be converted to Size");
-            return null;
+        return result;
+    }
+
+    private static void removeEntryWithoutValue(@NonNull JSONObject map) throws JSONException {
+        Iterator<String> iterator = map.keys();
+
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+
+            Object value = map.opt(key);
+            if (value != null) {
+
+                if (value instanceof JSONObject) {
+
+                    JSONObject mapValue = (JSONObject)value;
+                    removeEntryWithoutValue(mapValue);
+
+                    if (mapValue.length() == 0) {
+                        iterator.remove();
+                    }
+                } else if (value instanceof JSONArray) {
+
+                    JSONArray arrayValue = (JSONArray)value;
+                    arrayValue = removeEntryWithoutValue(arrayValue);
+
+                    map.put(key, arrayValue);
+
+                    if (arrayValue.length() == 0) {
+                        iterator.remove();
+                    }
+                }
+            }
+        }
+    }
+
+    @CheckResult
+    private static JSONArray removeEntryWithoutValue(@NonNull JSONArray array) throws JSONException {
+
+        for (int i = 0; i < array.length(); i++) {
+
+            Object value = array.opt(i);
+            if (value != null) {
+
+                if (value instanceof JSONObject) {
+
+                    JSONObject mapValue = (JSONObject)value;
+                    removeEntryWithoutValue(mapValue);
+
+                    if (mapValue.length() == 0) {
+                        array = getJsonArrayWithoutEntryByIndex(array, i);
+                    }
+                } else if (value instanceof JSONArray) {
+                    JSONArray arrayValue = (JSONArray)value;
+                    arrayValue = removeEntryWithoutValue(arrayValue);
+
+                    array.put(i, arrayValue);
+
+                    if (arrayValue.length() == 0) {
+                        array = getJsonArrayWithoutEntryByIndex(array, i);
+                    }
+                }
+            }
+
         }
 
-        return new CreativeSize(width, height);
+        return array;
+    }
+
+    @CheckResult
+    private static JSONArray getJsonArrayWithoutEntryByIndex(JSONArray jsonArray, int pos) throws JSONException {
+        JSONArray result = new JSONArray();
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            if (i != pos) {
+                result.put(jsonArray.get(i));
+            }
+        }
+
+        return result;
     }
 
     static Class getClassFromString(String className) {
@@ -492,12 +415,6 @@ public class Util {
 
     public interface CreativeSizeCompletionHandler {
         void onSize(@Nullable CreativeSize size);
-    }
-
-    private interface WebViewPrebidCallback {
-        void success(WebView webView, CreativeSize adSize);
-
-        void failure();
     }
 
     /**

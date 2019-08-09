@@ -14,28 +14,12 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile;
+package org.prebid.mobile.addendum;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-public class InterstitialAdUnit extends AdUnit {
+public final class PbFindSizeError extends PbError {
 
-    @Nullable
-    private AdSize minSizePerc = null;
-
-    public InterstitialAdUnit(@NonNull String configId) {
-        super(configId, AdType.INTERSTITIAL);
-    }
-
-    public InterstitialAdUnit(@NonNull String configId, int minWidthPerc, int minHeightPerc) {
-
-        this(configId);
-        minSizePerc = new AdSize(minWidthPerc, minHeightPerc);
-    }
-
-    @Nullable
-    AdSize getMinSizePerc() {
-        return minSizePerc;
+    PbFindSizeError(int code, String description) {
+        super(code, description);
     }
 }
