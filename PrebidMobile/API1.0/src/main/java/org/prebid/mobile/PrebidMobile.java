@@ -19,6 +19,8 @@ package org.prebid.mobile;
 import android.content.Context;
 
 import java.lang.ref.WeakReference;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class PrebidMobile {
 
@@ -81,5 +83,29 @@ public class PrebidMobile {
             return applicationContextWeak.get();
         }
         return null;
+    }
+
+    private static String storedAuctionResponse = "";
+
+    public static void setStoredAuctionResponse(String storedAuctionResponse) {
+        PrebidMobile.storedAuctionResponse = storedAuctionResponse;
+    }
+
+    public static String getStoredAuctionResponse() {
+        return storedAuctionResponse;
+    }
+
+    private static Map<String, String> storedBidResponses = new LinkedHashMap<>();
+
+    public static void addStoredBidResponse(String bidder, String responseId) {
+        storedBidResponses.put(bidder, responseId);
+    }
+
+    public static void cleanStoredBidResponses() {
+        storedBidResponses.clear();
+    }
+
+    public static Map<String, String> getStoredBidResponses() {
+        return storedBidResponses;
     }
 }
