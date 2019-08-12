@@ -42,7 +42,7 @@ public class PrebidMobileTest extends BaseSetup {
         PrebidMobile.setPrebidServerHost(Host.RUBICON);
         assertEquals(Host.RUBICON, PrebidMobile.getPrebidServerHost());
         PrebidMobile.setStoredAuctionResponse("111122223333");
-        assertEquals(PrebidMobile.getStoredAuctionResponse(), "111122223333");
+        assertEquals("111122223333", PrebidMobile.getStoredAuctionResponse());
         PrebidMobile.addStoredBidResponse("appnexus", "221144");
         PrebidMobile.addStoredBidResponse("rubicon", "221155");
         assertFalse(PrebidMobile.getStoredBidResponses().isEmpty());
