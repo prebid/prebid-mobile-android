@@ -20,6 +20,7 @@ import com.mopub.mobileads.MoPubView;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
@@ -865,6 +866,51 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
         JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
         assertFalse(postData.has("regs"));
+    }
+
+    @Test
+    public void testPostDataWithStoredResponses() throws Exception {
+
+        if (!successfulMockServerStarted) {
+            fail("Server failed to start, unable to test.");
+        }
+
+        //given
+        PrebidMobile.setStoredAuctionResponse("111122223333");
+        PrebidMobile.addStoredBidResponse("appnexus", "221144");
+        PrebidMobile.addStoredBidResponse("rubicon", "221155");
+
+        //when
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(500, 700));
+
+        RequestParams requestParams = new RequestParams("67890", AdType.INTERSTITIAL, sizes, new ArrayList<String>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        @SuppressWarnings("unchecked")
+        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+
+        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+        JSONObject prebid = postData.getJSONArray("imp").getJSONObject(0).getJSONObject("ext").getJSONObject("prebid");
+        JSONObject storedauctionresponse = prebid.getJSONObject("storedauctionresponse");
+        JSONArray storedbidresponse = prebid.getJSONArray("storedbidresponse");
+        JSONObject storedbidresponse1 = storedbidresponse.getJSONObject(0);
+        JSONObject storedbidresponse2 = storedbidresponse.getJSONObject(1);
+
+        //then
+        assertEquals("111122223333", storedauctionresponse.getString("id"));
+
+        Assert.assertEquals(2, storedbidresponse.length());
+        assertEquals("appnexus", storedbidresponse1.getString("bidder"));
+        assertEquals("221144", storedbidresponse1.getString("id"));
+        assertEquals("rubicon", storedbidresponse2.getString("bidder"));
+        assertEquals("221155", storedbidresponse2.getString("id"));
+
     }
 
     @Test

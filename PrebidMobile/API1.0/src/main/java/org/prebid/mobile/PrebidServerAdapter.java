@@ -531,6 +531,28 @@ class PrebidServerAdapter implements DemandAdapter {
                 JSONObject storedrequest = new JSONObject();
                 prebid.put("storedrequest", storedrequest);
                 storedrequest.put("id", requestParams.getConfigId());
+
+                if (!TextUtils.isEmpty(PrebidMobile.getStoredAuctionResponse())) {
+                    JSONObject storedAuctionResponse = new JSONObject();
+                    prebid.put("storedauctionresponse", storedAuctionResponse);
+                    storedAuctionResponse.put("id", PrebidMobile.getStoredAuctionResponse());
+                }
+
+                if (!PrebidMobile.getStoredBidResponses().isEmpty()) {
+                    JSONArray bidResponseArray = new JSONArray();
+                    prebid.put("storedbidresponse", bidResponseArray);
+
+                    for (String bidder : PrebidMobile.getStoredBidResponses().keySet()) {
+                        String bidId = PrebidMobile.getStoredBidResponses().get(bidder);
+                        if (!TextUtils.isEmpty(bidder) && !TextUtils.isEmpty(bidId)) {
+                            JSONObject storedBid = new JSONObject();
+                            storedBid.put("bidder", bidder);
+                            storedBid.put("id", bidId);
+                            bidResponseArray.put(storedBid);
+                        }
+                    }
+                }
+
                 imp.put("ext", ext);
 
                 impConfigs.put(imp);
