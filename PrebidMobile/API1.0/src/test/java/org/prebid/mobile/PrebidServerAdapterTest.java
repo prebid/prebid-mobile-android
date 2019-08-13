@@ -122,7 +122,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e45", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e45", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -147,7 +147,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("1001-1", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("1001-1", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -167,7 +167,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-ffffffffffff", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-ffffffffffff", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -193,7 +193,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("1001-1_INVALID_CONFIG_ID", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("1001-1_INVALID_CONFIG_ID", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -212,7 +212,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e45", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e45", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -230,7 +230,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -250,7 +250,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("e2edc23f-0b3b-4203-81b5-7cc97132f418", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("e2edc23f-0b3b-4203-81b5-7cc97132f418", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -275,7 +275,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
@@ -306,7 +306,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(320, 50));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
@@ -334,7 +334,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -357,7 +357,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
@@ -396,7 +396,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -437,7 +437,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
@@ -465,7 +465,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -487,7 +487,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
@@ -523,7 +523,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
@@ -559,7 +559,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
@@ -584,7 +584,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
@@ -629,7 +629,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(320, 50));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid1 = UUID.randomUUID().toString();
             String uuid2 = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener1, uuid1);
@@ -662,7 +662,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             final PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(320, 50));
-            final RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            final RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             final String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             bgScheduler.runOneTask();
@@ -685,10 +685,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
                 if (request.getPath().equals("/withKeywords")) {
                     String postData = request.getBody().readUtf8();
-                    errorCollector.checkThat("Post data does not contain key values: " + postData, postData, containsString("key1=value1,key1=value2,key2=value1,key2=value2,key3=value1,key3=value2,key4=value1,key4=value2,key5=value1,key5=value2"));
+                    errorCollector.checkThat("Post data does not contain key values: " + postData, postData, containsString("value2,value1"));
                 } else if (request.getPath().equals("/clearKeywords")) {
                     String postData = request.getBody().readUtf8();
-                    errorCollector.checkThat("Post data should not contain key values: " + postData, postData, not(containsString("key1=value1,key1=value2,key2=value1,key2=value2,key3=value1,key3=value2,key4=value1,key4=value2,key5=value1,key5=value2")));
+                    errorCollector.checkThat("Post data should not contain key values: " + postData, postData, not(containsString("value2,value1")));
                 }
                 return new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid());
             }
@@ -759,7 +759,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(320, 50));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             @SuppressWarnings("unchecked")
@@ -836,7 +836,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -1208,7 +1208,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
 
-        RequestParams requestParams = new RequestParams("67890", adType, sizes, new ArrayList<String>(), contextDataDictionary, contextKeywordsSet, minSizePerc);
+        RequestParams requestParams = new RequestParams("67890", adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")

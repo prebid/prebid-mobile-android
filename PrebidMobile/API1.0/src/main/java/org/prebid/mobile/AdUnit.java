@@ -24,7 +24,7 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -36,8 +36,6 @@ public abstract class AdUnit {
     private String configId;
     private AdType adType;
 
-    @Deprecated
-    private ArrayList<String> userKeywords;
     private DemandFetcher fetcher;
     private int periodMillis;
 
@@ -49,8 +47,6 @@ public abstract class AdUnit {
         this.adType = adType;
         this.periodMillis = 0; // by default no auto refresh
         
-        this.userKeywords = new ArrayList<>();
-
         this.contextDataDictionary = new HashMap<>();
         this.contextKeywordsSet = new HashSet<>();
 
@@ -74,7 +70,6 @@ public abstract class AdUnit {
             fetcher = null;
         }
     }
-
 
     public void fetchDemand(@NonNull Object adObj, @NonNull OnCompleteListener listener) {
         if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
@@ -128,7 +123,7 @@ public abstract class AdUnit {
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
 
-            RequestParams requestParams = new RequestParams(configId, adType, sizes, userKeywords, contextDataDictionary, contextKeywordsSet, minSizePerc);
+            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc);
             fetcher.setPeriodMillis(periodMillis);
             fetcher.setRequestParams(requestParams);
             fetcher.setListener(listener);
@@ -148,30 +143,26 @@ public abstract class AdUnit {
     /**
      *@deprecated Please migrate to - TargetingParams.addUserKeyword(String)
      *@see TargetingParams#addUserKeyword(String)
+     *
+     * @param key parameter will be omitted
      */
     @Deprecated
-    public void addUserKeyword(String key, String value) {
-        if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
-            userKeywords.add(key + "=" + value);
-        } else if (!TextUtils.isEmpty(key)) {
-            userKeywords.add(key);
+    public void addUserKeyword(String key, String keyword) {
+        if (!TextUtils.isEmpty(keyword)) {
+            TargetingParams.addUserKeyword(keyword);
         }
     }
 
     /**
      *@deprecated Please migrate to - TargetingParams.addUserKeywords(Set)
      *@see TargetingParams#addUserKeywords(Set)
+     *
+     * @param key parameter will be omitted
      */
     @Deprecated
-    public void addUserKeywords(String key, String[] values) {
-        if (!TextUtils.isEmpty(key) && values.length > 0) {
-            userKeywords.clear();
-            for (String value : values) {
-                userKeywords.add(key + "=" + value);
-            }
-        } else if (!TextUtils.isEmpty(key)) {
-            userKeywords.clear();
-            userKeywords.add(key);
+    public void addUserKeywords(String key, String[] keywords) {
+        if (keywords.length > 0) {
+            TargetingParams.addUserKeywords(new HashSet<>(Arrays.asList(keywords)));
         }
     }
 
@@ -180,19 +171,8 @@ public abstract class AdUnit {
      *@see TargetingParams#removeUserKeyword(String)
      */
     @Deprecated
-    public void removeUserKeyword(String key) {
-        ArrayList<String> toBeRemoved = new ArrayList<>();
-        for (String keyword : userKeywords) {
-            if (keyword.equals(key)) {
-                toBeRemoved.add(keyword);
-            } else {
-                String[] keyValuePair = keyword.split("=");
-                if (keyValuePair[0].equals(key)) {
-                    toBeRemoved.add(keyword);
-                }
-            }
-        }
-        userKeywords.removeAll(toBeRemoved);
+    public void removeUserKeyword(String keyword) {
+        TargetingParams.removeUserKeyword(keyword);
     }
 
     /**
@@ -201,7 +181,7 @@ public abstract class AdUnit {
      */
     @Deprecated
     public void clearUserKeywords() {
-        userKeywords.clear();
+        TargetingParams.clearUserKeywords();
     }
 
     // MARK: - adunit context data aka inventory data (imp[].ext.context.data)

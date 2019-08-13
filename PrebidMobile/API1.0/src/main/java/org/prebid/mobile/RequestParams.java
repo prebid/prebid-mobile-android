@@ -19,7 +19,6 @@ package org.prebid.mobile;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -31,8 +30,6 @@ class RequestParams {
     private AdType adType = AdType.BANNER;
     private HashSet<AdSize> sizes = new HashSet<>();
 
-    @Deprecated
-    private final ArrayList<String> userKeywords;
     @Nullable
     private Map<String, Set<String>> contextDataDictionary;
     @Nullable
@@ -41,15 +38,14 @@ class RequestParams {
     @Nullable
     private AdSize minSizePerc; //non null only for InterstitialAdUnit(String, int, int)
 
-    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, ArrayList<String> userKeywords) {
+    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes) {
         this.configId = configId;
         this.adType = adType;
         this.sizes = sizes; // for Interstitial this will be null, will use screen width & height in the request
-        this.userKeywords = userKeywords;
     }
 
-    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, ArrayList<String> userKeywords, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc) {
-        this(configId, adType, sizes, userKeywords);
+    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc) {
+        this(configId, adType, sizes);
         this.contextDataDictionary = contextDataDictionary;
         this.contextKeywordsSet = contextKeywordsSet;
         this.minSizePerc = minSizePerc;
@@ -65,10 +61,6 @@ class RequestParams {
 
     HashSet<AdSize> getAdSizes() {
         return this.sizes;
-    }
-
-    ArrayList<String> getUserKeywords() {
-        return userKeywords;
     }
 
     @NonNull

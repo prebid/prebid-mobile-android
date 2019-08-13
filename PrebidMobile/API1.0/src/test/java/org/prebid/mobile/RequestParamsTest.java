@@ -23,7 +23,6 @@ import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import static junit.framework.Assert.assertEquals;
@@ -37,30 +36,24 @@ public class RequestParamsTest {
     public void testCreation() throws Exception {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        ArrayList<String> keywords = new ArrayList<>();
-        keywords.add("test=1");
-        RequestParams requestParams = new RequestParams("123456", AdType.BANNER, sizes, keywords);
+        RequestParams requestParams = new RequestParams("123456", AdType.BANNER, sizes);
         assertEquals("123456", FieldUtils.readField(requestParams, "configId", true));
         assertEquals(AdType.BANNER, FieldUtils.readField(requestParams, "adType", true));
         assertEquals(sizes, FieldUtils.readField(requestParams, "sizes", true));
-        assertEquals(keywords, FieldUtils.readField(requestParams, "userKeywords", true));
-        requestParams = new RequestParams("123456", AdType.INTERSTITIAL, null, keywords);
+        requestParams = new RequestParams("123456", AdType.INTERSTITIAL, null);
         assertEquals("123456", FieldUtils.readField(requestParams, "configId", true));
         assertEquals(AdType.INTERSTITIAL, FieldUtils.readField(requestParams, "adType", true));
         assertEquals(null, FieldUtils.readField(requestParams, "sizes", true));
-        assertEquals(keywords, FieldUtils.readField(requestParams, "userKeywords", true));
     }
 
     @Test
     public void testCreationWithAdditionalMap() throws Exception {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
-        ArrayList<String> keywords = new ArrayList<>();
-        keywords.add("test=1");
 
         AdSize minSizePerc = new AdSize(50, 70);
 
-        RequestParams requestParams = new RequestParams("123456", AdType.INTERSTITIAL, sizes, keywords, null, null, minSizePerc);
+        RequestParams requestParams = new RequestParams("123456", AdType.INTERSTITIAL, sizes, null, null, minSizePerc);
 
         AdSize minAdSizePerc = requestParams.getMinSizePerc();
         assertNotNull(minAdSizePerc);

@@ -773,12 +773,7 @@ class PrebidServerAdapter implements DemandAdapter {
                 user.put("gender", g);
 
                 String globalUserKeywordString = TextUtils.join(",", TargetingParams.getUserKeywordsSet());
-                String adunitUserKeywordString = TextUtils.join(",", requestParams.getUserKeywords());
-                if (!TextUtils.isEmpty(globalUserKeywordString))  {
-                    user.put("keywords", globalUserKeywordString);
-                } else if (!TextUtils.isEmpty(adunitUserKeywordString))  {
-                    user.put("keywords", adunitUserKeywordString);
-                }
+                user.put("keywords", globalUserKeywordString);
 
                 JSONObject ext = new JSONObject();
                 ext.put("consent", TargetingParams.getGDPRConsentString());
