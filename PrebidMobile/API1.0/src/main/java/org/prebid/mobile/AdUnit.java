@@ -110,7 +110,7 @@ public abstract class AdUnit {
             RequestParams requestParams = new RequestParams(configId, adType, sizes, keywords);
             if (adType.equals(AdType.NATIVE)){
                 requestParams.setNativeRequestVersion(((NativeAdUnit)this).request_version);
-                requestParams.setNativeRequestAssets(((NativeAdUnit)this).asssets);
+                requestParams.setNativeRequestAssets(((NativeAdUnit)this).assets);
             }
             fetcher.setPeriodMillis(periodMillis);
             fetcher.setRequestParams(requestParams);

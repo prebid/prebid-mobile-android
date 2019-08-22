@@ -17,6 +17,7 @@
 package org.prebid.mobile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 class RequestParams {
@@ -25,7 +26,7 @@ class RequestParams {
     private HashSet<AdSize> sizes = new HashSet<>();
     private ArrayList<String> keywords;
     private NativeAdUnit.NATIVE_REQUEST_VERSION request_version = NativeAdUnit.NATIVE_REQUEST_VERSION.VERSION_1_1;
-    private HashSet<NativeAdUnit.NATIVE_REQUEST_ASSET> assets = new HashSet<>();
+    HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>> assets = null;
 
     RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, ArrayList<String> keywords) {
         this.configId = configId;
@@ -38,11 +39,11 @@ class RequestParams {
         this.request_version = version;
     }
 
-    void setNativeRequestAssets(HashSet<NativeAdUnit.NATIVE_REQUEST_ASSET> assets){
+    void setNativeRequestAssets(HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>> assets){
         this.assets = assets;
     }
 
-    HashSet<NativeAdUnit.NATIVE_REQUEST_ASSET> getNativeRequestAssets() {
+    HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>> getNativeRequestAssets() {
         return assets;
     }
 

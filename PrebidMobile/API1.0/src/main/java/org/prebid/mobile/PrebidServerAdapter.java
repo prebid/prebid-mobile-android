@@ -516,7 +516,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     }
                     banner.put("format", format);
                     imp.put("banner", banner);
-                } else if (requestParams.getAdType().equals(AdType.BANNER)){
+                } else if (requestParams.getAdType().equals(AdType.BANNER)) {
                     JSONObject banner = new JSONObject();
                     JSONArray format = new JSONArray();
                     for (AdSize size : requestParams.getAdSizes()) {
@@ -529,36 +529,188 @@ class PrebidServerAdapter implements DemandAdapter {
                     JSONObject nativeObj = new JSONObject();
                     JSONObject request = new JSONObject();
                     JSONArray assets = new JSONArray();
-                    for (NativeAdUnit.NATIVE_REQUEST_ASSET asset: requestParams.getNativeRequestAssets()){
-                        JSONObject assetObj = new JSONObject();
-                        assetObj.put("required", 1);
-                        switch (asset){
-                            case DATA:
-                                JSONObject data = new JSONObject();
-                                data.put("type",1);
-                                data.put("len", 25);
-                                assetObj.put("data", data);
-                            case ICON:
-                                break;
-                            case IMAGE:
-                                JSONObject image = new JSONObject();
-                                image.put("type", 3);
-                                image.put("wmin", 200);
-                                image.put("hmin", 200);
-                                assetObj.put("img", image);
-                            case TITLE:
-                                JSONObject len = new JSONObject();
-                                len.put("len", 90);
-                                assetObj.put("title", len);
-                                break;
+                    HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>> assetsParams = requestParams.getNativeRequestAssets();
+                    if (assetsParams != null) {
+                        for (NativeAdUnit.NATIVE_REQUEST_ASSET asset : assetsParams.keySet()) {
+                            JSONObject assetObj = new JSONObject();
+                            switch (asset) {
+                                case TITLE:
+                                    JSONObject title = new JSONObject();
+                                    HashMap<String, Object> titleParams = assetsParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.TITLE);
+                                    title.put("len", titleParams.get("len"));
+                                    assetObj.put("title", title);
+                                    assetObj.put("required", (Boolean) titleParams.get("required") ? 1 : 0);
+                                    assets.put(assetObj);
+                                    break;
+                                case IMAGE_TYPE_1_ICON:
+                                    HashMap<String, Object> iconParams = assetsParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.IMAGE_TYPE_1_ICON);
+                                    JSONObject iconImg = new JSONObject();
+                                    iconImg.put("type", 1);
+                                    if ((Integer) iconParams.get("wmin") > 0 && (Integer) iconParams.get("hmin") > 0) {
+                                        iconImg.put("wmin", iconParams.get("wmin"));
+                                        iconImg.put("hmin", iconParams.get("hmin"));
+                                    }
+                                    if ((Integer) iconParams.get("w") > 0 && (Integer) iconParams.get("h") > 0) {
+                                        iconImg.put("w", iconParams.get("w"));
+                                        iconImg.put("h", iconParams.get("h"));
+                                    }
+                                    if (iconParams.get("mimes") != null) {
+                                        ArrayList<String> mimes = (ArrayList) iconParams.get("mimes");
+                                        JSONArray iconMimesArray = new JSONArray();
+                                        for (String mime : mimes) {
+                                            iconMimesArray.put(mime);
+                                        }
+                                        if (iconMimesArray.length() != 0) {
+                                            iconImg.put("mimes", iconMimesArray);
+                                        }
+                                    }
+                                    assetObj.put("img", iconImg);
+                                    assetObj.put("required", (Boolean) iconParams.get("required") ? 1 : 0);
+                                    assets.put(assetObj);
+                                    break;
+                                case IMAGE_TYPE_3_MAIN:
+                                    HashMap<String, Object> imageParams = assetsParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.IMAGE_TYPE_3_MAIN);
+                                    JSONObject image = new JSONObject();
+                                    image.put("type", 3);
+                                    if ((Integer) imageParams.get("wmin") > 0 && (Integer) imageParams.get("hmin") > 0) {
+                                        image.put("wmin", imageParams.get("wmin"));
+                                        image.put("hmin", imageParams.get("hmin"));
+                                    }
+                                    if ((Integer) imageParams.get("w") > 0 && (Integer) imageParams.get("h") > 0) {
+                                        image.put("w", imageParams.get("w"));
+                                        image.put("h", imageParams.get("h"));
+                                    }
+                                    if (imageParams.get("mimes") != null) {
+                                        ArrayList<String> mimes = (ArrayList) imageParams.get("mimes");
+                                        JSONArray imageMimesArray = new JSONArray();
+                                        for (String mime : mimes) {
+                                            imageMimesArray.put(mime);
+                                        }
+                                        if (imageMimesArray.length() != 0) {
+                                            image.put("mimes", imageMimesArray);
+                                        }
+                                    }
+                                    assetObj.put("img", image);
+                                    assetObj.put("required", (Boolean) imageParams.get("required") ? 1 : 0);
+                                    assets.put(assetObj);
+                                    break;
+                                case DATA_TYPE_1_SPONSORED:
+                                    HashMap<String, Object> data1Params = assetsParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.DATA_TYPE_1_SPONSORED);
+                                    JSONObject data1 = new JSONObject();
+                                    data1.put("type", 1);
+                                    data1.put("len", data1Params.get("len"));
+                                    assetObj.put("data", data1);
+                                    assetObj.put("required", (Boolean) data1Params.get("required") ? 1 : 0);
+                                    assets.put(assetObj);
+                                    break;
+                                case DATA_TYPE_2_DESCRIPTION:
+                                    HashMap<String, Object> data2Params = assetsParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.DATA_TYPE_2_DESCRIPTION);
+                                    JSONObject data2 = new JSONObject();
+                                    data2.put("type", 2);
+                                    data2.put("len", data2Params.get("len"));
+                                    assetObj.put("data", data2);
+                                    assetObj.put("required", (Boolean) data2Params.get("required") ? 1 : 0);
+                                    assets.put(assetObj);
+                                    break;
+                                case DATA_TYPE_3_RATING:
+                                    HashMap<String, Object> data3Params = assetsParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.DATA_TYPE_3_RATING);
+                                    JSONObject data3 = new JSONObject();
+                                    data3.put("type", 3);
+                                    data3.put("len", data3Params.get("len"));
+                                    assetObj.put("data", data3);
+                                    assetObj.put("required", (Boolean) data3Params.get("required") ? 1 : 0);
+                                    assets.put(assetObj);
+                                    break;
+                                case DATA_TYPE_4_LIKES:
+                                    HashMap<String, Object> data4Params = assetsParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.DATA_TYPE_4_LIKES);
+                                    JSONObject data4 = new JSONObject();
+                                    data4.put("type", 4);
+                                    data4.put("len", data4Params.get("len"));
+                                    assetObj.put("data", data4);
+                                    assetObj.put("required", (Boolean) data4Params.get("required") ? 1 : 0);
+                                    assets.put(assetObj);
+                                    break;
+                                case DATA_TYPE_5_DOWNLOADS:
+                                    HashMap<String, Object> data5Params = assetsParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.DATA_TYPE_5_DOWNLOADS);
+                                    JSONObject data5 = new JSONObject();
+                                    data5.put("type", 5);
+                                    data5.put("len", data5Params.get("len"));
+                                    assetObj.put("data", data5);
+                                    assetObj.put("required", (Boolean) data5Params.get("required") ? 1 : 0);
+                                    assets.put(assetObj);
+                                    break;
+                                case DATA_TYPE_6_PRICE:
+                                    HashMap<String, Object> data6Params = assetsParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.DATA_TYPE_6_PRICE);
+                                    JSONObject data6 = new JSONObject();
+                                    data6.put("type", 6);
+                                    data6.put("len", data6Params.get("len"));
+                                    assetObj.put("data", data6);
+                                    assetObj.put("required", (Boolean) data6Params.get("required") ? 1 : 0);
+                                    assets.put(assetObj);
+                                    break;
+                                case DATA_TYPE_7_SALE_PRICE:
+                                    HashMap<String, Object> data7Params = assetsParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.DATA_TYPE_7_SALE_PRICE);
+                                    JSONObject data7 = new JSONObject();
+                                    data7.put("type", 7);
+                                    data7.put("len", data7Params.get("len"));
+                                    assetObj.put("data", data7);
+                                    assetObj.put("required", (Boolean) data7Params.get("required") ? 1 : 0);
+                                    assets.put(assetObj);
+                                    break;
+                                case DATA_TYPE_8_PHONE:
+                                    HashMap<String, Object> data8Params = assetsParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.DATA_TYPE_8_PHONE);
+                                    JSONObject data8 = new JSONObject();
+                                    data8.put("type", 8);
+                                    data8.put("len", data8Params.get("len"));
+                                    assetObj.put("data", data8);
+                                    assetObj.put("required", (Boolean) data8Params.get("required") ? 1 : 0);
+                                    assets.put(assetObj);
+                                    break;
+                                case DATA_TYPE_9_ADDRESS:
+                                    HashMap<String, Object> data9Params = assetsParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.DATA_TYPE_9_ADDRESS);
+                                    JSONObject data9 = new JSONObject();
+                                    data9.put("type", 9);
+                                    data9.put("len", data9Params.get("len"));
+                                    assetObj.put("data", data9);
+                                    assetObj.put("required", (Boolean) data9Params.get("required") ? 1 : 0);
+                                    assets.put(assetObj);
+                                    break;
+                                case DATA_TYPE_10_ADDITIONAL_DESCRIPTION:
+                                    HashMap<String, Object> data10Params = assetsParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.DATA_TYPE_10_ADDITIONAL_DESCRIPTION);
+                                    JSONObject data10 = new JSONObject();
+                                    data10.put("type", 10);
+                                    data10.put("len", data10Params.get("len"));
+                                    assetObj.put("data", data10);
+                                    assetObj.put("required", (Boolean) data10Params.get("required") ? 1 : 0);
+                                    assets.put(assetObj);
+                                    break;
+                                case DATA_TYPE_11_DISPLAY_URL:
+                                    HashMap<String, Object> data11Params = assetsParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.DATA_TYPE_11_DISPLAY_URL);
+                                    JSONObject data11 = new JSONObject();
+                                    data11.put("type", 11);
+                                    data11.put("len", data11Params.get("len"));
+                                    assetObj.put("data", data11);
+                                    assetObj.put("required", (Boolean) data11Params.get("required") ? 1 : 0);
+                                    assets.put(assetObj);
+                                    break;
+                                case DATA_TYPE_12_CTA_TEXT:
+                                    HashMap<String, Object> data12Params = assetsParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.DATA_TYPE_12_CTA_TEXT);
+                                    JSONObject data12 = new JSONObject();
+                                    data12.put("type", 12);
+                                    data12.put("len", data12Params.get("len"));
+                                    assetObj.put("data", data12);
+                                    assetObj.put("required", (Boolean) data12Params.get("required") ? 1 : 0);
+                                    assets.put(assetObj);
+                                    break;
+                            }
+
                         }
-                        assets.put(assetObj);
                     }
                     request.put("assets", assets);
                     request.put("context", 2);
                     request.put("contextsubtype", 20);
                     request.put("plcmttype", 1);
-                    switch (requestParams.getNativeRequestVersion()){
+                    switch (requestParams.getNativeRequestVersion()) {
                         case VERSION_1_1:
                             request.put("ver", "1.1");
                             nativeObj.put("request", request.toString());
