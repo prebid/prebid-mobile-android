@@ -25,8 +25,7 @@ class RequestParams {
     private AdType adType = AdType.BANNER;
     private HashSet<AdSize> sizes = new HashSet<>();
     private ArrayList<String> keywords;
-    private NativeAdUnit.NATIVE_REQUEST_VERSION request_version = NativeAdUnit.NATIVE_REQUEST_VERSION.VERSION_1_1;
-    HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>> assets = null;
+    HashMap<String, Object> assets = null;
 
     RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, ArrayList<String> keywords) {
         this.configId = configId;
@@ -35,20 +34,13 @@ class RequestParams {
         this.keywords = keywords;
     }
 
-    void setNativeRequestVersion(NativeAdUnit.NATIVE_REQUEST_VERSION version){
-        this.request_version = version;
-    }
 
-    void setNativeRequestAssets(HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>> assets){
+    void setNativeRequestAssets(HashMap<String, Object> assets) {
         this.assets = assets;
     }
 
-    HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>> getNativeRequestAssets() {
+    HashMap<String, Object> getNativeRequestAssets() {
         return assets;
-    }
-
-    public NativeAdUnit.NATIVE_REQUEST_VERSION getNativeRequestVersion() {
-        return request_version;
     }
 
     String getConfigId() {

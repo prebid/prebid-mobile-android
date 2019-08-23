@@ -43,6 +43,8 @@ import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
 
+import java.util.ArrayList;
+
 import static org.prebid.mobile.app.Constants.MOPUB_BANNER_ADUNIT_ID_300x250;
 import static org.prebid.mobile.app.Constants.MOPUB_BANNER_ADUNIT_ID_320x50;
 
@@ -105,20 +107,29 @@ public class DemoActivity extends AppCompatActivity {
         });
         adFrame.addView(adView);
         NativeAdUnit adUnit = new NativeAdUnit("25e17008-5081-4676-94d5-923ced4359d3");
-        adUnit.setNativeRequestAPIVersion(NativeAdUnit.NATIVE_REQUEST_VERSION.VERSION_1_1);
-        adUnit.addTitle(90, true);
+        adUnit.setContext(2);
+        adUnit.setPlacementType(1);
+        adUnit.setContextSubType(20);
+        adUnit.addTitle(90, true, null, null);
+        ArrayList<Integer> methods = new ArrayList<>();
+        methods.add(1);
         try {
-            adUnit.addImage(1, 20, 20, -1, -1, null, true);
+            adUnit.addEventTracker(1, methods, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            adUnit.addImage(1, 20, 20, -1, -1, null, true, null, null);
         } catch (Exception e) {
             LogUtil.d(e.getMessage());
         }
         try {
-            adUnit.addImage(3, 200, 200, -1, -1, null, true);
+            adUnit.addImage(3, 200, 200, -1, -1, null, true, null, null);
         } catch (Exception e) {
             LogUtil.d(e.getMessage());
         }
         try {
-            adUnit.addData(1, 90, true);
+            adUnit.addData(1, 90, true, null, null);
         } catch (Exception e) {
             LogUtil.e(e.getMessage());
         }
