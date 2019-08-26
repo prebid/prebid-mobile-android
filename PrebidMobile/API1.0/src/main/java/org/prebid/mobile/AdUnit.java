@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public abstract class AdUnit {
@@ -108,8 +109,13 @@ public abstract class AdUnit {
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
             RequestParams requestParams = new RequestParams(configId, adType, sizes, keywords);
-            if (adType.equals(AdType.NATIVE)){
-                requestParams.setNativeRequestAssets(((NativeAdUnit)this).requsetConfig);
+            if (adType.equals(AdType.NATIVE)) {
+                HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>> assets = (HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>>) ((NativeAdUnit) this).requsetConfig.get("assets");
+                if (assets == null || assets.isEmpty()) {
+                    listener.onComplete(ResultCode.INVALID_NATIVE_REQUEST);
+                    return;
+                }
+                requestParams.setNativeRequestParams(((NativeAdUnit) this).requsetConfig);
             }
             fetcher.setPeriodMillis(periodMillis);
             fetcher.setRequestParams(requestParams);

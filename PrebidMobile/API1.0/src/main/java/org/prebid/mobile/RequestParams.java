@@ -35,7 +35,7 @@ class RequestParams {
     }
 
 
-    void setNativeRequestAssets(HashMap<String, Object> assets) {
+    void setNativeRequestParams(HashMap<String, Object> assets) {
         this.assets = assets;
     }
 

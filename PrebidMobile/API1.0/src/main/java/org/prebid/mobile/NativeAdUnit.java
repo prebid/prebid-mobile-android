@@ -19,6 +19,39 @@ public class NativeAdUnit extends AdUnit {
         DATA
     }
 
+    // constants
+
+    static String VERSION = "ver";
+    static String SUPPORTED_VERSION = "1.2";
+    static String CONTEXT = "context";
+    static String CONTEXT_SUB_TYPE = "contextsubtype";
+    static String PLACEMENT_TYPE = "plcmttype";
+    static String PLACEMENT_COUNT = "plcmtcnt";
+    static String SEQ = "seq";
+    static String ASSETS = "assets";
+    static String A_URL_SUPPORT = "aurlsupport";
+    static String D_URL_SUPPORT = "durlsupport";
+    static String EVENT_TRACKERS = "eventtrackers";
+    static String PRIVACY = "privacy";
+    static String EXT = "ext";
+    static String EVENT = "event";
+    static String METHODS = "methods";
+    static String LENGTH = "len";
+    static String REQUIRED = "required";
+    static String ASSETS_EXT = "assetExt";
+    static String WIDTH_MIN = "wmin";
+    static String HEIGHT_MIN = "hmin";
+    static String WIDTH = "W";
+    static String HEIGHT = "h";
+    static String TYPE = "type";
+    static String MIMES = "mimes";
+    static String TITLE = "title";
+    static String IMAGE = "img";
+    static String DATA = "data";
+    static String NATIVE = "native";
+    static String REQUEST = "request";
+
+
     public NativeAdUnit(@NonNull String configId) {
         super(configId, AdType.NATIVE);
     }
@@ -26,40 +59,40 @@ public class NativeAdUnit extends AdUnit {
     HashMap<String, Object> requsetConfig = new HashMap<>();
 
     public void setContext(Integer contextId) {
-        requsetConfig.put("context", contextId);
+        requsetConfig.put(CONTEXT, contextId);
     }
 
     public void setContextSubType(Integer subTypeId) {
-        requsetConfig.put("contextsubtype", subTypeId);
+        requsetConfig.put(CONTEXT_SUB_TYPE, subTypeId);
     }
 
     public void setPlacementType(Integer placementType) {
-        requsetConfig.put("plcmttype", placementType);
+        requsetConfig.put(PLACEMENT_TYPE, placementType);
     }
 
     public void setPlacementCount(Integer placementCount) {
-        requsetConfig.put("plcmtcnt", placementCount);
+        requsetConfig.put(PLACEMENT_COUNT, placementCount);
     }
 
     public void setSeq(Integer seq) {
-        requsetConfig.put("seq", seq);
+        requsetConfig.put(SEQ, seq);
     }
 
     public void setAUrlSupport(int support) {
-        requsetConfig.put("aurlsupport", support);
+        requsetConfig.put(A_URL_SUPPORT, support);
     }
 
     public void setDUrlsSupport(int support) {
-        requsetConfig.put("durlsupport", support);
+        requsetConfig.put(D_URL_SUPPORT, support);
     }
 
     public void setPrivacy(int privacy) {
-        requsetConfig.put("privacy", privacy);
+        requsetConfig.put(PRIVACY, privacy);
     }
 
     public void setExt(Object jsonObject) {
         if (jsonObject instanceof JSONObject || jsonObject instanceof JSONArray) {
-            requsetConfig.put("ext", jsonObject);
+            requsetConfig.put(EXT, jsonObject);
         }
     }
 
@@ -67,22 +100,22 @@ public class NativeAdUnit extends AdUnit {
         if (methods == null || methods.isEmpty()) {
             throw new Exception("Methods are required");
         }
-        JSONArray eventTrackers = (JSONArray) requsetConfig.get("eventtrackers");
+        JSONArray eventTrackers = (JSONArray) requsetConfig.get(EVENT_TRACKERS);
         if (eventTrackers == null) {
             eventTrackers = new JSONArray();
         }
         JSONObject eventTracker = new JSONObject();
-        eventTracker.put("event", event);
+        eventTracker.put(EVENT, event);
         JSONArray methodsJSONArray = new JSONArray();
         for (Integer method : methods) {
             methodsJSONArray.put(method);
         }
-        eventTracker.put("methods", methodsJSONArray);
+        eventTracker.put(METHODS, methodsJSONArray);
         if (extObject instanceof JSONArray || extObject instanceof JSONObject) {
-            eventTracker.put("ext", extObject);
+            eventTracker.put(EXT, extObject);
         }
         eventTrackers.put(eventTracker);
-        requsetConfig.put("eventtrackers", eventTrackers);
+        requsetConfig.put(EVENT_TRACKERS, eventTrackers);
     }
 
     public void addTitle(Integer len, Boolean required, Object assetExt, Object titleExt) {
@@ -91,16 +124,17 @@ public class NativeAdUnit extends AdUnit {
             assets = new HashMap<>();
         }
         HashMap<String, Object> params = new HashMap<>();
-        params.put("len", len);
-        params.put("required", required);
+        params.put(LENGTH, len);
+
+        params.put(REQUIRED, required);
         if (assetExt instanceof JSONArray || assetExt instanceof JSONObject) {
-            params.put("assetExt", assetExt);
+            params.put(ASSETS_EXT, assetExt);
         }
         if (titleExt instanceof JSONArray || assetExt instanceof JSONObject) {
-            params.put("ext", titleExt);
+            params.put(EXT, titleExt);
         }
         assets.put(NATIVE_REQUEST_ASSET.TITLE, params);
-        requsetConfig.put("assets", assets);
+        requsetConfig.put(ASSETS, assets);
     }
 
     public void addImage(Integer type, Integer wmin, Integer hmin, Integer w, Integer h, ArrayList<String> mimes, Boolean required, Object assetExt, Object imageExt) throws Exception {
@@ -109,13 +143,13 @@ public class NativeAdUnit extends AdUnit {
             assets = new HashMap<>();
         }
         HashMap<String, Object> params = new HashMap<>();
-        params.put("wmin", wmin);
-        params.put("hmin", hmin);
-        params.put("h", h);
-        params.put("w", w);
-        params.put("required", required);
+        params.put(WIDTH_MIN, wmin);
+        params.put(HEIGHT_MIN, hmin);
+        params.put(HEIGHT, h);
+        params.put(WIDTH, w);
+        params.put(REQUIRED, required);
         if (type == 1 || type == 3) {
-            params.put("type", type);
+            params.put(TYPE, type);
         } else {
             throw new Exception("Unsupported type " + type + " for image");
         }
@@ -125,16 +159,16 @@ public class NativeAdUnit extends AdUnit {
                 mimesString += mime;
                 mimesString += ",";
             }
-            params.put("mimes", mimesString);
+            params.put(MIMES, mimesString);
         }
         if (assetExt instanceof JSONArray || assetExt instanceof JSONObject) {
-            params.put("assetExt", assetExt);
+            params.put(ASSETS_EXT, assetExt);
         }
         if (imageExt instanceof JSONArray || assetExt instanceof JSONObject) {
-            params.put("ext", imageExt);
+            params.put(EXT, imageExt);
         }
         assets.put(NATIVE_REQUEST_ASSET.IMAGE, params);
-        requsetConfig.put("assets", assets);
+        requsetConfig.put(ASSETS, assets);
     }
 
     public void addData(Integer type, Integer len, Boolean required, Object assetExt, Object dataExt) throws Exception {
@@ -143,21 +177,21 @@ public class NativeAdUnit extends AdUnit {
             assets = new HashMap<>();
         }
         HashMap<String, Object> params = new HashMap<>();
-        params.put("len", len);
-        params.put("required", required);
+        params.put(LENGTH, len);
+        params.put(REQUIRED, required);
         if (type >= 1 && type <= 12) {
-            params.put("type", type);
+            params.put(TYPE, type);
         } else {
             throw new Exception("Unsupported type for data");
         }
 
         if (assetExt instanceof JSONArray || assetExt instanceof JSONObject) {
-            params.put("assetExt", assetExt);
+            params.put(ASSETS_EXT, assetExt);
         }
         if (dataExt instanceof JSONArray || assetExt instanceof JSONObject) {
-            params.put("ext", dataExt);
+            params.put(EXT, dataExt);
         }
         assets.put(NATIVE_REQUEST_ASSET.DATA, params);
-        requsetConfig.put("assets", assets);
+        requsetConfig.put(ASSETS, assets);
     }
 }
