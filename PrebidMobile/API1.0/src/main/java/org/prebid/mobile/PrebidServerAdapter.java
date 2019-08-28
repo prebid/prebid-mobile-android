@@ -524,7 +524,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     }
                     banner.put("format", format);
                     imp.put("banner", banner);
-                } else {
+                } else if (requestParams.getAdType().equals(AdType.NATIVE)) {
                     // add native request
                     JSONObject nativeObj = new JSONObject();
                     JSONObject request = new JSONObject();
@@ -561,7 +561,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     if (requestConfig.get(NativeAdUnit.EXT) != null) {
                         request.put(NativeAdUnit.EXT, requestConfig.get(NativeAdUnit.EXT));
                     }
-                    HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>> assetParams = (HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>>) requestConfig.get("assets");
+                    HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>> assetParams = (HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>>) requestConfig.get(NativeAdUnit.ASSETS);
                     if (assetParams != null && !assetParams.isEmpty()) {
                         for (NativeAdUnit.NATIVE_REQUEST_ASSET asset : assetParams.keySet()) {
                             JSONObject assetObj = new JSONObject();

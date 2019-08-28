@@ -1,6 +1,7 @@
 package org.prebid.mobile;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -56,70 +57,203 @@ public class NativeAdUnit extends AdUnit {
         super(configId, AdType.NATIVE);
     }
 
-    HashMap<String, Object> requsetConfig = new HashMap<>();
+    HashMap<String, Object> requestConfig = new HashMap<>();
 
-    public void setContext(Integer contextId) {
-        requsetConfig.put(CONTEXT, contextId);
+    public enum CONTEXT_TYPE {
+        CONTENT_CENTRIC(1),
+        SOCIAL_CENTRIC(2),
+        PRODUCT(3),
+        CUSTOM(500);
+        private int id;
+
+        CONTEXT_TYPE(final int id) {
+            this.id = id;
+        }
+
+        public int getID() {
+            return this.id;
+        }
+
+        public void setID(int id) {
+            if (this.equals(CUSTOM) && id >= 500) {
+                this.id = id;
+            }
+        }
     }
 
-    public void setContextSubType(Integer subTypeId) {
-        requsetConfig.put(CONTEXT_SUB_TYPE, subTypeId);
+    public void setContextType(CONTEXT_TYPE type) {
+        requestConfig.put(CONTEXT, type.getID());
     }
 
-    public void setPlacementType(Integer placementType) {
-        requsetConfig.put(PLACEMENT_TYPE, placementType);
+    public enum CONTEXT_SUB_TYPE {
+        GENERAL(10),
+        ARTICAL(11),
+        VIDEO(12),
+        AUDIO(13),
+        IMAGE(14),
+        USER_GENERATED(15),
+        GENERAL_SOCIAL(20),
+        EMAIL(21),
+        CHAT_IM(22),
+        SELLING(30),
+        APPLICATION_STORE(31),
+        PRODUCT_REVIEW_SITES(32),
+        CUSTOM(500);
+        private int id;
+
+        CONTEXT_SUB_TYPE(final int id) {
+            this.id = id;
+        }
+
+        public int getID() {
+            return this.id;
+        }
+
+        public void setID(int id) {
+            if (this.equals(CUSTOM) && id >= 500) {
+                this.id = id;
+            }
+        }
+    }
+
+    public void setContextSubType(CONTEXT_SUB_TYPE type) {
+        requestConfig.put(CONTEXT_SUB_TYPE, type.getID());
+    }
+
+    public enum PLACEMENT_TYPE {
+        CONTENT_FEED(1),
+        CONTENT_ATOMIC_UNIT(2),
+        OUTSIDE_CORE_CONTENT(3),
+        RECOMMENDATION_WIDGET(4),
+        CUSTOM(500);
+        private int id;
+
+        PLACEMENT_TYPE(final int id) {
+            this.id = id;
+        }
+
+        public int getID() {
+            return this.id;
+        }
+
+        public void setID(int id) {
+            if (this.equals(CUSTOM) && id >= 500) {
+                this.id = id;
+            }
+        }
+
+    }
+
+    public void setPlacementType(PLACEMENT_TYPE placementType) {
+        requestConfig.put(PLACEMENT_TYPE, placementType.getID());
     }
 
     public void setPlacementCount(Integer placementCount) {
-        requsetConfig.put(PLACEMENT_COUNT, placementCount);
+        requestConfig.put(PLACEMENT_COUNT, placementCount);
     }
 
     public void setSeq(Integer seq) {
-        requsetConfig.put(SEQ, seq);
+        requestConfig.put(SEQ, seq);
     }
 
-    public void setAUrlSupport(int support) {
-        requsetConfig.put(A_URL_SUPPORT, support);
+    public void setAUrlSupport(boolean support) {
+        if (support) {
+            requestConfig.put(A_URL_SUPPORT, 1);
+        } else {
+            requestConfig.put(A_URL_SUPPORT, 0);
+        }
     }
 
-    public void setDUrlsSupport(int support) {
-        requsetConfig.put(D_URL_SUPPORT, support);
+    public void setDUrlsSupport(boolean support) {
+        if (support) {
+            requestConfig.put(D_URL_SUPPORT, 1);
+        } else {
+            requestConfig.put(D_URL_SUPPORT, 0);
+        }
     }
 
-    public void setPrivacy(int privacy) {
-        requsetConfig.put(PRIVACY, privacy);
+    public void setPrivacy(boolean privacy) {
+        if (privacy) {
+            requestConfig.put(PRIVACY, 1);
+        } else {
+            requestConfig.put(PRIVACY, 0);
+        }
     }
 
     public void setExt(Object jsonObject) {
         if (jsonObject instanceof JSONObject || jsonObject instanceof JSONArray) {
-            requsetConfig.put(EXT, jsonObject);
+            requestConfig.put(EXT, jsonObject);
         }
     }
 
-    public void addEventTracker(Integer event, ArrayList<Integer> methods, Object extObject) throws Exception {
+    public enum EVENT_TYPE {
+        IMPRESSION(1),
+        VIEWABLE_MRC50(2),
+        VIEWABLE_MRC100(3),
+        VIEWABLE_VIDEO50(4),
+        CUSTOM(500);
+        private int id;
+
+        EVENT_TYPE(final int id) {
+            this.id = id;
+        }
+
+        public int getID() {
+            return this.id;
+        }
+
+        public void setID(int id) {
+            if (this.equals(CUSTOM) && id >= 500) {
+                this.id = id;
+            }
+        }
+    }
+
+    public enum EVENT_TRACKING_METHOD {
+        IMAGE(1),
+        JS(2),
+        CUSTOM(500);
+        private int id;
+
+        EVENT_TRACKING_METHOD(final int id) {
+            this.id = id;
+        }
+
+        public int getID() {
+            return this.id;
+        }
+
+        public void setID(int id) {
+            if (this.equals(CUSTOM) && id >= 500) {
+                this.id = id;
+            }
+        }
+    }
+
+    public void addEventTracker(EVENT_TYPE event, ArrayList<EVENT_TRACKING_METHOD> methods, Object extObject) throws Exception {
         if (methods == null || methods.isEmpty()) {
             throw new Exception("Methods are required");
         }
-        JSONArray eventTrackers = (JSONArray) requsetConfig.get(EVENT_TRACKERS);
+        JSONArray eventTrackers = (JSONArray) requestConfig.get(EVENT_TRACKERS);
         if (eventTrackers == null) {
             eventTrackers = new JSONArray();
         }
         JSONObject eventTracker = new JSONObject();
-        eventTracker.put(EVENT, event);
+        eventTracker.put(EVENT, event.getID());
         JSONArray methodsJSONArray = new JSONArray();
-        for (Integer method : methods) {
-            methodsJSONArray.put(method);
+        for (EVENT_TRACKING_METHOD method : methods) {
+            methodsJSONArray.put(method.getID());
         }
         eventTracker.put(METHODS, methodsJSONArray);
         if (extObject instanceof JSONArray || extObject instanceof JSONObject) {
             eventTracker.put(EXT, extObject);
         }
         eventTrackers.put(eventTracker);
-        requsetConfig.put(EVENT_TRACKERS, eventTrackers);
+        requestConfig.put(EVENT_TRACKERS, eventTrackers);
     }
 
     public void addTitle(Integer len, Boolean required, Object assetExt, Object titleExt) {
-        HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>> assets = (HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>>) requsetConfig.get("assets");
+        HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>> assets = (HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>>) requestConfig.get("assets");
         if (assets == null) {
             assets = new HashMap<>();
         }
@@ -134,11 +268,32 @@ public class NativeAdUnit extends AdUnit {
             params.put(EXT, titleExt);
         }
         assets.put(NATIVE_REQUEST_ASSET.TITLE, params);
-        requsetConfig.put(ASSETS, assets);
+        requestConfig.put(ASSETS, assets);
     }
 
-    public void addImage(Integer type, Integer wmin, Integer hmin, Integer w, Integer h, ArrayList<String> mimes, Boolean required, Object assetExt, Object imageExt) throws Exception {
-        HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>> assets = (HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>>) requsetConfig.get("assets");
+    public enum IMAGE_TYPE {
+        ICON(1),
+        MAIN(3),
+        CUSTOM(500);
+        private int id;
+
+        IMAGE_TYPE(final int id) {
+            this.id = id;
+        }
+
+        public int getID() {
+            return this.id;
+        }
+
+        public void setID(int id) {
+            if (this.equals(CUSTOM) && id >= 500) {
+                this.id = id;
+            }
+        }
+    }
+
+    public void addImage(IMAGE_TYPE type, Integer wmin, Integer hmin, Integer w, Integer h, ArrayList<String> mimes, Boolean required, Object assetExt, Object imageExt) {
+        HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>> assets = (HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>>) requestConfig.get(ASSETS);
         if (assets == null) {
             assets = new HashMap<>();
         }
@@ -148,17 +303,9 @@ public class NativeAdUnit extends AdUnit {
         params.put(HEIGHT, h);
         params.put(WIDTH, w);
         params.put(REQUIRED, required);
-        if (type == 1 || type == 3) {
-            params.put(TYPE, type);
-        } else {
-            throw new Exception("Unsupported type " + type + " for image");
-        }
+        params.put(TYPE, type.getID());
         if (mimes != null) {
-            String mimesString = "";
-            for (String mime : mimes) {
-                mimesString += mime;
-                mimesString += ",";
-            }
+            String mimesString = TextUtils.join(",", mimes);
             params.put(MIMES, mimesString);
         }
         if (assetExt instanceof JSONArray || assetExt instanceof JSONObject) {
@@ -168,22 +315,49 @@ public class NativeAdUnit extends AdUnit {
             params.put(EXT, imageExt);
         }
         assets.put(NATIVE_REQUEST_ASSET.IMAGE, params);
-        requsetConfig.put(ASSETS, assets);
+        requestConfig.put(ASSETS, assets);
     }
 
-    public void addData(Integer type, Integer len, Boolean required, Object assetExt, Object dataExt) throws Exception {
-        HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>> assets = (HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>>) requsetConfig.get("assets");
+    public enum DATA_TYPE {
+        SPONSORED(1),
+        DESC(2),
+        RATING(3),
+        LIKES(4),
+        DOWNLOADS(5),
+        PRICE(6),
+        SALEPRICE(7),
+        PHONE(8),
+        ADDRESS(9),
+        DESC2(10),
+        DESPLAYURL(11),
+        CTATEXT(12),
+        CUSTOM(500);
+        private int id;
+
+        DATA_TYPE(final int id) {
+            this.id = id;
+        }
+
+        public int getID() {
+            return this.id;
+        }
+
+        public void setID(int id) {
+            if (this.equals(CUSTOM) && id >= 500) {
+                this.id = id;
+            }
+        }
+    }
+
+    public void addData(DATA_TYPE type, Integer len, Boolean required, Object assetExt, Object dataExt) {
+        HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>> assets = (HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>>) requestConfig.get("assets");
         if (assets == null) {
             assets = new HashMap<>();
         }
         HashMap<String, Object> params = new HashMap<>();
         params.put(LENGTH, len);
         params.put(REQUIRED, required);
-        if (type >= 1 && type <= 12) {
-            params.put(TYPE, type);
-        } else {
-            throw new Exception("Unsupported type for data");
-        }
+        params.put(TYPE, type.getID());
 
         if (assetExt instanceof JSONArray || assetExt instanceof JSONObject) {
             params.put(ASSETS_EXT, assetExt);
@@ -192,6 +366,6 @@ public class NativeAdUnit extends AdUnit {
             params.put(EXT, dataExt);
         }
         assets.put(NATIVE_REQUEST_ASSET.DATA, params);
-        requsetConfig.put(ASSETS, assets);
+        requestConfig.put(ASSETS, assets);
     }
 }

@@ -75,7 +75,7 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     void createMoPubNative() {
-        FrameLayout adFrame = (FrameLayout) findViewById(R.id.adFrame);
+        final FrameLayout adFrame = (FrameLayout) findViewById(R.id.adFrame);
         adFrame.removeAllViews();
         final MoPubView adView = new MoPubView(this);
         adView.setAdUnitId("a470959f33034229945744c5f904d5bc");
@@ -107,36 +107,27 @@ public class DemoActivity extends AppCompatActivity {
         });
         adFrame.addView(adView);
         NativeAdUnit adUnit = new NativeAdUnit("25e17008-5081-4676-94d5-923ced4359d3");
-        adUnit.setContext(2);
-        adUnit.setPlacementType(1);
-        adUnit.setContextSubType(20);
+        adUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
+        adUnit.setPlacementType(NativeAdUnit.PLACEMENT_TYPE.CONTENT_FEED);
+        adUnit.setContextSubType(NativeAdUnit.CONTEXT_SUB_TYPE.GENERAL_SOCIAL);
         adUnit.addTitle(90, true, null, null);
-        ArrayList<Integer> methods = new ArrayList<>();
-        methods.add(1);
+        ArrayList<NativeAdUnit.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
+        methods.add(NativeAdUnit.EVENT_TRACKING_METHOD.IMAGE);
         try {
-            adUnit.addEventTracker(1, methods, null);
+            adUnit.addEventTracker(NativeAdUnit.EVENT_TYPE.IMPRESSION, methods, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        try {
-            adUnit.addImage(1, 20, 20, -1, -1, null, true, null, null);
-        } catch (Exception e) {
-            LogUtil.d(e.getMessage());
-        }
-        try {
-            adUnit.addImage(3, 200, 200, -1, -1, null, true, null, null);
-        } catch (Exception e) {
-            LogUtil.d(e.getMessage());
-        }
-        try {
-            adUnit.addData(1, 90, true, null, null);
-        } catch (Exception e) {
-            LogUtil.e(e.getMessage());
-        }
+
+        adUnit.addImage(NativeAdUnit.IMAGE_TYPE.ICON, 20, 20, -1, -1, null, true, null, null);
+        adUnit.addImage(NativeAdUnit.IMAGE_TYPE.MAIN, 200, 200, -1, -1, null, true, null, null);
+        adUnit.addData(NativeAdUnit.DATA_TYPE.SPONSORED, 90, true, null, null);
         adUnit.fetchDemand(adView, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
+                DemoActivity.this.resultCode = resultCode;
                 adView.loadAd();
+                refreshCount++;
             }
         });
     }
@@ -159,7 +150,30 @@ public class DemoActivity extends AppCompatActivity {
         builder.addCustomTargeting("hb_pb", "0.50");
         builder.addCustomTargeting("hb_cache_id", "66fc1b77-297e-4526-8c22-279a929b4d82");
         final PublisherAdRequest request = builder.build();
-        nativeAdView.loadAd(request);
+        NativeAdUnit adUnit = new NativeAdUnit("25e17008-5081-4676-94d5-923ced4359d3");
+        adUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
+        adUnit.setPlacementType(NativeAdUnit.PLACEMENT_TYPE.CONTENT_FEED);
+        adUnit.setContextSubType(NativeAdUnit.CONTEXT_SUB_TYPE.GENERAL_SOCIAL);
+        adUnit.addTitle(90, true, null, null);
+        ArrayList<NativeAdUnit.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
+        methods.add(NativeAdUnit.EVENT_TRACKING_METHOD.IMAGE);
+        try {
+            adUnit.addEventTracker(NativeAdUnit.EVENT_TYPE.IMPRESSION, methods, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        adUnit.addImage(NativeAdUnit.IMAGE_TYPE.ICON, 20, 20, -1, -1, null, true, null, null);
+        adUnit.addImage(NativeAdUnit.IMAGE_TYPE.MAIN, 200, 200, -1, -1, null, true, null, null);
+        adUnit.addData(NativeAdUnit.DATA_TYPE.SPONSORED, 90, true, null, null);
+        adUnit.fetchDemand(request, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+                DemoActivity.this.resultCode = resultCode;
+                nativeAdView.loadAd(request);
+                refreshCount++;
+            }
+        });
     }
 
     void createDFPBanner(String size) {

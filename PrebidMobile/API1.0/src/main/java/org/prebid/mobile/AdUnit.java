@@ -110,12 +110,12 @@ public abstract class AdUnit {
             fetcher = new DemandFetcher(adObj);
             RequestParams requestParams = new RequestParams(configId, adType, sizes, keywords);
             if (adType.equals(AdType.NATIVE)) {
-                HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>> assets = (HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>>) ((NativeAdUnit) this).requsetConfig.get("assets");
+                HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>> assets = (HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>>) ((NativeAdUnit) this).requestConfig.get(NativeAdUnit.ASSETS);
                 if (assets == null || assets.isEmpty()) {
                     listener.onComplete(ResultCode.INVALID_NATIVE_REQUEST);
                     return;
                 }
-                requestParams.setNativeRequestParams(((NativeAdUnit) this).requsetConfig);
+                requestParams.setNativeRequestParams(((NativeAdUnit) this).requestConfig);
             }
             fetcher.setPeriodMillis(periodMillis);
             fetcher.setRequestParams(requestParams);
