@@ -23,6 +23,10 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -41,6 +45,16 @@ public class TargetingParams {
     private static final String PREBID_COPPA_KEY = "Prebid_COPPA";
     private static final String PREBID_GDPR_KEY = "Prebid_GDPR";
     private static final String IABConsent_SubjectToGDPR = "IABConsent_SubjectToGDPR";
+
+    public static final String BIDDER_NAME_APP_NEXUS = "appnexus";
+    public static final String BIDDER_NAME_RUBICON_PROJECT = "rubicon";
+
+    private static final Set<String> accessControlList = new HashSet<>();
+    private static final Map<String, Set<String>> userDataMap = new HashMap<>();
+    private static final Set<String> userKeywordsSet = new HashSet<>();
+    private static final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
+    private static final Set<String> contextKeywordsSet = new HashSet<>();
+
     //endregion
 
     //region Private Constructor
@@ -229,6 +243,179 @@ public class TargetingParams {
         return storeUrl;
     }
 
+
+    // MARK: - access control list (ext.prebid.data)
+
+    /**
+     * This method obtains a bidder name allowed to receive global targeting
+     */
+    public static void addBidderToAccessControlList(String bidderName) {
+        accessControlList.add(bidderName);
+    }
+
+    /**
+     * This method allows to remove specific bidder name
+     */
+    public static void removeBidderFromAccessControlList(String bidderName) {
+        accessControlList.remove(bidderName);
+    }
+
+    /**
+     * This method allows to remove all the bidder name set
+     */
+    public static void clearAccessControlList() {
+        accessControlList.clear();
+    }
+
+    static Set<String> getAccessControlList() {
+        return accessControlList;
+    }
+
+    // MARK: - global user data aka visitor data (user.ext.data)
+
+    /**
+     * This method obtains the user data keyword & value for global user targeting
+     * if the key already exists the value will be appended to the list. No duplicates will be added
+     */
+    public static void addUserData(String key, String value) {
+
+        Util.addValue(userDataMap, key, value);
+
+    }
+
+    /**
+     * This method obtains the user data keyword & values set for global user targeting
+     * the values if the key already exist will be replaced with the new set of values
+     */
+    public static void updateUserData(String key, Set<String> value) {
+        userDataMap.put(key, value);
+    }
+
+    /**
+     * This method allows to remove specific user data keyword & value set from global user targeting
+     */
+    public static void removeUserData(String key) {
+        userDataMap.remove(key);
+    }
+
+    /**
+     * This method allows to remove all user data set from global user targeting
+     */
+    public static void clearUserData() {
+        userDataMap.clear();
+    }
+
+    static Map<String, Set<String>> getUserDataDictionary() {
+        return userDataMap;
+    }
+
+    // MARK: - global user keywords (user.keywords)
+
+    /**
+     * This method obtains the user keyword for global user targeting
+     * Inserts the given element in the set if it is not already present.
+     */
+    public static void addUserKeyword(String keyword) {
+        userKeywordsSet.add(keyword);
+    }
+
+    /**
+     * This method obtains the user keyword set for global user targeting
+     * Adds the elements of the given set to the set.
+     */
+    public static void addUserKeywords(Set<String> keywords) {
+        userKeywordsSet.addAll(keywords);
+    }
+
+    /**
+     * This method allows to remove specific user keyword from global user targeting
+     */
+    public static void removeUserKeyword(String keyword) {
+        userKeywordsSet.remove(keyword);
+    }
+
+    /**
+     * This method allows to remove all keywords from the set of global user targeting
+     */
+    public static void clearUserKeywords() {
+        userKeywordsSet.clear();
+    }
+
+    static Set<String> getUserKeywordsSet() {
+        return userKeywordsSet;
+    }
+
+    // MARK: - global context data aka inventory data (app.ext.data)
+
+    /**
+     * This method obtains the context data keyword & value context for global context targeting
+     * if the key already exists the value will be appended to the list. No duplicates will be added
+     */
+    public static void addContextData(String key, String value) {
+        Util.addValue(contextDataDictionary, key, value);
+    }
+
+    /**
+     * This method obtains the context data keyword & values set for global context targeting.
+     * the values if the key already exist will be replaced with the new set of values
+     */
+    public static void updateContextData(String key, Set<String> value) {
+        contextDataDictionary.put(key, value);
+    }
+
+    /**
+     * This method allows to remove specific context data keyword & values set from global context targeting
+     */
+    public static void removeContextData(String key) {
+        contextDataDictionary.remove(key);
+    }
+
+    /**
+     * This method allows to remove all context data set from global context targeting
+     */
+    public static void clearContextData() {
+        contextDataDictionary.clear();
+    }
+
+    static Map<String, Set<String>> getContextDataDictionary() {
+        return contextDataDictionary;
+    }
+
+    // MARK: - adunit context keywords (imp[].ext.context.keywords)
+
+    /**
+     * This method obtains the context keyword for adunit context targeting
+     * Inserts the given element in the set if it is not already present.
+     */
+    public static void addContextKeyword(String keyword) {
+        contextKeywordsSet.add(keyword);
+    }
+
+    /**
+     * This method obtains the context keyword set for adunit context targeting
+     * Adds the elements of the given set to the set.
+     */
+    public static void addContextKeywords(Set<String> keywords) {
+        contextKeywordsSet.addAll(keywords);
+    }
+
+    /**
+     * This method allows to remove specific context keyword from adunit context targeting
+     */
+    public static void removeContextKeyword(String keyword) {
+        contextKeywordsSet.remove(keyword);
+    }
+
+    /**
+     * This method allows to remove all keywords from the set of adunit context targeting
+     */
+    public static void clearContextKeywords() {
+        contextKeywordsSet.clear();
+    }
+
+    static Set<String> getContextKeywordsSet()  {
+        return contextKeywordsSet;
+    }
 
 //endregion
 }

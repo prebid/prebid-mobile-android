@@ -469,8 +469,26 @@ class PrebidServerAdapter implements DemandAdapter {
                 if (ext != null && ext.length() > 0) {
                     postData.put("ext", ext);
                 }
+
+                JSONObject objectWithoutEmptyValues = Util.getObjectWithoutEmptyValues(postData);
+
+                if (objectWithoutEmptyValues != null) {
+                    postData = objectWithoutEmptyValues;
+
+                    JSONObject prebid = postData.getJSONObject("ext").getJSONObject("prebid");
+
+                    JSONObject cache = new JSONObject();
+                    JSONObject bids = new JSONObject();
+                    cache.put("bids", bids);
+                    prebid.put("cache", cache);
+
+                    JSONObject targetingEmpty = new JSONObject();
+                    prebid.put("targeting", targetingEmpty);
+                }
+
             } catch (JSONException e) {
             }
+
             return postData;
         }
 
@@ -478,15 +496,12 @@ class PrebidServerAdapter implements DemandAdapter {
             JSONObject ext = new JSONObject();
             JSONObject prebid = new JSONObject();
             try {
-                JSONObject cache = new JSONObject();
-                JSONObject bids = new JSONObject();
-                cache.put("bids", bids);
-                prebid.put("cache", cache);
                 JSONObject storedRequest = new JSONObject();
                 storedRequest.put("id", PrebidMobile.getPrebidServerAccountId());
                 prebid.put("storedrequest", storedRequest);
-                JSONObject targetingEmpty = new JSONObject();
-                prebid.put("targeting", targetingEmpty);
+
+                JSONObject data = new JSONObject().put("bidders", new JSONArray(TargetingParams.getAccessControlList()));
+                prebid.put("data", data);
                 ext.put("prebid", prebid);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -525,9 +540,13 @@ class PrebidServerAdapter implements DemandAdapter {
                     banner.put("format", format);
                     imp.put("banner", banner);
                 }
-                imp.put("ext", ext);
+
                 JSONObject prebid = new JSONObject();
                 ext.put("prebid", prebid);
+                JSONObject context = new JSONObject();
+                context.put("data", Util.toJson(requestParams.getContextDataDictionary()));
+                context.put("keywords", TextUtils.join(",", requestParams.getContextKeywordsSet()));
+                ext.put("context", context);
                 JSONObject storedrequest = new JSONObject();
                 prebid.put("storedrequest", storedrequest);
                 storedrequest.put("id", requestParams.getConfigId());
@@ -612,8 +631,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     deviceExtPrebidInstl.put("minwidthperc", minSizePercWidth);
                     deviceExtPrebidInstl.put("minheightperc", minSizePercHeight);
 
-                    JSONObject deviceExtWithoutEmptyValues = Util.getObjectWithoutEmptyValues(deviceExt);
-                    device.put("ext", deviceExtWithoutEmptyValues);
+                    device.put("ext", deviceExt);
                 }
 
                 // POST data that requires context
@@ -745,7 +763,9 @@ class PrebidServerAdapter implements DemandAdapter {
                 prebid.put("version", PrebidServerSettings.sdk_version);
                 JSONObject ext = new JSONObject();
                 ext.put("prebid", prebid);
+                ext.put("data", Util.toJson(TargetingParams.getContextDataDictionary()));
                 app.put("ext", ext);
+                app.put("keywords", TextUtils.join(",", TargetingParams.getContextKeywordsSet()));
             } catch (JSONException e) {
                 LogUtil.d("PrebidServerAdapter getAppObject() " + e.getMessage());
             }
@@ -773,20 +793,15 @@ class PrebidServerAdapter implements DemandAdapter {
                         break;
                 }
                 user.put("gender", g);
-                StringBuilder builder = new StringBuilder();
-                ArrayList<String> keywords = this.requestParams.getKeywords();
-                for (String key : keywords) {
-                    builder.append(key).append(",");
-                }
-                String finalKeywords = builder.toString();
-                if (!TextUtils.isEmpty(finalKeywords)) {
-                    user.put("keywords", finalKeywords);
-                }
-                if (TargetingParams.isSubjectToGDPR() != null) {
-                    JSONObject ext = new JSONObject();
-                    ext.put("consent", TargetingParams.getGDPRConsentString());
-                    user.put("ext", ext);
-                }
+
+                String globalUserKeywordString = TextUtils.join(",", TargetingParams.getUserKeywordsSet());
+                user.put("keywords", globalUserKeywordString);
+
+                JSONObject ext = new JSONObject();
+                ext.put("consent", TargetingParams.getGDPRConsentString());
+                ext.put("data", Util.toJson(TargetingParams.getUserDataDictionary()));
+                user.put("ext", ext);
+
             } catch (JSONException e) {
                 LogUtil.d("PrebidServerAdapter getUserObject() " + e.getMessage());
             }
