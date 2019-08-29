@@ -17,6 +17,7 @@
 package org.prebid.mobile;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.testutils.BaseSetup;
@@ -24,13 +25,29 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.Calendar;
+import java.util.Map;
+import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
 public class TargetingParamsTest extends BaseSetup {
+
+    @Override
+    public void tearDown() {
+        super.tearDown();
+
+        TargetingParams.clearAccessControlList();
+        TargetingParams.clearUserData();
+        TargetingParams.clearContextData();
+        TargetingParams.clearContextKeywords();
+        TargetingParams.clearUserKeywords();
+    }
+
     @Test
     public void testYearOfBirth() throws Exception {
         // force initial state since it's static might be changed from other tests
@@ -111,5 +128,64 @@ public class TargetingParamsTest extends BaseSetup {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         TargetingParams.setGDPRConsentString("testString");
         assertEquals("testString", TargetingParams.getGDPRConsentString());
+    }
+
+    @Test
+    public void testContextData() {
+        // given
+        TargetingParams.addContextData("key1", "value10");
+
+        //when
+        Map<String, Set<String>> dictionary = TargetingParams.getContextDataDictionary();
+        Set<String> set = dictionary.get("key1");
+
+        //then
+        Assert.assertEquals(1, dictionary.size());
+
+        Assert.assertEquals(1, set.size());
+        assertThat(set, containsInAnyOrder("value10"));
+    }
+
+    @Test
+    public void testUserData() {
+        // given
+        TargetingParams.addUserData("key1", "value10");
+
+        //when
+        Map<String, Set<String>> dictionary = TargetingParams.getUserDataDictionary();
+        Set<String> set = dictionary.get("key1");
+
+        //then
+        Assert.assertEquals(1, dictionary.size());
+
+        Assert.assertEquals(1, set.size());
+        assertThat(set, containsInAnyOrder("value10"));
+    }
+
+    @Test
+    public void testContextKeyword() {
+        // given
+        TargetingParams.addContextKeyword("value10");
+
+        //when
+        Set<String> set = TargetingParams.getContextKeywordsSet();
+
+        //then
+        Assert.assertEquals(1, set.size());
+        assertThat(set, containsInAnyOrder("value10"));
+    }
+
+    @Test
+    public void testUserKeyword() {
+
+        //given
+        TargetingParams.addUserKeyword("value10");
+
+        //when
+        Set<String>  set = TargetingParams.getUserKeywordsSet();
+
+        //then
+        Assert.assertEquals(1, set.size());
+        assertThat(set, containsInAnyOrder("value10"));
     }
 }
