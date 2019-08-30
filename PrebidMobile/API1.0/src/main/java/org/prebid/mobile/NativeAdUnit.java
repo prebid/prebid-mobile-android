@@ -85,7 +85,7 @@ public class NativeAdUnit extends AdUnit {
         requestConfig.put(CONTEXT, type.getID());
     }
 
-    public enum CONTEXT_SUB_TYPE {
+    public enum CONTEXTSUBTYPE {
         GENERAL(10),
         ARTICAL(11),
         VIDEO(12),
@@ -101,7 +101,7 @@ public class NativeAdUnit extends AdUnit {
         CUSTOM(500);
         private int id;
 
-        CONTEXT_SUB_TYPE(final int id) {
+        CONTEXTSUBTYPE(final int id) {
             this.id = id;
         }
 
@@ -116,11 +116,11 @@ public class NativeAdUnit extends AdUnit {
         }
     }
 
-    public void setContextSubType(CONTEXT_SUB_TYPE type) {
+    public void setContextSubType(CONTEXTSUBTYPE type) {
         requestConfig.put(CONTEXT_SUB_TYPE, type.getID());
     }
 
-    public enum PLACEMENT_TYPE {
+    public enum PLACEMENTTYPE {
         CONTENT_FEED(1),
         CONTENT_ATOMIC_UNIT(2),
         OUTSIDE_CORE_CONTENT(3),
@@ -128,7 +128,7 @@ public class NativeAdUnit extends AdUnit {
         CUSTOM(500);
         private int id;
 
-        PLACEMENT_TYPE(final int id) {
+        PLACEMENTTYPE(final int id) {
             this.id = id;
         }
 
@@ -144,7 +144,7 @@ public class NativeAdUnit extends AdUnit {
 
     }
 
-    public void setPlacementType(PLACEMENT_TYPE placementType) {
+    public void setPlacementType(PLACEMENTTYPE placementType) {
         requestConfig.put(PLACEMENT_TYPE, placementType.getID());
     }
 
@@ -164,7 +164,7 @@ public class NativeAdUnit extends AdUnit {
         }
     }
 
-    public void setDUrlsSupport(boolean support) {
+    public void setDUrlSupport(boolean support) {
         if (support) {
             requestConfig.put(D_URL_SUPPORT, 1);
         } else {
