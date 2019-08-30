@@ -17,8 +17,12 @@
 package org.prebid.mobile;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class PrebidMobile {
 
@@ -26,6 +30,12 @@ public class PrebidMobile {
 
     private static int timeoutMillis = TIMEOUT_MILLIS; // by default use 2000 milliseconds as timeout
     static boolean timeoutMillisUpdated = false;
+
+    @Nullable
+    private static String storedAuctionResponse = "";
+
+    @NonNull
+    private static final Map<String, String> storedBidResponses = new LinkedHashMap<>();
 
     public static int getTimeoutMillis() {
         return timeoutMillis;
@@ -81,5 +91,27 @@ public class PrebidMobile {
             return applicationContextWeak.get();
         }
         return null;
+    }
+
+    public static void setStoredAuctionResponse(@NonNull String storedAuctionResponse) {
+        PrebidMobile.storedAuctionResponse = storedAuctionResponse;
+    }
+
+    @Nullable
+    public static String getStoredAuctionResponse() {
+        return storedAuctionResponse;
+    }
+
+    public static void addStoredBidResponse(String bidder, String responseId) {
+        storedBidResponses.put(bidder, responseId);
+    }
+
+    public static void clearStoredBidResponses() {
+        storedBidResponses.clear();
+    }
+
+    @NonNull
+    static Map<String, String> getStoredBidResponses() {
+        return storedBidResponses;
     }
 }
