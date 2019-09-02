@@ -40,7 +40,9 @@ import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.InterstitialAdUnit;
 import org.prebid.mobile.OnCompleteListener;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.addendum.PbFindSizeError;
 
@@ -79,6 +81,8 @@ public class DemoActivity extends AppCompatActivity {
                 adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
             }
 
+            enableAdditionalFunctionality(adUnit);
+
             if ("DFP".equals(adServerName)) {
                 createDFPBanner(width, height);
             } else if ("MoPub".equals(adServerName)) {
@@ -87,12 +91,63 @@ public class DemoActivity extends AppCompatActivity {
         } else if ("Interstitial".equals(adTypeName)) {
             adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL);
 
+            //Advanced interstitial support
+//            adUnit = new InterstitialAdUnit("1001-1", 50, 70);
+
+            enableAdditionalFunctionality(adUnit);
+
             if ("DFP".equals(adServerName)) {
                 createDFPInterstitial();
             } else if ("MoPub".equals(adServerName)) {
                 createMoPubInterstitial();
             }
         }
+    }
+
+    private void enableAdditionalFunctionality(AdUnit adUnit) {
+//        enableCOPPA();
+//        addFirstPartyData(adUnit);
+//        setStoredResponse();
+//        setRequestTimeoutMillis();
+    }
+
+    private void enableCOPPA() {
+        TargetingParams.setSubjectToCOPPA(true);
+    }
+
+    private void addFirstPartyData(AdUnit adUnit) {
+        //Access Control List
+        TargetingParams.addBidderToAccessControlList(TargetingParams.BIDDER_NAME_APP_NEXUS);
+
+        //global user data
+        TargetingParams.addUserData("globalUserDataKey1", "globalUserDataValue1");
+
+        //global context data
+        TargetingParams.addContextData("globalContextDataKey1", "globalContextDataValue1");
+
+        //adunit context data
+        adUnit.addContextData("adunitContextDataKey1", "adunitContextDataValue1");
+
+        //global context keywords
+        TargetingParams.addContextKeyword("globalContextKeywordValue1");
+        TargetingParams.addContextKeyword("globalContextKeywordValue2");
+
+        //global user keywords
+        TargetingParams.addUserKeyword("globalUserKeywordValue1");
+        TargetingParams.addUserKeyword("globalUserKeywordValue2");
+
+        //adunit context keywords
+        adUnit.addContextKeyword("adunitContextKeywordValue1");
+        adUnit.addContextKeyword("adunitContextKeywordValue2");
+
+    }
+
+    private void setStoredResponse() {
+        PrebidMobile.setStoredAuctionResponse("111122223333");
+    }
+
+    private void setRequestTimeoutMillis() {
+        PrebidMobile.setTimeoutMillis(5_000);
     }
 
     void createDFPBanner(int width, int height) {
