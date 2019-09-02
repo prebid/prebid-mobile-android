@@ -58,33 +58,54 @@ public class DemoActivity extends AppCompatActivity {
         refreshCount = 0;
         setContentView(R.layout.activity_demo);
         Intent intent = getIntent();
-        if ("DFP".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Banner".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
-            createDFPBanner(intent.getStringExtra(Constants.AD_SIZE_NAME));
-        } else if ("DFP".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Interstitial".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
-            createDFPInterstitial();
-        } else if ("MoPub".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Banner".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
-            createMoPubBanner(intent.getStringExtra(Constants.AD_SIZE_NAME));
-        } else if ("MoPub".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Interstitial".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
-            createMoPubInterstitial();
+
+        String adTypeName = intent.getStringExtra(Constants.AD_TYPE_NAME);
+        String adServerName = intent.getStringExtra(Constants.AD_SERVER_NAME);
+
+        if ("Banner".equals(adTypeName)) {
+
+            String adSizeName = intent.getStringExtra(Constants.AD_SIZE_NAME);
+            int width = 0;
+            int height = 0;
+
+            String[] wAndH = adSizeName.split("x");
+            width = Integer.valueOf(wAndH[0]);
+            height = Integer.valueOf(wAndH[1]);
+            if (width == 300 && height == 250) {
+                adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250, width, height);
+            } else if (width == 320 && height == 50) {
+                adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
+            } else {
+                adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
+            }
+
+            if ("DFP".equals(adServerName)) {
+                createDFPBanner(width, height);
+            } else if ("MoPub".equals(adServerName)) {
+                createMoPubBanner(width, height);
+            }
+        } else if ("Interstitial".equals(adTypeName)) {
+            adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL);
+
+            if ("DFP".equals(adServerName)) {
+                createDFPInterstitial();
+            } else if ("MoPub".equals(adServerName)) {
+                createMoPubInterstitial();
+            }
         }
     }
 
-    void createDFPBanner(String size) {
-        FrameLayout adFrame = (FrameLayout) findViewById(R.id.adFrame);
+    void createDFPBanner(int width, int height) {
+        FrameLayout adFrame = findViewById(R.id.adFrame);
         adFrame.removeAllViews();
         final PublisherAdView dfpAdView = new PublisherAdView(this);
-        String[] wAndH = size.split("x");
-        int width = Integer.valueOf(wAndH[0]);
-        int height = Integer.valueOf(wAndH[1]);
+
         if (width == 300 && height == 250) {
             dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES);
-            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250, width, height);
         } else if (width == 320 && height == 50) {
             dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES);
-            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
         } else {
             dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES);
-            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
         }
 
         dfpAdView.setAdListener(new AdListener() {
@@ -153,7 +174,7 @@ public class DemoActivity extends AppCompatActivity {
                         .show();
             }
         });
-        adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL);
+
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
@@ -169,19 +190,14 @@ public class DemoActivity extends AppCompatActivity {
 
     }
 
-    void createMoPubBanner(String size) {
-        FrameLayout adFrame = (FrameLayout) findViewById(R.id.adFrame);
+    void createMoPubBanner(int width, int height) {
+        FrameLayout adFrame = findViewById(R.id.adFrame);
         adFrame.removeAllViews();
-        String[] wAndH = size.split("x");
-        int width = Integer.valueOf(wAndH[0]);
-        int height = Integer.valueOf(wAndH[1]);
         final MoPubView adView = new MoPubView(this);
         if (width == 300 && height == 250) {
             adView.setAdUnitId(MOPUB_BANNER_ADUNIT_ID_300x250);
-            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250, 300, 250);
         } else {
             adView.setAdUnitId(MOPUB_BANNER_ADUNIT_ID_320x50);
-            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, 320, 50);
         }
         adView.setMinimumWidth(width);
         adView.setMinimumHeight(height);
@@ -235,7 +251,7 @@ public class DemoActivity extends AppCompatActivity {
 
             }
         });
-        adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL);
+
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
         adUnit.fetchDemand(interstitial, new OnCompleteListener() {
