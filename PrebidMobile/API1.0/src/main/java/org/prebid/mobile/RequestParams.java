@@ -28,6 +28,7 @@ class RequestParams {
     private String configId = "";
     private AdType adType = AdType.BANNER;
     private HashSet<AdSize> sizes = new HashSet<>();
+    private HashMap<String, Object> assets = new HashMap<>();
 
     @Nullable
     private Map<String, Set<String>> contextDataDictionary;

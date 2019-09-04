@@ -46,7 +46,7 @@ public abstract class AdUnit {
         this.configId = configId;
         this.adType = adType;
         this.periodMillis = 0; // by default no auto refresh
-        
+
         this.contextDataDictionary = new HashMap<>();
         this.contextKeywordsSet = new HashSet<>();
 
@@ -123,6 +123,9 @@ public abstract class AdUnit {
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
             RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc);
+            if (this.adType.equals(AdType.NATIVE)) {
+                requestParams.setNativeRequestParams(((NativeAdUnit) this).requestConfig);
+            }
             fetcher.setPeriodMillis(periodMillis);
             fetcher.setRequestParams(requestParams);
             fetcher.setListener(listener);
@@ -140,10 +143,9 @@ public abstract class AdUnit {
 
 
     /**
-     *@deprecated Please migrate to - TargetingParams.addUserKeyword(String)
-     *@see TargetingParams#addUserKeyword(String)
-     *
      * @param key parameter will be omitted
+     * @see TargetingParams#addUserKeyword(String)
+     * @deprecated Please migrate to - TargetingParams.addUserKeyword(String)
      */
     @Deprecated
     public void addUserKeyword(String key, String keyword) {
@@ -153,10 +155,9 @@ public abstract class AdUnit {
     }
 
     /**
-     *@deprecated Please migrate to - TargetingParams.addUserKeywords(Set)
-     *@see TargetingParams#addUserKeywords(Set)
-     *
      * @param key parameter will be omitted
+     * @see TargetingParams#addUserKeywords(Set)
+     * @deprecated Please migrate to - TargetingParams.addUserKeywords(Set)
      */
     @Deprecated
     public void addUserKeywords(String key, String[] keywords) {
@@ -166,8 +167,8 @@ public abstract class AdUnit {
     }
 
     /**
-     *@deprecated Please migrate to - TargetingParams.removeUserKeyword(String)
-     *@see TargetingParams#removeUserKeyword(String)
+     * @see TargetingParams#removeUserKeyword(String)
+     * @deprecated Please migrate to - TargetingParams.removeUserKeyword(String)
      */
     @Deprecated
     public void removeUserKeyword(String keyword) {
@@ -175,8 +176,8 @@ public abstract class AdUnit {
     }
 
     /**
-     *@deprecated Please migrate to - TargetingParams.clearUserKeywords()
-     *@see TargetingParams#clearUserKeywords()
+     * @see TargetingParams#clearUserKeywords()
+     * @deprecated Please migrate to - TargetingParams.clearUserKeywords()
      */
     @Deprecated
     public void clearUserKeywords() {
@@ -251,7 +252,7 @@ public abstract class AdUnit {
         contextKeywordsSet.clear();
     }
 
-    Set<String>  getContextKeywordsSet() {
+    Set<String> getContextKeywordsSet() {
         return contextKeywordsSet;
     }
 

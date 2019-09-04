@@ -1,6 +1,7 @@
 package org.prebid.mobile;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -9,7 +10,15 @@ import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static org.prebid.mobile.NativeAdUnit.ASSETS;
+import static org.prebid.mobile.NativeAdUnit.EVENT_TRACKERS;
+import static org.prebid.mobile.NativeAdUnit.LENGTH;
+import static org.prebid.mobile.NativeAdUnit.REQUIRED;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -34,7 +43,7 @@ public class NativeAdUnitTest {
         assertEquals("assets", NativeAdUnit.ASSETS);
         assertEquals("aurlsupport", NativeAdUnit.A_URL_SUPPORT);
         assertEquals("durlsupport", NativeAdUnit.D_URL_SUPPORT);
-        assertEquals("eventtrackers", NativeAdUnit.EVENT_TRACKERS);
+        assertEquals("eventtrackers", EVENT_TRACKERS);
         assertEquals("privacy", NativeAdUnit.PRIVACY);
         assertEquals("event", NativeAdUnit.EVENT);
         assertEquals("methods", NativeAdUnit.METHODS);
@@ -186,6 +195,78 @@ public class NativeAdUnitTest {
         }
 
         assertEquals("value", value);
-
     }
+
+    @Test
+    public void testAddEventTrackerNullMethods() {
+        NativeAdUnit adUnit = new NativeAdUnit("1234");
+        Exception expected = null;
+        try {
+            adUnit.addEventTracker(NativeAdUnit.EVENT_TYPE.IMPRESSION, null, null);
+        } catch (Exception e) {
+            expected = e;
+        }
+        assertNotNull(expected);
+        assertEquals("Methods are required", expected.getMessage());
+        Exception expected2 = null;
+        try {
+            adUnit.addEventTracker(NativeAdUnit.EVENT_TYPE.IMPRESSION, new ArrayList<NativeAdUnit.EVENT_TRACKING_METHOD>(), null);
+        } catch (Exception e) {
+            expected2 = e;
+        }
+        assertNotNull(expected2);
+        assertEquals("Methods are required", expected2.getMessage());
+    }
+
+    @Test
+    public void testAddEventTracker() {
+        NativeAdUnit adUnit = new NativeAdUnit("1234");
+        try {
+            ArrayList<NativeAdUnit.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
+            methods.add(NativeAdUnit.EVENT_TRACKING_METHOD.IMAGE);
+            adUnit.addEventTracker(NativeAdUnit.EVENT_TYPE.IMPRESSION, methods, null);
+            ArrayList<NativeAdUnit.EVENT_TRACKING_METHOD> methods1 = new ArrayList<>();
+            methods1.add(NativeAdUnit.EVENT_TRACKING_METHOD.JS);
+            adUnit.addEventTracker(NativeAdUnit.EVENT_TYPE.VIEWABLE_MRC50, methods1, null);
+        } catch (Exception e) {
+
+        }
+        assertNotNull(adUnit.requestConfig.get(EVENT_TRACKERS));
+        JSONArray trackers = (JSONArray) adUnit.requestConfig.get(EVENT_TRACKERS);
+        assertEquals(2, trackers.length());
+        JSONObject tracker = null;
+        int event = 0;
+        int medthod = 0;
+        try {
+            tracker = (JSONObject) trackers.get(0);
+            event = (int) tracker.get(NativeAdUnit.EVENT);
+            medthod = (int) tracker.getJSONArray(NativeAdUnit.METHODS).get(0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        assertEquals(1, event);
+        assertEquals(1, medthod);
+        try {
+            tracker = (JSONObject) trackers.get(1);
+            event = (int) tracker.get(NativeAdUnit.EVENT);
+            medthod = (int) tracker.getJSONArray(NativeAdUnit.METHODS).get(0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        assertEquals(2, event);
+        assertEquals(2, medthod);
+    }
+
+    @Test
+    public void testAddTitle() {
+        NativeAdUnit adUnit = new NativeAdUnit("1234");
+        adUnit.addTitle(90, true, null, null);
+        HashMap<String, Object> params = null;
+        params = ((HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>>) adUnit.requestConfig.get(ASSETS)).get(NativeAdUnit.NATIVE_REQUEST_ASSET.TITLE);
+        assertEquals(2, params.size());
+        assertEquals(90, params.get(LENGTH));
+        assertEquals(true, params.get(REQUIRED));
+    }
+
+
 }

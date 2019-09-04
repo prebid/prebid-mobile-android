@@ -111,8 +111,8 @@ public class DemoActivity extends AppCompatActivity {
         adFrame.addView(adView);
         NativeAdUnit adUnit = new NativeAdUnit("25e17008-5081-4676-94d5-923ced4359d3");
         adUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
-        adUnit.setPlacementType(NativeAdUnit.PLACEMENT_TYPE.CONTENT_FEED);
-        adUnit.setContextSubType(NativeAdUnit.CONTEXT_SUB_TYPE.GENERAL_SOCIAL);
+        adUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
+        adUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
         adUnit.addTitle(90, true, null, null);
         ArrayList<NativeAdUnit.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
         methods.add(NativeAdUnit.EVENT_TRACKING_METHOD.IMAGE);
@@ -155,8 +155,8 @@ public class DemoActivity extends AppCompatActivity {
         final PublisherAdRequest request = builder.build();
         NativeAdUnit adUnit = new NativeAdUnit("25e17008-5081-4676-94d5-923ced4359d3");
         adUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
-        adUnit.setPlacementType(NativeAdUnit.PLACEMENT_TYPE.CONTENT_FEED);
-        adUnit.setContextSubType(NativeAdUnit.CONTEXT_SUB_TYPE.GENERAL_SOCIAL);
+        adUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
+        adUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
         adUnit.addTitle(90, true, null, null);
         ArrayList<NativeAdUnit.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
         methods.add(NativeAdUnit.EVENT_TRACKING_METHOD.IMAGE);

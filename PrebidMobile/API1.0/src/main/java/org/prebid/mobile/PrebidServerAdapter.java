@@ -576,53 +576,59 @@ class PrebidServerAdapter implements DemandAdapter {
                     if (requestConfig.get(NativeAdUnit.EXT) != null) {
                         request.put(NativeAdUnit.EXT, requestConfig.get(NativeAdUnit.EXT));
                     }
-                    HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>> assetParams = (HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>>) requestConfig.get(NativeAdUnit.ASSETS);
+                    HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>> assetParams = (HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>>) requestConfig.get(NativeAdUnit.ASSETS);
                     if (assetParams != null && !assetParams.isEmpty()) {
                         for (NativeAdUnit.NATIVE_REQUEST_ASSET asset : assetParams.keySet()) {
                             JSONObject assetObj = new JSONObject();
                             switch (asset) {
                                 case TITLE:
                                     JSONObject title = new JSONObject();
-                                    HashMap<String, Object> titleParams = assetParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.TITLE);
-                                    title.put(NativeAdUnit.LENGTH, titleParams.get("len"));
+                                    ArrayList<HashMap<String, Object>> titleParams = assetParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.TITLE);
+                                    title.put(NativeAdUnit.LENGTH, titleParams.get(0).get("len"));
                                     assetObj.put(NativeAdUnit.TITLE, title);
-                                    assetObj.put(NativeAdUnit.REQUIRED, (Boolean) titleParams.get(NativeAdUnit.REQUIRED) ? 1 : 0);
+                                    assetObj.put(NativeAdUnit.REQUIRED, (Boolean) titleParams.get(0).get(NativeAdUnit.REQUIRED) ? 1 : 0);
                                     assets.put(assetObj);
                                     break;
                                 case IMAGE:
-                                    HashMap<String, Object> imageParams = assetParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.IMAGE);
-                                    JSONObject image = new JSONObject();
-                                    image.put(NativeAdUnit.TYPE, imageParams.get(NativeAdUnit.TYPE));
-                                    if ((Integer) imageParams.get(NativeAdUnit.WIDTH_MIN) > 0 && (Integer) imageParams.get(NativeAdUnit.HEIGHT_MIN) > 0) {
-                                        image.put(NativeAdUnit.WIDTH_MIN, imageParams.get(NativeAdUnit.WIDTH_MIN));
-                                        image.put(NativeAdUnit.HEIGHT_MIN, imageParams.get(NativeAdUnit.HEIGHT_MIN));
-                                    }
-                                    if ((Integer) imageParams.get(NativeAdUnit.WIDTH) > 0 && (Integer) imageParams.get(NativeAdUnit.HEIGHT) > 0) {
-                                        image.put(NativeAdUnit.WIDTH, imageParams.get(NativeAdUnit.WIDTH));
-                                        image.put(NativeAdUnit.HEIGHT, imageParams.get(NativeAdUnit.HEIGHT));
-                                    }
-                                    if (imageParams.get(NativeAdUnit.MIMES) != null) {
-                                        ArrayList<String> mimes = (ArrayList) imageParams.get(NativeAdUnit.MIMES);
-                                        JSONArray iconMimesArray = new JSONArray();
-                                        for (String mime : mimes) {
-                                            iconMimesArray.put(mime);
+                                    ArrayList<HashMap<String, Object>> imageParams = assetParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.IMAGE);
+                                    for (HashMap<String, Object> imageParam: imageParams) {
+                                        JSONObject image = new JSONObject();
+                                        image.put(NativeAdUnit.TYPE, imageParam.get(NativeAdUnit.TYPE));
+                                        if ((Integer) imageParam.get(NativeAdUnit.WIDTH_MIN) > 0 && (Integer) imageParam.get(NativeAdUnit.HEIGHT_MIN) > 0) {
+                                            image.put(NativeAdUnit.WIDTH_MIN, imageParam.get(NativeAdUnit.WIDTH_MIN));
+                                            image.put(NativeAdUnit.HEIGHT_MIN, imageParam.get(NativeAdUnit.HEIGHT_MIN));
                                         }
-                                        if (iconMimesArray.length() != 0) {
-                                            image.put(NativeAdUnit.MIMES, iconMimesArray);
+                                        if ((Integer) imageParam.get(NativeAdUnit.WIDTH) > 0 && (Integer) imageParam.get(NativeAdUnit.HEIGHT) > 0) {
+                                            image.put(NativeAdUnit.WIDTH, imageParam.get(NativeAdUnit.WIDTH));
+                                            image.put(NativeAdUnit.HEIGHT, imageParam.get(NativeAdUnit.HEIGHT));
                                         }
+                                        if (imageParam.get(NativeAdUnit.MIMES) != null) {
+                                            ArrayList<String> mimes = (ArrayList) imageParam.get(NativeAdUnit.MIMES);
+                                            JSONArray iconMimesArray = new JSONArray();
+                                            for (String mime : mimes) {
+                                                iconMimesArray.put(mime);
+                                            }
+                                            if (iconMimesArray.length() != 0) {
+                                                image.put(NativeAdUnit.MIMES, iconMimesArray);
+                                            }
+                                        }
+                                        assetObj.put(NativeAdUnit.IMAGE, image);
+                                        assetObj.put(NativeAdUnit.REQUIRED, (Boolean) imageParam.get(NativeAdUnit.REQUIRED) ? 1 : 0);
+                                        assets.put(assetObj);
                                     }
-                                    assetObj.put(NativeAdUnit.IMAGE, image);
-                                    assetObj.put(NativeAdUnit.REQUIRED, (Boolean) imageParams.get(NativeAdUnit.REQUIRED) ? 1 : 0);
-                                    assets.put(assetObj);
+
+
                                     break;
                                 case DATA:
-                                    HashMap<String, Object> dataParams = assetParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.DATA);
-                                    JSONObject data = new JSONObject();
-                                    data.put(NativeAdUnit.TYPE, dataParams.get(NativeAdUnit.TYPE));
-                                    data.put(NativeAdUnit.LENGTH, dataParams.get(NativeAdUnit.LENGTH));
-                                    assetObj.put(NativeAdUnit.DATA, data);
-                                    assetObj.put(NativeAdUnit.REQUIRED, (Boolean) dataParams.get(NativeAdUnit.REQUIRED) ? 1 : 0);
-                                    assets.put(assetObj);
+                                    ArrayList<HashMap<String, Object>> dataParams = assetParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.DATA);
+                                    for (HashMap<String, Object> dataParam: dataParams) {
+                                        JSONObject data = new JSONObject();
+                                        data.put(NativeAdUnit.TYPE, dataParam.get(NativeAdUnit.TYPE));
+                                        data.put(NativeAdUnit.LENGTH, dataParam.get(NativeAdUnit.LENGTH));
+                                        assetObj.put(NativeAdUnit.DATA, data);
+                                        assetObj.put(NativeAdUnit.REQUIRED, (Boolean) dataParam.get(NativeAdUnit.REQUIRED) ? 1 : 0);
+                                        assets.put(assetObj);
+                                    }
                                     break;
                             }
                         }

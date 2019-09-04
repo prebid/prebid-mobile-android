@@ -253,7 +253,7 @@ public class NativeAdUnit extends AdUnit {
     }
 
     public void addTitle(Integer len, Boolean required, Object assetExt, Object titleExt) {
-        HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>> assets = (HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>>) requestConfig.get("assets");
+        HashMap<NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>> assets = (HashMap<NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>>) requestConfig.get("assets");
         if (assets == null) {
             assets = new HashMap<>();
         }
@@ -267,7 +267,13 @@ public class NativeAdUnit extends AdUnit {
         if (titleExt instanceof JSONArray || assetExt instanceof JSONObject) {
             params.put(EXT, titleExt);
         }
-        assets.put(NATIVE_REQUEST_ASSET.TITLE, params);
+        ArrayList<HashMap<String, Object>> assetParams = assets.get(NATIVE_REQUEST_ASSET.DATA);
+        if (assetParams == null) {
+            assetParams = new ArrayList<>();
+        }
+        assetParams.clear();
+        assetParams.add(params);
+        assets.put(NATIVE_REQUEST_ASSET.TITLE, assetParams);
         requestConfig.put(ASSETS, assets);
     }
 
@@ -293,7 +299,7 @@ public class NativeAdUnit extends AdUnit {
     }
 
     public void addImage(IMAGE_TYPE type, Integer wmin, Integer hmin, Integer w, Integer h, ArrayList<String> mimes, Boolean required, Object assetExt, Object imageExt) {
-        HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>> assets = (HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>>) requestConfig.get(ASSETS);
+        HashMap<NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>> assets = (HashMap<NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>>) requestConfig.get("assets");
         if (assets == null) {
             assets = new HashMap<>();
         }
@@ -314,7 +320,12 @@ public class NativeAdUnit extends AdUnit {
         if (imageExt instanceof JSONArray || assetExt instanceof JSONObject) {
             params.put(EXT, imageExt);
         }
-        assets.put(NATIVE_REQUEST_ASSET.IMAGE, params);
+        ArrayList<HashMap<String, Object>> assetParams = assets.get(NATIVE_REQUEST_ASSET.DATA);
+        if (assetParams == null) {
+            assetParams = new ArrayList<>();
+        }
+        assetParams.add(params);
+        assets.put(NATIVE_REQUEST_ASSET.IMAGE, assetParams);
         requestConfig.put(ASSETS, assets);
     }
 
@@ -350,7 +361,7 @@ public class NativeAdUnit extends AdUnit {
     }
 
     public void addData(DATA_TYPE type, Integer len, Boolean required, Object assetExt, Object dataExt) {
-        HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>> assets = (HashMap<NATIVE_REQUEST_ASSET, HashMap<String, Object>>) requestConfig.get("assets");
+        HashMap<NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>> assets = (HashMap<NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>>) requestConfig.get("assets");
         if (assets == null) {
             assets = new HashMap<>();
         }
@@ -365,7 +376,12 @@ public class NativeAdUnit extends AdUnit {
         if (dataExt instanceof JSONArray || assetExt instanceof JSONObject) {
             params.put(EXT, dataExt);
         }
-        assets.put(NATIVE_REQUEST_ASSET.DATA, params);
+        ArrayList<HashMap<String, Object>> assetParams = assets.get(NATIVE_REQUEST_ASSET.DATA);
+        if (assetParams == null) {
+            assetParams = new ArrayList<>();
+        }
+        assetParams.add(params);
+        assets.put(NATIVE_REQUEST_ASSET.DATA, assetParams);
         requestConfig.put(ASSETS, assets);
     }
 }
