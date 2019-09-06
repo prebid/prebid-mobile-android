@@ -24,23 +24,32 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class AdUnit {
     private static final int MIN_AUTO_REFRESH_PERIOD_MILLIS = 30_000;
 
     private String configId;
     private AdType adType;
-    private ArrayList<String> keywords;
+
     private DemandFetcher fetcher;
     private int periodMillis;
+
+    private final Map<String, Set<String>> contextDataDictionary;
+    private final Set<String> contextKeywordsSet;
 
     AdUnit(@NonNull String configId, @NonNull AdType adType) {
         this.configId = configId;
         this.adType = adType;
         this.periodMillis = 0; // by default no auto refresh
-        this.keywords = new ArrayList<>();
+        
+        this.contextDataDictionary = new HashMap<>();
+        this.contextKeywordsSet = new HashSet<>();
+
     }
 
     public void setAutoRefreshPeriodMillis(@IntRange(from = MIN_AUTO_REFRESH_PERIOD_MILLIS) int periodMillis) {
@@ -61,7 +70,6 @@ public abstract class AdUnit {
             fetcher = null;
         }
     }
-
 
     public void fetchDemand(@NonNull Object adObj, @NonNull OnCompleteListener listener) {
         if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
@@ -91,6 +99,13 @@ public abstract class AdUnit {
                 }
             }
         }
+        AdSize minSizePerc = null;
+        if (this instanceof InterstitialAdUnit) {
+            InterstitialAdUnit interstitialAdUnit = (InterstitialAdUnit) this;
+
+            minSizePerc = interstitialAdUnit.getMinSizePerc();
+        }
+
         Context context = PrebidMobile.getApplicationContext();
         if (context != null) {
             ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -107,7 +122,8 @@ public abstract class AdUnit {
         }
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
-            RequestParams requestParams = new RequestParams(configId, adType, sizes, keywords);
+
+            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc);
             fetcher.setPeriodMillis(periodMillis);
             fetcher.setRequestParams(requestParams);
             fetcher.setListener(listener);
@@ -124,43 +140,120 @@ public abstract class AdUnit {
     }
 
 
-    public void addUserKeyword(String key, String value) {
-        if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
-            keywords.add(key + "=" + value);
-        } else if (!TextUtils.isEmpty(key)) {
-            keywords.add(key);
+    /**
+     *@deprecated Please migrate to - TargetingParams.addUserKeyword(String)
+     *@see TargetingParams#addUserKeyword(String)
+     *
+     * @param key parameter will be omitted
+     */
+    @Deprecated
+    public void addUserKeyword(String key, String keyword) {
+        if (!TextUtils.isEmpty(keyword)) {
+            TargetingParams.addUserKeyword(keyword);
         }
     }
 
-    public void addUserKeywords(String key, String[] values) {
-        if (!TextUtils.isEmpty(key) && values.length > 0) {
-            keywords.clear();
-            for (String value : values) {
-                keywords.add(key + "=" + value);
-            }
-        } else if (!TextUtils.isEmpty(key)) {
-            keywords.clear();
-            keywords.add(key);
+    /**
+     *@deprecated Please migrate to - TargetingParams.addUserKeywords(Set)
+     *@see TargetingParams#addUserKeywords(Set)
+     *
+     * @param key parameter will be omitted
+     */
+    @Deprecated
+    public void addUserKeywords(String key, String[] keywords) {
+        if (keywords.length > 0) {
+            TargetingParams.addUserKeywords(new HashSet<>(Arrays.asList(keywords)));
         }
     }
 
-    public void removeUserKeyword(String key) {
-        ArrayList<String> toBeRemoved = new ArrayList<>();
-        for (String keyword : keywords) {
-            if (keyword.equals(key)) {
-                toBeRemoved.add(keyword);
-            } else {
-                String[] keyValuePair = keyword.split("=");
-                if (keyValuePair[0].equals(key)) {
-                    toBeRemoved.add(keyword);
-                }
-            }
-        }
-        keywords.removeAll(toBeRemoved);
+    /**
+     *@deprecated Please migrate to - TargetingParams.removeUserKeyword(String)
+     *@see TargetingParams#removeUserKeyword(String)
+     */
+    @Deprecated
+    public void removeUserKeyword(String keyword) {
+        TargetingParams.removeUserKeyword(keyword);
     }
 
+    /**
+     *@deprecated Please migrate to - TargetingParams.clearUserKeywords()
+     *@see TargetingParams#clearUserKeywords()
+     */
+    @Deprecated
     public void clearUserKeywords() {
-        keywords.clear();
+        TargetingParams.clearUserKeywords();
+    }
+
+    // MARK: - adunit context data aka inventory data (imp[].ext.context.data)
+
+    /**
+     * This method obtains the context data keyword & value for adunit context targeting
+     * if the key already exists the value will be appended to the list. No duplicates will be added
+     */
+    public void addContextData(String key, String value) {
+        Util.addValue(contextDataDictionary, key, value);
+    }
+
+    /**
+     * This method obtains the context data keyword & values for adunit context targeting
+     * the values if the key already exist will be replaced with the new set of values
+     */
+    public void updateContextData(String key, Set<String> value) {
+        contextDataDictionary.put(key, value);
+    }
+
+    /**
+     * This method allows to remove specific context data keyword & values set from adunit context targeting
+     */
+    public void removeContextData(String key) {
+        contextDataDictionary.remove(key);
+    }
+
+    /**
+     * This method allows to remove all context data set from adunit context targeting
+     */
+    public void clearContextData() {
+        contextDataDictionary.clear();
+    }
+
+    Map<String, Set<String>> getContextDataDictionary() {
+        return contextDataDictionary;
+    }
+
+    // MARK: - adunit context keywords (imp[].ext.context.keywords)
+
+    /**
+     * This method obtains the context keyword for adunit context targeting
+     * Inserts the given element in the set if it is not already present.
+     */
+    public void addContextKeyword(String keyword) {
+        contextKeywordsSet.add(keyword);
+    }
+
+    /**
+     * This method obtains the context keyword set for adunit context targeting
+     * Adds the elements of the given set to the set.
+     */
+    public void addContextKeywords(Set<String> keywords) {
+        contextKeywordsSet.addAll(keywords);
+    }
+
+    /**
+     * This method allows to remove specific context keyword from adunit context targeting
+     */
+    public void removeContextKeyword(String keyword) {
+        contextKeywordsSet.remove(keyword);
+    }
+
+    /**
+     * This method allows to remove all keywords from the set of adunit context targeting
+     */
+    public void clearContextKeywords() {
+        contextKeywordsSet.clear();
+    }
+
+    Set<String>  getContextKeywordsSet() {
+        return contextKeywordsSet;
     }
 
 
