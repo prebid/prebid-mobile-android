@@ -1,3 +1,10 @@
+# Maven
+*.asc
+Maven/PrebidMobile-javadoc.jar 
+Maven/PrebidMobile-sources.jar 
+Maven/PrebidMobile.jar
+Maven/Javadoc/
+
 # Calabash Test
 .irb-history
 screenshot_*
