@@ -16,7 +16,6 @@
 
 package org.prebid.mobile;
 
-
 import android.os.Bundle;
 
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
