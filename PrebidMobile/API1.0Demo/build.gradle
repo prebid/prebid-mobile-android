@@ -49,7 +49,7 @@ dependencies {
     implementation('com.mopub:mopub-sdk:5.4.1@aar') {
         transitive = true
     }
-//    implementation project(':API1.0')
+    implementation project(':API1.0')
     localJarImplementation fileTree(dir: 'libs', include: ['*.jar'])
     mavenImplementation 'org.prebid:prebid-mobile-sdk:1.2'
     androidTestImplementation 'junit:junit:4.12'
