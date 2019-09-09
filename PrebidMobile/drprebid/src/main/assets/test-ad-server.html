@@ -1,0 +1,44 @@
+<doctype! html>
+
+<html lang="en-US">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ad Server Setup Validation</title>
+
+  <style>
+    h1   {color: rgb(59, 136, 195); font-size:20x; font-weight: bold; font-family: -apple-system, BlinkMacSystemFont, sans-serif}
+    h2   {color: rgb(59, 136, 195); font-size:17x; font-weight: : bold; font-family: -apple-system, BlinkMacSystemFont, sans-serif}
+    p    {color: rgb(51, 51, 51); font-size:15x; font-family: -apple-system, BlinkMacSystemFont, sans-serif}
+    li   {color: rgb(51, 51, 51); font-size:15x; font-family: -apple-system, BlinkMacSystemFont, sans-serif}
+  </style>
+
+</head>
+
+<body>
+
+  <h2>Overview</h2>
+
+  <p>This test determines whether your Prebid line items are configured correctly in your primary ad server.<p>
+
+    <ul>
+    <li><b>Ad Server Request sent and Key-Value Targeting sent</b><br />Verifies whether the bid request was sent. (Note: If DFP was selected as the Ad Server on the Setup page and the IDs you entered on the Setup page are incorrect, the request will not be sent.) Tap this entry to see a list of key-value pairs that were sent with this request.</li>
+      <ul>
+        <li>Select <b>Prebid Key-Value Pairs</b> to view only the key-values sent that apply to prebid.</li>
+        <li>Select <b>Ad Server Request</b> to view the full list of key-values sent in the ad request.</li>
+      </ul>
+    <li><b>Prebid Mobile creative HTML served</b><br />Tap this entry to view:
+      <ul>
+        <li>The HTML code for the Prebid Mobile creative.</li>
+        <li>A rendering of the creative returned from the ad server (Received Creative) and a rendering of the Prebid.org test creative (Expected Creative). Tap the buttons to view each creative. In a successful test these two creatives will be the same.</li>
+      </ul></li>
+    </ul>
+
+  <h2>Results</h2>
+
+  <p>Success: If the test is successful, all entries will display green check marks. Tap into the <b>Prebid Mobile creative HTML served</b> screen to compare the ad server creative to the Prebid.org test creative. The <b>Received Creative</b> and the <b>Expected Creative</b> should be identical.</p>
+
+  <p>Failure: If the test fails, check the key-value targeting to ensure the bid price and size match those you've defined in your Prebid line item ad server settings. Also ensure that the creative HTML is the expected HTML.</p>
+
+</html>

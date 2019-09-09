@@ -41,7 +41,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 
-
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
 public class UtilTest extends BaseSetup {
