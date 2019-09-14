@@ -1,14 +1,17 @@
 #! /bin/bash
 set -e
+
+cd ..
+
 function echoX {
 echo -e "✅ PREBID TESTLOG: $@"
 }
 
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd $BASEDIR/PrebidMobile
+cd $BASEDIR
 
 echoX "clean previous build"
 ./gradlew clean
 
 echoX "start UI tests"
-./gradlew API1.0Demo:connectedSourceCodeDebugAndroidTest
+./gradlew PrebidDemo:connectedSourceCodeDebugAndroidTest
