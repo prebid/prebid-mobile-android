@@ -11,6 +11,7 @@
     <!-- Optional permissions. Used for MRAID 2.0 storePicture ads -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application
+        android:networkSecurityConfig="@xml/network_security_config"
         android:name=".CustomApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
