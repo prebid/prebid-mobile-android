@@ -23,22 +23,24 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 
-import org.prebid.mobile.addendum.AdViewUtils;
-import org.prebid.mobile.addendum.PbFindSizeError;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.addendum.AdViewUtils;
+import org.prebid.mobile.addendum.PbFindSizeError;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 public class Util {
 
@@ -125,6 +127,12 @@ public class Util {
                     if (arrayValue.length() == 0) {
                         iterator.remove();
                     }
+                } else if (value instanceof String) {
+                    String stringValue = (String) value;
+
+                    if (stringValue.length() == 0) {
+                        iterator.remove();
+                    }
                 }
             }
         }
@@ -153,6 +161,12 @@ public class Util {
                     array.put(i, arrayValue);
 
                     if (arrayValue.length() == 0) {
+                        array = getJsonArrayWithoutEntryByIndex(array, i);
+                    }
+                } else if (value instanceof String) {
+                    String stringValue = (String) value;
+
+                    if (stringValue.length() == 0) {
                         array = getJsonArrayWithoutEntryByIndex(array, i);
                     }
                 }
@@ -411,6 +425,33 @@ public class Util {
                 bundle.remove(key);
             }
         }
+    }
+
+    static <E, U> void addValue(Map<E, Set<U>> map, E key, U value) {
+        Set<U> valueSet = map.get(key);
+
+        if (valueSet == null) {
+            valueSet = new HashSet<>();
+            map.put(key, valueSet);
+        }
+
+        valueSet.add(value);
+    }
+
+    @NonNull
+    static <E, U> JSONObject toJson(@Nullable Map<E, ? extends Collection<U>> map) throws JSONException {
+
+        JSONObject jsonObject = new JSONObject();
+        if (map == null) {
+            return jsonObject;
+        }
+
+        for (Map.Entry<E, ? extends Collection<U>> entry : map.entrySet()) {
+
+            jsonObject.put(entry.getKey().toString(), new JSONArray(entry.getValue()));
+        }
+
+        return jsonObject;
     }
 
     public interface CreativeSizeCompletionHandler {

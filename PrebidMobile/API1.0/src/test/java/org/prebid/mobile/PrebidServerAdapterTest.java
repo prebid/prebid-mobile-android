@@ -16,26 +16,37 @@
 
 package org.prebid.mobile;
 
+import android.support.annotation.Nullable;
+
 import com.mopub.mobileads.MoPubView;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ErrorCollector;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
+import org.prebid.mobile.testutils.Utils;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLooper;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -48,8 +59,14 @@ import okhttp3.mockwebserver.RecordedRequest;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -59,6 +76,21 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK, manifest = Config.NONE)
 public class PrebidServerAdapterTest extends BaseSetup {
+
+    @Rule
+    public ErrorCollector errorCollector = new ErrorCollector();
+
+    @Override
+    public void tearDown() {
+        super.tearDown();
+
+        TargetingParams.clearAccessControlList();
+        TargetingParams.clearUserData();
+        TargetingParams.clearContextData();
+        TargetingParams.clearContextKeywords();
+        TargetingParams.clearUserKeywords();
+    }
+
     @Test
     public void testRegexMatch() {
         Pattern p = Pattern.compile("^Invalid request: Stored Request with ID=\".*\" not found.");
@@ -90,7 +122,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e45", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e45", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -115,7 +147,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("1001-1", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("1001-1", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -135,7 +167,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-ffffffffffff", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-ffffffffffff", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -161,7 +193,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("1001-1_INVALID_CONFIG_ID", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("1001-1_INVALID_CONFIG_ID", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -180,7 +212,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e45", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e45", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -198,7 +230,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -218,7 +250,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("e2edc23f-0b3b-4203-81b5-7cc97132f418", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("e2edc23f-0b3b-4203-81b5-7cc97132f418", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -243,7 +275,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
@@ -274,7 +306,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(320, 50));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
@@ -302,7 +334,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -325,7 +357,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
@@ -364,7 +396,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -405,7 +437,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
@@ -433,7 +465,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -455,7 +487,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
@@ -491,7 +523,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
@@ -527,7 +559,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
@@ -552,7 +584,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             Robolectric.flushBackgroundThreadScheduler();
@@ -597,7 +629,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(320, 50));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid1 = UUID.randomUUID().toString();
             String uuid2 = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener1, uuid1);
@@ -630,7 +662,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             final PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(320, 50));
-            final RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            final RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             final String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             bgScheduler.runOneTask();
@@ -653,10 +685,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
                 if (request.getPath().equals("/withKeywords")) {
                     String postData = request.getBody().readUtf8();
-                    Assert.assertTrue("Post data does not contain key values: " + postData, postData.contains("key1=value1,key1=value2,key2=value1,key2=value2,key3=value1,key3=value2,key4=value1,key4=value2,key5=value1,key5=value2,"));
+                    errorCollector.checkThat("Post data does not contain key values: " + postData, postData, containsString("value2,value1"));
                 } else if (request.getPath().equals("/clearKeywords")) {
                     String postData = request.getBody().readUtf8();
-                    Assert.assertTrue("Post data should not contain key values: " + postData, !postData.contains("key1=value1,key1=value2,key2=value1,key2=value2,key3=value1,key3=value2,key4=value1,key4=value2,key5=value1,key5=value2,"));
+                    errorCollector.checkThat("Post data should not contain key values: " + postData, postData, not(containsString("value2,value1")));
                 }
                 return new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid());
             }
@@ -727,7 +759,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
             PrebidServerAdapter adapter = new PrebidServerAdapter();
             HashSet<AdSize> sizes = new HashSet<>();
             sizes.add(new AdSize(320, 50));
-            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+            RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
             String uuid = UUID.randomUUID().toString();
             adapter.requestDemand(requestParams, mockListener, uuid);
             @SuppressWarnings("unchecked")
@@ -804,7 +836,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -815,57 +847,39 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
     @Test
     public void testPostDataWithCOPPA() throws Exception {
-        if (!successfulMockServerStarted) {
-            fail("Server failed to start, unable to test.");
+
+        //given
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        TargetingParams.setSubjectToCOPPA(true);
+        int coppa = 0;
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null);
+        try {
+            coppa = postData.getJSONObject("regs").getInt("coppa");
+        } catch (Exception ex) {
         }
 
-        PrebidMobile.setApplicationContext(activity.getApplicationContext());
-
-        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
-        TargetingParams.setSubjectToCOPPA(true);
-
-        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
-        PrebidServerAdapter adapter = new PrebidServerAdapter();
-        HashSet<AdSize> sizes = new HashSet<>();
-        sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
-        String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
-        @SuppressWarnings("unchecked")
-        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
-        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
-
-        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
-        assertTrue(postData.has("regs"));
-        JSONObject regs = postData.getJSONObject("regs");
-        assertEquals(1, regs.getInt("coppa"));
-
+        //then
+        assertEquals(1, coppa);
     }
 
     @Test
     public void testPostDataWithoutCOPPA() throws Exception {
-        if (!successfulMockServerStarted) {
-            fail("Server failed to start, unable to test.");
+
+        //given
+        TargetingParams.setSubjectToCOPPA(false);
+        int coppa = 0;
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null);
+        try {
+            coppa = postData.getJSONObject("regs").getInt("coppa");
+        } catch (Exception ex) {
         }
 
-        PrebidMobile.setApplicationContext(activity.getApplicationContext());
-
-        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
-        TargetingParams.setSubjectToCOPPA(false);
-
-        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
-        PrebidServerAdapter adapter = new PrebidServerAdapter();
-        HashSet<AdSize> sizes = new HashSet<>();
-        sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>());
-        String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
-        @SuppressWarnings("unchecked")
-        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
-        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
-
-        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
-        assertFalse(postData.has("regs"));
+        //then
+        assertEquals(0, coppa);
     }
 
     @Test
@@ -888,7 +902,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.INTERSTITIAL, sizes, new ArrayList<String>());
+        RequestParams requestParams = new RequestParams("67890", AdType.INTERSTITIAL, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
@@ -915,78 +929,317 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
     @Test
     public void testPostDataWithAdvancedInterstitial() throws Exception {
-        if (!successfulMockServerStarted) {
-            fail("Server failed to start, unable to test.");
-        }
 
-        PrebidMobile.setApplicationContext(activity.getApplicationContext());
-
-        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
-
-        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
-        PrebidServerAdapter adapter = new PrebidServerAdapter();
-        HashSet<AdSize> sizes = new HashSet<>();
-        sizes.add(new AdSize(500, 700));
+        //given
         AdSize minSizePerc = new AdSize(50, 70);
 
-        RequestParams requestParams = new RequestParams("67890", AdType.INTERSTITIAL, sizes, new ArrayList<String>(), minSizePerc);
-        String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
-        @SuppressWarnings("unchecked")
-        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
-        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+        JSONObject extInterstitial = null;
+        JSONObject banner = null;
+        int instl = 0;
 
-        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
-        JSONObject interstitial = postData.getJSONObject("device").getJSONObject("ext").getJSONObject("prebid").getJSONObject("interstitial");
-        assertTrue(interstitial.getInt("minwidthperc") == 50 && interstitial.getInt("minheightperc") == 70);
+        //when
+        JSONObject postData = getPostDataHelper(AdType.INTERSTITIAL, null, null, minSizePerc);
 
-        JSONObject banner = postData.getJSONArray("imp").getJSONObject(0).getJSONObject("banner").getJSONArray("format").getJSONObject(0);
+        try {
+            extInterstitial = postData.getJSONObject("device").getJSONObject("ext").getJSONObject("prebid").getJSONObject("interstitial");
+        } catch (Exception ex) {
+            fail("extInterstitial parsing fail");
+        }
 
+        try {
+            banner = postData.getJSONArray("imp").getJSONObject(0).getJSONObject("banner").getJSONArray("format").getJSONObject(0);
+        } catch (Exception ex) {
+            fail("banner parsing fail");
+        }
+
+        try {
+            instl = postData.getJSONArray("imp").getJSONObject(0).getInt("instl");
+        } catch (Exception ex) {
+            fail("instl parsing fail");
+        }
+
+        //then
+        Assert.assertNotNull(extInterstitial);
+        assertTrue(extInterstitial.getInt("minwidthperc") == 50 && extInterstitial.getInt("minheightperc") == 70);
+
+        Assert.assertNotNull(banner);
         assertTrue(banner.has("w"));
         assertTrue(banner.has("h"));
 
-        assertEquals(1, postData.getJSONArray("imp").getJSONObject(0).getInt("instl"));
-
+        assertEquals(1, instl);
     }
 
     @Test
     public void testPostDataWithoutAdvancedInterstitial() throws Exception {
-        if (!successfulMockServerStarted) {
-            fail("Server failed to start, unable to test.");
-        }
 
-        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        //given
+        JSONObject extInterstitial = null;
+        int instl = 0;
 
-        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
-
-        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
-        PrebidServerAdapter adapter = new PrebidServerAdapter();
-        HashSet<AdSize> sizes = new HashSet<>();
-        sizes.add(new AdSize(500, 700));
-
-        RequestParams requestParams = new RequestParams("67890", AdType.INTERSTITIAL, sizes, new ArrayList<String>());
-        String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
-        @SuppressWarnings("unchecked")
-        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
-        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
-
-        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+        //when
+        JSONObject postData = getPostDataHelper(AdType.INTERSTITIAL, null, null, null);
 
         try {
-            JSONObject interstitial = postData.getJSONObject("device").getJSONObject("ext").getJSONObject("prebid").getJSONObject("interstitial");
-            assertFalse(interstitial.has("minwidthperc"));
-            assertFalse(interstitial.has("minheightperc"));
+            instl = postData.getJSONArray("imp").getJSONObject(0).getInt("instl");
         } catch (Exception ex) {
-
         }
 
-        assertEquals(1, postData.getJSONArray("imp").getJSONObject(0).getInt("instl"));
+        try {
+            extInterstitial = postData.getJSONObject("device").getJSONObject("ext").getJSONObject("prebid").getJSONObject("interstitial");
+        } catch (Exception ex) {
+        }
+
+        //then
+        assertEquals(1, instl);
+        assertNull(extInterstitial);
+    }
+
+    @Test
+    public void testPostDataBannerWithAdvancedInterstitial() throws Exception {
+
+        //given
+        AdSize minSizePerc = new AdSize(50, 70);
+        JSONObject extInterstitial = null;
+        int instl = 0;
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, minSizePerc);
+
+        try {
+            extInterstitial = postData.getJSONObject("device").getJSONObject("ext").getJSONObject("prebid").getJSONObject("interstitial");
+        } catch (Exception ex) {
+        }
+
+        try {
+            instl = postData.getJSONArray("imp").getJSONObject(0).getInt("instl");
+        } catch (Exception ex) {
+        }
+
+        //then
+        assertNull(extInterstitial);
+        assertEquals(0, instl);
+    }
+
+    @Test
+    public void testPostDataWithGlobalUserKeyword() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+
+        //given
+        TargetingParams.addUserKeyword("value10");
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null);
+
+        String keywords = null;
+        try {
+            keywords = postData.getJSONObject("user").optString("keywords", null);
+        } catch (Exception ex) {
+            fail("keywords parsing fail");
+        }
+
+        //then
+        assertNotNull(keywords);
+        assertEquals("value10", keywords);
+    }
+
+    @Test
+    public void testPostDataWithGlobalContextKeyword() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+
+        //given
+        TargetingParams.addContextKeyword("value10");
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null);
+
+        String keywords = null;
+        try {
+            keywords = postData.getJSONObject("app").optString("keywords", null);
+        } catch (Exception ex) {
+            fail("keywords parsing fail");
+        }
+
+        //then
+        assertNotNull(keywords);
+        assertEquals("value10", keywords);
 
     }
 
     @Test
-    public void testPostDataWithoutAdvancedBannerInterstitial() throws Exception {
+    public void testPostDataWithAccessControlList() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, JSONException {
+
+        //given
+        TargetingParams.addBidderToAccessControlList(TargetingParams.BIDDER_NAME_RUBICON_PROJECT);
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null);
+
+        JSONArray biddersJsonArray = null;
+        try {
+            biddersJsonArray = postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("data").getJSONArray("bidders");
+        } catch (Exception ex) {
+            fail("keywords parsing fail");
+        }
+
+        //then
+        assertNotNull(biddersJsonArray);
+        assertEquals(1, biddersJsonArray.length());
+        assertEquals(TargetingParams.BIDDER_NAME_RUBICON_PROJECT, biddersJsonArray.get(0).toString());
+
+    }
+
+    @Test
+    public void testPostDataWithGlobalUserData() throws Exception {
+
+        //given
+        TargetingParams.addUserData("key1", "value10");
+        TargetingParams.addUserData("key2", "value20");
+        TargetingParams.addUserData("key2", "value21");
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null);
+
+        JSONObject dataJsonObject = null;
+        try {
+            dataJsonObject = postData.getJSONObject("user").getJSONObject("ext").getJSONObject("data");
+        } catch (Exception ex) {
+            fail("keywords parsing fail");
+        }
+
+        List<String> listKey1 = Utils.getList(dataJsonObject.getJSONArray("key1"), new Utils.ParseCallable<String>() {
+            @Override
+            public String call(JSONArray jsonArray, int index) throws JSONException {
+                return jsonArray.getString(index);
+            }
+        });
+
+        List<String> listKey2 = Utils.getList(dataJsonObject.getJSONArray("key2"), new Utils.ParseCallable<String>() {
+            @Override
+            public String call(JSONArray jsonArray, int index) throws JSONException {
+                return jsonArray.getString(index);
+            }
+        });
+
+        //then
+        assertNotNull(dataJsonObject);
+        assertEquals(2, dataJsonObject.length());
+
+        assertEquals(listKey1.size(), 1);
+        assertThat(listKey1, containsInAnyOrder("value10"));
+
+        assertEquals(listKey2.size(), 2);
+        assertThat(listKey2, containsInAnyOrder("value20", "value21"));
+    }
+
+    @Test
+    public void testPostDataWithGlobalContextData() throws Exception {
+
+        //given
+        TargetingParams.addContextData("key1", "value10");
+        TargetingParams.addContextData("key2", "value20");
+        TargetingParams.addContextData("key2", "value21");
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null);
+
+        JSONObject dataJsonObject = null;
+        try {
+            dataJsonObject = postData.getJSONObject("app").getJSONObject("ext").getJSONObject("data");
+        } catch (Exception ex) {
+            fail("keywords parsing fail");
+        }
+
+        List<String> listKey1 = Utils.getList(dataJsonObject.getJSONArray("key1"), new Utils.ParseCallable<String>() {
+            @Override
+            public String call(JSONArray jsonArray, int index) throws JSONException {
+                return jsonArray.getString(index);
+            }
+        });
+
+        List<String> listKey2 = Utils.getList(dataJsonObject.getJSONArray("key2"), new Utils.ParseCallable<String>() {
+            @Override
+            public String call(JSONArray jsonArray, int index) throws JSONException {
+                return jsonArray.getString(index);
+            }
+        });
+
+        //then
+        assertNotNull(dataJsonObject);
+        assertEquals(2, dataJsonObject.length());
+
+        assertEquals(listKey1.size(), 1);
+        assertThat(listKey1, containsInAnyOrder("value10"));
+
+        assertEquals(listKey2.size(), 2);
+        assertThat(listKey2, containsInAnyOrder("value20", "value21"));
+    }
+
+    @Test
+    public void testPostDataWithAdunitContextKeyword() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+
+        //given
+        HashSet<String> contextKeywordsSet = new HashSet<>(1);
+        contextKeywordsSet.add("value10");
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, contextKeywordsSet, null);
+
+        String keywords = null;
+
+        try {
+            keywords = postData.getJSONArray("imp").getJSONObject(0).getJSONObject("ext").getJSONObject("context").getString("keywords");
+        } catch (Exception ex) {
+            fail("keywords parsing fail");
+        }
+
+        //then
+        assertNotNull(keywords);
+        assertEquals("value10", keywords);
+    }
+
+    @Test
+    public void testPostDataWithAdunitContextData() throws Exception {
+
+        //given
+        Map<String, Set<String>> contextDataDictionary = new HashMap<>(2);
+        contextDataDictionary.put("key1", new HashSet<>(Arrays.asList("value10")));
+        contextDataDictionary.put("key2", new HashSet<>(Arrays.asList("value20", "value21")));
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, contextDataDictionary, null, null);
+
+        JSONObject dataJsonObject = null;
+        try {
+            dataJsonObject = postData.getJSONArray("imp").getJSONObject(0).getJSONObject("ext").getJSONObject("context").getJSONObject("data");
+        } catch (Exception ex) {
+            fail("keywords parsing fail");
+        }
+
+        List<String> listKey1 = Utils.getList(dataJsonObject.getJSONArray("key1"), new Utils.ParseCallable<String>() {
+            @Override
+            public String call(JSONArray jsonArray, int index) throws JSONException {
+                return jsonArray.getString(index);
+            }
+        });
+
+        List<String> listKey2 = Utils.getList(dataJsonObject.getJSONArray("key2"), new Utils.ParseCallable<String>() {
+            @Override
+            public String call(JSONArray jsonArray, int index) throws JSONException {
+                return jsonArray.getString(index);
+            }
+        });
+
+        //then
+        assertNotNull(dataJsonObject);
+        assertEquals(2, dataJsonObject.length());
+
+        assertEquals(listKey1.size(), 1);
+        assertThat(listKey1, containsInAnyOrder("value10"));
+
+        assertEquals(listKey2.size(), 2);
+        assertThat(listKey2, containsInAnyOrder("value20", "value21"));
+
+    }
+
+    private JSONObject getPostDataHelper(AdType adType, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         if (!successfulMockServerStarted) {
             fail("Server failed to start, unable to test.");
         }
@@ -999,9 +1252,8 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        AdSize minSizePerc = new AdSize(50, 70);
 
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, new ArrayList<String>(), minSizePerc);
+        RequestParams requestParams = new RequestParams("67890", adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
@@ -1009,20 +1261,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
 
         JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
-
-        try {
-            JSONObject interstitial = postData.getJSONObject("device").getJSONObject("ext").getJSONObject("prebid").getJSONObject("interstitial");
-            assertFalse(interstitial.has("minwidthperc"));
-            assertFalse(interstitial.has("minheightperc"));
-        } catch (Exception ex) {
-
-        }
-
-        try {
-            assertEquals(0, postData.getJSONArray("imp").getJSONObject(0).getInt("instl"));
-        } catch (Exception ex) {
-
-        }
+        return postData;
 
     }
 }

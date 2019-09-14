@@ -30,12 +30,16 @@ import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
-
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -131,6 +135,11 @@ public class UtilTest extends BaseSetup {
         JSONObject node1 = new JSONObject();
         node1.put("key1", node11);
 
+        node1.put("emptyObject", "");
+        List<String> array = new ArrayList<>();
+        array.add("");
+        node1.put("emptyArray", new JSONArray(array));
+
         JSONObject result1 = Util.getObjectWithoutEmptyValues(node1);
 
         Assert.assertNull(result1);
@@ -201,6 +210,94 @@ public class UtilTest extends BaseSetup {
         node31.put(node313);
         JSONObject result10 = Util.getObjectWithoutEmptyValues(node1);
         Assert.assertEquals("{\"key3\":[{\"key312\":\"value312\"},[{\"key3131\":\"value3131\"}]]}", result10.toString());
+    }
+
+    @Test
+    public void testAddValue() {
+
+        //given
+        Map<String, Set<String>> map = new HashMap<>();
+
+        //when
+        //add key1/value10
+        Util.addValue(map, "key1", "value10");
+
+        //then
+        Assert.assertEquals(1, map.size());
+        Assert.assertEquals(1, map.get("key1").size());
+        Assert.assertTrue(map.get("key1").contains("value10"));
+
+        //when
+        //add key2/value20
+        Util.addValue(map, "key2", "value20");
+
+        //then
+        Assert.assertEquals(2, map.size());
+        Assert.assertEquals(1, map.get("key2").size());
+        Assert.assertTrue(map.get("key2").contains("value20"));
+
+        //when
+        //add key1/value11
+        Util.addValue(map, "key1", "value11");
+
+        //then
+        Assert.assertEquals(2, map.size());
+        Assert.assertEquals(2, map.get("key1").size());
+        Assert.assertTrue(map.get("key1").contains("value10") && map.get("key1").contains("value11"));
+        Assert.assertTrue(map.get("key2").contains("value20"));
+    }
+
+    @Test
+    public void testToJson() throws JSONException {
+
+        //given
+        Map<String, Set<String>> map = new HashMap<>();
+        Set<String> set1 = new HashSet<>();
+        Set<String> set2 = new HashSet<>();
+
+        //when
+        JSONObject jsonObject = Util.toJson(map);
+
+        //then
+        Assert.assertNotNull(jsonObject);
+        Assert.assertEquals("{}", jsonObject.toString());
+
+        //given
+        map.put("key1", set1);
+
+        //when
+        JSONObject jsonObject2 = Util.toJson(map);
+
+        //then
+        Assert.assertEquals("{\"key1\":[]}", jsonObject2.toString());
+
+        //given
+        set1.add("value11");
+
+        //when
+        JSONObject jsonObject3 = Util.toJson(map);
+
+        //then
+        Assert.assertEquals("{\"key1\":[\"value11\"]}", jsonObject3.toString());
+
+        //given
+        set1.add("value12");
+
+        //when
+        JSONObject jsonObject4 = Util.toJson(map);
+
+        //then
+        Assert.assertEquals("{\"key1\":[\"value11\",\"value12\"]}", jsonObject4.toString());
+
+        //given
+        set2.add("value21");
+        map.put("key2", set2);
+
+        //when
+        JSONObject jsonObject5 = Util.toJson(map);
+
+        //then
+        Assert.assertEquals("{\"key1\":[\"value11\",\"value12\"],\"key2\":[\"value21\"]}", jsonObject5.toString());
     }
 
 }
