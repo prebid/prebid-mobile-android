@@ -1,4 +1,0 @@
-include ':app'
-
-include ':API1.0'
-project(':API1.0').projectDir = new File(settingsDir, '../../API1.0')
