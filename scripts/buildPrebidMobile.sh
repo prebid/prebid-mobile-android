@@ -93,36 +93,36 @@ cd $LIBDIR
 # Test and Build
 ###########################
 
-# echoX "Run unit tests"
-# cd $LIBDIR
-# (./gradlew -i --no-daemon PrebidMobile:test > $LOGPATH/testResults.log 2>&1) || (die "Unit tests failed, check log in $LOGPATH/testResults.log") &
-# PID=$!
-# spinner $PID &
-# wait $PID
+echoX "Run unit tests"
+cd $LIBDIR
+(./gradlew -i --no-daemon PrebidMobile:test > $LOGPATH/testResults.log 2>&1) || (die "Unit tests failed, check log in $LOGPATH/testResults.log") &
+PID=$!
+spinner $PID &
+wait $PID
 
-# echoX "Assemble builds"
-# cd $LIBDIR
-# # clean existing build results, exclude test task, and assemble new release build
-# (./gradlew -i --no-daemon PrebidMobile:assembleRelease > $LOGPATH/build.log 2>&1 || die "Build failed, check log in $LOGPATH/build.log" ) &
-# PID=$!
-# spinner $PID &
-# wait $PID
+echoX "Assemble builds"
+cd $LIBDIR
+# clean existing build results, exclude test task, and assemble new release build
+(./gradlew -i --no-daemon PrebidMobile:assembleRelease > $LOGPATH/build.log 2>&1 || die "Build failed, check log in $LOGPATH/build.log" ) &
+PID=$!
+spinner $PID &
+wait $PID
 
-# echoX "Start packaging product"
-# cd $TEMPDIR
-# mkdir output
-# echoX "Move library core to output"
-# cd $LIBDIR/$PREBIDCORE/$AARPATH
-# unzip -q -o $PREBIDCORE-release.aar
-# cd $TEMPDIR/output
-# jar xf $LIBDIR/$PREBIDCORE/$AARPATH/classes.jar
-# rm $LIBDIR/$PREBIDCORE/$AARPATH/classes.jar
-# cd $TEMPDIR/output
-# jar cf PrebidMobile.jar org*
+echoX "Start packaging product"
+cd $TEMPDIR
+mkdir output
+echoX "Move library core to output"
+cd $LIBDIR/$PREBIDCORE/$AARPATH
+unzip -q -o $PREBIDCORE-release.aar
+cd $TEMPDIR/output
+jar xf $LIBDIR/$PREBIDCORE/$AARPATH/classes.jar
+rm $LIBDIR/$PREBIDCORE/$AARPATH/classes.jar
+cd $TEMPDIR/output
+jar cf PrebidMobile.jar org*
 
-# mv PrebidMobile.jar $OUTDIR
-# # clean tmp dir
-# rm -r $TEMPDIR
+mv PrebidMobile.jar $OUTDIR
+# clean tmp dir
+rm -r $TEMPDIR
 
 # javadoc
 echoX "Prepare Javedoc"
@@ -149,7 +149,7 @@ done
 
 cd $OUTDIR
 # disable Javadoc for illegal pacakge name error
-javadoc -d Javadoc  -bootclasspath /Users/alex/Library/Android/sdk/platforms/android-28/android.jar -protected $FINAL_CLASSES>$LOGPATH/javadoc.log 2>&1 || die "Build Javadoc failed, check log in $LOGPATH/javadoc.log"
+javadoc -d Javadoc -protected $FINAL_CLASSES>$LOGPATH/javadoc.log 2>&1 || die "Build Javadoc failed, check log in $LOGPATH/javadoc.log"
 
 #######
 # End
