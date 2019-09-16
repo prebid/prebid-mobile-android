@@ -1,1 +1,7 @@
-include ':PrebidMobile', ':PrebidDemo', ':drprebid'
+rootProject.name = 'PrebidMobile-android'
+
+include ':PrebidMobile',
+        ':PrebidDemo',
+        ':drprebid', ':PrebidMobile-core'
+
+project(':PrebidMobile-core').projectDir = new File('PrebidMobile/PrebidMobile-core')
