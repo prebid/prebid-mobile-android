@@ -64,111 +64,6 @@ public class DemoActivity extends AppCompatActivity {
         refreshCount = 0;
         setContentView(R.layout.activity_demo);
         Intent intent = getIntent();
-//<<<<<<< HEAD
-//        if ("DFP".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Banner".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
-//            createDFPBanner(intent.getStringExtra(Constants.AD_SIZE_NAME));
-//        } else if ("DFP".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Interstitial".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
-//            createDFPInterstitial();
-//        } else if ("MoPub".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Banner".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
-//            createMoPubBanner(intent.getStringExtra(Constants.AD_SIZE_NAME));
-//        } else if ("MoPub".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Interstitial".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
-//            createMoPubInterstitial();
-//        } else if ("DFP".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Native".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
-//            createDFPNative();
-//        } else if ("MoPub".equals(intent.getStringExtra(Constants.AD_SERVER_NAME)) && "Native".equals(intent.getStringExtra(Constants.AD_TYPE_NAME))) {
-//            createMoPubNative();
-//        }
-//    }
-//
-//    void createMoPubNative() {
-//        final FrameLayout adFrame = (FrameLayout) findViewById(R.id.adFrame);
-//        adFrame.removeAllViews();
-//        final MoPubView adView = new MoPubView(this);
-//        adView.setAdUnitId("a470959f33034229945744c5f904d5bc");
-//        adView.setBannerAdListener(new MoPubView.BannerAdListener() {
-//            @Override
-//            public void onBannerLoaded(MoPubView banner) {
-//                LogUtil.d("Banner loaded");
-//            }
-//
-//            @Override
-//            public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
-//                LogUtil.d("Banner failed " + errorCode);
-//            }
-//
-//            @Override
-//            public void onBannerClicked(MoPubView banner) {
-//
-//            }
-//
-//            @Override
-//            public void onBannerExpanded(MoPubView banner) {
-//
-//            }
-//
-//            @Override
-//            public void onBannerCollapsed(MoPubView banner) {
-//
-//            }
-//        });
-//        adFrame.addView(adView);
-//        NativeAdUnit adUnit = new NativeAdUnit("25e17008-5081-4676-94d5-923ced4359d3");
-//        adUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
-//        adUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
-//        adUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
-//        adUnit.addTitle(90, true, null, null);
-//        ArrayList<NativeAdUnit.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
-//        methods.add(NativeAdUnit.EVENT_TRACKING_METHOD.IMAGE);
-//        try {
-//            adUnit.addEventTracker(NativeAdUnit.EVENT_TYPE.IMPRESSION, methods, null);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        adUnit.addImage(NativeAdUnit.IMAGE_TYPE.ICON, 20, 20, -1, -1, null, true, null, null);
-//        adUnit.addImage(NativeAdUnit.IMAGE_TYPE.MAIN, 200, 200, -1, -1, null, true, null, null);
-//        adUnit.addData(NativeAdUnit.DATA_TYPE.SPONSORED, 90, true, null, null);
-//        adUnit.fetchDemand(adView, new OnCompleteListener() {
-//            @Override
-//            public void onComplete(ResultCode resultCode) {
-//                DemoActivity.this.resultCode = resultCode;
-//                adView.loadAd();
-//                refreshCount++;
-//            }
-//        });
-//    }
-//
-//    void createDFPNative() {
-//        FrameLayout adFrame = (FrameLayout) findViewById(R.id.adFrame);
-//        adFrame.removeAllViews();
-//        final PublisherAdView nativeAdView = new PublisherAdView(this);
-//        nativeAdView.setAdListener(new AdListener() {
-//            @Override
-//            public void onAdLoaded() {
-//                super.onAdLoaded();
-//                LogUtil.d("ad loaded");
-//            }
-//        });
-//        nativeAdView.setAdUnitId("/19968336/Wei_Prebid_Native_Test");
-//        nativeAdView.setAdSizes(AdSize.FLUID);
-//        adFrame.addView(nativeAdView);
-//        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-//        builder.addCustomTargeting("hb_pb", "0.50");
-//        builder.addCustomTargeting("hb_cache_id", "66fc1b77-297e-4526-8c22-279a929b4d82");
-//        final PublisherAdRequest request = builder.build();
-//        NativeAdUnit adUnit = new NativeAdUnit("25e17008-5081-4676-94d5-923ced4359d3");
-//        adUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
-//        adUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
-//        adUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
-//        adUnit.addTitle(90, true, null, null);
-//        ArrayList<NativeAdUnit.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
-//        methods.add(NativeAdUnit.EVENT_TRACKING_METHOD.IMAGE);
-//        try {
-//            adUnit.addEventTracker(NativeAdUnit.EVENT_TYPE.IMPRESSION, methods, null);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//=======
-
         String adTypeName = intent.getStringExtra(Constants.AD_TYPE_NAME);
         String adServerName = intent.getStringExtra(Constants.AD_SERVER_NAME);
 
@@ -209,26 +104,124 @@ public class DemoActivity extends AppCompatActivity {
             } else if ("MoPub".equals(adServerName)) {
                 createMoPubInterstitial();
             }
+        } else if ("Native".equals(adTypeName)) {
+            adUnit = new NativeAdUnit("25e17008-5081-4676-94d5-923ced4359d3");
+            enableAdditionalFunctionality(adUnit);
+            if ("DFP".equals(adServerName)) {
+                createDFPNative();
+            } else if ("MoPub".equals(adServerName)) {
+                createMoPubNative();
+            }
         }
 
-//        adUnit.addImage(NativeAdUnit.IMAGE_TYPE.ICON, 20, 20, -1, -1, null, true, null, null);
-//        adUnit.addImage(NativeAdUnit.IMAGE_TYPE.MAIN, 200, 200, -1, -1, null, true, null, null);
-//        adUnit.addData(NativeAdUnit.DATA_TYPE.SPONSORED, 90, true, null, null);
-//        adUnit.fetchDemand(request, new OnCompleteListener() {
-//            @Override
-//            public void onComplete(ResultCode resultCode) {
-//                DemoActivity.this.resultCode = resultCode;
-//                nativeAdView.loadAd(request);
-//                refreshCount++;
-//            }
-//        });
+    }
+
+    void createMoPubNative() {
+        final FrameLayout adFrame = (FrameLayout) findViewById(R.id.adFrame);
+        adFrame.removeAllViews();
+        final MoPubView adView = new MoPubView(this);
+        adView.setAdUnitId("a470959f33034229945744c5f904d5bc");
+        adView.setBannerAdListener(new MoPubView.BannerAdListener() {
+            @Override
+            public void onBannerLoaded(MoPubView banner) {
+                LogUtil.d("Banner loaded");
+            }
+
+            @Override
+            public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
+                LogUtil.d("Banner failed " + errorCode);
+            }
+
+            @Override
+            public void onBannerClicked(MoPubView banner) {
+
+            }
+
+            @Override
+            public void onBannerExpanded(MoPubView banner) {
+
+            }
+
+            @Override
+            public void onBannerCollapsed(MoPubView banner) {
+
+            }
+        });
+        adFrame.addView(adView);
+        NativeAdUnit nativeAdUnit = (NativeAdUnit) adUnit;
+        nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
+        nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
+        nativeAdUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
+        nativeAdUnit.addTitle(90, true, null, null);
+        ArrayList<NativeAdUnit.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
+        methods.add(NativeAdUnit.EVENT_TRACKING_METHOD.IMAGE);
+        try {
+            nativeAdUnit.addEventTracker(NativeAdUnit.EVENT_TYPE.IMPRESSION, methods, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        nativeAdUnit.addImage(NativeAdUnit.IMAGE_TYPE.ICON, 20, 20, -1, -1, null, true, null, null);
+        nativeAdUnit.addImage(NativeAdUnit.IMAGE_TYPE.MAIN, 200, 200, -1, -1, null, true, null, null);
+        nativeAdUnit.addData(NativeAdUnit.DATA_TYPE.SPONSORED, 90, true, null, null);
+        nativeAdUnit.fetchDemand(adView, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+                DemoActivity.this.resultCode = resultCode;
+                adView.loadAd();
+                refreshCount++;
+            }
+        });
+    }
+
+    void createDFPNative() {
+        FrameLayout adFrame = (FrameLayout) findViewById(R.id.adFrame);
+        adFrame.removeAllViews();
+        final PublisherAdView nativeAdView = new PublisherAdView(this);
+        nativeAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                LogUtil.d("ad loaded");
+            }
+        });
+        nativeAdView.setAdUnitId("/19968336/Wei_Prebid_Native_Test");
+        nativeAdView.setAdSizes(AdSize.FLUID);
+        adFrame.addView(nativeAdView);
+        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        builder.addCustomTargeting("hb_pb", "0.50");
+        builder.addCustomTargeting("hb_cache_id", "66fc1b77-297e-4526-8c22-279a929b4d82");
+        final PublisherAdRequest request = builder.build();
+        NativeAdUnit nativeAdUnit = (NativeAdUnit)adUnit;
+        nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
+        nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
+        nativeAdUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
+        nativeAdUnit.addTitle(90, true, null, null);
+        ArrayList<NativeAdUnit.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
+        methods.add(NativeAdUnit.EVENT_TRACKING_METHOD.IMAGE);
+        try {
+            nativeAdUnit.addEventTracker(NativeAdUnit.EVENT_TYPE.IMPRESSION, methods, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            nativeAdUnit.addImage(NativeAdUnit.IMAGE_TYPE.ICON, 20, 20, -1, -1, null, true, null, null);
+            nativeAdUnit.addImage(NativeAdUnit.IMAGE_TYPE.MAIN, 200, 200, -1, -1, null, true, null, null);
+            nativeAdUnit.addData(NativeAdUnit.DATA_TYPE.SPONSORED, 90, true, null, null);
+            nativeAdUnit.fetchDemand(request, new OnCompleteListener() {
+                @Override
+                public void onComplete(ResultCode resultCode) {
+                    DemoActivity.this.resultCode = resultCode;
+                    nativeAdView.loadAd(request);
+                    refreshCount++;
+                }
+            });
+        }
     }
 
     private void enableAdditionalFunctionality(AdUnit adUnit) {
-//        enableCOPPA();
-//        addFirstPartyData(adUnit);
-//        setStoredResponse();
-//        setRequestTimeoutMillis();
+        enableCOPPA();
+        addFirstPartyData(adUnit);
+        setStoredResponse();
+        setRequestTimeoutMillis();
     }
 
     private void enableCOPPA() {
