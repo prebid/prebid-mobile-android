@@ -25,7 +25,6 @@ android {
     lintOptions {
         abortOnError false
     }
-    0
 
     testOptions.unitTests.all {
         testLogging {

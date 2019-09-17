@@ -1,0 +1,62 @@
+<doctype! html>
+
+<html lang="en-US">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-Time Demand Validation</title>
+
+  <style>
+    h1   {color: rgb(59, 136, 195); font-size:20x; font-weight: bold; font-family: -apple-system, BlinkMacSystemFont, sans-serif}
+    h2   {color: rgb(59, 136, 195); font-size:17x; font-weight: : bold; font-family: -apple-system, BlinkMacSystemFont, sans-serif}
+    p    {color: rgb(51, 51, 51); font-size:15x; font-family: -apple-system, BlinkMacSystemFont, sans-serif}
+    li   {color: rgb(51, 51, 51); font-size:15x; font-family: -apple-system, BlinkMacSystemFont, sans-serif}
+  </style>
+
+</head>
+
+<body>
+
+  <h2>Overview</h2>
+
+  <p>This test validates that the real-time requests generated using your Prebid Server Account ID and Prebid Server Configuration ID are reliably returning demand.<p>
+
+    <ul>
+    <li><b>Bid requests sent</b><br />The number of bid requests that were sent. The test is configured to send 100 requests.</li><br />
+    <li><b>Bid responses received</b><br />The number of responses received from demand partners. Tap this entry to view a summary of bid responses from each demand partner. From the summary page you'll be able to navigate to detailed request and response information. NOTE: If your configuration includes more than one demand partner, this number may exceed the number of bid requests sent.</li><br />
+    <li><b>Avg CPM</b><br />The average CPM (in USD) of all received bid responses.</li><br />
+    <li><b>Avg response time</b><br />The average amount of time (in milliseconds) it took for demand partners to respond.</li>
+    </ul>
+
+  <h2>Bid Response Summary</h2>
+
+  <p>On the Real-Time Demand Validation results screen, tap <b><i>n</i> bid responses received</b> to see a breakdown of bid responses by demand partner. For each demand partner you'll see the following details:
+    <ul>
+      <li><em># of Requests</em>:<br />The total number of bid requests sent. The test is configured to send 100 requests.</li><br />
+      <li><em>Valid Bid Rate</em><br />The percentage of bid requests for which the demand partner returned a valid response.</li><br />
+      <li><em>Avg Bid CPM</em><br />The average CPM (in USD) of all valid bid responses from the demand partner.</li><br />
+      <li><em>No-Bid Rate</em><br />The percentage of bid requests for which the demand partner did not return a bid response.</li><br />
+      <li><em>Timeout Rate</em><br />The percentage of bid requests that timed out before a bid response could be sent.</li><br />
+      <li><em>Error Rate</em><br />The percentage of bid requests that resulted in errors from the demand partner.</li>
+    </ul>
+
+  <h2>Request & Response</h2>
+
+  <p>On the Bid Response Summary screen, tap <b>Request & Response</b> for a demand partner to see the bid request sent to the demand partner and a response received (if any).</p>
+
+  <h2>Results</h2>
+
+  <p>Possible outcomes from this test:</p>
+
+  <ul>
+    <li>Success: The auctions ran successfully and at least one valid bid response was returned from any one of the demand partners.</li>
+    <li>Failure: The auctions ran successfully, but no valid bid responses were returned.</li>
+    <li>Failure: No auctions were run. If no auctions were run, verify the following setups:
+      <ul>
+        <li>Check to make sure the Prebid Server Account ID and Prebid Server Configuration ID you entered on the Dr. Prebid Setup page are correct.</li>
+        <li>Ensure that your Prebid Server Configuration is correct.</li>
+      </ul>
+  </ul>
+
+</html>

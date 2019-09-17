@@ -16,7 +16,6 @@
 
 package org.prebid.mobile.testutils;
 
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
