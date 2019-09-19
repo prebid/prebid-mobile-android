@@ -299,7 +299,7 @@ public class NativeAdUnit extends AdUnit {
     }
 
     public void addImage(IMAGE_TYPE type, Integer wmin, Integer hmin, Integer w, Integer h, ArrayList<String> mimes, Boolean required, Object assetExt, Object imageExt) {
-        HashMap<NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>> assets = (HashMap<NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>>) requestConfig.get("assets");
+        HashMap<NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>> assets = (HashMap<NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>>) requestConfig.get(ASSETS);
         if (assets == null) {
             assets = new HashMap<>();
         }
@@ -320,7 +320,7 @@ public class NativeAdUnit extends AdUnit {
         if (imageExt instanceof JSONArray || assetExt instanceof JSONObject) {
             params.put(EXT, imageExt);
         }
-        ArrayList<HashMap<String, Object>> assetParams = assets.get(NATIVE_REQUEST_ASSET.DATA);
+        ArrayList<HashMap<String, Object>> assetParams = assets.get(NATIVE_REQUEST_ASSET.IMAGE);
         if (assetParams == null) {
             assetParams = new ArrayList<>();
         }

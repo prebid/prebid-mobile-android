@@ -25,7 +25,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
-
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -608,9 +607,10 @@ class PrebidServerAdapter implements DemandAdapter {
                     HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>> assetParams = (HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>>) requestConfig.get(NativeAdUnit.ASSETS);
                     if (assetParams != null && !assetParams.isEmpty()) {
                         for (NativeAdUnit.NATIVE_REQUEST_ASSET asset : assetParams.keySet()) {
-                            JSONObject assetObj = new JSONObject();
+                            JSONObject assetObj;
                             switch (asset) {
                                 case TITLE:
+                                    assetObj = new JSONObject();
                                     JSONObject title = new JSONObject();
                                     ArrayList<HashMap<String, Object>> titleParams = assetParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.TITLE);
                                     title.put(NativeAdUnit.LENGTH, titleParams.get(0).get("len"));
@@ -619,8 +619,10 @@ class PrebidServerAdapter implements DemandAdapter {
                                     assets.put(assetObj);
                                     break;
                                 case IMAGE:
+
                                     ArrayList<HashMap<String, Object>> imageParams = assetParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.IMAGE);
-                                    for (HashMap<String, Object> imageParam: imageParams) {
+                                    for (HashMap<String, Object> imageParam : imageParams) {
+                                        assetObj = new JSONObject();
                                         JSONObject image = new JSONObject();
                                         image.put(NativeAdUnit.TYPE, imageParam.get(NativeAdUnit.TYPE));
                                         if ((Integer) imageParam.get(NativeAdUnit.WIDTH_MIN) > 0 && (Integer) imageParam.get(NativeAdUnit.HEIGHT_MIN) > 0) {
@@ -650,7 +652,8 @@ class PrebidServerAdapter implements DemandAdapter {
                                     break;
                                 case DATA:
                                     ArrayList<HashMap<String, Object>> dataParams = assetParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.DATA);
-                                    for (HashMap<String, Object> dataParam: dataParams) {
+                                    for (HashMap<String, Object> dataParam : dataParams) {
+                                        assetObj = new JSONObject();
                                         JSONObject data = new JSONObject();
                                         data.put(NativeAdUnit.TYPE, dataParam.get(NativeAdUnit.TYPE));
                                         data.put(NativeAdUnit.LENGTH, dataParam.get(NativeAdUnit.LENGTH));

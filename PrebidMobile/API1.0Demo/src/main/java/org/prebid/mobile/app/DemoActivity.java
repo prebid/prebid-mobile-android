@@ -203,25 +203,26 @@ public class DemoActivity extends AppCompatActivity {
             nativeAdUnit.addEventTracker(NativeAdUnit.EVENT_TYPE.IMPRESSION, methods, null);
         } catch (Exception e) {
             e.printStackTrace();
-            nativeAdUnit.addImage(NativeAdUnit.IMAGE_TYPE.ICON, 20, 20, -1, -1, null, true, null, null);
-            nativeAdUnit.addImage(NativeAdUnit.IMAGE_TYPE.MAIN, 200, 200, -1, -1, null, true, null, null);
-            nativeAdUnit.addData(NativeAdUnit.DATA_TYPE.SPONSORED, 90, true, null, null);
-            nativeAdUnit.fetchDemand(request, new OnCompleteListener() {
-                @Override
-                public void onComplete(ResultCode resultCode) {
-                    DemoActivity.this.resultCode = resultCode;
-                    nativeAdView.loadAd(request);
-                    refreshCount++;
-                }
-            });
+
         }
+        nativeAdUnit.addImage(NativeAdUnit.IMAGE_TYPE.ICON, 20, 20, -1, -1, null, true, null, null);
+        nativeAdUnit.addImage(NativeAdUnit.IMAGE_TYPE.MAIN, 200, 200, -1, -1, null, true, null, null);
+        nativeAdUnit.addData(NativeAdUnit.DATA_TYPE.SPONSORED, 90, true, null, null);
+        nativeAdUnit.fetchDemand(request, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+                DemoActivity.this.resultCode = resultCode;
+                nativeAdView.loadAd(request);
+                refreshCount++;
+            }
+        });
     }
 
     private void enableAdditionalFunctionality(AdUnit adUnit) {
-        enableCOPPA();
-        addFirstPartyData(adUnit);
-        setStoredResponse();
-        setRequestTimeoutMillis();
+//        enableCOPPA();
+//        addFirstPartyData(adUnit);
+//        setStoredResponse();
+//        setRequestTimeoutMillis();
     }
 
     private void enableCOPPA() {
