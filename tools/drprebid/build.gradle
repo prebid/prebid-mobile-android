@@ -43,7 +43,7 @@ dependencies {
     implementation "android.arch.lifecycle:common-java8:1.1.1"
 
     implementation 'com.google.android.gms:play-services-vision:17.0.2'
-    implementation 'com.google.android.gms:play-services-ads:17.2.1'
+    implementation 'com.google.android.gms:play-services-ads:17.1.3'
 
     implementation 'com.squareup.okhttp3:okhttp:3.14.2'
 
@@ -51,6 +51,9 @@ dependencies {
 
     implementation('com.mopub:mopub-sdk:5.4.1@aar') {
         transitive = true
+
+        exclude module: 'libAvid-mopub' // To exclude AVID
+        exclude module: 'moat-mobile-app-kit' // To exclude Moat
     }
 
     compileOnly 'com.mopub.volley:mopub-volley:2.0.0'

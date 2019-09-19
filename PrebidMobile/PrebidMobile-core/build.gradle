@@ -3,3 +3,5 @@ apply from: '../shared-build.gradle'
 dependencies {
 
 }
+
+apply from: '../publisher.gradle'

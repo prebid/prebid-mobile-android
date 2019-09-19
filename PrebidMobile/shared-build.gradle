@@ -3,25 +3,27 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion rootProject.buildToolsVersion
-    publishNonDefault true
 
     defaultConfig {
         minSdkVersion rootProject.minSDKVersion
         targetSdkVersion rootProject.targetSDKVersion
         versionCode rootProject.prebidVersionCode
         versionName rootProject.prebidVersionName
+
+        consumerProguardFiles project(':PrebidMobile').file('proguard-rules.pro')
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles 'proguard-rules.pro'
+            minifyEnabled false
+            proguardFiles project(':PrebidMobile').file('proguard-rules.pro')
         }
+
         debug {
             minifyEnabled false
-            proguardFiles 'proguard-rules.pro'
         }
     }
+
     lintOptions {
         abortOnError false
     }

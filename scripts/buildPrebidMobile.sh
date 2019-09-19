@@ -55,10 +55,12 @@ die() { echoX "$@" 1>&2 ; echoX "End Script"; exit 1;  }
 
 # file paths
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-OUTDIR=$BASEDIR/out
+OUTDIR=$BASEDIR/generated
 LOGPATH=$OUTDIR/logs
+FAT_PATH=$OUTDIR/fat
 AARPATH=build/outputs/aar
-TEMPDIR=$BASEDIR/temp
+BUILD_LIBS_PATH=build/libs
+TEMPDIR=$OUTDIR/temp
 LIBDIR=$BASEDIR
 PREBIDCORE=PrebidMobile
 
@@ -85,7 +87,6 @@ rm -rf $OUTDIR
 mkdir $OUTDIR
 mkdir $LOGPATH
 rm -rf $TEMPDIR
-mkdir $TEMPDIR
 cd $LIBDIR
 ./gradlew -i --no-daemon clean >$LOGPATH/clean.log 2>&1
 
@@ -93,66 +94,80 @@ cd $LIBDIR
 # Test and Build
 ###########################
 
-echoX "Run unit tests"
-cd $LIBDIR
-(./gradlew -i --no-daemon PrebidMobile:test > $LOGPATH/testResults.log 2>&1) || (die "Unit tests failed, check log in $LOGPATH/testResults.log") &
-PID=$!
-spinner $PID &
-wait $PID
+ echoX "Run unit tests"
+ cd $LIBDIR
+ (./gradlew -i --no-daemon PrebidMobile:test > $LOGPATH/testResults.log 2>&1) || (die "Unit tests failed, check log in $LOGPATH/testResults.log") &
+ PID=$!
+ spinner $PID &
+ wait $PID
+ 
+modules=("PrebidMobile" "PrebidMobile-core")
+projectPaths=("$BASEDIR/PrebidMobile" "$BASEDIR/PrebidMobile/PrebidMobile-core")
 
-echoX "Assemble builds"
-cd $LIBDIR
-# clean existing build results, exclude test task, and assemble new release build
-(./gradlew -i --no-daemon PrebidMobile:assembleRelease > $LOGPATH/build.log 2>&1 || die "Build failed, check log in $LOGPATH/build.log" ) &
-PID=$!
-spinner $PID &
-wait $PID
+for n in ${!modules[@]}; do
 
-echoX "Start packaging product"
-cd $TEMPDIR
-mkdir output
-echoX "Move library core to output"
-cd $LIBDIR/$PREBIDCORE/$AARPATH
-unzip -q -o $PREBIDCORE-release.aar
-cd $TEMPDIR/output
-jar xf $LIBDIR/$PREBIDCORE/$AARPATH/classes.jar
-rm $LIBDIR/$PREBIDCORE/$AARPATH/classes.jar
-cd $TEMPDIR/output
-jar cf PrebidMobile.jar org*
+	echo -e "\n"
+	echoX "Assembling ${modules[$n]}"
+	cd $LIBDIR
+	# clean existing build results, exclude test task, and assemble new release build
+	(./gradlew -i --no-daemon ${modules[$n]}:assembleRelease > $LOGPATH/build.log 2>&1 || die "Build failed, check log in $LOGPATH/build.log" ) &
+	PID=$!
+	spinner $PID &
+	wait $PID
 
-mv PrebidMobile.jar $OUTDIR
-# clean tmp dir
-rm -r $TEMPDIR
+	echoX "packaging ${modules[$n]}"
+	mkdir $TEMPDIR
+	cd $TEMPDIR
+	mkdir output
+	
+	AARPATH_ABSOLUTE="${projectPaths[$n]}/$AARPATH"
 
-# javadoc
-echoX "Prepare Javedoc"
+	cd $AARPATH_ABSOLUTE
+	unzip -q -o ${modules[$n]}-release.aar
+	cd $TEMPDIR/output
+	jar xf $AARPATH_ABSOLUTE/classes.jar
+	rm $AARPATH_ABSOLUTE/classes.jar
+	cd $TEMPDIR/output
+	jar cf ${modules[$n]}.jar org*
 
-# class paths
-CORE_API_PATH="PrebidMobile/src/main/java/org/prebid/mobile"
-CORE_CLASSES=()
-CORE_CLASSES+=("AdType.java")
-CORE_CLASSES+=("AdUnit.java")
-CORE_CLASSES+=("BannerAdUnit.java")
-CORE_CLASSES+=("DemandAdapter.java")
-CORE_CLASSES+=("Host.java")
-CORE_CLASSES+=("ResultCode.java")
-CORE_CLASSES+=("InterstitialAdUnit.java")
-CORE_CLASSES+=("LogUtil.java")
-CORE_CLASSES+=("OnCompleteListener.java")
-CORE_CLASSES+=("PrebidMobile.java")
-CORE_CLASSES+=("TargetingParams.java")
+	mv ${modules[$n]}.jar $OUTDIR
 
-FINAL_CLASSES=""
-for classes in "${CORE_CLASSES[@]}"; do
-    FINAL_CLASSES="$FINAL_CLASSES $LIBDIR/$CORE_API_PATH/$classes"
+	cd $LIBDIR
+
+	# Javadoc
+	echoX "Preparing ${modules[$n]} Javadoc"
+	./gradlew -i --no-daemon ${modules[$n]}:javadocJar>$LOGPATH/javadoc.log 2>&1 || die "Build Javadoc failed, check log in $LOGPATH/javadoc.log"
+
+	# Sources
+	echoX "Preparing ${modules[$n]} sources"
+	./gradlew -i --no-daemon ${modules[$n]}:sourcesJar>$LOGPATH/sources.log 2>&1 || die "Build Sources failed, check log in $LOGPATH/sources.log"
+
+	# copy the results
+	BUILD_LIBS_PATH_ABSOLUTE="${projectPaths[$n]}/$BUILD_LIBS_PATH"
+	cp -a $BUILD_LIBS_PATH_ABSOLUTE/. $OUTDIR/
+
+	# clean tmp dir
+	rm -r $TEMPDIR
 done
 
+# Prepare fat PrebidDemo library
+echo -e "\n"
+echoX "Preparing fat PrebidDemo library"
 cd $OUTDIR
-# disable Javadoc for illegal pacakge name error
-javadoc -d Javadoc -protected $FINAL_CLASSES>$LOGPATH/javadoc.log 2>&1 || die "Build Javadoc failed, check log in $LOGPATH/javadoc.log"
+mkdir $TEMPDIR
+cd $TEMPDIR; unzip -uo $OUTDIR/PrebidMobile-core.jar
+cd $TEMPDIR; unzip -uo $OUTDIR/PrebidMobile.jar
+
+rm $TEMPDIR/org/prebid/mobile/core/BuildConfig.class
+jar -cvf PrebidMobile.jar -C $TEMPDIR .
+
+mkdir $FAT_PATH
+mv PrebidMobile.jar $FAT_PATH
+
+rm -r $TEMPDIR
 
 #######
 # End
 #######
 echoX "Please find Prebid Mobile product in $OUTDIR"
-echoX "Build finished."
+echo -e "\n${GREEN}Done!${NC} \n"
