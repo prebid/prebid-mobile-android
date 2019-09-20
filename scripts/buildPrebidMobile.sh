@@ -20,6 +20,7 @@ fi
 set -e
 
 cd ..
+echo -e "$PWD"
 
 # Setup some constants for use later on.
 RED='\033[0;31m'
@@ -30,34 +31,11 @@ function echoX {
 echo -e "PREBID BUILDLOG: $@"
 }
 
-spinner()
-{
-local pid=$1
-local delay=0.75
-local spinstr='|/-\'
-while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
-local temp=${spinstr#?}
-printf " [%c]  " "$spinstr"
-local spinstr=$temp${spinstr%"$temp"}
-sleep $delay
-printf "\b\b\b\b\b\b"
-done
-printf "    \b\b\b\b"
-}
-# how to use?
-# ( command ) & spinner $!
-# Example: (sleep 2) & spinner $!
-
-bold=$(tput bold)
-normal=$(tput sgr0)
-
 die() { echoX "$@" 1>&2 ; echoX "End Script"; exit 1;  }
 
 ######################
 # Build Settings
 ######################
-# exit script if a command line fails
-#set -e
 
 # file paths
 BASEDIR="$PWD"
@@ -102,11 +80,8 @@ cd $LIBDIR
 
 echoX "Run unit tests"
 cd $LIBDIR
-(./gradlew -i --no-daemon PrebidMobile:test > $LOGPATH/testResults.log 2>&1) || (die "Unit tests failed, check log in $LOGPATH/testResults.log") &
-PID=$!
-spinner $PID &
-wait $PID
- 
+(./gradlew -i --no-daemon PrebidMobile:test > $LOGPATH/testResults.log 2>&1) || (die "Unit tests failed, check log in $LOGPATH/testResults.log") 
+
 modules=("PrebidMobile" "PrebidMobile-core")
 projectPaths=("$BASEDIR/PrebidMobile" "$BASEDIR/PrebidMobile/PrebidMobile-core")
 
@@ -116,10 +91,7 @@ for n in ${!modules[@]}; do
 	echoX "Assembling ${modules[$n]}"
 	cd $LIBDIR
 	# clean existing build results, exclude test task, and assemble new release build
-	(./gradlew -i --no-daemon ${modules[$n]}:assembleRelease > $LOGPATH/build.log 2>&1 || die "Build failed, check log in $LOGPATH/build.log" ) &
-	PID=$!
-	spinner $PID &
-	wait $PID
+	(./gradlew -i --no-daemon ${modules[$n]}:assembleRelease > $LOGPATH/build.log 2>&1 || die "Build failed, check log in $LOGPATH/build.log" )
 
 	echoX "packaging ${modules[$n]}"
 	mkdir $TEMPDIR

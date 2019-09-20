@@ -29,8 +29,8 @@ out/
 generated/
 scripts/Maven/*
 !scripts/Maven/deployPrebidMobile.sh
-!scripts/Maven/pom-PrebidMobile-core.xml
-!scripts/Maven/pom-PrebidMobile.xml
+!scripts/Maven/PrebidMobile-core-pom.xml
+!scripts/Maven/PrebidMobile-pom.xml
 
 # Gradle files
 .gradle/

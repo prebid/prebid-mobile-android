@@ -2,14 +2,14 @@
     
     <!-- SonaType Requirements -->
     <groupId>org.prebid</groupId>
-    <artifactId>prebid-mobile-sdk</artifactId>
-    <version>1.2.1</version>
+    <artifactId>prebid-mobile-sdk-core</artifactId>
+    <version>1.2</version>
 
     <name>Prebid Mobile Android SDK</name>
     <description>Prebid Mobile</description>
     <url>https://www.prebid.org</url>
 
-    <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>    
     <packaging>jar</packaging>
 
     <scm>
@@ -40,13 +40,4 @@
             <organizationUrl>https://rubiconproject.com</organizationUrl>
         </developer>
     </developers>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.prebid</groupId>
-            <artifactId>prebid-mobile-sdk-core</artifactId>
-            <version>1.2.1</version>
-            <scope>compile</scope>
-        </dependency>
-  </dependencies>
 </project>
