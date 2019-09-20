@@ -11,6 +11,12 @@
 ######################
 # Helper Methods
 ######################
+
+# Merge Script
+if [ -d "scripts" ]; then
+cd scripts/
+fi
+
 set -e
 
 cd ..
@@ -54,7 +60,7 @@ die() { echoX "$@" 1>&2 ; echoX "End Script"; exit 1;  }
 #set -e
 
 # file paths
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+BASEDIR="$PWD"
 OUTDIR=$BASEDIR/generated
 LOGPATH=$OUTDIR/logs
 FAT_PATH=$OUTDIR/fat
@@ -94,12 +100,12 @@ cd $LIBDIR
 # Test and Build
 ###########################
 
- echoX "Run unit tests"
- cd $LIBDIR
- (./gradlew -i --no-daemon PrebidMobile:test > $LOGPATH/testResults.log 2>&1) || (die "Unit tests failed, check log in $LOGPATH/testResults.log") &
- PID=$!
- spinner $PID &
- wait $PID
+echoX "Run unit tests"
+cd $LIBDIR
+(./gradlew -i --no-daemon PrebidMobile:test > $LOGPATH/testResults.log 2>&1) || (die "Unit tests failed, check log in $LOGPATH/testResults.log") &
+PID=$!
+spinner $PID &
+wait $PID
  
 modules=("PrebidMobile" "PrebidMobile-core")
 projectPaths=("$BASEDIR/PrebidMobile" "$BASEDIR/PrebidMobile/PrebidMobile-core")
@@ -139,7 +145,7 @@ for n in ${!modules[@]}; do
 	./gradlew -i --no-daemon ${modules[$n]}:javadocJar>$LOGPATH/javadoc.log 2>&1 || die "Build Javadoc failed, check log in $LOGPATH/javadoc.log"
 
 	# Sources
-	echoX "Preparing ${modules[$n]} sources"
+	echoX "Preparing ${modules[$n]} Sources"
 	./gradlew -i --no-daemon ${modules[$n]}:sourcesJar>$LOGPATH/sources.log 2>&1 || die "Build Sources failed, check log in $LOGPATH/sources.log"
 
 	# copy the results
