@@ -31,6 +31,24 @@
         </activity>
         <activity android:name=".DemoActivity" />
         <activity android:name=".TestActivity" />
+        <activity android:name=".VideoOutStreamActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".VideoInterstitialActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Video Interstitial -->
+        <activity android:name="org.prebid.mobile.video.ima.PbVideoImaInterstitialActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+
         <!--MoPub Activities-->
         <activity
             android:name="com.mopub.mobileads.MoPubActivity"

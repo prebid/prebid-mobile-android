@@ -99,12 +99,16 @@ class PrebidServerAdapter implements DemandAdapter {
         private DemandAdapterListener listener;
         private boolean timeoutFired;
 
+        private final AdType adType;
+
         ServerConnector(PrebidServerAdapter prebidServerAdapter, DemandAdapterListener listener, RequestParams requestParams, String auctionId) {
             this.prebidServerAdapter = new WeakReference<>(prebidServerAdapter);
             this.listener = listener;
             this.requestParams = requestParams;
             this.auctionId = auctionId;
             timeoutCountDownTimer = new TimeoutCountDownTimer(PrebidMobile.getTimeoutMillis(), TIMEOUT_COUNT_DOWN_INTERVAL);
+
+            adType = requestParams.getAdType();
         }
 
         @Override
@@ -509,6 +513,11 @@ class PrebidServerAdapter implements DemandAdapter {
                     JSONObject cache = new JSONObject();
                     JSONObject bids = new JSONObject();
                     cache.put("bids", bids);
+
+                    if (adType.equals(AdType.VIDEO) || adType.equals(AdType.VIDEO_INTERSTITIAL)) {
+                        cache.put("vastxml", bids);
+                    }
+
                     prebid.put("cache", cache);
 
                     JSONObject targetingEmpty = new JSONObject();
@@ -547,8 +556,11 @@ class PrebidServerAdapter implements DemandAdapter {
                 JSONObject ext = new JSONObject();
                 imp.put("id", "PrebidMobile");
                 imp.put("secure", 1);
-                if (requestParams.getAdType().equals(AdType.INTERSTITIAL)) {
+                if (adType.equals(AdType.INTERSTITIAL) || adType.equals(AdType.VIDEO_INTERSTITIAL)) {
                     imp.put("instl", 1);
+                }
+
+                if (adType.equals(AdType.INTERSTITIAL)) {
                     JSONObject banner = new JSONObject();
                     JSONArray format = new JSONArray();
                     Context context = PrebidMobile.getApplicationContext();
@@ -560,7 +572,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     }
                     banner.put("format", format);
                     imp.put("banner", banner);
-                } else {
+                } else if (adType.equals(AdType.BANNER)) {
                     JSONObject banner = new JSONObject();
                     JSONArray format = new JSONArray();
                     for (AdSize size : requestParams.getAdSizes()) {
@@ -568,6 +580,20 @@ class PrebidServerAdapter implements DemandAdapter {
                     }
                     banner.put("format", format);
                     imp.put("banner", banner);
+                } else if (adType.equals(AdType.VIDEO) || adType.equals(AdType.VIDEO_INTERSTITIAL)) {
+
+                    JSONObject video = new JSONObject();
+                    video.put("mimes", new JSONArray().put("video/mp4"));
+                    video.put("protocols", new JSONArray().put(7));
+                    video.put("startdelay", 0);
+                    video.put("protocols", new JSONArray().put(2));
+
+                    for (AdSize size : requestParams.getAdSizes()) {
+                        video.put("w", size.getWidth());
+                        video.put("h", size.getHeight());
+                    }
+
+                    imp.put("video", video);
                 }
 
                 JSONObject prebid = new JSONObject();
@@ -638,7 +664,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     device.put(PrebidServerSettings.REQUEST_LANGUAGE, Locale.getDefault().getLanguage());
                 }
 
-                if (requestParams.getAdType().equals(AdType.INTERSTITIAL)) {
+                if (adType.equals(AdType.INTERSTITIAL)) {
 
                     Integer minSizePercWidth = null;
                     Integer minSizePercHeight = null;

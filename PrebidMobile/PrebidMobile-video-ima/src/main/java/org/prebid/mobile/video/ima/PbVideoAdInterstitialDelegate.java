@@ -14,11 +14,12 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile;
+package org.prebid.mobile.video.ima;
 
-enum AdType {
-    BANNER,
-    INTERSTITIAL,
-    VIDEO,
-    VIDEO_INTERSTITIAL
+public interface PbVideoAdInterstitialDelegate {
+    void videoAdInterstitialLoaded();
+    void videoAdInterstitialCancelled();
+    void videoAdInterstitialCompleted();
+    void videoAdInterstitialFailed();
+    void videoAdEvent(PbVideoAdEvent event);
 }

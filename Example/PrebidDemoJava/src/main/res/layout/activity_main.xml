@@ -33,6 +33,7 @@
             android:minWidth="128dp" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/adServerNameRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

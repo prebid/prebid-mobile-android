@@ -16,9 +16,23 @@
 
 package org.prebid.mobile;
 
-enum AdType {
-    BANNER,
-    INTERSTITIAL,
-    VIDEO,
-    VIDEO_INTERSTITIAL
+import android.support.annotation.NonNull;
+
+public class VideoInterstitialAdUnit extends AdUnit {
+
+    private final AdSize addSize;
+
+    public VideoInterstitialAdUnit(@NonNull String configId, int width, int height) {
+        super(configId, AdType.VIDEO_INTERSTITIAL);
+        addSize = new AdSize(width, height);
+    }
+
+    public String getAddSizeString() {
+        return addSize.getWidth() + "x" + addSize.getHeight();
+    }
+
+    AdSize getAdSize() {
+        return addSize;
+    }
+
 }

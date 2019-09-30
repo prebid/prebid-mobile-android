@@ -3,6 +3,7 @@ apply from: 'shared-build.gradle'
 dependencies {
 
     api project(':PrebidMobile-core')
+    api project(':PrebidMobile-video-ima')
 
     testImplementation 'org.apache.commons:commons-lang3:3.7'
     testImplementation 'com.google.android.gms:play-services-ads:17.1.3'

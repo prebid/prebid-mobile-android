@@ -1,5 +1,6 @@
 include ':PrebidMobile',
         ':PrebidMobile-core',
+        ':PrebidMobile-video-ima',
 
 //Prebid Demo apps
         ':PrebidDemoJava',
@@ -9,6 +10,7 @@ include ':PrebidMobile',
         ':DrPrebid'
 
 project(':PrebidMobile-core').projectDir = new File('PrebidMobile/PrebidMobile-core')
+project(':PrebidMobile-video-ima').projectDir = new File('PrebidMobile/PrebidMobile-video-ima')
 
 project(':PrebidDemoJava').projectDir = new File('Example/PrebidDemoJava')
 project(':PrebidDemoKotlin').projectDir = new File('Example/PrebidDemoKotlin')

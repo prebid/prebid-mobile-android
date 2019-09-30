@@ -63,13 +63,26 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 adType = adTypes.get(pos);
+
+                LinearLayout adSizeRow = findViewById(R.id.adSizeRow);
+                LinearLayout adRefreshRow = findViewById(R.id.autoRefreshRow);
+                LinearLayout adServerNameRow = findViewById(R.id.adServerNameRow);
+
+                if (adType.equals("Video Out-Stream") || adType.equals("Video Interstitial")) {
+                    adRefreshRow.setVisibility(View.GONE);
+                    adSizeRow.setVisibility(View.GONE);
+                    adServerNameRow.setVisibility(View.GONE);
+                } else {
+                    adRefreshRow.setVisibility(View.VISIBLE);
+                    adSizeRow.setVisibility(View.VISIBLE);
+                    adServerNameRow.setVisibility(View.VISIBLE);
+                }
+
                 if (adType.equals("Banner")) {
                     // show size and refresh millis
-                    LinearLayout adSizeRow = (LinearLayout) findViewById(R.id.adSizeRow);
                     adSizeRow.setVisibility(View.VISIBLE);
                 } else {
                     // hide size selection and refresh millis
-                    LinearLayout adSizeRow = (LinearLayout) findViewById(R.id.adSizeRow);
                     adSizeRow.setVisibility(View.GONE);
                 }
             }
@@ -125,6 +138,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showAd(View view) {
+
+        if (adType.equals("Video Out-Stream")) {
+            Intent videoOutStreamActivity = new Intent(this, VideoOutStreamActivity.class);
+            startActivity(videoOutStreamActivity);
+
+            return;
+        } else if (adType.equals("Video Interstitial")) {
+            Intent videoInterstitial = new Intent(this, VideoInterstitialActivity.class);
+            startActivity(videoInterstitial);
+
+            return;
+        }
+
         Intent demoActivityIntent = new Intent(this, DemoActivity.class);
         demoActivityIntent.putExtra(Constants.AD_SERVER_NAME, adServer);
         demoActivityIntent.putExtra(Constants.AD_TYPE_NAME, adType);

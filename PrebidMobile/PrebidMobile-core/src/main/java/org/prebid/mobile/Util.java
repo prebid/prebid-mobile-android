@@ -335,20 +335,29 @@ public class Util {
 
     static boolean supportedAdObject(Object adObj) {
         if (adObj == null) return false;
-        if (adObj.getClass() == getClassFromString(MOPUB_BANNER_VIEW_CLASS)
-                || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)
-                || adObj.getClass() == getClassFromString(DFP_AD_REQUEST_CLASS))
+        Class<?> adObjClass = adObj.getClass();
+
+        if (adObjClass == getClassFromString(MOPUB_BANNER_VIEW_CLASS)
+                || adObjClass == getClassFromString(MOPUB_INTERSTITIAL_CLASS)
+                || adObjClass == getClassFromString(DFP_AD_REQUEST_CLASS)
+
+                || adObjClass == HashMap.class)
             return true;
         return false;
     }
 
     static void apply(HashMap<String, String> bids, Object adObj) {
         if (adObj == null) return;
-        if (adObj.getClass() == getClassFromString(MOPUB_BANNER_VIEW_CLASS)
-                || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)) {
+        Class<?> adObjClass = adObj.getClass();
+        if (adObjClass == getClassFromString(MOPUB_BANNER_VIEW_CLASS)
+                || adObjClass == getClassFromString(MOPUB_INTERSTITIAL_CLASS)) {
             handleMoPubKeywordsUpdate(bids, adObj);
-        } else if (adObj.getClass() == getClassFromString(DFP_AD_REQUEST_CLASS)) {
+        } else if (adObjClass == getClassFromString(DFP_AD_REQUEST_CLASS)) {
             handleDFPCustomTargetingUpdate(bids, adObj);
+        } else if (adObjClass == HashMap.class) {
+            if (bids != null && !bids.isEmpty()) {
+                ((HashMap) adObj).putAll(bids);
+            }
         }
     }
 

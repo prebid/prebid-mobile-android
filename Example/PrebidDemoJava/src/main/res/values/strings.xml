@@ -1,9 +1,11 @@
 <resources>
-    <string name="app_name">API1.0Demo</string>
+    <string name="app_name">Prebid Java Demo</string>
     <string name="adTypeText">Ad Type</string>
     <string-array name="adTypeArray">
         <item>Banner</item>
         <item>Interstitial</item>
+        <item>Video Out-Stream</item>
+        <item>Video Interstitial</item>
     </string-array>
     <string name="adServerText">Ad Server</string>
     <string-array name="adServerArray">

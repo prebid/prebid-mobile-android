@@ -14,11 +14,12 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile;
+package org.prebid.mobile.video.ima;
 
-enum AdType {
-    BANNER,
-    INTERSTITIAL,
-    VIDEO,
-    VIDEO_INTERSTITIAL
+public enum PbVideoAdEventType {
+    AD_LOAD_SUCCESS,
+    AD_LOAD_FAIL,
+    AD_CLICKED,
+    AD_STARTED,
+    AD_DID_REACH_END
 }
