@@ -586,7 +586,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     video.put("mimes", new JSONArray().put("video/mp4"));
                     video.put("protocols", new JSONArray().put(7));
                     video.put("startdelay", 0);
-                    video.put("protocols", new JSONArray().put(2));
+                    video.put("playbackmethod", new JSONArray().put(2));
 
                     for (AdSize size : requestParams.getAdSizes()) {
                         video.put("w", size.getWidth());

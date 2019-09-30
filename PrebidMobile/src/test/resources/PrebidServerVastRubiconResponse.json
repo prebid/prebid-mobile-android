@@ -1,0 +1,62 @@
+{
+    "id": "ABDD3E08-FC8C-4A69-9089-AD17954B78FE",
+    "seatbid": [{
+        "bid": [{
+            "id": "f227a07f-1579-4465-bc5e-5c5b02a0c180",
+            "impid": "87BD3F4D-CA53-495B-B2BA-91F7D10373DC",
+            "price": 1.23,
+            "adm": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<VAST version=\"2.0\">\r\n<Ad id=\"TestAd\">\r\n<InLine>\r\n<AdSystem>Rubicon Project</AdSystem>\r\n<AdTitle>VAST 2.0 Linear Ad</AdTitle>\r\n<Error><![CDATA[http://myErrorURL/error]]></Error>\r\n<Impression><![CDATA[]]></Impression>\r\n<Creatives>\r\n\t <Creative id=\"2014\" AdID=\"20150911\" sequence=\"1\">\r\n\t\t<Linear>\r\n\t\t\t<Duration>00:00:15</Duration>\r\n\t\t\t<TrackingEvents>\r\n\t\t\t\t<Tracking event=\"creativeView\"><![CDATA[]]></Tracking>\r\n\t\t\t\t<Tracking event=\"start\"><![CDATA[]]></Tracking>\r\n\t\t\t\t<Tracking event=\"firstQuartile\"><![CDATA[]]></Tracking>\r\n\t\t\t\t<Tracking event=\"midpoint\"><![CDATA[]]></Tracking>\r\n\t\t\t\t<Tracking event=\"thirdQuartile\"><![CDATA[]]></Tracking>\r\n\t\t\t\t<Tracking event=\"complete\"><![CDATA[]]></Tracking>\r\n\t\t\t</TrackingEvents>\r\n\t\t\t<VideoClicks>\r\n\t\t\t\t<ClickThrough><![CDATA[http://iwanttoberecycled.org/]]></ClickThrough>\r\n\t\t\t\t<ClickTracking><![CDATA[]]></ClickTracking>\r\n\t\t\t</VideoClicks>\r\n\t\t\t<MediaFiles>\r\n       \t\t\t<MediaFile delivery=\"progressive\" bitrate=\"275\" width=\"320\" height=\"180\" type=\"video/x-flv\"><![CDATA[https://sneezy.aws.rubiconproject.com/rp-eng-soln/rp-qa-sites/videoTest/ad1/recycling_320_low.flv]]></MediaFile>\r\n       \t\t\t<MediaFile delivery=\"progressive\" bitrate=\"348\" width=\"320\" height=\"180\" type=\"video/mp4\"><![CDATA[https://sneezy.aws.rubiconproject.com/rp-eng-soln/rp-qa-sites/videoTest/ad1/recycling_320_low.mp4]]></MediaFile>\r\n       \t\t\t<MediaFile delivery=\"progressive\" bitrate=\"250\" width=\"320\" height=\"180\" type=\"video/webm\"><![CDATA[https://sneezy.aws.rubiconproject.com/rp-eng-soln/rp-qa-sites/videoTest/ad1/recycling_320_low.webm]]></MediaFile>\r\n\t\t\t\t<MediaFile delivery=\"progressive\" bitrate=\"433\" width=\"620\" height=\"360\" type=\"video/x-flv\"><![CDATA[https://sneezy.aws.rubiconproject.com/rp-eng-soln/rp-qa-sites/videoTest/ad1/recycling_640_low.flv]]></MediaFile>\r\n       \t\t\t<MediaFile delivery=\"progressive\" bitrate=\"381\" width=\"620\" height=\"360\" type=\"video/mp4\"><![CDATA[https://sneezy.aws.rubiconproject.com/rp-eng-soln/rp-qa-sites/videoTest/ad1/recycling_640_low.mp4]]></MediaFile>\r\n\t\t\t\t<MediaFile delivery=\"progressive\" bitrate=\"614\" width=\"620\" height=\"360\" type=\"video/x-flv\"><![CDATA[https://sneezy.aws.rubiconproject.com/rp-eng-soln/rp-qa-sites/videoTest/ad1/recycling_640_med.flv]]></MediaFile>\r\n       \t\t\t<MediaFile delivery=\"progressive\" bitrate=\"553\" width=\"620\" height=\"360\" type=\"video/mp4\"><![CDATA[https://sneezy.aws.rubiconproject.com/rp-eng-soln/rp-qa-sites/videoTest/ad1/recycling_640_med.mp4]]></MediaFile>\r\n       \t\t\t<MediaFile delivery=\"progressive\" bitrate=\"1024\" width=\"620\" height=\"360\" type=\"video/x-flv\"><![CDATA[https://sneezy.aws.rubiconproject.com/rp-eng-soln/rp-qa-sites/videoTest/ad1/recycling_640_high.flv]]></MediaFile>\r\n       \t\t\t<MediaFile delivery=\"progressive\" bitrate=\"983\" width=\"620\" height=\"360\" type=\"video/mp4\"><![CDATA[https://sneezy.aws.rubiconproject.com/rp-eng-soln/rp-qa-sites/videoTest/ad1/recycling_640_high.mp4]]></MediaFile>\r\n       \t\t\t<MediaFile delivery=\"progressive\" bitrate=\"1024\" width=\"620\" height=\"360\" type=\"video/webm\"><![CDATA[https://sneezy.aws.rubiconproject.com/rp-eng-soln/rp-qa-sites/videoTest/ad1/recycling_640_high.webm]]></MediaFile>\r\n    \t\t</MediaFiles>\r\n\t\t</Linear>\r\n\t</Creative>\r\n\t<Creative AdID=\"TestAd-Companion\">\r\n\t\t<CompanionAds>\r\n\t\t\t<Companion width=\"300\" height=\"250\">\r\n\t\t\t\t<StaticResource creativeType=\"image/jpeg\"><![CDATA[http://sneezy.aws.rubiconproject.com/rp-eng-soln/rp-qa-sites/videoTest/ad1/recycling_300x250.jpg]]>\r\n\t\t\t\t</StaticResource> \r\n\t\t\t\t<TrackingEvents>\r\n\t\t\t\t\t<Tracking event=\"creativeView\"><![CDATA[]]></Tracking>\r\n\t\t\t\t</TrackingEvents>\r\n\t\t\t\t<CompanionClickThrough>\r\n\t\t\t\t\t<![CDATA[http://iwanttoberecycled.org/]]>\r\n\t\t\t\t</CompanionClickThrough>\r\n\t\t\t</Companion> \r\n\t\t</CompanionAds>\r\n\t</Creative>  \r\n</Creatives>\r\n</InLine>\r\n</Ad>\r\n</VAST>",
+            "crid": "888888",
+            "w": 640,
+            "h": 480,
+            "ext": {
+                "prebid": {
+                    "type": "video",
+                    "targeting": {
+                        "hb_env": "mobile-app",
+                        "hb_size_rubicon": "640x480",
+                        "hb_cache_id": "9690a5d8-3fa7-42d4-bafb-2385cc52fcbf",
+                        "hb_cache_path_rubicon": "/cache",
+                        "hb_cache_host_rubicon": "prebid-cache.qa.rubiconproject.com",
+                        "hb_pb": "1.20",
+                        "hb_pb_rubicon": "1.20",
+                        "hb_cache_id_rubicon": "9690a5d8-3fa7-42d4-bafb-2385cc52fcbf",
+                        "hb_cache_path": "/cache",
+                        "hb_uuid": "5f8dab2d-e45e-4d94-b622-c5a0af9287ab",
+                        "hb_size": "640x480",
+                        "hb_uuid_rubicon": "5f8dab2d-e45e-4d94-b622-c5a0af9287ab",
+                        "hb_env_rubicon": "mobile-app",
+                        "hb_bidder": "rubicon",
+                        "hb_bidder_rubicon": "rubicon",
+                        "hb_cache_host": "prebid-cache.qa.rubiconproject.com"
+                    },
+                    "cache": {
+                        "bids": {
+                            "url": "https://prebid-cache.qa.rubiconproject.com/cache?uuid=9690a5d8-3fa7-42d4-bafb-2385cc52fcbf",
+                            "cacheId": "9690a5d8-3fa7-42d4-bafb-2385cc52fcbf"
+                        },
+                        "vastXml": {
+                            "url": "https://prebid-cache.qa.rubiconproject.com/cache?uuid=5f8dab2d-e45e-4d94-b622-c5a0af9287ab",
+                            "cacheId": "5f8dab2d-e45e-4d94-b622-c5a0af9287ab"
+                        }
+                    }
+                },
+                "bidder": {
+                    "prebid": {
+                        "type": "video"
+                    }
+                }
+            }
+        }],
+        "seat": "rubicon",
+        "group": 0
+    }],
+    "cur": "USD",
+    "ext": {
+        "responsetimemillis": {
+            "cache": 82,
+            "rubicon": 0
+        },
+        "tmaxrequest": 900
+    }
+}

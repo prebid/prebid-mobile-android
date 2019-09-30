@@ -18,11 +18,10 @@ package org.prebid.mobile;
 
 import android.support.annotation.Nullable;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public final class VideoUtils {
-    public static String buildAdTagUrl(String adUnitId, @Nullable String adSlotSize, HashMap<String, String> targeting) {
-
+    public static String buildAdTagUrl(String adUnitId, @Nullable String adSlotSize, Map<String, String> targeting) {
 
         StringBuilder keywordsBuilder = new StringBuilder();
         for (String key : targeting.keySet()) {
@@ -30,9 +29,8 @@ public final class VideoUtils {
         }
 
         if (keywordsBuilder.length() > 0) {
-            keywordsBuilder.delete(keywordsBuilder.length() - 3, keywordsBuilder.length() - 1);
+            keywordsBuilder.delete(keywordsBuilder.length() - 3, keywordsBuilder.length());
         }
-
 
         String adTagUrl = buildAdTagUrl(adUnitId, adSlotSize, keywordsBuilder.toString());
 
@@ -40,7 +38,7 @@ public final class VideoUtils {
     }
 
     //https://support.google.com/admanager/answer/1068325?hl=en
-    public static String buildAdTagUrl(String adUnitId, @Nullable String adSlotSize, @Nullable String customParams) {
+    static String buildAdTagUrl(String adUnitId, @Nullable String adSlotSize, @Nullable String customParams) {
         String currentMillis = String.valueOf(System.currentTimeMillis());
 
         StringBuilder adTagUrl = new StringBuilder();
@@ -54,7 +52,6 @@ public final class VideoUtils {
         adTagUrl.append("&output=xml_vast4"); //Output format of ad
         adTagUrl.append("&vpmute=1"); //Indicates whether the ad playback starts while the video player is muted.
         adTagUrl.append("&iu=").append(adUnitId);
-        adTagUrl.append("&correlator=").append(currentMillis);
 
         if (adSlotSize != null) {
             adTagUrl.append("&sz=").append(adSlotSize); //Size of master video ad slot. Multiple sizes should be separated by the pipe (|) character.
@@ -63,6 +60,8 @@ public final class VideoUtils {
         if (customParams != null) {
             adTagUrl.append("&cust_params=").append(customParams);
         }
+
+        adTagUrl.append("&correlator=").append(currentMillis);
 
         return adTagUrl.toString();
     }
