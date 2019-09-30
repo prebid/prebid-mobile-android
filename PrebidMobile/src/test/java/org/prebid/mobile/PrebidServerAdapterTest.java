@@ -928,7 +928,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
-    public void testVideoOutStreamRubiconResponses() throws Exception {
+    public void testVideoOutStreamRubiconRequest() throws Exception {
 
         if (!successfulMockServerStarted) {
             fail("Server failed to start, unable to test.");
@@ -978,6 +978,61 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
         assertNotNull(vastxml);
 
+    }
+
+    @Test
+    public void testVideoInterstitialRubiconRequest() throws Exception {
+        if (!successfulMockServerStarted) {
+            fail("Server failed to start, unable to test.");
+        }
+
+        //given
+        PrebidMobile.setPrebidServerAccountId("12345");
+
+        //when
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(500, 700));
+
+        RequestParams requestParams = new RequestParams("67890", AdType.VIDEO_INTERSTITIAL, sizes);
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        @SuppressWarnings("unchecked")
+        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+
+        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+
+        JSONObject video = postData.getJSONArray("imp").getJSONObject(0).getJSONObject("video");
+
+        JSONObject cache = postData.getJSONObject("ext").getJSONObject("prebid").getJSONObject("cache");
+        JSONObject vastxml = cache.getJSONObject("vastxml");
+
+        int instl = postData.getJSONArray("imp").getJSONObject(0).getInt("instl");
+
+        //then
+        assertEquals(500, video.getInt("w"));
+        assertEquals(700, video.getInt("h"));
+        assertEquals(0, video.getInt("startdelay"));
+
+        JSONArray protocols = video.getJSONArray("protocols");
+        assertEquals(1, protocols.length());
+        assertEquals(7, protocols.getInt(0));
+
+        JSONArray playbackMethods = video.getJSONArray("playbackmethod");
+        assertEquals(1, playbackMethods.length());
+        assertEquals(2, playbackMethods.getInt(0));
+
+        JSONArray mimes = video.getJSONArray("mimes");
+        assertEquals(1, mimes.length());
+        assertEquals("video/mp4", mimes.getString(0));
+
+        assertEquals(1, instl);
+
+        assertNotNull(vastxml);
     }
 
     @Test
