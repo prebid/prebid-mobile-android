@@ -41,14 +41,4 @@ public class VideoUtilsTest extends BaseSetup {
         assertTrue(adTagUrl.contains("https://pubads.g.doubleclick.net/gampad/ads?env=vp&gdfp_req=1&unviewed_position_start=1&output=xml_vast4&vpmute=1&iu=adUnitId&sz=300x250&cust_params=key1%3Dvalue1%26key2%3Dvalue2"));
     }
 
-    @Test
-    public void testBuildAdTagUrl() throws Exception {
-        Map<String, String> targetingMap = new HashMap<>(2);
-        targetingMap.put("key1", "value1");
-        targetingMap.put("key2", "value2");
-
-        String adTagUrl = VideoUtils.buildAdTagUrl("adUnitId", "300x250", targetingMap);
-        assertTrue(adTagUrl.contains("https://pubads.g.doubleclick.net/gampad/ads?env=vp&gdfp_req=1&unviewed_position_start=1&output=xml_vast4&vpmute=1&iu=adUnitId&sz=300x250&cust_params=key1%3Dvalue1%26key2%3Dvalue2"));
-    }
-
 }
