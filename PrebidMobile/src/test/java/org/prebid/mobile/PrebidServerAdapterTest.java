@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -202,6 +203,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         verify(mockListener).onDemandFailed(ResultCode.INVALID_CONFIG_ID, uuid);
     }
 
+    @Ignore
     @Test
     public void testInvalidPrebidServerIdSyntaxForAppNexusHostedPrebidServer() {
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
@@ -220,6 +222,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         verify(mockListener).onDemandFailed(ResultCode.PREBID_SERVER_ERROR, uuid);
     }
 
+    @Ignore
     @Test
     public void testInvalidPrebidServerIdSyntaxForAppNexusHostedPrebidServer2() {
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
