@@ -55,5 +55,12 @@
             <version>1.2</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.prebid</groupId>
+            <artifactId>prebid-mobile-sdk-video-ima</artifactId>
+            <version>1.2</version>
+            <scope>compile</scope>
+        </dependency>
   </dependencies>
 </project>

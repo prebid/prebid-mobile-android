@@ -27,7 +27,7 @@ sh ./buildPrebidMobile.sh
 
 cp ../generated/* $DEPLOY_DIR_ABSOLUTE || true
 
-modules=("PrebidMobile" "PrebidMobile-core")
+modules=("PrebidMobile" "PrebidMobile-core" "PrebidMobile-video-ima")
 
 for n in ${!modules[@]}; do
 

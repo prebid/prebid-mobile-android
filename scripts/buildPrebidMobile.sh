@@ -82,8 +82,8 @@ echoX "Run unit tests"
 cd $LIBDIR
 (./gradlew -i --no-daemon PrebidMobile:test > $LOGPATH/testResults.log 2>&1) || (die "Unit tests failed, check log in $LOGPATH/testResults.log") 
 
-modules=("PrebidMobile" "PrebidMobile-core")
-projectPaths=("$BASEDIR/PrebidMobile" "$BASEDIR/PrebidMobile/PrebidMobile-core")
+modules=("PrebidMobile" "PrebidMobile-core" "PrebidMobile-video-ima")
+projectPaths=("$BASEDIR/PrebidMobile" "$BASEDIR/PrebidMobile/PrebidMobile-core" "$BASEDIR/PrebidMobile/PrebidMobile-video-ima")
 
 for n in ${!modules[@]}; do
 
@@ -133,6 +133,7 @@ echo -e "\n"
 echoX "Preparing fat PrebidDemo library"
 cd $OUTDIR
 mkdir $TEMPDIR
+cd $TEMPDIR; unzip -uo $OUTDIR/PrebidMobile-video-ima.jar
 cd $TEMPDIR; unzip -uo $OUTDIR/PrebidMobile-core.jar
 cd $TEMPDIR; unzip -uo $OUTDIR/PrebidMobile.jar
 
