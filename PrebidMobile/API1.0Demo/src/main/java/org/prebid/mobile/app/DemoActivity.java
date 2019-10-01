@@ -189,8 +189,6 @@ public class DemoActivity extends AppCompatActivity {
         nativeAdView.setAdSizes(AdSize.FLUID);
         adFrame.addView(nativeAdView);
         final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        builder.addCustomTargeting("hb_pb", "0.50");
-        builder.addCustomTargeting("hb_cache_id", "66fc1b77-297e-4526-8c22-279a929b4d82");
         final PublisherAdRequest request = builder.build();
         NativeAdUnit nativeAdUnit = (NativeAdUnit)adUnit;
         nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);

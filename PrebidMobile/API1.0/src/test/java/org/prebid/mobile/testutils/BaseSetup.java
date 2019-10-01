@@ -28,13 +28,13 @@ import java.io.IOException;
 
 import okhttp3.mockwebserver.MockWebServer;
 
+import static org.junit.Assert.fail;
 import static org.robolectric.Shadows.shadowOf;
 
 public class BaseSetup {
     public static final int testSDK = 21;
 
     protected MockWebServer server;
-    protected boolean successfulMockServerStarted = false;
     protected Scheduler uiScheduler, bgScheduler;
     protected Activity activity;
 
@@ -48,9 +48,8 @@ public class BaseSetup {
         server = new MockWebServer();
         try {
             server.start();
-            successfulMockServerStarted = true;
         } catch (IOException e) {
-            e.printStackTrace();
+            fail(e.getMessage());
         }
         FakeHttp.getFakeHttpLayer().interceptHttpRequests(true);
         FakeHttp.getFakeHttpLayer().interceptResponseContent(true);
@@ -64,9 +63,9 @@ public class BaseSetup {
 
     @After
     public void tearDown() {
+        activity.finish();
         try {
             server.shutdown();
-            activity.finish();
         } catch (IOException e) {
             e.printStackTrace();
         }

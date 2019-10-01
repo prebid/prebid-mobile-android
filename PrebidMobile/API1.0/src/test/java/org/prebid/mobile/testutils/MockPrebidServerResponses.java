@@ -75,6 +75,7 @@ public class MockPrebidServerResponses {
         InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerNoBidNoTmax.json");
         return inputStreamToString(in);
     }
+
     public static String noBidResponseTmaxTooLarge() {
         InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerNoBidTmaxTooLarge.json");
         return inputStreamToString(in);

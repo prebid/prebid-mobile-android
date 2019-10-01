@@ -22,7 +22,7 @@ import static org.prebid.mobile.NativeAdUnit.REQUIRED;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
-public class NativeAdUnitTest {
+public class NativeAdUnitTest extends BaseSetup {
 
     @Test
     public void testNativeAdUnitCreation() throws Exception {
@@ -76,6 +76,10 @@ public class NativeAdUnitTest {
         NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(501);
         adUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.CUSTOM);
         assertEquals(501, adUnit.requestConfig.get("context"));
+    }
+
+    @Test
+    public void testSetContextTypeServerRequestHasIt() {
     }
 
     @Test
