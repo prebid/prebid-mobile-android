@@ -38,11 +38,11 @@ class AdvertisingIDUtil {
         return limitAdTracking;
     }
 
-    private static synchronized void setAAID(String aaid) {
+    static synchronized void setAAID(String aaid) {
         AdvertisingIDUtil.aaid = aaid;
     }
 
-    private static synchronized void setLimitAdTracking(boolean limitAdTracking) {
+    static synchronized void setLimitAdTracking(boolean limitAdTracking) {
         AdvertisingIDUtil.limitAdTracking = limitAdTracking;
     }
 

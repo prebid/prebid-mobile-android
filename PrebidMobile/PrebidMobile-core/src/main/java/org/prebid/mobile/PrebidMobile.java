@@ -58,6 +58,17 @@ public class PrebidMobile {
         return accountId;
     }
 
+    public static void setPrebidUserAaid(String aaid) {
+        AdvertisingIDUtil.setAAID(aaid);
+    }
+
+    public static String getPrebidUserAaid() {
+        return AdvertisingIDUtil.getAAID();
+    }
+
+    public static void setPrebidUserAgent(String userAgent) { PrebidServerSettings.setUserAgent(userAgent); }
+
+
     private static Host host = Host.CUSTOM;
 
     public static void setPrebidServerHost(Host host) {

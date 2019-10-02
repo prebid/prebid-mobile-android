@@ -136,5 +136,10 @@ class PrebidServerSettings {
         PrebidServerSettings.carrierName = carrierName;
     }
 
+    static synchronized void setUserAgent(String userAgent) {
+        PrebidServerSettings.userAgent = userAgent;
+    }
+
+
 }
 
