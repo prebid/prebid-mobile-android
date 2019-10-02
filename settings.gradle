@@ -1,0 +1,16 @@
+include ':PrebidMobile',
+        ':PrebidMobile-core',
+
+//Prebid Demo apps
+        ':PrebidDemoJava',
+        ':PrebidDemoKotlin',
+
+//tools
+        ':DrPrebid'
+
+project(':PrebidMobile-core').projectDir = new File('PrebidMobile/PrebidMobile-core')
+
+project(':PrebidDemoJava').projectDir = new File('Example/PrebidDemoJava')
+project(':PrebidDemoKotlin').projectDir = new File('Example/PrebidDemoKotlin')
+
+project(':DrPrebid').projectDir = new File('tools/drprebid')

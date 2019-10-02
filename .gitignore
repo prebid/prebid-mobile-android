@@ -26,6 +26,11 @@ screenshot_*
 bin/
 gen/
 out/
+generated/
+scripts/Maven/*
+!scripts/Maven/deployPrebidMobile.sh
+!scripts/Maven/PrebidMobile-core-pom.xml
+!scripts/Maven/PrebidMobile-pom.xml
 
 # Gradle files
 .gradle/
