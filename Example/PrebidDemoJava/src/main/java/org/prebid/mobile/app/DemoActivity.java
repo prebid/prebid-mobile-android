@@ -106,7 +106,6 @@ public class DemoActivity extends AppCompatActivity {
             }
         } else if ("Native".equals(adTypeName)) {
             adUnit = new NativeAdUnit("25e17008-5081-4676-94d5-923ced4359d3");
-            enableAdditionalFunctionality(adUnit);
             if ("DFP".equals(adServerName)) {
                 createDFPNative();
             } else if ("MoPub".equals(adServerName)) {
@@ -217,10 +216,10 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     private void enableAdditionalFunctionality(AdUnit adUnit) {
-//        enableCOPPA();
-//        addFirstPartyData(adUnit);
-//        setStoredResponse();
-//        setRequestTimeoutMillis();
+        enableCOPPA();
+        addFirstPartyData(adUnit);
+        setStoredResponse();
+        setRequestTimeoutMillis();
     }
 
     private void enableCOPPA() {

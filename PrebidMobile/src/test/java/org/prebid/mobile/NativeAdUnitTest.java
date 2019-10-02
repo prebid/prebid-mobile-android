@@ -261,15 +261,4 @@ public class NativeAdUnitTest extends BaseSetup {
         assertEquals(2, medthod);
     }
 
-    @Test
-    public void testAddTitle() {
-        NativeAdUnit adUnit = new NativeAdUnit("1234");
-        adUnit.addTitle(90, true, null, null);
-        HashMap<String, Object> params = ((HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, HashMap<String, Object>>) adUnit.requestConfig.get(ASSETS)).get(NativeAdUnit.NATIVE_REQUEST_ASSET.TITLE);
-        assertEquals(2, params.size());
-        assertEquals(90, params.get(LENGTH));
-        assertEquals(true, params.get(REQUIRED));
-    }
-
-
 }

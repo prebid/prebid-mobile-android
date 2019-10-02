@@ -210,7 +210,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
-        verify(mockListener).onDemandFailed(ResultCode.PREBID_SERVER_ERROR, uuid);
+        verify(mockListener).onDemandFailed(ResultCode.INVALID_ACCOUNT_ID, uuid);
     }
 
     @Test
@@ -228,7 +228,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
-        verify(mockListener).onDemandFailed(ResultCode.PREBID_SERVER_ERROR, uuid);
+        verify(mockListener).onDemandFailed(ResultCode.INVALID_CONFIG_ID, uuid);
     }
 
     @Test
