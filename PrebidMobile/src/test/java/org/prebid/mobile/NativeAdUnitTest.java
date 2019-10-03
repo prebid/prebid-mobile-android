@@ -19,6 +19,7 @@ import static org.prebid.mobile.NativeAdUnit.ASSETS;
 import static org.prebid.mobile.NativeAdUnit.EVENT_TRACKERS;
 import static org.prebid.mobile.NativeAdUnit.LENGTH;
 import static org.prebid.mobile.NativeAdUnit.REQUIRED;
+import static org.prebid.mobile.NativeAdUnit.TYPE;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -261,4 +262,24 @@ public class NativeAdUnitTest extends BaseSetup {
         assertEquals(2, medthod);
     }
 
+    @Test
+    public void testAddTitle() {
+        NativeAdUnit adUnit = new NativeAdUnit("1234");
+        adUnit.addTitle(90, true, null, null);
+        assertEquals(90, ((HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>>) adUnit.requestConfig.get(ASSETS)).get(NativeAdUnit.NATIVE_REQUEST_ASSET.TITLE).get(0).get(LENGTH));
+        assertEquals(true, ((HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>>) adUnit.requestConfig.get(ASSETS)).get(NativeAdUnit.NATIVE_REQUEST_ASSET.TITLE).get(0).get(REQUIRED));
+        adUnit.addTitle(80, false, null, null);
+        assertEquals(1, ((HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>>) adUnit.requestConfig.get(ASSETS)).get(NativeAdUnit.NATIVE_REQUEST_ASSET.TITLE).size());
+        assertEquals(80, ((HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>>) adUnit.requestConfig.get(ASSETS)).get(NativeAdUnit.NATIVE_REQUEST_ASSET.TITLE).get(0).get(LENGTH));
+        assertEquals(false, ((HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>>) adUnit.requestConfig.get(ASSETS)).get(NativeAdUnit.NATIVE_REQUEST_ASSET.TITLE).get(0).get(REQUIRED));
+    }
+
+    @Test
+    public void testAddImage() {
+        NativeAdUnit adUnit = new NativeAdUnit("1234");
+        adUnit.addImage(NativeAdUnit.IMAGE_TYPE.MAIN, -1, -1, -1, -1, new ArrayList<String>(), true, null, null);
+        assertEquals(true, ((HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>>) adUnit.requestConfig.get(ASSETS)).get(NativeAdUnit.NATIVE_REQUEST_ASSET.IMAGE).get(0).get(REQUIRED));
+        assertEquals(3, ((HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>>) adUnit.requestConfig.get(ASSETS)).get(NativeAdUnit.NATIVE_REQUEST_ASSET.IMAGE).get(0).get(TYPE));
+
+    }
 }
