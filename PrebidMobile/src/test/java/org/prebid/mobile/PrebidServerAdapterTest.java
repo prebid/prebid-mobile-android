@@ -207,7 +207,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
     @Test
     public void testInvalidPrebidServerIdSyntaxForAppNexusHostedPrebidServer() {
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
-        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888d");
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888d"); // invalid account id
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
@@ -219,7 +219,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
-        verify(mockListener).onDemandFailed(ResultCode.PREBID_SERVER_ERROR, uuid);
+        verify(mockListener).onDemandFailed(ResultCode.INVALID_ACCOUNT_ID, uuid);
     }
 
     @Ignore
@@ -238,7 +238,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         adapter.requestDemand(requestParams, mockListener, uuid);
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
-        verify(mockListener).onDemandFailed(ResultCode.PREBID_SERVER_ERROR, uuid);
+        verify(mockListener).onDemandFailed(ResultCode.INVALID_CONFIG_ID, uuid);
     }
 
     @Test
