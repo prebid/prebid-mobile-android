@@ -1014,8 +1014,6 @@ public class PrebidServerAdapterTest extends BaseSetup {
         int instl = postData.getJSONArray("imp").getJSONObject(0).getInt("instl");
 
         //then
-        assertEquals(500, video.getInt("w"));
-        assertEquals(700, video.getInt("h"));
         assertEquals(0, video.getInt("startdelay"));
 
         JSONArray protocols = video.getJSONArray("protocols");
