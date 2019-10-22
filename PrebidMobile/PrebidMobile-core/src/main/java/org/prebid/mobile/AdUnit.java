@@ -98,6 +98,20 @@ public abstract class AdUnit {
                     return;
                 }
             }
+        } else if (adType == AdType.VIDEO) {
+
+            AdSize adSize = null;
+            if (adType == AdType.VIDEO) {
+                adSize = ((VideoAdUnit) this).getAdSize();
+            }
+            sizes = new HashSet<>(1);
+            sizes.add(adSize);
+            for (AdSize size : sizes) {
+                if (size.getWidth() < 0 || size.getHeight() < 0) {
+                    listener.onComplete(ResultCode.INVALID_SIZE);
+                    return;
+                }
+            }
         }
         AdSize minSizePerc = null;
         if (this instanceof InterstitialAdUnit) {
