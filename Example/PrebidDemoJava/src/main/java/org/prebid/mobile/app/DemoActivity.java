@@ -41,6 +41,7 @@ import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.InterstitialAdUnit;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.NativeAdUnit;
+import org.prebid.mobile.NativeEventTracker;
 import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
@@ -152,10 +153,12 @@ public class DemoActivity extends AppCompatActivity {
         nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
         nativeAdUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
         nativeAdUnit.addTitle(90, true, null, null);
-        ArrayList<NativeAdUnit.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
-        methods.add(NativeAdUnit.EVENT_TRACKING_METHOD.IMAGE);
+        ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
+        methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE);
+
         try {
-            nativeAdUnit.addEventTracker(NativeAdUnit.EVENT_TYPE.IMPRESSION, methods, null);
+            NativeEventTracker tracker = new NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods);
+            nativeAdUnit.addEventTracker(tracker);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -189,15 +192,17 @@ public class DemoActivity extends AppCompatActivity {
         adFrame.addView(nativeAdView);
         final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
         final PublisherAdRequest request = builder.build();
-        NativeAdUnit nativeAdUnit = (NativeAdUnit)adUnit;
+        NativeAdUnit nativeAdUnit = (NativeAdUnit) adUnit;
         nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
         nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
         nativeAdUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
         nativeAdUnit.addTitle(90, true, null, null);
-        ArrayList<NativeAdUnit.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
-        methods.add(NativeAdUnit.EVENT_TRACKING_METHOD.IMAGE);
+        ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
+        methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE);
+
         try {
-            nativeAdUnit.addEventTracker(NativeAdUnit.EVENT_TYPE.IMPRESSION, methods, null);
+            NativeEventTracker tracker = new NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods);
+            nativeAdUnit.addEventTracker(tracker);
         } catch (Exception e) {
             e.printStackTrace();
 
