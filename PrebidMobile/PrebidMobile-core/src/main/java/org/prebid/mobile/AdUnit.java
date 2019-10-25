@@ -124,7 +124,7 @@ public abstract class AdUnit {
             fetcher = new DemandFetcher(adObj);
             RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc);
             if (this.adType.equals(AdType.NATIVE)) {
-                requestParams.setNativeRequestParams(((NativeAdUnit) this).requestConfig);
+                requestParams.setNativeRequestParams(((NativeAdUnit) this).params);
             }
             fetcher.setPeriodMillis(periodMillis);
             fetcher.setRequestParams(requestParams);

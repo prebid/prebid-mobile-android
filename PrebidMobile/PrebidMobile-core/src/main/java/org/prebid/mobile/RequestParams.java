@@ -18,6 +18,7 @@ package org.prebid.mobile;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,7 +29,7 @@ class RequestParams {
     private String configId = "";
     private AdType adType = AdType.BANNER;
     private HashSet<AdSize> sizes = new HashSet<>();
-    private HashMap<String, Object> assets = new HashMap<>();
+    private NativeRequestParams nativeParams = null;
 
     @Nullable
     private Map<String, Set<String>> contextDataDictionary;
@@ -52,12 +53,12 @@ class RequestParams {
     }
 
 
-    void setNativeRequestParams(HashMap<String, Object> assets) {
-        this.assets = assets;
+    void setNativeRequestParams(NativeRequestParams params) {
+        this.nativeParams = params;
     }
 
-    HashMap<String, Object> getNativeRequestAssets() {
-        return assets;
+    NativeRequestParams getNativeRequestParams() {
+        return nativeParams;
     }
 
     String getConfigId() {

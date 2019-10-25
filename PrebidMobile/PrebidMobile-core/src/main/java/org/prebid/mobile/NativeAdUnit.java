@@ -2,61 +2,19 @@ package org.prebid.mobile;
 
 import android.support.annotation.NonNull;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 /**
  * For details of the configuration of native imps, please check this documentation:
  * https://www.iab.com/wp-content/uploads/2018/03/OpenRTB-Native-Ads-Specification-Final-1.2.pdf
  */
 public class NativeAdUnit extends AdUnit {
-    enum NATIVE_REQUEST_ASSET {
-        TITLE,
-        IMAGE,
-        DATA
-    }
-
-    // constants
-
-    static String VERSION = "ver";
-    static String SUPPORTED_VERSION = "1.2";
-    static String CONTEXT = "context";
-    static String CONTEXT_SUB_TYPE = "contextsubtype";
-    static String PLACEMENT_TYPE = "plcmttype";
-    static String PLACEMENT_COUNT = "plcmtcnt";
-    static String SEQ = "seq";
-    static String ASSETS = "assets";
-    static String A_URL_SUPPORT = "aurlsupport";
-    static String D_URL_SUPPORT = "durlsupport";
-    static String EVENT_TRACKERS = "eventtrackers";
-    static String PRIVACY = "privacy";
-    static String EXT = "ext";
-    static String EVENT = "event";
-    static String METHODS = "methods";
-    static String LENGTH = "len";
-    static String REQUIRED = "required";
-    static String ASSETS_EXT = "assetExt";
-    static String WIDTH_MIN = "wmin";
-    static String HEIGHT_MIN = "hmin";
-    static String WIDTH = "W";
-    static String HEIGHT = "h";
-    static String TYPE = "type";
-    static String MIMES = "mimes";
-    static String TITLE = "title";
-    static String IMAGE = "img";
-    static String DATA = "data";
-    static String NATIVE = "native";
-    static String REQUEST = "request";
+    NativeRequestParams params;
 
 
     public NativeAdUnit(@NonNull String configId) {
         super(configId, AdType.NATIVE);
+        params = new NativeRequestParams();
     }
 
-    HashMap<String, Object> requestConfig = new HashMap<>();
 
     public enum CONTEXT_TYPE {
         CONTENT_CENTRIC(1),
@@ -81,7 +39,7 @@ public class NativeAdUnit extends AdUnit {
     }
 
     public void setContextType(CONTEXT_TYPE type) {
-        requestConfig.put(CONTEXT, type.getID());
+        params.setContextType(type);
     }
 
     public enum CONTEXTSUBTYPE {
@@ -116,7 +74,7 @@ public class NativeAdUnit extends AdUnit {
     }
 
     public void setContextSubType(CONTEXTSUBTYPE type) {
-        requestConfig.put(CONTEXT_SUB_TYPE, type.getID());
+        params.setContextSubType(type);
     }
 
     public enum PLACEMENTTYPE {
@@ -144,45 +102,39 @@ public class NativeAdUnit extends AdUnit {
     }
 
     public void setPlacementType(PLACEMENTTYPE placementType) {
-        requestConfig.put(PLACEMENT_TYPE, placementType.getID());
+        params.setPlacementType(placementType);
     }
 
-    public void setPlacementCount(Integer placementCount) {
-        requestConfig.put(PLACEMENT_COUNT, placementCount);
+    public void setPlacementCount(int placementCount) {
+        params.setPlacementCount(placementCount);
     }
 
-    public void setSeq(Integer seq) {
-        requestConfig.put(SEQ, seq);
+    public void setSeq(int seq) {
+        params.setSeq(seq);
     }
 
     public void setAUrlSupport(boolean support) {
-        if (support) {
-            requestConfig.put(A_URL_SUPPORT, 1);
-        } else {
-            requestConfig.put(A_URL_SUPPORT, 0);
-        }
+        params.setAUrlSupport(support);
     }
 
     public void setDUrlSupport(boolean support) {
-        if (support) {
-            requestConfig.put(D_URL_SUPPORT, 1);
-        } else {
-            requestConfig.put(D_URL_SUPPORT, 0);
-        }
+        params.setDUrlSupport(support);
     }
 
     public void setPrivacy(boolean privacy) {
-        if (privacy) {
-            requestConfig.put(PRIVACY, 1);
-        } else {
-            requestConfig.put(PRIVACY, 0);
-        }
+        params.setPrivacy(privacy);
     }
 
     public void setExt(Object jsonObject) {
-        if (jsonObject instanceof JSONObject || jsonObject instanceof JSONArray) {
-            requestConfig.put(EXT, jsonObject);
-        }
+        params.setExt(jsonObject);
+    }
+
+    public void addEventTracker(NativeEventTracker tracker) {
+        params.addEventTracker(tracker);
+    }
+
+    public void addAsset(NativeAsset asset) {
+        params.addAsset(asset);
     }
 
 }

@@ -82,12 +82,9 @@ public class NativeImageAsset extends NativeAsset {
         return h;
     }
 
-    private ArrayList<String> mimes = null;
+    private ArrayList<String> mimes = new ArrayList<>();
 
     public void addMime(String mime) {
-        if (mimes == null) {
-            mimes = new ArrayList<>();
-        }
         mimes.add(mime);
     }
 

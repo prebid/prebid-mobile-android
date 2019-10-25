@@ -41,7 +41,10 @@ import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.InterstitialAdUnit;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.NativeAdUnit;
+import org.prebid.mobile.NativeDataAsset;
 import org.prebid.mobile.NativeEventTracker;
+import org.prebid.mobile.NativeImageAsset;
+import org.prebid.mobile.NativeTitleAsset;
 import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
@@ -152,20 +155,35 @@ public class DemoActivity extends AppCompatActivity {
         nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
         nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
         nativeAdUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
-        nativeAdUnit.addTitle(90, true, null, null);
         ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
         methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE);
-
         try {
             NativeEventTracker tracker = new NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods);
             nativeAdUnit.addEventTracker(tracker);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        nativeAdUnit.addImage(NativeAdUnit.IMAGE_TYPE.ICON, 20, 20, -1, -1, null, true, null, null);
-        nativeAdUnit.addImage(NativeAdUnit.IMAGE_TYPE.MAIN, 200, 200, -1, -1, null, true, null, null);
-        nativeAdUnit.addData(NativeAdUnit.DATA_TYPE.SPONSORED, 90, true, null, null);
+        NativeTitleAsset title = new NativeTitleAsset();
+        title.setLength(90);
+        title.setRequired(true);
+        nativeAdUnit.addAsset(title);
+        NativeImageAsset icon = new NativeImageAsset();
+        icon.setImageType(NativeImageAsset.IMAGE_TYPE.ICON);
+        icon.setWMin(20);
+        icon.setHMin(20);
+        icon.setRequired(true);
+        nativeAdUnit.addAsset(icon);
+        NativeImageAsset image = new NativeImageAsset();
+        image.setImageType(NativeImageAsset.IMAGE_TYPE.MAIN);
+        image.setHMin(200);
+        image.setWMin(200);
+        image.setRequired(true);
+        nativeAdUnit.addAsset(image);
+        NativeDataAsset data = new NativeDataAsset();
+        data.setLen(90);
+        data.setDataType(NativeDataAsset.DATA_TYPE.SPONSORED);
+        data.setRequired(true);
+        nativeAdUnit.addAsset(data);
         nativeAdUnit.fetchDemand(adView, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
@@ -196,7 +214,6 @@ public class DemoActivity extends AppCompatActivity {
         nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
         nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
         nativeAdUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
-        nativeAdUnit.addTitle(90, true, null, null);
         ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
         methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE);
 
@@ -207,9 +224,27 @@ public class DemoActivity extends AppCompatActivity {
             e.printStackTrace();
 
         }
-        nativeAdUnit.addImage(NativeAdUnit.IMAGE_TYPE.ICON, 20, 20, -1, -1, null, true, null, null);
-        nativeAdUnit.addImage(NativeAdUnit.IMAGE_TYPE.MAIN, 200, 200, -1, -1, null, true, null, null);
-        nativeAdUnit.addData(NativeAdUnit.DATA_TYPE.SPONSORED, 90, true, null, null);
+        NativeTitleAsset title = new NativeTitleAsset();
+        title.setLength(90);
+        title.setRequired(true);
+        nativeAdUnit.addAsset(title);
+        NativeImageAsset icon = new NativeImageAsset();
+        icon.setImageType(NativeImageAsset.IMAGE_TYPE.ICON);
+        icon.setWMin(20);
+        icon.setHMin(20);
+        icon.setRequired(true);
+        nativeAdUnit.addAsset(icon);
+        NativeImageAsset image = new NativeImageAsset();
+        image.setImageType(NativeImageAsset.IMAGE_TYPE.MAIN);
+        image.setHMin(200);
+        image.setWMin(200);
+        image.setRequired(true);
+        nativeAdUnit.addAsset(image);
+        NativeDataAsset data = new NativeDataAsset();
+        data.setLen(90);
+        data.setDataType(NativeDataAsset.DATA_TYPE.SPONSORED);
+        data.setRequired(true);
+        nativeAdUnit.addAsset(data);
         nativeAdUnit.fetchDemand(request, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {

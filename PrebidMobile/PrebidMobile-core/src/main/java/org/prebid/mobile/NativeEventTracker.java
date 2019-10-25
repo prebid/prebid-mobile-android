@@ -67,4 +67,16 @@ public class NativeEventTracker {
             this.extObject = extObject;
         }
     }
+
+    public EVENT_TYPE getEvent() {
+        return event;
+    }
+
+    public ArrayList<EVENT_TRACKING_METHOD> getMethods() {
+        return methods;
+    }
+
+    public Object getExtObject() {
+        return extObject;
+    }
 }

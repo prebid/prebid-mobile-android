@@ -1,5 +1,8 @@
 package org.prebid.mobile;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class NativeDataAsset extends NativeAsset {
     public NativeDataAsset() {
         super(REQUEST_ASSET.DATA);
@@ -36,29 +39,57 @@ public class NativeDataAsset extends NativeAsset {
         }
     }
 
+    private DATA_TYPE dataType = null;
 
-    //    public void addData(DATA_TYPE type, Integer len, Boolean required, Object assetExt, Object dataExt) {
-//        HashMap<NativeAdUnit.REQUEST_ASSET, ArrayList<HashMap<String, Object>>> assets = (HashMap<NativeAdUnit.REQUEST_ASSET, ArrayList<HashMap<String, Object>>>) requestConfig.get("assets");
-//        if (assets == null) {
-//            assets = new HashMap<>();
-//        }
-//        HashMap<String, Object> params = new HashMap<>();
-//        params.put(LENGTH, len);
-//        params.put(REQUIRED, required);
-//        params.put(TYPE, type.getID());
-//
-//        if (assetExt instanceof JSONArray || assetExt instanceof JSONObject) {
-//            params.put(ASSETS_EXT, assetExt);
-//        }
-//        if (dataExt instanceof JSONArray || assetExt instanceof JSONObject) {
-//            params.put(EXT, dataExt);
-//        }
-//        ArrayList<HashMap<String, Object>> assetParams = assets.get(NativeAdUnit.REQUEST_ASSET.DATA);
-//        if (assetParams == null) {
-//            assetParams = new ArrayList<>();
-//        }
-//        assetParams.add(params);
-//        assets.put(NativeAdUnit.REQUEST_ASSET.DATA, assetParams);
-//        requestConfig.put(ASSETS, assets);
-//    }
+    public DATA_TYPE getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(DATA_TYPE dataType) {
+        this.dataType = dataType;
+    }
+
+    private int len = -1;
+
+    public int getLen() {
+        return len;
+    }
+
+    public void setLen(int len) {
+        this.len = len;
+    }
+
+    private boolean required = false;
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    private Object dateExt = null;
+
+    public Object getDateExt() {
+        return dateExt;
+    }
+
+    public void setDateExt(Object dateExt) {
+        if (dateExt instanceof JSONObject || dateExt instanceof JSONArray) {
+            this.dateExt = dateExt;
+        }
+    }
+
+    private Object assetExt = null;
+
+    public Object getAssetExt() {
+        return assetExt;
+    }
+
+    public void setAssetExt(Object assetExt) {
+        if (assetExt instanceof JSONArray || assetExt instanceof JSONObject) {
+            this.assetExt = assetExt;
+        }
+    }
 }

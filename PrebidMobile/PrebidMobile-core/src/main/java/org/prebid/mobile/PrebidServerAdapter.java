@@ -572,104 +572,117 @@ class PrebidServerAdapter implements DemandAdapter {
                     JSONObject nativeObj = new JSONObject();
                     JSONObject request = new JSONObject();
                     JSONArray assets = new JSONArray();
-                    HashMap<String, Object> requestConfig = requestParams.getNativeRequestAssets();
-                    if (requestConfig.get(NativeAdUnit.CONTEXT) != null) {
-                        request.put(NativeAdUnit.CONTEXT, requestConfig.get(NativeAdUnit.CONTEXT));
+                    NativeRequestParams params = requestParams.getNativeRequestParams();
+                    if (params.getContextType() != null) {
+                        request.put(NativeRequestParams.CONTEXT, params.getContextType().getID());
                     }
-                    if (requestConfig.get(NativeAdUnit.CONTEXT_SUB_TYPE) != null) {
-                        request.put(NativeAdUnit.CONTEXT_SUB_TYPE, requestConfig.get(NativeAdUnit.CONTEXT_SUB_TYPE));
+                    if (params.getContextsubtype() != null) {
+                        request.put(NativeRequestParams.CONTEXT_SUB_TYPE, params.getContextsubtype().getID());
                     }
-                    if (requestConfig.get(NativeAdUnit.PLACEMENT_TYPE) != null) {
-                        request.put(NativeAdUnit.PLACEMENT_TYPE, requestConfig.get(NativeAdUnit.PLACEMENT_TYPE));
+                    if (params.getPlacementType() != null) {
+                        request.put(NativeRequestParams.PLACEMENT_TYPE, params.getPlacementType().getID());
                     }
-                    if (requestConfig.get(NativeAdUnit.PLACEMENT_COUNT) != null) {
-                        request.put(NativeAdUnit.PLACEMENT_COUNT, requestConfig.get(NativeAdUnit.PLACEMENT_COUNT));
+                    request.put(NativeRequestParams.PLACEMENT_COUNT, params.getPlacementCount());
+                    request.put(NativeRequestParams.SEQ, params.getSeq());
+                    request.put(NativeRequestParams.A_URL_SUPPORT, params.isAUrlSupport() ? 1 : 0);
+                    request.put(NativeRequestParams.D_URL_SUPPORT, params.isDUrlSupport() ? 1 : 0);
+                    if (!params.getEventTrackers().isEmpty()) {
+                        JSONArray trackers = new JSONArray();
+                        for (NativeEventTracker tracker : params.getEventTrackers()) {
+                            JSONObject trackerObject = new JSONObject();
+                            trackerObject.put(NativeRequestParams.EVENT, tracker.getEvent().getID());
+                            JSONArray methodsArray = new JSONArray();
+                            for (NativeEventTracker.EVENT_TRACKING_METHOD method : tracker.getMethods()) {
+                                methodsArray.put(method.getID());
+                            }
+                            trackerObject.put(NativeRequestParams.METHODS, methodsArray);
+                            if (tracker.getExtObject() != null) {
+                                trackerObject.put(NativeRequestParams.EXT, tracker.getExtObject());
+                            }
+                            trackers.put(trackerObject);
+                        }
+                        request.put(NativeRequestParams.EVENT_TRACKERS, trackers);
                     }
-                    if (requestConfig.get(NativeAdUnit.SEQ) != null) {
-                        request.put(NativeAdUnit.SEQ, requestConfig.get(NativeAdUnit.SEQ));
+                    request.put(NativeRequestParams.PRIVACY, params.isPrivacy() ? 1 : 0);
+                    if (params.getExt() != null) {
+                        request.put(NativeRequestParams.EXT, params.getExt());
                     }
-                    if (requestConfig.get(NativeAdUnit.A_URL_SUPPORT) != null) {
-                        request.put(NativeAdUnit.A_URL_SUPPORT, requestConfig.get(NativeAdUnit.A_URL_SUPPORT));
-                    }
-                    if (requestConfig.get(NativeAdUnit.D_URL_SUPPORT) != null) {
-                        request.put(NativeAdUnit.D_URL_SUPPORT, requestConfig.get(NativeAdUnit.D_URL_SUPPORT));
-                    }
-                    JSONArray trackers = (JSONArray) requestConfig.get(NativeAdUnit.EVENT_TRACKERS);
-                    if (trackers != null && trackers.length() > 0) {
-                        request.put(NativeAdUnit.EVENT_TRACKERS, requestConfig.get(NativeAdUnit.EVENT_TRACKERS));
-                    }
-                    if (requestConfig.get(NativeAdUnit.PRIVACY) != null) {
-                        request.put(NativeAdUnit.PRIVACY, requestConfig.get(NativeAdUnit.PRIVACY));
-                    }
-                    if (requestConfig.get(NativeAdUnit.EXT) != null) {
-                        request.put(NativeAdUnit.EXT, requestConfig.get(NativeAdUnit.EXT));
-                    }
-                    HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>> assetParams = (HashMap<NativeAdUnit.NATIVE_REQUEST_ASSET, ArrayList<HashMap<String, Object>>>) requestConfig.get(NativeAdUnit.ASSETS);
-                    if (assetParams != null && !assetParams.isEmpty()) {
-                        for (NativeAdUnit.NATIVE_REQUEST_ASSET asset : assetParams.keySet()) {
+                    if (!params.getAssets().isEmpty()) {
+                        for (NativeAsset asset : params.getAssets()) {
                             JSONObject assetObj;
-                            switch (asset) {
+                            switch (asset.getType()) {
                                 case TITLE:
+                                    NativeTitleAsset titleAsset = (NativeTitleAsset) asset;
                                     assetObj = new JSONObject();
                                     JSONObject title = new JSONObject();
-                                    ArrayList<HashMap<String, Object>> titleParams = assetParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.TITLE);
-                                    title.put(NativeAdUnit.LENGTH, titleParams.get(0).get("len"));
-                                    assetObj.put(NativeAdUnit.TITLE, title);
-                                    assetObj.put(NativeAdUnit.REQUIRED, (Boolean) titleParams.get(0).get(NativeAdUnit.REQUIRED) ? 1 : 0);
+                                    title.put(NativeRequestParams.LENGTH, titleAsset.getLen());
+                                    if (titleAsset.getTitleExt() != null) {
+                                        title.put(NativeRequestParams.EXT, titleAsset.getTitleExt());
+                                    }
+                                    assetObj.put(NativeRequestParams.TITLE, title);
+                                    assetObj.put(NativeRequestParams.REQUIRED, titleAsset.isRequired() ? 1 : 0);
+                                    if (titleAsset.getAssetExt() != null) {
+                                        assetObj.put(NativeRequestParams.EXT, titleAsset.getAssetExt());
+                                    }
                                     assets.put(assetObj);
                                     break;
                                 case IMAGE:
-
-                                    ArrayList<HashMap<String, Object>> imageParams = assetParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.IMAGE);
-                                    for (HashMap<String, Object> imageParam : imageParams) {
-                                        assetObj = new JSONObject();
-                                        JSONObject image = new JSONObject();
-                                        image.put(NativeAdUnit.TYPE, imageParam.get(NativeAdUnit.TYPE));
-                                        if ((Integer) imageParam.get(NativeAdUnit.WIDTH_MIN) > 0 && (Integer) imageParam.get(NativeAdUnit.HEIGHT_MIN) > 0) {
-                                            image.put(NativeAdUnit.WIDTH_MIN, imageParam.get(NativeAdUnit.WIDTH_MIN));
-                                            image.put(NativeAdUnit.HEIGHT_MIN, imageParam.get(NativeAdUnit.HEIGHT_MIN));
-                                        }
-                                        if ((Integer) imageParam.get(NativeAdUnit.WIDTH) > 0 && (Integer) imageParam.get(NativeAdUnit.HEIGHT) > 0) {
-                                            image.put(NativeAdUnit.WIDTH, imageParam.get(NativeAdUnit.WIDTH));
-                                            image.put(NativeAdUnit.HEIGHT, imageParam.get(NativeAdUnit.HEIGHT));
-                                        }
-                                        if (imageParam.get(NativeAdUnit.MIMES) != null) {
-                                            ArrayList<String> mimes = (ArrayList) imageParam.get(NativeAdUnit.MIMES);
-                                            JSONArray iconMimesArray = new JSONArray();
-                                            for (String mime : mimes) {
-                                                iconMimesArray.put(mime);
-                                            }
-                                            if (iconMimesArray.length() != 0) {
-                                                image.put(NativeAdUnit.MIMES, iconMimesArray);
-                                            }
-                                        }
-                                        assetObj.put(NativeAdUnit.IMAGE, image);
-                                        assetObj.put(NativeAdUnit.REQUIRED, (Boolean) imageParam.get(NativeAdUnit.REQUIRED) ? 1 : 0);
-                                        assets.put(assetObj);
+                                    NativeImageAsset imageAsset = (NativeImageAsset) asset;
+                                    assetObj = new JSONObject();
+                                    JSONObject image = new JSONObject();
+                                    image.put(NativeRequestParams.TYPE, imageAsset.getImageType().getID());
+                                    if (imageAsset.getImageExt() != null) {
+                                        image.put(NativeRequestParams.EXT, imageAsset.getImageExt());
                                     }
-
-
+                                    if (imageAsset.getHMin() > 0 && imageAsset.getWMin() > 0) {
+                                        image.put(NativeRequestParams.WIDTH_MIN, imageAsset.getWMin());
+                                        image.put(NativeRequestParams.HEIGHT_MIN, imageAsset.getHMin());
+                                    }
+                                    if (imageAsset.getH() > 0 && imageAsset.getW() > 0) {
+                                        image.put(NativeRequestParams.WIDTH, imageAsset.getW());
+                                        image.put(NativeRequestParams.HEIGHT, imageAsset.getH());
+                                    }
+                                    if (!imageAsset.getMimes().isEmpty()) {
+                                        JSONArray imageMimesArray = new JSONArray();
+                                        for (String mime : imageAsset.getMimes()) {
+                                            imageMimesArray.put(mime);
+                                        }
+                                        image.put(NativeRequestParams.MIMES, imageMimesArray);
+                                    }
+                                    assetObj.put(NativeRequestParams.IMAGE, image);
+                                    assetObj.put(NativeRequestParams.REQUIRED, imageAsset.isRequired() ? 1 : 0);
+                                    if (imageAsset.getAssetExt() != null) {
+                                        assetObj.put(NativeRequestParams.EXT, imageAsset.getAssetExt());
+                                    }
+                                    assets.put(assetObj);
                                     break;
                                 case DATA:
-                                    ArrayList<HashMap<String, Object>> dataParams = assetParams.get(NativeAdUnit.NATIVE_REQUEST_ASSET.DATA);
-                                    for (HashMap<String, Object> dataParam : dataParams) {
-                                        assetObj = new JSONObject();
-                                        JSONObject data = new JSONObject();
-                                        data.put(NativeAdUnit.TYPE, dataParam.get(NativeAdUnit.TYPE));
-                                        data.put(NativeAdUnit.LENGTH, dataParam.get(NativeAdUnit.LENGTH));
-                                        assetObj.put(NativeAdUnit.DATA, data);
-                                        assetObj.put(NativeAdUnit.REQUIRED, (Boolean) dataParam.get(NativeAdUnit.REQUIRED) ? 1 : 0);
-                                        assets.put(assetObj);
+                                    NativeDataAsset dataAsset = (NativeDataAsset) asset;
+                                    assetObj = new JSONObject();
+                                    JSONObject data = new JSONObject();
+                                    data.put(NativeRequestParams.TYPE, dataAsset.getDataType().getID());
+                                    if (dataAsset.getLen() > 0) {
+                                        data.put(NativeRequestParams.LENGTH, dataAsset.getLen());
                                     }
+                                    if (dataAsset.getDateExt() != null) {
+                                        data.put(NativeRequestParams.EXT, dataAsset.getDateExt());
+                                    }
+                                    assetObj.put(NativeRequestParams.DATA, data);
+                                    assetObj.put(NativeRequestParams.REQUIRED, dataAsset.isRequired() ? 1 : 0);
+                                    if (dataAsset.getAssetExt() != null) {
+                                        assetObj.put(NativeRequestParams.EXT, dataAsset.getAssetExt());
+                                    }
+                                    assets.put(assetObj);
+
                                     break;
                             }
                         }
                     }
-                    request.put(NativeAdUnit.ASSETS, assets);
-                    request.put(NativeAdUnit.VERSION, NativeAdUnit.SUPPORTED_VERSION);
-                    nativeObj.put(NativeAdUnit.REQUEST, request.toString());
-                    nativeObj.put(NativeAdUnit.VERSION, NativeAdUnit.SUPPORTED_VERSION);
-                    imp.put(NativeAdUnit.NATIVE, nativeObj);
+                    request.put(NativeRequestParams.ASSETS, assets);
+                    request.put(NativeRequestParams.VERSION, NativeRequestParams.SUPPORTED_VERSION);
+                    nativeObj.put(NativeRequestParams.REQUEST, request.toString());
+                    nativeObj.put(NativeRequestParams.VERSION, NativeRequestParams.SUPPORTED_VERSION);
+                    imp.put(NativeRequestParams.NATIVE, nativeObj);
                 }
 
                 JSONObject prebid = new JSONObject();
