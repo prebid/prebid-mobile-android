@@ -589,11 +589,16 @@ class PrebidServerAdapter implements DemandAdapter {
                     video.put("startdelay", 0);
                     video.put("playbackmethod", new JSONArray().put(2));
 
+                    Integer placement = null;
+
                     if (adType.equals(AdType.VIDEO)) {
                         for (AdSize size : requestParams.getAdSizes()) {
                             video.put("w", size.getWidth());
                             video.put("h", size.getHeight());
                         }
+
+                        placement = requestParams.getVideoPlacement();
+
                     } else if (adType.equals(AdType.VIDEO_INTERSTITIAL)) {
                         Context context = PrebidMobile.getApplicationContext();
 
@@ -602,7 +607,10 @@ class PrebidServerAdapter implements DemandAdapter {
                             video.put("h", context.getResources().getConfiguration().screenHeightDp);
                         }
 
+                        placement = 5;
                     }
+
+                    video.put("placement", placement);
 
                     imp.put("video", video);
                 }

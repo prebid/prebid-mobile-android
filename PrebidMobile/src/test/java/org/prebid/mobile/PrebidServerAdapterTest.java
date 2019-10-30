@@ -854,7 +854,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         int coppa = 0;
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
         try {
             coppa = postData.getJSONObject("regs").getInt("coppa");
         } catch (Exception ex) {
@@ -872,7 +872,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         int coppa = 0;
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
         try {
             coppa = postData.getJSONObject("regs").getInt("coppa");
         } catch (Exception ex) {
@@ -1044,7 +1044,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         int instl = 0;
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.INTERSTITIAL, null, null, minSizePerc);
+        JSONObject postData = getPostDataHelper(AdType.INTERSTITIAL, null, null, minSizePerc, null);
 
         try {
             extInterstitial = postData.getJSONObject("device").getJSONObject("ext").getJSONObject("prebid").getJSONObject("interstitial");
@@ -1083,7 +1083,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         int instl = 0;
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.INTERSTITIAL, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.INTERSTITIAL, null, null, null, null);
 
         try {
             instl = postData.getJSONArray("imp").getJSONObject(0).getInt("instl");
@@ -1109,7 +1109,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         int instl = 0;
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, minSizePerc);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, minSizePerc, null);
 
         try {
             extInterstitial = postData.getJSONObject("device").getJSONObject("ext").getJSONObject("prebid").getJSONObject("interstitial");
@@ -1133,7 +1133,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         TargetingParams.addUserKeyword("value10");
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
 
         String keywords = null;
         try {
@@ -1154,7 +1154,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         TargetingParams.addContextKeyword("value10");
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
 
         String keywords = null;
         try {
@@ -1176,7 +1176,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         TargetingParams.addBidderToAccessControlList(TargetingParams.BIDDER_NAME_RUBICON_PROJECT);
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
 
         JSONArray biddersJsonArray = null;
         try {
@@ -1201,7 +1201,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         TargetingParams.addUserData("key2", "value21");
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
 
         JSONObject dataJsonObject = null;
         try {
@@ -1244,7 +1244,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         TargetingParams.addContextData("key2", "value21");
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
 
         JSONObject dataJsonObject = null;
         try {
@@ -1286,7 +1286,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         contextKeywordsSet.add("value10");
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, contextKeywordsSet, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, contextKeywordsSet, null, null);
 
         String keywords = null;
 
@@ -1310,7 +1310,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         contextDataDictionary.put("key2", new HashSet<>(Arrays.asList("value20", "value21")));
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, contextDataDictionary, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, contextDataDictionary, null, null, null);
 
         JSONObject dataJsonObject = null;
         try {
@@ -1345,7 +1345,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
     }
 
-    private JSONObject getPostDataHelper(AdType adType, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    private JSONObject getPostDataHelper(AdType adType, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc, @Nullable Integer videoPlacement) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         if (!successfulMockServerStarted) {
             fail("Server failed to start, unable to test.");
         }
@@ -1359,7 +1359,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
 
-        RequestParams requestParams = new RequestParams("67890", adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc);
+        RequestParams requestParams = new RequestParams("67890", adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, videoPlacement);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")

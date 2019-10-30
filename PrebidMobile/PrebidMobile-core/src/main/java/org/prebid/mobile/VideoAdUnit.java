@@ -21,17 +21,35 @@ import android.support.annotation.NonNull;
 public class VideoAdUnit extends AdUnit {
 
     private final AdSize adSize;
+    private final PlacementType type;
 
-    public VideoAdUnit(@NonNull String configId, int width, int height) {
+    public VideoAdUnit(@NonNull String configId, int width, int height, PlacementType type) {
         super(configId, AdType.VIDEO);
         adSize = new AdSize(width, height);
-    }
-
-    public String getAdSizeString() {
-        return adSize.getWidth() + "x" + adSize.getHeight();
+        this.type = type;
     }
 
     AdSize getAdSize() {
         return adSize;
+    }
+
+    public PlacementType getType() {
+        return type;
+    }
+
+    public enum PlacementType {
+        IN_BANNER(2),
+        IN_ARTICLE(3),
+        IN_FEED(4);
+
+        private final int value;
+
+        PlacementType(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
     }
 }

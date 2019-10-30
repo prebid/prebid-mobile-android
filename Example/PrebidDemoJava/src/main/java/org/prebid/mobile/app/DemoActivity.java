@@ -206,7 +206,7 @@ public class DemoActivity extends AppCompatActivity {
         Host.CUSTOM.setHostUrl("https://prebid-server.qa.rubiconproject.com/openrtb2/auction");
         PrebidMobile.setPrebidServerAccountId("1011");
 
-        adUnit = new VideoAdUnit("1011-test-video", 300, 250);
+        adUnit = new VideoAdUnit("1011-test-video", 300, 250, VideoAdUnit.PlacementType.IN_BANNER);
     }
 
     private void setupAMBanner(int width, int height) {
