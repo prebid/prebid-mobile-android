@@ -61,6 +61,8 @@ public class DemoActivity extends AppCompatActivity {
     int refreshCount;
     AdUnit adUnit;
     ResultCode resultCode;
+    PublisherAdRequest request;
+    MoPubView adView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,7 +111,7 @@ public class DemoActivity extends AppCompatActivity {
                 createMoPubInterstitial();
             }
         } else if ("Native".equals(adTypeName)) {
-            adUnit = new NativeAdUnit("25e17008-5081-4676-94d5-923ced4359d3");
+            adUnit = new NativeAdUnit("1f85e687-b45f-4649-a4d5-65f74f2ede8e");
             if ("DFP".equals(adServerName)) {
                 createDFPNative();
             } else if ("MoPub".equals(adServerName)) {
@@ -122,7 +124,7 @@ public class DemoActivity extends AppCompatActivity {
     void createMoPubNative() {
         final FrameLayout adFrame = (FrameLayout) findViewById(R.id.adFrame);
         adFrame.removeAllViews();
-        final MoPubView adView = new MoPubView(this);
+        adView = new MoPubView(this);
         adView.setAdUnitId("a470959f33034229945744c5f904d5bc");
         adView.setBannerAdListener(new MoPubView.BannerAdListener() {
             @Override
@@ -157,6 +159,7 @@ public class DemoActivity extends AppCompatActivity {
         nativeAdUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
         ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
         methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE);
+        methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.JS);
         try {
             NativeEventTracker tracker = new NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods);
             nativeAdUnit.addEventTracker(tracker);
@@ -184,11 +187,14 @@ public class DemoActivity extends AppCompatActivity {
         data.setDataType(NativeDataAsset.DATA_TYPE.SPONSORED);
         data.setRequired(true);
         nativeAdUnit.addAsset(data);
+        int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
+        nativeAdUnit.setAutoRefreshPeriodMillis(millis);
         nativeAdUnit.fetchDemand(adView, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
                 DemoActivity.this.resultCode = resultCode;
                 adView.loadAd();
+                DemoActivity.this.adView = adView;
                 refreshCount++;
             }
         });
@@ -209,7 +215,7 @@ public class DemoActivity extends AppCompatActivity {
         nativeAdView.setAdSizes(AdSize.FLUID);
         adFrame.addView(nativeAdView);
         final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        final PublisherAdRequest request = builder.build();
+        request = builder.build();
         NativeAdUnit nativeAdUnit = (NativeAdUnit) adUnit;
         nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
         nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
@@ -245,11 +251,14 @@ public class DemoActivity extends AppCompatActivity {
         data.setDataType(NativeDataAsset.DATA_TYPE.SPONSORED);
         data.setRequired(true);
         nativeAdUnit.addAsset(data);
+        int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
+        nativeAdUnit.setAutoRefreshPeriodMillis(millis);
         nativeAdUnit.fetchDemand(request, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
                 DemoActivity.this.resultCode = resultCode;
                 nativeAdView.loadAd(request);
+                DemoActivity.this.request = request;
                 refreshCount++;
             }
         });
@@ -339,7 +348,7 @@ public class DemoActivity extends AppCompatActivity {
         adFrame.addView(dfpAdView);
         final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
 
-        final PublisherAdRequest request = builder.build();
+        request = builder.build();
 
         //region PrebidMobile Mobile API 1.0 usage
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
@@ -384,7 +393,7 @@ public class DemoActivity extends AppCompatActivity {
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        final PublisherAdRequest request = builder.build();
+        request = builder.build();
         adUnit.fetchDemand(request, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
@@ -399,7 +408,7 @@ public class DemoActivity extends AppCompatActivity {
     void createMoPubBanner(int width, int height) {
         FrameLayout adFrame = findViewById(R.id.adFrame);
         adFrame.removeAllViews();
-        final MoPubView adView = new MoPubView(this);
+        adView = new MoPubView(this);
         if (width == 300 && height == 250) {
             adView.setAdUnitId(MOPUB_BANNER_ADUNIT_ID_300x250);
         } else {
