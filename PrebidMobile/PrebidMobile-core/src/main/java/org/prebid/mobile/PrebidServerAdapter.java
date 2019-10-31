@@ -664,8 +664,8 @@ class PrebidServerAdapter implements DemandAdapter {
                                     if (dataAsset.getLen() > 0) {
                                         data.put(NativeRequestParams.LENGTH, dataAsset.getLen());
                                     }
-                                    if (dataAsset.getDateExt() != null) {
-                                        data.put(NativeRequestParams.EXT, dataAsset.getDateExt());
+                                    if (dataAsset.getDataExt() != null) {
+                                        data.put(NativeRequestParams.EXT, dataAsset.getDataExt());
                                     }
                                     assetObj.put(NativeRequestParams.DATA, data);
                                     assetObj.put(NativeRequestParams.REQUIRED, dataAsset.isRequired() ? 1 : 0);
