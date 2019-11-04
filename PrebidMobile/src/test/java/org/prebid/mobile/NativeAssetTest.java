@@ -11,6 +11,7 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
@@ -22,8 +23,8 @@ public class NativeAssetTest {
     @Test
     public void testNativeAssetTitle() {
         NativeTitleAsset title = new NativeTitleAsset();
-        assertEquals(title.getLen(), 0);
-        assertEquals(title.isRequired(), false);
+        assertEquals(0,title.getLen());
+        assertEquals(false,title.isRequired());
         assertNull(title.getTitleExt());
         assertNull(title.getAssetExt());
 
@@ -46,8 +47,8 @@ public class NativeAssetTest {
         title.setTitleExt(titleExt);
 
 
-        assertEquals(title.getLen(), 25);
-        assertEquals(title.isRequired(), true);
+        assertEquals(25,title.getLen());
+        assertEquals(true,title.isRequired());
         String value1 = "";
         try {
             JSONObject data = (JSONObject) title.getAssetExt();
@@ -92,12 +93,12 @@ public class NativeAssetTest {
         }
         image.setImageExt(imageExt);
 
-        assertEquals(image.getWMin(), 20);
-        assertEquals(image.getHMin(), 30);
-        assertEquals(image.getW(), 100);
-        assertEquals(image.getH(), 200);
-        assertEquals(image.isRequired(), true);
-        assertEquals(image.getMimes().get(0), "png");
+        assertEquals(20,image.getWMin());
+        assertEquals(30,image.getHMin());
+        assertEquals(100,image.getW());
+        assertEquals(200,image.getH());
+        assertEquals(true,image.isRequired());
+        assertEquals("png",image.getMimes().get(0));
 
         String value1 = "";
         try {
@@ -118,11 +119,20 @@ public class NativeAssetTest {
         assertEquals("value2", value2);
 
         image.setImageType(NativeImageAsset.IMAGE_TYPE.ICON);
-        assertEquals(image.getImageType(), NativeImageAsset.IMAGE_TYPE.ICON);
+        assertEquals(NativeImageAsset.IMAGE_TYPE.ICON,image.getImageType());
+        assertEquals(1,image.getImageType().getID());
         image.setImageType(NativeImageAsset.IMAGE_TYPE.MAIN);
-        assertEquals(image.getImageType(), NativeImageAsset.IMAGE_TYPE.MAIN);
+        assertEquals(NativeImageAsset.IMAGE_TYPE.MAIN,image.getImageType());
+        assertEquals(3,image.getImageType().getID());
         image.setImageType(NativeImageAsset.IMAGE_TYPE.CUSTOM);
-        assertEquals(image.getImageType(), NativeImageAsset.IMAGE_TYPE.CUSTOM);
+        assertEquals(NativeImageAsset.IMAGE_TYPE.CUSTOM,image.getImageType());
+        NativeImageAsset.IMAGE_TYPE.CUSTOM.setID(500);
+        assertEquals(500,image.getImageType().getID());
+        NativeImageAsset.IMAGE_TYPE.CUSTOM.setID(600);
+        assertEquals(600, image.getImageType().getID());
+        NativeImageAsset.IMAGE_TYPE.CUSTOM.setID(1);
+        assertEquals(600, image.getImageType().getID());
+        assertFalse("Invalid CustomId", 1 == image.getImageType().getID());
     }
 
     @Test
@@ -145,8 +155,8 @@ public class NativeAssetTest {
         }
         dataAsset.setDataExt(dataExt);
 
-        assertEquals(dataAsset.getLen(),25);
-        assertEquals(dataAsset.isRequired(),true);
+        assertEquals(25,dataAsset.getLen());
+        assertEquals(true,dataAsset.isRequired());
 
         String value1 = "";
         try {
@@ -167,31 +177,50 @@ public class NativeAssetTest {
         assertEquals("value2", value2);
 
         dataAsset.setDataType(NativeDataAsset.DATA_TYPE.SPONSORED);
-        assertEquals(dataAsset.getDataType(), NativeDataAsset.DATA_TYPE.SPONSORED);
+        assertEquals(NativeDataAsset.DATA_TYPE.SPONSORED,dataAsset.getDataType());
+        assertEquals(1,dataAsset.getDataType().getID());
         dataAsset.setDataType(NativeDataAsset.DATA_TYPE.DESC);
-        assertEquals(dataAsset.getDataType(), NativeDataAsset.DATA_TYPE.DESC);
+        assertEquals(NativeDataAsset.DATA_TYPE.DESC,dataAsset.getDataType());
+        assertEquals(2,dataAsset.getDataType().getID());
         dataAsset.setDataType(NativeDataAsset.DATA_TYPE.RATING);
-        assertEquals(dataAsset.getDataType(), NativeDataAsset.DATA_TYPE.RATING);
+        assertEquals(NativeDataAsset.DATA_TYPE.RATING,dataAsset.getDataType());
+        assertEquals(3,dataAsset.getDataType().getID());
         dataAsset.setDataType(NativeDataAsset.DATA_TYPE.LIKES);
-        assertEquals(dataAsset.getDataType(), NativeDataAsset.DATA_TYPE.LIKES);
+        assertEquals(NativeDataAsset.DATA_TYPE.LIKES,dataAsset.getDataType());
+        assertEquals(4,dataAsset.getDataType().getID());
         dataAsset.setDataType(NativeDataAsset.DATA_TYPE.DOWNLOADS);
-        assertEquals(dataAsset.getDataType(), NativeDataAsset.DATA_TYPE.DOWNLOADS);
+        assertEquals(NativeDataAsset.DATA_TYPE.DOWNLOADS,dataAsset.getDataType());
+        assertEquals(5,dataAsset.getDataType().getID());
         dataAsset.setDataType(NativeDataAsset.DATA_TYPE.PRICE);
-        assertEquals(dataAsset.getDataType(), NativeDataAsset.DATA_TYPE.PRICE);
+        assertEquals(NativeDataAsset.DATA_TYPE.PRICE,dataAsset.getDataType());
+        assertEquals(6,dataAsset.getDataType().getID());
         dataAsset.setDataType(NativeDataAsset.DATA_TYPE.SALEPRICE);
-        assertEquals(dataAsset.getDataType(), NativeDataAsset.DATA_TYPE.SALEPRICE);
+        assertEquals(NativeDataAsset.DATA_TYPE.SALEPRICE,dataAsset.getDataType());
+        assertEquals(7,dataAsset.getDataType().getID());
         dataAsset.setDataType(NativeDataAsset.DATA_TYPE.PHONE);
-        assertEquals(dataAsset.getDataType(), NativeDataAsset.DATA_TYPE.PHONE);
+        assertEquals(NativeDataAsset.DATA_TYPE.PHONE,dataAsset.getDataType());
+        assertEquals(8,dataAsset.getDataType().getID());
         dataAsset.setDataType(NativeDataAsset.DATA_TYPE.ADDRESS);
-        assertEquals(dataAsset.getDataType(), NativeDataAsset.DATA_TYPE.ADDRESS);
+        assertEquals(NativeDataAsset.DATA_TYPE.ADDRESS,dataAsset.getDataType());
+        assertEquals(9,dataAsset.getDataType().getID());
         dataAsset.setDataType(NativeDataAsset.DATA_TYPE.DESC2);
-        assertEquals(dataAsset.getDataType(), NativeDataAsset.DATA_TYPE.DESC2);
+        assertEquals(NativeDataAsset.DATA_TYPE.DESC2,dataAsset.getDataType());
+        assertEquals(10,dataAsset.getDataType().getID());
         dataAsset.setDataType(NativeDataAsset.DATA_TYPE.DESPLAYURL);
-        assertEquals(dataAsset.getDataType(), NativeDataAsset.DATA_TYPE.DESPLAYURL);
+        assertEquals(NativeDataAsset.DATA_TYPE.DESPLAYURL,dataAsset.getDataType());
+        assertEquals(11,dataAsset.getDataType().getID());
         dataAsset.setDataType(NativeDataAsset.DATA_TYPE.CTATEXT);
-        assertEquals(dataAsset.getDataType(), NativeDataAsset.DATA_TYPE.CTATEXT);
+        assertEquals(NativeDataAsset.DATA_TYPE.CTATEXT,dataAsset.getDataType());
+        assertEquals(12,dataAsset.getDataType().getID());
         dataAsset.setDataType(NativeDataAsset.DATA_TYPE.CUSTOM);
-        assertEquals(dataAsset.getDataType(), NativeDataAsset.DATA_TYPE.CUSTOM);
+        assertEquals(NativeDataAsset.DATA_TYPE.CUSTOM,dataAsset.getDataType());
+        NativeDataAsset.DATA_TYPE.CUSTOM.setID(500);
+        assertEquals(500,dataAsset.getDataType().getID());
+        NativeDataAsset.DATA_TYPE.CUSTOM.setID(600);
+        assertEquals(600, dataAsset.getDataType().getID());
+        NativeDataAsset.DATA_TYPE.CUSTOM.setID(1);
+        assertEquals(600, dataAsset.getDataType().getID());
+        assertFalse("Invalid CustomId", 1 == dataAsset.getDataType().getID());
 
     }
 

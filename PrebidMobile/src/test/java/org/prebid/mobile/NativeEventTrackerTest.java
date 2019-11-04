@@ -11,6 +11,7 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNull;
 
 @RunWith(RobolectricTestRunner.class)
@@ -24,15 +25,26 @@ public class NativeEventTrackerTest {
             methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE);
             methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.JS);
             NativeEventTracker eventTracker = new NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods);
-            assertEquals(eventTracker.getEvent(), NativeEventTracker.EVENT_TYPE.IMPRESSION);
+            assertEquals(NativeEventTracker.EVENT_TYPE.IMPRESSION,eventTracker.getEvent());
+            assertEquals(1,eventTracker.getEvent().getID());
             eventTracker.event = NativeEventTracker.EVENT_TYPE.VIEWABLE_MRC50;
-            assertEquals(eventTracker.getEvent(), NativeEventTracker.EVENT_TYPE.VIEWABLE_MRC50);
+            assertEquals(NativeEventTracker.EVENT_TYPE.VIEWABLE_MRC50,eventTracker.getEvent());
+            assertEquals(2,eventTracker.getEvent().getID());
             eventTracker.event = NativeEventTracker.EVENT_TYPE.VIEWABLE_MRC100;
-            assertEquals(eventTracker.getEvent(), NativeEventTracker.EVENT_TYPE.VIEWABLE_MRC100);
+            assertEquals(NativeEventTracker.EVENT_TYPE.VIEWABLE_MRC100,eventTracker.getEvent());
+            assertEquals(3,eventTracker.getEvent().getID());
             eventTracker.event = NativeEventTracker.EVENT_TYPE.VIEWABLE_VIDEO50;
-            assertEquals(eventTracker.getEvent(), NativeEventTracker.EVENT_TYPE.VIEWABLE_VIDEO50);
+            assertEquals(NativeEventTracker.EVENT_TYPE.VIEWABLE_VIDEO50,eventTracker.getEvent());
+            assertEquals(4,eventTracker.getEvent().getID());
             eventTracker.event = NativeEventTracker.EVENT_TYPE.CUSTOM;
-            assertEquals(eventTracker.getEvent(), NativeEventTracker.EVENT_TYPE.CUSTOM);
+            assertEquals(NativeEventTracker.EVENT_TYPE.CUSTOM,eventTracker.getEvent());
+            NativeEventTracker.EVENT_TYPE.CUSTOM.setID(500);
+            assertEquals(500,eventTracker.getEvent().getID());
+            NativeEventTracker.EVENT_TYPE.CUSTOM.setID(600);
+            assertEquals(600, eventTracker.getEvent().getID());
+            NativeEventTracker.EVENT_TYPE.CUSTOM.setID(1);
+            assertEquals(600, eventTracker.getEvent().getID());
+            assertFalse("Invalid CustomId", 1 == eventTracker.getEvent().getID());
 
         } catch (Exception e) {
 
@@ -46,18 +58,27 @@ public class NativeEventTrackerTest {
             ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
             methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE);
             NativeEventTracker eventTracker = new NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods);
-            assertEquals(eventTracker.getMethods().size(), 1);
-            assertEquals(eventTracker.getMethods().get(0), NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE);
+            assertEquals(1,eventTracker.getMethods().size());
+            assertEquals(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE,eventTracker.getMethods().get(0));
+            assertEquals(1,eventTracker.getMethods().get(0).getID());
             methods = new ArrayList<>();
             methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.JS);
             eventTracker.methods = methods;
-            assertEquals(eventTracker.getMethods().size(), 1);
-            assertEquals(eventTracker.getMethods().get(0), NativeEventTracker.EVENT_TRACKING_METHOD.JS);
+            assertEquals(1,eventTracker.getMethods().size());
+            assertEquals(NativeEventTracker.EVENT_TRACKING_METHOD.JS,eventTracker.getMethods().get(0));
+            assertEquals(2,eventTracker.getMethods().get(0).getID());
             methods = new ArrayList<>();
             methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM);
             eventTracker.methods = methods;
-            assertEquals(eventTracker.getMethods().size(), 1);
-            assertEquals(eventTracker.getMethods().get(0), NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM);
+            assertEquals(1,eventTracker.getMethods().size());
+            assertEquals(NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM,eventTracker.getMethods().get(0));
+            NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM.setID(500);
+            assertEquals(500,eventTracker.getMethods().get(0).getID());
+            NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM.setID(600);
+            assertEquals(600, eventTracker.getMethods().get(0).getID());
+            NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM.setID(1);
+            assertEquals(600, eventTracker.getMethods().get(0).getID());
+            assertFalse("Invalid CustomId", 1 == eventTracker.getMethods().get(0).getID());
 
         } catch (Exception e) {
 
