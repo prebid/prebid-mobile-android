@@ -962,11 +962,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         //then
         assertEquals(500, video.getInt("w"));
         assertEquals(700, video.getInt("h"));
-        assertEquals(0, video.getInt("startdelay"));
-
-        JSONArray protocols = video.getJSONArray("protocols");
-        assertEquals(1, protocols.length());
-        assertEquals(7, protocols.getInt(0));
+        assertEquals(1, video.getInt("linearity"));
 
         JSONArray playbackMethods = video.getJSONArray("playbackmethod");
         assertEquals(1, playbackMethods.length());
@@ -1014,11 +1010,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         int instl = postData.getJSONArray("imp").getJSONObject(0).getInt("instl");
 
         //then
-        assertEquals(0, video.getInt("startdelay"));
-
-        JSONArray protocols = video.getJSONArray("protocols");
-        assertEquals(1, protocols.length());
-        assertEquals(7, protocols.getInt(0));
+        assertEquals(1, video.getInt("linearity"));
 
         JSONArray playbackMethods = video.getJSONArray("playbackmethod");
         assertEquals(1, playbackMethods.length());
