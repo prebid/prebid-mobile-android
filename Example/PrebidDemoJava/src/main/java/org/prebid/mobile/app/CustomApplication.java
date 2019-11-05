@@ -24,7 +24,6 @@ import android.os.Bundle;
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
 
-import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
 
 import java.util.ArrayList;
@@ -47,8 +46,6 @@ public class CustomApplication extends Application {
         MoPub.initializeSdk(this, sdkConfiguration, null);
         //set Prebid Mobile global Settings
         //region PrebidMobile API
-        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID);
-        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(getApplicationContext());
         //endregion

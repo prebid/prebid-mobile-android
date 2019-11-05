@@ -26,6 +26,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
@@ -72,8 +73,15 @@ public class DemoActivity extends AppCompatActivity {
         String adTypeName = intent.getStringExtra(Constants.AD_TYPE_NAME);
         String adServerName = intent.getStringExtra(Constants.AD_SERVER_NAME);
 
-        if ("Banner".equals(adTypeName)) {
+        String adTypeBanner = getString(R.string.adTypeBanner);
+        String adTypeInterstitial = getString(R.string.adTypeInterstitial);
+        String adTypeBannerVideo = getString(R.string.adTypeBannerVideo);
+        String adTypeInterstitialVideo = getString(R.string.adTypeInterstitialVideo);
 
+        String adServerAdManager = getString(R.string.adServerAdManager);
+        String adServerMoPub = getString(R.string.adServerMoPub);
+
+        if (adTypeName.equals(adTypeBanner)) {
             String adSizeName = intent.getStringExtra(Constants.AD_SIZE_NAME);
             int width = 0;
             int height = 0;
@@ -84,25 +92,38 @@ public class DemoActivity extends AppCompatActivity {
 
             enableAdditionalFunctionality(adUnit);
 
-            if ("DFP".equals(adServerName)) {
+            if (adServerName.equals(adServerAdManager)) {
                 setupAndLoadAMBanner(width, height);
-//                setupAndLoadAMBannerVAST();
-            } else if ("MoPub".equals(adServerName)) {
+            } else if (adServerName.equals(adServerMoPub)) {
                 setupAndLoadMPBanner(width, height);
             }
-        } else if ("Interstitial".equals(adTypeName)) {
 
+        } else if (adTypeName.equals(adTypeInterstitial)) {
             //Advanced interstitial support
 //            adUnit = new InterstitialAdUnit("1001-1", 50, 70);
 
             enableAdditionalFunctionality(adUnit);
 
-            if ("DFP".equals(adServerName)) {
+            if (adServerName.equals(adServerAdManager)) {
                 setupAndLoadAMInterstitial();
-//                setupAndLoadAMInterstitialVAST();
-            } else if ("MoPub".equals(adServerName)) {
+            } else if (adServerName.equals(adServerMoPub)) {
                 setupAndLoadMPInterstitial();
-//                setupAndLoadMPInterstitialVAST();
+            }
+
+        } else if (adTypeName.equals(adTypeBannerVideo)) {
+
+            if (adServerName.equals(adServerAdManager)) {
+                setupAndLoadAMBannerVAST();
+            } else if (adServerName.equals(adServerMoPub)) {
+                Toast.makeText(getApplicationContext(), adServerName + " doest not support " + adTypeName, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        } else if (adTypeName.equals(adTypeInterstitialVideo)) {
+
+            if (adServerName.equals(adServerAdManager)) {
+                setupAndLoadAMInterstitialVAST();
+            } else if (adServerName.equals(adServerMoPub)) {
+                setupAndLoadMPInterstitialVAST();
             }
         }
     }
@@ -192,6 +213,10 @@ public class DemoActivity extends AppCompatActivity {
 
     //Banner
     private void setupPBBanner(int width, int height) {
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID);
+        PrebidMobile.setStoredAuctionResponse("");
+
         if (width == 300 && height == 250) {
             adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250, width, height);
         } else if (width == 320 && height == 50) {
@@ -202,11 +227,11 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     private void setupPBBannerVAST() {
-        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-        Host.CUSTOM.setHostUrl("https://prebid-server.qa.rubiconproject.com/openrtb2/auction");
-        PrebidMobile.setPrebidServerAccountId("1011");
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setPrebidServerAccountId("1001");
+        PrebidMobile.setStoredAuctionResponse("sample_video_response");
 
-        adUnit = new VideoAdUnit("1011-test-video", 300, 250, VideoAdUnit.PlacementType.IN_BANNER);
+        adUnit = new VideoAdUnit("1001-1", 300, 250, VideoAdUnit.PlacementType.IN_BANNER);
     }
 
     private void setupAMBanner(int width, int height) {
@@ -266,15 +291,19 @@ public class DemoActivity extends AppCompatActivity {
 
     // Interstitial
     private void setupPBInterstitial() {
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID);
+        PrebidMobile.setStoredAuctionResponse("");
+
         adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL);
     }
 
     private void setupPBInterstitialVAST() {
-        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-        Host.CUSTOM.setHostUrl("https://prebid-server.qa.rubiconproject.com/openrtb2/auction");
-        PrebidMobile.setPrebidServerAccountId("1011");
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setPrebidServerAccountId("1001");
+        PrebidMobile.setStoredAuctionResponse("sample_video_response");
 
-        adUnit = new VideoInterstitialAdUnit("1011-test-video");
+        adUnit = new VideoInterstitialAdUnit("1001-1");
     }
 
     private void setupAMInterstitial() {
