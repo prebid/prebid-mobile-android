@@ -17,7 +17,7 @@
 package org.prebid.mobile;
 
 import android.support.annotation.Nullable;
-
+import android.util.Log;
 import com.mopub.mobileads.MoPubView;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -1161,6 +1161,120 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertEquals(listKey2.size(), 2);
         assertThat(listKey2, containsInAnyOrder("value20", "value21"));
 
+    }
+
+    @Test
+    public void testNativeAdUnitInPostData() throws Exception {
+        server.setDispatcher(new Dispatcher() {
+            @Override
+            public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
+                String postData = request.getBody().readUtf8();
+                try {
+                    JSONObject jsonObject = new JSONObject(postData);
+                    JSONArray jsonArrayImp = jsonObject.getJSONArray("imp");
+                    JSONObject jsonObjectImp = (JSONObject) jsonArrayImp.get(0);
+                    JSONObject nativeObject = (JSONObject) jsonObjectImp.get("native");
+                    JSONObject nativeRequest = new JSONObject((String) nativeObject.get("request"));
+                    JSONArray eventtrackersArray = nativeRequest.getJSONArray("eventtrackers");
+                    JSONObject eventtracker = (JSONObject) eventtrackersArray.get(0);
+                    JSONArray eventtrackerMethodsArray = eventtracker.getJSONArray("methods");
+                    JSONObject ext = (JSONObject) nativeRequest.get("ext");
+                    JSONArray assets = nativeRequest.getJSONArray("assets");
+                    JSONObject asset1 = (JSONObject) assets.get(0);
+                    JSONObject assetTitle = (JSONObject) asset1.get("title");
+                    JSONObject assetImage = (JSONObject) asset1.get("img");
+                    JSONObject asset2 = (JSONObject) assets.get(1);
+                    JSONObject assetImage2 = (JSONObject) asset2.get("img");
+                    JSONObject assetData = (JSONObject) asset2.get("data");
+
+                    assertEquals(2,nativeRequest.getInt("context"));
+                    assertEquals(20,nativeRequest.getInt("contextsubtype"));
+                    assertEquals(4,nativeRequest.getInt("plcmttype"));
+                    assertEquals(10,nativeRequest.getInt("plcmtcnt"));
+                    assertEquals(12,nativeRequest.getInt("seq"));
+                    assertEquals(1,nativeRequest.getInt("aurlsupport"));
+                    assertEquals(1,nativeRequest.getInt("durlsupport"));
+                    assertEquals(1,eventtracker.getInt("event"));
+                    assertEquals(1,eventtrackerMethodsArray.get(0));
+                    assertEquals(2,eventtrackerMethodsArray.get(1));
+                    assertEquals(1,nativeRequest.getInt("privacy"));
+                    assertEquals("value",ext.get("key"));
+                    assertEquals(90,assetTitle.getInt("len"));
+                    assertEquals(1,assetTitle.getInt("required"));
+                    assertEquals(1,assetImage.getInt("type"));
+                    assertEquals(20,assetImage.getInt("wmin"));
+                    assertEquals(20,assetImage.getInt("hmin"));
+                    assertEquals(1,asset1.getInt("required"));
+                    assertEquals(3,assetImage2.getInt("type"));
+                    assertEquals(200,assetImage2.getInt("wmin"));
+                    assertEquals(200,assetImage2.getInt("hmin"));
+                    assertEquals(1,asset2.getInt("required"));
+                    assertEquals(1,assetData.getInt("type"));
+                    assertEquals(90,assetData.getInt("len"));
+                    assertEquals(1,assetData.getInt("required"));
+
+                }catch (JSONException err){
+                    Log.d("Error", err.toString());
+                }
+
+                return new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus());
+            }
+        });
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("123456");
+
+        NativeAdUnit nativeAdUnit = new NativeAdUnit("123456");
+        nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
+        nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.RECOMMENDATION_WIDGET);
+        nativeAdUnit.setPlacementCount(10);
+        nativeAdUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
+        nativeAdUnit.setPrivacy(true);
+        nativeAdUnit.setDUrlSupport(true);
+        nativeAdUnit.setAUrlSupport(true);
+        nativeAdUnit.setSeq(12);
+        JSONObject ext = new JSONObject();
+        try {
+            ext.put("key", "value");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        nativeAdUnit.setExt(ext);
+        ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
+        methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE);
+        methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.JS);
+        try {
+            NativeEventTracker tracker = new NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods);
+            nativeAdUnit.addEventTracker(tracker);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        NativeTitleAsset title = new NativeTitleAsset();
+        title.setLength(90);
+        title.setRequired(true);
+        nativeAdUnit.addAsset(title);
+        NativeImageAsset icon = new NativeImageAsset();
+        icon.setImageType(NativeImageAsset.IMAGE_TYPE.ICON);
+        icon.setWMin(20);
+        icon.setHMin(20);
+        icon.setRequired(true);
+        nativeAdUnit.addAsset(icon);
+        NativeImageAsset image = new NativeImageAsset();
+        image.setImageType(NativeImageAsset.IMAGE_TYPE.MAIN);
+        image.setHMin(200);
+        image.setWMin(200);
+        image.setRequired(true);
+        nativeAdUnit.addAsset(image);
+        NativeDataAsset data = new NativeDataAsset();
+        data.setLen(90);
+        data.setDataType(NativeDataAsset.DATA_TYPE.SPONSORED);
+        data.setRequired(true);
+        nativeAdUnit.addAsset(data);
+        nativeAdUnit.setAutoRefreshPeriodMillis(30000);
+
+        MoPubView testView = new MoPubView(activity);
+        OnCompleteListener mockListener = mock(OnCompleteListener.class);
+        nativeAdUnit.fetchDemand(testView, mockListener);
     }
 
     private JSONObject getPostDataHelper(AdType adType, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
