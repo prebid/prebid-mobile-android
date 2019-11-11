@@ -1,3 +1,19 @@
+/*
+ *    Copyright 2018-2019 Prebid.org, Inc.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
 package org.prebid.mobile;
 
 import org.json.JSONArray;
@@ -6,7 +22,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 class NativeRequestParams {
-    //    // constants
+    // constants
     static String VERSION = "ver";
     static String SUPPORTED_VERSION = "1.2";
     static String CONTEXT = "context";
@@ -24,10 +40,9 @@ class NativeRequestParams {
     static String METHODS = "methods";
     static String LENGTH = "len";
     static String REQUIRED = "required";
-    static String ASSETS_EXT = "assetExt";
     static String WIDTH_MIN = "wmin";
     static String HEIGHT_MIN = "hmin";
-    static String WIDTH = "W";
+    static String WIDTH = "w";
     static String HEIGHT = "h";
     static String TYPE = "type";
     static String MIMES = "mimes";
@@ -38,6 +53,16 @@ class NativeRequestParams {
     static String REQUEST = "request";
 
     private NativeAdUnit.CONTEXT_TYPE contextType;
+    private NativeAdUnit.CONTEXTSUBTYPE contextsubtype;
+    private NativeAdUnit.PLACEMENTTYPE placementtype;
+    private int placementCount = 1;
+    private int seq = 0;
+    private boolean aUrlSupport = false;
+    private boolean dUrlSupport = false;
+    private boolean privacy = false;
+    private Object ext = null;
+    private ArrayList<NativeEventTracker> trackers = new ArrayList<>();
+    private ArrayList<NativeAsset> assets = new ArrayList<>();
 
     void setContextType(NativeAdUnit.CONTEXT_TYPE type) {
         this.contextType = type;
@@ -47,9 +72,6 @@ class NativeRequestParams {
         return contextType;
     }
 
-
-    private NativeAdUnit.CONTEXTSUBTYPE contextsubtype;
-
     void setContextSubType(NativeAdUnit.CONTEXTSUBTYPE type) {
         this.contextsubtype = type;
     }
@@ -57,8 +79,6 @@ class NativeRequestParams {
     NativeAdUnit.CONTEXTSUBTYPE getContextsubtype() {
         return contextsubtype;
     }
-
-    private NativeAdUnit.PLACEMENTTYPE placementtype;
 
     void setPlacementType(NativeAdUnit.PLACEMENTTYPE placementType) {
         this.placementtype = placementType;
@@ -68,8 +88,6 @@ class NativeRequestParams {
         return placementtype;
     }
 
-    private int placementCount = 1;
-
     void setPlacementCount(int placementCount) {
         this.placementCount = placementCount;
     }
@@ -77,8 +95,6 @@ class NativeRequestParams {
     int getPlacementCount() {
         return placementCount;
     }
-
-    private int seq = 0;
 
     void setSeq(int seq) {
         this.seq = seq;
@@ -88,8 +104,6 @@ class NativeRequestParams {
         return seq;
     }
 
-    private boolean aUrlSupport = false;
-
     void setAUrlSupport(boolean support) {
         this.aUrlSupport = support;
     }
@@ -97,8 +111,6 @@ class NativeRequestParams {
     boolean isAUrlSupport() {
         return aUrlSupport;
     }
-
-    private boolean dUrlSupport = false;
 
     void setDUrlSupport(boolean support) {
         this.dUrlSupport = support;
@@ -108,8 +120,6 @@ class NativeRequestParams {
         return dUrlSupport;
     }
 
-    private boolean privacy = false;
-
     void setPrivacy(boolean privacy) {
         this.privacy = privacy;
     }
@@ -117,8 +127,6 @@ class NativeRequestParams {
     boolean isPrivacy() {
         return privacy;
     }
-
-    private Object ext = null;
 
     void setExt(Object jsonObject) {
         if (jsonObject instanceof JSONObject || jsonObject instanceof JSONArray) {
@@ -130,17 +138,13 @@ class NativeRequestParams {
         return ext;
     }
 
-    private ArrayList<NativeEventTracker> trackers = new ArrayList<>();
-
     void addEventTracker(NativeEventTracker tracker) {
         trackers.add(tracker);
     }
 
-    public ArrayList<NativeEventTracker> getEventTrackers() {
+    ArrayList<NativeEventTracker> getEventTrackers() {
         return trackers;
     }
-
-    private ArrayList<NativeAsset> assets = new ArrayList<>();
 
     void addAsset(NativeAsset asset) {
         assets.add(asset);

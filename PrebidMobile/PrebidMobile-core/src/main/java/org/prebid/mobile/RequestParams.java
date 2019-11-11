@@ -52,7 +52,6 @@ class RequestParams {
         this.minSizePerc = minSizePerc;
     }
 
-
     void setNativeRequestParams(NativeRequestParams params) {
         this.nativeParams = params;
     }
