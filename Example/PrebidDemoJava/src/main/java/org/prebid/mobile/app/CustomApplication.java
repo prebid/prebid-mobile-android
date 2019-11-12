@@ -39,10 +39,7 @@ public class CustomApplication extends Application {
     public void onCreate() {
         super.onCreate();
         //init MoPub SDK
-        List<String> networksToInit = new ArrayList<String>();
-        networksToInit.add("com.mopub.mobileads.VungleRewardedVideo");
         SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder("a935eac11acd416f92640411234fbba6")
-                .withNetworksToInit(networksToInit)
                 .build();
         MoPub.initializeSdk(this, sdkConfiguration, null);
         //set Prebid Mobile global Settings

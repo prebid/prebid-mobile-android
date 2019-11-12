@@ -125,7 +125,7 @@ public class DemoActivity extends AppCompatActivity {
         final FrameLayout adFrame = (FrameLayout) findViewById(R.id.adFrame);
         adFrame.removeAllViews();
         adView = new MoPubView(this);
-        adView.setAdUnitId("a470959f33034229945744c5f904d5bc");
+        adView.setAdUnitId("037a743e5d184129ab79c941240efff8");
         adView.setBannerAdListener(new MoPubView.BannerAdListener() {
             @Override
             public void onBannerLoaded(MoPubView banner) {
@@ -193,7 +193,7 @@ public class DemoActivity extends AppCompatActivity {
             @Override
             public void onComplete(ResultCode resultCode) {
                 DemoActivity.this.resultCode = resultCode;
-                adView.loadAd();
+                adView.loadAd(MoPubView.MoPubAdSize.MATCH_VIEW);
                 DemoActivity.this.adView = adView;
                 refreshCount++;
             }
