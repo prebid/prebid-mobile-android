@@ -69,15 +69,15 @@ public class NativeDataAsset extends NativeAsset {
         this.required = required;
     }
 
-    private Object dateExt = null;
+    private Object dataExt = null;
 
-    public Object getDateExt() {
-        return dateExt;
+    public Object getDataExt() {
+        return dataExt;
     }
 
-    public void setDateExt(Object dateExt) {
-        if (dateExt instanceof JSONObject || dateExt instanceof JSONArray) {
-            this.dateExt = dateExt;
+    public void setDataExt(Object dataExt) {
+        if (dataExt instanceof JSONObject || dataExt instanceof JSONArray) {
+            this.dataExt = dataExt;
         }
     }
 

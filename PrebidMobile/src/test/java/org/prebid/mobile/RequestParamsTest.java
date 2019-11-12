@@ -17,12 +17,15 @@
 package org.prebid.mobile;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import static junit.framework.Assert.assertEquals;
@@ -44,6 +47,65 @@ public class RequestParamsTest {
         assertEquals("123456", FieldUtils.readField(requestParams, "configId", true));
         assertEquals(AdType.INTERSTITIAL, FieldUtils.readField(requestParams, "adType", true));
         assertEquals(null, FieldUtils.readField(requestParams, "sizes", true));
+    }
+
+    @Test
+    public void testCreationNative() throws  Exception {
+        RequestParams requestParams = new RequestParams("123456", AdType.NATIVE, null);
+        assertEquals("123456", FieldUtils.readField(requestParams, "configId", true));
+        assertEquals(AdType.NATIVE, FieldUtils.readField(requestParams, "adType", true));
+        assertEquals(null, FieldUtils.readField(requestParams, "sizes", true));
+        NativeRequestParams nativeRequestParams = new NativeRequestParams();
+        nativeRequestParams.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
+        nativeRequestParams.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.ARTICAL);
+        nativeRequestParams.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_ATOMIC_UNIT);
+        nativeRequestParams.setAUrlSupport(true);
+        nativeRequestParams.setDUrlSupport(true);
+        NativeTitleAsset title = new NativeTitleAsset();
+        title.setLength(25);
+        NativeImageAsset image = new NativeImageAsset();
+        image.setWMin(20);
+        image.setHMin(30);
+        nativeRequestParams.addAsset(title);
+        nativeRequestParams.addAsset(image);
+        JSONObject ext = new JSONObject();
+        try {
+            ext.put("key", "value");
+            ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
+            methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE);
+            methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.JS);
+            NativeEventTracker eventTracker = new NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods);
+            nativeRequestParams.addEventTracker(eventTracker);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        nativeRequestParams.setExt(ext);
+
+        requestParams.setNativeRequestParams(nativeRequestParams);
+
+        assertEquals(requestParams.getNativeRequestParams().getContextType(), NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
+        assertEquals(requestParams.getNativeRequestParams().getContextsubtype(), NativeAdUnit.CONTEXTSUBTYPE.ARTICAL);
+        assertEquals(requestParams.getNativeRequestParams().getPlacementType(), NativeAdUnit.PLACEMENTTYPE.CONTENT_ATOMIC_UNIT);
+        assertEquals(requestParams.getNativeRequestParams().isAUrlSupport(), true);
+        assertEquals(requestParams.getNativeRequestParams().isDUrlSupport(), true);
+        assertNotNull(requestParams.getNativeRequestParams().getAssets());
+        assertEquals(requestParams.getNativeRequestParams().getAssets().size(), 2);
+        assertEquals(((NativeTitleAsset) requestParams.getNativeRequestParams().getAssets().get(0)).getLen(), 25);
+        assertEquals(((NativeImageAsset) requestParams.getNativeRequestParams().getAssets().get(1)).getHMin(), 30);
+        assertEquals(((NativeImageAsset) requestParams.getNativeRequestParams().getAssets().get(1)).getWMin(), 20);
+        NativeEventTracker eventTracker = requestParams.getNativeRequestParams().getEventTrackers().get(0);
+        assertEquals(eventTracker.event, NativeEventTracker.EVENT_TYPE.IMPRESSION);
+        assertEquals(eventTracker.getMethods().size(), 2);
+        assertEquals(eventTracker.getMethods().get(0), NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE);
+        assertEquals(eventTracker.getMethods().get(1), NativeEventTracker.EVENT_TRACKING_METHOD.JS);
+        String value = "";
+        try {
+            JSONObject data = (JSONObject) requestParams.getNativeRequestParams().getExt();
+            value = data.getString("key");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        assertEquals("value", value);
     }
 
     @Test
