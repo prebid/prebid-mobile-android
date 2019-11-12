@@ -3,6 +3,7 @@ package org.prebid.mobile;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.testutils.BaseSetup;
@@ -21,6 +22,11 @@ import static junit.framework.Assert.assertTrue;
 @Config(sdk = BaseSetup.testSDK, manifest=Config.NONE)
 public class NativeAdUnitTest {
     static final String PBS_CONFIG_ID_NATIVE_APPNEXUS = "1f85e687-b45f-4649-a4d5-65f74f2ede8e";
+
+    @After
+    public void tearDown() throws Exception {
+        NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM.setID(500);
+    }
 
     @Test
     public void testNativeAdUnitCreation() throws Exception {

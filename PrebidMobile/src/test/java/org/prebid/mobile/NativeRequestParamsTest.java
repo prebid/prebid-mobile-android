@@ -3,6 +3,7 @@ package org.prebid.mobile;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.testutils.BaseSetup;
@@ -20,6 +21,10 @@ import static junit.framework.Assert.assertTrue;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK, manifest=Config.NONE)
 public class NativeRequestParamsTest {
+    @After
+    public void tearDown() throws Exception {
+        NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM.setID(500);
+    }
 
     @Test
     public void testNativeRequestParamsContextType() {

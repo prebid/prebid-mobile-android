@@ -2,6 +2,7 @@ package org.prebid.mobile;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.testutils.BaseSetup;
@@ -113,4 +114,8 @@ public class NativeEventTrackerTest {
         }
     }
 
+    @After
+    public void tearDown() throws Exception {
+        NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM.setID(500);
+    }
 }
