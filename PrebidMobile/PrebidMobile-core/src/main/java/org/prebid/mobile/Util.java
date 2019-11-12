@@ -16,12 +16,19 @@
 
 package org.prebid.mobile;
 
+import android.annotation.TargetApi;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.ValueCallback;
+import android.webkit.WebView;
+import android.widget.FrameLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,9 +66,59 @@ public class Util {
 
     }
 
+    public interface ResizeInBannerNativeListener {
+        void onResizeSuccessful();
+
+        void onResizeFailed();
+    }
+
     /**
-     *@deprecated Please migrate to - AdViewUtils.findPrebidCreativeSize(View, AdViewUtils.PbFindSizeListener)
-     *@see AdViewUtils#findPrebidCreativeSize(View, AdViewUtils.PbFindSizeListener)
+     * This method resizes a view that contains prebid in banner native ad to the size you desired
+     *
+     * @param adView   the adView to be resized
+     * @param params   the size to be resized to, note the view group has to be the adView's parent view group type
+     * @param listener the listener to be called when resize is done
+     */
+    @TargetApi(19)
+    public static void resizeInBannerNative(@NonNull final ViewGroup adView, final ViewGroup.LayoutParams params, @Nullable final ResizeInBannerNativeListener listener) {
+        if (adView.getClass() == getClassFromString(MOPUB_BANNER_VIEW_CLASS)) {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (adView.getChildCount() > 0) {
+                        final WebView wv = (WebView) adView.getChildAt(0);
+                        wv.evaluateJavascript("document.body.innerHTML", new ValueCallback<String>() {
+
+
+                            @Override
+                            public void onReceiveValue(@Nullable String html) {
+
+                                if (!TextUtils.isEmpty(html) && html.contains("native-trk.js")) {
+                                    adView.setLayoutParams(params);
+                                    wv.setLayoutParams(new FrameLayout.LayoutParams(params.width, params.height));
+                                    if (listener != null) {
+                                        listener.onResizeSuccessful();
+                                    }
+                                } else {
+                                    if (listener != null) {
+                                        listener.onResizeFailed();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    if (listener != null) {
+                        listener.onResizeFailed();
+                    }
+                }
+            }, 500);
+        }
+    }
+
+    /**
+     * @see AdViewUtils#findPrebidCreativeSize(View, AdViewUtils.PbFindSizeListener)
+     * @deprecated Please migrate to - AdViewUtils.findPrebidCreativeSize(View, AdViewUtils.PbFindSizeListener)
      */
     @Deprecated
     public static void findPrebidCreativeSize(@Nullable View adView, final CreativeSizeCompletionHandler completionHandler) {
@@ -111,7 +168,7 @@ public class Util {
 
                 if (value instanceof JSONObject) {
 
-                    JSONObject mapValue = (JSONObject)value;
+                    JSONObject mapValue = (JSONObject) value;
                     removeEntryWithoutValue(mapValue);
 
                     if (mapValue.length() == 0) {
@@ -119,7 +176,7 @@ public class Util {
                     }
                 } else if (value instanceof JSONArray) {
 
-                    JSONArray arrayValue = (JSONArray)value;
+                    JSONArray arrayValue = (JSONArray) value;
                     arrayValue = removeEntryWithoutValue(arrayValue);
 
                     map.put(key, arrayValue);
@@ -148,14 +205,14 @@ public class Util {
 
                 if (value instanceof JSONObject) {
 
-                    JSONObject mapValue = (JSONObject)value;
+                    JSONObject mapValue = (JSONObject) value;
                     removeEntryWithoutValue(mapValue);
 
                     if (mapValue.length() == 0) {
                         array = getJsonArrayWithoutEntryByIndex(array, i);
                     }
                 } else if (value instanceof JSONArray) {
-                    JSONArray arrayValue = (JSONArray)value;
+                    JSONArray arrayValue = (JSONArray) value;
                     arrayValue = removeEntryWithoutValue(arrayValue);
 
                     array.put(i, arrayValue);

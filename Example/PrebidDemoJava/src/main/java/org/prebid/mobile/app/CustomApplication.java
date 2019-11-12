@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
+import android.webkit.WebView;
 
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
@@ -44,10 +45,14 @@ public class CustomApplication extends Application {
         MoPub.initializeSdk(this, sdkConfiguration, null);
         //set Prebid Mobile global Settings
         //region PrebidMobile API
-        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID);
-        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId("account");
+        Host custom = Host.CUSTOM;
+        custom.setHostUrl("http://10.0.2.2:8000/openrtb2/auction");
+        PrebidMobile.setPrebidServerHost(custom);
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(getApplicationContext());
+        WebView obj = new WebView(this);
+        obj.clearCache(true);
         //endregion
         if (BuildConfig.DEBUG) {
             sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));

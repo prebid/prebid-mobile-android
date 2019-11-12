@@ -187,7 +187,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     BidLog.getInstance().setLastEntry(entry);
 
                     return new AsyncTaskResult<>(response);
-                } else if (httpResult == HttpURLConnection.HTTP_BAD_REQUEST) {
+                } else if (httpResult >= HttpURLConnection.HTTP_BAD_REQUEST) {
                     StringBuilder builder = new StringBuilder();
                     InputStream is = conn.getErrorStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"));

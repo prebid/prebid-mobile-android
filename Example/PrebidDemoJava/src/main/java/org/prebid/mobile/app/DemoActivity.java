@@ -25,6 +25,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.google.android.gms.ads.AdListener;
@@ -49,6 +50,7 @@ import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.Util;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.addendum.PbFindSizeError;
 
@@ -111,7 +113,8 @@ public class DemoActivity extends AppCompatActivity {
                 createMoPubInterstitial();
             }
         } else if ("Native".equals(adTypeName)) {
-            adUnit = new NativeAdUnit("1f85e687-b45f-4649-a4d5-65f74f2ede8e");
+//            adUnit = new NativeAdUnit("25e17008-5081-4676-94d5-923ced4359d3");
+            adUnit = new NativeAdUnit("test");
             if ("DFP".equals(adServerName)) {
                 createDFPNative();
             } else if ("MoPub".equals(adServerName)) {
@@ -128,8 +131,25 @@ public class DemoActivity extends AppCompatActivity {
         adView.setAdUnitId("037a743e5d184129ab79c941240efff8");
         adView.setBannerAdListener(new MoPubView.BannerAdListener() {
             @Override
-            public void onBannerLoaded(MoPubView banner) {
-                LogUtil.d("Banner loaded");
+            public void onBannerLoaded(final MoPubView banner) {
+
+                Util.resizeInBannerNative(banner, new FrameLayout.LayoutParams(1000, 1500), new Util.ResizeInBannerNativeListener() {
+                    @Override
+                    public void onResizeSuccessful() {
+                        if (banner.getParent() != null) {
+                            ((ViewGroup) banner.getParent()).removeView(banner);
+                        }
+                        adFrame.addView(banner);
+                    }
+
+                    @Override
+                    public void onResizeFailed() {
+                        if (banner.getParent() != null) {
+                            ((ViewGroup) banner.getParent()).removeView(banner);
+                        }
+                        adFrame.addView(banner);
+                    }
+                });
             }
 
             @Override
@@ -152,7 +172,6 @@ public class DemoActivity extends AppCompatActivity {
 
             }
         });
-        adFrame.addView(adView);
         NativeAdUnit nativeAdUnit = (NativeAdUnit) adUnit;
         nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
         nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
@@ -187,6 +206,14 @@ public class DemoActivity extends AppCompatActivity {
         data.setDataType(NativeDataAsset.DATA_TYPE.SPONSORED);
         data.setRequired(true);
         nativeAdUnit.addAsset(data);
+        NativeDataAsset body = new NativeDataAsset();
+        body.setRequired(true);
+        body.setDataType(NativeDataAsset.DATA_TYPE.DESC);
+        nativeAdUnit.addAsset(body);
+        NativeDataAsset cta = new NativeDataAsset();
+        cta.setRequired(true);
+        cta.setDataType(NativeDataAsset.DATA_TYPE.CTATEXT);
+        nativeAdUnit.addAsset(cta);
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         nativeAdUnit.setAutoRefreshPeriodMillis(millis);
         nativeAdUnit.fetchDemand(adView, new OnCompleteListener() {
@@ -251,6 +278,14 @@ public class DemoActivity extends AppCompatActivity {
         data.setDataType(NativeDataAsset.DATA_TYPE.SPONSORED);
         data.setRequired(true);
         nativeAdUnit.addAsset(data);
+        NativeDataAsset body = new NativeDataAsset();
+        body.setRequired(true);
+        body.setDataType(NativeDataAsset.DATA_TYPE.DESC);
+        nativeAdUnit.addAsset(body);
+        NativeDataAsset cta = new NativeDataAsset();
+        cta.setRequired(true);
+        cta.setDataType(NativeDataAsset.DATA_TYPE.CTATEXT);
+        nativeAdUnit.addAsset(cta);
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         nativeAdUnit.setAutoRefreshPeriodMillis(millis);
         nativeAdUnit.fetchDemand(request, new OnCompleteListener() {
