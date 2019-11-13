@@ -2,9 +2,6 @@
 # This script helps to build the Prebid products in the following steps:
 # It will ask you the version you're releasing
 # Check if it's the same as the one in the project's build.gradle
-# If not, ask you to pick one, and update build.gradle if necessary
-# Run unit tests
-# Stop releasing if unit tests doesn't pass
 # Package releases
 # End
 
@@ -75,12 +72,8 @@ cd $LIBDIR
 ./gradlew -i --no-daemon clean >$LOGPATH/clean.log 2>&1
 
 ###########################
-# Test and Build
+# Generate modules
 ###########################
-
-echoX "Run unit tests"
-cd $LIBDIR
-(./gradlew -i --no-daemon PrebidMobile:test > $LOGPATH/testResults.log 2>&1) || (die "Unit tests failed, check log in $LOGPATH/testResults.log") 
 
 modules=("PrebidMobile" "PrebidMobile-core")
 projectPaths=("$BASEDIR/PrebidMobile" "$BASEDIR/PrebidMobile/PrebidMobile-core")

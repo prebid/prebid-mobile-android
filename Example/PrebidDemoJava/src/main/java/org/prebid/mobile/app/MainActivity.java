@@ -35,9 +35,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     // Default values
-    private String adType = "Banner";
-    private String adServer = "DFP";
-    private String adSize = "300x250";
+    private String adType = "";
+    private String adServer = "";
+    private String adSize = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,23 +54,29 @@ public class MainActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item);
         adTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adTypeSpinner.setAdapter(adTypeAdapter);
+
+        final LinearLayout adSizeRow = findViewById(R.id.adSizeRow);
+        final LinearLayout adRefreshRow = findViewById(R.id.autoRefreshRow);
         adTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             List<String> adTypes = Arrays.asList(getResources().getStringArray(R.array.adTypeArray));
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+
+                adSizeRow.setVisibility(View.INVISIBLE);
+                adRefreshRow.setVisibility(View.INVISIBLE);
+
                 if (pos > adTypes.size()) {
                     return;
                 }
                 adType = adTypes.get(pos);
                 if (adType.equals("Banner")) {
                     // show size and refresh millis
-                    LinearLayout adSizeRow = (LinearLayout) findViewById(R.id.adSizeRow);
+
                     adSizeRow.setVisibility(View.VISIBLE);
-                } else {
-                    // hide size selection and refresh millis
-                    LinearLayout adSizeRow = (LinearLayout) findViewById(R.id.adSizeRow);
-                    adSizeRow.setVisibility(View.GONE);
+                    adRefreshRow.setVisibility(View.VISIBLE);
+                } else if (adType.equals("Interstitial")) {
+                    adRefreshRow.setVisibility(View.VISIBLE);
                 }
             }
 
