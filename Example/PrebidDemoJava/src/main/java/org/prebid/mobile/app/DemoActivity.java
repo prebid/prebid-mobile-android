@@ -135,7 +135,7 @@ public class DemoActivity extends AppCompatActivity {
 
                 Util.resizeInBannerNative(banner, new FrameLayout.LayoutParams(1000, 1500), new Util.ResizeInBannerNativeListener() {
                     @Override
-                    public void onResizeSuccessful() {
+                    public void onResizePrebidAdSuccessful() {
                         if (banner.getParent() != null) {
                             ((ViewGroup) banner.getParent()).removeView(banner);
                         }
@@ -143,7 +143,7 @@ public class DemoActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onResizeFailed() {
+                    public void onPrebidAdNotFound() {
                         if (banner.getParent() != null) {
                             ((ViewGroup) banner.getParent()).removeView(banner);
                         }
@@ -172,6 +172,7 @@ public class DemoActivity extends AppCompatActivity {
 
             }
         });
+        adView.setAutorefreshEnabled(false);
         NativeAdUnit nativeAdUnit = (NativeAdUnit) adUnit;
         nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
         nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);

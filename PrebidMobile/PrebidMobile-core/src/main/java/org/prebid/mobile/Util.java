@@ -67,9 +67,9 @@ public class Util {
     }
 
     public interface ResizeInBannerNativeListener {
-        void onResizeSuccessful();
+        void onResizePrebidAdSuccessful();
 
-        void onResizeFailed();
+        void onPrebidAdNotFound();
     }
 
     /**
@@ -82,37 +82,39 @@ public class Util {
     @TargetApi(19)
     public static void resizeInBannerNative(@NonNull final ViewGroup adView, final ViewGroup.LayoutParams params, @Nullable final ResizeInBannerNativeListener listener) {
         if (adView.getClass() == getClassFromString(MOPUB_BANNER_VIEW_CLASS)) {
-            Handler handler = new Handler(Looper.getMainLooper());
+
+            final Handler handler = new Handler(Looper.getMainLooper());
+            final long startTime = System.currentTimeMillis();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (adView.getChildCount() > 0) {
-                        final WebView wv = (WebView) adView.getChildAt(0);
-                        wv.evaluateJavascript("document.body.innerHTML", new ValueCallback<String>() {
+                    if ((System.currentTimeMillis() - startTime) > 500) {
+                        listener.onPrebidAdNotFound();
+                    } else {
+                        if (adView.getChildCount() > 0) {
+                            final WebView wv = (WebView) adView.getChildAt(0);
+                            wv.evaluateJavascript("document.body.innerHTML", new ValueCallback<String>() {
 
 
-                            @Override
-                            public void onReceiveValue(@Nullable String html) {
+                                @Override
+                                public void onReceiveValue(@Nullable String html) {
 
-                                if (!TextUtils.isEmpty(html) && html.contains("native-trk.js")) {
-                                    adView.setLayoutParams(params);
-                                    wv.setLayoutParams(new FrameLayout.LayoutParams(params.width, params.height));
-                                    if (listener != null) {
-                                        listener.onResizeSuccessful();
-                                    }
-                                } else {
-                                    if (listener != null) {
-                                        listener.onResizeFailed();
+                                    if (!TextUtils.isEmpty(html) && html.contains("native-trk.js")) {
+                                        wv.setLayoutParams(new FrameLayout.LayoutParams(params.width, params.height));
+                                        adView.setLayoutParams(params);
+                                        listener.onResizePrebidAdSuccessful();
+                                    } else {
+                                        listener.onPrebidAdNotFound();
                                     }
                                 }
-                            }
-                        });
+                            });
+                        } else {
+                            handler.postDelayed(this, 50);
+                        }
                     }
-                    if (listener != null) {
-                        listener.onResizeFailed();
-                    }
+
                 }
-            }, 500);
+            }, 50);
         }
     }
 
