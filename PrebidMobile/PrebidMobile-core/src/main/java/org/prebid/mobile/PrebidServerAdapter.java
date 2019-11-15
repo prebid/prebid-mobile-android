@@ -580,7 +580,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     }
                     banner.put("format", format);
                     imp.put("banner", banner);
-                } else if (requestParams.getAdType().equals(AdType.NATIVE)) {
+                } else if (adType.equals(AdType.NATIVE)) {
                     // add native request
                     JSONObject nativeObj = new JSONObject();
                     JSONObject request = new JSONObject();
