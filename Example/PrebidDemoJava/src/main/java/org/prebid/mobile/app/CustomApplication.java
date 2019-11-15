@@ -28,9 +28,6 @@ import com.mopub.common.SdkConfiguration;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
 import static android.view.WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
@@ -45,10 +42,8 @@ public class CustomApplication extends Application {
         MoPub.initializeSdk(this, sdkConfiguration, null);
         //set Prebid Mobile global Settings
         //region PrebidMobile API
-        PrebidMobile.setPrebidServerAccountId("account");
-        Host custom = Host.CUSTOM;
-        custom.setHostUrl("http://10.0.2.2:8000/openrtb2/auction");
-        PrebidMobile.setPrebidServerHost(custom);
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(getApplicationContext());
         WebView obj = new WebView(this);

@@ -16,10 +16,12 @@
 
 package org.prebid.mobile;
 
-enum AdType {
-    BANNER,
-    INTERSTITIAL,
-    NATIVE,
-    VIDEO,
-    VIDEO_INTERSTITIAL
+import android.support.annotation.NonNull;
+
+public class VideoInterstitialAdUnit extends AdUnit {
+
+    public VideoInterstitialAdUnit(@NonNull String configId) {
+        super(configId, AdType.VIDEO_INTERSTITIAL);
+    }
+
 }

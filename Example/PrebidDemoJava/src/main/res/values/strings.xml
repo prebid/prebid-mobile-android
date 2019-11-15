@@ -1,16 +1,31 @@
 <resources>
     <string name="app_name">API1.0Demo</string>
     <string name="adTypeText">Ad Type</string>
+
+    <string name="adTypeBanner">Banner</string>
+    <string name="adTypeInterstitial">Interstitial</string>
+    <string name="adTypeBannerVideo">Banner Video</string>
+    <string name="adTypeInterstitialVideo">Interstitial Video</string>
+    <string name="adTypeInBannerNative">In Banner Native</string>
+
     <string-array name="adTypeArray">
-        <item>Banner</item>
-        <item>Interstitial</item>
-        <item>Native</item>
+        <item>@string/adTypeBanner</item>
+        <item>@string/adTypeInterstitial</item>
+        <item>@string/adTypeBannerVideo</item>
+        <item>@string/adTypeInterstitialVideo</item>
+        <item>@string/adTypeInBannerNative</item>
     </string-array>
+
     <string name="adServerText">Ad Server</string>
+
+    <string name="adServerAdManager">AdManager</string>
+    <string name="adServerMoPub">MoPub</string>
+
     <string-array name="adServerArray">
-        <item>DFP</item>
-        <item>MoPub</item>
+        <item>@string/adServerAdManager</item>
+        <item>@string/adServerMoPub</item>
     </string-array>
+
     <string name="adSizeText">Ad Size</string>
     <string-array name="adSizeArray">
         <item>300x250</item>
