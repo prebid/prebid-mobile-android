@@ -137,8 +137,7 @@ public class DemoActivity extends AppCompatActivity {
                 setupAndLoadMPInterstitialVAST();
             }
         } else if ("Native".equals(adTypeName)) {
-//            adUnit = new NativeAdUnit("25e17008-5081-4676-94d5-923ced4359d3");
-            adUnit = new NativeAdUnit("test");
+            adUnit = new NativeAdUnit("25e17008-5081-4676-94d5-923ced4359d3");
             if ("DFP".equals(adServerName)) {
                 createDFPNative();
             } else if ("MoPub".equals(adServerName)) {

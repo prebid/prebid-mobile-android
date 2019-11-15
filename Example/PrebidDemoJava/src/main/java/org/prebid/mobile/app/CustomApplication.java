@@ -43,7 +43,7 @@ public class CustomApplication extends Application {
         //set Prebid Mobile global Settings
         //region PrebidMobile API
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
-        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID);
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(getApplicationContext());
         WebView obj = new WebView(this);
