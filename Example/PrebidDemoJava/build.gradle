@@ -5,7 +5,7 @@ android {
     buildToolsVersion rootProject.buildToolsVersion
 
     defaultConfig {
-        applicationId "org.prebid.mobile.api1demo"
+        applicationId "org.prebid.mobile.prebidjavademo"
         minSdkVersion rootProject.minSDKVersion
         targetSdkVersion rootProject.targetSDKVersion
         versionCode rootProject.prebidVersionCode

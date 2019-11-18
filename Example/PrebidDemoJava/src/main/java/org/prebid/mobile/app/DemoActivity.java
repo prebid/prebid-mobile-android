@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,11 +40,14 @@ import com.mopub.mobileads.MoPubView;
 
 import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.BannerAdUnit;
+import org.prebid.mobile.Host;
 import org.prebid.mobile.InterstitialAdUnit;
 import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.VideoAdUnit;
+import org.prebid.mobile.VideoInterstitialAdUnit;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.addendum.PbFindSizeError;
 
@@ -55,6 +59,11 @@ public class DemoActivity extends AppCompatActivity {
     AdUnit adUnit;
     ResultCode resultCode;
 
+    private PublisherAdView amBanner;
+    private PublisherInterstitialAd amInterstitial;
+
+    private MoPubInterstitial mpInterstitial;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +74,15 @@ public class DemoActivity extends AppCompatActivity {
         String adTypeName = intent.getStringExtra(Constants.AD_TYPE_NAME);
         String adServerName = intent.getStringExtra(Constants.AD_SERVER_NAME);
 
-        if ("Banner".equals(adTypeName)) {
+        String adTypeBanner = getString(R.string.adTypeBanner);
+        String adTypeInterstitial = getString(R.string.adTypeInterstitial);
+        String adTypeBannerVideo = getString(R.string.adTypeBannerVideo);
+        String adTypeInterstitialVideo = getString(R.string.adTypeInterstitialVideo);
 
+        String adServerAdManager = getString(R.string.adServerAdManager);
+        String adServerMoPub = getString(R.string.adServerMoPub);
+
+        if (adTypeName.equals(adTypeBanner)) {
             String adSizeName = intent.getStringExtra(Constants.AD_SIZE_NAME);
             int width = 0;
             int height = 0;
@@ -74,35 +90,80 @@ public class DemoActivity extends AppCompatActivity {
             String[] wAndH = adSizeName.split("x");
             width = Integer.valueOf(wAndH[0]);
             height = Integer.valueOf(wAndH[1]);
-            if (width == 300 && height == 250) {
-                adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250, width, height);
-            } else if (width == 320 && height == 50) {
-                adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
-            } else {
-                adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
-            }
 
             enableAdditionalFunctionality(adUnit);
 
-            if ("DFP".equals(adServerName)) {
-                createDFPBanner(width, height);
-            } else if ("MoPub".equals(adServerName)) {
-                createMoPubBanner(width, height);
+            if (adServerName.equals(adServerAdManager)) {
+                setupAndLoadAMBanner(width, height);
+            } else if (adServerName.equals(adServerMoPub)) {
+                setupAndLoadMPBanner(width, height);
             }
-        } else if ("Interstitial".equals(adTypeName)) {
-            adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL);
 
+        } else if (adTypeName.equals(adTypeInterstitial)) {
             //Advanced interstitial support
 //            adUnit = new InterstitialAdUnit("1001-1", 50, 70);
 
             enableAdditionalFunctionality(adUnit);
 
-            if ("DFP".equals(adServerName)) {
-                createDFPInterstitial();
-            } else if ("MoPub".equals(adServerName)) {
-                createMoPubInterstitial();
+            if (adServerName.equals(adServerAdManager)) {
+                setupAndLoadAMInterstitial();
+            } else if (adServerName.equals(adServerMoPub)) {
+                setupAndLoadMPInterstitial();
+            }
+
+        } else if (adTypeName.equals(adTypeBannerVideo)) {
+
+            if (adServerName.equals(adServerAdManager)) {
+                setupAndLoadAMBannerVAST();
+            } else if (adServerName.equals(adServerMoPub)) {
+                Toast.makeText(getApplicationContext(), adServerName + " doest not support " + adTypeName, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        } else if (adTypeName.equals(adTypeInterstitialVideo)) {
+
+            if (adServerName.equals(adServerAdManager)) {
+                setupAndLoadAMInterstitialVAST();
+            } else if (adServerName.equals(adServerMoPub)) {
+                setupAndLoadMPInterstitialVAST();
             }
         }
+    }
+
+    void setupAndLoadAMBanner(int width, int height) {
+        setupPBBanner(width, height);
+        setupAMBanner(width, height);
+        loadBanner();
+    }
+
+    void setupAndLoadAMBannerVAST() {
+        setupPBBannerVAST();
+        setupAMBannerVAST();
+        loadBanner();
+    }
+
+    void setupAndLoadMPInterstitial() {
+        setupPBInterstitial();
+        setupMPInterstitial();
+        loadMPInterstitial();
+
+    }
+
+    void setupAndLoadMPInterstitialVAST() {
+        setupPBInterstitialVAST();
+        setupMPInterstitialVAST();
+        loadMPInterstitial();
+    }
+
+    void setupAndLoadAMInterstitial() {
+        setupPBInterstitial();
+        setupAMInterstitial();
+        loadInterstitial();
+    }
+
+    private void setupAndLoadAMInterstitialVAST() {
+        setupPBInterstitialVAST();
+        setupAMInterstitialVAST();
+        loadInterstitial();
     }
 
     private void enableAdditionalFunctionality(AdUnit adUnit) {
@@ -151,28 +212,57 @@ public class DemoActivity extends AppCompatActivity {
         PrebidMobile.setTimeoutMillis(5_000);
     }
 
-    void createDFPBanner(int width, int height) {
-        FrameLayout adFrame = findViewById(R.id.adFrame);
-        adFrame.removeAllViews();
-        final PublisherAdView dfpAdView = new PublisherAdView(this);
+    //Banner
+    private void setupPBBanner(int width, int height) {
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID);
+        PrebidMobile.setStoredAuctionResponse("");
 
         if (width == 300 && height == 250) {
-            dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES);
+            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250, width, height);
         } else if (width == 320 && height == 50) {
-            dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES);
+            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
         } else {
-            dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES);
+            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
         }
+    }
 
-        dfpAdView.setAdListener(new AdListener() {
+    private void setupPBBannerVAST() {
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setPrebidServerAccountId("1001");
+        PrebidMobile.setStoredAuctionResponse("sample_video_response");
+
+        adUnit = new VideoAdUnit("1001-1", 300, 250, VideoAdUnit.PlacementType.IN_BANNER);
+    }
+
+    private void setupAMBanner(int width, int height) {
+        setupAMBanner(width, height, Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES);
+    }
+
+    private void setupAMBannerVAST() {
+        setupAMBanner(300, 250, "/5300653/test_adunit_vast_pavliuchyk");
+    }
+
+    private void setupAMBanner(int width, int height, String id) {
+        amBanner = new PublisherAdView(this);
+        amBanner.setAdUnitId(id);
+        amBanner.setAdSizes(new AdSize(width, height));
+    }
+
+    private void loadBanner() {
+        FrameLayout adFrame = findViewById(R.id.adFrame);
+        adFrame.removeAllViews();
+        adFrame.addView(amBanner);
+
+        amBanner.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
 
-                AdViewUtils.findPrebidCreativeSize(dfpAdView, new AdViewUtils.PbFindSizeListener() {
+                AdViewUtils.findPrebidCreativeSize(amBanner, new AdViewUtils.PbFindSizeListener() {
                     @Override
                     public void success(int width, int height) {
-                        dfpAdView.setAdSizes(new AdSize(width, height));
+                        amBanner.setAdSizes(new AdSize(width, height));
 
                     }
 
@@ -185,12 +275,8 @@ public class DemoActivity extends AppCompatActivity {
             }
         });
 
-        dfpAdView.setAdSizes(new AdSize(width, height));
-        adFrame.addView(dfpAdView);
         final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-
         final PublisherAdRequest request = builder.build();
-
         //region PrebidMobile Mobile API 1.0 usage
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
@@ -198,21 +284,45 @@ public class DemoActivity extends AppCompatActivity {
             @Override
             public void onComplete(ResultCode resultCode) {
                 DemoActivity.this.resultCode = resultCode;
-                dfpAdView.loadAd(request);
+                amBanner.loadAd(request);
                 refreshCount++;
             }
         });
-        //endregion
     }
 
-    void createDFPInterstitial() {
-        final PublisherInterstitialAd interstitialAd = new PublisherInterstitialAd(this);
-        interstitialAd.setAdUnitId(Constants.DFP_INTERSTITIAL_ADUNIT_ID);
-        interstitialAd.setAdListener(new AdListener() {
+    // Interstitial
+    private void setupPBInterstitial() {
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID);
+        PrebidMobile.setStoredAuctionResponse("");
+
+        adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL);
+    }
+
+    private void setupPBInterstitialVAST() {
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setPrebidServerAccountId("1001");
+        PrebidMobile.setStoredAuctionResponse("sample_video_response");
+
+        adUnit = new VideoInterstitialAdUnit("1001-1");
+    }
+
+    private void setupAMInterstitial() {
+        setupAMInterstitial(Constants.DFP_INTERSTITIAL_ADUNIT_ID);
+    }
+
+    private void setupAMInterstitialVAST() {
+        setupAMInterstitial("/5300653/test_adunit_vast_pavliuchyk");
+    }
+
+    private void setupAMInterstitial(String id) {
+        amInterstitial = new PublisherInterstitialAd(this);
+        amInterstitial.setAdUnitId(id);
+        amInterstitial.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                interstitialAd.show();
+                amInterstitial.show();
             }
 
             @Override
@@ -230,7 +340,9 @@ public class DemoActivity extends AppCompatActivity {
                         .show();
             }
         });
+    }
 
+    private void loadInterstitial() {
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
@@ -239,14 +351,13 @@ public class DemoActivity extends AppCompatActivity {
             @Override
             public void onComplete(ResultCode resultCode) {
                 DemoActivity.this.resultCode = resultCode;
-                interstitialAd.loadAd(request);
+                amInterstitial.loadAd(request);
                 refreshCount++;
             }
         });
-
     }
 
-    void createMoPubBanner(int width, int height) {
+    void setupAndLoadMPBanner(int width, int height) {
         FrameLayout adFrame = findViewById(R.id.adFrame);
         adFrame.removeAllViews();
         final MoPubView adView = new MoPubView(this);
@@ -270,9 +381,17 @@ public class DemoActivity extends AppCompatActivity {
         });
     }
 
-    void createMoPubInterstitial() {
-        final MoPubInterstitial interstitial = new MoPubInterstitial(this, Constants.MOPUB_INTERSTITIAL_ADUNIT_ID);
-        interstitial.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
+    private void setupMPInterstitial() {
+        setupMPInterstitial(Constants.MOPUB_INTERSTITIAL_ADUNIT_ID);
+    }
+
+    private void setupMPInterstitialVAST() {
+        setupMPInterstitial("723dd84529b04075aa003a152ede0c4b");
+    }
+
+    private void setupMPInterstitial(String id) {
+        mpInterstitial = new MoPubInterstitial(this, id);
+        mpInterstitial.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
             @Override
             public void onInterstitialLoaded(MoPubInterstitial interstitial) {
                 interstitial.show();
@@ -307,14 +426,16 @@ public class DemoActivity extends AppCompatActivity {
 
             }
         });
+    }
 
+    private void loadMPInterstitial() {
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
-        adUnit.fetchDemand(interstitial, new OnCompleteListener() {
+        adUnit.fetchDemand(mpInterstitial, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
                 DemoActivity.this.resultCode = resultCode;
-                interstitial.load();
+                mpInterstitial.load();
                 refreshCount++;
             }
         });
