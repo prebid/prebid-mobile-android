@@ -609,17 +609,13 @@ class PrebidServerAdapter implements DemandAdapter {
                                 methodsArray.put(method.getID());
                             }
                             trackerObject.put(NativeRequestParams.METHODS, methodsArray);
-                            if (tracker.getExtObject() != null) {
-                                trackerObject.put(NativeRequestParams.EXT, tracker.getExtObject());
-                            }
+                            trackerObject.put(NativeRequestParams.EXT, tracker.getExtObject());
                             trackers.put(trackerObject);
                         }
                         request.put(NativeRequestParams.EVENT_TRACKERS, trackers);
                     }
                     request.put(NativeRequestParams.PRIVACY, params.isPrivacy() ? 1 : 0);
-                    if (params.getExt() != null) {
-                        request.put(NativeRequestParams.EXT, params.getExt());
-                    }
+                    request.put(NativeRequestParams.EXT, params.getExt());
                     if (!params.getAssets().isEmpty()) {
                         for (NativeAsset asset : params.getAssets()) {
                             JSONObject assetObj;
@@ -634,9 +630,7 @@ class PrebidServerAdapter implements DemandAdapter {
                                     }
                                     assetObj.put(NativeRequestParams.TITLE, title);
                                     assetObj.put(NativeRequestParams.REQUIRED, titleAsset.isRequired() ? 1 : 0);
-                                    if (titleAsset.getAssetExt() != null) {
-                                        assetObj.put(NativeRequestParams.EXT, titleAsset.getAssetExt());
-                                    }
+                                    assetObj.put(NativeRequestParams.EXT, titleAsset.getAssetExt());
                                     assets.put(assetObj);
                                     break;
                                 case IMAGE:
@@ -664,9 +658,7 @@ class PrebidServerAdapter implements DemandAdapter {
                                     }
                                     assetObj.put(NativeRequestParams.IMAGE, image);
                                     assetObj.put(NativeRequestParams.REQUIRED, imageAsset.isRequired() ? 1 : 0);
-                                    if (imageAsset.getAssetExt() != null) {
-                                        assetObj.put(NativeRequestParams.EXT, imageAsset.getAssetExt());
-                                    }
+                                    assetObj.put(NativeRequestParams.EXT, imageAsset.getAssetExt());
                                     assets.put(assetObj);
                                     break;
                                 case DATA:
@@ -682,9 +674,7 @@ class PrebidServerAdapter implements DemandAdapter {
                                     }
                                     assetObj.put(NativeRequestParams.DATA, data);
                                     assetObj.put(NativeRequestParams.REQUIRED, dataAsset.isRequired() ? 1 : 0);
-                                    if (dataAsset.getAssetExt() != null) {
-                                        assetObj.put(NativeRequestParams.EXT, dataAsset.getAssetExt());
-                                    }
+                                    assetObj.put(NativeRequestParams.EXT, dataAsset.getAssetExt());
                                     assets.put(assetObj);
 
                                     break;
