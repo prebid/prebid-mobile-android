@@ -17,9 +17,10 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = BaseSetup.testSDK, manifest=Config.NONE)
+@Config(sdk = BaseSetup.testSDK, manifest = Config.NONE)
 public class NativeAdUnitTest {
     static final String PBS_CONFIG_ID_NATIVE_APPNEXUS = "1f85e687-b45f-4649-a4d5-65f74f2ede8e";
 
@@ -43,7 +44,7 @@ public class NativeAdUnitTest {
         assertNull(nativeUnit.params.getContextType());
         nativeUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.CONTENT_CENTRIC);
         assertNotNull(nativeUnit.params.getContextType());
-        assertEquals(NativeAdUnit.CONTEXT_TYPE.CONTENT_CENTRIC,nativeUnit.params.getContextType());
+        assertEquals(NativeAdUnit.CONTEXT_TYPE.CONTENT_CENTRIC, nativeUnit.params.getContextType());
         assertEquals(1, nativeUnit.params.getContextType().getID());
         nativeUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
         assertEquals(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC, nativeUnit.params.getContextType());
@@ -53,11 +54,23 @@ public class NativeAdUnitTest {
         assertEquals(3, nativeUnit.params.getContextType().getID());
         nativeUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.CUSTOM);
         assertEquals(NativeAdUnit.CONTEXT_TYPE.CUSTOM, nativeUnit.params.getContextType());
-        NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(500);
+        try {
+            NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(500);
+        } catch (Exception e) {
+            fail();
+        }
         assertEquals(500, nativeUnit.params.getContextType().getID());
-        NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(600);
+        try {
+            NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(600);
+        } catch (Exception e) {
+            fail();
+        }
         assertEquals(600, nativeUnit.params.getContextType().getID());
-        NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(1);
+        try {
+            NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(1);
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("Invalid input"));
+        }
         assertEquals(600, nativeUnit.params.getContextType().getID());
         assertFalse("Invalid CustomId", 1 == nativeUnit.params.getContextType().getID());
     }
@@ -69,48 +82,60 @@ public class NativeAdUnitTest {
         assertNull(nativeUnit.params.getContextsubtype());
         nativeUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL);
         assertNotNull(nativeUnit.params.getContextsubtype());
-        assertEquals(NativeAdUnit.CONTEXTSUBTYPE.GENERAL,nativeUnit.params.getContextsubtype());
-        assertEquals(10,nativeUnit.params.getContextsubtype().getID());
+        assertEquals(NativeAdUnit.CONTEXTSUBTYPE.GENERAL, nativeUnit.params.getContextsubtype());
+        assertEquals(10, nativeUnit.params.getContextsubtype().getID());
         nativeUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.ARTICAL);
-        assertEquals(NativeAdUnit.CONTEXTSUBTYPE.ARTICAL,nativeUnit.params.getContextsubtype());
-        assertEquals(11,nativeUnit.params.getContextsubtype().getID());
+        assertEquals(NativeAdUnit.CONTEXTSUBTYPE.ARTICAL, nativeUnit.params.getContextsubtype());
+        assertEquals(11, nativeUnit.params.getContextsubtype().getID());
         nativeUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.VIDEO);
         assertEquals(NativeAdUnit.CONTEXTSUBTYPE.VIDEO, nativeUnit.params.getContextsubtype());
-        assertEquals(12,nativeUnit.params.getContextsubtype().getID());
+        assertEquals(12, nativeUnit.params.getContextsubtype().getID());
         nativeUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.AUDIO);
-        assertEquals(NativeAdUnit.CONTEXTSUBTYPE.AUDIO,nativeUnit.params.getContextsubtype());
-        assertEquals(13,nativeUnit.params.getContextsubtype().getID());
+        assertEquals(NativeAdUnit.CONTEXTSUBTYPE.AUDIO, nativeUnit.params.getContextsubtype());
+        assertEquals(13, nativeUnit.params.getContextsubtype().getID());
         nativeUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.IMAGE);
         assertEquals(NativeAdUnit.CONTEXTSUBTYPE.IMAGE, nativeUnit.params.getContextsubtype());
-        assertEquals(14,nativeUnit.params.getContextsubtype().getID());
+        assertEquals(14, nativeUnit.params.getContextsubtype().getID());
         nativeUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.USER_GENERATED);
         assertEquals(NativeAdUnit.CONTEXTSUBTYPE.USER_GENERATED, nativeUnit.params.getContextsubtype());
-        assertEquals(15,nativeUnit.params.getContextsubtype().getID());
+        assertEquals(15, nativeUnit.params.getContextsubtype().getID());
         nativeUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
         assertEquals(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL, nativeUnit.params.getContextsubtype());
-        assertEquals(20,nativeUnit.params.getContextsubtype().getID());
+        assertEquals(20, nativeUnit.params.getContextsubtype().getID());
         nativeUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.EMAIL);
         assertEquals(NativeAdUnit.CONTEXTSUBTYPE.EMAIL, nativeUnit.params.getContextsubtype());
-        assertEquals(21,nativeUnit.params.getContextsubtype().getID());
+        assertEquals(21, nativeUnit.params.getContextsubtype().getID());
         nativeUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.CHAT_IM);
-        assertEquals(NativeAdUnit.CONTEXTSUBTYPE.CHAT_IM,nativeUnit.params.getContextsubtype());
-        assertEquals(22,nativeUnit.params.getContextsubtype().getID());
+        assertEquals(NativeAdUnit.CONTEXTSUBTYPE.CHAT_IM, nativeUnit.params.getContextsubtype());
+        assertEquals(22, nativeUnit.params.getContextsubtype().getID());
         nativeUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.SELLING);
-        assertEquals(NativeAdUnit.CONTEXTSUBTYPE.SELLING,nativeUnit.params.getContextsubtype());
-        assertEquals(30,nativeUnit.params.getContextsubtype().getID());
+        assertEquals(NativeAdUnit.CONTEXTSUBTYPE.SELLING, nativeUnit.params.getContextsubtype());
+        assertEquals(30, nativeUnit.params.getContextsubtype().getID());
         nativeUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.APPLICATION_STORE);
-        assertEquals(NativeAdUnit.CONTEXTSUBTYPE.APPLICATION_STORE,nativeUnit.params.getContextsubtype());
-        assertEquals(31,nativeUnit.params.getContextsubtype().getID());
+        assertEquals(NativeAdUnit.CONTEXTSUBTYPE.APPLICATION_STORE, nativeUnit.params.getContextsubtype());
+        assertEquals(31, nativeUnit.params.getContextsubtype().getID());
         nativeUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.PRODUCT_REVIEW_SITES);
         assertEquals(NativeAdUnit.CONTEXTSUBTYPE.PRODUCT_REVIEW_SITES, nativeUnit.params.getContextsubtype());
-        assertEquals(32,nativeUnit.params.getContextsubtype().getID());
+        assertEquals(32, nativeUnit.params.getContextsubtype().getID());
         nativeUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.CUSTOM);
         assertEquals(NativeAdUnit.CONTEXTSUBTYPE.CUSTOM, nativeUnit.params.getContextsubtype());
-        NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(500);
-        assertEquals(500,nativeUnit.params.getContextsubtype().getID());
-        NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(600);
+        try {
+            NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(500);
+        } catch (Exception e) {
+            fail();
+        }
+        assertEquals(500, nativeUnit.params.getContextsubtype().getID());
+        try {
+            NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(600);
+        } catch (Exception e) {
+            fail();
+        }
         assertEquals(600, nativeUnit.params.getContextsubtype().getID());
-        NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(1);
+        try {
+            NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(1);
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("Invalid input"));
+        }
         assertEquals(600, nativeUnit.params.getContextsubtype().getID());
         assertFalse("Invalid CustomId", 1 == nativeUnit.params.getContextsubtype().getID());
 
@@ -129,18 +154,31 @@ public class NativeAdUnitTest {
         assertEquals(NativeAdUnit.PLACEMENTTYPE.CONTENT_ATOMIC_UNIT, nativeUnit.params.getPlacementType());
         assertEquals(2, nativeUnit.params.getPlacementType().getID());
         nativeUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.OUTSIDE_CORE_CONTENT);
-        assertEquals(NativeAdUnit.PLACEMENTTYPE.OUTSIDE_CORE_CONTENT,nativeUnit.params.getPlacementType());
+        assertEquals(NativeAdUnit.PLACEMENTTYPE.OUTSIDE_CORE_CONTENT, nativeUnit.params.getPlacementType());
         assertEquals(3, nativeUnit.params.getPlacementType().getID());
         nativeUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.RECOMMENDATION_WIDGET);
-        assertEquals(NativeAdUnit.PLACEMENTTYPE.RECOMMENDATION_WIDGET,nativeUnit.params.getPlacementType());
+        assertEquals(NativeAdUnit.PLACEMENTTYPE.RECOMMENDATION_WIDGET, nativeUnit.params.getPlacementType());
         assertEquals(4, nativeUnit.params.getPlacementType().getID());
         nativeUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CUSTOM);
-        assertEquals(NativeAdUnit.PLACEMENTTYPE.CUSTOM,nativeUnit.params.getPlacementType());
-        NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(500);
+        assertEquals(NativeAdUnit.PLACEMENTTYPE.CUSTOM, nativeUnit.params.getPlacementType());
+        try {
+            NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(500);
+        } catch (Exception e) {
+            fail();
+        }
+
         assertEquals(500, nativeUnit.params.getPlacementType().getID());
-        NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(600);
+        try {
+            NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(600);
+        } catch (Exception e) {
+            fail();
+        }
         assertEquals(600, nativeUnit.params.getPlacementType().getID());
-        NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(1);
+        try {
+            NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(1);
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("Invalid input"));
+        }
         assertEquals(600, nativeUnit.params.getPlacementType().getID());
         assertFalse("Invalid CustomId", 1 == nativeUnit.params.getPlacementType().getID());
     }
@@ -150,39 +188,39 @@ public class NativeAdUnitTest {
         NativeAdUnit nativeUnit = new NativeAdUnit(PBS_CONFIG_ID_NATIVE_APPNEXUS);
         assertEquals(1, nativeUnit.params.getPlacementCount());
         nativeUnit.setPlacementCount(123);
-        assertEquals(123,nativeUnit.params.getPlacementCount());
+        assertEquals(123, nativeUnit.params.getPlacementCount());
     }
 
     @Test
     public void testNativeAdSequence() {
         NativeAdUnit nativeUnit = new NativeAdUnit(PBS_CONFIG_ID_NATIVE_APPNEXUS);
-        assertEquals(0,nativeUnit.params.getSeq());
+        assertEquals(0, nativeUnit.params.getSeq());
         nativeUnit.setSeq(1);
-        assertEquals(1,nativeUnit.params.getSeq());
+        assertEquals(1, nativeUnit.params.getSeq());
     }
 
     @Test
     public void testNativeAdAsseturlSupport() {
         NativeAdUnit nativeUnit = new NativeAdUnit(PBS_CONFIG_ID_NATIVE_APPNEXUS);
-        assertEquals(false,nativeUnit.params.isAUrlSupport());
+        assertEquals(false, nativeUnit.params.isAUrlSupport());
         nativeUnit.setAUrlSupport(true);
-        assertEquals(true,nativeUnit.params.isAUrlSupport());
+        assertEquals(true, nativeUnit.params.isAUrlSupport());
     }
 
     @Test
     public void testNativeAdDUrlSupport() {
         NativeAdUnit nativeUnit = new NativeAdUnit(PBS_CONFIG_ID_NATIVE_APPNEXUS);
-        assertEquals(false,nativeUnit.params.isDUrlSupport());
+        assertEquals(false, nativeUnit.params.isDUrlSupport());
         nativeUnit.setDUrlSupport(true);
-        assertEquals(true,nativeUnit.params.isDUrlSupport());
+        assertEquals(true, nativeUnit.params.isDUrlSupport());
     }
 
     @Test
     public void testNativeAdPrivacy() {
         NativeAdUnit nativeUnit = new NativeAdUnit(PBS_CONFIG_ID_NATIVE_APPNEXUS);
-        assertEquals(false,nativeUnit.params.isPrivacy());
+        assertEquals(false, nativeUnit.params.isPrivacy());
         nativeUnit.setPrivacy(true);
-        assertEquals(true,nativeUnit.params.isPrivacy());
+        assertEquals(true, nativeUnit.params.isPrivacy());
     }
 
     @Test
@@ -209,7 +247,7 @@ public class NativeAdUnitTest {
     @Test
     public void testNativeAdEventTrackers() {
         NativeAdUnit nativeUnit = new NativeAdUnit(PBS_CONFIG_ID_NATIVE_APPNEXUS);
-        assertEquals(0,nativeUnit.params.getEventTrackers().size());
+        assertEquals(0, nativeUnit.params.getEventTrackers().size());
         try {
             ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD> methods1 = new ArrayList<>();
             methods1.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE);
@@ -226,27 +264,31 @@ public class NativeAdUnitTest {
         } catch (Exception e) {
 
         }
-        assertEquals(2,nativeUnit.params.getEventTrackers().size());
+        assertEquals(2, nativeUnit.params.getEventTrackers().size());
 
         NativeEventTracker eventTracker1 = nativeUnit.params.getEventTrackers().get(0);
-        assertEquals(NativeEventTracker.EVENT_TYPE.IMPRESSION,eventTracker1.event);
-        assertEquals(1,eventTracker1.event.getID());
-        assertEquals(2,eventTracker1.getMethods().size());
-        assertEquals(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE,eventTracker1.getMethods().get(0));
-        assertEquals(1,eventTracker1.getMethods().get(0).getID());
-        assertEquals(NativeEventTracker.EVENT_TRACKING_METHOD.JS,eventTracker1.getMethods().get(1));
-        assertEquals(2,eventTracker1.getMethods().get(1).getID());
+        assertEquals(NativeEventTracker.EVENT_TYPE.IMPRESSION, eventTracker1.event);
+        assertEquals(1, eventTracker1.event.getID());
+        assertEquals(2, eventTracker1.getMethods().size());
+        assertEquals(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE, eventTracker1.getMethods().get(0));
+        assertEquals(1, eventTracker1.getMethods().get(0).getID());
+        assertEquals(NativeEventTracker.EVENT_TRACKING_METHOD.JS, eventTracker1.getMethods().get(1));
+        assertEquals(2, eventTracker1.getMethods().get(1).getID());
 
         NativeEventTracker eventTracker2 = nativeUnit.params.getEventTrackers().get(1);
-        assertEquals(NativeEventTracker.EVENT_TYPE.VIEWABLE_MRC50,eventTracker2.event);
-        assertEquals(2,eventTracker2.event.getID());
-        assertEquals(2,eventTracker2.getMethods().size());
-        assertEquals(NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM,eventTracker2.getMethods().get(0));
-        assertEquals(500,eventTracker2.getMethods().get(0).getID());
-        NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM.setID(600);
-        assertEquals(600,eventTracker2.getMethods().get(0).getID());
-        assertEquals(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE,eventTracker2.getMethods().get(1));
-        assertEquals(1,eventTracker2.getMethods().get(1).getID());
+        assertEquals(NativeEventTracker.EVENT_TYPE.VIEWABLE_MRC50, eventTracker2.event);
+        assertEquals(2, eventTracker2.event.getID());
+        assertEquals(2, eventTracker2.getMethods().size());
+        assertEquals(NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM, eventTracker2.getMethods().get(0));
+        assertEquals(500, eventTracker2.getMethods().get(0).getID());
+        try {
+            NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM.setID(600);
+        } catch (Exception e) {
+            fail();
+        }
+        assertEquals(600, eventTracker2.getMethods().get(0).getID());
+        assertEquals(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE, eventTracker2.getMethods().get(1));
+        assertEquals(1, eventTracker2.getMethods().get(1).getID());
 
     }
 
@@ -264,10 +306,10 @@ public class NativeAdUnitTest {
         nativeUnit.params.addAsset(image);
 
         assertNotNull(nativeUnit.params.getAssets());
-        assertEquals(2,nativeUnit.params.getAssets().size());
-        assertEquals(25,((NativeTitleAsset) nativeUnit.params.getAssets().get(0)).getLen());
-        assertEquals(30,((NativeImageAsset) nativeUnit.params.getAssets().get(1)).getHMin());
-        assertEquals(20,((NativeImageAsset) nativeUnit.params.getAssets().get(1)).getWMin());
+        assertEquals(2, nativeUnit.params.getAssets().size());
+        assertEquals(25, ((NativeTitleAsset) nativeUnit.params.getAssets().get(0)).getLen());
+        assertEquals(30, ((NativeImageAsset) nativeUnit.params.getAssets().get(1)).getHMin());
+        assertEquals(20, ((NativeImageAsset) nativeUnit.params.getAssets().get(1)).getWMin());
     }
 
 }

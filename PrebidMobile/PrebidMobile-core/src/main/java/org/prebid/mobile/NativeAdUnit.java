@@ -31,9 +31,11 @@ public class NativeAdUnit extends AdUnit {
             return this.id;
         }
 
-        public void setID(int id) {
+        public void setID(int id) throws Exception {
             if (this.equals(CUSTOM) && id >= 500) {
                 this.id = id;
+            } else {
+                throw new Exception("Invalid input, should only set value on CUSTOM, should only use 500 above.");
             }
         }
     }
@@ -66,9 +68,11 @@ public class NativeAdUnit extends AdUnit {
             return this.id;
         }
 
-        public void setID(int id) {
+        public void setID(int id) throws Exception {
             if (this.equals(CUSTOM) && id >= 500) {
                 this.id = id;
+            } else {
+                throw new Exception("Invalid input, should only set value on CUSTOM, should only use 500 above.");
             }
         }
     }
@@ -93,9 +97,11 @@ public class NativeAdUnit extends AdUnit {
             return this.id;
         }
 
-        public void setID(int id) {
+        public void setID(int id) throws Exception {
             if (this.equals(CUSTOM) && id >= 500) {
                 this.id = id;
+            } else {
+                throw new Exception("Invalid input, should only set value on CUSTOM, should only use 500 above.");
             }
         }
 
