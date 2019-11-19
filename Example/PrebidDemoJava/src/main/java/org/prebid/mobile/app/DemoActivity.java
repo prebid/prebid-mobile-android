@@ -88,6 +88,7 @@ public class DemoActivity extends AppCompatActivity {
         String adTypeInterstitial = getString(R.string.adTypeInterstitial);
         String adTypeBannerVideo = getString(R.string.adTypeBannerVideo);
         String adTypeInterstitialVideo = getString(R.string.adTypeInterstitialVideo);
+        String adTypeInBannerNative = getString(R.string.adTypeInBannerNative);
 
         String adServerAdManager = getString(R.string.adServerAdManager);
         String adServerMoPub = getString(R.string.adServerMoPub);
@@ -136,8 +137,8 @@ public class DemoActivity extends AppCompatActivity {
             } else if (adServerName.equals(adServerMoPub)) {
                 setupAndLoadMPInterstitialVAST();
             }
-        } else if ("In Banner Native".equals(adTypeName)) {
-            adUnit = new NativeAdUnit("25e17008-5081-4676-94d5-923ced4359d3");
+        } else if (adTypeInBannerNative.equals(adTypeName)) {
+            adUnit = new NativeAdUnit(Constants.PBS_CONFIG_ID_NATIVE_APPNEXUS);
             if (adServerAdManager.equals(adServerName)) {
                 createDFPNative();
             } else if (adServerMoPub.equals(adServerName)) {
@@ -151,7 +152,7 @@ public class DemoActivity extends AppCompatActivity {
         final FrameLayout adFrame = (FrameLayout) findViewById(R.id.adFrame);
         adFrame.removeAllViews();
         adView = new MoPubView(this);
-        adView.setAdUnitId("037a743e5d184129ab79c941240efff8");
+        adView.setAdUnitId(Constants.MOPUB_IN_BANNER_NATIVE_ADUNIT_ID_APPNEXUS);
         adView.setBannerAdListener(new MoPubView.BannerAdListener() {
             @Override
             public void onBannerLoaded(final MoPubView banner) {
@@ -262,7 +263,7 @@ public class DemoActivity extends AppCompatActivity {
                 LogUtil.d("ad loaded");
             }
         });
-        nativeAdView.setAdUnitId("/19968336/Wei_Prebid_Native_Test");
+        nativeAdView.setAdUnitId(Constants.DFP_IN_BANNER_NATIVE_ADUNIT_ID_APPNEXUS);
         nativeAdView.setAdSizes(AdSize.FLUID);
         adFrame.addView(nativeAdView);
         final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
