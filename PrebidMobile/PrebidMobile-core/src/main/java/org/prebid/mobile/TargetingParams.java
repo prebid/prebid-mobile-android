@@ -18,8 +18,7 @@
 package org.prebid.mobile;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.util.Calendar;
@@ -40,11 +39,6 @@ public class TargetingParams {
     private static String domain = "";
     private static String storeUrl = "";
     private static String bundleName = null;
-    private static final String PREBID_CONSENT_STRING_KEY = "Prebid_GDPR_consent_strings";
-    private static final String IABConsent_ConsentString = "IABConsent_ConsentString";
-    private static final String PREBID_COPPA_KEY = "Prebid_COPPA";
-    private static final String PREBID_GDPR_KEY = "Prebid_GDPR";
-    private static final String IABConsent_SubjectToGDPR = "IABConsent_SubjectToGDPR";
 
     public static final String BIDDER_NAME_APP_NEXUS = "appnexus";
     public static final String BIDDER_NAME_RUBICON_PROJECT = "rubicon";
@@ -64,79 +58,82 @@ public class TargetingParams {
 
     //region Public APIs
 
-    public static void setGDPRConsentString(String string) {
-        Context context = PrebidMobile.getApplicationContext();
-        if (!TextUtils.isEmpty(string) && context != null) {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putString(PREBID_CONSENT_STRING_KEY, string);
-            editor.apply();
-        }
-    }
-
-    public static String getGDPRConsentString() {
-        Context context = PrebidMobile.getApplicationContext();
-        if (context != null) {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-            if (pref.contains(PREBID_CONSENT_STRING_KEY)) {
-                return pref.getString(PREBID_CONSENT_STRING_KEY, "");
-            } else if (pref.contains(IABConsent_ConsentString)) {
-                return pref.getString(IABConsent_ConsentString, "");
-            }
-        }
-        return null;
-    }
-
-    public static void setSubjectToCOPPA(boolean consent) {
-        Context context = PrebidMobile.getApplicationContext();
-        if (context != null) {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putBoolean(PREBID_COPPA_KEY, consent);
-            editor.apply();
-        }
-    }
-
+    //COPPA
     public static boolean isSubjectToCOPPA() {
-        boolean result = false;
-        Context context = PrebidMobile.getApplicationContext();
-        if (context != null) {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-            if (pref.contains(PREBID_COPPA_KEY)) {
-                result = pref.getBoolean(PREBID_COPPA_KEY, false);
-            }
+
+        try {
+            return StorageUtils.getPbCoppa();
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "can not get COPPA", ex);
+            return false;
         }
-        return result;
+
     }
 
-    public static void setSubjectToGDPR(boolean consent) {
-        Context context = PrebidMobile.getApplicationContext();
-        if (context != null) {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putBoolean(PREBID_GDPR_KEY, consent);
-            editor.apply();
+    public static void setSubjectToCOPPA(boolean isCoppa) {
+
+        try {
+            StorageUtils.setPbCoppa(isCoppa);
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "Coppa was not updated", ex);
         }
     }
 
+    //GDPR Subject
+    @Nullable
     public static Boolean isSubjectToGDPR() {
-        Context context = PrebidMobile.getApplicationContext();
-        if (context != null) {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-            if (pref.contains(PREBID_GDPR_KEY)) {
-                return pref.getBoolean(PREBID_GDPR_KEY, false);
-            } else if (pref.contains(IABConsent_SubjectToGDPR)) {
-                String value = pref.getString(IABConsent_SubjectToGDPR, "");
+
+        try {
+            if (StorageUtils.checkPbGdprSubject()) {
+                return StorageUtils.getPbGdprSubject();
+            } else if (StorageUtils.checkIabGdprSubject()) {
+                String value = StorageUtils.getIabGdprSubject();
                 if ("1".equals(value)) {
                     return true;
                 } else if ("0".equals(value)) {
                     return false;
                 }
             }
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "can not get GDPR Subject", ex);
         }
+
         return null;
     }
 
+    public static void setSubjectToGDPR(Boolean consent) {
+
+        try {
+            StorageUtils.setPbGdprSubject(consent);
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "GDPR Subject was not updated", ex);
+        }
+    }
+
+    //GDPR Consent
+    @Nullable
+    public static String getGDPRConsentString() {
+
+        try {
+            if (StorageUtils.checkPbGdprConsent()) {
+                return StorageUtils.getPbGdprConsent();
+            } else if (StorageUtils.checkIabGdprConsent()) {
+                return StorageUtils.getIabGdprConsent();
+            }
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "can not get GDPR Consent", ex);
+        }
+
+        return null;
+    }
+
+    public static void setGDPRConsentString(String string) {
+        try {
+            StorageUtils.setPbGdprConsent(string);
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "GDPR Consent was not updated", ex);
+        }
+    }
 
     /**
      * Get the year of birth for targeting
