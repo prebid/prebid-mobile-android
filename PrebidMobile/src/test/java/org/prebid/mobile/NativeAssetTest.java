@@ -11,8 +11,6 @@ import org.robolectric.annotation.Config;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK, manifest = Config.NONE)
@@ -124,24 +122,11 @@ public class NativeAssetTest {
         assertEquals(3, image.getImageType().getID());
         image.setImageType(NativeImageAsset.IMAGE_TYPE.CUSTOM);
         assertEquals(NativeImageAsset.IMAGE_TYPE.CUSTOM, image.getImageType());
-
-        try {
-            NativeImageAsset.IMAGE_TYPE.CUSTOM.setID(500);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeImageAsset.IMAGE_TYPE.CUSTOM.setID(500);
         assertEquals(500, image.getImageType().getID());
-        try {
-            NativeImageAsset.IMAGE_TYPE.CUSTOM.setID(600);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeImageAsset.IMAGE_TYPE.CUSTOM.setID(600);
         assertEquals(600, image.getImageType().getID());
-        try {
-            NativeImageAsset.IMAGE_TYPE.CUSTOM.setID(1);
-        } catch (Exception e) {
-            assertTrue(e.getMessage().contains("Invalid input"));
-        }
+        NativeImageAsset.IMAGE_TYPE.CUSTOM.setID(1);
         assertEquals(600, image.getImageType().getID());
         assertFalse("Invalid CustomId", 1 == image.getImageType().getID());
     }
@@ -225,23 +210,11 @@ public class NativeAssetTest {
         assertEquals(12, dataAsset.getDataType().getID());
         dataAsset.setDataType(NativeDataAsset.DATA_TYPE.CUSTOM);
         assertEquals(NativeDataAsset.DATA_TYPE.CUSTOM, dataAsset.getDataType());
-        try {
-            NativeDataAsset.DATA_TYPE.CUSTOM.setID(500);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeDataAsset.DATA_TYPE.CUSTOM.setID(500);
         assertEquals(500, dataAsset.getDataType().getID());
-        try {
-            NativeDataAsset.DATA_TYPE.CUSTOM.setID(600);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeDataAsset.DATA_TYPE.CUSTOM.setID(600);
         assertEquals(600, dataAsset.getDataType().getID());
-        try {
-            NativeDataAsset.DATA_TYPE.CUSTOM.setID(1);
-        } catch (Exception e) {
-            assertTrue(e.getMessage().contains("Invalid input"));
-        }
+        NativeDataAsset.DATA_TYPE.CUSTOM.setID(1);
         assertEquals(600, dataAsset.getDataType().getID());
         assertFalse("Invalid CustomId", 1 == dataAsset.getDataType().getID());
 

@@ -32,12 +32,19 @@ public class NativeDataAsset extends NativeAsset {
             return this.id;
         }
 
-        public void setID(int id) throws Exception {
-            if (this.equals(CUSTOM) && id >= 500) {
+        public void setID(int id) {
+            if (this.equals(CUSTOM) && !inExistingValue(id)) {
                 this.id = id;
-            } else {
-                throw new Exception("Invalid input, should only set value on CUSTOM, should only use 500 above.");
             }
+        }
+        private boolean inExistingValue(int id) {
+            DATA_TYPE[] possibleValues = this.getDeclaringClass().getEnumConstants();
+            for (DATA_TYPE value : possibleValues) {
+                if (!value.equals(DATA_TYPE.CUSTOM) && value.getID() == id) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 

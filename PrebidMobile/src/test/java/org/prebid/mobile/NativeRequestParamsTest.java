@@ -16,7 +16,6 @@ import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK, manifest = Config.NONE)
@@ -43,23 +42,11 @@ public class NativeRequestParamsTest {
         assertEquals(3, requestParams.getContextType().getID());
         requestParams.setContextType(NativeAdUnit.CONTEXT_TYPE.CUSTOM);
         assertEquals(NativeAdUnit.CONTEXT_TYPE.CUSTOM, requestParams.getContextType());
-        try {
-            NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(500);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(500);
         assertEquals(500, requestParams.getContextType().getID());
-        try {
-            NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(600);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(600);
         assertEquals(600, requestParams.getContextType().getID());
-        try {
-            NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(1);
-        } catch (Exception e) {
-            assertTrue(e.getMessage().contains("Invalid input"));
-        }
+        NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(1);
         assertEquals(600, requestParams.getContextType().getID());
         assertFalse("Invalid CustomId", 1 == requestParams.getContextType().getID());
     }
@@ -107,23 +94,11 @@ public class NativeRequestParamsTest {
         assertEquals(32, requestParams.getContextsubtype().getID());
         requestParams.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.CUSTOM);
         assertEquals(NativeAdUnit.CONTEXTSUBTYPE.CUSTOM, requestParams.getContextsubtype());
-        try {
-            NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(500);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(500);
         assertEquals(500, requestParams.getContextsubtype().getID());
-        try {
-            NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(600);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(600);
         assertEquals(600, requestParams.getContextsubtype().getID());
-        try {
-            NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(1);
-        } catch (Exception e) {
-            assertTrue(e.getMessage().contains("Invalid input"));
-        }
+        NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(10);
         assertEquals(600, requestParams.getContextsubtype().getID());
         assertFalse("Invalid CustomId", 1 == requestParams.getContextsubtype().getID());
     }
@@ -147,23 +122,11 @@ public class NativeRequestParamsTest {
         assertEquals(4, requestParams.getPlacementType().getID());
         requestParams.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CUSTOM);
         assertEquals(NativeAdUnit.PLACEMENTTYPE.CUSTOM, requestParams.getPlacementType());
-        try {
-            NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(500);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(500);
         assertEquals(500, requestParams.getPlacementType().getID());
-        try {
-            NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(600);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(600);
         assertEquals(600, requestParams.getPlacementType().getID());
-        try {
-            NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(1);
-        } catch (Exception e) {
-            assertTrue(e.getMessage().contains("Invalid input"));
-        }
+        NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(1);
         assertEquals(600, requestParams.getPlacementType().getID());
         assertFalse("Invalid CustomId", 1 == requestParams.getPlacementType().getID());
     }
@@ -259,29 +222,16 @@ public class NativeRequestParamsTest {
         assertEquals(1, eventTracker1.getMethods().get(0).getID());
         assertEquals(NativeEventTracker.EVENT_TRACKING_METHOD.JS, eventTracker1.getMethods().get(1));
         assertEquals(2, eventTracker1.getMethods().get(1).getID());
-
         NativeEventTracker eventTracker2 = requestParams.getEventTrackers().get(1);
         assertEquals(NativeEventTracker.EVENT_TYPE.VIEWABLE_MRC50, eventTracker2.event);
         assertEquals(2, eventTracker2.event.getID());
         assertEquals(2, eventTracker2.getMethods().size());
         assertEquals(NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM, eventTracker2.getMethods().get(0));
-        try {
-            NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM.setID(500);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM.setID(500);
         assertEquals(500, eventTracker2.getMethods().get(0).getID());
-        try {
-            NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM.setID(600);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM.setID(600);
         assertEquals(600, eventTracker2.getMethods().get(0).getID());
-        try {
-            NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM.setID(1);
-        } catch (Exception e) {
-            assertTrue(e.getMessage().contains("Invalid input"));
-        }
+        NativeEventTracker.EVENT_TRACKING_METHOD.CUSTOM.setID(1);
         assertEquals(600, eventTracker2.getMethods().get(0).getID());
         assertEquals(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE, eventTracker2.getMethods().get(1));
         assertEquals(1, eventTracker2.getMethods().get(1).getID());

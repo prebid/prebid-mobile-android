@@ -54,23 +54,11 @@ public class NativeAdUnitTest {
         assertEquals(3, nativeUnit.params.getContextType().getID());
         nativeUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.CUSTOM);
         assertEquals(NativeAdUnit.CONTEXT_TYPE.CUSTOM, nativeUnit.params.getContextType());
-        try {
-            NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(500);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(500);
         assertEquals(500, nativeUnit.params.getContextType().getID());
-        try {
-            NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(600);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(600);
         assertEquals(600, nativeUnit.params.getContextType().getID());
-        try {
-            NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(1);
-        } catch (Exception e) {
-            assertTrue(e.getMessage().contains("Invalid input"));
-        }
+        NativeAdUnit.CONTEXT_TYPE.CUSTOM.setID(1);
         assertEquals(600, nativeUnit.params.getContextType().getID());
         assertFalse("Invalid CustomId", 1 == nativeUnit.params.getContextType().getID());
     }
@@ -119,23 +107,11 @@ public class NativeAdUnitTest {
         assertEquals(32, nativeUnit.params.getContextsubtype().getID());
         nativeUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.CUSTOM);
         assertEquals(NativeAdUnit.CONTEXTSUBTYPE.CUSTOM, nativeUnit.params.getContextsubtype());
-        try {
-            NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(500);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(500);
         assertEquals(500, nativeUnit.params.getContextsubtype().getID());
-        try {
-            NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(600);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(600);
         assertEquals(600, nativeUnit.params.getContextsubtype().getID());
-        try {
-            NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(1);
-        } catch (Exception e) {
-            assertTrue(e.getMessage().contains("Invalid input"));
-        }
+        NativeAdUnit.CONTEXTSUBTYPE.CUSTOM.setID(10);
         assertEquals(600, nativeUnit.params.getContextsubtype().getID());
         assertFalse("Invalid CustomId", 1 == nativeUnit.params.getContextsubtype().getID());
 
@@ -161,24 +137,11 @@ public class NativeAdUnitTest {
         assertEquals(4, nativeUnit.params.getPlacementType().getID());
         nativeUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CUSTOM);
         assertEquals(NativeAdUnit.PLACEMENTTYPE.CUSTOM, nativeUnit.params.getPlacementType());
-        try {
-            NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(500);
-        } catch (Exception e) {
-            fail();
-        }
-
+        NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(500);
         assertEquals(500, nativeUnit.params.getPlacementType().getID());
-        try {
-            NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(600);
-        } catch (Exception e) {
-            fail();
-        }
+        NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(600);
         assertEquals(600, nativeUnit.params.getPlacementType().getID());
-        try {
-            NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(1);
-        } catch (Exception e) {
-            assertTrue(e.getMessage().contains("Invalid input"));
-        }
+        NativeAdUnit.PLACEMENTTYPE.CUSTOM.setID(1);
         assertEquals(600, nativeUnit.params.getPlacementType().getID());
         assertFalse("Invalid CustomId", 1 == nativeUnit.params.getPlacementType().getID());
     }
