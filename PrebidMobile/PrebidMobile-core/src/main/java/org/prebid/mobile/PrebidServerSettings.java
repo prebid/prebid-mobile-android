@@ -27,8 +27,6 @@ import android.text.TextUtils;
 import android.util.AndroidRuntimeException;
 import android.webkit.WebView;
 
-import java.util.Locale;
-
 class PrebidServerSettings {
     static final String AN_UUID = "uuid2";
     static final String COOKIE_HEADER = "Cookie";
@@ -66,7 +64,7 @@ class PrebidServerSettings {
     static final String deviceModel = Build.MODEL;
     static final String os = "android";
     static String userAgent = null;
-    static String sdk_version = "1.2";
+    static String sdk_version = "1.3";
     static String pkgVersion = "";
     static String appName = "";
     private static int mnc = -1;
