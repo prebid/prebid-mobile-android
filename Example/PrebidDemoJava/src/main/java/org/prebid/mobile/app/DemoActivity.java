@@ -369,7 +369,7 @@ public class DemoActivity extends AppCompatActivity {
         adView.setMinimumWidth(width);
         adView.setMinimumHeight(height);
         adFrame.addView(adView);
-
+        setupPBBanner(width, height);
         adUnit.setAutoRefreshPeriodMillis(getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0));
         adUnit.fetchDemand(adView, new OnCompleteListener() {
             @Override
