@@ -39,13 +39,17 @@ project.gradle.taskGraph.whenReady {
 
 repositories{
     maven {
-        url 'https://oss.sonatype.org/service/local/repositories/orgprebid-1025/content'
+        url 'https://oss.sonatype.org/service/local/repositories/orgprebid-1038/content'
     }
 }
 
 dependencies {
 
+//    implementation 'org.prebid:prebid-mobile-sdk:1.3'
+//    implementation 'org.prebid:prebid-mobile-sdk-core:1.3'
+
     implementation project(':PrebidMobile')
+
     localJarImplementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'androidx.appcompat:appcompat:1.0.0'
