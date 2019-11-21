@@ -117,7 +117,7 @@ final class StorageUtils {
 
     //CCPA
     @Nullable
-    static String getIabCcpa() {
+    static String getIabCcpa() throws PbContextNullException {
         SharedPreferences pref = getSharedPreferences();
         return pref.getString(StorageUtils.IABUSPrivacy_StringKey, null);
     }

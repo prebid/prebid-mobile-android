@@ -81,6 +81,7 @@ public class DemandFetcherTest extends BaseSetup {
             HttpUrl httpUrl = server.url("/");
             Host.CUSTOM.setHostUrl(httpUrl.toString());
             PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+            PrebidMobile.setApplicationContext(activity);
             server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
             PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
             PublisherAdRequest request = builder.build();
@@ -115,6 +116,7 @@ public class DemandFetcherTest extends BaseSetup {
             HttpUrl httpUrl = server.url("/");
             Host.CUSTOM.setHostUrl(httpUrl.toString());
             PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+            PrebidMobile.setApplicationContext(activity);
             server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
             server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
             server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
@@ -156,6 +158,7 @@ public class DemandFetcherTest extends BaseSetup {
             HttpUrl httpUrl = server.url("/");
             Host.CUSTOM.setHostUrl(httpUrl.toString());
             PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+            PrebidMobile.setApplicationContext(activity);
             server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
             PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
             PublisherAdRequest request = builder.build();
@@ -215,6 +218,7 @@ public class DemandFetcherTest extends BaseSetup {
         HttpUrl httpUrl = server.url("/");
         Host.CUSTOM.setHostUrl(httpUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setApplicationContext(activity);
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromRubicon()));
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
         PublisherAdRequest request = builder.build();
@@ -370,6 +374,7 @@ public class DemandFetcherTest extends BaseSetup {
             HttpUrl httpUrl = server.url("/");
             Host.CUSTOM.setHostUrl(httpUrl.toString());
             PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+            PrebidMobile.setApplicationContext(activity);
             server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
             server.enqueue(new MockResponse().setResponseCode(200).setBody("{}"));
             MoPubView adView = new MoPubView(activity);
@@ -415,6 +420,7 @@ public class DemandFetcherTest extends BaseSetup {
             HttpUrl httpUrl = server.url("/");
             Host.CUSTOM.setHostUrl(httpUrl.toString());
             PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+            PrebidMobile.setApplicationContext(activity);
             server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
             server.enqueue(new MockResponse().setResponseCode(200).setBody("{}"));
             PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
