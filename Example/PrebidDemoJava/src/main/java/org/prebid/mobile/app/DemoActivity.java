@@ -156,24 +156,7 @@ public class DemoActivity extends AppCompatActivity {
         adView.setBannerAdListener(new MoPubView.BannerAdListener() {
             @Override
             public void onBannerLoaded(final MoPubView banner) {
-
-                Util.resizeInBannerNative(banner, new FrameLayout.LayoutParams(1000, 1500), new Util.ResizeInBannerNativeListener() {
-                    @Override
-                    public void onResizePrebidAdSuccessful() {
-                        if (banner.getParent() != null) {
-                            ((ViewGroup) banner.getParent()).removeView(banner);
-                        }
-                        adFrame.addView(banner);
-                    }
-
-                    @Override
-                    public void onPrebidAdNotFound() {
-                        if (banner.getParent() != null) {
-                            ((ViewGroup) banner.getParent()).removeView(banner);
-                        }
-                        adFrame.addView(banner);
-                    }
-                });
+                adFrame.addView(banner);
             }
 
             @Override
