@@ -44,16 +44,20 @@ project.gradle.taskGraph.whenReady {
 
 repositories{
     maven {
-        url 'https://oss.sonatype.org/service/local/repositories/orgprebid-1025/content'
+        url 'https://oss.sonatype.org/service/local/repositories/orgprebid-1039/content'
     }
 }
 
 dependencies {
 
+//    implementation 'org.prebid:prebid-mobile-sdk:1.3'
+//    implementation 'org.prebid:prebid-mobile-sdk-core:1.3'
+
     implementation project(':PrebidMobile')
+
     localJarImplementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'com.google.android.gms:play-services-ads:17.1.3'
     implementation('com.mopub:mopub-sdk:5.8.0@aar') {
         transitive = true

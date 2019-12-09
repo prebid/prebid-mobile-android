@@ -16,6 +16,8 @@
 
 package org.prebid.mobile;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -810,6 +812,86 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
         //then
         assertEquals(0, coppa);
+    }
+
+    @Test
+    public void testPostDataWithCCPA() throws Exception {
+
+        //given
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("IABUSPrivacy_String", "1YN");
+        editor.apply();
+
+        String ccpa = null;
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        try {
+            ccpa = postData.getJSONObject("regs").getJSONObject("ext").getString("us_privacy");
+        } catch (Exception ex) {
+        }
+
+        //then
+        assertEquals("1YN", ccpa);
+
+        //defer
+        editor.remove("IABUSPrivacy_String");
+        editor.apply();
+    }
+
+    @Test
+    public void testPostDataWithEmptyCCPA() throws Exception {
+
+        //given
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("IABUSPrivacy_String", "");
+        editor.apply();
+
+        String ccpa = null;
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        try {
+            ccpa = postData.getJSONObject("regs").getJSONObject("ext").getString("us_privacy");
+        } catch (Exception ex) {
+        }
+
+        //then
+        assertNull(ccpa);
+
+        //defer
+        editor.remove("IABUSPrivacy_String");
+        editor.apply();
+    }
+
+    @Test
+    public void testPostDataWithoutCCPA() throws Exception {
+
+        //given
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.remove("IABUSPrivacy_String");
+        editor.apply();
+
+        String ccpa = null;
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        try {
+            ccpa = postData.getJSONObject("regs").getJSONObject("ext").getString("us_privacy");
+        } catch (Exception ex) {
+        }
+
+        //then
+        assertNull(ccpa);
+
+        //defer
+        editor.remove("IABUSPrivacy_String");
+        editor.apply();
     }
 
     @Test

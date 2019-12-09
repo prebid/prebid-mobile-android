@@ -1,12 +1,12 @@
 package org.prebid.mobile.drprebid.ui.viewholders;
 
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -16,8 +16,6 @@ import org.prebid.mobile.drprebid.model.HelpScreen;
 import org.prebid.mobile.drprebid.ui.activities.InfoActivity;
 import org.prebid.mobile.drprebid.ui.viewmodels.AdServerValidationViewModel;
 import org.prebid.mobile.drprebid.util.HelpScreenUtil;
-
-import java.util.Locale;
 
 public class AdServerValidationViewHolder extends RecyclerView.ViewHolder implements TestResultViewHolder, LifecycleOwner {
     private ProgressBar totalProgress;

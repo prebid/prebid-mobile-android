@@ -20,7 +20,6 @@ import org.prebid.mobile.InterstitialAdUnit;
 import org.prebid.mobile.ServerRequestSettings;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.drprebid.model.AdSize;
-import org.prebid.mobile.drprebid.model.PrebidServerSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,7 @@ public class DemandRequestBuilder {
             object.put("device", getOpenRtbDevice());
 
             Boolean isSubjectToGDPR = TargetingParams.isSubjectToGDPR();
-            if (isSubjectToGDPR != null && TargetingParams.isSubjectToGDPR()) {
+            if (isSubjectToGDPR != null && isSubjectToGDPR) {
                 object.put("regs", getOpenRtbRegs());
             }
 
@@ -228,7 +227,7 @@ public class DemandRequestBuilder {
 
         boolean gdpr = false;
         Boolean isSubjectToGDPR = TargetingParams.isSubjectToGDPR();
-        if (isSubjectToGDPR != null && TargetingParams.isSubjectToGDPR()) {
+        if (isSubjectToGDPR != null && isSubjectToGDPR) {
             gdpr = true;
         }
 
@@ -263,7 +262,7 @@ public class DemandRequestBuilder {
 
 
         Boolean isSubjectToGDPR = TargetingParams.isSubjectToGDPR();
-        if (isSubjectToGDPR != null && TargetingParams.isSubjectToGDPR()) {
+        if (isSubjectToGDPR != null && isSubjectToGDPR) {
             String consentString = TargetingParams.getGDPRConsentString();
 
             if (!TextUtils.isEmpty(consentString)) {

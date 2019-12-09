@@ -109,9 +109,24 @@ public class TargetingParamsTest extends BaseSetup {
     public void testCOPPAFlag() throws Exception {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         TargetingParams.setSubjectToCOPPA(true);
-        assertTrue(TargetingParams.isSubjectToCOPPA());
+        assertEquals(true, TargetingParams.isSubjectToCOPPA());
         TargetingParams.setSubjectToCOPPA(false);
-        assertTrue(!TargetingParams.isSubjectToCOPPA());
+        assertEquals(false, TargetingParams.isSubjectToCOPPA());
+    }
+
+    @Test
+    public void testCOPPAFlagWithoutContext() throws Exception {
+        //given
+        PrebidMobile.setApplicationContext(null);
+
+        //when
+        boolean result = TargetingParams.isSubjectToCOPPA();
+
+        //then
+        assertEquals(false, result);
+
+        //defer
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
     }
 
     @Test
@@ -121,6 +136,8 @@ public class TargetingParamsTest extends BaseSetup {
         assertTrue(TargetingParams.isSubjectToGDPR());
         TargetingParams.setSubjectToGDPR(false);
         assertTrue(!TargetingParams.isSubjectToGDPR());
+        TargetingParams.setSubjectToGDPR(null);
+        assertEquals(null, TargetingParams.isSubjectToGDPR());
     }
 
     @Test
