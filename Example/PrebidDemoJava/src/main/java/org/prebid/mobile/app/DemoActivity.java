@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -53,7 +52,6 @@ import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.TargetingParams;
-import org.prebid.mobile.Util;
 import org.prebid.mobile.VideoAdUnit;
 import org.prebid.mobile.VideoInterstitialAdUnit;
 import org.prebid.mobile.addendum.AdViewUtils;
