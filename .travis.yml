@@ -21,19 +21,16 @@ before_install:
   # Install the rest of tools (e.g., avdmanager)
   - sdkmanager tools
   # Install the system image
-#  - sdkmanager "system-images;android-18;default;armeabi-v7a"
-  - sdkmanager "system-images;android-25;google_apis;x86"
+  - sdkmanager "system-images;android-18;default;armeabi-v7a"
   - avdmanager list
 
   # Create and start emulator for the script. Meant to race the install task.
-#  - echo no | avdmanager create avd --force -n test -k "system-images;android-18;default;armeabi-v7a"
-#  - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
-  - echo no | avdmanager create avd --force -n test -k "system-images;android-25;google_apis;x86"
-  - emulator -avd test -no-audio -no-window &
-  - android-wait-for-emulator
-  - adb shell input keyevent 82
+  - echo no | avdmanager create avd --force -n test -k "system-images;android-18;default;armeabi-v7a"
+  - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
+#  - android-wait-for-emulator
+#  - adb shell input keyevent 82
 
 script:
   - "./scripts/buildPrebidMobile.sh"
   - "./scripts/testPrebidMobile.sh"
-  - "./scripts/testPrebidDemo.sh"
+#  - "./scripts/testPrebidDemo.sh"
