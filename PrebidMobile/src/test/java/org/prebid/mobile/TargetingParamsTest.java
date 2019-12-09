@@ -199,7 +199,7 @@ public class TargetingParamsTest extends BaseSetup {
         TargetingParams.addUserKeyword("value10");
 
         //when
-        Set<String>  set = TargetingParams.getUserKeywordsSet();
+        Set<String> set = TargetingParams.getUserKeywordsSet();
 
         //then
         Assert.assertEquals(1, set.size());

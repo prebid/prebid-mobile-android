@@ -61,5 +61,9 @@ public enum ResultCode {
     /**
      * Prebid Server responded with some error messages
      */
-    PREBID_SERVER_ERROR
+    PREBID_SERVER_ERROR,
+    /**
+     * Missing assets requirement for native ad unit
+     */
+    INVALID_NATIVE_REQUEST
 }

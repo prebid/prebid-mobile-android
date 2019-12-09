@@ -29,6 +29,7 @@ class RequestParams {
     private String configId = "";
     private AdType adType = AdType.BANNER;
     private HashSet<AdSize> sizes = new HashSet<>();
+    private NativeRequestParams nativeParams = null;
 
     @Nullable
     private Map<String, Set<String>> contextDataDictionary;
@@ -53,6 +54,15 @@ class RequestParams {
         this.contextKeywordsSet = contextKeywordsSet;
         this.minSizePerc = minSizePerc;
         this.videoPlacement = videoPlacement;
+    }
+
+
+    void setNativeRequestParams(NativeRequestParams params) {
+        this.nativeParams = params;
+    }
+
+    NativeRequestParams getNativeRequestParams() {
+        return nativeParams;
     }
 
     String getConfigId() {

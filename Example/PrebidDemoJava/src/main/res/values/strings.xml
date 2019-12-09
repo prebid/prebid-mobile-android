@@ -6,12 +6,14 @@
     <string name="adTypeInterstitial">Interstitial</string>
     <string name="adTypeBannerVideo">Banner Video</string>
     <string name="adTypeInterstitialVideo">Interstitial Video</string>
+    <string name="adTypeInBannerNative">In Banner Native</string>
 
     <string-array name="adTypeArray">
         <item>@string/adTypeBanner</item>
         <item>@string/adTypeInterstitial</item>
         <item>@string/adTypeBannerVideo</item>
         <item>@string/adTypeInterstitialVideo</item>
+        <item>@string/adTypeInBannerNative</item>
     </string-array>
 
     <string name="adServerText">Ad Server</string>

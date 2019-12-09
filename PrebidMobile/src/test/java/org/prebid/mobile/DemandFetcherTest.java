@@ -42,7 +42,6 @@ import okhttp3.mockwebserver.MockResponse;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -52,169 +51,145 @@ public class DemandFetcherTest extends BaseSetup {
 
     @Test
     public void testBaseConditions() throws Exception {
-        if (successfulMockServerStarted) {
-            PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-            PublisherAdRequest request = builder.build();
-            DemandFetcher demandFetcher = new DemandFetcher(request);
-            demandFetcher.setPeriodMillis(0);
-            HashSet<AdSize> sizes = new HashSet<>();
-            sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-            demandFetcher.setRequestParams(requestParams);
-            assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
-            demandFetcher.start();
-            assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
-            ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
-            fetcherLooper.runOneTask();
-            Robolectric.flushBackgroundThreadScheduler();
-            Robolectric.flushForegroundThreadScheduler();
-            demandFetcher.destroy();
-            assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
-        } else {
-            assertTrue("Mock server was not started", false);
-        }
+        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        PublisherAdRequest request = builder.build();
+        DemandFetcher demandFetcher = new DemandFetcher(request);
+        demandFetcher.setPeriodMillis(0);
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
+        demandFetcher.setRequestParams(requestParams);
+        assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
+        demandFetcher.start();
+        assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
+        ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
+        fetcherLooper.runOneTask();
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        demandFetcher.destroy();
+        assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
     }
 
     @Test
     public void testSingleRequestNoBidsResponse() throws Exception {
-        if (successfulMockServerStarted) {
-            HttpUrl httpUrl = server.url("/");
-            Host.CUSTOM.setHostUrl(httpUrl.toString());
-            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-            PrebidMobile.setApplicationContext(activity);
-            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
-            PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-            PublisherAdRequest request = builder.build();
-            DemandFetcher demandFetcher = new DemandFetcher(request);
-            PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
-            demandFetcher.setPeriodMillis(0);
-            HashSet<AdSize> sizes = new HashSet<>();
-            sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-            demandFetcher.setRequestParams(requestParams);
-            OnCompleteListener mockListener = mock(OnCompleteListener.class);
-            demandFetcher.setListener(mockListener);
-            assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
-            demandFetcher.start();
-            assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
-            ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
-            fetcherLooper.runOneTask();
-            ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
-            demandLooper.runOneTask();
-            Robolectric.flushBackgroundThreadScheduler();
-            Robolectric.flushForegroundThreadScheduler();
-            verify(mockListener).onComplete(ResultCode.NO_BIDS);
-            assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
-        } else {
-            assertTrue("Mock server was not started", false);
-        }
+        HttpUrl httpUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(httpUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        PublisherAdRequest request = builder.build();
+        DemandFetcher demandFetcher = new DemandFetcher(request);
+        PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
+        demandFetcher.setPeriodMillis(0);
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
+        demandFetcher.setRequestParams(requestParams);
+        OnCompleteListener mockListener = mock(OnCompleteListener.class);
+        demandFetcher.setListener(mockListener);
+        assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
+        demandFetcher.start();
+        assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
+        ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
+        fetcherLooper.runOneTask();
+        ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
+        demandLooper.runOneTask();
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onComplete(ResultCode.NO_BIDS);
+        assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
     }
 
     @Test
     public void testDestroyAutoRefresh() throws Exception {
-        if (successfulMockServerStarted) {
-            HttpUrl httpUrl = server.url("/");
-            Host.CUSTOM.setHostUrl(httpUrl.toString());
-            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-            PrebidMobile.setApplicationContext(activity);
-            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
-            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
-            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
-
-            PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-            PublisherAdRequest request = builder.build();
-            DemandFetcher demandFetcher = new DemandFetcher(request);
-            PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
-            demandFetcher.setPeriodMillis(30);
-            HashSet<AdSize> sizes = new HashSet<>();
-            sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-            demandFetcher.setRequestParams(requestParams);
-            OnCompleteListener mockListener = mock(OnCompleteListener.class);
-            demandFetcher.setListener(mockListener);
-            assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
-            demandFetcher.start();
-            assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
-            ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
-            fetcherLooper.runOneTask();
-            ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
-            demandLooper.runOneTask();
-            Robolectric.flushBackgroundThreadScheduler();
-            Robolectric.flushForegroundThreadScheduler();
-            assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
-            demandFetcher.destroy();
-            assertTrue(!Robolectric.getForegroundThreadScheduler().areAnyRunnable());
-            assertTrue(!Robolectric.getBackgroundThreadScheduler().areAnyRunnable());
-            assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
-            verify(mockListener, Mockito.times(1)).onComplete(ResultCode.NO_BIDS);
-        } else {
-            assertTrue("Mock server was not started", false);
-        }
+        HttpUrl httpUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(httpUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        PublisherAdRequest request = builder.build();
+        DemandFetcher demandFetcher = new DemandFetcher(request);
+        PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
+        demandFetcher.setPeriodMillis(30);
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
+        demandFetcher.setRequestParams(requestParams);
+        OnCompleteListener mockListener = mock(OnCompleteListener.class);
+        demandFetcher.setListener(mockListener);
+        assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
+        demandFetcher.start();
+        assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
+        ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
+        fetcherLooper.runOneTask();
+        ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
+        demandLooper.runOneTask();
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
+        demandFetcher.destroy();
+        assertTrue(!Robolectric.getForegroundThreadScheduler().areAnyRunnable());
+        assertTrue(!Robolectric.getBackgroundThreadScheduler().areAnyRunnable());
+        assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
+        verify(mockListener, Mockito.times(1)).onComplete(ResultCode.NO_BIDS);
     }
 
     @Test
     public void testSingleRequestOneBidResponseForDFPAdObject() throws Exception {
-        if (successfulMockServerStarted) {
-            HttpUrl httpUrl = server.url("/");
-            Host.CUSTOM.setHostUrl(httpUrl.toString());
-            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-            PrebidMobile.setApplicationContext(activity);
-            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
-            PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-            PublisherAdRequest request = builder.build();
-            DemandFetcher demandFetcher = new DemandFetcher(request);
-            PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
-            demandFetcher.setPeriodMillis(0);
-            HashSet<AdSize> sizes = new HashSet<>();
-            sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-            demandFetcher.setRequestParams(requestParams);
-            OnCompleteListener mockListener = mock(OnCompleteListener.class);
-            demandFetcher.setListener(mockListener);
-            assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
-            demandFetcher.start();
-            assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
-            ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
-            fetcherLooper.runOneTask();
-            ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
-            demandLooper.runOneTask();
-            Robolectric.flushBackgroundThreadScheduler();
-            Robolectric.flushForegroundThreadScheduler();
-            verify(mockListener).onComplete(ResultCode.SUCCESS);
-            assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
-            Bundle bundle = request.getCustomTargeting();
-            assertEquals(10, bundle.size());
-            assertTrue(bundle.containsKey("hb_pb"));
-            assertEquals("0.50", bundle.get("hb_pb"));
-            assertTrue(bundle.containsKey("hb_bidder"));
-            assertEquals("appnexus", bundle.get("hb_bidder"));
-            assertTrue(bundle.containsKey("hb_bidder_appnexus"));
-            assertEquals("appnexus", bundle.get("hb_bidder_appnexus"));
-            assertTrue(bundle.containsKey("hb_cache_id"));
-            assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id"));
-            assertTrue(bundle.containsKey("hb_cache_id_appnexus"));
-            assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id_appnexus"));
-            assertTrue(bundle.containsKey("hb_env"));
-            assertEquals("mobile-app", bundle.get("hb_env"));
-            assertTrue(bundle.containsKey("hb_env_appnexus"));
-            assertEquals("mobile-app", bundle.get("hb_env_appnexus"));
-            assertTrue(bundle.containsKey("hb_pb_appnexus"));
-            assertEquals("0.50", bundle.get("hb_pb_appnexus"));
-            assertTrue(bundle.containsKey("hb_size"));
-            assertEquals("300x250", bundle.get("hb_size"));
-            assertTrue(bundle.containsKey("hb_size_appnexus"));
-            assertEquals("300x250", bundle.get("hb_size_appnexus"));
-        } else {
-            assertTrue("Mock server was not started", false);
-        }
+        HttpUrl httpUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(httpUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
+        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        PublisherAdRequest request = builder.build();
+        DemandFetcher demandFetcher = new DemandFetcher(request);
+        PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
+        demandFetcher.setPeriodMillis(0);
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
+        demandFetcher.setRequestParams(requestParams);
+        OnCompleteListener mockListener = mock(OnCompleteListener.class);
+        demandFetcher.setListener(mockListener);
+        assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
+        demandFetcher.start();
+        assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
+        ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
+        fetcherLooper.runOneTask();
+        ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
+        demandLooper.runOneTask();
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onComplete(ResultCode.SUCCESS);
+        assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
+        Bundle bundle = request.getCustomTargeting();
+        assertEquals(10, bundle.size());
+        assertTrue(bundle.containsKey("hb_pb"));
+        assertEquals("0.50", bundle.get("hb_pb"));
+        assertTrue(bundle.containsKey("hb_bidder"));
+        assertEquals("appnexus", bundle.get("hb_bidder"));
+        assertTrue(bundle.containsKey("hb_bidder_appnexus"));
+        assertEquals("appnexus", bundle.get("hb_bidder_appnexus"));
+        assertTrue(bundle.containsKey("hb_cache_id"));
+        assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id"));
+        assertTrue(bundle.containsKey("hb_cache_id_appnexus"));
+        assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id_appnexus"));
+        assertTrue(bundle.containsKey("hb_env"));
+        assertEquals("mobile-app", bundle.get("hb_env"));
+        assertTrue(bundle.containsKey("hb_env_appnexus"));
+        assertEquals("mobile-app", bundle.get("hb_env_appnexus"));
+        assertTrue(bundle.containsKey("hb_pb_appnexus"));
+        assertEquals("0.50", bundle.get("hb_pb_appnexus"));
+        assertTrue(bundle.containsKey("hb_size"));
+        assertEquals("300x250", bundle.get("hb_size"));
+        assertTrue(bundle.containsKey("hb_size_appnexus"));
+        assertEquals("300x250", bundle.get("hb_size_appnexus"));
     }
 
     @Test
     public void testSingleRequestOneBidRubiconResponseForDFPAdObject() throws Exception {
-        if (!successfulMockServerStarted) {
-            fail("Mock server was not started");
-        }
-
         HttpUrl httpUrl = server.url("/");
         Host.CUSTOM.setHostUrl(httpUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
@@ -298,49 +273,43 @@ public class DemandFetcherTest extends BaseSetup {
 
     @Test
     public void testSingleRequestOneBidResponseForMoPubAdObject() throws Exception {
-        if (successfulMockServerStarted) {
-            HttpUrl httpUrl = server.url("/");
-            Host.CUSTOM.setHostUrl(httpUrl.toString());
-            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
-            MoPubView adView = new MoPubView(activity);
-            adView.setAdUnitId("123456789");
-            DemandFetcher demandFetcher = new DemandFetcher(adView);
-            PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
-            demandFetcher.setPeriodMillis(0);
-            HashSet<AdSize> sizes = new HashSet<>();
-            sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-            demandFetcher.setRequestParams(requestParams);
-            OnCompleteListener mockListener = mock(OnCompleteListener.class);
-            demandFetcher.setListener(mockListener);
-            assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
-            demandFetcher.start();
-            assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
-            ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
-            fetcherLooper.runOneTask();
-            ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
-            demandLooper.runOneTask();
-            Robolectric.flushBackgroundThreadScheduler();
-            Robolectric.flushForegroundThreadScheduler();
-            verify(mockListener).onComplete(ResultCode.SUCCESS);
-            assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
-            String adViewKeywords = adView.getKeywords();
-            assertEquals("hb_pb:0.50,hb_env:mobile-app,hb_pb_appnexus:0.50,hb_size:300x250,hb_bidder_appnexus:appnexus,hb_bidder:appnexus,hb_cache_id:df4aba04-5e69-44b8-8608-058ab21600b8,hb_env_appnexus:mobile-app,hb_size_appnexus:300x250,hb_cache_id_appnexus:df4aba04-5e69-44b8-8608-058ab21600b8,", adViewKeywords);
-        } else {
-            assertTrue("Mock server was not started", false);
-        }
-    }
-
-    @Test
-    public void testSingleRequestOneBidRubiconResponseForMoPubAdObject() throws Exception {
-        if (!successfulMockServerStarted) {
-            fail("Mock server was not started");
-        }
 
         HttpUrl httpUrl = server.url("/");
         Host.CUSTOM.setHostUrl(httpUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
+        MoPubView adView = new MoPubView(activity);
+        adView.setAdUnitId("123456789");
+        DemandFetcher demandFetcher = new DemandFetcher(adView);
+        PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
+        demandFetcher.setPeriodMillis(0);
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
+        demandFetcher.setRequestParams(requestParams);
+        OnCompleteListener mockListener = mock(OnCompleteListener.class);
+        demandFetcher.setListener(mockListener);
+        assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
+        demandFetcher.start();
+        assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
+        ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
+        fetcherLooper.runOneTask();
+        ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
+        demandLooper.runOneTask();
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onComplete(ResultCode.SUCCESS);
+        assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
+        String adViewKeywords = adView.getKeywords();
+        assertEquals("hb_pb:0.50,hb_env:mobile-app,hb_pb_appnexus:0.50,hb_size:300x250,hb_bidder_appnexus:appnexus,hb_bidder:appnexus,hb_cache_id:df4aba04-5e69-44b8-8608-058ab21600b8,hb_env_appnexus:mobile-app,hb_size_appnexus:300x250,hb_cache_id_appnexus:df4aba04-5e69-44b8-8608-058ab21600b8,", adViewKeywords);
+    }
+
+    @Test
+    public void testSingleRequestOneBidRubiconResponseForMoPubAdObject() throws Exception {
+        HttpUrl httpUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(httpUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromRubicon()));
         MoPubView adView = new MoPubView(activity);
         adView.setAdUnitId("123456789");
@@ -370,113 +339,103 @@ public class DemandFetcherTest extends BaseSetup {
 
     @Test
     public void testAutoRefreshForMoPubAdObject() throws Exception {
-        if (successfulMockServerStarted) {
-            HttpUrl httpUrl = server.url("/");
-            Host.CUSTOM.setHostUrl(httpUrl.toString());
-            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-            PrebidMobile.setApplicationContext(activity);
-            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
-            server.enqueue(new MockResponse().setResponseCode(200).setBody("{}"));
-            MoPubView adView = new MoPubView(activity);
-            adView.setAdUnitId("123456789");
-            DemandFetcher demandFetcher = new DemandFetcher(adView);
-            PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
-            demandFetcher.setPeriodMillis(2000);
-            HashSet<AdSize> sizes = new HashSet<>();
-            sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-            demandFetcher.setRequestParams(requestParams);
-            OnCompleteListener mockListener = mock(OnCompleteListener.class);
-            demandFetcher.setListener(mockListener);
-            assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
-            demandFetcher.start();
-            assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
-            ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
-            fetcherLooper.runOneTask();
-            ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
-            demandLooper.runOneTask();
-            Robolectric.flushBackgroundThreadScheduler();
-            Robolectric.flushForegroundThreadScheduler();
-            verify(mockListener).onComplete(ResultCode.SUCCESS);
-            assertNotSame(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
-            String adViewKeywords = adView.getKeywords();
-            assertEquals("hb_pb:0.50,hb_env:mobile-app,hb_pb_appnexus:0.50,hb_size:300x250,hb_bidder_appnexus:appnexus,hb_bidder:appnexus,hb_cache_id:df4aba04-5e69-44b8-8608-058ab21600b8,hb_env_appnexus:mobile-app,hb_size_appnexus:300x250,hb_cache_id_appnexus:df4aba04-5e69-44b8-8608-058ab21600b8,", adViewKeywords);
-            fetcherLooper.runOneTask();
-            demandLooper.runOneTask();
-            Robolectric.flushBackgroundThreadScheduler();
-            Robolectric.flushForegroundThreadScheduler();
-            verify(mockListener).onComplete(ResultCode.NO_BIDS);
-            assertNotSame(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
-            adViewKeywords = adView.getKeywords();
-            assertEquals("", adViewKeywords);
-        } else {
-            assertTrue("Mock server was not started", false);
-        }
+        HttpUrl httpUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(httpUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("{}"));
+        MoPubView adView = new MoPubView(activity);
+        adView.setAdUnitId("123456789");
+        DemandFetcher demandFetcher = new DemandFetcher(adView);
+        PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
+        demandFetcher.setPeriodMillis(2000);
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
+        demandFetcher.setRequestParams(requestParams);
+        OnCompleteListener mockListener = mock(OnCompleteListener.class);
+        demandFetcher.setListener(mockListener);
+        assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
+        demandFetcher.start();
+        assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
+        ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
+        fetcherLooper.runOneTask();
+        ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
+        demandLooper.runOneTask();
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onComplete(ResultCode.SUCCESS);
+        assertNotSame(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
+        String adViewKeywords = adView.getKeywords();
+        assertEquals("hb_pb:0.50,hb_env:mobile-app,hb_pb_appnexus:0.50,hb_size:300x250,hb_bidder_appnexus:appnexus,hb_bidder:appnexus,hb_cache_id:df4aba04-5e69-44b8-8608-058ab21600b8,hb_env_appnexus:mobile-app,hb_size_appnexus:300x250,hb_cache_id_appnexus:df4aba04-5e69-44b8-8608-058ab21600b8,", adViewKeywords);
+        fetcherLooper.runOneTask();
+        demandLooper.runOneTask();
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onComplete(ResultCode.NO_BIDS);
+        assertNotSame(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
+        adViewKeywords = adView.getKeywords();
+        assertEquals("", adViewKeywords);
     }
 
     @Test
     public void testAutoRefreshForDFPAdObject() throws Exception {
-        if (successfulMockServerStarted) {
-            HttpUrl httpUrl = server.url("/");
-            Host.CUSTOM.setHostUrl(httpUrl.toString());
-            PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-            PrebidMobile.setApplicationContext(activity);
-            server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
-            server.enqueue(new MockResponse().setResponseCode(200).setBody("{}"));
-            PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-            PublisherAdRequest request = builder.build();
-            DemandFetcher demandFetcher = new DemandFetcher(request);
-            PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
-            demandFetcher.setPeriodMillis(2000);
-            HashSet<AdSize> sizes = new HashSet<>();
-            sizes.add(new AdSize(300, 250));
-            RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-            demandFetcher.setRequestParams(requestParams);
-            OnCompleteListener mockListener = mock(OnCompleteListener.class);
-            demandFetcher.setListener(mockListener);
-            assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
-            demandFetcher.start();
-            assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
-            ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
-            fetcherLooper.runOneTask();
-            ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
-            demandLooper.runOneTask();
-            Robolectric.flushBackgroundThreadScheduler();
-            Robolectric.flushForegroundThreadScheduler();
-            verify(mockListener).onComplete(ResultCode.SUCCESS);
-            assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
-            Bundle bundle = request.getCustomTargeting();
-            assertEquals(10, bundle.size());
-            assertTrue(bundle.containsKey("hb_pb"));
-            assertEquals("0.50", bundle.get("hb_pb"));
-            assertTrue(bundle.containsKey("hb_bidder"));
-            assertEquals("appnexus", bundle.get("hb_bidder"));
-            assertTrue(bundle.containsKey("hb_bidder_appnexus"));
-            assertEquals("appnexus", bundle.get("hb_bidder_appnexus"));
-            assertTrue(bundle.containsKey("hb_cache_id"));
-            assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id"));
-            assertTrue(bundle.containsKey("hb_cache_id_appnexus"));
-            assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id_appnexus"));
-            assertTrue(bundle.containsKey("hb_env"));
-            assertEquals("mobile-app", bundle.get("hb_env"));
-            assertTrue(bundle.containsKey("hb_env_appnexus"));
-            assertEquals("mobile-app", bundle.get("hb_env_appnexus"));
-            assertTrue(bundle.containsKey("hb_pb_appnexus"));
-            assertEquals("0.50", bundle.get("hb_pb_appnexus"));
-            assertTrue(bundle.containsKey("hb_size"));
-            assertEquals("300x250", bundle.get("hb_size"));
-            assertTrue(bundle.containsKey("hb_size_appnexus"));
-            assertEquals("300x250", bundle.get("hb_size_appnexus"));
-            fetcherLooper.runOneTask();
-            demandLooper.runOneTask();
-            Robolectric.flushBackgroundThreadScheduler();
-            Robolectric.flushForegroundThreadScheduler();
-            verify(mockListener).onComplete(ResultCode.NO_BIDS);
-            assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
-            bundle = request.getCustomTargeting();
-            assertEquals(0, bundle.size());
-        } else {
-            assertTrue("Mock server was not started", false);
-        }
+        HttpUrl httpUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(httpUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("{}"));
+        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        PublisherAdRequest request = builder.build();
+        DemandFetcher demandFetcher = new DemandFetcher(request);
+        PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
+        demandFetcher.setPeriodMillis(2000);
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
+        demandFetcher.setRequestParams(requestParams);
+        OnCompleteListener mockListener = mock(OnCompleteListener.class);
+        demandFetcher.setListener(mockListener);
+        assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
+        demandFetcher.start();
+        assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
+        ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
+        fetcherLooper.runOneTask();
+        ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
+        demandLooper.runOneTask();
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onComplete(ResultCode.SUCCESS);
+        assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
+        Bundle bundle = request.getCustomTargeting();
+        assertEquals(10, bundle.size());
+        assertTrue(bundle.containsKey("hb_pb"));
+        assertEquals("0.50", bundle.get("hb_pb"));
+        assertTrue(bundle.containsKey("hb_bidder"));
+        assertEquals("appnexus", bundle.get("hb_bidder"));
+        assertTrue(bundle.containsKey("hb_bidder_appnexus"));
+        assertEquals("appnexus", bundle.get("hb_bidder_appnexus"));
+        assertTrue(bundle.containsKey("hb_cache_id"));
+        assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id"));
+        assertTrue(bundle.containsKey("hb_cache_id_appnexus"));
+        assertEquals("df4aba04-5e69-44b8-8608-058ab21600b8", bundle.get("hb_cache_id_appnexus"));
+        assertTrue(bundle.containsKey("hb_env"));
+        assertEquals("mobile-app", bundle.get("hb_env"));
+        assertTrue(bundle.containsKey("hb_env_appnexus"));
+        assertEquals("mobile-app", bundle.get("hb_env_appnexus"));
+        assertTrue(bundle.containsKey("hb_pb_appnexus"));
+        assertEquals("0.50", bundle.get("hb_pb_appnexus"));
+        assertTrue(bundle.containsKey("hb_size"));
+        assertEquals("300x250", bundle.get("hb_size"));
+        assertTrue(bundle.containsKey("hb_size_appnexus"));
+        assertEquals("300x250", bundle.get("hb_size_appnexus"));
+        fetcherLooper.runOneTask();
+        demandLooper.runOneTask();
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onComplete(ResultCode.NO_BIDS);
+        assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
+        bundle = request.getCustomTargeting();
+        assertEquals(0, bundle.size());
     }
 }

@@ -20,14 +20,13 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
+import android.webkit.WebView;
 
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
 
+import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
@@ -38,16 +37,17 @@ public class CustomApplication extends Application {
     public void onCreate() {
         super.onCreate();
         //init MoPub SDK
-        List<String> networksToInit = new ArrayList<String>();
-        networksToInit.add("com.mopub.mobileads.VungleRewardedVideo");
         SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder("a935eac11acd416f92640411234fbba6")
-                .withNetworksToInit(networksToInit)
                 .build();
         MoPub.initializeSdk(this, sdkConfiguration, null);
         //set Prebid Mobile global Settings
         //region PrebidMobile API
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID);
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(getApplicationContext());
+        WebView obj = new WebView(this);
+        obj.clearCache(true);
         //endregion
         if (BuildConfig.DEBUG) {
             sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));

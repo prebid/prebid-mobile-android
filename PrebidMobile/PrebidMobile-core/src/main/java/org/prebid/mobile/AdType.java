@@ -19,6 +19,7 @@ package org.prebid.mobile;
 enum AdType {
     BANNER,
     INTERSTITIAL,
+    NATIVE,
     VIDEO,
     VIDEO_INTERSTITIAL
 }
