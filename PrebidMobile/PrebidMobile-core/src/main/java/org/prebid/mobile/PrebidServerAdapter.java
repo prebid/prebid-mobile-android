@@ -513,7 +513,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     JSONObject bids = new JSONObject();
                     cache.put("bids", bids);
 
-                    if (adType.equals(AdType.VIDEO) || adType.equals(AdType.VIDEO_INTERSTITIAL)) {
+                    if (adType.equals(AdType.VIDEO) || adType.equals(AdType.VIDEO_INTERSTITIAL) || adType.equals(AdType.REWARDED_VIDEO)) {
                         cache.put("vastxml", bids);
                     }
 
@@ -555,7 +555,7 @@ class PrebidServerAdapter implements DemandAdapter {
                 JSONObject ext = new JSONObject();
                 imp.put("id", "PrebidMobile");
                 imp.put("secure", 1);
-                if (adType.equals(AdType.INTERSTITIAL) || adType.equals(AdType.VIDEO_INTERSTITIAL)) {
+                if (adType.equals(AdType.INTERSTITIAL) || adType.equals(AdType.VIDEO_INTERSTITIAL) || adType.equals(AdType.REWARDED_VIDEO)) {
                     imp.put("instl", 1);
                 }
 
@@ -686,7 +686,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     nativeObj.put(NativeRequestParams.REQUEST, request.toString());
                     nativeObj.put(NativeRequestParams.VERSION, NativeRequestParams.SUPPORTED_VERSION);
                     imp.put(NativeRequestParams.NATIVE, nativeObj);
-                } else if (adType.equals(AdType.VIDEO) || adType.equals(AdType.VIDEO_INTERSTITIAL)) {
+                } else if (adType.equals(AdType.VIDEO) || adType.equals(AdType.VIDEO_INTERSTITIAL) || adType.equals(AdType.REWARDED_VIDEO)) {
 
                     JSONObject video = new JSONObject();
                     video.put("mimes", new JSONArray().put("video/mp4"));
@@ -703,7 +703,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
                         placement = requestParams.getVideoPlacement();
 
-                    } else if (adType.equals(AdType.VIDEO_INTERSTITIAL)) {
+                    } else if (adType.equals(AdType.VIDEO_INTERSTITIAL) || adType.equals(AdType.REWARDED_VIDEO)) {
                         Context context = PrebidMobile.getApplicationContext();
 
                         if (context != null) {
@@ -748,6 +748,10 @@ class PrebidServerAdapter implements DemandAdapter {
                             bidResponseArray.put(storedBid);
                         }
                     }
+                }
+
+                if (adType.equals(AdType.REWARDED_VIDEO)) {
+                    prebid.put("is_rewarded_inventory", 1);
                 }
 
                 imp.put("ext", ext);

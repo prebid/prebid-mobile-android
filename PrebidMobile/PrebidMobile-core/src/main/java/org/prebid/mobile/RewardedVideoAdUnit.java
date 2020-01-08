@@ -16,11 +16,12 @@
 
 package org.prebid.mobile;
 
-enum AdType {
-    BANNER,
-    INTERSTITIAL,
-    NATIVE,
-    VIDEO,
-    VIDEO_INTERSTITIAL,
-    REWARDED_VIDEO
+import android.support.annotation.NonNull;
+
+public class RewardedVideoAdUnit extends AdUnit {
+
+    public RewardedVideoAdUnit(@NonNull String configId) {
+        super(configId, AdType.REWARDED_VIDEO);
+    }
+
 }

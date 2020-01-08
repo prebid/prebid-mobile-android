@@ -34,6 +34,10 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
@@ -51,6 +55,7 @@ import org.prebid.mobile.NativeTitleAsset;
 import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.RewardedVideoAdUnit;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.VideoAdUnit;
 import org.prebid.mobile.VideoInterstitialAdUnit;
@@ -73,6 +78,7 @@ public class DemoActivity extends AppCompatActivity {
     private PublisherInterstitialAd amInterstitial;
 
     private MoPubInterstitial mpInterstitial;
+    private RewardedAd amRewardedAd;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,6 +94,7 @@ public class DemoActivity extends AppCompatActivity {
         String adTypeBannerVideo = getString(R.string.adTypeBannerVideo);
         String adTypeInterstitialVideo = getString(R.string.adTypeInterstitialVideo);
         String adTypeInBannerNative = getString(R.string.adTypeInBannerNative);
+        String adTypeRewardedVideo = getString(R.string.adTypeRewardedVideo);
 
         String adServerAdManager = getString(R.string.adServerAdManager);
         String adServerMoPub = getString(R.string.adServerMoPub);
@@ -142,6 +149,13 @@ public class DemoActivity extends AppCompatActivity {
                 createDFPNative();
             } else if (adServerMoPub.equals(adServerName)) {
                 createMoPubNative();
+            }
+        } else if (adTypeRewardedVideo.equals(adTypeName)) {
+            if (adServerAdManager.equals(adServerName)) {
+                setupAndLoadAMRewardedVideo();
+            } else if (adServerMoPub.equals(adServerName)) {
+                Toast.makeText(this, "does not support", Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
 
@@ -341,6 +355,12 @@ public class DemoActivity extends AppCompatActivity {
         setupPBInterstitialVAST();
         setupAMInterstitialVAST();
         loadInterstitial();
+    }
+
+    private void setupAndLoadAMRewardedVideo() {
+        setupPBRewardedVideo();
+        setupAMRewardedVideo();
+        loadRewardedVideo();
     }
 
     private void enableAdditionalFunctionality(AdUnit adUnit) {
@@ -614,6 +634,72 @@ public class DemoActivity extends AppCompatActivity {
                 DemoActivity.this.resultCode = resultCode;
                 mpInterstitial.load();
                 refreshCount++;
+            }
+        });
+    }
+
+    //RewardedVideo
+    //AdManager
+    private void setupPBRewardedVideo() {
+
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        Host.CUSTOM.setHostUrl("https://prebid-server.qa.rubiconproject.com/openrtb2/auction");
+
+        PrebidMobile.setPrebidServerAccountId("1011");
+        PrebidMobile.setStoredAuctionResponse("");
+
+        adUnit = new RewardedVideoAdUnit("1011-test-video");
+
+    }
+
+    private void setupAMRewardedVideo() {
+
+        amRewardedAd = new RewardedAd(this, "/5300653/test_adunit_vast_rewarded-video_pavliuchyk");
+    }
+
+    private void loadRewardedVideo() {
+
+        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        request = builder.build();
+        adUnit.fetchDemand(request, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+                DemoActivity.this.resultCode = resultCode;
+                amRewardedAd.loadAd(request, new RewardedAdLoadCallback() {
+                    @Override
+                    public void onRewardedAdLoaded() {
+                        // Ad successfully loaded.
+
+                        if (amRewardedAd.isLoaded()) {
+                            amRewardedAd.show(DemoActivity.this, new RewardedAdCallback() {
+                                @Override
+                                public void onRewardedAdOpened() {
+                                    // Ad opened.
+                                }
+
+                                @Override
+                                public void onRewardedAdClosed() {
+                                    // Ad closed.
+                                }
+
+                                @Override
+                                public void onUserEarnedReward(@NonNull RewardItem reward) {
+                                    // User earned reward.
+                                }
+
+                                @Override
+                                public void onRewardedAdFailedToShow(int errorCode) {
+                                    // Ad failed to display.
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onRewardedAdFailedToLoad(int errorCode) {
+                        // Ad failed to load.
+                    }
+                });
             }
         });
     }
