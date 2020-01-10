@@ -101,8 +101,6 @@ public class DemoActivity extends AppCompatActivity {
             width = Integer.valueOf(wAndH[0]);
             height = Integer.valueOf(wAndH[1]);
 
-            enableAdditionalFunctionality(adUnit);
-
             if (adServerName.equals(adServerAdManager)) {
                 setupAndLoadAMBanner(width, height);
             } else if (adServerName.equals(adServerMoPub)) {
@@ -112,8 +110,6 @@ public class DemoActivity extends AppCompatActivity {
         } else if (adTypeName.equals(adTypeInterstitial)) {
             //Advanced interstitial support
 //            adUnit = new InterstitialAdUnit("1001-1", 50, 70);
-
-            enableAdditionalFunctionality(adUnit);
 
             if (adServerName.equals(adServerAdManager)) {
                 setupAndLoadAMInterstitial();
@@ -402,6 +398,8 @@ public class DemoActivity extends AppCompatActivity {
         } else {
             adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
         }
+
+        enableAdditionalFunctionality(adUnit);
     }
 
     private void setupPBBannerVAST() {
