@@ -40,12 +40,6 @@ public class CustomApplication extends Application {
         SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder("a935eac11acd416f92640411234fbba6")
                 .build();
         MoPub.initializeSdk(this, sdkConfiguration, null);
-        //set Prebid Mobile global Settings
-        //region PrebidMobile API
-        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
-        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID);
-        PrebidMobile.setShareGeoLocation(true);
-        PrebidMobile.setApplicationContext(getApplicationContext());
         WebView obj = new WebView(this);
         obj.clearCache(true);
         //endregion

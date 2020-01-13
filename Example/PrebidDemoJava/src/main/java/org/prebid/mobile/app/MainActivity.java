@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private String adType = "";
     private String adServer = "";
     private String adSize = "";
+    private String pbsHost = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +49,32 @@ public class MainActivity extends AppCompatActivity {
             WebView.setWebContentsDebuggingEnabled(true);
         }
         // Get all the components
-        Spinner adTypeSpinner = (Spinner) findViewById(R.id.adTypeSpinner);
+        // pbsHostSpinner set up
+        Spinner pbsHostSpinner = (Spinner) findViewById(R.id.pbsHostSpinner);
+
+        ArrayAdapter<CharSequence> hostAdapter = ArrayAdapter.createFromResource(
+                this, R.array.pbsHostArray,
+                android.R.layout.simple_spinner_item);
+        hostAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        pbsHostSpinner.setAdapter(hostAdapter);
+        pbsHostSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            List<String> pbsHosts = Arrays.asList(getResources().getStringArray(R.array.pbsHostArray));
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+
+                if (pos > pbsHosts.size()) {
+                    return;
+                }
+                pbsHost = pbsHosts.get(pos);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
         // Ad Type Spinner set up
+        Spinner adTypeSpinner = (Spinner) findViewById(R.id.adTypeSpinner);
         ArrayAdapter<CharSequence> adTypeAdapter = ArrayAdapter.createFromResource(
                 this, R.array.adTypeArray,
                 android.R.layout.simple_spinner_item);
@@ -133,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void showAd(View view) {
         Intent demoActivityIntent = new Intent(this, DemoActivity.class);
+        demoActivityIntent.putExtra(Constants.PBS_HOST_NAME, pbsHost);
         demoActivityIntent.putExtra(Constants.AD_SERVER_NAME, adServer);
         demoActivityIntent.putExtra(Constants.AD_TYPE_NAME, adType);
         if (adType.equals("Banner")) {

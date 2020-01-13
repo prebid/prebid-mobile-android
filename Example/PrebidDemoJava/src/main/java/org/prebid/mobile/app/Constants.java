@@ -24,9 +24,10 @@ public class Constants {
     static final String AD_TYPE_NAME = "adType";
     static final String AD_SERVER_NAME = "adServer";
     static final String AD_SIZE_NAME = "adSize";
+    static final String PBS_HOST_NAME = "pbsHost";
     static final String AUTO_REFRESH_NAME = "autoRefresh";
 
-    //AppNexus
+    //region AppNexus
     // Prebid server config ids
     static final String PBS_ACCOUNT_ID_APPNEXUS = "bfa84af2-bd16-4d35-96ad-31c6bb888df0";
     static final String PBS_CONFIG_ID_300x250_APPNEXUS = "6ace8c7d-88c0-4623-8117-75bc3f0a2e45";
@@ -42,8 +43,11 @@ public class Constants {
     static final String DFP_BANNER_ADUNIT_ID_300x250_APPNEXUS = "/19968336/PriceCheck_300x250";
     static final String DFP_BANNER_ADUNIT_ID_ALL_SIZES_APPNEXUS = "/19968336/PrebidMobileValidator_Banner_All_Sizes";
     static final String DFP_INTERSTITIAL_ADUNIT_ID_APPNEXUS = "/19968336/PriceCheck_Interstitial";
+    static final String DFP_INTERSTITIAL_ADUNIT_ID_APPNEXUS_2 = "/19968336/PrebidMobileValidator_Interstitial";
     static final String DFP_IN_BANNER_NATIVE_ADUNIT_ID_APPNEXUS = "/19968336/Wei_Prebid_Native_Test";
-    //RubiconProject
+    //endregion
+
+    //region RubiconProject
     // Prebid server config ids
     static final String PBS_ACCOUNT_ID_RUBICON = "1001";
     static final String PBS_CONFIG_ID_300x250_RUBICON = "1001-1";
@@ -51,21 +55,26 @@ public class Constants {
     // MoPub ad unit ids
     static final String MOPUB_BANNER_ADUNIT_ID_300x250_RUBICON = "a108b8dd5ebc472098167e6f1c118120";
     static final String MOPUB_INTERSTITIAL_ADUNIT_ID_RUBICON = "";
+    static final String MOPUB_INTERSTITIAL_VIDEO_ADUNIT_ID_RUBICON = "723dd84529b04075aa003a152ede0c4b";
     // DFP ad unit ids
     static final String DFP_BANNER_ADUNIT_ID_300x250_RUBICON = "/5300653/test_adunit_pavliuchyk_300x250_prebid-server.rubiconproject.com_puc";
     static final String DFP_INTERSTITIAL_ADUNIT_ID_RUBICON = "";
+    static final String DFP_BANNER_VIDEO_ADUNIT_ID_300x250_RUBICON = "/5300653/test_adunit_vast_pavliuchyk";
+    static final String DFP_INTERSTITIAL_VIDEO_ADUNIT_ID_RUBICON = "/5300653/test_adunit_vast_pavliuchyk";
 
-    static String PBS_ACCOUNT_ID = PBS_ACCOUNT_ID_APPNEXUS;
-    static String PBS_CONFIG_ID_300x250 = PBS_CONFIG_ID_300x250_APPNEXUS;
-    static String PBS_CONFIG_ID_320x50 = PBS_CONFIG_ID_320x50_APPNEXUS;
-    static String PBS_CONFIG_ID_INTERSTITIAL = PBS_CONFIG_ID_INTERSTITIAL_APPNEXUS;
+    //endregion
+
+    //    static String PBS_ACCOUNT_ID = PBS_ACCOUNT_ID_APPNEXUS;
+//    static String PBS_CONFIG_ID_300x250 = PBS_CONFIG_ID_300x250_APPNEXUS;
+//    static String PBS_CONFIG_ID_320x50 = PBS_CONFIG_ID_320x50_APPNEXUS;
+//    static String PBS_CONFIG_ID_INTERSTITIAL = PBS_CONFIG_ID_INTERSTITIAL_APPNEXUS;
     // MoPub ad unit ids
     static String MOPUB_BANNER_ADUNIT_ID_300x250 = MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS;
     static String MOPUB_BANNER_ADUNIT_ID_320x50 = MOPUB_BANNER_ADUNIT_ID_320x50_APPNEXUS;
     static String MOPUB_INTERSTITIAL_ADUNIT_ID = MOPUB_INTERSTITIAL_ADUNIT_ID_APPNEXUS;
     // DFP ad unit ids
     static String DFP_BANNER_ADUNIT_ID_300x250 = DFP_BANNER_ADUNIT_ID_300x250_APPNEXUS;
-    static String DFP_BANNER_ADUNIT_ID_ALL_SIZES = DFP_BANNER_ADUNIT_ID_ALL_SIZES_APPNEXUS;
+    //    static String DFP_BANNER_ADUNIT_ID_ALL_SIZES = DFP_BANNER_ADUNIT_ID_ALL_SIZES_APPNEXUS;
     static String DFP_INTERSTITIAL_ADUNIT_ID = DFP_INTERSTITIAL_ADUNIT_ID_APPNEXUS;
 
 }
