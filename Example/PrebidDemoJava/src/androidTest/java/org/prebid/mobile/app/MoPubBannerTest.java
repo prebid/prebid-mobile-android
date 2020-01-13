@@ -67,11 +67,8 @@ public class MoPubBannerTest {
 
     @Test
     public void testRubiconMoPubWithoutAutoRefreshAndSize300x250() throws Exception {
-        PrebidMobile.setPrebidServerHost(Host.RUBICON);
-        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
-        Constants.PBS_CONFIG_ID_300x250 = Constants.PBS_CONFIG_ID_300x250_RUBICON;
-        Constants.DFP_BANNER_ADUNIT_ID_300x250 = Constants.MOPUB_BANNER_ADUNIT_ID_300x250_RUBICON;
-
+        onView(withId(R.id.pbsHostSpinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("Rubicon"))).perform(click());
         onView(withId(R.id.adServerSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("MoPub"))).perform(click());
         onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));

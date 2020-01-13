@@ -68,11 +68,8 @@ public class DFPBannerTest {
 
     @Test
     public void testRubiconDFPBannerWithoutAutoRefreshAndSize300x250() throws Exception {
-        PrebidMobile.setPrebidServerHost(Host.RUBICON);
-        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
-        Constants.PBS_CONFIG_ID_300x250 = Constants.PBS_CONFIG_ID_300x250_RUBICON;
-        Constants.DFP_BANNER_ADUNIT_ID_300x250 = Constants.DFP_BANNER_ADUNIT_ID_300x250_RUBICON;
-
+        onView(withId(R.id.pbsHostSpinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("Rubicon"))).perform(click());
         onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);

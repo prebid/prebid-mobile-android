@@ -69,12 +69,12 @@ public class DemoActivity extends AppCompatActivity {
 
     private AdUnit adUnit;
 
-    private PublisherAdRequest gamRequest;
+    PublisherAdRequest gamRequest;
     private PublisherAdView gamBanner;
     private PublisherInterstitialAd gamInterstitial;
 
     private MoPubInterstitial mpInterstitial;
-    private MoPubView mpView;
+    MoPubView mpView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,6 +88,7 @@ public class DemoActivity extends AppCompatActivity {
 
     // region Prebid Setup
     private void setupPrebid() {
+        String adServer = getIntent().getStringExtra(Constants.AD_SERVER_NAME);
         String pbsHostName = getIntent().getStringExtra(Constants.PBS_HOST_NAME);
         String pbsHostNameAppnexus = getString(R.string.appnexusHost);
         Host pbsHost = pbsHostName.equals(pbsHostNameAppnexus) ? Host.APPNEXUS : Host.RUBICON;

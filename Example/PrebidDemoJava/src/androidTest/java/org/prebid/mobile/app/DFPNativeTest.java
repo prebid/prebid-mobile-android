@@ -51,20 +51,20 @@ public class DFPNativeTest {
     @Test
     public void testAppNexusDFPNativeSanityAppCheckTest() throws Exception {
         onView(withId(R.id.adTypeSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Native"))).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("In Banner Native"))).perform(click());
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
-        assertTrue(((DemoActivity) TestUtil.getCurrentActivity()).request.getCustomTargeting().keySet().contains("hb_pb"));
-        assertTrue(((DemoActivity) TestUtil.getCurrentActivity()).request.getCustomTargeting().keySet().contains("hb_cache_id"));
+        assertTrue(((DemoActivity) TestUtil.getCurrentActivity()).gamRequest.getCustomTargeting().keySet().contains("hb_pb"));
+        assertTrue(((DemoActivity) TestUtil.getCurrentActivity()).gamRequest.getCustomTargeting().keySet().contains("hb_cache_id"));
     }
 
     @Test
     public void testDFPNativeWithValidAutoRefresh() throws Exception {
+        onView(withId(R.id.autoRefreshInput)).perform(typeText("3000"));
         onView(withId(R.id.adTypeSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Native"))).perform(click());
-        onView(withId(R.id.autoRefreshInput)).perform(typeText("30000"));
+        onData(allOf(is(instanceOf(String.class)), is("In Banner Native"))).perform(click());
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
@@ -78,9 +78,9 @@ public class DFPNativeTest {
 
     @Test
     public void testDFPNativeWithoutAutoRefresh() throws Exception {
-        onView(withId(R.id.adTypeSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Native"))).perform(click());
         onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
+        onView(withId(R.id.adTypeSpinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("In Banner Native"))).perform(click());
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
@@ -91,9 +91,9 @@ public class DFPNativeTest {
 
     @Test
     public void testDFPNativeWithInvalidAutoRefresh() throws Exception {
-        onView(withId(R.id.adTypeSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Native"))).perform(click());
         onView(withId(R.id.autoRefreshInput)).perform(typeText("20000"));
+        onView(withId(R.id.adTypeSpinner)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("In Banner Native"))).perform(click());
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);

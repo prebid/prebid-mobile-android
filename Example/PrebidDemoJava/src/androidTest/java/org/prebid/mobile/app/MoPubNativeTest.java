@@ -52,8 +52,8 @@ public class MoPubNativeTest {
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
-        assertTrue(((DemoActivity) TestUtil.getCurrentActivity()).adView.getKeywords().contains("hb_pb"));
-        assertTrue(((DemoActivity) TestUtil.getCurrentActivity()).adView.getKeywords().contains("hb_cache_id"));
+        assertTrue(((DemoActivity) TestUtil.getCurrentActivity()).mpView.getKeywords().contains("hb_pb"));
+        assertTrue(((DemoActivity) TestUtil.getCurrentActivity()).mpView.getKeywords().contains("hb_cache_id"));
     }
 
     @Test

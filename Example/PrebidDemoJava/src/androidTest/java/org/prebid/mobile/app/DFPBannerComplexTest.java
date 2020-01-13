@@ -16,8 +16,11 @@
 
 package org.prebid.mobile.app;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -33,10 +36,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.BannerAdUnit;
-import org.prebid.mobile.Host;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.OnCompleteListener;
-import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
 
@@ -47,7 +48,8 @@ import static org.junit.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class DFPBannerComplexTest {
     @Rule
-    public ActivityTestRule<DemoActivity> m = new ActivityTestRule<>(DemoActivity.class);
+    public ActivityTestRule<DemoActivity> m = new ActivityTestRule<>(DemoActivity.class, false, false);
+
 
     //30x250 -> 728x90
     @Test
@@ -55,10 +57,13 @@ public class DFPBannerComplexTest {
 
         final CountDownLatch lock = new CountDownLatch(1);
 
-        PrebidMobile.setPrebidServerHost(Host.RUBICON);
-        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
-
-        DemoActivity demoActivity = m.getActivity();
+        Intent i = new Intent();
+        i.putExtra(Constants.PBS_HOST_NAME, "Rubicon");
+        i.putExtra(Constants.AD_SERVER_NAME, "AdManager");
+        i.putExtra(Constants.AD_TYPE_NAME, "Banner");
+        i.putExtra(Constants.AUTO_REFRESH_NAME, 0);
+        i.putExtra(Constants.AD_SIZE_NAME, "300x250");
+        DemoActivity demoActivity = m.launchActivity(i);
 
         final IntegerWrapper firstTransactionCount = new IntegerWrapper();
         final IntegerWrapper secondTransactionCount = new IntegerWrapper();
@@ -125,7 +130,7 @@ public class DFPBannerComplexTest {
                     }
 
                     if (firstTransactionCount.getValue() != -1) {
-                        if (firstTransactionCount.getValue() > transactionFailRepeatCount -2) {
+                        if (firstTransactionCount.getValue() > transactionFailRepeatCount - 2) {
                             Assert.fail("first Transaction Count == " + transactionFailRepeatCount);
                         } else {
                             //repeat
@@ -133,7 +138,7 @@ public class DFPBannerComplexTest {
                             bannerAdUnit.fetchDemand(request, completeListener);
                         }
                     } else if (secondTransactionCount.getValue() != -1) {
-                        if (secondTransactionCount.getValue() > transactionFailRepeatCount -2) {
+                        if (secondTransactionCount.getValue() > transactionFailRepeatCount - 2) {
                             Assert.fail("second Transaction Count == " + transactionFailRepeatCount);
                         } else {
                             //repeat
@@ -177,8 +182,8 @@ public class DFPBannerComplexTest {
                                         e.printStackTrace();
                                     }
 
-                                    assertEquals((int)dpW, size.getWidth());
-                                    assertEquals((int)dpH, size.getHeight());
+                                    assertEquals((int) dpW, size.getWidth());
+                                    assertEquals((int) dpH, size.getHeight());
 
                                     update(true);
 
