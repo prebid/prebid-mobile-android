@@ -118,7 +118,9 @@ class DemandFetcher {
             this.requestRunnable.cancelRequest();
             this.requestRunnable.destroy();
             this.fetcherHandler.removeCallbacks(requestRunnable);
-            this.fetcherHandler.getLooper().quit();
+            if (this.fetcherHandler.getLooper() != null) {
+                this.fetcherHandler.getLooper().quit();
+            }
             this.requestRunnable = null;
             state = STATE.DESTROYED;
         }
@@ -159,7 +161,9 @@ class DemandFetcher {
         void destroy() {
             cancelRequest();
             demandHandler.removeCallbacksAndMessages(null);
-            demandHandler.getLooper().quit();
+            if (demandHandler.getLooper() != null) {
+                demandHandler.getLooper().quit();
+            }
         }
 
         @Override
