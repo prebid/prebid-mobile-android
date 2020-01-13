@@ -116,7 +116,9 @@ class DemandFetcher {
             this.adObject = null;
             this.listener = null;
             this.requestRunnable.cancelRequest();
+            this.requestRunnable.destroy();
             this.fetcherHandler.removeCallbacks(requestRunnable);
+            this.fetcherHandler.getLooper().quit();
             this.requestRunnable = null;
             state = STATE.DESTROYED;
         }
@@ -152,6 +154,12 @@ class DemandFetcher {
 
         void cancelRequest() {
             this.demandAdapter.stopRequest(auctionId);
+        }
+
+        void destroy() {
+            cancelRequest();
+            demandHandler.removeCallbacksAndMessages(null);
+            demandHandler.getLooper().quit();
         }
 
         @Override
