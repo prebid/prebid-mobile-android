@@ -20,6 +20,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.FrameLayout;
 
+import androidx.test.espresso.Espresso;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
+
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
@@ -53,10 +58,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import androidx.test.espresso.Espresso;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.rule.GrantPermissionRule;
 import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -130,8 +131,9 @@ public class ExtraTests {
                         String keywords = adObject.getKeywords();
                         String[] keywordsArray = keywords.split(",");
                         assertEquals(15, keywordsArray.length);
-                        assertTrue(keywords.contains("hb_pb:1.20"));
-                        assertTrue(keywords.contains("hb_pb_rubicon:1.20"));
+                        assertTrue(keywords.contains("hb_pb:1.00"));
+                        assertTrue(keywords.contains("hb_pb_rubicon:1.00"));
+                        assertTrue(keywords.contains("hb_cache_id_rubicon:"));
                         assertTrue(keywords.contains("hb_cache_id:"));
                         assertTrue(keywords.contains("hb_pb_appnexus:0.50"));
                         assertTrue(keywords.contains("hb_cache_id_appnexus:"));
@@ -482,7 +484,7 @@ public class ExtraTests {
                 adObject.setMinimumHeight(250);
                 adObject.setMinimumWidth(300);
                 BannerAdUnit adUnit = new BannerAdUnit("67bac530-9832-4f78-8c94-fbf88ac7bd14", 300, 250);
-                adUnit.addUserKeyword("pbm_key", "pbm_value1");
+                TargetingParams.addUserKeyword("pbm_key=pbm_value1");
                 OnCompleteListener l = new OnCompleteListener() {
                     @Override
                     public void onComplete(ResultCode resultCode) {
@@ -517,7 +519,7 @@ public class ExtraTests {
                 adObject.setMinimumHeight(250);
                 adObject.setMinimumWidth(300);
                 BannerAdUnit adUnit = new BannerAdUnit("67bac530-9832-4f78-8c94-fbf88ac7bd14", 300, 250);
-                adUnit.addUserKeyword("pbm_key", "pbm_value2");
+                TargetingParams.addUserKeyword("pbm_key=pbm_value2");
                 OnCompleteListener l = new OnCompleteListener() {
                     @Override
                     public void onComplete(ResultCode resultCode) {
