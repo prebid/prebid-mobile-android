@@ -47,7 +47,7 @@ public class DFPInterstitialTest {
     @Rule
     public ActivityTestRule<MainActivity> m = new ActivityTestRule<>(MainActivity.class);
 
-    @Test
+    @Test @PassingTest
     public void testDFPInterstitialWithoutAutoRefresh() throws Exception {
         onView(withId(R.id.adTypeSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Interstitial"))).perform(click());
@@ -69,7 +69,7 @@ public class DFPInterstitialTest {
         }
     }
 
-    @Test
+    @Test @PassingTest
     public void testDFPInterstitialWithAutoRefresh() throws Exception {
         onView(withId(R.id.adTypeSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Interstitial"))).perform(click());

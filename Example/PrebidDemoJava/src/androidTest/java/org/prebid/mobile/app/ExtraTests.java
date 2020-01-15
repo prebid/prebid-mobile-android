@@ -108,7 +108,7 @@ public class ExtraTests {
         server = null;
     }
 
-    @Test
+    @Test @PassingTest
     public void testMultipleDemand() throws Exception {
         final ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
         final ArrayList<OnCompleteListener> spies = new ArrayList<>();
@@ -152,7 +152,7 @@ public class ExtraTests {
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
     }
 
-    @Test
+    @Test @PassingTest
     public void testSameConfigIdOnDifferentAdObjects() throws Exception {
         final ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
         final ArrayList<OnCompleteListener> spies = new ArrayList<>();
@@ -212,7 +212,7 @@ public class ExtraTests {
         verify(spies.get(1), times(1)).onComplete(ResultCode.SUCCESS);
     }
 
-    @Test
+    @Test @PassingTest
     public void testMultipleAdUnitsAllDemandFetched() throws Exception {
         final ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
         final ArrayList<OnCompleteListener> spies = new ArrayList<>();
@@ -435,7 +435,7 @@ public class ExtraTests {
         }
     }
 
-    @Test
+    @Test @PassingTest
     public void testRubiconDemand() throws Exception {
         PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("1001");
@@ -469,7 +469,7 @@ public class ExtraTests {
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
     }
 
-    @Test
+    @Test @PassingTest
     public void testAppNexusKeyValueTargeting() throws Exception {
         PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
@@ -504,7 +504,7 @@ public class ExtraTests {
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
     }
 
-    @Test
+    @Test @FailingTest
     public void testAppNexusKeyValueTargeting2() throws Exception {
         PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
@@ -539,7 +539,7 @@ public class ExtraTests {
         onWebView().check(webContent(containingTextInBody("Hello, I'm not a Prebid ad.")));
     }
 
-    @Test
+    @Test @PassingTest
     public void testEmptyInvalidPrebidServerAccountId() throws Exception {
         PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("");
@@ -570,7 +570,7 @@ public class ExtraTests {
         verify(listener[0], times(1)).onComplete(ResultCode.INVALID_ACCOUNT_ID);
     }
 
-    @Test
+    @Test @PassingTest
     public void testRubiconEmptyInvalidPrebidServerAccountId() throws Exception {
         PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("");
@@ -602,7 +602,7 @@ public class ExtraTests {
         verify(listener[0], times(1)).onComplete(ResultCode.INVALID_ACCOUNT_ID);
     }
 
-    @Test
+    @Test @PassingTest
     public void testAppNexusInvalidPrebidServerAccountId() throws Exception {
         PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-ffffffffffff");
@@ -633,7 +633,7 @@ public class ExtraTests {
         verify(listener[0], times(1)).onComplete(ResultCode.INVALID_ACCOUNT_ID);
     }
 
-    @Test
+    @Test @PassingTest
     public void testRubiconInvalidPrebidServerAccountId() throws Exception {
         PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("1001_ERROR");
@@ -665,7 +665,7 @@ public class ExtraTests {
         verify(listener[0], times(1)).onComplete(ResultCode.INVALID_ACCOUNT_ID);
     }
 
-    @Test
+    @Test @PassingTest
     public void testEmptyInvalidPrebidServerConfigId() throws Exception {
         PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
@@ -696,7 +696,7 @@ public class ExtraTests {
         verify(listener[0], times(1)).onComplete(ResultCode.INVALID_CONFIG_ID);
     }
 
-    @Test
+    @Test @PassingTest
     public void testRubiconEmptyInvalidPrebidServerConfigId() throws Exception {
         PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("1001");
@@ -728,7 +728,7 @@ public class ExtraTests {
         verify(listener[0], times(1)).onComplete(ResultCode.INVALID_CONFIG_ID);
     }
 
-    @Test
+    @Test @PassingTest
     public void testAppNexusInvalidPrebidServerConfigId() throws Exception {
         PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
@@ -759,7 +759,7 @@ public class ExtraTests {
         verify(listener[0], times(1)).onComplete(ResultCode.INVALID_CONFIG_ID);
     }
 
-    @Test
+    @Test @PassingTest
     public void testRubiconInvalidPrebidServerConfigId() throws Exception {
         PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("1001");
@@ -792,7 +792,7 @@ public class ExtraTests {
     }
 
     // Passing year 1855 is invalid yob, should not send yob and get back a no bid
-    @Test
+    @Test @PassingTest
     public void testAppNexusAgeTargeting1() throws Exception {
         boolean errorThrown = false;
         try {
@@ -847,7 +847,7 @@ public class ExtraTests {
     }
 
     // Passing year -1 is invalid yob, should not send yob and get back a no bid
-    @Test
+    @Test @PassingTest
     public void testAppNexusAgeTargeting2() throws Exception {
         boolean errorThrown = false;
         try {
@@ -902,7 +902,7 @@ public class ExtraTests {
     }
 
     // Passing year 2018 is valid yob, should send yob and but get back a no bid, since campaign targeting 25-34
-    @Test
+    @Test @PassingTest
     public void testAppNexusAgeTargeting3() throws Exception {
         server.setDispatcher(new Dispatcher() {
             @Override
@@ -949,7 +949,7 @@ public class ExtraTests {
         onWebView().check(webContent(containingTextInBody("Hello, I'm not a Prebid ad.")));
     }
 
-    @Test
+    @Test @FailingTest
     public void testAppNexusAgeTargeting4() throws Exception {
         server.setDispatcher(new Dispatcher() {
             @Override
@@ -997,7 +997,7 @@ public class ExtraTests {
     }
 
     // This test should be run with a real device located in New York City, New York, USA
-    @Test
+    @Test @PassingTest
     public void testLocationTargeting() throws Exception {
         if (!TestUtil.isEmulator()) {
             server.setDispatcher(new Dispatcher() {

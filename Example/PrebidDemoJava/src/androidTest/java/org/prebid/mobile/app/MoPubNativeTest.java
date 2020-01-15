@@ -43,10 +43,10 @@ public class MoPubNativeTest {
     @Rule
     public ActivityTestRule<MainActivity> m = new ActivityTestRule<>(MainActivity.class);
 
-    @Test
+    @Test @PassingTest
     public void testAppNexusMoPubNativeSanityAppCheckTest() throws Exception {
         onView(withId(R.id.adTypeSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Native"))).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("In Banner Native"))).perform(click());
         onView(withId(R.id.adServerSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("MoPub"))).perform(click());
         onView(withId(R.id.showAd)).perform(click());
@@ -56,13 +56,13 @@ public class MoPubNativeTest {
         assertTrue(((DemoActivity) TestUtil.getCurrentActivity()).mpView.getKeywords().contains("hb_cache_id"));
     }
 
-    @Test
+    @Test @PassingTest
     public void testMoPubNativeWithValidAutoRefresh() throws Exception {
+        onView(withId(R.id.autoRefreshInput)).perform(typeText("30000"));
         onView(withId(R.id.adTypeSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Native"))).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("In Banner Native"))).perform(click());
         onView(withId(R.id.adServerSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("MoPub"))).perform(click());
-        onView(withId(R.id.autoRefreshInput)).perform(typeText("30000"));
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
@@ -74,13 +74,13 @@ public class MoPubNativeTest {
         assertEquals("Auto refresh didn't stop", 2, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
-    @Test
+    @Test @PassingTest
     public void testMoPubNativeWithoutAutoRefresh() throws Exception {
+        onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
         onView(withId(R.id.adTypeSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Native"))).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("In Banner Native"))).perform(click());
         onView(withId(R.id.adServerSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("MoPub"))).perform(click());
-        onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
@@ -89,13 +89,13 @@ public class MoPubNativeTest {
         assertEquals("Auto refresh not happening", 1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
-    @Test
+    @Test @PassingTest
     public void testMoPubNativeWithInvalidAutoRefresh() throws Exception {
+        onView(withId(R.id.autoRefreshInput)).perform(typeText("20000"));
         onView(withId(R.id.adTypeSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("Native"))).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is("In Banner Native"))).perform(click());
         onView(withId(R.id.adServerSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("MoPub"))).perform(click());
-        onView(withId(R.id.autoRefreshInput)).perform(typeText("20000"));
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);

@@ -45,14 +45,14 @@ import java.util.concurrent.CountDownLatch;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(AndroidJUnit4.class)
+//@RunWith(AndroidJUnit4.class)
 public class DFPBannerComplexTest {
     @Rule
     public ActivityTestRule<DemoActivity> m = new ActivityTestRule<>(DemoActivity.class, false, false);
 
 
     //30x250 -> 728x90
-    @Test
+//    @Test @CrashingTest
     public void testRubiconDFPBannerResizeSanityAppCheckTest() throws Exception {
 
         final CountDownLatch lock = new CountDownLatch(1);

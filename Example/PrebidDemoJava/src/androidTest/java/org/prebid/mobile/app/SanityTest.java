@@ -37,7 +37,7 @@ public class SanityTest {
     public IntentsTestRule<MainActivity> intentsTestRule =
             new IntentsTestRule<>(MainActivity.class);
 
-    @Test
+    @Test @PassingTest
     public void testDemoActivityLaunch() {
         onView(withId(R.id.showAd)).perform(click());
         intended(hasComponent(DemoActivity.class.getName()));

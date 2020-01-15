@@ -47,7 +47,7 @@ public class MoPubInterstitialTest {
     @Rule
     public ActivityTestRule<MainActivity> m = new ActivityTestRule<>(MainActivity.class);
 
-    @Test
+    @Test @PassingTest
     public void testMoPubInterstitialWithoutAutoRefresh() throws Exception {
         onView(withId(R.id.adTypeSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Interstitial"))).perform(click());
@@ -71,7 +71,7 @@ public class MoPubInterstitialTest {
         }
     }
 
-    @Test
+    @Test @PassingTest
     public void testMoPubInterstitialWithAutoRefresh() throws Exception {
         onView(withId(R.id.adTypeSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Interstitial"))).perform(click());

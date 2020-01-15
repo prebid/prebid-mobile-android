@@ -50,7 +50,7 @@ public class DFPBannerTest {
     @Rule
     public ActivityTestRule<MainActivity> m = new ActivityTestRule<>(MainActivity.class);
 
-    @Test
+    @Test @PassingTest
     public void testDFPBannerWithoutAutoRefreshAndSize300x250() throws Exception {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
         onView(withId(R.id.showAd)).perform(click());
@@ -66,7 +66,7 @@ public class DFPBannerTest {
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
-    @Test
+    @Test @FailingTest
     public void testRubiconDFPBannerWithoutAutoRefreshAndSize300x250() throws Exception {
         onView(withId(R.id.pbsHostSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Rubicon"))).perform(click());
@@ -83,7 +83,7 @@ public class DFPBannerTest {
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
-    @Test
+    @Test @PassingTest
     public void testDFPBannerWithoutAutoRefreshAndSize320x50() throws Exception {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("15000"));
         onView(withId(R.id.adSizeSpinner)).perform(click());
@@ -101,7 +101,7 @@ public class DFPBannerTest {
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
-    @Test
+    @Test @PassingTest
     public void testDFPBannerWithAutoRefreshAndSize300x250() throws Exception {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("30000"));
         onView(withId(R.id.showAd)).perform(click());
