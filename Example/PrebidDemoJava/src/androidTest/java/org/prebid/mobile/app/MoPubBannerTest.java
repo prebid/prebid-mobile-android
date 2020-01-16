@@ -16,15 +16,13 @@
 
 package org.prebid.mobile.app;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.Host;
-import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -49,7 +47,8 @@ public class MoPubBannerTest {
     @Rule
     public ActivityTestRule<MainActivity> m = new ActivityTestRule<>(MainActivity.class);
 
-    @Test @PassingTest
+    @Test
+    @PassingTest
     public void testMoPubWithoutAutoRefreshAndSize300x250() throws Exception {
         onView(withId(R.id.adServerSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("MoPub"))).perform(click());
@@ -65,7 +64,8 @@ public class MoPubBannerTest {
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
-    @Test @FailingTest
+    @Test
+    @FailingTest
     public void testRubiconMoPubWithoutAutoRefreshAndSize300x250() throws Exception {
         onView(withId(R.id.pbsHostSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Rubicon"))).perform(click());
@@ -81,7 +81,8 @@ public class MoPubBannerTest {
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
-    @Test @PassingTest
+    @Test
+    @PassingTest
     public void testMoPubWithoutAutoRefreshAndSize320x50() throws Exception {
         onView(withId(R.id.adServerSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("MoPub"))).perform(click());
@@ -99,7 +100,8 @@ public class MoPubBannerTest {
         assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
-    @Test @PassingTest
+    @Test
+    @PassingTest
     public void testMoPubWithAutoRefreshAndSize300x250() throws Exception {
         onView(withId(R.id.adServerSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("MoPub"))).perform(click());

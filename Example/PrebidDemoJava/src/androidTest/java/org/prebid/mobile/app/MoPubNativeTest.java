@@ -29,21 +29,19 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.web.assertion.WebViewAssertions.webMatches;
-import static androidx.test.espresso.web.sugar.Web.onWebView;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 public class MoPubNativeTest {
     @Rule
     public ActivityTestRule<MainActivity> m = new ActivityTestRule<>(MainActivity.class);
 
-    @Test @PassingTest
+    @Test
+    @PassingTest
     public void testAppNexusMoPubNativeSanityAppCheckTest() throws Exception {
         onView(withId(R.id.adTypeSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("In Banner Native"))).perform(click());
@@ -56,7 +54,8 @@ public class MoPubNativeTest {
         assertTrue(((DemoActivity) TestUtil.getCurrentActivity()).mpView.getKeywords().contains("hb_cache_id"));
     }
 
-    @Test @PassingTest
+    @Test
+    @PassingTest
     public void testMoPubNativeWithValidAutoRefresh() throws Exception {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("30000"));
         onView(withId(R.id.adTypeSpinner)).perform(click());
@@ -74,7 +73,8 @@ public class MoPubNativeTest {
         assertEquals("Auto refresh didn't stop", 2, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
-    @Test @PassingTest
+    @Test
+    @PassingTest
     public void testMoPubNativeWithoutAutoRefresh() throws Exception {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
         onView(withId(R.id.adTypeSpinner)).perform(click());
@@ -89,7 +89,8 @@ public class MoPubNativeTest {
         assertEquals("Auto refresh not happening", 1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
-    @Test @PassingTest
+    @Test
+    @PassingTest
     public void testMoPubNativeWithInvalidAutoRefresh() throws Exception {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("20000"));
         onView(withId(R.id.adTypeSpinner)).perform(click());

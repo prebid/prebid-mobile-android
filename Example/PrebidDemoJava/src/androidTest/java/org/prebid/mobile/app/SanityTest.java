@@ -17,12 +17,12 @@
 package org.prebid.mobile.app;
 
 
+import androidx.test.espresso.intent.rule.IntentsTestRule;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import androidx.test.espresso.intent.rule.IntentsTestRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -37,7 +37,8 @@ public class SanityTest {
     public IntentsTestRule<MainActivity> intentsTestRule =
             new IntentsTestRule<>(MainActivity.class);
 
-    @Test @PassingTest
+    @Test
+    @PassingTest
     public void testDemoActivityLaunch() {
         onView(withId(R.id.showAd)).perform(click());
         intended(hasComponent(DemoActivity.class.getName()));

@@ -16,14 +16,14 @@
 
 package org.prebid.mobile.app;
 
+import androidx.test.espresso.Espresso;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.ResultCode;
-
-import androidx.test.espresso.Espresso;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -47,7 +47,8 @@ public class DFPInterstitialTest {
     @Rule
     public ActivityTestRule<MainActivity> m = new ActivityTestRule<>(MainActivity.class);
 
-    @Test @PassingTest
+    @Test
+    @PassingTest
     public void testDFPInterstitialWithoutAutoRefresh() throws Exception {
         onView(withId(R.id.adTypeSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Interstitial"))).perform(click());
@@ -69,7 +70,8 @@ public class DFPInterstitialTest {
         }
     }
 
-    @Test @PassingTest
+    @Test
+    @PassingTest
     public void testDFPInterstitialWithAutoRefresh() throws Exception {
         onView(withId(R.id.adTypeSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Interstitial"))).perform(click());

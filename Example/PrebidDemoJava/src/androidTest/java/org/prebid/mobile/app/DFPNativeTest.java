@@ -40,7 +40,8 @@ public class DFPNativeTest {
     @Rule
     public ActivityTestRule<MainActivity> m = new ActivityTestRule<>(MainActivity.class);
 
-    @Test @PassingTest
+    @Test
+    @PassingTest
     public void testAppNexusDFPNativeSanityAppCheckTest() throws Exception {
         onView(withId(R.id.adTypeSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("In Banner Native"))).perform(click());
@@ -52,7 +53,8 @@ public class DFPNativeTest {
         assertTrue(((DemoActivity) TestUtil.getCurrentActivity()).gamRequest.getCustomTargeting().keySet().contains("hb_cache_id"));
     }
 
-    @Test @FailingTest
+    @Test
+    @FailingTest
     public void testDFPNativeWithValidAutoRefresh() throws Exception {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("3000"));
         onView(withId(R.id.adTypeSpinner)).perform(click());
@@ -68,7 +70,8 @@ public class DFPNativeTest {
         assertEquals("Auto refresh didn't stop", 2, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
-    @Test @PassingTest
+    @Test
+    @PassingTest
     public void testDFPNativeWithoutAutoRefresh() throws Exception {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
         onView(withId(R.id.adTypeSpinner)).perform(click());
@@ -81,7 +84,8 @@ public class DFPNativeTest {
         assertEquals("Auto refresh not happening", 1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
-    @Test @PassingTest
+    @Test
+    @PassingTest
     public void testDFPNativeWithInvalidAutoRefresh() throws Exception {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("20000"));
         onView(withId(R.id.adTypeSpinner)).perform(click());
