@@ -300,4 +300,30 @@ public class UtilTest extends BaseSetup {
         Assert.assertEquals("{\"key1\":[\"value11\",\"value12\"],\"key2\":[\"value21\"]}", jsonObject5.toString());
     }
 
+    @Test
+    public void testConvertMapToMoPubKeywords() throws JSONException {
+        //given
+        Map<String, String> map = new HashMap<>(2);
+        map.put("key1", "value1");
+        map.put("key2", "value2");
+
+        //when
+        String result = Util.convertMapToMoPubKeywords(map);
+
+        //then
+        Assert.assertTrue("key1:value1,key2:value2".equals(result) || "key2:value2,key1:value1".equals(result));
+    }
+
+    @Test
+    public void testConvertMapToMoPubKeywordsEmpty() throws JSONException {
+        //given
+        Map<String, String> map = new HashMap<>(0);
+
+        //when
+        String result = Util.convertMapToMoPubKeywords(map);
+
+        //then
+        Assert.assertEquals("", result);
+    }
+
 }

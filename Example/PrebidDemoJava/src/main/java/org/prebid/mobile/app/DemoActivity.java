@@ -38,8 +38,15 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.mopub.common.MediationSettings;
+import com.mopub.common.MoPub;
+import com.mopub.common.MoPubReward;
+import com.mopub.common.SdkConfiguration;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
+import com.mopub.mobileads.MoPubRewardedVideoListener;
+import com.mopub.mobileads.MoPubRewardedVideoManager;
+import com.mopub.mobileads.MoPubRewardedVideos;
 import com.mopub.mobileads.MoPubView;
 
 import org.prebid.mobile.AdUnit;
@@ -57,23 +64,29 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.RewardedVideoAdUnit;
 import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.Util;
 import org.prebid.mobile.VideoAdUnit;
 import org.prebid.mobile.VideoInterstitialAdUnit;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.addendum.PbFindSizeError;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import static org.prebid.mobile.app.Constants.MOPUB_BANNER_ADUNIT_ID_300x250;
 import static org.prebid.mobile.app.Constants.MOPUB_BANNER_ADUNIT_ID_320x50;
 
-public class DemoActivity extends AppCompatActivity {
+public class DemoActivity extends AppCompatActivity implements MoPubRewardedVideoListener {
     int refreshCount;
     AdUnit adUnit;
     ResultCode resultCode;
+
     PublisherAdRequest request;
     MoPubView adView;
 
+    private static final String MP_ADUNITID_REWARDED = "066483fc44bf4793b4e275522ef7c428";
     private PublisherAdView amBanner;
     private PublisherInterstitialAd amInterstitial;
 
@@ -154,8 +167,7 @@ public class DemoActivity extends AppCompatActivity {
             if (adServerAdManager.equals(adServerName)) {
                 setupAndLoadAMRewardedVideo();
             } else if (adServerMoPub.equals(adServerName)) {
-                Toast.makeText(this, "does not support", Toast.LENGTH_SHORT).show();
-                finish();
+                setupAndLoadMPRewardedVideo();
             }
         }
 
@@ -323,13 +335,13 @@ public class DemoActivity extends AppCompatActivity {
     void setupAndLoadAMBanner(int width, int height) {
         setupPBBanner(width, height);
         setupAMBanner(width, height);
-        loadBanner();
+        loadAMBanner();
     }
 
     void setupAndLoadAMBannerVAST() {
         setupPBBannerVAST();
         setupAMBannerVAST();
-        loadBanner();
+        loadAMBanner();
     }
 
     void setupAndLoadMPInterstitial() {
@@ -348,19 +360,26 @@ public class DemoActivity extends AppCompatActivity {
     void setupAndLoadAMInterstitial() {
         setupPBInterstitial();
         setupAMInterstitial();
-        loadInterstitial();
+        loadAMInterstitial();
     }
 
     private void setupAndLoadAMInterstitialVAST() {
         setupPBInterstitialVAST();
         setupAMInterstitialVAST();
-        loadInterstitial();
+        loadAMInterstitial();
     }
 
     private void setupAndLoadAMRewardedVideo() {
         setupPBRewardedVideo();
         setupAMRewardedVideo();
-        loadRewardedVideo();
+        loadAMRewardedVideo();
+    }
+
+    private void setupAndLoadMPRewardedVideo() {
+        setupPBRewardedVideo();
+        setupMPRewardedVideo();
+        loadMPRewardedVideo();
+
     }
 
     private void enableAdditionalFunctionality(AdUnit adUnit) {
@@ -446,7 +465,7 @@ public class DemoActivity extends AppCompatActivity {
         amBanner.setAdSizes(new AdSize(width, height));
     }
 
-    private void loadBanner() {
+    private void loadAMBanner() {
         FrameLayout adFrame = findViewById(R.id.adFrame);
         adFrame.removeAllViews();
         adFrame.addView(amBanner);
@@ -539,7 +558,7 @@ public class DemoActivity extends AppCompatActivity {
         });
     }
 
-    private void loadInterstitial() {
+    private void loadAMInterstitial() {
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
@@ -639,16 +658,13 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     //RewardedVideo
-    //AdManager
     private void setupPBRewardedVideo() {
 
-        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-        Host.CUSTOM.setHostUrl("https://prebid-server.qa.rubiconproject.com/openrtb2/auction");
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setPrebidServerAccountId("1001");
+        PrebidMobile.setStoredAuctionResponse("sample_video_response");
 
-        PrebidMobile.setPrebidServerAccountId("1011");
-        PrebidMobile.setStoredAuctionResponse("");
-
-        adUnit = new RewardedVideoAdUnit("1011-test-video");
+        adUnit = new RewardedVideoAdUnit("1001-1");
 
     }
 
@@ -657,7 +673,7 @@ public class DemoActivity extends AppCompatActivity {
         amRewardedAd = new RewardedAd(this, "/5300653/test_adunit_vast_rewarded-video_pavliuchyk");
     }
 
-    private void loadRewardedVideo() {
+    private void loadAMRewardedVideo() {
 
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
         request = builder.build();
@@ -704,6 +720,28 @@ public class DemoActivity extends AppCompatActivity {
         });
     }
 
+    private void setupMPRewardedVideo() {
+        SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(MP_ADUNITID_REWARDED)
+                .build();
+        MoPub.initializeSdk(this, sdkConfiguration, null);
+
+        MoPubRewardedVideos.setRewardedVideoListener(this);
+    }
+
+    private void loadMPRewardedVideo() {
+
+        final Map<String, String> keywordsMap = new HashMap<>();
+        adUnit.fetchDemand(keywordsMap, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+
+                MoPubRewardedVideoManager.RequestParameters parameters = new MoPubRewardedVideoManager.RequestParameters(Util.convertMapToMoPubKeywords(keywordsMap));
+                MoPubRewardedVideos.loadRewardedVideo(MP_ADUNITID_REWARDED, parameters, (MediationSettings) null);
+            }
+        });
+
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -717,5 +755,43 @@ public class DemoActivity extends AppCompatActivity {
         if (adUnit != null) {
             adUnit.stopAutoRefresh();
         }
+    }
+
+    //MoPub Rewarded Video
+    @Override
+    public void onRewardedVideoLoadSuccess(@NonNull String adUnitId) {
+        if (MoPubRewardedVideos.hasRewardedVideo(MP_ADUNITID_REWARDED)) {
+            MoPubRewardedVideos.showRewardedVideo(MP_ADUNITID_REWARDED);
+        }
+    }
+
+    @Override
+    public void onRewardedVideoLoadFailure(@NonNull String adUnitId, @NonNull MoPubErrorCode errorCode) {
+        LogUtil.d("onRewardedVideoLoadFailure:" + errorCode);
+    }
+
+    @Override
+    public void onRewardedVideoStarted(@NonNull String adUnitId) {
+
+    }
+
+    @Override
+    public void onRewardedVideoPlaybackError(@NonNull String adUnitId, @NonNull MoPubErrorCode errorCode) {
+
+    }
+
+    @Override
+    public void onRewardedVideoClicked(@NonNull String adUnitId) {
+
+    }
+
+    @Override
+    public void onRewardedVideoClosed(@NonNull String adUnitId) {
+
+    }
+
+    @Override
+    public void onRewardedVideoCompleted(@NonNull Set<String> adUnitIds, @NonNull MoPubReward reward) {
+
     }
 }

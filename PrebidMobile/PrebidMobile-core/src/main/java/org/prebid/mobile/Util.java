@@ -140,6 +140,20 @@ public class Util {
 
     }
 
+    @NonNull
+    public static String convertMapToMoPubKeywords(Map<String, String> keywordMap) {
+        StringBuilder result = new StringBuilder();
+        for (String key : keywordMap.keySet()) {
+            result.append(key).append(":").append(keywordMap.get(key)).append(",");
+        }
+
+        if (result.length() > 0) {
+            result.delete(result.length() - 1, result.length());
+        }
+
+        return result.toString();
+    }
+
     @Nullable
     static JSONObject getObjectWithoutEmptyValues(@NonNull JSONObject jsonObject) {
 
@@ -396,7 +410,9 @@ public class Util {
         if (adObj == null) return false;
         if (adObj.getClass() == getClassFromString(MOPUB_BANNER_VIEW_CLASS)
                 || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)
-                || adObj.getClass() == getClassFromString(DFP_AD_REQUEST_CLASS))
+                || adObj.getClass() == getClassFromString(DFP_AD_REQUEST_CLASS)
+
+                || adObj.getClass() == HashMap.class)
             return true;
         return false;
     }
@@ -408,6 +424,10 @@ public class Util {
             handleMoPubKeywordsUpdate(bids, adObj);
         } else if (adObj.getClass() == getClassFromString(DFP_AD_REQUEST_CLASS)) {
             handleDFPCustomTargetingUpdate(bids, adObj);
+        } else if (adObj.getClass() == HashMap.class) {
+            if (bids != null && !bids.isEmpty()) {
+                ((HashMap) adObj).putAll(bids);
+            }
         }
     }
 
