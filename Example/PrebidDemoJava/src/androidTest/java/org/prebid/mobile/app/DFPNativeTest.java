@@ -54,9 +54,9 @@ public class DFPNativeTest {
     }
 
     @Test
-    @FailingTest
+    @PassingTest
     public void testDFPNativeWithValidAutoRefresh() throws Exception {
-        onView(withId(R.id.autoRefreshInput)).perform(typeText("3000"));
+        onView(withId(R.id.autoRefreshInput)).perform(typeText("30000"));
         onView(withId(R.id.adTypeSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("In Banner Native"))).perform(click());
         onView(withId(R.id.showAd)).perform(click());

@@ -474,7 +474,7 @@ public class ExtraTests {
     }
 
     @Test
-    @PassingTest
+    @FailingTest
     public void testAppNexusKeyValueTargeting() throws Exception {
         PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
