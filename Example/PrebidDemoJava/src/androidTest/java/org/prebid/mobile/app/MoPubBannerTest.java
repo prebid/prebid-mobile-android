@@ -65,8 +65,10 @@ public class MoPubBannerTest {
     }
 
     @Test
-    @FailingTest
+    @PassingTest
     public void testRubiconMoPubWithoutAutoRefreshAndSize300x250() throws Exception {
+        Constants.MOPUB_BANNER_ADUNIT_ID_300x250 = Constants.MOPUB_BANNER_ADUNIT_ID_300x250_RUBICON;
+
         onView(withId(R.id.pbsHostSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Rubicon"))).perform(click());
         onView(withId(R.id.adServerSpinner)).perform(click());

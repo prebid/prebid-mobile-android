@@ -195,7 +195,7 @@ public class DemoActivity extends AppCompatActivity {
             adUnit = new NativeAdUnit("");
         }
         adUnit.setAutoRefreshPeriodMillis(getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0));
-        enableAdditionalFunctionality();
+//        enableAdditionalFunctionality();
     }
     // endregion
 
@@ -253,7 +253,7 @@ public class DemoActivity extends AppCompatActivity {
     private void setupGAMBannerAndLoadWithPrebid() {
         Pair<Integer, Integer> size = getBannerWidthAndHeight();
         gamBanner = new PublisherAdView(this);
-        gamBanner.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES_APPNEXUS);
+        gamBanner.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES);
         gamBanner.setAdSizes(new AdSize(size.first, size.second));
         FrameLayout adFrame = findViewById(R.id.adFrame);
         adFrame.removeAllViews();
@@ -298,7 +298,7 @@ public class DemoActivity extends AppCompatActivity {
         adFrame.removeAllViews();
         mpView = new MoPubView(this);
         if (size.first == 300 && size.second == 250) {
-            mpView.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS);
+            mpView.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_300x250);
         } else {
             mpView.setAdUnitId(Constants.MOPUB_BANNER_ADUNIT_ID_320x50_APPNEXUS);
         }
