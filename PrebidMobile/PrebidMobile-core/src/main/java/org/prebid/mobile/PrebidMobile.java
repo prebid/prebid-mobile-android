@@ -85,8 +85,10 @@ public class PrebidMobile {
     public static void setApplicationContext(Context context) {
         applicationContextWeak = new WeakReference<>(context);
 
-        AdvertisingIDUtil.retrieveAndSetAAID(context);
-        PrebidServerSettings.update(context);
+        if (context != null) {
+            AdvertisingIDUtil.retrieveAndSetAAID(context);
+            PrebidServerSettings.update(context);
+        }
     }
 
     public static Context getApplicationContext() {
