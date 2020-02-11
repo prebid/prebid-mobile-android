@@ -459,11 +459,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
 
         private JSONObject getPostData() throws NoContextException {
-            Context context = PrebidMobile.getApplicationContext();
-            if (context != null) {
-                AdvertisingIDUtil.retrieveAndSetAAID(context);
-                PrebidServerSettings.update(context);
-            }
+
             JSONObject postData = new JSONObject();
             try {
                 String id = UUID.randomUUID().toString();

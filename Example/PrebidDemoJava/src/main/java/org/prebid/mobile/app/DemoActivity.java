@@ -101,7 +101,7 @@ public class DemoActivity extends AppCompatActivity {
             width = Integer.valueOf(wAndH[0]);
             height = Integer.valueOf(wAndH[1]);
 
-            enableAdditionalFunctionality(adUnit);
+//            enableAdditionalFunctionality(adUnit);
 
             if (adServerName.equals(adServerAdManager)) {
                 setupAndLoadAMBanner(width, height);
@@ -113,7 +113,7 @@ public class DemoActivity extends AppCompatActivity {
             //Advanced interstitial support
 //            adUnit = new InterstitialAdUnit("1001-1", 50, 70);
 
-            enableAdditionalFunctionality(adUnit);
+//            enableAdditionalFunctionality(adUnit);
 
             if (adServerName.equals(adServerAdManager)) {
                 setupAndLoadAMInterstitial();
