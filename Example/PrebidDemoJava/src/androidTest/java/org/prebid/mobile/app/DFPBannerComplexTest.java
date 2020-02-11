@@ -21,7 +21,6 @@ import android.graphics.Color;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.ads.AdListener;
@@ -31,8 +30,6 @@ import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
 import org.junit.Assert;
 import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.OnCompleteListener;
@@ -50,8 +47,7 @@ public class DFPBannerComplexTest {
 
 
     //30x250 -> 728x90
-//    @Test
-    @CrashingTest
+    @PassingTest
     public void testRubiconDFPBannerResizeSanityAppCheckTest() throws Exception {
 
         final CountDownLatch lock = new CountDownLatch(1);

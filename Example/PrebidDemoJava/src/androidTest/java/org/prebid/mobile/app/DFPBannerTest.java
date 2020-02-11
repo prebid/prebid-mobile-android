@@ -66,8 +66,10 @@ public class DFPBannerTest {
     }
 
     @Test
-    @FailingTest
+    @PassingTest
     public void testRubiconDFPBannerWithoutAutoRefreshAndSize300x250() throws Exception {
+        Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES = Constants.DFP_BANNER_ADUNIT_ID_300x250_RUBICON;
+
         onView(withId(R.id.pbsHostSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Rubicon"))).perform(click());
         onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
