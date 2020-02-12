@@ -154,7 +154,55 @@ public class ExtraTests {
     }
 
     @Test
-    @PassingTest
+    public void testPostDataWithContext() throws Exception {
+        server.setDispatcher(new Dispatcher() {
+            @Override
+            public MockResponse dispatch(RecordedRequest request) {
+                if (request.getPath().equals("/testPostData")) {
+                    String postDataString = request.getBody().readUtf8();
+                    try {
+                        JSONObject postData = new JSONObject(postDataString);
+
+                        JSONObject device = postData.getJSONObject("device");
+                        String ifa = device.getString("ifa");
+                        assertTrue(ifa != null && !ifa.isEmpty());
+                        String ua = device.getString("ua");
+                        assertTrue(ua != null && !ua.isEmpty());
+
+                    } catch (JSONException e) {
+                        fail("error:" + e);
+                    }
+
+                    return getAppNexusDemand(postDataString);
+                }
+                return new MockResponse().setResponseCode(404);
+            }
+        });
+
+        PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
+        PrebidMobile.setPrebidServerAccountId("1001");
+
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        Host.CUSTOM.setHostUrl(server.url("testPostData").toString());
+
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                BannerAdUnit adUnit = new BannerAdUnit("1001-1", 300, 250);
+
+                final MoPubView adObject = new MoPubView(m.getActivity());
+                adUnit.fetchDemand(adObject, new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+
+                    }
+                });
+            }
+        });
+        Thread.sleep(5_000);
+    }
+
+    @Test
     public void testSameConfigIdOnDifferentAdObjects() throws Exception {
         final ArrayList<AdUnit> adUnits = new ArrayList<AdUnit>();
         final ArrayList<OnCompleteListener> spies = new ArrayList<>();
@@ -828,6 +876,8 @@ public class ExtraTests {
                 return new MockResponse().setResponseCode(404);
             }
         });
+
+
         PrebidMobile.setApplicationContext(m.getActivity().getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
         Host.CUSTOM.setHostUrl(server.url("/").toString());

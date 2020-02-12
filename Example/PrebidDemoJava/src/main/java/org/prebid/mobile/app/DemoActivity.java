@@ -215,6 +215,7 @@ public class DemoActivity extends AppCompatActivity {
         String adServerAdManager = getString(R.string.adServerAdManager);
         String adServerMoPub = getString(R.string.adServerMoPub);
         if (adTypeName.equals(adTypeBanner)) {
+
             if (adServerName.equals(adServerAdManager)) {
                 setupGAMBannerAndLoadWithPrebid();
             } else if (adServerName.equals(adServerMoPub)) {
@@ -222,6 +223,8 @@ public class DemoActivity extends AppCompatActivity {
             }
 
         } else if (adTypeName.equals(adTypeInterstitial)) {
+
+
             if (adServerName.equals(adServerAdManager)) {
                 setupGAMInterstitialAndLoadWithPrebid();
             } else if (adServerName.equals(adServerMoPub)) {
