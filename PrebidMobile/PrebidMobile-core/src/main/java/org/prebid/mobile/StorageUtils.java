@@ -32,8 +32,15 @@ final class StorageUtils {
     //GDPR
     static final String PBConsent_SubjectToGDPRKey = "Prebid_GDPR";
     static final String PBConsent_ConsentStringKey = "Prebid_GDPR_consent_strings";
+    static final String PBConsent_PurposeConsents = "Prebid_GDPR_PurposeConsents";
     static final String IABConsent_SubjectToGDPRKey = "IABConsent_SubjectToGDPR";
     static final String IABConsent_ConsentStringKey = "IABConsent_ConsentString";
+
+    //TCF 2.0 consent parameters
+    static final String IABTCF_CONSENT_STRING = "IABTCF_TCString";
+    static final String IABTCF_SUBJECT_TO_GDPR = "IABTCF_gdprApplies";
+
+    static final String  IABTCF_PurposeConsents = "IABTCF_PurposeConsents";
 
     //CCPA
     static final String IABUSPrivacy_StringKey = "IABUSPrivacy_String";
@@ -84,7 +91,11 @@ final class StorageUtils {
     static String getIabGdprSubject() throws PbContextNullException {
 
         SharedPreferences pref = getSharedPreferences();
-        return pref.getString(StorageUtils.IABConsent_SubjectToGDPRKey, "");
+        String gdprSubject = pref.getString(StorageUtils.IABTCF_SUBJECT_TO_GDPR, "");
+        if(gdprSubject.isEmpty()){
+            gdprSubject = pref.getString(StorageUtils.IABConsent_SubjectToGDPRKey, "");
+        }
+        return gdprSubject;
     }
 
     //GDPR Consent
@@ -112,7 +123,49 @@ final class StorageUtils {
 
     static String getIabGdprConsent() throws PbContextNullException {
         SharedPreferences pref = getSharedPreferences();
-        return pref.getString(StorageUtils.IABConsent_ConsentStringKey, "");
+        String gdprConsent = pref.getString(StorageUtils.IABTCF_CONSENT_STRING, "");
+        if(gdprConsent.isEmpty()){
+            gdprConsent = pref.getString(StorageUtils.IABConsent_ConsentStringKey, "");
+        }
+        return gdprConsent;
+    }
+
+    /**
+     * Set the device access Consent by the publisher.
+     *
+     * @param consent set by the publisher to access the device data as per https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework
+     */
+    public static void setDeviceAccessConsent(String deviceConsent) throws PbContextNullException {
+        if (!deviceConsent.isEmpty()) {
+            SharedPreferences pref = getSharedPreferences();
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString(StorageUtils.PBConsent_PurposeConsents, deviceConsent);
+            editor.apply();
+        }
+
+    }
+
+    /**
+     * Get the device access Consent set by the publisher.
+     *
+     * @return A valid Base64 encode consent string as per https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework
+     * or "" if not set
+     */
+    public static String checkDeviceAccessConsent() throws PbContextNullException {
+
+        String deviceConsent = "";
+
+        SharedPreferences pref = getSharedPreferences();
+        if (pref.contains(PBConsent_PurposeConsents)) {
+            deviceConsent = pref.getString(PBConsent_PurposeConsents, null);
+        } else if (pref.contains(IABTCF_PurposeConsents)){
+            deviceConsent = pref.getString(IABTCF_PurposeConsents, null);
+        }
+
+        if (!deviceConsent.isEmpty())
+            return deviceConsent.substring(0);
+
+        return null;
     }
 
     //CCPA

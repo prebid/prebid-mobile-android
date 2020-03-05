@@ -135,6 +135,35 @@ public class TargetingParams {
         }
     }
 
+    //TCF 2.0 device access consent
+    public static void setDeviceAccessConsent(String deviceConsent) {
+        try {
+            StorageUtils.setDeviceAccessConsent(deviceConsent);
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "GDPR Device access Consent was not updated", ex);
+        }
+    }
+
+    /**
+     * Get the device access Consent set by the publisher.
+     *
+     * @return A valid Base64 encode consent string as per https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework
+     * or "" if not set
+     */
+    public static String getDeviceAccessConsent() {
+
+        try {
+
+            return  StorageUtils.checkDeviceAccessConsent();
+
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "cannot get Device access Consent", ex);
+        }
+
+        return null;
+
+    }
+
     /**
      * Get the year of birth for targeting
      *

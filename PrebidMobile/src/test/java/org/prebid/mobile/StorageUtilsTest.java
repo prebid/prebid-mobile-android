@@ -45,6 +45,25 @@ public class StorageUtilsTest extends BaseSetup {
         assertEquals("IABConsent_ConsentString", StorageUtils.IABConsent_ConsentStringKey);
 
     }
+
+    @Test
+    public void testIABTCF_CONSENT_STRING() throws Exception {
+        assertEquals("IABTCF_TCString", StorageUtils.IABTCF_CONSENT_STRING);
+
+    }
+
+    @Test
+    public void testIABTCF_SUBJECT_TO_GDPR() throws Exception {
+        assertEquals("IABTCF_gdprApplies", StorageUtils.IABTCF_SUBJECT_TO_GDPR);
+
+    }
+
+    @Test
+    public void testIABTCF_PurposeConsents() throws Exception {
+        assertEquals("IABTCF_PurposeConsents", StorageUtils.IABTCF_PurposeConsents);
+
+    }
+
     @Test
     public void testPBConsent_SubjectToGDPRKey() throws Exception {
         assertEquals("Prebid_GDPR", StorageUtils.PBConsent_SubjectToGDPRKey);

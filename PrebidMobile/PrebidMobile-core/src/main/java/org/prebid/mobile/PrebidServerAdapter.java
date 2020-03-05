@@ -133,11 +133,12 @@ class PrebidServerAdapter implements DemandAdapter {
                 conn.setDoInput(true);
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setRequestProperty("Accept", "application/json");
-                String existingCookie = getExistingCookie();
-                if (existingCookie != null) {
-                    conn.setRequestProperty(PrebidServerSettings.COOKIE_HEADER, existingCookie);
-                } // todo still pass cookie if limit ad tracking?
-
+                if(canIAccessDeviceData() == true) {
+                    String existingCookie = getExistingCookie();
+                    if (existingCookie != null) {
+                        conn.setRequestProperty(PrebidServerSettings.COOKIE_HEADER, existingCookie);
+                    } // todo still pass cookie if limit ad tracking?
+                }
                 conn.setRequestMethod("POST");
                 conn.setConnectTimeout(PrebidMobile.getTimeoutMillis());
 
@@ -770,9 +771,11 @@ class PrebidServerAdapter implements DemandAdapter {
                 }
                 // limited ad tracking
                 device.put(PrebidServerSettings.REQUEST_LMT, AdvertisingIDUtil.isLimitAdTracking() ? 1 : 0);
-                if (!AdvertisingIDUtil.isLimitAdTracking() && !TextUtils.isEmpty(AdvertisingIDUtil.getAAID())) {
-                    // put ifa
-                    device.put(PrebidServerSettings.REQUEST_IFA, AdvertisingIDUtil.getAAID());
+                if(canIAccessDeviceData() == true) {
+                    if (!AdvertisingIDUtil.isLimitAdTracking() && !TextUtils.isEmpty(AdvertisingIDUtil.getAAID())) {
+                        // put ifa
+                        device.put(PrebidServerSettings.REQUEST_IFA, AdvertisingIDUtil.getAAID());
+                    }
                 }
 
                 // os
@@ -1005,6 +1008,24 @@ class PrebidServerAdapter implements DemandAdapter {
                 LogUtil.d("PrebidServerAdapter getRegsObject() " + e.getMessage());
             }
             return regs;
+        }
+
+        private Boolean canIAccessDeviceData() throws PbContextNullException{
+            //fetch advertising identifier based TCF 2.0 Purpose1 value
+            //truth table
+            /*
+                                    deviceAccessConsent=true   deviceAccessConsent=false  deviceAccessConsent undefined
+            consentRequired=false        Yes, read IDFA             No, don’t read IDFA           Yes, read IDFA
+            consentRequired=true         Yes, read IDFA             No, don’t read IDFA           No, don’t read IDFA
+            consentRequired=undefined    Yes, read IDFA             No, don’t read IDFA           Yes, read IDFA
+            */
+
+            if(((TargetingParams.getDeviceAccessConsent() == null) && (TargetingParams.isSubjectToGDPR() == false)) ||
+                    (TargetingParams.getDeviceAccessConsent().equals("1"))){
+                return true;
+            }
+
+            return false;
         }
 
         private static class NoContextException extends Exception {
