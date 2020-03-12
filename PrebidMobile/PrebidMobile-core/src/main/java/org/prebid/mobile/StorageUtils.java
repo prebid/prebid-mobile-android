@@ -133,7 +133,7 @@ final class StorageUtils {
     /**
      * Set the device access Consent by the publisher.
      *
-     * @param consent set by the publisher to access the device data as per https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework
+     * @param deviceConsent set by the publisher to access the device data as per https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework
      */
     public static void setDeviceAccessConsent(String deviceConsent) throws PbContextNullException {
         if (!deviceConsent.isEmpty()) {
@@ -153,7 +153,7 @@ final class StorageUtils {
      */
     public static String checkDeviceAccessConsent() throws PbContextNullException {
 
-        String deviceConsent = "";
+        String deviceConsent = null;
 
         SharedPreferences pref = getSharedPreferences();
         if (pref.contains(PBConsent_PurposeConsents)) {
@@ -162,10 +162,7 @@ final class StorageUtils {
             deviceConsent = pref.getString(IABTCF_PurposeConsents, null);
         }
 
-        if (!deviceConsent.isEmpty())
-            return deviceConsent.substring(0);
-
-        return null;
+        return deviceConsent != null ? deviceConsent.substring(0, 1) : null;
     }
 
     //CCPA
