@@ -1020,8 +1020,8 @@ class PrebidServerAdapter implements DemandAdapter {
             consentRequired=undefined    Yes, read IDFA             No, don’t read IDFA           Yes, read IDFA
             */
 
-            if(((TargetingParams.getDeviceAccessConsent() == null) && (TargetingParams.isSubjectToGDPR() == false)) ||
-                    (TargetingParams.getDeviceAccessConsent().equals("1"))){
+            if(((TargetingParams.getDeviceAccessConsent() == null) && (TargetingParams.isSubjectToGDPR() == null || TargetingParams.isSubjectToGDPR() == false)) ||
+                    (TargetingParams.getDeviceAccessConsent() != null && TargetingParams.getDeviceAccessConsent().equals("1"))){
                 return true;
             }
 
