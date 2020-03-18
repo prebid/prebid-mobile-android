@@ -91,7 +91,8 @@ final class StorageUtils {
     static String getIabGdprSubject() throws PbContextNullException {
 
         SharedPreferences pref = getSharedPreferences();
-        String gdprSubject = pref.getString(StorageUtils.IABTCF_SUBJECT_TO_GDPR, "");
+        int iabTcfSubjectToGdpr = pref.getInt(IABTCF_SUBJECT_TO_GDPR, -1);
+        String gdprSubject = iabTcfSubjectToGdpr == -1 ? "" : String.valueOf(iabTcfSubjectToGdpr);
         if(gdprSubject.isEmpty()){
             gdprSubject = pref.getString(StorageUtils.IABConsent_SubjectToGDPRKey, "");
         }
