@@ -1057,12 +1057,12 @@ public class PrebidServerAdapterTest extends BaseSetup {
         editor.putString("IABUSPrivacy_String", "");
         editor.apply();
 
-        String ccpa = null;
+        Object ccpa = null;
 
         //when
         JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
         try {
-            ccpa = postData.getJSONObject("regs").getJSONObject("ext").getString("us_privacy");
+            ccpa = postData.opt("regs");
         } catch (Exception ex) {
             fail("parsing error");
         }
@@ -1082,12 +1082,12 @@ public class PrebidServerAdapterTest extends BaseSetup {
         editor.remove("IABUSPrivacy_String");
         editor.apply();
 
-        String ccpa = null;
+        Object ccpa = null;
 
         //when
         JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
         try {
-            ccpa = postData.getJSONObject("regs").getJSONObject("ext").getString("us_privacy");
+            ccpa = postData.opt("regs");
         } catch (Exception ex) {
             fail("parsing error");
         }
