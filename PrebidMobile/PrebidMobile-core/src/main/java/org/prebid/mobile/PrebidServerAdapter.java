@@ -975,7 +975,12 @@ class PrebidServerAdapter implements DemandAdapter {
                 user.put("keywords", globalUserKeywordString);
 
                 JSONObject ext = new JSONObject();
-                ext.put("consent", TargetingParams.getGDPRConsentString());
+
+                Boolean isSubjectToGDPR = TargetingParams.isSubjectToGDPR();
+                if (Boolean.TRUE.equals(isSubjectToGDPR)) {
+                    ext.put("consent", TargetingParams.getGDPRConsentString());
+                }
+
                 ext.put("data", Util.toJson(TargetingParams.getUserDataDictionary()));
                 user.put("ext", ext);
 
