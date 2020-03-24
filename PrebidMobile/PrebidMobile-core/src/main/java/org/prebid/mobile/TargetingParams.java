@@ -83,25 +83,27 @@ public class TargetingParams {
     @Nullable
     public static Boolean isSubjectToGDPR() {
 
+        Boolean gdprSubject = null;
+
         try {
-            if (StorageUtils.checkPbGdprSubject()) {
-                return StorageUtils.getPbGdprSubject();
-            } else if (StorageUtils.checkIabGdprSubject()) {
-                String value = StorageUtils.getIabGdprSubject();
-                if ("1".equals(value)) {
-                    return true;
-                } else if ("0".equals(value)) {
-                    return false;
+            Boolean pbGdpr = StorageUtils.getPbGdprSubject();
+            if (pbGdpr != null) {
+                gdprSubject = pbGdpr;
+            } else {
+                Boolean iabGdpr = StorageUtils.getIabGdprSubject();
+
+                if (iabGdpr != null) {
+                    gdprSubject = iabGdpr;
                 }
             }
         } catch (PbContextNullException ex) {
             LogUtil.e("Targeting", "can not get GDPR Subject", ex);
         }
 
-        return null;
+        return gdprSubject;
     }
 
-    public static void setSubjectToGDPR(Boolean consent) {
+    public static void setSubjectToGDPR(@Nullable Boolean consent) {
 
         try {
             StorageUtils.setPbGdprSubject(consent);
@@ -114,25 +116,109 @@ public class TargetingParams {
     @Nullable
     public static String getGDPRConsentString() {
 
+        String gdprConsent = null;
+
         try {
-            if (StorageUtils.checkPbGdprConsent()) {
-                return StorageUtils.getPbGdprConsent();
-            } else if (StorageUtils.checkIabGdprConsent()) {
-                return StorageUtils.getIabGdprConsent();
+
+            String pbGdprConsent = StorageUtils.getPbGdprConsent();
+            if (!TextUtils.isEmpty(pbGdprConsent)) {
+                gdprConsent = pbGdprConsent;
+            } else {
+                String iabGdprConsent = StorageUtils.getIabGdprConsent();
+                if (!TextUtils.isEmpty(iabGdprConsent)) {
+                    gdprConsent = iabGdprConsent;
+                }
             }
         } catch (PbContextNullException ex) {
             LogUtil.e("Targeting", "can not get GDPR Consent", ex);
         }
 
-        return null;
+        return gdprConsent;
     }
 
-    public static void setGDPRConsentString(String string) {
+    public static void setGDPRConsentString(@Nullable String string) {
         try {
             StorageUtils.setPbGdprConsent(string);
         } catch (PbContextNullException ex) {
             LogUtil.e("Targeting", "GDPR Consent was not updated", ex);
         }
+    }
+
+    //TCF 2.0 device access consent
+    public static void setPurposeConsents(@Nullable String purposeConsents) {
+        try {
+            StorageUtils.setPbPurposeConsents(purposeConsents);
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "GDPR Device access Consent was not updated", ex);
+        }
+    }
+
+    public static String getPurposeConsents() {
+
+        String savedPurposeConsents = null;
+
+        try {
+
+            String pbPurposeConsentsString = StorageUtils.getPbPurposeConsents();
+            if (pbPurposeConsentsString != null) {
+                savedPurposeConsents = pbPurposeConsentsString;
+            } else {
+
+                String iabPurposeConsentsString = StorageUtils.getIabPurposeConsents();
+
+                if (iabPurposeConsentsString != null) {
+                    savedPurposeConsents = iabPurposeConsentsString;
+                }
+
+            }
+
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "GDPR Device access Consent was not updated", ex);
+        }
+
+        return savedPurposeConsents;
+    }
+
+    /**
+     * Get the device access Consent set by the publisher.
+     *
+     * @return A valid Base64 encode consent string as per https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework
+     * or null if not set
+     */
+    @Nullable
+    public static Boolean getDeviceAccessConsent() {
+
+        Boolean deviceAccessConsent = null;
+        try {
+            int deviceAccessConsentIndex = 0;
+
+            deviceAccessConsent = getPurposeConsent(deviceAccessConsentIndex);
+
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "cannot get Device access Consent", ex);
+        }
+
+        return deviceAccessConsent;
+    }
+
+    static Boolean getPurposeConsent(int index) {
+
+        Boolean purposeConsent = null;
+        String purposeConsents = getPurposeConsents();
+
+        if (purposeConsents != null) {
+            char purposeConsentChar = purposeConsents.charAt(index);
+
+            if (purposeConsentChar == '1') {
+                purposeConsent = true;
+            } else if (purposeConsentChar == '0') {
+                purposeConsent = false;
+            } else {
+                LogUtil.w("invalid char:" + purposeConsent);
+            }
+        }
+
+        return purposeConsent;
     }
 
     /**

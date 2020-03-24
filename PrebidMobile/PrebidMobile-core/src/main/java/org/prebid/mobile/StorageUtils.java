@@ -32,8 +32,15 @@ final class StorageUtils {
     //GDPR
     static final String PBConsent_SubjectToGDPRKey = "Prebid_GDPR";
     static final String PBConsent_ConsentStringKey = "Prebid_GDPR_consent_strings";
+    static final String PBConsent_PurposeConsents = "Prebid_GDPR_PurposeConsents";
     static final String IABConsent_SubjectToGDPRKey = "IABConsent_SubjectToGDPR";
     static final String IABConsent_ConsentStringKey = "IABConsent_ConsentString";
+
+    //TCF 2.0 consent parameters
+    static final String IABTCF_CONSENT_STRING = "IABTCF_TCString";
+    static final String IABTCF_SUBJECT_TO_GDPR = "IABTCF_gdprApplies";
+
+    static final String  IABTCF_PurposeConsents = "IABTCF_PurposeConsents";
 
     //CCPA
     static final String IABUSPrivacy_StringKey = "IABUSPrivacy_String";
@@ -56,17 +63,20 @@ final class StorageUtils {
     }
 
     //GDPR Subject
-    static boolean checkPbGdprSubject() throws PbContextNullException {
-        return checkSharedPreferencesKey(StorageUtils.PBConsent_SubjectToGDPRKey);
-    }
 
-    static boolean getPbGdprSubject() throws PbContextNullException {
+    @Nullable
+    static Boolean getPbGdprSubject() throws PbContextNullException {
+
+        if (!checkSharedPreferencesKey(StorageUtils.PBConsent_SubjectToGDPRKey)) {
+            return null;
+        }
+
         SharedPreferences pref = getSharedPreferences();
         return pref.getBoolean(StorageUtils.PBConsent_SubjectToGDPRKey, false);
 
     }
 
-    static void setPbGdprSubject(Boolean value) throws PbContextNullException {
+    static void setPbGdprSubject(@Nullable Boolean value) throws PbContextNullException {
         SharedPreferences pref = getSharedPreferences();
         SharedPreferences.Editor editor = pref.edit();
         if (value != null) {
@@ -77,42 +87,99 @@ final class StorageUtils {
         editor.apply();
     }
 
-    static boolean checkIabGdprSubject() throws PbContextNullException {
-        return checkSharedPreferencesKey(StorageUtils.IABConsent_SubjectToGDPRKey);
-    }
+    @Nullable
+    static Boolean getIabGdprSubject() throws PbContextNullException {
 
-    static String getIabGdprSubject() throws PbContextNullException {
+        Boolean gdprSubject = null;
 
         SharedPreferences pref = getSharedPreferences();
-        return pref.getString(StorageUtils.IABConsent_SubjectToGDPRKey, "");
+        int gdprSubjectTcf2Default = -1;
+        int gdprSubjectTcf2 = pref.getInt(StorageUtils.IABTCF_SUBJECT_TO_GDPR, gdprSubjectTcf2Default);
+
+        if (gdprSubjectTcf2 != gdprSubjectTcf2Default) {
+            if (gdprSubjectTcf2 == 1) {
+                gdprSubject = true;
+            } else if (gdprSubjectTcf2 == 0) {
+                gdprSubject = false;
+            }
+        } else {
+            String gdprSubjectTcf1 = pref.getString(StorageUtils.IABConsent_SubjectToGDPRKey, null);
+
+            if (gdprSubjectTcf1 != null) {
+                if ("1".equals(gdprSubjectTcf1)) {
+                    return true;
+                } else if ("0".equals(gdprSubjectTcf1)) {
+                    return false;
+                }
+            }
+
+        }
+
+        return gdprSubject;
     }
 
     //GDPR Consent
 
-    static boolean checkPbGdprConsent() throws PbContextNullException {
-        return checkSharedPreferencesKey(StorageUtils.PBConsent_ConsentStringKey);
-    }
-
     static String getPbGdprConsent() throws PbContextNullException {
         SharedPreferences pref = getSharedPreferences();
-        return pref.getString(StorageUtils.PBConsent_ConsentStringKey, "");
+        return pref.getString(StorageUtils.PBConsent_ConsentStringKey, null);
     }
 
-    static void setPbGdprConsent(String value) throws PbContextNullException {
+    static void setPbGdprConsent(@Nullable String value) throws PbContextNullException {
 
         SharedPreferences pref = getSharedPreferences();
         SharedPreferences.Editor editor = pref.edit();
-        editor.putString(StorageUtils.PBConsent_ConsentStringKey, value);
+
+        if (value != null) {
+            editor.putString(StorageUtils.PBConsent_ConsentStringKey, value);
+        } else {
+            editor.remove(StorageUtils.PBConsent_ConsentStringKey);
+        }
         editor.apply();
     }
 
-    static boolean checkIabGdprConsent() throws PbContextNullException {
-        return checkSharedPreferencesKey(StorageUtils.IABConsent_ConsentStringKey);
-    }
-
+    @Nullable
     static String getIabGdprConsent() throws PbContextNullException {
         SharedPreferences pref = getSharedPreferences();
-        return pref.getString(StorageUtils.IABConsent_ConsentStringKey, "");
+        String gdprConsent = pref.getString(StorageUtils.IABTCF_CONSENT_STRING, null);
+        if (gdprConsent == null) {
+            gdprConsent = pref.getString(StorageUtils.IABConsent_ConsentStringKey, null);
+        }
+        return gdprConsent;
+    }
+
+    /**
+     * Set the device access Consent by the publisher.
+     *
+     * @param purposeConsents set by the publisher to access the device data as per https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework
+     */
+    static void setPbPurposeConsents(@Nullable String purposeConsents) throws PbContextNullException {
+        SharedPreferences pref = getSharedPreferences();
+        SharedPreferences.Editor editor = pref.edit();
+
+        String key = StorageUtils.PBConsent_PurposeConsents;
+
+        if (purposeConsents != null) {
+            editor.putString(key, purposeConsents);
+        } else {
+            editor.remove(key);
+        }
+
+        editor.apply();
+    }
+
+    @Nullable
+    static String getPbPurposeConsents() {
+        SharedPreferences pref = getSharedPreferences();
+
+        return pref.getString(PBConsent_PurposeConsents, null);
+    }
+
+    @Nullable
+    static String getIabPurposeConsents() {
+        SharedPreferences pref = getSharedPreferences();
+
+        return pref.getString(IABTCF_PurposeConsents, null);
     }
 
     //CCPA

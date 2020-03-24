@@ -133,11 +133,12 @@ class PrebidServerAdapter implements DemandAdapter {
                 conn.setDoInput(true);
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setRequestProperty("Accept", "application/json");
-                String existingCookie = getExistingCookie();
-                if (existingCookie != null) {
-                    conn.setRequestProperty(PrebidServerSettings.COOKIE_HEADER, existingCookie);
-                } // todo still pass cookie if limit ad tracking?
-
+                if(canIAccessDeviceData()) {
+                    String existingCookie = getExistingCookie();
+                    if (existingCookie != null) {
+                        conn.setRequestProperty(PrebidServerSettings.COOKIE_HEADER, existingCookie);
+                    } // todo still pass cookie if limit ad tracking?
+                }
                 conn.setRequestMethod("POST");
                 conn.setConnectTimeout(PrebidMobile.getTimeoutMillis());
 
@@ -459,11 +460,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
 
         private JSONObject getPostData() throws NoContextException {
-            Context context = PrebidMobile.getApplicationContext();
-            if (context != null) {
-                AdvertisingIDUtil.retrieveAndSetAAID(context);
-                PrebidServerSettings.update(context);
-            }
+
             JSONObject postData = new JSONObject();
             try {
                 String id = UUID.randomUUID().toString();
@@ -778,9 +775,11 @@ class PrebidServerAdapter implements DemandAdapter {
                 }
                 // limited ad tracking
                 device.put(PrebidServerSettings.REQUEST_LMT, AdvertisingIDUtil.isLimitAdTracking() ? 1 : 0);
-                if (!AdvertisingIDUtil.isLimitAdTracking() && !TextUtils.isEmpty(AdvertisingIDUtil.getAAID())) {
-                    // put ifa
-                    device.put(PrebidServerSettings.REQUEST_IFA, AdvertisingIDUtil.getAAID());
+                if(canIAccessDeviceData()) {
+                    if (!AdvertisingIDUtil.isLimitAdTracking() && !TextUtils.isEmpty(AdvertisingIDUtil.getAAID())) {
+                        // put ifa
+                        device.put(PrebidServerSettings.REQUEST_IFA, AdvertisingIDUtil.getAAID());
+                    }
                 }
 
                 // os
@@ -980,7 +979,12 @@ class PrebidServerAdapter implements DemandAdapter {
                 user.put("keywords", globalUserKeywordString);
 
                 JSONObject ext = new JSONObject();
-                ext.put("consent", TargetingParams.getGDPRConsentString());
+
+                Boolean isSubjectToGDPR = TargetingParams.isSubjectToGDPR();
+                if (Boolean.TRUE.equals(isSubjectToGDPR)) {
+                    ext.put("consent", TargetingParams.getGDPRConsentString());
+                }
+
                 ext.put("data", Util.toJson(TargetingParams.getUserDataDictionary()));
                 user.put("ext", ext);
 
@@ -1000,7 +1004,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     regs.put("coppa", 1);
                 }
 
-                if (isSubjectToGDPR != null && isSubjectToGDPR) {
+                if (Boolean.TRUE.equals(isSubjectToGDPR)) {
                     ext.put("gdpr", 1);
 
                 }
@@ -1013,6 +1017,30 @@ class PrebidServerAdapter implements DemandAdapter {
                 LogUtil.d("PrebidServerAdapter getRegsObject() " + e.getMessage());
             }
             return regs;
+        }
+
+        private boolean canIAccessDeviceData() {
+            //fetch advertising identifier based TCF 2.0 Purpose1 value
+            //truth table
+            /*
+                                 deviceAccessConsent=true   deviceAccessConsent=false  deviceAccessConsent undefined
+            gdprApplies=false        Yes, read IDFA             No, don’t read IDFA           Yes, read IDFA
+            gdprApplies=true         Yes, read IDFA             No, don’t read IDFA           No, don’t read IDFA
+            gdprApplies=undefined    Yes, read IDFA             No, don’t read IDFA           Yes, read IDFA
+            */
+
+            boolean setDeviceId = false;
+
+            Boolean gdprApplies = TargetingParams.isSubjectToGDPR();
+            Boolean deviceAccessConsent = TargetingParams.getDeviceAccessConsent();
+
+            if((deviceAccessConsent == null && (gdprApplies == null || Boolean.FALSE.equals(gdprApplies)))
+                    || Boolean.TRUE.equals(deviceAccessConsent)) {
+
+                setDeviceId = true;
+            }
+
+            return setDeviceId;
         }
 
         private static class NoContextException extends Exception {
