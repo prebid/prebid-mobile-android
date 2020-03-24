@@ -42,6 +42,7 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLooper;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -778,7 +779,213 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
-    public void testPostDataWithCOPPA() throws Exception {
+    public void testPostDataGdprSubjectTrue() throws Exception {
+
+        //given
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        TargetingParams.setSubjectToGDPR(true);
+
+        Integer gdprSubject = null;
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        try {
+            gdprSubject = postData.getJSONObject("regs").getJSONObject("ext").getInt("gdpr");
+        } catch (Exception ex) {
+            fail("parsing error");
+        }
+
+        //then
+        assertEquals(Integer.valueOf(1), gdprSubject);
+    }
+
+    @Test
+    public void testPostDataGdprSubjectFalse() throws Exception {
+
+        //given
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        TargetingParams.setSubjectToGDPR(false);
+
+        Object gdprSubject = null;
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        try {
+            gdprSubject = postData.opt("regs");
+        } catch (Exception ex) {
+            fail("parsing error");
+        }
+
+        //then
+        assertNull(gdprSubject);
+    }
+
+    @Test
+    public void testPostDataGdprSubjectUndefined() throws Exception {
+
+        //given
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        TargetingParams.setSubjectToGDPR(null);
+
+        Object gdprSubject = null;
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        try {
+            gdprSubject = postData.optJSONObject("regs");
+        } catch (Exception ex) {
+            fail("parsing error");
+        }
+
+        //then
+        assertNull(gdprSubject);
+    }
+
+    //GDPR Consent
+    @Test
+    public void testPostDataGdprConsent() throws Exception {
+
+        //given
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        TargetingParams.setSubjectToGDPR(true);
+        TargetingParams.setGDPRConsentString("BOEFEAyOEFEAyAHABDENAI4AAAB9vABAASA");
+
+        Integer gdprSubject = null;
+        String gdprConsent = null;
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        try {
+            gdprSubject = postData.getJSONObject("regs").getJSONObject("ext").getInt("gdpr");
+            gdprConsent = postData.getJSONObject("user").getJSONObject("ext").getString("consent");
+        } catch (Exception ex) {
+            fail("parsing error");
+        }
+
+        //then
+        assertEquals(Integer.valueOf(1), gdprSubject);
+        assertEquals("BOEFEAyOEFEAyAHABDENAI4AAAB9vABAASA", gdprConsent);
+    }
+
+    @Test
+    public void testPostDataGdprConsentAndGdprSubjectFalse() throws Exception {
+
+        //given
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        TargetingParams.setSubjectToGDPR(false);
+        TargetingParams.setGDPRConsentString("BOEFEAyOEFEAyAHABDENAI4AAAB9vABAASA");
+
+        Object gdprSubject = null;
+        Object gdprConsent = null;
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        try {
+            gdprSubject = postData.opt("regs");
+            gdprConsent = postData.getJSONObject("user").opt("ext");
+        } catch (Exception ex) {
+            fail("parsing error");
+        }
+
+        //then
+        assertNull(gdprSubject);
+        assertNull(gdprConsent);
+    }
+
+    //MARK: - TCFv2
+
+    @Test
+    public void testPostDataIfa() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+
+        //before
+        Method method = AdvertisingIDUtil.class.getDeclaredMethod("setAAID", String.class);
+        method.setAccessible(true);
+        method.invoke(null,"10000000-1000-1000-1000-100000000000");
+
+        //given
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        TargetingParams.setSubjectToGDPR(false);
+        TargetingParams.setPurposeConsents("100000000000000000000000");
+
+        String ifa = null;
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        try {
+            ifa = postData.getJSONObject("device").getString("ifa");
+
+        } catch (Exception ex) {
+            fail("parsing error");
+        }
+
+        //then
+        assertEquals("10000000-1000-1000-1000-100000000000", ifa);
+    }
+
+    //TCFv2 and gdpr
+    //fetch advertising identifier based TCF 2.0 Purpose1 value
+    //truth table
+    /*
+                           deviceAccessConsent=true  deviceAccessConsent=false  deviceAccessConsent undefined
+     gdprApplies=false        (1)Yes, read IDFA       (2)No, don’t read IDFA           (3)Yes, read IDFA
+     gdprApplies=true         (4)Yes, read IDFA       (5)No, don’t read IDFA           (6)No, don’t read IDFA
+     gdprApplies=undefined    (7)Yes, read IDFA       (8)No, don’t read IDFA           (9)Yes, read IDFA
+     */
+    @Test
+    public void testPostDataIfaPermission() throws Exception {
+        //before
+        Method method = AdvertisingIDUtil.class.getDeclaredMethod("setAAID", String.class);
+        method.setAccessible(true);
+        method.invoke(null,"10000000-1000-1000-1000-100000000000");
+
+        //(1)
+        postDataIfaHelper(false, "100000000000000000000000", true);
+        //(2)
+        postDataIfaHelper(false, "000000000000000000000000", false);
+        //(3)
+        postDataIfaHelper(false, null, true);
+        //(4)
+        postDataIfaHelper(true, "100000000000000000000000", true);
+        //(5)
+        postDataIfaHelper(true, "000000000000000000000000", false);
+        //(6)
+        postDataIfaHelper(true, null, false);
+        //(7)
+        postDataIfaHelper(null, "100000000000000000000000", true);
+        //(8)
+        postDataIfaHelper(null, "000000000000000000000000", false);
+        //(9)
+        postDataIfaHelper(null, null, true);
+
+    }
+
+    private void postDataIfaHelper(Boolean gdprApplies, String purposeConsents, boolean hasIfa) throws Exception {
+
+        //given
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        TargetingParams.setSubjectToGDPR(gdprApplies);
+        TargetingParams.setPurposeConsents(purposeConsents);
+
+        JSONObject device = null;
+        Object ifa = null;
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        try {
+            device = postData.optJSONObject("device");
+
+            if (device != null) {
+                ifa = device.opt("ifa");
+            }
+
+        } catch (Exception ex) {
+            fail("parsing error");
+        }
+
+        //then
+        assertEquals(hasIfa, ifa != null);
+
+        //defer
+        TargetingParams.setSubjectToGDPR(null);
+        TargetingParams.setPurposeConsents(null);
+    }
+
+    //COPPA
+    @Test
+    public void testPostDataCoppaTrue() throws Exception {
 
         //given
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
@@ -790,6 +997,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         try {
             coppa = postData.getJSONObject("regs").getInt("coppa");
         } catch (Exception ex) {
+            fail("parsing error");
         }
 
         //then
@@ -797,25 +1005,27 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
-    public void testPostDataWithoutCOPPA() throws Exception {
+    public void testPostDataCoppaFalse() throws Exception {
 
         //given
         TargetingParams.setSubjectToCOPPA(false);
-        int coppa = 0;
+        Object coppa = null;
 
         //when
         JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
         try {
-            coppa = postData.getJSONObject("regs").getInt("coppa");
+            coppa = postData.opt("regs");
         } catch (Exception ex) {
+            fail("parsing error");
         }
 
         //then
-        assertEquals(0, coppa);
+        assertNull(coppa);
     }
 
+    //CCPA
     @Test
-    public void testPostDataWithCCPA() throws Exception {
+    public void testPostDataCcpa() throws Exception {
 
         //given
 
@@ -831,18 +1041,15 @@ public class PrebidServerAdapterTest extends BaseSetup {
         try {
             ccpa = postData.getJSONObject("regs").getJSONObject("ext").getString("us_privacy");
         } catch (Exception ex) {
+            fail("parsing error");
         }
 
         //then
         assertEquals("1YN", ccpa);
-
-        //defer
-        editor.remove("IABUSPrivacy_String");
-        editor.apply();
     }
 
     @Test
-    public void testPostDataWithEmptyCCPA() throws Exception {
+    public void testPostDataCcpaEmptyValue() throws Exception {
 
         //given
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -850,25 +1057,23 @@ public class PrebidServerAdapterTest extends BaseSetup {
         editor.putString("IABUSPrivacy_String", "");
         editor.apply();
 
-        String ccpa = null;
+        Object ccpa = null;
 
         //when
         JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
         try {
-            ccpa = postData.getJSONObject("regs").getJSONObject("ext").getString("us_privacy");
+            ccpa = postData.opt("regs");
         } catch (Exception ex) {
+            fail("parsing error");
         }
 
         //then
         assertNull(ccpa);
 
-        //defer
-        editor.remove("IABUSPrivacy_String");
-        editor.apply();
     }
 
     @Test
-    public void testPostDataWithoutCCPA() throws Exception {
+    public void testPostDataCcpaUndefined() throws Exception {
 
         //given
 
@@ -877,21 +1082,18 @@ public class PrebidServerAdapterTest extends BaseSetup {
         editor.remove("IABUSPrivacy_String");
         editor.apply();
 
-        String ccpa = null;
+        Object ccpa = null;
 
         //when
         JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
         try {
-            ccpa = postData.getJSONObject("regs").getJSONObject("ext").getString("us_privacy");
+            ccpa = postData.opt("regs");
         } catch (Exception ex) {
+            fail("parsing error");
         }
 
         //then
         assertNull(ccpa);
-
-        //defer
-        editor.remove("IABUSPrivacy_String");
-        editor.apply();
     }
 
     @Test
