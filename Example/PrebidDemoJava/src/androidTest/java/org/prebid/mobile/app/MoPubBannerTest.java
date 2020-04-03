@@ -86,8 +86,8 @@ public class MoPubBannerTest {
     public void testMoPubWithoutAutoRefreshAndSize320x50() throws Exception {
         onView(withId(R.id.adServerSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("MoPub"))).perform(click());
-        onView(withId(R.id.adSizeSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("320x50"))).perform(click());
+//        onView(withId(R.id.adSizeSpinner)).perform(click());
+//        onData(allOf(is(instanceOf(String.class)), is("320x50"))).perform(click());
         onView(withId(R.id.autoRefreshInput)).perform(typeText("15000"));
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);

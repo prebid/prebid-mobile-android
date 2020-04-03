@@ -27,7 +27,6 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.testutils.ViewMinSizeMatcher;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
@@ -40,9 +39,6 @@ import static androidx.test.espresso.web.matcher.DomMatchers.containingTextInBod
 import static androidx.test.espresso.web.model.Atoms.getCurrentUrl;
 import static androidx.test.espresso.web.sugar.Web.onWebView;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
@@ -87,8 +83,8 @@ public class DFPBannerTest {
     @Test
     public void testDFPBannerWithoutAutoRefreshAndSize320x50() throws Exception {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("15000"));
-        onView(withId(R.id.adSizeSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("320x50"))).perform(click());
+//        onView(withId(R.id.adSizeSpinner)).perform(click());
+//        onData(allOf(is(instanceOf(String.class)), is("320x50"))).perform(click());
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
