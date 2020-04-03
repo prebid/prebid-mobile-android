@@ -75,9 +75,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.prebid.mobile.app.Constants.MOPUB_BANNER_ADUNIT_ID_300x250;
-import static org.prebid.mobile.app.Constants.MOPUB_BANNER_ADUNIT_ID_320x50;
-
 public class DemoActivity extends AppCompatActivity implements MoPubRewardedVideoListener {
     int refreshCount;
     AdUnit adUnit;
@@ -332,131 +329,52 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         });
     }
 
-    void setupAndLoadAMBanner(int width, int height) {
-        setupPBBanner(width, height);
-        setupAMBanner(width, height);
-        loadAMBanner();
-    }
-
-    void setupAndLoadAMBannerVAST() {
-        setupPBBannerVAST();
-        setupAMBannerVAST();
-        loadAMBanner();
-    }
-
-    void setupAndLoadMPInterstitial() {
-        setupPBInterstitial();
-        setupMPInterstitial();
-        loadMPInterstitial();
-
-    }
-
-    void setupAndLoadMPInterstitialVAST() {
-        setupPBInterstitialVAST();
-        setupMPInterstitialVAST();
-        loadMPInterstitial();
-    }
-
-    void setupAndLoadAMInterstitial() {
-        setupPBInterstitial();
-        setupAMInterstitial();
-        loadAMInterstitial();
-    }
-
-    private void setupAndLoadAMInterstitialVAST() {
-        setupPBInterstitialVAST();
-        setupAMInterstitialVAST();
-        loadAMInterstitial();
-    }
-
-    private void setupAndLoadAMRewardedVideo() {
-        setupPBRewardedVideo();
-        setupAMRewardedVideo();
-        loadAMRewardedVideo();
-    }
-
-    private void setupAndLoadMPRewardedVideo() {
-        setupPBRewardedVideo();
-        setupMPRewardedVideo();
-        loadMPRewardedVideo();
-
-    }
-
-    private void enableAdditionalFunctionality(AdUnit adUnit) {
-        enableCOPPA();
-        addFirstPartyData(adUnit);
-        setStoredResponse();
-        setRequestTimeoutMillis();
-    }
-
-    private void enableCOPPA() {
-        TargetingParams.setSubjectToCOPPA(true);
-    }
-
-    private void addFirstPartyData(AdUnit adUnit) {
-        //Access Control List
-        TargetingParams.addBidderToAccessControlList(TargetingParams.BIDDER_NAME_APP_NEXUS);
-
-        //global user data
-        TargetingParams.addUserData("globalUserDataKey1", "globalUserDataValue1");
-
-        //global context data
-        TargetingParams.addContextData("globalContextDataKey1", "globalContextDataValue1");
-
-        //adunit context data
-        adUnit.addContextData("adunitContextDataKey1", "adunitContextDataValue1");
-
-        //global context keywords
-        TargetingParams.addContextKeyword("globalContextKeywordValue1");
-        TargetingParams.addContextKeyword("globalContextKeywordValue2");
-
-        //global user keywords
-        TargetingParams.addUserKeyword("globalUserKeywordValue1");
-        TargetingParams.addUserKeyword("globalUserKeywordValue2");
-
-        //adunit context keywords
-        adUnit.addContextKeyword("adunitContextKeywordValue1");
-        adUnit.addContextKeyword("adunitContextKeywordValue2");
-
-    }
-
-    private void setStoredResponse() {
-        PrebidMobile.setStoredAuctionResponse("111122223333");
-    }
-
-    private void setRequestTimeoutMillis() {
-        PrebidMobile.setTimeoutMillis(5_000);
-    }
-
     //Banner
-    private void setupPBBanner(int width, int height) {
-        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
-        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID);
-        PrebidMobile.setStoredAuctionResponse("");
+    void setupAndLoadAMBanner(int width, int height) {
+        setupPBRubiconBanner(width, height);
+        setupAMRubiconBanner(width, height);
+        loadAMBanner();
+    }
 
+    void setupAndLoadMPBanner(int width, int height) {
+        setupPBRubiconBanner(width, height);
+        setupMPRubiconBanner(width, height);
+        loadMPBanner();
+    }
+
+    //setup PB
+    private void setupPBAppNexusBanner(int width, int height) {
+
+        String accountId = Constants.PBS_CONFIG_ID_320x50_APPNEXUS;
         if (width == 300 && height == 250) {
-            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250, width, height);
-        } else if (width == 320 && height == 50) {
-            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
-        } else {
-            adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height);
+            accountId = Constants.PBS_CONFIG_ID_300x250_APPNEXUS;
         }
+
+        setupPBBanner(Host.APPNEXUS, Constants.PBS_ACCOUNT_ID_APPNEXUS, accountId, width, height, null);
     }
 
-    private void setupPBBannerVAST() {
-        PrebidMobile.setPrebidServerHost(Host.RUBICON);
-        PrebidMobile.setPrebidServerAccountId("1001");
-        PrebidMobile.setStoredAuctionResponse("sample_video_response");
+    private void setupPBRubiconBanner(int width, int height) {
 
-        adUnit = new VideoAdUnit("1001-1", 300, 250, VideoAdUnit.PlacementType.IN_BANNER);
+        setupPBBanner(Host.RUBICON, Constants.PBS_ACCOUNT_ID_RUBICON, Constants.PBS_CONFIG_ID_300x250_RUBICON, width, height, Constants.PBS_STORED_RESPONSE_300x250_RUBICON);
     }
 
-    private void setupAMBanner(int width, int height) {
-        setupAMBanner(width, height, Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES);
+    private void setupPBBanner(Host host, String accountId, String configId, int width, int height, @Nullable String storedResponse) {
+
+        PrebidMobile.setPrebidServerHost(host);
+        PrebidMobile.setPrebidServerAccountId(accountId);
+        PrebidMobile.setStoredAuctionResponse(storedResponse);
+
+        adUnit = new BannerAdUnit(configId, width, height);
+
     }
 
-    private void setupAMBannerVAST() {
-        setupAMBanner(300, 250, "/5300653/test_adunit_vast_pavliuchyk");
+    //Setup AdServer
+    private void setupAMAppNexusBanner(int width, int height) {
+        setupAMBanner(width, height, Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES_APPNEXUS);
+    }
+
+    private void setupAMRubiconBanner(int width, int height) {
+        setupAMBanner(width, height, Constants.DFP_BANNER_ADUNIT_ID_300x250_RUBICON);
     }
 
     private void setupAMBanner(int width, int height, String id) {
@@ -465,6 +383,31 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         amBanner.setAdSizes(new AdSize(width, height));
     }
 
+    void setupMPAppNexusBanner(int width, int height) {
+        String adUnitId = Constants.MOPUB_BANNER_ADUNIT_ID_320x50_APPNEXUS;
+        if (width == 300 && height == 250) {
+            adUnitId = Constants.MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS;
+        }
+
+        setupMPBanner(adUnitId, width, height);
+    }
+
+    void setupMPRubiconBanner(int width, int height) {
+        setupMPBanner(Constants.MOPUB_BANNER_ADUNIT_ID_300x250_RUBICON, width, height);
+    }
+
+    void setupMPBanner(String adUnitId, int width, int height) {
+        FrameLayout adFrame = findViewById(R.id.adFrame);
+        adFrame.removeAllViews();
+        adView = new MoPubView(this);
+        adView.setAdUnitId(adUnitId);
+
+        adView.setMinimumWidth(width);
+        adView.setMinimumHeight(height);
+        adFrame.addView(adView);
+    }
+
+    //Load
     private void loadAMBanner() {
         FrameLayout adFrame = findViewById(R.id.adFrame);
         adFrame.removeAllViews();
@@ -506,29 +449,74 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         });
     }
 
-    // Interstitial
-    private void setupPBInterstitial() {
-        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
-        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID);
-        PrebidMobile.setStoredAuctionResponse("");
-
-        adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL);
+    void loadMPBanner() {
+        adUnit.setAutoRefreshPeriodMillis(getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0));
+        adUnit.fetchDemand(adView, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+                DemoActivity.this.resultCode = resultCode;
+                adView.loadAd();
+                refreshCount++;
+            }
+        });
     }
 
-    private void setupPBInterstitialVAST() {
+    //Banner VAST
+    void setupAndLoadAMBannerVAST() {
+        setupPBBannerVAST();
+        setupAMBannerVAST();
+        loadAMBanner();
+    }
+
+    private void setupPBBannerVAST() {
         PrebidMobile.setPrebidServerHost(Host.RUBICON);
-        PrebidMobile.setPrebidServerAccountId("1001");
-        PrebidMobile.setStoredAuctionResponse("sample_video_response");
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
+        PrebidMobile.setStoredAuctionResponse(Constants.PBS_STORED_RESPONSE_VAST_RUBICON);
 
-        adUnit = new VideoInterstitialAdUnit("1001-1");
+        adUnit = new VideoAdUnit("1001-1", 300, 250, VideoAdUnit.PlacementType.IN_BANNER);
     }
 
-    private void setupAMInterstitial() {
-        setupAMInterstitial(Constants.DFP_INTERSTITIAL_ADUNIT_ID);
+    private void setupAMBannerVAST() {
+        setupAMBanner(300, 250, Constants.DFP_VAST_ADUNIT_ID_RUBICON);
     }
 
-    private void setupAMInterstitialVAST() {
-        setupAMInterstitial("/5300653/test_adunit_vast_pavliuchyk");
+    //Interstitial
+    void setupAndLoadAMInterstitial() {
+        setupPBRubiconInterstitial();
+        setupAMRubiconInterstitial();
+        loadAMInterstitial();
+    }
+
+    void setupAndLoadMPInterstitial() {
+        setupPBRubiconInterstitial();
+        setupMPRubiconInterstitial();
+        loadMPInterstitial();
+    }
+
+    //Setup PB
+    private void setupPBAppNexusInterstitial() {
+        setupPBInterstitial(Host.APPNEXUS, Constants.PBS_ACCOUNT_ID_APPNEXUS, Constants.PBS_CONFIG_ID_INTERSTITIAL_APPNEXUS, null);
+    }
+
+    private void setupPBRubiconInterstitial() {
+        setupPBInterstitial(Host.RUBICON, Constants.PBS_ACCOUNT_ID_RUBICON, Constants.PBS_CONFIG_ID_INTERSTITIAL_RUBICON, Constants.PBS_STORED_RESPONSE_300x250_RUBICON);
+    }
+
+    private void setupPBInterstitial(Host host, String accountId, String configId, @Nullable String storedResponse) {
+        PrebidMobile.setPrebidServerHost(host);
+        PrebidMobile.setPrebidServerAccountId(accountId);
+        PrebidMobile.setStoredAuctionResponse(storedResponse);
+
+        adUnit = new InterstitialAdUnit(configId);
+    }
+
+    //Setup AdServer
+    private void setupAMAppNexusInterstitial() {
+        setupAMInterstitial(Constants.DFP_INTERSTITIAL_ADUNIT_ID_APPNEXUS);
+    }
+
+    private void setupAMRubiconInterstitial() {
+        setupAMInterstitial(Constants.DFP_INTERSTITIAL_ADUNIT_ID_RUBICON);
     }
 
     private void setupAMInterstitial(String id) {
@@ -558,51 +546,12 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         });
     }
 
-    private void loadAMInterstitial() {
-        int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
-        adUnit.setAutoRefreshPeriodMillis(millis);
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        request = builder.build();
-        adUnit.fetchDemand(request, new OnCompleteListener() {
-            @Override
-            public void onComplete(ResultCode resultCode) {
-                DemoActivity.this.resultCode = resultCode;
-                amInterstitial.loadAd(request);
-                refreshCount++;
-            }
-        });
+    private void setupMPAppNexusInterstitial() {
+        setupMPInterstitial(Constants.MOPUB_INTERSTITIAL_ADUNIT_ID_APPNEXUS);
     }
 
-    void setupAndLoadMPBanner(int width, int height) {
-        FrameLayout adFrame = findViewById(R.id.adFrame);
-        adFrame.removeAllViews();
-        adView = new MoPubView(this);
-        if (width == 300 && height == 250) {
-            adView.setAdUnitId(MOPUB_BANNER_ADUNIT_ID_300x250);
-        } else {
-            adView.setAdUnitId(MOPUB_BANNER_ADUNIT_ID_320x50);
-        }
-        adView.setMinimumWidth(width);
-        adView.setMinimumHeight(height);
-        adFrame.addView(adView);
-        setupPBBanner(width, height);
-        adUnit.setAutoRefreshPeriodMillis(getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0));
-        adUnit.fetchDemand(adView, new OnCompleteListener() {
-            @Override
-            public void onComplete(ResultCode resultCode) {
-                DemoActivity.this.resultCode = resultCode;
-                adView.loadAd();
-                refreshCount++;
-            }
-        });
-    }
-
-    private void setupMPInterstitial() {
-        setupMPInterstitial(Constants.MOPUB_INTERSTITIAL_ADUNIT_ID);
-    }
-
-    private void setupMPInterstitialVAST() {
-        setupMPInterstitial("723dd84529b04075aa003a152ede0c4b");
+    private void setupMPRubiconInterstitial() {
+        setupMPInterstitial(Constants.MOPUB_INTERSTITIAL_ADUNIT_ID_RUBICON);
     }
 
     private void setupMPInterstitial(String id) {
@@ -644,6 +593,22 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         });
     }
 
+    //Load
+    private void loadAMInterstitial() {
+        int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
+        adUnit.setAutoRefreshPeriodMillis(millis);
+        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        request = builder.build();
+        adUnit.fetchDemand(request, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+                DemoActivity.this.resultCode = resultCode;
+                amInterstitial.loadAd(request);
+                refreshCount++;
+            }
+        });
+    }
+
     private void loadMPInterstitial() {
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
@@ -657,22 +622,74 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         });
     }
 
-    //RewardedVideo
-    private void setupPBRewardedVideo() {
+    //Interstitial VAST
+    void setupAndLoadMPInterstitialVAST() {
+        setupPBInterstitialVAST();
+        setupMPInterstitialVAST();
+        loadMPInterstitial();
+    }
 
+    private void setupAndLoadAMInterstitialVAST() {
+        setupPBInterstitialVAST();
+        setupAMInterstitialVAST();
+        loadAMInterstitial();
+    }
+
+    //Setup PB
+    private void setupPBInterstitialVAST() {
         PrebidMobile.setPrebidServerHost(Host.RUBICON);
-        PrebidMobile.setPrebidServerAccountId("1001");
-        PrebidMobile.setStoredAuctionResponse("sample_video_response");
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
+        PrebidMobile.setStoredAuctionResponse(Constants.PBS_STORED_RESPONSE_VAST_RUBICON);
 
-        adUnit = new RewardedVideoAdUnit("1001-1");
+        adUnit = new VideoInterstitialAdUnit("1001-1");
+    }
+
+    //Setup AdServer
+    private void setupAMInterstitialVAST() {
+        setupAMInterstitial(Constants.DFP_VAST_ADUNIT_ID_RUBICON);
+    }
+
+    private void setupMPInterstitialVAST() {
+        setupMPInterstitial("723dd84529b04075aa003a152ede0c4b");
+    }
+
+    //Rewarded Video
+    private void setupAndLoadAMRewardedVideo() {
+        setupPBRewardedVideo();
+        setupAMRewardedVideo();
+        loadAMRewardedVideo();
+    }
+
+    private void setupAndLoadMPRewardedVideo() {
+        setupPBRewardedVideo();
+        setupMPRewardedVideo();
+        loadMPRewardedVideo();
 
     }
 
-    private void setupAMRewardedVideo() {
+    //Setup PB
+    private void setupPBRewardedVideo() {
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
+        PrebidMobile.setStoredAuctionResponse(Constants.PBS_STORED_RESPONSE_VAST_RUBICON);
 
+        adUnit = new RewardedVideoAdUnit("1001-1");
+    }
+
+    //Setup AdServer
+    private void setupAMRewardedVideo() {
         amRewardedAd = new RewardedAd(this, "/5300653/test_adunit_vast_rewarded-video_pavliuchyk");
     }
 
+    private void setupMPRewardedVideo() {
+        SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(MP_ADUNITID_REWARDED)
+                .build();
+        MoPub.initializeSdk(this, sdkConfiguration, null);
+
+        MoPubRewardedVideos.setRewardedVideoListener(this);
+    }
+
+    //Load
     private void loadAMRewardedVideo() {
 
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
@@ -720,14 +737,6 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         });
     }
 
-    private void setupMPRewardedVideo() {
-        SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(MP_ADUNITID_REWARDED)
-                .build();
-        MoPub.initializeSdk(this, sdkConfiguration, null);
-
-        MoPubRewardedVideos.setRewardedVideoListener(this);
-    }
-
     private void loadMPRewardedVideo() {
 
         final Map<String, String> keywordsMap = new HashMap<>();
@@ -748,12 +757,6 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         if (adUnit != null) {
             adUnit.stopAutoRefresh();
             adUnit = null;
-        }
-    }
-
-    void stopAutoRefresh() {
-        if (adUnit != null) {
-            adUnit.stopAutoRefresh();
         }
     }
 
@@ -793,5 +796,57 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
     @Override
     public void onRewardedVideoCompleted(@NonNull Set<String> adUnitIds, @NonNull MoPubReward reward) {
 
+    }
+
+    void stopAutoRefresh() {
+        if (adUnit != null) {
+            adUnit.stopAutoRefresh();
+        }
+    }
+
+    private void enableAdditionalFunctionality(AdUnit adUnit) {
+        enableCOPPA();
+        addFirstPartyData(adUnit);
+        setStoredResponse();
+        setRequestTimeoutMillis();
+    }
+
+    private void enableCOPPA() {
+        TargetingParams.setSubjectToCOPPA(true);
+    }
+
+    private void addFirstPartyData(AdUnit adUnit) {
+        //Access Control List
+        TargetingParams.addBidderToAccessControlList(TargetingParams.BIDDER_NAME_APP_NEXUS);
+
+        //global user data
+        TargetingParams.addUserData("globalUserDataKey1", "globalUserDataValue1");
+
+        //global context data
+        TargetingParams.addContextData("globalContextDataKey1", "globalContextDataValue1");
+
+        //adunit context data
+        adUnit.addContextData("adunitContextDataKey1", "adunitContextDataValue1");
+
+        //global context keywords
+        TargetingParams.addContextKeyword("globalContextKeywordValue1");
+        TargetingParams.addContextKeyword("globalContextKeywordValue2");
+
+        //global user keywords
+        TargetingParams.addUserKeyword("globalUserKeywordValue1");
+        TargetingParams.addUserKeyword("globalUserKeywordValue2");
+
+        //adunit context keywords
+        adUnit.addContextKeyword("adunitContextKeywordValue1");
+        adUnit.addContextKeyword("adunitContextKeywordValue2");
+
+    }
+
+    private void setStoredResponse() {
+        PrebidMobile.setStoredAuctionResponse("111122223333");
+    }
+
+    private void setRequestTimeoutMillis() {
+        PrebidMobile.setTimeoutMillis(5_000);
     }
 }

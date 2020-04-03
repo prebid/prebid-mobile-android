@@ -47,25 +47,14 @@ public class Constants {
     // Prebid server config ids
     static final String PBS_ACCOUNT_ID_RUBICON = "1001";
     static final String PBS_CONFIG_ID_300x250_RUBICON = "1001-1";
-    static final String PBS_CONFIG_ID_INTERSTITIAL_RUBICON = "";
+    static final String PBS_CONFIG_ID_INTERSTITIAL_RUBICON = "1001-1";
+    static final String PBS_STORED_RESPONSE_300x250_RUBICON = "1001-rubicon-300x250";
+    static final String PBS_STORED_RESPONSE_VAST_RUBICON = "sample_video_response";
     // MoPub ad unit ids
     static final String MOPUB_BANNER_ADUNIT_ID_300x250_RUBICON = "a108b8dd5ebc472098167e6f1c118120";
-    static final String MOPUB_INTERSTITIAL_ADUNIT_ID_RUBICON = "";
+    static final String MOPUB_INTERSTITIAL_ADUNIT_ID_RUBICON = "d5c75d9f0b8742cab579610930077c35";
     // DFP ad unit ids
-    static final String DFP_BANNER_ADUNIT_ID_300x250_RUBICON = "/5300653/test_adunit_pavliuchyk_300x250_prebid-server.rubiconproject.com_puc";
-    static final String DFP_INTERSTITIAL_ADUNIT_ID_RUBICON = "";
-
-    static String PBS_ACCOUNT_ID = PBS_ACCOUNT_ID_APPNEXUS;
-    static String PBS_CONFIG_ID_300x250 = PBS_CONFIG_ID_300x250_APPNEXUS;
-    static String PBS_CONFIG_ID_320x50 = PBS_CONFIG_ID_320x50_APPNEXUS;
-    static String PBS_CONFIG_ID_INTERSTITIAL = PBS_CONFIG_ID_INTERSTITIAL_APPNEXUS;
-    // MoPub ad unit ids
-    static String MOPUB_BANNER_ADUNIT_ID_300x250 = MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS;
-    static String MOPUB_BANNER_ADUNIT_ID_320x50 = MOPUB_BANNER_ADUNIT_ID_320x50_APPNEXUS;
-    static String MOPUB_INTERSTITIAL_ADUNIT_ID = MOPUB_INTERSTITIAL_ADUNIT_ID_APPNEXUS;
-    // DFP ad unit ids
-    static String DFP_BANNER_ADUNIT_ID_300x250 = DFP_BANNER_ADUNIT_ID_300x250_APPNEXUS;
-    static String DFP_BANNER_ADUNIT_ID_ALL_SIZES = DFP_BANNER_ADUNIT_ID_ALL_SIZES_APPNEXUS;
-    static String DFP_INTERSTITIAL_ADUNIT_ID = DFP_INTERSTITIAL_ADUNIT_ID_APPNEXUS;
-
+    static final String DFP_BANNER_ADUNIT_ID_300x250_RUBICON = "/5300653/pavliuchyk_test_adunit_1x1_puc";
+    static final String DFP_INTERSTITIAL_ADUNIT_ID_RUBICON = "/5300653/pavliuchyk_test_adunit_1x1_puc";
+    static final String DFP_VAST_ADUNIT_ID_RUBICON = "/5300653/test_adunit_vast_pavliuchyk";
 }
