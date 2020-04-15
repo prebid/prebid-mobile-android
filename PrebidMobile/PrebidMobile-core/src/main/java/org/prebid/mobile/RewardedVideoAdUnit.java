@@ -18,7 +18,7 @@ package org.prebid.mobile;
 
 import android.support.annotation.NonNull;
 
-public class RewardedVideoAdUnit extends AdUnit {
+public class RewardedVideoAdUnit extends VideoBaseAdUnit {
 
     public RewardedVideoAdUnit(@NonNull String configId) {
         super(configId, AdType.REWARDED_VIDEO);

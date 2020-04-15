@@ -42,18 +42,22 @@ class RequestParams {
     @Nullable
     private Integer videoPlacement;
 
+    @Nullable
+    private VideoBaseAdUnit.Parameters parameters;
+
     RequestParams(String configId, AdType adType, HashSet<AdSize> sizes) {
         this.configId = configId;
         this.adType = adType;
         this.sizes = sizes; // for Interstitial this will be null, will use screen width & height in the request
     }
 
-    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc, @Nullable Integer videoPlacement) {
+    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc, @Nullable Integer videoPlacement, @Nullable VideoBaseAdUnit.Parameters parameters) {
         this(configId, adType, sizes);
         this.contextDataDictionary = contextDataDictionary;
         this.contextKeywordsSet = contextKeywordsSet;
         this.minSizePerc = minSizePerc;
         this.videoPlacement = videoPlacement;
+        this.parameters = parameters;
     }
 
 
@@ -95,5 +99,10 @@ class RequestParams {
     @Nullable
     public Integer getVideoPlacement() {
         return videoPlacement;
+    }
+
+    @Nullable
+    public VideoBaseAdUnit.Parameters getVideoParameters() {
+        return parameters;
     }
 }

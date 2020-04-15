@@ -686,12 +686,49 @@ class PrebidServerAdapter implements DemandAdapter {
                 } else if (adType.equals(AdType.VIDEO) || adType.equals(AdType.VIDEO_INTERSTITIAL) || adType.equals(AdType.REWARDED_VIDEO)) {
 
                     JSONObject video = new JSONObject();
-                    video.put("mimes", new JSONArray().put("video/mp4"));
-                    video.put("linearity", 1);
-                    video.put("playbackmethod", new JSONArray().put(2));
+
+                    VideoBaseAdUnit.Parameters parameters = requestParams.getVideoParameters();
+                    if (parameters != null) {
+
+                        List<Integer> apiList = Util.convertCollection(parameters.getApi(), new Util.Function1<Integer, Signals.Api>() {
+                            @Override
+                            public Integer apply(Signals.Api element) {
+                                return element.value;
+                            }
+                        });
+
+                        List<Integer> playbackMethodList = Util.convertCollection(parameters.getPlaybackMethod(), new Util.Function1<Integer, Signals.PlaybackMethod>() {
+                            @Override
+                            public Integer apply(Signals.PlaybackMethod element) {
+                                return element.value;
+                            }
+                        });
+
+                        List<Integer> protocolList = Util.convertCollection(parameters.getProtocols(), new Util.Function1<Integer, Signals.Protocols>() {
+                            @Override
+                            public Integer apply(Signals.Protocols element) {
+                                return element.value;
+                            }
+                        });
+
+                        Integer startDelayValue = null;
+                        Signals.StartDelay startDelay = parameters.getStartDelay();
+                        if (startDelay != null) {
+                            startDelayValue = startDelay.value;
+                        }
+
+                        video.put("api", new JSONArray(apiList));
+                        video.put("maxbitrate", parameters.getMaxBitrate());
+                        video.put("minbitrate", parameters.getMinBitrate());
+                        video.put("maxduration", parameters.getMaxDuration());
+                        video.put("minduration", parameters.getMinDuration());
+                        video.put("mimes", new JSONArray(parameters.getMimes()));
+                        video.put("playbackmethod", new JSONArray(playbackMethodList));
+                        video.put("protocols", new JSONArray(protocolList));
+                        video.put("startdelay", startDelayValue);
+                    }
 
                     Integer placement = null;
-
                     if (adType.equals(AdType.VIDEO)) {
                         for (AdSize size : requestParams.getAdSizes()) {
                             video.put("w", size.getWidth());
@@ -712,6 +749,8 @@ class PrebidServerAdapter implements DemandAdapter {
                     }
 
                     video.put("placement", placement);
+
+                    video.put("linearity", 1);
 
                     imp.put("video", video);
                 }

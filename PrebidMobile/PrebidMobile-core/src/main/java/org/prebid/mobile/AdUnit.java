@@ -136,9 +136,16 @@ public abstract class AdUnit {
             listener.onComplete(ResultCode.INVALID_CONTEXT);
             return;
         }
+
+        VideoBaseAdUnit.Parameters parameters = null;
+        if (this instanceof VideoBaseAdUnit) {
+            VideoBaseAdUnit videoBaseAdUnit = (VideoBaseAdUnit) this;
+            parameters = videoBaseAdUnit.parameters;
+        }
+
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
-            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, videoPlacement);
+            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, videoPlacement, parameters);
             if (this.adType.equals(AdType.NATIVE)) {
                 requestParams.setNativeRequestParams(((NativeAdUnit) this).params);
             }

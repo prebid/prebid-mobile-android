@@ -18,7 +18,7 @@ package org.prebid.mobile;
 
 import android.support.annotation.NonNull;
 
-public class VideoInterstitialAdUnit extends AdUnit {
+public class VideoInterstitialAdUnit extends VideoBaseAdUnit {
 
     public VideoInterstitialAdUnit(@NonNull String configId) {
         super(configId, AdType.VIDEO_INTERSTITIAL);

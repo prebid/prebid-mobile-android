@@ -18,7 +18,7 @@ package org.prebid.mobile;
 
 import android.support.annotation.NonNull;
 
-public class VideoAdUnit extends AdUnit {
+public class VideoAdUnit extends VideoBaseAdUnit {
 
     private final AdSize adSize;
     private final PlacementType type;
