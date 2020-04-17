@@ -100,7 +100,7 @@ public final class AdViewUtils {
                     //case: wait when webView.getContentHeight() >= expected height from HTML
                     //webView does not contain getContentWidth()
                     if (webViewContentHeight < expectedHeight) {
-                        LogUtil.d("triggerSuccess next" + " webViewContentHeight:" + webViewContentHeight);
+                        LogUtil.d("fixZoomIn" + " webViewContentHeight:" + webViewContentHeight);
                         contentHeightQueue.add(webViewContentHeight);
                         if (contentHeightQueue.isFull()) {
 
@@ -126,9 +126,9 @@ public final class AdViewUtils {
 
     static void setWebViewScale(WebView webView, float webViewHeight, int webViewContentHeight) {
         //case: regulate scale because WebView.getSettings().setLoadWithOverviewMode() does not work
-        int scale = (int) (webViewHeight / webViewContentHeight * 100 - 1);
+        int scale = (int) (webViewHeight / webViewContentHeight * 100 + 1);
 
-        LogUtil.d("triggerSuccess WB Height:" + webViewHeight + " getContentHeight:" + webViewContentHeight + " scale:" + scale );
+        LogUtil.d("fixZoomIn WB Height:" + webViewHeight + " getContentHeight:" + webViewContentHeight + " scale:" + scale );
         webView.setInitialScale(scale);
     }
 
