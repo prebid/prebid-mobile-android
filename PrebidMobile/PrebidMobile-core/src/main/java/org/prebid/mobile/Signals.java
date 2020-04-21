@@ -42,17 +42,17 @@ public class Signals {
 
     }
     /**
-     # OpenRTB #
-     ```
-     | Value | Description |
-     |-------|-------------|
-     | 1     | VPAID 1.0   |
-     | 2     | VPAID 2.0   |
-     | 3     | MRAID-1     |
-     | 4     | ORMMA       |
-     | 5     | MRAID-2     |
-     | 6     | MRAID-3     |
-     ```
+     * OpenRTB
+     * <pre>
+    | Value | Description |
+    |-------|-------------|
+    | 1     | VPAID 1.0   |
+    | 2     | VPAID 2.0   |
+    | 3     | MRAID-1     |
+    | 4     | ORMMA       |
+    | 5     | MRAID-2     |
+    | 6     | MRAID-3     |
+     *</pre>
      */
     public static class Api extends SingleContainerInt {
 
@@ -69,15 +69,15 @@ public class Signals {
     }
 
     /**
-     # OpenRTB #
-     ```
+     OpenRTB
+     * <pre>
      | Value | Description         |
      |-------|---------------------|
      | 1     | Auto-Play Sound On  |
      | 2     | Auto-Play Sound Off |
      | 3     | Click-to-Play       |
      | 4     | Mouse-Over          |
-     ```
+     *</pre>
      */
     public static class PlaybackMethod extends SingleContainerInt {
 
@@ -92,8 +92,8 @@ public class Signals {
     }
 
     /**
-     # OpenRTB #
-     ```
+     OpenRTB
+     * <pre>
      | Value | Description      |
      |-------|------------------|
      | 1     | VAST 1.0         |
@@ -102,7 +102,7 @@ public class Signals {
      | 4     | VAST 1.0 Wrapper |
      | 5     | VAST 2.0 Wrapper |
      | 6     | VAST 3.0 Wrapper |
-     ```
+     *</pre>
      */
     public static class Protocols extends SingleContainerInt {
 
@@ -119,15 +119,15 @@ public class Signals {
     }
 
     /**
-     # OpenRTB #
-     ```
+     OpenRTB
+     * <pre>
      | Value | Description                                      |
      |-------|--------------------------------------------------|
      | > 0   | Mid-Roll (value indicates start delay in second) |
      | 0     | Pre-Roll                                         |
      | -1    | Generic Mid-Roll                                 |
      | -2    | Generic Post-Roll                                |
-     ```
+     *</pre>
      */
     public static class StartDelay extends SingleContainerInt {
 
