@@ -540,6 +540,7 @@ public class Util {
     /**
      * Utility Size class
      */
+    @Deprecated
     public static class CreativeSize {
         private int width;
         private int height;
