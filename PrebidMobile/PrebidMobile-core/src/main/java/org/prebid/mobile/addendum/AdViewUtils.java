@@ -30,6 +30,7 @@ import android.webkit.WebView;
 import org.prebid.mobile.LogUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -62,19 +63,73 @@ public final class AdViewUtils {
         findSizeInWebViewListAsync(webViewList, handler);
     }
 
-    static void triggerSuccess(final WebView webView, Pair<Integer, Integer> adSize, PbFindSizeListener handler) {
-        int width = adSize.first;
-        int height = adSize.second;
+    static void triggerSuccess(WebView webView, Pair<Integer, Integer> adSize, PbFindSizeListener handler) {
+        final int width = adSize.first;
+        final int height = adSize.second;
 
         handler.success(width, height);
 
-        //a fix of strange bug on Android with image scaling up
+        fixZoomIn(webView, width, height);
+
+    }
+    //a fix of strange bug on Android with image scaling up
+    //case: should be called after PublisherAdView.setAdSizes()
+    static void fixZoomIn(final WebView webView, final int expectedWidth, final int expectedHeight) {
+
+        final int minViewHeight = 10;
+
+        //500 millis to find a webViewContentHeight
+        //usually it takes 200 millis
+        final int contentHeightDelayMillis = 100;
+        int queueLimit = 5;
+
+        final LimitedQueueContainer<Integer> contentHeightQueue = new LimitedQueueContainer<>(queueLimit);
+        final Set<Integer> contentHeightSet = new HashSet<>(queueLimit);
+
         webView.post(new Runnable() {
             @Override
             public void run() {
-                webView.getSettings().setLoadWithOverviewMode(true);
+
+                int webViewHeight = webView.getHeight();
+
+                //case: check if a publisher have called PublisherAdView.setAdSizes()
+                //if publisher does not call PublisherAdView.setAdSizes() it is less then 10(e.g 3 instead of 750)
+                if (webViewHeight > minViewHeight) {
+                    int webViewContentHeight = webView.getContentHeight();
+
+                    //case: wait when webView.getContentHeight() >= expected height from HTML
+                    //webView does not contain getContentWidth()
+                    if (webViewContentHeight < expectedHeight) {
+                        LogUtil.d("fixZoomIn" + " webViewContentHeight:" + webViewContentHeight);
+                        contentHeightQueue.add(webViewContentHeight);
+                        if (contentHeightQueue.isFull()) {
+
+                            contentHeightSet.clear();
+                            contentHeightSet.addAll(contentHeightQueue.getList());
+
+                            if (contentHeightSet.size() == 1) {
+
+                                //case: if it is not possible to get an expected height se scale as is
+                                setWebViewScale(webView, webViewHeight, webViewContentHeight);
+                                return;
+                            }
+                        }
+                        webView.postDelayed(this, contentHeightDelayMillis);
+                    } else {
+                        setWebViewScale(webView, webViewHeight, webViewContentHeight);
+                    }
+                }
+
             }
         });
+    }
+
+    static void setWebViewScale(WebView webView, float webViewHeight, int webViewContentHeight) {
+        //case: regulate scale because WebView.getSettings().setLoadWithOverviewMode() does not work
+        int scale = (int) (webViewHeight / webViewContentHeight * 100 + 1);
+
+        LogUtil.d("fixZoomIn WB Height:" + webViewHeight + " getContentHeight:" + webViewContentHeight + " scale:" + scale );
+        webView.setInitialScale(scale);
     }
 
     static void warnAndTriggerFailure(Set<Pair<WebView, PbFindSizeError>> webViewErrorSet, PbFindSizeListener handler) {
