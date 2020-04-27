@@ -557,7 +557,6 @@ class PrebidServerAdapter implements DemandAdapter {
                 }
 
                 if (adType.equals(AdType.INTERSTITIAL)) {
-                    imp.put("instl", 1);
                     JSONObject banner = new JSONObject();
                     JSONArray format = new JSONArray();
                     Context context = PrebidMobile.getApplicationContext();
@@ -686,6 +685,7 @@ class PrebidServerAdapter implements DemandAdapter {
                 } else if (adType.equals(AdType.VIDEO) || adType.equals(AdType.VIDEO_INTERSTITIAL) || adType.equals(AdType.REWARDED_VIDEO)) {
 
                     JSONObject video = new JSONObject();
+                    Integer placementValue = null;
 
                     VideoBaseAdUnit.Parameters parameters = requestParams.getVideoParameters();
                     if (parameters != null) {
@@ -717,6 +717,11 @@ class PrebidServerAdapter implements DemandAdapter {
                             startDelayValue = startDelay.value;
                         }
 
+                        Signals.Placement placement = parameters.getPlacement();
+                        if (placement != null) {
+                            placementValue = placement.value;
+                        }
+
                         video.put("api", new JSONArray(apiList));
                         video.put("maxbitrate", parameters.getMaxBitrate());
                         video.put("minbitrate", parameters.getMinBitrate());
@@ -728,14 +733,12 @@ class PrebidServerAdapter implements DemandAdapter {
                         video.put("startdelay", startDelayValue);
                     }
 
-                    Integer placement = null;
+                    Integer placementValueDefault = null;
                     if (adType.equals(AdType.VIDEO)) {
                         for (AdSize size : requestParams.getAdSizes()) {
                             video.put("w", size.getWidth());
                             video.put("h", size.getHeight());
                         }
-
-                        placement = requestParams.getVideoPlacement();
 
                     } else if (adType.equals(AdType.VIDEO_INTERSTITIAL) || adType.equals(AdType.REWARDED_VIDEO)) {
                         Context context = PrebidMobile.getApplicationContext();
@@ -745,10 +748,14 @@ class PrebidServerAdapter implements DemandAdapter {
                             video.put("h", context.getResources().getConfiguration().screenHeightDp);
                         }
 
-                        placement = 5;
+                        placementValueDefault = 5;
                     }
 
-                    video.put("placement", placement);
+                    if (placementValue == null) {
+                        placementValue = placementValueDefault;
+                    }
+
+                    video.put("placement", placementValue);
 
                     video.put("linearity", 1);
 

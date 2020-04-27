@@ -455,8 +455,9 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         parameters.setMimes(Arrays.asList("video/mp4"));
         parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0));
         parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOff));
+        parameters.setPlacement(Signals.Placement.InBanner);
 
-        VideoAdUnit adUnit = new VideoAdUnit("1001-1", 300, 250, VideoAdUnit.PlacementType.IN_BANNER);
+        VideoAdUnit adUnit = new VideoAdUnit("1001-1", 300, 250);
         adUnit.setParameters(parameters);
 
         this.adUnit = adUnit;
