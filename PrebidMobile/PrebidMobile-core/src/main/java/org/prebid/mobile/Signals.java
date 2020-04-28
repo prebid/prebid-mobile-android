@@ -219,10 +219,10 @@ public class Signals {
         public static Placement InBanner = new Placement(2);
 
         /** In-Article */
-        public static Placement inArticle = new Placement(3);
+        public static Placement InArticle = new Placement(3);
 
         /** In-Feed */
-        public static Placement inFeed = new Placement(4);
+        public static Placement InFeed = new Placement(4);
 
         /** Interstitial */
         public static Placement Interstitial = new Placement(5);
