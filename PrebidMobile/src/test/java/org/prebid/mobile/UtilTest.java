@@ -31,6 +31,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -325,5 +326,41 @@ public class UtilTest extends BaseSetup {
         //then
         Assert.assertEquals("", result);
     }
+
+    @Test
+    public void testConvertJSONArray() throws Exception {
+        //given
+        List<String> list1 = Arrays.asList("first", "second");
+        JSONArray jsonArray1 = new JSONArray(list1);
+
+        List<Integer> list2 = Arrays.asList(1, 2);
+        JSONArray jsonArray2 = new JSONArray(list2);
+
+        //when
+        List<String> result1 = Util.convertJSONArray(jsonArray1);
+        List<Integer> result2 = Util.convertJSONArray(jsonArray2);
+
+        //then
+        Assert.assertEquals(list1, result1);
+        Assert.assertEquals(list2, result2);
+    }
+
+    @Test
+    public void testConvertCollection() {
+        //given
+        List<Signals.Api> list1 = Arrays.asList(new Signals.Api(1), new Signals.Api(2));
+
+        //when
+        List<Integer> result1 = Util.convertCollection(list1, new Util.Function1<Integer, Signals.Api>() {
+            @Override
+            public Integer apply(Signals.Api element) {
+                return element.value;
+            }
+        });
+
+        //then
+        Assert.assertEquals(Arrays.asList(1, 2), result1);
+    }
+
 
 }

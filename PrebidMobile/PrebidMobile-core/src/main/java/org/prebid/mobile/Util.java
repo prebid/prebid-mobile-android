@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -531,6 +532,39 @@ public class Util {
         }
 
         return jsonObject;
+    }
+
+    static <T> List<T> convertJSONArray(JSONArray jsonArray) throws Exception {
+
+        List<T> list = new ArrayList<>(jsonArray.length());
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+
+            list.add((T)jsonArray.get(i));
+        }
+
+        return list;
+
+    }
+
+    public interface Function1<R, T> {
+        R apply(T element);
+    }
+
+    @Nullable
+    static <T, E> List<T> convertCollection(@Nullable Collection<E> collection, Function1<T, E> callable) {
+        List<T> result = null;
+
+        if (collection != null) {
+            result = new ArrayList<>(collection.size());
+
+            for (E element : collection) {
+                result.add(callable.apply(element));
+            }
+
+        }
+
+        return result;
     }
 
     public interface CreativeSizeCompletionHandler {

@@ -63,14 +63,17 @@ import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.RewardedVideoAdUnit;
+import org.prebid.mobile.Signals;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.Util;
 import org.prebid.mobile.VideoAdUnit;
+import org.prebid.mobile.VideoBaseAdUnit;
 import org.prebid.mobile.VideoInterstitialAdUnit;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.addendum.PbFindSizeError;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -448,7 +451,15 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         PrebidMobile.setPrebidServerAccountId("1001");
         PrebidMobile.setStoredAuctionResponse("sample_video_response");
 
-        adUnit = new VideoAdUnit("1001-1", 300, 250, VideoAdUnit.PlacementType.IN_BANNER);
+        VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
+        parameters.setMimes(Arrays.asList("video/mp4"));
+        parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0));
+        parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOff));
+
+        VideoAdUnit adUnit = new VideoAdUnit("1001-1", 300, 250, VideoAdUnit.PlacementType.IN_BANNER);
+        adUnit.setParameters(parameters);
+
+        this.adUnit = adUnit;
     }
 
     private void setupAMBanner(int width, int height) {
@@ -520,7 +531,15 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         PrebidMobile.setPrebidServerAccountId("1001");
         PrebidMobile.setStoredAuctionResponse("sample_video_response");
 
-        adUnit = new VideoInterstitialAdUnit("1001-1");
+        VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
+        parameters.setMimes(Arrays.asList("video/mp4"));
+        parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0));
+        parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOff));
+
+        VideoInterstitialAdUnit adUnit = new VideoInterstitialAdUnit("1001-1");
+        adUnit.setParameters(parameters);
+
+        this.adUnit = adUnit;
     }
 
     private void setupAMInterstitial() {
@@ -664,7 +683,15 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         PrebidMobile.setPrebidServerAccountId("1001");
         PrebidMobile.setStoredAuctionResponse("sample_video_response");
 
-        adUnit = new RewardedVideoAdUnit("1001-1");
+        VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
+        parameters.setMimes(Arrays.asList("video/mp4"));
+        parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0));
+        parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOff));
+
+        RewardedVideoAdUnit adUnit = new RewardedVideoAdUnit("1001-1");
+        adUnit.setParameters(parameters);
+
+        this.adUnit = adUnit;
 
     }
 
