@@ -17,8 +17,6 @@
 
 package org.prebid.mobile;
 
-import android.support.annotation.RequiresApi;
-
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -75,7 +73,6 @@ public class AdUnitSuccessorTest {
     }
 
     //Video AdUnit
-    @RequiresApi
     @Test
     public void testVideoAdUnitCreation() throws Exception {
         VideoAdUnit adUnit = new VideoAdUnit("123456", 320, 50);

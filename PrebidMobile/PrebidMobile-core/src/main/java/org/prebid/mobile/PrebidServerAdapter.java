@@ -685,6 +685,7 @@ class PrebidServerAdapter implements DemandAdapter {
                 } else if (adType.equals(AdType.VIDEO) || adType.equals(AdType.VIDEO_INTERSTITIAL) || adType.equals(AdType.REWARDED_VIDEO)) {
 
                     JSONObject video = new JSONObject();
+
                     Integer placementValue = null;
 
                     VideoBaseAdUnit.Parameters parameters = requestParams.getVideoParameters();
@@ -734,6 +735,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     }
 
                     Integer placementValueDefault = null;
+
                     if (adType.equals(AdType.VIDEO)) {
                         for (AdSize size : requestParams.getAdSizes()) {
                             video.put("w", size.getWidth());
@@ -756,6 +758,8 @@ class PrebidServerAdapter implements DemandAdapter {
                     }
 
                     video.put("placement", placementValue);
+
+                    video.put("linearity", 1);
 
                     video.put("linearity", 1);
 

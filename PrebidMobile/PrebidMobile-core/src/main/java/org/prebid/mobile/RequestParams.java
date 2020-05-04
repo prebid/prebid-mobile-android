@@ -42,6 +42,9 @@ class RequestParams {
     @Nullable
     private VideoBaseAdUnit.Parameters parameters;
 
+    @Nullable
+    private VideoBaseAdUnit.Parameters parameters;
+
     RequestParams(String configId, AdType adType, HashSet<AdSize> sizes) {
         this.configId = configId;
         this.adType = adType;
@@ -49,6 +52,7 @@ class RequestParams {
     }
 
     RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc, @Nullable VideoBaseAdUnit.Parameters parameters) {
+
         this(configId, adType, sizes);
         this.contextDataDictionary = contextDataDictionary;
         this.contextKeywordsSet = contextKeywordsSet;
@@ -94,6 +98,11 @@ class RequestParams {
 
     @Nullable
     VideoBaseAdUnit.Parameters getVideoParameters() {
+        return parameters;
+    }
+
+    @Nullable
+    public VideoBaseAdUnit.Parameters getVideoParameters() {
         return parameters;
     }
 }
