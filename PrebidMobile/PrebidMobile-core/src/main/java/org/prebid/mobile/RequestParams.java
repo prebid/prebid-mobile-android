@@ -42,9 +42,6 @@ class RequestParams {
     @Nullable
     private VideoBaseAdUnit.Parameters parameters;
 
-    @Nullable
-    private VideoBaseAdUnit.Parameters parameters;
-
     RequestParams(String configId, AdType adType, HashSet<AdSize> sizes) {
         this.configId = configId;
         this.adType = adType;
@@ -98,11 +95,6 @@ class RequestParams {
 
     @Nullable
     VideoBaseAdUnit.Parameters getVideoParameters() {
-        return parameters;
-    }
-
-    @Nullable
-    public VideoBaseAdUnit.Parameters getVideoParameters() {
         return parameters;
     }
 }
