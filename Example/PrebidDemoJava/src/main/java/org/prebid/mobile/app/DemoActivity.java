@@ -464,7 +464,6 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         // parameters.setPlacement(new Signals.Placement(2));
 
         VideoAdUnit adUnit = new VideoAdUnit("1001-1", 300, 250);
-
         adUnit.setParameters(parameters);
 
         this.adUnit = adUnit;

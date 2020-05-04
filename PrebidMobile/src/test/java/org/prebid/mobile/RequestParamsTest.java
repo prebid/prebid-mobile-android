@@ -115,7 +115,7 @@ public class RequestParamsTest {
 
         AdSize minSizePerc = new AdSize(50, 70);
 
-        RequestParams requestParams = new RequestParams("123456", AdType.INTERSTITIAL, sizes, null, null, minSizePerc, null, null);
+        RequestParams requestParams = new RequestParams("123456", AdType.INTERSTITIAL, sizes, null, null, minSizePerc, null);
 
         AdSize minAdSizePerc = requestParams.getMinSizePerc();
         assertNotNull(minAdSizePerc);
