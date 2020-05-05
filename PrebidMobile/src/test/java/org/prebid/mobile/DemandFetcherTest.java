@@ -73,6 +73,7 @@ public class DemandFetcherTest extends BaseSetup {
     @Test
     public void testSingleRequestNoBidsResponse() throws Exception {
         HttpUrl httpUrl = server.url("/");
+        PrebidMobile.setApplicationContext(activity);
         Host.CUSTOM.setHostUrl(httpUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
@@ -103,6 +104,7 @@ public class DemandFetcherTest extends BaseSetup {
     @Test
     public void testDestroyAutoRefresh() throws Exception {
         HttpUrl httpUrl = server.url("/");
+        PrebidMobile.setApplicationContext(activity);
         Host.CUSTOM.setHostUrl(httpUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
@@ -139,6 +141,7 @@ public class DemandFetcherTest extends BaseSetup {
     @Test
     public void testSingleRequestOneBidResponseForDFPAdObject() throws Exception {
         HttpUrl httpUrl = server.url("/");
+        PrebidMobile.setApplicationContext(activity);
         Host.CUSTOM.setHostUrl(httpUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
@@ -191,9 +194,9 @@ public class DemandFetcherTest extends BaseSetup {
     @Test
     public void testSingleRequestOneBidRubiconResponseForDFPAdObject() throws Exception {
         HttpUrl httpUrl = server.url("/");
+        PrebidMobile.setApplicationContext(activity);
         Host.CUSTOM.setHostUrl(httpUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-        PrebidMobile.setApplicationContext(activity);
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromRubicon()));
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
         PublisherAdRequest request = builder.build();
@@ -275,6 +278,7 @@ public class DemandFetcherTest extends BaseSetup {
     public void testSingleRequestOneBidResponseForMoPubAdObject() throws Exception {
 
         HttpUrl httpUrl = server.url("/");
+        PrebidMobile.setApplicationContext(activity);
         Host.CUSTOM.setHostUrl(httpUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
@@ -307,9 +311,9 @@ public class DemandFetcherTest extends BaseSetup {
     @Test
     public void testSingleRequestOneBidRubiconResponseForMoPubAdObject() throws Exception {
         HttpUrl httpUrl = server.url("/");
+        PrebidMobile.setApplicationContext(activity);
         Host.CUSTOM.setHostUrl(httpUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-        PrebidMobile.setApplicationContext(activity.getApplicationContext());
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromRubicon()));
         MoPubView adView = new MoPubView(activity);
         adView.setAdUnitId("123456789");
@@ -340,6 +344,7 @@ public class DemandFetcherTest extends BaseSetup {
     @Test
     public void testAutoRefreshForMoPubAdObject() throws Exception {
         HttpUrl httpUrl = server.url("/");
+        PrebidMobile.setApplicationContext(activity);
         Host.CUSTOM.setHostUrl(httpUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
@@ -381,6 +386,7 @@ public class DemandFetcherTest extends BaseSetup {
     @Test
     public void testAutoRefreshForDFPAdObject() throws Exception {
         HttpUrl httpUrl = server.url("/");
+        PrebidMobile.setApplicationContext(activity);
         Host.CUSTOM.setHostUrl(httpUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));

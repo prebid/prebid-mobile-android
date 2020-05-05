@@ -40,7 +40,7 @@ class RequestParams {
     private AdSize minSizePerc; //non null only for InterstitialAdUnit(String, int, int)
 
     @Nullable
-    private Integer videoPlacement;
+    private VideoBaseAdUnit.Parameters parameters;
 
     RequestParams(String configId, AdType adType, HashSet<AdSize> sizes) {
         this.configId = configId;
@@ -48,12 +48,12 @@ class RequestParams {
         this.sizes = sizes; // for Interstitial this will be null, will use screen width & height in the request
     }
 
-    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc, @Nullable Integer videoPlacement) {
+    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc, @Nullable VideoBaseAdUnit.Parameters parameters) {
         this(configId, adType, sizes);
         this.contextDataDictionary = contextDataDictionary;
         this.contextKeywordsSet = contextKeywordsSet;
         this.minSizePerc = minSizePerc;
-        this.videoPlacement = videoPlacement;
+        this.parameters = parameters;
     }
 
 
@@ -78,12 +78,12 @@ class RequestParams {
     }
 
     @NonNull
-    public Map<String, Set<String>> getContextDataDictionary() {
+    Map<String, Set<String>> getContextDataDictionary() {
         return contextDataDictionary != null ? contextDataDictionary : new HashMap<String, Set<String>>();
     }
 
     @NonNull
-    public Set<String> getContextKeywordsSet() {
+    Set<String> getContextKeywordsSet() {
         return contextKeywordsSet != null ? contextKeywordsSet : new HashSet<String>();
     }
 
@@ -93,7 +93,7 @@ class RequestParams {
     }
 
     @Nullable
-    public Integer getVideoPlacement() {
-        return videoPlacement;
+    VideoBaseAdUnit.Parameters getVideoParameters() {
+        return parameters;
     }
 }

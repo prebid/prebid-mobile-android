@@ -17,15 +17,27 @@
 package org.prebid.mobile;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-public class VideoAdUnit extends AdUnit {
+public class VideoAdUnit extends VideoBaseAdUnit {
 
     private final AdSize adSize;
-    private final PlacementType type;
 
-    public VideoAdUnit(@NonNull String configId, int width, int height, PlacementType type) {
+    @Deprecated
+    @Nullable
+    private PlacementType type;
+
+    public VideoAdUnit(@NonNull String configId, int width, int height) {
         super(configId, AdType.VIDEO);
         adSize = new AdSize(width, height);
+    }
+
+    /**
+     * @deprecated Replaced by {@link #VideoAdUnit(String, int, int)}}
+     */
+    @Deprecated
+    public VideoAdUnit(@NonNull String configId, int width, int height, PlacementType type) {
+        this(configId, width, height);
         this.type = type;
     }
 
@@ -33,21 +45,31 @@ public class VideoAdUnit extends AdUnit {
         return adSize;
     }
 
+    @Deprecated
     public PlacementType getType() {
         return type;
     }
 
+    /**
+     * @deprecated Replaced by {@link Signals.Placement}
+     */
+    @Deprecated
     public enum PlacementType {
+        @Deprecated
         IN_BANNER(2),
+        @Deprecated
         IN_ARTICLE(3),
+        @Deprecated
         IN_FEED(4);
 
         private final int value;
 
+        @Deprecated
         PlacementType(int value) {
             this.value = value;
         }
 
+        @Deprecated
         public int getValue() {
             return value;
         }
