@@ -157,6 +157,9 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
                 setupAndLoadMPInterstitialVAST();
             }
         } else if (adTypeInBannerNative.equals(adTypeName)) {
+            PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+            PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_APPNEXUS);
+
             adUnit = new NativeAdUnit(Constants.PBS_CONFIG_ID_NATIVE_APPNEXUS);
             if (adServerAdManager.equals(adServerName)) {
                 createDFPNative();
