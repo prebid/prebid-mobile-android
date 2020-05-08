@@ -101,6 +101,12 @@ public abstract class VideoBaseAdUnit extends AdUnit {
         @Nullable
         private Signals.StartDelay startDelay;
 
+        /**
+         Placement type for the impression.
+         */
+        @Nullable
+        private Signals.Placement placement;
+
         //Getters and setters
         @Nullable
         public List<Signals.Api> getApi() {
@@ -181,6 +187,15 @@ public abstract class VideoBaseAdUnit extends AdUnit {
 
         public void setStartDelay(@Nullable Signals.StartDelay startDelay) {
             this.startDelay = startDelay;
+        }
+
+        @Nullable
+        public Signals.Placement getPlacement() {
+            return placement;
+        }
+
+        public void setPlacement(@Nullable Signals.Placement placement) {
+            this.placement = placement;
         }
     }
 }

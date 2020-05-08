@@ -453,10 +453,17 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
 
         VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
         parameters.setMimes(Arrays.asList("video/mp4"));
-        parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0));
-        parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOff));
 
-        VideoAdUnit adUnit = new VideoAdUnit("1001-1", 300, 250, VideoAdUnit.PlacementType.IN_BANNER);
+        parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0));
+        // parameters.setProtocols(Arrays.asList(new Signals.Protocols(2)));
+
+        parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOff));
+        // parameters.setPlaybackMethod(Arrays.asList(new Signals.PlaybackMethod(2)));
+
+        parameters.setPlacement(Signals.Placement.InBanner);
+        // parameters.setPlacement(new Signals.Placement(2));
+
+        VideoAdUnit adUnit = new VideoAdUnit("1001-1", 300, 250);
         adUnit.setParameters(parameters);
 
         this.adUnit = adUnit;
@@ -533,8 +540,12 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
 
         VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
         parameters.setMimes(Arrays.asList("video/mp4"));
+
         parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0));
+        // parameters.setProtocols(Arrays.asList(new Signals.Protocols(2)));
+
         parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOff));
+        // parameters.setPlaybackMethod(Arrays.asList(new Signals.PlaybackMethod(2)));
 
         VideoInterstitialAdUnit adUnit = new VideoInterstitialAdUnit("1001-1");
         adUnit.setParameters(parameters);
@@ -685,8 +696,12 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
 
         VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
         parameters.setMimes(Arrays.asList("video/mp4"));
+
         parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0));
+        // parameters.setProtocols(Arrays.asList(new Signals.Protocols(2)));
+
         parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOff));
+        // parameters.setPlaybackMethod(Arrays.asList(new Signals.PlaybackMethod(2)));
 
         RewardedVideoAdUnit adUnit = new RewardedVideoAdUnit("1001-1");
         adUnit.setParameters(parameters);

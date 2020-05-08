@@ -184,17 +184,58 @@ public class Signals {
      */
     public static class StartDelay extends SingleContainerInt {
 
-        /** Pre-Roll  */
+        /** Pre-Roll */
         public static StartDelay PreRoll = new StartDelay(0);
 
-        /** Generic Mid-Roll  */
+        /** Generic Mid-Roll */
         public static StartDelay GenericMidRoll = new StartDelay(-1);
 
-        /** Generic Post-Roll  */
+        /** Generic Post-Roll */
         public static StartDelay GenericPostRoll = new StartDelay(-2);
 
         public StartDelay(int value) {
             super(value);
         }
     }
+
+    /**
+     OpenRTB - Video Placement Types
+     * <pre>
+     | Value | Description                  |
+     |-------|------------------------------|
+     | 1     | In-Stream                    |
+     | 2     | In-Banner                    |
+     | 3     | In-Article                   |
+     | 4     | In-Feed                      |
+     | 5     | Interstitial/Slider/Floating |
+     *</pre>
+     */
+    public static class Placement extends SingleContainerInt {
+
+        /** In-Stream */
+        public static Placement InStream = new Placement(1);
+
+        /** In-Banner */
+        public static Placement InBanner = new Placement(2);
+
+        /** In-Article */
+        public static Placement InArticle = new Placement(3);
+
+        /** In-Feed */
+        public static Placement InFeed = new Placement(4);
+
+        /** Interstitial */
+        public static Placement Interstitial = new Placement(5);
+
+        /** Slider */
+        public static Placement Slider = new Placement(5);
+
+        /** Floating */
+        public static Placement Floating = new Placement(5);
+
+        public Placement(int value) {
+            super(value);
+        }
+    }
+
 }

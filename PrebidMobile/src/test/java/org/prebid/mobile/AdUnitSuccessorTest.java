@@ -75,6 +75,15 @@ public class AdUnitSuccessorTest {
     //Video AdUnit
     @Test
     public void testVideoAdUnitCreation() throws Exception {
+        VideoAdUnit adUnit = new VideoAdUnit("123456", 320, 50);
+        assertEquals(new AdSize(320, 50), adUnit.getAdSize());
+        assertEquals("123456", FieldUtils.readField(adUnit, "configId", true));
+        assertEquals(AdType.VIDEO, FieldUtils.readField(adUnit, "adType", true));
+    }
+
+    @Test
+    @Deprecated
+    public void testVideoAdUnitCreationDeprecated() throws Exception {
         VideoAdUnit adUnit = new VideoAdUnit("123456", 320, 50, VideoAdUnit.PlacementType.IN_BANNER);
         assertEquals(new AdSize(320, 50), adUnit.getAdSize());
         assertEquals("123456", FieldUtils.readField(adUnit, "configId", true));
@@ -103,19 +112,19 @@ public class AdUnitSuccessorTest {
     public void testVideoParametersCreation() {
 
         //given
-        VideoAdUnit videoAdUnit = new VideoAdUnit("123456", 320, 50, VideoAdUnit.PlacementType.IN_BANNER);
+        VideoAdUnit videoAdUnit = new VideoAdUnit("123456", 320, 50);
         VideoInterstitialAdUnit videoInterstitialAdUnit = new VideoInterstitialAdUnit("123456");
         RewardedVideoAdUnit rewardedVideoAdUnit = new RewardedVideoAdUnit("123456");
 
         List<VideoBaseAdUnit> videoBaseAdUnitList = Arrays.asList(videoAdUnit, videoInterstitialAdUnit, rewardedVideoAdUnit);
 
         for (VideoBaseAdUnit videoBaseAdUnit : videoBaseAdUnitList) {
-            checkVideoParametersHelper(videoBaseAdUnit);
+            setupAndCheckVideoParametersHelper(videoBaseAdUnit);
         }
 
     }
 
-    private void checkVideoParametersHelper(VideoBaseAdUnit videoBaseAdUnit) {
+    private void setupAndCheckVideoParametersHelper(VideoBaseAdUnit videoBaseAdUnit) {
 
         VideoAdUnit.Parameters parameters = new VideoAdUnit.Parameters();
 
@@ -128,13 +137,13 @@ public class AdUnitSuccessorTest {
         parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOn, Signals.PlaybackMethod.ClickToPlay));
         parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0, Signals.Protocols.VAST_3_0));
         parameters.setStartDelay(Signals.StartDelay.PreRoll);
+        parameters.setPlacement(Signals.Placement.InBanner);
 
         videoBaseAdUnit.parameters = parameters;
 
         //when
         VideoAdUnit.Parameters testedVideoParameters = videoBaseAdUnit.parameters;
 
-        //then
         List<Signals.Api> api = testedVideoParameters.getApi();
         Integer maxBitrate = testedVideoParameters.getMaxBitrate();
         Integer minBitrate = testedVideoParameters.getMinBitrate();
@@ -144,7 +153,9 @@ public class AdUnitSuccessorTest {
         List<Signals.PlaybackMethod> playbackMethod = testedVideoParameters.getPlaybackMethod();
         List<Signals.Protocols> protocols = testedVideoParameters.getProtocols();
         Signals.StartDelay startDelay = testedVideoParameters.getStartDelay();
+        Signals.Placement placement = testedVideoParameters.getPlacement();
 
+        //then
         assertEquals(2, api.size());
         assertTrue(api.contains(new Signals.Api(1)) && api.contains(new Signals.Api(2)));
         assertEquals(new Integer(1500), maxBitrate);
@@ -158,5 +169,6 @@ public class AdUnitSuccessorTest {
         assertEquals(2, protocols.size());
         assertTrue(protocols.contains(new Signals.Protocols(2)) && protocols.contains(new Signals.Protocols(3)));
         assertEquals(new Signals.StartDelay(0), startDelay);
+        assertEquals(new Signals.Placement(2), placement);
     }
 }
