@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
                 this, R.array.adSizeArray,
                 android.R.layout.simple_spinner_item);
         adSizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adSizeSpinner.setEnabled(false);
         adSizeSpinner.setAdapter(adSizeAdapter);
         adSizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             List<String> adSizes = Arrays.asList(getResources().getStringArray(R.array.adSizeArray));
