@@ -51,6 +51,7 @@ import com.mopub.mobileads.MoPubView;
 
 import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.BannerAdUnit;
+import org.prebid.mobile.BannerBaseAdUnit;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.InterstitialAdUnit;
 import org.prebid.mobile.LogUtil;
@@ -368,7 +369,15 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
 
         setupPB(host, accountId, storedResponse);
 
-        adUnit = new BannerAdUnit(configId, width, height);
+        BannerAdUnit adUnit = new BannerAdUnit(configId, width, height);
+
+        BannerBaseAdUnit.Parameters parameters = new BannerBaseAdUnit.Parameters();
+        parameters.setApi(Arrays.asList(Signals.Api.MRAID_2));
+//        parameters.setApi(Arrays.asList(new Signals.Api(5)));
+
+        adUnit.setParameters(parameters);
+
+        this.adUnit = adUnit;
 
     }
 

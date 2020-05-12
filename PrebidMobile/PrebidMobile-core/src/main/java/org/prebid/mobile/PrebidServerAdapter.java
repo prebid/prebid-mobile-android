@@ -556,25 +556,41 @@ class PrebidServerAdapter implements DemandAdapter {
                     imp.put("instl", 1);
                 }
 
-                if (adType.equals(AdType.INTERSTITIAL)) {
+                if (adType.equals(AdType.BANNER) || adType.equals(AdType.INTERSTITIAL)) {
+
                     JSONObject banner = new JSONObject();
                     JSONArray format = new JSONArray();
-                    Context context = PrebidMobile.getApplicationContext();
-                    if (context != null) {
-                        format.put(new JSONObject().put("w", context.getResources().getConfiguration().screenWidthDp).put("h", context.getResources().getConfiguration().screenHeightDp));
-                    } else {
-                        // Unlikely this is being called, if so, please check if you've set up the SDK properly
-                        throw new NoContextException();
+
+                    if (adType.equals(AdType.BANNER)) {
+                        for (AdSize size : requestParams.getAdSizes()) {
+                            format.put(new JSONObject().put("w", size.getWidth()).put("h", size.getHeight()));
+                        }
+                    } else if (adType.equals(AdType.INTERSTITIAL)) {
+                        Context context = PrebidMobile.getApplicationContext();
+                        if (context != null) {
+                            format.put(new JSONObject().put("w", context.getResources().getConfiguration().screenWidthDp).put("h", context.getResources().getConfiguration().screenHeightDp));
+                        } else {
+                            // Unlikely this is being called, if so, please check if you've set up the SDK properly
+                            throw new NoContextException();
+                        }
                     }
+
                     banner.put("format", format);
-                    imp.put("banner", banner);
-                } else if (adType.equals(AdType.BANNER)) {
-                    JSONObject banner = new JSONObject();
-                    JSONArray format = new JSONArray();
-                    for (AdSize size : requestParams.getAdSizes()) {
-                        format.put(new JSONObject().put("w", size.getWidth()).put("h", size.getHeight()));
+
+                    BannerBaseAdUnit.Parameters parameters = requestParams.getBannerParameters();
+                    if (parameters != null) {
+
+                        List<Integer> apiList = Util.convertCollection(parameters.getApi(), new Util.Function1<Integer, Signals.Api>() {
+                            @Override
+                            public Integer apply(Signals.Api element) {
+                                return element.value;
+                            }
+                        });
+
+                        banner.put("api", new JSONArray(apiList));
+
                     }
-                    banner.put("format", format);
+
                     imp.put("banner", banner);
                 } else if (adType.equals(AdType.NATIVE)) {
                     // add native request

@@ -69,10 +69,10 @@ public class Signals {
         public static Api ORMMA = new Api(4);
 
         /** MRAID-2 */
-        public static Api MARAID_2 = new Api(5);
+        public static Api MRAID_2 = new Api(5);
 
         /** MRAID-3 */
-        public static Api MARAID_3 = new Api(6);
+        public static Api MRAID_3 = new Api(6);
 
         public Api(int value) {
             super(value);

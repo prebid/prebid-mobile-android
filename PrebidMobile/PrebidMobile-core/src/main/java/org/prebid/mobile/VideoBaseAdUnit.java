@@ -40,7 +40,10 @@ public abstract class VideoBaseAdUnit extends AdUnit {
     }
 
     //Parameters class
-    /// Describes an [OpenRTB](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf) video object
+
+    /**
+     * Describes an <a href="https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf">OpenRTB</a> video object
+     */
     public static class Parameters {
 
         /**
