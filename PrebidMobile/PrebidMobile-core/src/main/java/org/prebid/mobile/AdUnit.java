@@ -24,7 +24,6 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -160,49 +159,6 @@ public abstract class AdUnit {
             listener.onComplete(ResultCode.INVALID_AD_OBJECT);
         }
 
-    }
-
-
-    /**
-     * @param key parameter will be omitted
-     * @see TargetingParams#addUserKeyword(String)
-     * @deprecated Please migrate to - TargetingParams.addUserKeyword(String)
-     */
-    @Deprecated
-    public void addUserKeyword(String key, String keyword) {
-        if (!TextUtils.isEmpty(keyword)) {
-            TargetingParams.addUserKeyword(keyword);
-        }
-    }
-
-    /**
-     * @param key parameter will be omitted
-     * @see TargetingParams#addUserKeywords(Set)
-     * @deprecated Please migrate to - TargetingParams.addUserKeywords(Set)
-     */
-    @Deprecated
-    public void addUserKeywords(String key, String[] keywords) {
-        if (keywords.length > 0) {
-            TargetingParams.addUserKeywords(new HashSet<>(Arrays.asList(keywords)));
-        }
-    }
-
-    /**
-     * @see TargetingParams#removeUserKeyword(String)
-     * @deprecated Please migrate to - TargetingParams.removeUserKeyword(String)
-     */
-    @Deprecated
-    public void removeUserKeyword(String keyword) {
-        TargetingParams.removeUserKeyword(keyword);
-    }
-
-    /**
-     * @see TargetingParams#clearUserKeywords()
-     * @deprecated Please migrate to - TargetingParams.clearUserKeywords()
-     */
-    @Deprecated
-    public void clearUserKeywords() {
-        TargetingParams.clearUserKeywords();
     }
 
     // MARK: - adunit context data aka inventory data (imp[].ext.context.data)

@@ -24,7 +24,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
@@ -33,8 +32,6 @@ import android.widget.FrameLayout;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.prebid.mobile.addendum.AdViewUtils;
-import org.prebid.mobile.addendum.PbFindSizeError;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -117,28 +114,6 @@ public class Util {
                 }
             }, 50);
         }
-    }
-
-    /**
-     * @see AdViewUtils#findPrebidCreativeSize(View, AdViewUtils.PbFindSizeListener)
-     * @deprecated Please migrate to - AdViewUtils.findPrebidCreativeSize(View, AdViewUtils.PbFindSizeListener)
-     */
-    @Deprecated
-    public static void findPrebidCreativeSize(@Nullable View adView, final CreativeSizeCompletionHandler completionHandler) {
-        AdViewUtils.findPrebidCreativeSize(adView, new AdViewUtils.PbFindSizeListener() {
-            @Override
-            public void success(int width, int height) {
-                completionHandler.onSize(new CreativeSize(width, height));
-
-            }
-
-            @Override
-            public void failure(@NonNull PbFindSizeError error) {
-                LogUtil.w("Missing failure handler, please migrate to - Util.findPrebidCreativeSize(View, CreativeSizeResultHandler)");
-                completionHandler.onSize(null); // backwards compatibility
-            }
-        });
-
     }
 
     @NonNull
@@ -567,62 +542,4 @@ public class Util {
         return result;
     }
 
-    public interface CreativeSizeCompletionHandler {
-        void onSize(@Nullable CreativeSize size);
-    }
-
-    /**
-     * Utility Size class
-     */
-    @Deprecated
-    public static class CreativeSize {
-        private int width;
-        private int height;
-
-        /**
-         * Creates an ad size object with width and height as specified
-         *
-         * @param width  width of the ad container
-         * @param height height of the ad container
-         */
-        public CreativeSize(int width, int height) {
-            this.width = width;
-            this.height = height;
-        }
-
-        /**
-         * Returns the width of the ad container
-         *
-         * @return width
-         */
-        public int getWidth() {
-            return width;
-        }
-
-        /**
-         * Returns the height of the ad container
-         *
-         * @return height
-         */
-        public int getHeight() {
-            return height;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            CreativeSize adSize = (CreativeSize) o;
-
-            if (width != adSize.width) return false;
-            return height == adSize.height;
-        }
-
-        @Override
-        public int hashCode() {
-            String size = width + "x" + height;
-            return size.hashCode();
-        }
-    }
 }
