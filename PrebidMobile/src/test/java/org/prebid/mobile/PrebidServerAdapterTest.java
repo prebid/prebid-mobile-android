@@ -1136,6 +1136,39 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
+    public void testPbsDebug() throws Exception {
+        pbsDebugHelper(true, 1);
+        pbsDebugHelper(false, null);
+
+    }
+
+    private void pbsDebugHelper(boolean pbsDebug, @Nullable Integer expectedTest) throws Exception {
+        //given
+        PrebidMobile.setPbsDebug(pbsDebug);
+
+        //when
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+
+        RequestParams requestParams = new RequestParams("67890", AdType.INTERSTITIAL, sizes);
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        @SuppressWarnings("unchecked")
+        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+
+        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+        Integer test = (Integer) postData.opt("test");
+
+        //then
+        assertEquals(expectedTest, test);
+    }
+
+    @Test
     public void testVideoAdUnit() throws Exception {
         //given
         PrebidMobile.setPrebidServerAccountId("12345");

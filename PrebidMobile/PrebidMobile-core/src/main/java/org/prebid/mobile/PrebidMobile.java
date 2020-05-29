@@ -34,6 +34,8 @@ public class PrebidMobile {
     @Nullable
     private static String storedAuctionResponse = "";
 
+    private static boolean pbsDebug = false;
+
     @NonNull
     private static final Map<String, String> storedBidResponses = new LinkedHashMap<>();
 
@@ -118,5 +120,13 @@ public class PrebidMobile {
     @NonNull
     static Map<String, String> getStoredBidResponses() {
         return storedBidResponses;
+    }
+
+    public static boolean getPbsDebug() {
+        return pbsDebug;
+    }
+
+    public static void setPbsDebug(boolean pbsDebug) {
+        PrebidMobile.pbsDebug = pbsDebug;
     }
 }
