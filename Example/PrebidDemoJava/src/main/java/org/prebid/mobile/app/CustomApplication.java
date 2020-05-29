@@ -25,7 +25,6 @@ import android.webkit.WebView;
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
 
-import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
 
 import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
@@ -42,8 +41,7 @@ public class CustomApplication extends Application {
         MoPub.initializeSdk(this, sdkConfiguration, null);
         //set Prebid Mobile global Settings
         //region PrebidMobile API
-        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
-        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID);
+
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(getApplicationContext());
         WebView obj = new WebView(this);

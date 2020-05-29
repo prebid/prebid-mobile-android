@@ -60,7 +60,7 @@ public class DemandRequestBuilder {
             object.put("device", getOpenRtbDevice());
 
             Boolean isSubjectToGDPR = TargetingParams.isSubjectToGDPR();
-            if (isSubjectToGDPR != null && isSubjectToGDPR) {
+            if (Boolean.TRUE.equals(isSubjectToGDPR)) {
                 object.put("regs", getOpenRtbRegs());
             }
 
@@ -227,7 +227,7 @@ public class DemandRequestBuilder {
 
         boolean gdpr = false;
         Boolean isSubjectToGDPR = TargetingParams.isSubjectToGDPR();
-        if (isSubjectToGDPR != null && isSubjectToGDPR) {
+        if (Boolean.TRUE.equals(isSubjectToGDPR)) {
             gdpr = true;
         }
 
@@ -262,7 +262,7 @@ public class DemandRequestBuilder {
 
 
         Boolean isSubjectToGDPR = TargetingParams.isSubjectToGDPR();
-        if (isSubjectToGDPR != null && isSubjectToGDPR) {
+        if (Boolean.TRUE.equals(isSubjectToGDPR)) {
             String consentString = TargetingParams.getGDPRConsentString();
 
             if (!TextUtils.isEmpty(consentString)) {

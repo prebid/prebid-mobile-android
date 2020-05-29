@@ -14,14 +14,37 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile;
+package org.prebid.mobile.addendum;
 
-import android.support.annotation.NonNull;
+import java.util.LinkedList;
+import java.util.Queue;
 
-public class VideoInterstitialAdUnit extends VideoBaseAdUnit {
+public class LimitedQueueContainer<T> {
+    private Queue<T> list = new LinkedList<>();
+    private final int limit;
 
-    public VideoInterstitialAdUnit(@NonNull String configId) {
-        super(configId, AdType.VIDEO_INTERSTITIAL);
+    public LimitedQueueContainer(int limit) {
+        if (limit < 0) {
+            throw new IllegalArgumentException("Illegal Limit:" + limit);
+        }
+
+        this.limit = limit;
     }
 
+    void add(T t) {
+
+        list.add(t);
+
+        if (list.size() > limit) {
+            list.poll();
+        }
+    }
+
+    boolean isFull() {
+        return list.size() == limit;
+    }
+
+    Queue<T> getList() {
+        return list;
+    }
 }

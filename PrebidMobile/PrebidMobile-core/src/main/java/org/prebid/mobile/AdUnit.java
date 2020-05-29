@@ -92,7 +92,6 @@ public abstract class AdUnit {
             }
         }
 
-        Integer videoPlacement = null;
         HashSet<AdSize> sizes = null;
         if (adType == AdType.BANNER) {
             sizes = ((BannerAdUnit) this).getSizes();
@@ -115,7 +114,6 @@ public abstract class AdUnit {
                 }
             }
 
-            videoPlacement = videoAdUnit.getType().getValue();
         }
         AdSize minSizePerc = null;
         if (this instanceof InterstitialAdUnit) {
@@ -138,9 +136,16 @@ public abstract class AdUnit {
             listener.onComplete(ResultCode.INVALID_CONTEXT);
             return;
         }
+
+        VideoBaseAdUnit.Parameters parameters = null;
+        if (this instanceof VideoBaseAdUnit) {
+            VideoBaseAdUnit videoBaseAdUnit = (VideoBaseAdUnit) this;
+            parameters = videoBaseAdUnit.parameters;
+        }
+
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
-            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, videoPlacement, pbAdSlot);
+            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, parameters, pbAdSlot);
             if (this.adType.equals(AdType.NATIVE)) {
                 requestParams.setNativeRequestParams(((NativeAdUnit) this).params);
             }

@@ -16,15 +16,15 @@
 
 package org.prebid.mobile.app;
 
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -69,8 +69,6 @@ public class MoPubBannerTest {
     public void testRubiconMoPubWithoutAutoRefreshAndSize300x250() throws Exception {
         PrebidMobile.setPrebidServerHost(Host.RUBICON);
         PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
-        Constants.PBS_CONFIG_ID_300x250 = Constants.PBS_CONFIG_ID_300x250_RUBICON;
-        Constants.DFP_BANNER_ADUNIT_ID_300x250 = Constants.MOPUB_BANNER_ADUNIT_ID_300x250_RUBICON;
 
         onView(withId(R.id.adServerSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("MoPub"))).perform(click());
@@ -88,8 +86,8 @@ public class MoPubBannerTest {
     public void testMoPubWithoutAutoRefreshAndSize320x50() throws Exception {
         onView(withId(R.id.adServerSpinner)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("MoPub"))).perform(click());
-        onView(withId(R.id.adSizeSpinner)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is("320x50"))).perform(click());
+//        onView(withId(R.id.adSizeSpinner)).perform(click());
+//        onData(allOf(is(instanceOf(String.class)), is("320x50"))).perform(click());
         onView(withId(R.id.autoRefreshInput)).perform(typeText("15000"));
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);

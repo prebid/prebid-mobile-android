@@ -47,7 +47,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(AndroidJUnit4.class)
 public class DFPBannerComplexTest {
     @Rule
-    public ActivityTestRule<DemoActivity> m = new ActivityTestRule<>(DemoActivity.class);
+    public ActivityTestRule<TestActivity> m = new ActivityTestRule<>(TestActivity.class);
 
     //30x250 -> 728x90
     @Test
@@ -57,8 +57,9 @@ public class DFPBannerComplexTest {
 
         PrebidMobile.setPrebidServerHost(Host.RUBICON);
         PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
+        PrebidMobile.setStoredAuctionResponse(Constants.PBS_STORED_RESPONSE_300x250_RUBICON);
 
-        DemoActivity demoActivity = m.getActivity();
+        TestActivity activity = m.getActivity();
 
         final IntegerWrapper firstTransactionCount = new IntegerWrapper();
         final IntegerWrapper secondTransactionCount = new IntegerWrapper();
@@ -67,15 +68,15 @@ public class DFPBannerComplexTest {
         final int screenshotDelayMillis = 3_000;
         final int transactionFailDelayMillis = 3_000;
 
-        final FrameLayout adFrame = demoActivity.findViewById(R.id.adFrame);
-        demoActivity.runOnUiThread(new Runnable() {
+        final FrameLayout adFrame = activity.findViewById(R.id.adFrame);
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 adFrame.removeAllViews();
             }
         });
 
-        final PublisherAdView dfpAdView = new PublisherAdView(demoActivity);
+        final PublisherAdView dfpAdView = new PublisherAdView(activity);
         //Programmatic fix
         dfpAdView.setAdUnitId("/5300653/test_adunit_pavliuchyk_300x250_puc_ucTagData_prebid-server.rubiconproject.com");
         dfpAdView.setAdSizes(new AdSize(300, 250));
@@ -86,7 +87,7 @@ public class DFPBannerComplexTest {
         dfpAdView.setAdSizes(new AdSize(300, 250), new AdSize(728, 90));
         */
 
-        final BannerAdUnit bannerAdUnit = new BannerAdUnit("1001-1", 300, 250);
+        final BannerAdUnit bannerAdUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_RUBICON, 300, 250);
 
         final PublisherAdRequest request = new PublisherAdRequest.Builder().build();
         final OnCompleteListener completeListener = new OnCompleteListener() {
@@ -109,7 +110,8 @@ public class DFPBannerComplexTest {
                         firstTransactionCount.value = -1;
                         //TODO make a call
 
-                        bannerAdUnit.addAdditionalSize(728, 90);
+                        //TODO PrebidMobile.setStoredAuctionResponse(728x90);
+//                        bannerAdUnit.addAdditionalSize(728, 90);
                         bannerAdUnit.fetchDemand(request, completeListener);
                     } else if (secondTransactionCount.getValue() != -1) {
                         secondTransactionCount.value = -1;
@@ -212,7 +214,7 @@ public class DFPBannerComplexTest {
             }
         });
 
-        demoActivity.runOnUiThread(new Runnable() {
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 adFrame.addView(dfpAdView);

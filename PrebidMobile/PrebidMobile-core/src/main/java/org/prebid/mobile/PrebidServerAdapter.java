@@ -133,11 +133,12 @@ class PrebidServerAdapter implements DemandAdapter {
                 conn.setDoInput(true);
                 conn.setRequestProperty("Content-Type", "application/json");
                 conn.setRequestProperty("Accept", "application/json");
-                String existingCookie = getExistingCookie();
-                if (existingCookie != null) {
-                    conn.setRequestProperty(PrebidServerSettings.COOKIE_HEADER, existingCookie);
-                } // todo still pass cookie if limit ad tracking?
-
+                if(canIAccessDeviceData()) {
+                    String existingCookie = getExistingCookie();
+                    if (existingCookie != null) {
+                        conn.setRequestProperty(PrebidServerSettings.COOKIE_HEADER, existingCookie);
+                    } // todo still pass cookie if limit ad tracking?
+                }
                 conn.setRequestMethod("POST");
                 conn.setConnectTimeout(PrebidMobile.getTimeoutMillis());
 
@@ -459,11 +460,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
 
         private JSONObject getPostData() throws NoContextException {
-            Context context = PrebidMobile.getApplicationContext();
-            if (context != null) {
-                AdvertisingIDUtil.retrieveAndSetAAID(context);
-                PrebidServerSettings.update(context);
-            }
+
             JSONObject postData = new JSONObject();
             try {
                 String id = UUID.randomUUID().toString();
@@ -513,7 +510,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     JSONObject bids = new JSONObject();
                     cache.put("bids", bids);
 
-                    if (adType.equals(AdType.VIDEO) || adType.equals(AdType.VIDEO_INTERSTITIAL)) {
+                    if (adType.equals(AdType.VIDEO) || adType.equals(AdType.VIDEO_INTERSTITIAL) || adType.equals(AdType.REWARDED_VIDEO)) {
                         cache.put("vastxml", bids);
                     }
 
@@ -555,12 +552,11 @@ class PrebidServerAdapter implements DemandAdapter {
                 JSONObject ext = new JSONObject();
                 imp.put("id", "PrebidMobile");
                 imp.put("secure", 1);
-                if (adType.equals(AdType.INTERSTITIAL) || adType.equals(AdType.VIDEO_INTERSTITIAL)) {
+                if (adType.equals(AdType.INTERSTITIAL) || adType.equals(AdType.VIDEO_INTERSTITIAL) || adType.equals(AdType.REWARDED_VIDEO)) {
                     imp.put("instl", 1);
                 }
 
                 if (adType.equals(AdType.INTERSTITIAL)) {
-                    imp.put("instl", 1);
                     JSONObject banner = new JSONObject();
                     JSONArray format = new JSONArray();
                     Context context = PrebidMobile.getApplicationContext();
@@ -686,24 +682,65 @@ class PrebidServerAdapter implements DemandAdapter {
                     nativeObj.put(NativeRequestParams.REQUEST, request.toString());
                     nativeObj.put(NativeRequestParams.VERSION, NativeRequestParams.SUPPORTED_VERSION);
                     imp.put(NativeRequestParams.NATIVE, nativeObj);
-                } else if (adType.equals(AdType.VIDEO) || adType.equals(AdType.VIDEO_INTERSTITIAL)) {
+                } else if (adType.equals(AdType.VIDEO) || adType.equals(AdType.VIDEO_INTERSTITIAL) || adType.equals(AdType.REWARDED_VIDEO)) {
 
                     JSONObject video = new JSONObject();
-                    video.put("mimes", new JSONArray().put("video/mp4"));
-                    video.put("linearity", 1);
-                    video.put("playbackmethod", new JSONArray().put(2));
+                    Integer placementValue = null;
 
-                    Integer placement = null;
+                    VideoBaseAdUnit.Parameters parameters = requestParams.getVideoParameters();
+                    if (parameters != null) {
 
+                        List<Integer> apiList = Util.convertCollection(parameters.getApi(), new Util.Function1<Integer, Signals.Api>() {
+                            @Override
+                            public Integer apply(Signals.Api element) {
+                                return element.value;
+                            }
+                        });
+
+                        List<Integer> playbackMethodList = Util.convertCollection(parameters.getPlaybackMethod(), new Util.Function1<Integer, Signals.PlaybackMethod>() {
+                            @Override
+                            public Integer apply(Signals.PlaybackMethod element) {
+                                return element.value;
+                            }
+                        });
+
+                        List<Integer> protocolList = Util.convertCollection(parameters.getProtocols(), new Util.Function1<Integer, Signals.Protocols>() {
+                            @Override
+                            public Integer apply(Signals.Protocols element) {
+                                return element.value;
+                            }
+                        });
+
+                        Integer startDelayValue = null;
+                        Signals.StartDelay startDelay = parameters.getStartDelay();
+                        if (startDelay != null) {
+                            startDelayValue = startDelay.value;
+                        }
+
+                        Signals.Placement placement = parameters.getPlacement();
+                        if (placement != null) {
+                            placementValue = placement.value;
+                        }
+
+                        video.put("api", new JSONArray(apiList));
+                        video.put("maxbitrate", parameters.getMaxBitrate());
+                        video.put("minbitrate", parameters.getMinBitrate());
+                        video.put("maxduration", parameters.getMaxDuration());
+                        video.put("minduration", parameters.getMinDuration());
+                        video.put("mimes", new JSONArray(parameters.getMimes()));
+                        video.put("playbackmethod", new JSONArray(playbackMethodList));
+                        video.put("protocols", new JSONArray(protocolList));
+                        video.put("startdelay", startDelayValue);
+                    }
+
+                    Integer placementValueDefault = null;
                     if (adType.equals(AdType.VIDEO)) {
                         for (AdSize size : requestParams.getAdSizes()) {
                             video.put("w", size.getWidth());
                             video.put("h", size.getHeight());
                         }
 
-                        placement = requestParams.getVideoPlacement();
-
-                    } else if (adType.equals(AdType.VIDEO_INTERSTITIAL)) {
+                    } else if (adType.equals(AdType.VIDEO_INTERSTITIAL) || adType.equals(AdType.REWARDED_VIDEO)) {
                         Context context = PrebidMobile.getApplicationContext();
 
                         if (context != null) {
@@ -711,10 +748,16 @@ class PrebidServerAdapter implements DemandAdapter {
                             video.put("h", context.getResources().getConfiguration().screenHeightDp);
                         }
 
-                        placement = 5;
+                        placementValueDefault = 5;
                     }
 
-                    video.put("placement", placement);
+                    if (placementValue == null) {
+                        placementValue = placementValueDefault;
+                    }
+
+                    video.put("placement", placementValue);
+
+                    video.put("linearity", 1);
 
                     imp.put("video", video);
                 }
@@ -755,6 +798,10 @@ class PrebidServerAdapter implements DemandAdapter {
                     }
                 }
 
+                if (adType.equals(AdType.REWARDED_VIDEO)) {
+                    prebid.put("is_rewarded_inventory", 1);
+                }
+
                 imp.put("ext", ext);
 
                 impConfigs.put(imp);
@@ -779,9 +826,11 @@ class PrebidServerAdapter implements DemandAdapter {
                 }
                 // limited ad tracking
                 device.put(PrebidServerSettings.REQUEST_LMT, AdvertisingIDUtil.isLimitAdTracking() ? 1 : 0);
-                if (!AdvertisingIDUtil.isLimitAdTracking() && !TextUtils.isEmpty(AdvertisingIDUtil.getAAID())) {
-                    // put ifa
-                    device.put(PrebidServerSettings.REQUEST_IFA, AdvertisingIDUtil.getAAID());
+                if(canIAccessDeviceData()) {
+                    if (!AdvertisingIDUtil.isLimitAdTracking() && !TextUtils.isEmpty(AdvertisingIDUtil.getAAID())) {
+                        // put ifa
+                        device.put(PrebidServerSettings.REQUEST_IFA, AdvertisingIDUtil.getAAID());
+                    }
                 }
 
                 // os
@@ -981,7 +1030,12 @@ class PrebidServerAdapter implements DemandAdapter {
                 user.put("keywords", globalUserKeywordString);
 
                 JSONObject ext = new JSONObject();
-                ext.put("consent", TargetingParams.getGDPRConsentString());
+
+                Boolean isSubjectToGDPR = TargetingParams.isSubjectToGDPR();
+                if (Boolean.TRUE.equals(isSubjectToGDPR)) {
+                    ext.put("consent", TargetingParams.getGDPRConsentString());
+                }
+
                 ext.put("data", Util.toJson(TargetingParams.getUserDataDictionary()));
                 user.put("ext", ext);
 
@@ -1001,7 +1055,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     regs.put("coppa", 1);
                 }
 
-                if (isSubjectToGDPR != null && isSubjectToGDPR) {
+                if (Boolean.TRUE.equals(isSubjectToGDPR)) {
                     ext.put("gdpr", 1);
 
                 }
@@ -1014,6 +1068,30 @@ class PrebidServerAdapter implements DemandAdapter {
                 LogUtil.d("PrebidServerAdapter getRegsObject() " + e.getMessage());
             }
             return regs;
+        }
+
+        private boolean canIAccessDeviceData() {
+            //fetch advertising identifier based TCF 2.0 Purpose1 value
+            //truth table
+            /*
+                                 deviceAccessConsent=true   deviceAccessConsent=false  deviceAccessConsent undefined
+            gdprApplies=false        Yes, read IDFA             No, don’t read IDFA           Yes, read IDFA
+            gdprApplies=true         Yes, read IDFA             No, don’t read IDFA           No, don’t read IDFA
+            gdprApplies=undefined    Yes, read IDFA             No, don’t read IDFA           Yes, read IDFA
+            */
+
+            boolean setDeviceId = false;
+
+            Boolean gdprApplies = TargetingParams.isSubjectToGDPR();
+            Boolean deviceAccessConsent = TargetingParams.getDeviceAccessConsent();
+
+            if((deviceAccessConsent == null && (gdprApplies == null || Boolean.FALSE.equals(gdprApplies)))
+                    || Boolean.TRUE.equals(deviceAccessConsent)) {
+
+                setDeviceId = true;
+            }
+
+            return setDeviceId;
         }
 
         private static class NoContextException extends Exception {
