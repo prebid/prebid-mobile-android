@@ -24,6 +24,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
@@ -55,6 +56,7 @@ public class Util {
     static final String MOPUB_BANNER_VIEW_CLASS = "com.mopub.mobileads.MoPubView";
     static final String MOPUB_INTERSTITIAL_CLASS = "com.mopub.mobileads.MoPubInterstitial";
     static final String DFP_AD_REQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
+    static final String DFP_AD_REQUEST_BUILDER_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest$Builder";
     private static final Random RANDOM = new Random();
     private static final HashSet<String> reservedKeys;
     private static final int MoPubQueryStringLimit = 4000;
@@ -412,7 +414,7 @@ public class Util {
         if (adObj.getClass() == getClassFromString(MOPUB_BANNER_VIEW_CLASS)
                 || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)
                 || adObj.getClass() == getClassFromString(DFP_AD_REQUEST_CLASS)
-
+                || adObj.getClass() == getClassFromString(DFP_AD_REQUEST_BUILDER_CLASS)
                 || adObj.getClass() == HashMap.class)
             return true;
         return false;
@@ -425,7 +427,10 @@ public class Util {
             handleMoPubKeywordsUpdate(bids, adObj);
         } else if (adObj.getClass() == getClassFromString(DFP_AD_REQUEST_CLASS)) {
             handleDFPCustomTargetingUpdate(bids, adObj);
-        } else if (adObj.getClass() == HashMap.class) {
+        } else if (adObj.getClass() == getClassFromString(DFP_AD_REQUEST_BUILDER_CLASS)) {
+            handleDFPBuilderCustomTargetingUpdate(bids, adObj);
+        }
+        else if (adObj.getClass() == HashMap.class) {
             if (bids != null && !bids.isEmpty()) {
                 ((HashMap) adObj).putAll(bids);
             }
@@ -468,6 +473,15 @@ public class Util {
         }
     }
 
+    private static void handleDFPBuilderCustomTargetingUpdate(HashMap<String, String> bids, Object adObj) {
+        removeUsedCustomTargetingForDFPBuilder(adObj);
+        if (bids != null && !bids.isEmpty()) {
+            for (String key : bids.keySet()) {
+                Util.callMethodOnObject(adObj, "addCustomTargeting", key, bids.get(key));
+            }
+        }
+    }
+
     private static void addReservedKeys(String key) {
         synchronized (reservedKeys) {
             reservedKeys.add(key);
@@ -505,6 +519,10 @@ public class Util {
                 bundle.remove(key);
             }
         }
+    }
+
+    private static void removeUsedCustomTargetingForDFPBuilder(Object adRequestObj) {
+        // TODO: How to remove stuff from the custom targeting map?
     }
 
     static <E, U> void addValue(Map<E, Set<U>> map, E key, U value) {
