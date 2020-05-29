@@ -786,7 +786,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
         Integer gdprSubject = null;
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
         try {
             gdprSubject = postData.getJSONObject("regs").getJSONObject("ext").getInt("gdpr");
         } catch (Exception ex) {
@@ -806,7 +806,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
         Object gdprSubject = null;
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
         try {
             gdprSubject = postData.opt("regs");
         } catch (Exception ex) {
@@ -826,7 +826,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
         Object gdprSubject = null;
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
         try {
             gdprSubject = postData.optJSONObject("regs");
         } catch (Exception ex) {
@@ -849,7 +849,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Integer gdprSubject = null;
         String gdprConsent = null;
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
         try {
             gdprSubject = postData.getJSONObject("regs").getJSONObject("ext").getInt("gdpr");
             gdprConsent = postData.getJSONObject("user").getJSONObject("ext").getString("consent");
@@ -873,7 +873,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Object gdprSubject = null;
         Object gdprConsent = null;
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
         try {
             gdprSubject = postData.opt("regs");
             gdprConsent = postData.getJSONObject("user").opt("ext");
@@ -903,7 +903,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
         String ifa = null;
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
         try {
             ifa = postData.getJSONObject("device").getString("ifa");
 
@@ -962,7 +962,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         JSONObject device = null;
         Object ifa = null;
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
         try {
             device = postData.optJSONObject("device");
 
@@ -1271,7 +1271,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.VIDEO, sizes, null, null, null, parameters);
+        RequestParams requestParams = new RequestParams("67890", AdType.VIDEO, sizes, null, null, null, parameters, null);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
