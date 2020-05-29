@@ -474,7 +474,6 @@ public class Util {
     }
 
     private static void handleDFPBuilderCustomTargetingUpdate(HashMap<String, String> bids, Object adObj) {
-        removeUsedCustomTargetingForDFPBuilder(adObj);
         if (bids != null && !bids.isEmpty()) {
             for (String key : bids.keySet()) {
                 Util.callMethodOnObject(adObj, "addCustomTargeting", key, bids.get(key));
@@ -519,10 +518,6 @@ public class Util {
                 bundle.remove(key);
             }
         }
-    }
-
-    private static void removeUsedCustomTargetingForDFPBuilder(Object adRequestObj) {
-        // TODO: How to remove stuff from the custom targeting map?
     }
 
     static <E, U> void addValue(Map<E, Set<U>> map, E key, U value) {
