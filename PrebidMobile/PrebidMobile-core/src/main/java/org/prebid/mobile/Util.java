@@ -24,7 +24,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
@@ -474,9 +473,11 @@ public class Util {
     }
 
     private static void handleDFPBuilderCustomTargetingUpdate(HashMap<String, String> bids, Object adObj) {
+        removeUsedCustomTargetingForDFP(adObj);
         if (bids != null && !bids.isEmpty()) {
             for (String key : bids.keySet()) {
                 Util.callMethodOnObject(adObj, "addCustomTargeting", key, bids.get(key));
+                addReservedKeys(key);
             }
         }
     }

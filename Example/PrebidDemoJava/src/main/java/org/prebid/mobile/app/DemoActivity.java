@@ -83,6 +83,7 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
     AdUnit adUnit;
     ResultCode resultCode;
 
+    //Used by UI tests
     PublisherAdRequest request;
     MoPubView adView;
 
@@ -278,7 +279,6 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         nativeAdView.setAdSizes(AdSize.FLUID);
         adFrame.addView(nativeAdView);
         final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        request = builder.build();
         NativeAdUnit nativeAdUnit = (NativeAdUnit) adUnit;
         nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
         nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
@@ -324,12 +324,13 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         nativeAdUnit.addAsset(cta);
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         nativeAdUnit.setAutoRefreshPeriodMillis(millis);
-        nativeAdUnit.fetchDemand(request, new OnCompleteListener() {
+        nativeAdUnit.fetchDemand(builder, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
                 DemoActivity.this.resultCode = resultCode;
+
+                request = builder.build();
                 nativeAdView.loadAd(request);
-                DemoActivity.this.request = request;
                 refreshCount++;
             }
         });
@@ -445,14 +446,17 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         });
 
         final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        final PublisherAdRequest request = builder.build();
+
         //region PrebidMobile Mobile API 1.0 usage
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
-        adUnit.fetchDemand(request, new OnCompleteListener() {
+        adUnit.fetchDemand(builder, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
+
                 DemoActivity.this.resultCode = resultCode;
+
+                PublisherAdRequest request = builder.build();
                 amBanner.loadAd(request);
                 refreshCount++;
             }
@@ -622,12 +626,13 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
     private void loadAMInterstitial() {
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        request = builder.build();
-        adUnit.fetchDemand(request, new OnCompleteListener() {
+        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        adUnit.fetchDemand(builder, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
                 DemoActivity.this.resultCode = resultCode;
+
+                PublisherAdRequest request = builder.build();
                 amInterstitial.loadAd(request);
                 refreshCount++;
             }
@@ -738,12 +743,13 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
     //Load
     private void loadAMRewardedVideo() {
 
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        request = builder.build();
-        adUnit.fetchDemand(request, new OnCompleteListener() {
+        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        adUnit.fetchDemand(builder, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
                 DemoActivity.this.resultCode = resultCode;
+
+                PublisherAdRequest request = builder.build();
                 amRewardedAd.loadAd(request, new RewardedAdLoadCallback() {
                     @Override
                     public void onRewardedAdLoaded() {

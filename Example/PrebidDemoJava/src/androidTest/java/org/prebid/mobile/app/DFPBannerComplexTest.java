@@ -17,6 +17,9 @@
 package org.prebid.mobile.app;
 
 import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -28,10 +31,13 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.LogUtil;
@@ -40,14 +46,137 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
 
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
+import javax.annotation.Nullable;
+
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 public class DFPBannerComplexTest {
     @Rule
-    public ActivityTestRule<TestActivity> m = new ActivityTestRule<>(TestActivity.class);
+    public ActivityTestRule<TestActivity> testActivityRule = new ActivityTestRule<>(TestActivity.class);
+
+    MockWebServer mockServer;
+    Handler handler;
+
+    @Before
+    public void setUp() {
+        handler = new Handler(Looper.getMainLooper());
+        mockServer = new MockWebServer();
+
+
+        try {
+            mockServer.start();
+        } catch (IOException e) {
+            fail("Mock server start failed.");
+        }
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        mockServer.shutdown();
+        mockServer = null;
+    }
+
+
+    @Test
+    public void testPublisherAdRequestBuilder() throws Exception {
+
+        //given
+        HttpUrl httpUrl = mockServer.url("/");
+        Host.CUSTOM.setHostUrl(httpUrl.toString());
+        PrebidMobile.setPrebidServerAccountId("1001");
+
+        mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
+                "  \"seatbid\": [\n" +
+                "    {\n" +
+                "      \"bid\": [\n" +
+                "        {\n" +
+                "          \"ext\": {\n" +
+                "            \"prebid\": {\n" +
+                "              \"targeting\": {\n" +
+                "                \"hb_env\": \"mobile-app\",\n" +
+                "                \"hb_cache_hostpath\": \"https://prebid-cache-europe.rubiconproject.com/cache\",\n" +
+                "                \"hb_size_rubicon\": \"300x250\",\n" +
+                "                \"hb_cache_id\": \"a2f41588-4727-425c-9ef0-3b382debef1e\",\n" +
+                "                \"hb_cache_path_rubicon\": \"/cache\",\n" +
+                "                \"hb_cache_host_rubicon\": \"prebid-cache-europe.rubiconproject.com\",\n" +
+                "                \"hb_pb\": \"1.20\",\n" +
+                "                \"hb_pb_rubicon\": \"1.20\",\n" +
+                "                \"hb_cache_id_rubicon\": \"a2f41588-4727-425c-9ef0-3b382debef1e\",\n" +
+                "                \"hb_cache_path\": \"/cache\",\n" +
+                "                \"hb_size\": \"300x250\",\n" +
+                "                \"hb_cache_hostpath_rubicon\": \"https://prebid-cache-europe.rubiconproject.com/cache\",\n" +
+                "                \"hb_env_rubicon\": \"mobile-app\",\n" +
+                "                \"hb_bidder\": \"rubicon\",\n" +
+                "                \"hb_bidder_rubicon\": \"rubicon\",\n" +
+                "                \"hb_cache_host\": \"prebid-cache-europe.rubiconproject.com\"\n" +
+                "              }\n" +
+                "            }\n" +
+                "          }\n" +
+                "        }\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}"));
+
+
+
+        final ReferenceWrapper<Bundle> customTargetingBundleWrapper = new ReferenceWrapper<>();
+
+        //when
+        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        AdUnit adUnit = new BannerAdUnit("1001-1", 300, 250);
+
+
+        adUnit.fetchDemand(builder, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+
+
+                PublisherAdRequest publisherAdRequest = builder.build();
+                Bundle customTargetingBundle = publisherAdRequest.getCustomTargeting();
+
+                customTargetingBundleWrapper.value = customTargetingBundle;
+            }
+        });
+
+        try {
+            Thread.sleep(1_000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //then
+        Bundle customTargetingBundle = customTargetingBundleWrapper.value;
+
+        assertEquals(16, customTargetingBundle.keySet().size());
+
+        assertEquals("mobile-app", customTargetingBundle.getString("hb_env"));
+        assertEquals("https://prebid-cache-europe.rubiconproject.com/cache", customTargetingBundle.getString("hb_cache_hostpath"));
+        assertEquals("300x250", customTargetingBundle.getString("hb_size_rubicon"));
+        assertEquals("a2f41588-4727-425c-9ef0-3b382debef1e", customTargetingBundle.getString("hb_cache_id"));
+        assertEquals("/cache", customTargetingBundle.getString("hb_cache_path_rubicon"));
+        assertEquals("prebid-cache-europe.rubiconproject.com", customTargetingBundle.getString("hb_cache_host_rubicon"));
+        assertEquals("1.20", customTargetingBundle.getString("hb_pb"));
+        assertEquals("1.20", customTargetingBundle.getString("hb_pb_rubicon"));
+        assertEquals("a2f41588-4727-425c-9ef0-3b382debef1e", customTargetingBundle.getString("hb_cache_id_rubicon"));
+        assertEquals("/cache", customTargetingBundle.getString("hb_cache_path"));
+        assertEquals("300x250", customTargetingBundle.getString("hb_size"));
+        assertEquals("https://prebid-cache-europe.rubiconproject.com/cache", customTargetingBundle.getString("hb_cache_hostpath_rubicon"));
+        assertEquals("mobile-app", customTargetingBundle.getString("hb_env_rubicon"));
+        assertEquals("rubicon", customTargetingBundle.getString("hb_bidder"));
+        assertEquals("rubicon", customTargetingBundle.getString("hb_bidder_rubicon"));
+        assertEquals("prebid-cache-europe.rubiconproject.com", customTargetingBundle.getString("hb_cache_host"));
+
+    }
 
     //30x250 -> 728x90
     @Test
@@ -59,7 +188,7 @@ public class DFPBannerComplexTest {
         PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
         PrebidMobile.setStoredAuctionResponse(Constants.PBS_STORED_RESPONSE_300x250_RUBICON);
 
-        TestActivity activity = m.getActivity();
+        TestActivity activity = testActivityRule.getActivity();
 
         final IntegerWrapper firstTransactionCount = new IntegerWrapper();
         final IntegerWrapper secondTransactionCount = new IntegerWrapper();
@@ -240,9 +369,16 @@ public class DFPBannerComplexTest {
 
     }
 
+    private static class ReferenceWrapper<T> {
+
+        @Nullable
+        T value = null;
+    }
+
     private static class IntegerWrapper {
         int value = 0;
 
+        //TODO remove getValue()
         public int getValue() {
             return value;
         }
