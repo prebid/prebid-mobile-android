@@ -269,6 +269,30 @@ public class AdManagerComplexTest {
     }
 
     @Test
+    public void testPublisherAdRequest() throws Exception {
+        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        builder.addCustomTargeting("key1", "value1");
+        builder.addCustomTargeting("key2", "value2");
+
+        PublisherAdRequest publisherAdRequest1 = builder.build();
+        Bundle bundle1 = publisherAdRequest1.getCustomTargeting();
+
+        assertEquals(2, bundle1.keySet().size());
+        assertEquals("value1", bundle1.getString("key1"));
+        assertEquals("value2", bundle1.getString("key2"));
+
+        bundle1.remove("key2");
+        assertEquals(1, bundle1.keySet().size());
+        assertEquals("value1", bundle1.getString("key1"));
+
+        PublisherAdRequest publisherAdRequest2 = builder.build();
+        Bundle bundle2 = publisherAdRequest2.getCustomTargeting();
+        assertEquals(1, bundle2.keySet().size());
+        assertEquals("value1", bundle2.getString("key1"));
+
+    }
+
+    @Test
     public void testPublisherAdRequestBuilderUseCase() throws Exception {
         //given
 
