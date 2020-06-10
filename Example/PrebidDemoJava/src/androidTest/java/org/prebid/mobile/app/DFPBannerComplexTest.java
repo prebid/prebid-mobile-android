@@ -70,8 +70,6 @@ public class DFPBannerComplexTest {
     public void setUp() {
         handler = new Handler(Looper.getMainLooper());
         mockServer = new MockWebServer();
-
-
         try {
             mockServer.start();
         } catch (IOException e) {
@@ -84,7 +82,6 @@ public class DFPBannerComplexTest {
         mockServer.shutdown();
         mockServer = null;
     }
-
 
     @Test
     public void testPublisherAdRequestBuilder() throws Exception {
@@ -127,14 +124,11 @@ public class DFPBannerComplexTest {
                 "  ]\n" +
                 "}"));
 
-
-
         final ReferenceWrapper<Bundle> customTargetingBundleWrapper = new ReferenceWrapper<>();
 
         //when
         final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
         AdUnit adUnit = new BannerAdUnit("1001-1", 300, 250);
-
 
         adUnit.fetchDemand(builder, new OnCompleteListener() {
             @Override
@@ -175,6 +169,101 @@ public class DFPBannerComplexTest {
         assertEquals("rubicon", customTargetingBundle.getString("hb_bidder"));
         assertEquals("rubicon", customTargetingBundle.getString("hb_bidder_rubicon"));
         assertEquals("prebid-cache-europe.rubiconproject.com", customTargetingBundle.getString("hb_cache_host"));
+
+    }
+
+    @Test
+    public void testPublisherAdRequestBuilderWithRefresh() throws Exception {
+
+        //given
+        HttpUrl httpUrl = mockServer.url("/");
+        Host.CUSTOM.setHostUrl(httpUrl.toString());
+        PrebidMobile.setPrebidServerAccountId("1001");
+
+        mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
+                "  \"seatbid\": [\n" +
+                "    {\n" +
+                "      \"bid\": [\n" +
+                "        {\n" +
+                "          \"ext\": {\n" +
+                "            \"prebid\": {\n" +
+                "              \"targeting\": {\n" +
+                "                \"hb_cache_id\": \"top_bid_1\",\n" +
+                "                \"key1\": \"value1\"\n" +
+                "              }\n" +
+                "            }\n" +
+                "          }\n" +
+                "        }\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}"));
+
+        mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
+                "  \"seatbid\": [\n" +
+                "    {\n" +
+                "      \"bid\": [\n" +
+                "        {\n" +
+                "          \"ext\": {\n" +
+                "            \"prebid\": {\n" +
+                "              \"targeting\": {\n" +
+                "                \"hb_cache_id\": \"top_bid_2\",\n" +
+                "                \"key5\": \"value5\"\n" +
+                "              }\n" +
+                "            }\n" +
+                "          }\n" +
+                "        }\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}"));
+
+        final ReferenceWrapper<Bundle> customTargetingBundleWrapper1 = new ReferenceWrapper<>();
+        final ReferenceWrapper<Bundle> customTargetingBundleWrapper2 = new ReferenceWrapper<>();
+        final IntegerWrapper requestCountWrapper = new IntegerWrapper();
+
+        //when
+        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        AdUnit adUnit = new BannerAdUnit("1001-1", 300, 250);
+        adUnit.setAutoRefreshPeriodMillis(30_001);
+
+        adUnit.fetchDemand(builder, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+
+                requestCountWrapper.value++;
+
+                PublisherAdRequest publisherAdRequest = builder.build();
+                Bundle customTargetingBundle = publisherAdRequest.getCustomTargeting();
+
+                if (requestCountWrapper.value == 1) {
+                    customTargetingBundleWrapper1.value = (Bundle)customTargetingBundle.clone();
+                } else if (requestCountWrapper.value == 2) {
+                    customTargetingBundleWrapper2.value = (Bundle)customTargetingBundle.clone();
+                }
+            }
+        });
+
+        try {
+            Thread.sleep(31_000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //then
+        Bundle customTargetingBundle1 = customTargetingBundleWrapper1.value;
+        Bundle customTargetingBundle2 = customTargetingBundleWrapper2.value;
+
+        assertEquals(2, requestCountWrapper.value);
+
+        assertEquals(2, customTargetingBundle1.keySet().size());
+        assertEquals("top_bid_1", customTargetingBundle1.getString("hb_cache_id"));
+        assertEquals("value1", customTargetingBundle1.getString("key1"));
+
+        assertEquals(2, customTargetingBundle2.keySet().size());
+        assertEquals(null, customTargetingBundle2.getString("key1"));
+        assertEquals("top_bid_2", customTargetingBundle2.getString("hb_cache_id"));
+        assertEquals("value5", customTargetingBundle2.getString("key5"));
 
     }
 

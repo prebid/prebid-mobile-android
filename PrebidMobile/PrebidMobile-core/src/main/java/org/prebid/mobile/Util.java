@@ -473,7 +473,9 @@ public class Util {
     }
 
     private static void handleDFPBuilderCustomTargetingUpdate(HashMap<String, String> bids, Object adObj) {
-        removeUsedCustomTargetingForDFP(adObj);
+        Object publisherAdRequest = Util.callMethodOnObject(adObj, "build");
+        removeUsedCustomTargetingForDFP(publisherAdRequest);
+
         if (bids != null && !bids.isEmpty()) {
             for (String key : bids.keySet()) {
                 Util.callMethodOnObject(adObj, "addCustomTargeting", key, bids.get(key));
