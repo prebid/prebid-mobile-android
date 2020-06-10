@@ -54,8 +54,8 @@ public class Util {
 
     static final String MOPUB_BANNER_VIEW_CLASS = "com.mopub.mobileads.MoPubView";
     static final String MOPUB_INTERSTITIAL_CLASS = "com.mopub.mobileads.MoPubInterstitial";
-    static final String DFP_AD_REQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
-    static final String DFP_AD_REQUEST_BUILDER_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest$Builder";
+    static final String AD_MANAGER_REQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
+    static final String AD_MANAGER_REQUEST_BUILDER_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest$Builder";
     private static final Random RANDOM = new Random();
     private static final HashSet<String> reservedKeys;
     private static final int MoPubQueryStringLimit = 4000;
@@ -412,8 +412,8 @@ public class Util {
         if (adObj == null) return false;
         if (adObj.getClass() == getClassFromString(MOPUB_BANNER_VIEW_CLASS)
                 || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)
-                || adObj.getClass() == getClassFromString(DFP_AD_REQUEST_CLASS)
-                || adObj.getClass() == getClassFromString(DFP_AD_REQUEST_BUILDER_CLASS)
+                || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS)
+                || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS)
                 || adObj.getClass() == HashMap.class)
             return true;
         return false;
@@ -424,10 +424,10 @@ public class Util {
         if (adObj.getClass() == getClassFromString(MOPUB_BANNER_VIEW_CLASS)
                 || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)) {
             handleMoPubKeywordsUpdate(bids, adObj);
-        } else if (adObj.getClass() == getClassFromString(DFP_AD_REQUEST_CLASS)) {
-            handleDFPCustomTargetingUpdate(bids, adObj);
-        } else if (adObj.getClass() == getClassFromString(DFP_AD_REQUEST_BUILDER_CLASS)) {
-            handleDFPBuilderCustomTargetingUpdate(bids, adObj);
+        } else if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS)) {
+            handleAdManagerCustomTargeting(bids, adObj);
+        } else if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS)) {
+            handleAdManagerBuilderCustomTargeting(bids, adObj);
         }
         else if (adObj.getClass() == HashMap.class) {
             if (bids != null && !bids.isEmpty()) {
@@ -458,10 +458,10 @@ public class Util {
         }
     }
 
-    private static void handleDFPCustomTargetingUpdate(HashMap<String, String> bids, Object adObj) {
-        removeUsedCustomTargetingForDFP(adObj);
+    private static void handleAdManagerCustomTargeting(HashMap<String, String> bids, Object publisherAdRequest) {
+        removeUsedCustomTargetingForDFP(publisherAdRequest);
         if (bids != null && !bids.isEmpty()) {
-            Bundle bundle = (Bundle) Util.callMethodOnObject(adObj, "getCustomTargeting");
+            Bundle bundle = (Bundle) Util.callMethodOnObject(publisherAdRequest, "getCustomTargeting");
             if (bundle != null) {
                 // retrieve keywords from mopub adview
                 for (String key : bids.keySet()) {
@@ -472,13 +472,13 @@ public class Util {
         }
     }
 
-    private static void handleDFPBuilderCustomTargetingUpdate(HashMap<String, String> bids, Object adObj) {
-        Object publisherAdRequest = Util.callMethodOnObject(adObj, "build");
+    private static void handleAdManagerBuilderCustomTargeting(HashMap<String, String> bids, Object publisherAdRequestBuilder) {
+        Object publisherAdRequest = Util.callMethodOnObject(publisherAdRequestBuilder, "build");
         removeUsedCustomTargetingForDFP(publisherAdRequest);
 
         if (bids != null && !bids.isEmpty()) {
             for (String key : bids.keySet()) {
-                Util.callMethodOnObject(adObj, "addCustomTargeting", key, bids.get(key));
+                Util.callMethodOnObject(publisherAdRequestBuilder, "addCustomTargeting", key, bids.get(key));
                 addReservedKeys(key);
             }
         }
@@ -514,8 +514,8 @@ public class Util {
         }
     }
 
-    private static void removeUsedCustomTargetingForDFP(Object adRequestObj) {
-        Bundle bundle = (Bundle) Util.callMethodOnObject(adRequestObj, "getCustomTargeting");
+    private static void removeUsedCustomTargetingForDFP(Object publisherAdRequest) {
+        Bundle bundle = (Bundle) Util.callMethodOnObject(publisherAdRequest, "getCustomTargeting");
         if (bundle != null && reservedKeys != null) {
             for (String key : reservedKeys) {
                 bundle.remove(key);
