@@ -268,6 +268,72 @@ public class AdManagerComplexTest {
         assertEquals("value5", customTargetingBundle2.getString("key5"));
     }
 
+    @Test
+    public void testPublisherAdRequestBuilderUseCase() throws Exception {
+        //given
+
+        mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
+                "  \"seatbid\": [\n" +
+                "    {\n" +
+                "      \"bid\": [\n" +
+                "        {\n" +
+                "          \"ext\": {\n" +
+                "            \"prebid\": {\n" +
+                "              \"targeting\": {\n" +
+                "                \"hb_cache_id\": \"top_bid_1\",\n" +
+                "                \"key1\": \"value1\"\n" +
+                "              }\n" +
+                "            }\n" +
+                "          }\n" +
+                "        }\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}"));
+
+
+        //important line
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+
+        HttpUrl httpUrl = mockServer.url("/testPublisherAdRequestBuilderUseCase");
+        Host.CUSTOM.setHostUrl(httpUrl.toString());
+        PrebidMobile.setPrebidServerAccountId("1001");
+
+        final ReferenceWrapper<Bundle> customTargetingBundleWrapper1 = new ReferenceWrapper<>();
+
+        //when
+        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        AdUnit adUnit = new BannerAdUnit("1001-1", 300, 250);
+
+        adUnit.fetchDemand(builder, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+
+                builder.addCustomTargeting("key2", "value2");
+                PublisherAdRequest publisherAdRequest = builder.build();
+                Bundle customTargetingBundle = publisherAdRequest.getCustomTargeting();
+
+                customTargetingBundleWrapper1.value = (Bundle)customTargetingBundle.clone();
+
+            }
+        });
+
+        try {
+            Thread.sleep(1_000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //then
+        Bundle customTargetingBundle = customTargetingBundleWrapper1.value;
+
+        assertEquals(3, customTargetingBundle.keySet().size());
+        assertEquals("top_bid_1", customTargetingBundle.getString("hb_cache_id"));
+        assertEquals("value1", customTargetingBundle.getString("key1"));
+        assertEquals("value2", customTargetingBundle.getString("key2"));
+
+    }
+
     //30x250 -> 728x90
     @Test
     public void testRubiconDFPBannerResizeSanityAppCheckTest() throws Exception {
