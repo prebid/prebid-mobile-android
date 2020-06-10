@@ -18,8 +18,6 @@ package org.prebid.mobile.app;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -32,7 +30,6 @@ import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -59,16 +56,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
-public class DFPBannerComplexTest {
+public class AdManagerComplexTest {
     @Rule
     public ActivityTestRule<TestActivity> testActivityRule = new ActivityTestRule<>(TestActivity.class);
 
     MockWebServer mockServer;
-    Handler handler;
 
     @Before
     public void setUp() {
-        handler = new Handler(Looper.getMainLooper());
         mockServer = new MockWebServer();
         try {
             mockServer.start();
@@ -87,10 +82,6 @@ public class DFPBannerComplexTest {
     public void testPublisherAdRequestBuilder() throws Exception {
 
         //given
-        HttpUrl httpUrl = mockServer.url("/");
-        Host.CUSTOM.setHostUrl(httpUrl.toString());
-        PrebidMobile.setPrebidServerAccountId("1001");
-
         mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
                 "  \"seatbid\": [\n" +
                 "    {\n" +
@@ -123,6 +114,13 @@ public class DFPBannerComplexTest {
                 "    }\n" +
                 "  ]\n" +
                 "}"));
+
+        //important line
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+
+        HttpUrl httpUrl = mockServer.url("/testPublisherAdRequestBuilder");
+        Host.CUSTOM.setHostUrl(httpUrl.toString());
+        PrebidMobile.setPrebidServerAccountId("1001");
 
         final ReferenceWrapper<Bundle> customTargetingBundleWrapper = new ReferenceWrapper<>();
 
@@ -174,11 +172,7 @@ public class DFPBannerComplexTest {
 
     @Test
     public void testPublisherAdRequestBuilderWithRefresh() throws Exception {
-
         //given
-        HttpUrl httpUrl = mockServer.url("/");
-        Host.CUSTOM.setHostUrl(httpUrl.toString());
-        PrebidMobile.setPrebidServerAccountId("1001");
 
         mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
                 "  \"seatbid\": [\n" +
@@ -217,6 +211,14 @@ public class DFPBannerComplexTest {
                 "    }\n" +
                 "  ]\n" +
                 "}"));
+
+
+        //important line
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+
+        HttpUrl httpUrl = mockServer.url("/testPublisherAdRequestBuilderWithRefresh");
+        Host.CUSTOM.setHostUrl(httpUrl.toString());
+        PrebidMobile.setPrebidServerAccountId("1001");
 
         final ReferenceWrapper<Bundle> customTargetingBundleWrapper1 = new ReferenceWrapper<>();
         final ReferenceWrapper<Bundle> customTargetingBundleWrapper2 = new ReferenceWrapper<>();
@@ -264,7 +266,6 @@ public class DFPBannerComplexTest {
         assertEquals(null, customTargetingBundle2.getString("key1"));
         assertEquals("top_bid_2", customTargetingBundle2.getString("hb_cache_id"));
         assertEquals("value5", customTargetingBundle2.getString("key5"));
-
     }
 
     //30x250 -> 728x90
@@ -275,7 +276,7 @@ public class DFPBannerComplexTest {
 
         PrebidMobile.setPrebidServerHost(Host.RUBICON);
         PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
-        PrebidMobile.setStoredAuctionResponse(Constants.PBS_STORED_RESPONSE_300x250_RUBICON);
+        PrebidMobile.setStoredAuctionResponse("1001-rubicon-300x250");
 
         TestActivity activity = testActivityRule.getActivity();
 
@@ -324,14 +325,13 @@ public class DFPBannerComplexTest {
             private void update(boolean isSuccess) {
                 if (isSuccess) {
 
-                    if (firstTransactionCount.getValue() != -1) {
+                    if (firstTransactionCount.value != -1) {
                         firstTransactionCount.value = -1;
-                        //TODO make a call
 
-                        //TODO PrebidMobile.setStoredAuctionResponse(728x90);
-//                        bannerAdUnit.addAdditionalSize(728, 90);
+                        PrebidMobile.setStoredAuctionResponse("1001-rubicon-300x50");
+
                         bannerAdUnit.fetchDemand(request, completeListener);
-                    } else if (secondTransactionCount.getValue() != -1) {
+                    } else if (secondTransactionCount.value != -1) {
                         secondTransactionCount.value = -1;
 
                         notifyResult();
@@ -344,24 +344,24 @@ public class DFPBannerComplexTest {
                         e.printStackTrace();
                     }
 
-                    if (firstTransactionCount.getValue() != -1) {
-                        if (firstTransactionCount.getValue() > transactionFailRepeatCount -2) {
-                            Assert.fail("first Transaction Count == " + transactionFailRepeatCount);
+                    if (firstTransactionCount.value != -1) {
+                        if (firstTransactionCount.value > transactionFailRepeatCount -2) {
+                            fail("first Transaction Count == " + transactionFailRepeatCount);
                         } else {
                             //repeat
                             firstTransactionCount.value++;
                             bannerAdUnit.fetchDemand(request, completeListener);
                         }
-                    } else if (secondTransactionCount.getValue() != -1) {
-                        if (secondTransactionCount.getValue() > transactionFailRepeatCount -2) {
-                            Assert.fail("second Transaction Count == " + transactionFailRepeatCount);
+                    } else if (secondTransactionCount.value != -1) {
+                        if (secondTransactionCount.value > transactionFailRepeatCount -2) {
+                            fail("second Transaction Count == " + transactionFailRepeatCount);
                         } else {
                             //repeat
                             secondTransactionCount.value++;
                             bannerAdUnit.fetchDemand(request, completeListener);
                         }
                     } else {
-                        Assert.fail("Unexpected");
+                        fail("Unexpected");
                     }
 
                 }
@@ -452,25 +452,18 @@ public class DFPBannerComplexTest {
             e.printStackTrace();
         }
 
-        assertEquals(-1, firstTransactionCount.getValue());
-        assertEquals(-1, secondTransactionCount.getValue());
-
+        assertEquals(-1, firstTransactionCount.value);
+        assertEquals(-1, secondTransactionCount.value);
 
     }
 
     private static class ReferenceWrapper<T> {
-
         @Nullable
         T value = null;
     }
 
     private static class IntegerWrapper {
         int value = 0;
-
-        //TODO remove getValue()
-        public int getValue() {
-            return value;
-        }
     }
 
 }
