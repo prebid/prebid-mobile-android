@@ -52,6 +52,7 @@ public class Signals {
     | 4     | ORMMA       |
     | 5     | MRAID-2     |
     | 6     | MRAID-3     |
+    | 7     | OMID-1      |
      *</pre>
      */
     public static class Api extends SingleContainerInt {
@@ -73,6 +74,9 @@ public class Signals {
 
         /** MRAID-3 */
         public static Api MRAID_3 = new Api(6);
+
+        /** OMID-1 */
+        public static Api OMID_1 = new Api(7);
 
         public Api(int value) {
             super(value);
