@@ -861,7 +861,10 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
 
     private void addFirstPartyData(AdUnit adUnit) {
         //Access Control List
-        TargetingParams.addBidderToAccessControlList(TargetingParams.BIDDER_NAME_APP_NEXUS);
+        TargetingParams.addBidderToAccessControlList(TargetingParams.BIDDER_NAME_RUBICON_PROJECT);
+
+        //PBAdSlot(should be set together with Access Control List)
+        adUnit.setPbAdSlot("/1111111/homepage/med-rect-2");
 
         //global user data
         TargetingParams.addUserData("globalUserDataKey1", "globalUserDataValue1");

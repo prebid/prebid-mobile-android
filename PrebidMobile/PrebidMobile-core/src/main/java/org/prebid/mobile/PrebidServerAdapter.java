@@ -769,7 +769,12 @@ class PrebidServerAdapter implements DemandAdapter {
                 JSONObject prebid = new JSONObject();
                 ext.put("prebid", prebid);
                 JSONObject context = new JSONObject();
-                context.put("data", Util.toJson(requestParams.getContextDataDictionary()));
+
+                JSONObject contextData = Util.toJson(requestParams.getContextDataDictionary());
+                JSONObject data = new JSONObject(contextData.toString());
+                data.put("adslot", requestParams.getPbAdSlot());
+
+                context.put("data", data);
                 context.put("keywords", TextUtils.join(",", requestParams.getContextKeywordsSet()));
                 ext.put("context", context);
                 JSONObject storedrequest = new JSONObject();
