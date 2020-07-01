@@ -9,12 +9,10 @@ import android.support.annotation.NonNull;
 public class NativeAdUnit extends AdUnit {
     NativeRequestParams params;
 
-
     public NativeAdUnit(@NonNull String configId) {
         super(configId, AdType.NATIVE);
         params = new NativeRequestParams();
     }
-
 
     public enum CONTEXT_TYPE {
         CONTENT_CENTRIC(1),
