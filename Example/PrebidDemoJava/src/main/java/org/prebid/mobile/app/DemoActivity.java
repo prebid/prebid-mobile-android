@@ -852,6 +852,7 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         addFirstPartyData(adUnit);
         setStoredResponse();
         setRequestTimeoutMillis();
+        enablePbsDebug();
     }
 
     private void enableCOPPA() {
@@ -894,5 +895,9 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
 
     private void setRequestTimeoutMillis() {
         PrebidMobile.setTimeoutMillis(5_000);
+    }
+
+    private void enablePbsDebug() {
+        PrebidMobile.setPbsDebug(true);
     }
 }

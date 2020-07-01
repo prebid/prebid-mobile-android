@@ -499,6 +499,10 @@ class PrebidServerAdapter implements DemandAdapter {
                     postData.put("ext", ext);
                 }
 
+                if (PrebidMobile.getPbsDebug()) {
+                    postData.put("test", 1);
+                }
+
                 JSONObject objectWithoutEmptyValues = Util.getObjectWithoutEmptyValues(postData);
 
                 if (objectWithoutEmptyValues != null) {
