@@ -1136,6 +1136,39 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
+    public void testPbsDebug() throws Exception {
+        pbsDebugHelper(true, 1);
+        pbsDebugHelper(false, null);
+
+    }
+
+    private void pbsDebugHelper(boolean pbsDebug, @Nullable Integer expectedTest) throws Exception {
+        //given
+        PrebidMobile.setPbsDebug(pbsDebug);
+
+        //when
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+
+        RequestParams requestParams = new RequestParams("67890", AdType.INTERSTITIAL, sizes);
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        @SuppressWarnings("unchecked")
+        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+
+        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+        Integer test = (Integer) postData.opt("test");
+
+        //then
+        assertEquals(expectedTest, test);
+    }
+
+    @Test
     public void testBannerBaseAdUnit() throws Exception {
         PrebidMobile.setPrebidServerAccountId("12345");
 
@@ -1306,7 +1339,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.VIDEO, sizes, null, null, null, null, parameters);
+        RequestParams requestParams = new RequestParams("67890", AdType.VIDEO, sizes, null, null, null, null, parameters, null);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
@@ -1749,6 +1782,28 @@ public class PrebidServerAdapterTest extends BaseSetup {
         nativeAdUnit.fetchDemand(testView, mockListener);
     }
 
+    @Test
+    public void testPostDataWithPrebidAdSlot() throws Exception {
+
+        //given
+        TargetingParams.addBidderToAccessControlList(TargetingParams.BIDDER_NAME_RUBICON_PROJECT);
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, "/1111111/homepage/med-rect-2");
+
+        String adSlot = null;
+        try {
+            adSlot = postData.getJSONArray("imp").getJSONObject(0).getJSONObject("ext").getJSONObject("context").getJSONObject("data").getString("adslot");
+        } catch (Exception ex) {
+            fail("keywords parsing fail");
+        }
+
+        //then
+        assertNotNull(adSlot);
+        assertEquals("/1111111/homepage/med-rect-2", adSlot);
+
+    }
+
     private JSONObject getPostDataHelper(AdType adType, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc, @Nullable BannerBaseAdUnit.Parameters bannerParameters, @Nullable VideoBaseAdUnit.Parameters videoParameters) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
@@ -1760,7 +1815,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
 
-        RequestParams requestParams = new RequestParams("67890", adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, bannerParameters, videoParameters);
+        RequestParams requestParams = new RequestParams("67890", adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, adSlot, bannerParameters, videoParameters);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")

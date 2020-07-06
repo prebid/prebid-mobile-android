@@ -42,6 +42,8 @@ public abstract class AdUnit {
     private final Map<String, Set<String>> contextDataDictionary;
     private final Set<String> contextKeywordsSet;
 
+    private String pbAdSlot;
+
     AdUnit(@NonNull String configId, @NonNull AdType adType) {
         this.configId = configId;
         this.adType = adType;
@@ -149,7 +151,7 @@ public abstract class AdUnit {
 
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
-            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, bannerParameters, videoParameters);
+            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, bannerParameters, videoParameters, pbAdSlot);
             if (this.adType.equals(AdType.NATIVE)) {
                 requestParams.setNativeRequestParams(((NativeAdUnit) this).params);
             }
@@ -283,6 +285,12 @@ public abstract class AdUnit {
         return contextKeywordsSet;
     }
 
+    public String getPbAdSlot() {
+        return pbAdSlot;
+    }
 
+    public void setPbAdSlot(String pbAdSlot) {
+        this.pbAdSlot = pbAdSlot;
+    }
 }
 

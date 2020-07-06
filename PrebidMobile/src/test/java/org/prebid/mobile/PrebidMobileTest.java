@@ -48,5 +48,7 @@ public class PrebidMobileTest extends BaseSetup {
         assertFalse(PrebidMobile.getStoredBidResponses().isEmpty());
         PrebidMobile.clearStoredBidResponses();
         assertTrue(PrebidMobile.getStoredBidResponses().isEmpty());
+        PrebidMobile.setPbsDebug(true);
+        assertTrue(PrebidMobile.getPbsDebug());
     }
 }
