@@ -786,7 +786,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
         Integer gdprSubject = null;
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
         try {
             gdprSubject = postData.getJSONObject("regs").getJSONObject("ext").getInt("gdpr");
         } catch (Exception ex) {
@@ -806,7 +806,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
         Object gdprSubject = null;
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
         try {
             gdprSubject = postData.opt("regs");
         } catch (Exception ex) {
@@ -826,7 +826,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
         Object gdprSubject = null;
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
         try {
             gdprSubject = postData.optJSONObject("regs");
         } catch (Exception ex) {
@@ -849,7 +849,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Integer gdprSubject = null;
         String gdprConsent = null;
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
         try {
             gdprSubject = postData.getJSONObject("regs").getJSONObject("ext").getInt("gdpr");
             gdprConsent = postData.getJSONObject("user").getJSONObject("ext").getString("consent");
@@ -873,7 +873,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Object gdprSubject = null;
         Object gdprConsent = null;
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
         try {
             gdprSubject = postData.opt("regs");
             gdprConsent = postData.getJSONObject("user").opt("ext");
@@ -903,7 +903,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
         String ifa = null;
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
         try {
             ifa = postData.getJSONObject("device").getString("ifa");
 
@@ -962,7 +962,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         JSONObject device = null;
         Object ifa = null;
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
         try {
             device = postData.optJSONObject("device");
 
@@ -992,7 +992,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         int coppa = 0;
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
         try {
             coppa = postData.getJSONObject("regs").getInt("coppa");
         } catch (Exception ex) {
@@ -1011,7 +1011,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Object coppa = null;
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
         try {
             coppa = postData.opt("regs");
         } catch (Exception ex) {
@@ -1036,7 +1036,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         String ccpa = null;
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
         try {
             ccpa = postData.getJSONObject("regs").getJSONObject("ext").getString("us_privacy");
         } catch (Exception ex) {
@@ -1059,7 +1059,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Object ccpa = null;
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
         try {
             ccpa = postData.opt("regs");
         } catch (Exception ex) {
@@ -1084,7 +1084,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Object ccpa = null;
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
         try {
             ccpa = postData.opt("regs");
         } catch (Exception ex) {
@@ -1185,7 +1185,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, null, null, null, parameters, null);
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, null, null, null, null, parameters, null);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
@@ -1339,7 +1339,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.VIDEO, sizes, null, null, null, null, parameters, null);
+        RequestParams requestParams = new RequestParams("67890", AdType.VIDEO, sizes, null, null, null, null, null, parameters);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
@@ -1396,7 +1396,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         int instl = 0;
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.INTERSTITIAL, null, null, minSizePerc, null, null);
+        JSONObject postData = getPostDataHelper(AdType.INTERSTITIAL, null, null, minSizePerc, null, null, null);
 
         try {
             extInterstitial = postData.getJSONObject("device").getJSONObject("ext").getJSONObject("prebid").getJSONObject("interstitial");
@@ -1435,7 +1435,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         int instl = 0;
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.INTERSTITIAL, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.INTERSTITIAL, null, null, null, null, null, null);
 
         try {
             instl = postData.getJSONArray("imp").getJSONObject(0).getInt("instl");
@@ -1461,7 +1461,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         int instl = 0;
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, minSizePerc, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, minSizePerc, null, null, null);
 
         try {
             extInterstitial = postData.getJSONObject("device").getJSONObject("ext").getJSONObject("prebid").getJSONObject("interstitial");
@@ -1485,7 +1485,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         TargetingParams.addUserKeyword("value10");
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
 
         String keywords = null;
         try {
@@ -1506,7 +1506,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         TargetingParams.addContextKeyword("value10");
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
 
         String keywords = null;
         try {
@@ -1528,7 +1528,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         TargetingParams.addBidderToAccessControlList(TargetingParams.BIDDER_NAME_RUBICON_PROJECT);
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
 
         JSONArray biddersJsonArray = null;
         try {
@@ -1553,7 +1553,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         TargetingParams.addUserData("key2", "value21");
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
 
         JSONObject dataJsonObject = null;
         try {
@@ -1586,7 +1586,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         TargetingParams.addContextData("key2", "value21");
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
 
         JSONObject dataJsonObject = null;
         try {
@@ -1618,7 +1618,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         contextKeywordsSet.add("value10");
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, contextKeywordsSet, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, contextKeywordsSet, null, null, null, null);
 
         String keywords = null;
 
@@ -1642,7 +1642,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         contextDataDictionary.put("key2", new HashSet<>(Arrays.asList("value20", "value21")));
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, contextDataDictionary, null, null, null, null);
+        JSONObject postData = getPostDataHelper(AdType.BANNER, contextDataDictionary, null, null, null, null, null);
 
         JSONObject dataJsonObject = null;
         try {
@@ -1789,7 +1789,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         TargetingParams.addBidderToAccessControlList(TargetingParams.BIDDER_NAME_RUBICON_PROJECT);
 
         //when
-        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, "/1111111/homepage/med-rect-2");
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, "/1111111/homepage/med-rect-2", null, null);
 
         String adSlot = null;
         try {
@@ -1804,7 +1804,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
     }
 
-    private JSONObject getPostDataHelper(AdType adType, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc, @Nullable BannerBaseAdUnit.Parameters bannerParameters, @Nullable VideoBaseAdUnit.Parameters videoParameters) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    private JSONObject getPostDataHelper(AdType adType, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc, @Nullable String adSlot, @Nullable BannerBaseAdUnit.Parameters bannerParameters, @Nullable VideoBaseAdUnit.Parameters videoParameters) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
 
