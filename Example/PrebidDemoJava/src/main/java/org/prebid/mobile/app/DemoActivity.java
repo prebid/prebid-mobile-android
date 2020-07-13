@@ -122,8 +122,6 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
             width = Integer.valueOf(wAndH[0]);
             height = Integer.valueOf(wAndH[1]);
 
-//            enableAdditionalFunctionality(adUnit);
-
             if (adServerName.equals(adServerAdManager)) {
                 setupAndLoadAMBanner(width, height);
             } else if (adServerName.equals(adServerMoPub)) {
@@ -133,8 +131,6 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         } else if (adTypeName.equals(adTypeInterstitial)) {
             //Advanced interstitial support
 //            adUnit = new InterstitialAdUnit("1001-1", 50, 70);
-
-//            enableAdditionalFunctionality(adUnit);
 
             if (adServerName.equals(adServerAdManager)) {
                 setupAndLoadAMInterstitial();
@@ -371,6 +367,7 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
 
         adUnit = new BannerAdUnit(configId, width, height);
 
+//        enableAdditionalFunctionality(adUnit);
     }
 
     private void setupPB(Host host, String accountId, @NonNull String storedResponse) {
@@ -861,6 +858,7 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
         addFirstPartyData(adUnit);
         setStoredResponse();
         setRequestTimeoutMillis();
+        enablePbsDebug();
     }
 
     private void enableCOPPA() {
@@ -869,7 +867,10 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
 
     private void addFirstPartyData(AdUnit adUnit) {
         //Access Control List
-        TargetingParams.addBidderToAccessControlList(TargetingParams.BIDDER_NAME_APP_NEXUS);
+        TargetingParams.addBidderToAccessControlList(TargetingParams.BIDDER_NAME_RUBICON_PROJECT);
+
+        //PBAdSlot(should be set together with Access Control List)
+        adUnit.setPbAdSlot("/1111111/homepage/med-rect-2");
 
         //global user data
         TargetingParams.addUserData("globalUserDataKey1", "globalUserDataValue1");
@@ -900,5 +901,9 @@ public class DemoActivity extends AppCompatActivity implements MoPubRewardedVide
 
     private void setRequestTimeoutMillis() {
         PrebidMobile.setTimeoutMillis(5_000);
+    }
+
+    private void enablePbsDebug() {
+        PrebidMobile.setPbsDebug(true);
     }
 }

@@ -23,7 +23,6 @@ import java.util.HashSet;
 public class BannerAdUnit extends AdUnit {
     private HashSet<AdSize> sizes;
 
-
     public BannerAdUnit(@NonNull String configId, int width, int height) {
         super(configId, AdType.BANNER);
         this.sizes = new HashSet<>();
