@@ -19,7 +19,7 @@ package org.prebid.mobile;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-public class InterstitialAdUnit extends AdUnit {
+public class InterstitialAdUnit extends BannerBaseAdUnit {
 
     @Nullable
     private AdSize minSizePerc = null;
