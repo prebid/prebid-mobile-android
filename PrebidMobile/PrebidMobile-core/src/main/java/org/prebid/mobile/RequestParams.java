@@ -40,10 +40,13 @@ class RequestParams {
     private AdSize minSizePerc; //non null only for InterstitialAdUnit(String, int, int)
 
     @Nullable
-    private VideoBaseAdUnit.Parameters parameters;
+    private String pbAdSlot;
 
     @Nullable
-    private String pbAdSlot;
+    private VideoBaseAdUnit.Parameters videoParameters;
+
+    @Nullable
+    private BannerBaseAdUnit.Parameters bannerParameters;
 
     RequestParams(String configId, AdType adType, HashSet<AdSize> sizes) {
         this.configId = configId;
@@ -51,15 +54,15 @@ class RequestParams {
         this.sizes = sizes; // for Interstitial this will be null, will use screen width & height in the request
     }
 
-    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc, @Nullable VideoBaseAdUnit.Parameters parameters, @Nullable String pbAdSlot) {
+    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc, @Nullable String pbAdSlot , @Nullable BannerBaseAdUnit.Parameters bannerParameters, @Nullable VideoBaseAdUnit.Parameters videoParameters) {
         this(configId, adType, sizes);
         this.contextDataDictionary = contextDataDictionary;
         this.contextKeywordsSet = contextKeywordsSet;
         this.minSizePerc = minSizePerc;
-        this.parameters = parameters;
         this.pbAdSlot = pbAdSlot;
+        this.bannerParameters = bannerParameters;
+        this.videoParameters = videoParameters;
     }
-
 
     void setNativeRequestParams(NativeRequestParams params) {
         this.nativeParams = params;
@@ -97,12 +100,17 @@ class RequestParams {
     }
 
     @Nullable
-    VideoBaseAdUnit.Parameters getVideoParameters() {
-        return parameters;
+    String getPbAdSlot() {
+        return pbAdSlot;
     }
 
     @Nullable
-    String getPbAdSlot() {
-        return pbAdSlot;
+    BannerBaseAdUnit.Parameters getBannerParameters() {
+        return bannerParameters;
+    }
+
+    @Nullable
+    VideoBaseAdUnit.Parameters getVideoParameters() {
+        return videoParameters;
     }
 }

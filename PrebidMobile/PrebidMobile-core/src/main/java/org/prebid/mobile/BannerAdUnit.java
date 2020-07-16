@@ -20,7 +20,8 @@ import android.support.annotation.NonNull;
 
 import java.util.HashSet;
 
-public class BannerAdUnit extends AdUnit {
+public class BannerAdUnit extends BannerBaseAdUnit {
+
     private HashSet<AdSize> sizes;
 
     public BannerAdUnit(@NonNull String configId, int width, int height) {

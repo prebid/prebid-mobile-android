@@ -137,15 +137,21 @@ public abstract class AdUnit {
             return;
         }
 
-        VideoBaseAdUnit.Parameters parameters = null;
+        BannerBaseAdUnit.Parameters bannerParameters = null;
+        if (this instanceof BannerBaseAdUnit) {
+            BannerBaseAdUnit bannerBaseAdUnit = (BannerBaseAdUnit) this;
+            bannerParameters = bannerBaseAdUnit.parameters;
+        }
+
+        VideoBaseAdUnit.Parameters videoParameters = null;
         if (this instanceof VideoBaseAdUnit) {
             VideoBaseAdUnit videoBaseAdUnit = (VideoBaseAdUnit) this;
-            parameters = videoBaseAdUnit.parameters;
+            videoParameters = videoBaseAdUnit.parameters;
         }
 
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
-            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, parameters, pbAdSlot);
+            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, pbAdSlot, bannerParameters, videoParameters);
             if (this.adType.equals(AdType.NATIVE)) {
                 requestParams.setNativeRequestParams(((NativeAdUnit) this).params);
             }
