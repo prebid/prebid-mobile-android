@@ -11,9 +11,9 @@ Easily include the Prebid Mobile SDK using Maven. Simply add this line to your g
 ```
 implementation 'org.prebid:prebid-mobile-sdk:[1,2)'
 ```
-If you want explicit stable vesion, please use the following:
+If you want explicit stable version, please use the following:
 ```
-implementation 'org.prebid:prebid-mobile-sdk:1.6'
+implementation 'org.prebid:prebid-mobile-sdk:1.7'
 ```
 
 
