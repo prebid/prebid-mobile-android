@@ -30,6 +30,8 @@ import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.prebid.mobile.Host;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private String adType = "";
     private String adServer = "";
     private String adSize = "";
+    private Host host = Host.RUBICON;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,25 @@ public class MainActivity extends AppCompatActivity {
             WebView.setWebContentsDebuggingEnabled(true);
         }
         // Get all the components
+        Spinner hostSpinner = findViewById(R.id.hostSpinner);
+        ArrayAdapter<CharSequence> hostAdapter = ArrayAdapter.createFromResource(this, R.array.hostArray, android.R.layout.simple_spinner_item);
+        hostAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        hostSpinner.setAdapter(hostAdapter);
+        hostSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            List<String> hosts = Arrays.asList(getResources().getStringArray(R.array.hostArray));
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position > hosts.size()) {
+                    return;
+                }
+                host = hosts.get(position).equals("Rubicon")? Host.RUBICON: Host.APPNEXUS;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         Spinner adTypeSpinner = (Spinner) findViewById(R.id.adTypeSpinner);
         // Ad Type Spinner set up
         ArrayAdapter<CharSequence> adTypeAdapter = ArrayAdapter.createFromResource(
@@ -133,18 +155,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showAd(View view) {
-        Intent demoActivityIntent = new Intent(this, DemoActivity.class);
-        demoActivityIntent.putExtra(Constants.AD_SERVER_NAME, adServer);
-        demoActivityIntent.putExtra(Constants.AD_TYPE_NAME, adType);
-        if (adType.equals("Banner")) {
-            demoActivityIntent.putExtra(Constants.AD_SIZE_NAME, adSize);
-        }
         EditText autoRefreshMillis = (EditText) findViewById(R.id.autoRefreshInput);
         String refreshMillisString = autoRefreshMillis.getText().toString();
-        if (!TextUtils.isEmpty(refreshMillisString)) {
-            int refreshMillis = Integer.valueOf(refreshMillisString);
-            demoActivityIntent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+        Intent intent = null;
+        if (host.equals(Host.RUBICON)) {
+            if (adType.equals("Banner") && adServer.equals("AdManager")) {
+                intent = new Intent(this, RubiconBannerGamDemoActivity.class);
+                intent.putExtra(Constants.AD_SIZE_NAME, adSize);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals("Banner") && adServer.equals("MoPub")){
+                intent = new Intent(this, RubiconBannerMoPubDemoActivity.class);
+                intent.putExtra(Constants.AD_SIZE_NAME, adSize);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            }
+        } else if (host.equals(Host.APPNEXUS)) {
+
         }
-        startActivity(demoActivityIntent);
+        if (intent != null) {
+            startActivity(intent);
+        }
+
     }
 }

@@ -29,7 +29,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DemoActivity" />
+        <activity android:name=".RubiconBannerGamDemoActivity" />
+        <activity android:name=".RubiconBannerMoPubDemoActivity"/>
         <activity android:name=".TestActivity" />
         <!--MoPub Activities-->
         <activity
