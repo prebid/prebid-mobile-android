@@ -57,12 +57,13 @@ public class MainActivity extends AppCompatActivity {
         hostSpinner.setAdapter(hostAdapter);
         hostSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             List<String> hosts = Arrays.asList(getResources().getStringArray(R.array.hostArray));
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position > hosts.size()) {
                     return;
                 }
-                host = hosts.get(position).equals("Rubicon")? Host.RUBICON: Host.APPNEXUS;
+                host = hosts.get(position).equals("Rubicon") ? Host.RUBICON : Host.APPNEXUS;
             }
 
             @Override
@@ -159,16 +160,28 @@ public class MainActivity extends AppCompatActivity {
         String refreshMillisString = autoRefreshMillis.getText().toString();
         Intent intent = null;
         if (host.equals(Host.RUBICON)) {
-            if (adType.equals("Banner") && adServer.equals("AdManager")) {
+            if (adType.equals(getString(R.string.adTypeBanner)) && adServer.equals(getString(R.string.adServerAdManager))) {
                 intent = new Intent(this, RubiconBannerGamDemoActivity.class);
                 intent.putExtra(Constants.AD_SIZE_NAME, adSize);
                 if (!TextUtils.isEmpty(refreshMillisString)) {
                     int refreshMillis = Integer.valueOf(refreshMillisString);
                     intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
                 }
-            } else if (adType.equals("Banner") && adServer.equals("MoPub")){
+            } else if (adType.equals(getString(R.string.adTypeBanner)) && adServer.equals(getString(R.string.adServerMoPub))) {
                 intent = new Intent(this, RubiconBannerMoPubDemoActivity.class);
                 intent.putExtra(Constants.AD_SIZE_NAME, adSize);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeInterstitial)) && adServer.equals(getString(R.string.adServerAdManager))) {
+                intent = new Intent(this, RubiconIntersitialGamDemoActivity.class);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeInterstitial)) && adServer.equals(getString(R.string.adServerMoPub))) {
+                intent = new Intent(this, RubiconIntersitialGamDemoActivity.class);
                 if (!TextUtils.isEmpty(refreshMillisString)) {
                     int refreshMillis = Integer.valueOf(refreshMillisString);
                     intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
