@@ -85,7 +85,7 @@ public class SdkValidationViewHolder extends RecyclerView.ViewHolder implements 
         responseAdServerReceivedIcon = itemView.findViewById(R.id.image_prebid_creative_served_result);
         responseAdServerReceivedIcon.setOnClickListener(v -> {
             if (receivedAdServerPassed == null) {
-                Toast.makeText(v.getContext(), "not supported", Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "This feature is not supported for Interstitial Ad Units", Toast.LENGTH_SHORT).show();
             }
         });
         SdkValidationViewModel viewModel = ViewModelProviders.of((AppCompatActivity) itemView.getContext()).get(SdkValidationViewModel.class);

@@ -53,7 +53,7 @@ public class AdServerValidationViewHolder extends RecyclerView.ViewHolder implem
         responseReceivedIcon = itemView.findViewById(R.id.image_prebid_creative_served_result);
         responseReceivedIcon.setOnClickListener(v -> {
             if (receivedPassed == null) {
-                Toast.makeText(v.getContext(), "not supported", Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "This feature is not supported for Interstitial Ad Units", Toast.LENGTH_SHORT).show();
             }
         });
 
