@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.FrameLayout;
 
+import androidx.annotation.Nullable;
+
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
@@ -66,7 +68,7 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
 
         void requestSentToAdServer(String request, String postBody);
 
-        void adServerResponseContainsPrebidCreative(boolean contains);
+        void adServerResponseContainsPrebidCreative(@Nullable Boolean contains);
 
         void onTestFinished();
     }
@@ -369,7 +371,7 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
         public void onAdLoaded() {
             super.onAdLoaded();
 
-            mListener.onTestFinished();
+            invokeContainsPrebidCreative(null);
         }
 
         @Override
@@ -448,7 +450,7 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
         }
     }
 
-    private void invokeContainsPrebidCreative(boolean contains) {
+    private void invokeContainsPrebidCreative(@Nullable Boolean contains) {
         mContext.runOnUiThread(() -> {
             if (mListener != null) {
                 mListener.adServerResponseContainsPrebidCreative(contains);

@@ -57,9 +57,7 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
 
         void onPrebidKeywordsNotFoundOnRequest();
 
-        void onServerRespondedWithPrebidCreative();
-
-        void onServerNotRespondedWithPrebidCreative();
+        void adServerResponseContainsPrebidCreative(@Nullable Boolean contains);
 
         void onTestFinished();
     }
@@ -208,7 +206,7 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
 
                 @Override
                 public void failure() {
-                    invokeDoesNotContainPrebidCreative();
+                    invokeContainsPrebidCreative(false);
                 }
             });
         }
@@ -217,7 +215,7 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
         public void onAdFailedToLoad(int errorCode) {
             super.onAdFailedToLoad(errorCode);
 
-            invokeDoesNotContainPrebidCreative();
+            invokeContainsPrebidCreative(false);
         }
     };
 
@@ -228,6 +226,7 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
         public void onAdLoaded() {
             super.onAdLoaded();
 
+            invokeContainsPrebidCreative(null);
             invokeTestFinished();
         }
 
@@ -235,7 +234,7 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
         public void onAdFailedToLoad(int errorCode) {
             super.onAdFailedToLoad(errorCode);
 
-            invokeDoesNotContainPrebidCreative();
+            invokeContainsPrebidCreative(false);
         }
     };
 
@@ -325,7 +324,7 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Log.e(TAG, e.getMessage());
-                        invokeDoesNotContainPrebidCreative();
+                        invokeContainsPrebidCreative(false);
                     }
 
                     @Override
@@ -336,7 +335,7 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
                             inputStream.close();
                             checkResponseForPrebidCreative();
                         } else {
-                            invokeDoesNotContainPrebidCreative();
+                            invokeContainsPrebidCreative(false);
                         }
                     }
                 });
@@ -392,26 +391,16 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
 
     private void checkResponseForPrebidCreative() {
         if (!TextUtils.isEmpty(mAdServerResponse) && (mAdServerResponse.contains("pbm.js") || mAdServerResponse.contains("creative.js"))) {
-            invokeContainsPrebidCreative();
+            invokeContainsPrebidCreative(true);
         } else {
-            invokeDoesNotContainPrebidCreative();
+            invokeContainsPrebidCreative(false);
         }
     }
 
-    private void invokeContainsPrebidCreative() {
+    private void invokeContainsPrebidCreative(@Nullable Boolean contains) {
         mContext.runOnUiThread(() -> {
             if (mListener != null) {
-                mListener.onServerRespondedWithPrebidCreative();
-            }
-
-            invokeTestFinished();
-        });
-    }
-
-    private void invokeDoesNotContainPrebidCreative() {
-        mContext.runOnUiThread(() -> {
-            if (mListener != null) {
-                mListener.onServerNotRespondedWithPrebidCreative();
+                mListener.adServerResponseContainsPrebidCreative(contains);
             }
 
             invokeTestFinished();
