@@ -12,11 +12,17 @@ import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
 
 import org.prebid.mobile.AdUnit;
-import org.prebid.mobile.InterstitialAdUnit;
+import org.prebid.mobile.Host;
 import org.prebid.mobile.OnCompleteListener;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.Signals;
+import org.prebid.mobile.VideoBaseAdUnit;
+import org.prebid.mobile.VideoInterstitialAdUnit;
 
-public class RubiconIntersitialGamDemoActivity extends AppCompatActivity {
+import java.util.Arrays;
+
+public class RubiconInterstitialVideoGamDemoActivity extends AppCompatActivity {
     AdUnit adUnit;
 
     @Override
@@ -32,9 +38,24 @@ public class RubiconIntersitialGamDemoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
-        adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL_RUBICON);
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
+        PrebidMobile.setStoredAuctionResponse(Constants.PBS_STORED_RESPONSE_VAST_RUBICON);
+        VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
+        parameters.setMimes(Arrays.asList("video/mp4"));
+
+        parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0));
+        // parameters.setProtocols(Arrays.asList(new Signals.Protocols(2)));
+
+        parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOff));
+        // parameters.setPlaybackMethod(Arrays.asList(new Signals.PlaybackMethod(2)));
+
+        VideoInterstitialAdUnit adUnit = new VideoInterstitialAdUnit("1001-1");
+        adUnit.setParameters(parameters);
+
+        this.adUnit = adUnit;
         final PublisherInterstitialAd amInterstitial = new PublisherInterstitialAd(this);
-        amInterstitial.setAdUnitId(Constants.DFP_INTERSTITIAL_ADUNIT_ID_RUBICON);
+        amInterstitial.setAdUnitId(Constants.DFP_VAST_ADUNIT_ID_RUBICON);
         amInterstitial.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
@@ -47,9 +68,9 @@ public class RubiconIntersitialGamDemoActivity extends AppCompatActivity {
                 super.onAdFailedToLoad(i);
                 AlertDialog.Builder builder;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder = new AlertDialog.Builder(RubiconIntersitialGamDemoActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                    builder = new AlertDialog.Builder(RubiconInterstitialVideoGamDemoActivity.this, android.R.style.Theme_Material_Dialog_Alert);
                 } else {
-                    builder = new AlertDialog.Builder(RubiconIntersitialGamDemoActivity.this);
+                    builder = new AlertDialog.Builder(RubiconInterstitialVideoGamDemoActivity.this);
                 }
                 builder.setTitle("Failed to load AdManager interstitial ad")
                         .setMessage("Error code: " + i)

@@ -11,11 +11,17 @@ import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 
 import org.prebid.mobile.AdUnit;
-import org.prebid.mobile.InterstitialAdUnit;
+import org.prebid.mobile.Host;
 import org.prebid.mobile.OnCompleteListener;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.Signals;
+import org.prebid.mobile.VideoBaseAdUnit;
+import org.prebid.mobile.VideoInterstitialAdUnit;
 
-public class RubiconInterstitialMoPubDemoActivity extends AppCompatActivity {
+import java.util.Arrays;
+
+public class RubiconInterstitialVideoMoPubDemoActivity extends AppCompatActivity {
     AdUnit adUnit;
 
     @Override
@@ -31,8 +37,23 @@ public class RubiconInterstitialMoPubDemoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
-        adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL_RUBICON);
-        final MoPubInterstitial mpInterstitial = new MoPubInterstitial(this, Constants.MOPUB_INTERSTITIAL_ADUNIT_ID_RUBICON);
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
+        PrebidMobile.setStoredAuctionResponse(Constants.PBS_STORED_RESPONSE_VAST_RUBICON);
+        VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
+        parameters.setMimes(Arrays.asList("video/mp4"));
+
+        parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0));
+        // parameters.setProtocols(Arrays.asList(new Signals.Protocols(2)));
+
+        parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOff));
+        // parameters.setPlaybackMethod(Arrays.asList(new Signals.PlaybackMethod(2)));
+
+        VideoInterstitialAdUnit adUnit = new VideoInterstitialAdUnit("1001-1");
+        adUnit.setParameters(parameters);
+
+        this.adUnit = adUnit;
+        final MoPubInterstitial mpInterstitial = new MoPubInterstitial(this, Constants.MOPUB_INTERSTITIAL_VIDEO_ADUNIT_ID_RUBICON);
         mpInterstitial.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
             @Override
             public void onInterstitialLoaded(MoPubInterstitial interstitial) {
@@ -43,9 +64,9 @@ public class RubiconInterstitialMoPubDemoActivity extends AppCompatActivity {
             public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
                 AlertDialog.Builder builder;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder = new AlertDialog.Builder(RubiconInterstitialMoPubDemoActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                    builder = new AlertDialog.Builder(RubiconInterstitialVideoMoPubDemoActivity.this, android.R.style.Theme_Material_Dialog_Alert);
                 } else {
-                    builder = new AlertDialog.Builder(RubiconInterstitialMoPubDemoActivity.this);
+                    builder = new AlertDialog.Builder(RubiconInterstitialVideoMoPubDemoActivity.this);
                 }
                 builder.setTitle("Failed to load MoPub interstitial ad")
                         .setMessage("Error code: " + errorCode.toString())
@@ -68,7 +89,6 @@ public class RubiconInterstitialMoPubDemoActivity extends AppCompatActivity {
 
             }
         });
-
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
         adUnit.fetchDemand(mpInterstitial, new OnCompleteListener() {
@@ -77,6 +97,5 @@ public class RubiconInterstitialMoPubDemoActivity extends AppCompatActivity {
                 mpInterstitial.load();
             }
         });
-
     }
 }

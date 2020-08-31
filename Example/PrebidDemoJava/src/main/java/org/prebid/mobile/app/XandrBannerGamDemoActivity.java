@@ -13,6 +13,7 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
+import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.BannerBaseAdUnit;
 import org.prebid.mobile.Host;
@@ -25,8 +26,8 @@ import org.prebid.mobile.addendum.PbFindSizeError;
 
 import java.util.Arrays;
 
-public class RubiconBannerGamDemoActivity extends AppCompatActivity {
-    BannerAdUnit adUnit;
+public class XandrBannerGamDemoActivity extends AppCompatActivity {
+    AdUnit adUnit;
 
     @Override
     protected void onDestroy() {
@@ -41,24 +42,21 @@ public class RubiconBannerGamDemoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
-        PrebidMobile.setPrebidServerHost(Host.RUBICON);
-        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
-        PrebidMobile.setStoredAuctionResponse(Constants.PBS_STORED_RESPONSE_300x250_RUBICON);
-        String adSizeName = getIntent().getStringExtra(Constants.AD_SIZE_NAME);
-        int width = 0;
-        int height = 0;
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_APPNEXUS);
+        BannerAdUnit adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_APPNEXUS, 300, 250);
 
-        String[] wAndH = adSizeName.split("x");
-        width = Integer.valueOf(wAndH[0]);
-        height = Integer.valueOf(wAndH[1]);
-
-        adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_RUBICON, width, height);
         BannerBaseAdUnit.Parameters parameters = new BannerBaseAdUnit.Parameters();
         parameters.setApi(Arrays.asList(Signals.Api.MRAID_2));
+//        parameters.setApi(Arrays.asList(new Signals.Api(5)));
+
         adUnit.setParameters(parameters);
+
+        this.adUnit = adUnit;
+//        Util.enableAdditionalFunctionality(this.adUnit);
         final PublisherAdView amBanner = new PublisherAdView(this);
-        amBanner.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_300x250_RUBICON);
-        amBanner.setAdSizes(new AdSize(width, height));
+        amBanner.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES_APPNEXUS);
+        amBanner.setAdSizes(new AdSize(300, 250));
         FrameLayout adFrame = findViewById(R.id.adFrame);
         adFrame.removeAllViews();
         adFrame.addView(amBanner);
@@ -96,6 +94,5 @@ public class RubiconBannerGamDemoActivity extends AppCompatActivity {
                 amBanner.loadAd(request);
             }
         });
-
     }
 }

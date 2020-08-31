@@ -11,11 +11,13 @@ import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 
 import org.prebid.mobile.AdUnit;
+import org.prebid.mobile.Host;
 import org.prebid.mobile.InterstitialAdUnit;
 import org.prebid.mobile.OnCompleteListener;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 
-public class RubiconInterstitialMoPubDemoActivity extends AppCompatActivity {
+public class XandrInterstitialMoPubDemoActivity extends AppCompatActivity {
     AdUnit adUnit;
 
     @Override
@@ -31,8 +33,10 @@ public class RubiconInterstitialMoPubDemoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
-        adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL_RUBICON);
-        final MoPubInterstitial mpInterstitial = new MoPubInterstitial(this, Constants.MOPUB_INTERSTITIAL_ADUNIT_ID_RUBICON);
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_APPNEXUS);
+        adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL_APPNEXUS);
+        final MoPubInterstitial mpInterstitial = new MoPubInterstitial(this, Constants.MOPUB_INTERSTITIAL_ADUNIT_ID_APPNEXUS);
         mpInterstitial.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {
             @Override
             public void onInterstitialLoaded(MoPubInterstitial interstitial) {
@@ -43,9 +47,9 @@ public class RubiconInterstitialMoPubDemoActivity extends AppCompatActivity {
             public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
                 AlertDialog.Builder builder;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder = new AlertDialog.Builder(RubiconInterstitialMoPubDemoActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                    builder = new AlertDialog.Builder(XandrInterstitialMoPubDemoActivity.this, android.R.style.Theme_Material_Dialog_Alert);
                 } else {
-                    builder = new AlertDialog.Builder(RubiconInterstitialMoPubDemoActivity.this);
+                    builder = new AlertDialog.Builder(XandrInterstitialMoPubDemoActivity.this);
                 }
                 builder.setTitle("Failed to load MoPub interstitial ad")
                         .setMessage("Error code: " + errorCode.toString())
@@ -68,7 +72,6 @@ public class RubiconInterstitialMoPubDemoActivity extends AppCompatActivity {
 
             }
         });
-
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
         adUnit.fetchDemand(mpInterstitial, new OnCompleteListener() {
@@ -77,6 +80,5 @@ public class RubiconInterstitialMoPubDemoActivity extends AppCompatActivity {
                 mpInterstitial.load();
             }
         });
-
     }
 }

@@ -13,20 +13,21 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
-import org.prebid.mobile.BannerAdUnit;
-import org.prebid.mobile.BannerBaseAdUnit;
+import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Signals;
+import org.prebid.mobile.VideoAdUnit;
+import org.prebid.mobile.VideoBaseAdUnit;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.addendum.PbFindSizeError;
 
 import java.util.Arrays;
 
-public class RubiconBannerGamDemoActivity extends AppCompatActivity {
-    BannerAdUnit adUnit;
+public class RubiconBannerVideoGamDemoActivity extends AppCompatActivity {
+    AdUnit adUnit;
 
     @Override
     protected void onDestroy() {
@@ -43,22 +44,26 @@ public class RubiconBannerGamDemoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_demo);
         PrebidMobile.setPrebidServerHost(Host.RUBICON);
         PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
-        PrebidMobile.setStoredAuctionResponse(Constants.PBS_STORED_RESPONSE_300x250_RUBICON);
-        String adSizeName = getIntent().getStringExtra(Constants.AD_SIZE_NAME);
-        int width = 0;
-        int height = 0;
+        PrebidMobile.setStoredAuctionResponse(Constants.PBS_STORED_RESPONSE_VAST_RUBICON);
+        VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
+        parameters.setMimes(Arrays.asList("video/mp4"));
 
-        String[] wAndH = adSizeName.split("x");
-        width = Integer.valueOf(wAndH[0]);
-        height = Integer.valueOf(wAndH[1]);
+        parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0));
+        // parameters.setProtocols(Arrays.asList(new Signals.Protocols(2)));
 
-        adUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_RUBICON, width, height);
-        BannerBaseAdUnit.Parameters parameters = new BannerBaseAdUnit.Parameters();
-        parameters.setApi(Arrays.asList(Signals.Api.MRAID_2));
+        parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOff));
+        // parameters.setPlaybackMethod(Arrays.asList(new Signals.PlaybackMethod(2)));
+
+        parameters.setPlacement(Signals.Placement.InBanner);
+        // parameters.setPlacement(new Signals.Placement(2));
+
+        VideoAdUnit adUnit = new VideoAdUnit("1001-1", 300, 250);
         adUnit.setParameters(parameters);
+        this.adUnit = adUnit;
         final PublisherAdView amBanner = new PublisherAdView(this);
-        amBanner.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_300x250_RUBICON);
-        amBanner.setAdSizes(new AdSize(width, height));
+        amBanner.setAdUnitId(Constants.DFP_VAST_ADUNIT_ID_RUBICON
+        );
+        amBanner.setAdSizes(new AdSize(300, 250));
         FrameLayout adFrame = findViewById(R.id.adFrame);
         adFrame.removeAllViews();
         adFrame.addView(amBanner);
