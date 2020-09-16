@@ -1136,6 +1136,61 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
+    public void testPostDataWithOmidNameAndVersion() throws Exception {
+
+        //given
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+
+        String partnerName = "PartnerName";
+        String partnerVersion = "1.0";
+
+        TargetingParams.setOmidPartnerName(partnerName);
+        TargetingParams.setOmidPartnerVersion(partnerVersion);
+
+        String omidPartnerName = null;
+        String omidPartnerVersion = null;
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
+        try {
+            JSONObject ext = postData.getJSONObject("source").getJSONObject("ext");
+            omidPartnerName = ext.getString("omidpn");
+            omidPartnerVersion = ext.getString("omidpv");
+
+        } catch (Exception ex) {
+            fail("parsing error");
+        }
+
+        //then
+        assertEquals(partnerName, omidPartnerName);
+        assertEquals(partnerVersion, omidPartnerVersion);
+    }
+
+    @Test
+    public void testPostDataWithoutOmidNameAndVersion() throws Exception {
+
+        //given
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+
+        TargetingParams.setOmidPartnerName(null);
+        TargetingParams.setOmidPartnerVersion(null);
+
+        JSONObject ext = null;
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
+        try {
+            ext = (JSONObject) postData.getJSONObject("source").opt("ext");
+
+        } catch (Exception ex) {
+            fail("parsing error");
+        }
+
+        //then
+        assertNull(ext);
+    }
+
+    @Test
     public void testPbsDebug() throws Exception {
         pbsDebugHelper(true, 1);
         pbsDebugHelper(false, null);
