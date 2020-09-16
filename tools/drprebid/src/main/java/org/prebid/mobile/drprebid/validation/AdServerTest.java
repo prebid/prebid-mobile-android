@@ -1,10 +1,11 @@
 package org.prebid.mobile.drprebid.validation;
 
 import android.app.Activity;
-import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.FrameLayout;
+
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
@@ -22,7 +23,6 @@ import org.prebid.mobile.drprebid.managers.SettingsManager;
 import org.prebid.mobile.drprebid.model.AdFormat;
 import org.prebid.mobile.drprebid.model.AdServer;
 import org.prebid.mobile.drprebid.model.AdServerSettings;
-import org.prebid.mobile.drprebid.model.AdServerTestResult;
 import org.prebid.mobile.drprebid.model.AdSize;
 import org.prebid.mobile.drprebid.model.GeneralSettings;
 import org.prebid.mobile.drprebid.model.PrebidServer;
@@ -34,8 +34,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import okhttp3.Call;
@@ -45,6 +47,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static org.prebid.mobile.drprebid.managers.LineItemKeywordManager.KEYWORD_REQUEST_ID;
+
 public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstitial.InterstitialAdListener {
     private static final String TAG = AdServerTest.class.getSimpleName();
 
@@ -53,9 +57,7 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
 
         void onPrebidKeywordsNotFoundOnRequest();
 
-        void onServerRespondedWithPrebidCreative();
-
-        void onServerNotRespondedWithPrebidCreative();
+        void adServerResponseContainsPrebidCreative(@Nullable Boolean contains);
 
         void onTestFinished();
     }
@@ -128,6 +130,8 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
                 mMoPubInterstitial.load();
             }
         } else if (adServerSettings.getAdServer() == AdServer.GOOGLE_AD_MANAGER) {
+            PublisherAdRequest adRequest = null;
+
             if (generalSettings.getAdFormat() == AdFormat.BANNER) {
                 mGoogleAd = new PublisherAdView(mContext);
                 AdSize adSize = generalSettings.getAdSize();
@@ -135,32 +139,29 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
                 mGoogleAd.setAdUnitId(adServerSettings.getAdUnitId());
                 mGoogleAd.setAdListener(mGoogleBannerListener);
 
-                PublisherAdRequest.Builder adRequestBuilder = new PublisherAdRequest.Builder();
-
-                for (String key : mKeywords.keySet()) {
-                    if (mKeywords.containsKey(key)) {
-                        adRequestBuilder.addCustomTargeting(key, mKeywords.get(key));
-                    }
-                }
-
-                PublisherAdRequest adRequest = adRequestBuilder.build();
-                mGoogleAd.loadAd(adRequest);
-
             } else if (generalSettings.getAdFormat() == AdFormat.INTERSTITIAL) {
-                 mGoogleInterstitial = new PublisherInterstitialAd(mContext);
+                mGoogleInterstitial = new PublisherInterstitialAd(mContext);
+                mGoogleInterstitial.setAdUnitId(adServerSettings.getAdUnitId());
                 mGoogleInterstitial.setAdListener(mGoogleInterstitialListener);
+            }
 
-                PublisherAdRequest.Builder adRequestBuilder = new PublisherAdRequest.Builder();
+            PublisherAdRequest.Builder adRequestBuilder = new PublisherAdRequest.Builder();
 
-                for (String key : mKeywords.keySet()) {
-                    if (mKeywords.containsKey(key)) {
-                        adRequestBuilder.addCustomTargeting(key, mKeywords.get(key));
-                    }
+            for (String key : mKeywords.keySet()) {
+                if (mKeywords.containsKey(key)) {
+                    adRequestBuilder.addCustomTargeting(key, mKeywords.get(key));
                 }
+            }
 
-                PublisherAdRequest adRequest = adRequestBuilder.build();
+            adRequest = adRequestBuilder.build();
+
+            if (generalSettings.getAdFormat() == AdFormat.BANNER) {
+                mGoogleAd.loadAd(adRequest);
+            } else if (generalSettings.getAdFormat() == AdFormat.INTERSTITIAL) {
                 mGoogleInterstitial.loadAd(adRequest);
             }
+
+            checkRequestForKeywordsAM(adRequest);
         }
     }
 
@@ -184,7 +185,7 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
 
         mRequestId = UUID.randomUUID().toString();
 
-        keywords.put(LineItemKeywordManager.KEYWORD_REQUEST_ID, mRequestId);
+        keywords.put(KEYWORD_REQUEST_ID, mRequestId);
 
         return keywords;
     }
@@ -195,11 +196,26 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
         @Override
         public void onAdLoaded() {
             super.onAdLoaded();
+
+            AdViewUtils.findHtml(mGoogleAd, new OnWebViewListener() {
+                @Override
+                public void success(String html) {
+                    mAdServerResponse = html;
+                    checkResponseForPrebidCreative();
+                }
+
+                @Override
+                public void failure() {
+                    invokeContainsPrebidCreative(false);
+                }
+            });
         }
 
         @Override
         public void onAdFailedToLoad(int errorCode) {
             super.onAdFailedToLoad(errorCode);
+
+            invokeContainsPrebidCreative(false);
         }
     };
 
@@ -209,11 +225,16 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
         @Override
         public void onAdLoaded() {
             super.onAdLoaded();
+
+            invokeContainsPrebidCreative(null);
+            invokeTestFinished();
         }
 
         @Override
         public void onAdFailedToLoad(int errorCode) {
             super.onAdFailedToLoad(errorCode);
+
+            invokeContainsPrebidCreative(false);
         }
     };
 
@@ -303,7 +324,7 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Log.e(TAG, e.getMessage());
-                        invokeDoesNotContainPrebidCreative();
+                        invokeContainsPrebidCreative(false);
                     }
 
                     @Override
@@ -314,13 +335,36 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
                             inputStream.close();
                             checkResponseForPrebidCreative();
                         } else {
-                            invokeDoesNotContainPrebidCreative();
+                            invokeContainsPrebidCreative(false);
                         }
                     }
                 });
             }
         } catch (Exception exception) {
             Log.e(TAG, exception.getMessage());
+        }
+    }
+
+    //Check PublisherAdRequest
+    private void checkRequestForKeywordsAM(@Nullable PublisherAdRequest adRequest) {
+        if (adRequest != null && mListener != null) {
+
+            Map<String, String> map = new HashMap<>();
+
+            Set<String> set = adRequest.getCustomTargeting().keySet();
+            Iterator<String> iterator = set.iterator();
+            while (iterator.hasNext()) {
+                String key = iterator.next();
+                map.put(key, adRequest.getCustomTargeting().getString(key));
+            }
+
+            if (map.get(KEYWORD_REQUEST_ID).equals(mRequestId)) {
+                if (mKeywords.equals(map)) {
+                    mListener.onPrebidKeywordsFoundOnRequest();
+                } else {
+                    mListener.onPrebidKeywordsNotFoundOnRequest();
+                }
+            }
         }
     }
 
@@ -347,26 +391,16 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
 
     private void checkResponseForPrebidCreative() {
         if (!TextUtils.isEmpty(mAdServerResponse) && (mAdServerResponse.contains("pbm.js") || mAdServerResponse.contains("creative.js"))) {
-            invokeContainsPrebidCreative();
+            invokeContainsPrebidCreative(true);
         } else {
-            invokeDoesNotContainPrebidCreative();
+            invokeContainsPrebidCreative(false);
         }
     }
 
-    private void invokeContainsPrebidCreative() {
+    private void invokeContainsPrebidCreative(@Nullable Boolean contains) {
         mContext.runOnUiThread(() -> {
             if (mListener != null) {
-                mListener.onServerRespondedWithPrebidCreative();
-            }
-
-            invokeTestFinished();
-        });
-    }
-
-    private void invokeDoesNotContainPrebidCreative() {
-        mContext.runOnUiThread(() -> {
-            if (mListener != null) {
-                mListener.onServerNotRespondedWithPrebidCreative();
+                mListener.adServerResponseContainsPrebidCreative(contains);
             }
 
             invokeTestFinished();
