@@ -1,15 +1,17 @@
 package org.prebid.mobile.drprebid.ui.viewholders;
 
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.model.HelpScreen;
@@ -49,7 +51,7 @@ public class SdkValidationViewHolder extends RecyclerView.ViewHolder implements 
     private boolean creativeCachedFinished = false;
     private boolean sentAdServerPassed = false;
     private boolean sentAdServerFinished = false;
-    private boolean receivedAdServerPassed = false;
+    private Boolean receivedAdServerPassed = false;
     private boolean receivedAdServerFinished = false;
 
     public SdkValidationViewHolder(@NonNull final View itemView) {
@@ -81,7 +83,11 @@ public class SdkValidationViewHolder extends RecyclerView.ViewHolder implements 
 
         responseAdServerReceivedProgress = itemView.findViewById(R.id.progress_prebid_creative_served_result);
         responseAdServerReceivedIcon = itemView.findViewById(R.id.image_prebid_creative_served_result);
-
+        responseAdServerReceivedIcon.setOnClickListener(v -> {
+            if (receivedAdServerPassed == null) {
+                Toast.makeText(v.getContext(), "This feature is not supported for Interstitial Ad Units", Toast.LENGTH_SHORT).show();
+            }
+        });
         SdkValidationViewModel viewModel = ViewModelProviders.of((AppCompatActivity) itemView.getContext()).get(SdkValidationViewModel.class);
 
         viewModel.getAdUnitRegistered().observe(this, registered -> {
@@ -173,12 +179,17 @@ public class SdkValidationViewHolder extends RecyclerView.ViewHolder implements 
             responseAdServerReceivedProgress.setVisibility(View.GONE);
             responseAdServerReceivedIcon.setVisibility(View.VISIBLE);
 
-            if (served) {
-                responseAdServerReceivedIcon.setImageResource(R.drawable.icon_success_step);
-                receivedAdServerPassed = true;
+            if (served == null) {
+                responseAdServerReceivedIcon.setImageResource(R.drawable.icon_not_supported);
+                receivedAdServerPassed = null;
             } else {
-                responseAdServerReceivedIcon.setImageResource(R.drawable.icon_fail_step);
-                receivedAdServerPassed = false;
+                if (served) {
+                    responseAdServerReceivedIcon.setImageResource(R.drawable.icon_success_step);
+                    receivedAdServerPassed = true;
+                } else {
+                    responseAdServerReceivedIcon.setImageResource(R.drawable.icon_fail_step);
+                    receivedAdServerPassed = false;
+                }
             }
 
             receivedAdServerFinished = true;
@@ -207,15 +218,20 @@ public class SdkValidationViewHolder extends RecyclerView.ViewHolder implements 
                 && receivedAdServerFinished) {
             totalProgress.setVisibility(View.GONE);
             totalIcon.setVisibility(View.VISIBLE);
-            if (adUnitRegisteredPassed
-                    && sentPrebidPassed
-                    && receivedPrebidPassed
-                    && creativeCachedPassed
-                    && sentAdServerPassed
-                    && receivedAdServerPassed) {
-                totalIcon.setImageResource(R.drawable.icon_success_main);
+
+            if (receivedAdServerPassed == null) {
+                totalIcon.setImageResource(R.drawable.icon_not_supported);
             } else {
-                totalIcon.setImageResource(R.drawable.icon_fail_main);
+                if (adUnitRegisteredPassed
+                        && sentPrebidPassed
+                        && receivedPrebidPassed
+                        && creativeCachedPassed
+                        && sentAdServerPassed
+                        && receivedAdServerPassed) {
+                    totalIcon.setImageResource(R.drawable.icon_success_main);
+                } else {
+                    totalIcon.setImageResource(R.drawable.icon_fail_main);
+                }
             }
         }
     }

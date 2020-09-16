@@ -1,8 +1,10 @@
 package org.prebid.mobile.drprebid.ui.activities;
 
-import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -87,13 +89,8 @@ public class TestResultsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onServerRespondedWithPrebidCreative() {
-                mAdServerValidationViewModel.setCreativeServed(true);
-            }
-
-            @Override
-            public void onServerNotRespondedWithPrebidCreative() {
-                mAdServerValidationViewModel.setCreativeServed(false);
+            public void adServerResponseContainsPrebidCreative(@Nullable Boolean contains) {
+                mAdServerValidationViewModel.setCreativeServed(contains);
             }
 
             @Override
@@ -148,7 +145,7 @@ public class TestResultsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void adServerResponseContainsPrebidCreative(boolean contains) {
+            public void adServerResponseContainsPrebidCreative(@Nullable Boolean contains) {
                 mSdkValidationViewModel.setCreativeServed(contains);
             }
 

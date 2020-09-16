@@ -69,8 +69,7 @@
                 android:layout_weight="1"
                 android:text="@string/google_ad_manager"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:visibility="gone"/>
+                android:textSize="16sp"/>
 
             <RadioButton
                 android:id="@+id/radio_mopub"
