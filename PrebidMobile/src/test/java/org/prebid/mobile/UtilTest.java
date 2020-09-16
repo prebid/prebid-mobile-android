@@ -63,7 +63,8 @@ public class UtilTest extends BaseSetup {
     public void testGetClassFromString() throws Exception {
         assertEquals(MoPubView.class, Util.getClassFromString(Util.MOPUB_BANNER_VIEW_CLASS));
         assertEquals(MoPubInterstitial.class, Util.getClassFromString(Util.MOPUB_INTERSTITIAL_CLASS));
-        assertEquals(PublisherAdRequest.class, Util.getClassFromString(Util.DFP_AD_REQUEST_CLASS));
+        assertEquals(PublisherAdRequest.class, Util.getClassFromString(Util.AD_MANAGER_REQUEST_CLASS));
+        assertEquals(PublisherAdRequest.Builder.class, Util.getClassFromString(Util.AD_MANAGER_REQUEST_BUILDER_CLASS));
     }
 
     @Test
@@ -93,18 +94,22 @@ public class UtilTest extends BaseSetup {
         HashMap<String, String> bids = new HashMap<>();
         bids.put("hb_pb", "0.50");
         bids.put("hb_cache_id", "123456");
+
+        Util.apply(bids, builder);
         PublisherAdRequest request = builder.build();
+        assertEquals(3, request.getCustomTargeting().size());
+        assertEquals("Value", request.getCustomTargeting().get("Key"));
+        assertEquals("0.50", request.getCustomTargeting().get("hb_pb"));
+        assertEquals("123456", request.getCustomTargeting().get("hb_cache_id"));
+
         Util.apply(bids, request);
         assertEquals(3, request.getCustomTargeting().size());
-        assertTrue(request.getCustomTargeting().containsKey("Key"));
         assertEquals("Value", request.getCustomTargeting().get("Key"));
-        assertTrue(request.getCustomTargeting().containsKey("hb_pb"));
         assertEquals("0.50", request.getCustomTargeting().get("hb_pb"));
-        assertTrue(request.getCustomTargeting().containsKey("hb_cache_id"));
         assertEquals("123456", request.getCustomTargeting().get("hb_cache_id"));
+
         Util.apply(null, request);
         assertEquals(1, request.getCustomTargeting().size());
-        assertTrue(request.getCustomTargeting().containsKey("Key"));
         assertEquals("Value", request.getCustomTargeting().get("Key"));
     }
 
@@ -117,6 +122,8 @@ public class UtilTest extends BaseSetup {
         assertTrue(Util.supportedAdObject(interstitial));
         PublisherAdRequest request = new PublisherAdRequest.Builder().build();
         assertTrue(Util.supportedAdObject(request));
+        PublisherAdRequest.Builder requestBuilder = new PublisherAdRequest.Builder();
+        assertTrue(Util.supportedAdObject(requestBuilder));
         Object object = new Object();
         assertFalse(Util.supportedAdObject(object));
     }

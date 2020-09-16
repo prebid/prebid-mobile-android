@@ -24,6 +24,7 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -40,6 +41,8 @@ public abstract class AdUnit {
 
     private final Map<String, Set<String>> contextDataDictionary;
     private final Set<String> contextKeywordsSet;
+
+    private String pbAdSlot;
 
     AdUnit(@NonNull String configId, @NonNull AdType adType) {
         this.configId = configId;
@@ -68,6 +71,18 @@ public abstract class AdUnit {
             fetcher.destroy();
             fetcher = null;
         }
+    }
+
+    public void fetchDemand(@NonNull final OnCompleteListener2 listener) {
+
+        final Map<String, String> keywordsMap = new HashMap<>();
+
+        fetchDemand(keywordsMap, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+                listener.onComplete(resultCode, keywordsMap.size() != 0 ? Collections.unmodifiableMap(keywordsMap) : null);
+            }
+        });
     }
 
     public void fetchDemand(@NonNull Object adObj, @NonNull OnCompleteListener listener) {
@@ -134,15 +149,21 @@ public abstract class AdUnit {
             return;
         }
 
-        VideoBaseAdUnit.Parameters parameters = null;
+        BannerBaseAdUnit.Parameters bannerParameters = null;
+        if (this instanceof BannerBaseAdUnit) {
+            BannerBaseAdUnit bannerBaseAdUnit = (BannerBaseAdUnit) this;
+            bannerParameters = bannerBaseAdUnit.parameters;
+        }
+
+        VideoBaseAdUnit.Parameters videoParameters = null;
         if (this instanceof VideoBaseAdUnit) {
             VideoBaseAdUnit videoBaseAdUnit = (VideoBaseAdUnit) this;
-            parameters = videoBaseAdUnit.parameters;
+            videoParameters = videoBaseAdUnit.parameters;
         }
 
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
-            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, parameters);
+            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, pbAdSlot, bannerParameters, videoParameters);
             if (this.adType.equals(AdType.NATIVE)) {
                 requestParams.setNativeRequestParams(((NativeAdUnit) this).params);
             }
@@ -233,6 +254,12 @@ public abstract class AdUnit {
         return contextKeywordsSet;
     }
 
+    public String getPbAdSlot() {
+        return pbAdSlot;
+    }
 
+    public void setPbAdSlot(String pbAdSlot) {
+        this.pbAdSlot = pbAdSlot;
+    }
 }
 

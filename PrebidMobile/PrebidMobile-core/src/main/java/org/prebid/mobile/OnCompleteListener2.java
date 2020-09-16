@@ -17,12 +17,16 @@
 package org.prebid.mobile;
 
 import android.support.annotation.MainThread;
+import android.support.annotation.Nullable;
 
-public interface OnCompleteListener {
+import java.util.Map;
+
+public interface OnCompleteListener2 {
     /**
-     * This method will be called when PrebidMobile finishes attaching keywords to your ad object.
-     * @param resultCode see object class definition for details
+     * This method will be called when PrebidMobile finishes attaching keywords to unmodifiableMap.
+     * @param resultCode see {@link ResultCode} class definition for details
+     * @param unmodifiableMap a map of targeting Key/Value pairs
      */
     @MainThread
-    void onComplete(ResultCode resultCode);
+    void onComplete(ResultCode resultCode, @Nullable Map<String, String> unmodifiableMap);
 }

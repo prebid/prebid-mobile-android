@@ -105,15 +105,13 @@ class DemoActivity : AppCompatActivity() {
         adFrame.addView(dfpAdView)
         val builder = PublisherAdRequest.Builder()
 
-        val request = builder.build()
-
         //region PrebidMobile Mobile API 1.0 usage
         val millis = intent.getIntExtra(Constants.AUTO_REFRESH_NAME, 0)
         adUnit!!.setAutoRefreshPeriodMillis(millis)
-        adUnit!!.fetchDemand(request, object : OnCompleteListener {
+        adUnit!!.fetchDemand(builder, object : OnCompleteListener {
             override fun onComplete(resultCode: ResultCode) {
                 this@DemoActivity.resultCode = resultCode
-                dfpAdView.loadAd(request)
+                dfpAdView.loadAd(builder.build())
                 refreshCount++
             }
         })

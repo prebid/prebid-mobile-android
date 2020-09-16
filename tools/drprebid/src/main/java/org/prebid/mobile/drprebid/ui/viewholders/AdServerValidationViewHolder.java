@@ -1,15 +1,17 @@
 package org.prebid.mobile.drprebid.ui.viewholders;
 
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.model.HelpScreen;
@@ -29,7 +31,7 @@ public class AdServerValidationViewHolder extends RecyclerView.ViewHolder implem
 
     private boolean sentPassed = false;
     private boolean sentFinished = false;
-    private boolean receivedPassed = false;
+    private Boolean receivedPassed = false;
     private boolean receivedFinished = false;
 
     public AdServerValidationViewHolder(@NonNull final View itemView) {
@@ -49,6 +51,11 @@ public class AdServerValidationViewHolder extends RecyclerView.ViewHolder implem
 
         responseReceivedProgress = itemView.findViewById(R.id.progress_prebid_creative_served_result);
         responseReceivedIcon = itemView.findViewById(R.id.image_prebid_creative_served_result);
+        responseReceivedIcon.setOnClickListener(v -> {
+            if (receivedPassed == null) {
+                Toast.makeText(v.getContext(), "This feature is not supported for Interstitial Ad Units", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         AdServerValidationViewModel viewModel = ViewModelProviders.of((AppCompatActivity) itemView.getContext()).get(AdServerValidationViewModel.class);
 
@@ -73,12 +80,17 @@ public class AdServerValidationViewHolder extends RecyclerView.ViewHolder implem
             responseReceivedProgress.setVisibility(View.GONE);
             responseReceivedIcon.setVisibility(View.VISIBLE);
 
-            if (served) {
-                responseReceivedIcon.setImageResource(R.drawable.icon_success_step);
-                receivedPassed = true;
+            if (served == null) {
+                responseReceivedIcon.setImageResource(R.drawable.icon_not_supported);
+                receivedPassed = null;
             } else {
-                responseReceivedIcon.setImageResource(R.drawable.icon_fail_step);
-                receivedPassed = false;
+                if (served) {
+                    responseReceivedIcon.setImageResource(R.drawable.icon_success_step);
+                    receivedPassed = true;
+                } else {
+                    responseReceivedIcon.setImageResource(R.drawable.icon_fail_step);
+                    receivedPassed = false;
+                }
             }
 
             receivedFinished = true;
@@ -102,10 +114,16 @@ public class AdServerValidationViewHolder extends RecyclerView.ViewHolder implem
         if (sentFinished && receivedFinished) {
             totalProgress.setVisibility(View.GONE);
             totalIcon.setVisibility(View.VISIBLE);
-            if (sentPassed && receivedPassed) {
-                totalIcon.setImageResource(R.drawable.icon_success_main);
+
+            if (receivedPassed == null) {
+                totalIcon.setImageResource(R.drawable.icon_not_supported);
             } else {
-                totalIcon.setImageResource(R.drawable.icon_fail_main);
+                totalIcon.setTag(null);
+                if (sentPassed && receivedPassed) {
+                    totalIcon.setImageResource(R.drawable.icon_success_main);
+                } else {
+                    totalIcon.setImageResource(R.drawable.icon_fail_main);
+                }
             }
         }
     }

@@ -465,38 +465,23 @@ class PrebidServerAdapter implements DemandAdapter {
             try {
                 String id = UUID.randomUUID().toString();
                 postData.put("id", id);
-                JSONObject source = new JSONObject();
-                source.put("tid", id);
-                postData.put("source", source);
+                // add ad source
+                postData.put("source", getSource(id));
                 // add ad units
-                JSONArray imp = getImp();
-                if (imp != null && imp.length() > 0) {
-                    postData.put("imp", imp);
-                }
+                postData.put("imp", getImp());
                 // add device
-                JSONObject device = getDeviceObject();
-                if (device != null && device.length() > 0) {
-                    postData.put(PrebidServerSettings.REQUEST_DEVICE, device);
-                }
+                postData.put(PrebidServerSettings.REQUEST_DEVICE, getDeviceObject());
                 // add app
-                JSONObject app = getAppObject();
-                if (device != null && device.length() > 0) {
-                    postData.put(PrebidServerSettings.REQUEST_APP, app);
-                }
+                postData.put(PrebidServerSettings.REQUEST_APP, getAppObject());
                 // add user
-                JSONObject user = getUserObject();
-                if (user != null && user.length() > 0) {
-                    postData.put(PrebidServerSettings.REQUEST_USER, user);
-                }
+                postData.put(PrebidServerSettings.REQUEST_USER, getUserObject());
                 // add regs
-                JSONObject regs = getRegsObject();
-                if (regs != null && regs.length() > 0) {
-                    postData.put("regs", regs);
-                }
+                postData.put("regs", getRegsObject());
                 // add targeting keywords request
-                JSONObject ext = getRequestExtData();
-                if (ext != null && ext.length() > 0) {
-                    postData.put("ext", ext);
+                postData.put("ext", getRequestExtData());
+
+                if (PrebidMobile.getPbsDebug()) {
+                    postData.put("test", 1);
                 }
 
                 JSONObject objectWithoutEmptyValues = Util.getObjectWithoutEmptyValues(postData);
@@ -526,6 +511,16 @@ class PrebidServerAdapter implements DemandAdapter {
             return postData;
         }
 
+        private JSONObject getSource(String id) throws JSONException {
+            JSONObject source = new JSONObject();
+            source.put("tid", id);
+            JSONObject ext = new JSONObject();
+            ext.put("omidpn", TargetingParams.getOmidPartnerName());
+            ext.put("omidpv", TargetingParams.getOmidPartnerVersion());
+            source.put("ext", ext);
+
+            return source;
+        }
         private JSONObject getRequestExtData() {
             JSONObject ext = new JSONObject();
             JSONObject prebid = new JSONObject();
@@ -556,25 +551,41 @@ class PrebidServerAdapter implements DemandAdapter {
                     imp.put("instl", 1);
                 }
 
-                if (adType.equals(AdType.INTERSTITIAL)) {
+                if (adType.equals(AdType.BANNER) || adType.equals(AdType.INTERSTITIAL)) {
+
                     JSONObject banner = new JSONObject();
                     JSONArray format = new JSONArray();
-                    Context context = PrebidMobile.getApplicationContext();
-                    if (context != null) {
-                        format.put(new JSONObject().put("w", context.getResources().getConfiguration().screenWidthDp).put("h", context.getResources().getConfiguration().screenHeightDp));
-                    } else {
-                        // Unlikely this is being called, if so, please check if you've set up the SDK properly
-                        throw new NoContextException();
+
+                    if (adType.equals(AdType.BANNER)) {
+                        for (AdSize size : requestParams.getAdSizes()) {
+                            format.put(new JSONObject().put("w", size.getWidth()).put("h", size.getHeight()));
+                        }
+                    } else if (adType.equals(AdType.INTERSTITIAL)) {
+                        Context context = PrebidMobile.getApplicationContext();
+                        if (context != null) {
+                            format.put(new JSONObject().put("w", context.getResources().getConfiguration().screenWidthDp).put("h", context.getResources().getConfiguration().screenHeightDp));
+                        } else {
+                            // Unlikely this is being called, if so, please check if you've set up the SDK properly
+                            throw new NoContextException();
+                        }
                     }
+
                     banner.put("format", format);
-                    imp.put("banner", banner);
-                } else if (adType.equals(AdType.BANNER)) {
-                    JSONObject banner = new JSONObject();
-                    JSONArray format = new JSONArray();
-                    for (AdSize size : requestParams.getAdSizes()) {
-                        format.put(new JSONObject().put("w", size.getWidth()).put("h", size.getHeight()));
+
+                    BannerBaseAdUnit.Parameters parameters = requestParams.getBannerParameters();
+                    if (parameters != null) {
+
+                        List<Integer> apiList = Util.convertCollection(parameters.getApi(), new Util.Function1<Integer, Signals.Api>() {
+                            @Override
+                            public Integer apply(Signals.Api element) {
+                                return element.value;
+                            }
+                        });
+
+                        banner.put("api", new JSONArray(apiList));
+
                     }
-                    banner.put("format", format);
+
                     imp.put("banner", banner);
                 } else if (adType.equals(AdType.NATIVE)) {
                     // add native request
@@ -765,7 +776,12 @@ class PrebidServerAdapter implements DemandAdapter {
                 JSONObject prebid = new JSONObject();
                 ext.put("prebid", prebid);
                 JSONObject context = new JSONObject();
-                context.put("data", Util.toJson(requestParams.getContextDataDictionary()));
+
+                JSONObject contextData = Util.toJson(requestParams.getContextDataDictionary());
+                JSONObject data = new JSONObject(contextData.toString());
+                data.put("adslot", requestParams.getPbAdSlot());
+
+                context.put("data", data);
                 context.put("keywords", TextUtils.join(",", requestParams.getContextKeywordsSet()));
                 ext.put("context", context);
                 JSONObject storedrequest = new JSONObject();

@@ -54,6 +54,27 @@ public class AdUnitSuccessorTest {
         assertEquals(2, adUnit.getSizes().size());
     }
 
+    @Test
+    public void testBannerParametersCreation() throws Exception {
+
+        //given
+        BannerAdUnit bannerAdUnit = new BannerAdUnit("123456", 320, 50);
+
+        BannerAdUnit.Parameters parameters = new BannerAdUnit.Parameters();
+        parameters.setApi(Arrays.asList(Signals.Api.VPAID_1, Signals.Api.VPAID_2));
+
+        bannerAdUnit.parameters = parameters;
+
+        //when
+        BannerAdUnit.Parameters testedBannerParameters = bannerAdUnit.parameters;
+        List<Signals.Api> api = testedBannerParameters.getApi();
+
+        //then
+        assertEquals(2, api.size());
+        assertTrue(api.contains(new Signals.Api(1)) && api.contains(new Signals.Api(2)));
+
+    }
+
     //Interstitial AdUnit
     @Test
     public void testInterstitialAdUnitCreation() throws Exception {
