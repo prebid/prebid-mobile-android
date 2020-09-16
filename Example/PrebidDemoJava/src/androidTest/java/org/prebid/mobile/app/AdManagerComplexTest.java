@@ -42,7 +42,8 @@ import org.prebid.mobile.OnCompleteListener;
 import org.prebid.mobile.OnCompleteListener2;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
-import org.prebid.mobile.Util;
+import org.prebid.mobile.addendum.AdViewUtils;
+import org.prebid.mobile.addendum.PbFindSizeError;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -570,42 +571,41 @@ public class AdManagerComplexTest {
                 super.onAdLoaded();
 
                 //Programmatic fix
-                Util.findPrebidCreativeSize(dfpAdView, new Util.CreativeSizeCompletionHandler() {
+                AdViewUtils.findPrebidCreativeSize(dfpAdView, new AdViewUtils.PbFindSizeListener() {
                     @Override
-                    public void onSize(final Util.CreativeSize size) {
-                        if (size != null) {
+                    public void success(final int width, final int height) {
+                        dfpAdView.setAdSizes(new AdSize(width, height));
 
-                            dfpAdView.setAdSizes(new AdSize(size.getWidth(), size.getHeight()));
+                        final View child = dfpAdView.getChildAt(0);
+                        child.setBackgroundColor(Color.RED);
 
-                            final View child = dfpAdView.getChildAt(0);
-                            child.setBackgroundColor(Color.RED);
+                        dfpAdView.post(new Runnable() {
+                            @Override
+                            public void run() {
 
-                            dfpAdView.post(new Runnable() {
-                                @Override
-                                public void run() {
+                                float density = dfpAdView.getResources().getDisplayMetrics().density;
+                                double dpW = Math.ceil(child.getMinimumWidth() / density);
+                                double dpH = Math.ceil(child.getMinimumHeight() / density);
 
-                                    float density = dfpAdView.getResources().getDisplayMetrics().density;
-                                    double dpW = Math.ceil(child.getMinimumWidth() / density);
-                                    double dpH = Math.ceil(child.getMinimumHeight() / density);
-
-                                    try {
-                                        Thread.sleep(screenshotDelayMillis);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    assertEquals((int)dpW, size.getWidth());
-                                    assertEquals((int)dpH, size.getHeight());
-
-                                    update(true);
-
+                                try {
+                                    Thread.sleep(screenshotDelayMillis);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
                                 }
-                            });
 
-                        } else {
-                            LogUtil.w("size is null");
-                            update(false);
-                        }
+                                assertEquals((int)dpW, width);
+                                assertEquals((int)dpH, height);
+
+                                update(true);
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void failure(PbFindSizeError error) {
+                        LogUtil.w("failure:" + error.getDescription());
+                        update(false);
                     }
                 });
 
