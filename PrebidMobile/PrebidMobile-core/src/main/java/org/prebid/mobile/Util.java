@@ -431,7 +431,9 @@ public class Util {
         }
         else if (adObj.getClass() == HashMap.class) {
             if (bids != null && !bids.isEmpty()) {
-                ((HashMap) adObj).putAll(bids);
+                HashMap map = ((HashMap) adObj);
+                map.clear();
+                map.putAll(bids);
             }
         }
     }

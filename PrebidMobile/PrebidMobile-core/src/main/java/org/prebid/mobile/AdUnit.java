@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -71,6 +72,18 @@ public abstract class AdUnit {
             fetcher.destroy();
             fetcher = null;
         }
+    }
+
+    public void fetchDemand(@NonNull final OnCompleteListener2 listener) {
+
+        final Map<String, String> keywordsMap = new HashMap<>();
+
+        fetchDemand(keywordsMap, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+                listener.onComplete(resultCode, keywordsMap.size() != 0 ? Collections.unmodifiableMap(keywordsMap) : null);
+            }
+        });
     }
 
     public void fetchDemand(@NonNull Object adObj, @NonNull OnCompleteListener listener) {
