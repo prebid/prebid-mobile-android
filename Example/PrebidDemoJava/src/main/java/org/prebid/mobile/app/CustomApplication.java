@@ -44,8 +44,6 @@ public class CustomApplication extends Application {
 
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(getApplicationContext());
-        WebView obj = new WebView(this);
-        obj.clearCache(true);
         //endregion
         if (BuildConfig.DEBUG) {
             sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
