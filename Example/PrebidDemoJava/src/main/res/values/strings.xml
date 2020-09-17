@@ -33,6 +33,11 @@
         <item>300x250</item>
         <item>320x50</item>
     </string-array>
+    <string name="hostText">Host</string>
+    <string-array name="hostArray">
+        <item>Rubicon</item>
+        <item>Xandr</item>
+    </string-array>
     <string name="buttonText">Show Ad</string>
     <string name="autoRefreshText">Refresh Millis</string>
 </resources>

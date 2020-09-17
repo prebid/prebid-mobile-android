@@ -53,8 +53,11 @@ public class Constants {
     // MoPub ad unit ids
     static final String MOPUB_BANNER_ADUNIT_ID_300x250_RUBICON = "a108b8dd5ebc472098167e6f1c118120";
     static final String MOPUB_INTERSTITIAL_ADUNIT_ID_RUBICON = "d5c75d9f0b8742cab579610930077c35";
+    static final String MOPUB_INTERSTITIAL_VIDEO_ADUNIT_ID_RUBICON = "723dd84529b04075aa003a152ede0c4b";
+    static final String MP_ADUNITID_REWARDED = "066483fc44bf4793b4e275522ef7c428";
     // DFP ad unit ids
     static final String DFP_BANNER_ADUNIT_ID_300x250_RUBICON = "/5300653/pavliuchyk_test_adunit_1x1_puc";
     static final String DFP_INTERSTITIAL_ADUNIT_ID_RUBICON = "/5300653/pavliuchyk_test_adunit_1x1_puc";
     static final String DFP_VAST_ADUNIT_ID_RUBICON = "/5300653/test_adunit_vast_pavliuchyk";
+    static final String DFP_REWARDED_ADUNIT_ID_RUBICON = "/5300653/test_adunit_vast_rewarded-video_pavliuchyk";
 }

@@ -6,10 +6,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Optional permissions. Will pass Lat/Lon values when available. Choose either Coarse or Fine -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- Optional permissions. Used for MRAID 2.0 storePicture ads -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:name=".CustomApplication"
         android:allowBackup="true"
@@ -21,7 +21,8 @@
         android:usesCleartextTraffic="true">
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
-            android:value="true"/>
+            android:value="true" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +30,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DemoActivity" />
+        <activity android:name=".RubiconBannerGamDemoActivity" />
+        <activity android:name=".RubiconBannerMoPubDemoActivity" />
+        <activity android:name=".RubiconIntersitialGamDemoActivity" />
+        <activity android:name=".RubiconInterstitialMoPubDemoActivity" />
+        <activity android:name=".RubiconBannerVideoGamDemoActivity" />
+        <activity android:name=".RubiconInterstitialVideoGamDemoActivity" />
+        <activity android:name=".RubiconInterstitialVideoMoPubDemoActivity" />
+        <activity android:name=".RubiconRewardedVideoGamDemoActivity" />
+        <activity android:name=".RubiconRewardedVideoMoPubDemoActivity" />
+        <activity android:name=".XandrBannerGamDemoActivity" />
+        <activity android:name=".XandrBannerMoPubDemoActivity" />
+        <activity android:name=".XandrInterstitialGamDemoActivity" />
+        <activity android:name=".XandrInterstitialMoPubDemoActivity" />
+        <activity android:name=".XandrNativeInBannerGamDemoActivity" />
+        <activity android:name=".XandrNativeInBannerMoPubDemoActivity" />
         <activity android:name=".TestActivity" />
         <!--MoPub Activities-->
         <activity
