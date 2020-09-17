@@ -620,7 +620,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
-    public void testAdUnitKeyValuesInPostData() throws Exception {
+    public void testUserKeywordInPostData() throws Exception {
         server.setDispatcher(new Dispatcher() {
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
@@ -640,16 +640,9 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("123456");
         BannerAdUnit adUnit = new BannerAdUnit("123456", 300, 250);
-        adUnit.addUserKeyword("key1", "value1");
-        adUnit.addUserKeyword("key1", "value2");
-        adUnit.addUserKeyword("key2", "value1");
-        adUnit.addUserKeyword("key2", "value2");
-        adUnit.addUserKeyword("key3", "value1");
-        adUnit.addUserKeyword("key3", "value2");
-        adUnit.addUserKeyword("key4", "value1");
-        adUnit.addUserKeyword("key4", "value2");
-        adUnit.addUserKeyword("key5", "value1");
-        adUnit.addUserKeyword("key5", "value2");
+        TargetingParams.addUserKeyword("value1");
+        TargetingParams.addUserKeyword("value2");
+        TargetingParams.addUserKeyword("value1");
         MoPubView testView = new MoPubView(activity);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         adUnit.fetchDemand(testView, mockListener);
@@ -663,7 +656,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Robolectric.flushForegroundThreadScheduler();
         Host.CUSTOM.setHostUrl(server.url("/clearKeywords").toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-        adUnit.clearUserKeywords();
+        TargetingParams.clearUserKeywords();
         OnCompleteListener mockListenerNoKV = mock(OnCompleteListener.class);
         adUnit.fetchDemand(testView, mockListenerNoKV);
         fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
