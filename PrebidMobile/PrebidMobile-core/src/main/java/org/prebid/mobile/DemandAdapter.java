@@ -16,7 +16,7 @@
 
 package org.prebid.mobile;
 
-import android.support.annotation.MainThread;
+import androidx.annotation.MainThread;
 
 import java.util.HashMap;
 
