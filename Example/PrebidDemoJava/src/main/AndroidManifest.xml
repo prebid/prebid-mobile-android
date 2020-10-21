@@ -45,6 +45,7 @@
         <activity android:name=".XandrInterstitialMoPubDemoActivity" />
         <activity android:name=".XandrNativeInBannerGamDemoActivity" />
         <activity android:name=".XandrNativeInBannerMoPubDemoActivity" />
+        <activity android:name=".XandrInstreamVideoGamActivity"/>
         <activity android:name=".TestActivity" />
         <!--MoPub Activities-->
         <activity
