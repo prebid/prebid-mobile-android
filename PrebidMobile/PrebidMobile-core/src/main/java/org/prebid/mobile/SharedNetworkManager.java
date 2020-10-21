@@ -87,9 +87,9 @@ public class SharedNetworkManager {
                                                     urls.add(urlObject);
                                                 } else {
                                                     // Nothing more to do just print logs and exit.
-//                                                    if (impressionTrackerListener != null) {
-//                                                        impressionTrackerListener.onImpressionTrackerFired();
-//                                                    }
+                                                    if (impressionTrackerListener != null) {
+                                                        impressionTrackerListener.onImpressionTrackerFired();
+                                                    }
                                                 }
 
                                             }
