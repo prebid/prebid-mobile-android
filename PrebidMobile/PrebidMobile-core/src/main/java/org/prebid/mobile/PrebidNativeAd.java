@@ -32,11 +32,18 @@ public class PrebidNativeAd {
     private Runnable expireRunnable = new Runnable() {
         @Override
         public void run() {
+            if (listener != null) {
+                listener.onAdExpired();
+            }
             expired = true;
+            registeredView = null;
             if (visibilityDetector != null) {
                 visibilityDetector.destroy();
                 visibilityDetector = null;
             }
+            impressionTrackers = null;
+            listener = null;
+            // free assets
         }
     };
     private boolean expired;

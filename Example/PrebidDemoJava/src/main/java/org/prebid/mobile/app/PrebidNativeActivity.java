@@ -322,6 +322,11 @@ public class PrebidNativeActivity extends AppCompatActivity {
             public void onAdImpression() {
                 Toast.makeText(PrebidNativeActivity.this, "onAdImpression", Toast.LENGTH_SHORT).show();
             }
+
+            @Override
+            public void onAdExpired() {
+                Toast.makeText(PrebidNativeActivity.this, "onAdExpired", Toast.LENGTH_SHORT).show();
+            }
         });
         nativeContainer.setOrientation(LinearLayout.VERTICAL);
         LinearLayout iconAndTitle = new LinearLayout(PrebidNativeActivity.this);
