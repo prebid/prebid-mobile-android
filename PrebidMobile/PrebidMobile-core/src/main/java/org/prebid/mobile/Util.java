@@ -560,4 +560,12 @@ public class Util {
         return result;
     }
 
+    public static String generateInstreamUriForGam(Map<String,String> keywords) {
+        String uri = "https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/19968336/Punnaghai_Instream_Video1&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=sample_ct%3Dlinear%26hb_uuid%3D";
+        if (keywords != null && keywords.containsKey("hb_uuid")) {
+            uri = uri + keywords.get("hb_uuid");
+        }
+        return uri;
+    }
+
 }

@@ -16,7 +16,17 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 
 import org.prebid.mobile.AdUnit;
+import org.prebid.mobile.Host;
+import org.prebid.mobile.OnCompleteListener2;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.Signals;
+import org.prebid.mobile.Util;
+import org.prebid.mobile.VideoAdUnit;
+import org.prebid.mobile.VideoBaseAdUnit;
+
+import java.util.Arrays;
+import java.util.Map;
 
 public class XandrInstreamVideoGamActivity extends AppCompatActivity {
     AdUnit adUnit;
@@ -40,8 +50,33 @@ public class XandrInstreamVideoGamActivity extends AppCompatActivity {
         setContentView(R.layout.activity_instream_video);
         playerView = findViewById(R.id.player_view);
 
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId("aecd6ef7-b992-4e99-9bb8-65e2d984e1dd");
+        VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
+        parameters.setMimes(Arrays.asList("video/mp4"));
+
+        parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0));
+        // parameters.setProtocols(Arrays.asList(new Signals.Protocols(2)));
+
+        parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOff));
+        // parameters.setPlaybackMethod(Arrays.asList(new Signals.PlaybackMethod(2)));
+
+        parameters.setPlacement(Signals.Placement.InStream);
+        // parameters.setPlacement(new Signals.Placement(2));
+
+        VideoAdUnit adUnit = new VideoAdUnit("2c0af852-a55d-49dc-a5ca-ef7e141f73cc", 300, 250);
+        adUnit.setParameters(parameters);
+        this.adUnit = adUnit;
         // Create an AdsLoader with the ad tag url.
-        adsLoader = new ImaAdsLoader(this, Uri.parse(getString(R.string.ad_tag_url)));
+        adUnit.fetchDemand(new OnCompleteListener2() {
+            @Override
+            public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
+                String uri = Util.generateInstreamUriForGam(unmodifiableMap);
+                adsLoader = new ImaAdsLoader(XandrInstreamVideoGamActivity.this, Uri.parse(uri));
+                initializePlayer();
+            }
+        });
+//        adsLoader = new ImaAdsLoader(this, Uri.parse(getString(R.string.ad_tag_url)));
     }
 
     private void releasePlayer() {
@@ -83,7 +118,7 @@ public class XandrInstreamVideoGamActivity extends AppCompatActivity {
         super.onStart();
         //
         if (android.os.Build.VERSION.SDK_INT > 23) {
-            initializePlayer();
+//            initializePlayer();
             if (playerView != null) {
                 playerView.onResume();
             }
@@ -94,7 +129,7 @@ public class XandrInstreamVideoGamActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         if (android.os.Build.VERSION.SDK_INT <= 23 || player == null) {
-            initializePlayer();
+//            initializePlayer();
             if (playerView != null) {
                 playerView.onResume();
             }
