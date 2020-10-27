@@ -76,7 +76,6 @@ public class XandrInstreamVideoGamActivity extends AppCompatActivity {
                 initializePlayer();
             }
         });
-//        adsLoader = new ImaAdsLoader(this, Uri.parse(getString(R.string.ad_tag_url)));
     }
 
     private void releasePlayer() {
@@ -116,9 +115,7 @@ public class XandrInstreamVideoGamActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        //
         if (android.os.Build.VERSION.SDK_INT > 23) {
-//            initializePlayer();
             if (playerView != null) {
                 playerView.onResume();
             }
@@ -129,7 +126,6 @@ public class XandrInstreamVideoGamActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         if (android.os.Build.VERSION.SDK_INT <= 23 || player == null) {
-//            initializePlayer();
             if (playerView != null) {
                 playerView.onResume();
             }
