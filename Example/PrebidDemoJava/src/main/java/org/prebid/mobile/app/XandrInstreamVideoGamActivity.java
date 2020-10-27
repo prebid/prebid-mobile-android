@@ -71,7 +71,7 @@ public class XandrInstreamVideoGamActivity extends AppCompatActivity {
         adUnit.fetchDemand(new OnCompleteListener2() {
             @Override
             public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
-                String uri = Util.generateInstreamUriForGam(unmodifiableMap);
+                String uri = Util.generateInstreamUriForGam("/19968336/Punnaghai_Instream_Video1", 640, 480, unmodifiableMap);
                 adsLoader = new ImaAdsLoader(XandrInstreamVideoGamActivity.this, Uri.parse(uri));
                 initializePlayer();
             }

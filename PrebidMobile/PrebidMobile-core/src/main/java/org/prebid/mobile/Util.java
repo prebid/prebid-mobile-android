@@ -403,8 +403,7 @@ public class Util {
             handleAdManagerCustomTargeting(bids, adObj);
         } else if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS)) {
             handleAdManagerBuilderCustomTargeting(bids, adObj);
-        }
-        else if (adObj.getClass() == HashMap.class) {
+        } else if (adObj.getClass() == HashMap.class) {
             if (bids != null && !bids.isEmpty()) {
                 HashMap map = ((HashMap) adObj);
                 map.clear();
@@ -533,7 +532,7 @@ public class Util {
 
         for (int i = 0; i < jsonArray.length(); i++) {
 
-            list.add((T)jsonArray.get(i));
+            list.add((T) jsonArray.get(i));
         }
 
         return list;
@@ -560,10 +559,18 @@ public class Util {
         return result;
     }
 
-    public static String generateInstreamUriForGam(Map<String,String> keywords) {
-        String uri = "https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/19968336/Punnaghai_Instream_Video1&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=sample_ct%3Dlinear%26hb_uuid%3D";
+    public static String generateInstreamUriForGam(String adUnit, int w, int h, Map<String, String> keywords) {
+        String uri = "https://pubads.g.doubleclick.net/gampad/ads?";
+        if (TextUtils.isEmpty(adUnit)) {
+            throw new IllegalArgumentException("adUnit should not be empty");
+        }
+        if (w <= 0 || h <= 0) {
+            throw new IllegalArgumentException("w or h should be positive numbers");
+        }
+        uri = uri + "sz=" + w + "x" + h + "&iu=" + adUnit + "&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1";
+
         if (keywords != null && keywords.containsKey("hb_uuid")) {
-            uri = uri + keywords.get("hb_uuid");
+            uri = uri + "&cust_params=hb_uuid%3D" + keywords.get("hb_uuid");
         }
         return uri;
     }
