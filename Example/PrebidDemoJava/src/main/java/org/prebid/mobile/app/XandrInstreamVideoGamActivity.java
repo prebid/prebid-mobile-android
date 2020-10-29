@@ -79,10 +79,17 @@ public class XandrInstreamVideoGamActivity extends AppCompatActivity {
     }
 
     private void releasePlayer() {
-        adsLoader.setPlayer(null);
-        playerView.setPlayer(null);
-        player.release();
-        player = null;
+        if (adsLoader != null) {
+            adsLoader.setPlayer(null);
+        }
+        if (playerView != null) {
+            playerView.setPlayer(null);
+        }
+        if (player != null) {
+            player.release();
+            player = null;
+        }
+
     }
 
     private void initializePlayer() {
