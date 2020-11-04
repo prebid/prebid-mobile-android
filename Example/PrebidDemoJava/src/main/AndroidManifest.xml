@@ -18,8 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
-        >
+        android:usesCleartextTraffic="true">
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
             android:value="true" />
@@ -40,13 +39,14 @@
         <activity android:name=".RubiconInterstitialVideoMoPubDemoActivity" />
         <activity android:name=".RubiconRewardedVideoGamDemoActivity" />
         <activity android:name=".RubiconRewardedVideoMoPubDemoActivity" />
+        <activity android:name=".RubiconInstreamVideoDemoActivity" />
         <activity android:name=".XandrBannerGamDemoActivity" />
         <activity android:name=".XandrBannerMoPubDemoActivity" />
         <activity android:name=".XandrInterstitialGamDemoActivity" />
         <activity android:name=".XandrInterstitialMoPubDemoActivity" />
         <activity android:name=".XandrNativeInBannerGamDemoActivity" />
         <activity android:name=".XandrNativeInBannerMoPubDemoActivity" />
-        <activity android:name=".XandrInstreamVideoGamActivity"/>
+        <activity android:name=".XandrInstreamVideoGamActivity" />
         <activity android:name=".TestActivity" />
         <!--MoPub Activities-->
         <activity

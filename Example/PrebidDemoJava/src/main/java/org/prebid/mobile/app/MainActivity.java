@@ -217,6 +217,12 @@ public class MainActivity extends AppCompatActivity {
                     int refreshMillis = Integer.valueOf(refreshMillisString);
                     intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
                 }
+            } else if (adType.equals(getString(R.string.adTypeInstreamVideo)) && adServer.equals(getString(R.string.adServerAdManager))) {
+                intent = new Intent(this, RubiconInstreamVideoDemoActivity.class);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
             }
         } else if (host.equals(Host.APPNEXUS)) {
             if (adType.equals(getString(R.string.adTypeBanner)) && adServer.equals(getString(R.string.adServerAdManager))) {

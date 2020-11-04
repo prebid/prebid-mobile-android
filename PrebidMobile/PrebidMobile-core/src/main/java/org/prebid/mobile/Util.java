@@ -569,8 +569,11 @@ public class Util {
         }
         uri = uri + "sz=" + w + "x" + h + "&iu=" + adUnit + "&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1";
 
-        if (keywords != null && keywords.containsKey("hb_uuid")) {
-            uri = uri + "&cust_params=hb_uuid%3D" + keywords.get("hb_uuid");
+        if (keywords != null) {
+            uri = uri + "&cust_params=";
+            for (String key : keywords.keySet()) {
+                uri = uri+ key + "%3D" + keywords.get(key) + "%26";
+            }
         }
         return uri;
     }
