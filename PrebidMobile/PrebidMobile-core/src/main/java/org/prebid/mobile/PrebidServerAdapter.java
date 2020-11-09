@@ -59,8 +59,9 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class PrebidServerAdapter implements DemandAdapter {
+public class PrebidServerAdapter implements DemandAdapter {
     private ArrayList<ServerConnector> serverConnectors;
+    public static boolean testingNativeNative;
 
     PrebidServerAdapter() {
         serverConnectors = new ArrayList<>();
@@ -172,6 +173,58 @@ class PrebidServerAdapter implements DemandAdapter {
                     reader.close();
                     is.close();
                     String result = builder.toString();
+                    if (testingNativeNative) {
+                        result = "{\n" +
+                                "  \"seatbid\": [\n" +
+                                "    {\n" +
+                                "      \"bid\": [{\n" +
+                                "        \"ver\": \"1.2\",\n" +
+                                "        \"assets\": [\n" +
+                                "          {\n" +
+                                "            \"id\": 1,\n" +
+                                "            \"img\": {\n" +
+                                "              \"type\": 3,\n" +
+                                "              \"url\": \"https://vcdn.adnxs.com/p/creative-image/7e/71/90/27/7e719027-80ef-4664-9b6d-a763da4cea4e.png\",\n" +
+                                "              \"w\": 300,\n" +
+                                "              \"h\": 250,\n" +
+                                "              \"ext\": {\n" +
+                                "                \"appnexus\": {\n" +
+                                "                  \"prevent_crop\": 0\n" +
+                                "                },\n" +
+                                "                \"prebid\": {" +
+                                "                   " +
+                                "                 }   " +
+                                "              }\n" +
+                                "            }\n" +
+                                "          },\n" +
+                                "          {\n" +
+                                "            \"data\": {\n" +
+                                "              \"type\": 1,\n" +
+                                "              \"value\": \"AppNexus\"\n" +
+                                "            }\n" +
+                                "          },\n" +
+                                "          {\n" +
+                                "            \"id\": 2,\n" +
+                                "            \"title\": {\n" +
+                                "              \"text\": \"This is an RTB ad\"\n" +
+                                "            }\n" +
+                                "          }\n" +
+                                "        ],\n" +
+                                "        \"link\": {\n" +
+                                "          \"url\": \"https://nym1-ib.adnxs.com/click?mpmZmZmZqT-amZmZmZmpPwAAAAAAAOA_mpmZmZmZqT-amZmZmZmpP8GRp4bdjMle__________8UQVpfAAAAAHu99gBuJwAAbicAAAIAAACRL6wJ-MwcAAAAAABVU0QAVVNEAAEAAQDILwAAAAABAgMCAAAAAMYAfyvwMQAAAAA./bcr=AAAAAAAA8D8=/pp=${AUCTION_PRICE}/cnd=%211BKZHAiFzYATEJHfsE0Y-JlzIAQoADGamZmZmZmpPzoJTllNMjo0MDU2QKYkSQAAAAAAAPA_UQAAAAAAAAAAWQAAAAAAAAAAYQAAAAAAAAAAaQAAAAAAAAAAcQAAAAAAAAAAeAA./cca=MTAwOTQjTllNMjo0MDU2/bn=77455/clickenc=http%3A%2F%2Fappnexus.com\"\n" +
+                                "        },\n" +
+                                "        \"eventtrackers\": [\n" +
+                                "          {\n" +
+                                "            \"event\": 1,\n" +
+                                "            \"method\": 1,\n" +
+                                "            \"url\": \"https://nym1-ib.adnxs.com/it?an_audit=0&e=wqT_3QLhCWzhBAAAAwDWAAUBCJSC6foFEMGjnrXYm-PkXhj_EQEUASo2CZqZAQEIqT8REQkEGQAFAQjgPyEREgApEQkAMQUauADgPzD7-toHOO5OQO5OSAJQkd-wTVj4mXNgAGjI34wBeI_dBIABAYoBA1VTRJIBAQbwVZgBAaABAagBAbABALgBAsABA8gBAtABANgBAOABAPABAIoCPHVmKCdhJywgMzM5MzUyMCwgMTU5OTc1MDQyMCk7dWYoJ3InLCAxNjIyNzkzMTMsIDE1GR_0DgGSAvkDIWdGazdGZ2lGellBVEVKSGZzRTBZQUNENG1YTXdBRGdBUUFSSTdrNVEtX3JhQjFnQVlQX19fXzhQYUFCd0FYZ0JnQUVCaUFFQmtBRUJtQUVCb0FFQnFBRURzQUVBdVFGMXF3MXNtcG1wUDhFQmRhc05iSnFacVRfSkFYd2xrdlZtdVBBXzJRRUFBQUFBQUFEd1AtQUJBUFVCQUFBQUFKZ0NBS0FDQUxVQ0FBQUFBTDBDQUFBQUFNQUNBY2dDQWRBQ0FkZ0NBZUFDQU9nQ0FQZ0NBSUFEQVpnREFhZ0RoYzJBRTdvRENVNVpUVEk2TkRBMU51QURwaVNJQkFDUUJBQ1lCQUhCQkFBQUFBCYMIeVFRCQkBARhOZ0VBUEVFAQsJASBDSUJkZ2ZxUVUJDxhBRHdQN0VGDQ0UQUFBREJCHT8AeRUoDEFBQU4yKAAAWi4oAPBANEFXSUpfQUY0djN4QV9nRjhJX1BBWUlHQTFWVFJJZ0dBSkFHQVpnR0FLRUdtcG1abVptWnFULW9CZ0d5QmlRSkEBYAkBAFIJBwUBAFoFBgkBAGgJBwEBQEM0QmdvLpoCiQEhMUJLWkhBNv0BMC1KbHpJQVFvQURHYW0Fa1htcFB6b0pUbGxOTWpvME1EVTJRS1lrUxHpDFBBX1URDAxBQUFXHQwAWR0MAGEdDABjHQzwpGVBQS7YAgDgAsqoTYADAYgDAJADAJgDFKADAaoDAMAD4KgByAMA2AMA4AMA6AMC-AMAgAQAkgQJL29wZW5ydGIymAQAqAQAsgQMCAAQABgAIAAwADgAuAQAwAQAyAQA0gQPMTAwOTQjTllNMjo0MDU22gQCCAHgBADwBJHfsE2CBRpvcmcucHJlYmlkLm1vYmlsZS5hcGkxZGVtb4gFAZgFAKAF_3X8sKoFJDZhZjFlZmQ3LWJlNmMtNDlmMS04MTk2LWViNjI0NWI5ZWFjZsAFAMkFAGX5FPA_0gUJCQULOAAAANgFAeAFAfAFAfoFBAGwKJAGAZgGALgGAMEGAR8wAADwP9AG1jPaBhYKEAkRGQFcEAAYAOAGDPIGAggAgAcBiAcAoAdBugcOAUgEGAAJ-CRAAMgHj90E0gcNFXMwEAAYANoHBggAEAAYAA..&s=46d93f84d8459a2ca773485e5721255200b9f0ed&pp=${AUCTION_PRICE}\"\n" +
+                                "          }\n" +
+                                "        ]\n" +
+                                "      }]\n" +
+                                "    }\n" +
+                                "  ]\n" +
+                                "}";
+                    }
                     entry.setResponse(result);
                     JSONObject response = new JSONObject(result);
                     httpCookieSync(conn.getHeaderFields());
@@ -306,6 +359,13 @@ class PrebidServerAdapter implements DemandAdapter {
                                                 String key = (String) it.next();
                                                 keywords.put(key, hb_key_values.getString(key));
                                             }
+                                        }
+                                    }
+                                    if (testingNativeNative) {
+                                        String cacheId = CacheManager.save(bid.toString());
+                                        if (cacheId != null) {
+                                            keywords.put("hb_cache_id", cacheId);
+                                            containTopBid = true;
                                         }
                                     }
                                 }

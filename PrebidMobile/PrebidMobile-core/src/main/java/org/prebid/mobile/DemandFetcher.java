@@ -181,6 +181,11 @@ class DemandFetcher {
                         @MainThread
                         public void onDemandReady(final HashMap<String, String> demand, String auctionId) {
                             if (RequestRunnable.this.auctionId.equals(auctionId)) {
+                                if (requestParams.getNativeRequestParams() != null) {
+                                    if (demand.containsKey("hb_cache_id")) {
+                                        requestParams.getNativeRequestParams().setCacheId(demand.get("hb_cache_id"));
+                                    }
+                                }
                                 Util.apply(demand, DemandFetcher.this.adObject);
                                 LogUtil.i("Successfully set the following keywords: " + demand.toString());
                                 notifyListener(ResultCode.SUCCESS);

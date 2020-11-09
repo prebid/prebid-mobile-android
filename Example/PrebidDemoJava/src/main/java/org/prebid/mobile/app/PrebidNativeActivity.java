@@ -35,10 +35,22 @@ import com.mopub.nativeads.RequestParameters;
 import com.mopub.nativeads.StaticNativeAd;
 
 import org.prebid.mobile.CacheManager;
+import org.prebid.mobile.Host;
+import org.prebid.mobile.NativeAdUnit;
+import org.prebid.mobile.NativeDataAsset;
+import org.prebid.mobile.NativeEventTracker;
+import org.prebid.mobile.NativeImageAsset;
+import org.prebid.mobile.NativeTitleAsset;
+import org.prebid.mobile.OnCompleteListener;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.PrebidNativeAdEventListener;
 import org.prebid.mobile.PrebidNativeAdListener;
+import org.prebid.mobile.PrebidServerAdapter;
+import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
+
+import java.util.ArrayList;
 
 public class PrebidNativeActivity extends AppCompatActivity {
     private PublisherAdView adView;
@@ -167,7 +179,7 @@ public class PrebidNativeActivity extends AppCompatActivity {
         if (usePrebid) {
             request = new PublisherAdRequest.Builder()
                     .addCustomTargeting("hb_pb", "0.80")
-                    .addCustomTargeting("hb_cache_id", cacheId)
+//                    .addCustomTargeting("hb_cache_id", cacheId)
                     .build();
         } else {
             request = new PublisherAdRequest.Builder().build();
@@ -373,18 +385,257 @@ public class PrebidNativeActivity extends AppCompatActivity {
     }
 
     public void loadDFPWithoutPrebid(View view) {
+        PrebidServerAdapter.testingNativeNative = false;
         loadDFPCustomRendering(false);
     }
 
     public void loadDFPWithPrebid(View view) {
+        PrebidServerAdapter.testingNativeNative = false;
         loadDFPCustomRendering(true);
     }
 
     public void loadMoPubWithoutPrebid(View view) {
+        PrebidServerAdapter.testingNativeNative = false;
         loadMoPubNativeNative(false);
     }
 
     public void loadMoPubWithPrebid(View view) {
+        PrebidServerAdapter.testingNativeNative = false;
         loadMoPubNativeNative(true);
     }
+
+    public void loadNativeNative(View view) {
+        removePreviousAds();
+        PrebidServerAdapter.testingNativeNative = true;
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_APPNEXUS);
+
+        NativeAdUnit nativeAdUnit = new NativeAdUnit(Constants.PBS_CONFIG_ID_NATIVE_APPNEXUS);
+        nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
+        nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
+        nativeAdUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
+        ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
+        methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE);
+        methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.JS);
+        try {
+            NativeEventTracker tracker = new NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods);
+            nativeAdUnit.addEventTracker(tracker);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        NativeTitleAsset title = new NativeTitleAsset();
+        title.setLength(90);
+        title.setRequired(true);
+        nativeAdUnit.addAsset(title);
+        NativeImageAsset icon = new NativeImageAsset();
+        icon.setImageType(NativeImageAsset.IMAGE_TYPE.ICON);
+        icon.setWMin(20);
+        icon.setHMin(20);
+        icon.setRequired(true);
+        nativeAdUnit.addAsset(icon);
+        NativeImageAsset image = new NativeImageAsset();
+        image.setImageType(NativeImageAsset.IMAGE_TYPE.MAIN);
+        image.setHMin(200);
+        image.setWMin(200);
+        image.setRequired(true);
+        nativeAdUnit.addAsset(image);
+        NativeDataAsset data = new NativeDataAsset();
+        data.setLen(90);
+        data.setDataType(NativeDataAsset.DATA_TYPE.SPONSORED);
+        data.setRequired(true);
+        nativeAdUnit.addAsset(data);
+        NativeDataAsset body = new NativeDataAsset();
+        body.setRequired(true);
+        body.setDataType(NativeDataAsset.DATA_TYPE.DESC);
+        nativeAdUnit.addAsset(body);
+        NativeDataAsset cta = new NativeDataAsset();
+        cta.setRequired(true);
+        cta.setDataType(NativeDataAsset.DATA_TYPE.CTATEXT);
+        nativeAdUnit.addAsset(cta);
+
+//        final PublisherAdRequest publisherAdView = new PublisherAdRequest(this);
+//        publisherAdView.setAdListener(new AdListener() {
+//            @Override
+//            public void onAdLoaded() {
+//                super.onAdLoaded();
+//                LogUtil.d("ad loaded");
+//            }
+//        });
+//        publisherAdView.setAdUnitId(Constants.DFP_IN_BANNER_NATIVE_ADUNIT_ID_APPNEXUS);
+//        publisherAdView.setAdSizes(AdSize.FLUID);
+//        adFrame.addView(publisherAdView);
+        final PublisherAdRequest publisherAdRequest = new PublisherAdRequest.Builder()
+                    .addCustomTargeting("hb_pb", "0.80")
+//                    .addCustomTargeting("hb_cache_id", cacheId)
+                .build();
+        nativeAdUnit.fetchDemand(publisherAdRequest, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+                if (resultCode == ResultCode.SUCCESS) {
+                    loadDfp(publisherAdRequest);
+                }
+                Toast.makeText(PrebidNativeActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void loadDfp(PublisherAdRequest publisherAdRequest) {
+        adLoader = new AdLoader.Builder(this, "/19968336/Wei_test_native_native")
+                .forPublisherAdView(new OnPublisherAdViewLoadedListener() {
+                    @Override
+                    public void onPublisherAdViewLoaded(PublisherAdView publisherAdView) {
+                        adView = publisherAdView;
+                        ((FrameLayout) findViewById(R.id.adFrame)).addView(publisherAdView);
+                    }
+                }, AdSize.BANNER)
+                .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+                    @Override
+                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+                        Log.d("Prebid", "native loaded");
+                        PrebidNativeActivity.this.unifiedNativeAd = unifiedNativeAd;
+                    }
+                })
+                .forCustomTemplateAd("11885766", new NativeCustomTemplateAd.OnCustomTemplateAdLoadedListener() {
+
+                    @Override
+                    public void onCustomTemplateAdLoaded(NativeCustomTemplateAd nativeCustomTemplateAd) {
+                        Log.d("Prebid", "custom ad loaded");
+                        Util.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
+                            @Override
+                            public void onPrebidNativeLoaded(PrebidNativeAd ad) {
+                                inflatePrebidNativeAd(ad);
+                            }
+
+                            @Override
+                            public void onPrebidNativeNotFound() {
+                                Log.e("Prebid", "onPrebidNativeNotFound");
+                                // inflate nativeCustomTemplateAd
+                            }
+
+                            @Override
+                            public void onPrebidNativeNotValid() {
+                                Log.e("Prebid", "onPrebidNativeNotFound");
+                                // show your own content
+                            }
+                        });
+                    }
+                }, new NativeCustomTemplateAd.OnCustomClickListener() {
+
+                    @Override
+                    public void onCustomClick(NativeCustomTemplateAd nativeCustomTemplateAd, String s) {
+
+                    }
+                })
+                .withAdListener(new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(int i) {
+                        super.onAdFailedToLoad(i);
+                    }
+                })
+                .build();
+
+        adLoader.loadAd(publisherAdRequest);
+    }
+
+    // Mopub
+    public void loadNativeNativeMopub(View v) {
+        {
+            removePreviousAds();
+            PrebidServerAdapter.testingNativeNative = true;
+            PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
+            PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_APPNEXUS);
+
+            final NativeAdUnit nativeAdUnit = new NativeAdUnit(Constants.PBS_CONFIG_ID_NATIVE_APPNEXUS);
+            nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
+            nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
+            nativeAdUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
+            ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
+            methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE);
+            methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.JS);
+            try {
+                NativeEventTracker tracker = new NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods);
+                nativeAdUnit.addEventTracker(tracker);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            NativeTitleAsset title = new NativeTitleAsset();
+            title.setLength(90);
+            title.setRequired(true);
+            nativeAdUnit.addAsset(title);
+            NativeImageAsset icon = new NativeImageAsset();
+            icon.setImageType(NativeImageAsset.IMAGE_TYPE.ICON);
+            icon.setWMin(20);
+            icon.setHMin(20);
+            icon.setRequired(true);
+            nativeAdUnit.addAsset(icon);
+            NativeImageAsset image = new NativeImageAsset();
+            image.setImageType(NativeImageAsset.IMAGE_TYPE.MAIN);
+            image.setHMin(200);
+            image.setWMin(200);
+            image.setRequired(true);
+            nativeAdUnit.addAsset(image);
+            NativeDataAsset data = new NativeDataAsset();
+            data.setLen(90);
+            data.setDataType(NativeDataAsset.DATA_TYPE.SPONSORED);
+            data.setRequired(true);
+            nativeAdUnit.addAsset(data);
+            NativeDataAsset body = new NativeDataAsset();
+            body.setRequired(true);
+            body.setDataType(NativeDataAsset.DATA_TYPE.DESC);
+            nativeAdUnit.addAsset(body);
+            NativeDataAsset cta = new NativeDataAsset();
+            cta.setRequired(true);
+            cta.setDataType(NativeDataAsset.DATA_TYPE.CTATEXT);
+            nativeAdUnit.addAsset(cta);
+
+            mMoPubNative = new MoPubNative(PrebidNativeActivity.this, "2674981035164b2db5ef4b4546bf3d49", new MoPubNative.MoPubNativeNetworkListener() {
+                @Override
+                public void onNativeLoad(final NativeAd nativeAd) {
+                    Log.d("Prebid", "MoPub native ad loaded");
+                    PrebidNativeActivity.this.ad = nativeAd;
+                    Util.findNative(nativeAd, new PrebidNativeAdListener() {
+                        @Override
+                        public void onPrebidNativeLoaded(final PrebidNativeAd ad) {
+                            inflatePrebidNativeAd(ad);
+                        }
+
+                        @Override
+                        public void onPrebidNativeNotFound() {
+                            infalteMoPubNativeAd(nativeAd);
+                        }
+
+                        @Override
+                        public void onPrebidNativeNotValid() {
+                            // should not show the NativeAd on the screen, do something else
+                        }
+                    });
+
+                }
+
+                @Override
+                public void onNativeFail(NativeErrorCode errorCode) {
+                    Log.d("Prebid", "MoPub native failed to load: " + errorCode.toString());
+                }
+            });
+            mMoPubNative.registerAdRenderer(new MoPubStaticNativeAdRenderer(null));
+            nativeAdUnit.fetchDemand(mMoPubNative, new OnCompleteListener() {
+                @Override
+                public void onComplete(ResultCode resultCode) {
+                    if (resultCode == ResultCode.SUCCESS) {
+                        String keywords = "hb_pb:0.50";
+                        if (nativeAdUnit.getCacheId() != null)
+                            keywords += ", hb_cache_id:" + nativeAdUnit.getCacheId();
+                        RequestParameters mRP = new RequestParameters.Builder().keywords(keywords).build();
+                        Log.d("Prebid", mRP.getKeywords());
+                        mMoPubNative.makeRequest(mRP);
+                    }
+                    Toast.makeText(PrebidNativeActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+
 }

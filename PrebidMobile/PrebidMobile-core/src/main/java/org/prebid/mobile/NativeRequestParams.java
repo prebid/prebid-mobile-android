@@ -149,4 +149,14 @@ class NativeRequestParams {
     ArrayList<NativeAsset> getAssets() {
         return assets;
     }
+
+    private String cacheId;
+
+    protected void setCacheId(String cacheId) {
+        this.cacheId = cacheId;
+    }
+
+    public String getCacheId() {
+        return cacheId;
+    }
 }

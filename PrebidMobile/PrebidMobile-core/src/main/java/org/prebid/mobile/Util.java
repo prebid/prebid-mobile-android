@@ -65,6 +65,7 @@ public class Util {
     static final String MOPUB_INTERSTITIAL_CLASS = "com.mopub.mobileads.MoPubInterstitial";
     static final String AD_MANAGER_REQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
     static final String AD_MANAGER_REQUEST_BUILDER_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest$Builder";
+    static final String MOPUB_NATIVE_CLASS = "com.mopub.nativeads.MoPubNative";
     public static final int HTTP_CONNECTION_TIMEOUT = 15000;
     public static final int HTTP_SOCKET_TIMEOUT = 20000;
     public static final int NATIVE_AD_VISIBLE_PERIOD_MILLIS = 1000;
@@ -426,6 +427,7 @@ public class Util {
                 || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)
                 || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS)
                 || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS)
+                || adObj.getClass() == getClassFromString(MOPUB_NATIVE_CLASS)
                 || adObj.getClass() == HashMap.class)
             return true;
         return false;
@@ -687,16 +689,16 @@ public class Util {
         String isPrebid = (String) callMethodOnObject(object, "getText", "isPrebid");
         if ("1".equals(isPrebid)) {
             String cacheId = (String) callMethodOnObject(object, "getText", "hb_cache_id");
-            if (CacheManager.isValid(cacheId)) {
-                PrebidNativeAd ad = PrebidNativeAd.create(cacheId);
-                if (ad != null) {
-                    listener.onPrebidNativeLoaded(ad);
-                    return;
-                }
+            PrebidNativeAd ad = PrebidNativeAd.create(cacheId);
+            if (ad != null) {
+                listener.onPrebidNativeLoaded(ad);
+                return;
+            } else {
+                listener.onPrebidNativeNotValid();
             }
-            listener.onPrebidNativeNotValid();
+        } else {
+            listener.onPrebidNativeNotFound();
         }
-        listener.onPrebidNativeNotFound();
     }
 
     private static void findNativeInMoPubNativeAd(@NonNull Object object, @NonNull PrebidNativeAdListener listener) {
@@ -711,10 +713,32 @@ public class Util {
                     listener.onPrebidNativeLoaded(ad);
                     return;
                 }
+            } else {
+                listener.onPrebidNativeNotValid();
             }
-            listener.onPrebidNativeNotValid();
+        } else {
+            listener.onPrebidNativeNotFound();
         }
-        listener.onPrebidNativeNotFound();
+    }
+
+    private static void findMoPubNativeAd(@NonNull Object object, @NonNull PrebidNativeAdListener listener) {
+        Object baseNativeAd = callMethodOnObject(object, "getBaseNativeAd");
+        Log.d("Prebid", "" + baseNativeAd);
+        Boolean isPrebid = (Boolean) callMethodOnObject(baseNativeAd, "getExtra", "isPrebid");
+        if (isPrebid != null && isPrebid) {
+            String cacheId = (String) callMethodOnObject(baseNativeAd, "getExtra", "hb_cache_id");
+            if (CacheManager.isValid(cacheId)) {
+                PrebidNativeAd ad = PrebidNativeAd.create(cacheId);
+                if (ad != null) {
+                    listener.onPrebidNativeLoaded(ad);
+                    return;
+                }
+            } else {
+                listener.onPrebidNativeNotValid();
+            }
+        } else {
+            listener.onPrebidNativeNotFound();
+        }
     }
 
 
