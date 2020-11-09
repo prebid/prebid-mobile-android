@@ -567,7 +567,7 @@ public class Util {
         if (w <= 0 || h <= 0) {
             throw new IllegalArgumentException("w or h should be positive numbers");
         }
-        uri = uri + "sz=" + w + "x" + h + "&iu=" + adUnit + "&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1";
+        uri = uri + "sz=" + w + "x" + h + "&iu=" + adUnit + "&impl=s&gdfp_req=1&env=vp&output=xml_vast4&unviewed_position_start=1";
 
         if (keywords != null) {
             uri = uri + "&cust_params=";

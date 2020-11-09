@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
                     intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
                 }
             } else if (adType.equals(getString(R.string.adTypeInstreamVideo)) && adServer.equals(getString(R.string.adServerAdManager))) {
-                intent = new Intent(this, RubiconInstreamVideoDemoActivity.class);
+                intent = new Intent(this, RubiconInstreamVideoIMADemoActivity.class);
                 if (!TextUtils.isEmpty(refreshMillisString)) {
                     int refreshMillis = Integer.valueOf(refreshMillisString);
                     intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);

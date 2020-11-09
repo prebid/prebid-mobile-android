@@ -39,7 +39,7 @@
         <activity android:name=".RubiconInterstitialVideoMoPubDemoActivity" />
         <activity android:name=".RubiconRewardedVideoGamDemoActivity" />
         <activity android:name=".RubiconRewardedVideoMoPubDemoActivity" />
-        <activity android:name=".RubiconInstreamVideoDemoActivity" />
+        <activity android:name=".RubiconInstreamVideoIMADemoActivity" />
         <activity android:name=".XandrBannerGamDemoActivity" />
         <activity android:name=".XandrBannerMoPubDemoActivity" />
         <activity android:name=".XandrInterstitialGamDemoActivity" />

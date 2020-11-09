@@ -1,6 +1,5 @@
 <resources>
     <string name="content_url"><![CDATA[https://storage.googleapis.com/gvabox/media/samples/stock.mp4]]></string>
-<!--    <string name="ad_tag_url"><![CDATA[]]></string>-->
 
     <string name="app_name">API1.0Demo</string>
     <string name="adTypeText">Ad Type</string>

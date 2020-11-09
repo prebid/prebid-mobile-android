@@ -28,7 +28,7 @@ import org.prebid.mobile.VideoBaseAdUnit;
 import java.util.Arrays;
 import java.util.Map;
 
-public class RubiconInstreamVideoDemoActivity extends AppCompatActivity {
+public class RubiconInstreamVideoIMADemoActivity extends AppCompatActivity {
     AdUnit adUnit;
     private PlayerView playerView;
     private SimpleExoPlayer player;
@@ -65,7 +65,7 @@ public class RubiconInstreamVideoDemoActivity extends AppCompatActivity {
         parameters.setPlacement(Signals.Placement.InStream);
         // parameters.setPlacement(new Signals.Placement(2));
 
-        VideoAdUnit adUnit = new VideoAdUnit("1001-1", 300, 250);
+        VideoAdUnit adUnit = new VideoAdUnit("1001-1", 640, 480);
         adUnit.setParameters(parameters);
         this.adUnit = adUnit;
         // Create an AdsLoader with the ad tag url.
@@ -73,7 +73,7 @@ public class RubiconInstreamVideoDemoActivity extends AppCompatActivity {
             @Override
             public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
                 String uri = Util.generateInstreamUriForGam("/19968336/Wei_instream_video", 640, 480, unmodifiableMap);
-                adsLoader = new ImaAdsLoader(RubiconInstreamVideoDemoActivity.this, Uri.parse(uri));
+                adsLoader = new ImaAdsLoader(RubiconInstreamVideoIMADemoActivity.this, Uri.parse(uri));
                 initializePlayer();
             }
         });
