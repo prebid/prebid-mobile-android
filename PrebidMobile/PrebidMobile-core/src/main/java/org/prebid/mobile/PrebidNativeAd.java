@@ -28,24 +28,6 @@ public class PrebidNativeAd {
     private String clickUrl;
     private ArrayList<String> imp_trackers;
     private VisibilityDetector visibilityDetector;
-    private Handler anNativeExpireHandler;
-    private Runnable expireRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (listener != null) {
-                listener.onAdExpired();
-            }
-            expired = true;
-            registeredView = null;
-            if (visibilityDetector != null) {
-                visibilityDetector.destroy();
-                visibilityDetector = null;
-            }
-            impressionTrackers = null;
-            listener = null;
-            // free assets
-        }
-    };
     private boolean expired;
     private View registeredView;
     private PrebidNativeAdEventListener listener;
@@ -59,7 +41,23 @@ public class PrebidNativeAd {
                 JSONObject details = new JSONObject(content);
                 Log.e("DETAILS", content);
                 JSONArray asset = details.getJSONArray("assets");
-                PrebidNativeAd ad = new PrebidNativeAd();
+                final PrebidNativeAd ad = new PrebidNativeAd();
+                CacheManager.registerCacheExpiryListener(cacheId, new CacheManager.CacheExpiryListener() {
+                    @Override
+                    public void onCacheExpired() {
+                        if (ad.listener != null) {
+                            ad.listener.onAdExpired();
+                        }
+                        ad.expired = true;
+                        ad.registeredView = null;
+                        if (ad.visibilityDetector != null) {
+                            ad.visibilityDetector.destroy();
+                            ad.visibilityDetector = null;
+                        }
+                        ad.impressionTrackers = null;
+                        ad.listener = null;
+                    }
+                });
                 for (int i=0; i < asset.length(); i++) {
                     JSONObject adObject = asset.getJSONObject(i);
                     if (adObject.has("title")) {
@@ -113,9 +111,6 @@ public class PrebidNativeAd {
                         }
                     }
                 }
-//                ad.imp_trackers =
-                ad.anNativeExpireHandler = new Handler(Looper.getMainLooper());
-                ad.anNativeExpireHandler.postDelayed(ad.expireRunnable, NATIVE_AD_RESPONSE_EXPIRATION_TIME);
                 return ad.isValid() ? ad : null;
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -127,10 +122,10 @@ public class PrebidNativeAd {
     private boolean isValid() {
         return URLUtil.isValidUrl(clickUrl) &&
                 !TextUtils.isEmpty(title) &&
-//                !TextUtils.isEmpty(description) &&
-//                URLUtil.isValidUrl(iconUrl) &&
-                URLUtil.isValidUrl(imageUrl);
-//                !TextUtils.isEmpty(cta);
+                !TextUtils.isEmpty(description) &&
+                URLUtil.isValidUrl(iconUrl) &&
+                URLUtil.isValidUrl(imageUrl) &&
+                !TextUtils.isEmpty(cta);
     }
 
     private PrebidNativeAd() {
@@ -216,9 +211,6 @@ public class PrebidNativeAd {
                     }
                 }
             });
-            if (anNativeExpireHandler != null) {
-                anNativeExpireHandler.removeCallbacks(expireRunnable);
-            }
             return true;
         }
         return false;

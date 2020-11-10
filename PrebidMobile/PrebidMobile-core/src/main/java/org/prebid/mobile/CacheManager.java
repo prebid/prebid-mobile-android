@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public class CacheManager {
     private static HashMap<String, String> savedValues = new HashMap<>();
+    private static HashMap<String, CacheExpiryListener> cacheExpiryListenerMap = new HashMap<>();
     private static Handler handler = new Handler();
 
     public static String save(String content) {
@@ -17,6 +18,9 @@ public class CacheManager {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    if (cacheExpiryListenerMap.containsKey(cacheId)) {
+                        cacheExpiryListenerMap.remove(cacheId).onCacheExpired();
+                    }
                     savedValues.remove(cacheId);
                 }
             }, 300000);
@@ -30,7 +34,15 @@ public class CacheManager {
         return savedValues.keySet().contains(cacheId);
     }
 
-    public static String get(String cacheId) {
+    protected static String get(String cacheId) {
         return savedValues.remove(cacheId);
+    }
+
+    protected static void registerCacheExpiryListener(String cacheId, CacheExpiryListener expiryListener) {
+        cacheExpiryListenerMap.put(cacheId, expiryListener);
+    }
+
+    interface CacheExpiryListener {
+        void onCacheExpired();
     }
 }
