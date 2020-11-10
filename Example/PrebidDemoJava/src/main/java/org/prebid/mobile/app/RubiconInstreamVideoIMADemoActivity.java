@@ -53,7 +53,7 @@ public class RubiconInstreamVideoIMADemoActivity extends AppCompatActivity {
         PrebidMobile.setPrebidServerHost(Host.RUBICON);
         PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
         PrebidMobile.setStoredAuctionResponse(Constants.PBS_STORED_RESPONSE_VAST_RUBICON);
-        VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
+        VideoAdUnit.Parameters parameters = new VideoAdUnit.Parameters();
         parameters.setMimes(Arrays.asList("video/mp4"));
 
         parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0));

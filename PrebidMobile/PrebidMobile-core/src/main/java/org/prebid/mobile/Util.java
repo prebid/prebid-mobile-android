@@ -24,6 +24,7 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
@@ -559,20 +560,30 @@ public class Util {
         return result;
     }
 
-    public static String generateInstreamUriForGam(String adUnit, int w, int h, Map<String, String> keywords) {
+    public static String generateInstreamUriForGam(String adUnit, ArrayList<Pair<Integer, Integer>> sizes, Map<String, String> prebidKeywords) {
         String uri = "https://pubads.g.doubleclick.net/gampad/ads?";
         if (TextUtils.isEmpty(adUnit)) {
             throw new IllegalArgumentException("adUnit should not be empty");
         }
-        if (w <= 0 || h <= 0) {
-            throw new IllegalArgumentException("w or h should be positive numbers");
+        String sz = "";
+        if (sizes == null || sizes.size() == 0) {
+            throw new IllegalArgumentException("sizes should not be empty");
+        } else {
+            for (Pair<Integer, Integer> size : sizes) {
+                if (!(size.first == 640 && size.second == 480) && !(size.first == 400 && size.second == 300)) {
+                    throw new IllegalArgumentException("size should be either 640x480 or 400x300");
+                } else {
+                    sz = sz + size.first + 'x' + size.second + "|";
+                }
+            }
         }
-        uri = uri + "sz=" + w + "x" + h + "&iu=" + adUnit + "&impl=s&gdfp_req=1&env=vp&output=xml_vast4&unviewed_position_start=1";
+        sz = sz.substring(0, sz.length() - 1);
+        uri = uri + "sz=" + sz + "&iu=" + adUnit + "&impl=s&gdfp_req=1&env=vp&output=xml_vast4&unviewed_position_start=1";
 
-        if (keywords != null) {
+        if (prebidKeywords != null) {
             uri = uri + "&cust_params=";
-            for (String key : keywords.keySet()) {
-                uri = uri+ key + "%3D" + keywords.get(key) + "%26";
+            for (String key : prebidKeywords.keySet()) {
+                uri = uri + key + "%3D" + prebidKeywords.get(key) + "%26";
             }
         }
         return uri;

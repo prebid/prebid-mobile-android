@@ -2,6 +2,7 @@ package org.prebid.mobile.app;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,7 +53,7 @@ public class XandrInstreamVideoGamActivity extends AppCompatActivity {
 
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setPrebidServerAccountId("aecd6ef7-b992-4e99-9bb8-65e2d984e1dd");
-        VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
+        VideoAdUnit.Parameters parameters = new VideoAdUnit.Parameters();
         parameters.setMimes(Arrays.asList("video/mp4"));
 
         parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0));

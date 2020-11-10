@@ -16,6 +16,8 @@
 
 package org.prebid.mobile;
 
+import android.util.Pair;
+
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
@@ -369,5 +371,74 @@ public class UtilTest extends BaseSetup {
         Assert.assertEquals(Arrays.asList(1, 2), result1);
     }
 
-
+    @Test
+    public void testGenerateInstreamUriForGam() {
+        ArrayList<Pair<Integer, Integer>> sizes = null;
+        try {
+            Util.generateInstreamUriForGam("test", sizes, null);
+        } catch (Exception e) {
+            assertEquals("sizes should not be empty", e.getMessage());
+        }
+        sizes = new ArrayList<>();
+        try {
+            Util.generateInstreamUriForGam("test", sizes, null);
+        } catch (Exception e) {
+            assertEquals("sizes should not be empty", e.getMessage());
+        }
+        sizes.add(new Pair<Integer, Integer>(1, 300));
+        try {
+            Util.generateInstreamUriForGam("test", sizes, null);
+        } catch (Exception e) {
+            assertEquals("size should be either 640x480 or 400x300", e.getMessage());
+        }
+        sizes = new ArrayList<>();
+        sizes.add(new Pair<Integer, Integer>(400, 300));
+        Exception exception = null;
+        try {
+            Util.generateInstreamUriForGam("test", sizes, null);
+        } catch (Exception e) {
+            exception = e;
+        }
+        assertEquals(null, exception);
+        sizes = new ArrayList<>();
+        sizes.add(new Pair<Integer, Integer>(640, 480));
+        exception = null;
+        try {
+            Util.generateInstreamUriForGam("test", sizes, null);
+        } catch (Exception e) {
+            exception = e;
+        }
+        assertEquals(null, exception);
+        sizes = new ArrayList<>();
+        sizes.add(new Pair<Integer, Integer>(640, 480));
+        sizes.add(new Pair<Integer, Integer>(400, 300));
+        exception = null;
+        try {
+            Util.generateInstreamUriForGam("test", sizes, null);
+        } catch (Exception e) {
+            exception = e;
+        }
+        assertEquals(null, exception);
+        sizes = new ArrayList<>();
+        sizes.add(new Pair<Integer, Integer>(640, 480));
+        sizes.add(new Pair<Integer, Integer>(400, 300));
+        sizes.add(new Pair<Integer, Integer>(1, 1));
+        try {
+            Util.generateInstreamUriForGam("test", sizes, null);
+        } catch (Exception e) {
+            assertEquals("size should be either 640x480 or 400x300", e.getMessage());
+        }
+        sizes = new ArrayList<>();
+        sizes.add(new Pair<Integer, Integer>(640, 480));
+        String adTagUrl = Util.generateInstreamUriForGam("test", sizes, null);
+        assertEquals("https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=test&impl=s&gdfp_req=1&env=vp&output=xml_vast4&unviewed_position_start=1", adTagUrl);
+        sizes = new ArrayList<>();
+        sizes.add(new Pair<Integer, Integer>(640, 480));
+        sizes.add(new Pair<Integer, Integer>(400, 300));
+        HashMap<String, String> keywords = new HashMap<>();
+        keywords.put("hb_cache_id", "123");
+        keywords.put("hb_pb", "1");
+        adTagUrl = Util.generateInstreamUriForGam("test", sizes, keywords);
+        assertEquals("https://pubads.g.doubleclick.net/gampad/ads?sz=640x480|400x300&iu=test&impl=s&gdfp_req=1&env=vp&output=xml_vast4&unviewed_position_start=1&cust_params=hb_pb%3D1%26hb_cache_id%3D123%26", adTagUrl);
+    }
 }
