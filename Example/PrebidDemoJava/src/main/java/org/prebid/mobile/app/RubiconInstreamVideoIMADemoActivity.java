@@ -2,6 +2,7 @@ package org.prebid.mobile.app;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Pair;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,8 +24,8 @@ import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.Util;
 import org.prebid.mobile.VideoAdUnit;
-import org.prebid.mobile.VideoBaseAdUnit;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -72,7 +73,9 @@ public class RubiconInstreamVideoIMADemoActivity extends AppCompatActivity {
         adUnit.fetchDemand(new OnCompleteListener2() {
             @Override
             public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
-                String uri = Util.generateInstreamUriForGam("/19968336/Wei_instream_video", 640, 480, unmodifiableMap);
+                ArrayList<Pair<Integer, Integer>> sizes = new ArrayList<>();
+                sizes.add(new Pair<>(640, 480));
+                String uri = Util.generateInstreamUriForGam("/19968336/Wei_instream_video", sizes, unmodifiableMap);
                 adsLoader = new ImaAdsLoader(RubiconInstreamVideoIMADemoActivity.this, Uri.parse(uri));
                 initializePlayer();
             }
