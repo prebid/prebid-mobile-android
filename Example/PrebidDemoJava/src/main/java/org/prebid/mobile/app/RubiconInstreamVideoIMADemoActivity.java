@@ -2,7 +2,6 @@ package org.prebid.mobile.app;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Pair;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
