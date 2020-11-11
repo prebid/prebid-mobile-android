@@ -560,7 +560,7 @@ public class Util {
         return result;
     }
 
-    public static String generateInstreamUriForGam(String adUnit, ArrayList<Pair<Integer, Integer>> sizes, Map<String, String> prebidKeywords) {
+    public static String generateInstreamUriForGam(String adUnit, HashSet<AdSize> sizes, Map<String, String> prebidKeywords) {
         String uri = "https://pubads.g.doubleclick.net/gampad/ads?";
         if (TextUtils.isEmpty(adUnit)) {
             throw new IllegalArgumentException("adUnit should not be empty");
@@ -569,11 +569,11 @@ public class Util {
         if (sizes == null || sizes.size() == 0) {
             throw new IllegalArgumentException("sizes should not be empty");
         } else {
-            for (Pair<Integer, Integer> size : sizes) {
-                if (!(size.first == 640 && size.second == 480) && !(size.first == 400 && size.second == 300)) {
+            for (AdSize size : sizes) {
+                if (!(size.getWidth() == 640 && size.getHeight() == 480) && !(size.getWidth() == 400 && size.getHeight() == 300)) {
                     throw new IllegalArgumentException("size should be either 640x480 or 400x300");
                 } else {
-                    sz = sz + size.first + 'x' + size.second + "|";
+                    sz = sz + size.getWidth() + 'x' + size.getHeight() + "|";
                 }
             }
         }

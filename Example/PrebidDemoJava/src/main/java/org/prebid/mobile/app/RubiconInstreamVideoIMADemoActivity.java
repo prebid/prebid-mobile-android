@@ -16,6 +16,7 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.OnCompleteListener2;
@@ -27,6 +28,7 @@ import org.prebid.mobile.VideoAdUnit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 
 public class RubiconInstreamVideoIMADemoActivity extends AppCompatActivity {
@@ -73,8 +75,8 @@ public class RubiconInstreamVideoIMADemoActivity extends AppCompatActivity {
         adUnit.fetchDemand(new OnCompleteListener2() {
             @Override
             public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
-                ArrayList<Pair<Integer, Integer>> sizes = new ArrayList<>();
-                sizes.add(new Pair<>(640, 480));
+                HashSet<AdSize> sizes = new HashSet<>();
+                sizes.add(new AdSize(640, 480));
                 String uri = Util.generateInstreamUriForGam("/19968336/Wei_instream_video", sizes, unmodifiableMap);
                 adsLoader = new ImaAdsLoader(RubiconInstreamVideoIMADemoActivity.this, Uri.parse(uri));
                 initializePlayer();

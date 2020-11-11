@@ -19,7 +19,7 @@ package org.prebid.mobile;
 /**
  * AdSize class defines the size of the ad slot to be made available for auction.
  */
-class AdSize {
+public class AdSize {
     private int width;
     private int height;
 
@@ -29,7 +29,7 @@ class AdSize {
      * @param width  width of the ad container
      * @param height height of the ad container
      */
-    AdSize(int width, int height) {
+    public AdSize(int width, int height) {
         this.width = width;
         this.height = height;
     }
