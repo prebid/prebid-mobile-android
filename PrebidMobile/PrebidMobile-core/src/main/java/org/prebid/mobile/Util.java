@@ -560,6 +560,15 @@ public class Util {
         return result;
     }
 
+    /**
+     * Generate ad tag url for Google's IMA SDK to fetch ads
+     *
+     * @param adUnit GAM ad unit id
+     * @param sizes a set of ad sizes, only 640x480 and 400x300 are valid
+     * @param prebidKeywords prebid keywords
+     *
+     * @return ad tag url
+     */
     public static String generateInstreamUriForGam(String adUnit, HashSet<AdSize> sizes, Map<String, String> prebidKeywords) {
         String uri = "https://pubads.g.doubleclick.net/gampad/ads?";
         if (TextUtils.isEmpty(adUnit)) {
