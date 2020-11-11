@@ -421,6 +421,16 @@ public class UtilTest extends BaseSetup {
         assertEquals(null, exception);
         sizes = new ArrayList<>();
         sizes.add(new Pair<Integer, Integer>(640, 480));
+        sizes.add(new Pair<Integer, Integer>(300, 300));
+        exception = null;
+        try {
+            Util.generateInstreamUriForGam("test", sizes, null);
+        } catch (Exception e) {
+            exception = e;
+        }
+        assertEquals("size should be either 640x480 or 400x300", exception.getMessage());
+        sizes = new ArrayList<>();
+        sizes.add(new Pair<Integer, Integer>(640, 480));
         sizes.add(new Pair<Integer, Integer>(400, 300));
         sizes.add(new Pair<Integer, Integer>(1, 1));
         try {
