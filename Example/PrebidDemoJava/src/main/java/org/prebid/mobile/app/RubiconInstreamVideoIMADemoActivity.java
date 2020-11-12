@@ -75,7 +75,7 @@ public class RubiconInstreamVideoIMADemoActivity extends AppCompatActivity {
             public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
                 HashSet<AdSize> sizes = new HashSet<>();
                 sizes.add(new AdSize(640, 480));
-                String uri = Util.generateInstreamUriForGam("/19968336/Wei_instream_video", sizes, unmodifiableMap);
+                String uri = Util.generateInstreamUriForGam(Constants.DFP_VAST_ADUNIT_ID_RUBICON, sizes, unmodifiableMap);
                 adsLoader = new ImaAdsLoader(RubiconInstreamVideoIMADemoActivity.this, Uri.parse(uri));
                 initializePlayer();
             }
