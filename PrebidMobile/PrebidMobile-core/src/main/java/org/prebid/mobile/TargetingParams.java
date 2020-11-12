@@ -49,6 +49,12 @@ public class TargetingParams {
     private static final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
     private static final Set<String> contextKeywordsSet = new HashSet<>();
 
+    @Nullable
+    private static String omidPartnerName;
+
+    @Nullable
+    private static String omidPartnerVersion;
+
     //endregion
 
     //region Private Constructor
@@ -498,6 +504,25 @@ public class TargetingParams {
 
     static Set<String> getContextKeywordsSet()  {
         return contextKeywordsSet;
+    }
+
+    //OMID signaling
+    @Nullable
+    public static String getOmidPartnerName() {
+        return omidPartnerName;
+    }
+
+    public static void setOmidPartnerName(@Nullable String omidPartnerName) {
+        TargetingParams.omidPartnerName = omidPartnerName;
+    }
+
+    @Nullable
+    public static String getOmidPartnerVersion() {
+        return omidPartnerVersion;
+    }
+
+    public static void setOmidPartnerVersion(@Nullable String omidPartnerVersion) {
+        TargetingParams.omidPartnerVersion = omidPartnerVersion;
     }
 
 //endregion

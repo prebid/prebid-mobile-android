@@ -27,8 +27,11 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.prebid.mobile.Host;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private String adType = "";
     private String adServer = "";
     private String adSize = "";
+    private Host host = Host.RUBICON;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,26 @@ public class MainActivity extends AppCompatActivity {
             WebView.setWebContentsDebuggingEnabled(true);
         }
         // Get all the components
+        Spinner hostSpinner = findViewById(R.id.hostSpinner);
+        ArrayAdapter<CharSequence> hostAdapter = ArrayAdapter.createFromResource(this, R.array.hostArray, android.R.layout.simple_spinner_item);
+        hostAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        hostSpinner.setAdapter(hostAdapter);
+        hostSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            List<String> hosts = Arrays.asList(getResources().getStringArray(R.array.hostArray));
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position > hosts.size()) {
+                    return;
+                }
+                host = hosts.get(position).equals("Rubicon") ? Host.RUBICON : Host.APPNEXUS;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         Spinner adTypeSpinner = (Spinner) findViewById(R.id.adTypeSpinner);
         // Ad Type Spinner set up
         ArrayAdapter<CharSequence> adTypeAdapter = ArrayAdapter.createFromResource(
@@ -133,18 +157,125 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showAd(View view) {
-        Intent demoActivityIntent = new Intent(this, DemoActivity.class);
-        demoActivityIntent.putExtra(Constants.AD_SERVER_NAME, adServer);
-        demoActivityIntent.putExtra(Constants.AD_TYPE_NAME, adType);
-        if (adType.equals("Banner")) {
-            demoActivityIntent.putExtra(Constants.AD_SIZE_NAME, adSize);
-        }
         EditText autoRefreshMillis = (EditText) findViewById(R.id.autoRefreshInput);
         String refreshMillisString = autoRefreshMillis.getText().toString();
-        if (!TextUtils.isEmpty(refreshMillisString)) {
-            int refreshMillis = Integer.valueOf(refreshMillisString);
-            demoActivityIntent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+        Intent intent = null;
+        if (host.equals(Host.RUBICON)) {
+            if (adType.equals(getString(R.string.adTypeBanner)) && adServer.equals(getString(R.string.adServerAdManager))) {
+                intent = new Intent(this, RubiconBannerGamDemoActivity.class);
+                intent.putExtra(Constants.AD_SIZE_NAME, adSize);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeBanner)) && adServer.equals(getString(R.string.adServerMoPub))) {
+                intent = new Intent(this, RubiconBannerMoPubDemoActivity.class);
+                intent.putExtra(Constants.AD_SIZE_NAME, adSize);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeInterstitial)) && adServer.equals(getString(R.string.adServerAdManager))) {
+                intent = new Intent(this, RubiconIntersitialGamDemoActivity.class);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeInterstitial)) && adServer.equals(getString(R.string.adServerMoPub))) {
+                intent = new Intent(this, RubiconInterstitialMoPubDemoActivity.class);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeBannerVideo)) && adServer.equals(getString(R.string.adServerAdManager))) {
+                intent = new Intent(this, RubiconBannerVideoGamDemoActivity.class);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeInterstitialVideo)) && adServer.equals(getString(R.string.adServerAdManager))) {
+                intent = new Intent(this, RubiconInterstitialVideoGamDemoActivity.class);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeInterstitialVideo)) && adServer.equals(getString(R.string.adServerMoPub))) {
+                intent = new Intent(this, RubiconInterstitialVideoMoPubDemoActivity.class);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeRewardedVideo)) && adServer.equals(getString(R.string.adServerAdManager))) {
+                intent = new Intent(this, RubiconRewardedVideoGamDemoActivity.class);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeRewardedVideo)) && adServer.equals(getString(R.string.adServerMoPub))) {
+                intent = new Intent(this, RubiconRewardedVideoMoPubDemoActivity.class);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeInstreamVideo)) && adServer.equals(getString(R.string.adServerAdManager))) {
+                intent = new Intent(this, RubiconInstreamVideoIMADemoActivity.class);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            }
+        } else if (host.equals(Host.APPNEXUS)) {
+            if (adType.equals(getString(R.string.adTypeBanner)) && adServer.equals(getString(R.string.adServerAdManager))) {
+                intent = new Intent(this, XandrBannerGamDemoActivity.class);
+                intent.putExtra(Constants.AD_SIZE_NAME, adSize);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeBanner)) && adServer.equals(getString(R.string.adServerMoPub))) {
+                intent = new Intent(this, XandrBannerMoPubDemoActivity.class);
+                intent.putExtra(Constants.AD_SIZE_NAME, adSize);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeInterstitial)) && adServer.equals(getString(R.string.adServerAdManager))) {
+                intent = new Intent(this, XandrInterstitialGamDemoActivity.class);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeInterstitial)) && adServer.equals(getString(R.string.adServerMoPub))) {
+                intent = new Intent(this, XandrInterstitialMoPubDemoActivity.class);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeInBannerNative)) && adServer.equals(getString(R.string.adServerAdManager))) {
+                intent = new Intent(this, XandrNativeInBannerGamDemoActivity.class);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeInBannerNative)) && adServer.equals(getString(R.string.adServerMoPub))) {
+                intent = new Intent(this, XandrNativeInBannerMoPubDemoActivity.class);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            } else if (adType.equals(getString(R.string.adTypeInstreamVideo)) && adServer.equals(getString(R.string.adServerAdManager))) {
+                intent = new Intent(this, XandrInstreamVideoGamActivity.class);
+                if (!TextUtils.isEmpty(refreshMillisString)) {
+                    int refreshMillis = Integer.valueOf(refreshMillisString);
+                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
+                }
+            }
         }
-        startActivity(demoActivityIntent);
+        if (intent != null) {
+            startActivity(intent);
+        } else {
+            Toast.makeText(getApplicationContext(), "Not supported yet.", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

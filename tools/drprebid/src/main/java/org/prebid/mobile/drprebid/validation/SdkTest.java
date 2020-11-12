@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.FrameLayout;
 
+import androidx.annotation.Nullable;
+
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
@@ -38,6 +40,8 @@ import org.prebid.mobile.drprebid.util.IOUtil;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -47,6 +51,8 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static org.prebid.mobile.ResultCode.SUCCESS;
 
 public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.InterstitialAdListener {
     private static final String TAG = SdkTest.class.getSimpleName();
@@ -62,7 +68,7 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
 
         void requestSentToAdServer(String request, String postBody);
 
-        void adServerResponseContainsPrebidCreative(boolean contains);
+        void adServerResponseContainsPrebidCreative(@Nullable Boolean contains);
 
         void onTestFinished();
     }
@@ -197,29 +203,51 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
                 mGoogleBanner.setAdUnitId(adServerSettings.getAdUnitId());
                 mGoogleBanner.setAdListener(mGoogleBannerListener);
 
-                PublisherAdRequest adRequest = new PublisherAdRequest.Builder().build();
-
-                if (mAdUnit != null) {
-                    mAdUnit.fetchDemand(mGoogleBanner, resultCode -> mGoogleBanner.loadAd(adRequest));
-
-                    if (mListener != null) {
-                        mListener.requestToPrebidServerSent(true);
-                    }
-                }
-
             } else if (generalSettings.getAdFormat() == AdFormat.INTERSTITIAL) {
                 mGoogleInterstitial = new PublisherInterstitialAd(mContext);
+                mGoogleInterstitial.setAdUnitId(adServerSettings.getAdUnitId());
                 mGoogleInterstitial.setAdListener(mGoogleInterstitialListener);
+            }
 
-                PublisherAdRequest adRequest = new PublisherAdRequest.Builder().build();
+            if (mAdUnit != null) {
+                final Map<String, String> keywordsMap = new HashMap<>();
 
-                if (mAdUnit != null) {
-                    mAdUnit.fetchDemand(mGoogleInterstitial, resultCode -> mGoogleInterstitial.loadAd(adRequest));
+                mAdUnit.fetchDemand(keywordsMap, resultCode -> {
+
+                    boolean responseSuccess = false;
+                    if (resultCode == SUCCESS) {
+                        responseSuccess = true;
+                    }
+
+                    boolean topBid = false;
+                    if (keywordsMap.containsKey("hb_cache_id")) {
+                        topBid = true;
+                    }
+
+                    PublisherAdRequest.Builder adRequestBuilder = new PublisherAdRequest.Builder();
+
+                    for (Map.Entry<String, String> entry : keywordsMap.entrySet()) {
+                        adRequestBuilder.addCustomTargeting(entry.getKey(), entry.getValue());
+                    }
+
+                    if (generalSettings.getAdFormat() == AdFormat.BANNER) {
+                        mGoogleBanner.loadAd(adRequestBuilder.build());
+                    } else if (generalSettings.getAdFormat() == AdFormat.INTERSTITIAL) {
+                        mGoogleInterstitial.loadAd(adRequestBuilder.build());
+                    }
 
                     if (mListener != null) {
-                        mListener.requestToPrebidServerSent(true);
+                        mListener.responseFromPrebidServerReceived(responseSuccess);
+                        mListener.bidReceivedAndCached(topBid);
+                        mListener.requestSentToAdServer("", "");
                     }
+
+                });
+
+                if (mListener != null) {
+                    mListener.requestToPrebidServerSent(true);
                 }
+
             }
         }
     }
@@ -313,11 +341,26 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
         @Override
         public void onAdLoaded() {
             super.onAdLoaded();
+
+            AdViewUtils.findHtml(mGoogleBanner, new OnWebViewListener() {
+                @Override
+                public void success(String html) {
+                    mAdServerResponse = html;
+                    checkResponseForPrebidCreative();
+                }
+
+                @Override
+                public void failure() {
+                    invokeContainsPrebidCreative(false);
+                }
+            });
         }
 
         @Override
         public void onAdFailedToLoad(int errorCode) {
             super.onAdFailedToLoad(errorCode);
+
+            invokeContainsPrebidCreative(false);
         }
     };
 
@@ -327,11 +370,15 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
         @Override
         public void onAdLoaded() {
             super.onAdLoaded();
+
+            invokeContainsPrebidCreative(null);
         }
 
         @Override
         public void onAdFailedToLoad(int errorCode) {
             super.onAdFailedToLoad(errorCode);
+
+            invokeContainsPrebidCreative(false);
         }
     };
 
@@ -403,7 +450,7 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
         }
     }
 
-    private void invokeContainsPrebidCreative(boolean contains) {
+    private void invokeContainsPrebidCreative(@Nullable Boolean contains) {
         mContext.runOnUiThread(() -> {
             if (mListener != null) {
                 mListener.adServerResponseContainsPrebidCreative(contains);

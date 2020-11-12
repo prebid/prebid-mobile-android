@@ -39,11 +39,17 @@ import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.OnCompleteListener;
+import org.prebid.mobile.OnCompleteListener2;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
-import org.prebid.mobile.Util;
+import org.prebid.mobile.addendum.AdViewUtils;
+import org.prebid.mobile.addendum.PbFindSizeError;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import javax.annotation.Nullable;
@@ -78,10 +84,226 @@ public class AdManagerComplexTest {
         mockServer = null;
     }
 
-    @Test
-    public void testPublisherAdRequestBuilder() throws Exception {
+    private interface FetchDemandCompleteListener {
+        void preFetchDemand();
+        void executeFetchDemand(AdUnit adUnit, List<Map<String, String>> resultList);
+        void postFetchDemand(List<Map<String, String>> resultList);
+    }
 
+    @Test
+    public void testFetchDemand() throws Exception {
+
+        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+
+        fetchDemandHelper(0, new FetchDemandCompleteListener() {
+
+            @Override
+            public void preFetchDemand() {
+
+            }
+
+            @Override
+            public void executeFetchDemand(AdUnit adUnit, final List<Map<String, String>> resultList) {
+                adUnit.fetchDemand(builder, new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+
+                        Bundle customTargetingBundle = builder.build().getCustomTargeting();
+
+                        Map<String, String> map = new HashMap<>(customTargetingBundle.keySet().size());
+                        for (String key : customTargetingBundle.keySet()) {
+                            map.put(key, customTargetingBundle.get(key).toString());
+                        }
+
+                        resultList.add(map);
+
+                    }
+                });
+            }
+
+            @Override
+            public void postFetchDemand(List<Map<String, String>> resultList) {
+
+            }
+        });
+    }
+
+    @Test
+    public void testFetchDemandBids() throws Exception {
+
+        fetchDemandHelper(0, new FetchDemandCompleteListener() {
+
+            @Override
+            public void preFetchDemand() {
+
+            }
+
+            @Override
+            public void executeFetchDemand(AdUnit adUnit, final List<Map<String, String>> resultList) {
+                adUnit.fetchDemand(new OnCompleteListener2() {
+                    @Override
+                    public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
+                        resultList.add(unmodifiableMap);
+                    }
+                });
+            }
+
+            @Override
+            public void postFetchDemand(List<Map<String, String>> resultList) {
+
+            }
+        });
+
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testFetchDemandBidsUnmodifiable() throws Exception {
+
+        fetchDemandHelper(0, new FetchDemandCompleteListener() {
+
+            @Override
+            public void preFetchDemand() {
+
+            }
+
+            @Override
+            public void executeFetchDemand(AdUnit adUnit, final List<Map<String, String>> resultList) {
+                adUnit.fetchDemand(new OnCompleteListener2() {
+                    @Override
+                    public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
+                        resultList.add(unmodifiableMap);
+                    }
+                });
+            }
+
+            @Override
+            public void postFetchDemand(List<Map<String, String>> resultList) {
+                resultList.get(0).put("someKey", "someValue");
+            }
+        });
+
+    }
+
+    @Test
+    public void testFetchDemandAutoRefresh() throws Exception {
+
+        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        final IntegerWrapper requestCountWrapper = new IntegerWrapper();
+
+        fetchDemandHelper(31_000, new FetchDemandCompleteListener() {
+            @Override
+            public void preFetchDemand() {
+                mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
+                        "  \"seatbid\": [\n" +
+                        "    {\n" +
+                        "      \"bid\": [\n" +
+                        "        {\n" +
+                        "          \"ext\": {\n" +
+                        "            \"prebid\": {\n" +
+                        "              \"targeting\": {\n" +
+                        "                \"hb_cache_id\": \"top_bid_1\",\n" +
+                        "                \"key1\": \"value1\"\n" +
+                        "              }\n" +
+                        "            }\n" +
+                        "          }\n" +
+                        "        }\n" +
+                        "      ]\n" +
+                        "    }\n" +
+                        "  ]\n" +
+                        "}"));
+            }
+
+            @Override
+            public void executeFetchDemand(AdUnit adUnit, final List<Map<String, String>> resultList) {
+                adUnit.fetchDemand(builder, new OnCompleteListener() {
+                    @Override
+                    public void onComplete(ResultCode resultCode) {
+
+                        requestCountWrapper.value++;
+
+                        PublisherAdRequest publisherAdRequest = builder.build();
+                        Bundle customTargetingBundle = publisherAdRequest.getCustomTargeting();
+
+                        Map<String, String> map = new HashMap<>(customTargetingBundle.keySet().size());
+                        for (String key : customTargetingBundle.keySet()) {
+                            map.put(key, customTargetingBundle.get(key).toString());
+                        }
+
+                        resultList.add(map);
+                    }
+                });
+            }
+
+            @Override
+            public void postFetchDemand(List<Map<String, String>> resultList) {
+                Map<String, String> result = resultList.get(1);
+
+                assertEquals("top_bid_1", result.get("hb_cache_id"));
+                assertEquals("value1", result.get("key1"));
+            }
+        });
+
+        assertEquals(2, requestCountWrapper.value);
+    }
+
+    @Test
+    public void testFetchDemandBidsAutoRefresh() throws Exception {
+        final IntegerWrapper requestCountWrapper = new IntegerWrapper();
+
+        fetchDemandHelper(31_000, new FetchDemandCompleteListener() {
+            @Override
+            public void preFetchDemand() {
+                mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
+                        "  \"seatbid\": [\n" +
+                        "    {\n" +
+                        "      \"bid\": [\n" +
+                        "        {\n" +
+                        "          \"ext\": {\n" +
+                        "            \"prebid\": {\n" +
+                        "              \"targeting\": {\n" +
+                        "                \"hb_cache_id\": \"top_bid_1\",\n" +
+                        "                \"key1\": \"value1\"\n" +
+                        "              }\n" +
+                        "            }\n" +
+                        "          }\n" +
+                        "        }\n" +
+                        "      ]\n" +
+                        "    }\n" +
+                        "  ]\n" +
+                        "}"));
+            }
+
+            @Override
+            public void executeFetchDemand(AdUnit adUnit, final List<Map<String, String>> resultList) {
+
+                adUnit.fetchDemand(new OnCompleteListener2() {
+                    @Override
+                    public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
+                        requestCountWrapper.value++;
+
+                        resultList.add(new HashMap(unmodifiableMap));
+                    }
+                });
+            }
+
+            @Override
+            public void postFetchDemand(List<Map<String, String>> resultList) {
+                Map<String, String> result = resultList.get(1);
+
+                assertEquals("top_bid_1", result.get("hb_cache_id"));
+                assertEquals("value1", result.get("key1"));
+            }
+        });
+
+        assertEquals(2, requestCountWrapper.value);
+    }
+
+    public void fetchDemandHelper(int autoRefreshMillis, FetchDemandCompleteListener listener) throws Exception {
         //given
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        HttpUrl httpUrl = mockServer.url("/fetchDemandHelper");
+        Host.CUSTOM.setHostUrl(httpUrl.toString());
+        PrebidMobile.setPrebidServerAccountId("1001");
         mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
                 "  \"seatbid\": [\n" +
                 "    {\n" +
@@ -115,157 +337,43 @@ public class AdManagerComplexTest {
                 "  ]\n" +
                 "}"));
 
-        //important line
-        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        listener.preFetchDemand();
 
-        HttpUrl httpUrl = mockServer.url("/testPublisherAdRequestBuilder");
-        Host.CUSTOM.setHostUrl(httpUrl.toString());
-        PrebidMobile.setPrebidServerAccountId("1001");
-
-        final ReferenceWrapper<Bundle> customTargetingBundleWrapper = new ReferenceWrapper<>();
+        final List<Map<String, String>> resultList = new ArrayList<>();
 
         //when
-        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
         AdUnit adUnit = new BannerAdUnit("1001-1", 300, 250);
+        adUnit.setAutoRefreshPeriodMillis(autoRefreshMillis);
 
-        adUnit.fetchDemand(builder, new OnCompleteListener() {
-            @Override
-            public void onComplete(ResultCode resultCode) {
-
-
-                PublisherAdRequest publisherAdRequest = builder.build();
-                Bundle customTargetingBundle = publisherAdRequest.getCustomTargeting();
-
-                customTargetingBundleWrapper.value = customTargetingBundle;
-            }
-        });
+        listener.executeFetchDemand(adUnit, resultList);
 
         try {
-            Thread.sleep(1_000);
+            Thread.sleep(autoRefreshMillis + 1_000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         //then
-        Bundle customTargetingBundle = customTargetingBundleWrapper.value;
+        Map<String, String> map = resultList.get(0);
 
-        assertEquals(16, customTargetingBundle.keySet().size());
+        assertEquals("mobile-app", map.get("hb_env"));
+        assertEquals("https://prebid-cache-europe.rubiconproject.com/cache", map.get("hb_cache_hostpath"));
+        assertEquals("300x250", map.get("hb_size_rubicon"));
+        assertEquals("a2f41588-4727-425c-9ef0-3b382debef1e", map.get("hb_cache_id"));
+        assertEquals("/cache", map.get("hb_cache_path_rubicon"));
+        assertEquals("prebid-cache-europe.rubiconproject.com", map.get("hb_cache_host_rubicon"));
+        assertEquals("1.20", map.get("hb_pb"));
+        assertEquals("1.20", map.get("hb_pb_rubicon"));
+        assertEquals("a2f41588-4727-425c-9ef0-3b382debef1e", map.get("hb_cache_id_rubicon"));
+        assertEquals("/cache", map.get("hb_cache_path"));
+        assertEquals("300x250", map.get("hb_size"));
+        assertEquals("https://prebid-cache-europe.rubiconproject.com/cache", map.get("hb_cache_hostpath_rubicon"));
+        assertEquals("mobile-app", map.get("hb_env_rubicon"));
+        assertEquals("rubicon", map.get("hb_bidder"));
+        assertEquals("rubicon", map.get("hb_bidder_rubicon"));
+        assertEquals("prebid-cache-europe.rubiconproject.com", map.get("hb_cache_host"));
 
-        assertEquals("mobile-app", customTargetingBundle.getString("hb_env"));
-        assertEquals("https://prebid-cache-europe.rubiconproject.com/cache", customTargetingBundle.getString("hb_cache_hostpath"));
-        assertEquals("300x250", customTargetingBundle.getString("hb_size_rubicon"));
-        assertEquals("a2f41588-4727-425c-9ef0-3b382debef1e", customTargetingBundle.getString("hb_cache_id"));
-        assertEquals("/cache", customTargetingBundle.getString("hb_cache_path_rubicon"));
-        assertEquals("prebid-cache-europe.rubiconproject.com", customTargetingBundle.getString("hb_cache_host_rubicon"));
-        assertEquals("1.20", customTargetingBundle.getString("hb_pb"));
-        assertEquals("1.20", customTargetingBundle.getString("hb_pb_rubicon"));
-        assertEquals("a2f41588-4727-425c-9ef0-3b382debef1e", customTargetingBundle.getString("hb_cache_id_rubicon"));
-        assertEquals("/cache", customTargetingBundle.getString("hb_cache_path"));
-        assertEquals("300x250", customTargetingBundle.getString("hb_size"));
-        assertEquals("https://prebid-cache-europe.rubiconproject.com/cache", customTargetingBundle.getString("hb_cache_hostpath_rubicon"));
-        assertEquals("mobile-app", customTargetingBundle.getString("hb_env_rubicon"));
-        assertEquals("rubicon", customTargetingBundle.getString("hb_bidder"));
-        assertEquals("rubicon", customTargetingBundle.getString("hb_bidder_rubicon"));
-        assertEquals("prebid-cache-europe.rubiconproject.com", customTargetingBundle.getString("hb_cache_host"));
-
-    }
-
-    @Test
-    public void testPublisherAdRequestBuilderWithRefresh() throws Exception {
-        //given
-
-        mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
-                "  \"seatbid\": [\n" +
-                "    {\n" +
-                "      \"bid\": [\n" +
-                "        {\n" +
-                "          \"ext\": {\n" +
-                "            \"prebid\": {\n" +
-                "              \"targeting\": {\n" +
-                "                \"hb_cache_id\": \"top_bid_1\",\n" +
-                "                \"key1\": \"value1\"\n" +
-                "              }\n" +
-                "            }\n" +
-                "          }\n" +
-                "        }\n" +
-                "      ]\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}"));
-
-        mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
-                "  \"seatbid\": [\n" +
-                "    {\n" +
-                "      \"bid\": [\n" +
-                "        {\n" +
-                "          \"ext\": {\n" +
-                "            \"prebid\": {\n" +
-                "              \"targeting\": {\n" +
-                "                \"hb_cache_id\": \"top_bid_2\",\n" +
-                "                \"key5\": \"value5\"\n" +
-                "              }\n" +
-                "            }\n" +
-                "          }\n" +
-                "        }\n" +
-                "      ]\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}"));
-
-
-        //important line
-        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-
-        HttpUrl httpUrl = mockServer.url("/testPublisherAdRequestBuilderWithRefresh");
-        Host.CUSTOM.setHostUrl(httpUrl.toString());
-        PrebidMobile.setPrebidServerAccountId("1001");
-
-        final ReferenceWrapper<Bundle> customTargetingBundleWrapper1 = new ReferenceWrapper<>();
-        final ReferenceWrapper<Bundle> customTargetingBundleWrapper2 = new ReferenceWrapper<>();
-        final IntegerWrapper requestCountWrapper = new IntegerWrapper();
-
-        //when
-        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        AdUnit adUnit = new BannerAdUnit("1001-1", 300, 250);
-        adUnit.setAutoRefreshPeriodMillis(30_001);
-
-        adUnit.fetchDemand(builder, new OnCompleteListener() {
-            @Override
-            public void onComplete(ResultCode resultCode) {
-
-                requestCountWrapper.value++;
-
-                PublisherAdRequest publisherAdRequest = builder.build();
-                Bundle customTargetingBundle = publisherAdRequest.getCustomTargeting();
-
-                if (requestCountWrapper.value == 1) {
-                    customTargetingBundleWrapper1.value = (Bundle)customTargetingBundle.clone();
-                } else if (requestCountWrapper.value == 2) {
-                    customTargetingBundleWrapper2.value = (Bundle)customTargetingBundle.clone();
-                }
-            }
-        });
-
-        try {
-            Thread.sleep(31_000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        //then
-        Bundle customTargetingBundle1 = customTargetingBundleWrapper1.value;
-        Bundle customTargetingBundle2 = customTargetingBundleWrapper2.value;
-
-        assertEquals(2, requestCountWrapper.value);
-
-        assertEquals(2, customTargetingBundle1.keySet().size());
-        assertEquals("top_bid_1", customTargetingBundle1.getString("hb_cache_id"));
-        assertEquals("value1", customTargetingBundle1.getString("key1"));
-
-        assertEquals(2, customTargetingBundle2.keySet().size());
-        assertEquals(null, customTargetingBundle2.getString("key1"));
-        assertEquals("top_bid_2", customTargetingBundle2.getString("hb_cache_id"));
-        assertEquals("value5", customTargetingBundle2.getString("key5"));
+        listener.postFetchDemand(resultList);
     }
 
     @Test
@@ -463,42 +571,41 @@ public class AdManagerComplexTest {
                 super.onAdLoaded();
 
                 //Programmatic fix
-                Util.findPrebidCreativeSize(dfpAdView, new Util.CreativeSizeCompletionHandler() {
+                AdViewUtils.findPrebidCreativeSize(dfpAdView, new AdViewUtils.PbFindSizeListener() {
                     @Override
-                    public void onSize(final Util.CreativeSize size) {
-                        if (size != null) {
+                    public void success(final int width, final int height) {
+                        dfpAdView.setAdSizes(new AdSize(width, height));
 
-                            dfpAdView.setAdSizes(new AdSize(size.getWidth(), size.getHeight()));
+                        final View child = dfpAdView.getChildAt(0);
+                        child.setBackgroundColor(Color.RED);
 
-                            final View child = dfpAdView.getChildAt(0);
-                            child.setBackgroundColor(Color.RED);
+                        dfpAdView.post(new Runnable() {
+                            @Override
+                            public void run() {
 
-                            dfpAdView.post(new Runnable() {
-                                @Override
-                                public void run() {
+                                float density = dfpAdView.getResources().getDisplayMetrics().density;
+                                double dpW = Math.ceil(child.getMinimumWidth() / density);
+                                double dpH = Math.ceil(child.getMinimumHeight() / density);
 
-                                    float density = dfpAdView.getResources().getDisplayMetrics().density;
-                                    double dpW = Math.ceil(child.getMinimumWidth() / density);
-                                    double dpH = Math.ceil(child.getMinimumHeight() / density);
-
-                                    try {
-                                        Thread.sleep(screenshotDelayMillis);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    assertEquals((int)dpW, size.getWidth());
-                                    assertEquals((int)dpH, size.getHeight());
-
-                                    update(true);
-
+                                try {
+                                    Thread.sleep(screenshotDelayMillis);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
                                 }
-                            });
 
-                        } else {
-                            LogUtil.w("size is null");
-                            update(false);
-                        }
+                                assertEquals((int)dpW, width);
+                                assertEquals((int)dpH, height);
+
+                                update(true);
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void failure(PbFindSizeError error) {
+                        LogUtil.w("failure:" + error.getDescription());
+                        update(false);
                     }
                 });
 

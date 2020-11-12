@@ -38,8 +38,6 @@ import android.widget.ImageView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.prebid.mobile.addendum.AdViewUtils;
-import org.prebid.mobile.addendum.PbFindSizeError;
 
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -131,28 +129,6 @@ public class Util {
                 }
             }, 50);
         }
-    }
-
-    /**
-     * @see AdViewUtils#findPrebidCreativeSize(View, AdViewUtils.PbFindSizeListener)
-     * @deprecated Please migrate to - AdViewUtils.findPrebidCreativeSize(View, AdViewUtils.PbFindSizeListener)
-     */
-    @Deprecated
-    public static void findPrebidCreativeSize(@Nullable View adView, final CreativeSizeCompletionHandler completionHandler) {
-        AdViewUtils.findPrebidCreativeSize(adView, new AdViewUtils.PbFindSizeListener() {
-            @Override
-            public void success(int width, int height) {
-                completionHandler.onSize(new CreativeSize(width, height));
-
-            }
-
-            @Override
-            public void failure(@NonNull PbFindSizeError error) {
-                LogUtil.w("Missing failure handler, please migrate to - Util.findPrebidCreativeSize(View, CreativeSizeResultHandler)");
-                completionHandler.onSize(null); // backwards compatibility
-            }
-        });
-
     }
 
     @NonNull
@@ -442,10 +418,11 @@ public class Util {
             handleAdManagerCustomTargeting(bids, adObj);
         } else if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS)) {
             handleAdManagerBuilderCustomTargeting(bids, adObj);
-        }
-        else if (adObj.getClass() == HashMap.class) {
+        } else if (adObj.getClass() == HashMap.class) {
             if (bids != null && !bids.isEmpty()) {
-                ((HashMap) adObj).putAll(bids);
+                HashMap map = ((HashMap) adObj);
+                map.clear();
+                map.putAll(bids);
             }
         }
     }
@@ -570,7 +547,7 @@ public class Util {
 
         for (int i = 0; i < jsonArray.length(); i++) {
 
-            list.add((T)jsonArray.get(i));
+            list.add((T) jsonArray.get(i));
         }
 
         return list;
@@ -597,63 +574,23 @@ public class Util {
         return result;
     }
 
-    public interface CreativeSizeCompletionHandler {
-        void onSize(@Nullable CreativeSize size);
-    }
-
-    /**
-     * Utility Size class
-     */
-    @Deprecated
-    public static class CreativeSize {
-        private int width;
-        private int height;
-
-        /**
-         * Creates an ad size object with width and height as specified
-         *
-         * @param width  width of the ad container
-         * @param height height of the ad container
-         */
-        public CreativeSize(int width, int height) {
-            this.width = width;
-            this.height = height;
+    public static String generateInstreamUriForGam(String adUnit, int w, int h, Map<String, String> keywords) {
+        String uri = "https://pubads.g.doubleclick.net/gampad/ads?";
+        if (TextUtils.isEmpty(adUnit)) {
+            throw new IllegalArgumentException("adUnit should not be empty");
         }
-
-        /**
-         * Returns the width of the ad container
-         *
-         * @return width
-         */
-        public int getWidth() {
-            return width;
+        if (w <= 0 || h <= 0) {
+            throw new IllegalArgumentException("w or h should be positive numbers");
         }
+        uri = uri + "sz=" + w + "x" + h + "&iu=" + adUnit + "&impl=s&gdfp_req=1&env=vp&output=xml_vast4&unviewed_position_start=1";
 
-        /**
-         * Returns the height of the ad container
-         *
-         * @return height
-         */
-        public int getHeight() {
-            return height;
+        if (keywords != null) {
+            uri = uri + "&cust_params=";
+            for (String key : keywords.keySet()) {
+                uri = uri+ key + "%3D" + keywords.get(key) + "%26";
+            }
         }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            CreativeSize adSize = (CreativeSize) o;
-
-            if (width != adSize.width) return false;
-            return height == adSize.height;
-        }
-
-        @Override
-        public int hashCode() {
-            String size = width + "x" + height;
-            return size.hashCode();
-        }
+        return uri;
     }
 
     private static final String GAM_VIEW_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdView";

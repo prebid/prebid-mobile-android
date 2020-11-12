@@ -620,7 +620,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
-    public void testAdUnitKeyValuesInPostData() throws Exception {
+    public void testUserKeywordInPostData() throws Exception {
         server.setDispatcher(new Dispatcher() {
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
@@ -640,16 +640,9 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("123456");
         BannerAdUnit adUnit = new BannerAdUnit("123456", 300, 250);
-        adUnit.addUserKeyword("key1", "value1");
-        adUnit.addUserKeyword("key1", "value2");
-        adUnit.addUserKeyword("key2", "value1");
-        adUnit.addUserKeyword("key2", "value2");
-        adUnit.addUserKeyword("key3", "value1");
-        adUnit.addUserKeyword("key3", "value2");
-        adUnit.addUserKeyword("key4", "value1");
-        adUnit.addUserKeyword("key4", "value2");
-        adUnit.addUserKeyword("key5", "value1");
-        adUnit.addUserKeyword("key5", "value2");
+        TargetingParams.addUserKeyword("value1");
+        TargetingParams.addUserKeyword("value2");
+        TargetingParams.addUserKeyword("value1");
         MoPubView testView = new MoPubView(activity);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         adUnit.fetchDemand(testView, mockListener);
@@ -663,7 +656,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Robolectric.flushForegroundThreadScheduler();
         Host.CUSTOM.setHostUrl(server.url("/clearKeywords").toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
-        adUnit.clearUserKeywords();
+        TargetingParams.clearUserKeywords();
         OnCompleteListener mockListenerNoKV = mock(OnCompleteListener.class);
         adUnit.fetchDemand(testView, mockListenerNoKV);
         fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
@@ -1133,6 +1126,61 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertEquals("rubicon", storedbidresponse2.getString("bidder"));
         assertEquals("221155", storedbidresponse2.getString("id"));
 
+    }
+
+    @Test
+    public void testPostDataWithOmidNameAndVersion() throws Exception {
+
+        //given
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+
+        String partnerName = "PartnerName";
+        String partnerVersion = "1.0";
+
+        TargetingParams.setOmidPartnerName(partnerName);
+        TargetingParams.setOmidPartnerVersion(partnerVersion);
+
+        String omidPartnerName = null;
+        String omidPartnerVersion = null;
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
+        try {
+            JSONObject ext = postData.getJSONObject("source").getJSONObject("ext");
+            omidPartnerName = ext.getString("omidpn");
+            omidPartnerVersion = ext.getString("omidpv");
+
+        } catch (Exception ex) {
+            fail("parsing error");
+        }
+
+        //then
+        assertEquals(partnerName, omidPartnerName);
+        assertEquals(partnerVersion, omidPartnerVersion);
+    }
+
+    @Test
+    public void testPostDataWithoutOmidNameAndVersion() throws Exception {
+
+        //given
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+
+        TargetingParams.setOmidPartnerName(null);
+        TargetingParams.setOmidPartnerVersion(null);
+
+        JSONObject ext = null;
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
+        try {
+            ext = (JSONObject) postData.getJSONObject("source").opt("ext");
+
+        } catch (Exception ex) {
+            fail("parsing error");
+        }
+
+        //then
+        assertNull(ext);
     }
 
     @Test

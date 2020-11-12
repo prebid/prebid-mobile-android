@@ -12,6 +12,7 @@ android {
         versionName rootProject.prebidVersionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
 
     }
     flavorDimensions "version"
@@ -30,6 +31,7 @@ android {
         abortOnError false
     }
     compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
@@ -44,14 +46,14 @@ project.gradle.taskGraph.whenReady {
 
 //repositories{
 //    maven {
-//        url 'https://oss.sonatype.org/content/repositories/orgprebid-1049'
+//        url 'https://oss.sonatype.org/content/repositories/orgprebid-1050'
 //    }
 //}
 
 dependencies {
 
-//    implementation 'org.prebid:prebid-mobile-sdk:1.7'
-//    implementation 'org.prebid:prebid-mobile-sdk-core:1.7'
+//    implementation 'org.prebid:prebid-mobile-sdk:1.8'
+//    implementation 'org.prebid:prebid-mobile-sdk-core:1.8'
 
     implementation project(':PrebidMobile')
 
@@ -59,6 +61,10 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'com.google.android.gms:play-services-ads:17.2.0'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.11.1'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.11.1'
+    implementation 'com.google.android.exoplayer:extension-ima:2.11.1'
+    implementation 'com.android.support:multidex:1.0.3'
     implementation('com.mopub:mopub-sdk:5.8.0@aar') {
         transitive = true
 

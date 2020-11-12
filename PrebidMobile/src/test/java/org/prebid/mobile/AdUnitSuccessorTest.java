@@ -102,16 +102,6 @@ public class AdUnitSuccessorTest {
         assertEquals(AdType.VIDEO, FieldUtils.readField(adUnit, "adType", true));
     }
 
-    @Test
-    @Deprecated
-    public void testVideoAdUnitCreationDeprecated() throws Exception {
-        VideoAdUnit adUnit = new VideoAdUnit("123456", 320, 50, VideoAdUnit.PlacementType.IN_BANNER);
-        assertEquals(new AdSize(320, 50), adUnit.getAdSize());
-        assertEquals("123456", FieldUtils.readField(adUnit, "configId", true));
-        assertEquals(AdType.VIDEO, FieldUtils.readField(adUnit, "adType", true));
-        assertEquals(VideoAdUnit.PlacementType.IN_BANNER, FieldUtils.readField(adUnit, "type", true));
-    }
-
     //VideoInterstitial AdUnit
     @Test
     public void testVideoInterstitialAdUnitCreation() throws Exception {

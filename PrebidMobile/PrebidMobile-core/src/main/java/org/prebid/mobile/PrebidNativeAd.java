@@ -121,11 +121,13 @@ public class PrebidNativeAd {
 
     private boolean isValid() {
         return URLUtil.isValidUrl(clickUrl) &&
-                !TextUtils.isEmpty(title) &&
-                !TextUtils.isEmpty(description) &&
-                URLUtil.isValidUrl(iconUrl) &&
-                URLUtil.isValidUrl(imageUrl) &&
-                !TextUtils.isEmpty(cta);
+                !TextUtils.isEmpty(title);
+//                &&
+//                !TextUtils.isEmpty(description) &&
+//                URLUtil.isValidUrl(iconUrl) &&
+//                URLUtil.isValidUrl(imageUrl);
+//                &&
+//                !TextUtils.isEmpty(cta);
     }
 
     private PrebidNativeAd() {

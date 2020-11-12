@@ -165,9 +165,4 @@ public class NativeAdUnit extends AdUnit {
         params.addAsset(asset);
     }
 
-    public String getCacheId() {
-        return params.getCacheId();
-    }
-
-
 }

@@ -42,6 +42,7 @@ import org.prebid.mobile.NativeEventTracker;
 import org.prebid.mobile.NativeImageAsset;
 import org.prebid.mobile.NativeTitleAsset;
 import org.prebid.mobile.OnCompleteListener;
+import org.prebid.mobile.OnCompleteListener2;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.PrebidNativeAdEventListener;
@@ -51,6 +52,7 @@ import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class PrebidNativeActivity extends AppCompatActivity {
     private PublisherAdView adView;
@@ -688,6 +690,7 @@ public class PrebidNativeActivity extends AppCompatActivity {
 
                         @Override
                         public void onPrebidNativeNotValid() {
+                            Log.e("ERROR", "onPrebidNativeNotValid");
                             // should not show the NativeAd on the screen, do something else
                         }
                     });
@@ -700,19 +703,33 @@ public class PrebidNativeActivity extends AppCompatActivity {
                 }
             });
             mMoPubNative.registerAdRenderer(new MoPubStaticNativeAdRenderer(null));
-            nativeAdUnit.fetchDemand(mMoPubNative, new OnCompleteListener() {
+            nativeAdUnit.fetchDemand(new OnCompleteListener2() {
                 @Override
-                public void onComplete(ResultCode resultCode) {
+                public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
+                    Log.e("MAP", unmodifiableMap.toString());
                     if (resultCode == ResultCode.SUCCESS) {
                         String keywords = "hb_pb:0.50";
-                        if (nativeAdUnit.getCacheId() != null)
-                            keywords += ",hb_cache_id:" + nativeAdUnit.getCacheId();
+                        if (unmodifiableMap.containsKey("hb_cache_id_local"))
+                            keywords += ",hb_cache_id:" + unmodifiableMap.get("hb_cache_id_local");
                         RequestParameters mRP = new RequestParameters.Builder().keywords(keywords).build();
                         Log.d("Prebid", mRP.getKeywords());
                         mMoPubNative.makeRequest(mRP);
                     }
                     Toast.makeText(PrebidNativeActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
                 }
+
+//                @Override
+//                public void onComplete(ResultCode resultCode) {
+//                    if (resultCode == ResultCode.SUCCESS) {
+//                        String keywords = "hb_pb:0.50";
+//                        if (nativeAdUnit.getCacheId() != null)
+//                            keywords += ",hb_cache_id:" + nativeAdUnit.getCacheId();
+//                        RequestParameters mRP = new RequestParameters.Builder().keywords(keywords).build();
+//                        Log.d("Prebid", mRP.getKeywords());
+//                        mMoPubNative.makeRequest(mRP);
+//                    }
+//                    Toast.makeText(PrebidNativeActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
+//                }
             });
         }
     }

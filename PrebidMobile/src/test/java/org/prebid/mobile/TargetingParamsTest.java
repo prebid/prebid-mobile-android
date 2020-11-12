@@ -389,4 +389,23 @@ public class TargetingParamsTest extends BaseSetup {
         Assert.assertEquals(1, set.size());
         assertThat(set, containsInAnyOrder("value10"));
     }
+
+    @Test
+    public void testOmidPartnerNameAndVersion() {
+
+        //given
+        String partnerName = "PartnerName";
+        String partnerVersion = "1.0";
+
+        TargetingParams.setOmidPartnerName(partnerName);
+        TargetingParams.setOmidPartnerVersion(partnerVersion);
+
+        //when
+        String omidPartnerName = TargetingParams.getOmidPartnerName();
+        String omidPartnerVersion = TargetingParams.getOmidPartnerVersion();
+
+        //then
+        Assert.assertEquals(partnerName, omidPartnerName);
+        Assert.assertEquals(partnerVersion, omidPartnerVersion);
+    }
 }

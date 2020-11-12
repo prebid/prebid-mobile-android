@@ -22,6 +22,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.webkit.WebView;
 
+import androidx.multidex.MultiDexApplication;
+
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
 
@@ -44,8 +46,6 @@ public class CustomApplication extends Application {
 
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(getApplicationContext());
-        WebView obj = new WebView(this);
-        obj.clearCache(true);
         //endregion
         if (BuildConfig.DEBUG) {
             sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));

@@ -364,7 +364,7 @@ public class PrebidServerAdapter implements DemandAdapter {
                                     if (testingNativeNative) {
                                         String cacheId = CacheManager.save(bid.toString());
                                         if (cacheId != null) {
-                                            keywords.put("hb_cache_id", cacheId);
+                                            keywords.put("hb_cache_id_local", cacheId);
                                             containTopBid = true;
                                         }
                                     }
@@ -525,39 +525,20 @@ public class PrebidServerAdapter implements DemandAdapter {
             try {
                 String id = UUID.randomUUID().toString();
                 postData.put("id", id);
-                JSONObject source = new JSONObject();
-                source.put("tid", id);
-                postData.put("source", source);
+                // add ad source
+                postData.put("source", getSource(id));
                 // add ad units
-                JSONArray imp = getImp();
-                if (imp != null && imp.length() > 0) {
-                    postData.put("imp", imp);
-                }
+                postData.put("imp", getImp());
                 // add device
-                JSONObject device = getDeviceObject();
-                if (device != null && device.length() > 0) {
-                    postData.put(PrebidServerSettings.REQUEST_DEVICE, device);
-                }
+                postData.put(PrebidServerSettings.REQUEST_DEVICE, getDeviceObject());
                 // add app
-                JSONObject app = getAppObject();
-                if (device != null && device.length() > 0) {
-                    postData.put(PrebidServerSettings.REQUEST_APP, app);
-                }
+                postData.put(PrebidServerSettings.REQUEST_APP, getAppObject());
                 // add user
-                JSONObject user = getUserObject();
-                if (user != null && user.length() > 0) {
-                    postData.put(PrebidServerSettings.REQUEST_USER, user);
-                }
+                postData.put(PrebidServerSettings.REQUEST_USER, getUserObject());
                 // add regs
-                JSONObject regs = getRegsObject();
-                if (regs != null && regs.length() > 0) {
-                    postData.put("regs", regs);
-                }
+                postData.put("regs", getRegsObject());
                 // add targeting keywords request
-                JSONObject ext = getRequestExtData();
-                if (ext != null && ext.length() > 0) {
-                    postData.put("ext", ext);
-                }
+                postData.put("ext", getRequestExtData());
 
                 if (PrebidMobile.getPbsDebug()) {
                     postData.put("test", 1);
@@ -590,6 +571,16 @@ public class PrebidServerAdapter implements DemandAdapter {
             return postData;
         }
 
+        private JSONObject getSource(String id) throws JSONException {
+            JSONObject source = new JSONObject();
+            source.put("tid", id);
+            JSONObject ext = new JSONObject();
+            ext.put("omidpn", TargetingParams.getOmidPartnerName());
+            ext.put("omidpv", TargetingParams.getOmidPartnerVersion());
+            source.put("ext", ext);
+
+            return source;
+        }
         private JSONObject getRequestExtData() {
             JSONObject ext = new JSONObject();
             JSONObject prebid = new JSONObject();
