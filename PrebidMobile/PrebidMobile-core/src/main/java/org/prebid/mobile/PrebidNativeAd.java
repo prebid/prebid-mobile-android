@@ -25,6 +25,7 @@ public class PrebidNativeAd {
     private String iconUrl;
     private String imageUrl;
     private String cta;
+    private String sponsoredBy;
     private String clickUrl;
     private ArrayList<String> imp_trackers;
     private VisibilityDetector visibilityDetector;
@@ -66,30 +67,30 @@ public class PrebidNativeAd {
                             ad.setTitle(title.getString("text"));
                         }
                     }
-                    if (adObject.has("description")) {
-                        JSONObject description = adObject.getJSONObject("description");
-                        if (description.has("text")) {
-                            ad.setDescription(description.getString("text"));
+                    if (adObject.has("data")) {
+                        JSONObject data = adObject.getJSONObject("data");
+                        if (data.optInt("type") == 1) {
+                            ad.setSponsoredBy(data.getString("value"));
+                        } else if (data.optInt("type") == 2) {
+                            ad.setDescription(data.getString("value"));
+                        } else if (data.optInt("type") == 12) {
+                            ad.setCallToAction(data.getString("value"));
                         }
                     }
 
                     if (adObject.has("img")) {
-                        JSONObject img = adObject.getJSONObject("img");
-                        if (img.has("url")) {
-                            ad.setImageUrl(img.getString("url"));
+                        if (adObject.optInt("id") == 1) {
+                            JSONObject img = adObject.getJSONObject("img");
+                            if (img.has("url")) {
+                                ad.setIconUrl(img.getString("url"));
+                            }
+                        } else if (adObject.optInt("id") == 2) {
+                            JSONObject img = adObject.getJSONObject("img");
+                            if (img.has("url")) {
+                                ad.setImageUrl(img.getString("url"));
+                            }
                         }
                     }
-
-                    if (adObject.has("icon")) {
-                        JSONObject icon = adObject.getJSONObject("icon");
-                        if (icon.has("url")) {
-                            ad.setIconUrl(icon.getString("url"));
-                        }
-                    }
-
-                    ad.setCallToAction(details.optString("cta"));
-
-//                    ad.setClickUrl(details.getString("clickUrl"));
                 }
 
                 if (details.has("link")) {
@@ -121,13 +122,11 @@ public class PrebidNativeAd {
 
     private boolean isValid() {
         return URLUtil.isValidUrl(clickUrl) &&
-                !TextUtils.isEmpty(title);
-//                &&
-//                !TextUtils.isEmpty(description) &&
-//                URLUtil.isValidUrl(iconUrl) &&
-//                URLUtil.isValidUrl(imageUrl);
-//                &&
-//                !TextUtils.isEmpty(cta);
+                !TextUtils.isEmpty(title) &&
+                !TextUtils.isEmpty(description) &&
+                URLUtil.isValidUrl(iconUrl) &&
+                URLUtil.isValidUrl(imageUrl) &&
+                !TextUtils.isEmpty(cta);
     }
 
     private PrebidNativeAd() {
@@ -157,6 +156,10 @@ public class PrebidNativeAd {
         this.cta = cta;
     }
 
+    private void setSponsoredBy(String sponsoredBy) {
+        this.sponsoredBy = sponsoredBy;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -175,6 +178,10 @@ public class PrebidNativeAd {
 
     public String getCallToAction() {
         return cta;
+    }
+
+    public String getSponsoredBy() {
+        return sponsoredBy;
     }
 
     public boolean registerView(View view, final PrebidNativeAdEventListener listener) {

@@ -625,7 +625,7 @@ public class Util {
     private static void finaNativeInGAMCustomTemplateAd(@NonNull Object object, @NonNull PrebidNativeAdListener listener) {
         String isPrebid = (String) callMethodOnObject(object, "getText", "isPrebid");
         if ("1".equals(isPrebid)) {
-            String cacheId = (String) callMethodOnObject(object, "getText", "hb_cache_id");
+            String cacheId = (String) callMethodOnObject(object, "getText", "hb_cache_id_local");
             PrebidNativeAd ad = PrebidNativeAd.create(cacheId);
             if (ad != null) {
                 listener.onPrebidNativeLoaded(ad);

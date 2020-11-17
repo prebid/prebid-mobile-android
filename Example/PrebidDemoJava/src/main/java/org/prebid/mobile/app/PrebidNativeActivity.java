@@ -84,7 +84,8 @@ public class PrebidNativeActivity extends AppCompatActivity {
 
     private void loadDFPCustomRendering(boolean usePrebid) {
         removePreviousAds();
-        adLoader = new AdLoader.Builder(this, "/19968336/Wei_test_native_native")
+//      Wei_test_native_native
+        adLoader = new AdLoader.Builder(this, "/19968336/Abhas_test_native_native_adunit")
                 .forPublisherAdView(new OnPublisherAdViewLoadedListener() {
                     @Override
                     public void onPublisherAdViewLoaded(PublisherAdView publisherAdView) {
@@ -180,7 +181,7 @@ public class PrebidNativeActivity extends AppCompatActivity {
 //        String cacheId = CacheManager.save("{\"title\":\"Test title\",\"description\":\"This is a test ad for Prebid Native Native. Please check prebid.org\",\"cta\":\"Learn More\",\"iconUrl\":\"https://dummyimage.com/40x40/000/fff\",\"imageUrl\":\"https://dummyimage.com/600x400/000/fff\",\"clickUrl\":\"https://prebid.org/\"}");
         if (usePrebid) {
             request = new PublisherAdRequest.Builder()
-                    .addCustomTargeting("hb_pb", "0.80")
+                    .addCustomTargeting("hb_pb", "0.50")
 //                    .addCustomTargeting("hb_cache_id", cacheId)
                     .build();
         } else {
@@ -555,14 +556,18 @@ public class PrebidNativeActivity extends AppCompatActivity {
             @Override
             public void onComplete(ResultCode resultCode) {
                 if (resultCode == ResultCode.SUCCESS) {
+                    Toast.makeText(PrebidNativeActivity.this, "Native Ad Unit: " + publisherAdRequest.getKeywords() + ", Custom Targeting: " + publisherAdRequest.getCustomTargeting(), Toast.LENGTH_SHORT).show();
+                    Log.e("Custom Targeting: ", publisherAdRequest.getCustomTargeting().toString());
                     loadDfp(publisherAdRequest);
+                } else {
+                    Toast.makeText(PrebidNativeActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(PrebidNativeActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void loadDfp(PublisherAdRequest publisherAdRequest) {
+//        Abhas_test_native_native_adunit
         adLoader = new AdLoader.Builder(this, "/19968336/Wei_test_native_native")
                 .forPublisherAdView(new OnPublisherAdViewLoadedListener() {
                     @Override
@@ -613,6 +618,7 @@ public class PrebidNativeActivity extends AppCompatActivity {
                     @Override
                     public void onAdFailedToLoad(int i) {
                         super.onAdFailedToLoad(i);
+                        Toast.makeText(PrebidNativeActivity.this, "DFP onAdFailedToLoad", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .build();
