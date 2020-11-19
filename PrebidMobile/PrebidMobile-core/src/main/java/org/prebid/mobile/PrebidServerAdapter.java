@@ -61,7 +61,6 @@ import java.util.regex.Pattern;
 
 public class PrebidServerAdapter implements DemandAdapter {
     private ArrayList<ServerConnector> serverConnectors;
-    public static boolean testingNativeNative;
 
     PrebidServerAdapter() {
         serverConnectors = new ArrayList<>();

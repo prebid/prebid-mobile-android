@@ -156,7 +156,6 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
     private void loadNativeNativeMopub() {
         {
             removePreviousAds();
-            PrebidServerAdapter.testingNativeNative = true;
             PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
             PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_APPNEXUS);
 
