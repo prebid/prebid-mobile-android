@@ -14,27 +14,6 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Load DFP without Prebid"
-            android:onClick="loadDFPWithoutPrebid"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Load DFP with Prebid"
-            android:onClick="loadDFPWithPrebid"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Load MoPub without Prebid"
-            android:onClick="loadMoPubWithoutPrebid"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Load MoPub with Prebid"
-            android:onClick="loadMoPubWithPrebid"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:text="Load Prebid Native"
             android:onClick="loadNativeNative"/>
 

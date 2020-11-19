@@ -41,6 +41,7 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class Util {
     static final String MOPUB_INTERSTITIAL_CLASS = "com.mopub.mobileads.MoPubInterstitial";
     static final String AD_MANAGER_REQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
     static final String AD_MANAGER_REQUEST_BUILDER_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest$Builder";
-    static final String MOPUB_NATIVE_CLASS = "com.mopub.nativeads.MoPubNative";
+    static final String MOPUB_NATIVE_CLASS = "com.mopub.nativeads.RequestParameters";
     public static final int HTTP_CONNECTION_TIMEOUT = 15000;
     public static final int HTTP_SOCKET_TIMEOUT = 20000;
     public static final int NATIVE_AD_VISIBLE_PERIOD_MILLIS = 1000;
@@ -283,6 +284,29 @@ public class Util {
         return null;
     }
 
+    static void setValueOnPrivateVariable(Object object, String variableName, Object params) {
+        try
+        {
+            Field field = object.getClass().getDeclaredField(variableName);
+            field.setAccessible(true);
+            field.set(object, (String) params);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    static void setFinalStatic(Field field, String newValue) throws Exception {
+        field.setAccessible(true);
+//        Field modifiersField = Field.class.getDeclaredField("modifiers");
+//        modifiersField.setAccessible(true);
+//        field.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+        field.set(null, newValue);
+    }
+
     /**
      * Creates a random lowercase string whose length is the number
      * of characters specified.
@@ -414,6 +438,8 @@ public class Util {
         if (adObj.getClass() == getClassFromString(MOPUB_BANNER_VIEW_CLASS)
                 || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)) {
             handleMoPubKeywordsUpdate(bids, adObj);
+        } else if (adObj.getClass() == getClassFromString(MOPUB_NATIVE_CLASS)) {
+            handleMoPubBuilderCustomTargeting(bids, adObj);
         } else if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS)) {
             handleAdManagerCustomTargeting(bids, adObj);
         } else if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS)) {
@@ -478,6 +504,30 @@ public class Util {
     private static void addReservedKeys(String key) {
         synchronized (reservedKeys) {
             reservedKeys.add(key);
+        }
+    }
+
+    private static void handleMoPubBuilderCustomTargeting(HashMap<String, String> bids, Object requestParameters) {
+        removeUsedKeywordsForMoPub(requestParameters);
+
+        if (bids != null && !bids.isEmpty()) {
+            StringBuilder keywordsBuilder = new StringBuilder();
+            for (String key : bids.keySet()) {
+                addReservedKeys(key);
+                keywordsBuilder.append(key).append(":").append(bids.get(key)).append(",");
+            }
+            String pbmKeywords = keywordsBuilder.toString();
+            String adViewKeywords = (String) Util.callMethodOnObject(requestParameters, "getKeywords");
+            if (!TextUtils.isEmpty(adViewKeywords)) {
+                adViewKeywords = pbmKeywords + adViewKeywords;
+            } else {
+                adViewKeywords = pbmKeywords;
+            }
+
+            // only set keywords if less than mopub query string limit
+            if (adViewKeywords.length() <= MoPubQueryStringLimit) {
+                Util.setValueOnPrivateVariable(requestParameters, "mKeywords", adViewKeywords);
+            }
         }
     }
 
@@ -643,7 +693,11 @@ public class Util {
         Log.d("Prebid", "" + baseNativeAd);
         Boolean isPrebid = (Boolean) callMethodOnObject(baseNativeAd, "getExtra", "isPrebid");
         if (isPrebid != null && isPrebid) {
-            String cacheId = (String) callMethodOnObject(baseNativeAd, "getExtra", "hb_cache_id");
+            String cacheId = (String) callMethodOnObject(baseNativeAd, "getExtra", "hb_cache_id_local");
+            // For testing MoPub
+            if (TextUtils.isEmpty(cacheId)) {
+                cacheId = (String) callMethodOnObject(baseNativeAd, "getExtra", "hb_cache_id");
+            }
             if (CacheManager.isValid(cacheId)) {
                 PrebidNativeAd ad = PrebidNativeAd.create(cacheId);
                 if (ad != null) {

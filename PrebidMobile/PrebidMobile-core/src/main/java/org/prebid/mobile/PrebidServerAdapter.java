@@ -310,6 +310,8 @@ public class PrebidServerAdapter implements DemandAdapter {
                                             String cacheId = CacheManager.save(bid.toString());
                                             if (cacheId != null) {
                                                 keywords.put("hb_cache_id_local", cacheId);
+                                                // For testing MoPub
+                                                keywords.put("hb_cache_id", cacheId);
                                                 containTopBid = true;
                                             }
                                         }

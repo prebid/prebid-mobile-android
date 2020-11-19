@@ -41,7 +41,9 @@ public class PrebidNativeAd {
             try {
                 JSONObject details = new JSONObject(content);
                 Log.e("DETAILS", content);
-                JSONArray asset = details.getJSONArray("assets");
+                String admStr = details.getString("adm");
+                JSONObject adm = new JSONObject(admStr);
+                JSONArray asset = adm.getJSONArray("assets");
                 final PrebidNativeAd ad = new PrebidNativeAd();
                 CacheManager.registerCacheExpiryListener(cacheId, new CacheManager.CacheExpiryListener() {
                     @Override
@@ -93,15 +95,15 @@ public class PrebidNativeAd {
                     }
                 }
 
-                if (details.has("link")) {
-                    JSONObject link = details.getJSONObject("link");
+                if (adm.has("link")) {
+                    JSONObject link = adm.getJSONObject("link");
                     if (link.has("url")) {
                         ad.setClickUrl(link.getString("url"));
                     }
                 }
 
-                if (details.has("eventtrackers")) {
-                    JSONArray eventtrackers = details.getJSONArray("eventtrackers");
+                if (adm.has("eventtrackers")) {
+                    JSONArray eventtrackers = adm.getJSONArray("eventtrackers");
                     if (eventtrackers.length() > 0) {
                         ad.imp_trackers = new ArrayList<>();
                         for (int count = 0; count < eventtrackers.length(); count++) {

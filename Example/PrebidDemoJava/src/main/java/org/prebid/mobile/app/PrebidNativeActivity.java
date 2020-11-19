@@ -82,291 +82,6 @@ public class PrebidNativeActivity extends AppCompatActivity {
 
     }
 
-    private void loadDFPCustomRendering(boolean usePrebid) {
-        removePreviousAds();
-//      Wei_test_native_native
-        adLoader = new AdLoader.Builder(this, "/19968336/Abhas_test_native_native_adunit")
-                .forPublisherAdView(new OnPublisherAdViewLoadedListener() {
-                    @Override
-                    public void onPublisherAdViewLoaded(PublisherAdView publisherAdView) {
-                        adView = publisherAdView;
-                        ((FrameLayout) findViewById(R.id.adFrame)).addView(publisherAdView);
-                    }
-                }, AdSize.BANNER)
-                .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
-                    @Override
-                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
-                        Log.d("Prebid", "native loaded");
-                        PrebidNativeActivity.this.unifiedNativeAd = unifiedNativeAd;
-                    }
-                })
-                .forCustomTemplateAd("11885766", new NativeCustomTemplateAd.OnCustomTemplateAdLoadedListener() {
-
-                    @Override
-                    public void onCustomTemplateAdLoaded(NativeCustomTemplateAd nativeCustomTemplateAd) {
-                        Log.d("Prebid", "custom ad loaded");
-                        Util.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
-                            @Override
-                            public void onPrebidNativeLoaded(PrebidNativeAd ad) {
-                                inflatePrebidNativeAd(ad);
-                            }
-
-                            @Override
-                            public void onPrebidNativeNotFound() {
-                                // inflate nativeCustomTemplateAd
-                            }
-
-                            @Override
-                            public void onPrebidNativeNotValid() {
-                                // show your own content
-                            }
-                        });
-                    }
-                }, new NativeCustomTemplateAd.OnCustomClickListener() {
-
-                    @Override
-                    public void onCustomClick(NativeCustomTemplateAd nativeCustomTemplateAd, String s) {
-
-                    }
-                })
-                .withAdListener(new AdListener() {
-                    @Override
-                    public void onAdFailedToLoad(int i) {
-                        super.onAdFailedToLoad(i);
-                    }
-                })
-                .build();
-        PublisherAdRequest request;
-        String cacheId = CacheManager.save("{\n" +
-                "  \"ver\": \"1.2\",\n" +
-                "  \"assets\": [\n" +
-                "    {\n" +
-                "      \"id\": 1,\n" +
-                "      \"img\": {\n" +
-                "        \"type\": 3,\n" +
-                "        \"url\": \"https://vcdn.adnxs.com/p/creative-image/7e/71/90/27/7e719027-80ef-4664-9b6d-a763da4cea4e.png\",\n" +
-                "        \"w\": 300,\n" +
-                "        \"h\": 250,\n" +
-                "        \"ext\": {\n" +
-                "          \"appnexus\": {\n" +
-                "            \"prevent_crop\": 0\n" +
-                "          }\n" +
-                "        }\n" +
-                "      }\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"data\": {\n" +
-                "        \"type\": 1,\n" +
-                "        \"value\": \"AppNexus\"\n" +
-                "      }\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"id\": 2,\n" +
-                "      \"title\": {\n" +
-                "        \"text\": \"This is an RTB ad\"\n" +
-                "      }\n" +
-                "    }\n" +
-                "  ],\n" +
-                "  \"link\": {\n" +
-                "    \"url\": \"https://nym1-ib.adnxs.com/click?mpmZmZmZqT-amZmZmZmpPwAAAAAAAOA_mpmZmZmZqT-amZmZmZmpP8GRp4bdjMle__________8UQVpfAAAAAHu99gBuJwAAbicAAAIAAACRL6wJ-MwcAAAAAABVU0QAVVNEAAEAAQDILwAAAAABAgMCAAAAAMYAfyvwMQAAAAA./bcr=AAAAAAAA8D8=/pp=${AUCTION_PRICE}/cnd=%211BKZHAiFzYATEJHfsE0Y-JlzIAQoADGamZmZmZmpPzoJTllNMjo0MDU2QKYkSQAAAAAAAPA_UQAAAAAAAAAAWQAAAAAAAAAAYQAAAAAAAAAAaQAAAAAAAAAAcQAAAAAAAAAAeAA./cca=MTAwOTQjTllNMjo0MDU2/bn=77455/clickenc=http%3A%2F%2Fappnexus.com\"\n" +
-                "  },\n" +
-                "  \"eventtrackers\": [\n" +
-                "    {\n" +
-                "      \"event\": 1,\n" +
-                "      \"method\": 1,\n" +
-                "      \"url\": \"https://nym1-ib.adnxs.com/it?an_audit=0&e=wqT_3QLhCWzhBAAAAwDWAAUBCJSC6foFEMGjnrXYm-PkXhj_EQEUASo2CZqZAQEIqT8REQkEGQAFAQjgPyEREgApEQkAMQUauADgPzD7-toHOO5OQO5OSAJQkd-wTVj4mXNgAGjI34wBeI_dBIABAYoBA1VTRJIBAQbwVZgBAaABAagBAbABALgBAsABA8gBAtABANgBAOABAPABAIoCPHVmKCdhJywgMzM5MzUyMCwgMTU5OTc1MDQyMCk7dWYoJ3InLCAxNjIyNzkzMTMsIDE1GR_0DgGSAvkDIWdGazdGZ2lGellBVEVKSGZzRTBZQUNENG1YTXdBRGdBUUFSSTdrNVEtX3JhQjFnQVlQX19fXzhQYUFCd0FYZ0JnQUVCaUFFQmtBRUJtQUVCb0FFQnFBRURzQUVBdVFGMXF3MXNtcG1wUDhFQmRhc05iSnFacVRfSkFYd2xrdlZtdVBBXzJRRUFBQUFBQUFEd1AtQUJBUFVCQUFBQUFKZ0NBS0FDQUxVQ0FBQUFBTDBDQUFBQUFNQUNBY2dDQWRBQ0FkZ0NBZUFDQU9nQ0FQZ0NBSUFEQVpnREFhZ0RoYzJBRTdvRENVNVpUVEk2TkRBMU51QURwaVNJQkFDUUJBQ1lCQUhCQkFBQUFBCYMIeVFRCQkBARhOZ0VBUEVFAQsJASBDSUJkZ2ZxUVUJDxhBRHdQN0VGDQ0UQUFBREJCHT8AeRUoDEFBQU4yKAAAWi4oAPBANEFXSUpfQUY0djN4QV9nRjhJX1BBWUlHQTFWVFJJZ0dBSkFHQVpnR0FLRUdtcG1abVptWnFULW9CZ0d5QmlRSkEBYAkBAFIJBwUBAFoFBgkBAGgJBwEBQEM0QmdvLpoCiQEhMUJLWkhBNv0BMC1KbHpJQVFvQURHYW0Fa1htcFB6b0pUbGxOTWpvME1EVTJRS1lrUxHpDFBBX1URDAxBQUFXHQwAWR0MAGEdDABjHQzwpGVBQS7YAgDgAsqoTYADAYgDAJADAJgDFKADAaoDAMAD4KgByAMA2AMA4AMA6AMC-AMAgAQAkgQJL29wZW5ydGIymAQAqAQAsgQMCAAQABgAIAAwADgAuAQAwAQAyAQA0gQPMTAwOTQjTllNMjo0MDU22gQCCAHgBADwBJHfsE2CBRpvcmcucHJlYmlkLm1vYmlsZS5hcGkxZGVtb4gFAZgFAKAF_3X8sKoFJDZhZjFlZmQ3LWJlNmMtNDlmMS04MTk2LWViNjI0NWI5ZWFjZsAFAMkFAGX5FPA_0gUJCQULOAAAANgFAeAFAfAFAfoFBAGwKJAGAZgGALgGAMEGAR8wAADwP9AG1jPaBhYKEAkRGQFcEAAYAOAGDPIGAggAgAcBiAcAoAdBugcOAUgEGAAJ-CRAAMgHj90E0gcNFXMwEAAYANoHBggAEAAYAA..&s=46d93f84d8459a2ca773485e5721255200b9f0ed&pp=${AUCTION_PRICE}\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}");
-//        String cacheId = CacheManager.save("{\"title\":\"Test title\",\"description\":\"This is a test ad for Prebid Native Native. Please check prebid.org\",\"cta\":\"Learn More\",\"iconUrl\":\"https://dummyimage.com/40x40/000/fff\",\"imageUrl\":\"https://dummyimage.com/600x400/000/fff\",\"clickUrl\":\"https://prebid.org/\"}");
-        if (usePrebid) {
-            request = new PublisherAdRequest.Builder()
-                    .addCustomTargeting("hb_pb", "0.50")
-//                    .addCustomTargeting("hb_cache_id", cacheId)
-                    .build();
-        } else {
-            request = new PublisherAdRequest.Builder().build();
-        }
-
-        adLoader.loadAd(request);
-    }
-
-    private void loadDFPNativeNative(boolean usePrebid) {
-        removePreviousAds();
-        adView = new PublisherAdView(this);
-        adView.setAdUnitId("/19968336/Wei_test_native_native");
-        adView.setAdSizes(AdSize.BANNER);
-        adView.setAdListener(new AdListener() {
-            @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                Log.d("Prebid", "dfp failed to load " + i);
-            }
-
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                Util.findNative(adView, new PrebidNativeAdListener() {
-                    @Override
-                    public void onPrebidNativeLoaded(PrebidNativeAd ad) {
-                        // Display Native
-                        Log.d("Prebid", "DFP Prebid Native ad loaded");
-                        inflatePrebidNativeAd(ad);
-                    }
-
-                    @Override
-                    public void onPrebidNativeNotFound() {
-                        // Display Banner
-                        Log.d("Prebid", "DFP Prebid Native not found, display regular banner");
-                        ((FrameLayout) PrebidNativeActivity.this.findViewById(R.id.adFrame)).addView(adView);
-                    }
-
-                    @Override
-                    public void onPrebidNativeNotValid() {
-                        //should not show the NativeAd on the screen, do something else
-                        Log.d("Prebid", "DFP Prebid Native not valid");
-                    }
-                });
-            }
-        });
-
-        PublisherAdRequest request;
-        String cacheId = CacheManager.save("{\n" +
-                "  \"ver\": \"1.2\",\n" +
-                "  \"assets\": [\n" +
-                "    {\n" +
-                "      \"id\": 1,\n" +
-                "      \"img\": {\n" +
-                "        \"type\": 3,\n" +
-                "        \"url\": \"https://vcdn.adnxs.com/p/creative-image/7e/71/90/27/7e719027-80ef-4664-9b6d-a763da4cea4e.png\",\n" +
-                "        \"w\": 300,\n" +
-                "        \"h\": 250,\n" +
-                "        \"ext\": {\n" +
-                "          \"appnexus\": {\n" +
-                "            \"prevent_crop\": 0\n" +
-                "          }\n" +
-                "        }\n" +
-                "      }\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"data\": {\n" +
-                "        \"type\": 1,\n" +
-                "        \"value\": \"AppNexus\"\n" +
-                "      }\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"id\": 2,\n" +
-                "      \"title\": {\n" +
-                "        \"text\": \"This is an RTB ad\"\n" +
-                "      }\n" +
-                "    }\n" +
-                "  ],\n" +
-                "  \"link\": {\n" +
-                "    \"url\": \"https://nym1-ib.adnxs.com/click?mpmZmZmZqT-amZmZmZmpPwAAAAAAAOA_mpmZmZmZqT-amZmZmZmpP8GRp4bdjMle__________8UQVpfAAAAAHu99gBuJwAAbicAAAIAAACRL6wJ-MwcAAAAAABVU0QAVVNEAAEAAQDILwAAAAABAgMCAAAAAMYAfyvwMQAAAAA./bcr=AAAAAAAA8D8=/pp=${AUCTION_PRICE}/cnd=%211BKZHAiFzYATEJHfsE0Y-JlzIAQoADGamZmZmZmpPzoJTllNMjo0MDU2QKYkSQAAAAAAAPA_UQAAAAAAAAAAWQAAAAAAAAAAYQAAAAAAAAAAaQAAAAAAAAAAcQAAAAAAAAAAeAA./cca=MTAwOTQjTllNMjo0MDU2/bn=77455/clickenc=http%3A%2F%2Fappnexus.com\"\n" +
-                "  },\n" +
-                "  \"eventtrackers\": [\n" +
-                "    {\n" +
-                "      \"event\": 1,\n" +
-                "      \"method\": 1,\n" +
-                "      \"url\": \"https://nym1-ib.adnxs.com/it?an_audit=0&e=wqT_3QLhCWzhBAAAAwDWAAUBCJSC6foFEMGjnrXYm-PkXhj_EQEUASo2CZqZAQEIqT8REQkEGQAFAQjgPyEREgApEQkAMQUauADgPzD7-toHOO5OQO5OSAJQkd-wTVj4mXNgAGjI34wBeI_dBIABAYoBA1VTRJIBAQbwVZgBAaABAagBAbABALgBAsABA8gBAtABANgBAOABAPABAIoCPHVmKCdhJywgMzM5MzUyMCwgMTU5OTc1MDQyMCk7dWYoJ3InLCAxNjIyNzkzMTMsIDE1GR_0DgGSAvkDIWdGazdGZ2lGellBVEVKSGZzRTBZQUNENG1YTXdBRGdBUUFSSTdrNVEtX3JhQjFnQVlQX19fXzhQYUFCd0FYZ0JnQUVCaUFFQmtBRUJtQUVCb0FFQnFBRURzQUVBdVFGMXF3MXNtcG1wUDhFQmRhc05iSnFacVRfSkFYd2xrdlZtdVBBXzJRRUFBQUFBQUFEd1AtQUJBUFVCQUFBQUFKZ0NBS0FDQUxVQ0FBQUFBTDBDQUFBQUFNQUNBY2dDQWRBQ0FkZ0NBZUFDQU9nQ0FQZ0NBSUFEQVpnREFhZ0RoYzJBRTdvRENVNVpUVEk2TkRBMU51QURwaVNJQkFDUUJBQ1lCQUhCQkFBQUFBCYMIeVFRCQkBARhOZ0VBUEVFAQsJASBDSUJkZ2ZxUVUJDxhBRHdQN0VGDQ0UQUFBREJCHT8AeRUoDEFBQU4yKAAAWi4oAPBANEFXSUpfQUY0djN4QV9nRjhJX1BBWUlHQTFWVFJJZ0dBSkFHQVpnR0FLRUdtcG1abVptWnFULW9CZ0d5QmlRSkEBYAkBAFIJBwUBAFoFBgkBAGgJBwEBQEM0QmdvLpoCiQEhMUJLWkhBNv0BMC1KbHpJQVFvQURHYW0Fa1htcFB6b0pUbGxOTWpvME1EVTJRS1lrUxHpDFBBX1URDAxBQUFXHQwAWR0MAGEdDABjHQzwpGVBQS7YAgDgAsqoTYADAYgDAJADAJgDFKADAaoDAMAD4KgByAMA2AMA4AMA6AMC-AMAgAQAkgQJL29wZW5ydGIymAQAqAQAsgQMCAAQABgAIAAwADgAuAQAwAQAyAQA0gQPMTAwOTQjTllNMjo0MDU22gQCCAHgBADwBJHfsE2CBRpvcmcucHJlYmlkLm1vYmlsZS5hcGkxZGVtb4gFAZgFAKAF_3X8sKoFJDZhZjFlZmQ3LWJlNmMtNDlmMS04MTk2LWViNjI0NWI5ZWFjZsAFAMkFAGX5FPA_0gUJCQULOAAAANgFAeAFAfAFAfoFBAGwKJAGAZgGALgGAMEGAR8wAADwP9AG1jPaBhYKEAkRGQFcEAAYAOAGDPIGAggAgAcBiAcAoAdBugcOAUgEGAAJ-CRAAMgHj90E0gcNFXMwEAAYANoHBggAEAAYAA..&s=46d93f84d8459a2ca773485e5721255200b9f0ed&pp=${AUCTION_PRICE}\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}");
-        if (usePrebid && !TextUtils.isEmpty(cacheId)) {
-            request = new PublisherAdRequest.Builder()
-                    .addCustomTargeting("hb_cache_id", cacheId)
-                    .addCustomTargeting("hb_pb", "0.50")
-                    .build();
-        } else {
-            request = new PublisherAdRequest.Builder().build();
-        }
-
-        adView.loadAd(request);
-    }
-
-    private void loadMoPubNativeNative(final boolean usePrebid) {
-        removePreviousAds();
-        mMoPubNative = new MoPubNative(PrebidNativeActivity.this, "2674981035164b2db5ef4b4546bf3d49", new MoPubNative.MoPubNativeNetworkListener() {
-            @Override
-            public void onNativeLoad(final NativeAd nativeAd) {
-                Log.d("Prebid", "MoPub native ad loaded");
-                PrebidNativeActivity.this.ad = nativeAd;
-                Util.findNative(nativeAd, new PrebidNativeAdListener() {
-                    @Override
-                    public void onPrebidNativeLoaded(final PrebidNativeAd ad) {
-                        inflatePrebidNativeAd(ad);
-                    }
-
-                    @Override
-                    public void onPrebidNativeNotFound() {
-                        infalteMoPubNativeAd(nativeAd);
-                    }
-
-                    @Override
-                    public void onPrebidNativeNotValid() {
-                        // should not show the NativeAd on the screen, do something else
-                    }
-                });
-
-            }
-
-            @Override
-            public void onNativeFail(NativeErrorCode errorCode) {
-                Log.d("Prebid", "MoPub native failed to load: " + errorCode.toString());
-            }
-        });
-        mMoPubNative.registerAdRenderer(new MoPubStaticNativeAdRenderer(null));
-        String cacheId = CacheManager.save("{\n" +
-                "  \"ver\": \"1.2\",\n" +
-                "  \"assets\": [\n" +
-                "    {\n" +
-                "      \"id\": 1,\n" +
-                "      \"img\": {\n" +
-                "        \"type\": 3,\n" +
-                "        \"url\": \"https://vcdn.adnxs.com/p/creative-image/7e/71/90/27/7e719027-80ef-4664-9b6d-a763da4cea4e.png\",\n" +
-                "        \"w\": 300,\n" +
-                "        \"h\": 250,\n" +
-                "        \"ext\": {\n" +
-                "          \"appnexus\": {\n" +
-                "            \"prevent_crop\": 0\n" +
-                "          }\n" +
-                "        }\n" +
-                "      }\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"data\": {\n" +
-                "        \"type\": 1,\n" +
-                "        \"value\": \"AppNexus\"\n" +
-                "      }\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"id\": 2,\n" +
-                "      \"title\": {\n" +
-                "        \"text\": \"This is an RTB ad\"\n" +
-                "      }\n" +
-                "    }\n" +
-                "  ],\n" +
-                "  \"link\": {\n" +
-                "    \"url\": \"https://nym1-ib.adnxs.com/click?mpmZmZmZqT-amZmZmZmpPwAAAAAAAOA_mpmZmZmZqT-amZmZmZmpP8GRp4bdjMle__________8UQVpfAAAAAHu99gBuJwAAbicAAAIAAACRL6wJ-MwcAAAAAABVU0QAVVNEAAEAAQDILwAAAAABAgMCAAAAAMYAfyvwMQAAAAA./bcr=AAAAAAAA8D8=/pp=${AUCTION_PRICE}/cnd=%211BKZHAiFzYATEJHfsE0Y-JlzIAQoADGamZmZmZmpPzoJTllNMjo0MDU2QKYkSQAAAAAAAPA_UQAAAAAAAAAAWQAAAAAAAAAAYQAAAAAAAAAAaQAAAAAAAAAAcQAAAAAAAAAAeAA./cca=MTAwOTQjTllNMjo0MDU2/bn=77455/clickenc=http%3A%2F%2Fappnexus.com\"\n" +
-                "  },\n" +
-                "  \"eventtrackers\": [\n" +
-                "    {\n" +
-                "      \"event\": 1,\n" +
-                "      \"method\": 1,\n" +
-                "      \"url\": \"https://nym1-ib.adnxs.com/it?an_audit=0&e=wqT_3QLhCWzhBAAAAwDWAAUBCJSC6foFEMGjnrXYm-PkXhj_EQEUASo2CZqZAQEIqT8REQkEGQAFAQjgPyEREgApEQkAMQUauADgPzD7-toHOO5OQO5OSAJQkd-wTVj4mXNgAGjI34wBeI_dBIABAYoBA1VTRJIBAQbwVZgBAaABAagBAbABALgBAsABA8gBAtABANgBAOABAPABAIoCPHVmKCdhJywgMzM5MzUyMCwgMTU5OTc1MDQyMCk7dWYoJ3InLCAxNjIyNzkzMTMsIDE1GR_0DgGSAvkDIWdGazdGZ2lGellBVEVKSGZzRTBZQUNENG1YTXdBRGdBUUFSSTdrNVEtX3JhQjFnQVlQX19fXzhQYUFCd0FYZ0JnQUVCaUFFQmtBRUJtQUVCb0FFQnFBRURzQUVBdVFGMXF3MXNtcG1wUDhFQmRhc05iSnFacVRfSkFYd2xrdlZtdVBBXzJRRUFBQUFBQUFEd1AtQUJBUFVCQUFBQUFKZ0NBS0FDQUxVQ0FBQUFBTDBDQUFBQUFNQUNBY2dDQWRBQ0FkZ0NBZUFDQU9nQ0FQZ0NBSUFEQVpnREFhZ0RoYzJBRTdvRENVNVpUVEk2TkRBMU51QURwaVNJQkFDUUJBQ1lCQUhCQkFBQUFBCYMIeVFRCQkBARhOZ0VBUEVFAQsJASBDSUJkZ2ZxUVUJDxhBRHdQN0VGDQ0UQUFBREJCHT8AeRUoDEFBQU4yKAAAWi4oAPBANEFXSUpfQUY0djN4QV9nRjhJX1BBWUlHQTFWVFJJZ0dBSkFHQVpnR0FLRUdtcG1abVptWnFULW9CZ0d5QmlRSkEBYAkBAFIJBwUBAFoFBgkBAGgJBwEBQEM0QmdvLpoCiQEhMUJLWkhBNv0BMC1KbHpJQVFvQURHYW0Fa1htcFB6b0pUbGxOTWpvME1EVTJRS1lrUxHpDFBBX1URDAxBQUFXHQwAWR0MAGEdDABjHQzwpGVBQS7YAgDgAsqoTYADAYgDAJADAJgDFKADAaoDAMAD4KgByAMA2AMA4AMA6AMC-AMAgAQAkgQJL29wZW5ydGIymAQAqAQAsgQMCAAQABgAIAAwADgAuAQAwAQAyAQA0gQPMTAwOTQjTllNMjo0MDU22gQCCAHgBADwBJHfsE2CBRpvcmcucHJlYmlkLm1vYmlsZS5hcGkxZGVtb4gFAZgFAKAF_3X8sKoFJDZhZjFlZmQ3LWJlNmMtNDlmMS04MTk2LWViNjI0NWI5ZWFjZsAFAMkFAGX5FPA_0gUJCQULOAAAANgFAeAFAfAFAfoFBAGwKJAGAZgGALgGAMEGAR8wAADwP9AG1jPaBhYKEAkRGQFcEAAYAOAGDPIGAggAgAcBiAcAoAdBugcOAUgEGAAJ-CRAAMgHj90E0gcNFXMwEAAYANoHBggAEAAYAA..&s=46d93f84d8459a2ca773485e5721255200b9f0ed&pp=${AUCTION_PRICE}\"\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}");
-        if (usePrebid && !TextUtils.isEmpty(cacheId)) {
-            RequestParameters mRP = new RequestParameters.Builder().keywords("hb_pb:0.50,hb_cache_id:" + cacheId).build();
-            Log.d("Prebid", mRP.getKeywords());
-            mMoPubNative.makeRequest(mRP);
-        } else {
-            mMoPubNative.makeRequest();
-        }
-
-    }
-
     private void infalteMoPubNativeAd(NativeAd nativeAd) {
         Log.d("Prebid", "came here");
         final StaticNativeAd ad = (StaticNativeAd) nativeAd.getBaseNativeAd();
@@ -444,14 +159,7 @@ public class PrebidNativeActivity extends AppCompatActivity {
 //        description.setText(ad.getDescription());
         nativeContainer.addView(description);
         Button cta = new Button(PrebidNativeActivity.this);
-//        cta.setText(ad.getCallToAction());
-//        cta.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ad.getClickUrl()));
-//                startActivity(browserIntent);
-//            }
-//        });
+        cta.setText(ad.getCallToAction());
         nativeContainer.addView(cta);
         ((FrameLayout) PrebidNativeActivity.this.findViewById(R.id.adFrame)).addView(nativeContainer);
     }
@@ -465,26 +173,6 @@ public class PrebidNativeActivity extends AppCompatActivity {
                 .withLogLevel(MoPubLog.LogLevel.DEBUG)
                 .build();
         MoPub.initializeSdk(this, sdkConfiguration, null);
-    }
-
-    public void loadDFPWithoutPrebid(View view) {
-        PrebidServerAdapter.testingNativeNative = false;
-        loadDFPCustomRendering(false);
-    }
-
-    public void loadDFPWithPrebid(View view) {
-        PrebidServerAdapter.testingNativeNative = false;
-        loadDFPCustomRendering(true);
-    }
-
-    public void loadMoPubWithoutPrebid(View view) {
-        PrebidServerAdapter.testingNativeNative = false;
-        loadMoPubNativeNative(false);
-    }
-
-    public void loadMoPubWithPrebid(View view) {
-        PrebidServerAdapter.testingNativeNative = false;
-        loadMoPubNativeNative(true);
     }
 
     public void loadNativeNative(View view) {
@@ -537,20 +225,9 @@ public class PrebidNativeActivity extends AppCompatActivity {
         cta.setDataType(NativeDataAsset.DATA_TYPE.CTATEXT);
         nativeAdUnit.addAsset(cta);
 
-//        final PublisherAdRequest publisherAdView = new PublisherAdRequest(this);
-//        publisherAdView.setAdListener(new AdListener() {
-//            @Override
-//            public void onAdLoaded() {
-//                super.onAdLoaded();
-//                LogUtil.d("ad loaded");
-//            }
-//        });
-//        publisherAdView.setAdUnitId(Constants.DFP_IN_BANNER_NATIVE_ADUNIT_ID_APPNEXUS);
-//        publisherAdView.setAdSizes(AdSize.FLUID);
-//        adFrame.addView(publisherAdView);
         final PublisherAdRequest publisherAdRequest = new PublisherAdRequest.Builder()
-                    .addCustomTargeting("hb_pb", "0.80")
-//                    .addCustomTargeting("hb_cache_id", cacheId)
+//                    .addCustomTargeting("hb_pb", "0.80")
+                    .addCustomTargeting("hb_pb", "0.00")
                 .build();
         nativeAdUnit.fetchDemand(publisherAdRequest, new OnCompleteListener() {
             @Override
@@ -567,8 +244,7 @@ public class PrebidNativeActivity extends AppCompatActivity {
     }
 
     private void loadDfp(PublisherAdRequest publisherAdRequest) {
-//        Abhas_test_native_native_adunit
-        adLoader = new AdLoader.Builder(this, "/19968336/Wei_test_native_native")
+        adLoader = new AdLoader.Builder(this, "/19968336/Abhas_test_native_native_adunit")
                 .forPublisherAdView(new OnPublisherAdViewLoadedListener() {
                     @Override
                     public void onPublisherAdViewLoaded(PublisherAdView publisherAdView) {
@@ -583,7 +259,7 @@ public class PrebidNativeActivity extends AppCompatActivity {
                         PrebidNativeActivity.this.unifiedNativeAd = unifiedNativeAd;
                     }
                 })
-                .forCustomTemplateAd("11885766", new NativeCustomTemplateAd.OnCustomTemplateAdLoadedListener() {
+                .forCustomTemplateAd("11963183", new NativeCustomTemplateAd.OnCustomTemplateAdLoadedListener() {
 
                     @Override
                     public void onCustomTemplateAdLoaded(NativeCustomTemplateAd nativeCustomTemplateAd) {
@@ -709,34 +385,33 @@ public class PrebidNativeActivity extends AppCompatActivity {
                 }
             });
             mMoPubNative.registerAdRenderer(new MoPubStaticNativeAdRenderer(null));
-            nativeAdUnit.fetchDemand(new OnCompleteListener2() {
+            String keywords = "hb_pb:0.50";
+            RequestParameters mRP = new RequestParameters.Builder().keywords(keywords).build();
+            nativeAdUnit.fetchDemand(mRP, new OnCompleteListener() {
                 @Override
-                public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
-                    Log.e("MAP", unmodifiableMap.toString());
-                    if (resultCode == ResultCode.SUCCESS) {
-                        String keywords = "hb_pb:0.50";
-                        if (unmodifiableMap.containsKey("hb_cache_id_local"))
-                            keywords += ",hb_cache_id:" + unmodifiableMap.get("hb_cache_id_local");
-                        RequestParameters mRP = new RequestParameters.Builder().keywords(keywords).build();
-                        Log.d("Prebid", mRP.getKeywords());
-                        mMoPubNative.makeRequest(mRP);
-                    }
+                public void onComplete(ResultCode resultCode) {
                     Toast.makeText(PrebidNativeActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
+                    Log.e("Prebid", mRP.getKeywords());
+                    mMoPubNative.makeRequest(mRP);
                 }
+            });
 
+            // Fetchingn the demannd using OnCompleteListener2
+//            nativeAdUnit.fetchDemand(new OnCompleteListener2() {
 //                @Override
-//                public void onComplete(ResultCode resultCode) {
+//                public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
+//                    Log.e("MAP", unmodifiableMap.toString());
 //                    if (resultCode == ResultCode.SUCCESS) {
 //                        String keywords = "hb_pb:0.50";
-//                        if (nativeAdUnit.getCacheId() != null)
-//                            keywords += ",hb_cache_id:" + nativeAdUnit.getCacheId();
+//                        if (unmodifiableMap.containsKey("hb_cache_id_local"))
+//                            keywords += ",hb_cache_id:" + unmodifiableMap.get("hb_cache_id_local");
 //                        RequestParameters mRP = new RequestParameters.Builder().keywords(keywords).build();
 //                        Log.d("Prebid", mRP.getKeywords());
 //                        mMoPubNative.makeRequest(mRP);
 //                    }
 //                    Toast.makeText(PrebidNativeActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
 //                }
-            });
+//            });
         }
     }
 
