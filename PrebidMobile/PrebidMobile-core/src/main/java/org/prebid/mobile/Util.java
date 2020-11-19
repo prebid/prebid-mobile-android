@@ -64,7 +64,7 @@ public class Util {
     static final String MOPUB_INTERSTITIAL_CLASS = "com.mopub.mobileads.MoPubInterstitial";
     static final String AD_MANAGER_REQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
     static final String AD_MANAGER_REQUEST_BUILDER_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest$Builder";
-    static final String MOPUB_NATIVE_CLASS = "com.mopub.nativeads.RequestParameters";
+    static final String MOPUB_NATIVE_CLASS = "com.mopub.nativeads.RequestParameters$Builder";
     public static final int HTTP_CONNECTION_TIMEOUT = 15000;
     public static final int HTTP_SOCKET_TIMEOUT = 20000;
     public static final int NATIVE_AD_VISIBLE_PERIOD_MILLIS = 1000;
@@ -284,6 +284,10 @@ public class Util {
         return null;
     }
 
+    /**
+     * This is a utility method to set String value to a variable.
+     * Not in use currently, but keeping it, for now.
+     * */
     static void setValueOnPrivateVariable(Object object, String variableName, Object params) {
         try
         {
@@ -499,7 +503,8 @@ public class Util {
         }
     }
 
-    private static void handleMoPubBuilderCustomTargeting(HashMap<String, String> bids, Object requestParameters) {
+    private static void handleMoPubBuilderCustomTargeting(HashMap<String, String> bids, Object requestParametersBuilder) {
+        Object requestParameters = Util.callMethodOnObject(requestParametersBuilder, "build");
         removeUsedKeywordsForMoPub(requestParameters);
 
         if (bids != null && !bids.isEmpty()) {
@@ -509,7 +514,7 @@ public class Util {
                 keywordsBuilder.append(key).append(":").append(bids.get(key)).append(",");
             }
             String pbmKeywords = keywordsBuilder.toString();
-            String adViewKeywords = (String) Util.callMethodOnObject(requestParameters, "getKeywords");
+            String adViewKeywords = (String) Util.callMethodOnObject(requestParametersBuilder, "getKeywords");
             if (!TextUtils.isEmpty(adViewKeywords)) {
                 adViewKeywords = pbmKeywords + adViewKeywords;
             } else {
@@ -518,7 +523,7 @@ public class Util {
 
             // only set keywords if less than mopub query string limit
             if (adViewKeywords.length() <= MoPubQueryStringLimit) {
-                Util.setValueOnPrivateVariable(requestParameters, "mKeywords", adViewKeywords);
+                Util.callMethodOnObject(requestParametersBuilder, "keywords", adViewKeywords);
             }
         }
     }
@@ -686,10 +691,6 @@ public class Util {
         Boolean isPrebid = (Boolean) callMethodOnObject(baseNativeAd, "getExtra", "isPrebid");
         if (isPrebid != null && isPrebid) {
             String cacheId = (String) callMethodOnObject(baseNativeAd, "getExtra", "hb_cache_id_local");
-            // For testing MoPub
-            if (TextUtils.isEmpty(cacheId)) {
-                cacheId = (String) callMethodOnObject(baseNativeAd, "getExtra", "hb_cache_id");
-            }
             if (CacheManager.isValid(cacheId)) {
                 PrebidNativeAd ad = PrebidNativeAd.create(cacheId);
                 if (ad != null) {

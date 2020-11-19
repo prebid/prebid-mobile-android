@@ -234,12 +234,12 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
                 }
             });
             mMoPubNative.registerAdRenderer(new MoPubStaticNativeAdRenderer(null));
-            RequestParameters mRP = new RequestParameters.Builder().build();
+            RequestParameters.Builder mRP = new RequestParameters.Builder();
             nativeAdUnit.fetchDemand(mRP, new OnCompleteListener() {
                 @Override
                 public void onComplete(ResultCode resultCode) {
                     if (resultCode == ResultCode.SUCCESS) {
-                        mMoPubNative.makeRequest(mRP);
+                        mMoPubNative.makeRequest(mRP.build());
                     } else {
                         Toast.makeText(XandrNativeInAppMoPubDemoActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
                     }
