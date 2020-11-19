@@ -299,14 +299,6 @@ public class Util {
         }
     }
 
-    static void setFinalStatic(Field field, String newValue) throws Exception {
-        field.setAccessible(true);
-//        Field modifiersField = Field.class.getDeclaredField("modifiers");
-//        modifiersField.setAccessible(true);
-//        field.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-        field.set(null, newValue);
-    }
-
     /**
      * Creates a random lowercase string whose length is the number
      * of characters specified.
