@@ -285,25 +285,6 @@ public class Util {
     }
 
     /**
-     * This is a utility method to set String value to a variable.
-     * Not in use currently, but keeping it, for now.
-     * */
-    static void setValueOnPrivateVariable(Object object, String variableName, Object params) {
-        try
-        {
-            Field field = object.getClass().getDeclaredField(variableName);
-            field.setAccessible(true);
-            field.set(object, (String) params);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Creates a random lowercase string whose length is the number
      * of characters specified.
      * <p>
@@ -504,8 +485,7 @@ public class Util {
     }
 
     private static void handleMoPubBuilderCustomTargeting(HashMap<String, String> bids, Object requestParametersBuilder) {
-        Object requestParameters = Util.callMethodOnObject(requestParametersBuilder, "build");
-        removeUsedKeywordsForMoPub(requestParameters);
+        removeUsedKeywordsForMoPub(requestParametersBuilder);
 
         if (bids != null && !bids.isEmpty()) {
             StringBuilder keywordsBuilder = new StringBuilder();
@@ -661,7 +641,7 @@ public class Util {
 
     private static boolean implementsInterface(@NonNull Object object, @NonNull String it) {
         for (Class c : object.getClass().getInterfaces()) {
-            Log.d("Prebid", c.getCanonicalName());
+            LogUtil.d("Prebid", c.getCanonicalName());
             if (c.getCanonicalName().equals(it)) {
                 return true;
             }
@@ -687,7 +667,7 @@ public class Util {
 
     private static void findNativeInMoPubNativeAd(@NonNull Object object, @NonNull PrebidNativeAdListener listener) {
         Object baseNativeAd = callMethodOnObject(object, "getBaseNativeAd");
-        Log.d("Prebid", "" + baseNativeAd);
+        LogUtil.d("Prebid", "" + baseNativeAd);
         Boolean isPrebid = (Boolean) callMethodOnObject(baseNativeAd, "getExtra", "isPrebid");
         if (isPrebid != null && isPrebid) {
             String cacheId = (String) callMethodOnObject(baseNativeAd, "getExtra", "hb_cache_id_local");
@@ -707,7 +687,7 @@ public class Util {
 
     private static void findMoPubNativeAd(@NonNull Object object, @NonNull PrebidNativeAdListener listener) {
         Object baseNativeAd = callMethodOnObject(object, "getBaseNativeAd");
-        Log.d("Prebid", "" + baseNativeAd);
+        LogUtil.d("Prebid", "" + baseNativeAd);
         Boolean isPrebid = (Boolean) callMethodOnObject(baseNativeAd, "getExtra", "isPrebid");
         if (isPrebid != null && isPrebid) {
             String cacheId = (String) callMethodOnObject(baseNativeAd, "getExtra", "hb_cache_id");
@@ -812,8 +792,7 @@ public class Util {
                 InputStream in = new java.net.URL(urldisplay).openStream();
                 mIcon11 = BitmapFactory.decodeStream(in);
             } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
+                LogUtil.e("Error", e.getMessage());
             }
             return mIcon11;
         }

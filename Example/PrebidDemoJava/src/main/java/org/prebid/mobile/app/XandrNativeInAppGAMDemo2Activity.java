@@ -20,6 +20,7 @@ import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
 import com.google.android.gms.ads.formats.OnPublisherAdViewLoadedListener;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.mopub.nativeads.RequestParameters;
 
 import org.prebid.mobile.Host;
 import org.prebid.mobile.LogUtil;
@@ -29,19 +30,20 @@ import org.prebid.mobile.NativeEventTracker;
 import org.prebid.mobile.NativeImageAsset;
 import org.prebid.mobile.NativeTitleAsset;
 import org.prebid.mobile.OnCompleteListener;
+import org.prebid.mobile.OnCompleteListener2;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.PrebidNativeAdEventListener;
 import org.prebid.mobile.PrebidNativeAdListener;
-import org.prebid.mobile.PrebidServerAdapter;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static org.prebid.mobile.app.Constants.DFP_NATIVE_NATIVE_ADUNIT_ID_APPNEXUS;
 
-public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
+public class XandrNativeInAppGAMDemo2Activity extends AppCompatActivity {
     private PublisherAdView adView;
     private AdLoader adLoader;
     private UnifiedNativeAd unifiedNativeAd;
@@ -60,47 +62,47 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
     }
 
     private void inflatePrebidNativeAd(final PrebidNativeAd ad) {
-        LinearLayout nativeContainer = new LinearLayout(XandrNativeInAppGAMDemoActivity.this);
+        LinearLayout nativeContainer = new LinearLayout(XandrNativeInAppGAMDemo2Activity.this);
         ad.registerView(nativeContainer, new PrebidNativeAdEventListener() {
             @Override
             public void onAdClicked() {
-                Toast.makeText(XandrNativeInAppGAMDemoActivity.this, "onAdClicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(XandrNativeInAppGAMDemo2Activity.this, "onAdClicked", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdImpression() {
-                Toast.makeText(XandrNativeInAppGAMDemoActivity.this, "onAdImpression", Toast.LENGTH_SHORT).show();
+                Toast.makeText(XandrNativeInAppGAMDemo2Activity.this, "onAdImpression", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdExpired() {
-                Toast.makeText(XandrNativeInAppGAMDemoActivity.this, "onAdExpired", Toast.LENGTH_SHORT).show();
+                Toast.makeText(XandrNativeInAppGAMDemo2Activity.this, "onAdExpired", Toast.LENGTH_SHORT).show();
             }
         });
         nativeContainer.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout iconAndTitle = new LinearLayout(XandrNativeInAppGAMDemoActivity.this);
+        LinearLayout iconAndTitle = new LinearLayout(XandrNativeInAppGAMDemo2Activity.this);
         iconAndTitle.setOrientation(LinearLayout.HORIZONTAL);
-        ImageView icon = new ImageView(XandrNativeInAppGAMDemoActivity.this);
+        ImageView icon = new ImageView(XandrNativeInAppGAMDemo2Activity.this);
         icon.setLayoutParams(new LinearLayout.LayoutParams(160, 160));
         Util.loadImage(icon, ad.getIconUrl());
         iconAndTitle.addView(icon);
-        TextView title = new TextView(XandrNativeInAppGAMDemoActivity.this);
+        TextView title = new TextView(XandrNativeInAppGAMDemo2Activity.this);
         title.setTextSize(20);
         title.setText(ad.getTitle());
         iconAndTitle.addView(title);
         nativeContainer.addView(iconAndTitle);
-        ImageView image = new ImageView(XandrNativeInAppGAMDemoActivity.this);
+        ImageView image = new ImageView(XandrNativeInAppGAMDemo2Activity.this);
         image.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         Util.loadImage(image, ad.getImageUrl());
         nativeContainer.addView(image);
-        TextView description = new TextView(XandrNativeInAppGAMDemoActivity.this);
+        TextView description = new TextView(XandrNativeInAppGAMDemo2Activity.this);
         description.setTextSize(18);
         description.setText(ad.getDescription());
         nativeContainer.addView(description);
-        Button cta = new Button(XandrNativeInAppGAMDemoActivity.this);
+        Button cta = new Button(XandrNativeInAppGAMDemo2Activity.this);
         cta.setText(ad.getCallToAction());
         nativeContainer.addView(cta);
-        ((FrameLayout) XandrNativeInAppGAMDemoActivity.this.findViewById(R.id.adFrame)).addView(nativeContainer);
+        ((FrameLayout) XandrNativeInAppGAMDemo2Activity.this.findViewById(R.id.adFrame)).addView(nativeContainer);
     }
 
     @Override
@@ -159,16 +161,17 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
         cta.setDataType(NativeDataAsset.DATA_TYPE.CTATEXT);
         nativeAdUnit.addAsset(cta);
 
-        final PublisherAdRequest publisherAdRequest = new PublisherAdRequest.Builder()
-                .build();
-        nativeAdUnit.fetchDemand(publisherAdRequest, new OnCompleteListener() {
+        nativeAdUnit.fetchDemand(new OnCompleteListener2() {
             @Override
-            public void onComplete(ResultCode resultCode) {
+            public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
                 if (resultCode == ResultCode.SUCCESS) {
-                    loadDfp(publisherAdRequest);
-                } else {
-                    Toast.makeText(XandrNativeInAppGAMDemoActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
+                    final PublisherAdRequest.Builder publisherAdRequestBuilder = new PublisherAdRequest.Builder();
+                    for (String key: unmodifiableMap.keySet()) {
+                        publisherAdRequestBuilder.addCustomTargeting(key, unmodifiableMap.get(key));
+                    }
+                    loadDfp(publisherAdRequestBuilder.build());
                 }
+                Toast.makeText(XandrNativeInAppGAMDemo2Activity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -186,7 +189,7 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
                     @Override
                     public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
                         LogUtil.d("Prebid", "native loaded");
-                        XandrNativeInAppGAMDemoActivity.this.unifiedNativeAd = unifiedNativeAd;
+                        XandrNativeInAppGAMDemo2Activity.this.unifiedNativeAd = unifiedNativeAd;
                     }
                 })
                 .forCustomTemplateAd("11963183", new NativeCustomTemplateAd.OnCustomTemplateAdLoadedListener() {
@@ -223,7 +226,7 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
                     @Override
                     public void onAdFailedToLoad(int i) {
                         super.onAdFailedToLoad(i);
-                        Toast.makeText(XandrNativeInAppGAMDemoActivity.this, "DFP onAdFailedToLoad", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(XandrNativeInAppGAMDemo2Activity.this, "DFP onAdFailedToLoad", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .build();

@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
 
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.Util;
 
 import java.io.BufferedReader;
@@ -44,11 +45,6 @@ public abstract class HTTPGet {
     }
 
     private void setConnectionParams(HttpURLConnection connection) throws ProtocolException {
-//        connection.setRequestProperty("User-Agent", Settings.getSettings().ua);
-//        String cookieString = WebviewUtil.getCookie();
-//        if (!TextUtils.isEmpty(cookieString)) {
-//            connection.setRequestProperty("Cookie", cookieString);
-//        }
         connection.setConnectTimeout(Util.HTTP_CONNECTION_TIMEOUT);
         connection.setReadTimeout(Util.HTTP_SOCKET_TIMEOUT);
     }
@@ -59,11 +55,9 @@ public abstract class HTTPGet {
         try {
             URL reqUrl = new URL(getUrl());
             if (reqUrl.getHost() == null) {
-//                Clog.w(Clog.httpReqLogTag, "An HTTP request with an invalid URL was attempted.", new IllegalStateException("An HTTP request with an invalid URL was attempted."));
                 out.setSucceeded(false);
                 return out;
             }
-//            Clog.i(Clog.httpReqLogTag, "HTTPGet ReqURL - " + reqUrl);
             //  Create and connect to HTTP service
             connection = createConnection(reqUrl);
             setConnectionParams(connection);
@@ -92,16 +86,13 @@ public abstract class HTTPGet {
         } catch (MalformedURLException e) {
             out.setSucceeded(false);
             out.setErrorCode(HttpErrorCode.URI_SYNTAX_ERROR);
-//            Clog.e(Clog.httpReqLogTag, Clog.getString(R.string.http_get_url_malformed));
         } catch (IOException e) {
             out.setSucceeded(false);
             out.setErrorCode(HttpErrorCode.TRANSPORT_ERROR);
-//            Clog.e(Clog.httpReqLogTag, Clog.getString(R.string.http_get_io));
         } catch (Exception e) {
             out.setSucceeded(false);
             out.setErrorCode(HttpErrorCode.UNKNOWN_ERROR);
             e.printStackTrace();
-//            Clog.e(Clog.httpReqLogTag, Clog.getString(R.string.http_get_unknown_exception));
         }
         return out;
     }

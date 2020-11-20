@@ -40,7 +40,6 @@ public class PrebidNativeAd {
         if (!TextUtils.isEmpty(content)) {
             try {
                 JSONObject details = new JSONObject(content);
-                Log.e("DETAILS", content);
                 String admStr = details.getString("adm");
                 JSONObject adm = new JSONObject(admStr);
                 JSONArray asset = adm.getJSONArray("assets");

@@ -40,7 +40,6 @@ class ImpressionTracker {
                 @SuppressLint("StaticFieldLeak") HTTPGet asyncTask = new HTTPGet() {
                     @Override
                     protected void onPostExecute(HTTPResponse response) {
-//                        Clog.d(Clog.nativeLogTag, "Impression tracked.");
                         if (impressionTrackerListener != null) {
                             impressionTrackerListener.onImpressionTrackerFired();
                         }

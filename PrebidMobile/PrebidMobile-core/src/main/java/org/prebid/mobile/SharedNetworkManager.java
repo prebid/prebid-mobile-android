@@ -57,7 +57,7 @@ public class SharedNetworkManager {
     }
 
     synchronized void addURL(String url, Context context, ImpressionTrackerListener impressionTrackerListener) {
-//        Log.d(Clog.baseLogTag, "SharedNetworkManager adding URL for Network Retry");
+        LogUtil.d("SharedNetworkManager adding URL for Network Retry");
         this.impressionTrackerListener = impressionTrackerListener;
         urls.add(new UrlObject(url));
         startTimer(context);

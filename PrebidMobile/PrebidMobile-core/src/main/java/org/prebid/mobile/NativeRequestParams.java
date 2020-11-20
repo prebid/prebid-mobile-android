@@ -149,5 +149,4 @@ class NativeRequestParams {
     ArrayList<NativeAsset> getAssets() {
         return assets;
     }
-
 }

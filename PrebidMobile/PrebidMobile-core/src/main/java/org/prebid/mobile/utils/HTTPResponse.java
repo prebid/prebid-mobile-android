@@ -28,7 +28,7 @@ public class HTTPResponse {
     }
 
     public void setErrorCode(HttpErrorCode errorCode) {
-//        this.errorCode = errorCode;
+        this.errorCode = errorCode;
     }
 
     public HttpErrorCode getErrorCode() {

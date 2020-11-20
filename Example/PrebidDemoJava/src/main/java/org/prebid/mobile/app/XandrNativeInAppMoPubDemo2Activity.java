@@ -32,6 +32,7 @@ import org.prebid.mobile.NativeEventTracker;
 import org.prebid.mobile.NativeImageAsset;
 import org.prebid.mobile.NativeTitleAsset;
 import org.prebid.mobile.OnCompleteListener;
+import org.prebid.mobile.OnCompleteListener2;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.PrebidNativeAdEventListener;
@@ -40,8 +41,9 @@ import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
 
 import java.util.ArrayList;
+import java.util.Map;
 
-public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
+public class XandrNativeInAppMoPubDemo2Activity extends AppCompatActivity {
     private MoPubNative mMoPubNative;
     private NativeAd ad;
 
@@ -61,28 +63,28 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
         Log.d("Prebid", "came here");
         final StaticNativeAd ad = (StaticNativeAd) nativeAd.getBaseNativeAd();
         Log.d("Prebid", ""+ad.getExtras().toString());
-        LinearLayout nativeContainer = new LinearLayout(XandrNativeInAppMoPubDemoActivity.this);
+        LinearLayout nativeContainer = new LinearLayout(XandrNativeInAppMoPubDemo2Activity.this);
         nativeContainer.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout iconAndTitle = new LinearLayout(XandrNativeInAppMoPubDemoActivity.this);
+        LinearLayout iconAndTitle = new LinearLayout(XandrNativeInAppMoPubDemo2Activity.this);
         iconAndTitle.setOrientation(LinearLayout.HORIZONTAL);
-        ImageView icon = new ImageView(XandrNativeInAppMoPubDemoActivity.this);
+        ImageView icon = new ImageView(XandrNativeInAppMoPubDemo2Activity.this);
         icon.setLayoutParams(new LinearLayout.LayoutParams(160, 160));
         Util.loadImage(icon, ad.getIconImageUrl());
         iconAndTitle.addView(icon);
-        TextView title = new TextView(XandrNativeInAppMoPubDemoActivity.this);
+        TextView title = new TextView(XandrNativeInAppMoPubDemo2Activity.this);
         title.setTextSize(20);
         title.setText(ad.getTitle());
         iconAndTitle.addView(title);
         nativeContainer.addView(iconAndTitle);
-        ImageView image = new ImageView(XandrNativeInAppMoPubDemoActivity.this);
+        ImageView image = new ImageView(XandrNativeInAppMoPubDemo2Activity.this);
         image.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         Util.loadImage(image, ad.getMainImageUrl());
         nativeContainer.addView(image);
-        TextView description = new TextView(XandrNativeInAppMoPubDemoActivity.this);
+        TextView description = new TextView(XandrNativeInAppMoPubDemo2Activity.this);
         description.setTextSize(18);
         description.setText(ad.getText());
         nativeContainer.addView(description);
-        Button cta = new Button(XandrNativeInAppMoPubDemoActivity.this);
+        Button cta = new Button(XandrNativeInAppMoPubDemo2Activity.this);
         cta.setText(ad.getCallToAction());
         cta.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,51 +94,51 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
             }
         });
         nativeContainer.addView(cta);
-        ((FrameLayout) XandrNativeInAppMoPubDemoActivity.this.findViewById(R.id.adFrame)).addView(nativeContainer);
+        ((FrameLayout) XandrNativeInAppMoPubDemo2Activity.this.findViewById(R.id.adFrame)).addView(nativeContainer);
     }
 
     private void inflatePrebidNativeAd(final PrebidNativeAd ad) {
-        LinearLayout nativeContainer = new LinearLayout(XandrNativeInAppMoPubDemoActivity.this);
+        LinearLayout nativeContainer = new LinearLayout(XandrNativeInAppMoPubDemo2Activity.this);
         ad.registerView(nativeContainer, new PrebidNativeAdEventListener() {
             @Override
             public void onAdClicked() {
-                Toast.makeText(XandrNativeInAppMoPubDemoActivity.this, "onAdClicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(XandrNativeInAppMoPubDemo2Activity.this, "onAdClicked", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdImpression() {
-                Toast.makeText(XandrNativeInAppMoPubDemoActivity.this, "onAdImpression", Toast.LENGTH_SHORT).show();
+                Toast.makeText(XandrNativeInAppMoPubDemo2Activity.this, "onAdImpression", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdExpired() {
-                Toast.makeText(XandrNativeInAppMoPubDemoActivity.this, "onAdExpired", Toast.LENGTH_SHORT).show();
+                Toast.makeText(XandrNativeInAppMoPubDemo2Activity.this, "onAdExpired", Toast.LENGTH_SHORT).show();
             }
         });
         nativeContainer.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout iconAndTitle = new LinearLayout(XandrNativeInAppMoPubDemoActivity.this);
+        LinearLayout iconAndTitle = new LinearLayout(XandrNativeInAppMoPubDemo2Activity.this);
         iconAndTitle.setOrientation(LinearLayout.HORIZONTAL);
-        ImageView icon = new ImageView(XandrNativeInAppMoPubDemoActivity.this);
+        ImageView icon = new ImageView(XandrNativeInAppMoPubDemo2Activity.this);
         icon.setLayoutParams(new LinearLayout.LayoutParams(160, 160));
 //        Util.loadImage(icon, ad.getIconUrl());
         iconAndTitle.addView(icon);
-        TextView title = new TextView(XandrNativeInAppMoPubDemoActivity.this);
+        TextView title = new TextView(XandrNativeInAppMoPubDemo2Activity.this);
         title.setTextSize(20);
         title.setText(ad.getTitle());
         iconAndTitle.addView(title);
         nativeContainer.addView(iconAndTitle);
-        ImageView image = new ImageView(XandrNativeInAppMoPubDemoActivity.this);
+        ImageView image = new ImageView(XandrNativeInAppMoPubDemo2Activity.this);
         image.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         Util.loadImage(image, ad.getImageUrl());
         nativeContainer.addView(image);
-        TextView description = new TextView(XandrNativeInAppMoPubDemoActivity.this);
+        TextView description = new TextView(XandrNativeInAppMoPubDemo2Activity.this);
         description.setTextSize(18);
         description.setText(ad.getDescription());
         nativeContainer.addView(description);
-        Button cta = new Button(XandrNativeInAppMoPubDemoActivity.this);
+        Button cta = new Button(XandrNativeInAppMoPubDemo2Activity.this);
         cta.setText(ad.getCallToAction());
         nativeContainer.addView(cta);
-        ((FrameLayout) XandrNativeInAppMoPubDemoActivity.this.findViewById(R.id.adFrame)).addView(nativeContainer);
+        ((FrameLayout) XandrNativeInAppMoPubDemo2Activity.this.findViewById(R.id.adFrame)).addView(nativeContainer);
     }
 
     @Override
@@ -202,11 +204,11 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
             cta.setDataType(NativeDataAsset.DATA_TYPE.CTATEXT);
             nativeAdUnit.addAsset(cta);
 
-            mMoPubNative = new MoPubNative(XandrNativeInAppMoPubDemoActivity.this, "2674981035164b2db5ef4b4546bf3d49", new MoPubNative.MoPubNativeNetworkListener() {
+            mMoPubNative = new MoPubNative(XandrNativeInAppMoPubDemo2Activity.this, "2674981035164b2db5ef4b4546bf3d49", new MoPubNative.MoPubNativeNetworkListener() {
                 @Override
                 public void onNativeLoad(final NativeAd nativeAd) {
                     Log.d("Prebid", "MoPub native ad loaded");
-                    XandrNativeInAppMoPubDemoActivity.this.ad = nativeAd;
+                    XandrNativeInAppMoPubDemo2Activity.this.ad = nativeAd;
                     Util.findNative(nativeAd, new PrebidNativeAdListener() {
                         @Override
                         public void onPrebidNativeLoaded(final PrebidNativeAd ad) {
@@ -233,15 +235,23 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
                 }
             });
             mMoPubNative.registerAdRenderer(new MoPubStaticNativeAdRenderer(null));
-            RequestParameters.Builder mRP = new RequestParameters.Builder();
-            nativeAdUnit.fetchDemand(mRP, new OnCompleteListener() {
+            // Fetching the demand using OnCompleteListener2
+            nativeAdUnit.fetchDemand(new OnCompleteListener2() {
                 @Override
-                public void onComplete(ResultCode resultCode) {
+                public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
+                    Log.e("MAP", unmodifiableMap.toString());
                     if (resultCode == ResultCode.SUCCESS) {
-                        mMoPubNative.makeRequest(mRP.build());
-                    } else {
-                        Toast.makeText(XandrNativeInAppMoPubDemoActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
+                        String keywords = "";
+                        for (String key: unmodifiableMap.keySet()) {
+                            keywords += key + ":" + unmodifiableMap.get(key) + ",";
+                        }
+                        // removing last ","
+                        keywords = keywords.substring(0, keywords.length()-1);
+                        RequestParameters mRP = new RequestParameters.Builder().keywords(keywords).build();
+                        Log.d("Prebid", mRP.getKeywords());
+                        mMoPubNative.makeRequest(mRP);
                     }
+                    Toast.makeText(XandrNativeInAppMoPubDemo2Activity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
