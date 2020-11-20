@@ -63,17 +63,18 @@ public class PrebidNativeAd {
                 CacheManager.registerCacheExpiryListener(cacheId, new CacheManager.CacheExpiryListener() {
                     @Override
                     public void onCacheExpired() {
-                        if (ad.listener != null) {
-                            ad.listener.onAdExpired();
+                        if (ad.registeredView == null) {
+                            if (ad.listener != null) {
+                                ad.listener.onAdExpired();
+                            }
+                            ad.expired = true;
+                            if (ad.visibilityDetector != null) {
+                                ad.visibilityDetector.destroy();
+                                ad.visibilityDetector = null;
+                            }
+                            ad.impressionTrackers = null;
+                            ad.listener = null;
                         }
-                        ad.expired = true;
-                        ad.registeredView = null;
-                        if (ad.visibilityDetector != null) {
-                            ad.visibilityDetector.destroy();
-                            ad.visibilityDetector = null;
-                        }
-                        ad.impressionTrackers = null;
-                        ad.listener = null;
                     }
                 });
                 for (int i=0; i < asset.length(); i++) {
