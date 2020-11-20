@@ -15,6 +15,7 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.OnCompleteListener2;
@@ -23,9 +24,9 @@ import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.Util;
 import org.prebid.mobile.VideoAdUnit;
-import org.prebid.mobile.VideoBaseAdUnit;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 
 public class XandrInstreamVideoGamActivity extends AppCompatActivity {
@@ -52,7 +53,7 @@ public class XandrInstreamVideoGamActivity extends AppCompatActivity {
 
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setPrebidServerAccountId("aecd6ef7-b992-4e99-9bb8-65e2d984e1dd");
-        VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
+        VideoAdUnit.Parameters parameters = new VideoAdUnit.Parameters();
         parameters.setMimes(Arrays.asList("video/mp4"));
 
         parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0));
@@ -71,7 +72,9 @@ public class XandrInstreamVideoGamActivity extends AppCompatActivity {
         adUnit.fetchDemand(new OnCompleteListener2() {
             @Override
             public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
-                String uri = Util.generateInstreamUriForGam("/19968336/Punnaghai_Instream_Video1", 640, 480, unmodifiableMap);
+                HashSet<AdSize> sizes = new HashSet<>();
+                sizes.add(new AdSize(640, 480));
+                String uri = Util.generateInstreamUriForGam("/19968336/Punnaghai_Instream_Video1", sizes, unmodifiableMap);
                 adsLoader = new ImaAdsLoader(XandrInstreamVideoGamActivity.this, Uri.parse(uri));
                 initializePlayer();
             }
