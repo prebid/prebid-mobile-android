@@ -118,7 +118,7 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
         iconAndTitle.setOrientation(LinearLayout.HORIZONTAL);
         ImageView icon = new ImageView(XandrNativeInAppMoPubDemoActivity.this);
         icon.setLayoutParams(new LinearLayout.LayoutParams(160, 160));
-//        Util.loadImage(icon, ad.getIconUrl());
+        Util.loadImage(icon, ad.getIconUrl());
         iconAndTitle.addView(icon);
         TextView title = new TextView(XandrNativeInAppMoPubDemoActivity.this);
         title.setTextSize(20);

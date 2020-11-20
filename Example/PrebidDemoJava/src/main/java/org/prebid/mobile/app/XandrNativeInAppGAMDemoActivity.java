@@ -33,7 +33,6 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.PrebidNativeAdEventListener;
 import org.prebid.mobile.PrebidNativeAdListener;
-import org.prebid.mobile.PrebidServerAdapter;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
 
