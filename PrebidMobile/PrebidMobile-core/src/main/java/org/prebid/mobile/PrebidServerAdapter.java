@@ -59,7 +59,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PrebidServerAdapter implements DemandAdapter {
+class PrebidServerAdapter implements DemandAdapter {
     private ArrayList<ServerConnector> serverConnectors;
 
     PrebidServerAdapter() {
