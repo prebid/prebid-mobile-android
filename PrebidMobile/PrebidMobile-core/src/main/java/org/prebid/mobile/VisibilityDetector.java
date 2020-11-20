@@ -76,7 +76,6 @@ class VisibilityDetector {
                     if (isVisible()) {
                         for (VisibilityListener listener : tempList) {
                             listener.onVisibilityChanged(true);
-                            removeVisibilityListener(listener);
                         }
                     } else {
                         for (VisibilityListener listener : tempList) {

@@ -229,18 +229,58 @@ public class PrebidNativeAd {
                     handleClick(v, listener);
                 }
             });
-            visibilityDetector.addVisibilityListener(new VisibilityDetector.VisibilityListener() {
-                @Override
-                public void onVisibilityChanged(boolean visible) {
-                    if (visible) {
-                        listener.onAdImpression();
-                    }
-                }
-            });
             return true;
         }
         return false;
     }
+
+    public boolean registerViewList(View container, List<View> viewList, final PrebidNativeAdEventListener listener) {
+        if (container == null || viewList == null || viewList.isEmpty()) {
+            return false;
+        }
+        if (!expired && container != null) {
+            this.listener = listener;
+            visibilityDetector = VisibilityDetector.create(container);
+            if (visibilityDetector == null) {
+                return false;
+            }
+
+            impressionTrackers = new ArrayList<ImpressionTracker>(imp_trackers.size());
+            for (String url : imp_trackers) {
+                ImpressionTracker impressionTracker = ImpressionTracker.create(url, visibilityDetector, container.getContext(), new ImpressionTrackerListener() {
+                    @Override
+                    public void onImpressionTrackerFired() {
+                        if (listener != null) {
+                            listener.onAdImpression();
+                        }
+                    }
+                });
+                impressionTrackers.add(impressionTracker);
+            }
+            this.registeredView = container;
+
+            container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    handleClick(v, listener);
+                }
+            });
+
+            if (viewList != null && viewList.size() > 0) {
+                for (View views : viewList) {
+                    views.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            handleClick(v, listener);
+                        }
+                    });
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
 
     private boolean handleClick(View v, PrebidNativeAdEventListener listener) {
         if (clickUrl == null || clickUrl.isEmpty()) {
@@ -264,15 +304,5 @@ public class PrebidNativeAd {
         } catch (ActivityNotFoundException e) {
             return false;
         }
-    }
-
-    public boolean registerViewList(List<View> viewList, final PrebidNativeAdEventListener listener) {
-        if (viewList != null && viewList.size() > 0) {
-            for (View view : viewList) {
-                registerView(view, listener);
-            }
-            return true;
-        }
-        return false;
     }
 }
