@@ -61,6 +61,16 @@ public class MockPrebidServerResponses {
         return inputStreamToString(in);
     }
 
+    public static String validResponsePrebidNativeNative() {
+        InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerValidResponsePrebidNativeNative.json");
+        return inputStreamToString(in);
+    }
+
+    public static String validResponsePrebidNativeNativeBid() {
+        InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerValidResponsePrebidNativeNativeBid.json");
+        return inputStreamToString(in);
+    }
+
     public static String invalidBidResponseTopBidNoCacheId() {
         InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerInvalidResponseTopBidDoesNotHaveCacheId.json");
         return inputStreamToString(in);

@@ -19,6 +19,7 @@ package org.prebid.mobile;
 import android.util.Pair;
 
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
 
@@ -28,7 +29,9 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.prebid.mobile.testutils.BaseSetup;
+import org.prebid.mobile.testutils.MockPrebidServerResponses;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -43,6 +46,7 @@ import java.util.Set;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -450,5 +454,30 @@ public class UtilTest extends BaseSetup {
         keywords.put("hb_pb", "1");
         adTagUrl = Util.generateInstreamUriForGam("test", sizes, keywords);
         assertEquals("https://pubads.g.doubleclick.net/gampad/ads?sz=400x300|640x480&iu=test&impl=s&gdfp_req=1&env=vp&output=xml_vast4&unviewed_position_start=1&cust_params=hb_pb%3D1%26hb_cache_id%3D123%26", adTagUrl);
+    }
+
+    @Test
+    public void testFindNative() {
+        String mockedResponse = MockPrebidServerResponses.validResponsePrebidNativeNativeBid();
+        String cacheId = CacheManager.save(mockedResponse);
+        NativeCustomTemplateAd nativeCustomTemplateAd = Mockito.mock(NativeCustomTemplateAd.class);
+        Mockito.when(nativeCustomTemplateAd.getText("isPrebid")).thenReturn("1");
+        Mockito.when(nativeCustomTemplateAd.getText("hb_cache_id_local")).thenReturn(cacheId);
+        Util.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
+            @Override
+            public void onPrebidNativeLoaded(PrebidNativeAd ad) {
+                assertTrue(ad != null);
+            }
+
+            @Override
+            public void onPrebidNativeNotFound() {
+                fail();
+            }
+
+            @Override
+            public void onPrebidNativeNotValid() {
+                fail();
+            }
+        });
     }
 }
