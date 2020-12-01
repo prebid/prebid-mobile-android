@@ -16,8 +16,6 @@
 
 package org.prebid.mobile;
 
-import android.util.Pair;
-
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
 import com.mopub.mobileads.MoPubInterstitial;
@@ -457,7 +455,7 @@ public class UtilTest extends BaseSetup {
     }
 
     @Test
-    public void testFindNative() {
+    public void testFindNativeLoadedDFP() {
         String mockedResponse = MockPrebidServerResponses.validResponsePrebidNativeNativeBid();
         String cacheId = CacheManager.save(mockedResponse);
         NativeCustomTemplateAd nativeCustomTemplateAd = Mockito.mock(NativeCustomTemplateAd.class);
@@ -480,4 +478,87 @@ public class UtilTest extends BaseSetup {
             }
         });
     }
+
+    @Test
+    public void testFindNativeNotValidDFP() {
+        String mockedResponse = MockPrebidServerResponses.validResponsePrebidNativeNativeBid();
+        String cacheId = CacheManager.save(mockedResponse);
+        NativeCustomTemplateAd nativeCustomTemplateAd = Mockito.mock(NativeCustomTemplateAd.class);
+        Mockito.when(nativeCustomTemplateAd.getText("isPrebid")).thenReturn("1");
+        Mockito.when(nativeCustomTemplateAd.getText("hb_cache_id_local")).thenReturn("cacheId");
+        Util.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
+            @Override
+            public void onPrebidNativeLoaded(PrebidNativeAd ad) {
+                fail();
+            }
+
+            @Override
+            public void onPrebidNativeNotFound() {
+                fail();
+            }
+
+            @Override
+            public void onPrebidNativeNotValid() {
+                assertTrue(true);
+            }
+        });
+    }
+
+    @Test
+    public void testFindNativeNotFoundDFP() {
+        String mockedResponse = MockPrebidServerResponses.validResponsePrebidNativeNativeBid();
+        String cacheId = CacheManager.save(mockedResponse);
+        NativeCustomTemplateAd nativeCustomTemplateAd = Mockito.mock(NativeCustomTemplateAd.class);
+        Mockito.when(nativeCustomTemplateAd.getText("isPrebid")).thenReturn("0");
+        Mockito.when(nativeCustomTemplateAd.getText("hb_cache_id_local")).thenReturn(cacheId);
+        Util.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
+            @Override
+            public void onPrebidNativeLoaded(PrebidNativeAd ad) {
+                fail();
+            }
+
+            @Override
+            public void onPrebidNativeNotFound() {
+                assertTrue(true);
+            }
+
+            @Override
+            public void onPrebidNativeNotValid() {
+                fail();
+            }
+        });
+    }
+
+//    @Test
+//    public void testFindNativeMoPub() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+//        String mockedResponse = MockPrebidServerResponses.validResponsePrebidNativeNativeBid();
+//        String cacheId = CacheManager.save(mockedResponse);
+//        NativeAd nativeCustomTemplateAd = Mockito.mock(NativeAd.class);
+////        Class clazz = Class.forName("com.mopub.nativeads.MoPubCustomEventNative$MoPubStaticNativeAd");
+//        Class clazz = Class.forName("com.mopub.nativeads.StaticNativeAd");
+////        Field moPubStaticNativeAd = clazz.getDeclaredField("moPubStaticNativeAd");
+////        moPubStaticNativeAd.setAccessible(true);
+//        Method addExtra = clazz.getMethod("addExtra");
+//        addExtra.setAccessible(true);
+//        addExtra.invoke(clazz, "isPrebid", true);
+//        Util.callMethodOnObject(clazz, "addExtra", "isPrebid", true);
+////        Mockito.when(nativeCustomTemplateAd.getBaseNativeAd()).thenReturn((BaseNativeAd) clazz);
+////        Mockito.when(nativeCustomTemplateAd.getExtra("hb_cache_id_local")).thenReturn(cacheId);
+//        Util.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
+//            @Override
+//            public void onPrebidNativeLoaded(PrebidNativeAd ad) {
+//                assertTrue(ad != null);
+//            }
+//
+//            @Override
+//            public void onPrebidNativeNotFound() {
+//                fail();
+//            }
+//
+//            @Override
+//            public void onPrebidNativeNotValid() {
+//                fail();
+//            }
+//        });
+//    }
 }

@@ -114,7 +114,11 @@ public class PrebidNativeAd {
                 if (adm.has("link")) {
                     JSONObject link = adm.getJSONObject("link");
                     if (link.has("url")) {
-                        ad.setClickUrl(link.getString("url"));
+                        String url = link.getString("url");
+                        if (url.contains("{AUCTION_PRICE}") && details.has("price")) {
+                            url = url.replace("{AUCTION_PRICE}", details.getString("price"));
+                        }
+                        ad.setClickUrl(url);
                     }
                 }
 
@@ -282,6 +286,10 @@ public class PrebidNativeAd {
         return false;
     }
 
+    protected boolean registerPrebidNativeAdEventListener(PrebidNativeAdEventListener listener) {
+        this.listener = listener;
+        return true;
+    }
 
     private boolean handleClick(View v, PrebidNativeAdEventListener listener) {
         if (clickUrl == null || clickUrl.isEmpty()) {

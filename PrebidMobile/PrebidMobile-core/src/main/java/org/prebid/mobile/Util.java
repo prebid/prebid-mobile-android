@@ -675,7 +675,6 @@ public class Util {
             PrebidNativeAd ad = PrebidNativeAd.create(cacheId);
             if (ad != null) {
                 listener.onPrebidNativeLoaded(ad);
-                return;
             } else {
                 listener.onPrebidNativeNotValid();
             }
