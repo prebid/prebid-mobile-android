@@ -270,7 +270,7 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
                         Log.d("Prebid", mRP.getKeywords());
                         mMoPubNative.makeRequest(mRP);
                     }
-                    Toast.makeText(XandrNativeInAppMoPubDemo2Activity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(XandrNativeInAppMoPubDemoActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
                 }
             });*/
 

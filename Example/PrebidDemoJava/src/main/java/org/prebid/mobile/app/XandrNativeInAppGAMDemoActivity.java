@@ -190,7 +190,7 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
                     }
                     loadDfp(publisherAdRequestBuilder.build());
                 }
-                Toast.makeText(XandrNativeInAppGAMDemo2Activity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(XandrNativeInAppGAMDemoActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
             }
         });*/
 
