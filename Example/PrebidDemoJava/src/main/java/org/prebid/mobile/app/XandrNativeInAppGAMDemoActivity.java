@@ -20,6 +20,7 @@ import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
 import com.google.android.gms.ads.formats.OnPublisherAdViewLoadedListener;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.mopub.nativeads.RequestParameters;
 
 import org.prebid.mobile.Host;
 import org.prebid.mobile.LogUtil;
@@ -29,6 +30,7 @@ import org.prebid.mobile.NativeEventTracker;
 import org.prebid.mobile.NativeImageAsset;
 import org.prebid.mobile.NativeTitleAsset;
 import org.prebid.mobile.OnCompleteListener;
+import org.prebid.mobile.OnCompleteListener2;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.PrebidNativeAdEventListener;
@@ -37,6 +39,7 @@ import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static org.prebid.mobile.app.Constants.DFP_NATIVE_NATIVE_ADUNIT_ID_APPNEXUS;
 
@@ -106,10 +109,10 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
-        loadNativeNative();
+        loadInAppNative();
     }
 
-    private void loadNativeNative() {
+    private void loadInAppNative() {
         removePreviousAds();
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_APPNEXUS);
@@ -160,6 +163,8 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
 
         final PublisherAdRequest publisherAdRequest = new PublisherAdRequest.Builder()
                 .build();
+
+        // Fetching the demannd using OnCompleteListener
         nativeAdUnit.fetchDemand(publisherAdRequest, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
@@ -170,6 +175,29 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //================================================================================
+        // SAMPLE CODE: Fetching the demand using OnCompleteListener2
+        //================================================================================
+
+        /*nativeAdUnit.fetchDemand(new OnCompleteListener2() {
+            @Override
+            public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
+                if (resultCode == ResultCode.SUCCESS) {
+                    final PublisherAdRequest.Builder publisherAdRequestBuilder = new PublisherAdRequest.Builder();
+                    for (String key: unmodifiableMap.keySet()) {
+                        publisherAdRequestBuilder.addCustomTargeting(key, unmodifiableMap.get(key));
+                    }
+                    loadDfp(publisherAdRequestBuilder.build());
+                }
+                Toast.makeText(XandrNativeInAppGAMDemo2Activity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
+            }
+        });*/
+
+        //================================================================================
+        // SAMPLE CODE: END
+        //================================================================================
+
     }
 
     private void loadDfp(PublisherAdRequest publisherAdRequest) {

@@ -14,13 +14,12 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile.utils;
+package org.prebid.mobile.http;
 
 import android.annotation.TargetApi;
 import android.os.AsyncTask;
 import android.os.Build;
 
-import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.Util;
 
 import java.io.BufferedReader;

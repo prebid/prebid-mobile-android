@@ -17,7 +17,6 @@
 package org.prebid.mobile;
 
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 class VisibilityDetector {
     static final long VISIBILITY_THROTTLE_MILLIS = 250;
     private boolean scheduled = false;
-    private View mView; // not null
+    private View view; // not null
     private ArrayList<VisibilityListener> listeners;
     private Runnable visibilityCheck;
     private ScheduledExecutorService tasker;
@@ -46,7 +45,7 @@ class VisibilityDetector {
     }
 
     private VisibilityDetector(View view) {
-        this.mView = view;
+        this.view = view;
         this.listeners = new ArrayList<VisibilityListener>();
         scheduleVisibilityCheck();
     }
@@ -89,25 +88,25 @@ class VisibilityDetector {
         tasker.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                mView.post(visibilityCheck);
+                view.post(visibilityCheck);
             }
         }, 0, VISIBILITY_THROTTLE_MILLIS, TimeUnit.MILLISECONDS);
     }
 
     boolean isVisible() {
-        if (mView == null || mView.getVisibility() != View.VISIBLE || mView.getParent() == null) {
+        if (view == null || view.getVisibility() != View.VISIBLE || view.getParent() == null) {
             return false;
         }
 
         // holds the visible part of a view
         Rect clippedArea = new Rect();
 
-        if (!mView.getGlobalVisibleRect(clippedArea)) {
+        if (!view.getGlobalVisibleRect(clippedArea)) {
             return false;
         }
 
         final int visibleViewArea = clippedArea.height() * clippedArea.width();
-        final int totalArea = mView.getHeight() * mView.getWidth();
+        final int totalArea = view.getHeight() * view.getWidth();
 
         if (totalArea <= 0) {
             return false;
@@ -119,8 +118,8 @@ class VisibilityDetector {
         if (tasker != null) {
             tasker.shutdownNow();
         }
-        mView.removeCallbacks(visibilityCheck);
-        mView = null;
+        view.removeCallbacks(visibilityCheck);
+        view = null;
         listeners = null;
     }
 

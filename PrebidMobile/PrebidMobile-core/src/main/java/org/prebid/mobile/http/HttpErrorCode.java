@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile.utils;
+package org.prebid.mobile.http;
 
 public enum HttpErrorCode {
     CONNECTION_FAILURE,

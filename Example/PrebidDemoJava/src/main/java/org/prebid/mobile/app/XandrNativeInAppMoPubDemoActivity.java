@@ -32,6 +32,7 @@ import org.prebid.mobile.NativeEventTracker;
 import org.prebid.mobile.NativeImageAsset;
 import org.prebid.mobile.NativeTitleAsset;
 import org.prebid.mobile.OnCompleteListener;
+import org.prebid.mobile.OnCompleteListener2;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.PrebidNativeAdEventListener;
@@ -41,6 +42,7 @@ import org.prebid.mobile.Util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
     private MoPubNative mMoPubNative;
@@ -151,11 +153,11 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
                 .withLogLevel(MoPubLog.LogLevel.DEBUG)
                 .build();
         MoPub.initializeSdk(this, sdkConfiguration, null);
-        loadNativeNativeMopub();
+        loadInAppNativeMopub();
     }
 
     // Mopub
-    private void loadNativeNativeMopub() {
+    private void loadInAppNativeMopub() {
         {
             removePreviousAds();
             PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
@@ -237,6 +239,7 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
             });
             mMoPubNative.registerAdRenderer(new MoPubStaticNativeAdRenderer(null));
             RequestParameters.Builder mRP = new RequestParameters.Builder();
+            // Fetching the demannd using OnCompleteListener
             nativeAdUnit.fetchDemand(mRP, new OnCompleteListener() {
                 @Override
                 public void onComplete(ResultCode resultCode) {
@@ -247,6 +250,33 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
                     }
                 }
             });
+
+            //================================================================================
+            // SAMPLE CODE: Fetching the demand using OnCompleteListener2
+            //================================================================================
+
+            /*nativeAdUnit.fetchDemand(new OnCompleteListener2() {
+                @Override
+                public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
+                    Log.e("MAP", unmodifiableMap.toString());
+                    if (resultCode == ResultCode.SUCCESS) {
+                        String keywords = "";
+                        for (String key: unmodifiableMap.keySet()) {
+                            keywords += key + ":" + unmodifiableMap.get(key) + ",";
+                        }
+                        // removing last ","
+                        keywords = keywords.substring(0, keywords.length()-1);
+                        RequestParameters mRP = new RequestParameters.Builder().keywords(keywords).build();
+                        Log.d("Prebid", mRP.getKeywords());
+                        mMoPubNative.makeRequest(mRP);
+                    }
+                    Toast.makeText(XandrNativeInAppMoPubDemo2Activity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
+                }
+            });*/
+
+            //================================================================================
+            // SAMPLE CODE: END
+            //================================================================================
         }
     }
 

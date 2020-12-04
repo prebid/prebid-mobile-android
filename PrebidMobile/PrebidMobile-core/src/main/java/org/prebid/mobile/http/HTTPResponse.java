@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile.utils;
+package org.prebid.mobile.http;
 
 import java.util.List;
 import java.util.Map;

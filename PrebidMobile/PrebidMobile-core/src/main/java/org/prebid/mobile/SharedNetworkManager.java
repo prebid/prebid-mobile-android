@@ -21,9 +21,9 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import org.prebid.mobile.utils.HTTPGet;
-import org.prebid.mobile.utils.HTTPResponse;
-import org.prebid.mobile.utils.HttpErrorCode;
+import org.prebid.mobile.http.HTTPGet;
+import org.prebid.mobile.http.HTTPResponse;
+import org.prebid.mobile.http.HttpErrorCode;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

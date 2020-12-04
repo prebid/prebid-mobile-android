@@ -19,8 +19,8 @@ package org.prebid.mobile;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
-import org.prebid.mobile.utils.HTTPGet;
-import org.prebid.mobile.utils.HTTPResponse;
+import org.prebid.mobile.http.HTTPGet;
+import org.prebid.mobile.http.HTTPResponse;
 
 class ImpressionTracker {
     private String url;

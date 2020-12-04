@@ -658,10 +658,10 @@ public class Util {
         }
     }
 
-    private static boolean implementsInterface(@NonNull Object object, @NonNull String it) {
+    private static boolean implementsInterface(@NonNull Object object, @NonNull String interfaceName) {
         for (Class c : object.getClass().getInterfaces()) {
             LogUtil.d("Prebid", c.getCanonicalName());
-            if (c.getCanonicalName().equals(it)) {
+            if (c.getCanonicalName().equals(interfaceName)) {
                 return true;
             }
         }
@@ -795,31 +795,5 @@ public class Util {
     public static void loadImage(ImageView image, String url) {
         new DownloadImageTask(image).execute(url);
     }
-
-    private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        WeakReference<ImageView> imageRef;
-
-        public DownloadImageTask(ImageView image) {
-            this.imageRef = new WeakReference<>(image);
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                LogUtil.e("Error", e.getMessage());
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            ImageView image = this.imageRef.get();
-            if (image != null) {
-                image.setImageBitmap(result);
-            }
-        }
-    }
 }
+

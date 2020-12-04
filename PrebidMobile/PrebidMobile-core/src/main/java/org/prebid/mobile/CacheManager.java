@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class CacheManager {
+    private static final int NATIVE_AD_EXPIRY_TIMEOUT = 300000;
     private static HashMap<String, String> savedValues = new HashMap<>();
     private static HashMap<String, CacheExpiryListener> cacheExpiryListenerMap = new HashMap<>();
     private static Handler handler = new Handler();
@@ -39,7 +40,7 @@ public class CacheManager {
                     }
                     savedValues.remove(cacheId);
                 }
-            }, 300000);
+            }, NATIVE_AD_EXPIRY_TIMEOUT);
             return cacheId;
         } else {
             return null;
