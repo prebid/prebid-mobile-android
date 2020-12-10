@@ -125,14 +125,15 @@ public class TargetingParams {
         String gdprConsent = null;
 
         try {
-
-            String pbGdprConsent = StorageUtils.getPbGdprConsent();
-            if (!TextUtils.isEmpty(pbGdprConsent)) {
-                gdprConsent = pbGdprConsent;
+            // TCF consent string
+            String iabGdprConsent = StorageUtils.getIabGdprConsent();
+            if (!TextUtils.isEmpty(iabGdprConsent)) {
+                gdprConsent = iabGdprConsent;
             } else {
-                String iabGdprConsent = StorageUtils.getIabGdprConsent();
-                if (!TextUtils.isEmpty(iabGdprConsent)) {
-                    gdprConsent = iabGdprConsent;
+                // GDPR consent string
+                String pbGdprConsent = StorageUtils.getPbGdprConsent();
+                if (!TextUtils.isEmpty(pbGdprConsent)) {
+                    gdprConsent = pbGdprConsent;
                 }
             }
         } catch (PbContextNullException ex) {
@@ -164,18 +165,16 @@ public class TargetingParams {
         String savedPurposeConsents = null;
 
         try {
-
-            String pbPurposeConsentsString = StorageUtils.getPbPurposeConsents();
-            if (pbPurposeConsentsString != null) {
-                savedPurposeConsents = pbPurposeConsentsString;
+            // TCF purpose consent
+            String iabPurposeConsentsString = StorageUtils.getIabPurposeConsents();
+            if (iabPurposeConsentsString != null) {
+                savedPurposeConsents = iabPurposeConsentsString;
             } else {
-
-                String iabPurposeConsentsString = StorageUtils.getIabPurposeConsents();
-
-                if (iabPurposeConsentsString != null) {
-                    savedPurposeConsents = iabPurposeConsentsString;
+                // GDPR purpose consent
+                String pbPurposeConsentsString = StorageUtils.getPbPurposeConsents();
+                if (pbPurposeConsentsString != null) {
+                    savedPurposeConsents = pbPurposeConsentsString;
                 }
-
             }
 
         } catch (PbContextNullException ex) {
