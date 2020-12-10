@@ -403,8 +403,7 @@ public class Util {
             handleAdManagerCustomTargeting(bids, adObj);
         } else if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS)) {
             handleAdManagerBuilderCustomTargeting(bids, adObj);
-        }
-        else if (adObj.getClass() == HashMap.class) {
+        } else if (adObj.getClass() == HashMap.class) {
             if (bids != null && !bids.isEmpty()) {
                 HashMap map = ((HashMap) adObj);
                 map.clear();
@@ -533,7 +532,7 @@ public class Util {
 
         for (int i = 0; i < jsonArray.length(); i++) {
 
-            list.add((T)jsonArray.get(i));
+            list.add((T) jsonArray.get(i));
         }
 
         return list;
@@ -558,6 +557,44 @@ public class Util {
         }
 
         return result;
+    }
+
+    /**
+     * Generate ad tag url for Google's IMA SDK to fetch ads
+     *
+     * @param adUnit GAM ad unit id
+     * @param sizes a set of ad sizes, only 640x480 and 400x300 are valid
+     * @param prebidKeywords prebid keywords
+     *
+     * @return ad tag url
+     */
+    public static String generateInstreamUriForGam(String adUnit, HashSet<AdSize> sizes, Map<String, String> prebidKeywords) {
+        String uri = "https://pubads.g.doubleclick.net/gampad/ads?";
+        if (TextUtils.isEmpty(adUnit)) {
+            throw new IllegalArgumentException("adUnit should not be empty");
+        }
+        String sz = "";
+        if (sizes == null || sizes.size() == 0) {
+            throw new IllegalArgumentException("sizes should not be empty");
+        } else {
+            for (AdSize size : sizes) {
+                if (!(size.getWidth() == 640 && size.getHeight() == 480) && !(size.getWidth() == 400 && size.getHeight() == 300)) {
+                    throw new IllegalArgumentException("size should be either 640x480 or 400x300");
+                } else {
+                    sz = sz + size.getWidth() + 'x' + size.getHeight() + "|";
+                }
+            }
+        }
+        sz = sz.substring(0, sz.length() - 1);
+        uri = uri + "sz=" + sz + "&iu=" + adUnit + "&impl=s&gdfp_req=1&env=vp&output=xml_vast4&unviewed_position_start=1";
+
+        if (prebidKeywords != null) {
+            uri = uri + "&cust_params=";
+            for (String key : prebidKeywords.keySet()) {
+                uri = uri + key + "%3D" + prebidKeywords.get(key) + "%26";
+            }
+        }
+        return uri;
     }
 
 }
