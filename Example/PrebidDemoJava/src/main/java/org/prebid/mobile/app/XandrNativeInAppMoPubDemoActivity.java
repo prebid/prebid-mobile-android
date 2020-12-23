@@ -60,6 +60,38 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
         }
     }
 
+    private void inflatePrebidNativeAd(final PrebidNativeAd ad) {
+        View nativeContainer = View.inflate(this, R.layout.layout_native, null);
+        ad.registerView(nativeContainer, new PrebidNativeAdEventListener() {
+            @Override
+            public void onAdClicked() {
+                Toast.makeText(XandrNativeInAppMoPubDemoActivity.this, "onAdClicked", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdImpression() {
+                Toast.makeText(XandrNativeInAppMoPubDemoActivity.this, "onAdImpression", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAdExpired() {
+                Toast.makeText(XandrNativeInAppMoPubDemoActivity.this, "onAdExpired", Toast.LENGTH_SHORT).show();
+            }
+        });
+        ImageView icon = nativeContainer.findViewById(R.id.imgIcon);
+        Util.loadImage(icon, ad.getIconUrl());
+        TextView title = nativeContainer.findViewById(R.id.tvTitle);
+        title.setText(ad.getTitle());
+        ImageView image = nativeContainer.findViewById(R.id.imgImage);
+        Util.loadImage(image, ad.getImageUrl());
+        TextView description = nativeContainer.findViewById(R.id.tvDesc);
+        description.setText(ad.getDescription());
+        Button cta = nativeContainer.findViewById(R.id.btnCta);
+        cta.setText(ad.getCallToAction());
+        ((FrameLayout) XandrNativeInAppMoPubDemoActivity.this.findViewById(R.id.adFrame)).addView(nativeContainer);
+    }
+
+
     private void inflateMoPubNativeAd(NativeAd nativeAd) {
         Log.d("Prebid", "came here");
         final StaticNativeAd ad = (StaticNativeAd) nativeAd.getBaseNativeAd();
@@ -96,52 +128,6 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
         });
         nativeContainer.addView(cta);
         ((FrameLayout) XandrNativeInAppMoPubDemoActivity.this.findViewById(R.id.adFrame)).addView(nativeContainer);
-    }
-
-    private void inflatePrebidNativeAd(final PrebidNativeAd ad) {
-        LinearLayout nativeContainer = new LinearLayout(XandrNativeInAppMoPubDemoActivity.this);
-        nativeContainer.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout iconAndTitle = new LinearLayout(XandrNativeInAppMoPubDemoActivity.this);
-        iconAndTitle.setOrientation(LinearLayout.HORIZONTAL);
-        ImageView icon = new ImageView(XandrNativeInAppMoPubDemoActivity.this);
-        icon.setLayoutParams(new LinearLayout.LayoutParams(160, 160));
-        Util.loadImage(icon, ad.getIconUrl());
-        iconAndTitle.addView(icon);
-        TextView title = new TextView(XandrNativeInAppMoPubDemoActivity.this);
-        title.setTextSize(20);
-        title.setText(ad.getTitle());
-        iconAndTitle.addView(title);
-        nativeContainer.addView(iconAndTitle);
-        ImageView image = new ImageView(XandrNativeInAppMoPubDemoActivity.this);
-        image.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        Util.loadImage(image, ad.getImageUrl());
-        nativeContainer.addView(image);
-        TextView description = new TextView(XandrNativeInAppMoPubDemoActivity.this);
-        description.setTextSize(18);
-        description.setText(ad.getDescription());
-        nativeContainer.addView(description);
-        Button cta = new Button(XandrNativeInAppMoPubDemoActivity.this);
-        cta.setText(ad.getCallToAction());
-        nativeContainer.addView(cta);
-        ((FrameLayout) XandrNativeInAppMoPubDemoActivity.this.findViewById(R.id.adFrame)).addView(nativeContainer);
-        List<View> viewList = new ArrayList<>();
-        viewList.add(cta);
-        ad.registerViewList(nativeContainer, viewList, new PrebidNativeAdEventListener() {
-            @Override
-            public void onAdClicked() {
-                Toast.makeText(XandrNativeInAppMoPubDemoActivity.this, "onAdClicked", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onAdImpression() {
-                Toast.makeText(XandrNativeInAppMoPubDemoActivity.this, "onAdImpression", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onAdExpired() {
-                Toast.makeText(XandrNativeInAppMoPubDemoActivity.this, "onAdExpired", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override

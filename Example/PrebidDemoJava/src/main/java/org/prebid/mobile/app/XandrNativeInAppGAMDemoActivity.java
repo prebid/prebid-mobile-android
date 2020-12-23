@@ -2,6 +2,7 @@ package org.prebid.mobile.app;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -62,7 +63,7 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
     }
 
     private void inflatePrebidNativeAd(final PrebidNativeAd ad) {
-        LinearLayout nativeContainer = new LinearLayout(XandrNativeInAppGAMDemoActivity.this);
+        View nativeContainer = View.inflate(this, R.layout.layout_native, null);
         ad.registerView(nativeContainer, new PrebidNativeAdEventListener() {
             @Override
             public void onAdClicked() {
@@ -79,29 +80,16 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
                 Toast.makeText(XandrNativeInAppGAMDemoActivity.this, "onAdExpired", Toast.LENGTH_SHORT).show();
             }
         });
-        nativeContainer.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout iconAndTitle = new LinearLayout(XandrNativeInAppGAMDemoActivity.this);
-        iconAndTitle.setOrientation(LinearLayout.HORIZONTAL);
-        ImageView icon = new ImageView(XandrNativeInAppGAMDemoActivity.this);
-        icon.setLayoutParams(new LinearLayout.LayoutParams(160, 160));
+        ImageView icon = nativeContainer.findViewById(R.id.imgIcon);
         Util.loadImage(icon, ad.getIconUrl());
-        iconAndTitle.addView(icon);
-        TextView title = new TextView(XandrNativeInAppGAMDemoActivity.this);
-        title.setTextSize(20);
+        TextView title = nativeContainer.findViewById(R.id.tvTitle);
         title.setText(ad.getTitle());
-        iconAndTitle.addView(title);
-        nativeContainer.addView(iconAndTitle);
-        ImageView image = new ImageView(XandrNativeInAppGAMDemoActivity.this);
-        image.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        ImageView image = nativeContainer.findViewById(R.id.imgImage);
         Util.loadImage(image, ad.getImageUrl());
-        nativeContainer.addView(image);
-        TextView description = new TextView(XandrNativeInAppGAMDemoActivity.this);
-        description.setTextSize(18);
+        TextView description = nativeContainer.findViewById(R.id.tvDesc);
         description.setText(ad.getDescription());
-        nativeContainer.addView(description);
-        Button cta = new Button(XandrNativeInAppGAMDemoActivity.this);
+        Button cta = nativeContainer.findViewById(R.id.btnCta);
         cta.setText(ad.getCallToAction());
-        nativeContainer.addView(cta);
         ((FrameLayout) XandrNativeInAppGAMDemoActivity.this.findViewById(R.id.adFrame)).addView(nativeContainer);
     }
 
