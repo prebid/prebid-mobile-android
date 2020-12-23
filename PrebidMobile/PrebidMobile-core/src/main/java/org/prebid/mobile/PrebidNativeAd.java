@@ -20,10 +20,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.webkit.URLUtil;
 
@@ -35,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PrebidNativeAd {
-    private static final long NATIVE_AD_RESPONSE_EXPIRATION_TIME = 60 * 1000;
     private String title;
     private String description;
     private String iconUrl;
@@ -51,7 +47,7 @@ public class PrebidNativeAd {
     private ArrayList<ImpressionTracker> impressionTrackers;
 
 
-    static PrebidNativeAd create(String cacheId) {
+    public static PrebidNativeAd create(String cacheId) {
         String content = CacheManager.get(cacheId);
         if (!TextUtils.isEmpty(content)) {
             try {
@@ -77,7 +73,7 @@ public class PrebidNativeAd {
                         }
                     }
                 });
-                for (int i=0; i < asset.length(); i++) {
+                for (int i = 0; i < asset.length(); i++) {
                     JSONObject adObject = asset.getJSONObject(i);
                     if (adObject.has("title")) {
                         JSONObject title = adObject.getJSONObject("title");

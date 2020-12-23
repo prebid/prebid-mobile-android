@@ -27,7 +27,10 @@ import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 
+import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.PrebidNativeAd;
+import org.prebid.mobile.PrebidNativeAdListener;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -146,7 +149,7 @@ public final class AdViewUtils {
     }
 
     @Nullable
-    static void recursivelyFindWebViewList(@Nullable View view, List<WebView> webViewList) {
+    public static void recursivelyFindWebViewList(@Nullable View view, List<WebView> webViewList) {
         if (view instanceof ViewGroup) {
             //ViewGroup
             ViewGroup viewGroup = (ViewGroup) view;
@@ -226,6 +229,53 @@ public final class AdViewUtils {
             }
         });
     }
+
+    /**
+     * {@link PrebidNativeAdListener} will be called only once.
+     * {@link PrebidNativeAdListener#onPrebidNativeLoaded(PrebidNativeAd)} when Cached Ad is found and is valid
+     * {@link PrebidNativeAdListener#onPrebidNativeNotValid()} (PrebidNativeAd)} when Cached Ad is found and but is invalid
+     * and {@link PrebidNativeAdListener#onPrebidNativeNotFound()} ()} (PrebidNativeAd)} when Cached Ad is not found
+     */
+    public static void iterateWebViewListAsync(final List<WebView> webViewList, final int index, final PrebidNativeAdListener listener) {
+
+        final WebView webView = webViewList.get(index);
+
+        webView.evaluateJavascript(INNER_HTML_SCRIPT, new ValueCallback<String>() {
+
+            private void processNextWebView() {
+
+                int nextIndex = index - 1;
+
+                if (nextIndex >= 0) {
+                    iterateWebViewListAsync(webViewList, nextIndex, listener);
+                } else {
+                    listener.onPrebidNativeNotFound();
+                }
+            }
+
+            @Override
+            public void onReceiveValue(@Nullable String html) {
+                Pattern prebidPattern = Pattern.compile("\\%\\%Prebid\\%\\%.*\\%\\%Prebid\\%\\%");
+                Matcher m = prebidPattern.matcher(html);
+                if (m.find()) {
+                    String s = m.group();
+                    String[] results = s.split("%%");
+                    String cacheId = results[2];
+                    if (CacheManager.isValid(cacheId)) {
+                        PrebidNativeAd ad = PrebidNativeAd.create(cacheId);
+                        if (ad != null) {
+                            listener.onPrebidNativeLoaded(ad);
+                            return;
+                        }
+                    }
+                    listener.onPrebidNativeNotValid();
+                } else {
+                    processNextWebView();
+                }
+            }
+        });
+    }
+
 
     @NonNull
     static Pair<Pair<Integer, Integer>, PbFindSizeError> findSizeInHtml(@Nullable String html) {

@@ -17,9 +17,6 @@
 package org.prebid.mobile;
 
 import android.annotation.TargetApi;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -27,7 +24,6 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
@@ -38,10 +34,8 @@ import android.widget.ImageView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.addendum.AdViewUtils;
 
-import java.io.InputStream;
-import java.lang.ref.WeakReference;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -55,8 +49,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Util {
 
@@ -703,93 +695,15 @@ public class Util {
         }
     }
 
-    private static void findMoPubNativeAd(@NonNull Object object, @NonNull PrebidNativeAdListener listener) {
-        Object baseNativeAd = callMethodOnObject(object, "getBaseNativeAd");
-        LogUtil.d("Prebid", "" + baseNativeAd);
-        Boolean isPrebid = (Boolean) callMethodOnObject(baseNativeAd, "getExtra", "isPrebid");
-        if (isPrebid != null && isPrebid) {
-            String cacheId = (String) callMethodOnObject(baseNativeAd, "getExtra", "hb_cache_id");
-            if (CacheManager.isValid(cacheId)) {
-                PrebidNativeAd ad = PrebidNativeAd.create(cacheId);
-                if (ad != null) {
-                    listener.onPrebidNativeLoaded(ad);
-                    return;
-                }
-            } else {
-                listener.onPrebidNativeNotValid();
-            }
-        } else {
-            listener.onPrebidNativeNotFound();
-        }
-    }
-
-
     private static void findNativeInGAMPublisherAdView(@NonNull View adView, @NonNull PrebidNativeAdListener listener) {
         List<WebView> webViewList = new ArrayList<>();
-        recursivelyFindWebViewList(adView, webViewList);
+        AdViewUtils.recursivelyFindWebViewList(adView, webViewList);
         if (webViewList.size() == 0) {
             listener.onPrebidNativeNotFound();
         } else {
-            iterateWebViewListAsync(webViewList, webViewList.size() - 1, listener);
+            AdViewUtils.iterateWebViewListAsync(webViewList, webViewList.size() - 1, listener);
         }
 
-    }
-
-    private static void iterateWebViewListAsync(final List<WebView> webViewList, final int index, final PrebidNativeAdListener listener) {
-
-        final WebView webView = webViewList.get(index);
-
-        webView.evaluateJavascript(INNER_HTML_SCRIPT, new ValueCallback<String>() {
-
-            private void processNextWebView() {
-
-                int nextIndex = index - 1;
-
-                if (nextIndex >= 0) {
-                    iterateWebViewListAsync(webViewList, nextIndex, listener);
-                } else {
-                    listener.onPrebidNativeNotFound();
-                }
-            }
-
-            @Override
-            public void onReceiveValue(@Nullable String html) {
-                Pattern prebidPattern = Pattern.compile("\\%\\%Prebid\\%\\%.*\\%\\%Prebid\\%\\%");
-                Matcher m = prebidPattern.matcher(html);
-                if (m.find()) {
-                    String s = m.group();
-                    String[] results = s.split("%%");
-                    String cacheId = results[2];
-                    if (CacheManager.isValid(cacheId)) {
-                        PrebidNativeAd ad = PrebidNativeAd.create(cacheId);
-                        if (ad != null) {
-                            listener.onPrebidNativeLoaded(ad);
-                            return;
-                        }
-                    }
-                    listener.onPrebidNativeNotValid();
-                } else {
-                    processNextWebView();
-                }
-            }
-        });
-    }
-
-    private static void recursivelyFindWebViewList(View view, List<WebView> webViewList) {
-        if (view instanceof ViewGroup) {
-            //ViewGroup
-            ViewGroup viewGroup = (ViewGroup) view;
-
-            if (viewGroup instanceof WebView) {
-                //WebView
-                final WebView webView = (WebView) viewGroup;
-                webViewList.add(webView);
-            } else {
-                for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                    recursivelyFindWebViewList(viewGroup.getChildAt(i), webViewList);
-                }
-            }
-        }
     }
 
     public static void loadImage(ImageView image, String url) {
