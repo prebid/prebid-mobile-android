@@ -32,7 +32,7 @@
         </activity>
         <activity android:name=".RubiconBannerGamDemoActivity" />
         <activity android:name=".RubiconBannerMoPubDemoActivity" />
-        <activity android:name=".RubiconIntersitialGamDemoActivity" />
+        <activity android:name=".RubiconInterstitialGamDemoActivity" />
         <activity android:name=".RubiconInterstitialMoPubDemoActivity" />
         <activity android:name=".RubiconBannerVideoGamDemoActivity" />
         <activity android:name=".RubiconInterstitialVideoGamDemoActivity" />
