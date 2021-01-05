@@ -24,6 +24,8 @@ import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import org.prebid.mobile.tasksmanager.TasksManager;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -79,8 +81,13 @@ public abstract class AdUnit {
 
         fetchDemand(keywordsMap, new OnCompleteListener() {
             @Override
-            public void onComplete(ResultCode resultCode) {
-                listener.onComplete(resultCode, keywordsMap.size() != 0 ? Collections.unmodifiableMap(keywordsMap) : null);
+            public void onComplete(final ResultCode resultCode) {
+                TasksManager.getInstance().executeOnMainThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        listener.onComplete(resultCode, keywordsMap.size() != 0 ? Collections.unmodifiableMap(keywordsMap) : null);
+                    }
+                });
             }
         });
     }

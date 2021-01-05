@@ -22,13 +22,13 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.webkit.CookieManager;
@@ -37,6 +37,7 @@ import android.webkit.CookieSyncManager;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.tasksmanager.TasksManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -68,9 +69,20 @@ class PrebidServerAdapter implements DemandAdapter {
 
     @Override
     public void requestDemand(RequestParams params, DemandAdapterListener listener, String auctionId) {
-        ServerConnector connector = new ServerConnector(this, listener, params, auctionId);
+        final ServerConnector connector = new ServerConnector(this, listener, params, auctionId);
         serverConnectors.add(connector);
-        connector.execute();
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            TasksManager.getInstance().executeOnBackgroundThread(new Runnable() {
+                @Override
+                public void run() {
+                    ServerConnector.TaskResult<JSONObject> result = connector.execute();
+                    connector.processResult(result);
+                }
+            });
+        } else {
+            ServerConnector.TaskResult<JSONObject> result = connector.execute();
+            connector.processResult(result);
+        }
     }
 
     @Override
@@ -85,7 +97,7 @@ class PrebidServerAdapter implements DemandAdapter {
         serverConnectors.removeAll(toRemove);
     }
 
-    static class ServerConnector extends AsyncTask<Object, Object, ServerConnector.AsyncTaskResult<JSONObject>> {
+    static class ServerConnector {
 
         private static final int TIMEOUT_COUNT_DOWN_INTERVAL = 500;
 
@@ -99,6 +111,7 @@ class PrebidServerAdapter implements DemandAdapter {
         private boolean timeoutFired;
 
         private final AdType adType;
+        private boolean isCancelled;
 
         ServerConnector(PrebidServerAdapter prebidServerAdapter, DemandAdapterListener listener, RequestParams requestParams, String auctionId) {
             this.prebidServerAdapter = new WeakReference<>(prebidServerAdapter);
@@ -106,20 +119,11 @@ class PrebidServerAdapter implements DemandAdapter {
             this.requestParams = requestParams;
             this.auctionId = auctionId;
             timeoutCountDownTimer = new TimeoutCountDownTimer(PrebidMobile.getTimeoutMillis(), TIMEOUT_COUNT_DOWN_INTERVAL);
-
             adType = requestParams.getAdType();
         }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
+        private TaskResult<JSONObject> execute() {
             timeoutCountDownTimer.start();
-        }
-
-        @Override
-        @WorkerThread
-        protected AsyncTaskResult<JSONObject> doInBackground(Object... objects) {
             try {
                 long demandFetchStartTime = System.currentTimeMillis();
 
@@ -191,7 +195,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
                     BidLog.getInstance().setLastEntry(entry);
 
-                    return new AsyncTaskResult<>(response);
+                    return new TaskResult<>(response);
                 } else if (httpResult >= HttpURLConnection.HTTP_BAD_REQUEST) {
                     StringBuilder builder = new StringBuilder();
                     InputStream is = conn.getErrorStream();
@@ -217,57 +221,53 @@ class PrebidServerAdapter implements DemandAdapter {
                     BidLog.getInstance().setLastEntry(entry);
 
                     if (m.find() || result.contains("No stored request")) {
-                        return new AsyncTaskResult<>(ResultCode.INVALID_ACCOUNT_ID);
+                        return new TaskResult<>(ResultCode.INVALID_ACCOUNT_ID);
                     } else if (m3.find() || result.contains("No stored imp")) {
-                        return new AsyncTaskResult<>(ResultCode.INVALID_CONFIG_ID);
+                        return new TaskResult<>(ResultCode.INVALID_CONFIG_ID);
                     } else if (m2.find() || m4.find() || result.contains("Request imp[0].banner.format")) {
-                        return new AsyncTaskResult<>(ResultCode.INVALID_SIZE);
+                        return new TaskResult<>(ResultCode.INVALID_SIZE);
                     } else {
-                        return new AsyncTaskResult<>(ResultCode.PREBID_SERVER_ERROR);
+                        return new TaskResult<>(ResultCode.PREBID_SERVER_ERROR);
                     }
                 }
 
             } catch (MalformedURLException e) {
-                return new AsyncTaskResult<>(e);
+                return new TaskResult<>(e);
             } catch (UnsupportedEncodingException e) {
-                return new AsyncTaskResult<>(e);
+                return new TaskResult<>(e);
             } catch (SocketTimeoutException ex) {
-                return new AsyncTaskResult<>(ResultCode.TIMEOUT);
+                return new TaskResult<>(ResultCode.TIMEOUT);
             } catch (IOException e) {
-                return new AsyncTaskResult<>(e);
+                return new TaskResult<>(e);
             } catch (JSONException e) {
-                return new AsyncTaskResult<>(e);
+                return new TaskResult<>(e);
             } catch (NoContextException ex) {
-                return new AsyncTaskResult<>(ResultCode.INVALID_CONTEXT);
+                return new TaskResult<>(ResultCode.INVALID_CONTEXT);
             } catch (Exception e) {
-                return new AsyncTaskResult<>(e);
+                return new TaskResult<>(e);
             }
-            return new AsyncTaskResult<>(new RuntimeException("ServerConnector exception"));
+            return new TaskResult<>(new RuntimeException("ServerConnector exception"));
         }
 
-        @Override
-        @MainThread
-        protected void onPostExecute(AsyncTaskResult<JSONObject> asyncTaskResult) {
-            super.onPostExecute(asyncTaskResult);
-
+        private void processResult(TaskResult<JSONObject> taskResult) {
             timeoutCountDownTimer.cancel();
 
-            if (asyncTaskResult.getError() != null) {
-                asyncTaskResult.getError().printStackTrace();
+            if (taskResult.getError() != null) {
+                taskResult.getError().printStackTrace();
 
                 //Default error
                 notifyDemandFailed(ResultCode.PREBID_SERVER_ERROR);
 
                 removeThisTask();
                 return;
-            } else if (asyncTaskResult.getResultCode() != null) {
-                notifyDemandFailed(asyncTaskResult.getResultCode());
+            } else if (taskResult.getResultCode() != null) {
+                notifyDemandFailed(taskResult.getResultCode());
 
                 removeThisTask();
                 return;
             }
 
-            JSONObject jsonObject = asyncTaskResult.getResult();
+            JSONObject jsonObject = taskResult.getResult();
 
             HashMap<String, String> keywords = new HashMap<>();
             boolean containTopBid = false;
@@ -328,18 +328,28 @@ class PrebidServerAdapter implements DemandAdapter {
             removeThisTask();
         }
 
-        @Override
-        @MainThread
-        protected void onCancelled() {
-            super.onCancelled();
-
+        private void cancel() {
+            isCancelled = true;
             if (timeoutFired) {
                 notifyDemandFailed(ResultCode.TIMEOUT);
             } else {
                 timeoutCountDownTimer.cancel();
             }
-            removeThisTask();
+//            removeThisTask();
         }
+
+//        @Override
+//        @MainThread
+//        protected void onCancelled() {
+//            super.onCancelled();
+//
+//            if (timeoutFired) {
+//                notifyDemandFailed(ResultCode.TIMEOUT);
+//            } else {
+//                timeoutCountDownTimer.cancel();
+//            }
+//            removeThisTask();
+//        }
 
         private void removeThisTask() {
             @Nullable
@@ -356,7 +366,7 @@ class PrebidServerAdapter implements DemandAdapter {
         }
 
         void destroy() {
-            this.cancel(true);
+            this.cancel();
             this.listener = null;
         }
 
@@ -1108,7 +1118,7 @@ class PrebidServerAdapter implements DemandAdapter {
         private static class NoContextException extends Exception {
         }
 
-        private static class AsyncTaskResult<T> {
+        private static class TaskResult<T> {
             @Nullable
             private T result;
             @Nullable
@@ -1131,15 +1141,15 @@ class PrebidServerAdapter implements DemandAdapter {
                 return error;
             }
 
-            private AsyncTaskResult(@NonNull T result) {
+            private TaskResult(@NonNull T result) {
                 this.result = result;
             }
 
-            private AsyncTaskResult(@NonNull ResultCode resultCode) {
+            private TaskResult(@NonNull ResultCode resultCode) {
                 this.resultCode = resultCode;
             }
 
-            private AsyncTaskResult(@NonNull Exception error) {
+            private TaskResult(@NonNull Exception error) {
                 this.error = error;
             }
         }
@@ -1160,7 +1170,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
             @Override
             public void onTick(long millisUntilFinished) {
-                if (ServerConnector.this.isCancelled()) {
+                if (isCancelled) {
                     TimeoutCountDownTimer.this.cancel();
                 }
             }
@@ -1168,12 +1178,12 @@ class PrebidServerAdapter implements DemandAdapter {
             @Override
             public void onFinish() {
 
-                if (ServerConnector.this.isCancelled()) {
+                if (isCancelled) {
                     return;
                 }
 
                 timeoutFired = true;
-                ServerConnector.this.cancel(true);
+                ServerConnector.this.cancel();
 
             }
         }

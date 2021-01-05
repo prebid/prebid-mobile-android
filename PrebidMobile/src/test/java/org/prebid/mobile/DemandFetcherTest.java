@@ -26,6 +26,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.prebid.mobile.tasksmanager.BackgroundThreadExecutor;
+import org.prebid.mobile.tasksmanager.MainThreadExecutor;
+import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
 import org.robolectric.Robolectric;
@@ -49,6 +52,18 @@ import static org.mockito.Mockito.verify;
 @Config(sdk = BaseSetup.testSDK)
 public class DemandFetcherTest extends BaseSetup {
 
+    @Override
+    public void setup() {
+        super.setup();
+        ((BackgroundThreadExecutor)TasksManager.getInstance().backgroundThreadExecutor).startThread();
+    }
+
+    @Override
+    public void tearDown() {
+        super.tearDown();
+        ((BackgroundThreadExecutor)TasksManager.getInstance().backgroundThreadExecutor).shutdown();
+    }
+
     @Test
     public void testBaseConditions() throws Exception {
         PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
@@ -64,6 +79,10 @@ public class DemandFetcherTest extends BaseSetup {
         assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
         ShadowLooper fetcherLooper = Shadows.shadowOf(demandFetcher.getHandler().getLooper());
         fetcherLooper.runOneTask();
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         demandFetcher.destroy();
@@ -95,6 +114,10 @@ public class DemandFetcherTest extends BaseSetup {
         fetcherLooper.runOneTask();
         ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
         demandLooper.runOneTask();
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onComplete(ResultCode.NO_BIDS);
@@ -128,6 +151,10 @@ public class DemandFetcherTest extends BaseSetup {
         fetcherLooper.runOneTask();
         ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
         demandLooper.runOneTask();
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
@@ -163,6 +190,10 @@ public class DemandFetcherTest extends BaseSetup {
         fetcherLooper.runOneTask();
         ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
         demandLooper.runOneTask();
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onComplete(ResultCode.SUCCESS);
@@ -216,6 +247,10 @@ public class DemandFetcherTest extends BaseSetup {
         fetcherLooper.runOneTask();
         ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
         demandLooper.runOneTask();
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onComplete(ResultCode.SUCCESS);
@@ -300,6 +335,10 @@ public class DemandFetcherTest extends BaseSetup {
         fetcherLooper.runOneTask();
         ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
         demandLooper.runOneTask();
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onComplete(ResultCode.SUCCESS);
@@ -333,8 +372,12 @@ public class DemandFetcherTest extends BaseSetup {
         fetcherLooper.runOneTask();
         ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
         demandLooper.runOneTask();
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
+
         verify(mockListener).onComplete(ResultCode.SUCCESS);
         assertEquals(DemandFetcher.STATE.DESTROYED, FieldUtils.readField(demandFetcher, "state", true));
         String adViewKeywords = adView.getKeywords();
@@ -367,6 +410,10 @@ public class DemandFetcherTest extends BaseSetup {
         fetcherLooper.runOneTask();
         ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
         demandLooper.runOneTask();
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onComplete(ResultCode.SUCCESS);
@@ -375,6 +422,8 @@ public class DemandFetcherTest extends BaseSetup {
         assertEquals("hb_pb:0.50,hb_env:mobile-app,hb_pb_appnexus:0.50,hb_size:300x250,hb_bidder_appnexus:appnexus,hb_bidder:appnexus,hb_cache_id:df4aba04-5e69-44b8-8608-058ab21600b8,hb_env_appnexus:mobile-app,hb_size_appnexus:300x250,hb_cache_id_appnexus:df4aba04-5e69-44b8-8608-058ab21600b8,", adViewKeywords);
         fetcherLooper.runOneTask();
         demandLooper.runOneTask();
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onComplete(ResultCode.NO_BIDS);
@@ -409,6 +458,10 @@ public class DemandFetcherTest extends BaseSetup {
         fetcherLooper.runOneTask();
         ShadowLooper demandLooper = Shadows.shadowOf(demandFetcher.getDemandHandler().getLooper());
         demandLooper.runOneTask();
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onComplete(ResultCode.SUCCESS);
@@ -437,6 +490,7 @@ public class DemandFetcherTest extends BaseSetup {
         assertEquals("300x250", bundle.get("hb_size_appnexus"));
         fetcherLooper.runOneTask();
         demandLooper.runOneTask();
+        bgLooper.runToEndOfTasks();
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onComplete(ResultCode.NO_BIDS);

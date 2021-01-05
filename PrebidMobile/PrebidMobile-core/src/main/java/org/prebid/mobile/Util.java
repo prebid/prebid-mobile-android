@@ -53,6 +53,8 @@ public class Util {
     static final String MOPUB_INTERSTITIAL_CLASS = "com.mopub.mobileads.MoPubInterstitial";
     static final String AD_MANAGER_REQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
     static final String AD_MANAGER_REQUEST_BUILDER_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest$Builder";
+    public static final int HTTP_CONNECTION_TIMEOUT = 15000;
+    public static final int HTTP_SOCKET_TIMEOUT = 20000;
     private static final Random RANDOM = new Random();
     private static final HashSet<String> reservedKeys;
     private static final int MoPubQueryStringLimit = 4000;

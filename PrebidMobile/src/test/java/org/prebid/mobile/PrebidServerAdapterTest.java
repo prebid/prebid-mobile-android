@@ -33,10 +33,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.tasksmanager.BackgroundThreadExecutor;
+import org.prebid.mobile.tasksmanager.MainThreadExecutor;
+import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLooper;
 
@@ -84,8 +88,16 @@ public class PrebidServerAdapterTest extends BaseSetup {
     public ErrorCollector errorCollector = new ErrorCollector();
 
     @Override
+    public void setup() {
+        super.setup();
+        ((BackgroundThreadExecutor)TasksManager.getInstance().backgroundThreadExecutor).startThread();
+    }
+
+    @Override
     public void tearDown() {
         super.tearDown();
+
+        ((BackgroundThreadExecutor)TasksManager.getInstance().backgroundThreadExecutor).shutdown();
 
         TargetingParams.clearAccessControlList();
         TargetingParams.clearUserData();
@@ -128,6 +140,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e45", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onDemandFailed(ResultCode.INVALID_ACCOUNT_ID, uuid);
@@ -150,11 +166,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("1001-1", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
 
         verify(mockListener).onDemandFailed(ResultCode.INVALID_ACCOUNT_ID, uuid);
-
     }
 
     @Test
@@ -170,6 +189,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-ffffffffffff", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onDemandFailed(ResultCode.INVALID_CONFIG_ID, uuid);
@@ -192,9 +215,12 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("1001-1_INVALID_CONFIG_ID", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
-
         verify(mockListener).onDemandFailed(ResultCode.INVALID_CONFIG_ID, uuid);
     }
 
@@ -211,6 +237,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e45", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onDemandFailed(ResultCode.INVALID_ACCOUNT_ID, uuid);
@@ -229,6 +259,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onDemandFailed(ResultCode.INVALID_CONFIG_ID, uuid);
@@ -249,6 +283,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("e2edc23f-0b3b-4203-81b5-7cc97132f418", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
@@ -273,11 +311,19 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.getTimeoutMillis(), 2000, PrebidMobile.getTimeoutMillis());
         assertTrue(!PrebidMobile.timeoutMillisUpdated);
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.getTimeoutMillis(), 2000, PrebidMobile.getTimeoutMillis());
@@ -300,6 +346,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
@@ -321,6 +371,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
@@ -343,6 +397,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         HashMap<String, String> bids = new HashMap<String, String>();
@@ -375,6 +433,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         HashMap<String, String> bids = new HashMap<String, String>();
@@ -415,6 +477,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
@@ -436,6 +502,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
@@ -457,6 +527,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         HashMap<String, String> bids = new HashMap<String, String>();
@@ -489,6 +563,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         HashMap<String, String> bids = new HashMap<String, String>();
@@ -521,6 +599,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
@@ -542,6 +624,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         HashMap<String, String> bids = new HashMap<String, String>();
@@ -585,6 +671,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         String uuid2 = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener1, uuid1);
         adapter.requestDemand(requestParams, mockListener2, uuid2);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener1).onDemandFailed(ResultCode.NO_BIDS, uuid1);
@@ -652,6 +742,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         fetcherLooper.runOneTask();
         ShadowLooper demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
         demandLooper.runOneTask();
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         Host.CUSTOM.setHostUrl(server.url("/clearKeywords").toString());
@@ -665,6 +759,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         fetcherLooper.runOneTask();
         demandLooper = shadowOf(fetcher.getDemandHandler().getLooper());
         demandLooper.runOneTask();
+
+        bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener, times(1)).onComplete(ResultCode.NO_BIDS);
@@ -765,6 +863,10 @@ public class PrebidServerAdapterTest extends BaseSetup {
         RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
         verify(mockListener).onDemandFailed(ResultCode.PREBID_SERVER_ERROR, uuid);
