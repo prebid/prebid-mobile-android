@@ -1,13 +1,10 @@
 package org.prebid.mobile.app;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +18,6 @@ import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
 import com.google.android.gms.ads.formats.OnPublisherAdViewLoadedListener;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import com.mopub.nativeads.RequestParameters;
 
 import org.prebid.mobile.Host;
 import org.prebid.mobile.LogUtil;
@@ -31,16 +27,15 @@ import org.prebid.mobile.NativeEventTracker;
 import org.prebid.mobile.NativeImageAsset;
 import org.prebid.mobile.NativeTitleAsset;
 import org.prebid.mobile.OnCompleteListener;
-import org.prebid.mobile.OnCompleteListener2;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.PrebidNativeAdEventListener;
 import org.prebid.mobile.PrebidNativeAdListener;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
+import org.prebid.mobile.addendum.AdViewUtils;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import static org.prebid.mobile.app.Constants.DFP_NATIVE_NATIVE_ADUNIT_ID_APPNEXUS;
 
@@ -209,7 +204,7 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
                     @Override
                     public void onCustomTemplateAdLoaded(NativeCustomTemplateAd nativeCustomTemplateAd) {
                         LogUtil.d("Prebid", "custom ad loaded");
-                        Util.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
+                        AdViewUtils.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
                             @Override
                             public void onPrebidNativeLoaded(PrebidNativeAd ad) {
                                 inflatePrebidNativeAd(ad);

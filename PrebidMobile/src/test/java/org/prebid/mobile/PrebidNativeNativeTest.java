@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
 import org.robolectric.Robolectric;
@@ -59,6 +60,12 @@ public class PrebidNativeNativeTest extends BaseSetup {
 
     @Rule
     public ErrorCollector errorCollector = new ErrorCollector();
+
+    @Override
+    public void setup() {
+        super.setup();
+        CacheManager.clear();
+    }
 
     @Override
     public void tearDown() {
@@ -125,7 +132,7 @@ public class PrebidNativeNativeTest extends BaseSetup {
         NativeCustomTemplateAd nativeCustomTemplateAd = Mockito.mock(NativeCustomTemplateAd.class);
         Mockito.when(nativeCustomTemplateAd.getText("isPrebid")).thenReturn("1");
         Mockito.when(nativeCustomTemplateAd.getText("hb_cache_id_local")).thenReturn(cacheId);
-        Util.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
+        AdViewUtils.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
             @Override
             public void onPrebidNativeLoaded(PrebidNativeAd ad) {
                 assertTrue(ad != null);
@@ -196,7 +203,7 @@ public class PrebidNativeNativeTest extends BaseSetup {
         NativeCustomTemplateAd nativeCustomTemplateAd = Mockito.mock(NativeCustomTemplateAd.class);
         Mockito.when(nativeCustomTemplateAd.getText("isPrebid")).thenReturn("1");
         Mockito.when(nativeCustomTemplateAd.getText("hb_cache_id_local")).thenReturn(cacheId);
-        Util.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
+        AdViewUtils.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
             @Override
             public void onPrebidNativeLoaded(PrebidNativeAd ad) {
                 assertTrue(ad != null);
@@ -289,7 +296,7 @@ public class PrebidNativeNativeTest extends BaseSetup {
         NativeCustomTemplateAd nativeCustomTemplateAd = Mockito.mock(NativeCustomTemplateAd.class);
         Mockito.when(nativeCustomTemplateAd.getText("isPrebid")).thenReturn("1");
         Mockito.when(nativeCustomTemplateAd.getText("hb_cache_id_local")).thenReturn(cacheId);
-        Util.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
+        AdViewUtils.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
             @Override
             public void onPrebidNativeLoaded(PrebidNativeAd ad) {
                 assertTrue(ad != null);

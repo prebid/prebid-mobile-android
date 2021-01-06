@@ -32,17 +32,15 @@ import org.prebid.mobile.NativeEventTracker;
 import org.prebid.mobile.NativeImageAsset;
 import org.prebid.mobile.NativeTitleAsset;
 import org.prebid.mobile.OnCompleteListener;
-import org.prebid.mobile.OnCompleteListener2;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.PrebidNativeAdEventListener;
 import org.prebid.mobile.PrebidNativeAdListener;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
+import org.prebid.mobile.addendum.AdViewUtils;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
     private MoPubNative mMoPubNative;
@@ -198,7 +196,7 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
                 public void onNativeLoad(final NativeAd nativeAd) {
                     Log.d("Prebid", "MoPub native ad loaded");
                     XandrNativeInAppMoPubDemoActivity.this.ad = nativeAd;
-                    Util.findNative(nativeAd, new PrebidNativeAdListener() {
+                    AdViewUtils.findNative(nativeAd, new PrebidNativeAdListener() {
                         @Override
                         public void onPrebidNativeLoaded(final PrebidNativeAd ad) {
                             inflatePrebidNativeAd(ad);

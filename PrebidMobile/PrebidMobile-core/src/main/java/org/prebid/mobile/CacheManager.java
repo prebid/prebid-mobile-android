@@ -17,6 +17,7 @@
 package org.prebid.mobile;
 
 import android.os.Handler;
+import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 
 import java.util.HashMap;
@@ -49,6 +50,12 @@ public class CacheManager {
 
     public static boolean isValid(String cacheId) {
         return savedValues.keySet().contains(cacheId);
+    }
+
+    @VisibleForTesting
+    public static void clear() {
+        savedValues.clear();
+        cacheExpiryListenerMap.clear();
     }
 
     protected static String get(String cacheId) {

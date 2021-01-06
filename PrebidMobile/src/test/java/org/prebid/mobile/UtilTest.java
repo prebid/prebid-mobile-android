@@ -28,6 +28,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
 import org.robolectric.RobolectricTestRunner;
@@ -461,7 +462,7 @@ public class UtilTest extends BaseSetup {
         NativeCustomTemplateAd nativeCustomTemplateAd = Mockito.mock(NativeCustomTemplateAd.class);
         Mockito.when(nativeCustomTemplateAd.getText("isPrebid")).thenReturn("1");
         Mockito.when(nativeCustomTemplateAd.getText("hb_cache_id_local")).thenReturn(cacheId);
-        Util.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
+        AdViewUtils.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
             @Override
             public void onPrebidNativeLoaded(PrebidNativeAd ad) {
                 assertTrue(ad != null);
@@ -486,7 +487,7 @@ public class UtilTest extends BaseSetup {
         NativeCustomTemplateAd nativeCustomTemplateAd = Mockito.mock(NativeCustomTemplateAd.class);
         Mockito.when(nativeCustomTemplateAd.getText("isPrebid")).thenReturn("1");
         Mockito.when(nativeCustomTemplateAd.getText("hb_cache_id_local")).thenReturn("cacheId");
-        Util.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
+        AdViewUtils.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
             @Override
             public void onPrebidNativeLoaded(PrebidNativeAd ad) {
                 fail();
@@ -511,7 +512,7 @@ public class UtilTest extends BaseSetup {
         NativeCustomTemplateAd nativeCustomTemplateAd = Mockito.mock(NativeCustomTemplateAd.class);
         Mockito.when(nativeCustomTemplateAd.getText("isPrebid")).thenReturn("0");
         Mockito.when(nativeCustomTemplateAd.getText("hb_cache_id_local")).thenReturn(cacheId);
-        Util.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
+        AdViewUtils.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
             @Override
             public void onPrebidNativeLoaded(PrebidNativeAd ad) {
                 fail();
