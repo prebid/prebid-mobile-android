@@ -24,10 +24,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -37,19 +34,11 @@ import android.webkit.CookieSyncManager;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.prebid.mobile.tasksmanager.TasksManager;
+import org.prebid.mobile.http.HTTPPost;
+import org.prebid.mobile.http.NoContextException;
+import org.prebid.mobile.http.TaskResult;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -57,8 +46,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 class PrebidServerAdapter implements DemandAdapter {
     private ArrayList<ServerConnector> serverConnectors;
@@ -71,18 +58,7 @@ class PrebidServerAdapter implements DemandAdapter {
     public void requestDemand(RequestParams params, DemandAdapterListener listener, String auctionId) {
         final ServerConnector connector = new ServerConnector(this, listener, params, auctionId);
         serverConnectors.add(connector);
-        if (Looper.myLooper() == Looper.getMainLooper()) {
-            TasksManager.getInstance().executeOnBackgroundThread(new Runnable() {
-                @Override
-                public void run() {
-                    ServerConnector.TaskResult<JSONObject> result = connector.execute();
-                    connector.processResult(result);
-                }
-            });
-        } else {
-            ServerConnector.TaskResult<JSONObject> result = connector.execute();
-            connector.processResult(result);
-        }
+        connector.execute();
     }
 
     @Override
@@ -97,7 +73,7 @@ class PrebidServerAdapter implements DemandAdapter {
         serverConnectors.removeAll(toRemove);
     }
 
-    static class ServerConnector {
+    static class ServerConnector extends HTTPPost {
 
         private static final int TIMEOUT_COUNT_DOWN_INTERVAL = 500;
 
@@ -122,131 +98,30 @@ class PrebidServerAdapter implements DemandAdapter {
             adType = requestParams.getAdType();
         }
 
-        private TaskResult<JSONObject> execute() {
+        @Override
+        protected void onPostExecute(TaskResult<JSONObject> response) {
+            processResult(response);
+
+        }
+
+         public void execute() {
             timeoutCountDownTimer.start();
-            try {
-                long demandFetchStartTime = System.currentTimeMillis();
+            super.execute();
+        }
 
-                BidLog.BidLogEntry entry = new BidLog.BidLogEntry();
+        @Override
+        protected String getUrl() {
+            return PrebidMobile.getPrebidServerHost().getHostUrl();
+        }
 
-                URL url = new URL(getHost());
-                entry.setRequestUrl(getHost());
+        @Override
+        protected void setTimeoutMillisUpdated(boolean b) {
+            PrebidMobile.timeoutMillisUpdated = b;
+        }
 
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setDoOutput(true);
-                conn.setDoInput(true);
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setRequestProperty("Accept", "application/json");
-                if(canIAccessDeviceData()) {
-                    String existingCookie = getExistingCookie();
-                    if (existingCookie != null) {
-                        conn.setRequestProperty(PrebidServerSettings.COOKIE_HEADER, existingCookie);
-                    } // todo still pass cookie if limit ad tracking?
-                }
-                conn.setRequestMethod("POST");
-                conn.setConnectTimeout(PrebidMobile.getTimeoutMillis());
-
-                // Add post data
-                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
-                JSONObject postData = getPostData();
-                String postString = postData.toString();
-                LogUtil.d("Sending request for auction " + auctionId + " with post data: " + postString);
-                wr.write(postString);
-                wr.flush();
-
-                entry.setRequestBody(postString);
-
-                // Start the connection
-                conn.connect();
-
-                // Read request response
-                int httpResult = conn.getResponseCode();
-                long demandFetchEndTime = System.currentTimeMillis();
-
-                entry.setResponseCode(httpResult);
-
-                if (httpResult == HttpURLConnection.HTTP_OK) {
-                    StringBuilder builder = new StringBuilder();
-                    InputStream is = conn.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        builder.append(line);
-                    }
-                    reader.close();
-                    is.close();
-                    String result = builder.toString();
-                    entry.setResponse(result);
-                    JSONObject response = new JSONObject(result);
-                    httpCookieSync(conn.getHeaderFields());
-                    // in the future, this can be improved to parse response base on request versions
-                    if (!PrebidMobile.timeoutMillisUpdated) {
-                        int tmaxRequest = -1;
-                        try {
-                            tmaxRequest = response.getJSONObject("ext").getInt("tmaxrequest");
-                        } catch (JSONException e) {
-                            // ignore this
-                        }
-                        if (tmaxRequest >= 0) {
-                            PrebidMobile.setTimeoutMillis(Math.min((int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200, 2000)); // adding 200ms as safe time
-                            PrebidMobile.timeoutMillisUpdated = true;
-                        }
-                    }
-
-                    BidLog.getInstance().setLastEntry(entry);
-
-                    return new TaskResult<>(response);
-                } else if (httpResult >= HttpURLConnection.HTTP_BAD_REQUEST) {
-                    StringBuilder builder = new StringBuilder();
-                    InputStream is = conn.getErrorStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        builder.append(line);
-                    }
-                    reader.close();
-                    is.close();
-                    String result = builder.toString();
-                    entry.setResponse(result);
-                    LogUtil.d("Getting response for auction " + getAuctionId() + ": " + result);
-                    Pattern storedRequestNotFound = Pattern.compile("^Invalid request: Stored Request with ID=\".*\" not found.");
-                    Pattern storedImpNotFound = Pattern.compile("^Invalid request: Stored Imp with ID=\".*\" not found.");
-                    Pattern invalidBannerSize = Pattern.compile("^Invalid request: Request imp\\[\\d\\].banner.format\\[\\d\\] must define non-zero \"h\" and \"w\" properties.");
-                    Pattern invalidInterstitialSize = Pattern.compile("Invalid request: Unable to set interstitial size list");
-                    Matcher m = storedRequestNotFound.matcher(result);
-                    Matcher m2 = invalidBannerSize.matcher(result);
-                    Matcher m3 = storedImpNotFound.matcher(result);
-                    Matcher m4 = invalidInterstitialSize.matcher(result);
-
-                    BidLog.getInstance().setLastEntry(entry);
-
-                    if (m.find() || result.contains("No stored request")) {
-                        return new TaskResult<>(ResultCode.INVALID_ACCOUNT_ID);
-                    } else if (m3.find() || result.contains("No stored imp")) {
-                        return new TaskResult<>(ResultCode.INVALID_CONFIG_ID);
-                    } else if (m2.find() || m4.find() || result.contains("Request imp[0].banner.format")) {
-                        return new TaskResult<>(ResultCode.INVALID_SIZE);
-                    } else {
-                        return new TaskResult<>(ResultCode.PREBID_SERVER_ERROR);
-                    }
-                }
-
-            } catch (MalformedURLException e) {
-                return new TaskResult<>(e);
-            } catch (UnsupportedEncodingException e) {
-                return new TaskResult<>(e);
-            } catch (SocketTimeoutException ex) {
-                return new TaskResult<>(ResultCode.TIMEOUT);
-            } catch (IOException e) {
-                return new TaskResult<>(e);
-            } catch (JSONException e) {
-                return new TaskResult<>(e);
-            } catch (NoContextException ex) {
-                return new TaskResult<>(ResultCode.INVALID_CONTEXT);
-            } catch (Exception e) {
-                return new TaskResult<>(e);
-            }
-            return new TaskResult<>(new RuntimeException("ServerConnector exception"));
+        @Override
+        protected boolean isTimeoutMillisUpdated() {
+            return PrebidMobile.timeoutMillisUpdated;
         }
 
         private void processResult(TaskResult<JSONObject> taskResult) {
@@ -361,7 +236,7 @@ class PrebidServerAdapter implements DemandAdapter {
             prebidServerAdapter.serverConnectors.remove(this);
         }
 
-        String getAuctionId() {
+        protected String getAuctionId() {
             return auctionId;
         }
 
@@ -395,10 +270,6 @@ class PrebidServerAdapter implements DemandAdapter {
             }
         }
 
-        private String getHost() {
-            return PrebidMobile.getPrebidServerHost().getHostUrl();
-        }
-
         /**
          * Synchronize the uuid2 cookie to the Webview Cookie Jar
          * This is only done if there is no present cookie.
@@ -406,7 +277,7 @@ class PrebidServerAdapter implements DemandAdapter {
          * @param headers headers to extract cookies from for syncing
          */
         @SuppressWarnings("deprecation")
-        private void httpCookieSync(Map<String, List<String>> headers) {
+        protected void httpCookieSync(Map<String, List<String>> headers) {
             if (headers == null || headers.isEmpty()) return;
             CookieManager cm = CookieManager.getInstance();
             if (cm == null) {
@@ -448,7 +319,7 @@ class PrebidServerAdapter implements DemandAdapter {
             }
         }
 
-        private String getExistingCookie() {
+        protected String getExistingCookie() {
             try {
                 CookieSyncManager.createInstance(PrebidMobile.getApplicationContext());
                 CookieManager cm = CookieManager.getInstance();
@@ -469,7 +340,7 @@ class PrebidServerAdapter implements DemandAdapter {
         }
 
 
-        private JSONObject getPostData() throws NoContextException {
+        protected JSONObject getPostData() throws NoContextException {
 
             JSONObject postData = new JSONObject();
             try {
@@ -1091,7 +962,7 @@ class PrebidServerAdapter implements DemandAdapter {
             return regs;
         }
 
-        private boolean canIAccessDeviceData() {
+        protected boolean canIAccessDeviceData() {
             //fetch advertising identifier based TCF 2.0 Purpose1 value
             //truth table
             /*
@@ -1113,45 +984,6 @@ class PrebidServerAdapter implements DemandAdapter {
             }
 
             return setDeviceId;
-        }
-
-        private static class NoContextException extends Exception {
-        }
-
-        private static class TaskResult<T> {
-            @Nullable
-            private T result;
-            @Nullable
-            private ResultCode resultCode;
-            @Nullable
-            private Exception error;
-
-            @Nullable
-            public T getResult() {
-                return result;
-            }
-
-            @Nullable
-            public ResultCode getResultCode() {
-                return resultCode;
-            }
-
-            @Nullable
-            public Exception getError() {
-                return error;
-            }
-
-            private TaskResult(@NonNull T result) {
-                this.result = result;
-            }
-
-            private TaskResult(@NonNull ResultCode resultCode) {
-                this.resultCode = resultCode;
-            }
-
-            private TaskResult(@NonNull Exception error) {
-                this.error = error;
-            }
         }
 
         class TimeoutCountDownTimer extends CountDownTimer {
