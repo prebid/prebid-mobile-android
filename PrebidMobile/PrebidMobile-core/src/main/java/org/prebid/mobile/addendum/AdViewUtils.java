@@ -269,7 +269,7 @@ public final class AdViewUtils {
                         String[] results = s.split("%%");
                         String cacheId = results[2];
                         if (CacheManager.isValid(cacheId)) {
-                            PrebidNativeAd ad = PrebidNativeAd.create(cacheId);
+                            PrebidNativeAd ad = createPrebidNativeAd(cacheId, listener);
                             if (ad != null) {
                                 listener.onPrebidNativeLoaded(ad);
                                 return;
@@ -286,6 +286,19 @@ public final class AdViewUtils {
                 listener.onPrebidNativeNotFound();
             }
         }
+    }
+
+    private static PrebidNativeAd createPrebidNativeAd(String cacheId, PrebidNativeAdListener listener) {
+        Class clazz = null;
+        try {
+            clazz = Class.forName("org.prebid.mobile.PrebidNativeAd");
+            Method method = clazz.getDeclaredMethod("create", String.class);
+            method.setAccessible(true);
+            return (PrebidNativeAd) method.invoke(null, cacheId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
@@ -417,7 +430,7 @@ public final class AdViewUtils {
         String isPrebid = (String) callMethodOnObject(object, "getText", "isPrebid");
         if ("1".equals(isPrebid)) {
             String cacheId = (String) callMethodOnObject(object, "getText", "hb_cache_id_local");
-            PrebidNativeAd ad = PrebidNativeAd.create(cacheId);
+            PrebidNativeAd ad = createPrebidNativeAd(cacheId, listener);
             if (ad != null) {
                 listener.onPrebidNativeLoaded(ad);
             } else {
@@ -435,7 +448,7 @@ public final class AdViewUtils {
         if (isPrebid != null && isPrebid) {
             String cacheId = (String) callMethodOnObject(baseNativeAd, "getExtra", "hb_cache_id_local");
             if (CacheManager.isValid(cacheId)) {
-                PrebidNativeAd ad = PrebidNativeAd.create(cacheId);
+                PrebidNativeAd ad = createPrebidNativeAd(cacheId, listener);
                 if (ad != null) {
                     listener.onPrebidNativeLoaded(ad);
                     return;

@@ -47,7 +47,7 @@ public class PrebidNativeAd {
     private ArrayList<ImpressionTracker> impressionTrackers;
 
 
-    public static PrebidNativeAd create(String cacheId) {
+    static PrebidNativeAd create(String cacheId) {
         String content = CacheManager.get(cacheId);
         if (!TextUtils.isEmpty(content)) {
             try {
