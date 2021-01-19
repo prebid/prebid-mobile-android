@@ -34,6 +34,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    buildTypes {
+
+        debug {
+            minifyEnabled false
+        }
+    }
 }
 
 project.gradle.taskGraph.whenReady {
@@ -52,9 +59,15 @@ project.gradle.taskGraph.whenReady {
 
 dependencies {
 
+//    LocalMaven
+//    implementation 'org.prebid:prebid-mobile-sdk:+'
+//    implementation 'org.prebid:prebid-mobile-sdk-core:+'
+
+//    Maven
 //    implementation 'org.prebid:prebid-mobile-sdk:1.8'
 //    implementation 'org.prebid:prebid-mobile-sdk-core:1.8'
 
+//    Source code
     implementation project(':PrebidMobile')
 
     localJarImplementation fileTree(dir: 'libs', include: ['*.jar'])

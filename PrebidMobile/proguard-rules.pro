@@ -20,7 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keepattributes InnerClasses
+-keepattributes InnerClasses, Signature
 -keep public enum org.prebid.mobile.TargetingParams$** {
     *;
 }

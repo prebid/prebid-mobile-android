@@ -1,5 +1,47 @@
 apply from: 'shared-build.gradle'
 
+//LocalMaven
+project.afterEvaluate {
+    publishing {
+        publications {
+            library(MavenPublication) {
+                setGroupId "org.prebid"
+                setArtifactId "prebid-mobile-sdk"
+                version android.defaultConfig.versionName
+
+                artifact bundleDebugAar
+
+                pom.withXml {
+
+                    def dependenciesNode = asNode().appendNode('dependencies')
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', 'org.prebid')
+                    dependencyNode.appendNode('artifactId', 'prebid-mobile-sdk-core')
+                    dependencyNode.appendNode('version', android.defaultConfig.versionName)
+                }
+            }
+        }
+    }
+}
+
+android {
+
+    defaultConfig {
+        consumerProguardFiles file('proguard-rules.pro')
+    }
+
+    buildTypes {
+
+        debug {
+            minifyEnabled false
+
+//            minifyEnabled true
+//            proguardFiles file('proguard-rules.pro')
+        }
+    }
+
+}
+
 dependencies {
 
     api project(':PrebidMobile-core')
