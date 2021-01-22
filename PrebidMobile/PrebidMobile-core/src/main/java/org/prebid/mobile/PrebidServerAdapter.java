@@ -310,6 +310,10 @@ class PrebidServerAdapter implements DemandAdapter {
                                             if (bid.getJSONObject("ext").getJSONObject("prebid").getString("type").equalsIgnoreCase("native")) {
                                                 String cacheId = CacheManager.save(bid.toString());
                                                 if (cacheId != null) {
+                                                    if (bid.has("exp")) {
+                                                        Long exp = bid.optLong("exp");
+                                                        CacheManager.setExpiry(cacheId, exp);
+                                                    }
                                                     keywords.put("hb_cache_id_local", cacheId);
                                                 }
                                             }

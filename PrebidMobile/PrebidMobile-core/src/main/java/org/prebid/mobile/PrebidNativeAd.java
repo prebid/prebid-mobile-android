@@ -125,7 +125,11 @@ public class PrebidNativeAd {
                         for (int count = 0; count < eventtrackers.length(); count++) {
                             JSONObject eventtracker = eventtrackers.getJSONObject(count);
                             if (eventtracker.has("url")) {
-                                ad.imp_trackers.add(eventtracker.getString("url"));
+                                String impUrl = eventtracker.getString("url");
+                                if (impUrl.contains("{AUCTION_PRICE}") && details.has("price")) {
+                                    impUrl = impUrl.replace("{AUCTION_PRICE}", details.getString("price"));
+                                }
+                                ad.imp_trackers.add(impUrl);
                             }
                         }
                     }

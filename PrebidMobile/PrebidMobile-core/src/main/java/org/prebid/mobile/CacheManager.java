@@ -26,6 +26,7 @@ import java.util.UUID;
 public class CacheManager {
     private static final int NATIVE_AD_EXPIRY_TIMEOUT = 300000;
     private static HashMap<String, String> savedValues = new HashMap<>();
+    private static HashMap<String, Long> expiryIntervalMap = new HashMap<>();
     private static HashMap<String, CacheExpiryListener> cacheExpiryListenerMap = new HashMap<>();
     private static Handler handler = new Handler();
 
@@ -41,11 +42,15 @@ public class CacheManager {
                     }
                     savedValues.remove(cacheId);
                 }
-            }, NATIVE_AD_EXPIRY_TIMEOUT);
+            }, getExpiryInterval(cacheId));
             return cacheId;
         } else {
             return null;
         }
+    }
+
+    private static long getExpiryInterval(String cacheId) {
+        return expiryIntervalMap.containsKey(cacheId) ? expiryIntervalMap.get(cacheId) : NATIVE_AD_EXPIRY_TIMEOUT;
     }
 
     public static boolean isValid(String cacheId) {
@@ -56,6 +61,7 @@ public class CacheManager {
     public static void clear() {
         savedValues.clear();
         cacheExpiryListenerMap.clear();
+        expiryIntervalMap.clear();
     }
 
     protected static String get(String cacheId) {
@@ -64,6 +70,10 @@ public class CacheManager {
 
     protected static void registerCacheExpiryListener(String cacheId, CacheExpiryListener expiryListener) {
         cacheExpiryListenerMap.put(cacheId, expiryListener);
+    }
+
+    public static void setExpiry(String cacheId, long exp) {
+        expiryIntervalMap.put(cacheId, exp);
     }
 
     interface CacheExpiryListener {
