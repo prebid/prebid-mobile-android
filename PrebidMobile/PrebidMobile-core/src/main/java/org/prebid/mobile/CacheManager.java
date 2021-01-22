@@ -73,7 +73,7 @@ public class CacheManager {
     }
 
     public static void setExpiry(String cacheId, long exp) {
-        expiryIntervalMap.put(cacheId, exp);
+        expiryIntervalMap.put(cacheId, exp * 1000); //converting seconds into ms
     }
 
     interface CacheExpiryListener {
