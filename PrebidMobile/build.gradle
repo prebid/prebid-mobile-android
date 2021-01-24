@@ -30,16 +30,6 @@ android {
         consumerProguardFiles file('proguard-rules.pro')
     }
 
-    buildTypes {
-
-        debug {
-            minifyEnabled false
-
-//            minifyEnabled true
-//            proguardFiles file('proguard-rules.pro')
-        }
-    }
-
 }
 
 dependencies {

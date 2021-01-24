@@ -86,7 +86,7 @@ for n in ${!modules[@]}; do
 	# clean existing build results, exclude test task, and assemble new release build
 	(./gradlew -i --no-daemon ${modules[$n]}:assembleRelease > $LOGPATH/build.log 2>&1 || die "Build failed, check log in $LOGPATH/build.log" )
 
-	echoX "packaging ${modules[$n]}"
+	echoX "Packaging ${modules[$n]}"
 	mkdir $TEMPDIR
 	cd $TEMPDIR
 	mkdir output
@@ -96,11 +96,24 @@ for n in ${!modules[@]}; do
 	cd $AARPATH_ABSOLUTE
 	unzip -q -o ${modules[$n]}-release.aar
 	cd $TEMPDIR/output
+
+	# Extracting the Contents of a JAR File
 	jar xf $AARPATH_ABSOLUTE/classes.jar
 	rm $AARPATH_ABSOLUTE/classes.jar
-	cd $TEMPDIR/output
-	jar cf ${modules[$n]}.jar org*
 
+	# Handle ProGuard rules from .aar into .jar
+	# rename proguard.txt to proguard.pro
+	mv $AARPATH_ABSOLUTE/proguard.{txt,pro}
+	mkdir $AARPATH_ABSOLUTE/META-INF
+	mkdir $AARPATH_ABSOLUTE/META-INF/proguard
+	mv $AARPATH_ABSOLUTE/proguard.pro $AARPATH_ABSOLUTE/META-INF/proguard
+	# move META-INF into a result direcotory
+	mv $AARPATH_ABSOLUTE/META-INF $TEMPDIR/output
+
+	# Creating a JAR File
+	jar cf ${modules[$n]}.jar org* META-INF*
+
+	# move jar into a result direcotory
 	mv ${modules[$n]}.jar $OUTDIR
 
 	cd $LIBDIR
@@ -113,7 +126,7 @@ for n in ${!modules[@]}; do
 	echoX "Preparing ${modules[$n]} Sources"
 	./gradlew -i --no-daemon ${modules[$n]}:sourcesJar>$LOGPATH/sources.log 2>&1 || die "Build Sources failed, check log in $LOGPATH/sources.log"
 
-	# copy the results
+	# copy sources and javadoc into a result direcotory
 	BUILD_LIBS_PATH_ABSOLUTE="${projectPaths[$n]}/$BUILD_LIBS_PATH"
 	cp -a $BUILD_LIBS_PATH_ABSOLUTE/. $OUTDIR/
 
@@ -121,13 +134,22 @@ for n in ${!modules[@]}; do
 	rm -r $TEMPDIR
 done
 
-# Prepare fat PrebidDemo library
+# Prepare fat PrebidDemo library which can be used for LocalJar
 echo -e "\n"
 echoX "Preparing fat PrebidDemo library"
 cd $OUTDIR
 mkdir $TEMPDIR
-cd $TEMPDIR; unzip -uo $OUTDIR/PrebidMobile-core.jar
-cd $TEMPDIR; unzip -uo $OUTDIR/PrebidMobile.jar
+
+cd $TEMPDIR; 
+
+unzip -uo $OUTDIR/PrebidMobile-core.jar 
+unzip -uo $OUTDIR/PrebidMobile.jar
+
+# unzip second proguard
+unzip -B $OUTDIR/PrebidMobile.jar "META-INF/proguard/proguard.pro"
+# append text from second proguard
+cat "$TEMPDIR/META-INF/proguard/proguard.pro~" >> "$TEMPDIR/META-INF/proguard/proguard.pro"
+rm "$TEMPDIR/META-INF/proguard/proguard.pro~"
 
 rm $TEMPDIR/org/prebid/mobile/core/BuildConfig.class
 jar -cvf PrebidMobile.jar -C $TEMPDIR .
