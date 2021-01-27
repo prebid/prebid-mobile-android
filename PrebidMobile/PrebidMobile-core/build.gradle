@@ -1,5 +1,27 @@
 apply from: '../shared-build.gradle'
 
+project.afterEvaluate {
+    publishing {
+        publications {
+            library(MavenPublication) {
+                setGroupId "org.prebid"
+                setArtifactId "prebid-mobile-sdk-core"
+                version android.defaultConfig.versionName
+
+                artifact bundleDebugAar
+            }
+        }
+    }
+}
+
+android {
+
+    defaultConfig {
+        consumerProguardFiles file('proguard-rules.pro')
+    }
+
+}
+
 dependencies {
 
 }
