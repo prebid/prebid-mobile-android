@@ -8,6 +8,7 @@ include ':PrebidMobile',
 //tools
         ':DrPrebid'
 
+project(':PrebidMobile').projectDir = new File('PrebidMobile')
 project(':PrebidMobile-core').projectDir = new File('PrebidMobile/PrebidMobile-core')
 
 project(':PrebidDemoJava').projectDir = new File('Example/PrebidDemoJava')

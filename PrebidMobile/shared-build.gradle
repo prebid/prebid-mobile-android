@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -9,17 +10,10 @@ android {
         targetSdkVersion rootProject.targetSDKVersion
         versionCode rootProject.prebidVersionCode
         versionName rootProject.prebidVersionName
-
-        consumerProguardFiles project(':PrebidMobile').file('proguard-rules.pro')
     }
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles project(':PrebidMobile').file('proguard-rules.pro')
-        }
-
-        debug {
             minifyEnabled false
         }
     }
