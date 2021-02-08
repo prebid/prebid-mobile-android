@@ -17,7 +17,19 @@
 package org.prebid.mobile;
 
 public interface PrebidNativeAdEventListener {
+
+    /**
+     * Callback method for Ad's click event
+     * */
     void onAdClicked();
+
+    /**
+     * Callback method for Ad's click event
+     * */
     void onAdImpression();
+
+    /**
+     * Callback method for Ad's click event
+     * */
     void onAdExpired();
 }

@@ -182,30 +182,53 @@ public class PrebidNativeAd {
         this.sponsoredBy = sponsoredBy;
     }
 
+    /**
+     * @return String title of the Native Ad
+     * */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * @return String description of the Native Ad
+     * */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * @return String iconUrl of the Native Ad
+     * */
     public String getIconUrl() {
         return iconUrl;
     }
 
+    /**
+     * @return String imageUrl of the Native Ad
+     * */
     public String getImageUrl() {
         return imageUrl;
     }
 
+    /**
+     * @return String callToAction of the Native Ad
+     * */
     public String getCallToAction() {
         return cta;
     }
 
+    /**
+     * @return String sponsoredBy of the Native Ad
+     * */
     public String getSponsoredBy() {
         return sponsoredBy;
     }
 
+    /**
+     * This API is used to register the view for Ad Events (#onAdClicked(), #onAdImpression, #onAdExpired)
+     * @param view
+     * @param listener
+     * */
     public boolean registerView(View view, final PrebidNativeAdEventListener listener) {
         if (!expired && view != null) {
             this.listener = listener;
@@ -239,6 +262,12 @@ public class PrebidNativeAd {
         return false;
     }
 
+    /**
+     * This API is used to register a list of views for Ad Events (#onAdClicked(), #onAdImpression, #onAdExpired)
+     * @param container
+     * @param viewList
+     * @param listener
+     * */
     public boolean registerViewList(View container, List<View> viewList, final PrebidNativeAdEventListener listener) {
         if (container == null || viewList == null || viewList.isEmpty()) {
             return false;
