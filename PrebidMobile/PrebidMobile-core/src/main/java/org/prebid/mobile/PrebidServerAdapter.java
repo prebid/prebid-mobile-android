@@ -210,22 +210,8 @@ class PrebidServerAdapter implements DemandAdapter {
             } else {
                 timeoutCountDownTimer.cancel();
             }
-//            removeThisTask();
         }
-
-//        @Override
-//        @MainThread
-//        protected void onCancelled() {
-//            super.onCancelled();
-//
-//            if (timeoutFired) {
-//                notifyDemandFailed(ResultCode.TIMEOUT);
-//            } else {
-//                timeoutCountDownTimer.cancel();
-//            }
-//            removeThisTask();
-//        }
-
+        
         private void removeThisTask() {
             @Nullable
             PrebidServerAdapter prebidServerAdapter = this.prebidServerAdapter.get();

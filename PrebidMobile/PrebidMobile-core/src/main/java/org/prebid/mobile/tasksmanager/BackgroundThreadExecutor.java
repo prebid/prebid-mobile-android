@@ -1,5 +1,5 @@
 /*
- *    Copyright 2020 APPNEXUS INC
+ *    Copyright 2020-2021 Prebid.org, Inc.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import android.support.annotation.VisibleForTesting;
 
 public class BackgroundThreadExecutor implements CancellableExecutor {
 
-    private Handler h;
+    private Handler handler;
     private boolean running = false;
     private final int HANDLER_COUNT = 3;
     private int index = 0;
@@ -30,7 +30,7 @@ public class BackgroundThreadExecutor implements CancellableExecutor {
     BackgroundThreadExecutor() {
         HandlerThread backgroundThread = new HandlerThread("BackgroundThread");
         backgroundThread.start();
-        h = new Handler(backgroundThread.getLooper());
+        handler = new Handler(backgroundThread.getLooper());
         running = true;
     }
 
@@ -38,14 +38,14 @@ public class BackgroundThreadExecutor implements CancellableExecutor {
     @Override
     public void execute(Runnable runnable) {
         if (running) {
-            h.post(runnable);
+            handler.post(runnable);
         }
     }
 
     @Override
     public boolean cancel(Runnable runnable) {
         if (running) {
-            h.removeCallbacks(runnable);
+            handler.removeCallbacks(runnable);
             return true;
         }
         return false;
@@ -53,8 +53,8 @@ public class BackgroundThreadExecutor implements CancellableExecutor {
 
     public void shutdown() {
         if (running) {
-            h.getLooper().quit();
-            h = null;
+            handler.getLooper().quit();
+            handler = null;
             running = false;
         }
     }
@@ -63,13 +63,13 @@ public class BackgroundThreadExecutor implements CancellableExecutor {
         if (!running) {
             HandlerThread backgroundThread = new HandlerThread("BackgroundThread");
             backgroundThread.start();
-            h = new Handler(backgroundThread.getLooper());
+            handler = new Handler(backgroundThread.getLooper());
             running = true;
         }
     }
 
     @VisibleForTesting
     public Handler getBackgroundHandler() {
-        return h;
+        return handler;
     }
 }

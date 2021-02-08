@@ -1,5 +1,5 @@
 /*
- *    Copyright 2020 APPNEXUS INC
+ *    Copyright 2020-2021 Prebid.org, Inc.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -21,21 +21,21 @@ import android.os.Looper;
 import android.support.annotation.VisibleForTesting;
 
 public class MainThreadExecutor implements CancellableExecutor {
-    private final Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     public void execute(Runnable runnable) {
-        mHandler.post(runnable);
+        handler.post(runnable);
     }
 
     @Override
     public boolean cancel(Runnable runnable) {
-        mHandler.removeCallbacks(runnable);
+        handler.removeCallbacks(runnable);
         return true;
     }
 
     @VisibleForTesting
     public Handler getMainExecutor() {
-        return mHandler;
+        return handler;
     }
 }
