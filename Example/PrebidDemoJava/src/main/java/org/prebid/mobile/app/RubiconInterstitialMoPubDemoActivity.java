@@ -11,8 +11,10 @@ import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 
 import org.prebid.mobile.AdUnit;
+import org.prebid.mobile.Host;
 import org.prebid.mobile.InterstitialAdUnit;
 import org.prebid.mobile.OnCompleteListener;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 
 public class RubiconInterstitialMoPubDemoActivity extends AppCompatActivity {
@@ -31,6 +33,9 @@ public class RubiconInterstitialMoPubDemoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
+        PrebidMobile.setStoredAuctionResponse(Constants.PBS_STORED_RESPONSE_300x250_RUBICON);
         adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL_RUBICON);
         final MoPubInterstitial mpInterstitial = new MoPubInterstitial(this, Constants.MOPUB_INTERSTITIAL_ADUNIT_ID_RUBICON);
         mpInterstitial.setInterstitialAdListener(new MoPubInterstitial.InterstitialAdListener() {

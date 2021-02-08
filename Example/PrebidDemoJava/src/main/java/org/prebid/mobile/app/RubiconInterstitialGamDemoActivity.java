@@ -12,11 +12,13 @@ import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
 
 import org.prebid.mobile.AdUnit;
+import org.prebid.mobile.Host;
 import org.prebid.mobile.InterstitialAdUnit;
 import org.prebid.mobile.OnCompleteListener;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 
-public class RubiconIntersitialGamDemoActivity extends AppCompatActivity {
+public class RubiconInterstitialGamDemoActivity extends AppCompatActivity {
     AdUnit adUnit;
 
     @Override
@@ -32,6 +34,9 @@ public class RubiconIntersitialGamDemoActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
+        PrebidMobile.setPrebidServerHost(Host.RUBICON);
+        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
+        PrebidMobile.setStoredAuctionResponse(Constants.PBS_STORED_RESPONSE_300x250_RUBICON);
         adUnit = new InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL_RUBICON);
         final PublisherInterstitialAd amInterstitial = new PublisherInterstitialAd(this);
         amInterstitial.setAdUnitId(Constants.DFP_INTERSTITIAL_ADUNIT_ID_RUBICON);
@@ -47,9 +52,9 @@ public class RubiconIntersitialGamDemoActivity extends AppCompatActivity {
                 super.onAdFailedToLoad(i);
                 AlertDialog.Builder builder;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder = new AlertDialog.Builder(RubiconIntersitialGamDemoActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                    builder = new AlertDialog.Builder(RubiconInterstitialGamDemoActivity.this, android.R.style.Theme_Material_Dialog_Alert);
                 } else {
-                    builder = new AlertDialog.Builder(RubiconIntersitialGamDemoActivity.this);
+                    builder = new AlertDialog.Builder(RubiconInterstitialGamDemoActivity.this);
                 }
                 builder.setTitle("Failed to load AdManager interstitial ad")
                         .setMessage("Error code: " + i)
