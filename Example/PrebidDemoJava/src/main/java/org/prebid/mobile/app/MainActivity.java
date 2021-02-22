@@ -269,6 +269,10 @@ public class MainActivity extends AppCompatActivity {
                     int refreshMillis = Integer.valueOf(refreshMillisString);
                     intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
                 }
+            } else if (adType.equals(getString(R.string.adTypeInAppNative)) && adServer.equals(getString(R.string.adServerAdManager))) {
+                intent = new Intent(this, XandrNativeInAppGAMDemoActivity.class);
+            } else if (adType.equals(getString(R.string.adTypeInAppNative)) && adServer.equals(getString(R.string.adServerMoPub))) {
+                intent = new Intent(this, XandrNativeInAppMoPubDemoActivity.class);
             }
         }
         if (intent != null) {

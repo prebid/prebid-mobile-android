@@ -43,6 +43,7 @@ public class Constants {
     static final String DFP_BANNER_ADUNIT_ID_ALL_SIZES_APPNEXUS = "/19968336/PrebidMobileValidator_Banner_All_Sizes";
     static final String DFP_INTERSTITIAL_ADUNIT_ID_APPNEXUS = "/19968336/PriceCheck_Interstitial";
     static final String DFP_IN_BANNER_NATIVE_ADUNIT_ID_APPNEXUS = "/19968336/Wei_Prebid_Native_Test";
+    static final String DFP_NATIVE_NATIVE_ADUNIT_ID_APPNEXUS = "/19968336/Abhas_test_native_native_adunit";
     //RubiconProject
     // Prebid server config ids
     static final String PBS_ACCOUNT_ID_RUBICON = "1001";

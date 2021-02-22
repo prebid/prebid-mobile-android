@@ -1,0 +1,69 @@
+{
+  "id": "465493aa-0a3c-4ca4-915f-f2c9f1377941",
+  "seatbid": [
+    {
+      "bid": [
+        {
+          "id": "6710145726530182423",
+          "impid": "PrebidMobile",
+          "price": 0.05,
+          "adm": "{\"ver\":\"1.2\",\"assets\":[{\"id\":1,\"img\":{\"type\":1,\"url\":\"https:\/\/vcdn.adnxs.com\/p\/creative-image\/be\/53\/27\/49\/be532749-1ede-4655-91c9-3d6d07081fb6.png\",\"w\":40,\"h\":40,\"ext\":{\"appnexus\":{\"prevent_crop\":0}}}},{\"id\":2,\"img\":{\"type\":3,\"url\":\"https:\/\/vcdn.adnxs.com\/p\/creative-image\/7e\/71\/90\/27\/7e719027-80ef-4664-9b6d-a763da4cea4e.png\",\"w\":300,\"h\":250,\"ext\":{\"appnexus\":{\"prevent_crop\":0}}}},{\"title\":{\"text\":\"This is an RTB ad\"}},{\"id\":3,\"data\":{\"type\":1,\"value\":\"AppNexus\"}},{\"id\":4,\"data\":{\"type\":2,\"value\":\"The industry is trending native. Just see this ad as an example. Contact AppNexus for more!\"}},{\"id\":5,\"data\":{\"type\":12,\"value\":\"More\"}}],\"link\":{\"url\":\"https:\/\/sin3-ib.adnxs.com\/click?mpmZmZmZqT-amZmZmZmpPwAAAAAAAOA_mpmZmZmZqT-amZmZmZmpPzTiAd9tv5s1qkBWN3HQUUmaML5fAAAAAHu99gBuJwAAbicAAAIAAACRL6wJ-MwcAAAAAABVU0QAVVNEAAEAAQDILwAAAAABAgMCAAAAAMYAlSbJqwAAAAA.\/bcr=AAAAAAAA8D8=\/pp=${AUCTION_PRICE}\/cnd=%21XBNcTAi4reMWEJHfsE0Y-JlzIAQoADGamZmZmZmpPzoJU0lOMzo1NDIwQL0pSQAAAAAAAPA_UQAAAAAAAAAAWQAAAAAAAAAAYQAAAAAAAAAAaQAAAAAAAAAAcQAAAAAAAAAAeAA.\/cca=MTAwOTQjU0lOMzo1NDIw\/bn=89159\/clickenc=http%3A%2F%2Fappnexus.com\"},\"jstracker\":\"\\u003cscript type=\\\"text\/javascript\\\" async=\\\"true\\\" src=\\\"https:\/\/cdn.adnxs.com\/v\/app\/201\/trk.js#app;vk=appnexus.com-omid;tv=app-native-23hs;dom_id=%native_dom_id%;st=2;d=1x1;vc=iab;vid_ccr=1;tag_id=16170363;cb=https%3A%2F%2Fsin3-ib.adnxs.com%2Fvevent%3Fan_audit%3D0%26e%3DwqT_3QLKCsBKBQAAAwDWAAUBCJrh-P0FELTEh_jd7e_NNRiqgdm6k470qEkqNgmamZmZmZmpPxGaAQgQmak_GQAFAQjgPyERGwApEQkAMQUauADgPzD7-toHOO5OQO5OSAJQkd-wTVj4mXNgAGjI34wBeMe4BYABAYoBA1VTRJIBAQbwRpgBAaABAagBAbABALgBAsABA8gBAtABANgBAOABAPABAIoCPHVmKCdhJywgMzM5MzUyMCwgMTYwNjI5OTgwMik7dWYoJ3InARQYMjI3OTMxMwELGR_w9ZIC4QMhZGxFN1JRaTRyZU1XRUpIZnNFMFlBQ0Q0bVhNd0FEZ0FRQVJJN2s1US1fcmFCMWdBWU5JR2FBQndESGlzQTRBQkRJZ0JyQU9RQVFDWUFRQ2dBUUdvQVFPd0FRQzVBWFdyRFd5YW1ha193UUYxcXcxc21wbXBQOGtCV2d3dGlyU085VF9aQVFBQUFBQUFBUEFfNEFFQTlRRUFBQUFBbUFJQW9BSUF0UUlBQUFBQXZRSUFBQUFBNEFJQTZBSUEtQUlBZ0FNQm1BTUJ1Z01KVTBsT016bzFOREl3NEFPOUtZZ0VBSkFFQUpnRUFjRUVBQUFBQQVqCERKQgUICQEYMkFRQThRUQkNAQEcSWdGckNxcEIRExRQQV9zUVUBGgkBCE1FRgkJAQEEREoVKAxBQUEwLigABE5rLigAuGdCWWduOEFYaV9mRUQtQVh3ajg4QmdnWURWVk5FaUFZQWtBWUJtQVlBb1FhYW1aBQIscFA2Z0dBYklHSkFrAV8JAQBCKSAFAQRCawUHBQEAQx0YRExnR0NnLi6aAokBIVhCTmNUQTblASwtSmx6SUFRb0FER2EFaxhabXBQem9KLkUBEFFMMHBTPQUAVREMDEFBQVcdDABZHQwAYR0MAGMdDPBhZUFBLtgCAOACyqhNgAMAiAMBkAMAmAMUoAMBqgMAwAPgqAHIAwDSAzAIEBIkZDlhOGZkMDktMDExMy00NmEzLThkZjMtYzFhMWVlYzJiZWVlGAEiBGRwaWTSAyoIChIkZDmKMwD0DgEA2AMA4AMA6AMC-AMAgAQAkgQJL29wZW5ydGIymAQAogQPMjIzLjIyNi4xNDguMjM5qAS2TrIEDAgAEAAYACAAMAA4ALgEAMAEAMgEANIEDzEwMDk0I1NJTjM6NTQyMNoEAggB4AQA8ASR37BNggUgb3JnLnByZWJpZC5tb2JpbGUucHJlYmlkamF2YWRlbW-IBQGYBQCgBf___________wGqBSQ0NjU0OTNhYS0wYTNjLTRjYTQtOTE1Zi1mMmM5ZjEzNzc5NDHABQDJBQAAAAAAAPA_0gUJCQAAAAAAAAAA2AUB4AUB8AUB-gUECAAQAJAGAZgGALgGAMEGAAAAAAAA8D_QBtYz2gYWChAABREZAVwQABgA4AYM8gYCCACABwGIBwCgB0G6Bw8BSAAYCf4w6Q1AAMgHx7gF0gcNCRE6AThA2gcGCAAQABgA4AcA6gcCCAA.%26s%3Dc3ae5f12da6cbacd1d7150499062dec2bf608365;ts=1606299802;cet=0;cecb=\\\"\\u003e\\u003c\/script\\u003e\",\"eventtrackers\":[{\"event\":1,\"method\":1,\"url\":\"https:\/\/sin3-ib.adnxs.com\/it?an_audit=0\\u0026e=wqT_3QLKCsBKBQAAAwDWAAUBCJrh-P0FELTEh_jd7e_NNRiqgdm6k470qEkqNgmamZmZmZmpPxGaAQgQmak_GQAFAQjgPyERGwApEQkAMQUauADgPzD7-toHOO5OQO5OSAJQkd-wTVj4mXNgAGjI34wBeMe4BYABAYoBA1VTRJIBAQbwRpgBAaABAagBAbABALgBAsABA8gBAtABANgBAOABAPABAIoCPHVmKCdhJywgMzM5MzUyMCwgMTYwNjI5OTgwMik7dWYoJ3InARQYMjI3OTMxMwELGR_w9ZIC4QMhZGxFN1JRaTRyZU1XRUpIZnNFMFlBQ0Q0bVhNd0FEZ0FRQVJJN2s1US1fcmFCMWdBWU5JR2FBQndESGlzQTRBQkRJZ0JyQU9RQVFDWUFRQ2dBUUdvQVFPd0FRQzVBWFdyRFd5YW1ha193UUYxcXcxc21wbXBQOGtCV2d3dGlyU085VF9aQVFBQUFBQUFBUEFfNEFFQTlRRUFBQUFBbUFJQW9BSUF0UUlBQUFBQXZRSUFBQUFBNEFJQTZBSUEtQUlBZ0FNQm1BTUJ1Z01KVTBsT016bzFOREl3NEFPOUtZZ0VBSkFFQUpnRUFjRUVBQUFBQQVqCERKQgUICQEYMkFRQThRUQkNAQEcSWdGckNxcEIRExRQQV9zUVUBGgkBCE1FRgkJAQEEREoVKAxBQUEwLigABE5rLigAuGdCWWduOEFYaV9mRUQtQVh3ajg4QmdnWURWVk5FaUFZQWtBWUJtQVlBb1FhYW1aBQIscFA2Z0dBYklHSkFrAV8JAQBCKSAFAQRCawUHBQEAQx0YRExnR0NnLi6aAokBIVhCTmNUQTblASwtSmx6SUFRb0FER2EFaxhabXBQem9KLkUBEFFMMHBTPQUAVREMDEFBQVcdDABZHQwAYR0MAGMdDPBhZUFBLtgCAOACyqhNgAMAiAMBkAMAmAMUoAMBqgMAwAPgqAHIAwDSAzAIEBIkZDlhOGZkMDktMDExMy00NmEzLThkZjMtYzFhMWVlYzJiZWVlGAEiBGRwaWTSAyoIChIkZDmKMwD0DgEA2AMA4AMA6AMC-AMAgAQAkgQJL29wZW5ydGIymAQAogQPMjIzLjIyNi4xNDguMjM5qAS2TrIEDAgAEAAYACAAMAA4ALgEAMAEAMgEANIEDzEwMDk0I1NJTjM6NTQyMNoEAggB4AQA8ASR37BNggUgb3JnLnByZWJpZC5tb2JpbGUucHJlYmlkamF2YWRlbW-IBQGYBQCgBf___________wGqBSQ0NjU0OTNhYS0wYTNjLTRjYTQtOTE1Zi1mMmM5ZjEzNzc5NDHABQDJBQAAAAAAAPA_0gUJCQAAAAAAAAAA2AUB4AUB8AUB-gUECAAQAJAGAZgGALgGAMEGAAAAAAAA8D_QBtYz2gYWChAABREZAVwQABgA4AYM8gYCCACABwGIBwCgB0G6Bw8BSAAYCf4w6Q1AAMgHx7gF0gcNCRE6AThA2gcGCAAQABgA4AcA6gcCCAA.\\u0026s=c3ae5f12da6cbacd1d7150499062dec2bf608365\\u0026pp=${AUCTION_PRICE}\"}]}",
+          "adid": "162279313",
+          "adomain": [
+            "appnexus.com"
+          ],
+          "iurl": "https:\/\/sin3-ib.adnxs.com\/cr?id=162279313",
+          "cid": "10094",
+          "crid": "162279313",
+          "ext": {
+            "prebid": {
+              "cache": {
+                "key": "",
+                "url": "",
+                "bids": {
+                  "url": "prebid.sin3.adnxs.com\/pbc\/v1\/cache?uuid=dfad62f2-8ed5-4cf8-a597-f702147b7c98",
+                  "cacheId": "dfad62f2-8ed5-4cf8-a597-f702147b7c98"
+                }
+              },
+              "targeting": {
+                "hb_bidder": "appnexus",
+                "hb_bidder_appnexus": "appnexus",
+                "hb_cache_host": "prebid.sin3.adnxs.com",
+                "hb_cache_host_appnex": "prebid.sin3.adnxs.com",
+                "hb_cache_id": "dfad62f2-8ed5-4cf8-a597-f702147b7c98",
+                "hb_cache_id_appnexus": "dfad62f2-8ed5-4cf8-a597-f702147b7c98",
+                "hb_cache_path": "\/pbc\/v1\/cache",
+                "hb_cache_path_appnex": "\/pbc\/v1\/cache",
+                "hb_env": "mobile-app",
+                "hb_env_appnexus": "mobile-app",
+                "hb_pb": "0.00",
+                "hb_pb_appnexus": "0.00"
+              },
+              "type": "native",
+              "video": {
+                "duration": 0,
+                "primary_category": ""
+              }
+            },
+            "bidder": {
+              "appnexus": {
+                "brand_id": 1,
+                "auction_id": 3862891584014115380,
+                "bidder_id": 2,
+                "bid_ad_type": 3
+              }
+            }
+          }
+        }
+      ],
+      "seat": "appnexus"
+    }
+  ],
+  "cur": "USD",
+  "ext": {
+    "responsetimemillis": {
+      "appnexus": 32
+    },
+    "tmaxrequest": 500
+  }
+}
