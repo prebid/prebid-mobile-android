@@ -22,6 +22,8 @@ import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
+import org.prebid.mobile.tasksmanager.TasksManager;
+
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -131,12 +133,19 @@ class DemandFetcher {
         LogUtil.d("notifyListener:" + resultCode);
 
         if (listener != null) {
-            listener.onComplete(resultCode);
-        }
-        // for single request, if done, finish current fetcher,
-        // let ad unit create a new fetcher for next request
-        if (periodMillis <= 0) {
-            destroy();
+            TasksManager.getInstance().executeOnMainThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (listener != null) {
+                        listener.onComplete(resultCode);
+                    }
+                    // for single request, if done, finish current fetcher,
+                    // let ad unit create a new fetcher for next request
+                    if (periodMillis <= 0) {
+                        destroy();
+                    }
+                }
+            });
         }
     }
 

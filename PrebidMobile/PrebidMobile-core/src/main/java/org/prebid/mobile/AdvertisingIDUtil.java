@@ -18,9 +18,10 @@ package org.prebid.mobile;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.AsyncTask;
-import android.os.Build;
+import android.os.Looper;
 import android.text.TextUtils;
+
+import org.prebid.mobile.tasksmanager.TasksManager;
 
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
@@ -56,7 +57,7 @@ class AdvertisingIDUtil {
     private static STATE state = STATE.NOT_FETCHED;
 
     /**
-     * Starts an AsyncTask to retrieve and set the AAID.
+     * Fetch a background executor to retrieve and set the AAID.
      * Does nothing if PrebidServerSettings.aaid is already set for the SDK.
      *
      * @param context context to retrieve the AAID on.
@@ -68,11 +69,7 @@ class AdvertisingIDUtil {
         }
 
         AAIDTask getAAIDTask = new AAIDTask(context);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            getAAIDTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            getAAIDTask.execute();
-        }
+        getAAIDTask.execute();
     }
 
     /**
@@ -80,7 +77,7 @@ class AdvertisingIDUtil {
      * Sets the SDK's aaid value to the result if successful,
      * or null if failed.
      */
-    private static class AAIDTask extends AsyncTask<Void, Void, Void> {
+    private static class AAIDTask {
         private static final String cAdvertisingIdClientName
                 = "com.google.android.gms.ads.identifier.AdvertisingIdClient";
         private static final String cAdvertisingIdClientInfoName
@@ -92,8 +89,20 @@ class AdvertisingIDUtil {
             this.context = new WeakReference<Context>(context);
         }
 
-        @Override
-        protected Void doInBackground(Void... params) {
+        protected void execute() {
+            if (Looper.myLooper() == Looper.getMainLooper()) {
+                TasksManager.getInstance().executeOnBackgroundThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        fetchAAID();
+                    }
+                });
+            } else {
+                fetchAAID();
+            }
+        }
+
+        private void fetchAAID() {
             state = STATE.FETCHING;
             // attempt to retrieve AAID from GooglePlayServices via reflection
             // Setting aaid in the backend thread
@@ -129,7 +138,6 @@ class AdvertisingIDUtil {
             } else {
                 state = STATE.FETCHED;
             }
-            return null;
         }
     }
 }

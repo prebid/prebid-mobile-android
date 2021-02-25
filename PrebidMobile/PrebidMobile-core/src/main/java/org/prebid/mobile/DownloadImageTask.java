@@ -2,35 +2,55 @@ package org.prebid.mobile;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.os.Looper;
 import android.widget.ImageView;
+
+import org.prebid.mobile.tasksmanager.TasksManager;
 
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
-public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+public class DownloadImageTask {
+
     WeakReference<ImageView> imageRef;
 
-    public DownloadImageTask(ImageView image) {
+    protected DownloadImageTask(ImageView image) {
         this.imageRef = new WeakReference<>(image);
     }
 
-    protected Bitmap doInBackground(String... urls) {
-        String urldisplay = urls[0];
-        Bitmap mIcon11 = null;
+    protected void execute(final String url) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            TasksManager.getInstance().executeOnBackgroundThread(new Runnable() {
+                @Override
+                public void run() {
+                    fetchAndProcessImage(url);
+                }
+            });
+        } else {
+            fetchAndProcessImage(url);
+        }
+    }
+
+    private void fetchAndProcessImage(String url) {
+        Bitmap bitmap = null;
         try {
-            InputStream in = new java.net.URL(urldisplay).openStream();
-            mIcon11 = BitmapFactory.decodeStream(in);
+            InputStream in = new java.net.URL(url).openStream();
+            bitmap = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
             LogUtil.e("Error", e.getMessage());
         }
-        return mIcon11;
+        processImage(bitmap);
     }
 
-    protected void onPostExecute(Bitmap result) {
-        ImageView image = this.imageRef.get();
-        if (image != null) {
-            image.setImageBitmap(result);
-        }
+    private void processImage(final Bitmap result) {
+        TasksManager.getInstance().executeOnMainThread(new Runnable() {
+            @Override
+            public void run() {
+                ImageView image = imageRef.get();
+                if (image != null) {
+                    image.setImageBitmap(result);
+                }
+            }
+        });
     }
 }

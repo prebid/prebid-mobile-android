@@ -16,11 +16,10 @@
 
 package org.prebid.mobile.http;
 
-import android.annotation.TargetApi;
-import android.os.AsyncTask;
-import android.os.Build;
+import android.os.Looper;
 
 import org.prebid.mobile.Util;
+import org.prebid.mobile.tasksmanager.TasksManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,10 +32,6 @@ import java.net.URL;
 
 public abstract class HTTPGet {
 
-
-    private HTTPGetAsync httpGetAsync;
-    private boolean isCancelled = false;
-
     public HTTPGet() {
         super();
     }
@@ -44,8 +39,18 @@ public abstract class HTTPGet {
     abstract protected void onPostExecute(HTTPResponse response);
 
     public void execute() {
-        httpGetAsync = new HTTPGetAsync();
-        httpGetAsync.execute();
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            TasksManager.getInstance().executeOnBackgroundThread(new Runnable() {
+                @Override
+                public void run() {
+                    HTTPResponse response = makeHttpRequest();
+                    onPostExecute(response);
+                }
+            });
+        } else {
+            HTTPResponse response = makeHttpRequest();
+            onPostExecute(response);
+        }
     }
 
     protected abstract String getUrl();
@@ -110,51 +115,6 @@ public abstract class HTTPGet {
             e.printStackTrace();
         }
         return out;
-    }
-
-    public void cancel(boolean b) {
-        if (httpGetAsync != null) {
-            httpGetAsync.cancel(true);
-            isCancelled = true;
-        }
-    }
-
-    protected HTTPResponse doInBackground(Void[] params) {
-        return makeHttpRequest();
-    }
-
-    public boolean isCancelled() {
-        return isCancelled;
-    }
-
-    private class HTTPGetAsync extends AsyncTask<Void, Void, HTTPResponse> {
-
-
-        public HTTPGetAsync() {
-            super();
-        }
-
-        @Override
-        protected HTTPResponse doInBackground(Void... params) {
-            return makeHttpRequest();
-        }
-
-        @Override
-        protected void onPostExecute(HTTPResponse response) {
-            HTTPGet.this.onPostExecute(response);
-        }
-
-        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-        @Override
-        protected void onCancelled(HTTPResponse response) {
-            super.onCancelled(null);
-        }
-
-
-        protected String getUrl() {
-            return HTTPGet.this.getUrl();
-        }
-
     }
 }
 

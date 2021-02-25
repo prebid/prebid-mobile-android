@@ -27,11 +27,15 @@ import org.junit.rules.ErrorCollector;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.prebid.mobile.addendum.AdViewUtils;
+import org.prebid.mobile.tasksmanager.BackgroundThreadExecutor;
+import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowLooper;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -65,11 +69,13 @@ public class PrebidNativeNativeTest extends BaseSetup {
     public void setup() {
         super.setup();
         CacheManager.clear();
+        ((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).startThread();
     }
 
     @Override
     public void tearDown() {
         super.tearDown();
+        ((BackgroundThreadExecutor)TasksManager.getInstance().backgroundThreadExecutor).shutdown();
         adExpired = false;
         adClicked = false;
         TargetingParams.clearAccessControlList();
@@ -94,8 +100,12 @@ public class PrebidNativeNativeTest extends BaseSetup {
         requestParams.setNativeRequestParams(new NativeRequestParams());
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
-        Robolectric.flushBackgroundThreadScheduler();
-        Robolectric.flushForegroundThreadScheduler();
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runOneTask();
+        bgLooper.runOneTask();
+
+        Robolectric.getBackgroundThreadScheduler().runOneTask();
+        Robolectric.getBackgroundThreadScheduler().runOneTask();
         String cacheId = "";
         try {
             Class clazz = Class.forName(CacheManager.class.getName());
@@ -148,6 +158,7 @@ public class PrebidNativeNativeTest extends BaseSetup {
                 fail();
             }
         });
+
     }
 
     @Test
@@ -165,8 +176,12 @@ public class PrebidNativeNativeTest extends BaseSetup {
         requestParams.setNativeRequestParams(new NativeRequestParams());
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
-        Robolectric.flushBackgroundThreadScheduler();
-        Robolectric.flushForegroundThreadScheduler();
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runOneTask();
+        bgLooper.runOneTask();
+
+        Robolectric.getBackgroundThreadScheduler().runOneTask();
+        Robolectric.getBackgroundThreadScheduler().runOneTask();
         String cacheId = "";
         try {
             Class clazz = Class.forName(CacheManager.class.getName());
@@ -258,8 +273,12 @@ public class PrebidNativeNativeTest extends BaseSetup {
         requestParams.setNativeRequestParams(new NativeRequestParams());
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
-        Robolectric.flushBackgroundThreadScheduler();
-        Robolectric.flushForegroundThreadScheduler();
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runOneTask();
+        bgLooper.runOneTask();
+
+        Robolectric.getBackgroundThreadScheduler().runOneTask();
+        Robolectric.getBackgroundThreadScheduler().runOneTask();
         String cacheId = "";
         try {
             Class clazz = Class.forName(CacheManager.class.getName());
