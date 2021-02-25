@@ -24,14 +24,17 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.addendum.AdViewUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -53,8 +56,10 @@ public class Util {
     static final String MOPUB_INTERSTITIAL_CLASS = "com.mopub.mobileads.MoPubInterstitial";
     static final String AD_MANAGER_REQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
     static final String AD_MANAGER_REQUEST_BUILDER_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest$Builder";
+    static final String MOPUB_NATIVE_CLASS = "com.mopub.nativeads.RequestParameters$Builder";
     public static final int HTTP_CONNECTION_TIMEOUT = 15000;
     public static final int HTTP_SOCKET_TIMEOUT = 20000;
+    public static final int NATIVE_AD_VISIBLE_PERIOD_MILLIS = 1000;
     private static final Random RANDOM = new Random();
     private static final HashSet<String> reservedKeys;
     private static final int MoPubQueryStringLimit = 4000;
@@ -391,6 +396,7 @@ public class Util {
                 || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)
                 || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS)
                 || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS)
+                || adObj.getClass() == getClassFromString(MOPUB_NATIVE_CLASS)
                 || adObj.getClass() == HashMap.class)
             return true;
         return false;
@@ -401,6 +407,8 @@ public class Util {
         if (adObj.getClass() == getClassFromString(MOPUB_BANNER_VIEW_CLASS)
                 || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)) {
             handleMoPubKeywordsUpdate(bids, adObj);
+        } else if (adObj.getClass() == getClassFromString(MOPUB_NATIVE_CLASS)) {
+            handleMoPubBuilderCustomTargeting(bids, adObj);
         } else if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS)) {
             handleAdManagerCustomTargeting(bids, adObj);
         } else if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS)) {
@@ -465,6 +473,30 @@ public class Util {
     private static void addReservedKeys(String key) {
         synchronized (reservedKeys) {
             reservedKeys.add(key);
+        }
+    }
+
+    private static void handleMoPubBuilderCustomTargeting(HashMap<String, String> bids, Object requestParametersBuilder) {
+        removeUsedKeywordsForMoPub(requestParametersBuilder);
+
+        if (bids != null && !bids.isEmpty()) {
+            StringBuilder keywordsBuilder = new StringBuilder();
+            for (String key : bids.keySet()) {
+                addReservedKeys(key);
+                keywordsBuilder.append(key).append(":").append(bids.get(key)).append(",");
+            }
+            String pbmKeywords = keywordsBuilder.toString();
+            String adViewKeywords = (String) Util.callMethodOnObject(requestParametersBuilder, "getKeywords");
+            if (!TextUtils.isEmpty(adViewKeywords)) {
+                adViewKeywords = pbmKeywords + adViewKeywords;
+            } else {
+                adViewKeywords = pbmKeywords;
+            }
+
+            // only set keywords if less than mopub query string limit
+            if (adViewKeywords.length() <= MoPubQueryStringLimit) {
+                Util.callMethodOnObject(requestParametersBuilder, "keywords", adViewKeywords);
+            }
         }
     }
 
@@ -599,4 +631,8 @@ public class Util {
         return uri;
     }
 
+    public static void loadImage(ImageView image, String url) {
+        new DownloadImageTask(image).execute(url);
+    }
 }
+

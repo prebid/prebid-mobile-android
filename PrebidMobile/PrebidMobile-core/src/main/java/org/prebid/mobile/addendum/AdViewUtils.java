@@ -27,8 +27,13 @@ import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 
+import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.PrebidNativeAd;
+import org.prebid.mobile.PrebidNativeAdListener;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -42,6 +47,10 @@ public final class AdViewUtils {
     private static final String INNER_HTML_SCRIPT = "document.body.innerHTML";
     private static final String SIZE_VALUE_REGEX_EXPRESSION = "[0-9]+x[0-9]+";
     private static final String SIZE_OBJECT_REGEX_EXPRESSION = "hb_size\\W+" + SIZE_VALUE_REGEX_EXPRESSION; //"hb_size\\W+[0-9]+x[0-9]+"
+
+    private static final String GAM_VIEW_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdView";
+    private static final String GAM_CUSTOM_TEMPLATE_AD_CLASS = "com.google.android.gms.ads.formats.NativeCustomTemplateAd";
+    private static final String MOPUB_NATIVE_AD_CLASS = "com.mopub.nativeads.NativeAd";
 
     private AdViewUtils() { }
 
@@ -227,6 +236,72 @@ public final class AdViewUtils {
         });
     }
 
+    /**
+     * {@link PrebidNativeAdListener} will be called only once.
+     * {@link PrebidNativeAdListener#onPrebidNativeLoaded(PrebidNativeAd)} when Cached Ad is found and is valid
+     * {@link PrebidNativeAdListener#onPrebidNativeNotValid()} (PrebidNativeAd)} when Cached Ad is found and but is invalid
+     * and {@link PrebidNativeAdListener#onPrebidNativeNotFound()} ()} (PrebidNativeAd)} when Cached Ad is not found
+     */
+    static void iterateWebViewListAsync(final List<WebView> webViewList, final int index, final PrebidNativeAdListener listener) {
+
+        final WebView webView = webViewList.get(index);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            webView.evaluateJavascript(INNER_HTML_SCRIPT, new ValueCallback<String>() {
+
+                private void processNextWebView() {
+
+                    int nextIndex = index - 1;
+
+                    if (nextIndex >= 0) {
+                        iterateWebViewListAsync(webViewList, nextIndex, listener);
+                    } else {
+                        listener.onPrebidNativeNotFound();
+                    }
+                }
+
+                @Override
+                public void onReceiveValue(@Nullable String html) {
+                    Pattern prebidPattern = Pattern.compile("\\%\\%Prebid\\%\\%.*\\%\\%Prebid\\%\\%");
+                    Matcher m = prebidPattern.matcher(html);
+                    if (m.find()) {
+                        String s = m.group();
+                        String[] results = s.split("%%");
+                        String cacheId = results[2];
+                        if (CacheManager.isValid(cacheId)) {
+                            PrebidNativeAd ad = createPrebidNativeAd(cacheId, listener);
+                            if (ad != null) {
+                                listener.onPrebidNativeLoaded(ad);
+                                return;
+                            }
+                        }
+                        listener.onPrebidNativeNotValid();
+                    } else {
+                        processNextWebView();
+                    }
+                }
+            });
+        } else {
+            if (listener != null) {
+                listener.onPrebidNativeNotFound();
+            }
+        }
+    }
+
+    private static PrebidNativeAd createPrebidNativeAd(String cacheId, PrebidNativeAdListener listener) {
+        Class clazz = null;
+        try {
+            clazz = Class.forName("org.prebid.mobile.PrebidNativeAd");
+            Method method = clazz.getDeclaredMethod("create", String.class);
+            method.setAccessible(true);
+            return (PrebidNativeAd) method.invoke(null, cacheId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
     @NonNull
     static Pair<Pair<Integer, Integer>, PbFindSizeError> findSizeInHtml(@Nullable String html) {
 
@@ -325,6 +400,103 @@ public final class AdViewUtils {
         void success(int width, int height);
 
         void failure(@NonNull PbFindSizeError error);
+    }
+
+    /**
+     * This API can be used to find if the passed object contains info to retreive valid cached Native response or not,
+     * and notifies using the {@link PrebidNativeAdListener}
+     * @param object   instances of Google and MoPub Native Ads
+     * @param listener to notify the validity of passed object via @onPrebidNativeLoaded, #onPrebidNativeNotFound, #onPrebidNativeNotValid
+     * */
+    public static void findNative(@NonNull Object object, @NonNull PrebidNativeAdListener listener) {
+        String objectClassName = object.getClass().getCanonicalName();
+        if (GAM_VIEW_CLASS.equals(objectClassName)) {
+            View adView = (View) object;
+            findNativeInGAMPublisherAdView(adView, listener);
+        } else if (MOPUB_NATIVE_AD_CLASS.equals(objectClassName)) {
+            findNativeInMoPubNativeAd(object, listener);
+        } else if (implementsInterface(object, GAM_CUSTOM_TEMPLATE_AD_CLASS)) {
+            findNativeInGAMCustomTemplateAd(object, listener);
+        } else {
+            listener.onPrebidNativeNotFound();
+        }
+    }
+
+    private static boolean implementsInterface(@NonNull Object object, @NonNull String interfaceName) {
+        for (Class c : object.getClass().getInterfaces()) {
+            LogUtil.d("Prebid", c.getCanonicalName());
+            if (c.getCanonicalName().equals(interfaceName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void findNativeInGAMCustomTemplateAd(@NonNull Object object, @NonNull PrebidNativeAdListener listener) {
+        String isPrebid = (String) callMethodOnObject(object, "getText", "isPrebid");
+        if ("1".equals(isPrebid)) {
+            String cacheId = (String) callMethodOnObject(object, "getText", "hb_cache_id_local");
+            PrebidNativeAd ad = createPrebidNativeAd(cacheId, listener);
+            if (ad != null) {
+                listener.onPrebidNativeLoaded(ad);
+            } else {
+                listener.onPrebidNativeNotValid();
+            }
+        } else {
+            listener.onPrebidNativeNotFound();
+        }
+    }
+
+    private static void findNativeInMoPubNativeAd(@NonNull Object object, @NonNull PrebidNativeAdListener listener) {
+        Object baseNativeAd = callMethodOnObject(object, "getBaseNativeAd");
+        LogUtil.d("Prebid", "" + baseNativeAd);
+        Boolean isPrebid = (Boolean) callMethodOnObject(baseNativeAd, "getExtra", "isPrebid");
+        if (isPrebid != null && isPrebid) {
+            String cacheId = (String) callMethodOnObject(baseNativeAd, "getExtra", "hb_cache_id_local");
+            if (CacheManager.isValid(cacheId)) {
+                PrebidNativeAd ad = createPrebidNativeAd(cacheId, listener);
+                if (ad != null) {
+                    listener.onPrebidNativeLoaded(ad);
+                    return;
+                }
+            } else {
+                listener.onPrebidNativeNotValid();
+            }
+        } else {
+            listener.onPrebidNativeNotFound();
+        }
+    }
+
+    private static void findNativeInGAMPublisherAdView(@NonNull View adView, @NonNull PrebidNativeAdListener listener) {
+        List<WebView> webViewList = new ArrayList<>();
+        AdViewUtils.recursivelyFindWebViewList(adView, webViewList);
+        if (webViewList.size() == 0) {
+            listener.onPrebidNativeNotFound();
+        } else {
+            iterateWebViewListAsync(webViewList, webViewList.size() - 1, listener);
+        }
+
+    }
+
+    static Object callMethodOnObject(Object object, String methodName, Object... params) {
+        try {
+            int len = params.length;
+            Class<?>[] classes = new Class[len];
+            for (int i = 0; i < len; i++) {
+                classes[i] = params[i].getClass();
+            }
+            Method method = object.getClass().getMethod(methodName, classes);
+            return method.invoke(object, params);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

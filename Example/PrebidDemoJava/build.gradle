@@ -34,6 +34,17 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    buildTypes {
+
+        debug {
+            minifyEnabled false
+
+//            minifyEnabled true
+//            proguardFiles 'proguard-rules.pro'
+
+        }
+    }
 }
 
 project.gradle.taskGraph.whenReady {
@@ -41,8 +52,6 @@ project.gradle.taskGraph.whenReady {
         ignoreFailures = true
     }
 }
-
-
 
 //repositories{
 //    maven {
@@ -52,10 +61,21 @@ project.gradle.taskGraph.whenReady {
 
 dependencies {
 
+//    Source code
+    implementation project(':PrebidMobile')
+
+//    Maven
 //    implementation 'org.prebid:prebid-mobile-sdk:1.8'
 //    implementation 'org.prebid:prebid-mobile-sdk-core:1.8'
 
-    implementation project(':PrebidMobile')
+//    LocalMaven .aar
+//    implementation 'org.prebid:prebid-mobile-sdk:+'
+//    implementation 'org.prebid:prebid-mobile-sdk-core:+'
+
+//    LocalJar .jar
+//    Fat library
+//    implementation files('libs/PrebidMobile.jar')
+//    implementation files('libs/PrebidMobile-core.jar')
 
     localJarImplementation fileTree(dir: 'libs', include: ['*.jar'])
 
