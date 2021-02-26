@@ -65,8 +65,8 @@ dependencies {
     implementation project(':PrebidMobile')
 
 //    Maven
-//    implementation 'org.prebid:prebid-mobile-sdk:1.8'
-//    implementation 'org.prebid:prebid-mobile-sdk-core:1.8'
+//    implementation 'org.prebid:prebid-mobile-sdk:1.10'
+//    implementation 'org.prebid:prebid-mobile-sdk-core:1.10'
 
 //    LocalMaven .aar
 //    implementation 'org.prebid:prebid-mobile-sdk:+'
