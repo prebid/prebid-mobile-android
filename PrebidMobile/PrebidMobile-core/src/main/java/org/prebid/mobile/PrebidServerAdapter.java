@@ -926,12 +926,39 @@ class PrebidServerAdapter implements DemandAdapter {
                 }
 
                 ext.put("data", Util.toJson(TargetingParams.getUserDataDictionary()));
+
+                JSONArray eidArray = getExternalUserIdArray();
+                if (eidArray != null && eidArray.length() > 0) {
+                    ext.put("eids", eidArray);
+                }
                 user.put("ext", ext);
 
             } catch (JSONException e) {
                 LogUtil.d("PrebidServerAdapter getUserObject() " + e.getMessage());
             }
             return user;
+        }
+
+        private JSONArray getExternalUserIdArray() {
+            JSONArray idArray = new JSONArray();
+            try {
+                if (PrebidMobile.getExternalUserIds() != null) {
+                    for (ExternalUserId externaluserId : PrebidMobile.getExternalUserIds()) {
+                        if (externaluserId.getSource().length() == 0) {
+                            return null;
+                        }
+                        JSONObject idObject = new JSONObject();
+                        idObject.put("source", externaluserId.getSource());
+                        JSONArray uidsArray = new JSONArray(externaluserId.getUserIdArray());
+                        idObject.put("uids", uidsArray);
+                        idArray.put(idObject);
+                    }
+                }
+            }catch (JSONException e) {
+                LogUtil.d("PrebidServerAdapter getExternalUserIdArray() " + e.getMessage());
+            }
+
+            return idArray;
         }
 
         private JSONObject getRegsObject() {

@@ -849,6 +849,69 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
+    public void testExternalUserIdsInPostData() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        HttpUrl hostUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(hostUrl.toString());
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+
+        // User Id from External Third Party Sources
+        ArrayList<ExternalUserId> externalUserIdArray = new ArrayList<>();
+        externalUserIdArray.add(new ExternalUserId("adserver.org", Arrays.<Map<String, Object>>asList(new HashMap<String, Object>() {{
+            put("id", "111111111111"); put("ext", new HashMap<String, String>() {{ put("rtiPartner", "TDID"); }}); }})));
+        externalUserIdArray.add(new ExternalUserId("netid.de", Arrays.<Map<String, Object>>asList(new HashMap<String, Object>() {{
+            put("id", "999888777");}})));
+        externalUserIdArray.add(new ExternalUserId("criteo.com", Arrays.<Map<String, Object>>asList(new HashMap<String, Object>() {{
+            put("id", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N");}})));
+        externalUserIdArray.add(new ExternalUserId("liveramp.com", Arrays.<Map<String, Object>>asList(new HashMap<String, Object>() {{
+            put("id", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg");}})));
+        externalUserIdArray.add(new ExternalUserId("sharedid.org", Arrays.<Map<String, Object>>asList(new HashMap<String, Object>() {{
+            put("id", "111111111111"); put("ext", new HashMap<String, String>() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV"); }}); put("atype", "1"); }})));
+
+        PrebidMobile.setExternalUserIds(externalUserIdArray);
+
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(320, 50));
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        @SuppressWarnings("unchecked")
+        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+        assertEquals(uuid, connector.getAuctionId());
+        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+
+        JSONObject user = postData.getJSONObject("user");
+        JSONObject ext = user.getJSONObject("ext");
+        JSONArray eids = ext.getJSONArray("eids");
+
+        JSONObject adserverObj = eids.getJSONObject(0);
+        assertEquals("adserver.org", adserverObj.get("source"));
+        assertEquals("111111111111", adserverObj.getJSONArray("uids").getJSONObject(0).getString("id"));
+        assertEquals("TDID", adserverObj.getJSONArray("uids").getJSONObject(0).getJSONObject("ext").getString("rtiPartner"));
+
+        JSONObject netidObj = eids.getJSONObject(1);
+        assertEquals("netid.de", netidObj.get("source"));
+        assertEquals("999888777", netidObj.getJSONArray("uids").getJSONObject(0).getString("id"));
+
+        JSONObject criteoObj = eids.getJSONObject(2);
+        assertEquals("criteo.com", criteoObj.get("source"));
+        assertEquals("_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", criteoObj.getJSONArray("uids").getJSONObject(0).getString("id"));
+
+        JSONObject liverampObj = eids.getJSONObject(3);
+        assertEquals("liveramp.com", liverampObj.get("source"));
+        assertEquals("AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", liverampObj.getJSONArray("uids").getJSONObject(0).getString("id"));
+
+        JSONObject sharedidObj = eids.getJSONObject(4);
+        assertEquals("sharedid.org", sharedidObj.get("source"));
+        assertEquals("111111111111", sharedidObj.getJSONArray("uids").getJSONObject(0).getString("id"));
+        assertEquals("1", sharedidObj.getJSONArray("uids").getJSONObject(0).getString("atype"));
+        assertEquals("01ERJWE5FS4RAZKG6SKQ3ZYSKV", sharedidObj.getJSONArray("uids").getJSONObject(0).getJSONObject("ext").getString("third"));
+    }
+
+    @Test
     public void testRubiconDefaultError() {
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.htmlUnreachableFromRubicon()));
         HttpUrl hostUrl = server.url("/");

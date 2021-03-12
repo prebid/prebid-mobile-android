@@ -31,9 +31,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.prebid.mobile.ExternalUserId;
 import org.prebid.mobile.Host;
-
+import org.prebid.mobile.PrebidMobile;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,6 +54,21 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
+        // User Id from External Third Party Sources
+        ArrayList<ExternalUserId> externalUserIdArray = new ArrayList<>();
+        externalUserIdArray.add(new ExternalUserId("adserver.org", Arrays.asList(new HashMap<String, Object>() {{
+            put("id", "111111111111"); put("ext", new HashMap<String, String>() {{ put("rtiPartner", "TDID"); }}); }})));
+        externalUserIdArray.add(new ExternalUserId("netid.de", Arrays.asList(new HashMap<String, Object>() {{
+            put("id", "999888777");}})));
+        externalUserIdArray.add(new ExternalUserId("criteo.com", Arrays.asList(new HashMap<String, Object>() {{
+            put("id", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N");}})));
+        externalUserIdArray.add(new ExternalUserId("liveramp.com", Arrays.asList(new HashMap<String, Object>() {{
+            put("id", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg");}})));
+        externalUserIdArray.add(new ExternalUserId("sharedid.org", Arrays.asList(new HashMap<String, Object>() {{
+            put("id", "111111111111"); put("ext", new HashMap<String, String>() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV"); }}); put("atype", "1"); }})));
+
+        PrebidMobile.setExternalUserIds(externalUserIdArray);
+
         // Get all the components
         Spinner hostSpinner = findViewById(R.id.hostSpinner);
         ArrayAdapter<CharSequence> hostAdapter = ArrayAdapter.createFromResource(this, R.array.hostArray, android.R.layout.simple_spinner_item);
