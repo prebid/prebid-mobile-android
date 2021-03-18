@@ -56,17 +56,11 @@ public class MainActivity extends AppCompatActivity {
         }
         // User Id from External Third Party Sources
         ArrayList<ExternalUserId> externalUserIdArray = new ArrayList<>();
-        externalUserIdArray.add(new ExternalUserId("adserver.org", Arrays.asList(new HashMap<String, Object>() {{
-            put("id", "111111111111"); put("ext", new HashMap<String, String>() {{ put("rtiPartner", "TDID"); }}); }})));
-        externalUserIdArray.add(new ExternalUserId("netid.de", Arrays.asList(new HashMap<String, Object>() {{
-            put("id", "999888777");}})));
-        externalUserIdArray.add(new ExternalUserId("criteo.com", Arrays.asList(new HashMap<String, Object>() {{
-            put("id", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N");}})));
-        externalUserIdArray.add(new ExternalUserId("liveramp.com", Arrays.asList(new HashMap<String, Object>() {{
-            put("id", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg");}})));
-        externalUserIdArray.add(new ExternalUserId("sharedid.org", Arrays.asList(new HashMap<String, Object>() {{
-            put("id", "111111111111"); put("ext", new HashMap<String, String>() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV"); }}); put("atype", "1"); }})));
-
+        externalUserIdArray.add(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+        externalUserIdArray.add(new ExternalUserId("netid.de", "999888777", null, null));
+        externalUserIdArray.add(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
+        externalUserIdArray.add(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
+        externalUserIdArray.add(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
         PrebidMobile.setExternalUserIds(externalUserIdArray);
 
         // Get all the components

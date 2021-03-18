@@ -17,8 +17,6 @@
 package org.prebid.mobile;
 
 import android.support.annotation.NonNull;
-
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,39 +25,49 @@ import java.util.Map;
 public class ExternalUserId {
 
     private String source;
-    /**
-     Get source of the External User Id String
-     */
     public String getSource() {
         return source;
     }
-    /**
-     Set source of the External User Id String
-     */
     public void setSource(String source) {
         this.source = source;
     }
 
-    private List<Map<String,Object>> userIdArray;
-    /**
-     Get List of Maps containing objects that hold UserId parameters.
-     */
-    public List<Map<String,Object>> getUserIdArray() {
-        return userIdArray;
+    private String identifier;
+    public String getIdentifier() {
+        return identifier;
     }
-    /**
-     Set List of Maps containing objects that hold UserId parameters.
-     */
-    public void setUserIdArray(List<Map<String,Object>> userIdArray) {
-        this.userIdArray = userIdArray;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
+
+    private Integer atype;
+    public Integer getAtype() {
+        return atype;
+    }
+    public void setAtype(Integer atype) {
+        this.atype = atype;
+    }
+
+    private Map<String,Object> ext;
+    public Map<String, Object> getExt() {
+        return ext;
+    }
+    public void setExt(Map<String, Object> ext) {
+        this.ext = ext;
+    }
+
     /**
      Initialize ExternalUserId Class
      - Parameter source: Source of the External User Id String.
-     - Parameter userIdArray: List of Maps containing objects that hold UserId parameters.
+     - Parameter identifier: String of the External User Id.
+     - Parameter atype: (Optional) Integer of the External User Id.
+     - Parameter ext: (Optional) Map of the External User Id.
      */
-    public ExternalUserId(@NonNull String source,@NonNull List<Map<String,Object>> userIdArray) {
+    public ExternalUserId(@NonNull String source, @NonNull String identifier, Integer atype, Map<String, Object> ext) {
         this.source = source;
-        this.userIdArray = userIdArray;
+        this.identifier = identifier;
+        this.atype = atype;
+        this.ext = ext;
     }
+
 }

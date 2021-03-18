@@ -940,25 +940,37 @@ class PrebidServerAdapter implements DemandAdapter {
         }
 
         private JSONArray getExternalUserIdArray() {
-            JSONArray idArray = new JSONArray();
+            JSONArray transformedUserIdArray = new JSONArray();
             try {
                 if (PrebidMobile.getExternalUserIds() != null) {
                     for (ExternalUserId externaluserId : PrebidMobile.getExternalUserIds()) {
-                        if (externaluserId.getSource().length() == 0) {
+                        if (externaluserId.getSource().length() == 0 || externaluserId.getIdentifier().length() == 0) {
                             return null;
                         }
-                        JSONObject idObject = new JSONObject();
-                        idObject.put("source", externaluserId.getSource());
-                        JSONArray uidsArray = new JSONArray(externaluserId.getUserIdArray());
-                        idObject.put("uids", uidsArray);
-                        idArray.put(idObject);
+                        JSONObject transformedUserIdObject = new JSONObject();
+                        transformedUserIdObject.put("source", externaluserId.getSource());
+                        JSONArray uidArray = new JSONArray();
+                        JSONObject uidObject = new JSONObject();
+                        uidObject.put("id", externaluserId.getIdentifier());
+                        if (externaluserId.getAtype() != null)
+                        {
+                            uidObject.put("atype", externaluserId.getAtype());
+                        }
+                        if (externaluserId.getExt() != null)
+                        {
+                            JSONObject extObject = new JSONObject(externaluserId.getExt());
+                            uidObject.put("ext", extObject);
+                        }
+                        uidArray.put(uidObject);
+                        transformedUserIdObject.put("uids", uidArray);
+                        transformedUserIdArray.put(transformedUserIdObject);
                     }
                 }
             }catch (JSONException e) {
                 LogUtil.d("PrebidServerAdapter getExternalUserIdArray() " + e.getMessage());
             }
 
-            return idArray;
+            return transformedUserIdArray;
         }
 
         private JSONObject getRegsObject() {
