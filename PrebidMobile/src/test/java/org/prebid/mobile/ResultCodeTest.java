@@ -27,7 +27,6 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.tasksmanager.BackgroundThreadExecutor;
-import org.prebid.mobile.tasksmanager.MainThreadExecutor;
 import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
@@ -38,8 +37,8 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLooper;
 import org.robolectric.shadows.ShadowNetworkInfo;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 import okhttp3.HttpUrl;
@@ -276,7 +275,7 @@ public class ResultCodeTest extends BaseSetup {
         adapter.requestDemand(requestParams, mockListener, uuid);
 
         @SuppressWarnings("unchecked")
-        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        List<PrebidServerAdapter.ServerConnector> connectors = (List<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
         PrebidServerAdapter.ServerConnector.TimeoutCountDownTimer timeoutCountDownTimer = (PrebidServerAdapter.ServerConnector.TimeoutCountDownTimer) FieldUtils.readDeclaredField(connector, "timeoutCountDownTimer", true);
         shadowOf(timeoutCountDownTimer).invokeFinish();

@@ -34,7 +34,6 @@ import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.tasksmanager.BackgroundThreadExecutor;
-import org.prebid.mobile.tasksmanager.MainThreadExecutor;
 import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
@@ -794,7 +793,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
-        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        List<PrebidServerAdapter.ServerConnector> connectors = (List<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
         assertEquals(uuid, connector.getAuctionId());
         JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
@@ -1209,7 +1208,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
-        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        List<PrebidServerAdapter.ServerConnector> connectors = (List<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
 
         JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
@@ -1308,7 +1307,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
-        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        List<PrebidServerAdapter.ServerConnector> connectors = (List<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
 
         JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
@@ -1339,7 +1338,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
-        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        List<PrebidServerAdapter.ServerConnector> connectors = (List<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
 
         JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
@@ -1370,7 +1369,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
-        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        List<PrebidServerAdapter.ServerConnector> connectors = (List<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
 
         JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
@@ -1406,7 +1405,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
-        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        List<PrebidServerAdapter.ServerConnector> connectors = (List<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
 
         JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
@@ -1442,7 +1441,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
-        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        List<PrebidServerAdapter.ServerConnector> connectors = (List<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
 
         JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
@@ -1493,7 +1492,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
-        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        List<PrebidServerAdapter.ServerConnector> connectors = (List<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
 
         JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
@@ -1969,7 +1968,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
-        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        List<PrebidServerAdapter.ServerConnector> connectors = (List<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
 
         JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
