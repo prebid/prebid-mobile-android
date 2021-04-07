@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="segments_ad_categories">
+        <item>@string/segment_title_banner</item>
+        <item>@string/segment_title_interstitial</item>
+        <item>@string/segment_title_mraid</item>
+        <item>@string/segment_title_video</item>
+        <item>@string/segment_title_native</item>
+        <item>@string/segment_title_all</item>
+    </string-array>
+
+    <string-array name="segments_integration">
+        <item>@string/segment_title_apollo</item>
+        <item>@string/segment_title_mopub</item>
+        <item>@string/segment_title_gam</item>
+        <item>@string/segment_title_all</item>
+    </string-array>
+
+    <string name="segment_title_banner">Banner</string>
+    <string name="segment_title_interstitial">Interstitial</string>
+    <string name="segment_title_mraid">MRAID</string>
+    <string name="segment_title_video">Video</string>
+    <string name="segment_title_native">Native</string>
+    <string name="segment_title_all">All</string>
+    <string name="segment_title_mopub">MoPub</string>
+    <string name="segment_title_gam">GAM</string>
+    <string name="segment_title_apollo">Apollo</string>
+</resources>

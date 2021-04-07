@@ -1,0 +1,205 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+
+    before_all do
+        OUTPUT_DIR          = './fastlane/Builds'
+    end
+
+# ------------------------------------------
+# Build
+# ------------------------------------------
+
+    lane :build_apps do
+        gradle(
+            task: "clean assembleDebug",
+            gradle_path: "./gradlew"
+        )
+    end
+
+# ------------------------------------------
+# Unit Tests
+# ------------------------------------------
+
+    desc "Running Unit tests for PrebidMobile-rendering"
+    lane :unit_tests do
+
+        sh("rm -f ../local.properties")
+
+        gradle(
+            task: ":PrebidMobile-rendering:clean",
+            gradle_path: "./gradlew"
+        )
+
+        gradle(
+            task: ":PrebidMobile-rendering:testDebugUnitTest -x lint -x lintVitalRelease",
+            gradle_path: "./gradlew"
+        )
+
+        gradle(
+              task: ":PrebidMobile-gamEventHandlers:clean",
+              gradle_path: "./gradlew"
+          )
+
+          gradle(
+              task: ":PrebidMobile-gamEventHandlers:testDebugUnitTest -x lint -x lintVitalRelease",
+              gradle_path: "./gradlew"
+          )
+
+    end
+
+# ------------------------------------------
+# UI Tests
+# ------------------------------------------
+
+    desc "Running UI tests for Prebid SDK PPM examples"
+    lane :ui_tests_ppm do
+
+        # Waking up the machine...
+        sh("caffeinate -u -t 1")
+
+        automated_test_emulator_run(
+            AVD_setup_path: "fastlane/AVD_setup.json",
+            AVD_recreate_new: false,
+            AVD_clean_after: false,
+            gradle_task: "connectedMockDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=com.openx.internal_test_app.uiAutomator.tests.ppm"
+        )
+
+    end
+
+    desc "Running UI tests for Prebid SDK GAM examples"
+    lane :ui_tests_gam do
+
+        # Waking up the machine...
+        sh("caffeinate -u -t 1")
+
+        automated_test_emulator_run(
+            AVD_setup_path: "fastlane/AVD_setup.json",
+            AVD_recreate_new: false,
+            AVD_clean_after: false,
+            gradle_task: "connectedMockDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=com.openx.internal_test_app.uiAutomator.tests.gam"
+        )
+
+    end
+
+    desc "Running UI tests for Prebid SDK MoPub examples"
+        lane :ui_tests_mopub do
+
+            # Waking up the machine...
+            sh("caffeinate -u -t 1")
+
+            automated_test_emulator_run(
+                AVD_setup_path: "fastlane/AVD_setup.json",
+                AVD_recreate_new: false,
+                AVD_clean_after: false,
+                gradle_task: "connectedMockDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=com.openx.internal_test_app.uiAutomator.tests.mopub"
+            )
+
+        end
+
+# ------------------------------------------
+# Slack Notification
+# ------------------------------------------
+
+    desc "Sends a notification to the Slack channel"
+    lane :send_slack_message do |options|
+      step      = options[:step]
+      url       = options[:build_url]
+      warning   = options[:warning]
+
+      slack_warning_message(step, url, warning)
+    end
+
+
+# ------------------------------------------
+# Helpers
+# ------------------------------------------
+
+    def slack_message(scheme, build_url, exception)
+
+        # Do not send the Slack message from the dev machine
+        return if not is_ci
+
+        message = exception ? "#{scheme} build failed!" : "#{scheme} build successful!"
+
+        payload = {
+            "Build Date" => Time.new.to_s,
+            "Build Machine" => sh("hostname"),
+            "Platform" => "Android"
+        }
+
+        if build_url then
+            payload[:"FirebaseAppDistribution dashboard: "] = build_url
+        end
+
+        attachment_properties = nil
+        if exception then
+            attachment_properties = {
+                fields: [{ title: "Error", value: exception }]
+            }
+        end
+
+        slack(
+            message: message,
+            slack_url: SLACK_URL,
+            channel: SLACK_CHANNEL,
+            username: "Jenkins",
+            default_payloads: [:git_branch],
+            payload: payload,
+            attachment_properties: attachment_properties
+        )
+
+        if exception then
+            UI.user_error!("Error: #{exception}")
+        end
+    end
+    
+    def slack_warning_message(scheme, build_url, warning)
+
+        # Do not send the Slack message from the dev machine
+        return if not is_ci
+
+        message = scheme
+
+        payload = {
+            "Build Date" => Time.new.to_s,
+            "Build Machine" => sh("hostname"),
+            "Platform" => "Android"
+        }
+
+        if build_url then
+            payload[:"Build URL "] = build_url
+        end
+
+        attachment_properties = {
+            fields: [{ title: "Message", value: warning }]
+        }
+
+        slack(
+            message: message,
+            success: false,
+            slack_url: SLACK_URL,
+            channel: SLACK_CHANNEL,
+            username: "Jenkins",
+            default_payloads: [:git_branch],
+            payload: payload,
+            attachment_properties: attachment_properties
+        )
+    end
+
+end

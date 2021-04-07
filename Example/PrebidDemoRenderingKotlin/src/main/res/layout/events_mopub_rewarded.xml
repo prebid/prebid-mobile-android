@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.openx.widgets.EventCounterView
+        android:id="@+id/btnAdDidLoad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/events_mopub_rewarded_loaded"
+        android:layout_marginTop="@dimen/event_top_margin" />
+
+    <com.openx.widgets.EventCounterView
+        android:id="@+id/btnAdFailed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/events_mopub_rewarded_failed"
+        android:layout_marginTop="@dimen/event_top_margin" />
+
+    <com.openx.widgets.EventCounterView
+        android:id="@+id/btnAdVideoStarted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/events_mopub_rewarded_started"
+        android:layout_marginTop="@dimen/event_top_margin" />
+
+    <com.openx.widgets.EventCounterView
+        android:id="@+id/btnAdVideoPlaybackError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/events_mopub_rewarded_playback_error"
+        android:layout_marginTop="@dimen/event_top_margin" />
+
+    <com.openx.widgets.EventCounterView
+        android:id="@+id/btnAdClicked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/events_mopub_rewarded_clicked"
+        android:layout_marginTop="@dimen/event_top_margin" />
+
+    <com.openx.widgets.EventCounterView
+        android:id="@+id/btnAdCollapsed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/events_mopub_rewarded_collapsed"
+        android:layout_marginTop="@dimen/event_top_margin" />
+
+    <com.openx.widgets.EventCounterView
+        android:id="@+id/btnAdCompleted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/events_mopub_rewarded_completed"
+        android:layout_marginTop="@dimen/event_top_margin" />
+</LinearLayout>

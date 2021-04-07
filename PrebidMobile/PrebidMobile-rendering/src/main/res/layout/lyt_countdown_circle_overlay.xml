@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_count_down"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom|start"
+    >
+
+    <RelativeLayout
+        android:id="@+id/lytCountdown"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="25dp"
+        >
+
+        <ProgressBar
+            android:id="@+id/Progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:indeterminate="false"
+            android:progressDrawable="@drawable/drw_timer_circle"
+            />
+
+        <TextView
+            android:id="@+id/lblCountdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:text="00"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>

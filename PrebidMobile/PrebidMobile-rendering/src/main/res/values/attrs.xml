@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="BannerView">
+        <attr name="configId" format="string" />
+        <attr name="adWidth" format="integer" />
+        <attr name="adHeight" format="integer" />
+        <attr name="refreshIntervalSec" format="integer" />
+    </declare-styleable>
+</resources>

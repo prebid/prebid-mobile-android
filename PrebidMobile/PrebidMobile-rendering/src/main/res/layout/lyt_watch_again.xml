@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/btn_watch_again"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/drw_button_rounded_outlined"
+        android:padding="8dp"
+        android:text="@string/watch_again"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="16sp">
+</Button>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_bidding"
+        android:title="Bidding"
+        android:icon="@drawable/openx_adapter"
+        app:showAsAction="always" />
+    <item
+        android:icon="@drawable/ic_info_outline_black_24dp"
+        android:id="@+id/menu_utilities"
+        android:title="@string/title_utilities"
+        app:showAsAction="always"/>
+</menu>

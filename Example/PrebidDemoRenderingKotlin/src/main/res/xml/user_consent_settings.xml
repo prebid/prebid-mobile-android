@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="TCF v1"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            android:key="IABConsent_CMPPresent"
+            android:title="CMPPresent"
+            app:iconSpaceReserved="false" />
+
+        <com.openx.widgets.EditTextPreferenceWithValue
+            android:key="@string/key_subject_to_gdpr"
+            android:title="SubjectToGDPR"
+            app:iconSpaceReserved="false" />
+
+        <com.openx.widgets.EditTextPreferenceWithValue
+            android:key="@string/key_consent_string"
+            android:title="ConsentString"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="TCF v2"
+        app:iconSpaceReserved="false">
+
+        <com.openx.widgets.IntegerEditTextPreferenceWithValue
+            android:key="@string/key_cmp_sdk_id"
+            android:title="CMP SDK ID"
+            app:iconSpaceReserved="false" />
+
+        <com.openx.widgets.IntegerEditTextPreferenceWithValue
+            android:key="@string/key_subject_to_gdpr_v2"
+            android:title="SubjectToGDPR"
+            app:iconSpaceReserved="false" />
+
+        <com.openx.widgets.EditTextPreferenceWithValue
+            android:key="@string/key_consent_string_v2"
+            android:title="ConsentString"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="CCPA"
+        app:iconSpaceReserved="false">
+
+        <com.openx.widgets.EditTextPreferenceWithValue
+            android:key="@string/key_us_privacy"
+            android:title="US Privacy String"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="TESTING"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            android:key="@string/key_keep_settings"
+            android:title="KeepSettings"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

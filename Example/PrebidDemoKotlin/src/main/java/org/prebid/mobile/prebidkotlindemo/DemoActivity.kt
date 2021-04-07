@@ -48,7 +48,8 @@ class DemoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_demo)
         val intent = intent
         if ("DFP" == intent.getStringExtra(Constants.AD_SERVER_NAME) && "Banner" == intent.getStringExtra(Constants.AD_TYPE_NAME)) {
-            createDFPBanner(intent.getStringExtra(Constants.AD_SIZE_NAME))
+            val size = intent.getStringExtra(Constants.AD_SIZE_NAME) ?: ""
+            createDFPBanner(size)
         } else if ("DFP" == intent.getStringExtra(Constants.AD_SERVER_NAME) && "Interstitial" == intent.getStringExtra(
                 Constants.AD_TYPE_NAME
             )
@@ -58,7 +59,8 @@ class DemoActivity : AppCompatActivity() {
                 Constants.AD_TYPE_NAME
             )
         ) {
-            createMoPubBanner(intent.getStringExtra(Constants.AD_SIZE_NAME))
+            val size = intent.getStringExtra(Constants.AD_SIZE_NAME) ?: ""
+            createMoPubBanner(size)
         } else if ("MoPub" == intent.getStringExtra(Constants.AD_SERVER_NAME) && "Interstitial" == intent.getStringExtra(
                 Constants.AD_TYPE_NAME
             )

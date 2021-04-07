@@ -1,0 +1,74 @@
+<html><body>
+    <style type='text/css'>.sponsored-post {
+    background-color: #fffdeb;
+    font-family: sans-serif;
+}
+
+.content {
+    overflow: hidden;
+}
+
+.thumbnail {
+    width: 50px;
+    height: 50px;
+    float: left;
+    margin: 0 20px 10px 0;
+    background-size: cover;
+}
+
+h1 {
+    font-size: 18px;
+    margin: 0;
+}
+
+a {
+    color: #0086b3;
+    text-decoration: none;
+}
+
+p {
+    font-size: 16px;
+    color: #000;
+    margin: 10px 0 10px 0;
+}
+
+.attribution {
+    color: #000;
+    font-size: 9px;
+    font-weight: bold;
+    display: inline-block;
+    letter-spacing: 2px;
+    background-color: #ffd724;
+    border-radius: 2px;
+    padding: 4px;
+}</style>
+<div class="sponsored-post">
+    <div class="thumbnail">
+        <img src="hb_native_icon" alt="hb_native_icon" width="50" height="50"></div>
+    <div class="content">
+        <h1><p>hb_native_title</p></h1>
+        <p>hb_native_body</p>
+        <a target="_blank" href="hb_native_linkurl" class="pb-click">hb_native_cta</a>
+        <div class="attribution">hb_native_brand</div>
+    </div>
+    <img src="hb_native_image" alt="hb_native_image" width="320" height="50">
+</div>
+<script src="https://cdn.jsdelivr.net/npm/prebid-universal-creative@latest/dist/native-trk.js"></script>
+<script>
+  	let pbNativeTagData = {};
+  	pbNativeTagData.pubUrl = "%%PATTERN:url%%";
+	pbNativeTagData.targetingMap = %%PATTERN:TARGETINGMAP%%;
+
+
+  // if not DFP, use these params
+  pbNativeTagData.adId = "%%PATTERN:hb_adid%%";
+  pbNativeTagData.cacheHost = "%%PATTERN:hb_cache_host%%";
+  pbNativeTagData.cachePath = "%%PATTERN:hb_cache_path%%";
+  pbNativeTagData.uuid = "%%PATTERN:hb_cache_id%%";
+  pbNativeTagData.env = "%%PATTERN:hb_env%%";
+  pbNativeTagData.hbPb = "%%PATTERN:hb_pb%%";
+
+  	window.pbNativeTag.startTrackers(pbNativeTagData);
+</script>
+</body>
+</html>

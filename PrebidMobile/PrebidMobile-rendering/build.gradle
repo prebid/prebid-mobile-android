@@ -1,0 +1,91 @@
+apply plugin: 'com.android.library'
+
+android {
+    def getGitHash = { ->
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'rev-parse', '--short', 'HEAD'
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    }
+
+    compileSdkVersion 30
+
+    packagingOptions {
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/LICENSE'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        buildConfigField "String", "GitHash", "\"${getGitHash()}\""
+        minSdkVersion 16
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+    }
+
+    dexOptions {
+        preDexLibraries = false
+        javaMaxHeapSize "2g"
+    }
+
+    buildTypes {
+
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            returnDefaultValues = true
+        }
+        unitTests.all {
+            testLogging {
+                exceptionFormat = "full"
+            }
+        }
+    }
+}
+
+dependencies {
+    // AndroidJUnitRunner and JUnit Rules
+    testImplementation 'androidx.test:runner:1.2.0'
+    testImplementation 'androidx.test:rules:1.2.0'
+
+    testImplementation 'org.robolectric:robolectric:4.3.1'
+    testImplementation 'junit:junit:4.12'
+
+    testImplementation 'org.mockito:mockito-core:1.10.19'
+
+    testImplementation 'org.json:json:20180813'
+    testImplementation 'com.google.code.gson:gson:2.8.6'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.0'
+    testImplementation('com.mopub:mopub-sdk:5.10.0') {
+        transitive = true
+        exclude module: 'moat-mobile-app-kit'
+    }
+    testImplementation 'com.google.android.gms:play-services-ads:19.1.0'
+    testImplementation project(':TestUtils')
+
+    // Google play services
+    implementation 'com.google.android.gms:play-services-base:17.5.0'
+    implementation 'com.google.android.gms:play-services-ads-identifier:17.0.0'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.11.0'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.11.0'
+
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation project(path: ':omsdk-android')
+}

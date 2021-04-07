@@ -1,0 +1,17 @@
+{
+    "frequency": "daily",
+    "daysInWeek": [
+        1,
+        2
+    ],
+    "daysInMonth": [
+        10
+    ],
+    "daysInYear": [
+        23
+    ],
+    "exceptionDates": [
+        "2011-05-05T12:00Z",
+        "2011-05-06T09:11Z"
+    ]
+}

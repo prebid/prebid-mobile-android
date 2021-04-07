@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.openx.widgets.EventCounterView
+        android:id="@+id/btnAdDidLoad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/event_mopub_interstitial_loaded"
+        android:layout_marginTop="@dimen/event_top_margin"
+        app:layout_constraintBottom_toTopOf="@+id/btnAdFailed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <com.openx.widgets.EventCounterView
+        android:id="@+id/btnAdFailed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:text="@string/event_mopub_interstitial_failed"
+        android:layout_marginTop="@dimen/event_top_margin"
+        app:layout_constraintBottom_toTopOf="@+id/btnAdDisplayed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAdDidLoad" />
+
+    <com.openx.widgets.EventCounterView
+        android:id="@+id/btnAdDisplayed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/event_mopub_interstitial_displayed"
+        android:layout_marginTop="@dimen/event_top_margin"
+        app:layout_constraintBottom_toTopOf="@+id/btnAdClicked"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAdFailed" />
+
+    <com.openx.widgets.EventCounterView
+        android:id="@+id/btnAdClicked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/event_mopub_interstitial_clicked"
+        android:layout_marginTop="@dimen/event_top_margin"
+        app:layout_constraintBottom_toTopOf="@+id/btnAdDismissed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAdDisplayed" />
+
+    <com.openx.widgets.EventCounterView
+        android:id="@+id/btnAdDismissed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/event_mopub_interstitial_dismissed"
+        android:layout_marginTop="@dimen/event_top_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnAdClicked" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

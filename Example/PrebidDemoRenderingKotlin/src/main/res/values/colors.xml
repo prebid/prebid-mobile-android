@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <color name="white">#ffffff</color>
+
+    <color name="list_background">#FFFFFF</color>
+    <color name="list_background_pressed">#ffbf00</color>
+
+    <color name="ads_list_item_title">#000000</color>
+    
+    <color name="action_bar_bkg">#0068b3</color>
+
+    <color name="dark_blue_bkg">#005a9a</color>
+
+    <color name="button_disabled">#ADADAD</color>
+    <color name="disabled_grey_color">#888888</color>
+    <color name="panel_background">#ECECEC</color>
+    <color name="grey_background">#949495</color>
+
+</resources>

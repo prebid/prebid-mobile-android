@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- NOTE: order is important (the first matching state(s) is what is rendered) -->
+    <item
+        android:drawable="@drawable/ic_adchoices_collapsed_top_right"
+
+        android:state_activated="false"/>
+    <item
+
+        android:drawable="@drawable/ic_adchoices_expanded_top_right"/>
+</selector>

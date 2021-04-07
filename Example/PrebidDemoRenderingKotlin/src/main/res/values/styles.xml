@@ -1,0 +1,68 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="SdkInternalBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="SdkDemoTheme" parent="SdkInternalBaseTheme">
+        <item name="colorPrimary">@color/action_bar_bkg</item>
+        <item name="colorPrimaryDark">@color/dark_blue_bkg</item>
+        <item name="colorAccent">@color/action_bar_bkg</item>
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <!--<item name="actionBarStyle">@style/MWCActionBar</item>-->
+        <!--<item name="actionMenuTextColor">@color/action_bar_text</item>-->
+    </style>
+
+    <!-- ActionBar styles -->
+
+    <!-- ActionBar title text -->
+
+    <style name="MWCSublistItems">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:minHeight">?android:attr/listPreferredItemHeightLarge</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceListItemSmall</item>
+        <item name="android:textColor">@color/ads_list_item_title</item>
+        <item name="android:layout_marginLeft">10dp</item>
+    </style>
+
+    <style name="AdEventButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:enabled">false</item>
+        <item name="android:background">@null</item>
+        <item name="android:textColor">@color/color_selector</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ConfigDialogTextStyle">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="AppTheme.AdAttribution">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">left</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:text">Ad</item>
+        <item name="android:background">#FFCC66</item>
+        <item name="android:width">15dp</item>
+        <item name="android:height">15dp</item>
+    </style>
+
+
+</resources>

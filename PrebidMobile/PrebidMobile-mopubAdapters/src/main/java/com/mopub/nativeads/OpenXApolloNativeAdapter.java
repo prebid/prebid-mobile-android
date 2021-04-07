@@ -1,0 +1,41 @@
+package com.mopub.nativeads;
+
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+
+import com.openx.apollo.bidding.data.bid.BidResponse;
+import com.openx.apollo.bidding.data.ntv.NativeAd;
+import com.openx.apollo.bidding.data.ntv.NativeAdParser;
+
+import java.util.Map;
+
+public class OpenXApolloNativeAdapter extends CustomEventNative {
+
+    private static final String KEY_BID_RESPONSE = "OPENX_BID_RESPONSE_ID";
+
+    @Override
+    protected void loadNativeAd(
+        @NonNull
+            Context context,
+        @NonNull
+            CustomEventNativeListener customEventNativeListener,
+        @NonNull
+            Map<String, Object> localExtras,
+        @NonNull
+            Map<String, String> serverExtras) {
+        Object bidResponseObj = localExtras.get(KEY_BID_RESPONSE);
+        if (!(bidResponseObj instanceof BidResponse)) {
+            customEventNativeListener.onNativeAdFailed(NativeErrorCode.NATIVE_ADAPTER_CONFIGURATION_ERROR);
+            return;
+        }
+        NativeAdParser nativeAdParser = new NativeAdParser();
+        NativeAd nativeAd = nativeAdParser.parse(((BidResponse) bidResponseObj).getWinningBid().getAdm());
+        if (nativeAd == null) {
+            customEventNativeListener.onNativeAdFailed(NativeErrorCode.SERVER_ERROR_RESPONSE_CODE);
+            return;
+        }
+        ApolloNativeAdWrapper apolloNativeAdWrapper = new ApolloNativeAdWrapper(nativeAd);
+        customEventNativeListener.onNativeAdLoaded(apolloNativeAdWrapper);
+    }
+}
