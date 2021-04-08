@@ -29,10 +29,12 @@ class InternalTestApplication : MultiDexApplication() {
         PrebidRenderingSettings.logLevel = PrebidRenderingSettings.LogLevel.DEBUG
 
         // Setup mock responses only in mock build
-        if (BuildConfig.FLAVOR == "mock") {
+        val isMock = BuildConfig.FLAVOR == "mock"
+        if (isMock) {
             setupMockResponses()
-            SourcePicker.useMockServer = true
         }
+
+        SourcePicker.useMockServer = isMock
         DemoItemProvider.init(this)
 
         // Only uncomment while testing memory leaks

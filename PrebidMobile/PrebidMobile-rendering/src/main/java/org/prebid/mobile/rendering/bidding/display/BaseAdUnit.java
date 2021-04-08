@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.enums.Host;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
@@ -70,6 +71,14 @@ abstract class BaseAdUnit {
             listener.onComplete(FetchDemandResult.INVALID_CONFIG_ID);
             return;
         }
+
+        final Host bidServerHost = PrebidRenderingSettings.getBidServerHost();
+        if (bidServerHost.equals(Host.CUSTOM) && bidServerHost.getHostUrl().isEmpty()) {
+            OXLog.error(TAG, "Empty host url for custom Prebid Server host.");
+            listener.onComplete(FetchDemandResult.INVALID_HOST_URL);
+            return;
+        }
+
         mAdViewReference = new WeakReference<>(adObject);
         mOnFetchCompleteListener = listener;
         mBidLoader.load();

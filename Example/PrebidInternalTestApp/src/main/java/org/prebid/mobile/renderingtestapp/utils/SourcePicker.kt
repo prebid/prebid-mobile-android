@@ -1,9 +1,7 @@
 package org.prebid.mobile.renderingtestapp.utils
 
-import android.util.Log
+import org.prebid.mobile.rendering.bidding.enums.Host
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
-import java.lang.reflect.Field
-import java.lang.reflect.Modifier
 
 object SourcePicker {
 
@@ -42,20 +40,9 @@ object SourcePicker {
         }
     }
 
-    private fun setBidServerHost(host: String) {
-        try {
-            val field = PrebidRenderingSettings::class.java.getDeclaredField("BID_SERVER_HOST")
-            field.isAccessible = true
-
-            val modifiersField: Field = Field::class.java.getDeclaredField("accessFlags")
-            modifiersField.isAccessible = true
-            modifiersField.setInt(field, field.modifiers and Modifier.FINAL.inv())
-
-            field.set(field, host)
-        }
-        catch (throwable: Throwable) {
-            Log.d("SourcePicker", "Failed to change bid server host")
-            throwable.printStackTrace()
-        }
+    private fun setBidServerHost(hostUrl: String) {
+        val host = Host.CUSTOM
+        host.hostUrl = hostUrl
+        PrebidRenderingSettings.setBidServerHost(host)
     }
 }

@@ -31,6 +31,10 @@ public enum FetchDemandResult {
      */
     INVALID_AD_OBJECT,
     /**
+     * The ad request failed because a CUSTOM host used without providing host url
+     */
+    INVALID_HOST_URL,
+    /**
      * The ad request failed due to a network error.
      */
     NETWORK_ERROR,

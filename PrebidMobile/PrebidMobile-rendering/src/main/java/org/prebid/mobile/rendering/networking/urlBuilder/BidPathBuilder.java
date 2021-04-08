@@ -6,6 +6,6 @@ public class BidPathBuilder extends PathBuilderBase {
 
     @Override
     public String buildURLPath(String domain) {
-        return PrebidRenderingSettings.getBidServerHost();
+        return PrebidRenderingSettings.getBidServerHost().getHostUrl();
     }
 }

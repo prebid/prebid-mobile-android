@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.rendering.bidding.enums.Host;
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.robolectric.Robolectric;
@@ -81,5 +82,24 @@ public class PrebidRenderingSettingsTest {
         PrebidRenderingSettings.useHttpsWebViewBaseUrl(false);
 
         assertEquals(PrebidRenderingSettings.SCHEME_HTTP, PrebidRenderingSettings.getWebViewBaseUrlScheme());
+    }
+
+    @Test
+    public void setBidServerHost_nullValue_ReturnDefaultBidServerHost() {
+        String expected = PrebidRenderingSettings.getBidServerHost().getHostUrl();
+
+        PrebidRenderingSettings.setBidServerHost(null);
+        assertEquals(expected, PrebidRenderingSettings.getBidServerHost().getHostUrl());
+    }
+
+    @Test
+    public void setBidServerHost_validValue_ReturnModifiedHost() {
+        final String hostUrl = "http://customserver.com";
+        final Host host = Host.CUSTOM;
+        host.setHostUrl(hostUrl);
+
+        PrebidRenderingSettings.setBidServerHost(host);
+
+        assertEquals(host, PrebidRenderingSettings.getBidServerHost());
     }
 }

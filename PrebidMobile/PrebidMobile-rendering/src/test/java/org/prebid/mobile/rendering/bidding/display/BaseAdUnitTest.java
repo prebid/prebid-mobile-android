@@ -18,6 +18,7 @@ import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.enums.BannerAdPosition;
+import org.prebid.mobile.rendering.bidding.enums.Host;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
@@ -57,6 +58,7 @@ public class BaseAdUnitTest {
         mContext = Robolectric.buildActivity(Activity.class).create().get();
         mMopubView = new MoPubView(mContext);
         mBaseAdUnit = createAdUnit("config");
+        PrebidRenderingSettings.setBidServerHost(Host.APPNEXUS);
 
         assertEquals(BannerAdPosition.UNDEFINED.getValue(), mBaseAdUnit.mAdUnitConfig.getAdPositionValue());
     }
@@ -86,6 +88,18 @@ public class BaseAdUnitTest {
         mBaseAdUnit = createAdUnit("");
         mBaseAdUnit.fetchDemand(mMopubView, result -> {
             assertEquals(FetchDemandResult.INVALID_CONFIG_ID, result);
+        });
+    }
+
+    @Test
+    public void whenFetchDemandAndNoUrlForCustomHost_InvalidHostUrl() {
+        PrebidRenderingSettings.setAccountId("id");
+        final Host custom = Host.CUSTOM;
+        custom.setHostUrl("");
+        PrebidRenderingSettings.setBidServerHost(custom);
+        mBaseAdUnit = createAdUnit("123");
+        mBaseAdUnit.fetchDemand(mMopubView, result -> {
+            assertEquals(FetchDemandResult.INVALID_HOST_URL, result);
         });
     }
 
