@@ -9,10 +9,11 @@ import androidx.annotation.Nullable;
 
 import com.mopub.common.LifecycleListener;
 import com.mopub.common.logging.MoPubLog;
-import com.openx.apollo.bidding.display.DisplayView;
-import com.openx.apollo.bidding.listeners.DisplayViewListener;
-import com.openx.apollo.errors.AdException;
-import com.openx.apollo.models.AdConfiguration;
+
+import org.prebid.mobile.rendering.bidding.display.DisplayView;
+import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
+import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.rendering.models.AdConfiguration;
 
 /**
  * To integrate, place a copy of this class into 'com.mopub.mobileads'

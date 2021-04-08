@@ -4,9 +4,9 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.openx.apollo.bidding.data.bid.BidResponse;
-import com.openx.apollo.bidding.data.ntv.NativeAd;
-import com.openx.apollo.bidding.data.ntv.NativeAdParser;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.data.ntv.NativeAd;
+import org.prebid.mobile.rendering.bidding.data.ntv.NativeAdParser;
 
 import java.util.Map;
 

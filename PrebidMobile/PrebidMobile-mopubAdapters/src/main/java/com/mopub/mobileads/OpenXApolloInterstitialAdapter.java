@@ -8,9 +8,10 @@ import androidx.annotation.Nullable;
 
 import com.mopub.common.LifecycleListener;
 import com.mopub.common.logging.MoPubLog;
-import com.openx.apollo.bidding.display.InterstitialController;
-import com.openx.apollo.bidding.interfaces.InterstitialControllerListener;
-import com.openx.apollo.errors.AdException;
+
+import org.prebid.mobile.rendering.bidding.display.InterstitialController;
+import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
+import org.prebid.mobile.rendering.errors.AdException;
 
 public class OpenXApolloInterstitialAdapter extends BaseAd {
     private static final String TAG = OpenXApolloInterstitialAdapter.class.getSimpleName();

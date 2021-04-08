@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="400dp">
 
-        <com.openx.apollo.bidding.data.ntv.MediaView
+        <org.prebid.mobile.rendering.bidding.data.ntv.MediaView
             android:id="@+id/mediaView"
             android:layout_width="300dp"
             android:layout_height="250dp"

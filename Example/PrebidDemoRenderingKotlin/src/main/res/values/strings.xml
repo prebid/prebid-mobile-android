@@ -2,7 +2,7 @@
 <resources>
 
     <!-- App -->
-    <string name="app_name">OpenX Internal Test</string>
+    <string name="app_name">Prebid Rendering Kotlin Demo</string>
 
     <string name="action_settings">Settings</string>
 
@@ -12,6 +12,7 @@
     <string name="text_stop_refresh">Stop refresh</string>
 
     <string name="title_preload_failed">Preload failed</string>
+    <string name="title_examples">Examples</string>
 
     <string name="onAdLoaded">onAdLoaded called</string>
     <string name="onAdDisplayed">onAdDisplayed called</string>
@@ -49,54 +50,54 @@
     <string name="key_height">KEY_HEIGHT</string>
     <string name="key_title">KEY_TITLE</string>
 
-    <!--PPM Titles-->
-    <string name="demo_bidding_ppm_banner_320_50">Banner 320x50 (PPM)</string>
-    <string name="demo_bidding_ppm_banner_320_50_no_bids">Banner 320x50 [noBids] (PPM)</string>
-    <string name="demo_bidding_ppm_banner_320_50_mock_random_bid"> Banner 320x50 [Bid - RANDOM noBids, Ad - RESPECTIVE]</string>
-    <string name="demo_bidding_ppm_banner_300_250">Banner 300x250 (PPM)</string>
-    <string name="demo_bidding_ppm_banner_728_90">Banner 728x90 (PPM)</string>
-    <string name="demo_bidding_ppm_banner_320_50_scrollable">Banner 320x50 Scrollable (PPM)</string>
-    <string name="demo_bidding_ppm_banner_320_50_vast">Banner 320x50 (PPM) [Incorrect VAST]</string>
-    <string name="demo_bidding_ppm_banner_320_50_deeplink">Banner 320x50 (PPM) [DeepLink+]</string>
-    <string name="demo_bidding_ppm_banner_layout">Banner 320x50 Layout (PPM)</string>
-    <string name="demo_bidding_ppm_banner_multisize">Banner Multisize (PPM)</string>
-    <string name="demo_bidding_ppm_banners_and_interstitial">Banners and Interstitial (PPM)</string>
-    <string name="demo_bidding_ppm_interstitial_320_480">Display Interstitial 320x480 (PPM)</string>
-    <string name="demo_bidding_ppm_interstitial_320_480_no_bids">Display Interstitial 320x480 [noBids] (PPM)</string>
-    <string name="demo_bidding_ppm_banner_video_outstream">Video Outstream (PPM)</string>
-    <string name="demo_bidding_ppm_banner_video_outstream_no_bids">Video Outstream [noBids] (PPM)</string>
-    <string name="demo_bidding_ppm_banner_video_outstream_feed">Video Outstream Feed (PPM)</string>
-    <string name="demo_bidding_ppm_banner_video_outstream_end_card">Video Outstream with End Card (PPM)</string>
-    <string name="demo_bidding_ppm_interstitial_video_320_480">Video Interstitial 320x480 (PPM)</string>
-    <string name="demo_bidding_ppm_interstitial_video_320_480_deeplink">Video Interstitial 320x480 Deeplink+ (PPM)</string>
-    <string name="demo_bidding_ppm_interstitial_video_320_480_skipoffset">Video Interstitial 320x480 SkipOffset (PPM)</string>
-    <string name="demo_bidding_ppm_interstitial_video_320_480_end_card">Video Interstitial 320x480 With End Card (PPM)</string>
-    <string name="demo_bidding_ppm_interstitial_video_320_480_mraid_end_card">Video Interstitial 320x480 with MRAID End Card (PPM)</string>
-    <string name="demo_bidding_ppm_interstitial_video_320_480_no_bids">Video Interstitial 320x480 (PPM) [noBids]</string>
-    <string name="demo_bidding_ppm_video_rewarded_end_card_320_480">Video Rewarded 320x480 (PPM)</string>
-    <string name="demo_bidding_ppm_video_rewarded_end_card_320_480_no_bids">Video Rewarded 320x480 with End Card (PPM) [noBids]</string>
-    <string name="demo_bidding_ppm_video_rewarded_320_480">Video Rewarded 320x480 without End Card (PPM)</string>
-    <string name="demo_bidding_ppm_mraid_expand">MRAID 2.0: Expand - 1 Part (PPM)</string>
-    <string name="demo_bidding_ppm_mraid_expand_2">MRAID 2.0: Expand - 2 Part (PPM)</string>
-    <string name="demo_bidding_ppm_mraid_resize">MRAID 2.0: Resize (PPM)</string>
-    <string name="demo_bidding_ppm_mraid_resize_with_errors">MRAID 2.0: Resize With Errors (PPM)</string>
-    <string name="demo_bidding_ppm_mraid_fullscreen">MRAID 2.0: Fullscreen (PPM)</string>
-    <string name="demo_bidding_ppm_mraid_fullscreen_video">MRAID 2.0: Video Interstitial (PPM)</string>
-    <string name="demo_bidding_ppm_mraid_resize_negative">MRAID 3.0: Resize Negative Test (PPM)</string>
-    <string name="demo_bidding_ppm_mraid_viewability_compliance">MRAID 3.0: Viewability Compliance Ad (PPM)</string>
-    <string name="demo_bidding_ppm_mraid_load_and_events">MRAID 3.0: Load And Events (PPM)</string>
-    <string name="demo_bidding_ppm_mraid_test_methods">MRAID OX: Test Methods 3.0 (PPM)</string>
-    <string name="demo_bidding_ppm_mraid_test_properties">MRAID OX: Test Properties 3.0 (PPM)</string>
-    <string name="demo_bidding_ppm_mraid_resize_expandable">MRAID OX: Resize (Expandable) (PPM)</string>
-    <string name="demo_bidding_ppm_mraid_resize_scroll">MRAID OX: Resize (With Scroll) (PPM)</string>
-    <string name="demo_bidding_ppm_native_styles_map">Banner Native Styles (PPM) [MAP]</string>
-    <string name="demo_bidding_ppm_native_styles_keys">Banner Native Styles (PPM) [KEYS]</string>
-    <string name="demo_bidding_ppm_native_styles_no_assets">Banner Native Styles No Assets (PPM)</string>
-    <string name="demo_bidding_ppm_native_styles_no_creative">Banner Native Styles No Creative (PPM)</string>
-    <string name="demo_bidding_ppm_native">Native Ad (PPM)</string>
-    <string name="demo_bidding_ppm_native_feed">Native Ad Feed (PPM)</string>
-    <string name="demo_bidding_ppm_native_links">Native Ad Links (PPM)</string>
-    <string name="demo_bidding_ppm_native_video">Native Ad Video (PPM)</string>
+    <!--In-App Titles-->
+    <string name="demo_bidding_in_app_banner_320_50">Banner 320x50 (In-App)</string>
+    <string name="demo_bidding_in_app_banner_320_50_no_bids">Banner 320x50 [noBids] (In-App)</string>
+    <string name="demo_bidding_in_app_banner_320_50_mock_random_bid"> Banner 320x50 [Bid - RANDOM noBids, Ad - RESPECTIVE]</string>
+    <string name="demo_bidding_in_app_banner_300_250">Banner 300x250 (In-App)</string>
+    <string name="demo_bidding_in_app_banner_728_90">Banner 728x90 (In-App)</string>
+    <string name="demo_bidding_in_app_banner_320_50_scrollable">Banner 320x50 Scrollable (In-App)</string>
+    <string name="demo_bidding_in_app_banner_320_50_vast">Banner 320x50 (In-App) [Incorrect VAST]</string>
+    <string name="demo_bidding_in_app_banner_320_50_deeplink">Banner 320x50 (In-App) [DeepLink+]</string>
+    <string name="demo_bidding_in_app_banner_layout">Banner 320x50 Layout (In-App)</string>
+    <string name="demo_bidding_in_app_banner_multisize">Banner Multisize (In-App)</string>
+    <string name="demo_bidding_in_app_banners_and_interstitial">Banners and Interstitial (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_320_480">Display Interstitial 320x480 (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_320_480_no_bids">Display Interstitial 320x480 [noBids] (In-App)</string>
+    <string name="demo_bidding_in_app_banner_video_outstream">Video Outstream (In-App)</string>
+    <string name="demo_bidding_in_app_banner_video_outstream_no_bids">Video Outstream [noBids] (In-App)</string>
+    <string name="demo_bidding_in_app_banner_video_outstream_feed">Video Outstream Feed (In-App)</string>
+    <string name="demo_bidding_in_app_banner_video_outstream_end_card">Video Outstream with End Card (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_video_320_480">Video Interstitial 320x480 (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_video_320_480_deeplink">Video Interstitial 320x480 Deeplink+ (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_video_320_480_skipoffset">Video Interstitial 320x480 SkipOffset (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_video_320_480_end_card">Video Interstitial 320x480 With End Card (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_video_320_480_mraid_end_card">Video Interstitial 320x480 with MRAID End Card (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_video_320_480_no_bids">Video Interstitial 320x480 (In-App) [noBids]</string>
+    <string name="demo_bidding_in_app_video_rewarded_end_card_320_480">Video Rewarded 320x480 (In-App)</string>
+    <string name="demo_bidding_in_app_video_rewarded_end_card_320_480_no_bids">Video Rewarded 320x480 with End Card (In-App) [noBids]</string>
+    <string name="demo_bidding_in_app_video_rewarded_320_480">Video Rewarded 320x480 without End Card (In-App)</string>
+    <string name="demo_bidding_in_app_mraid_expand">MRAID 2.0: Expand - 1 Part (In-App)</string>
+    <string name="demo_bidding_in_app_mraid_expand_2">MRAID 2.0: Expand - 2 Part (In-App)</string>
+    <string name="demo_bidding_in_app_mraid_resize">MRAID 2.0: Resize (In-App)</string>
+    <string name="demo_bidding_in_app_mraid_resize_with_errors">MRAID 2.0: Resize With Errors (In-App)</string>
+    <string name="demo_bidding_in_app_mraid_fullscreen">MRAID 2.0: Fullscreen (In-App)</string>
+    <string name="demo_bidding_in_app_mraid_fullscreen_video">MRAID 2.0: Video Interstitial (In-App)</string>
+    <string name="demo_bidding_in_app_mraid_resize_negative">MRAID 3.0: Resize Negative Test (In-App)</string>
+    <string name="demo_bidding_in_app_mraid_viewability_compliance">MRAID 3.0: Viewability Compliance Ad (In-App)</string>
+    <string name="demo_bidding_in_app_mraid_load_and_events">MRAID 3.0: Load And Events (In-App)</string>
+    <string name="demo_bidding_in_app_mraid_test_methods">MRAID OX: Test Methods 3.0 (In-App)</string>
+    <string name="demo_bidding_in_app_mraid_test_properties">MRAID OX: Test Properties 3.0 (In-App)</string>
+    <string name="demo_bidding_in_app_mraid_resize_expandable">MRAID OX: Resize (Expandable) (In-App)</string>
+    <string name="demo_bidding_in_app_mraid_resize_scroll">MRAID OX: Resize (With Scroll) (In-App)</string>
+    <string name="demo_bidding_in_app_native_styles_map">Banner Native Styles (In-App) [MAP]</string>
+    <string name="demo_bidding_in_app_native_styles_keys">Banner Native Styles (In-App) [KEYS]</string>
+    <string name="demo_bidding_in_app_native_styles_no_assets">Banner Native Styles No Assets (In-App)</string>
+    <string name="demo_bidding_in_app_native_styles_no_creative">Banner Native Styles No Creative (In-App)</string>
+    <string name="demo_bidding_in_app_native">Native Ad (In-App)</string>
+    <string name="demo_bidding_in_app_native_feed">Native Ad Feed (In-App)</string>
+    <string name="demo_bidding_in_app_native_links">Native Ad Links (In-App)</string>
+    <string name="demo_bidding_in_app_native_video">Native Ad Video (In-App)</string>
 
     <!--GAM Titles-->
     <string name="demo_bidding_gam_banner_320_50_app_event">Banner 320x50 (GAM) [OK, AppEvent]</string>
@@ -134,8 +135,8 @@
     <string name="demo_bidding_gam_native_custom_templates_no_bids">Native Ad (GAM) [noBids, GADNativeCustomTemplateAd]</string>
     <string name="demo_bidding_gam_native_unified_ads">Native Ad Unified Ad (GAM) [OK, OXANativeAd]</string>
     <string name="demo_bidding_gam_native_unified_ads_no_bids">Native Ad (GAM) [noBids, GADUnifiedNativeAd]</string>
-    <string name="demo_bidding_gam_native_custom_templates_apollo_ok">Native Ad (GAM) [OK, GADNativeCustomTemplateAd]</string>
-    <string name="demo_bidding_gam_native_unified_ads_apollo_ok">Native Ad (GAM) [OK, GADUnifiedNativeAd]</string>
+    <string name="demo_bidding_gam_native_custom_templates_prebid_ok">Native Ad (GAM) [OK, GADNativeCustomTemplateAd]</string>
+    <string name="demo_bidding_gam_native_unified_ads_prebid_ok">Native Ad (GAM) [OK, GADUnifiedNativeAd]</string>
     <string name="demo_bidding_gam_native_feed">Native Ad Feed (GAM) [OK, OXANativeAd]</string>
 
 
@@ -219,57 +220,56 @@
     <string name="mopub_native_no_bids">27a0aca8ce2c41e19195ea9beeb05e67</string>
 
     <!--    Bidding configs-->
-    <string name="openx_account_id_prod">0689a263-318d-448b-a3d4-b02e8a709d9d</string>
-    <string name="openx_account_id_prod_no_bids">1768035c-74d3-4786-b056-13bd41f34bde</string>
+    <string name="prebid_account_id_prod">0689a263-318d-448b-a3d4-b02e8a709d9d</string>
+    <string name="prebid_account_id_prod_no_bids">1768035c-74d3-4786-b056-13bd41f34bde</string>
 
-    <string name="apollo_banner_320x50_config_id">50699c03-0910-477c-b4a4-911dbe2b9d42</string>
-    <string name="apollo_mraid_resize_config_id">758bef6c-a811-497e-8234-9a583daf92e0</string>
-    <string name="apollo_interstitial_320_480_config_id">5a4b8dcf-f984-4b04-9448-6529908d6cb6</string>
-    <string name="apollo_video_rewarded_320_480_config_id">12f58bc2-b664-4672-8d19-638bcc96fd5c</string>
-    <string name="apollo_video_outstream_end_card_config_id">9007b76d-c73c-49c6-b0a8-1c7890a84b33</string>
-    <string name="apollo_native_styles_config_id">621da6c1-6ab6-464d-a955-b4e447eaedcb</string>
-    <string name="apollo_no_bids_config_id">28259226-68de-49f8-88d6-f0f2fab846e3</string>
-    <string name="qa_native_styles_config_id">51fe68ba-aff2-401e-9e15-f3ed89d5c036</string>
+    <string name="prebid_config_id_banner_320x50">50699c03-0910-477c-b4a4-911dbe2b9d42</string>
+    <string name="prebid_config_id_mraid_resize">758bef6c-a811-497e-8234-9a583daf92e0</string>
+    <string name="prebid_config_id_interstitial_320_480">5a4b8dcf-f984-4b04-9448-6529908d6cb6</string>
+    <string name="prebid_config_id_video_rewarded_320_480">12f58bc2-b664-4672-8d19-638bcc96fd5c</string>
+    <string name="prebid_config_id_video_outstream_end_card">9007b76d-c73c-49c6-b0a8-1c7890a84b33</string>
+    <string name="prebid_config_id_native_styles">621da6c1-6ab6-464d-a955-b4e447eaedcb</string>
+    <string name="prebid_config_id_no_bids">28259226-68de-49f8-88d6-f0f2fab846e3</string>
+    <string name="prebid_config_id_qa_native_styles">51fe68ba-aff2-401e-9e15-f3ed89d5c036</string>
 
-    <string name="mock_banner_320x50_config_id">mock-banner-320-50</string>
-    <string name="mock_banner_320x50_deeplink_config_id">mock-banner-deeplink</string>
-    <string name="mock_banner_320x50_vast_config_id">mock-banner-incorrect-vast</string>
-    <string name="mock_banner_300x250_config_id">mock-banner-300-250</string>
-    <string name="mock_banner_728x90_config_id">mock-banner-728-90</string>
-    <string name="mock_banner_multisize_config_id">mock-banner-multisize</string>
-    <string name="mock_interstitial_320_480_config_id">mock-display-interstitial-320-480</string>
+    <string name="mock_config_id_banner_320x50">mock-banner-320-50</string>
+    <string name="mock_config_id_banner_320x50_deeplink">mock-banner-deeplink</string>
+    <string name="mock_config_id_banner_320x50_vast">mock-banner-incorrect-vast</string>
+    <string name="mock_config_id_banner_300x250">mock-banner-300-250</string>
+    <string name="mock_config_id_banner_728x90">mock-banner-728-90</string>
+    <string name="mock_config_id_banner_multisize">mock-banner-multisize</string>
+    <string name="mock_config_id_interstitial_320_480">mock-display-interstitial-320-480</string>
 
-    <string name="mock_video_outstream_config_id">mock-video-outstream</string>
-    <string name="mock_video_outstream_end_card_config_id">mock-video-outstream-with-end-card</string>
-    <string name="mock_video_interstitial_320_480_config_id">mock-video-interstitial-320-480</string>
-    <string name="mock_video_interstitial_deeplink_config_id">mock-video-interstitial-320-480-deeplink</string>
-    <string name="mock_video_interstitial_skipoffset_config_id">mock-video-interstitial-320-480-skip-offset</string>
-    <string name="mock_video_interstitial_mraid_end_card_config_id">mock-video-interstitial-mraid-end-card</string>
-    <string name="mock_video_rewarded_end_card_320_480_config_id">mock-video-rewarded-320-480</string>
-    <string name="mock_video_rewarded_320_480_config_id">mock-video-rewarded-320-480-without-end-card</string>
-    <string name="mock_mraid_resize_config_id">mock-mraid-resize</string>
-    <string name="mock_mraid_resize_with_errors_config_id">mock-mraid-resize-with-errors</string>
-    <string name="mock_mraid_expand_config_id">mock-mraid-expand-1-part</string>
-    <string name="mock_mraid_expand_two_part_config_id">mock-mraid-expand-2-part</string>
-    <string name="mock_mraid_fullscreen_config_id">mock-mraid-fullscreen</string>
-    <string name="mock_mraid_video_interstitial_config_id">mock-mraid-video-interstitial</string>
-    <string name="mock_mraid_3_viewability_compliance_config_id">mock-mraid-viewability-compliance</string>
-    <string name="mock_mraid_3_resize_negative_config_id">mock-mraid-resize-negative-test</string>
-    <string name="mock_mraid_3_load_and_events_config_id">mock-mraid-load-and-events</string>
-    <string name="mock_mraid_ox_test_properties_config_id">mock-mraid-test-properties-3</string>
-    <string name="mock_mraid_ox_test_methods_config_id">mock-mraid-test-methods-3</string>
-    <string name="mock_mraid_ox_resize_expandable_config_id">mock-mraid-resize-expandable</string>
-    <string name="mock_native_styles_config_id">mock-banner-native-styles</string>
-    <string name="mock_native_links_config_id">mock-native-links</string>
-    <string name="mock_native_video_config_id">mock-native-video-with-end-card</string>
-    <string name="mock_no_bids_config_id">no_bids</string>
+    <string name="mock_config_id_video_outstream">mock-video-outstream</string>
+    <string name="mock_config_id_video_outstream_end_card">mock-video-outstream-with-end-card</string>
+    <string name="mock_config_id_video_interstitial_320_480">mock-video-interstitial-320-480</string>
+    <string name="mock_config_id_video_interstitial_deeplink">mock-video-interstitial-320-480-deeplink</string>
+    <string name="mock_config_id_video_interstitial_skipoffset">mock-video-interstitial-320-480-skip-offset</string>
+    <string name="mock_config_id_video_interstitial_mraid_end_card">mock-video-interstitial-mraid-end-card</string>
+    <string name="mock_config_id_video_rewarded_end_card_320_480">mock-video-rewarded-320-480</string>
+    <string name="mock_config_id_video_rewarded_320_480">mock-video-rewarded-320-480-without-end-card</string>
+    <string name="mock_config_id_mraid_resize">mock-mraid-resize</string>
+    <string name="mock_config_id_mraid_resize_with_errors">mock-mraid-resize-with-errors</string>
+    <string name="mock_config_id_mraid_expand">mock-mraid-expand-1-part</string>
+    <string name="mock_config_id_mraid_expand_two_part">mock-mraid-expand-2-part</string>
+    <string name="mock_config_id_mraid_fullscreen">mock-mraid-fullscreen</string>
+    <string name="mock_config_id_mraid_video_interstitial">mock-mraid-video-interstitial</string>
+    <string name="mock_config_id_mraid_3_viewability_compliance">mock-mraid-viewability-compliance</string>
+    <string name="mock_config_id_mraid_3_resize_negative">mock-mraid-resize-negative-test</string>
+    <string name="mock_config_id_mraid_3_load_and_events">mock-mraid-load-and-events</string>
+    <string name="mock_config_id_mraid_ox_test_properties">mock-mraid-test-properties-3</string>
+    <string name="mock_config_id_mraid_ox_test_methods">mock-mraid-test-methods-3</string>
+    <string name="mock_config_id_mraid_ox_resize_expandable">mock-mraid-resize-expandable</string>
+    <string name="mock_config_id_native_styles">mock-banner-native-styles</string>
+    <string name="mock_config_id_native_links">mock-native-links</string>
+    <string name="mock_config_id_native_video">mock-native-video-with-end-card</string>
+    <string name="mock_config_id_no_bids">no_bids</string>
 
     <!--  APP SETTINGS  -->
     <string name="key_show_progress_dialog">key_show_progress_dialog</string>
 
     <!-- Ad event status -->
 
-    <string name="openx_examples">OpenX Examples</string>
     <string name="title_utilities">Utilities</string>
     <string name="title_app_settings">App Settings</string>
     <string name="loading">Loading…</string>
@@ -286,7 +286,7 @@
     <string name="dialog_configurator_min_height_percentage">Min. Height Percentage</string>
     <string name="dialog_configurator_min_width_percentage">Min. Width Percentage</string>
 
-    <string name="version_tag_apollo">Apollo:</string>
+    <string name="version_tag_prebid_rendering">Prebid Rendering:</string>
     <string name="version_tag_mopub">MoPub:</string>
     <string name="version_tag_gam">GAM:</string>
 

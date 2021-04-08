@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="com.openx.internal_test_app">
+          package="org.prebid.mobile.renderingtestapp">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
@@ -16,7 +16,6 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="OpenX SDK Internal Test App"
             android:windowSoftInputMode="adjustPan|stateHidden">
 
             <intent-filter>

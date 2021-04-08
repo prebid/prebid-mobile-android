@@ -24,15 +24,15 @@
             android:layout_marginBottom="8dp">
 
             <TextView
-                android:id="@+id/labelApollo"
+                android:id="@+id/labelPrebid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/version_tag_apollo"
+                android:text="@string/version_tag_prebid_rendering"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/tvApolloVersion"
+                android:id="@+id/tvPrebidRenderingVersion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"

@@ -77,7 +77,7 @@ platform :android do
             AVD_setup_path: "fastlane/AVD_setup.json",
             AVD_recreate_new: false,
             AVD_clean_after: false,
-            gradle_task: "connectedMockDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=com.openx.internal_test_app.uiAutomator.tests.ppm"
+            gradle_task: "connectedMockDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=org.prebid.mobile.renderingtestapp.uiAutomator.tests.ppm"
         )
 
     end
@@ -92,7 +92,7 @@ platform :android do
             AVD_setup_path: "fastlane/AVD_setup.json",
             AVD_recreate_new: false,
             AVD_clean_after: false,
-            gradle_task: "connectedMockDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=com.openx.internal_test_app.uiAutomator.tests.gam"
+            gradle_task: "connectedMockDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=org.prebid.mobile.renderingtestapp.uiAutomator.tests.gam"
         )
 
     end
@@ -107,7 +107,7 @@ platform :android do
                 AVD_setup_path: "fastlane/AVD_setup.json",
                 AVD_recreate_new: false,
                 AVD_clean_after: false,
-                gradle_task: "connectedMockDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=com.openx.internal_test_app.uiAutomator.tests.mopub"
+                gradle_task: "connectedMockDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.package=org.prebid.mobile.renderingtestapp.uiAutomator.tests.mopub"
             )
 
         end

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.openx.apollo.bidding.data.ntv.MediaView
+    <org.prebid.mobile.rendering.bidding.data.ntv.MediaView
         android:id="@+id/mediaView"
         android:layout_width="300dp"
         android:layout_height="250dp"

@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.openx.apollo.bidding.data.ntv.MediaData;
-import com.openx.apollo.bidding.data.ntv.MediaView;
-import com.openx.apollo.listeners.MediaViewListener;
+import org.prebid.mobile.rendering.bidding.data.ntv.MediaData;
+import org.prebid.mobile.rendering.bidding.data.ntv.MediaView;
+import org.prebid.mobile.rendering.listeners.MediaViewListener;
 
 import java.util.WeakHashMap;
 

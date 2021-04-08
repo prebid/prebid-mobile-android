@@ -25,7 +25,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.openx.internal_test_app"
+        applicationId "org.prebid.mobile.renderingtestapp"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1558441678

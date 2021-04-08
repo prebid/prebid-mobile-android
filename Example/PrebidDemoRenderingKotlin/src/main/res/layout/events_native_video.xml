@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnPlaybackStarted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnVideoLoadingFinished" />
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnPlaybackFinished"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnPlaybackStarted" />
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnPlaybackPaused"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
         app:layout_constraintTop_toBottomOf="@+id/btnPlaybackFinished" />
 
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnPlaybackResumed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
         app:layout_constraintTop_toBottomOf="@+id/btnPlaybackPaused" />
 
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnPlaybackMuted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
         app:layout_constraintTop_toBottomOf="@+id/btnPlaybackResumed" />
 
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnPlaybackUnMuted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
         app:layout_constraintTop_toBottomOf="@+id/btnPlaybackMuted" />
 
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnFailure"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnPlaybackUnMuted" />
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnVideoLoadingFinished"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
 
     <include
         android:id="@+id/nativeEvents"
-        layout="@layout/lyt_native_ppm_events"
+        layout="@layout/lyt_native_in_app_events"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

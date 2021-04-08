@@ -17,6 +17,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textColor="@color/white"
-        tools:text="@string/openx_examples"/>
+        tools:text="Prebid Rendering examples"/>
 
 </androidx.appcompat.widget.Toolbar>

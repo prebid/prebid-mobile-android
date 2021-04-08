@@ -5,11 +5,11 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.openx.apollo.bidding.data.ntv.MediaData;
-import com.openx.apollo.bidding.data.ntv.NativeAd;
-import com.openx.apollo.bidding.data.ntv.NativeAdElementType;
-import com.openx.apollo.bidding.listeners.NativeAdListener;
-import com.openx.apollo.models.ntv.NativeEventTracker;
+import org.prebid.mobile.rendering.bidding.data.ntv.MediaData;
+import org.prebid.mobile.rendering.bidding.data.ntv.NativeAd;
+import org.prebid.mobile.rendering.bidding.data.ntv.NativeAdElementType;
+import org.prebid.mobile.rendering.bidding.listeners.NativeAdListener;
+import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 
 public class ApolloNativeAdWrapper extends BaseNativeAd {
 

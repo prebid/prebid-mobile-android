@@ -33,22 +33,22 @@
 
     <fragment
         android:id="@+id/appSettingsFragment"
-        android:name="com.openx.internal_test_app.plugplay.utilities.AppSettingsFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.utilities.AppSettingsFragment"
         android:label="@string/title_app_settings" />
 
     <fragment
         android:id="@+id/mainUtilitiesFragment"
-        android:name="com.openx.internal_test_app.plugplay.utilities.UtilitiesListFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.utilities.UtilitiesListFragment"
         android:label="@string/title_utilities" />
 
     <fragment
         android:id="@+id/consentSettingsFragment"
-        android:name="com.openx.internal_test_app.plugplay.utilities.consent.ConsentSettingsFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.utilities.consent.ConsentSettingsFragment"
         android:label="IAB Consent Settings" />
 
     <fragment
         android:id="@+id/versionInfoFragment"
-        android:name="com.openx.internal_test_app.plugplay.utilities.version.VersionInfoFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.utilities.version.VersionInfoFragment"
         android:label="Versions" />
 
 </navigation>

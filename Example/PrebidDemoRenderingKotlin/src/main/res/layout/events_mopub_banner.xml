@@ -5,34 +5,34 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnAdDidLoad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/event_mopub_banner_loaded" />
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnAdFailed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/event_mopub_banner_failed"
         android:layout_marginTop="@dimen/event_top_margin" />
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnAdClicked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/event_mopub_banner_clicked"
         android:layout_marginTop="@dimen/event_top_margin" />
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnAdExpanded"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/event_mopub_banner_expanded"
         android:layout_marginTop="@dimen/event_top_margin" />
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnAdCollapsed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

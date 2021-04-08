@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_bidding"
-        android:title="Bidding"
-        android:icon="@drawable/openx_adapter"
+        android:icon="@drawable/ic_list"
+        android:title="@string/title_examples"
         app:showAsAction="always" />
     <item
-        android:icon="@drawable/ic_info_outline_black_24dp"
         android:id="@+id/menu_utilities"
+        android:icon="@drawable/ic_info_outline_black_24dp"
         android:title="@string/title_utilities"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 </menu>

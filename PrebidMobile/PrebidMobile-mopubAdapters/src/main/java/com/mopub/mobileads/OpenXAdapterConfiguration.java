@@ -8,7 +8,8 @@ import androidx.annotation.Nullable;
 import com.mopub.common.BaseAdapterConfiguration;
 import com.mopub.common.OnNetworkInitializationFinishedListener;
 import com.mopub.common.Preconditions;
-import com.openx.apollo.sdk.ApolloSettings;
+
+import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 
 import java.util.Map;
 
@@ -45,7 +46,7 @@ public class OpenXAdapterConfiguration extends BaseAdapterConfiguration {
     @NonNull
     @Override
     public String getNetworkSdkVersion() {
-        return ApolloSettings.SDK_VERSION;
+        return PrebidRenderingSettings.SDK_VERSION;
     }
 
     @Override

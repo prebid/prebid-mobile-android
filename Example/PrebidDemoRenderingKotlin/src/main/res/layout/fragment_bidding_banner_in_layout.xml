@@ -17,11 +17,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.openx.apollo.bidding.parallel.BannerView
+        <org.prebid.mobile.rendering.bidding.parallel.BannerView
             android:id="@+id/oxBannerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:configId="@string/mock_banner_320x50_config_id"
+            app:configId="@string/mock_config_id_banner_320x50"
             app:refreshIntervalSec="5"
             app:adWidth="320"
             app:adHeight="50" />

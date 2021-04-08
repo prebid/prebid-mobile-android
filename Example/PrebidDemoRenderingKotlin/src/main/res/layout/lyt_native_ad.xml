@@ -65,7 +65,7 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/ivNativeIcon"
         app:layout_constraintTop_toBottomOf="@+id/tvNativeBody"
-        tools:text="Brand (OpenX)" />
+        tools:text="Brand (Prebid)" />
 
     <TextView
         android:id="@+id/tvNativeTitle"
@@ -79,6 +79,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ivNativeIcon"
         app:layout_constraintTop_toTopOf="@+id/ivNativeIcon"
-        tools:text="OpenX (Title)" />
+        tools:text="Prebid (Title)" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

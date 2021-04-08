@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.openx.apollo">
+          package="org.prebid.mobile.rendering">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -13,7 +13,7 @@
             android:name="org.apache.http.legacy"
             android:required="false"/>
         <activity
-            android:name="com.openx.apollo.views.browser.AdBrowserActivity"
+            android:name="org.prebid.mobile.rendering.views.browser.AdBrowserActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="adjustPan|stateHidden"

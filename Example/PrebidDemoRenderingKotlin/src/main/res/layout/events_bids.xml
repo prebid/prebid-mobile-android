@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center">
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnAdLoaded"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnAdDisplayed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnAdLoaded" />
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnAdFailed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnAdDisplayed" />
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnAdClicked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnAdFailed" />
 
-    <com.openx.widgets.EventCounterView
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnAdClosed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
