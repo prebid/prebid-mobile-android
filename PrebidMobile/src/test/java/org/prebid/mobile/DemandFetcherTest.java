@@ -18,7 +18,7 @@ package org.prebid.mobile;
 
 import android.os.Bundle;
 
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.mopub.mobileads.MoPubView;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -27,7 +27,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.prebid.mobile.tasksmanager.BackgroundThreadExecutor;
-import org.prebid.mobile.tasksmanager.MainThreadExecutor;
 import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
@@ -66,8 +65,8 @@ public class DemandFetcherTest extends BaseSetup {
 
     @Test
     public void testBaseConditions() throws Exception {
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        PublisherAdRequest request = builder.build();
+        AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
+        AdManagerAdRequest request = builder.build();
         DemandFetcher demandFetcher = new DemandFetcher(request);
         demandFetcher.setPeriodMillis(0);
         HashSet<AdSize> sizes = new HashSet<>();
@@ -96,8 +95,8 @@ public class DemandFetcherTest extends BaseSetup {
         Host.CUSTOM.setHostUrl(httpUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        PublisherAdRequest request = builder.build();
+        AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
+        AdManagerAdRequest request = builder.build();
         DemandFetcher demandFetcher = new DemandFetcher(request);
         PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
         demandFetcher.setPeriodMillis(0);
@@ -133,8 +132,8 @@ public class DemandFetcherTest extends BaseSetup {
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        PublisherAdRequest request = builder.build();
+        AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
+        AdManagerAdRequest request = builder.build();
         DemandFetcher demandFetcher = new DemandFetcher(request);
         PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
         demandFetcher.setPeriodMillis(30);
@@ -172,8 +171,8 @@ public class DemandFetcherTest extends BaseSetup {
         Host.CUSTOM.setHostUrl(httpUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        PublisherAdRequest request = builder.build();
+        AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
+        AdManagerAdRequest request = builder.build();
         DemandFetcher demandFetcher = new DemandFetcher(request);
         PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
         demandFetcher.setPeriodMillis(0);
@@ -229,8 +228,8 @@ public class DemandFetcherTest extends BaseSetup {
         Host.CUSTOM.setHostUrl(httpUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromRubicon()));
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        PublisherAdRequest request = builder.build();
+        AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
+        AdManagerAdRequest request = builder.build();
         DemandFetcher demandFetcher = new DemandFetcher(request);
         PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
         demandFetcher.setPeriodMillis(0);
@@ -440,8 +439,8 @@ public class DemandFetcherTest extends BaseSetup {
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
         server.enqueue(new MockResponse().setResponseCode(200).setBody("{}"));
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        PublisherAdRequest request = builder.build();
+        AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
+        AdManagerAdRequest request = builder.build();
         DemandFetcher demandFetcher = new DemandFetcher(request);
         PrebidMobile.setTimeoutMillis(Integer.MAX_VALUE);
         demandFetcher.setPeriodMillis(2000);

@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
+import com.google.android.gms.ads.admanager.AdManagerAdView;
 
 import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.Host;
@@ -46,7 +46,7 @@ public class XandrNativeInBannerGamDemoActivity extends AppCompatActivity {
         adUnit = new NativeAdUnit(Constants.PBS_CONFIG_ID_NATIVE_APPNEXUS);
         FrameLayout adFrame = (FrameLayout) findViewById(R.id.adFrame);
         adFrame.removeAllViews();
-        final PublisherAdView nativeAdView = new PublisherAdView(this);
+        final AdManagerAdView nativeAdView = new AdManagerAdView(this);
         nativeAdView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
@@ -57,7 +57,7 @@ public class XandrNativeInBannerGamDemoActivity extends AppCompatActivity {
         nativeAdView.setAdUnitId(Constants.DFP_IN_BANNER_NATIVE_ADUNIT_ID_APPNEXUS);
         nativeAdView.setAdSizes(AdSize.FLUID);
         adFrame.addView(nativeAdView);
-        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
         NativeAdUnit nativeAdUnit = (NativeAdUnit) adUnit;
         nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
         nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
@@ -106,7 +106,7 @@ public class XandrNativeInBannerGamDemoActivity extends AppCompatActivity {
         nativeAdUnit.fetchDemand(builder, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
-                PublisherAdRequest request = builder.build();
+                AdManagerAdRequest request = builder.build();
                 nativeAdView.loadAd(request);
             }
         });

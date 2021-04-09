@@ -77,10 +77,10 @@ dependencies {
 //    implementation files('libs/PrebidMobile.jar')
 //    implementation files('libs/PrebidMobile-core.jar')
 
-    localJarImplementation fileTree(dir: 'libs', include: ['*.jar'])
+//    localJarImplementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'com.google.android.gms:play-services-ads:17.2.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.gms:play-services-ads:20.0.0'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.11.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.11.1'
     implementation 'com.google.android.exoplayer:extension-ima:2.11.1'

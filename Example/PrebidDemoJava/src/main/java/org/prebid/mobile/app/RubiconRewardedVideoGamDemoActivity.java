@@ -6,10 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
-import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
 import org.prebid.mobile.AdUnit;
@@ -55,48 +56,34 @@ public class RubiconRewardedVideoGamDemoActivity extends AppCompatActivity {
         adUnit.setParameters(parameters);
 
         this.adUnit = adUnit;
-        final RewardedAd amRewardedAd = new RewardedAd(this, Constants.DFP_REWARDED_ADUNIT_ID_RUBICON);
-        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
         adUnit.fetchDemand(builder, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
 
-                PublisherAdRequest request = builder.build();
-                amRewardedAd.loadAd(request, new RewardedAdLoadCallback() {
-                    @Override
-                    public void onRewardedAdLoaded() {
-                        // Ad successfully loaded.
+                AdManagerAdRequest request = builder.build();
 
-                        if (amRewardedAd.isLoaded()) {
-                            amRewardedAd.show(RubiconRewardedVideoGamDemoActivity.this, new RewardedAdCallback() {
-                                @Override
-                                public void onRewardedAdOpened() {
-                                    // Ad opened.
-                                }
+                RewardedAd.load(
+                        RubiconRewardedVideoGamDemoActivity.this,
+                        Constants.DFP_REWARDED_ADUNIT_ID_RUBICON,
+                        request,
+                        new RewardedAdLoadCallback() {
+                            @Override
+                            public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+                                super.onAdLoaded(rewardedAd);
+                                rewardedAd.show(RubiconRewardedVideoGamDemoActivity.this, new OnUserEarnedRewardListener() {
+                                    @Override
+                                    public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
 
-                                @Override
-                                public void onRewardedAdClosed() {
-                                    // Ad closed.
-                                }
+                                    }
+                                });
+                            }
 
-                                @Override
-                                public void onUserEarnedReward(@NonNull RewardItem reward) {
-                                    // User earned reward.
-                                }
-
-                                @Override
-                                public void onRewardedAdFailedToShow(int errorCode) {
-                                    // Ad failed to display.
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onRewardedAdFailedToLoad(int errorCode) {
-                        // Ad failed to load.
-                    }
-                });
+                            @Override
+                            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                                super.onAdFailedToLoad(loadAdError);
+                            }
+                        });
             }
         });
     }

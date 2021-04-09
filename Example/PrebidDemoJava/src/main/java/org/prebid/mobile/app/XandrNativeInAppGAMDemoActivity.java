@@ -8,15 +8,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
+import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
-import com.google.android.gms.ads.formats.OnPublisherAdViewLoadedListener;
+import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 
 import org.prebid.mobile.Host;
@@ -40,7 +42,7 @@ import java.util.ArrayList;
 import static org.prebid.mobile.app.Constants.DFP_NATIVE_NATIVE_ADUNIT_ID_APPNEXUS;
 
 public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
-    private PublisherAdView adView;
+    private AdManagerAdView adView;
     private AdLoader adLoader;
     private UnifiedNativeAd unifiedNativeAd;
 
@@ -144,15 +146,15 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
         cta.setDataType(NativeDataAsset.DATA_TYPE.CTATEXT);
         nativeAdUnit.addAsset(cta);
 
-        final PublisherAdRequest publisherAdRequest = new PublisherAdRequest.Builder()
+        final AdManagerAdRequest AdManagerAdRequest = new AdManagerAdRequest.Builder()
                 .build();
 
         // Fetching the demannd using OnCompleteListener
-        nativeAdUnit.fetchDemand(publisherAdRequest, new OnCompleteListener() {
+        nativeAdUnit.fetchDemand(AdManagerAdRequest, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
                 if (resultCode == ResultCode.SUCCESS) {
-                    loadDfp(publisherAdRequest);
+                    loadDfp(AdManagerAdRequest);
                 } else {
                     Toast.makeText(XandrNativeInAppGAMDemoActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
                 }
@@ -167,11 +169,11 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
             @Override
             public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
                 if (resultCode == ResultCode.SUCCESS) {
-                    final PublisherAdRequest.Builder publisherAdRequestBuilder = new PublisherAdRequest.Builder();
+                    final AdManagerAdRequest.Builder AdManagerAdRequestBuilder = new AdManagerAdRequest.Builder();
                     for (String key: unmodifiableMap.keySet()) {
-                        publisherAdRequestBuilder.addCustomTargeting(key, unmodifiableMap.get(key));
+                        AdManagerAdRequestBuilder.addCustomTargeting(key, unmodifiableMap.get(key));
                     }
-                    loadDfp(publisherAdRequestBuilder.build());
+                    loadDfp(AdManagerAdRequestBuilder.build());
                 }
                 Toast.makeText(XandrNativeInAppGAMDemoActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
             }
@@ -183,13 +185,13 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
 
     }
 
-    private void loadDfp(PublisherAdRequest publisherAdRequest) {
+    private void loadDfp(AdManagerAdRequest AdManagerAdRequest) {
         adLoader = new AdLoader.Builder(this, DFP_NATIVE_NATIVE_ADUNIT_ID_APPNEXUS)
-                .forPublisherAdView(new OnPublisherAdViewLoadedListener() {
+                .forAdManagerAdView(new OnAdManagerAdViewLoadedListener() {
                     @Override
-                    public void onPublisherAdViewLoaded(PublisherAdView publisherAdView) {
-                        adView = publisherAdView;
-                        ((FrameLayout) findViewById(R.id.adFrame)).addView(publisherAdView);
+                    public void onAdManagerAdViewLoaded(AdManagerAdView AdManagerAdView) {
+                        adView = AdManagerAdView;
+                        ((FrameLayout) findViewById(R.id.adFrame)).addView(AdManagerAdView);
                     }
                 }, AdSize.BANNER)
                 .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
@@ -231,13 +233,14 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
                 })
                 .withAdListener(new AdListener() {
                     @Override
-                    public void onAdFailedToLoad(int i) {
-                        super.onAdFailedToLoad(i);
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        super.onAdFailedToLoad(loadAdError);
                         Toast.makeText(XandrNativeInAppGAMDemoActivity.this, "DFP onAdFailedToLoad", Toast.LENGTH_SHORT).show();
+
                     }
                 })
                 .build();
 
-        adLoader.loadAd(publisherAdRequest);
+        adLoader.loadAd(AdManagerAdRequest);
     }
 }

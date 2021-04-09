@@ -8,9 +8,9 @@ import android.widget.FrameLayout;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
-import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
+import com.google.android.gms.ads.doubleclick.AdManagerAdRequest;
+import com.google.android.gms.ads.doubleclick.AdManagerAdView;
+import com.google.android.gms.ads.doubleclick.AdManagerInterstitialAd;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
@@ -67,8 +67,8 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
 
     private MoPubView mMoPubAd;
     private MoPubInterstitial mMoPubInterstitial;
-    private PublisherAdView mGoogleAd;
-    private PublisherInterstitialAd mGoogleInterstitial;
+    private AdManagerAdView mGoogleAd;
+    private AdManagerInterstitialAd mGoogleInterstitial;
 
     private String mAdServerResponse = "";
     private String mRequestId;
@@ -130,22 +130,22 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
                 mMoPubInterstitial.load();
             }
         } else if (adServerSettings.getAdServer() == AdServer.GOOGLE_AD_MANAGER) {
-            PublisherAdRequest adRequest = null;
+            AdManagerAdRequest adRequest = null;
 
             if (generalSettings.getAdFormat() == AdFormat.BANNER) {
-                mGoogleAd = new PublisherAdView(mContext);
+                mGoogleAd = new AdManagerAdView(mContext);
                 AdSize adSize = generalSettings.getAdSize();
                 mGoogleAd.setAdSizes(new com.google.android.gms.ads.AdSize(adSize.getWidth(), adSize.getHeight()));
                 mGoogleAd.setAdUnitId(adServerSettings.getAdUnitId());
                 mGoogleAd.setAdListener(mGoogleBannerListener);
 
             } else if (generalSettings.getAdFormat() == AdFormat.INTERSTITIAL) {
-                mGoogleInterstitial = new PublisherInterstitialAd(mContext);
+                mGoogleInterstitial = new AdManagerInterstitialAd(mContext);
                 mGoogleInterstitial.setAdUnitId(adServerSettings.getAdUnitId());
                 mGoogleInterstitial.setAdListener(mGoogleInterstitialListener);
             }
 
-            PublisherAdRequest.Builder adRequestBuilder = new PublisherAdRequest.Builder();
+            AdManagerAdRequest.Builder adRequestBuilder = new AdManagerAdRequest.Builder();
 
             for (String key : mKeywords.keySet()) {
                 if (mKeywords.containsKey(key)) {
@@ -345,8 +345,8 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
         }
     }
 
-    //Check PublisherAdRequest
-    private void checkRequestForKeywordsAM(@Nullable PublisherAdRequest adRequest) {
+    //Check AdManagerAdRequest
+    private void checkRequestForKeywordsAM(@Nullable AdManagerAdRequest adRequest) {
         if (adRequest != null && mListener != null) {
 
             Map<String, String> map = new HashMap<>();

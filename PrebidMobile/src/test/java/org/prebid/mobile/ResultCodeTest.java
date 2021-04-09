@@ -20,14 +20,13 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.mopub.mobileads.MoPubView;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.tasksmanager.BackgroundThreadExecutor;
-import org.prebid.mobile.tasksmanager.MainThreadExecutor;
 import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
@@ -125,7 +124,7 @@ public class ResultCodeTest extends BaseSetup {
         PrebidMobile.setPrebidServerAccountId("123456");
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
         BannerAdUnit adUnit = new BannerAdUnit("123456", 300, 250);
-        PublisherAdRequest testRequest = new PublisherAdRequest.Builder().build();
+        AdManagerAdRequest testRequest = new AdManagerAdRequest.Builder().build();
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         adUnit.fetchDemand(testRequest, mockListener);
         DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
@@ -174,7 +173,7 @@ public class ResultCodeTest extends BaseSetup {
         PrebidMobile.setPrebidServerAccountId("123456");
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromRubicon()));
         BannerAdUnit adUnit = new BannerAdUnit("123456", 300, 250);
-        PublisherAdRequest testRequest = new PublisherAdRequest.Builder().build();
+        AdManagerAdRequest testRequest = new AdManagerAdRequest.Builder().build();
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         adUnit.fetchDemand(testRequest, mockListener);
         DemandFetcher fetcher = (DemandFetcher) FieldUtils.readField(adUnit, "fetcher", true);
@@ -381,7 +380,7 @@ public class ResultCodeTest extends BaseSetup {
         BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
         adUnit.addAdditionalSize(300, 250);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
         adUnit.fetchDemand(builder.build(), mockListener);
         verify(mockListener, never()).onComplete(ResultCode.INVALID_SIZE);
     }

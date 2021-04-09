@@ -18,8 +18,9 @@ package org.prebid.mobile;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import com.mopub.mobileads.MoPubView;
 
@@ -34,7 +35,6 @@ import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.tasksmanager.BackgroundThreadExecutor;
-import org.prebid.mobile.tasksmanager.MainThreadExecutor;
 import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
