@@ -17,6 +17,7 @@
 package org.prebid.mobile.http;
 
 import android.os.Looper;
+import android.support.annotation.MainThread;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +25,6 @@ import org.prebid.mobile.BidLog;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
-import org.prebid.mobile.Util;
 import org.prebid.mobile.tasksmanager.TasksManager;
 
 import java.io.BufferedReader;
@@ -35,7 +35,6 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.List;
@@ -51,37 +50,19 @@ public abstract class HTTPPost {
         super();
     }
 
-    abstract protected void onPostExecute(TaskResult<JSONObject> response);
-
     public void execute() {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             TasksManager.getInstance().executeOnBackgroundThread(new Runnable() {
                 @Override
                 public void run() {
                     TaskResult<JSONObject> response = makeHttpRequest();
-                    onPostExecute(response);
+                    postResultOnMainThread(response);
                 }
             });
         } else {
             TaskResult<JSONObject> response = makeHttpRequest();
-            onPostExecute(response);
+            postResultOnMainThread(response);
         }
-    }
-
-    protected abstract String getUrl();
-
-    private HttpURLConnection createConnection(URL url) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setDoOutput(false);
-        connection.setDoInput(true);
-        connection.setUseCaches(false);
-        connection.setRequestMethod("GET");
-        return connection;
-    }
-
-    private void setConnectionParams(HttpURLConnection connection) throws ProtocolException {
-        connection.setConnectTimeout(Util.HTTP_CONNECTION_TIMEOUT);
-        connection.setReadTimeout(Util.HTTP_SOCKET_TIMEOUT);
     }
 
     protected TaskResult<JSONObject> makeHttpRequest() {
@@ -209,6 +190,20 @@ public abstract class HTTPPost {
         }
         return new TaskResult<>(new RuntimeException("ServerConnector exception"));
     }
+
+    private void postResultOnMainThread(final TaskResult<JSONObject> result) {
+        TasksManager.getInstance().executeOnMainThread(new Runnable() {
+            @Override
+            public void run() {
+                onPostExecute(result);
+            }
+        });
+    }
+
+    @MainThread
+    protected abstract void onPostExecute(TaskResult<JSONObject> response);
+
+    protected abstract String getUrl();
 
     protected abstract void setTimeoutMillisUpdated(boolean b);
 
