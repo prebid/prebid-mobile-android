@@ -9,9 +9,9 @@ import android.widget.FrameLayout;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.doubleclick.AdManagerAdRequest;
-import com.google.android.gms.ads.doubleclick.AdManagerAdView;
-import com.google.android.gms.ads.doubleclick.AdManagerInterstitialAd;
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
@@ -80,9 +80,9 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
     private boolean mInitialPrebidServerResponseReceived;
     private String mAdServerResponse = "";
 
-    private AdManagerAdView mGoogleBanner;
-    private AdManagerInterstitialAd mGoogleInterstitial;
-    private AdManagerAdRequest mGoogleAdRequest;
+    private PublisherAdView mGoogleBanner;
+    private PublisherInterstitialAd mGoogleInterstitial;
+    private PublisherAdRequest mGoogleAdRequest;
 
     private MoPubView mMoPubBanner;
     private MoPubInterstitial mMoPubInterstitial;
@@ -197,14 +197,14 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
             }
         } else if (adServerSettings.getAdServer() == AdServer.GOOGLE_AD_MANAGER) {
             if (generalSettings.getAdFormat() == AdFormat.BANNER) {
-                mGoogleBanner = new AdManagerAdView(mContext);
+                mGoogleBanner = new PublisherAdView(mContext);
                 AdSize adSize = generalSettings.getAdSize();
                 mGoogleBanner.setAdSizes(new com.google.android.gms.ads.AdSize(adSize.getWidth(), adSize.getHeight()));
                 mGoogleBanner.setAdUnitId(adServerSettings.getAdUnitId());
                 mGoogleBanner.setAdListener(mGoogleBannerListener);
 
             } else if (generalSettings.getAdFormat() == AdFormat.INTERSTITIAL) {
-                mGoogleInterstitial = new AdManagerInterstitialAd(mContext);
+                mGoogleInterstitial = new PublisherInterstitialAd(mContext);
                 mGoogleInterstitial.setAdUnitId(adServerSettings.getAdUnitId());
                 mGoogleInterstitial.setAdListener(mGoogleInterstitialListener);
             }
@@ -224,7 +224,7 @@ public class SdkTest implements MoPubView.BannerAdListener, MoPubInterstitial.In
                         topBid = true;
                     }
 
-                    AdManagerAdRequest.Builder adRequestBuilder = new AdManagerAdRequest.Builder();
+                    PublisherAdRequest.Builder adRequestBuilder = new PublisherAdRequest.Builder();
 
                     for (Map.Entry<String, String> entry : keywordsMap.entrySet()) {
                         adRequestBuilder.addCustomTargeting(entry.getKey(), entry.getValue());

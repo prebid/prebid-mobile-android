@@ -146,15 +146,15 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
         cta.setDataType(NativeDataAsset.DATA_TYPE.CTATEXT);
         nativeAdUnit.addAsset(cta);
 
-        final AdManagerAdRequest AdManagerAdRequest = new AdManagerAdRequest.Builder()
+        final AdManagerAdRequest adManagerAdRequest = new AdManagerAdRequest.Builder()
                 .build();
 
         // Fetching the demannd using OnCompleteListener
-        nativeAdUnit.fetchDemand(AdManagerAdRequest, new OnCompleteListener() {
+        nativeAdUnit.fetchDemand(adManagerAdRequest, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
                 if (resultCode == ResultCode.SUCCESS) {
-                    loadDfp(AdManagerAdRequest);
+                    loadDfp(adManagerAdRequest);
                 } else {
                     Toast.makeText(XandrNativeInAppGAMDemoActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
                 }
@@ -165,19 +165,21 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
         // SAMPLE CODE: Fetching the demand using OnCompleteListener2
         //================================================================================
 
-        /*nativeAdUnit.fetchDemand(new OnCompleteListener2() {
+        /*
+        nativeAdUnit.fetchDemand(new OnCompleteListener2() {
             @Override
             public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
                 if (resultCode == ResultCode.SUCCESS) {
-                    final AdManagerAdRequest.Builder AdManagerAdRequestBuilder = new AdManagerAdRequest.Builder();
+                    final AdManagerAdRequest.Builder adManagerAdRequestBuilder = new AdManagerAdRequest.Builder();
                     for (String key: unmodifiableMap.keySet()) {
-                        AdManagerAdRequestBuilder.addCustomTargeting(key, unmodifiableMap.get(key));
+                        adManagerAdRequestBuilder.addCustomTargeting(key, unmodifiableMap.get(key));
                     }
-                    loadDfp(AdManagerAdRequestBuilder.build());
+                    loadDfp(adManagerAdRequestBuilder.build());
                 }
                 Toast.makeText(XandrNativeInAppGAMDemoActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
             }
-        });*/
+        });
+        */
 
         //================================================================================
         // SAMPLE CODE: END

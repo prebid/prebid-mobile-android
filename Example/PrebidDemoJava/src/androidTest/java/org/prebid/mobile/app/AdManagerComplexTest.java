@@ -223,8 +223,8 @@ public class AdManagerComplexTest {
 
                         requestCountWrapper.value++;
 
-                        AdManagerAdRequest AdManagerAdRequest = builder.build();
-                        Bundle customTargetingBundle = AdManagerAdRequest.getCustomTargeting();
+                        AdManagerAdRequest adManagerAdRequest = builder.build();
+                        Bundle customTargetingBundle = adManagerAdRequest.getCustomTargeting();
 
                         Map<String, String> map = new HashMap<>(customTargetingBundle.keySet().size());
                         for (String key : customTargetingBundle.keySet()) {
@@ -384,8 +384,8 @@ public class AdManagerComplexTest {
         builder.addCustomTargeting("key1", "value1");
         builder.addCustomTargeting("key2", "value2");
 
-        AdManagerAdRequest AdManagerAdRequest1 = builder.build();
-        Bundle bundle1 = AdManagerAdRequest1.getCustomTargeting();
+        AdManagerAdRequest adManagerAdRequest1 = builder.build();
+        Bundle bundle1 = adManagerAdRequest1.getCustomTargeting();
 
         assertEquals(2, bundle1.keySet().size());
         assertEquals("value1", bundle1.getString("key1"));
@@ -444,8 +444,8 @@ public class AdManagerComplexTest {
             public void onComplete(ResultCode resultCode) {
 
                 builder.addCustomTargeting("key2", "value2");
-                AdManagerAdRequest AdManagerAdRequest = builder.build();
-                Bundle customTargetingBundle = AdManagerAdRequest.getCustomTargeting();
+                AdManagerAdRequest adManagerAdRequest = builder.build();
+                Bundle customTargetingBundle = adManagerAdRequest.getCustomTargeting();
 
                 customTargetingBundleWrapper1.value = (Bundle)customTargetingBundle.clone();
 
