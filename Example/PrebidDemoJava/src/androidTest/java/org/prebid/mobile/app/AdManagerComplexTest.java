@@ -395,8 +395,8 @@ public class AdManagerComplexTest {
         assertEquals(1, bundle1.keySet().size());
         assertEquals("value1", bundle1.getString("key1"));
 
-        AdManagerAdRequest AdManagerAdRequest2 = builder.build();
-        Bundle bundle2 = AdManagerAdRequest2.getCustomTargeting();
+        AdManagerAdRequest adManagerAdRequest2 = builder.build();
+        Bundle bundle2 = adManagerAdRequest2.getCustomTargeting();
         assertEquals(1, bundle2.keySet().size());
         assertEquals("value1", bundle2.getString("key1"));
 

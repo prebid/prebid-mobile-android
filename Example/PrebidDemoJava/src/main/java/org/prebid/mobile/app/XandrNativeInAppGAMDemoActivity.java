@@ -187,7 +187,7 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
 
     }
 
-    private void loadDfp(AdManagerAdRequest AdManagerAdRequest) {
+    private void loadDfp(AdManagerAdRequest adManagerAdRequest) {
         adLoader = new AdLoader.Builder(this, DFP_NATIVE_NATIVE_ADUNIT_ID_APPNEXUS)
                 .forAdManagerAdView(new OnAdManagerAdViewLoadedListener() {
                     @Override
@@ -243,6 +243,6 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
                 })
                 .build();
 
-        adLoader.loadAd(AdManagerAdRequest);
+        adLoader.loadAd(adManagerAdRequest);
     }
 }
