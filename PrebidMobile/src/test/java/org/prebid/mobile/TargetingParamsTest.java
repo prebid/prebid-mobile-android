@@ -28,11 +28,16 @@ import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -50,6 +55,8 @@ public class TargetingParamsTest extends BaseSetup {
     @Override
     public void tearDown() {
         super.tearDown();
+
+        TargetingParams.clearStoredExternalUserIds();
 
         TargetingParams.clearAccessControlList();
         TargetingParams.clearUserData();
@@ -407,5 +414,128 @@ public class TargetingParamsTest extends BaseSetup {
         //then
         Assert.assertEquals(partnerName, omidPartnerName);
         Assert.assertEquals(partnerVersion, omidPartnerVersion);
+    }
+
+    @Test
+    public void testStoreAndFetchExternalUserIds() {
+        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+        TargetingParams.storeExternalUserId(new ExternalUserId("netid.de", "999888777", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
+
+
+        ArrayList<String> arrSource = new ArrayList<>(Arrays.asList("adserver.org", "netid.de", "criteo.com", "liveramp.com", "sharedid.org"));
+
+        List<ExternalUserId> externalUserIdList = TargetingParams.fetchStoredExternalUserIds();
+        assertTrue(externalUserIdList.size() == arrSource.size());
+
+        for (ExternalUserId externalUserId: externalUserIdList) {
+            assertTrue(arrSource.contains(externalUserId.getSource()));
+            arrSource.remove(externalUserId.getSource());
+        }
+
+        assertTrue(arrSource.size() == 0);
+    }
+
+    @Test
+    public void testStoreDuplicateAndFetchExternalUserIds() {
+        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+        TargetingParams.storeExternalUserId(new ExternalUserId("netid.de", "999888777", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
+        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "2222222", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+
+        ArrayList<String> arrSource = new ArrayList<>(Arrays.asList("adserver.org", "netid.de", "criteo.com", "liveramp.com", "sharedid.org"));
+
+        List<ExternalUserId> externalUserIdList = TargetingParams.fetchStoredExternalUserIds();
+        assertTrue(externalUserIdList.size() == arrSource.size());
+
+        for (ExternalUserId externalUserId: externalUserIdList) {
+            assertTrue(arrSource.contains(externalUserId.getSource()));
+            arrSource.remove(externalUserId.getSource());
+        }
+
+        assertTrue(arrSource.size() == 0);
+    }
+
+    @Test
+    public void testStoreDuplicateAndOverwriteFetchExternalUserIds() {
+        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+        TargetingParams.storeExternalUserId(new ExternalUserId("netid.de", "999888777", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
+        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "2222222", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+
+        ArrayList<String> arrSource = new ArrayList<>(Arrays.asList("adserver.org", "netid.de", "criteo.com", "liveramp.com", "sharedid.org"));
+
+        List<ExternalUserId> externalUserIdList = TargetingParams.fetchStoredExternalUserIds();
+        assertTrue(externalUserIdList.size() == arrSource.size());
+
+        for (ExternalUserId externalUserId: externalUserIdList) {
+            assertTrue(arrSource.contains(externalUserId.getSource()));
+            arrSource.remove(externalUserId.getSource());
+
+            if (externalUserId.getSource().equals("adserver.org")) {
+                assertTrue(externalUserId.getIdentifier().equals("2222222"));
+            }
+        }
+
+        assertTrue(arrSource.size() == 0);
+    }
+
+    @Test
+    public void testStoreRemoveAndFetchExternalUserIds() {
+        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+        TargetingParams.storeExternalUserId(new ExternalUserId("netid.de", "999888777", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
+        // removing two externalUserId
+        TargetingParams.removeStoredExternalUserId("adserver.org");
+        TargetingParams.removeStoredExternalUserId("criteo.com");
+
+        ArrayList<String> arrSource = new ArrayList<>(Arrays.asList("adserver.org", "netid.de", "criteo.com", "liveramp.com", "sharedid.org"));
+
+        List<ExternalUserId> externalUserIdList = TargetingParams.fetchStoredExternalUserIds();
+        assertTrue(externalUserIdList.size() == arrSource.size() - 2); // removed 2 externaUserId
+
+        for (ExternalUserId externalUserId: externalUserIdList) {
+            assertTrue(arrSource.contains(externalUserId.getSource()));
+            arrSource.remove(externalUserId.getSource());
+        }
+
+        assertTrue(arrSource.size() == 2); // removed 2 externalUserId
+    }
+
+    @Test
+    public void testStoreClearAndFetchExternalUserIds() {
+        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+        TargetingParams.storeExternalUserId(new ExternalUserId("netid.de", "999888777", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
+        // clearing externalUserId
+        TargetingParams.clearStoredExternalUserIds();
+
+        List<ExternalUserId> externalUserIdList = TargetingParams.fetchStoredExternalUserIds();
+        assertNull(externalUserIdList);
+    }
+
+    @Test
+    public void testStoreAndFetchExternalUserId() {
+        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+        TargetingParams.storeExternalUserId(new ExternalUserId("netid.de", "999888777", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
+        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
+
+        ExternalUserId externalUserId = TargetingParams.fetchStoredExternalUserId("sharedid.org");
+        assertTrue(externalUserId.getSource().equals("sharedid.org"));
+        assertTrue(externalUserId.getIdentifier().equals("111111111111"));
+        assertTrue(externalUserId.getAtype() == 1);
+        assertTrue(externalUserId.getExt().get("third").equals("01ERJWE5FS4RAZKG6SKQ3ZYSKV"));
     }
 }

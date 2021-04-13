@@ -50,7 +50,7 @@ final class StorageUtils {
     static final String IABUSPrivacy_StringKey = "IABUSPrivacy_String";
 
     //External UserIds
-    static final String EXTERNAL_USER_ID_KEY = "EXTERNAL_USER_ID_KEY";
+    static final String PB_ExternalUserIdsKey = "PB_ExternalUserIdsKey";
 
     //COPPA
     static boolean getPbCoppa() throws PbContextNullException {
@@ -156,26 +156,30 @@ final class StorageUtils {
     }
 
 
-    static void storeExternalUserId(ExternalUserId value){
+    static void storeExternalUserId(ExternalUserId externalUserId){
+        // Remove the existing ExternalUserId with same source.
+        removeStoredExternalUserId(externalUserId.getSource());
+
+        // Storing the ExternalUserId
         SharedPreferences pref = getSharedPreferences();
-        String externalUserIdString = pref.getString(EXTERNAL_USER_ID_KEY, null);
+        String externalUserIdString = pref.getString(PB_ExternalUserIdsKey, null);
         List<ExternalUserId> externalUidListFromJson;
-        if (externalUserIdString != null) {
+        if (!TextUtils.isEmpty(externalUserIdString)) {
             externalUidListFromJson = ExternalUserId.getExternalUidListFromJson(externalUserIdString);
         } else {
             externalUidListFromJson = new ArrayList<>();
         }
-        externalUidListFromJson.add(value);
+        externalUidListFromJson.add(externalUserId);
         SharedPreferences.Editor editor = pref.edit();
-        if (value != null) {
-            editor.putString(StorageUtils.EXTERNAL_USER_ID_KEY, externalUidListFromJson.toString());
+        if (externalUserId != null) {
+            editor.putString(StorageUtils.PB_ExternalUserIdsKey, externalUidListFromJson.toString());
         }
         editor.apply();
     }
 
     static List<ExternalUserId> fetchStoredExternalUserIds() {
         SharedPreferences pref = getSharedPreferences();
-        String externalUserIds = pref.getString(StorageUtils.EXTERNAL_USER_ID_KEY, null);
+        String externalUserIds = pref.getString(StorageUtils.PB_ExternalUserIdsKey, null);
         if (externalUserIds != null) {
             return ExternalUserId.getExternalUidListFromJson(externalUserIds);
         }
@@ -184,7 +188,7 @@ final class StorageUtils {
 
     static ExternalUserId fetchStoredExternalUserId(String source) {
         SharedPreferences pref = getSharedPreferences();
-        String externalUserIds = pref.getString(StorageUtils.EXTERNAL_USER_ID_KEY, null);
+        String externalUserIds = pref.getString(StorageUtils.PB_ExternalUserIdsKey, null);
         if (!TextUtils.isEmpty(externalUserIds)) {
             List<ExternalUserId> externalUidListFromJson = ExternalUserId.getExternalUidListFromJson(externalUserIds);
             for (ExternalUserId externalUserId: externalUidListFromJson) {
@@ -198,7 +202,7 @@ final class StorageUtils {
 
     static void removeStoredExternalUserId(String source) {
         SharedPreferences pref = getSharedPreferences();
-        String externalUserIds = pref.getString(StorageUtils.EXTERNAL_USER_ID_KEY, null);
+        String externalUserIds = pref.getString(StorageUtils.PB_ExternalUserIdsKey, null);
         if (!TextUtils.isEmpty(externalUserIds)) {
             List<ExternalUserId> externalUidListFromJson = ExternalUserId.getExternalUidListFromJson(externalUserIds);
             ExternalUserId toBeRemoved = null;
@@ -215,7 +219,7 @@ final class StorageUtils {
                     clearStoredExternalUserIds();
                 } else {
                     SharedPreferences.Editor editor = pref.edit();
-                    editor.putString(StorageUtils.EXTERNAL_USER_ID_KEY, externalUidListFromJson.toString());
+                    editor.putString(StorageUtils.PB_ExternalUserIdsKey, externalUidListFromJson.toString());
                     editor.apply();
                 }
             }
@@ -226,7 +230,7 @@ final class StorageUtils {
         if (fetchStoredExternalUserIds() != null) {
             SharedPreferences pref = getSharedPreferences();
             SharedPreferences.Editor editor = pref.edit();
-            editor.remove(StorageUtils.EXTERNAL_USER_ID_KEY);
+            editor.remove(StorageUtils.PB_ExternalUserIdsKey);
             editor.apply();
         }
     }
