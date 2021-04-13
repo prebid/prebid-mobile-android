@@ -15,7 +15,7 @@ import org.prebid.mobile.rendering.errors.AdException;
 
 public class OpenXApolloInterstitialAdapter extends BaseAd {
     private static final String TAG = OpenXApolloInterstitialAdapter.class.getSimpleName();
-    private static final String KEY_BID_RESPONSE = "OPENX_BID_RESPONSE_ID";
+    private static final String KEY_BID_RESPONSE = "PREBID_BID_RESPONSE_ID";
 
     private InterstitialController mInterstitialController;
     private InterstitialControllerListener mInterstitialListener = new InterstitialControllerListener() {

@@ -26,8 +26,8 @@ public class DeepLinkActionTest {
 
     @Test
     public void whenShouldOverrideUrlLoadingWithHttpHttpsScheme_ReturnFalse() {
-        Uri httpUri = Uri.parse("http://openx.com");
-        Uri httpsUri = Uri.parse("https://openx.com");
+        Uri httpUri = Uri.parse("http://prebid.com");
+        Uri httpsUri = Uri.parse("https://prebid.com");
 
         assertFalse(mDeepLinkAction.shouldOverrideUrlLoading(httpUri));
         assertFalse(mDeepLinkAction.shouldOverrideUrlLoading(httpsUri));
@@ -35,7 +35,7 @@ public class DeepLinkActionTest {
 
     @Test
     public void whenShouldOverrideUrlLoadingCustomScheme_ReturnTrue() {
-        Uri customSchemeUri = Uri.parse("openx://open");
+        Uri customSchemeUri = Uri.parse("prebid://open");
 
         assertTrue(mDeepLinkAction.shouldOverrideUrlLoading(customSchemeUri));
     }

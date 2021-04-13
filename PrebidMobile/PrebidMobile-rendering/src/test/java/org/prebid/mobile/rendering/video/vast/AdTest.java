@@ -2,10 +2,9 @@ package org.prebid.mobile.rendering.video.vast;
 
 import android.util.Xml;
 
-import com.apollo.test.utils.ResourceUtils;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.test.utils.ResourceUtils;
 import org.robolectric.RobolectricTestRunner;
 import org.xmlpull.v1.XmlPullParser;
 

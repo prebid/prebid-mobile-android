@@ -17,12 +17,12 @@ import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
 
 /**
- * This class is compatible with OpenX Apollo SDK v1.0.0.
- * This class implements the communication between the OpenX SDK and the GAM SDK for a given ad
- * unit. It implements the OpenX EventHandler interface. OpenX SDK notifies (using EventHandler interface)
+ * This class is compatible with Prebid Rendering SDK v1.10.
+ * This class implements the communication between the Prebid Rendering SDK and the GAM SDK for a given ad
+ * unit. It implements the Prebid Rendering SDK EventHandler interface. Prebid Rendering SDK notifies (using EventHandler interface)
  * to make a request to GAM SDK and pass the targeting parameters. This class also creates the GAM's
  * PublisherAdViews, initializes them and listens for the callback methods. And pass the GAM ad event to
- * OpenX SDK via OXBBannerEventListener.
+ * Prebid Rendering SDK via BannerEventListener.
  */
 public class GamBannerEventHandler implements BannerEventHandler, GamAdEventListener {
     private static final String TAG = GamBannerEventHandler.class.getSimpleName();

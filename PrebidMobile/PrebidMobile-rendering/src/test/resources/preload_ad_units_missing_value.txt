@@ -4,6 +4,6 @@
        "auid":"539733507"
     },
     {
-       "domain":"mobile-d.openx.net"
+       "domain":"mobile-d.prebid.net"
     }]
 }

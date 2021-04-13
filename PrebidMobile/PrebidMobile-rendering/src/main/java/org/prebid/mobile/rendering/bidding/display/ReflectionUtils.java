@@ -28,7 +28,7 @@ public class ReflectionUtils {
     private static final String MOPUB_NATIVE_CLASS = "com.mopub.nativeads.MoPubNative";
     static final String GAM_AD_REQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
 
-    static final String KEY_BID_RESPONSE = "OPENX_BID_RESPONSE_ID";
+    static final String KEY_BID_RESPONSE = "PREBID_BID_RESPONSE_ID";
 
     static {
         RESERVED_KEYS = new HashSet<>();

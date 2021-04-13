@@ -7,13 +7,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.R;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -55,14 +54,14 @@ public class BrowserControlsTest {
         forthBtnField.set(mBrowserControls, forthBtn);
 
         mBrowserControls.updateNavigationButtonsState();
-        verify(backBtn).setBackgroundResource(eq(R.drawable.openx_res_back_inactive));
-        verify(forthBtn).setBackgroundResource(eq(R.drawable.openx_res_forth_inactive));
+        verify(backBtn).setBackgroundResource(eq(R.drawable.prebid_ic_back_inactive));
+        verify(forthBtn).setBackgroundResource(eq(R.drawable.prebid_ic_forth_inactive));
 
         when(mMockListener.canGoBack()).thenReturn(true);
         when(mMockListener.canGoForward()).thenReturn(true);
         mBrowserControls.updateNavigationButtonsState();
-        verify(backBtn).setBackgroundResource(eq(R.drawable.openx_res_back_active));
-        verify(forthBtn).setBackgroundResource(eq(R.drawable.openx_res_forth_active));
+        verify(backBtn).setBackgroundResource(eq(R.drawable.prebid_ic_back_active));
+        verify(forthBtn).setBackgroundResource(eq(R.drawable.prebid_ic_forth_active));
     }
 
     @Test

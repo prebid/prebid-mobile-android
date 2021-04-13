@@ -16,7 +16,7 @@ import org.prebid.mobile.rendering.models.internal.MraidEvent;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBase;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
@@ -62,8 +62,8 @@ public class MraidController {
         }
 
         @Override
-        public void displayOpenXWebViewForMRAID(WebViewBase adBaseView, boolean isNewlyLoaded, MraidEvent mraidEvent) {
-            MraidController.this.displayOpenXWebViewForMRAID(adBaseView, isNewlyLoaded, mraidEvent);
+        public void displayPrebidWebViewForMraid(WebViewBase adBaseView, boolean isNewlyLoaded, MraidEvent mraidEvent) {
+            MraidController.this.displaPrebidWebViewForMraid(adBaseView, isNewlyLoaded, mraidEvent);
         }
 
         @Override
@@ -98,24 +98,21 @@ public class MraidController {
         mMraidCalendarEvent.createCalendarEvent(parameters);
     }
 
-    public void expand(WebViewBase oldWebViewBase, OpenXWebViewBase twoPartNewWebViewBase,
+    public void expand(WebViewBase oldWebViewBase, PrebidWebViewBase twoPartNewWebViewBase,
                        MraidEvent mraidEvent) {
         oldWebViewBase.getMraidListener().loadMraidExpandProperties();
         if (TextUtils.isEmpty(mraidEvent.mraidActionHelper)) {
             //create an mraidExpand & call expand on it to open up a dialog
-            displayOpenXWebViewForMRAID(oldWebViewBase, false, mraidEvent);
+            displaPrebidWebViewForMraid(oldWebViewBase, false, mraidEvent);
         }
         else {
             //2 part
-
-            //OpenXWebViewBase openxwebviewNew = mTwoPartNewWebViewBase;
             twoPartNewWebViewBase.getMraidWebView().setMraidEvent(mraidEvent);
-            //1st call loadurl() & then call displayOpenXWebViewForMRAID() in preloaded listener.
         }
     }
 
     public void handleMraidEvent(MraidEvent event, HTMLCreative creative,
-                                 WebViewBase oldWebViewBase, OpenXWebViewBase twoPartNewWebViewBase) {
+                                 WebViewBase oldWebViewBase, PrebidWebViewBase twoPartNewWebViewBase) {
         switch (event.mraidAction) {
             case ACTION_EXPAND:
                 if (Utils.isBlank(event.mraidActionHelper)) {
@@ -243,13 +240,13 @@ public class MraidController {
         }
     }
 
-    private void displayOpenXWebViewForMRAID(final WebViewBase adBaseView,
+    private void displaPrebidWebViewForMraid(final WebViewBase adBaseView,
                                              final boolean isNewlyLoaded,
                                              MraidEvent mraidEvent) {
         displayMraidInInterstitial(adBaseView, false, mraidEvent, () -> {
             if (isNewlyLoaded) {
                 //handle 2 part expand
-                OpenXWebViewBase oxWebview = (OpenXWebViewBase) adBaseView.getPreloadedListener();
+                PrebidWebViewBase oxWebview = (PrebidWebViewBase) adBaseView.getPreloadedListener();
                 oxWebview.initMraidExpanded();
             }
         });

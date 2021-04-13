@@ -1,10 +1,9 @@
 package org.prebid.mobile.rendering.bidding.data.bid;
 
-import com.apollo.test.utils.ResourceUtils;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
+import org.prebid.mobile.test.utils.ResourceUtils;
 
 import java.io.IOException;
 

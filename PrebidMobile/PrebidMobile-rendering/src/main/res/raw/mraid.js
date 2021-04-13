@@ -3,7 +3,7 @@ var printDebug = function(messageBuilder) {};
 (function() {
 
     const LOG_TO_CONSOLE_ENABLE = false;
-    const TAG = "OPENX_MRAID_JS";
+    const TAG = "PREBID_MRAID_JS";
 
     var mraid = window.mraid = {};
     mraid.eventListeners = {};

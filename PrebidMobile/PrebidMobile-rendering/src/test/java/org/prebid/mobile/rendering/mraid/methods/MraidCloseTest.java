@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,12 +13,13 @@ import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.views.browser.AdBrowserActivity;
 import org.prebid.mobile.rendering.views.indicator.AdIndicatorView;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBase;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JsExecutor;
 import org.prebid.mobile.rendering.views.webview.mraid.ScreenMetricsWaiter;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -111,18 +110,18 @@ public class MraidCloseTest {
     throws InvocationTargetException, IllegalAccessException {
         Method changeAdIndicatorPositionMethod = WhiteBox.method(MraidClose.class, "changeAdIndicatorPosition", WebViewBase.class);
 
-        OpenXWebViewBase mockOpenXWebViewbase = mock(OpenXWebViewBase.class);
+        PrebidWebViewBase mockPrebidWebViewbase = mock(PrebidWebViewBase.class);
         HTMLCreative mockHtmlCreative = mock(HTMLCreative.class);
         AdIndicatorView mockView = mock(AdIndicatorView.class);
         when(mockHtmlCreative.getAdIndicatorView()).thenReturn(mockView);
-        when(mockOpenXWebViewbase.getCreative()).thenReturn(mockHtmlCreative);
+        when(mockPrebidWebViewbase.getCreative()).thenReturn(mockHtmlCreative);
 
         when(mockView.getAdUnitIdentifierType()).thenReturn(AdConfiguration.AdUnitIdentifierType.BANNER);
-        when(mMockWebViewBase.getPreloadedListener()).thenReturn(mockOpenXWebViewbase);
+        when(mMockWebViewBase.getPreloadedListener()).thenReturn(mockPrebidWebViewbase);
 
         changeAdIndicatorPositionMethod.invoke(mMraidClose, mMockWebViewBase);
         verify(mockView).setPosition(AdIndicatorView.AdIconPosition.TOP);
-        verify(mockOpenXWebViewbase).addView(mockView, 0);
-        verify(mockOpenXWebViewbase).setVisibility(View.VISIBLE);
+        verify(mockPrebidWebViewbase).addView(mockView, 0);
+        verify(mockPrebidWebViewbase).setVisibility(View.VISIBLE);
     }
 }

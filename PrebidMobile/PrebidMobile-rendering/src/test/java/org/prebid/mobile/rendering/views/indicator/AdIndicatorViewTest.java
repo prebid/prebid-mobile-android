@@ -5,13 +5,12 @@ import android.content.Context;
 import android.view.Gravity;
 import android.widget.ImageView;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.R;
 import org.prebid.mobile.rendering.models.AdConfiguration;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 

@@ -5,8 +5,6 @@ import android.content.Context;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.video.VideoCreativeView;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;

@@ -5,8 +5,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.view.View;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +16,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -40,7 +39,6 @@ import static org.mockito.Mockito.when;
 public class GamBannerEventHandlerTest {
     private static final String GAM_AD_UNIT_ID = "12345678";
     private static final AdSize GAM_AD_SIZE = new AdSize(350 ,50);
-    private static final String OXB_SDK_APP_EVENT = "OpenXApolloAppEvent";
 
     private GamBannerEventHandler mBannerEventHandler;
     private Context mContext;
@@ -155,19 +153,19 @@ public class GamBannerEventHandlerTest {
     }
 
     @Test
-    public void convertGamAdSize_ReturnApolloSizesArray() {
-        AdSize[] apolloSizes = GamBannerEventHandler.convertGamAdSize(com.google.android.gms.ads.AdSize.FLUID,
+    public void convertGamAdSize_ReturnPrebidSizesArray() {
+        AdSize[] prebidSizes = GamBannerEventHandler.convertGamAdSize(com.google.android.gms.ads.AdSize.FLUID,
                                                                       com.google.android.gms.ads.AdSize.BANNER);
-        assertEquals(com.google.android.gms.ads.AdSize.FLUID.getWidth(), apolloSizes[0].width);
-        assertEquals(com.google.android.gms.ads.AdSize.FLUID.getHeight(), apolloSizes[0].height);
-        assertEquals(com.google.android.gms.ads.AdSize.BANNER.getWidth(), apolloSizes[1].width);
-        assertEquals(com.google.android.gms.ads.AdSize.BANNER.getHeight(), apolloSizes[1].height);
+        assertEquals(com.google.android.gms.ads.AdSize.FLUID.getWidth(), prebidSizes[0].width);
+        assertEquals(com.google.android.gms.ads.AdSize.FLUID.getHeight(), prebidSizes[0].height);
+        assertEquals(com.google.android.gms.ads.AdSize.BANNER.getWidth(), prebidSizes[1].width);
+        assertEquals(com.google.android.gms.ads.AdSize.BANNER.getHeight(), prebidSizes[1].height);
     }
 
     @Test
-    public void convertGamAdSizeAndNullPassed_ReturnEmptyApolloSizesArray() {
-        AdSize[] apolloSizes = GamBannerEventHandler.convertGamAdSize(null);
-        assertEquals(0, apolloSizes.length);
+    public void convertGamAdSizeAndNullPassed_ReturnEmptyPrebidSizesArray() {
+        AdSize[] prebidSizes = GamBannerEventHandler.convertGamAdSize(null);
+        assertEquals(0, prebidSizes.length);
     }
 
     @After

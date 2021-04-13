@@ -1,12 +1,11 @@
 package org.prebid.mobile.rendering.utils.helpers;
 
-import com.apollo.test.utils.ResourceUtils;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.models.internal.MacrosModel;
+import org.prebid.mobile.test.utils.ResourceUtils;
 
 import java.io.IOException;
 import java.util.Base64;

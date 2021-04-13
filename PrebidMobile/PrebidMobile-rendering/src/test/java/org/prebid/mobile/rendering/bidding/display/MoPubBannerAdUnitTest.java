@@ -3,7 +3,6 @@ package org.prebid.mobile.rendering.bidding.display;
 import android.app.Activity;
 import android.content.Context;
 
-import com.apollo.test.utils.WhiteBox;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
 
@@ -20,6 +19,7 @@ import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;

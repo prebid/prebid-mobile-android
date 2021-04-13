@@ -6,12 +6,12 @@ import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 
-public class OpenXWebViewInterstitial extends OpenXWebViewBase
+public class PrebidWebViewInterstitial extends PrebidWebViewBase
     implements PreloadManager.PreloadedListener, MraidEventsManager.MraidListener {
 
-    private final String TAG = OpenXWebViewInterstitial.class.getSimpleName();
+    private final String TAG = PrebidWebViewInterstitial.class.getSimpleName();
 
-    public OpenXWebViewInterstitial(Context context, InterstitialManager interstitialManager) {
+    public PrebidWebViewInterstitial(Context context, InterstitialManager interstitialManager) {
         super(context, interstitialManager);
     }
 

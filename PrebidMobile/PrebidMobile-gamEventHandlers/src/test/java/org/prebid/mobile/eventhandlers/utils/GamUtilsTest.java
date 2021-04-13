@@ -1,6 +1,5 @@
 package org.prebid.mobile.eventhandlers.utils;
 
-import com.apollo.test.utils.WhiteBox;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
@@ -14,6 +13,7 @@ import org.prebid.mobile.rendering.bidding.data.ntv.NativeAd;
 import org.prebid.mobile.rendering.bidding.data.ntv.NativeAdParser;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.listeners.NativeAdCallback;
+import org.prebid.mobile.test.utils.WhiteBox;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -29,56 +29,39 @@ import static org.mockito.Mockito.when;
 
 public class GamUtilsTest {
 
-    public static final String KEY_IS_APOLLO_CREATIVE = "isApolloCreative";
     public static final String KEY_IS_PREBID = "isPrebid";
 
     @Test
-    public void didApolloWin_customTemplate_adIsNullOrNoEvents_ReturnFalse() {
+    public void didPrebidWin_customTemplate_adIsNullOrNoEvents_ReturnFalse() {
         NativeCustomTemplateAd ad = null;
-        assertFalse(GamUtils.didApolloWin(ad));
+        assertFalse(GamUtils.didPrebidWin(ad));
 
         ad = mock(NativeCustomTemplateAd.class);
-        when(ad.getText(KEY_IS_APOLLO_CREATIVE)).thenReturn("0");
         when(ad.getText(KEY_IS_PREBID)).thenReturn("0");
 
-        assertFalse(GamUtils.didApolloWin(ad));
+        assertFalse(GamUtils.didPrebidWin(ad));
     }
 
     @Test
-    public void didApolloWin_customTemplate_adContainsEvents_ReturnTrue() {
+    public void didPrebidWin_customTemplate_adContainsEvents_ReturnTrue() {
         NativeCustomTemplateAd ad = mock(NativeCustomTemplateAd.class);
 
-        when(ad.getText(KEY_IS_APOLLO_CREATIVE)).thenReturn("1");
         when(ad.getText(KEY_IS_PREBID)).thenReturn("0");
-        assertTrue(GamUtils.didApolloWin(ad));
+        assertFalse(GamUtils.didPrebidWin(ad));
 
         when(ad.getText(KEY_IS_PREBID)).thenReturn("1");
-        when(ad.getText(KEY_IS_APOLLO_CREATIVE)).thenReturn("0");
-        assertTrue(GamUtils.didApolloWin(ad));
-
-        when(ad.getText(KEY_IS_PREBID)).thenReturn("1");
-        when(ad.getText(KEY_IS_APOLLO_CREATIVE)).thenReturn("1");
-        assertTrue(GamUtils.didApolloWin(ad));
+        assertTrue(GamUtils.didPrebidWin(ad));
     }
 
     @Test
-    public void didApolloWin_unifiedAd_adIsNullOrNoEvents_ReturnFalse() {
+    public void didPrebidWin_unifiedAd_adIsNullOrNoEvents_ReturnFalse() {
         UnifiedNativeAd ad = null;
-        assertFalse(GamUtils.didApolloWin(ad));
+        assertFalse(GamUtils.didPrebidWin(ad));
 
         ad = mock(UnifiedNativeAd.class);
         when(ad.getBody()).thenReturn("");
 
-        assertFalse(GamUtils.didApolloWin(ad));
-    }
-
-    @Test
-    public void didApolloWin_unifiedAd_adContainsEvents_ReturnTrue() {
-        UnifiedNativeAd ad = mock(UnifiedNativeAd.class);
-
-        when(ad.getBody()).thenReturn(KEY_IS_APOLLO_CREATIVE);
-
-        assertTrue(GamUtils.didApolloWin(ad));
+        assertFalse(GamUtils.didPrebidWin(ad));
     }
 
     @Test

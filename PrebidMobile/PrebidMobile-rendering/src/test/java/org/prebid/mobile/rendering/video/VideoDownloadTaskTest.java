@@ -3,8 +3,6 @@ package org.prebid.mobile.rendering.video;
 import android.app.Activity;
 import android.content.Context;
 
-import com.apollo.test.utils.ResourceUtils;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +11,7 @@ import org.mockito.Mockito;
 import org.prebid.mobile.rendering.loading.FileDownloadListener;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
+import org.prebid.mobile.test.utils.ResourceUtils;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 

@@ -42,7 +42,7 @@ import org.prebid.mobile.rendering.utils.helpers.HandlerQueueManager;
 import org.prebid.mobile.rendering.utils.helpers.MraidUtils;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBase;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 
 import java.lang.ref.WeakReference;
@@ -63,7 +63,7 @@ public class BaseJSInterface implements JSInterface {
     private final MraidVariableContainer mMraidVariableContainer = new MraidVariableContainer();
 
     // An ad container, which contains the ad web view in default state, but is empty when expanded.
-    protected OpenXWebViewBase mDefaultAdContainer;
+    protected PrebidWebViewBase mDefaultAdContainer;
 
     @NonNull
     @VisibleForTesting
@@ -94,7 +94,7 @@ public class BaseJSInterface implements JSInterface {
 
         //need this for all metric updates - DONOT do this here cos metric update happens in a thread & this js class may not
         //have been initiated by then.
-        mDefaultAdContainer = (OpenXWebViewBase) adBaseView.getPreloadedListener();
+        mDefaultAdContainer = (PrebidWebViewBase) adBaseView.getPreloadedListener();
 
         mScreenMetrics = new MraidScreenMetrics(mContext, mContext.getResources().getDisplayMetrics().density);
         mScreenMetricsWaiter = new ScreenMetricsWaiter();
@@ -397,7 +397,7 @@ public class BaseJSInterface implements JSInterface {
         return mScreenMetrics;
     }
 
-    public OpenXWebViewBase getDefaultAdContainer() {
+    public PrebidWebViewBase getDefaultAdContainer() {
         return mDefaultAdContainer;
     }
 
@@ -488,7 +488,7 @@ public class BaseJSInterface implements JSInterface {
         if (mAdBaseView == null) {
             return;
         }
-        mDefaultAdContainer = (OpenXWebViewBase) mAdBaseView.getPreloadedListener();
+        mDefaultAdContainer = (PrebidWebViewBase) mAdBaseView.getPreloadedListener();
         // Determine which web view should be used for the current ad position
 
         OXLog.debug(TAG, "updateMetrics()  Width: " + mAdBaseView.getWidth() + " Height: " + mAdBaseView.getHeight());
@@ -561,7 +561,7 @@ public class BaseJSInterface implements JSInterface {
 
     private void notifyMraidEventHandler() {
         mOrientationBroadcastReceiver.setMraidAction(mMraidEvent.mraidAction);
-        HTMLCreative htmlCreative = ((OpenXWebViewBase) mAdBaseView.getPreloadedListener())
+        HTMLCreative htmlCreative = ((PrebidWebViewBase) mAdBaseView.getPreloadedListener())
             .getCreative();
         mAdBaseView.post(new MraidEventHandlerNotifierRunnable(htmlCreative,
                                                                mAdBaseView,

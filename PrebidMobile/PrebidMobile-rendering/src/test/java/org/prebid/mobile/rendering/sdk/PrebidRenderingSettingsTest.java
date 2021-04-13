@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.bidding.enums.Host;
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;

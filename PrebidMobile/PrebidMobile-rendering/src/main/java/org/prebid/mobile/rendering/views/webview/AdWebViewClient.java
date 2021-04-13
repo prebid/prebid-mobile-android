@@ -95,7 +95,7 @@ public class AdWebViewClient extends WebViewClient {
             // IMPORTANT: The code below should be performed only to the iframe of the raw ad (without SDK injections).
             // Need to check webViewBase.containsIFrame() because displayed ad could contain another
             // injected script (for example OpenMeasurement) that initializes own resources.
-            // Otherwise, we could get an error: https://openxtechinc.atlassian.net/browse/MOBILE-5100
+            // Otherwise, we could get an error: jira/browse/MOBILE-5100
             if (webViewBase.containsIFrame()
                 && webViewBase.isClicked()
                 && !mUrls.contains(url)

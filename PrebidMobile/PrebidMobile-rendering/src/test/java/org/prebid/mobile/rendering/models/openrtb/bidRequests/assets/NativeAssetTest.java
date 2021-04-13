@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import org.junit.Test;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 
-import static com.apollo.test.utils.ResourceUtils.assertJsonEquals;
+import static org.prebid.mobile.test.utils.ResourceUtils.assertJsonEquals;
 
 public class NativeAssetTest {
     @Test

@@ -1,8 +1,5 @@
 package org.prebid.mobile.rendering.mraid.methods.network;
 
-import com.apollo.test.utils.ResourceUtils;
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,6 +8,8 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask.GetUrlResult;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
+import org.prebid.mobile.test.utils.ResourceUtils;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 

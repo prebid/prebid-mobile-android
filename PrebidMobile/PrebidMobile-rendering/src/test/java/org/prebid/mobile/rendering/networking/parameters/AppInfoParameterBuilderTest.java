@@ -1,7 +1,5 @@
 package org.prebid.mobile.rendering.networking.parameters;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
@@ -16,6 +14,7 @@ import org.prebid.mobile.rendering.networking.targeting.Targeting;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.RobolectricTestRunner;
 
 import static org.junit.Assert.assertEquals;
@@ -48,7 +47,7 @@ public class AppInfoParameterBuilderTest {
         AdRequestInput adRequestInput = new AdRequestInput();
 
         final String expectedStoreurl = "https://google.play.com";
-        final String expectedPublisherName = "openx";
+        final String expectedPublisherName = "prebid";
 
         Targeting.setPublisherName(expectedPublisherName);
         Targeting.setAppStoreMarketUrl(expectedStoreurl);

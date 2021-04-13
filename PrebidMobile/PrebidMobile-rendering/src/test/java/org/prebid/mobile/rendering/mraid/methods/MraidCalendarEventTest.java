@@ -4,14 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.provider.CalendarContract;
 
-import com.apollo.test.utils.ResourceUtils;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
+import org.prebid.mobile.test.utils.ResourceUtils;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;

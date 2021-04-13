@@ -109,9 +109,6 @@ public abstract class AdBaseDialog extends Dialog {
         mListener = listener;
     }
 
-    /**
-     * This onWindowFocusChanged event is used internally by the OpenX SDK
-     */
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
 

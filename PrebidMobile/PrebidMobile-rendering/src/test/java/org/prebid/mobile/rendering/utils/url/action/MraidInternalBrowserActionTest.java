@@ -42,7 +42,7 @@ import static org.robolectric.Shadows.shadowOf;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class MraidInternalBrowserActionTest {
-    private static final Uri VALID_URI = Uri.parse("http://openx.com");
+    private static final Uri VALID_URI = Uri.parse("http://prebid.com");
     private static final String VALID_URL = VALID_URI.toString();
 
     private MraidInternalBrowserAction mMraidInternalBrowserAction;
@@ -65,8 +65,8 @@ public class MraidInternalBrowserActionTest {
 
     @Test
     public void shouldOverrideUrlLoadingWithHttpHttpsScheme_ReturnTrue() {
-        Uri httpUri = Uri.parse("http://openx.com");
-        Uri httpsUri = Uri.parse("https://openx.com");
+        Uri httpUri = Uri.parse("http://prebid.com");
+        Uri httpsUri = Uri.parse("https://prebid.com");
 
         assertTrue(mMraidInternalBrowserAction.shouldOverrideUrlLoading(httpUri));
         assertTrue(mMraidInternalBrowserAction.shouldOverrideUrlLoading(httpsUri));
@@ -74,7 +74,7 @@ public class MraidInternalBrowserActionTest {
 
     @Test
     public void shouldOverrideUrlLoadingWithCustomScheme_ReturnFalse() {
-        Uri customUri = Uri.parse("openx://open");
+        Uri customUri = Uri.parse("prebid://open");
         Uri deepLinkPlusUri = Uri.parse("deeplink+://open");
 
         assertFalse(mMraidInternalBrowserAction.shouldOverrideUrlLoading(customUri));

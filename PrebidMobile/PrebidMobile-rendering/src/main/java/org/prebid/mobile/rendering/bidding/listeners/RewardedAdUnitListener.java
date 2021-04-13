@@ -11,7 +11,7 @@ public interface RewardedAdUnitListener {
     /**
      * Executed when the ad is loaded and is ready for display.
      *
-     * @param rewardedAdUnit view of the corresponding event. Contains reward instance inside. OpenX reward is always null.
+     * @param rewardedAdUnit view of the corresponding event. Contains reward instance inside. Prebod reward is always null.
      */
     void onAdLoaded(RewardedAdUnit rewardedAdUnit);
 
@@ -47,7 +47,7 @@ public interface RewardedAdUnitListener {
     /**
      * Executed when user receives reward.
      *
-     * @param rewardedAdUnit view of the corresponding event. Contains reward instance inside. OpenX reward is always null.
+     * @param rewardedAdUnit view of the corresponding event. Contains reward instance inside. Prebid reward is always null.
      */
     void onUserEarnedReward(RewardedAdUnit rewardedAdUnit);
 }

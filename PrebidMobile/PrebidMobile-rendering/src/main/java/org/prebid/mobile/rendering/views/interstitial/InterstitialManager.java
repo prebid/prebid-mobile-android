@@ -22,7 +22,7 @@ import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.mraid.methods.InterstitialManagerMraidDelegate;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
 import org.prebid.mobile.rendering.views.AdViewManager;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewInterstitial;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.rendering.views.webview.WebViewBanner;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 
@@ -73,12 +73,12 @@ public class InterstitialManager implements InterstitialManagerInterface {
         mAdViewManagerInterstitialDelegate = adViewManagerInterstitialDelegate;
     }
 
-    public void displayOpenXWebViewForMRAID(final WebViewBase adBaseView,
-                                            final boolean isNewlyLoaded) {
+    public void displayPrebidWebViewForMraid(final WebViewBase adBaseView,
+                                             final boolean isNewlyLoaded) {
 
         //if it has come from htmlcreative, then nothing in stack. send closed() callback to pubs
         if (mMraidDelegate != null) {
-            mMraidDelegate.displayOpenXWebViewForMRAID(adBaseView, isNewlyLoaded, ((WebViewBanner) adBaseView).getMraidEvent());
+            mMraidDelegate.displayPrebidWebViewForMraid(adBaseView, isNewlyLoaded, ((WebViewBanner) adBaseView).getMraidEvent());
         }
     }
 
@@ -178,7 +178,7 @@ public class InterstitialManager implements InterstitialManagerInterface {
     }
 
     private void showInterstitialDialog(Context context, InterstitialView interstitialView) {
-        WebViewBase webViewBase = ((OpenXWebViewInterstitial) interstitialView.getCreativeView()).getWebView();
+        WebViewBase webViewBase = ((PrebidWebViewInterstitial) interstitialView.getCreativeView()).getWebView();
         webViewBase.setId(INTERSTITIAL_WEBVIEW_ID);
         mInterstitialDialog = new AdInterstitialDialog(context, webViewBase, interstitialView, this);
         mInterstitialDialog.setAdIndicatorView(interstitialView.getAdIndicatorView());

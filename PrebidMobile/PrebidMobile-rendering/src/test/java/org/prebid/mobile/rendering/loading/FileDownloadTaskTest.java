@@ -1,12 +1,11 @@
 package org.prebid.mobile.rendering.loading;
 
-import com.apollo.test.utils.ResourceUtils;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
+import org.prebid.mobile.test.utils.ResourceUtils;
 import org.robolectric.RobolectricTestRunner;
 
 import java.io.File;

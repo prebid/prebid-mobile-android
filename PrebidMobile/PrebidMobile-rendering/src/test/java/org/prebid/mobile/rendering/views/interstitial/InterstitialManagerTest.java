@@ -5,8 +5,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,12 +22,13 @@ import org.prebid.mobile.rendering.models.internal.MraidEvent;
 import org.prebid.mobile.rendering.mraid.methods.InterstitialManagerMraidDelegate;
 import org.prebid.mobile.rendering.video.VideoCreative;
 import org.prebid.mobile.rendering.views.AdViewManager;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewInterstitial;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.rendering.views.webview.WebViewBanner;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JsExecutor;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -138,11 +137,11 @@ public class InterstitialManagerTest {
         WebViewBase mockWebViewBase = mock(WebViewBase.class);
         when(mockWebViewBase.getMRAIDInterface()).thenReturn(mockJsInterface);
 
-        OpenXWebViewInterstitial mockOpenXWebViewInterstitial = mock(OpenXWebViewInterstitial.class);
-        when(mockOpenXWebViewInterstitial.getWebView()).thenReturn(mockWebViewBase);
+        PrebidWebViewInterstitial mockPrebidWebViewInterstitial = mock(PrebidWebViewInterstitial.class);
+        when(mockPrebidWebViewInterstitial.getWebView()).thenReturn(mockWebViewBase);
 
         InterstitialView mockInterstitialView = mock(InterstitialView.class);
-        when(mockInterstitialView.getCreativeView()).thenReturn(mockOpenXWebViewInterstitial);
+        when(mockInterstitialView.getCreativeView()).thenReturn(mockPrebidWebViewInterstitial);
 
         mSpyInterstitialManager.displayAdViewInInterstitial(mContext, mockInterstitialView);
 
@@ -150,7 +149,7 @@ public class InterstitialManagerTest {
     }
 
     @Test
-    public void displayOpenXWebViewForMraid_CallDelegateDisplayOpenXWebViewForMRAID()
+    public void displayPrebidWebViewForMraid_CallDelegateDisplayPrebidWebViewForMRAID()
     throws Exception {
         WebViewBanner mockWebView = mock(WebViewBanner.class);
         MraidEvent mockEvent = mock(MraidEvent.class);
@@ -159,9 +158,9 @@ public class InterstitialManagerTest {
         mockEvent.mraidActionHelper = "test";
         when(mockWebView.getMraidEvent()).thenReturn(mockEvent);
 
-        mSpyInterstitialManager.displayOpenXWebViewForMRAID(mockWebView, true);
+        mSpyInterstitialManager.displayPrebidWebViewForMraid(mockWebView, true);
 
-        verify(mMockMraidDelegate).displayOpenXWebViewForMRAID(mockWebView, true, mockEvent);
+        verify(mMockMraidDelegate).displayPrebidWebViewForMraid(mockWebView, true, mockEvent);
     }
 
     @Test

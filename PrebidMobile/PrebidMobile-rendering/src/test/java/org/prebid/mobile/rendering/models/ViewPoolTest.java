@@ -5,8 +5,6 @@ import android.content.Context;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +14,9 @@ import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
 import org.prebid.mobile.rendering.video.ExoPlayerView;
 import org.prebid.mobile.rendering.video.VideoCreative;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBanner;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewInterstitial;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -106,7 +105,7 @@ public class ViewPoolTest {
         assertEquals(0, mViewPool.sizeOfUnoccupied());
 
         result = mViewPool.getUnoccupiedView(mContext, mockVideoCreativeViewListener, adType, mockInterstitialManager);
-        assertThat(result, instanceOf(OpenXWebViewBanner.class));
+        assertThat(result, instanceOf(PrebidWebViewBanner.class));
         assertEquals(3, mViewPool.sizeOfOccupied());
         assertEquals(0, mViewPool.sizeOfUnoccupied());
 
@@ -118,7 +117,7 @@ public class ViewPoolTest {
 
         adType = AdConfiguration.AdUnitIdentifierType.INTERSTITIAL;
         result = mViewPool.getUnoccupiedView(mContext, mockVideoCreativeViewListener, adType, mockInterstitialManager);
-        assertThat(result, instanceOf(OpenXWebViewInterstitial.class));
+        assertThat(result, instanceOf(PrebidWebViewInterstitial.class));
         assertEquals(5, mViewPool.sizeOfOccupied());
         assertEquals(0, mViewPool.sizeOfUnoccupied());
     }

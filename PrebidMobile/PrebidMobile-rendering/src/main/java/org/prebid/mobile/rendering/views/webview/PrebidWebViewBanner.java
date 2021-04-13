@@ -16,10 +16,10 @@ import org.prebid.mobile.rendering.utils.logger.OXLog;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
-public class OpenXWebViewBanner extends OpenXWebViewBase
+public class PrebidWebViewBanner extends PrebidWebViewBase
     implements PreloadManager.PreloadedListener, MraidEventsManager.MraidListener {
 
-    private static final String TAG = OpenXWebViewBanner.class.getSimpleName();
+    private static final String TAG = PrebidWebViewBanner.class.getSimpleName();
 
     private final FetchPropertiesHandler.FetchPropertyCallback mExpandPropertiesCallback = new FetchPropertiesHandler.FetchPropertyCallback() {
         @Override
@@ -33,7 +33,7 @@ public class OpenXWebViewBanner extends OpenXWebViewBase
         }
     };
 
-    public OpenXWebViewBanner(Context context, InterstitialManager interstitialManager) {
+    public PrebidWebViewBanner(Context context, InterstitialManager interstitialManager) {
         super(context, interstitialManager);
         setId(R.id.web_view_banner);
     }
@@ -116,7 +116,7 @@ public class OpenXWebViewBanner extends OpenXWebViewBase
         mCurrentWebViewBase = adBaseView;
         if (mCurrentWebViewBase.mMRAIDBridgeName.equals("twopart")) {
             //SHould have expanded url here, as last param
-            mInterstitialManager.displayOpenXWebViewForMRAID(mMraidWebView, true);
+            mInterstitialManager.displayPrebidWebViewForMraid(mMraidWebView, true);
         }
         else {
             if (adBaseView.getParent() == null) {

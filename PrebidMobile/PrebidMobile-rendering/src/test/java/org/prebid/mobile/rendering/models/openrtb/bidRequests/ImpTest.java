@@ -13,7 +13,7 @@ public class ImpTest {
     public void getJsonObject() throws Exception {
         Imp imp = new Imp();
 
-        imp.displaymanager = "openx";
+        imp.displaymanager = "prebid";
         imp.displaymanagerver = "1.0";
         imp.instl = 1;
         imp.tagid = "tagid";
@@ -25,7 +25,7 @@ public class ImpTest {
         imp.clickBrowser = 0;
 
         JSONObject actualObj = imp.getJsonObject();
-        String expectedString = "{\"clickbrowser\":0,\"pmp\":{},\"tagid\":\"tagid\",\"displaymanager\":\"openx\",\"displaymanagerver\":\"1.0\",\"banner\":{},\"video\":{},\"secure\":0,\"instl\":1}";
+        String expectedString = "{\"clickbrowser\":0,\"pmp\":{},\"tagid\":\"tagid\",\"displaymanager\":\"prebid\",\"displaymanagerver\":\"1.0\",\"banner\":{},\"video\":{},\"secure\":0,\"instl\":1}";
         assertEquals("got: " + actualObj.toString(), expectedString, actualObj.toString());
         imp.getJsonObject();
     }

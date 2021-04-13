@@ -3,8 +3,6 @@ package org.prebid.mobile.rendering.bidding.data.ntv;
 import android.app.Activity;
 import android.content.Context;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +12,7 @@ import org.prebid.mobile.rendering.bidding.display.VideoView;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.listeners.MediaViewListener;
 import org.prebid.mobile.rendering.views.video.VideoViewListener;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 

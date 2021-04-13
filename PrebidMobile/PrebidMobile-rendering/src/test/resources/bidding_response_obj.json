@@ -31,7 +31,7 @@
           }
         }
       ],
-      "seat": "openx"
+      "seat": "prebid"
     }
   ],
   "cur": "USD",
@@ -40,7 +40,7 @@
   "nbr": 1,
   "ext": {
     "responsetimemillis": {
-      "openx": 63
+      "prebid": 63
     },
     "tmaxrequest": 3000
   }

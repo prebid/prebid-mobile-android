@@ -3,8 +3,6 @@ package org.prebid.mobile.rendering.utils.url;
 import android.content.Context;
 import android.net.Uri;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.mraid.methods.network.UrlResolutionTask;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.utils.url.action.DeepLinkAction;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -32,7 +31,7 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class UrlHandlerTest {
-    private static final String VALID_URL = "http://openx.com";
+    private static final String VALID_URL = "http://prebid.com";
 
     @Mock
     Context mMockContext;

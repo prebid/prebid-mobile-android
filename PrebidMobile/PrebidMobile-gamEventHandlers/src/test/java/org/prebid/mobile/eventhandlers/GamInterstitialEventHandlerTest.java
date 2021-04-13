@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +13,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -34,7 +33,6 @@ import static org.mockito.Mockito.when;
 @Config(sdk = 19)
 public class GamInterstitialEventHandlerTest {
     private static final String GAM_AD_UNIT_ID = "12345678";
-    private static final String OXB_SDK_APP_EVENT = "OpenXApolloAppEvent";
 
     private GamInterstitialEventHandler mEventHandler;
     private Context mContext;

@@ -8,8 +8,8 @@ import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
 import org.prebid.mobile.rendering.video.ExoPlayerView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBanner;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewInterstitial;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
 import java.util.ArrayList;
@@ -104,10 +104,10 @@ public class ViewPool {
 
         switch (adType) {
             case BANNER:
-                plugPlayView = new OpenXWebViewBanner(context, interstitialManager);
+                plugPlayView = new PrebidWebViewBanner(context, interstitialManager);
                 break;
             case INTERSTITIAL:
-                plugPlayView = new OpenXWebViewInterstitial(context, interstitialManager);
+                plugPlayView = new PrebidWebViewInterstitial(context, interstitialManager);
                 //add it to occupied
                 break;
             case VAST:

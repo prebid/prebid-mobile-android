@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
-import com.apollo.test.utils.ResourceUtils;
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +18,8 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAsset
 import org.prebid.mobile.rendering.session.manager.NativeOmVerification;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposure;
+import org.prebid.mobile.test.utils.ResourceUtils;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 

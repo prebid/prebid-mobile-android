@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +18,7 @@ import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;

@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -48,92 +47,74 @@ final class BrowserControls extends TableLayout {
      * Update navigation controls (back and forth buttons)
      */
     public void updateNavigationButtonsState() {
-        mUIHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (mBrowserControlsEventsListener == null) {
-                    OXLog.error(TAG, "updateNavigationButtonsState: Unable to update state. mBrowserControlsEventsListener is null");
-                    return;
-                }
+        mUIHandler.post(() -> {
+            if (mBrowserControlsEventsListener == null) {
+                OXLog.error(TAG, "updateNavigationButtonsState: Unable to update state. mBrowserControlsEventsListener is null");
+                return;
+            }
 
-                if (mBrowserControlsEventsListener.canGoBack()) {
-                    mBackBtn.setBackgroundResource(R.drawable.openx_res_back_active);
-                }
-                else {
-                    mBackBtn.setBackgroundResource(R.drawable.openx_res_back_inactive);
-                }
+            if (mBrowserControlsEventsListener.canGoBack()) {
+                mBackBtn.setBackgroundResource(R.drawable.prebid_ic_back_active);
+            }
+            else {
+                mBackBtn.setBackgroundResource(R.drawable.prebid_ic_back_inactive);
+            }
 
-                if (mBrowserControlsEventsListener.canGoForward()) {
-                    mForthBtn.setBackgroundResource(R.drawable.openx_res_forth_active);
-                }
-                else {
-                    mForthBtn.setBackgroundResource(R.drawable.openx_res_forth_inactive);
-                }
+            if (mBrowserControlsEventsListener.canGoForward()) {
+                mForthBtn.setBackgroundResource(R.drawable.prebid_ic_forth_active);
+            }
+            else {
+                mForthBtn.setBackgroundResource(R.drawable.prebid_ic_forth_inactive);
             }
         });
     }
 
     private void bindEventListeners() {
-        mCloseBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBrowserControlsEventsListener == null) {
-                    OXLog.error(TAG, "Close button click failed: mBrowserControlsEventsListener is null");
-                    return;
-                }
-                mBrowserControlsEventsListener.closeBrowser();
+        mCloseBtn.setOnClickListener(v -> {
+            if (mBrowserControlsEventsListener == null) {
+                OXLog.error(TAG, "Close button click failed: mBrowserControlsEventsListener is null");
+                return;
             }
+            mBrowserControlsEventsListener.closeBrowser();
         });
 
-        mBackBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBrowserControlsEventsListener == null) {
-                    OXLog.error(TAG, "Back button click failed: mBrowserControlsEventsListener is null");
-                    return;
-                }
-                mBrowserControlsEventsListener.onGoBack();
+        mBackBtn.setOnClickListener(v -> {
+            if (mBrowserControlsEventsListener == null) {
+                OXLog.error(TAG, "Back button click failed: mBrowserControlsEventsListener is null");
+                return;
             }
+            mBrowserControlsEventsListener.onGoBack();
         });
 
-        mForthBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBrowserControlsEventsListener == null) {
-                    OXLog.error(TAG, "Forward button click failed: mBrowserControlsEventsListener is null");
-                    return;
-                }
-                mBrowserControlsEventsListener.onGoForward();
+        mForthBtn.setOnClickListener(v -> {
+            if (mBrowserControlsEventsListener == null) {
+                OXLog.error(TAG, "Forward button click failed: mBrowserControlsEventsListener is null");
+                return;
             }
+            mBrowserControlsEventsListener.onGoForward();
         });
 
-        mRefreshBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBrowserControlsEventsListener == null) {
-                    OXLog.error(TAG, "Refresh button click failed: mBrowserControlsEventsListener is null");
-                    return;
-                }
-                mBrowserControlsEventsListener.onRelaod();
+        mRefreshBtn.setOnClickListener(v -> {
+            if (mBrowserControlsEventsListener == null) {
+                OXLog.error(TAG, "Refresh button click failed: mBrowserControlsEventsListener is null");
+                return;
             }
+            mBrowserControlsEventsListener.onRelaod();
         });
 
-        mOpenInExternalBrowserBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = null;
+        mOpenInExternalBrowserBtn.setOnClickListener(v -> {
+            String url = null;
 
-                if (mBrowserControlsEventsListener != null) {
-                    url = mBrowserControlsEventsListener.getCurrentURL();
-                }
-
-                if (url == null) {
-                    OXLog.error(TAG, "Open external link failed. url is null");
-                    return;
-                }
-
-                openURLInExternalBrowser(url);
+            if (mBrowserControlsEventsListener != null) {
+                url = mBrowserControlsEventsListener.getCurrentURL();
             }
+
+            if (url == null) {
+                OXLog.error(TAG, "Open external link failed. url is null");
+                return;
+            }
+
+            openURLInExternalBrowser(url);
         });
     }
 
@@ -189,27 +170,27 @@ final class BrowserControls extends TableLayout {
         mCloseBtn = new Button(getContext());
         mCloseBtn.setContentDescription("close");
         setButtonDefaultSize(mCloseBtn);
-        mCloseBtn.setBackgroundResource(R.drawable.openx_res_close_browser);
+        mCloseBtn.setBackgroundResource(R.drawable.prebid_ic_close_browser);
 
         mBackBtn = new Button(getContext());
         mBackBtn.setContentDescription("back");
         setButtonDefaultSize(mBackBtn);
-        mBackBtn.setBackgroundResource(R.drawable.openx_res_back_inactive);
+        mBackBtn.setBackgroundResource(R.drawable.prebid_ic_back_inactive);
 
         mForthBtn = new Button(getContext());
         mForthBtn.setContentDescription("forth");
         setButtonDefaultSize(mForthBtn);
-        mForthBtn.setBackgroundResource(R.drawable.openx_res_forth_inactive);
+        mForthBtn.setBackgroundResource(R.drawable.prebid_ic_forth_inactive);
 
         mRefreshBtn = new Button(getContext());
         mRefreshBtn.setContentDescription("refresh");
         setButtonDefaultSize(mRefreshBtn);
-        mRefreshBtn.setBackgroundResource(R.drawable.openx_res_refresh);
+        mRefreshBtn.setBackgroundResource(R.drawable.prebid_ic_refresh);
 
         mOpenInExternalBrowserBtn = new Button(getContext());
         mOpenInExternalBrowserBtn.setContentDescription("openInExternalBrowser");
         setButtonDefaultSize(mOpenInExternalBrowserBtn);
-        mOpenInExternalBrowserBtn.setBackgroundResource(R.drawable.openx_res_open_in_browser);
+        mOpenInExternalBrowserBtn.setBackgroundResource(R.drawable.prebid_ic_open_in_browser);
     }
 
     public void showNavigationControls() {

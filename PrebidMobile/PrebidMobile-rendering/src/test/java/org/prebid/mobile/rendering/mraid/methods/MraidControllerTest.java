@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,11 +21,12 @@ import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.MraidEventsManager;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBase;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBanner;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -83,7 +82,7 @@ public class MraidControllerTest {
         mMraidController.handleMraidEvent(createMraidEvent(JSInterface.ACTION_UNLOAD, null),
                                           mockCreative,
                                           mock(WebViewBase.class),
-                                          mock(OpenXWebViewBase.class));
+                                          mock(PrebidWebViewBase.class));
 
         verify(mMockInterstitialManager).interstitialClosed(any(View.class));
         verify(mockListener).creativeDidComplete(mockCreative);
@@ -105,7 +104,7 @@ public class MraidControllerTest {
         when(mockOldWebView.getMraidListener()).thenReturn(mock(MraidEventsManager.MraidListener.class));
         when(mockOldWebView.getContext()).thenReturn(mContext);
 
-        mMraidController.handleMraidEvent(event, mockCreative, mockOldWebView, mock(OpenXWebViewBase.class));
+        mMraidController.handleMraidEvent(event, mockCreative, mockOldWebView, mock(PrebidWebViewBase.class));
         verify(mMraidController).initMraidExpand(any(View.class),
                                                  any(MraidController.DisplayCompletionListener.class),
                                                  any(MraidEvent.class));
@@ -120,15 +119,15 @@ public class MraidControllerTest {
         when(mockOldWebView.getMraidListener()).thenReturn(mock(MraidEventsManager.MraidListener.class));
         when(mockOldWebView.getContext()).thenReturn(mContext);
 
-        mMraidController.handleMraidEvent(event, mockCreative, mockOldWebView, mock(OpenXWebViewBase.class));
+        mMraidController.handleMraidEvent(event, mockCreative, mockOldWebView, mock(PrebidWebViewBase.class));
         ShadowLooper.runUiThreadTasks();
-        verify(mMraidController, times(1)).expand(any(WebViewBase.class), any(OpenXWebViewBase.class), eq(event));
+        verify(mMraidController, times(1)).expand(any(WebViewBase.class), any(PrebidWebViewBase.class), eq(event));
     }
 
     @Test
     public void expandWhenHelperNotEmpty_NewWebViewSetEvent() {
         WebViewBase mockOldWebView = mock(WebViewBase.class);
-        OpenXWebViewBase mockNewWebView = mock(OpenXWebViewBase.class);
+        PrebidWebViewBase mockNewWebView = mock(PrebidWebViewBase.class);
         MraidEvent event = createMraidEvent(JSInterface.ACTION_EXPAND, "twoPart");
         WebViewBanner mockBanner = mock(WebViewBanner.class);
 
@@ -179,7 +178,7 @@ public class MraidControllerTest {
         WebViewBase mockOldWebView = mock(WebViewBase.class);
         when(mockOldWebView.getContext()).thenReturn(mContext);
         when(mockOldWebView.getMRAIDInterface()).thenReturn(mockJsInterface);
-        mMraidController.handleMraidEvent(createMraidEvent(JSInterface.ACTION_RESIZE, null), mock(HTMLCreative.class), mockOldWebView, mock(OpenXWebViewBase.class));
+        mMraidController.handleMraidEvent(createMraidEvent(JSInterface.ACTION_RESIZE, null), mock(HTMLCreative.class), mockOldWebView, mock(PrebidWebViewBase.class));
         assertNotNull(WhiteBox.getInternalState(mMraidController, "mMraidResize"));
     }
 
@@ -226,7 +225,7 @@ public class MraidControllerTest {
         WebViewBase mockWebView = mock(WebViewBase.class);
         MraidEvent mockEvent = mock(MraidEvent.class);
         MraidExpand mockMraidExpand = mock(MraidExpand.class);
-        OpenXWebViewBase mockOxBase = mock(OpenXWebViewBase.class);
+        PrebidWebViewBase mockOxBase = mock(PrebidWebViewBase.class);
 
         mockEvent.mraidAction = JSInterface.ACTION_EXPAND;
         mockEvent.mraidActionHelper = "test";
@@ -235,7 +234,7 @@ public class MraidControllerTest {
         when(mockWebView.getPreloadedListener()).thenReturn(mockOxBase);
 
         WhiteBox.field(MraidController.class, "mMraidExpand").set(mMraidController, mockMraidExpand);
-        getMraidDelegate().displayOpenXWebViewForMRAID(mockWebView, true, mockEvent);
+        getMraidDelegate().displayPrebidWebViewForMraid(mockWebView, true, mockEvent);
 
         verify(mockMraidExpand, times(1)).setDisplayView(mockWebView);
         verify(mockOxBase).initMraidExpanded();
@@ -283,7 +282,7 @@ public class MraidControllerTest {
         when(mockCreativeModel.getAdConfiguration()).thenReturn(mock(AdConfiguration.class));
         when(mockOldWebView.getContext()).thenReturn(mContext);
 
-        mMraidController.handleMraidEvent(event, mockCreative, mockOldWebView, mock(OpenXWebViewBase.class));
+        mMraidController.handleMraidEvent(event, mockCreative, mockOldWebView, mock(PrebidWebViewBase.class));
     }
 
     private MraidEvent createMraidEvent(String eventType, String helper) {

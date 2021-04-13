@@ -1,4 +1,4 @@
-package com.apollo.test.utils;
+package org.prebid.mobile.test.utils;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;

@@ -3,14 +3,14 @@ id: "0123456",
 app: {
 id: "1",
 publisher: {
-domain: "openx.com",
-name: "OpenX"
+domain: "prebid.com",
+name: "Prebid"
 },
-domain: "com.openx.demo",
+domain: "com.prebid.demo",
 ver: "0.0.1",
 keywords: "demo, app, test",
 storeurl: "itunes.com/apps/129487234975692834897298375892375",
-name: "OpenXDemoApp"
+name: "PrebidDemoApp"
 },
 device: {
 geo: {
@@ -36,7 +36,7 @@ content: {
 title: "content title",
 embeddable: 1,
 producer: {
-name: "OpenX Films"
+name: "Prebid Films"
 }
 },
 mobile: 1,

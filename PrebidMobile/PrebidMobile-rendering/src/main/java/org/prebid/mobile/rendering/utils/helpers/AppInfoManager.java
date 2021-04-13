@@ -102,7 +102,7 @@ public class AppInfoManager {
     // IMPORTANT: This will only be executed for pre-lolipop versions due to security issue described here:
     // https://developer.android.com/training/articles/security-gms-provider
     // If this will be removed the publisher may face problems described here:
-    // https://openxtechinc.atlassian.net/browse/MOBILE-5295
+    // jira/browse/MOBILE-5295
     private static void patchSecurityProviderIfNeeded(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return;

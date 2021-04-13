@@ -10,9 +10,9 @@ public interface InterstitialManagerMraidDelegate {
 
     void closeThroughJs(WebViewBase viewToClose);
 
-    void displayOpenXWebViewForMRAID(final WebViewBase adBaseView,
-                                     final boolean isNewlyLoaded,
-                                     MraidEvent mraidEvent);
+    void displayPrebidWebViewForMraid(final WebViewBase adBaseView,
+                                      final boolean isNewlyLoaded,
+                                      MraidEvent mraidEvent);
 
     void displayViewInInterstitial(final View adBaseView,
                                    boolean addOldViewToBackStack,

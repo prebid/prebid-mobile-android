@@ -2,8 +2,6 @@ package org.prebid.mobile.rendering.mraid.methods;
 
 import android.app.Activity;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,11 +13,12 @@ import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.mraid.methods.network.RedirectUrlListener;
 import org.prebid.mobile.rendering.views.indicator.AdIndicatorView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBase;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JsExecutor;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -67,7 +66,7 @@ public class MraidExpandTest {
             return null;
         }).when(mSpyBaseJsInterface).followToOriginalUrl(anyString(), any(RedirectUrlListener.class));
 
-        OpenXWebViewBase mockPreloadedListener = mock(OpenXWebViewBase.class);
+        PrebidWebViewBase mockPreloadedListener = mock(PrebidWebViewBase.class);
         HTMLCreative mockCreative = mock(HTMLCreative.class);
         when(mockCreative.getAdIndicatorView()).thenAnswer(invocation -> {
             WhiteBox.setInternalState(mMraidExpand, "mExpandedDialog", mock(AdExpandedDialog.class));

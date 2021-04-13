@@ -9,8 +9,6 @@ import android.view.WindowManager;
 
 import androidx.test.filters.Suppress;
 
-import com.apollo.test.utils.ResourceUtils;
-
 import junit.framework.TestCase;
 
 import org.json.JSONArray;
@@ -23,6 +21,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
+import org.prebid.mobile.test.utils.ResourceUtils;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
@@ -341,12 +340,12 @@ public class UtilsTest extends TestCase {
 
     @Test
     public void getFileExtensionWithEmptyLastPathSegment_ReturnEmptyString() {
-        assertTrue(Utils.getFileExtension("https://openx.com/").isEmpty());
+        assertTrue(Utils.getFileExtension("https://prebid.com/").isEmpty());
     }
 
     @Test
     public void getFileExtensionWithoutExtension_ReturnEmptyString() {
-        assertTrue(Utils.getFileExtension("http://openx.com/openxlogo").isEmpty());
+        assertTrue(Utils.getFileExtension("http://prebid.com/prebidlogo").isEmpty());
     }
 
     @Test

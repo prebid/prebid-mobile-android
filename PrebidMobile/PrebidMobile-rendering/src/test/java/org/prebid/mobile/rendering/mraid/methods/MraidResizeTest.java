@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,11 +20,12 @@ import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.views.indicator.AdIndicatorView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBase;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JsExecutor;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -68,7 +67,7 @@ public class MraidResizeTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        OpenXWebViewBase openXWebViewBase = mock(OpenXWebViewBase.class);
+        PrebidWebViewBase prebidWebViewBase = mock(PrebidWebViewBase.class);
         mMockContext = Robolectric.buildActivity(Activity.class).create().get().getApplicationContext();
 
         mSpyBaseJsInterface = spy(new BaseJSInterface(mMockContext, mMockWebViewBase, mMockJsExecutor));
@@ -89,8 +88,8 @@ public class MraidResizeTest {
             return null;
         }).when(mMockJsExecutor).executeGetResizeProperties(any(Handler.class));
 
-        when(mMockWebViewBase.getParent()).thenReturn(openXWebViewBase);
-        when(mSpyBaseJsInterface.getDefaultAdContainer()).thenReturn(openXWebViewBase);
+        when(mMockWebViewBase.getParent()).thenReturn(prebidWebViewBase);
+        when(mSpyBaseJsInterface.getDefaultAdContainer()).thenReturn(prebidWebViewBase);
 
         mMraidResize = new MraidResize(mMockContext, mSpyBaseJsInterface, mMockWebViewBase, mMockManager);
     }
@@ -144,9 +143,9 @@ public class MraidResizeTest {
         when(mockMetrics.getRootViewRectDips()).thenReturn(new Rect(0, 0, 0, 0));
         when(mSpyBaseJsInterface.getScreenMetrics()).thenReturn(mockMetrics);
 
-        OpenXWebViewBase mockOpenxWebViewBase = mock(OpenXWebViewBase.class);
-        when(mMockWebViewBase.getParent()).thenReturn(mockOpenxWebViewBase);
-        when(mSpyBaseJsInterface.getDefaultAdContainer()).thenReturn(mockOpenxWebViewBase);
+        PrebidWebViewBase mockPrebidWebViewBase = mock(PrebidWebViewBase.class);
+        when(mMockWebViewBase.getParent()).thenReturn(mockPrebidWebViewBase);
+        when(mSpyBaseJsInterface.getDefaultAdContainer()).thenReturn(mockPrebidWebViewBase);
         when(mSpyBaseJsInterface.getRootView()).thenReturn(mock(FrameLayout.class));
 
         showExpandDialogMethod.invoke(mMraidResize, 100, 100, 0, 0, true);
@@ -177,13 +176,13 @@ public class MraidResizeTest {
     public void moveAdIndicatorTest() throws InvocationTargetException, IllegalAccessException {
         Method moveAdIndicatorMethod = WhiteBox.method(MraidResize.class, "moveAdIndicator");
 
-        OpenXWebViewBase mockOpenxWebViewBase = mock(OpenXWebViewBase.class);
+        PrebidWebViewBase mockPrebidWebViewBase = mock(PrebidWebViewBase.class);
         HTMLCreative mockCreative = mock(HTMLCreative.class);
         View mockView = mock(AdIndicatorView.class);
         FrameLayout mockSecondaryContainer = mock(FrameLayout.class);
         when(mockCreative.getAdIndicatorView()).thenReturn(mockView);
-        when(mockOpenxWebViewBase.getCreative()).thenReturn(mockCreative);
-        when(mSpyBaseJsInterface.getDefaultAdContainer()).thenReturn(mockOpenxWebViewBase);
+        when(mockPrebidWebViewBase.getCreative()).thenReturn(mockCreative);
+        when(mSpyBaseJsInterface.getDefaultAdContainer()).thenReturn(mockPrebidWebViewBase);
 
         WhiteBox.field(MraidResize.class, "mSecondaryAdContainer").set(mMraidResize, mockSecondaryContainer);
 

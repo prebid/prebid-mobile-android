@@ -48,7 +48,7 @@ public final class AdBrowserActivity extends Activity
     private int mBroadcastId;
     private String mUrl;
 
-    //https://jira.corp.openx.com/browse/MOBILE-1222 - Enable physical BACK button of the device in the in-app browser in Android
+    //jira/browse/MOBILE-1222 - Enable physical BACK button of the device in the in-app browser in Android
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
@@ -207,7 +207,7 @@ public final class AdBrowserActivity extends Activity
             mWebView.getSettings().setBuiltInZoomControls(true);
 
             //MOB-2160 - Ad Browser: Leaking memory on zoom.(Though it looks like a chromiun webview problem)
-            //Activity com.openx.apollo.views.browser.AdBrowserActivity has leaked window android.widget.ZoomButtonsController$Container
+            //Activity browser.AdBrowserActivity has leaked window android.widget.ZoomButtonsController$Container
             mWebView.getSettings().setDisplayZoomControls(false);
 
             mWebView.getSettings().setLoadWithOverviewMode(true);

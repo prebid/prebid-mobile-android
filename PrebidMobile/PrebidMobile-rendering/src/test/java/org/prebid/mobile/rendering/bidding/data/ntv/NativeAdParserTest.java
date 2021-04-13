@@ -1,7 +1,5 @@
 package org.prebid.mobile.rendering.bidding.data.ntv;
 
-import com.apollo.test.utils.ResourceUtils;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -10,6 +8,7 @@ import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetData;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetImage;
+import org.prebid.mobile.test.utils.ResourceUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;

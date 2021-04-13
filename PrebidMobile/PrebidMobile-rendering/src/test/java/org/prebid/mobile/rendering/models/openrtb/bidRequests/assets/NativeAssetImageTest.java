@@ -1,12 +1,11 @@
 package org.prebid.mobile.rendering.models.openrtb.bidRequests.assets;
 
-import com.apollo.test.utils.ResourceUtils;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
+import org.prebid.mobile.test.utils.ResourceUtils;
 
 public class NativeAssetImageTest {
 

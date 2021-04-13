@@ -6,8 +6,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.utils.url.ActionNotResolvedException;
 import org.prebid.mobile.rendering.utils.url.UrlHandler;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -48,7 +47,7 @@ public class DeepLinkPlusActionTest {
     private static final String NO_FALLBACK_DEEPLINK_EXAMPLE = "deeplink+://navigate?primaryUrl=google%3A%2F%2Ftimeline"
                                                                + "&primaryTrackingUrl=http%3A%2F%2Fmopub.com%2Fclicktracking&primaryTrackingUrl=http%3A%2F%2Fmopub.com%2Fmopubtracking";
 
-    private static final String INVALID_NESTED_DEEPLINK_IN_PRIMARY_URL = "deeplink+://navigate?primaryUrl=deeplink%2B://navigate?primaryUrl=openx.com";
+    private static final String INVALID_NESTED_DEEPLINK_IN_PRIMARY_URL = "deeplink+://navigate?primaryUrl=deeplink%2B://navigate?primaryUrl=prebid.com";
 
     private static final String INVALID_NESTED_DEEPLINK_IN_FALLBACK_URL = "deeplink+://navigate?primaryUrl=google%3A%2F%2Ftimeline"
                                                                           + "&primaryTrackingUrl=http%3A%2F%2Fmopub.com%2Fclicktracking&primaryTrackingUrl=http%3A%2F%2Fmopub.com%2Fmopubtracking"
@@ -83,9 +82,9 @@ public class DeepLinkPlusActionTest {
 
     @Test
     public void shouldOverrideUrlLoadingHttpHttpsCustomSchemes_ReturnFalse() {
-        Uri httpUri = Uri.parse("http://openx.com");
-        Uri httpsUri = Uri.parse("https://openx.com");
-        Uri customScheme = Uri.parse("openx://open");
+        Uri httpUri = Uri.parse("http://prebid.com");
+        Uri httpsUri = Uri.parse("https://prebid.com");
+        Uri customScheme = Uri.parse("prebid://open");
 
         assertFalse(mDeepLinkPlusAction.shouldOverrideUrlLoading(httpUri));
         assertFalse(mDeepLinkPlusAction.shouldOverrideUrlLoading(httpsUri));
@@ -103,7 +102,7 @@ public class DeepLinkPlusActionTest {
         String actualMessage = "";
 
         try {
-            mDeepLinkPlusAction.performAction(mMockContext, mMockUrlHandler, Uri.parse("example.com/holiday/openx/"));
+            mDeepLinkPlusAction.performAction(mMockContext, mMockUrlHandler, Uri.parse("example.com/holiday/prebid/"));
         }
         catch (ActionNotResolvedException e) {
             actualMessage = e.getMessage();

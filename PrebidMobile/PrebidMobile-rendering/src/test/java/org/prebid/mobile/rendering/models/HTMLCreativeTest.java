@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,10 +24,11 @@ import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposure;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBanner;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBase;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -72,7 +71,7 @@ public class HTMLCreativeTest {
     @Mock
     CreativeVisibilityTracker mMockCreativeVisibilityTracker;
     @Mock
-    OpenXWebViewBase mMockOpenXWebView;
+    PrebidWebViewBase mMockPrebidWebView;
 
     private HTMLCreative mHtmlCreative;
 
@@ -86,7 +85,7 @@ public class HTMLCreativeTest {
 
         when(mMockModel.getAdConfiguration()).thenReturn(mMockConfig);
         mHtmlCreative = new HTMLCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
-        mHtmlCreative.setCreativeView(mMockOpenXWebView);
+        mHtmlCreative.setCreativeView(mMockPrebidWebView);
         WhiteBox.setInternalState(mHtmlCreative, "mMraidController", mMockMraidController);
     }
 
@@ -112,14 +111,14 @@ public class HTMLCreativeTest {
 
     @Test
     public void loadTest() throws Exception {
-        OpenXWebViewBanner mockOpenXWebViewBanner = mock(OpenXWebViewBanner.class);
+        PrebidWebViewBanner mockPrebidWebViewBanner = mock(PrebidWebViewBanner.class);
 
         ViewPool mockViewPool = mock(ViewPool.class);
         when(mockViewPool.getUnoccupiedView(any(Context.class),
                                             any(VideoCreativeViewListener.class),
                                             any(AdConfiguration.AdUnitIdentifierType.class),
                                             any(InterstitialManager.class)))
-            .thenReturn(mockOpenXWebViewBanner);
+            .thenReturn(mockPrebidWebViewBanner);
         WhiteBox.field(ViewPool.class, "sInstance").set(null, mockViewPool);
 
         // Test null context
@@ -156,16 +155,16 @@ public class HTMLCreativeTest {
 
         mHtmlCreative = new HTMLCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
         mHtmlCreative.load();
-        verify(mockOpenXWebViewBanner).loadHTML(anyString(), anyInt(), anyInt());
-        assertEquals(mockOpenXWebViewBanner, mHtmlCreative.getCreativeView());
+        verify(mockPrebidWebViewBanner).loadHTML(anyString(), anyInt(), anyInt());
+        assertEquals(mockPrebidWebViewBanner, mHtmlCreative.getCreativeView());
     }
 
     @Test
     public void displayTest() throws Exception {
         // Null view
-        OpenXWebViewBase openXWebViewBase = new OpenXWebViewBase(mContext, mMockInterstitialManager);
-        WhiteBox.setInternalState(openXWebViewBase, "mWebView", mock(WebViewBase.class));
-        when(mMockOpenXWebView.getWebView()).thenReturn(mock(WebViewBase.class));
+        PrebidWebViewBase prebidWebViewBase = new PrebidWebViewBase(mContext, mMockInterstitialManager);
+        WhiteBox.setInternalState(prebidWebViewBase, "mWebView", mock(WebViewBase.class));
+        when(mMockPrebidWebView.getWebView()).thenReturn(mock(WebViewBase.class));
 
         when(mMockConfig.getAdUnitIdentifierType()).thenReturn(AdConfiguration.AdUnitIdentifierType.BANNER);
 
@@ -175,14 +174,14 @@ public class HTMLCreativeTest {
 
     @Test
     public void adSessionSuccessInitializationTest() throws Exception {
-        OpenXWebViewBase openXWebView = new OpenXWebViewBase(mContext, mMockInterstitialManager);
+        PrebidWebViewBase prebidWebView = new PrebidWebViewBase(mContext, mMockInterstitialManager);
         WebViewBase mockWebViewBase = mock(WebViewBase.class);
         BaseJSInterface baseJSInterface = mock(BaseJSInterface.class);
         when(mockWebViewBase.getMRAIDInterface()).thenReturn(baseJSInterface);
-        WhiteBox.setInternalState(openXWebView, "mWebView", mockWebViewBase);
+        WhiteBox.setInternalState(prebidWebView, "mWebView", mockWebViewBase);
 
-        mHtmlCreative.setCreativeView(openXWebView);
-        mHtmlCreative.setCreativeView(openXWebView);
+        mHtmlCreative.setCreativeView(prebidWebView);
+        mHtmlCreative.setCreativeView(prebidWebView);
         HTMLCreative spyHtmlCreative = spy(mHtmlCreative);
 
         spyHtmlCreative.display();
@@ -190,9 +189,9 @@ public class HTMLCreativeTest {
 
     @Test
     public void adSessionFailureInitializationTest() throws Exception {
-        OpenXWebViewBase openXWebViewBase = new OpenXWebViewBase(mContext, mMockInterstitialManager);
-        WhiteBox.setInternalState(openXWebViewBase, "mWebView", mock(WebViewBase.class));
-        mHtmlCreative.setCreativeView(openXWebViewBase);
+        PrebidWebViewBase prebidWebViewBase = new PrebidWebViewBase(mContext, mMockInterstitialManager);
+        WhiteBox.setInternalState(prebidWebViewBase, "mWebView", mock(WebViewBase.class));
+        mHtmlCreative.setCreativeView(prebidWebViewBase);
         HTMLCreative spyHtmlCreative = spy(mHtmlCreative);
 
         spyHtmlCreative.display();
@@ -241,9 +240,9 @@ public class HTMLCreativeTest {
     @Test
     public void viewabilityTrackListenerExecution_TrackOnWindowFocusChangeAndOnViewExposureChange()
     throws Exception {
-        OpenXWebViewBase mockOpenXWebViewBase = mock(OpenXWebViewBase.class);
-        when(mockOpenXWebViewBase.getWebView()).thenReturn(mock(WebViewBase.class));
-        mHtmlCreative.setCreativeView(mockOpenXWebViewBase);
+        PrebidWebViewBase mockPrebidWebViewBase = mock(PrebidWebViewBase.class);
+        when(mockPrebidWebViewBase.getWebView()).thenReturn(mock(WebViewBase.class));
+        mHtmlCreative.setCreativeView(mockPrebidWebViewBase);
 
         VisibilityTrackerResult result = new VisibilityTrackerResult(NativeEventTracker.EventType.IMPRESSION,
                                                                      null, false, false);
@@ -260,25 +259,25 @@ public class HTMLCreativeTest {
         mHtmlCreative.onVisibilityEvent(result);
 
         verify(mMockModel, never()).trackDisplayAdEvent(TrackingEvent.Events.IMPRESSION);
-        verify(mockOpenXWebViewBase, times(1)).onWindowFocusChanged(false);
-        verify(mockOpenXWebViewBase, times(1)).onViewExposureChange(null);
+        verify(mockPrebidWebViewBase, times(1)).onWindowFocusChanged(false);
+        verify(mockPrebidWebViewBase, times(1)).onViewExposureChange(null);
     }
 
     @Test
     public void viewabilityTrackListenerExecutionIsViewable_trackImpression() {
         ViewExposure viewExposure = new ViewExposure();
 
-        OpenXWebViewBase mockOpenXWebViewBase = mock(OpenXWebViewBase.class);
-        when(mockOpenXWebViewBase.getWebView()).thenReturn(mock(WebViewBase.class));
-        mHtmlCreative.setCreativeView(mockOpenXWebViewBase);
+        PrebidWebViewBase mockPrebidWebViewBase = mock(PrebidWebViewBase.class);
+        when(mockPrebidWebViewBase.getWebView()).thenReturn(mock(WebViewBase.class));
+        mHtmlCreative.setCreativeView(mockPrebidWebViewBase);
 
         VisibilityTrackerResult result = new VisibilityTrackerResult(NativeEventTracker.EventType.IMPRESSION,
                                                                      viewExposure, true, true);
         mHtmlCreative.onVisibilityEvent(result);
 
         verify(mMockModel, times(1)).trackDisplayAdEvent(TrackingEvent.Events.IMPRESSION);
-        verify(mockOpenXWebViewBase, times(1)).onWindowFocusChanged(true);
-        verify(mockOpenXWebViewBase, times(1)).onViewExposureChange(viewExposure);
+        verify(mockPrebidWebViewBase, times(1)).onWindowFocusChanged(true);
+        verify(mockPrebidWebViewBase, times(1)).onViewExposureChange(viewExposure);
     }
 
     @Test
@@ -314,22 +313,22 @@ public class HTMLCreativeTest {
     }
 
     @Test
-    public void openXWebViewDelegateEventTest() throws Exception {
+    public void prebidWebViewDelegateEventTest() throws Exception {
         // External link
-        OpenXWebViewBase mockOpenXWebViewBase = mock(OpenXWebViewBase.class);
-        Mockito.doNothing().when(mockOpenXWebViewBase).handleOpen(anyString());
-        when(mockOpenXWebViewBase.post(any(Runnable.class))).thenReturn(anyBoolean());
+        PrebidWebViewBase mockPrebidWebViewBase = mock(PrebidWebViewBase.class);
+        Mockito.doNothing().when(mockPrebidWebViewBase).handleOpen(anyString());
+        when(mockPrebidWebViewBase.post(any(Runnable.class))).thenReturn(anyBoolean());
 
-        mHtmlCreative.setCreativeView(mockOpenXWebViewBase);
+        mHtmlCreative.setCreativeView(mockPrebidWebViewBase);
         mHtmlCreative.webViewShouldOpenExternalLink("foo");
-        verify(mockOpenXWebViewBase).handleOpen(anyString());
+        verify(mockPrebidWebViewBase).handleOpen(anyString());
 
         // MRAID link
         CreativeViewListener mockCreativeViewListener = mock(CreativeViewListener.class);
         mHtmlCreative.setCreativeViewListener(mockCreativeViewListener);
         mHtmlCreative.webViewShouldOpenMRAIDLink("foo");
         verify(mockCreativeViewListener).creativeWasClicked(any(HTMLCreative.class), anyString());
-        verify(mockOpenXWebViewBase).post(any(Runnable.class));
+        verify(mockPrebidWebViewBase).post(any(Runnable.class));
     }
 
     @Test
@@ -338,7 +337,7 @@ public class HTMLCreativeTest {
         verify(mMockMraidController).handleMraidEvent(any(MraidEvent.class),
                                                       eq(mHtmlCreative),
                                                       any(WebViewBase.class),
-                                                      any(OpenXWebViewBase.class));
+                                                      any(PrebidWebViewBase.class));
     }
 
     @Test
@@ -347,13 +346,13 @@ public class HTMLCreativeTest {
         WhiteBox.setInternalState(mHtmlCreative, "mMraidController", mockController);
 
         mHtmlCreative.destroy();
-        verify(mMockOpenXWebView).destroy();
+        verify(mMockPrebidWebView).destroy();
         verify(mockController).destroy();
     }
 
     @Test
     public void createOmAdSessionTest() throws IllegalAccessException {
-        OpenXWebViewBase mockOXWebView = mock(OpenXWebViewBase.class);
+        PrebidWebViewBase mockOXWebView = mock(PrebidWebViewBase.class);
         when(mockOXWebView.getWebView()).thenReturn(mock(WebViewBase.class));
 
         mHtmlCreative.setCreativeView(mockOXWebView);

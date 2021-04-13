@@ -1,8 +1,5 @@
 package org.prebid.mobile.rendering.loading;
 
-import com.apollo.test.utils.ResourceUtils;
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +10,8 @@ import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.internal.VastExtractorResult;
 import org.prebid.mobile.rendering.networking.modelcontrollers.AsyncVastLoader;
 import org.prebid.mobile.rendering.parser.AdResponseParserVast;
+import org.prebid.mobile.test.utils.ResourceUtils;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 

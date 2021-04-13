@@ -3,13 +3,12 @@ package org.prebid.mobile.rendering.views.webview;
 import android.app.Activity;
 import android.content.Context;
 
-import com.apollo.test.utils.ResourceUtils;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
+import org.prebid.mobile.test.utils.ResourceUtils;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;

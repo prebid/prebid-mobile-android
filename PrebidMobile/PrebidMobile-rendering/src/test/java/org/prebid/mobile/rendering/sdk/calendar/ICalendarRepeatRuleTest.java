@@ -1,11 +1,10 @@
 package org.prebid.mobile.rendering.sdk.calendar;
 
-import com.apollo.test.utils.ResourceUtils;
-
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.prebid.mobile.test.utils.ResourceUtils;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;

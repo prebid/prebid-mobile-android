@@ -1,9 +1,8 @@
 package org.prebid.mobile.rendering.models.openrtb.bidRequests.users;
 
-import com.apollo.test.utils.ResourceUtils;
-
 import org.json.JSONObject;
 import org.junit.Test;
+import org.prebid.mobile.test.utils.ResourceUtils;
 
 import static org.junit.Assert.assertEquals;
 

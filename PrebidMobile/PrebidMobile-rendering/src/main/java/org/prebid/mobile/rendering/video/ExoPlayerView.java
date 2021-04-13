@@ -218,7 +218,7 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
             return null;
         }
         return new ExtractorMediaSource.Factory(
-            new DefaultDataSourceFactory(getContext(), Util.getUserAgent(getContext(), "OpenXSdk")))
+            new DefaultDataSourceFactory(getContext(), Util.getUserAgent(getContext(), "PrebidRenderingSDK")))
             .createMediaSource(uri);
     }
 

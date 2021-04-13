@@ -16,8 +16,6 @@ import java.util.Map;
 public class OpenXAdapterConfiguration extends BaseAdapterConfiguration {
     private static final String TAG = OpenXAdapterConfiguration.class.getSimpleName();
 
-    public final static String KEY_OPENX_CONFIGURATION = "openx_sdk_initialization_options";
-
     // 4-digit versioning scheme, of which the leftmost 3 digits correspond to the network SDK version,
     // and the last digit denotes the minor version number referring to an adapter release
     private static final String VERSION = "4.11.0.0";

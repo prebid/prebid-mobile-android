@@ -2,7 +2,7 @@
    "ads":{
       "chain":1,
       "medium":"ma",
-      "record_tmpl":"http://qa-v2-i16-lmi.del-qa.openx.net/{medium}/1.0/{rtype}?did.adid=fa7685f4-f806-4c03-9211-6c43f49d10ad&ts={txn_state}",
+      "record_tmpl":"http://qa-v2-i16-lmi.del-qa.prebid.net/{medium}/1.0/{rtype}?did.adid=fa7685f4-f806-4c03-9211-6c43f49d10ad&ts={txn_state}",
       "adunits":[
          {
             "auid":"1610813824",

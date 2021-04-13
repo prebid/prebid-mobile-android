@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBase;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -37,7 +37,7 @@ public class HTMLCreativeViewTest {
     @Test
     public void testSetMediaUrl() throws Exception {
 
-        OpenXWebViewBase mockHTMLCreativeView = new OpenXWebViewBase(mMockContext, mock(InterstitialManager.class));
+        PrebidWebViewBase mockHTMLCreativeView = new PrebidWebViewBase(mMockContext, mock(InterstitialManager.class));
         //mockHTMLCreativeView.start();
         assertNotNull(mockHTMLCreativeView);
     }

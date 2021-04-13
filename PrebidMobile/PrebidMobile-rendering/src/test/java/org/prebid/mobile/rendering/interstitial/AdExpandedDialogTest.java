@@ -4,17 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBase;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -37,7 +36,7 @@ public class AdExpandedDialogTest {
     private Context mMockContext;
     private WebViewBase mMockWebViewBase;
     private BaseJSInterface mMockBaseJSInterface;
-    private OpenXWebViewBase mMockOpenXWebView;
+    private PrebidWebViewBase mMockPrebidWebView;
     private InterstitialManager mMockInterstitialManager;
 
     @Before
@@ -47,10 +46,10 @@ public class AdExpandedDialogTest {
         mMockBaseJSInterface = mock(BaseJSInterface.class);
         mMockInterstitialManager = mock(InterstitialManager.class);
 
-        mMockOpenXWebView = mock(OpenXWebViewBase.class);
+        mMockPrebidWebView = mock(PrebidWebViewBase.class);
 
         when(mMockWebViewBase.getMRAIDInterface()).thenReturn(mMockBaseJSInterface);
-        when(mMockWebViewBase.getPreloadedListener()).thenReturn(mMockOpenXWebView);
+        when(mMockWebViewBase.getPreloadedListener()).thenReturn(mMockPrebidWebView);
 
         mAdExpandedDialog = new AdExpandedDialog(mMockContext, mMockWebViewBase, mMockInterstitialManager);
     }
@@ -67,11 +66,11 @@ public class AdExpandedDialogTest {
 
     @Test
     public void cancelTest() {
-        when(mMockOpenXWebView.getCreative()).thenReturn(mock(HTMLCreative.class));
+        when(mMockPrebidWebView.getCreative()).thenReturn(mock(HTMLCreative.class));
         when(mMockWebViewBase.getJSName()).thenReturn("");
 
         mAdExpandedDialog.cancel();
-        verify(mMockOpenXWebView, atLeast(1)).addView(any(View.class));
+        verify(mMockPrebidWebView, atLeast(1)).addView(any(View.class));
         verify(mMockBaseJSInterface).onStateChange(eq(JSInterface.STATE_DEFAULT));
     }
 }

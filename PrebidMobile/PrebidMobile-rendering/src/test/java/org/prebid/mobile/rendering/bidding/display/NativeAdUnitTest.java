@@ -2,8 +2,6 @@ package org.prebid.mobile.rendering.bidding.display;
 
 import android.content.Context;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -16,6 +14,7 @@ import org.prebid.mobile.rendering.bidding.listeners.OnNativeFetchCompleteListen
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
+import org.prebid.mobile.test.utils.WhiteBox;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
-import com.apollo.test.utils.ResourceUtils;
-import com.apollo.test.utils.WhiteBox;
 import com.mopub.mobileads.MoPubView;
 
 import org.junit.After;
@@ -23,6 +21,8 @@ import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
+import org.prebid.mobile.test.utils.ResourceUtils;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;

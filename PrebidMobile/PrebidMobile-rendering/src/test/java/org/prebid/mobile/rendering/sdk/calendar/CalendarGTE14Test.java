@@ -5,12 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 
-import com.apollo.test.utils.ResourceUtils;
-
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.test.utils.ResourceUtils;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
-import com.apollo.test.utils.WhiteBox;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
 import org.junit.Before;
@@ -14,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.eventhandlers.global.Constants;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;

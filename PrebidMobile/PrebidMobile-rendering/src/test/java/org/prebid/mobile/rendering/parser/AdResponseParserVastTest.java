@@ -1,7 +1,5 @@
 package org.prebid.mobile.rendering.parser;
 
-import com.apollo.test.utils.ResourceUtils;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.errors.VastParseError;
@@ -13,6 +11,7 @@ import org.prebid.mobile.rendering.video.vast.InLine;
 import org.prebid.mobile.rendering.video.vast.StaticResource;
 import org.prebid.mobile.rendering.video.vast.Tracking;
 import org.prebid.mobile.rendering.video.vast.Verification;
+import org.prebid.mobile.test.utils.ResourceUtils;
 import org.robolectric.RobolectricTestRunner;
 
 import java.io.IOException;
@@ -148,7 +147,7 @@ public class AdResponseParserVastTest {
         AdResponseParserVastHelper vast = new AdResponseParserVastHelper(vastXML);
 
         AdResponseParserVastHelper tempVast = new AdResponseParserVastHelper(vastXML);
-        assertEquals("http://i-cdn.openx" +
+        assertEquals("http://i-cdn.prebid" +
                      ".com/5a7/5a731840-5ae7-4dca-ba66-6e959bb763e2/be2" +
                      "/be2cf3b2cf0648e0aa46c7c09afaf3f4.mp4", tempVast.getMediaFileUrl(vast, 0));
     }
@@ -159,7 +158,7 @@ public class AdResponseParserVastTest {
         AdResponseParserVastHelper vast = new AdResponseParserVastHelper(vastXML);
 
         AdResponseParserVastHelper tempVast = new AdResponseParserVastHelper(vastXML);
-        assertEquals("http://oxv4support-d3.openxenterprise.com/v/1.0/ri?did" +
+        assertEquals("http://oxv4support-d3.prebidenterprise.com/v/1.0/ri?did" +
                      ".adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts" +
                      "=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51", tempVast.getImpressions(vast, 0).get(0).getValue());
     }
@@ -207,7 +206,7 @@ public class AdResponseParserVastTest {
 
         AdResponseParserVastHelper tempVast = new AdResponseParserVastHelper(vastXML);
 
-        assertEquals("http://oxv4support-d3.openxenterprise.com/v/1.0/rc?did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51", tempVast.getClickThroughUrl(vast, 0));
+        assertEquals("http://oxv4support-d3.prebidenterprise.com/v/1.0/rc?did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51", tempVast.getClickThroughUrl(vast, 0));
     }
 
     @Test
@@ -293,7 +292,7 @@ public class AdResponseParserVastTest {
         //inline ->adSystem
         assertNotNull(vast.getVast().getAds().get(0).getInline().getAdSystem());
         assertEquals("1.0", vast.getVast().getAds().get(0).getInline().getAdSystem().getVersion());
-        assertEquals("OpenX Enterprise", vast.getVast().getAds().get(0).getInline().getAdSystem().getValue());
+        assertEquals("Prebid Enterprise", vast.getVast().getAds().get(0).getInline().getAdSystem().getValue());
 
         //inline ->adTitle
         assertNotNull(vast.getVast().getAds().get(0).getInline().getAdTitle());
@@ -319,7 +318,7 @@ public class AdResponseParserVastTest {
         assertNotNull(vast.getVast().getAds().get(0).getInline().getImpressions());
         assertEquals(2, vast.getVast().getAds().get(0).getInline().getImpressions().size());
         assertEquals("first", vast.getVast().getAds().get(0).getInline().getImpressions().get(0).getId());
-        assertEquals("http://oxv4support-d3.openxenterprise.com/v/1.0/ri?did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51", vast.getVast().getAds().get(0).getInline().getImpressions().get(0).getValue());
+        assertEquals("http://oxv4support-d3.prebidenterprise.com/v/1.0/ri?did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51", vast.getVast().getAds().get(0).getInline().getImpressions().get(0).getValue());
 
         assertEquals("second", vast.getVast().getAds().get(0).getInline().getImpressions().get(1).getId());
         assertEquals("got:" + vast.getVast().getAds().get(0).getInline().getImpressions().get(1).getValue(), "http://myTrackingURL/anotherImpression", vast.getVast().getAds().get(0).getInline().getImpressions().get(1).getValue());
@@ -339,7 +338,7 @@ public class AdResponseParserVastTest {
         assertEquals(16, vast.getVast().getAds().get(0).getInline().getCreatives().get(0).getLinear().getTrackingEvents().size());
 
         String expected_track_event_name_0 = "creativeView";
-        String expected_track_event_value_0 = "http://oxv4support-d3.openxenterprise.com/v/1" +
+        String expected_track_event_value_0 = "http://oxv4support-d3.prebidenterprise.com/v/1" +
                                               ".0/rv?t=creativeView&did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51";
         assertEquals(expected_track_event_name_0, vast.getVast().getAds().get(0).getInline().getCreatives().get(0).getLinear()
                                                       .getTrackingEvents().get(0)
@@ -349,7 +348,7 @@ public class AdResponseParserVastTest {
                                                        .getValue());
 
         String expected_track_event_name_1 = "start";
-        String expected_track_event_value_1 = "http://oxv4support-d3.openxenterprise.com/v/1" +
+        String expected_track_event_value_1 = "http://oxv4support-d3.prebidenterprise.com/v/1" +
                                               ".0/rv?t=start&did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51";
         assertEquals(expected_track_event_name_1, vast.getVast().getAds().get(0).getInline().getCreatives().get(0).getLinear()
                                                       .getTrackingEvents().get(1)
@@ -359,7 +358,7 @@ public class AdResponseParserVastTest {
                                                        .getValue());
 
         String expected_track_event_name_2 = "midpoint";
-        String expected_track_event_value_2 = "http://oxv4support-d3.openxenterprise.com/v/1" +
+        String expected_track_event_value_2 = "http://oxv4support-d3.prebidenterprise.com/v/1" +
                                               ".0/rv?t=midpoint&did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51";
         assertEquals(expected_track_event_name_2, vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                                                       .getLinear()
@@ -371,7 +370,7 @@ public class AdResponseParserVastTest {
                                                        .getValue());
 
         String expected_track_event_name_3 = "firstQuartile";
-        String expected_track_event_value_3 = "http://oxv4support-d3.openxenterprise.com/v/1" +
+        String expected_track_event_value_3 = "http://oxv4support-d3.prebidenterprise.com/v/1" +
                                               ".0/rv?t=firstQuartile&did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51";
         assertEquals(expected_track_event_name_3, vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                                                       .getLinear()
@@ -383,7 +382,7 @@ public class AdResponseParserVastTest {
                                                        .getValue());
 
         String expected_track_event_name_4 = "thirdQuartile";
-        String expected_track_event_value_4 = "http://oxv4support-d3.openxenterprise.com/v/1" +
+        String expected_track_event_value_4 = "http://oxv4support-d3.prebidenterprise.com/v/1" +
                                               ".0/rv?t=thirdQuartile&did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51";
         assertEquals(expected_track_event_name_4, vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                                                       .getLinear()
@@ -395,7 +394,7 @@ public class AdResponseParserVastTest {
                                                        .getValue());
 
         String expected_track_event_name_5 = "complete";
-        String expected_track_event_value_5 = "http://oxv4support-d3.openxenterprise.com/v/1" +
+        String expected_track_event_value_5 = "http://oxv4support-d3.prebidenterprise.com/v/1" +
                                               ".0/rv?t=complete&did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51";
         assertEquals(expected_track_event_name_5, vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                                                       .getLinear()
@@ -407,7 +406,7 @@ public class AdResponseParserVastTest {
                                                        .getValue());
 
         String expected_track_event_name_6 = "mute";
-        String expected_track_event_value_6 = "http://oxv4support-d3.openxenterprise.com/v/1" +
+        String expected_track_event_value_6 = "http://oxv4support-d3.prebidenterprise.com/v/1" +
                                               ".0/rv?t=mute&did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51";
         assertEquals(expected_track_event_name_6, vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                                                       .getLinear()
@@ -419,7 +418,7 @@ public class AdResponseParserVastTest {
                                                        .getValue());
 
         String expected_track_event_name_7 = "unmute";
-        String expected_track_event_value_7 = "http://oxv4support-d3.openxenterprise.com/v/1" +
+        String expected_track_event_value_7 = "http://oxv4support-d3.prebidenterprise.com/v/1" +
                                               ".0/rv?t=unmute&did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51";
         assertEquals(expected_track_event_name_7, vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                                                       .getLinear()
@@ -431,7 +430,7 @@ public class AdResponseParserVastTest {
                                                        .getValue());
 
         String expected_track_event_name_8 = "pause";
-        String expected_track_event_value_8 = "http://oxv4support-d3.openxenterprise.com/v/1" +
+        String expected_track_event_value_8 = "http://oxv4support-d3.prebidenterprise.com/v/1" +
                                               ".0/rv?t=pause&did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51";
         assertEquals(expected_track_event_name_8, vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                                                       .getLinear()
@@ -443,7 +442,7 @@ public class AdResponseParserVastTest {
                                                        .getValue());
 
         String expected_track_event_name_9 = "rewind";
-        String expected_track_event_value_9 = "http://oxv4support-d3.openxenterprise.com/v/1" +
+        String expected_track_event_value_9 = "http://oxv4support-d3.prebidenterprise.com/v/1" +
                                               ".0/rv?t=rewind&did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51";
         assertEquals(expected_track_event_name_9, vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                                                       .getLinear()
@@ -455,7 +454,7 @@ public class AdResponseParserVastTest {
                                                        .getValue());
 
         String expected_track_event_name_10 = "resume";
-        String expected_track_event_value_10 = "http://oxv4support-d3.openxenterprise.com/v/1" +
+        String expected_track_event_value_10 = "http://oxv4support-d3.prebidenterprise.com/v/1" +
                                                ".0/rv?t=resume&did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51";
         assertEquals(expected_track_event_name_10, vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                                                        .getLinear()
@@ -467,7 +466,7 @@ public class AdResponseParserVastTest {
                                                         .getValue());
 
         String expected_track_event_name_11 = "fullscreen";
-        String expected_track_event_value_11 = "http://oxv4support-d3.openxenterprise.com/v/1" +
+        String expected_track_event_value_11 = "http://oxv4support-d3.prebidenterprise.com/v/1" +
                                                ".0/rv?t=fullscreen&did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51";
         assertEquals(expected_track_event_name_11, vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                                                        .getLinear()
@@ -479,7 +478,7 @@ public class AdResponseParserVastTest {
                                                         .getValue());
 
         String expected_track_event_name_12 = "expand";
-        String expected_track_event_value_12 = "http://oxv4support-d3.openxenterprise.com/v/1" +
+        String expected_track_event_value_12 = "http://oxv4support-d3.prebidenterprise.com/v/1" +
                                                ".0/rv?t=expand&did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51";
         assertEquals(expected_track_event_name_12, vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                                                        .getLinear()
@@ -491,7 +490,7 @@ public class AdResponseParserVastTest {
                                                         .getValue());
 
         String expected_track_event_name_13 = "collapse";
-        String expected_track_event_value_13 = "http://oxv4support-d3.openxenterprise.com/v/1" +
+        String expected_track_event_value_13 = "http://oxv4support-d3.prebidenterprise.com/v/1" +
                                                ".0/rv?t=collapse&did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51";
         assertEquals(expected_track_event_name_13, vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                                                        .getLinear()
@@ -503,7 +502,7 @@ public class AdResponseParserVastTest {
                                                         .getValue());
 
         String expected_track_event_name_14 = "acceptInvitation";
-        String expected_track_event_value_14 = "http://oxv4support-d3.openxenterprise.com/v/1" +
+        String expected_track_event_value_14 = "http://oxv4support-d3.prebidenterprise.com/v/1" +
                                                ".0/rv?t=acceptInvitation&did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51";
         assertEquals(expected_track_event_name_14, vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                                                        .getLinear()
@@ -515,7 +514,7 @@ public class AdResponseParserVastTest {
                                                         .getValue());
 
         String expected_track_event_name_15 = "close";
-        String expected_track_event_value_15 = "http://oxv4support-d3.openxenterprise.com/v/1" +
+        String expected_track_event_value_15 = "http://oxv4support-d3.prebidenterprise.com/v/1" +
                                                ".0/rv?t=close&did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51";
         assertEquals(expected_track_event_name_15, vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                                                        .getLinear()
@@ -533,7 +532,7 @@ public class AdResponseParserVastTest {
                           .getLinear().getVideoClicks());
         assertNotNull(vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                           .getLinear().getVideoClicks().getClickThrough());
-        assertEquals("http://oxv4support-d3.openxenterprise.com/v/1.0/rc?did" +
+        assertEquals("http://oxv4support-d3.prebidenterprise.com/v/1.0/rc?did" +
                      ".adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts" +
                      "=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51", vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                        .getLinear().getVideoClicks().getClickThrough().getValue());
@@ -593,7 +592,7 @@ public class AdResponseParserVastTest {
         assertNull(vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                        .getLinear().getMediaFiles().get(0).getDuration());
 
-        assertEquals("http://i-cdn.openx" +
+        assertEquals("http://i-cdn.prebid" +
                      ".com/5a7/5a731840-5ae7-4dca-ba66-6e959bb763e2/be2" +
                      "/be2cf3b2cf0648e0aa46c7c09afaf3f4.mp4", vast.getVast().getAds().get(0).getInline().getCreatives().get(0)
                                                                   .getLinear().getMediaFiles().get(0).getValue());
@@ -658,15 +657,15 @@ public class AdResponseParserVastTest {
         assertEquals(2, verifications.size());
 
         Verification verification1 = verifications.get(0);
-        assertEquals("OpenX1", verification1.getVendor());
-        assertEquals("omidOpenx1", verification1.getApiFramework());
+        assertEquals("Prebid1", verification1.getVendor());
+        assertEquals("omidPrebid1", verification1.getApiFramework());
         assertEquals("https://measurement.domain.com/tag.js", verification1.getJsResource());
         assertEquals("{1}", verification1.getVerificationParameters());
 
         Verification verification2 = verifications.get(1);
-        assertEquals("OpenX2", verification2.getVendor());
+        assertEquals("Prebid2", verification2.getVendor());
         assertEquals("https://measurement.domain.com/tag2.js", verification2.getJsResource());
-        assertEquals("omidOpenx2", verification2.getApiFramework());
+        assertEquals("omidPrebid2", verification2.getApiFramework());
         assertEquals("{2}", verification2.getVerificationParameters());
     }
 
@@ -683,7 +682,7 @@ public class AdResponseParserVastTest {
 
         assertEquals("https://s3-us-west-2.amazonaws.com/omsdk-files/compliance-js/omid-validation-verification-script-v1.js", verification.getJsResource());
         assertEquals("omid", verification.getApiFramework());
-        assertEquals("openx", verification.getVendor());
+        assertEquals("prebid", verification.getVendor());
         assertEquals("parameter1=value1&parameter2=value2&parameter3=value3", verification.getVerificationParameters());
     }
 

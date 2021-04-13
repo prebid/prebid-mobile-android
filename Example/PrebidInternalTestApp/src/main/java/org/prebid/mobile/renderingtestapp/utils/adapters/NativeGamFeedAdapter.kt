@@ -73,7 +73,7 @@ class NativeGamFeedAdapter(context: Context,
     fun handleCustomTemplateAd(customTemplate: NativeCustomTemplateAd?) {
         customTemplate ?: return
 
-        if (GamUtils.didApolloWin(customTemplate)) {
+        if (GamUtils.didPrebidWin(customTemplate)) {
             GamUtils.findNativeAd(customTemplate) {
                 inflateViewContent(it)
             }

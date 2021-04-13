@@ -21,7 +21,7 @@ import org.prebid.mobile.rendering.models.AdConfiguration;
 public class OpenXApolloBannerAdapter extends BaseAd {
 
     private static final String TAG = OpenXApolloBannerAdapter.class.getSimpleName();
-    private static final String KEY_BID_RESPONSE = "OPENX_BID_RESPONSE_ID";
+    private static final String KEY_BID_RESPONSE = "PREBID_BID_RESPONSE_ID";
 
     private DisplayView mDisplayView;
     private DisplayViewListener mDisplayViewListener = new DisplayViewListener() {

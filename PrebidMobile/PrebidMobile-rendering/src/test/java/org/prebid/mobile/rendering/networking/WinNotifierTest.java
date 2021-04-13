@@ -2,9 +2,6 @@ package org.prebid.mobile.rendering.networking;
 
 import android.text.TextUtils;
 
-import com.apollo.test.utils.ResourceUtils;
-import com.apollo.test.utils.WhiteBox;
-
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 import org.junit.After;
@@ -17,6 +14,8 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
+import org.prebid.mobile.test.utils.ResourceUtils;
+import org.prebid.mobile.test.utils.WhiteBox;
 
 import java.io.IOException;
 import java.util.HashMap;

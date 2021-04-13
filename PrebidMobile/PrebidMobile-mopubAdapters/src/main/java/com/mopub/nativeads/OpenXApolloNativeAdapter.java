@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class OpenXApolloNativeAdapter extends CustomEventNative {
 
-    private static final String KEY_BID_RESPONSE = "OPENX_BID_RESPONSE_ID";
+    private static final String KEY_BID_RESPONSE = "PREBID_BID_RESPONSE_ID";
 
     @Override
     protected void loadNativeAd(

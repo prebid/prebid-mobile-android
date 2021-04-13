@@ -112,7 +112,7 @@ class GamNativeFragment(override val layoutRes: Int = R.layout.fragment_native) 
     private fun handleUnifiedAd(unifiedAd: UnifiedNativeAd?) {
         unifiedAd ?: return
 
-        if (GamUtils.didApolloWin(unifiedAd)) {
+        if (GamUtils.didPrebidWin(unifiedAd)) {
             GamUtils.findNativeAd(unifiedAd) {
                 btnNativeAdLoaded?.isEnabled = true
                 inflateViewContent(it)
@@ -127,7 +127,7 @@ class GamNativeFragment(override val layoutRes: Int = R.layout.fragment_native) 
     private fun handleCustomTemplateAd(customTemplate: NativeCustomTemplateAd?) {
         customTemplate ?: return
 
-        if (GamUtils.didApolloWin(customTemplate)) {
+        if (GamUtils.didPrebidWin(customTemplate)) {
             GamUtils.findNativeAd(customTemplate) {
                 btnNativeAdLoaded?.isEnabled = true
                 inflateViewContent(it)

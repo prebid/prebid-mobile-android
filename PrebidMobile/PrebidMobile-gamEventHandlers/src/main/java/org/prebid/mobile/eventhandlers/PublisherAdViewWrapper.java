@@ -146,8 +146,8 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
 
         final com.google.android.gms.ads.AdSize[] gamAdSizeArray = new com.google.android.gms.ads.AdSize[adSizes.length];
         for (int i = 0; i < adSizes.length; i++) {
-            final AdSize apolloAdSize = adSizes[i];
-            gamAdSizeArray[i] = new com.google.android.gms.ads.AdSize(apolloAdSize.width, apolloAdSize.height);
+            final AdSize prebidAdSize = adSizes[i];
+            gamAdSizeArray[i] = new com.google.android.gms.ads.AdSize(prebidAdSize.width, prebidAdSize.height);
         }
 
         return gamAdSizeArray;

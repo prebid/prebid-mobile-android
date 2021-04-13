@@ -3,12 +3,11 @@ package org.prebid.mobile.rendering.views.webview;
 import android.app.Activity;
 import android.content.Context;
 
-import com.apollo.test.utils.ResourceUtils;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
+import org.prebid.mobile.test.utils.ResourceUtils;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -44,7 +43,7 @@ public class WebViewBannerTest {
         WebViewBanner webViewBanner = new WebViewBanner(mContext, mAdHTML, 100, 200,  mMockPreloadListener, mMockMraidListener);
         assertNotNull(webViewBanner.getMRAIDInterface());
 
-        webViewBanner = new WebViewBanner(mContext, mock(OpenXWebViewBase.class), mMockMraidListener);
+        webViewBanner = new WebViewBanner(mContext, mock(PrebidWebViewBase.class), mMockMraidListener);
         assertNotNull(webViewBanner.getMRAIDInterface());
     }
 }

@@ -10,7 +10,7 @@ import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
 import org.prebid.mobile.rendering.views.indicator.AdIndicatorView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBase;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
@@ -36,13 +36,13 @@ public class AdExpandedDialog extends AdBaseDialog {
                     //detach from closecontainer
                     mWebViewBase.detachFromParent();
                     //add it back to OXWebView.
-                    OpenXWebViewBase defaultContainer = (OpenXWebViewBase) mWebViewBase.getPreloadedListener();
+                    PrebidWebViewBase defaultContainer = (PrebidWebViewBase) mWebViewBase.getPreloadedListener();
 
                     //use getPreloadedListener() to get defaultContainer, as mDefaultContainer is not initiated for non-mraid cases(such as interstitials)
                     defaultContainer.addView(mWebViewBase);
                     ////IMP - get the default state
                     defaultContainer.setVisibility(View.VISIBLE);
-                    //do not ever call openXWebView.visible. It makes the default adview on click of expand to be blank.
+                    //do not ever call prebidWebView.visible. It makes the default adview on click of expand to be blank.
                     if (context instanceof Activity) {
                         ((Activity) context).setRequestedOrientation(mInitialOrientation);
                     }
@@ -59,7 +59,7 @@ public class AdExpandedDialog extends AdBaseDialog {
                             defaultContainer.addView(mAdIndicatorView);
                         }
                         else {
-                            ((OpenXWebViewBase) defaultContainer.getOldWebView().getPreloadedListener()).addView(mAdIndicatorView);
+                            ((PrebidWebViewBase) defaultContainer.getOldWebView().getPreloadedListener()).addView(mAdIndicatorView);
                         }
                     }
 
@@ -95,7 +95,7 @@ public class AdExpandedDialog extends AdBaseDialog {
     public void showAdIndicator() {
         if (mAdIndicatorView == null) {
             if (mWebViewBase != null) {
-                mAdIndicatorView = ((OpenXWebViewBase) mWebViewBase.getPreloadedListener()).getCreative().getAdIndicatorView();
+                mAdIndicatorView = ((PrebidWebViewBase) mWebViewBase.getPreloadedListener()).getCreative().getAdIndicatorView();
                 ((AdIndicatorView) mAdIndicatorView).setPosition(AdIndicatorView.AdIconPosition.BOTTOM);
             }
         }

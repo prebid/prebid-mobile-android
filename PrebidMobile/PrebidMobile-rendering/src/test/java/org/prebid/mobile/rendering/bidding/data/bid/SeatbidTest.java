@@ -1,10 +1,9 @@
 package org.prebid.mobile.rendering.bidding.data.bid;
 
-import com.apollo.test.utils.ResourceUtils;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
+import org.prebid.mobile.test.utils.ResourceUtils;
 
 import java.io.IOException;
 
@@ -22,7 +21,7 @@ public class SeatbidTest {
         assertNotNull(seatbid);
         assertNotNull(seatbid.getBids());
         assertFalse(seatbid.getBids().isEmpty());
-        assertEquals("openx", seatbid.getSeat());
+        assertEquals("prebid", seatbid.getSeat());
         assertEquals(1, seatbid.getGroup());
     }
 

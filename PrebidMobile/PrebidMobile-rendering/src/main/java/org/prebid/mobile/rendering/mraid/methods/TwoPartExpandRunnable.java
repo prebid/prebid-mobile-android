@@ -3,8 +3,8 @@ package org.prebid.mobile.rendering.mraid.methods;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.MraidEvent;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBanner;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBase;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 
 import java.lang.ref.WeakReference;
@@ -35,15 +35,15 @@ public class TwoPartExpandRunnable implements Runnable {
             return;
         }
 
-        OpenXWebViewBase openXWebViewBanner = new OpenXWebViewBanner(mOldWebViewBase.getContext(), mMraidController.mInterstitialManager);
+        PrebidWebViewBase prebidWebViewBanner = new PrebidWebViewBanner(mOldWebViewBase.getContext(), mMraidController.mInterstitialManager);
         //inject mraid.js & load url here, for 2part expand
-        openXWebViewBanner.setOldWebView(mOldWebViewBase);
-        openXWebViewBanner.initTwoPartAndLoad(mMraidEvent.mraidActionHelper);
-        openXWebViewBanner.setWebViewDelegate(htmlCreative);
-        openXWebViewBanner.setCreative(htmlCreative);
+        prebidWebViewBanner.setOldWebView(mOldWebViewBase);
+        prebidWebViewBanner.initTwoPartAndLoad(mMraidEvent.mraidActionHelper);
+        prebidWebViewBanner.setWebViewDelegate(htmlCreative);
+        prebidWebViewBanner.setCreative(htmlCreative);
         //Set a view before handling any action.
-        htmlCreative.setCreativeView(openXWebViewBanner);
-        htmlCreative.setTwoPartNewWebViewBase(openXWebViewBanner);
-        mMraidController.expand(mOldWebViewBase, openXWebViewBanner, mMraidEvent);
+        htmlCreative.setCreativeView(prebidWebViewBanner);
+        htmlCreative.setTwoPartNewWebViewBase(prebidWebViewBanner);
+        mMraidController.expand(mOldWebViewBase, prebidWebViewBanner, mMraidEvent);
     }
 }

@@ -25,10 +25,10 @@ import org.prebid.mobile.rendering.views.webview.mraid.Views;
 import java.lang.ref.WeakReference;
 
 //Equivalent of adBase
-public class OpenXWebViewBase extends FrameLayout
+public class PrebidWebViewBase extends FrameLayout
     implements PreloadManager.PreloadedListener, MraidEventsManager.MraidListener {
 
-    private final String TAG = OpenXWebViewBase.class.getSimpleName();
+    private final String TAG = PrebidWebViewBase.class.getSimpleName();
     public static final int WEBVIEW_DESTROY_DELAY_MS = 1000;
 
     protected Context mContext;
@@ -53,7 +53,7 @@ public class OpenXWebViewBase extends FrameLayout
     protected Animation mFadeInAnimation;
     protected Animation mFadeOutAnimation;
 
-    public OpenXWebViewBase(Context context, InterstitialManager interstitialManager) {
+    public PrebidWebViewBase(Context context, InterstitialManager interstitialManager) {
         //a null context to super(), a framelayout, could crash. So, catch this exception
         super(context);
         mContext = context;
@@ -76,7 +76,7 @@ public class OpenXWebViewBase extends FrameLayout
 
         WebView currentWebView = (mWebView != null) ? mWebView : mMraidWebView;
 
-        // IMPORTANT: Delayed execution was implemented due to this issue: https://openxtechinc.atlassian.net/browse/MOBILE-5380
+        // IMPORTANT: Delayed execution was implemented due to this issue: jira/browse/MOBILE-5380
         // We need to give OMID time to finish method execution inside the webview
         mHandler.removeCallbacksAndMessages(null);
         mHandler.postDelayed(new WebViewCleanupRunnable(currentWebView), WEBVIEW_DESTROY_DELAY_MS);

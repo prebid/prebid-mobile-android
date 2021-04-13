@@ -82,7 +82,7 @@ public abstract class BaseInterstitialAdUnit {
         @Override
         public void onInterstitialClosed() {
             notifyAdEventListener(AdListenerEvent.AD_CLOSE);
-            notifyAdEventListener(AdListenerEvent.USER_RECEIVED_OPENX_REWARD);
+            notifyAdEventListener(AdListenerEvent.USER_RECEIVED_PREBID_REWARD);
         }
     };
 
@@ -204,7 +204,7 @@ public abstract class BaseInterstitialAdUnit {
         mAdUnitConfig = adUnitConfiguration;
         mAdUnitConfig.setAdPosition(AdPosition.FULLSCREEN);
 
-        initOpenxSdk();
+        initPrebidRenderingSdk();
         initBidLoader();
         initInterstitialController();
     }
@@ -231,7 +231,7 @@ public abstract class BaseInterstitialAdUnit {
         mInterstitialAdUnitState = state;
     }
 
-    private void initOpenxSdk() {
+    private void initPrebidRenderingSdk() {
         try {
             PrebidRenderingSettings.initializeSDK(getContext(), () -> { });
         }
@@ -276,7 +276,7 @@ public abstract class BaseInterstitialAdUnit {
         AD_CLICKED,
         AD_DISPLAYED,
         AD_LOADED,
-        USER_RECEIVED_OPENX_REWARD // only for OXBRewardedAdUnit
+        USER_RECEIVED_PREBID_REWARD // only for RewardedAdUnit
     }
 
     enum InterstitialAdUnitState {

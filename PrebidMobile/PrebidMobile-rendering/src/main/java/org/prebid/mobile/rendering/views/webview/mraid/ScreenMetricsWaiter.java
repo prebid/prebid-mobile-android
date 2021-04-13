@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.prebid.mobile.rendering.utils.logger.OXLog;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBase;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 
 import java.util.LinkedList;
 
@@ -90,8 +90,8 @@ public class ScreenMetricsWaiter {
 
                 for (final View view : mViews) {
                     boolean isTwoPart = false;
-                    if (view instanceof OpenXWebViewBase && ((OpenXWebViewBase) view).getMraidWebView() != null) {
-                        String jsName = ((OpenXWebViewBase) view).getMraidWebView().getJSName();
+                    if (view instanceof PrebidWebViewBase && ((PrebidWebViewBase) view).getMraidWebView() != null) {
+                        String jsName = ((PrebidWebViewBase) view).getMraidWebView().getJSName();
                         isTwoPart = "twopart".equals(jsName);
                     }
 

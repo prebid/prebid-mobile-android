@@ -39,9 +39,6 @@ public abstract class BaseAdView extends FrameLayout {
         super(context, attrs);
     }
 
-    /**
-     * This onWindowFocusChanged event is used internally by the OpenX SDK
-     */
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);

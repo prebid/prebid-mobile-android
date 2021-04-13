@@ -21,9 +21,9 @@ import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposure;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBanner;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBase;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewInterstitial;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
@@ -34,7 +34,7 @@ public class HTMLCreative extends AbstractCreative
 
     private MraidController mMraidController;
 
-    private OpenXWebViewBase mTwoPartNewWebViewBase;
+    private PrebidWebViewBase mTwoPartNewWebViewBase;
 
     private boolean mIsEndCard = false;
     private boolean mResolved;
@@ -71,23 +71,23 @@ public class HTMLCreative extends AbstractCreative
             throw new AdException(AdException.INTERNAL_ERROR, "Can't create a WebView for a null adtype");
         }
         //create a webview here
-        OpenXWebViewBase openXWebView = null;
+        PrebidWebViewBase prebidWebView = null;
         if (adType == AdConfiguration.AdUnitIdentifierType.BANNER) {
             //do all banner
-            openXWebView = (OpenXWebViewBanner) ViewPool.getInstance()
+            prebidWebView = (PrebidWebViewBanner) ViewPool.getInstance()
                                                         .getUnoccupiedView(mContextReference.get(), null, adType, mInterstitialManager);
         }
         else if (adType == AdConfiguration.AdUnitIdentifierType.INTERSTITIAL) {
             //do all interstitials
-            openXWebView = (OpenXWebViewInterstitial) ViewPool.getInstance()
+            prebidWebView = (PrebidWebViewInterstitial) ViewPool.getInstance()
                                                               .getUnoccupiedView(mContextReference.get(), null, adType, mInterstitialManager);
         }
 
-        if (openXWebView == null) {
-            throw new AdException(AdException.INTERNAL_ERROR, "OpenXWebView creation failed");
+        if (prebidWebView == null) {
+            throw new AdException(AdException.INTERNAL_ERROR, "PrebidWebView creation failed");
         }
-        openXWebView.setWebViewDelegate(this);
-        openXWebView.setCreative(this);
+        prebidWebView.setWebViewDelegate(this);
+        prebidWebView.setCreative(this);
 
         String html = model.getHtml();
         int width = model.getWidth();
@@ -100,8 +100,8 @@ public class HTMLCreative extends AbstractCreative
         }
         else {
             html = injectingScriptContent(html);
-            openXWebView.loadHTML(html, width, height);
-            setCreativeView(openXWebView);
+            prebidWebView.loadHTML(html, width, height);
+            setCreativeView(prebidWebView);
         }
 
         mIsEndCard = model.hasEndCard();
@@ -110,11 +110,11 @@ public class HTMLCreative extends AbstractCreative
     @Override
     public void display() {
 
-        if (!(getCreativeView() instanceof OpenXWebViewBase)) {
-            OXLog.error(TAG, "Could not cast mCreativeView to a OpenXWebViewBase");
+        if (!(getCreativeView() instanceof PrebidWebViewBase)) {
+            OXLog.error(TAG, "Could not cast mCreativeView to a PrebidWebViewBase");
             return;
         }
-        OpenXWebViewBase creativeWebView = (OpenXWebViewBase) getCreativeView();
+        PrebidWebViewBase creativeWebView = (PrebidWebViewBase) getCreativeView();
 
         // Fire impression
         startViewabilityTracker();
@@ -158,7 +158,7 @@ public class HTMLCreative extends AbstractCreative
         mCreativeVisibilityTracker = new CreativeVisibilityTracker(
             getCreativeView().getWebView(),
             visibilityTrackerOption,
-            ((OpenXWebViewBase) getCreativeView()).getWebView().isMRAID()
+            ((PrebidWebViewBase) getCreativeView()).getWebView().isMRAID()
         );
         mCreativeVisibilityTracker.setVisibilityTrackerListener(this::onVisibilityEvent);
         mCreativeVisibilityTracker.startVisibilityCheck(mContextReference.get());
@@ -239,8 +239,8 @@ public class HTMLCreative extends AbstractCreative
     }
 
     @Override
-    public OpenXWebViewBase getCreativeView() {
-        return (OpenXWebViewBase) super.getCreativeView();
+    public PrebidWebViewBase getCreativeView() {
+        return (PrebidWebViewBase) super.getCreativeView();
     }
 
     public void mraidAdExpanded() {
@@ -329,7 +329,7 @@ public class HTMLCreative extends AbstractCreative
         }
     }
 
-    public void setTwoPartNewWebViewBase(OpenXWebViewBase twoPartNewWebViewBase) {
+    public void setTwoPartNewWebViewBase(PrebidWebViewBase twoPartNewWebViewBase) {
         mTwoPartNewWebViewBase = twoPartNewWebViewBase;
     }
 }

@@ -116,7 +116,7 @@ public abstract class Requester {
         DeviceInfoManager deviceManager = ManagersResolver.getInstance().getDeviceManager();
         if (deviceManager == null || !deviceManager.isPermissionGranted("android.permission.INTERNET")) {
             sendAdException(
-                "Either OpenX DeviceManager is not initialized or android.permission.INTERNET is not specified. Please check",
+                "Either Prebid DeviceManager is not initialized or android.permission.INTERNET is not specified. Please check",
                 "Internet permission not granted"
             );
             return;
@@ -126,7 +126,7 @@ public abstract class Requester {
         ConnectionInfoManager connectionInfoManager = ManagersResolver.getInstance().getNetworkManager();
         if (connectionInfoManager == null || connectionInfoManager.getConnectionType() == UserParameters.OXMConnectionType.OFFLINE) {
             sendAdException(
-                "Either OpenX networkManager is not initialized or Device is offline. Please check the internet connection",
+                "Either Prebid networkManager is not initialized or Device is offline. Please check the internet connection",
                 "No internet connection detected"
             );
             return;

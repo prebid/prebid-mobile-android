@@ -21,8 +21,9 @@ public class GamUtils {
     private static final String TAG = GamUtils.class.getSimpleName();
     static final HashSet<String> RESERVED_KEYS;
 
-    private static final String KEY_IS_APOLLO_CREATIVE = "isApolloCreative";
     private static final String KEY_IS_PREBID_CREATIVE = "isPrebid";
+    // TODO: 4/13/21 Remove in scope of MOBILE-7005
+    private static final String KEY_IS_PREBID_CREATIVE_UNIFIED = "isApolloCreative";
 
     static {
         RESERVED_KEYS = new HashSet<>();
@@ -71,25 +72,23 @@ public class GamUtils {
         NativeUtils.findNativeAd(fetchDemandResult, callback);
     }
 
-    public static boolean didApolloWin(UnifiedNativeAd unifiedNativeAd) {
+    public static boolean didPrebidWin(UnifiedNativeAd unifiedNativeAd) {
         if (unifiedNativeAd == null) {
             return false;
         }
 
         final String body = unifiedNativeAd.getBody();
-        return KEY_IS_APOLLO_CREATIVE.equals(body);
+        return KEY_IS_PREBID_CREATIVE.equals(body) || KEY_IS_PREBID_CREATIVE_UNIFIED.equals(body);
     }
 
-    public static boolean didApolloWin(NativeCustomTemplateAd ad) {
+    public static boolean didPrebidWin(NativeCustomTemplateAd ad) {
         if (ad == null) {
             return false;
         }
 
-        CharSequence isApolloValue = ad.getText(KEY_IS_APOLLO_CREATIVE);
         CharSequence isPrebidValue = ad.getText(KEY_IS_PREBID_CREATIVE);
 
-        return (isApolloValue != null && "1".contentEquals(isApolloValue))
-               || (isPrebidValue != null && "1".contentEquals(isPrebidValue));
+        return isPrebidValue != null && "1".contentEquals(isPrebidValue);
     }
 
     private static void removeUsedCustomTargetingForGam(PublisherAdRequest adRequestObj) {

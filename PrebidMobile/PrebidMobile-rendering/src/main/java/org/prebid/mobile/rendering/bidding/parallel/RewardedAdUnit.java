@@ -160,7 +160,7 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
             case AD_CLICKED:
                 mRewardedAdUnitListener.onAdClicked(RewardedAdUnit.this);
                 break;
-            case USER_RECEIVED_OPENX_REWARD:
+            case USER_RECEIVED_PREBID_REWARD:
                 mRewardedAdUnitListener.onUserEarnedReward(RewardedAdUnit.this);
                 break;
         }

@@ -3,8 +3,6 @@ package org.prebid.mobile.rendering.bidding.loader;
 import android.app.Activity;
 import android.content.Context;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +15,7 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAsset
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetImage;
 import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
 import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;

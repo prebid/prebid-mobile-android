@@ -18,7 +18,7 @@ import org.robolectric.annotation.Config;
 
 import java.util.Locale;
 
-import static com.apollo.test.utils.ResourceUtils.assertJsonEquals;
+import static org.prebid.mobile.test.utils.ResourceUtils.assertJsonEquals;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19, qualifiers = "w1920dp-h1080dp")

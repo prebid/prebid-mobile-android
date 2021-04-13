@@ -2,11 +2,11 @@
     "sdk_configuration":{
         "mraid_library":{
             "version":"100500.0",
-            "download_url":"https://ssl-i.cdn.openx.com/sdks/ssc/lib/mraid.js"
+            "download_url":"https://ssl-i.cdn.prebid.com/sdks/ssc/lib/mraid.js"
         },
         "omsdk_library":{
             "version":"100500.0",
-            "download_url":"https://ssl-i.cdn.openx.com/sdks/ssc/lib/omsdk.js"
+            "download_url":"https://ssl-i.cdn.prebid.com/sdks/ssc/lib/omsdk.js"
         },
         "sdk_version":{
             "version":"4.11",

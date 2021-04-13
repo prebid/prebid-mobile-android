@@ -7,9 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.ViewGroup;
 
-import com.apollo.test.utils.ResourceUtils;
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +22,8 @@ import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JsExecutor;
+import org.prebid.mobile.test.utils.ResourceUtils;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -44,9 +43,9 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
-public class OpenXWebViewBannerTest {
+public class PrebidWebViewBannerTest {
 
-    private OpenXWebViewBanner mBanner;
+    private PrebidWebViewBanner mBanner;
     private WebViewBanner mMockWebViewBanner;
     private BaseJSInterface mMockBaseJSInterface;
 
@@ -67,7 +66,7 @@ public class OpenXWebViewBannerTest {
         when(mMockBaseJSInterface.getJsExecutor()).thenReturn(mMockJsExecutor);
 
         when(mMockWebViewBanner.getMRAIDInterface()).thenReturn(mMockBaseJSInterface);
-        mBanner = new OpenXWebViewBanner(mContext, mock(InterstitialManager.class));
+        mBanner = new PrebidWebViewBanner(mContext, mock(InterstitialManager.class));
 
         mBanner.mMraidWebView = mMockWebViewBanner;
     }
@@ -89,7 +88,7 @@ public class OpenXWebViewBannerTest {
         }).when(mMockJsExecutor).executeGetExpandProperties(any(Handler.class));
 
         FetchPropertiesHandler.FetchPropertyCallback mockCallback = mock(FetchPropertiesHandler.FetchPropertyCallback.class);
-        WhiteBox.field(OpenXWebViewBanner.class, "mExpandPropertiesCallback").set(mBanner, mockCallback);
+        WhiteBox.field(PrebidWebViewBanner.class, "mExpandPropertiesCallback").set(mBanner, mockCallback);
 
         mBanner.loadMraidExpandProperties();
 
@@ -110,7 +109,7 @@ public class OpenXWebViewBannerTest {
 
         mMockWebViewBanner.mMRAIDBridgeName = "twopart";
         mBanner.preloaded(mMockWebViewBanner);
-        verify(mockManager).displayOpenXWebViewForMRAID(eq(mMockWebViewBanner), eq(true));
+        verify(mockManager).displayPrebidWebViewForMraid(eq(mMockWebViewBanner), eq(true));
 
         mMockWebViewBanner.mMRAIDBridgeName = "else";
         mBanner.preloaded(mMockWebViewBanner);

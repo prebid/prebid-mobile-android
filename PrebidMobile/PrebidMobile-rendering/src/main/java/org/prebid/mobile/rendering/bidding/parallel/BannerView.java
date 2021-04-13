@@ -396,13 +396,13 @@ public class BannerView extends FrameLayout {
     }
 
     private void init() {
-        initOpenxSdk();
+        initPrebidRenderingSdk();
         initAdConfiguration();
         initBidLoader();
         mScreenStateReceiver.register(getContext());
     }
 
-    private void initOpenxSdk() {
+    private void initPrebidRenderingSdk() {
         try {
             PrebidRenderingSettings.initializeSDK(getContext(), () -> { });
         }

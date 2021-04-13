@@ -12,7 +12,7 @@ import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
 import org.prebid.mobile.rendering.views.browser.AdBrowserActivity;
 import org.prebid.mobile.rendering.views.indicator.AdIndicatorView;
-import org.prebid.mobile.rendering.views.webview.OpenXWebViewBase;
+import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBanner;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
@@ -75,9 +75,6 @@ public class MraidClose {
                     mWebViewBase.setDialog(null);
                 }
                 else {
-                    //FIX THIS - crash - java.lang.ClassCastException: com.openx.apollo.interstitial.OpenXWebView cannot be cast to com.openx.apollo.common.utils.helpers.CloseableLayout
-                    //Happens after trying to close the MRAID Resize with errors ad.
-                    //on resize, Move the web view from the closeable container back to the default container
                     FrameLayout frameLayout = (FrameLayout) mWebViewBase.getParent();
                     removeParent(frameLayout);
 
@@ -99,7 +96,7 @@ public class MraidClose {
     }
 
     private void changeAdIndicatorPosition(WebViewBase webViewBase) {
-        OpenXWebViewBase defaultContainer = (OpenXWebViewBase) webViewBase.getPreloadedListener();
+        PrebidWebViewBase defaultContainer = (PrebidWebViewBase) webViewBase.getPreloadedListener();
         if (defaultContainer != null) {
             AdIndicatorView adIndicatorView = (AdIndicatorView) (defaultContainer).getCreative().getAdIndicatorView();
 

@@ -7,9 +7,6 @@ import androidx.annotation.VisibleForTesting;
 
 import org.prebid.mobile.rendering.utils.logger.OXLog;
 
-/*
- *  Class that deals with all the refresh for mopub through OpenX
- */
 public class RefreshTimerTask {
     private static final String TAG = RefreshTimerTask.class.getSimpleName();
     private Handler mRefreshHandler;

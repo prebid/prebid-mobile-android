@@ -24,12 +24,12 @@ public class PrebidRenderingSettings {
     /**
      * SDK version
      */
-    public static final String SDK_VERSION = "1.2.0";
+    public static final String SDK_VERSION = BuildConfig.VERSION;
 
     /**
      * SDK name provided for MRAID_ENV in {@link MraidEnv}
      */
-    public static final String SDK_NAME = "openx-apollo-sdk";
+    public static final String SDK_NAME = "prebid-mobile-sdk-rendering";
     /**
      * Currently implemented MRAID version.
      */
@@ -91,9 +91,9 @@ public class PrebidRenderingSettings {
 
     public static void initializeSDK(Context context, final SdkInitListener sdkInitListener)
             throws AdException {
-        Log.d(TAG, "Initializing OpenX SDK");
+        Log.d(TAG, "Initializing Prebid Rendering SDK");
         if (context == null) {
-            throw new AdException(AdException.INIT_ERROR, "OpenXSDK initialization failed. Context is null");
+            throw new AdException(AdException.INIT_ERROR, "Prebid Rendering SDK initialization failed. Context is null");
         }
 
         if (sIsSdkInitialized) {
@@ -116,14 +116,14 @@ public class PrebidRenderingSettings {
     }
 
     /**
-     * Return 'true' if OpenX SDK is initialized completely
+     * Return 'true' if Prebid Rendering SDK is initialized completely
      */
     public static boolean isSdkInitialized() {
         return sIsSdkInitialized;
     }
 
     /**
-     * Helper to know the last commit hash of OpenX SDK
+     * Helper to know the last commit hash of Prebid Rendering SDK
      *
      * @return
      */
@@ -189,7 +189,7 @@ public class PrebidRenderingSettings {
     static void increaseTaskCount() {
         if (INIT_SDK_TASK_COUNT.incrementAndGet() >= MANDATORY_TASK_COUNT) {
             sIsSdkInitialized = true;
-            OXLog.debug(TAG, "OpenX SDK " + SDK_VERSION + " Initialized");
+            OXLog.debug(TAG, "Prebid Rendering SDK " + SDK_VERSION + " Initialized");
 
             if (sInitSdkListener != null) {
                 sInitSdkListener.onSDKInit();

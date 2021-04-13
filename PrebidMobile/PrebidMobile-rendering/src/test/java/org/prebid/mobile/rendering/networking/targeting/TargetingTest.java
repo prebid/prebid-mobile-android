@@ -127,7 +127,7 @@ public class TargetingTest {
 
     @Test
     public void setPublisherName_EqualToGetPublisherName() {
-        final String expected = "openx";
+        final String expected = "prebid";
 
         Targeting.setPublisherName(expected);
 

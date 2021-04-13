@@ -1,7 +1,5 @@
 package org.prebid.mobile.rendering.utils.ntv;
 
-import com.apollo.test.utils.WhiteBox;
-
 import org.junit.Test;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.NativeFetchDemandResult;
@@ -11,6 +9,7 @@ import org.prebid.mobile.rendering.bidding.data.ntv.NativeAd;
 import org.prebid.mobile.rendering.bidding.data.ntv.NativeAdParser;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.listeners.NativeAdCallback;
+import org.prebid.mobile.test.utils.WhiteBox;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;

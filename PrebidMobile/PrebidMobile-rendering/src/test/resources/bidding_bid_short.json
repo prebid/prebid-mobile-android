@@ -4,7 +4,7 @@
   "price": 0.1,
   "adm": "test",
   "adomain": [
-    "openx.com"
+    "prebid.com"
   ],
   "crid": "test-crid-id",
   "w": 320,
