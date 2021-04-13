@@ -105,7 +105,7 @@ public class ExternalUserId {
 
     }
 
-    public static List<ExternalUserId> getExternalUidListFromJson(String list) {
+    static List<ExternalUserId> getExternalUidListFromJson(String list) {
         List<ExternalUserId> externalUserIdList = new ArrayList<>();
         try {
             JSONArray jsonArr = new JSONArray(list);
@@ -120,7 +120,7 @@ public class ExternalUserId {
         return externalUserIdList;
     }
 
-    public static ExternalUserId getExternalUidFromJson(String json) {
+    static ExternalUserId getExternalUidFromJson(String json) {
         ExternalUserId extUId = null;
         try {
             JSONObject jsonObject = new JSONObject(json);

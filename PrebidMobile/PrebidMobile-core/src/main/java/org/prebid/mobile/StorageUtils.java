@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -172,7 +173,7 @@ final class StorageUtils {
         editor.apply();
     }
 
-    static List<ExternalUserId> fetchStoredExternalUserId() {
+    static List<ExternalUserId> fetchStoredExternalUserIds() {
         SharedPreferences pref = getSharedPreferences();
         String externalUserIds = pref.getString(StorageUtils.EXTERNAL_USER_ID_KEY, null);
         if (externalUserIds != null) {
@@ -181,8 +182,48 @@ final class StorageUtils {
         return null;
     }
 
-    public static void clearStoredExternalUserIds() {
-        if (fetchStoredExternalUserId() != null) {
+    static ExternalUserId fetchStoredExternalUserId(String source) {
+        SharedPreferences pref = getSharedPreferences();
+        String externalUserIds = pref.getString(StorageUtils.EXTERNAL_USER_ID_KEY, null);
+        if (!TextUtils.isEmpty(externalUserIds)) {
+            List<ExternalUserId> externalUidListFromJson = ExternalUserId.getExternalUidListFromJson(externalUserIds);
+            for (ExternalUserId externalUserId: externalUidListFromJson) {
+                if (externalUserId.getSource().equals(source)) {
+                    return externalUserId;
+                }
+            }
+        }
+        return null;
+    }
+
+    static void removeStoredExternalUserId(String source) {
+        SharedPreferences pref = getSharedPreferences();
+        String externalUserIds = pref.getString(StorageUtils.EXTERNAL_USER_ID_KEY, null);
+        if (!TextUtils.isEmpty(externalUserIds)) {
+            List<ExternalUserId> externalUidListFromJson = ExternalUserId.getExternalUidListFromJson(externalUserIds);
+            ExternalUserId toBeRemoved = null;
+            for (ExternalUserId externalUserId: externalUidListFromJson) {
+                if (externalUserId.getSource().equals(source)) {
+                    toBeRemoved = externalUserId;
+                    break;
+                }
+            }
+
+            if (toBeRemoved != null) {
+                externalUidListFromJson.remove(toBeRemoved);
+                if (externalUidListFromJson.isEmpty()) {
+                    clearStoredExternalUserIds();
+                } else {
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString(StorageUtils.EXTERNAL_USER_ID_KEY, externalUidListFromJson.toString());
+                    editor.apply();
+                }
+            }
+        }
+    }
+
+    static void clearStoredExternalUserIds() {
+        if (fetchStoredExternalUserIds() != null) {
             SharedPreferences pref = getSharedPreferences();
             SharedPreferences.Editor editor = pref.edit();
             editor.remove(StorageUtils.EXTERNAL_USER_ID_KEY);

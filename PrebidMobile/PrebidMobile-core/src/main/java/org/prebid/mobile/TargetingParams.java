@@ -18,6 +18,7 @@
 package org.prebid.mobile;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -185,10 +186,38 @@ public class TargetingParams {
         return savedPurposeConsents;
     }
 
-    public static List<ExternalUserId> fetchStoredExternalUserId() {
-        return StorageUtils.fetchStoredExternalUserId();
+    /**
+     * Returns the stored (in the SharedPreferences) External User Id list
+     * */
+    public static List<ExternalUserId> fetchStoredExternalUserIds() {
+        return StorageUtils.fetchStoredExternalUserIds();
     }
 
+    /**
+     * Returns the stored (in the SharedPreference) ExternalUserId instance for a given source
+     * @param source
+     * */
+    public static ExternalUserId fetchStoredExternalUserId(@NonNull String source) {
+        if (!TextUtils.isEmpty(source)) {
+            return StorageUtils.fetchStoredExternalUserId(source);
+        }
+        return null;
+    }
+
+    /**
+     * Removes the stored (in the SharedPreference) ExternalUserId instance for a given source
+     * @param source
+     * */
+    public static void removeStoredExternalUserId(@NonNull String source) {
+        if (!TextUtils.isEmpty(source)) {
+            StorageUtils.removeStoredExternalUserId(source);
+        }
+    }
+
+    /**
+     * Use this API for storing the externalUserId in the SharedPreference
+     * @param externalUserId the externalUserId instance to be stored in the SharedPreference
+     * */
     public static void storeExternalUserId(ExternalUserId externalUserId) {
         if (externalUserId != null) {
             StorageUtils.storeExternalUserId(externalUserId);
@@ -198,6 +227,9 @@ public class TargetingParams {
         }
     }
 
+    /**
+     * Clear the Stored ExternalUserId list from the SharedPreference
+     * */
     public static void clearStoredExternalUserIds() {
         StorageUtils.clearStoredExternalUserIds();
     }
