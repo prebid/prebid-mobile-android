@@ -98,13 +98,13 @@ class PrebidServerAdapter implements DemandAdapter {
             adType = requestParams.getAdType();
         }
 
+        @MainThread
         @Override
         protected void onPostExecute(TaskResult<JSONObject> response) {
             processResult(response);
-
         }
 
-         public void execute() {
+        public void execute() {
             timeoutCountDownTimer.start();
             super.execute();
         }
