@@ -43,6 +43,7 @@ public class RubiconInterstitialGamDemoActivity extends AppCompatActivity {
 
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
         adUnit.setAutoRefreshPeriodMillis(millis);
+
         final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
         adUnit.fetchDemand(builder, new OnCompleteListener() {
             @Override
@@ -78,8 +79,45 @@ public class RubiconInterstitialGamDemoActivity extends AppCompatActivity {
                             }
                         }
                 );
-
             }
         });
     }
+
+    /*
+    private void showAdPreGAMv20() {
+        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        adUnit.fetchDemand(builder, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+                final PublisherInterstitialAd amInterstitial = new PublisherInterstitialAd(this);
+                amInterstitial.setAdUnitId(Constants.DFP_INTERSTITIAL_ADUNIT_ID_RUBICON);
+                amInterstitial.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdLoaded() {
+                        super.onAdLoaded();
+                        amInterstitial.show();
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(int i) {
+                        super.onAdFailedToLoad(i);
+                        AlertDialog.Builder builder;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            builder = new AlertDialog.Builder(RubiconInterstitialGamDemoActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+                        } else {
+                            builder = new AlertDialog.Builder(RubiconInterstitialGamDemoActivity.this);
+                        }
+                        builder.setTitle("Failed to load AdManager interstitial ad")
+                                .setMessage("Error code: " + i)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
+                    }
+                });
+
+                PublisherAdRequest request = builder.build();
+                amInterstitial.loadAd(request);
+            }
+        });
+    }
+     */
 }

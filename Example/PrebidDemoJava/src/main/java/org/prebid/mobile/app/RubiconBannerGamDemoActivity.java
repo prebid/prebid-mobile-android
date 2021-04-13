@@ -56,6 +56,8 @@ public class RubiconBannerGamDemoActivity extends AppCompatActivity {
         BannerBaseAdUnit.Parameters parameters = new BannerBaseAdUnit.Parameters();
         parameters.setApi(Arrays.asList(Signals.Api.MRAID_2));
         adUnit.setParameters(parameters);
+//        pre GAM v20.0
+//        final PublisherAdView amBanner = new PublisherAdView(this);
         final AdManagerAdView amBanner = new AdManagerAdView(this);
         amBanner.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_300x250_RUBICON);
         amBanner.setAdSizes(new AdSize(width, height));
@@ -84,6 +86,8 @@ public class RubiconBannerGamDemoActivity extends AppCompatActivity {
             }
         });
 
+//        pre GAM v20.0
+//        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
         final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
 
         //region PrebidMobile Mobile API 1.0 usage
@@ -92,6 +96,8 @@ public class RubiconBannerGamDemoActivity extends AppCompatActivity {
         adUnit.fetchDemand(builder, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
+//                pre GAM v20.0
+//                PublisherAdRequest request = builder.build();
                 AdManagerAdRequest request = builder.build();
                 amBanner.loadAd(request);
             }

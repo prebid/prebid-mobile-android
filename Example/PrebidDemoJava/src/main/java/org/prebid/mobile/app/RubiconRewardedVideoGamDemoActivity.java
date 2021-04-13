@@ -87,4 +87,53 @@ public class RubiconRewardedVideoGamDemoActivity extends AppCompatActivity {
             }
         });
     }
+
+    /*
+    private void showAdPreGAMv20() {
+        final RewardedAd amRewardedAd = new RewardedAd(this, Constants.DFP_REWARDED_ADUNIT_ID_RUBICON);
+        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        adUnit.fetchDemand(builder, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+
+                PublisherAdRequest request = builder.build();
+                amRewardedAd.loadAd(request, new RewardedAdLoadCallback() {
+                    @Override
+                    public void onRewardedAdLoaded() {
+                        // Ad successfully loaded.
+
+                        if (amRewardedAd.isLoaded()) {
+                            amRewardedAd.show(RubiconRewardedVideoGamDemoActivity.this, new RewardedAdCallback() {
+                                @Override
+                                public void onRewardedAdOpened() {
+                                    // Ad opened.
+                                }
+
+                                @Override
+                                public void onRewardedAdClosed() {
+                                    // Ad closed.
+                                }
+
+                                @Override
+                                public void onUserEarnedReward(@NonNull RewardItem reward) {
+                                    // User earned reward.
+                                }
+
+                                @Override
+                                public void onRewardedAdFailedToShow(int errorCode) {
+                                    // Ad failed to display.
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onRewardedAdFailedToLoad(int errorCode) {
+                        // Ad failed to load.
+                    }
+                });
+            }
+        });
+    }
+     */
 }
