@@ -941,10 +941,14 @@ class PrebidServerAdapter implements DemandAdapter {
 
         private JSONArray getExternalUserIdArray() {
             JSONArray transformedUserIdArray = new JSONArray();
+            List<ExternalUserId> externalUserIds = PrebidMobile.getExternalUserIds();
+            if (externalUserIds == null || externalUserIds.isEmpty()) {
+                externalUserIds = TargetingParams.fetchStoredExternalUserIds();
+            }
             try {
-                if (PrebidMobile.getExternalUserIds() != null) {
-                    for (ExternalUserId externaluserId : PrebidMobile.getExternalUserIds()) {
-                        if (externaluserId.getSource().length() == 0 || externaluserId.getIdentifier().length() == 0) {
+                if (externalUserIds != null && !externalUserIds.isEmpty()) {
+                    for (ExternalUserId externaluserId : externalUserIds) {
+                        if (externaluserId.getSource() == null || externaluserId.getSource().length() == 0 || externaluserId.getIdentifier() == null || externaluserId.getIdentifier().length() == 0) {
                             return null;
                         }
                         JSONObject transformedUserIdObject = new JSONObject();
