@@ -17,6 +17,15 @@
 package org.prebid.mobile;
 
 import android.support.annotation.NonNull;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,43 +34,51 @@ import java.util.Map;
 public class ExternalUserId {
 
     private String source;
+
     public String getSource() {
         return source;
     }
+
     public void setSource(String source) {
         this.source = source;
     }
 
     private String identifier;
+
     public String getIdentifier() {
         return identifier;
     }
+
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
 
     private Integer atype;
+
     public Integer getAtype() {
         return atype;
     }
+
     public void setAtype(Integer atype) {
         this.atype = atype;
     }
 
-    private Map<String,Object> ext;
+    private Map<String, Object> ext;
+
     public Map<String, Object> getExt() {
         return ext;
     }
+
     public void setExt(Map<String, Object> ext) {
         this.ext = ext;
     }
 
     /**
-     Initialize ExternalUserId Class
-     - Parameter source: Source of the External User Id String.
-     - Parameter identifier: String of the External User Id.
-     - Parameter atype: (Optional) Integer of the External User Id.
-     - Parameter ext: (Optional) Map of the External User Id.
+     * Initialize ExternalUserId Class
+     * - Parameter source: Source of the External User Id String.
+     * - Parameter identifier: String of the External User Id.
+     * - Parameter atype: (Optional) Integer of the External User Id.
+     * - Parameter ext: (Optional) Map of the External User Id.
      */
     public ExternalUserId(@NonNull String source, @NonNull String identifier, Integer atype, Map<String, Object> ext) {
         this.source = source;
@@ -70,4 +87,59 @@ public class ExternalUserId {
         this.ext = ext;
     }
 
+    @Override
+    public String toString() {
+        JSONObject transformedUserIdObject = new JSONObject();
+        try {
+            transformedUserIdObject.put("source", getSource());
+            transformedUserIdObject.put("id", getIdentifier());
+            transformedUserIdObject.put("atype", getAtype());
+            if (getExt() != null && !getExt().isEmpty()) {
+                JSONObject extObject = new JSONObject(getExt());
+                transformedUserIdObject.put("ext", extObject);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return transformedUserIdObject.toString();
+
+    }
+
+    public static List<ExternalUserId> getExternalUidListFromJson(String list) {
+        List<ExternalUserId> externalUserIdList = new ArrayList<>();
+        try {
+            JSONArray jsonArr = new JSONArray(list);
+            for (int i = 0; i < jsonArr.length(); i++) {
+                if (getExternalUidFromJson(jsonArr.getJSONObject(i).toString()) != null) {
+                    externalUserIdList.add(getExternalUidFromJson(jsonArr.getJSONObject(i).toString()));
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return externalUserIdList;
+    }
+
+    public static ExternalUserId getExternalUidFromJson(String json) {
+        ExternalUserId extUId = null;
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            String source = jsonObject.has("source") ? jsonObject.optString("source") : null;
+            String id = jsonObject.has("id") ? jsonObject.optString("id") : null;
+            Integer aType = jsonObject.has("atype") ? jsonObject.optInt("atype") : null;
+            Map<String, Object> ext = null;
+            JSONObject extObj = jsonObject.optJSONObject("ext");
+            if (extObj != null) {
+                for (Iterator<String> it = extObj.keys(); it.hasNext(); ) {
+                    ext = new HashMap<>();
+                    String key = it.next();
+                    ext.put(key, extObj.getString(key));
+                }
+            }
+            extUId = new ExternalUserId(source, id, aType, ext);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return extUId;
+    }
 }

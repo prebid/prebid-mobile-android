@@ -24,6 +24,7 @@ import android.text.TextUtils;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -182,6 +183,23 @@ public class TargetingParams {
         }
 
         return savedPurposeConsents;
+    }
+
+    public static List<ExternalUserId> fetchStoredExternalUserId() {
+        return StorageUtils.fetchStoredExternalUserId();
+    }
+
+    public static void storeExternalUserId(ExternalUserId externalUserId) {
+        if (externalUserId != null) {
+            StorageUtils.storeExternalUserId(externalUserId);
+        } else {
+            LogUtil.e("Targeting", "External User ID can't be set as null");
+
+        }
+    }
+
+    public static void clearStoredExternalUserIds() {
+        StorageUtils.clearStoredExternalUserIds();
     }
 
     /**
