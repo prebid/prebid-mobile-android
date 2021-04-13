@@ -191,9 +191,9 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
         adLoader = new AdLoader.Builder(this, DFP_NATIVE_NATIVE_ADUNIT_ID_APPNEXUS)
                 .forAdManagerAdView(new OnAdManagerAdViewLoadedListener() {
                     @Override
-                    public void onAdManagerAdViewLoaded(AdManagerAdView AdManagerAdView) {
-                        adView = AdManagerAdView;
-                        ((FrameLayout) findViewById(R.id.adFrame)).addView(AdManagerAdView);
+                    public void onAdManagerAdViewLoaded(AdManagerAdView adManagerAdView) {
+                        adView = adManagerAdView;
+                        ((FrameLayout) findViewById(R.id.adFrame)).addView(adManagerAdView);
                     }
                 }, AdSize.BANNER)
                 .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
