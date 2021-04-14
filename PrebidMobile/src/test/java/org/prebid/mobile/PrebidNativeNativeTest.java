@@ -28,6 +28,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.tasksmanager.BackgroundThreadExecutor;
+import org.prebid.mobile.tasksmanager.MainThreadExecutor;
 import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
@@ -104,6 +105,8 @@ public class PrebidNativeNativeTest extends BaseSetup {
         bgLooper.runOneTask();
         bgLooper.runOneTask();
 
+        runAllMainThreadExecutorTasks();
+
         Robolectric.getBackgroundThreadScheduler().runOneTask();
         Robolectric.getBackgroundThreadScheduler().runOneTask();
         String cacheId = "";
@@ -179,6 +182,8 @@ public class PrebidNativeNativeTest extends BaseSetup {
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runOneTask();
         bgLooper.runOneTask();
+
+        runAllMainThreadExecutorTasks();
 
         Robolectric.getBackgroundThreadScheduler().runOneTask();
         Robolectric.getBackgroundThreadScheduler().runOneTask();
@@ -277,6 +282,8 @@ public class PrebidNativeNativeTest extends BaseSetup {
         bgLooper.runOneTask();
         bgLooper.runOneTask();
 
+        runAllMainThreadExecutorTasks();
+
         Robolectric.getBackgroundThreadScheduler().runOneTask();
         Robolectric.getBackgroundThreadScheduler().runOneTask();
         String cacheId = "";
@@ -356,4 +363,9 @@ public class PrebidNativeNativeTest extends BaseSetup {
         });
     }
 
+    private void runAllMainThreadExecutorTasks() {
+        ShadowLooper mainLooper = Shadows.shadowOf(((MainThreadExecutor) TasksManager.getInstance().mainThreadExecutor)
+                .getMainExecutor().getLooper());
+        mainLooper.runToEndOfTasks();
+    }
 }
