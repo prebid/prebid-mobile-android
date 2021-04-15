@@ -927,10 +927,8 @@ class PrebidServerAdapter implements DemandAdapter {
 
                 ext.put("data", Util.toJson(TargetingParams.getUserDataDictionary()));
 
-                JSONArray eidArray = getExternalUserIdArray();
-                if (eidArray != null && eidArray.length() > 0) {
-                    ext.put("eids", eidArray);
-                }
+                ext.put("eids", getExternalUserIdArray());
+
                 user.put("ext", ext);
 
             } catch (JSONException e) {
