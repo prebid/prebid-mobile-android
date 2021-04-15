@@ -87,7 +87,7 @@ public class MraidCloseTest {
         mraidVariableContainer.setCurrentState(JSInterface.STATE_EXPANDED);
         mMraidClose.closeThroughJS();
         verify(mSpyBaseJSInterface).onStateChange(eq(JSInterface.STATE_DEFAULT));
-        verify(mockViewGroup).removeView(any(View.class));
+        verify(mockViewGroup).removeView(any());
 
         reset(mSpyBaseJSInterface);
         AdBrowserActivity mockActivity = new AdBrowserActivity();

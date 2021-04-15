@@ -116,7 +116,8 @@ public class PrebidWebViewBaseTest {
         when(mockHandler.postDelayed(any(Runnable.class), anyLong())).thenAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) {
-                invocation.getArgumentAt(0, Runnable.class).run();
+                Runnable runnable = invocation.getArgument(0);
+                runnable.run();
                 return null;
             }
         });

@@ -220,7 +220,7 @@ public class NativeAdTest {
 
     private void mockClickListener(View clickViewToMock, View onClickParam) {
         doAnswer(invocation -> {
-            final View.OnClickListener listener = invocation.getArgumentAt(0, View.OnClickListener.class);
+            final View.OnClickListener listener = invocation.getArgument(0);
             listener.onClick(onClickParam);
             return null;
         }).when(clickViewToMock).setOnClickListener(any());
@@ -228,7 +228,7 @@ public class NativeAdTest {
 
     private void prepareIntentVerifyUrl(Context spyContext, NativeAdLink nativeAdLink) {
         doAnswer(invocation -> {
-            final Intent intent = invocation.getArgumentAt(0, Intent.class);
+            final Intent intent = invocation.getArgument(0);
             final String url = intent.getStringExtra(EXTRA_URL);
             assertEquals(nativeAdLink.getUrl(), url);
             return null;

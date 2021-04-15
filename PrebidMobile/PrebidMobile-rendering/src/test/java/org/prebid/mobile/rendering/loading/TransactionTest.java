@@ -191,6 +191,7 @@ public class TransactionTest {
         CreativeModelsMaker.Result result = new CreativeModelsMaker.Result();
         result.creativeModels = creativeModels;
         result.transactionState = state;
+        result.loaderIdentifier = "123";
         return result;
     }
 }

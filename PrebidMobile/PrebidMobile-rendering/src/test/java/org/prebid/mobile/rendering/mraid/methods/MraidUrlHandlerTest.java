@@ -53,8 +53,8 @@ public class MraidUrlHandlerTest {
     public void openTest() {
 
         doAnswer(invocation -> {
-            RedirectUrlListener listener = invocation.getArgumentAt(1, RedirectUrlListener.class);
-            listener.onSuccess(invocation.getArgumentAt(0, String.class), "html");
+            RedirectUrlListener listener = invocation.getArgument(1);
+            listener.onSuccess(invocation.getArgument(0), "html");
 
             return null;
         }).when(mMockBaseJsInterface).followToOriginalUrl(anyString(), any(RedirectUrlListener.class));

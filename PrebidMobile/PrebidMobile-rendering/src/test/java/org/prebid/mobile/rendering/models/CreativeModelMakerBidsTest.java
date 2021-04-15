@@ -21,7 +21,6 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -48,13 +47,13 @@ public class CreativeModelMakerBidsTest {
     @Test
     public void whenMakeModelsAndNoAdConfiguration_CallErrorListener() {
         mModelMakerBids.makeModels(null, mock(BidResponse.class));
-        verify(mMockLoadListener).onFailedToLoadAd(any(AdException.class), anyString());
+        verify(mMockLoadListener).onFailedToLoadAd(any(AdException.class), any());
     }
 
     @Test
     public void whenMakeModelsAndNoBidResponse_CallErrorListener() {
         mModelMakerBids.makeModels(mock(AdConfiguration.class), null);
-        verify(mMockLoadListener).onFailedToLoadAd(any(AdException.class), anyString());
+        verify(mMockLoadListener).onFailedToLoadAd(any(AdException.class), any());
     }
 
     @Test
@@ -62,7 +61,7 @@ public class CreativeModelMakerBidsTest {
         BidResponse mockResponse = mock(BidResponse.class);
         when(mockResponse.hasParseError()).thenReturn(true);
         mModelMakerBids.makeModels(null, mockResponse);
-        verify(mMockLoadListener).onFailedToLoadAd(any(AdException.class), anyString());
+        verify(mMockLoadListener).onFailedToLoadAd(any(AdException.class), any());
     }
 
     @Test

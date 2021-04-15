@@ -15,7 +15,6 @@ import org.prebid.mobile.rendering.models.AbstractCreative;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
-import org.prebid.mobile.rendering.video.vast.AdVerifications;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
@@ -24,8 +23,7 @@ import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeastOnce;
@@ -74,7 +72,7 @@ public class VideoCreativeTest {
 
         spyVideoCreative.display();
 
-        verify(mVideoCreative.mVideoCreativeView).start(anyInt());
+        verify(mVideoCreative.mVideoCreativeView).start(anyFloat());
     }
 
     @Test
@@ -84,7 +82,7 @@ public class VideoCreativeTest {
 
         spyVideoCreative.createOmAdSession();
 
-        verify(mMockOmAdSessionManager).initVideoAdSession(any(AdVerifications.class), anyString());
+        verify(mMockOmAdSessionManager).initVideoAdSession(any(), any());
     }
 
     @Test

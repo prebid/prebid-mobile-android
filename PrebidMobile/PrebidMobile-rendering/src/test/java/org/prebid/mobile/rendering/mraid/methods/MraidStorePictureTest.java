@@ -49,7 +49,7 @@ public class MraidStorePictureTest {
         when(mMockWebViewBase.post(any(Runnable.class))).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                Runnable runnable = invocation.getArgumentAt(0, Runnable.class);
+                Runnable runnable = invocation.getArgument(0);
                 runnable.run();
                 return null;
             }

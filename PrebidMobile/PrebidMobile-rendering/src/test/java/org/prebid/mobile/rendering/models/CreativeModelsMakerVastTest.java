@@ -34,7 +34,6 @@ import okhttp3.mockwebserver.MockWebServer;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -71,7 +70,7 @@ public class CreativeModelsMakerVastTest {
 
         // Null ad configuration
         creativeModelsMakerVast.makeModels(null, rootParser, latestParser);
-        verify(mMockListener).onFailedToLoadAd(any(AdException.class), anyString());
+        verify(mMockListener).onFailedToLoadAd(any(AdException.class), any());
 
         // Valid - Inline
         creativeModelsMakerVast.makeModels(mAdConfiguration, rootParser, latestParser);

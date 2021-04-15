@@ -345,7 +345,7 @@ public class AdViewManagerTest {
         verify(mockAdView, never()).removeView(any(View.class));
         WhiteBox.field(AdViewManager.class, "mCurrentCreative").set(mAdViewManager, mockCreative);
         mAdViewManager.hide();
-        verify(mockAdView).removeView(any(View.class));
+        verify(mockAdView).removeView(any());
     }
 
     @Test

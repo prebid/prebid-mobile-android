@@ -100,7 +100,7 @@ public class BaseJSInterfaceTest {
 
         Mockito.when(mMockWebViewBase.post(Mockito.any(Runnable.class))).thenAnswer(
             invocation -> {
-                Runnable runnable = invocation.getArgumentAt(0, Runnable.class);
+                Runnable runnable = invocation.getArgument(0);
                 if (runnable != null) {
                     runnable.run();
                 }
@@ -178,7 +178,7 @@ public class BaseJSInterfaceTest {
         assertEquals(JSInterface.ACTION_ORIENTATION_CHANGE, event.mraidAction);
         assertEquals("test", event.mraidActionHelper);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any(PrebidWebViewBase.class));
+        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
     }
 
     @Test
@@ -190,7 +190,7 @@ public class BaseJSInterfaceTest {
 
         assertEquals(JSInterface.ACTION_CLOSE, event.mraidAction);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any(PrebidWebViewBase.class));
+        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
     }
 
     @Test
@@ -202,7 +202,7 @@ public class BaseJSInterfaceTest {
 
         assertEquals(JSInterface.ACTION_RESIZE, event.mraidAction);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any(PrebidWebViewBase.class));
+        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
     }
 
     @Test
@@ -215,7 +215,7 @@ public class BaseJSInterfaceTest {
         assertEquals(JSInterface.ACTION_EXPAND, event.mraidAction);
         assertNull(event.mraidActionHelper);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any(PrebidWebViewBase.class));
+        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
     }
 
     @Test
@@ -227,7 +227,7 @@ public class BaseJSInterfaceTest {
 
         assertEquals(JSInterface.ACTION_EXPAND, event.mraidAction);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any(PrebidWebViewBase.class));
+        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
     }
 
     @Test
@@ -241,7 +241,7 @@ public class BaseJSInterfaceTest {
         assertEquals(JSInterface.ACTION_OPEN, event.mraidAction);
         assertEquals("test", event.mraidActionHelper);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any(PrebidWebViewBase.class));
+        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
     }
 
     @Test
@@ -254,7 +254,7 @@ public class BaseJSInterfaceTest {
         assertEquals(JSInterface.ACTION_CREATE_CALENDAR_EVENT, event.mraidAction);
         assertEquals("test", event.mraidActionHelper);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any(PrebidWebViewBase.class));
+        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
     }
 
     @Test
@@ -267,7 +267,7 @@ public class BaseJSInterfaceTest {
         assertEquals(JSInterface.ACTION_STORE_PICTURE, event.mraidAction);
         assertEquals("test", event.mraidActionHelper);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any(PrebidWebViewBase.class));
+        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
     }
 
     @Test
@@ -280,7 +280,7 @@ public class BaseJSInterfaceTest {
         assertEquals(JSInterface.ACTION_PLAY_VIDEO, event.mraidAction);
         assertEquals("test", event.mraidActionHelper);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any(PrebidWebViewBase.class));
+        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
     }
 
     @Test
@@ -328,7 +328,7 @@ public class BaseJSInterfaceTest {
         assertEquals("{\"x\":0,\"width\":0,\"y\":0,\"height\":0}", currentPosition);
 
         when(mMockWebViewBase.getGlobalVisibleRect(any(Rect.class))).then(invocation -> {
-            Rect argumentRect = invocation.getArgumentAt(0, Rect.class);
+            Rect argumentRect = invocation.getArgument(0);
             argumentRect.left = 1;
             argumentRect.top = 2;
             argumentRect.right = 3;
@@ -362,7 +362,7 @@ public class BaseJSInterfaceTest {
         Shadows.shadowOf(Looper.getMainLooper()).idle();
 
         verify(mSpyBaseJSInterface, timeout(100)).updateScreenMetricsAsync(any(Runnable.class));
-        verify(mSpyBaseJSInterface).supports(anyString());
+        verify(mSpyBaseJSInterface).supports(any());
         verify(mMockJsExecutor).executeOnReadyExpanded();
     }
 
@@ -405,7 +405,7 @@ public class BaseJSInterfaceTest {
         ResponseHandler getOriginalURLCallBack = WhiteBox.getInternalState(oxmRedirectedUrlAsyncTask, "mResponseHandler");
 
         getOriginalURLCallBack.onResponse(mock(BaseNetworkTask.GetUrlResult.class));
-        verify(mockListener).onSuccess(anyString(), anyString());
+        verify(mockListener).onSuccess(any(), any());
 
         getOriginalURLCallBack.onResponse(null);
         verify(mockListener).onFailed();

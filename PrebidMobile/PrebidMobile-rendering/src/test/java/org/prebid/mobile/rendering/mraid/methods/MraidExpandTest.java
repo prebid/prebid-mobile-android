@@ -61,7 +61,7 @@ public class MraidExpandTest {
     public void expandTest() {
 
         doAnswer(invocation -> {
-            RedirectUrlListener listener = invocation.getArgumentAt(1, RedirectUrlListener.class);
+            RedirectUrlListener listener = invocation.getArgument(1);
             listener.onSuccess("test", "html");
             return null;
         }).when(mSpyBaseJsInterface).followToOriginalUrl(anyString(), any(RedirectUrlListener.class));

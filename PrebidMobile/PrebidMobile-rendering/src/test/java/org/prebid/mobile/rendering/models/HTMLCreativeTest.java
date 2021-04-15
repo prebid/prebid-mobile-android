@@ -14,7 +14,6 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.listeners.CreativeResolutionListener;
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
-import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
 import org.prebid.mobile.rendering.models.internal.MraidEvent;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerResult;
@@ -115,7 +114,7 @@ public class HTMLCreativeTest {
 
         ViewPool mockViewPool = mock(ViewPool.class);
         when(mockViewPool.getUnoccupiedView(any(Context.class),
-                                            any(VideoCreativeViewListener.class),
+                                            any(),
                                             any(AdConfiguration.AdUnitIdentifierType.class),
                                             any(InterstitialManager.class)))
             .thenReturn(mockPrebidWebViewBanner);
@@ -155,7 +154,7 @@ public class HTMLCreativeTest {
 
         mHtmlCreative = new HTMLCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
         mHtmlCreative.load();
-        verify(mockPrebidWebViewBanner).loadHTML(anyString(), anyInt(), anyInt());
+        verify(mockPrebidWebViewBanner).loadHTML(any(), anyInt(), anyInt());
         assertEquals(mockPrebidWebViewBanner, mHtmlCreative.getCreativeView());
     }
 
@@ -249,7 +248,7 @@ public class HTMLCreativeTest {
 
         doAnswer(invocation -> {
             CreativeVisibilityTracker.VisibilityTrackerListener listener =
-                invocation.getArgumentAt(0, CreativeVisibilityTracker.VisibilityTrackerListener.class);
+                invocation.getArgument(0);
 
             listener.onVisibilityChanged(result);
             return null;
@@ -337,7 +336,7 @@ public class HTMLCreativeTest {
         verify(mMockMraidController).handleMraidEvent(any(MraidEvent.class),
                                                       eq(mHtmlCreative),
                                                       any(WebViewBase.class),
-                                                      any(PrebidWebViewBase.class));
+                                                      any());
     }
 
     @Test
@@ -358,7 +357,7 @@ public class HTMLCreativeTest {
         mHtmlCreative.setCreativeView(mockOXWebView);
 
         mHtmlCreative.createOmAdSession();
-        verify(mMockOmAdSessionManager).initWebAdSessionManager(any(WebViewBase.class), anyString());
+        verify(mMockOmAdSessionManager).initWebAdSessionManager(any(WebViewBase.class), any());
         verify(mMockOmAdSessionManager).registerAdView(any(View.class));
         verify(mMockOmAdSessionManager).startAdSession();
 

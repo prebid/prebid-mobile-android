@@ -16,8 +16,8 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -48,7 +48,7 @@ public class BidRequesterTest {
         mAdConfiguration.setConfigId("test");
         BidRequester requester = new BidRequester(null, mAdConfiguration, mAdRequestInput, mMockResponseHandler);
         requester.startAdRequest();
-        verify(mMockResponseHandler).onErrorWithException(any(AdException.class), anyInt());
+        verify(mMockResponseHandler).onErrorWithException(any(AdException.class), anyLong());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class BidRequesterTest {
         mAdConfiguration.setConfigId(null);
         BidRequester requester = new BidRequester(mContext, mAdConfiguration, mAdRequestInput, mMockResponseHandler);
         requester.startAdRequest();
-        verify(mMockResponseHandler).onError(anyString(), anyInt());
+        verify(mMockResponseHandler).onError(anyString(), anyLong());
     }
 
     @Test

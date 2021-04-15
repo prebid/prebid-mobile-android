@@ -14,6 +14,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -39,7 +40,7 @@ public class VideoCreativeViewTest {
         WhiteBox.field(VideoCreativeView.class, "mExoPlayerView").set(mVideoCreativeView, mockPlugPlayView);
 
         mVideoCreativeView.start(anyInt());
-        verify(mockPlugPlayView).start(anyInt());
+        verify(mockPlugPlayView).start(anyFloat());
     }
 
     @Test

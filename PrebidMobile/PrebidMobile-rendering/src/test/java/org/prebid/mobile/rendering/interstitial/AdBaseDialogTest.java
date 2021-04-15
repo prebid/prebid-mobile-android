@@ -142,7 +142,7 @@ public class AdBaseDialogTest {
 
     private Answer<Object> prepareHandlerAnswer(final String jsonString) {
         return invocation -> {
-            Handler handler = invocation.getArgumentAt(0, Handler.class);
+            Handler handler = invocation.getArgument(0);
             Message message = new Message();
 
             Bundle data = new Bundle();

@@ -76,7 +76,7 @@ public class PrebidWebViewBannerTest {
     throws IllegalAccessException {
         final String jsonAnswer = "{\"width\":100,\"height\":200,\"useCustomClose\":false,\"isModal\":true}";
         doAnswer(invocation -> {
-            Handler handler = invocation.getArgumentAt(0, Handler.class);
+            Handler handler = invocation.getArgument(0);
             Message message = new Message();
 
             Bundle data = new Bundle();

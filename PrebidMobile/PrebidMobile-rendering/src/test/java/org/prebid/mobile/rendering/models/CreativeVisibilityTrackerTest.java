@@ -314,7 +314,7 @@ public class CreativeVisibilityTrackerTest {
         when(mMockView.getParent()).thenReturn(mockParent);
         when(mMockView.getContext()).thenReturn(mActivity);
         doAnswer(invocation -> {
-            final Rect clipRect = invocation.getArgumentAt(0, Rect.class);
+            final Rect clipRect = invocation.getArgument(0);
             clipRect.right = 200;
             clipRect.bottom = 300;
             return true;

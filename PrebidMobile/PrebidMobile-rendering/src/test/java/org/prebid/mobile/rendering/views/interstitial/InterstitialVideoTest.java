@@ -57,7 +57,7 @@ public class InterstitialVideoTest {
         mSpyInterstitialVideo = Mockito.spy(new InterstitialVideo(null, mMockAdView, mMockInterstitialManager, mMockAdConfiguration));
 
         doAnswer(invocation -> {
-            Runnable runnable = invocation.getArgumentAt(0, Runnable.class);
+            Runnable runnable = invocation.getArgument(0);
             runnable.run();
             return null;
         }).when(mMockHandler).post(any(Runnable.class));

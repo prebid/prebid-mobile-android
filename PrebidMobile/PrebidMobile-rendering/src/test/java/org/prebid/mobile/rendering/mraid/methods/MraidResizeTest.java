@@ -74,12 +74,12 @@ public class MraidResizeTest {
         when(mSpyBaseJsInterface.getMraidVariableContainer()).thenReturn(mMockMraidVariableContainer);
 
         when(mMockWebViewBase.post(any(Runnable.class))).thenAnswer(invocation -> {
-            Runnable runnable = invocation.getArgumentAt(0, Runnable.class);
+            Runnable runnable = invocation.getArgument(0);
             runnable.run();
             return null;
         });
         doAnswer(invocation -> {
-            Handler handler = invocation.getArgumentAt(0, Handler.class);
+            Handler handler = invocation.getArgument(0);
             Message message = new Message();
             Bundle data = new Bundle();
             data.putString(JSInterface.JSON_VALUE, "{\"width\":320,\"height\":250,\"customClosePosition\":\"top-right\",\"offsetX\":0,\"offsetY\":0,\"allowOffscreen\":true}");

@@ -218,7 +218,7 @@ public class InterstitialManagerTest {
 
     @Test
     public void interstitialDialogShown_NotifyInterstitialDelegate() {
-        mSpyInterstitialManager.interstitialDialogShown(any(ViewGroup.class));
+        mSpyInterstitialManager.interstitialDialogShown(mock(ViewGroup.class));
 
         verify(mMockInterstitialManagerDisplayDelegate).interstitialDialogShown(any(ViewGroup.class));
     }
