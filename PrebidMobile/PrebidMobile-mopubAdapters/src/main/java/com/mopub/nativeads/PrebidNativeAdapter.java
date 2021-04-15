@@ -10,7 +10,7 @@ import org.prebid.mobile.rendering.bidding.data.ntv.NativeAdParser;
 
 import java.util.Map;
 
-public class OpenXApolloNativeAdapter extends CustomEventNative {
+public class PrebidNativeAdapter extends CustomEventNative {
 
     private static final String KEY_BID_RESPONSE = "PREBID_BID_RESPONSE_ID";
 
@@ -35,7 +35,7 @@ public class OpenXApolloNativeAdapter extends CustomEventNative {
             customEventNativeListener.onNativeAdFailed(NativeErrorCode.SERVER_ERROR_RESPONSE_CODE);
             return;
         }
-        ApolloNativeAdWrapper apolloNativeAdWrapper = new ApolloNativeAdWrapper(nativeAd);
-        customEventNativeListener.onNativeAdLoaded(apolloNativeAdWrapper);
+        PrebidNativeAdWrapper prebidNativeAdWrapper = new PrebidNativeAdWrapper(nativeAd);
+        customEventNativeListener.onNativeAdLoaded(prebidNativeAdWrapper);
     }
 }

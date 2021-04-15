@@ -18,9 +18,9 @@ import org.prebid.mobile.rendering.models.AdConfiguration;
 /**
  * To integrate, place a copy of this class into 'com.mopub.mobileads'
  */
-public class OpenXApolloBannerAdapter extends BaseAd {
+public class PrebidBannerAdapter extends BaseAd {
 
-    private static final String TAG = OpenXApolloBannerAdapter.class.getSimpleName();
+    private static final String TAG = PrebidBannerAdapter.class.getSimpleName();
     private static final String KEY_BID_RESPONSE = "PREBID_BID_RESPONSE_ID";
 
     private DisplayView mDisplayView;

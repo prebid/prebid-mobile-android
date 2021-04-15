@@ -15,8 +15,8 @@ import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.errors.AdException;
 
-public class OpenXApolloRewardedVideoAdapter extends BaseAd {
-    private static final String TAG = OpenXApolloRewardedVideoAdapter.class.getSimpleName();
+public class PrebidRewardedVideoAdapter extends BaseAd {
+    private static final String TAG = PrebidRewardedVideoAdapter.class.getSimpleName();
 
     private InterstitialController mInterstitialController;
     private InterstitialControllerListener mInterstitialListener = new InterstitialControllerListener() {

@@ -11,7 +11,7 @@ import org.prebid.mobile.rendering.bidding.data.ntv.NativeAdElementType;
 import org.prebid.mobile.rendering.bidding.listeners.NativeAdListener;
 import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 
-public class ApolloNativeAdWrapper extends BaseNativeAd {
+public class PrebidNativeAdWrapper extends BaseNativeAd {
 
     private final NativeAd mNativeAd;
     private final NativeAdListener mNativeAdListener = new NativeAdListener() {
@@ -40,7 +40,7 @@ public class ApolloNativeAdWrapper extends BaseNativeAd {
     @Nullable
     private String mText;
 
-    ApolloNativeAdWrapper(NativeAd nativeAd) {
+    PrebidNativeAdWrapper(NativeAd nativeAd) {
         mNativeAd = nativeAd;
         mNativeAd.setNativeAdListener(mNativeAdListener);
         mText = mNativeAd.getText();

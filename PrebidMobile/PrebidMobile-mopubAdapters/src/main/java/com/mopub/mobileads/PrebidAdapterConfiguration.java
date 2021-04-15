@@ -9,17 +9,18 @@ import com.mopub.common.BaseAdapterConfiguration;
 import com.mopub.common.OnNetworkInitializationFinishedListener;
 import com.mopub.common.Preconditions;
 
+import org.prebid.mobile.rendering.BuildConfig;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 
 import java.util.Map;
 
-public class OpenXAdapterConfiguration extends BaseAdapterConfiguration {
-    private static final String TAG = OpenXAdapterConfiguration.class.getSimpleName();
+public class PrebidAdapterConfiguration extends BaseAdapterConfiguration {
+    private static final String TAG = PrebidAdapterConfiguration.class.getSimpleName();
 
     // 4-digit versioning scheme, of which the leftmost 3 digits correspond to the network SDK version,
     // and the last digit denotes the minor version number referring to an adapter release
-    private static final String VERSION = "4.11.0.0";
-    private static final String NETWORK_NAME = "openx";
+    private static final String VERSION = BuildConfig.VERSION;
+    private static final String NETWORK_NAME = "prebid";
 
     @NonNull
     @Override

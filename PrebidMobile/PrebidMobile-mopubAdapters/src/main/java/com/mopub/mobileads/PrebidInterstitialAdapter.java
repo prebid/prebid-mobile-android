@@ -13,8 +13,8 @@ import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.errors.AdException;
 
-public class OpenXApolloInterstitialAdapter extends BaseAd {
-    private static final String TAG = OpenXApolloInterstitialAdapter.class.getSimpleName();
+public class PrebidInterstitialAdapter extends BaseAd {
+    private static final String TAG = PrebidInterstitialAdapter.class.getSimpleName();
     private static final String KEY_BID_RESPONSE = "PREBID_BID_RESPONSE_ID";
 
     private InterstitialController mInterstitialController;

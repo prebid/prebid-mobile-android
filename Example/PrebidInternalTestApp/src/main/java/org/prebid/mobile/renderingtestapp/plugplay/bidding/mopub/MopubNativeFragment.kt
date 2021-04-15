@@ -79,7 +79,7 @@ open class MopubNativeFragment : AdFragment() {
                 .iconImageId(R.id.ivNativeIcon)
                 .callToActionId(R.id.btnNativeAction)
                 .build()
-        mopubNative?.registerAdRenderer(ApolloNativeAdRenderer(viewBinder))
+        mopubNative?.registerAdRenderer(PrebidNativeAdRenderer(viewBinder))
         mopubNative?.registerAdRenderer(MoPubStaticNativeAdRenderer(viewBinder))
         mopubNativeAdUnit = MoPubNativeAdUnit(requireContext(), configId, getNativeAdConfig())
         return mopubNativeAdUnit

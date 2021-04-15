@@ -42,7 +42,7 @@ class MoPubNativeFeedAdapter(context: Context,
                 .iconImageId(R.id.ivNativeIcon)
                 .callToActionId(R.id.btnNativeAction)
                 .build()
-        mopubNative?.registerAdRenderer(ApolloNativeAdRenderer(viewBinder))
+        mopubNative?.registerAdRenderer(PrebidNativeAdRenderer(viewBinder))
         mopubNative?.registerAdRenderer(MoPubStaticNativeAdRenderer(viewBinder))
         mopubNativeAdUnit = MoPubNativeAdUnit(context, configId, nativeAdConfiguration)
         MoPub.initializeSdk(context, SdkConfiguration.Builder(adUnitId).build()) {

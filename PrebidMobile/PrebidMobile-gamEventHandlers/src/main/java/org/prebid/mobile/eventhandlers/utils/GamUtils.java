@@ -22,8 +22,6 @@ public class GamUtils {
     static final HashSet<String> RESERVED_KEYS;
 
     private static final String KEY_IS_PREBID_CREATIVE = "isPrebid";
-    // TODO: 4/13/21 Remove in scope of MOBILE-7005
-    private static final String KEY_IS_PREBID_CREATIVE_UNIFIED = "isApolloCreative";
 
     static {
         RESERVED_KEYS = new HashSet<>();
@@ -78,7 +76,7 @@ public class GamUtils {
         }
 
         final String body = unifiedNativeAd.getBody();
-        return KEY_IS_PREBID_CREATIVE.equals(body) || KEY_IS_PREBID_CREATIVE_UNIFIED.equals(body);
+        return KEY_IS_PREBID_CREATIVE.equals(body);
     }
 
     public static boolean didPrebidWin(NativeCustomTemplateAd ad) {

@@ -16,7 +16,7 @@ import java.util.WeakHashMap;
 
 import static android.view.View.VISIBLE;
 
-public class ApolloNativeAdRenderer implements MoPubAdRenderer<ApolloNativeAdWrapper> {
+public class PrebidNativeAdRenderer implements MoPubAdRenderer<PrebidNativeAdWrapper> {
 
     @NonNull
     private final ViewBinder mViewBinder;
@@ -25,7 +25,7 @@ public class ApolloNativeAdRenderer implements MoPubAdRenderer<ApolloNativeAdWra
     private Integer mMediaViewResId;
     private MediaViewListener mMediaViewListener;
 
-    public ApolloNativeAdRenderer(
+    public PrebidNativeAdRenderer(
         @NonNull
         final ViewBinder viewBinder) {
         mViewBinder = viewBinder;
@@ -49,14 +49,14 @@ public class ApolloNativeAdRenderer implements MoPubAdRenderer<ApolloNativeAdWra
         @NonNull
             View view,
         @NonNull
-            ApolloNativeAdWrapper apolloAd) {
+                PrebidNativeAdWrapper ad) {
         StaticNativeViewHolder staticNativeViewHolder = mViewHolderMap.get(view);
         if (staticNativeViewHolder == null) {
             staticNativeViewHolder = StaticNativeViewHolder.fromViewBinder(view, mViewBinder);
             mViewHolderMap.put(view, staticNativeViewHolder);
         }
 
-        update(staticNativeViewHolder, apolloAd);
+        update(staticNativeViewHolder, ad);
         setViewVisibility(staticNativeViewHolder, VISIBLE);
     }
 
@@ -64,7 +64,7 @@ public class ApolloNativeAdRenderer implements MoPubAdRenderer<ApolloNativeAdWra
     public boolean supports(
         @NonNull
             BaseNativeAd nativeAd) {
-        return nativeAd instanceof ApolloNativeAdWrapper;
+        return nativeAd instanceof PrebidNativeAdWrapper;
     }
 
     public void setMediaViewResId(int resId) {
@@ -79,17 +79,17 @@ public class ApolloNativeAdRenderer implements MoPubAdRenderer<ApolloNativeAdWra
         @NonNull
         final StaticNativeViewHolder staticNativeViewHolder,
         @NonNull
-        final ApolloNativeAdWrapper apolloAd) {
+        final PrebidNativeAdWrapper adWrapper) {
         NativeRendererHelper.addTextView(staticNativeViewHolder.titleView,
-                                         apolloAd.getTitle());
-        NativeRendererHelper.addTextView(staticNativeViewHolder.textView, apolloAd.getText());
-        NativeRendererHelper.addTextView(staticNativeViewHolder.callToActionView, apolloAd.getCallToAction());
-        NativeImageHelper.loadImageView(apolloAd.getMainImageUrl(),
+                                         adWrapper.getTitle());
+        NativeRendererHelper.addTextView(staticNativeViewHolder.textView, adWrapper.getText());
+        NativeRendererHelper.addTextView(staticNativeViewHolder.callToActionView, adWrapper.getCallToAction());
+        NativeImageHelper.loadImageView(adWrapper.getMainImageUrl(),
                                         staticNativeViewHolder.mainImageView);
-        NativeImageHelper.loadImageView(apolloAd.getIconImageUrl(),
+        NativeImageHelper.loadImageView(adWrapper.getIconImageUrl(),
                                         staticNativeViewHolder.iconImageView);
-        apolloAd.registerActionView(staticNativeViewHolder.callToActionView);
-        loadMediaView(staticNativeViewHolder.mainView, apolloAd.getMediaData());
+        adWrapper.registerActionView(staticNativeViewHolder.callToActionView);
+        loadMediaView(staticNativeViewHolder.mainView, adWrapper.getMediaData());
     }
 
     private void setViewVisibility(

@@ -89,7 +89,7 @@ class MoPubNativeVideoFragment : MopubNativeFragment() {
         adapterHelper = AdapterHelper(requireContext(), 0, 3);
         mopubNative = MoPubNative(requireContext(), adUnitId, nativeNetworkListener)
         val viewBinder = ViewBinder.Builder(R.layout.lyt_native_ad_video).build()
-        val addRenderer = ApolloNativeAdRenderer(viewBinder)
+        val addRenderer = PrebidNativeAdRenderer(viewBinder)
         addRenderer.setMediaViewResId(R.id.mediaView)
         addRenderer.setMediaViewListener(mediaViewListener)
 
