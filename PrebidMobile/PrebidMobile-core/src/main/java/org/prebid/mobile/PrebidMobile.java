@@ -21,7 +21,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PrebidMobile {
@@ -80,6 +82,23 @@ public class PrebidMobile {
 
     public static boolean isShareGeoLocation() {
         return shareGeoLocation;
+    }
+
+    private static List<ExternalUserId> externalUserIds = new ArrayList<>();
+    /**
+     * List containing objects that hold External UserId parameters for the current application user.
+     * @param externalUserIds
+     */
+    public static void setExternalUserIds(List<ExternalUserId> externalUserIds){
+        PrebidMobile.externalUserIds = externalUserIds;
+    }
+
+    /**
+     * Returns the List that hold External UserId parameters for the current application user
+     * @@return externalUserIds as Array.
+     */
+    public static List<ExternalUserId> getExternalUserIds() {
+        return PrebidMobile.externalUserIds;
     }
 
     private static WeakReference<Context> applicationContextWeak;

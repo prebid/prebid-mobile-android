@@ -31,9 +31,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.prebid.mobile.ExternalUserId;
 import org.prebid.mobile.Host;
-
+import org.prebid.mobile.PrebidMobile;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,6 +54,15 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true);
         }
+        // User Id from External Third Party Sources
+        ArrayList<ExternalUserId> externalUserIdArray = new ArrayList<>();
+        externalUserIdArray.add(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+        externalUserIdArray.add(new ExternalUserId("netid.de", "999888777", null, null));
+        externalUserIdArray.add(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
+        externalUserIdArray.add(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
+        externalUserIdArray.add(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
+        PrebidMobile.setExternalUserIds(externalUserIdArray);
+
         // Get all the components
         Spinner hostSpinner = findViewById(R.id.hostSpinner);
         ArrayAdapter<CharSequence> hostAdapter = ArrayAdapter.createFromResource(this, R.array.hostArray, android.R.layout.simple_spinner_item);

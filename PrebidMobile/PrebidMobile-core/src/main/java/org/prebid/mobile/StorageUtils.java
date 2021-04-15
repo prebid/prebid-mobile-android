@@ -20,6 +20,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 final class StorageUtils {
 
@@ -44,6 +48,9 @@ final class StorageUtils {
 
     //CCPA
     static final String IABUSPrivacy_StringKey = "IABUSPrivacy_String";
+
+    //External UserIds
+    static final String PB_ExternalUserIdsKey = "PB_ExternalUserIdsKey";
 
     //COPPA
     static boolean getPbCoppa() throws PbContextNullException {
@@ -146,6 +153,86 @@ final class StorageUtils {
             gdprConsent = pref.getString(StorageUtils.IABConsent_ConsentStringKey, null);
         }
         return gdprConsent;
+    }
+
+
+    static void storeExternalUserId(ExternalUserId externalUserId){
+        // Remove the existing ExternalUserId with same source.
+        removeStoredExternalUserId(externalUserId.getSource());
+
+        // Storing the ExternalUserId
+        SharedPreferences pref = getSharedPreferences();
+        String externalUserIdString = pref.getString(PB_ExternalUserIdsKey, null);
+        List<ExternalUserId> externalUidListFromJson;
+        if (!TextUtils.isEmpty(externalUserIdString)) {
+            externalUidListFromJson = ExternalUserId.getExternalUidListFromJson(externalUserIdString);
+        } else {
+            externalUidListFromJson = new ArrayList<>();
+        }
+        externalUidListFromJson.add(externalUserId);
+        SharedPreferences.Editor editor = pref.edit();
+        if (externalUserId != null) {
+            editor.putString(StorageUtils.PB_ExternalUserIdsKey, externalUidListFromJson.toString());
+        }
+        editor.apply();
+    }
+
+    static List<ExternalUserId> fetchStoredExternalUserIds() {
+        SharedPreferences pref = getSharedPreferences();
+        String externalUserIds = pref.getString(StorageUtils.PB_ExternalUserIdsKey, null);
+        if (externalUserIds != null) {
+            return ExternalUserId.getExternalUidListFromJson(externalUserIds);
+        }
+        return null;
+    }
+
+    static ExternalUserId fetchStoredExternalUserId(String source) {
+        SharedPreferences pref = getSharedPreferences();
+        String externalUserIds = pref.getString(StorageUtils.PB_ExternalUserIdsKey, null);
+        if (!TextUtils.isEmpty(externalUserIds)) {
+            List<ExternalUserId> externalUidListFromJson = ExternalUserId.getExternalUidListFromJson(externalUserIds);
+            for (ExternalUserId externalUserId: externalUidListFromJson) {
+                if (externalUserId.getSource().equals(source)) {
+                    return externalUserId;
+                }
+            }
+        }
+        return null;
+    }
+
+    static void removeStoredExternalUserId(String source) {
+        SharedPreferences pref = getSharedPreferences();
+        String externalUserIds = pref.getString(StorageUtils.PB_ExternalUserIdsKey, null);
+        if (!TextUtils.isEmpty(externalUserIds)) {
+            List<ExternalUserId> externalUidListFromJson = ExternalUserId.getExternalUidListFromJson(externalUserIds);
+            ExternalUserId toBeRemoved = null;
+            for (ExternalUserId externalUserId: externalUidListFromJson) {
+                if (externalUserId.getSource().equals(source)) {
+                    toBeRemoved = externalUserId;
+                    break;
+                }
+            }
+
+            if (toBeRemoved != null) {
+                externalUidListFromJson.remove(toBeRemoved);
+                if (externalUidListFromJson.isEmpty()) {
+                    clearStoredExternalUserIds();
+                } else {
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putString(StorageUtils.PB_ExternalUserIdsKey, externalUidListFromJson.toString());
+                    editor.apply();
+                }
+            }
+        }
+    }
+
+    static void clearStoredExternalUserIds() {
+        if (fetchStoredExternalUserIds() != null) {
+            SharedPreferences pref = getSharedPreferences();
+            SharedPreferences.Editor editor = pref.edit();
+            editor.remove(StorageUtils.PB_ExternalUserIdsKey);
+            editor.apply();
+        }
     }
 
     /**
