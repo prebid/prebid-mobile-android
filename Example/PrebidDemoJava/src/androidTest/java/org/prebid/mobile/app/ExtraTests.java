@@ -26,8 +26,8 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
+import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
 
@@ -231,8 +231,8 @@ public class ExtraTests {
                 l1 = spy(l1);
                 spies.add(l1);
                 adUnit1.fetchDemand(adObject1, l1);
-                PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-                final PublisherAdRequest adObject2 = builder.build();
+                AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
+                final AdManagerAdRequest adObject2 = builder.build();
                 BannerAdUnit adUnit2 = new BannerAdUnit(Constants.PBS_CONFIG_ID_320x50_APPNEXUS, 320, 50);
                 adUnits.add(adUnit2);
                 OnCompleteListener l2 = new OnCompleteListener() {
@@ -243,7 +243,7 @@ public class ExtraTests {
                         assertTrue(adObject2.getCustomTargeting().keySet().contains("hb_cache_id"));
                         assertEquals("0.50", adObject2.getCustomTargeting().getString("hb_pb"));
                         FrameLayout adFrame = m.getActivity().findViewById(R.id.adFrame);
-                        PublisherAdView adView = new PublisherAdView(m.getActivity());
+                        AdManagerAdView adView = new AdManagerAdView(m.getActivity());
                         adView.setAdSizes(AdSize.BANNER);
                         adView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES_APPNEXUS);
                         adFrame.addView(adView);

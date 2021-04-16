@@ -18,8 +18,9 @@ package org.prebid.mobile;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import com.mopub.mobileads.MoPubView;
 

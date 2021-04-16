@@ -49,7 +49,9 @@ public final class AdViewUtils {
     private static final String SIZE_OBJECT_REGEX_EXPRESSION = "hb_size\\W+" + SIZE_VALUE_REGEX_EXPRESSION; //"hb_size\\W+[0-9]+x[0-9]+"
 
     private static final String GAM_VIEW_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdView";
+    private static final String GAM_VIEW_CLASS_2 = "com.google.android.gms.ads.admanager.AdManagerAdView";
     private static final String GAM_CUSTOM_TEMPLATE_AD_CLASS = "com.google.android.gms.ads.formats.NativeCustomTemplateAd";
+    private static final String GAM_CUSTOM_TEMPLATE_AD_CLASS_2 = "com.google.android.gms.ads.nativead.NativeCustomFormatAd";
     private static final String MOPUB_NATIVE_AD_CLASS = "com.mopub.nativeads.NativeAd";
 
     private AdViewUtils() { }
@@ -410,12 +412,12 @@ public final class AdViewUtils {
      * */
     public static void findNative(@NonNull Object object, @NonNull PrebidNativeAdListener listener) {
         String objectClassName = object.getClass().getCanonicalName();
-        if (GAM_VIEW_CLASS.equals(objectClassName)) {
+        if (GAM_VIEW_CLASS.equals(objectClassName) || GAM_VIEW_CLASS_2.equals(objectClassName)) {
             View adView = (View) object;
             findNativeInGAMPublisherAdView(adView, listener);
         } else if (MOPUB_NATIVE_AD_CLASS.equals(objectClassName)) {
             findNativeInMoPubNativeAd(object, listener);
-        } else if (implementsInterface(object, GAM_CUSTOM_TEMPLATE_AD_CLASS)) {
+        } else if (implementsInterface(object, GAM_CUSTOM_TEMPLATE_AD_CLASS) || implementsInterface(object, GAM_CUSTOM_TEMPLATE_AD_CLASS_2)) {
             findNativeInGAMCustomTemplateAd(object, listener);
         } else {
             listener.onPrebidNativeNotFound();

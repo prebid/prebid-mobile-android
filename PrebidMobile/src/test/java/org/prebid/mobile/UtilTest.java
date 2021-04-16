@@ -16,7 +16,7 @@
 
 package org.prebid.mobile;
 
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
@@ -68,8 +68,8 @@ public class UtilTest extends BaseSetup {
     public void testGetClassFromString() throws Exception {
         assertEquals(MoPubView.class, Util.getClassFromString(Util.MOPUB_BANNER_VIEW_CLASS));
         assertEquals(MoPubInterstitial.class, Util.getClassFromString(Util.MOPUB_INTERSTITIAL_CLASS));
-        assertEquals(PublisherAdRequest.class, Util.getClassFromString(Util.AD_MANAGER_REQUEST_CLASS));
-        assertEquals(PublisherAdRequest.Builder.class, Util.getClassFromString(Util.AD_MANAGER_REQUEST_BUILDER_CLASS));
+        assertEquals(AdManagerAdRequest.class, Util.getClassFromString(Util.AD_MANAGER_REQUEST_CLASS_V20));
+        assertEquals(AdManagerAdRequest.Builder.class, Util.getClassFromString(Util.AD_MANAGER_REQUEST_BUILDER_CLASS_V20));
     }
 
     @Test
@@ -94,14 +94,14 @@ public class UtilTest extends BaseSetup {
 
     @Test
     public void testApplyBidsToDFOAdObject() throws Exception {
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
         builder.addCustomTargeting("Key", "Value");
         HashMap<String, String> bids = new HashMap<>();
         bids.put("hb_pb", "0.50");
         bids.put("hb_cache_id", "123456");
 
         Util.apply(bids, builder);
-        PublisherAdRequest request = builder.build();
+        AdManagerAdRequest request = builder.build();
         assertEquals(3, request.getCustomTargeting().size());
         assertEquals("Value", request.getCustomTargeting().get("Key"));
         assertEquals("0.50", request.getCustomTargeting().get("hb_pb"));
@@ -125,9 +125,9 @@ public class UtilTest extends BaseSetup {
         assertFalse(Util.supportedAdObject(null));
         MoPubInterstitial interstitial = new MoPubInterstitial(activity, "");
         assertTrue(Util.supportedAdObject(interstitial));
-        PublisherAdRequest request = new PublisherAdRequest.Builder().build();
+        AdManagerAdRequest request = new AdManagerAdRequest.Builder().build();
         assertTrue(Util.supportedAdObject(request));
-        PublisherAdRequest.Builder requestBuilder = new PublisherAdRequest.Builder();
+        AdManagerAdRequest.Builder requestBuilder = new AdManagerAdRequest.Builder();
         assertTrue(Util.supportedAdObject(requestBuilder));
         Object object = new Object();
         assertFalse(Util.supportedAdObject(object));

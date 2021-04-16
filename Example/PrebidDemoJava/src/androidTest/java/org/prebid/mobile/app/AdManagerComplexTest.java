@@ -21,13 +21,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
+import com.google.android.gms.ads.admanager.AdManagerAdView;
 
 import org.junit.After;
 import org.junit.Before;
@@ -93,7 +95,7 @@ public class AdManagerComplexTest {
     @Test
     public void testFetchDemand() throws Exception {
 
-        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
 
         fetchDemandHelper(0, new FetchDemandCompleteListener() {
 
@@ -187,7 +189,7 @@ public class AdManagerComplexTest {
     @Test
     public void testFetchDemandAutoRefresh() throws Exception {
 
-        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
         final IntegerWrapper requestCountWrapper = new IntegerWrapper();
 
         fetchDemandHelper(31_000, new FetchDemandCompleteListener() {
@@ -221,8 +223,8 @@ public class AdManagerComplexTest {
 
                         requestCountWrapper.value++;
 
-                        PublisherAdRequest publisherAdRequest = builder.build();
-                        Bundle customTargetingBundle = publisherAdRequest.getCustomTargeting();
+                        AdManagerAdRequest adManagerAdRequest = builder.build();
+                        Bundle customTargetingBundle = adManagerAdRequest.getCustomTargeting();
 
                         Map<String, String> map = new HashMap<>(customTargetingBundle.keySet().size());
                         for (String key : customTargetingBundle.keySet()) {
@@ -377,13 +379,13 @@ public class AdManagerComplexTest {
     }
 
     @Test
-    public void testPublisherAdRequest() throws Exception {
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+    public void testAdManagerAdRequest() throws Exception {
+        AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
         builder.addCustomTargeting("key1", "value1");
         builder.addCustomTargeting("key2", "value2");
 
-        PublisherAdRequest publisherAdRequest1 = builder.build();
-        Bundle bundle1 = publisherAdRequest1.getCustomTargeting();
+        AdManagerAdRequest adManagerAdRequest1 = builder.build();
+        Bundle bundle1 = adManagerAdRequest1.getCustomTargeting();
 
         assertEquals(2, bundle1.keySet().size());
         assertEquals("value1", bundle1.getString("key1"));
@@ -393,15 +395,15 @@ public class AdManagerComplexTest {
         assertEquals(1, bundle1.keySet().size());
         assertEquals("value1", bundle1.getString("key1"));
 
-        PublisherAdRequest publisherAdRequest2 = builder.build();
-        Bundle bundle2 = publisherAdRequest2.getCustomTargeting();
+        AdManagerAdRequest adManagerAdRequest2 = builder.build();
+        Bundle bundle2 = adManagerAdRequest2.getCustomTargeting();
         assertEquals(1, bundle2.keySet().size());
         assertEquals("value1", bundle2.getString("key1"));
 
     }
 
     @Test
-    public void testPublisherAdRequestBuilderUseCase() throws Exception {
+    public void testAdManagerAdRequestBuilderUseCase() throws Exception {
         //given
 
         mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{\n" +
@@ -427,14 +429,14 @@ public class AdManagerComplexTest {
         //important line
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
 
-        HttpUrl httpUrl = mockServer.url("/testPublisherAdRequestBuilderUseCase");
+        HttpUrl httpUrl = mockServer.url("/testAdManagerAdRequestBuilderUseCase");
         Host.CUSTOM.setHostUrl(httpUrl.toString());
         PrebidMobile.setPrebidServerAccountId("1001");
 
         final ReferenceWrapper<Bundle> customTargetingBundleWrapper1 = new ReferenceWrapper<>();
 
         //when
-        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
         AdUnit adUnit = new BannerAdUnit("1001-1", 300, 250);
 
         adUnit.fetchDemand(builder, new OnCompleteListener() {
@@ -442,8 +444,8 @@ public class AdManagerComplexTest {
             public void onComplete(ResultCode resultCode) {
 
                 builder.addCustomTargeting("key2", "value2");
-                PublisherAdRequest publisherAdRequest = builder.build();
-                Bundle customTargetingBundle = publisherAdRequest.getCustomTargeting();
+                AdManagerAdRequest adManagerAdRequest = builder.build();
+                Bundle customTargetingBundle = adManagerAdRequest.getCustomTargeting();
 
                 customTargetingBundleWrapper1.value = (Bundle)customTargetingBundle.clone();
 
@@ -493,7 +495,7 @@ public class AdManagerComplexTest {
             }
         });
 
-        final PublisherAdView dfpAdView = new PublisherAdView(activity);
+        final AdManagerAdView dfpAdView = new AdManagerAdView(activity);
         //Programmatic fix
         dfpAdView.setAdUnitId("/5300653/test_adunit_pavliuchyk_300x250_puc_ucTagData_prebid-server.rubiconproject.com");
         dfpAdView.setAdSizes(new AdSize(300, 250));
@@ -506,7 +508,7 @@ public class AdManagerComplexTest {
 
         final BannerAdUnit bannerAdUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_RUBICON, 300, 250);
 
-        final PublisherAdRequest request = new PublisherAdRequest.Builder().build();
+        final AdManagerAdRequest request = new AdManagerAdRequest.Builder().build();
         final OnCompleteListener completeListener = new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
@@ -621,9 +623,8 @@ public class AdManagerComplexTest {
             }
 
             @Override
-            public void onAdFailedToLoad(int i) {
-                super.onAdFailedToLoad(i);
-                LogUtil.w("onAdFailedToLoad:" + i);
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                LogUtil.w("onAdFailedToLoad:" + loadAdError);
 
                 update(false);
             }

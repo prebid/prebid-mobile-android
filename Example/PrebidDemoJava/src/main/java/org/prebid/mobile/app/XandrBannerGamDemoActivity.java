@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
+import com.google.android.gms.ads.admanager.AdManagerAdView;
 
 import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.BannerAdUnit;
@@ -54,7 +54,7 @@ public class XandrBannerGamDemoActivity extends AppCompatActivity {
 
         this.adUnit = adUnit;
 //        Util.enableAdditionalFunctionality(this.adUnit);
-        final PublisherAdView amBanner = new PublisherAdView(this);
+        final AdManagerAdView amBanner = new AdManagerAdView(this);
         amBanner.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES_APPNEXUS);
         amBanner.setAdSizes(new AdSize(300, 250));
         FrameLayout adFrame = findViewById(R.id.adFrame);
@@ -82,7 +82,7 @@ public class XandrBannerGamDemoActivity extends AppCompatActivity {
             }
         });
 
-        final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
+        final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
 
         //region PrebidMobile Mobile API 1.0 usage
         int millis = getIntent().getIntExtra(Constants.AUTO_REFRESH_NAME, 0);
@@ -90,7 +90,7 @@ public class XandrBannerGamDemoActivity extends AppCompatActivity {
         adUnit.fetchDemand(builder, new OnCompleteListener() {
             @Override
             public void onComplete(ResultCode resultCode) {
-                PublisherAdRequest request = builder.build();
+                AdManagerAdRequest request = builder.build();
                 amBanner.loadAd(request);
             }
         });

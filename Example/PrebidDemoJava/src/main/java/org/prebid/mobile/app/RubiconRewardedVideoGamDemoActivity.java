@@ -6,10 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
-import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
 import org.prebid.mobile.AdUnit;
@@ -55,6 +56,40 @@ public class RubiconRewardedVideoGamDemoActivity extends AppCompatActivity {
         adUnit.setParameters(parameters);
 
         this.adUnit = adUnit;
+        final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
+        adUnit.fetchDemand(builder, new OnCompleteListener() {
+            @Override
+            public void onComplete(ResultCode resultCode) {
+
+                AdManagerAdRequest request = builder.build();
+
+                RewardedAd.load(
+                        RubiconRewardedVideoGamDemoActivity.this,
+                        Constants.DFP_REWARDED_ADUNIT_ID_RUBICON,
+                        request,
+                        new RewardedAdLoadCallback() {
+                            @Override
+                            public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+                                super.onAdLoaded(rewardedAd);
+                                rewardedAd.show(RubiconRewardedVideoGamDemoActivity.this, new OnUserEarnedRewardListener() {
+                                    @Override
+                                    public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                                super.onAdFailedToLoad(loadAdError);
+                            }
+                        });
+            }
+        });
+    }
+
+    /*
+    private void showAdPreGAMv20() {
         final RewardedAd amRewardedAd = new RewardedAd(this, Constants.DFP_REWARDED_ADUNIT_ID_RUBICON);
         final PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
         adUnit.fetchDemand(builder, new OnCompleteListener() {
@@ -100,4 +135,5 @@ public class RubiconRewardedVideoGamDemoActivity extends AppCompatActivity {
             }
         });
     }
+     */
 }

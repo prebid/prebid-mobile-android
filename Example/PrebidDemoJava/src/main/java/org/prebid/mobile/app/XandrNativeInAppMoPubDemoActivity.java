@@ -239,7 +239,8 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
             // SAMPLE CODE: Fetching the demand using OnCompleteListener2
             //================================================================================
 
-            /*nativeAdUnit.fetchDemand(new OnCompleteListener2() {
+            /*
+            nativeAdUnit.fetchDemand(new OnCompleteListener2() {
                 @Override
                 public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
                     Log.e("MAP", unmodifiableMap.toString());
@@ -256,7 +257,8 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
                     }
                     Toast.makeText(XandrNativeInAppMoPubDemoActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
                 }
-            });*/
+            });
+            */
 
             //================================================================================
             // SAMPLE CODE: END
