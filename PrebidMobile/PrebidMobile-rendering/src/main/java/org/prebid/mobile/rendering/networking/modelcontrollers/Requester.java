@@ -40,6 +40,7 @@ import org.prebid.mobile.rendering.networking.urlBuilder.URLComponents;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.ConnectionInfoManager;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
+import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
@@ -52,6 +53,8 @@ import java.util.List;
 public abstract class Requester {
     private static final String TAG = Requester.class.getSimpleName();
 
+    private final UserConsentManager mUserConsentManager;
+
     protected String mRequestName;
     protected WeakReference<Context> mContextReference;
     protected AdConfiguration mAdConfiguration;
@@ -63,6 +66,7 @@ public abstract class Requester {
         mRequestName = "";
         mContextReference = new WeakReference<>(context);
         mAdConfiguration = config;
+        mUserConsentManager = ManagersResolver.getInstance().getUserConsentManager();
 
         /*
             IMPORTANT
@@ -96,7 +100,7 @@ public abstract class Requester {
         parameterBuilderArray.add(new AppInfoParameterBuilder());
         parameterBuilderArray.add(new DeviceInfoParameterBuilder(mAdConfiguration));
         parameterBuilderArray.add(new NetworkParameterBuilder());
-        parameterBuilderArray.add(new UserConsentParameterBuilder());
+        parameterBuilderArray.add(new UserConsentParameterBuilder(mUserConsentManager));
         return parameterBuilderArray;
     }
 
@@ -116,7 +120,13 @@ public abstract class Requester {
             return;
         }
 
-        AdIdManager.initAdId(context, new AdIdInitListener(this));
+        if (mUserConsentManager.canAccessDeviceData()) {
+            AdIdManager.initAdId(context, new AdIdInitListener(this));
+        }
+        else {
+            AdIdManager.setAdId(null);
+            makeAdRequest();
+        }
     }
 
     protected abstract PathBuilderBase getPathBuilder();

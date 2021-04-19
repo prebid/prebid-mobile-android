@@ -28,6 +28,7 @@ import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
+import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -57,6 +58,7 @@ public class BidRequesterTest {
         mContext = Robolectric.buildActivity(Activity.class).create().get();
         mAdConfiguration = new AdConfiguration();
         mAdRequestInput = new AdRequestInput();
+        ManagersResolver.getInstance().prepare(mContext);
     }
 
     @Test

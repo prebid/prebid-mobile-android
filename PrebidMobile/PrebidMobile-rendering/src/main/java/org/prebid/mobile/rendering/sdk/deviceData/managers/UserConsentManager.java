@@ -19,7 +19,9 @@ package org.prebid.mobile.rendering.sdk.deviceData.managers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import org.prebid.mobile.rendering.sdk.BaseManager;
@@ -29,22 +31,23 @@ public class UserConsentManager extends BaseManager {
     static final int NOT_ASSIGNED = -1;
 
     // TCF v1 constants
-    private static final String CMP_PRESENT = "IABConsent_CMPPresent";
     private static final String SUBJECT_TO_GDPR = "IABConsent_SubjectToGDPR";
     private static final String CONSENT_STRING = "IABConsent_ConsentString";
-    private static final String PARSED_PURPOSE_CONSENTS = "IABConsent_ParsedPurposeConsents";
-    private static final String PARSED_VENDOR_CONSENTS = "IABConsent_ParsedVendorConsents";
-    private static final String US_PRIVACY_STRING = "IABUSPrivacy_String";
 
     // TCF v2 constants
     private static final String CMP_SDK_ID = "IABTCF_CmpSdkID";
     private static final String GDPR_APPLIES = "IABTCF_gdprApplies";
     private static final String TRANSPARENCY_CONSENT_STRING = "IABTCF_TCString";
+    private static final String PURPOSE_CONSENT = "IABTCF_PurposeConsents";
+
+    // CCPA
+    private static final String US_PRIVACY_STRING = "IABUSPrivacy_String";
 
     private String mUsPrivacyString;
 
     private String mIsSubjectToGdpr = "";
     private String mConsentString;
+    private String mPurposeConsent;
 
     private String mTcfV2ConsentString;
     private int mTcfV2GdprApplies = NOT_ASSIGNED;
@@ -53,9 +56,6 @@ public class UserConsentManager extends BaseManager {
      */
     private int mCmpSdkId = NOT_ASSIGNED;
 
-    private Boolean mCMPPresent;
-    private String mParsedPurposeConsents;
-    private String mParsedVendorConsents;
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener;
 
@@ -76,13 +76,11 @@ public class UserConsentManager extends BaseManager {
     private void initConsentValuesAtStart(SharedPreferences preferences) {
         getConsentValues(preferences, SUBJECT_TO_GDPR);
         getConsentValues(preferences, CONSENT_STRING);
-        getConsentValues(preferences, CMP_PRESENT);
-        getConsentValues(preferences, PARSED_PURPOSE_CONSENTS);
-        getConsentValues(preferences, PARSED_VENDOR_CONSENTS);
         getConsentValues(preferences, CMP_SDK_ID);
         getConsentValues(preferences, GDPR_APPLIES);
         getConsentValues(preferences, TRANSPARENCY_CONSENT_STRING);
         getConsentValues(preferences, US_PRIVACY_STRING);
+        getConsentValues(preferences, PURPOSE_CONSENT);
     }
 
     private Object getConsentValues(SharedPreferences preferences, String key) {
@@ -91,12 +89,6 @@ public class UserConsentManager extends BaseManager {
                 return mIsSubjectToGdpr = preferences.getString(SUBJECT_TO_GDPR, null);
             case CONSENT_STRING:
                 return mConsentString = preferences.getString(CONSENT_STRING, null);
-            case CMP_PRESENT:
-                return mCMPPresent = preferences.getBoolean(CMP_PRESENT, false);
-            case PARSED_PURPOSE_CONSENTS:
-                return mParsedPurposeConsents = preferences.getString(PARSED_PURPOSE_CONSENTS, null);
-            case PARSED_VENDOR_CONSENTS:
-                return mParsedVendorConsents = preferences.getString(PARSED_VENDOR_CONSENTS, null);
             case CMP_SDK_ID:
                 return mCmpSdkId = preferences.getInt(CMP_SDK_ID, NOT_ASSIGNED);
             case GDPR_APPLIES:
@@ -105,6 +97,8 @@ public class UserConsentManager extends BaseManager {
                 return mTcfV2ConsentString = preferences.getString(TRANSPARENCY_CONSENT_STRING, null);
             case US_PRIVACY_STRING:
                 return mUsPrivacyString = preferences.getString(US_PRIVACY_STRING, null);
+            case PURPOSE_CONSENT:
+                return mPurposeConsent = preferences.getString(PURPOSE_CONSENT, null);
         }
 
         return null;
@@ -128,6 +122,42 @@ public class UserConsentManager extends BaseManager {
 
     public String getUsPrivacyString() {
         return mUsPrivacyString;
+    }
+
+    //fetch advertising identifier based TCF 2.0 Purpose1 value
+    //truth table
+    /*
+                         deviceAccessConsent=true   deviceAccessConsent=false  deviceAccessConsent undefined
+    gdprApplies=false        Yes, read IDFA             No, don’t read IDFA           Yes, read IDFA
+    gdprApplies=true         Yes, read IDFA             No, don’t read IDFA           No, don’t read IDFA
+    gdprApplies=undefined    Yes, read IDFA             No, don’t read IDFA           Yes, read IDFA
+    */
+
+    public boolean canAccessDeviceData() {
+        final String subjectToGdpr = getSubjectToGdpr();
+        final int deviceConsentIndex = 1;
+
+        Boolean gdprApplies = TextUtils.isEmpty(subjectToGdpr) ? null : "1".equals(subjectToGdpr);
+        Boolean deviceAccessConsent = getPurposeConsent(deviceConsentIndex);
+
+        //deviceAccess undefined and gdprApplies undefined
+        if (deviceAccessConsent == null && gdprApplies == null) {
+            return true;
+        }
+
+        //deviceAccess undefined and gdprApplies false
+        if (deviceAccessConsent == null && Boolean.FALSE.equals(gdprApplies)) {
+            return true;
+        }
+
+        //deviceAccess true
+        return Boolean.TRUE.equals(deviceAccessConsent);
+    }
+
+    @Nullable
+    Boolean getPurposeConsent(int consentIndex) {
+        boolean isConsentStringInvalid = TextUtils.isEmpty(mPurposeConsent) || mPurposeConsent.length() <= consentIndex;
+        return isConsentStringInvalid ? null : mPurposeConsent.charAt(consentIndex) == '1';
     }
 
     /**

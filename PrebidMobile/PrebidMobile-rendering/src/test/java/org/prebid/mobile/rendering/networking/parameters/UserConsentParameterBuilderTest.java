@@ -44,7 +44,7 @@ public class UserConsentParameterBuilderTest {
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(robolectricActivity);
         mSharedPreferences.edit().putString("IABConsent_ConsentString", "foobar_consent_string").commit();
 
-        mBuilder = new UserConsentParameterBuilder();
+        mBuilder = new UserConsentParameterBuilder(ManagersResolver.getInstance().getUserConsentManager());
     }
 
     @Test

@@ -17,7 +17,6 @@
 package org.prebid.mobile.rendering.networking.parameters;
 
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
-import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
@@ -27,10 +26,10 @@ public class UserConsentParameterBuilder extends ParameterBuilder {
     private static final String US_PRIVACY = "us_privacy";
     private static final String CONSENT = "consent";
 
-    private UserConsentManager mUserConsentManager;
+    private final UserConsentManager mUserConsentManager;
 
-    public UserConsentParameterBuilder() {
-        mUserConsentManager = ManagersResolver.getInstance().getUserConsentManager();
+    public UserConsentParameterBuilder(UserConsentManager userConsentManager) {
+        mUserConsentManager = userConsentManager;
     }
 
     @Override

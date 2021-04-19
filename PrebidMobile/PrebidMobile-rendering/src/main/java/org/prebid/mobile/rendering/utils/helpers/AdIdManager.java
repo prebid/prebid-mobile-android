@@ -92,7 +92,6 @@ public class AdIdManager {
         sLimitAdTrackingEnabled = limitAdTrackingEnabled;
     }
 
-    @VisibleForTesting
     public static void setAdId(String adId) {
         sAdId = adId;
     }
