@@ -23,22 +23,22 @@ import android.webkit.WebView;
 
 import androidx.annotation.Nullable;
 
-import com.iab.omid.library.openx.Omid;
-import com.iab.omid.library.openx.ScriptInjector;
-import com.iab.omid.library.openx.adsession.AdEvents;
-import com.iab.omid.library.openx.adsession.AdSession;
-import com.iab.omid.library.openx.adsession.AdSessionConfiguration;
-import com.iab.omid.library.openx.adsession.AdSessionContext;
-import com.iab.omid.library.openx.adsession.CreativeType;
-import com.iab.omid.library.openx.adsession.FriendlyObstructionPurpose;
-import com.iab.omid.library.openx.adsession.ImpressionType;
-import com.iab.omid.library.openx.adsession.Owner;
-import com.iab.omid.library.openx.adsession.Partner;
-import com.iab.omid.library.openx.adsession.VerificationScriptResource;
-import com.iab.omid.library.openx.adsession.media.InteractionType;
-import com.iab.omid.library.openx.adsession.media.MediaEvents;
-import com.iab.omid.library.openx.adsession.media.Position;
-import com.iab.omid.library.openx.adsession.media.VastProperties;
+import com.iab.omid.library.prebidorg.Omid;
+import com.iab.omid.library.prebidorg.ScriptInjector;
+import com.iab.omid.library.prebidorg.adsession.AdEvents;
+import com.iab.omid.library.prebidorg.adsession.AdSession;
+import com.iab.omid.library.prebidorg.adsession.AdSessionConfiguration;
+import com.iab.omid.library.prebidorg.adsession.AdSessionContext;
+import com.iab.omid.library.prebidorg.adsession.CreativeType;
+import com.iab.omid.library.prebidorg.adsession.FriendlyObstructionPurpose;
+import com.iab.omid.library.prebidorg.adsession.ImpressionType;
+import com.iab.omid.library.prebidorg.adsession.Owner;
+import com.iab.omid.library.prebidorg.adsession.Partner;
+import com.iab.omid.library.prebidorg.adsession.VerificationScriptResource;
+import com.iab.omid.library.prebidorg.adsession.media.InteractionType;
+import com.iab.omid.library.prebidorg.adsession.media.MediaEvents;
+import com.iab.omid.library.prebidorg.adsession.media.Position;
+import com.iab.omid.library.prebidorg.adsession.media.VastProperties;
 
 import org.prebid.mobile.rendering.models.TrackingEvent;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;

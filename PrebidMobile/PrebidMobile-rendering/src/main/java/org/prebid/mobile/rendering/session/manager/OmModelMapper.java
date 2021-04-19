@@ -16,8 +16,8 @@
 
 package org.prebid.mobile.rendering.session.manager;
 
-import com.iab.omid.library.openx.adsession.FriendlyObstructionPurpose;
-import com.iab.omid.library.openx.adsession.media.PlayerState;
+import com.iab.omid.library.prebidorg.adsession.FriendlyObstructionPurpose;
+import com.iab.omid.library.prebidorg.adsession.media.PlayerState;
 
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
