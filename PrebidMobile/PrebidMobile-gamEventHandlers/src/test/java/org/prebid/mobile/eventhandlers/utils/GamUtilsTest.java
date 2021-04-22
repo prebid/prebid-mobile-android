@@ -16,11 +16,14 @@
 
 package org.prebid.mobile.eventhandlers.utils;
 
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
+import com.google.android.gms.ads.nativead.NativeCustomFormatAd;
 
+import junit.framework.Assert;
+
+import org.junit.After;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.NativeFetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -30,6 +33,8 @@ import org.prebid.mobile.rendering.bidding.data.ntv.NativeAdParser;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.listeners.NativeAdCallback;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -43,16 +48,23 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk = 21)
 public class GamUtilsTest {
 
     public static final String KEY_IS_PREBID = "isPrebid";
 
+    @After
+    public void cleanup() {
+        GamUtils.RESERVED_KEYS.clear();
+    }
+
     @Test
     public void didPrebidWin_customTemplate_adIsNullOrNoEvents_ReturnFalse() {
-        NativeCustomTemplateAd ad = null;
+        NativeCustomFormatAd ad = null;
         assertFalse(GamUtils.didPrebidWin(ad));
 
-        ad = mock(NativeCustomTemplateAd.class);
+        ad = mock(NativeCustomFormatAd.class);
         when(ad.getText(KEY_IS_PREBID)).thenReturn("0");
 
         assertFalse(GamUtils.didPrebidWin(ad));
@@ -60,7 +72,7 @@ public class GamUtilsTest {
 
     @Test
     public void didPrebidWin_customTemplate_adContainsEvents_ReturnTrue() {
-        NativeCustomTemplateAd ad = mock(NativeCustomTemplateAd.class);
+        NativeCustomFormatAd ad = mock(NativeCustomFormatAd.class);
 
         when(ad.getText(KEY_IS_PREBID)).thenReturn("0");
         assertFalse(GamUtils.didPrebidWin(ad));
@@ -71,10 +83,10 @@ public class GamUtilsTest {
 
     @Test
     public void didPrebidWin_unifiedAd_adIsNullOrNoEvents_ReturnFalse() {
-        UnifiedNativeAd ad = null;
+        com.google.android.gms.ads.nativead.NativeAd ad = null;
         assertFalse(GamUtils.didPrebidWin(ad));
 
-        ad = mock(UnifiedNativeAd.class);
+        ad = mock(com.google.android.gms.ads.nativead.NativeAd.class);
         when(ad.getBody()).thenReturn("");
 
         assertFalse(GamUtils.didPrebidWin(ad));
@@ -83,7 +95,7 @@ public class GamUtilsTest {
     @Test
     public void findNativeAd_customTemplate_adIsNull_DoNothing() {
         final NativeAdCallback mockCallback = mock(NativeAdCallback.class);
-        final NativeCustomTemplateAd customTemplateAd = null;
+        final NativeCustomFormatAd customTemplateAd = null;
         GamUtils.findNativeAd(customTemplateAd, mockCallback);
 
         verifyZeroInteractions(mockCallback);
@@ -92,7 +104,7 @@ public class GamUtilsTest {
     @Test
     public void findNativeAd_customTemplate_validAdNoBidResponse_InvokeCallbackWithNull() {
         NativeAdCallback mockCallback = mock(NativeAdCallback.class);
-        NativeCustomTemplateAd mockCustomTemplateAd = mock(NativeCustomTemplateAd.class);
+        NativeCustomFormatAd mockCustomTemplateAd = mock(NativeCustomFormatAd.class);
 
         GamUtils.findNativeAd(mockCustomTemplateAd, mockCallback);
 
@@ -109,7 +121,7 @@ public class GamUtilsTest {
         final NativeAd expectedNativeAd = new NativeAdParser().parse(adm);
 
         NativeAdCallback mockCallback = mock(NativeAdCallback.class);
-        NativeCustomTemplateAd mockCustomTemplateAd = mock(NativeCustomTemplateAd.class);
+        NativeCustomFormatAd mockCustomTemplateAd = mock(NativeCustomFormatAd.class);
         when(mockCustomTemplateAd.getText("hb_cache_id_local")).thenReturn("123");
 
         when(mockBidResponse.getId()).thenReturn("123");
@@ -126,7 +138,7 @@ public class GamUtilsTest {
     @Test
     public void findNativeAd_unifiedAd_adIsNull_DoNothing() {
         final NativeAdCallback mockCallback = mock(NativeAdCallback.class);
-        final UnifiedNativeAd ad = null;
+        final com.google.android.gms.ads.nativead.NativeAd ad = null;
         GamUtils.findNativeAd(ad, mockCallback);
 
         verifyZeroInteractions(mockCallback);
@@ -135,7 +147,7 @@ public class GamUtilsTest {
     @Test
     public void findNativeAd_unifiedAd_validAdNoBidResponse_InvokeCallbackWithNull() {
         NativeAdCallback mockCallback = mock(NativeAdCallback.class);
-        UnifiedNativeAd mockAd = mock(UnifiedNativeAd.class);
+        com.google.android.gms.ads.nativead.NativeAd mockAd = mock(com.google.android.gms.ads.nativead.NativeAd.class);
 
         GamUtils.findNativeAd(mockAd, mockCallback);
 
@@ -152,7 +164,7 @@ public class GamUtilsTest {
         final NativeAd expectedNativeAd = new NativeAdParser().parse(adm);
 
         NativeAdCallback mockCallback = mock(NativeAdCallback.class);
-        UnifiedNativeAd mockAd = mock(UnifiedNativeAd.class);
+        com.google.android.gms.ads.nativead.NativeAd mockAd = mock(com.google.android.gms.ads.nativead.NativeAd.class);
         when(mockAd.getCallToAction()).thenReturn("123");
 
         when(mockBidResponse.getId()).thenReturn("123");
@@ -168,7 +180,7 @@ public class GamUtilsTest {
 
     @Test
     public void prepare_AddReservedKeys() {
-        final PublisherAdRequest.Builder publisherAdRequest = new PublisherAdRequest.Builder();
+        final AdManagerAdRequest publisherAdRequest = new AdManagerAdRequest.Builder().build();
         final NativeFetchDemandResult fetchDemandResult = new NativeFetchDemandResult(FetchDemandResult.SUCCESS);
         final HashMap<String, String> keyWordsMap = new HashMap<>();
         keyWordsMap.put("key", "value");
@@ -178,5 +190,29 @@ public class GamUtilsTest {
 
         assertEquals(1, GamUtils.RESERVED_KEYS.size());
         assertEquals("[key]", GamUtils.RESERVED_KEYS.toString());
+    }
+
+    @Test
+    public void handleGamKeywordsUpdate_KeyWordsShouldMatchExpected() {
+        AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
+        builder.addCustomTargeting("Key", "Value");
+        HashMap<String, String> bids = new HashMap<>();
+        bids.put("hb_pb", "0.50");
+        bids.put("hb_cache_id", "123456");
+        AdManagerAdRequest request = builder.build();
+        GamUtils.handleGamCustomTargetingUpdate(request, bids);
+
+        Assert.assertEquals(3, request.getCustomTargeting().size());
+        assertTrue(request.getCustomTargeting().containsKey("Key"));
+        Assert.assertEquals("Value", request.getCustomTargeting().get("Key"));
+        assertTrue(request.getCustomTargeting().containsKey("hb_pb"));
+        Assert.assertEquals("0.50", request.getCustomTargeting().get("hb_pb"));
+        assertTrue(request.getCustomTargeting().containsKey("hb_cache_id"));
+        Assert.assertEquals("123456", request.getCustomTargeting().get("hb_cache_id"));
+
+        GamUtils.handleGamCustomTargetingUpdate(request, null);
+        Assert.assertEquals(1, request.getCustomTargeting().size());
+        assertTrue(request.getCustomTargeting().containsKey("Key"));
+        Assert.assertEquals("Value", request.getCustomTargeting().get("Key"));
     }
 }

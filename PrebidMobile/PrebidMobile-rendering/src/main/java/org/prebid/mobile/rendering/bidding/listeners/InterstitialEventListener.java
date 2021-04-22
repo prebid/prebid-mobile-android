@@ -25,8 +25,6 @@ public interface InterstitialEventListener {
 
     void onAdFailed(AdException exception);
 
-    void onAdClicked();
-
     void onAdClosed();
 
     void onAdDisplayed();

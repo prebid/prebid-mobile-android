@@ -270,14 +270,6 @@ public class InterstitialAdUnitTest {
     }
 
     @Test
-    public void onAdOpened_NotifyClickedListener() {
-        final InterstitialEventListener eventListener = getEventListener();
-        eventListener.onAdClicked();
-
-        verify(mMockInterstitialAdUnitListener, times(1)).onAdClicked(mInterstitialAdUnit);
-    }
-
-    @Test
     public void onAdClosed_NotifyAdClosedListener() {
         final InterstitialEventListener eventListener = getEventListener();
         eventListener.onAdClosed();

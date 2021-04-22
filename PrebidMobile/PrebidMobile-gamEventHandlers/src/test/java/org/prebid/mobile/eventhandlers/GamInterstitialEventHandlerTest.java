@@ -17,7 +17,6 @@
 package org.prebid.mobile.eventhandlers;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Handler;
 
 import org.junit.Before;
@@ -46,12 +45,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 19)
+@Config(sdk = 21)
 public class GamInterstitialEventHandlerTest {
     private static final String GAM_AD_UNIT_ID = "12345678";
 
     private GamInterstitialEventHandler mEventHandler;
-    private Context mContext;
 
     @Mock
     private InterstitialEventListener mMockEventListener;
@@ -59,12 +57,12 @@ public class GamInterstitialEventHandlerTest {
     private Handler mMockAppEventHandler;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
+        Activity activity = Robolectric.buildActivity(Activity.class).get();
 
-        mEventHandler = new GamInterstitialEventHandler(mContext, GAM_AD_UNIT_ID);
+        mEventHandler = new GamInterstitialEventHandler(activity, GAM_AD_UNIT_ID);
         mEventHandler.setInterstitialEventListener(mMockEventListener);
     }
 

@@ -17,11 +17,9 @@
 package org.prebid.mobile.eventhandlers;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
-
-import androidx.annotation.NonNull;
 
 import org.prebid.mobile.eventhandlers.global.Constants;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -30,6 +28,10 @@ import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
 
+import java.lang.ref.WeakReference;
+
+import androidx.annotation.NonNull;
+
 public class GamInterstitialEventHandler implements InterstitialEventHandler, GamAdEventListener {
     private static final String TAG = GamInterstitialEventHandler.class.getSimpleName();
 
@@ -37,7 +39,7 @@ public class GamInterstitialEventHandler implements InterstitialEventHandler, Ga
 
     private PublisherInterstitialAdWrapper mRequestInterstitial;
 
-    private final Context mApplicationContext;
+    private final WeakReference<Activity> mActivityWeakReference;
     private final String mGamAdUnitId;
 
     private InterstitialEventListener mInterstitialEventListener;
@@ -46,8 +48,8 @@ public class GamInterstitialEventHandler implements InterstitialEventHandler, Ga
     private boolean mIsExpectingAppEvent;
     private boolean mDidNotifiedBidWin;
 
-    public GamInterstitialEventHandler(Context applicationContext, String gamAdUnitId) {
-        mApplicationContext = applicationContext.getApplicationContext();
+    public GamInterstitialEventHandler(Activity activity, String gamAdUnitId) {
+        mActivityWeakReference = new WeakReference<>(activity);
         mGamAdUnitId = gamAdUnitId;
     }
 
@@ -66,9 +68,6 @@ public class GamInterstitialEventHandler implements InterstitialEventHandler, Ga
                 break;
             case DISPLAYED:
                 mInterstitialEventListener.onAdDisplayed();
-                break;
-            case CLICKED:
-                mInterstitialEventListener.onAdClicked();
                 break;
             case LOADED:
                 primaryAdReceived();
@@ -131,7 +130,7 @@ public class GamInterstitialEventHandler implements InterstitialEventHandler, Ga
             mRequestInterstitial = null;
         }
 
-        mRequestInterstitial = PublisherInterstitialAdWrapper.newInstance(mApplicationContext, mGamAdUnitId, this);
+        mRequestInterstitial = PublisherInterstitialAdWrapper.newInstance(mActivityWeakReference.get(), mGamAdUnitId, this);
     }
 
     private void primaryAdReceived() {

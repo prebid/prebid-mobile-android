@@ -25,10 +25,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest
-import com.google.android.gms.ads.formats.NativeCustomTemplateAd
-import com.google.android.gms.ads.formats.UnifiedNativeAd
-import com.google.android.gms.ads.formats.UnifiedNativeAdView
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.admanager.AdManagerAdRequest
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdView
+import com.google.android.gms.ads.nativead.NativeCustomFormatAd
 import kotlinx.android.synthetic.main.lyt_native_ad.*
 import kotlinx.android.synthetic.main.lyt_native_gam_events.*
 import org.prebid.mobile.eventhandlers.utils.GamUtils
@@ -41,16 +42,16 @@ import org.prebid.mobile.renderingtestapp.utils.loadImage
 
 class GamNativeFragment(override val layoutRes: Int = R.layout.fragment_native) : PpmNativeFragment() {
     companion object {
-        const val ARG_CUSTOM_TEMPLATE_ID = "ARG_CUSTOM_TEMPLATE_ID"
+        const val ARG_CUSTOM_FORMAT_ID = "ARG_CUSTOM_FORMAT_ID"
     }
 
     private var gamAdLoader: AdLoader? = null
-    private var customTemplateId: String? = null
+    private var customFormatId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            customTemplateId = it.getString(ARG_CUSTOM_TEMPLATE_ID, "")
+            customFormatId = it.getString(ARG_CUSTOM_FORMAT_ID, "")
         }
     }
 
@@ -69,7 +70,7 @@ class GamNativeFragment(override val layoutRes: Int = R.layout.fragment_native) 
     }
 
     override fun loadAd() {
-        val builder = PublisherAdRequest.Builder()
+        val builder = AdManagerAdRequest.Builder()
         val publisherAdRequest = builder.build()
 
         nativeAdUnit?.fetchDemand { result ->
@@ -82,7 +83,7 @@ class GamNativeFragment(override val layoutRes: Int = R.layout.fragment_native) 
             }
 
             btnFetchDemandResultSuccess?.isEnabled = true
-            GamUtils.prepare(builder, result)
+            GamUtils.prepare(publisherAdRequest, result)
             loadGam(publisherAdRequest)
         }
     }
@@ -91,19 +92,19 @@ class GamNativeFragment(override val layoutRes: Int = R.layout.fragment_native) 
 
     override fun configuratorMode(): AdConfiguratorDialogFragment.AdConfiguratorMode? = null
 
-    private fun loadGam(publisherAdRequest: PublisherAdRequest) {
-        gamAdLoader = if (isCustomTemplateExample()) createCustomTemplateAdLoader() else createUnifiedAdLoader()
+    private fun loadGam(publisherAdRequest: AdManagerAdRequest) {
+        gamAdLoader = if (isCustomFormatExample()) createCustomFormatAdLoader() else createNativeAdLoader()
 
         gamAdLoader?.loadAd(publisherAdRequest)
     }
 
-    private fun createUnifiedAdLoader(): AdLoader = AdLoader.Builder(requireContext(), adUnitId)
-            .forUnifiedNativeAd { unifiedAd ->
+    private fun createNativeAdLoader(): AdLoader = AdLoader.Builder(requireContext(), adUnitId)
+            .forNativeAd { unifiedAd ->
                 btnUnifiedRequestSuccess?.isEnabled = true
-                handleUnifiedAd(unifiedAd)
+                handleNativeAd(unifiedAd)
             }
             .withAdListener(object : AdListener() {
-                override fun onAdFailedToLoad(p0: Int) {
+                override fun onAdFailedToLoad(p0: LoadAdError) {
                     btnPrimaryAdRequestFailure?.isEnabled = true
                 }
 
@@ -113,57 +114,57 @@ class GamNativeFragment(override val layoutRes: Int = R.layout.fragment_native) 
             })
             .build()
 
-    private fun createCustomTemplateAdLoader() = AdLoader.Builder(requireContext(), adUnitId)
-            .forCustomTemplateAd(customTemplateId, { customTemplate ->
+    private fun createCustomFormatAdLoader() = AdLoader.Builder(requireContext(), adUnitId)
+            .forCustomFormatAd(customFormatId, { formatAd ->
                 btnCustomAdRequestSuccess?.isEnabled = true
-                handleCustomTemplateAd(customTemplate)
+                handleCustomFormatAd(formatAd)
             }, null)
             .withAdListener(object : AdListener() {
-                override fun onAdFailedToLoad(p0: Int) {
+                override fun onAdFailedToLoad(p0: LoadAdError) {
                     btnPrimaryAdRequestFailure?.isEnabled = true
                 }
             })
             .build()
 
-    private fun handleUnifiedAd(unifiedAd: UnifiedNativeAd?) {
-        unifiedAd ?: return
+    private fun handleNativeAd(nativeAd: NativeAd?) {
+        nativeAd ?: return
 
-        if (GamUtils.didPrebidWin(unifiedAd)) {
-            GamUtils.findNativeAd(unifiedAd) {
+        if (GamUtils.didPrebidWin(nativeAd)) {
+            GamUtils.findNativeAd(nativeAd) {
                 btnNativeAdLoaded?.isEnabled = true
                 inflateViewContent(it)
             }
         }
         else {
             btnPrimaryAdWinUnified?.isEnabled = true
-            inflateUnifiedNativeAd(unifiedAd)
+            inflateNativeAd(nativeAd)
         }
     }
 
-    private fun handleCustomTemplateAd(customTemplate: NativeCustomTemplateAd?) {
-        customTemplate ?: return
+    private fun handleCustomFormatAd(customFormatAd: NativeCustomFormatAd?) {
+        customFormatAd ?: return
 
-        if (GamUtils.didPrebidWin(customTemplate)) {
-            GamUtils.findNativeAd(customTemplate) {
+        if (GamUtils.didPrebidWin(customFormatAd)) {
+            GamUtils.findNativeAd(customFormatAd) {
                 btnNativeAdLoaded?.isEnabled = true
                 inflateViewContent(it)
             }
         }
         else {
             btnPrimaryAdWinCustom?.isEnabled = true
-            inflateGamCustomTemplate(customTemplate)
+            inflateGamCustomFormat(customFormatAd)
         }
     }
 
 
-    private fun inflateGamCustomTemplate(customTemplate: NativeCustomTemplateAd) {
+    private fun inflateGamCustomFormat(customFormatAd: NativeCustomFormatAd) {
 
-        val title = customTemplate.getText("title")
-        val text = customTemplate.getText("text")
-        val cta = customTemplate.getText("cta")
-        val sponsoredBy = customTemplate.getText("sponsoredBy")
-        val iconUrl = customTemplate.getText("iconUrl")?.toString() ?: ""
-        val imageUrl = customTemplate.getText("imgUrl")?.toString() ?: ""
+        val title = customFormatAd.getText("title")
+        val text = customFormatAd.getText("text")
+        val cta = customFormatAd.getText("cta")
+        val sponsoredBy = customFormatAd.getText("sponsoredBy")
+        val iconUrl = customFormatAd.getText("iconUrl")?.toString() ?: ""
+        val imageUrl = customFormatAd.getText("imgUrl")?.toString() ?: ""
 
         tvNativeTitle?.text = title
         tvNativeBody?.text = text
@@ -174,15 +175,15 @@ class GamNativeFragment(override val layoutRes: Int = R.layout.fragment_native) 
         loadImage(ivNativeIcon, iconUrl)
 
         btnNativeAction?.setOnClickListener {
-            customTemplate.performClick("cta")
+            customFormatAd.performClick("cta")
             btnAdClicked?.isEnabled = true
         }
     }
 
-    private fun inflateUnifiedNativeAd(nativeAd: UnifiedNativeAd?) {
+    private fun inflateNativeAd(nativeAd: NativeAd?) {
         nativeAd ?: return
 
-        val adView = LayoutInflater.from(requireContext()).inflate(R.layout.lyt_unified_native_ad, null) as UnifiedNativeAdView
+        val adView = LayoutInflater.from(requireContext()).inflate(R.layout.lyt_unified_native_ad, null) as NativeAdView
 
         adView.mediaView = adView.findViewById(R.id.ad_media)
 
@@ -198,40 +199,43 @@ class GamNativeFragment(override val layoutRes: Int = R.layout.fragment_native) 
 
         // The headline and media content are guaranteed to be in every UnifiedNativeAd.
         (adView.headlineView as TextView).text = nativeAd.headline
-        adView.mediaView.setMediaContent(nativeAd.mediaContent)
+
+        nativeAd.mediaContent?.let { mediaContent ->
+            adView.mediaView?.setMediaContent(mediaContent)
+        }
 
         // These assets aren't guaranteed to be in every UnifiedNativeAd, so it's important to
         // check before trying to display them.
         if (nativeAd.body == null) {
-            adView.bodyView.visibility = View.INVISIBLE
+            adView.bodyView?.visibility = View.INVISIBLE
         }
         else {
-            adView.bodyView.visibility = View.VISIBLE
+            adView.bodyView?.visibility = View.VISIBLE
             (adView.bodyView as TextView).text = nativeAd.body
         }
 
         if (nativeAd.callToAction == null) {
-            adView.callToActionView.visibility = View.INVISIBLE
+            adView.callToActionView?.visibility = View.INVISIBLE
         }
         else {
-            adView.callToActionView.visibility = View.VISIBLE
+            adView.callToActionView?.visibility = View.VISIBLE
             (adView.callToActionView as Button).text = nativeAd.callToAction
         }
 
         if (nativeAd.icon == null) {
-            adView.iconView.visibility = View.GONE
+            adView.iconView?.visibility = View.GONE
         }
         else {
-            (adView.iconView as ImageView).setImageDrawable(nativeAd.icon.drawable)
-            adView.iconView.visibility = View.VISIBLE
+            (adView.iconView as ImageView).setImageDrawable(nativeAd.icon?.drawable)
+            adView.iconView?.visibility = View.VISIBLE
         }
 
         if (nativeAd.advertiser == null) {
-            adView.advertiserView.visibility = View.INVISIBLE
+            adView.advertiserView?.visibility = View.INVISIBLE
         }
         else {
             (adView.advertiserView as TextView).text = nativeAd.advertiser
-            adView.advertiserView.visibility = View.VISIBLE
+            adView.advertiserView?.visibility = View.VISIBLE
         }
 
         // This method tells the Google Mobile Ads SDK that you have finished populating your
@@ -242,5 +246,5 @@ class GamNativeFragment(override val layoutRes: Int = R.layout.fragment_native) 
         adContainer?.addView(adView)
     }
 
-    private fun isCustomTemplateExample() = !TextUtils.isEmpty(customTemplateId)
+    private fun isCustomFormatExample() = !TextUtils.isEmpty(customFormatId)
 }

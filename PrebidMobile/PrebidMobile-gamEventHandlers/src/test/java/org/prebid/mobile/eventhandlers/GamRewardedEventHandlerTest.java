@@ -46,7 +46,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 19)
+@Config(sdk = 21)
 public class GamRewardedEventHandlerTest {
     private static final String GAM_AD_UNIT_ID = "12345678";
 
@@ -59,10 +59,10 @@ public class GamRewardedEventHandlerTest {
     private Handler mMockAppEventHandler;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        mActivity = Robolectric.buildActivity(Activity.class).create().get();
+        mActivity = Robolectric.buildActivity(Activity.class).get();
 
         mEventHandler = new GamRewardedEventHandler(mActivity, GAM_AD_UNIT_ID);
         mEventHandler.setRewardedEventListener(mMockEventListener);

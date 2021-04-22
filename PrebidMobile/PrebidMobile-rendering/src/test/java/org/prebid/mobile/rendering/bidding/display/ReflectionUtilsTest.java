@@ -19,8 +19,6 @@ package org.prebid.mobile.rendering.bidding.display;
 import android.app.Activity;
 import android.view.View;
 
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
 
@@ -97,30 +95,6 @@ public class ReflectionUtilsTest {
     }
 
     @Test
-    public void handleGamKeywordsUpdate_KeyWordsShouldMatchExpected() {
-        PublisherAdRequest.Builder builder = new PublisherAdRequest.Builder();
-        builder.addCustomTargeting("Key", "Value");
-        HashMap<String, String> bids = new HashMap<>();
-        bids.put("hb_pb", "0.50");
-        bids.put("hb_cache_id", "123456");
-        PublisherAdRequest request = builder.build();
-        ReflectionUtils.handleGamCustomTargetingUpdate(request, bids);
-
-        assertEquals(3, request.getCustomTargeting().size());
-        assertTrue(request.getCustomTargeting().containsKey("Key"));
-        assertEquals("Value", request.getCustomTargeting().get("Key"));
-        assertTrue(request.getCustomTargeting().containsKey("hb_pb"));
-        assertEquals("0.50", request.getCustomTargeting().get("hb_pb"));
-        assertTrue(request.getCustomTargeting().containsKey("hb_cache_id"));
-        assertEquals("123456", request.getCustomTargeting().get("hb_cache_id"));
-
-        ReflectionUtils.handleGamCustomTargetingUpdate(request, null);
-        assertEquals(1, request.getCustomTargeting().size());
-        assertTrue(request.getCustomTargeting().containsKey("Key"));
-        assertEquals("Value", request.getCustomTargeting().get("Key"));
-    }
-
-    @Test
     public void setResponseToMoPubLocalExtrasWithMoPubBannerOrInterstitialView_ResponseStoredInLocalExtras() {
         MoPubView moPubView = new MoPubView(mActivity);
         BidResponse response = new BidResponse("{\"response\":\"test\", \"id\":\"1234\"}");
@@ -158,15 +132,5 @@ public class ReflectionUtilsTest {
     @Test
     public void isMoPubInterstitialViewWithMoPubBannerView_ReturnFalse() {
         assertFalse(ReflectionUtils.isMoPubInterstitialView(new MoPubView(mActivity)));
-    }
-
-    @Test
-    public void isGamAdRequestWithGamAd_ReturnFalse() {
-        assertFalse(ReflectionUtils.isGamAdRequest(new PublisherAdView(mActivity)));
-    }
-
-    @Test
-    public void isGamAdRequestWithPublisherAdRequest_ReturnTrue() {
-        assertTrue(ReflectionUtils.isGamAdRequest(new PublisherAdRequest.Builder().build()));
     }
 }

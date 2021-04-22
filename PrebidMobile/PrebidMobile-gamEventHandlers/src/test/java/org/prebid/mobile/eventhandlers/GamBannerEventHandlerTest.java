@@ -21,7 +21,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.view.View;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,24 +50,23 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 19)
+@Config(sdk = 21)
 public class GamBannerEventHandlerTest {
     private static final String GAM_AD_UNIT_ID = "12345678";
     private static final AdSize GAM_AD_SIZE = new AdSize(350 ,50);
 
     private GamBannerEventHandler mBannerEventHandler;
-    private Context mContext;
 
     @Mock private BannerEventListener mMockBannerEventListener;
     @Mock private Handler mMockAppEventHandler;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
+        Context context = Robolectric.buildActivity(Activity.class).get();
 
-        mBannerEventHandler = new GamBannerEventHandler(mContext, GAM_AD_UNIT_ID, GAM_AD_SIZE);
+        mBannerEventHandler = new GamBannerEventHandler(context, GAM_AD_UNIT_ID, GAM_AD_SIZE);
         mBannerEventHandler.setBannerEventListener(mMockBannerEventListener);
     }
 
@@ -182,11 +180,6 @@ public class GamBannerEventHandlerTest {
     public void convertGamAdSizeAndNullPassed_ReturnEmptyPrebidSizesArray() {
         AdSize[] prebidSizes = GamBannerEventHandler.convertGamAdSize(null);
         assertEquals(0, prebidSizes.length);
-    }
-
-    @After
-    public void cleanup() {
-        mBannerEventHandler.destroy();
     }
 
     private void changeExpectingAppEventStatus(boolean status) {

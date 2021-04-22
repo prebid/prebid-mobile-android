@@ -225,17 +225,17 @@ class DemoItemProvider private constructor() {
                     gamNativeTagList, createBannerBundle(R.string.mock_config_id_native_styles, R.string.adunit_gam_native_fluid, AdSize.FLUID.width, AdSize.FLUID.height)))
 
             var gamNativeBundle = createBannerBundle(R.string.mock_config_id_native_styles, R.string.adunit_gam_native_custom_template)
-            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_TEMPLATE_ID, "11934135")
+            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11934135")
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_custom_templates), R.id.action_header_bidding_to_gam_native, gamNativeTagList, gamNativeBundle))
 
             gamNativeBundle = createBannerBundle(R.string.mock_config_id_native_styles, R.string.adunit_gam_native_custom_template)
-            val staticCustomTemplateId = "11982639"
-            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_TEMPLATE_ID, staticCustomTemplateId)
+            val staticCustomFormatId = "11982639"
+            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, staticCustomFormatId)
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_custom_templates_prebid_ok), R.id.action_header_bidding_to_gam_native,
                     gamNativeTagList, gamNativeBundle))
 
             gamNativeBundle = createBannerBundle(R.string.mock_config_id_no_bids, R.string.adunit_gam_native_custom_template)
-            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_TEMPLATE_ID, staticCustomTemplateId)
+            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, staticCustomFormatId)
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_custom_templates_no_bids), R.id.action_header_bidding_to_gam_native,
                     gamNativeTagList, gamNativeBundle))
 
@@ -247,7 +247,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(R.string.mock_config_id_no_bids, R.string.adunit_gam_native_unified_static)))
 
             gamNativeBundle = createBannerBundle(R.string.mock_config_id_native_styles, R.string.adunit_gam_native_custom_template)
-            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_TEMPLATE_ID, "11934135")
+            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11934135")
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_feed), R.id.action_header_bidding_to_gam_native_feed,
                     gamNativeTagList, gamNativeBundle))
 
@@ -377,7 +377,7 @@ class DemoItemProvider private constructor() {
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_styles_mrect), R.id.action_header_bidding_to_gam_native_styles,
                     gamNativeTagList, createBannerBundle(R.string.prebid_config_id_native_styles, R.string.adunit_gam_native_mrect, 300, 250)))
             val gamNativeBundle = createBannerBundle(R.string.prebid_config_id_qa_native_styles, R.string.adunit_gam_native_custom_template, 300, 250)
-            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_TEMPLATE_ID, "11934135")
+            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11934135")
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_custom_templates), R.id.action_header_bidding_to_gam_native, gamNativeTagList, gamNativeBundle))
 
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_unified_ads), R.id.action_header_bidding_to_gam_native, gamNativeTagList,

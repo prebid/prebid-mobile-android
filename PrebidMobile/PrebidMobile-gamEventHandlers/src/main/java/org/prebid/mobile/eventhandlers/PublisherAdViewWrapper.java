@@ -20,21 +20,23 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 
-import androidx.annotation.Nullable;
-
 import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.doubleclick.AppEventListener;
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
+import com.google.android.gms.ads.admanager.AdManagerAdView;
+import com.google.android.gms.ads.admanager.AppEventListener;
 
 import org.prebid.mobile.eventhandlers.global.Constants;
+import org.prebid.mobile.eventhandlers.utils.GamUtils;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
-import org.prebid.mobile.rendering.bidding.display.ReflectionUtils;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * This class is responsible for wrapping usage of PublisherAdView from GAM SDK.
@@ -45,23 +47,24 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
 
     private static final String TAG = PublisherAdViewWrapper.class.getSimpleName();
 
-    private final PublisherAdView mPublisherAdView;
+    private final AdManagerAdView mAdView;
     private final GamAdEventListener mListener;
 
     private PublisherAdViewWrapper(Context context, String gamAdUnit,
                                    GamAdEventListener eventListener, AdSize... adSizes) {
         mListener = eventListener;
 
-        mPublisherAdView = new PublisherAdView(context);
-        mPublisherAdView.setAdSizes(mapToGamAdSizes(adSizes));
-        mPublisherAdView.setAdUnitId(gamAdUnit);
-        mPublisherAdView.setAdListener(this);
-        mPublisherAdView.setAppEventListener(this);
+        mAdView = new AdManagerAdView(context);
+        mAdView.setAdSizes(mapToGamAdSizes(adSizes));
+        mAdView.setAdUnitId(gamAdUnit);
+        mAdView.setAdListener(this);
+        mAdView.setAppEventListener(this);
+        mAdView.setAdListener(this);
     }
 
     @Nullable
     static PublisherAdViewWrapper newInstance(Context context, String gamAdUnitId,
-                                                     GamAdEventListener eventListener, AdSize... adSizes) {
+                                              GamAdEventListener eventListener, AdSize... adSizes) {
         try {
             return new PublisherAdViewWrapper(context,
                                               gamAdUnitId,
@@ -76,7 +79,11 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
 
     //region ==================== GAM AppEventsListener Implementation
     @Override
-    public void onAppEvent(String name, String info) {
+    public void onAppEvent(
+        @NonNull
+            String name,
+        @NonNull
+            String info) {
         if (Constants.APP_EVENT.equals(name)) {
             mListener.onEvent(AdEvent.APP_EVENT_RECEIVED);
         }
@@ -90,9 +97,11 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
     }
 
     @Override
-    public void onAdFailedToLoad(int errorCode) {
+    public void onAdFailedToLoad(
+        @NonNull
+            LoadAdError loadAdError) {
         final AdEvent adEvent = AdEvent.FAILED;
-        adEvent.setErrorCode(errorCode);
+        adEvent.setErrorCode(loadAdError.getCode());
 
         mListener.onEvent(adEvent);
     }
@@ -110,14 +119,14 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
 
     public void loadAd(Bid bid) {
         try {
-            PublisherAdRequest adRequest = new PublisherAdRequest.Builder().build();
+            AdManagerAdRequest adRequest = new AdManagerAdRequest.Builder().build();
 
             if (bid != null) {
                 Map<String, String> targetingMap = new HashMap<>(bid.getPrebid().getTargeting());
-                ReflectionUtils.handleGamCustomTargetingUpdate(adRequest, targetingMap);
+                GamUtils.handleGamCustomTargetingUpdate(adRequest, targetingMap);
             }
 
-            mPublisherAdView.loadAd(adRequest);
+            mAdView.loadAd(adRequest);
         }
         catch (Throwable throwable) {
             OXLog.error(TAG, Log.getStackTraceString(throwable));
@@ -126,7 +135,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
 
     public void setManualImpressionsEnabled(boolean enabled) {
         try {
-            mPublisherAdView.setManualImpressionsEnabled(enabled);
+            mAdView.setManualImpressionsEnabled(enabled);
         }
         catch (Throwable throwable) {
             OXLog.error(TAG, Log.getStackTraceString(throwable));
@@ -135,7 +144,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
 
     public void recordManualImpression() {
         try {
-            mPublisherAdView.recordManualImpression();
+            mAdView.recordManualImpression();
         }
         catch (Throwable throwable) {
             OXLog.error(TAG, Log.getStackTraceString(throwable));
@@ -144,7 +153,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
 
     public void destroy() {
         try {
-            mPublisherAdView.destroy();
+            mAdView.destroy();
         }
         catch (Throwable throwable) {
             OXLog.error(TAG, Log.getStackTraceString(throwable));
@@ -152,7 +161,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
     }
 
     public View getView() {
-        return mPublisherAdView;
+        return mAdView;
     }
 
     private com.google.android.gms.ads.AdSize[] mapToGamAdSizes(AdSize[] adSizes) {

@@ -17,20 +17,27 @@
 package org.prebid.mobile.eventhandlers;
 
 import android.app.Activity;
-import android.content.Context;
+
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
+import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.prebid.mobile.eventhandlers.global.Constants;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -46,7 +53,7 @@ public class PublisherInterstitialAdWrapperTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        Context context = Robolectric.buildActivity(Activity.class).create().get();
+        Activity context = Robolectric.buildActivity(Activity.class).create().get();
 
         mPublisherInterstitialAdWrapper = PublisherInterstitialAdWrapper.newInstance(context, "123", mMockListener);
     }
@@ -75,7 +82,7 @@ public class PublisherInterstitialAdWrapperTest {
 
     @Test
     public void onGamAdClosed_NotifyEventCloseListener() {
-        mPublisherInterstitialAdWrapper.onAdClosed();
+        mPublisherInterstitialAdWrapper.onAdDismissedFullScreenContent();
 
         verify(mMockListener, times(1)).onEvent(eq(AdEvent.CLOSED));
     }
@@ -85,23 +92,42 @@ public class PublisherInterstitialAdWrapperTest {
         final int wantedNumberOfInvocations = 10;
 
         for (int i = 0; i < wantedNumberOfInvocations; i++) {
-            mPublisherInterstitialAdWrapper.onAdFailedToLoad(i);
+            AdError adError = new AdError(i, "", "");
+            mPublisherInterstitialAdWrapper.onAdFailedToShowFullScreenContent(adError);
         }
         verify(mMockListener, times(wantedNumberOfInvocations)).onEvent(eq(AdEvent.FAILED));
     }
 
     @Test
     public void onGamAdOpened_NotifyEventDisplayedListener() {
-        mPublisherInterstitialAdWrapper.onAdOpened();
+        mPublisherInterstitialAdWrapper.onAdShowedFullScreenContent();
 
         verify(mMockListener, times(1)).onEvent(AdEvent.DISPLAYED);
     }
 
     @Test
     public void onGamAdLoadedAppEventExpected_NotifyLoadedListener() {
-        mPublisherInterstitialAdWrapper.onAdLoaded();
+        final AdManagerInterstitialAdLoadCallback listener = getAdLoadCallback();
+
+        final AdManagerInterstitialAd mock = mock(AdManagerInterstitialAd.class);
+        listener.onAdLoaded(mock);
 
         verify(mMockListener, times(1)).onEvent(AdEvent.LOADED);
     }
 
+    @Test
+    public void isLoaded_adIsNull_ReturnFalse() {
+        assertFalse(mPublisherInterstitialAdWrapper.isLoaded());
+    }
+
+    @Test
+    public void isLoaded_adIsNonNull_ReturnTrue() {
+        getAdLoadCallback().onAdLoaded(mock(AdManagerInterstitialAd.class));
+
+        assertTrue(mPublisherInterstitialAdWrapper.isLoaded());
+    }
+
+    private AdManagerInterstitialAdLoadCallback getAdLoadCallback() {
+        return (AdManagerInterstitialAdLoadCallback) Whitebox.getInternalState(mPublisherInterstitialAdWrapper, "mAdLoadCallback");
+    }
 }

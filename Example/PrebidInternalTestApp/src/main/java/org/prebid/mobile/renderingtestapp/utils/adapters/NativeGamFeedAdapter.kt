@@ -23,8 +23,8 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.gms.ads.AdLoader
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest
-import com.google.android.gms.ads.formats.NativeCustomTemplateAd
+import com.google.android.gms.ads.admanager.AdManagerAdRequest
+import com.google.android.gms.ads.nativead.NativeCustomFormatAd
 import kotlinx.android.synthetic.main.lyt_native_ad.*
 import kotlinx.android.synthetic.main.lyt_native_ad.view.*
 import kotlinx.android.synthetic.main.lyt_native_gam_events.*
@@ -48,7 +48,7 @@ class NativeGamFeedAdapter(context: Context,
     private var nativeAd: NativeAd? = null
 
     private val fetchCompleteListener = OnNativeFetchCompleteListener {
-        val builder = PublisherAdRequest.Builder()
+        val builder = AdManagerAdRequest.Builder()
         val publisherAdRequest = builder.build()
 
         nativeAdUnit.fetchDemand { result ->
@@ -59,7 +59,7 @@ class NativeGamFeedAdapter(context: Context,
                 return@fetchDemand
             }
 
-            GamUtils.prepare(builder, result)
+            GamUtils.prepare(publisherAdRequest, result)
             gamAdLoader.loadAd(publisherAdRequest)
         }
     }
@@ -86,16 +86,16 @@ class NativeGamFeedAdapter(context: Context,
         return nativeAdLayout
     }
 
-    fun handleCustomTemplateAd(customTemplate: NativeCustomTemplateAd?) {
-        customTemplate ?: return
+    fun handleCustomFormatAd(customFormatAd: NativeCustomFormatAd?) {
+        customFormatAd ?: return
 
-        if (GamUtils.didPrebidWin(customTemplate)) {
-            GamUtils.findNativeAd(customTemplate) {
+        if (GamUtils.didPrebidWin(customFormatAd)) {
+            GamUtils.findNativeAd(customFormatAd) {
                 inflateViewContent(it)
             }
         }
         else {
-            Log.d(TAG, "handleCustomTemplateAd: prebid lost")
+            Log.d(TAG, "handleCustomFormatAd: prebid lost")
         }
     }
 

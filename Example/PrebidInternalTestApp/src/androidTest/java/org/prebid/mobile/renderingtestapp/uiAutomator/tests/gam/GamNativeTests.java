@@ -16,13 +16,13 @@
 
 package org.prebid.mobile.renderingtestapp.uiAutomator.tests.gam;
 
-import androidx.test.uiautomator.BySelector;
-
 import org.junit.Test;
 import org.prebid.mobile.renderingtestapp.R;
 import org.prebid.mobile.renderingtestapp.uiAutomator.pages.AdBasePage;
 import org.prebid.mobile.renderingtestapp.uiAutomator.pages.factory.GamNativePage;
 import org.prebid.mobile.renderingtestapp.uiAutomator.utils.BaseUiAutomatorTest;
+
+import androidx.test.uiautomator.BySelector;
 
 public class GamNativeTests extends BaseUiAutomatorTest {
     @Test
@@ -71,7 +71,7 @@ public class GamNativeTests extends BaseUiAutomatorTest {
     }
 
     @Test
-    public void testGamNativeCustomTemplatesPrebidWin() throws InterruptedException {
+    public void testGamNativeCustomFormatPrebidWin() throws InterruptedException {
         final GamNativePage gamNativePage =
             homePage.getNativePageFactory()
                     .goToGamNative(getStringResource(R.string.demo_bidding_gam_native_custom_templates));
@@ -80,16 +80,16 @@ public class GamNativeTests extends BaseUiAutomatorTest {
     }
 
     @Test
-    public void testGamNativeUnifiedAdPrebidWin() throws InterruptedException {
+    public void testGamNativeNativeAdPrebidWin() throws InterruptedException {
         final GamNativePage gamNativePage =
             homePage.getNativePageFactory()
                     .goToGamNative(getStringResource(R.string.demo_bidding_gam_native_unified_ads));
 
-        verifyGamNativeAdPrebidWin(gamNativePage, AdBasePage.SdkEvent.unifiedAdRequestSuccess);
+        verifyGamNativeAdPrebidWin(gamNativePage, AdBasePage.SdkEvent.nativeAdRequestSuccess);
     }
 
     @Test
-    public void testGamNativeCustomTemplatesGamWin() throws InterruptedException {
+    public void testGamNativeCustomFormatGamWin() throws InterruptedException {
         homePage.getNativePageFactory()
                 .goToGamNative(getStringResource(R.string.demo_bidding_gam_native_custom_templates_no_bids))
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.fetchDemandFailure)
@@ -105,19 +105,19 @@ public class GamNativeTests extends BaseUiAutomatorTest {
                 .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.nativeAdLoaded)
                 .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.fetchDemandSuccess)
                 .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.primaryAdRequestFailed)
-                .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.unifiedPrimaryAdWin)
-                .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.unifiedAdRequestSuccess)
+                .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.nativePrimaryAdWin)
+                .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.nativeAdRequestSuccess)
                 .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.video50Event);
     }
 
     @Test
-    public void testGamNativeUnifiedAdGamWin() throws InterruptedException {
+    public void testGamNativeAdGamWin() throws InterruptedException {
         homePage.getNativePageFactory()
                 .goToGamNative(getStringResource(R.string.demo_bidding_gam_native_unified_ads_no_bids))
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.fetchDemandFailure)
-                .sdkEventShouldBePresent(AdBasePage.SdkEvent.unifiedPrimaryAdWin)
-                .sdkEventShouldBePresent(AdBasePage.SdkEvent.unifiedAdRequestSuccess)
-                .clickUnifiedCta()
+                .sdkEventShouldBePresent(AdBasePage.SdkEvent.nativePrimaryAdWin)
+                .sdkEventShouldBePresent(AdBasePage.SdkEvent.nativeAdRequestSuccess)
+                .clickNativeGamCta()
                 .sleepFor(2)
                 .goBackOnce()
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdClicked)
@@ -147,7 +147,7 @@ public class GamNativeTests extends BaseUiAutomatorTest {
                   .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.fetchDemandFailure)
                   .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.primaryAdRequestFailed)
                   .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.customPrimaryAdWin)
-                  .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.unifiedPrimaryAdWin)
+                  .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.nativePrimaryAdWin)
                   .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.video50Event);
     }
 }

@@ -24,7 +24,7 @@ import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstit
 
 open class GamInterstitialFragment : BaseBidInterstitialFragment() {
     override fun initInterstitialAd(adUnitFormat: AdUnitFormat, adUnitId: String?, configId: String?, width: Int, height: Int) {
-        val interstitialEventHandler = GamInterstitialEventHandler(requireContext(), adUnitId)
+        val interstitialEventHandler = GamInterstitialEventHandler(requireActivity(), adUnitId)
         interstitialAdUnit = if (adUnitFormat == AdUnitFormat.VIDEO){
             InterstitialAdUnit(requireContext(), configId, adUnitFormat, interstitialEventHandler)
         }

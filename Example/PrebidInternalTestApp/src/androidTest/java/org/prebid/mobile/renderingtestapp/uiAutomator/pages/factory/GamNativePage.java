@@ -16,11 +16,11 @@
 
 package org.prebid.mobile.renderingtestapp.uiAutomator.pages.factory;
 
+import org.prebid.mobile.renderingtestapp.uiAutomator.pages.AdBasePage;
+
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.BySelector;
 import androidx.test.uiautomator.UiDevice;
-
-import org.prebid.mobile.renderingtestapp.uiAutomator.pages.AdBasePage;
 
 public class GamNativePage extends AdBasePage<GamNativePage> {
 
@@ -38,7 +38,7 @@ public class GamNativePage extends AdBasePage<GamNativePage> {
         return this;
     }
 
-    public GamNativePage clickUnifiedCta() {
+    public GamNativePage clickNativeGamCta() {
         clickOnView(Locators.unifiedCtaButton, TIMEOUT);
         return this;
     }

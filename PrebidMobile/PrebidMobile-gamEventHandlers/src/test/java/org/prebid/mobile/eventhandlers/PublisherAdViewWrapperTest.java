@@ -20,7 +20,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.admanager.AdManagerAdView;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -91,7 +92,8 @@ public class PublisherAdViewWrapperTest {
         final int wantedNumberOfInvocations = 10;
 
         for (int i = 0; i < wantedNumberOfInvocations; i++) {
-            mPublisherAdViewWrapper.onAdFailedToLoad(i);
+            LoadAdError loadAdError = new LoadAdError(i, "", "", null, null);
+            mPublisherAdViewWrapper.onAdFailedToLoad(loadAdError);
         }
         verify(mMockListener, times(wantedNumberOfInvocations)).onEvent(eq(AdEvent.FAILED));
     }
@@ -113,9 +115,9 @@ public class PublisherAdViewWrapperTest {
     @Test
     public void getView_ReturnGamView() throws IllegalAccessException {
         final Activity activity = Robolectric.buildActivity(Activity.class).create().get();
-        PublisherAdView publisherAdView = new PublisherAdView(activity);
+        AdManagerAdView publisherAdView = new AdManagerAdView(activity);
 
-        WhiteBox.field(PublisherAdViewWrapper.class, "mPublisherAdView").set(mPublisherAdViewWrapper, publisherAdView);
+        WhiteBox.field(PublisherAdViewWrapper.class, "mAdView").set(mPublisherAdViewWrapper, publisherAdView);
 
         final View view = mPublisherAdViewWrapper.getView();
 

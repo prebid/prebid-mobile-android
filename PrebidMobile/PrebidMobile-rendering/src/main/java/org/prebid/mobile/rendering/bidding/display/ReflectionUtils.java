@@ -16,10 +16,7 @@
 
 package org.prebid.mobile.rendering.bidding.display;
 
-import android.os.Bundle;
 import android.text.TextUtils;
-
-import androidx.annotation.Nullable;
 
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
@@ -34,6 +31,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 
+import androidx.annotation.Nullable;
+
 public class ReflectionUtils {
     private static final String TAG = ReflectionUtils.class.getSimpleName();
 
@@ -42,30 +41,11 @@ public class ReflectionUtils {
     private static final String MOPUB_BANNER_VIEW_CLASS = "com.mopub.mobileads.MoPubView";
     private static final String MOPUB_INTERSTITIAL_VIEW_CLASS = "com.mopub.mobileads.MoPubInterstitial";
     private static final String MOPUB_NATIVE_CLASS = "com.mopub.nativeads.MoPubNative";
-    static final String GAM_AD_REQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
 
     static final String KEY_BID_RESPONSE = "PREBID_BID_RESPONSE_ID";
 
     static {
         RESERVED_KEYS = new HashSet<>();
-    }
-
-    public static void handleGamCustomTargetingUpdate(Object adRequest, Map<String, String> keywords) {
-        if (!isGamAdRequest(adRequest)) {
-            OXLog.error(TAG, "handleGamCustomTargetingUpdate: Failed. Provided instance is not " + GAM_AD_REQUEST_CLASS);
-            return;
-        }
-
-        removeUsedCustomTargetingForGam(adRequest);
-        if (keywords != null && !keywords.isEmpty()) {
-            Bundle bundle = (Bundle) callMethodOnObject(adRequest, "getCustomTargeting");
-            if (bundle != null) {
-                for (String key : keywords.keySet()) {
-                    bundle.putString(key, keywords.get(key));
-                    addReservedKeys(key);
-                }
-            }
-        }
     }
 
     static Class getClassForString(String className) {
@@ -141,19 +121,6 @@ public class ReflectionUtils {
             Object adViewObj) {
         return adViewObj != null
                && adViewObj.getClass() == getClassForString(MOPUB_NATIVE_CLASS);
-    }
-
-    static boolean isGamAdRequest(Object adViewObj) {
-        return adViewObj != null && adViewObj.getClass() == getClassForString(GAM_AD_REQUEST_CLASS);
-    }
-
-    private static void removeUsedCustomTargetingForGam(Object adRequestObj) {
-        Bundle bundle = (Bundle) callMethodOnObject(adRequestObj, "getCustomTargeting");
-        if (bundle != null && RESERVED_KEYS != null) {
-            for (String key : RESERVED_KEYS) {
-                bundle.remove(key);
-            }
-        }
     }
 
     private static void removeUsedKeywordsForMoPub(Object adViewObj) {

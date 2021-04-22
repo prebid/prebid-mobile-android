@@ -18,11 +18,13 @@ package org.prebid.mobile.eventhandlers;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,13 +37,15 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+import static org.prebid.mobile.eventhandlers.global.Constants.APP_EVENT;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -72,30 +76,33 @@ public class RewardedAdWrapperTest {
     }
 
     @Test
-    @Ignore // issue with classloader when using mockito.spy and robolectric
     public void onAdMetadataChanged_WithMetadataContainsAdEvent_NotifyAppEventListener() {
-        RewardedAdWrapper spyRewardedAdWrapper = spy(mRewardedAdWrapper);
-        when(spyRewardedAdWrapper.metadataContainsAdEvent()).thenReturn(true);
+        final RewardedAdLoadCallback rewardedAdLoadCallback = getRewardedAdLoadCallback();
+        final RewardedAd mockRewardedAd = mock(RewardedAd.class);
+        final Bundle bundle = new Bundle();
+        bundle.putString(RewardedAdWrapper.KEY_METADATA, APP_EVENT);
+        when(mockRewardedAd.getAdMetadata()).thenReturn(bundle);
 
-        spyRewardedAdWrapper.onAdMetadataChanged();
+        rewardedAdLoadCallback.onAdLoaded(mockRewardedAd);
 
         verify(mMockListener, times(1)).onEvent(eq(AdEvent.APP_EVENT_RECEIVED));
     }
 
     @Test
-    @Ignore // issue with classloader when using mockito.spy and robolectric
     public void onAdMetadataChangedMetadata_ContainsNoAdEvent_DoNothing() {
-        RewardedAdWrapper spyRewardedAdWrapper = spy(mRewardedAdWrapper);
-        when(spyRewardedAdWrapper.metadataContainsAdEvent()).thenReturn(false);
+        final RewardedAdLoadCallback rewardedAdLoadCallback = getRewardedAdLoadCallback();
+        final RewardedAd mockRewardedAd = mock(RewardedAd.class);
+        final Bundle bundle = new Bundle();
+        when(mockRewardedAd.getAdMetadata()).thenReturn(bundle);
 
-        spyRewardedAdWrapper.onAdMetadataChanged();
+        rewardedAdLoadCallback.onAdLoaded(mockRewardedAd);
 
-        verifyZeroInteractions(mMockListener);
+        verify(mMockListener, times(0)).onEvent(eq(AdEvent.APP_EVENT_RECEIVED));
     }
 
     @Test
     public void onGamAdClosed_NotifyEventCloseListener() {
-        mRewardedAdWrapper.onRewardedAdClosed();
+        mRewardedAdWrapper.onAdDismissedFullScreenContent();
 
         verify(mMockListener, times(1)).onEvent(AdEvent.CLOSED);
     }
@@ -105,14 +112,15 @@ public class RewardedAdWrapperTest {
         final int wantedNumberOfInvocations = 10;
 
         for (int i = 0; i < wantedNumberOfInvocations; i++) {
-            mRewardedAdWrapper.onRewardedAdFailedToShow(i);
+            AdError adError = new AdError(i, "", "");
+            mRewardedAdWrapper.onAdFailedToShowFullScreenContent(adError);
         }
         verify(mMockListener, times(wantedNumberOfInvocations)).onEvent(eq(AdEvent.FAILED));
     }
 
     @Test
     public void onGamAdOpened_NotifyBannerEventDisplayListener() {
-        mRewardedAdWrapper.onRewardedAdOpened();
+        mRewardedAdWrapper.onAdShowedFullScreenContent();
 
         verify(mMockListener, times(1)).onEvent(AdEvent.DISPLAYED);
     }
@@ -127,9 +135,21 @@ public class RewardedAdWrapperTest {
 
     @Test
     public void onGamAdLoadedAppEventExpected_ScheduleAppEventHandler() {
-        getRewardedAdLoadCallback().onRewardedAdLoaded();
+        getRewardedAdLoadCallback().onAdLoaded(mock(RewardedAd.class));
 
         verify(mMockListener, times(1)).onEvent(eq(AdEvent.LOADED));
+    }
+
+    @Test
+    public void isLoaded_adIsNull_ReturnFalse() {
+        assertFalse(mRewardedAdWrapper.isLoaded());
+    }
+
+    @Test
+    public void isLoaded_adIsNonNull_ReturnTrue() {
+        getRewardedAdLoadCallback().onAdLoaded(mock(RewardedAd.class));
+
+        assertTrue(mRewardedAdWrapper.isLoaded());
     }
 
     private RewardedAdLoadCallback getRewardedAdLoadCallback() {

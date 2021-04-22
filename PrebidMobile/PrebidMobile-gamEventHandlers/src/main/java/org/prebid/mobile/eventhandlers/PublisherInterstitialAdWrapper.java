@@ -16,22 +16,27 @@
 
 package org.prebid.mobile.eventhandlers;
 
-import android.content.Context;
+import android.app.Activity;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
+import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
+import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
+import com.google.android.gms.ads.admanager.AppEventListener;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.doubleclick.AppEventListener;
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
-
+import org.prebid.mobile.eventhandlers.utils.GamUtils;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
-import org.prebid.mobile.rendering.bidding.display.ReflectionUtils;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import static org.prebid.mobile.eventhandlers.global.Constants.APP_EVENT;
 
@@ -40,26 +45,53 @@ import static org.prebid.mobile.eventhandlers.global.Constants.APP_EVENT;
  * To achieve safe integration between various GAM SDK versions we have to wrap all PublisherAdView method execution in try / catch.
  * This class instance should be created via newInstance method, which will catch any potential exception on PublisherInterstitialAd / PublisherInterstitialAdWrapper instance creation
  */
-public class PublisherInterstitialAdWrapper extends AdListener implements AppEventListener {
+public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
+    implements AppEventListener {
 
     private static final String TAG = PublisherInterstitialAdWrapper.class.getSimpleName();
 
-    private final PublisherInterstitialAd mRequestInterstitial;
+    private AdManagerInterstitialAd mInterstitialAd;
+
+    private final WeakReference<Activity> mActivityWeakReference;
+    private final String mAdUnitId;
     private final GamAdEventListener mListener;
 
-    private PublisherInterstitialAdWrapper(Context context, String gamAdUnitId, GamAdEventListener eventListener) {
-        mListener = eventListener;
+    private final AdManagerInterstitialAdLoadCallback mAdLoadCallback = new AdManagerInterstitialAdLoadCallback() {
+        @Override
+        public void onAdLoaded(
+            @NonNull
+                AdManagerInterstitialAd adManagerInterstitialAd) {
+            mListener.onEvent(AdEvent.LOADED);
 
-        mRequestInterstitial = new PublisherInterstitialAd(context.getApplicationContext());
-        mRequestInterstitial.setAdUnitId(gamAdUnitId);
-        mRequestInterstitial.setAdListener(this);
-        mRequestInterstitial.setAppEventListener(this);
+            mInterstitialAd = adManagerInterstitialAd;
+            mInterstitialAd.setFullScreenContentCallback(PublisherInterstitialAdWrapper.this);
+            mInterstitialAd.setAppEventListener(PublisherInterstitialAdWrapper.this);
+        }
+
+        @Override
+        public void onAdFailedToLoad(
+            @NonNull
+                LoadAdError loadAdError) {
+            mInterstitialAd = null;
+            notifyErrorListener(loadAdError.getCode());
+        }
+    };
+
+    private PublisherInterstitialAdWrapper(Activity activity, String gamAdUnitId, GamAdEventListener eventListener) {
+        if (activity == null) {
+            throw new IllegalArgumentException("Activity can't be null.");
+        }
+
+        mListener = eventListener;
+        mActivityWeakReference = new WeakReference<>(activity);
+
+        mAdUnitId = gamAdUnitId;
     }
 
     @Nullable
-    static PublisherInterstitialAdWrapper newInstance(Context context, String gamAdUnitId, GamAdEventListener eventListener) {
+    static PublisherInterstitialAdWrapper newInstance(Activity activity, String gamAdUnitId, GamAdEventListener eventListener) {
         try {
-            return new PublisherInterstitialAdWrapper(context, gamAdUnitId, eventListener);
+            return new PublisherInterstitialAdWrapper(activity, gamAdUnitId, eventListener);
         }
         catch (Throwable throwable) {
             OXLog.error(TAG, Log.getStackTraceString(throwable));
@@ -69,46 +101,43 @@ public class PublisherInterstitialAdWrapper extends AdListener implements AppEve
 
     //region ==================== GAM AppEventsListener Implementation
     @Override
-    public void onAppEvent(String name, String info) {
+    public void onAppEvent(
+        @NonNull
+            String name,
+        @NonNull
+            String info) {
         if (APP_EVENT.equals(name)) {
             mListener.onEvent(AdEvent.APP_EVENT_RECEIVED);
         }
     }
     //endregion ==================== GAM AppEventsListener Implementation
 
-    //region ==================== GAM AdEventListener Implementation
+    //region ==================== GAM FullScreenContentCallback Implementation
+
     @Override
-    public void onAdClosed() {
-        mListener.onEvent(AdEvent.CLOSED);
+    public void onAdFailedToShowFullScreenContent(
+        @NonNull
+            AdError adError) {
+
+        mInterstitialAd = null;
+        notifyErrorListener(adError.getCode());
     }
 
     @Override
-    public void onAdFailedToLoad(int errorCode) {
-        final AdEvent adEvent = AdEvent.FAILED;
-        adEvent.setErrorCode(errorCode);
-
-        mListener.onEvent(adEvent);
-    }
-
-    @Override
-    public void onAdOpened() {
+    public void onAdShowedFullScreenContent() {
         mListener.onEvent(AdEvent.DISPLAYED);
     }
 
     @Override
-    public void onAdClicked() {
-        mListener.onEvent(AdEvent.CLICKED);
+    public void onAdDismissedFullScreenContent() {
+        mListener.onEvent(AdEvent.CLOSED);
     }
 
-    @Override
-    public void onAdLoaded() {
-        mListener.onEvent(AdEvent.LOADED);
-    }
-    //endregion ==================== GAM AdEventListener Implementation
+    //endregion ==================== GAM FullScreenContentCallback Implementation
 
     public boolean isLoaded() {
         try {
-            return mRequestInterstitial.isLoaded();
+            return mInterstitialAd != null;
         }
         catch (Throwable throwable) {
             OXLog.error(TAG, Log.getStackTraceString(throwable));
@@ -117,8 +146,20 @@ public class PublisherInterstitialAdWrapper extends AdListener implements AppEve
     }
 
     public void show() {
+        final Activity activity = mActivityWeakReference.get();
+
+        if (activity == null) {
+            OXLog.error(TAG, "show: Failed. Activity is null.");
+            return;
+        }
+
+        if (mInterstitialAd == null) {
+            OXLog.error(TAG, "show: Failure. Interstitial ad is null.");
+            return;
+        }
+
         try {
-            mRequestInterstitial.show();
+            mInterstitialAd.show(activity);
         }
         catch (Throwable throwable) {
             OXLog.error(TAG, Log.getStackTraceString(throwable));
@@ -126,17 +167,25 @@ public class PublisherInterstitialAdWrapper extends AdListener implements AppEve
     }
 
     public void loadAd(Bid bid) {
+        mInterstitialAd = null;
         try {
-            PublisherAdRequest adRequest = new PublisherAdRequest.Builder().build();
+            AdManagerAdRequest adRequest = new AdManagerAdRequest.Builder().build();
             if (bid != null) {
                 Map<String, String> targetingMap = new HashMap<>(bid.getPrebid().getTargeting());
-                ReflectionUtils.handleGamCustomTargetingUpdate(adRequest, targetingMap);
+                GamUtils.handleGamCustomTargetingUpdate(adRequest, targetingMap);
             }
 
-            mRequestInterstitial.loadAd(adRequest);
+            AdManagerInterstitialAd.load(mActivityWeakReference.get(), mAdUnitId, adRequest, mAdLoadCallback);
         }
         catch (Throwable throwable) {
             OXLog.error(TAG, Log.getStackTraceString(throwable));
         }
+    }
+
+    private void notifyErrorListener(int code) {
+        final AdEvent adEvent = AdEvent.FAILED;
+        adEvent.setErrorCode(code);
+
+        mListener.onEvent(adEvent);
     }
 }

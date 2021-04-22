@@ -18,9 +18,6 @@ package org.prebid.mobile.rendering.bidding.parallel;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat;
@@ -31,6 +28,9 @@ import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
@@ -71,11 +71,6 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
             }
 
             onOXBSdkWin();
-        }
-
-        @Override
-        public void onAdClicked() {
-            notifyAdEventListener(AdListenerEvent.AD_CLICKED);
         }
 
         @Override

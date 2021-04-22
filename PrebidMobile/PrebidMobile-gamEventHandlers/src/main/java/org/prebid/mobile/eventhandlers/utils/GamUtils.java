@@ -18,9 +18,9 @@ package org.prebid.mobile.eventhandlers.utils;
 
 import android.os.Bundle;
 
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.admanager.AdManagerAdRequest;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeCustomFormatAd;
 
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.NativeFetchDemandResult;
@@ -43,38 +43,43 @@ public class GamUtils {
         RESERVED_KEYS = new HashSet<>();
     }
 
-    public static void prepare(PublisherAdRequest.Builder adRequestBuilder, NativeFetchDemandResult result) {
-        PublisherAdRequest publisherAdRequest = adRequestBuilder.build();
-        removeUsedCustomTargetingForGam(publisherAdRequest);
-
+    public static void prepare(AdManagerAdRequest adRequest, NativeFetchDemandResult result) {
         Map<String, String> targeting = result.getKeyWordsMap();
 
-        if (targeting == null || targeting.isEmpty()) {
+        handleGamCustomTargetingUpdate(adRequest, targeting);
+    }
+
+    public static void handleGamCustomTargetingUpdate(AdManagerAdRequest adRequest, Map<String, String> keywords) {
+        removeUsedCustomTargetingForGam(adRequest);
+
+        if (keywords == null || keywords.isEmpty()) {
             OXLog.error(TAG, "prepare: Failed. Result contains invalid keywords");
             return;
         }
 
-        for (Map.Entry<String, String> entry : targeting.entrySet()) {
-            String key = entry.getKey();
-            adRequestBuilder.addCustomTargeting(key, entry.getValue());
-            addReservedKeys(key);
+        if (keywords != null && !keywords.isEmpty()) {
+            Bundle bundle = adRequest.getCustomTargeting();
+            for (String key : keywords.keySet()) {
+                bundle.putString(key, keywords.get(key));
+                addReservedKeys(key);
+            }
         }
     }
 
-    public static void findNativeAd(NativeCustomTemplateAd nativeCustomTemplateAd, NativeAdCallback callback) {
-        if (nativeCustomTemplateAd == null || callback == null) {
+    public static void findNativeAd(NativeCustomFormatAd customFormatAd, NativeAdCallback callback) {
+        if (customFormatAd == null || callback == null) {
             OXLog.error(TAG, "findNativeAd: Failed. Passed nativeTemplateAd or callback is invalid");
             return;
         }
 
-        final CharSequence cacheIdText = nativeCustomTemplateAd.getText(BidResponse.KEY_CACHE_ID);
+        final CharSequence cacheIdText = customFormatAd.getText(BidResponse.KEY_CACHE_ID);
         final String cacheId = cacheIdText != null ? cacheIdText.toString() : null;
         final NativeFetchDemandResult fetchDemandResult = createSuccessDemandResult(cacheId);
 
         NativeUtils.findNativeAd(fetchDemandResult, callback);
     }
 
-    public static void findNativeAd(UnifiedNativeAd unifiedNativeAd, NativeAdCallback callback) {
+    public static void findNativeAd(NativeAd unifiedNativeAd, NativeAdCallback callback) {
         if (unifiedNativeAd == null || callback == null) {
             OXLog.error(TAG, "findNativeAd: Failed. Passed nativeTemplateAd or callback is invalid");
             return;
@@ -86,7 +91,7 @@ public class GamUtils {
         NativeUtils.findNativeAd(fetchDemandResult, callback);
     }
 
-    public static boolean didPrebidWin(UnifiedNativeAd unifiedNativeAd) {
+    public static boolean didPrebidWin(NativeAd unifiedNativeAd) {
         if (unifiedNativeAd == null) {
             return false;
         }
@@ -95,7 +100,7 @@ public class GamUtils {
         return KEY_IS_PREBID_CREATIVE.equals(body);
     }
 
-    public static boolean didPrebidWin(NativeCustomTemplateAd ad) {
+    public static boolean didPrebidWin(NativeCustomFormatAd ad) {
         if (ad == null) {
             return false;
         }
@@ -105,9 +110,9 @@ public class GamUtils {
         return isPrebidValue != null && "1".contentEquals(isPrebidValue);
     }
 
-    private static void removeUsedCustomTargetingForGam(PublisherAdRequest adRequestObj) {
+    private static void removeUsedCustomTargetingForGam(AdManagerAdRequest adRequestObj) {
         Bundle bundle = adRequestObj.getCustomTargeting();
-        if (bundle != null && RESERVED_KEYS != null) {
+        if (RESERVED_KEYS != null) {
             for (String key : RESERVED_KEYS) {
                 bundle.remove(key);
             }

@@ -16,15 +16,15 @@
 
 package org.prebid.mobile.renderingtestapp.uiAutomator.pages;
 
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.BySelector;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
-
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static androidx.test.uiautomator.By.copy;
 import static org.junit.Assert.assertFalse;
@@ -83,11 +83,11 @@ public class AdBasePage<T> extends BasePage<T> {
 
         // GAM native events
         public static BySelector customAdRequestSuccess = By.res(TAG, "btnCustomAdRequestSuccess");
-        public static BySelector unifiedAdRequestSuccess = By.res(TAG, "btnUnifiedRequestSuccess");
+        public static BySelector nativeAdRequestSuccess = By.res(TAG, "btnUnifiedRequestSuccess");
         public static BySelector primaryAdRequestFailed = By.res(TAG, "btnPrimaryAdRequestFailure");
         public static BySelector nativeAdLoaded = By.res(TAG, "btnNativeAdLoaded");
         public static BySelector customPrimaryAdWin = By.res(TAG, "btnPrimaryAdWinCustom");
-        public static BySelector unifiedPrimaryAdWin = By.res(TAG, "btnPrimaryAdWinUnified");
+        public static BySelector nativePrimaryAdWin = By.res(TAG, "btnPrimaryAdWinUnified");
 
         // native impression events
         public static BySelector impressionEvent = By.res(TAG, "btnAdEventImpression");

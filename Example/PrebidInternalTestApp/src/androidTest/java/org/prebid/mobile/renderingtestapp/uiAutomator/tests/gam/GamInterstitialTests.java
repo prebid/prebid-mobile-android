@@ -62,11 +62,8 @@ public class GamInterstitialTests extends BaseUiAutomatorTest {
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdLoaded)
                 .showPrebidInterstitial()
                 .gamOrPrebidHtmlCreativeShouldBePresent()
-                .clickInterstitial()
-                .goBackOnce()
                 .closeInterstitial()
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdDisplayed)
-                .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdClicked)
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdClosed)
                 .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.onAdFailed);
     }

@@ -96,11 +96,10 @@ dependencies {
         transitive = true
         exclude module: 'moat-mobile-app-kit'
     }
-    testImplementation 'com.google.android.gms:play-services-ads:19.1.0'
     testImplementation project(':TestUtils')
 
     // Google play services
-    implementation 'com.google.android.gms:play-services-base:17.5.0'
+    implementation 'com.google.android.gms:play-services-base:17.6.0'
     implementation 'com.google.android.gms:play-services-ads-identifier:17.0.0'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.11.0'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.11.0'
