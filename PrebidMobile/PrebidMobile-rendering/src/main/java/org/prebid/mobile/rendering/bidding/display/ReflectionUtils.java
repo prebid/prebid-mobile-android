@@ -58,7 +58,7 @@ public class ReflectionUtils {
         return null;
     }
 
-    static void handleMoPubKeywordsUpdate(Object adObj, HashMap<String, String> keywords) {
+    public static void handleMoPubKeywordsUpdate(Object adObj, HashMap<String, String> keywords) {
         removeUsedKeywordsForMoPub(adObj);
 
         if (keywords != null && !keywords.isEmpty()) {
@@ -88,35 +88,35 @@ public class ReflectionUtils {
         }
     }
 
-    static void setResponseIdToMoPubLocalExtras(Object adViewObj, BidResponse response) {
+    public static void setResponseIdToMoPubLocalExtras(Object adViewObj, BidResponse response) {
         if (isMoPubBannerView(adViewObj) || isMoPubInterstitialView(adViewObj)) {
             Map<String, Object> localExtras = Collections.singletonMap(KEY_BID_RESPONSE, response.getId());
             callMethodOnObjectWithParameter(adViewObj, "setLocalExtras", Map.class, localExtras);
         }
     }
 
-    static void setResponseToMoPubLocalExtras(Object adViewObj, BidResponse response) {
+    public static void setResponseToMoPubLocalExtras(Object adViewObj, BidResponse response) {
         if (isMoPubNative(adViewObj)) {
             Map<String, Object> localExtras = Collections.singletonMap(KEY_BID_RESPONSE, response);
             callMethodOnObjectWithParameter(adViewObj, "setLocalExtras", Map.class, localExtras);
         }
     }
 
-    static boolean isMoPubBannerView(
+    public static boolean isMoPubBannerView(
         @Nullable
             Object adViewObj) {
         return adViewObj != null
                && adViewObj.getClass() == getClassForString(MOPUB_BANNER_VIEW_CLASS);
     }
 
-    static boolean isMoPubInterstitialView(
+    public static boolean isMoPubInterstitialView(
         @Nullable
             Object adViewObj) {
         return adViewObj != null
                && adViewObj.getClass() == getClassForString(MOPUB_INTERSTITIAL_VIEW_CLASS);
     }
 
-    static boolean isMoPubNative(
+    public static boolean isMoPubNative(
         @Nullable
             Object adViewObj) {
         return adViewObj != null
@@ -147,7 +147,7 @@ public class ReflectionUtils {
         }
     }
 
-    static Object callMethodOnObject(Object object, String methodName, Object... params) {
+    public static Object callMethodOnObject(Object object, String methodName, Object... params) {
         try {
             int len = params.length;
             Class<?>[] classes = new Class[len];

@@ -86,16 +86,12 @@ dependencies {
 
     testImplementation 'org.robolectric:robolectric:4.3.1'
     testImplementation 'junit:junit:4.12'
-
     testImplementation 'org.mockito:mockito-core:2.7.22'
 
     testImplementation 'org.json:json:20180813'
     testImplementation 'com.google.code.gson:gson:2.8.6'
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.0'
-    testImplementation('com.mopub:mopub-sdk:5.10.0') {
-        transitive = true
-        exclude module: 'moat-mobile-app-kit'
-    }
+
     testImplementation project(':TestUtils')
 
     // Google play services

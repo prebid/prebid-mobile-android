@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile.rendering.bidding.display;
+package org.prebid.mobile.mopub.adapters;
 
 import android.app.Activity;
 import android.view.View;
@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.display.ReflectionUtils;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -38,15 +39,15 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.prebid.mobile.rendering.bidding.display.ReflectionUtils.KEY_BID_RESPONSE;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class ReflectionUtilsTest {
+    private static final String KEY_BID_RESPONSE = "PREBID_BID_RESPONSE_ID";
     private Activity mActivity;
 
-    class TestObject {
+    public class TestObject {
         public String testString() {
             return "test";
         }
@@ -111,7 +112,7 @@ public class ReflectionUtilsTest {
 
         ReflectionUtils.setResponseIdToMoPubLocalExtras(mockView, new BidResponse("{}"));
 
-        verifyZeroInteractions(mockView);
+        verifyNoInteractions(mockView);
     }
 
     @Test

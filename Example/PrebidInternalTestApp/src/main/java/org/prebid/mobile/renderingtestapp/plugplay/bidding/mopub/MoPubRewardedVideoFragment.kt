@@ -22,9 +22,9 @@ import com.mopub.common.MoPub
 import com.mopub.common.MoPubReward
 import com.mopub.common.SdkConfiguration
 import com.mopub.mobileads.MoPubErrorCode
-import com.mopub.mobileads.MoPubRewardedVideoListener
-import com.mopub.mobileads.MoPubRewardedVideoManager
-import com.mopub.mobileads.MoPubRewardedVideos
+import com.mopub.mobileads.MoPubRewardedAdListener
+import com.mopub.mobileads.MoPubRewardedAdManager
+import com.mopub.mobileads.MoPubRewardedAds
 import kotlinx.android.synthetic.main.events_mopub_rewarded.*
 import kotlinx.android.synthetic.main.fragment_mopub_interstitial_video_rewarded.*
 import org.prebid.mobile.rendering.bidding.display.MoPubRewardedVideoAdUnit
@@ -38,39 +38,39 @@ class MoPubRewardedVideoFragment: AdFragment() {
 
     private var rewardedAdUnit: MoPubRewardedVideoAdUnit? = null
     private val keywordsMap = HashMap<String, String>()
-    private val mListener = object : MoPubRewardedVideoListener {
+    private val mListener = object : MoPubRewardedAdListener {
 
-        override fun onRewardedVideoLoadSuccess(adUnitId: String) {
+        override fun onRewardedAdLoadSuccess(adUnitId: String) {
             btnAdDidLoad.isEnabled = true
             btnLoad.isEnabled = true
             btnLoad.text = getString(R.string.text_show)
         }
 
-        override fun onRewardedVideoLoadFailure(adUnitId: String, errorCode: MoPubErrorCode) {
+        override fun onRewardedAdLoadFailure(adUnitId: String, errorCode: MoPubErrorCode) {
             btnAdFailed.isEnabled = true
             btnLoad.isEnabled = true
             btnLoad.text = getString(R.string.text_retry)
         }
 
-        override fun onRewardedVideoStarted(adUnitId: String) {
+        override fun onRewardedAdStarted(adUnitId: String) {
             btnAdVideoStarted.isEnabled = true
         }
 
-        override fun onRewardedVideoPlaybackError(adUnitId: String, errorCode: MoPubErrorCode) {
+        override fun onRewardedAdShowError(adUnitId: String, errorCode: MoPubErrorCode) {
             btnAdVideoPlaybackError.isEnabled = true
         }
 
-        override fun onRewardedVideoClicked(adUnitId: String) {
+        override fun onRewardedAdClicked(adUnitId: String) {
             btnAdClicked.isEnabled = true
         }
 
-        override fun onRewardedVideoClosed(adUnitId: String) {
+        override fun onRewardedAdClosed(adUnitId: String) {
             btnAdCollapsed.isEnabled = true
             btnLoad.isEnabled = true
             btnLoad.text = getString(R.string.text_retry)
         }
 
-        override fun onRewardedVideoCompleted(adUnitIds: Set<String>, reward: MoPubReward) {
+        override fun onRewardedAdCompleted(adUnitIds: Set<String?>, reward: MoPubReward) {
             btnAdCompleted.isEnabled = true
         }
     }
@@ -89,9 +89,9 @@ class MoPubRewardedVideoFragment: AdFragment() {
 
     override fun loadAd() {
         val builder = SdkConfiguration.Builder(adUnitId)
-        MoPubRewardedVideoManager.init(requireActivity())
-        MoPubRewardedVideoManager.updateActivity(requireActivity())
-        MoPubRewardedVideos.setRewardedVideoListener(mListener)
+        MoPubRewardedAdManager.init(requireActivity())
+        MoPubRewardedAdManager.updateActivity(requireActivity())
+        MoPubRewardedAds.setRewardedAdListener(mListener)
         MoPub.initializeSdk(requireContext(), builder.build()) {
             fetchAdUnit(adUnitId)
         }
@@ -109,15 +109,15 @@ class MoPubRewardedVideoFragment: AdFragment() {
     private fun fetchAdUnit(adUnitId: String) {
         rewardedAdUnit?.fetchDemand(keywordsMap) {
             val keywordsString = convertMapToMoPubKeywords(keywordsMap)
-            val params = MoPubRewardedVideoManager.RequestParameters(keywordsString)
+            val params = MoPubRewardedAdManager.RequestParameters(keywordsString)
 
-            MoPubRewardedVideos.loadRewardedVideo(adUnitId, params, null)
+            MoPubRewardedAds.loadRewardedAd(adUnitId, params, null)
         }
     }
 
     private fun handleLoadButtonClick() {
-        if (btnLoad.text == getString(R.string.text_show) && MoPubRewardedVideos.hasRewardedVideo(adUnitId)) {
-            MoPubRewardedVideos.showRewardedVideo(adUnitId)
+        if (btnLoad.text == getString(R.string.text_show) && MoPubRewardedAds.hasRewardedAd(adUnitId)) {
+            MoPubRewardedAds.showRewardedAd(adUnitId)
         }
         else if (btnLoad.text == getString(R.string.text_retry)) {
             resetEventDisplay()

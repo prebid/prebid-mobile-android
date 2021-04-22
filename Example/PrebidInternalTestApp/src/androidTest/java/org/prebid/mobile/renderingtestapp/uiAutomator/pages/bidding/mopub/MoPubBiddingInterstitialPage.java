@@ -16,18 +16,18 @@
 
 package org.prebid.mobile.renderingtestapp.uiAutomator.pages.bidding.mopub;
 
+import org.prebid.mobile.renderingtestapp.uiAutomator.pages.AdBasePage;
+
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.BySelector;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
 
-import org.prebid.mobile.renderingtestapp.uiAutomator.pages.AdBasePage;
-
 import static org.junit.Assert.assertNotNull;
 
 public class MoPubBiddingInterstitialPage extends AdBasePage<MoPubBiddingInterstitialPage> {
-    private static final int VIDEO_DURATION = 16 * 1000;
+    private static final int VIDEO_DURATION = 30 * 1000;
     private static final int TIMEOUT_FULLSCREEN_HINT = 2500;
 
     public MoPubBiddingInterstitialPage(UiDevice device) {

@@ -61,6 +61,16 @@ platform :android do
               gradle_path: "./gradlew"
           )
 
+        gradle(
+              task: ":PrebidMobile-mopubAdapters:clean",
+              gradle_path: "./gradlew"
+          )
+
+          gradle(
+              task: ":PrebidMobile-mopubAdapters:testDebugUnitTest -x lint -x lintVitalRelease",
+              gradle_path: "./gradlew"
+          )
+
     end
 
 # ------------------------------------------

@@ -20,8 +20,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
-import com.mopub.mobileads.MoPubView;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,7 +59,7 @@ public class BaseAdUnitTest {
 
     private BaseAdUnit mBaseAdUnit;
     private Context mContext;
-    private MoPubView mMopubView;
+    private Object mMopubView = new Object();
     @Mock
     private AdSize mMockAdSize;
     @Mock
@@ -72,7 +70,6 @@ public class BaseAdUnitTest {
         MockitoAnnotations.initMocks(this);
 
         mContext = Robolectric.buildActivity(Activity.class).create().get();
-        mMopubView = new MoPubView(mContext);
         mBaseAdUnit = createAdUnit("config");
         PrebidRenderingSettings.setBidServerHost(Host.APPNEXUS);
 
@@ -86,7 +83,17 @@ public class BaseAdUnitTest {
 
     @Test
     public void whenFetchDemandAndNotMoPubViewPassed_InvalidAdObjectResult() {
-        mBaseAdUnit.fetchDemand(mock(View.class), result -> {
+        new BaseAdUnit(mContext, "123", mMockAdSize) {
+            @Override
+            protected void initAdConfig(String configId, AdSize adSize) {
+                mAdUnitConfig.setConfigId(configId);
+            }
+
+            @Override
+            protected boolean isAdObjectSupported(Object adObject) {
+                return false;
+            }
+        }.fetchDemand(mock(View.class), result -> {
             assertEquals(FetchDemandResult.INVALID_AD_OBJECT, result);
         });
     }
@@ -141,12 +148,13 @@ public class BaseAdUnitTest {
         BidResponse bidResponse = new BidResponse(responseString);
         OnFetchCompleteListener mockListener = mock(OnFetchCompleteListener.class);
 
-        mBaseAdUnit.fetchDemand(mMopubView, mockListener);
+        MoPubViewMock moPubViewMock = new MoPubViewMock();
+
+        mBaseAdUnit.fetchDemand(moPubViewMock, mockListener);
         mBaseAdUnit.onResponseReceived(bidResponse);
 
         verify(mockListener).onComplete(FetchDemandResult.SUCCESS);
-        assertEquals(keywordsString, mMopubView.getKeywords());
-        assertTrue(mMopubView.getLocalExtras().containsKey(ReflectionUtils.KEY_BID_RESPONSE));
+        assertEquals(keywordsString, moPubViewMock.getKeywords());
         assertNotNull(BidResponseCache.getInstance().popBidResponse(bidResponse.getId()));
     }
 
@@ -230,10 +238,22 @@ public class BaseAdUnitTest {
 
             @Override
             protected boolean isAdObjectSupported(Object adObject) {
-                return ReflectionUtils.isMoPubBannerView(adObject);
+                return true;
             }
         };
         WhiteBox.setInternalState(baseAdUnit, "mBidLoader", mMockBidLoader);
         return baseAdUnit;
+    }
+
+    static class MoPubViewMock {
+        private String mKeywords;
+
+        public void setKeywords(String keywords) {
+            mKeywords = keywords;
+        }
+
+        public String getKeywords() {
+            return mKeywords;
+        }
     }
 }

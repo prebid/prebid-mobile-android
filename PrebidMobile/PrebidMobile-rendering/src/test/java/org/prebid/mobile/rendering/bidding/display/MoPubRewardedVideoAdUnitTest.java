@@ -19,8 +19,6 @@ package org.prebid.mobile.rendering.bidding.display;
 import android.app.Activity;
 import android.content.Context;
 
-import com.mopub.mobileads.MoPubView;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,17 +63,6 @@ public class MoPubRewardedVideoAdUnitTest {
     @After
     public void cleanup() {
         PrebidRenderingSettings.setAccountId(null);
-    }
-
-    @Test
-    public void whenIsMopubViewAndHashMapPassed_ReturnTrue() {
-        assertTrue(mMopubRewardedAdUnit.isAdObjectSupported(new HashMap<String, String>()));
-    }
-
-    @Test
-    public void whenIsMopubViewAndAnyObjectPassed_ReturnFalse() {
-        MoPubView moPubView = new MoPubView(mContext);
-        assertFalse(mMopubRewardedAdUnit.isAdObjectSupported(moPubView));
     }
 
     @Test
