@@ -28,7 +28,6 @@ import org.prebid.mobile.rendering.utils.broadcast.local.EventForwardingLocalBro
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
 import org.prebid.mobile.rendering.views.AdViewManager;
-import org.prebid.mobile.rendering.views.indicator.AdIndicatorView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 
 /**
@@ -39,8 +38,6 @@ public abstract class BaseAdView extends FrameLayout {
 
     protected AdViewManager mAdViewManager;
     protected InterstitialManager mInterstitialManager = new InterstitialManager();
-
-    protected AdIndicatorView mAdIndicatorView;
 
     private EventForwardingLocalBroadcastReceiver mEventForwardingReceiver;
     private final EventForwardingLocalBroadcastReceiver.EventForwardingBroadcastListener mBroadcastListener = this::handleBroadcastAction;
@@ -90,13 +87,6 @@ public abstract class BaseAdView extends FrameLayout {
         return getChildAt(0);
     }
 
-    /**
-     * @return AdIndicatorView associated with currently shown view
-     */
-    public View getAdIndicatorView() {
-        return mAdIndicatorView;
-    }
-
     protected void init() throws AdException {
         int visibility = getVisibility();
 
@@ -108,11 +98,6 @@ public abstract class BaseAdView extends FrameLayout {
         final int broadcastId = mAdViewManager.getAdConfiguration().getBroadcastId();
         mEventForwardingReceiver = new EventForwardingLocalBroadcastReceiver(broadcastId, mBroadcastListener);
         mEventForwardingReceiver.register(getContext(), mEventForwardingReceiver);
-    }
-
-    protected void createAdIndicatorView() {
-        mAdIndicatorView = new AdIndicatorView(getContext(), mAdViewManager.getAdConfiguration().getAdUnitIdentifierType());
-        mAdViewManager.setAdIndicatorView(mAdIndicatorView);
     }
 
     protected void setScreenVisibility(int screenVisibility) {

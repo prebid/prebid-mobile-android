@@ -30,12 +30,10 @@ import android.widget.ImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.mraid.handler.FetchPropertiesHandler;
 import org.prebid.mobile.rendering.utils.helpers.Dips;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
-import org.prebid.mobile.rendering.views.indicator.AdIndicatorView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
@@ -188,7 +186,6 @@ public class MraidResize {
 
         initSecondaryAdContainer();
 
-        moveAdIndicator();
         //Add webAdContainer to the viewgroup for later use.
         if (adBaseViewParent != null) {
             adBaseViewParent.addView(mSecondaryAdContainer, layoutParams);
@@ -225,16 +222,6 @@ public class MraidResize {
         MraidClose mraidClose = new MraidClose(mAdBaseView.getContext(), mJsInterface, mAdBaseView);
         mraidClose.closeThroughJS();
         mInterstitialManager.interstitialClosed(mAdBaseView);
-    }
-
-    private void moveAdIndicator() {
-        HTMLCreative creative = mJsInterface.getDefaultAdContainer().getCreative();
-        if (creative != null && creative.getAdIndicatorView() != null) {
-            AdIndicatorView adIndicatorView = (AdIndicatorView) creative.getAdIndicatorView();
-            adIndicatorView.setPosition(AdIndicatorView.AdIconPosition.BOTTOM);
-            Views.removeFromParent(adIndicatorView);
-            mSecondaryAdContainer.addView(adIndicatorView);
-        }
     }
 
     private Rect getResizeRect(int widthDips, int heightDips, int offsetXDips, int offsetYDips, boolean allowOffscreen) {

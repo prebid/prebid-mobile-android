@@ -19,8 +19,6 @@ package org.prebid.mobile.rendering.models;
 import android.content.Context;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.listeners.CreativeResolutionListener;
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
@@ -33,6 +31,8 @@ import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 
 import java.lang.ref.WeakReference;
+
+import androidx.annotation.NonNull;
 
 public abstract class AbstractCreative {
     private static final String TAG = AbstractCreative.class.getSimpleName();
@@ -47,7 +47,6 @@ public abstract class AbstractCreative {
 
     protected InterstitialManager mInterstitialManager;
 
-    private View mAdIndicatorView;
     private View mCreativeView;
 
     protected CreativeVisibilityTracker mCreativeVisibilityTracker;
@@ -235,14 +234,6 @@ public abstract class AbstractCreative {
 
     public void setResolutionListener(CreativeResolutionListener resolutionListener) {
         mResolutionListener = resolutionListener;
-    }
-
-    public void setAdIndicatorView(View adIndicatorView) {
-        mAdIndicatorView = adIndicatorView;
-    }
-
-    public View getAdIndicatorView() {
-        return mAdIndicatorView;
     }
 
     public CreativeResolutionListener getResolutionListener() {

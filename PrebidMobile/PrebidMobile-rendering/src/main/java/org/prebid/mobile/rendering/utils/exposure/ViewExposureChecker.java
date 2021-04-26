@@ -23,17 +23,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.rendering.R;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
-import org.prebid.mobile.rendering.views.indicator.AdIndicatorView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import androidx.annotation.VisibleForTesting;
 
 public class ViewExposureChecker {
     private static final String TAG = ViewExposureChecker.class.getSimpleName();
@@ -156,8 +155,7 @@ public class ViewExposureChecker {
 
     // don't test child if it is viewGroup and transparent
     private boolean isFriendlyObstruction(View child) {
-        return child instanceof AdIndicatorView
-               || (child instanceof ImageView && child.getId() == R.id.iv_close_interstitial)
+        return (child instanceof ImageView && child.getId() == R.id.iv_close_interstitial)
                || child.getId() == R.id.rl_count_down;
     }
 

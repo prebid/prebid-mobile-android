@@ -32,9 +32,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
-import org.prebid.mobile.rendering.views.indicator.AdIndicatorView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
@@ -182,27 +180,8 @@ public class MraidResizeTest {
     @Test
     public void closeViewTest() throws Exception {
         Method closeViewMethod = WhiteBox.method(MraidResize.class, "closeView");
-        MraidClose mockMraidClose = mock(MraidClose.class);
 
         closeViewMethod.invoke(mMraidResize);
         verify(mMockManager).interstitialClosed(any(View.class));
-    }
-
-    @Test
-    public void moveAdIndicatorTest() throws InvocationTargetException, IllegalAccessException {
-        Method moveAdIndicatorMethod = WhiteBox.method(MraidResize.class, "moveAdIndicator");
-
-        PrebidWebViewBase mockPrebidWebViewBase = mock(PrebidWebViewBase.class);
-        HTMLCreative mockCreative = mock(HTMLCreative.class);
-        View mockView = mock(AdIndicatorView.class);
-        FrameLayout mockSecondaryContainer = mock(FrameLayout.class);
-        when(mockCreative.getAdIndicatorView()).thenReturn(mockView);
-        when(mockPrebidWebViewBase.getCreative()).thenReturn(mockCreative);
-        when(mSpyBaseJsInterface.getDefaultAdContainer()).thenReturn(mockPrebidWebViewBase);
-
-        WhiteBox.field(MraidResize.class, "mSecondaryAdContainer").set(mMraidResize, mockSecondaryContainer);
-
-        moveAdIndicatorMethod.invoke(mMraidResize);
-        verify(mockSecondaryContainer).addView(mockView);
     }
 }

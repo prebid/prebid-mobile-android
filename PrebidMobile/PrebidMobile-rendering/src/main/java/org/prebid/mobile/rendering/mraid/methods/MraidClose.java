@@ -24,10 +24,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
 import org.prebid.mobile.rendering.views.browser.AdBrowserActivity;
-import org.prebid.mobile.rendering.views.indicator.AdIndicatorView;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBanner;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
@@ -94,7 +92,7 @@ public class MraidClose {
                     FrameLayout frameLayout = (FrameLayout) mWebViewBase.getParent();
                     removeParent(frameLayout);
 
-                    changeAdIndicatorPosition(mWebViewBase);
+                    addWebViewToContainer(mWebViewBase);
 
                     //Add expanded view into rootView as well  & remove this null chk once done. Shud work for both expand & resize
 
@@ -111,19 +109,9 @@ public class MraidClose {
         }
     }
 
-    private void changeAdIndicatorPosition(WebViewBase webViewBase) {
+    private void addWebViewToContainer(WebViewBase webViewBase) {
         PrebidWebViewBase defaultContainer = (PrebidWebViewBase) webViewBase.getPreloadedListener();
         if (defaultContainer != null) {
-            AdIndicatorView adIndicatorView = (AdIndicatorView) (defaultContainer).getCreative().getAdIndicatorView();
-
-            if (adIndicatorView != null) {
-                Views.removeFromParent(adIndicatorView);
-                if (adIndicatorView.getAdUnitIdentifierType().equals(AdConfiguration.AdUnitIdentifierType.BANNER)) {
-                    adIndicatorView.setPosition(AdIndicatorView.AdIconPosition.TOP);
-                }
-                defaultContainer.addView(adIndicatorView, 0);
-            }
-
             defaultContainer.addView(webViewBase, 0);
             defaultContainer.setVisibility(View.VISIBLE);
         }

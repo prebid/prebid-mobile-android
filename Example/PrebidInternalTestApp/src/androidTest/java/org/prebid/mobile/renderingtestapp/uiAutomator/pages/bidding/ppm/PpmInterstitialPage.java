@@ -16,12 +16,12 @@
 
 package org.prebid.mobile.renderingtestapp.uiAutomator.pages.bidding.ppm;
 
+import org.prebid.mobile.renderingtestapp.uiAutomator.pages.AdBasePage;
+
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.BySelector;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.Until;
-
-import org.prebid.mobile.renderingtestapp.uiAutomator.pages.AdBasePage;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -31,7 +31,6 @@ public class PpmInterstitialPage extends AdBasePage<PpmInterstitialPage> {
     private static class Locators {
         static BySelector htmlCreative = getWebViewSelectorVersionDepends("www.openx");
         static BySelector videoCreative = By.res(TAG, "exo_content_frame");
-        static BySelector adIndicator = By.res(TAG, "adIndicatorIV");
         static BySelector learnMore = By.res(TAG, "LearnMore");
 
         static BySelector closeButton = By.res(TAG, "iv_close_interstitial");
@@ -41,21 +40,17 @@ public class PpmInterstitialPage extends AdBasePage<PpmInterstitialPage> {
         super(device);
     }
 
-    public PpmInterstitialPage htmlCreativeWithAdIndicatorShouldBePresent() {
+    public PpmInterstitialPage htmlCreativeShouldBePresent() {
         final boolean isCreativeDisplayed = device.wait(Until.findObject(Locators.htmlCreative), TIMEOUT) != null;
 
         assertTrue("Interstitial is not displayed", isCreativeDisplayed);
-        assertNotNull("Ad indicator is not displayed",
-                      device.wait(Until.findObject(Locators.adIndicator), TIMEOUT));
         return this;
     }
 
-    public PpmInterstitialPage videoCreativeWithAdIndicatorShouldBePresent() {
+    public PpmInterstitialPage videoCreativeWithShouldBePresent() {
         final boolean isCreativeDisplayed = device.wait(Until.findObject(Locators.videoCreative), TIMEOUT) != null;
 
         assertTrue("Interstitial is not displayed", isCreativeDisplayed);
-        assertNotNull("Ad indicator is not displayed",
-                      device.wait(Until.findObject(Locators.adIndicator), TIMEOUT));
         return this;
     }
 
@@ -65,12 +60,10 @@ public class PpmInterstitialPage extends AdBasePage<PpmInterstitialPage> {
         return this;
     }
 
-    public PpmInterstitialPage videoCreativeWithAdIndicatorShouldNotBePresent() {
+    public PpmInterstitialPage videoCreativeShouldNotBePresent() {
         final boolean isCreativeDisplayed = device.wait(Until.gone(Locators.videoCreative), TIMEOUT) != null;
 
         assertTrue("Interstitial is displayed", isCreativeDisplayed);
-        assertTrue("Ad indicator is displayed",
-                   device.wait(Until.gone(Locators.adIndicator), TIMEOUT));
         return this;
     }
 

@@ -22,8 +22,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.rendering.bidding.display.InterstitialView;
 import org.prebid.mobile.rendering.bidding.display.VideoView;
 import org.prebid.mobile.rendering.interstitial.AdBaseDialog;
@@ -43,6 +41,8 @@ import org.prebid.mobile.rendering.views.webview.WebViewBanner;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 
 import java.util.Stack;
+
+import androidx.annotation.VisibleForTesting;
 
 public class InterstitialManager implements InterstitialManagerInterface {
 
@@ -197,7 +197,6 @@ public class InterstitialManager implements InterstitialManagerInterface {
         WebViewBase webViewBase = ((PrebidWebViewInterstitial) interstitialView.getCreativeView()).getWebView();
         webViewBase.setId(INTERSTITIAL_WEBVIEW_ID);
         mInterstitialDialog = new AdInterstitialDialog(context, webViewBase, interstitialView, this);
-        mInterstitialDialog.setAdIndicatorView(interstitialView.getAdIndicatorView());
         mInterstitialDialog.show();
     }
 

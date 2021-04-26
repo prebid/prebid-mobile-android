@@ -75,10 +75,6 @@ public class AdInterstitialDialog extends AdBaseDialog {
     @Override
     protected void handleDialogShow() {
         Views.removeFromParent(mAdViewContainer);
-        if (mAdIndicatorView != null) {
-            Views.removeFromParent(mAdIndicatorView);
-            mAdViewContainer.addView(mAdIndicatorView);
-        }
         addContentView(mAdViewContainer,
                        new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                                                        RelativeLayout.LayoutParams.MATCH_PARENT)

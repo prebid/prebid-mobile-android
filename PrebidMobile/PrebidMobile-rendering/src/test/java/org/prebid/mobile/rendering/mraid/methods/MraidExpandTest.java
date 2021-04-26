@@ -23,11 +23,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.prebid.mobile.rendering.interstitial.AdBaseDialog;
-import org.prebid.mobile.rendering.interstitial.AdExpandedDialog;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.mraid.methods.network.RedirectUrlListener;
-import org.prebid.mobile.rendering.views.indicator.AdIndicatorView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
@@ -40,6 +38,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doAnswer;
@@ -61,7 +60,13 @@ public class MraidExpandTest {
 
     @Before
     public void setup() {
-        mTestActivity = Robolectric.buildActivity(Activity.class).create().get();
+        mTestActivity = Robolectric.buildActivity(Activity.class)
+                                   .setup()
+                                   .create()
+                                   .visible()
+                                   .resume()
+                                   .windowFocusChanged(true)
+                                   .get();
         mSpyJsExecutor = spy(new JsExecutor(mMockWebViewBase, null, null));
 
         mMockWebViewBase = mock(WebViewBase.class);
@@ -84,10 +89,7 @@ public class MraidExpandTest {
 
         PrebidWebViewBase mockPreloadedListener = mock(PrebidWebViewBase.class);
         HTMLCreative mockCreative = mock(HTMLCreative.class);
-        when(mockCreative.getAdIndicatorView()).thenAnswer(invocation -> {
-            WhiteBox.setInternalState(mMraidExpand, "mExpandedDialog", mock(AdExpandedDialog.class));
-            return mock(AdIndicatorView.class);
-        });
+
         when(mockPreloadedListener.getCreative()).thenReturn(mockCreative);
         when(mMockWebViewBase.getPreloadedListener()).thenReturn(mockPreloadedListener);
 
@@ -95,10 +97,20 @@ public class MraidExpandTest {
         final MraidVariableContainer mraidVariableContainer = mSpyBaseJsInterface.getMraidVariableContainer();
         mraidVariableContainer.setCurrentState(JSInterface.STATE_DEFAULT);
 
-        mMraidExpand.expand("test", callBack);
+        MraidExpand spyExpand = spy(mMraidExpand);
+
+        doAnswer(invocation -> {
+            CompletedCallBack completedCallBack = invocation.getArgument(1);
+            completedCallBack.expandDialogShown();
+            return null;
+        }).when(spyExpand).showExpandDialog(any(), any());
+
+        spyExpand.expand("test", callBack);
+
         verify(mSpyBaseJsInterface).followToOriginalUrl(anyString(), any(RedirectUrlListener.class));
         assertEquals(mraidVariableContainer.getUrlForLaunching(), "test");
         verify(callBack).expandDialogShown();
+        verify(spyExpand).showExpandDialog(any(), any());
     }
 
     @Test
@@ -115,6 +127,6 @@ public class MraidExpandTest {
     @Test
     public void setMraidExpandedTest() {
         mMraidExpand.setMraidExpanded(true);
-        assertEquals(true, mMraidExpand.isMraidExpanded());
+        assertTrue(mMraidExpand.isMraidExpanded());
     }
 }

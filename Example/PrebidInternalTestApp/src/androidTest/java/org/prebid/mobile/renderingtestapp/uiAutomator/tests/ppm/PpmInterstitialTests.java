@@ -45,7 +45,7 @@ public class PpmInterstitialTests extends BaseUiAutomatorTest {
         homePage.getInterstitialPageFactory()
                 .goToPpmInterstitialExample(getStringResource(R.string.demo_bidding_in_app_banners_and_interstitial))
                 .showPrebidInterstitial()
-                .htmlCreativeWithAdIndicatorShouldBePresent()
+                .htmlCreativeShouldBePresent()
                 .sleepFor(20)
                 .closeInterstitial();
     }
@@ -65,11 +65,11 @@ public class PpmInterstitialTests extends BaseUiAutomatorTest {
                 .goToPpmInterstitialExample(exampleName)
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdLoaded)
                 .showPrebidInterstitial()
-                .htmlCreativeWithAdIndicatorShouldBePresent()
+                .htmlCreativeShouldBePresent()
                 .clickInterstitial()
                 .browserShouldOpen()
                 .closeBrowser()
-                .htmlCreativeWithAdIndicatorShouldBePresent()
+                .htmlCreativeShouldBePresent()
                 .closeInterstitial()
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdDisplayed)
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdClicked)

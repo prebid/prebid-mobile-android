@@ -19,10 +19,7 @@ package org.prebid.mobile.rendering.models;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
-
-import androidx.annotation.VisibleForTesting;
 
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.interstitial.InterstitialManagerDisplayDelegate;
@@ -41,7 +38,8 @@ import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
-import org.prebid.mobile.rendering.views.webview.mraid.Views;
+
+import androidx.annotation.VisibleForTesting;
 
 public class HTMLCreative extends AbstractCreative
     implements WebViewDelegate, InterstitialManagerDisplayDelegate, Comparable {
@@ -134,12 +132,6 @@ public class HTMLCreative extends AbstractCreative
 
         // Fire impression
         startViewabilityTracker();
-
-        View adIndicatorView = getAdIndicatorView();
-        if (adIndicatorView != null) {
-            Views.removeFromParent(adIndicatorView);
-            creativeWebView.addView(adIndicatorView);
-        }
     }
 
     @Override

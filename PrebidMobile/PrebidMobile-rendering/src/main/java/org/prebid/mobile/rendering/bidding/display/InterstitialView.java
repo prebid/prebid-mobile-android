@@ -97,7 +97,6 @@ public class InterstitialView extends BaseAdView {
     }
 
     public void loadAd(AdConfiguration adUnitConfiguration, BidResponse bidResponse) {
-        createAdIndicatorView();
         mAdViewManager.loadBidTransaction(adUnitConfiguration, bidResponse);
     }
 
@@ -151,7 +150,6 @@ public class InterstitialView extends BaseAdView {
                                                        mInterstitialManager,
                                                        adConfiguration);
             mInterstitialVideo.setDialogListener(this::handleDialogEvent);
-            mInterstitialVideo.setAdIndicatorView(mAdIndicatorView);
             mInterstitialVideo.show();
         }
         catch (final Exception e) {

@@ -31,8 +31,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.rendering.R;
 import org.prebid.mobile.rendering.interstitial.AdBaseDialog;
 import org.prebid.mobile.rendering.models.AdConfiguration;
@@ -45,6 +43,8 @@ import java.lang.ref.WeakReference;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import androidx.annotation.VisibleForTesting;
 
 @SuppressLint("NewApi")
 //Interstitial video
@@ -119,9 +119,6 @@ public class InterstitialVideo extends AdBaseDialog {
         else {
             scheduleShowCloseBtnTask(mAdViewContainer);
         }
-
-        Views.removeFromParent(mAdIndicatorView);
-        mAdViewContainer.addView(mAdIndicatorView);
     }
 
     public boolean shouldShowCloseButtonOnComplete() {

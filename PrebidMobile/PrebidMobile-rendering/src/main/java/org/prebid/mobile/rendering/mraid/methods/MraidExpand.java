@@ -36,6 +36,8 @@ import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
+import androidx.annotation.VisibleForTesting;
+
 public class MraidExpand {
     public static final String TAG = MraidExpand.class.getSimpleName();
     private WebViewBase mWebViewBanner;
@@ -144,7 +146,7 @@ public class MraidExpand {
                     mraidVariableContainer.setUrlForLaunching(url);
                 }
 
-                showExpandDialog(completedCallBack, context);
+                showExpandDialog(context, completedCallBack);
             }
             catch (Exception e) {
                 OXLog.error(TAG, "Expand failed: " + Log.getStackTraceString(e));
@@ -152,25 +154,25 @@ public class MraidExpand {
         });
     }
 
-    private void showExpandDialog(CompletedCallBack completedCallBack, Context context) {
+    private boolean isContainerStateInvalid(String state) {
+        return TextUtils.isEmpty(state)
+               || state.equals(JSInterface.STATE_LOADING)
+               || state.equals(JSInterface.STATE_HIDDEN)
+               || state.equals(JSInterface.STATE_EXPANDED);
+    }
+
+    @VisibleForTesting
+    void showExpandDialog(Context context, CompletedCallBack completedCallBack) {
         if (!(context instanceof Activity) || ((Activity) context).isFinishing()) {
             OXLog.error(TAG, "Context is not activity or activity is finishing, can not show expand dialog");
             return;
         }
 
         mExpandedDialog = new AdExpandedDialog(context, mWebViewBanner, mInterstitialManager);//HAS be on UI thread
-        ((AdExpandedDialog) mExpandedDialog).showAdIndicator();
         //Workaround fix for a random crash on multiple clicks on 2part expand and press back key
         mExpandedDialog.show();
         if (completedCallBack != null) {
             completedCallBack.expandDialogShown();
         }
-    }
-
-    private boolean isContainerStateInvalid(String state) {
-        return TextUtils.isEmpty(state)
-               || state.equals(JSInterface.STATE_LOADING)
-               || state.equals(JSInterface.STATE_HIDDEN)
-               || state.equals(JSInterface.STATE_EXPANDED);
     }
 }

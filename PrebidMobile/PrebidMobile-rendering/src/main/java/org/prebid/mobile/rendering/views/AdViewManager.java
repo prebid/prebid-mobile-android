@@ -41,7 +41,6 @@ import org.prebid.mobile.rendering.utils.logger.OXLog;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreative;
 import org.prebid.mobile.rendering.video.VideoCreativeView;
-import org.prebid.mobile.rendering.views.indicator.AdIndicatorView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 
 import java.lang.ref.WeakReference;
@@ -59,8 +58,6 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
     private AdViewManagerListener mAdViewListener;
     private AbstractCreative mCurrentCreative;
     private AbstractCreative mLastCreativeShown;
-
-    private AdIndicatorView mAdIndicatorView;
 
     private AdViewManagerInterstitialDelegate mDelegate = this::show;
 
@@ -262,14 +259,6 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
         return mCurrentCreative != null && mCurrentCreative.isDisplay();
     }
 
-    public AdIndicatorView getAdIndicatorView() {
-        return mAdIndicatorView;
-    }
-
-    public void setAdIndicatorView(AdIndicatorView adIndicatorView) {
-        mAdIndicatorView = adIndicatorView;
-    }
-
     public void updateAdView(View view) {
         mCurrentCreative.updateAdView(view);
     }
@@ -353,11 +342,6 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
         }
         // Display current creative
         mCurrentCreative = creative;
-        mCurrentCreative.setAdIndicatorView(mAdIndicatorView);
-        InternalFriendlyObstruction friendlyObstruction = new InternalFriendlyObstruction(mAdIndicatorView,
-                                                                                          InternalFriendlyObstruction.Purpose.OTHER,
-                                                                                          "AdChoices button");
-        addObstructions(friendlyObstruction);
 
         mCurrentCreative.setCreativeViewListener(this);
         handleCreativeDisplay();

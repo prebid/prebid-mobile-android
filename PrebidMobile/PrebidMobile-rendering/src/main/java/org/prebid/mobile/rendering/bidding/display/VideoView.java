@@ -21,8 +21,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import androidx.core.content.ContextCompat;
-
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
@@ -39,9 +37,10 @@ import org.prebid.mobile.rendering.video.VideoCreativeView;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.rendering.views.base.BaseAdView;
-import org.prebid.mobile.rendering.views.indicator.AdIndicatorView;
 import org.prebid.mobile.rendering.views.video.VideoViewListener;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
+
+import androidx.core.content.ContextCompat;
 
 public class VideoView extends BaseAdView {
     private final static String TAG = VideoView.class.getSimpleName();
@@ -237,9 +236,7 @@ public class VideoView extends BaseAdView {
     }
 
     protected void setAdViewManagerValues() throws AdException {
-        mAdIndicatorView = new AdIndicatorView(getContext(), AdConfiguration.AdUnitIdentifierType.VAST);
         mAdViewManager = new AdViewManager(getContext(), mOnAdViewManagerListener, this, mInterstitialManager);
-        mAdViewManager.setAdIndicatorView(mAdIndicatorView);
     }
 
     @Override
@@ -273,7 +270,6 @@ public class VideoView extends BaseAdView {
 
         videoCreativeView.showVolumeControls();
         addView(view);
-        addView(getAdIndicatorView());
     }
 
     private void showEndCardCreative(View creativeView) {

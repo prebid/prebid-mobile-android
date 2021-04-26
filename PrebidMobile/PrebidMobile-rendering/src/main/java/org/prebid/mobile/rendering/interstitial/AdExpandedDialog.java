@@ -22,9 +22,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.utils.logger.OXLog;
-import org.prebid.mobile.rendering.views.indicator.AdIndicatorView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
@@ -66,19 +64,6 @@ public class AdExpandedDialog extends AdBaseDialog {
                         OXLog.error(TAG, "Context is not Activity, can not set orientation");
                     }
 
-                    HTMLCreative creative = defaultContainer.getCreative();
-                    if (creative != null && creative.getAdIndicatorView() != null) {
-                        mAdIndicatorView = creative.getAdIndicatorView();
-                        ((AdIndicatorView) mAdIndicatorView).setPosition(AdIndicatorView.AdIconPosition.TOP);
-                        Views.removeFromParent(mAdIndicatorView);
-                        if (!mWebViewBase.getJSName().equals("twopart")) {
-                            defaultContainer.addView(mAdIndicatorView);
-                        }
-                        else {
-                            ((PrebidWebViewBase) defaultContainer.getOldWebView().getPreloadedListener()).addView(mAdIndicatorView);
-                        }
-                    }
-
                     mWebViewBase.getMRAIDInterface().onStateChange(JSInterface.STATE_DEFAULT);
                 }
             }
@@ -98,22 +83,9 @@ public class AdExpandedDialog extends AdBaseDialog {
     @Override
     protected void handleDialogShow() {
         Views.removeFromParent(mAdViewContainer);
-        if (mAdIndicatorView != null) {
-            Views.removeFromParent(mAdIndicatorView);
-            mAdViewContainer.addView(mAdIndicatorView);
-        }
         addContentView(mAdViewContainer,
                                    new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                                                                    RelativeLayout.LayoutParams.MATCH_PARENT)
         );
-    }
-
-    public void showAdIndicator() {
-        if (mAdIndicatorView == null) {
-            if (mWebViewBase != null) {
-                mAdIndicatorView = ((PrebidWebViewBase) mWebViewBase.getPreloadedListener()).getCreative().getAdIndicatorView();
-                ((AdIndicatorView) mAdIndicatorView).setPosition(AdIndicatorView.AdIconPosition.BOTTOM);
-            }
-        }
     }
 }

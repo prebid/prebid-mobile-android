@@ -24,12 +24,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.prebid.mobile.rendering.models.AdConfiguration;
-import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.views.browser.AdBrowserActivity;
-import org.prebid.mobile.rendering.views.indicator.AdIndicatorView;
-import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
@@ -119,25 +115,5 @@ public class MraidCloseTest {
 
         method.invoke(mMraidClose);
         verify(mMockWebViewBase, timeout(100)).setVisibility(eq(View.INVISIBLE));
-    }
-
-    @Test
-    public void changeAdIndicatorPositionTest()
-    throws InvocationTargetException, IllegalAccessException {
-        Method changeAdIndicatorPositionMethod = WhiteBox.method(MraidClose.class, "changeAdIndicatorPosition", WebViewBase.class);
-
-        PrebidWebViewBase mockPrebidWebViewbase = mock(PrebidWebViewBase.class);
-        HTMLCreative mockHtmlCreative = mock(HTMLCreative.class);
-        AdIndicatorView mockView = mock(AdIndicatorView.class);
-        when(mockHtmlCreative.getAdIndicatorView()).thenReturn(mockView);
-        when(mockPrebidWebViewbase.getCreative()).thenReturn(mockHtmlCreative);
-
-        when(mockView.getAdUnitIdentifierType()).thenReturn(AdConfiguration.AdUnitIdentifierType.BANNER);
-        when(mMockWebViewBase.getPreloadedListener()).thenReturn(mockPrebidWebViewbase);
-
-        changeAdIndicatorPositionMethod.invoke(mMraidClose, mMockWebViewBase);
-        verify(mockView).setPosition(AdIndicatorView.AdIconPosition.TOP);
-        verify(mockPrebidWebViewbase).addView(mockView, 0);
-        verify(mockPrebidWebViewbase).setVisibility(View.VISIBLE);
     }
 }

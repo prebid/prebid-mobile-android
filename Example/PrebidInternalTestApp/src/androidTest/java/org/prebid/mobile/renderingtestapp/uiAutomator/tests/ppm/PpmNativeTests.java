@@ -16,12 +16,12 @@
 
 package org.prebid.mobile.renderingtestapp.uiAutomator.tests.ppm;
 
-import androidx.test.uiautomator.By;
-
 import org.junit.Test;
 import org.prebid.mobile.renderingtestapp.R;
 import org.prebid.mobile.renderingtestapp.uiAutomator.pages.AdBasePage;
 import org.prebid.mobile.renderingtestapp.uiAutomator.utils.BaseUiAutomatorTest;
+
+import androidx.test.uiautomator.By;
 
 public class PpmNativeTests extends BaseUiAutomatorTest {
     @Test
@@ -83,7 +83,7 @@ public class PpmNativeTests extends BaseUiAutomatorTest {
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.getNativeAdSuccess)
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onVideoLoadingFinished)
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onPlaybackStarted)
-                .videoCreativeWithAdIndicatorShouldBePresent()
+                .videoCreativeShouldBePresent()
                 .clickUnMute()
                 .clickMute()
                 .clickPause()

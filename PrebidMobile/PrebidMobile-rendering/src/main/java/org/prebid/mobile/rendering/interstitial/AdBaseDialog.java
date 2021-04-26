@@ -29,9 +29,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-
 import org.json.JSONObject;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
@@ -49,6 +46,9 @@ import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
 import java.lang.ref.WeakReference;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+
 //Class to show ad as an interstitial i.e, a fullscreen ad
 public abstract class AdBaseDialog extends Dialog {
     private static final String TAG = AdBaseDialog.class.getSimpleName();
@@ -63,7 +63,6 @@ public abstract class AdBaseDialog extends Dialog {
     protected WebViewBase mWebViewBase;
     protected FrameLayout mAdViewContainer;
     protected View mDisplayView;
-    protected View mAdIndicatorView;
     private View mCloseView;
 
     // IMP: shud be always none. cos this val is used when expand is called with an url.
@@ -150,10 +149,6 @@ public abstract class AdBaseDialog extends Dialog {
     @VisibleForTesting
     void setCloseView(View closeView) {
         mCloseView = closeView;
-    }
-
-    public void setAdIndicatorView(View adIndicatorView) {
-        mAdIndicatorView = adIndicatorView;
     }
 
     public View getDisplayView() {
