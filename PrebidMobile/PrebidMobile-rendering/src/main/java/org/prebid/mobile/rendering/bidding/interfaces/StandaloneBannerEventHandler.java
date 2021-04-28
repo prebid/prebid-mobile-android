@@ -35,7 +35,7 @@ public class StandaloneBannerEventHandler implements BannerEventHandler {
 
     @Override
     public void requestAdWithBid(Bid bid) {
-        mBannerViewListener.onOXBSdkWin();
+        mBannerViewListener.onPrebidSdkWin();
     }
 
     @Override

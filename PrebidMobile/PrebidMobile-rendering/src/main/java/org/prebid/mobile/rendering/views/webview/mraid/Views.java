@@ -21,10 +21,10 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
+
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
-
-import org.prebid.mobile.rendering.utils.logger.OXLog;
 
 public class Views {
 
@@ -80,7 +80,7 @@ public class Views {
         }
 
         if (!ViewCompat.isAttachedToWindow(view)) {
-            OXLog.debug(TAG, "Attempting to call View.getRootView() on an unattached View.");
+            LogUtil.debug(TAG, "Attempting to call View.getRootView() on an unattached View.");
         }
 
         final View rootView = view.getRootView();

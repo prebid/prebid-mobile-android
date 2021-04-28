@@ -20,7 +20,7 @@ import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.CreativeModel;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.vast.AdVerifications;
 
 import java.util.ArrayList;
@@ -57,13 +57,13 @@ public class VideoCreativeModel extends CreativeModel {
         mOmEventTracker.trackOmVideoAdEvent(videoEvent);
         ArrayList<String> urls = mVideoEventUrls.get(videoEvent);
         if (urls == null) {
-            OXLog.debug(TAG, "Event" + videoEvent + " not found");
+            LogUtil.debug(TAG, "Event" + videoEvent + " not found");
             return;
         }
 
         mTrackingManager.fireEventTrackingURLs(urls);
 
-        OXLog.info(TAG, "Video event '" + videoEvent.name() + "' was fired with urls: " + urls.toString());
+        LogUtil.info(TAG, "Video event '" + videoEvent.name() + "' was fired with urls: " + urls.toString());
     }
 
     public void trackPlayerStateChange(InternalPlayerState changedPlayerState) {

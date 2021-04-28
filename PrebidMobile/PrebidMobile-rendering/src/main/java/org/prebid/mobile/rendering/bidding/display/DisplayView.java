@@ -28,7 +28,7 @@ import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 import org.prebid.mobile.rendering.utils.broadcast.local.EventForwardingLocalBroadcastReceiver;
 import org.prebid.mobile.rendering.utils.constants.IntentActions;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
@@ -199,35 +199,35 @@ public class DisplayView extends FrameLayout {
     }
 
     private void notifyListenerError(AdException e) {
-        OXLog.debug(TAG, "onAdFailed");
+        LogUtil.debug(TAG, "onAdFailed");
         if (mDisplayViewListener != null) {
             mDisplayViewListener.onAdFailed(e);
         }
     }
 
     private void notifyListenerClicked() {
-        OXLog.debug(TAG, "onAdClicked");
+        LogUtil.debug(TAG, "onAdClicked");
         if (mDisplayViewListener != null) {
             mDisplayViewListener.onAdClicked();
         }
     }
 
     private void notifyListenerClose() {
-        OXLog.debug(TAG, "onAdClosed");
+        LogUtil.debug(TAG, "onAdClosed");
         if (mDisplayViewListener != null) {
             mDisplayViewListener.onAdClosed();
         }
     }
 
     private void notifyListenerDisplayed() {
-        OXLog.debug(TAG, "onAdDisplayed");
+        LogUtil.debug(TAG, "onAdDisplayed");
         if (mDisplayViewListener != null) {
             mDisplayViewListener.onAdDisplayed();
         }
     }
 
     private void notifyListenerLoaded() {
-        OXLog.debug(TAG, "onAdLoaded");
+        LogUtil.debug(TAG, "onAdLoaded");
         if (mDisplayViewListener != null) {
             mDisplayViewListener.onAdLoaded();
         }

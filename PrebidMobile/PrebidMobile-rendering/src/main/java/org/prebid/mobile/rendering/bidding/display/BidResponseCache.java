@@ -18,27 +18,27 @@ package org.prebid.mobile.rendering.bidding.display;
 
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+
 /**
- * Holds OXBBidResponses in memory until they are used
+ * Holds BidResponses in memory until they are used
  */
 public class BidResponseCache {
     private static final String TAG = BidResponseCache.class.getSimpleName();
 
     /**
      * Maximum number of responses that are cached. This limit is intended to be very
-     * conservative; it is not recommended to cache more than a few OXBBidResponses.
+     * conservative; it is not recommended to cache more than a few BidResponses.
      */
     @VisibleForTesting
     static final int MAX_SIZE = 20;
@@ -62,7 +62,7 @@ public class BidResponseCache {
     }
 
     /**
-     * Stores the { OXBBidResponse} in the cache. This OXBBidResponse will live until it is retrieved via
+     * Stores the { BidResponse} in the cache. This BidResponse will live until it is retrieved via
      * { #popBidResponse(String)}
      *
      * @param response Parsed bid response
@@ -73,7 +73,7 @@ public class BidResponseCache {
     }
 
     /**
-     * Stores the { OXBBidResponse} in the cache. This OXBBidResponse will live until it is retrieved via
+     * Stores the { BidResponse} in the cache. This BidResponse will live until it is retrieved via
      * { #popBidResponse(String)}
      *
      * @param key      Custom key to store response
@@ -83,25 +83,25 @@ public class BidResponseCache {
         trimCache();
         // Ignore request when max size is reached.
         if (sCachedBidResponses.size() >= MAX_SIZE) {
-            OXLog.error(TAG,
-                        "Unable to cache OXBBidResponse. Please destroy some via #destroy() and try again.");
+            LogUtil.error(TAG,
+                          "Unable to cache BidResponse. Please destroy some via #destroy() and try again.");
             return;
         }
         if (TextUtils.isEmpty(key)) {
-            OXLog.error(TAG,
-                        "Unable to cache OXBBidResponse. Key is empty or null.");
+            LogUtil.error(TAG,
+                          "Unable to cache BidResponse. Key is empty or null.");
             return;
         }
 
         sCachedBidResponses.put(key, response);
-        OXLog.debug(TAG, "Cached ad count after storing: " + getCachedResponsesCount());
+        LogUtil.debug(TAG, "Cached ad count after storing: " + getCachedResponsesCount());
     }
 
     @Nullable
     public BidResponse popBidResponse(
         @Nullable
         final String responseId) {
-        OXLog.debug(TAG, "POPPING the response");
+        LogUtil.debug(TAG, "POPPING the response");
 
         BidResponse bidResponse = null;
 
@@ -111,9 +111,9 @@ public class BidResponseCache {
             bidResponse = sCachedBidResponses.remove(responseId);
         }
         else {
-            OXLog.warn(TAG, "No cached ad to retrieve in the final map");
+            LogUtil.warn(TAG, "No cached ad to retrieve in the final map");
         }
-        OXLog.debug(TAG, "Cached ad count after popping: " + getCachedResponsesCount());
+        LogUtil.debug(TAG, "Cached ad count after popping: " + getCachedResponsesCount());
         return bidResponse;
     }
 

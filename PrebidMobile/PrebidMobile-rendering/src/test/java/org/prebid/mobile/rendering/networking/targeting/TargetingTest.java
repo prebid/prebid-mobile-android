@@ -65,7 +65,7 @@ public class TargetingTest {
     public void setUserGender_EqualToGetUserGenderAndIsInRequestParams() {
         final String expected = UserParameters.GENDER_FEMALE;
 
-        Targeting.setUserGender(UserParameters.OXMGender.FEMALE);
+        Targeting.setUserGender(UserParameters.Gender.FEMALE);
 
         assertEquals(expected, Targeting.getUserGender());
         assertEquals(expected, Targeting.getTargetingMap().get(Targeting.KEY_GENDER));

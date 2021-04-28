@@ -37,7 +37,7 @@ import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreative;
 import org.prebid.mobile.rendering.video.VideoCreativeView;
@@ -87,7 +87,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     @Override
     public void onFetchingFailed(AdException exception) {
-        OXLog.error(TAG, "There was an error fetching an ad " + exception.toString());
+        LogUtil.error(TAG, "There was an error fetching an ad " + exception.toString());
         mAdViewListener.failedToLoad(exception);
     }
 
@@ -98,7 +98,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     @Override
     public void creativeInterstitialDidClose(AbstractCreative creative) {
-        OXLog.debug(TAG, "creativeInterstitialDidClose");
+        LogUtil.debug(TAG, "creativeInterstitialDidClose");
 
         Transaction currentTransaction = mTransactionManager.getCurrentTransaction();
         if (creative.isDisplay() && creative.isEndCard()) {
@@ -151,7 +151,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     @Override
     public void creativeDidComplete(AbstractCreative creative) {
-        OXLog.debug(TAG, "creativeDidComplete");
+        LogUtil.debug(TAG, "creativeDidComplete");
 
         // NOTE: This is currently hard-wired to work for video + end card only
         //       To truly support continuous ads in a queue, there would need to be significant changes
@@ -180,7 +180,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     public void hide() {
         if (mCurrentCreative == null) {
-            OXLog.warn(TAG, "Can not hide a null creative");
+            LogUtil.warn(TAG, "Can not hide a null creative");
             return;
         }
 
@@ -192,7 +192,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     public void setAdVisibility(int visibility) {
         if (mCurrentCreative == null) {
-            OXLog.debug(TAG, "setAdVisibility(): Skipping creative window focus notification. mCurrentCreative is null");
+            LogUtil.debug(TAG, "setAdVisibility(): Skipping creative window focus notification. mCurrentCreative is null");
             return;
         }
 
@@ -316,12 +316,12 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     public void addObstructions(InternalFriendlyObstruction... friendlyObstructions) {
         if (friendlyObstructions == null || friendlyObstructions.length == 0) {
-            OXLog.debug(TAG, "addObstructions(): Failed. Obstructions list is empty or null");
+            LogUtil.debug(TAG, "addObstructions(): Failed. Obstructions list is empty or null");
             return;
         }
 
         if (mCurrentCreative == null) {
-            OXLog.debug(TAG, "addObstructions(): Failed. Current creative is null.");
+            LogUtil.debug(TAG, "addObstructions(): Failed. Current creative is null.");
             return;
         }
 
@@ -332,12 +332,12 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     public void show() {
         if (!isCreativeResolved()) {
-            OXLog.debug(TAG, "Couldn't proceed show(): Video or HTML is not resolved.");
+            LogUtil.debug(TAG, "Couldn't proceed show(): Video or HTML is not resolved.");
             return;
         }
         AbstractCreative creative = mTransactionManager.getCurrentCreative();
         if (creative == null) {
-            OXLog.error(TAG, "Show called with no ad");
+            LogUtil.error(TAG, "Show called with no ad");
             return;
         }
         // Display current creative
@@ -384,7 +384,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
     private void handleCreativeDisplay() {
         View creativeView = mCurrentCreative.getCreativeView();
         if (creativeView == null) {
-            OXLog.error(TAG, "Creative has no view");
+            LogUtil.error(TAG, "Creative has no view");
             return;
         }
 
@@ -425,13 +425,13 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
             show();
         }
         else {
-            OXLog.info(TAG, "AdViewManager - Ad will be displayed when show is called");
+            LogUtil.info(TAG, "AdViewManager - Ad will be displayed when show is called");
         }
     }
 
     private void addHtmlInterstitialObstructions(ViewGroup rootViewGroup) {
         if (rootViewGroup == null) {
-            OXLog.debug(TAG, "addHtmlInterstitialObstructions(): rootViewGroup is null.");
+            LogUtil.debug(TAG, "addHtmlInterstitialObstructions(): rootViewGroup is null.");
             return;
         }
         View closeButtonView = rootViewGroup.findViewById(R.id.iv_close_interstitial);
@@ -453,7 +453,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
             trackAdLoaded();
         }
         catch (Exception e) {
-            OXLog.error(TAG, "adLoaded failed: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "adLoaded failed: " + Log.getStackTraceString(e));
         }
 
         handleAutoDisplay();

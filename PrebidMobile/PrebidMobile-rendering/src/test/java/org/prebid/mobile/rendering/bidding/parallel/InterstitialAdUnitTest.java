@@ -55,10 +55,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.LOADING;
-import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.OXB_LOADING;
+import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.PREBID_LOADING;
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
-import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_OXB;
+import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_PREBID;
 
 @RunWith(RobolectricTestRunner.class)
 public class InterstitialAdUnitTest {
@@ -118,7 +118,7 @@ public class InterstitialAdUnitTest {
         mInterstitialAdUnit.loadAd();
         verifyZeroInteractions(mMockBidLoader);
 
-        changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_OXB);
+        changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_PREBID);
         mInterstitialAdUnit.loadAd();
         verifyZeroInteractions(mMockBidLoader);
 
@@ -126,7 +126,7 @@ public class InterstitialAdUnitTest {
         mInterstitialAdUnit.loadAd();
         verifyZeroInteractions(mMockBidLoader);
 
-        changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.OXB_LOADING);
+        changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.PREBID_LOADING);
         mInterstitialAdUnit.loadAd();
         verifyZeroInteractions(mMockBidLoader);
     }
@@ -155,10 +155,10 @@ public class InterstitialAdUnitTest {
     }
 
     @Test
-    public void showWhenAuctionWinnerIsOXB_ShowOXB() {
+    public void showWhenAuctionWinnerIsPrebid_ShowPrebid() {
         final InterstitialController mockInterstitialController = mock(InterstitialController.class);
 
-        changeInterstitialState(READY_TO_DISPLAY_OXB);
+        changeInterstitialState(READY_TO_DISPLAY_PREBID);
 
         WhiteBox.setInternalState(mInterstitialAdUnit, "mInterstitialController", mockInterstitialController);
         mInterstitialAdUnit.show();
@@ -174,13 +174,13 @@ public class InterstitialAdUnitTest {
         changeInterstitialState(LOADING);
         assertFalse(mInterstitialAdUnit.isLoaded());
 
-        changeInterstitialState(OXB_LOADING);
+        changeInterstitialState(PREBID_LOADING);
         assertFalse(mInterstitialAdUnit.isLoaded());
     }
 
     @Test
     public void isLoadedWhenAuctionIsReadyForDisplay_ReturnTrue() {
-        changeInterstitialState(READY_TO_DISPLAY_OXB);
+        changeInterstitialState(READY_TO_DISPLAY_PREBID);
         assertTrue(mInterstitialAdUnit.isLoaded());
 
         changeInterstitialState(READY_TO_DISPLAY_GAM);
@@ -222,10 +222,10 @@ public class InterstitialAdUnitTest {
 
     //region ================= EventListener tests
     @Test
-    public void onOxbSdkWinAndWinnerBidIsNull_AdStatusReadyForLoadNotifyErrorListener() {
+    public void onPrebidSdkWinAndWinnerBidIsNull_AdStatusReadyForLoadNotifyErrorListener() {
         final InterstitialEventListener eventListener = getEventListener();
 
-        eventListener.onOXBSdkWin();
+        eventListener.onPrebidSdkWin();
 
         verify(mMockInterstitialAdUnitListener, times(1)).onAdFailed(eq(mInterstitialAdUnit), any(AdException.class));
         assertEquals(READY_FOR_LOAD, mInterstitialAdUnit.getAdUnitState());
@@ -265,7 +265,7 @@ public class InterstitialAdUnitTest {
 
         spyEventListener.onAdFailed(new AdException(AdException.INTERNAL_ERROR, "Test"));
 
-        verify(spyEventListener, times(1)).onOXBSdkWin();
+        verify(spyEventListener, times(1)).onPrebidSdkWin();
         verify(mockInterstitialController, times(1)).loadAd(any(), any());
     }
 

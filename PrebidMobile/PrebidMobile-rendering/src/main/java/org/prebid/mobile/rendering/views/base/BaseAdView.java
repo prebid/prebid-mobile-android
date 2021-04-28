@@ -26,7 +26,7 @@ import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.broadcast.local.EventForwardingLocalBroadcastReceiver;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 
@@ -74,7 +74,7 @@ public abstract class BaseAdView extends FrameLayout {
 
     public void setContentUrl(String contentUrl) {
         if (mAdViewManager == null) {
-            OXLog.error(TAG, "setContentUrl: Failed. AdViewManager is null");
+            LogUtil.error(TAG, "setContentUrl: Failed. AdViewManager is null");
             return;
         }
         mAdViewManager.getAdConfiguration().setContentUrl(contentUrl);
@@ -105,7 +105,7 @@ public abstract class BaseAdView extends FrameLayout {
     }
 
     protected void handleBroadcastAction(String action) {
-        OXLog.debug(TAG, "handleBroadcastAction: parent method executed. No default action handling. " + action);
+        LogUtil.debug(TAG, "handleBroadcastAction: parent method executed. No default action handling. " + action);
     }
 
     protected void handleWindowFocusChange(boolean hasWindowFocus) {

@@ -23,7 +23,7 @@ import org.prebid.mobile.rendering.models.CreativeModel;
 import org.prebid.mobile.rendering.models.CreativeModelsMaker;
 import org.prebid.mobile.rendering.sdk.JSLibraryManager;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 
 import java.lang.ref.WeakReference;
@@ -113,7 +113,7 @@ public class Transaction {
             }
         }
         catch (Exception e) {
-            OXLog.error(TAG, "Failed to check for built in video override");
+            LogUtil.error(TAG, "Failed to check for built in video override");
         }
     }
 
@@ -164,7 +164,7 @@ public class Transaction {
 
     private void stopOmAdSession() {
         if (mOmAdSessionManager == null) {
-            OXLog.error(TAG, "Failed to stopOmAdSession. OmAdSessionManager is null");
+            LogUtil.error(TAG, "Failed to stopOmAdSession. OmAdSessionManager is null");
             return;
         }
 
@@ -208,7 +208,7 @@ public class Transaction {
         public void onSuccess() {
             Transaction transaction = mWeakTransaction.get();
             if (transaction == null) {
-                OXLog.warn(TAG, "CreativeMaker is null");
+                LogUtil.warn(TAG, "CreativeMaker is null");
                 return;
             }
 
@@ -225,7 +225,7 @@ public class Transaction {
         public void onFailure(AdException e) {
             Transaction transaction = mWeakTransaction.get();
             if (transaction == null) {
-                OXLog.warn(TAG, "CreativeMaker is null");
+                LogUtil.warn(TAG, "CreativeMaker is null");
                 return;
             }
 

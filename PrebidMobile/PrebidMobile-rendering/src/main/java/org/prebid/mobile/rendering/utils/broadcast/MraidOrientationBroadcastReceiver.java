@@ -18,7 +18,7 @@ package org.prebid.mobile.rendering.utils.broadcast;
 
 import android.os.Build;
 
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 
@@ -41,12 +41,12 @@ public class MraidOrientationBroadcastReceiver extends OrientationBroadcastRecei
         super.handleOrientationChange(currentRotation);
         BaseJSInterface baseJSInterface = mBaseJSInterfaceWeakReference.get();
         if (baseJSInterface == null) {
-            OXLog.debug(TAG, "handleOrientationChange failure. BaseJsInterface is null");
+            LogUtil.debug(TAG, "handleOrientationChange failure. BaseJsInterface is null");
             return;
         }
 
         if (shouldHandleClose()) {
-            OXLog.debug(TAG, "Call 'close' action for MRAID Resize after changing rotation for API 19.");
+            LogUtil.debug(TAG, "Call 'close' action for MRAID Resize after changing rotation for API 19.");
             baseJSInterface.close();
         }
     }

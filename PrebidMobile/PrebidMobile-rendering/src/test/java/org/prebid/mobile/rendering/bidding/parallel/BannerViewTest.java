@@ -105,7 +105,7 @@ public class BannerViewTest {
     }
 
     @Test
-    public void createOXBBannerViewWithAttributes_InstanceCreated() {
+    public void createPrebidBannerViewWithAttributes_InstanceCreated() {
         AttributeSet attributes = Robolectric.buildAttributeSet().build();
         BannerView bannerView = new BannerView(mMockContext, attributes);
 
@@ -113,7 +113,7 @@ public class BannerViewTest {
     }
 
     @Test
-    public void createOXBBannerViewNoEventHandler_InstanceCreatedAndBidLoaderIsNotNullAndStandaloneEventHandlerProvided()
+    public void createPrebidBannerViewNoEventHandler_InstanceCreatedAndBidLoaderIsNotNullAndStandaloneEventHandlerProvided()
     throws IllegalAccessException {
         BannerView bannerView = new BannerView(mMockContext, AD_UNIT_ID, AD_SIZE);
 
@@ -274,19 +274,19 @@ public class BannerViewTest {
 
     //region ================= BannerEventListener tests
     @Test
-    public void onOxbSdkWinAndWinnerBidIsNull_AdRequestStatusIsFinishedNotifyErrorListener() {
+    public void onPrebidSdkWinAndWinnerBidIsNull_AdRequestStatusIsFinishedNotifyErrorListener() {
         changePrimaryAdServerRequestStatus(true);
         final BannerEventListener bannerEventListener = getBannerEventListener();
         mBannerView.setBidResponse(null);
 
-        bannerEventListener.onOXBSdkWin();
+        bannerEventListener.onPrebidSdkWin();
 
         verify(mMockBannerListener, times(1)).onAdFailed(eq(mBannerView), any(AdException.class));
         assertFalse(mBannerView.isPrimaryAdServerRequestInProgress());
     }
 
     @Test
-    public void onOxbSdkWin_AdRequestStatusIsFinishedDisplayAdView() {
+    public void onPrebidSdkWin_AdRequestStatusIsFinishedDisplayAdView() {
         changePrimaryAdServerRequestStatus(true);
         final BannerEventListener bannerEventListener = getBannerEventListener();
         final BidResponse mockBidResponse = mock(BidResponse.class);
@@ -297,7 +297,7 @@ public class BannerViewTest {
 
         mBannerView.setBidResponse(mockBidResponse);
 
-        bannerEventListener.onOXBSdkWin();
+        bannerEventListener.onPrebidSdkWin();
 
         assertFalse(mBannerView.isPrimaryAdServerRequestInProgress());
     }
@@ -307,7 +307,6 @@ public class BannerViewTest {
         changePrimaryAdServerRequestStatus(true);
 
         final View mockView = mock(View.class);
-        // final OXBBannerView spyBannerView = spy(mOXBBannerView);
         final BannerEventListener bannerEventListener = getBannerEventListener();
 
         bannerEventListener.onAdServerWin(mockView);
@@ -331,7 +330,7 @@ public class BannerViewTest {
     }
 
     @Test
-    public void onFailedAndWithWinnerBid_AdRequestStatusIsFinishedNotifyOxbSdkWin() {
+    public void onFailedAndWithWinnerBid_AdRequestStatusIsFinishedNotifyPrebidSdkWin() {
         changePrimaryAdServerRequestStatus(true);
 
         final BidResponse mockBidResponse = mock(BidResponse.class);
@@ -344,7 +343,7 @@ public class BannerViewTest {
         spyEventListener.onAdFailed(new AdException(AdException.INTERNAL_ERROR, "Test"));
 
         assertFalse(mBannerView.isPrimaryAdServerRequestInProgress());
-        verify(spyEventListener, times(1)).onOXBSdkWin();
+        verify(spyEventListener, times(1)).onPrebidSdkWin();
     }
 
     @Test

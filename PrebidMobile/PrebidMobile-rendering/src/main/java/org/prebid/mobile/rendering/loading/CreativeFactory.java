@@ -31,7 +31,7 @@ import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.TrackingEvent;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.RewardedVideoCreative;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreative;
@@ -98,7 +98,7 @@ public class CreativeFactory {
                 default:
                     String msg = "Unable to start creativeFactory. adConfig.adUnitIdentifierType doesn't match supported types"
                                  + "adConfig.adUnitIdentifierType: " + adUnitIdentifierType;
-                    OXLog.error(TAG, msg);
+                    LogUtil.error(TAG, msg);
                     AdException adException = new AdException(AdException.INTERNAL_ERROR, msg);
                     mListener.onFailure(adException);
                     break;
@@ -106,7 +106,7 @@ public class CreativeFactory {
         }
         catch (Exception exception) {
             String message = "Creative Factory failed: " + exception.getMessage();
-            OXLog.error(TAG, message + Log.getStackTraceString(exception));
+            LogUtil.error(TAG, message + Log.getStackTraceString(exception));
             AdException adException = new AdException(AdException.INTERNAL_ERROR, message);
             mListener.onFailure(adException);
         }
@@ -179,7 +179,7 @@ public class CreativeFactory {
             newCreative.load();
         }
         catch (Exception exception) {
-            OXLog.error(TAG, "VideoCreative creation failed: " + Log.getStackTraceString(exception));
+            LogUtil.error(TAG, "VideoCreative creation failed: " + Log.getStackTraceString(exception));
             mListener.onFailure(new AdException(AdException.INTERNAL_ERROR, "VideoCreative creation failed: " + exception.getMessage()));
         }
     }
@@ -224,12 +224,12 @@ public class CreativeFactory {
         public void creativeReady(AbstractCreative creative) {
             CreativeFactory creativeFactory = mWeakCreativeFactory.get();
             if (creativeFactory == null) {
-                OXLog.warn(TAG, "CreativeFactory is null");
+                LogUtil.warn(TAG, "CreativeFactory is null");
                 return;
             }
             if (creativeFactory.mTimeoutState == TimeoutState.EXPIRED) {
                 creativeFactory.mListener.onFailure(new AdException(AdException.INTERNAL_ERROR, "Creative Timeout"));
-                OXLog.warn(TAG, "Creative timed out, backing out");
+                LogUtil.warn(TAG, "Creative timed out, backing out");
                 return;
             }
             creativeFactory.mTimeoutState = TimeoutState.FINISHED;
@@ -241,7 +241,7 @@ public class CreativeFactory {
         public void creativeFailed(AdException error) {
             CreativeFactory creativeFactory = mWeakCreativeFactory.get();
             if (creativeFactory == null) {
-                OXLog.warn(TAG, "CreativeFactory is null");
+                LogUtil.warn(TAG, "CreativeFactory is null");
                 return;
             }
 

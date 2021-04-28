@@ -417,8 +417,8 @@ public class BaseJSInterfaceTest {
         RedirectUrlListener mockListener = mock(RedirectUrlListener.class);
         mSpyBaseJSInterface.followToOriginalUrl("test", mockListener);
 
-        GetOriginalUrlTask oxmRedirectedUrlAsyncTask = WhiteBox.getInternalState(mSpyBaseJSInterface, "mRedirectedUrlAsyncTask");
-        ResponseHandler getOriginalURLCallBack = WhiteBox.getInternalState(oxmRedirectedUrlAsyncTask, "mResponseHandler");
+        GetOriginalUrlTask redirectedUrlAsyncTask = WhiteBox.getInternalState(mSpyBaseJSInterface, "mRedirectedUrlAsyncTask");
+        ResponseHandler getOriginalURLCallBack = WhiteBox.getInternalState(redirectedUrlAsyncTask, "mResponseHandler");
 
         getOriginalURLCallBack.onResponse(mock(BaseNetworkTask.GetUrlResult.class));
         verify(mockListener).onSuccess(any(), any());

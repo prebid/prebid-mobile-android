@@ -21,7 +21,7 @@ import android.view.View;
 import org.prebid.mobile.rendering.errors.AdException;
 
 public interface BannerEventListener {
-    void onOXBSdkWin();
+    void onPrebidSdkWin();
 
     void onAdServerWin(View view);
 

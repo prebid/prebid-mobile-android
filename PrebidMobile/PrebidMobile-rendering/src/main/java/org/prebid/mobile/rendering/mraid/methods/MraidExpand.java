@@ -29,7 +29,7 @@ import org.prebid.mobile.rendering.interstitial.AdExpandedDialog;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.mraid.methods.network.RedirectUrlListener;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
@@ -72,7 +72,7 @@ public class MraidExpand {
 
             @Override
             public void onFailed() {
-                OXLog.debug(TAG, "Expand failed");
+                LogUtil.debug(TAG, "Expand failed");
                 // Nothing to do
             }
         });
@@ -124,7 +124,7 @@ public class MraidExpand {
     private void performExpand(String url, CompletedCallBack completedCallBack) {
         final Context context = mContext;
         if (context == null) {
-            OXLog.error(TAG, "Context is null");
+            LogUtil.error(TAG, "Context is null");
             return;
         }
 
@@ -136,7 +136,7 @@ public class MraidExpand {
                 String state = mraidVariableContainer.getCurrentState();
 
                 if (isContainerStateInvalid(state)) {
-                    OXLog.debug(TAG, "handleExpand: Skipping. Wrong container state: " + state);
+                    LogUtil.debug(TAG, "handleExpand: Skipping. Wrong container state: " + state);
                     return;
                 }
 
@@ -149,7 +149,7 @@ public class MraidExpand {
                 showExpandDialog(context, completedCallBack);
             }
             catch (Exception e) {
-                OXLog.error(TAG, "Expand failed: " + Log.getStackTraceString(e));
+                LogUtil.error(TAG, "Expand failed: " + Log.getStackTraceString(e));
             }
         });
     }
@@ -164,7 +164,7 @@ public class MraidExpand {
     @VisibleForTesting
     void showExpandDialog(Context context, CompletedCallBack completedCallBack) {
         if (!(context instanceof Activity) || ((Activity) context).isFinishing()) {
-            OXLog.error(TAG, "Context is not activity or activity is finishing, can not show expand dialog");
+            LogUtil.error(TAG, "Context is not activity or activity is finishing, can not show expand dialog");
             return;
         }
 

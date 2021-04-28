@@ -20,7 +20,7 @@ import org.prebid.mobile.rendering.bidding.parallel.InterstitialAdUnit;
 import org.prebid.mobile.rendering.errors.AdException;
 
 /**
- * Listener interface representing OXBInterstitialAdUnit events.
+ * Listener interface representing InterstitialAdUnit events.
  * All methods will be invoked on the main thread.
  */
 public interface InterstitialAdUnitListener {

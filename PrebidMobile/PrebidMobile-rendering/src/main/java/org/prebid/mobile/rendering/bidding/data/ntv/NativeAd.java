@@ -20,9 +20,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.rendering.bidding.listeners.NativeAdListener;
 import org.prebid.mobile.rendering.listeners.OnBrowserActionResultListener;
 import org.prebid.mobile.rendering.models.CreativeVisibilityTracker;
@@ -37,13 +34,16 @@ import org.prebid.mobile.rendering.sdk.JSLibraryManager;
 import org.prebid.mobile.rendering.session.manager.NativeOmVerification;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.utils.url.ActionNotResolvedException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class NativeAd {
     private static final String TAG = NativeAd.class.getSimpleName();
@@ -342,7 +342,7 @@ public class NativeAd {
         if (mOmAdSessionManager == null) {
             mOmAdSessionManager = OmAdSessionManager.createNewInstance(JSLibraryManager.getInstance(adView.getContext()));
             if (mOmAdSessionManager == null) {
-                OXLog.error(TAG, "Failed to init OmAdSessionManager");
+                LogUtil.error(TAG, "Failed to init OmAdSessionManager");
                 return;
             }
         }
@@ -410,7 +410,7 @@ public class NativeAd {
     private void handleClickAction(Context context, NativeAdLink nativeAdLink) {
         if (nativeAdLink == null || nativeAdLink.getUrl().isEmpty()) {
             if (mNativeAdLink == null || mNativeAdLink.getUrl().isEmpty()) {
-                OXLog.error(TAG, "handleClickAction failed. NativeAdLink is null or url is empty.");
+                LogUtil.error(TAG, "handleClickAction failed. NativeAdLink is null or url is empty.");
                 return;
             }
             // If asset's link is null, use parent's one
@@ -427,10 +427,10 @@ public class NativeAd {
                 notifyClick();
             }
             catch (ActionNotResolvedException e) {
-                OXLog.debug(TAG, "handleUrl(): Primary URL failed. Attempting to process fallback URL");
+                LogUtil.debug(TAG, "handleUrl(): Primary URL failed. Attempting to process fallback URL");
                 String fallbackUrl = nativeAdLink.getFallback();
                 if (fallbackUrl == null || fallbackUrl.isEmpty()) {
-                    OXLog.debug(TAG, "handleUrl(): No fallback URL was provided.");
+                    LogUtil.debug(TAG, "handleUrl(): No fallback URL was provided.");
                     return;
                 }
                 launchUrlInBrowser(context, fallbackUrl);

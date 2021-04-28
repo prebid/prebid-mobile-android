@@ -24,7 +24,7 @@ import org.prebid.mobile.rendering.models.AbstractCreative;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.CreativeModelMakerBids;
 import org.prebid.mobile.rendering.models.CreativeModelsMaker;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 
 import java.lang.ref.WeakReference;
@@ -75,7 +75,7 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
     public void onTransactionSuccess(Transaction transaction) {
         mLatestTransaction = null;
         if (mListener == null) {
-            OXLog.warn(TAG, "Unable to notify listener. Listener is null");
+            LogUtil.warn(TAG, "Unable to notify listener. Listener is null");
             return;
         }
         mTransactions.add(transaction);
@@ -90,7 +90,7 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
     /**
      * Initiates the process of creating creative model and transaction from parsed bid response
      *
-     * @param adConfiguration - OXBAdConfiguration
+     * @param adConfiguration - AdConfiguration
      * @param bidResponse     - parsed bid response
      */
     public void fetchBidTransaction(AdConfiguration adConfiguration, BidResponse bidResponse) {
@@ -128,7 +128,7 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
     public AbstractCreative getCurrentCreative() {
         Transaction transaction = getCurrentTransaction();
         if (transaction == null) {
-            OXLog.error(TAG, "Get Current creative called with no ad");
+            LogUtil.error(TAG, "Get Current creative called with no ad");
             return null;
         }
         return transaction.getCreativeFactories().get(mCurrentTransactionCreativeIndex).getCreative();
@@ -182,7 +182,7 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
 
     private void notifyListenerError(AdException e) {
         if (mListener == null) {
-            OXLog.warn(TAG, "Unable to notify listener. Listener is null");
+            LogUtil.warn(TAG, "Unable to notify listener. Listener is null");
             return;
         }
         mListener.onFetchingFailed(e);

@@ -22,7 +22,7 @@ import android.os.Looper;
 
 import org.prebid.mobile.rendering.models.internal.MraidEvent;
 import org.prebid.mobile.rendering.utils.helpers.HandlerQueueManager;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.mraid.BannerJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JsExecutor;
@@ -64,7 +64,7 @@ public class WebViewBanner extends WebViewBase {
                                                                                          new HandlerQueueManager()));
 
         addJavascriptInterface(mraid, "jsBridge");
-        OXLog.debug(TAG, "JS bridge initialized");
+        LogUtil.debug(TAG, "JS bridge initialized");
         setBaseJSInterface(mraid);
     }
 }

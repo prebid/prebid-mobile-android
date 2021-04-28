@@ -32,14 +32,12 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.WindowManager;
 
-import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.rendering.sdk.BaseManager;
 import org.prebid.mobile.rendering.sdk.calendar.CalendarEventWrapper;
 import org.prebid.mobile.rendering.sdk.calendar.CalendarFactory;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.browser.AdBrowserActivity;
 
 import java.io.BufferedInputStream;
@@ -52,6 +50,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+
+import androidx.annotation.VisibleForTesting;
 
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
 import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
@@ -209,7 +209,7 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
     @Override
     public boolean isActivityOrientationLocked(Context context) {
         if (!(context instanceof Activity)) {
-            OXLog.debug(TAG, "isScreenOrientationLocked() executed with non-activity context. Returning false.");
+            LogUtil.debug(TAG, "isScreenOrientationLocked() executed with non-activity context. Returning false.");
             return false;
         }
 
@@ -236,7 +236,7 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
     @Override
     public void storePicture(String url) throws Exception {
         if (!Utils.isExternalStorageAvailable()) {
-            OXLog.error(TAG, "storePicture: Failed. External storage is not available");
+            LogUtil.error(TAG, "storePicture: Failed. External storage is not available");
             return;
         }
         String fileName = Utils.md5(url);
@@ -249,7 +249,7 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
         OutputStream outputStream = getOutputStream(fileName);
 
         if (outputStream == null) {
-            OXLog.error(TAG, "Could not get Outputstream to write file to");
+            LogUtil.error(TAG, "Could not get Outputstream to write file to");
             return;
         }
 
@@ -320,7 +320,7 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
     OutputStream getOutPutStreamForQ(String filename, Context context)
     throws FileNotFoundException {
         if (context == null) {
-            OXLog.debug(TAG, "getOutPutStreamForQ: Failed. Context is null");
+            LogUtil.debug(TAG, "getOutPutStreamForQ: Failed. Context is null");
             return null;
         }
 
@@ -331,7 +331,7 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
         Uri contentUri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
         Uri insert = contentResolver.insert(contentUri, contentValues);
         if (insert == null) {
-            OXLog.debug(TAG, "Could not save content uri");
+            LogUtil.debug(TAG, "Could not save content uri");
             return null;
         }
         return contentResolver.openOutputStream(insert);

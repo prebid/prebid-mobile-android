@@ -33,7 +33,7 @@ import org.json.JSONObject;
 import org.prebid.mobile.rendering.mraid.handler.FetchPropertiesHandler;
 import org.prebid.mobile.rendering.utils.helpers.Dips;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
@@ -65,7 +65,7 @@ public class MraidResize {
 
         @Override
         public void onError(Throwable throwable) {
-            OXLog.error(TAG, "executeGetResizeProperties failed: " + Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, "executeGetResizeProperties failed: " + Log.getStackTraceString(throwable));
         }
     };
 
@@ -86,7 +86,7 @@ public class MraidResize {
     public void resize() {
         final String state = mJsInterface.getMraidVariableContainer().getCurrentState();
         if (isContainerStateInvalid(state)) {
-            OXLog.debug(TAG, "resize: Skipping. Wrong container state: " + state);
+            LogUtil.debug(TAG, "resize: Skipping. Wrong container state: " + state);
             return;
         }
         else if (state.equals(JSInterface.STATE_EXPANDED)) {
@@ -109,7 +109,7 @@ public class MraidResize {
         mCloseView = Utils.createCloseView(mContextReference.get());
 
         if (mCloseView == null) {
-            OXLog.error(TAG, "Error initializing close view. Close view is null");
+            LogUtil.error(TAG, "Error initializing close view. Close view is null");
             return;
         }
         mAdBaseView.post(() -> {
@@ -128,13 +128,13 @@ public class MraidResize {
         mAdBaseView.post((() -> {
                              try {
                                  if (mAdBaseView == null) {
-                                     OXLog.error(TAG, "Resize failed. Webview is null");
+                                     LogUtil.error(TAG, "Resize failed. Webview is null");
                                      mJsInterface.onError("Unable to resize after webview is destroyed", JSInterface.ACTION_RESIZE);
                                      return;
                                  }
                                  Context context = mContextReference.get();
                                  if (context == null) {
-                                     OXLog.error(TAG, "Resize failed. Context is null");
+                                     LogUtil.error(TAG, "Resize failed. Context is null");
                                      mJsInterface.onError("Unable to resize when mContext is null", JSInterface.ACTION_RESIZE);
                                      return;
                                  }
@@ -161,7 +161,7 @@ public class MraidResize {
                                  mInterstitialManager.interstitialDialogShown(mSecondaryAdContainer);
                              }
                              catch (Exception e) {
-                                 OXLog.error(TAG, "Resize failed: " + Log.getStackTraceString(e));
+                                 LogUtil.error(TAG, "Resize failed: " + Log.getStackTraceString(e));
                              }
                          })
         );
@@ -271,7 +271,7 @@ public class MraidResize {
                          + widthDips + ", " + height + ") and offset ("
                          + offsetXDips + ", " + offsetYDips + ") that don't allow the close region to appear "
                          + "within the resized ad.";
-            OXLog.error(TAG, err);
+            LogUtil.error(TAG, err);
             mJsInterface.onError("Resize properties specified a size & offset that does not allow the close region to appear within the resized ad", JSInterface.ACTION_RESIZE);
             return null;
         }
@@ -281,7 +281,7 @@ public class MraidResize {
 
     private Pair<Integer, Integer> getCloseViewWidthHeight() {
         if (mCloseView == null) {
-            OXLog.error(TAG, "Unable to retrieve width height from close view. Close view is null.");
+            LogUtil.error(TAG, "Unable to retrieve width height from close view. Close view is null.");
             return new Pair<>(0, 0);
         }
 
@@ -307,10 +307,10 @@ public class MraidResize {
             allowOffscreen = resizeProperties.optBoolean("allowOffscreen", true);
         }
         catch (JSONException e) {
-            OXLog.error(TAG, "Failed to get resize values from JSON for MRAID: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Failed to get resize values from JSON for MRAID: " + Log.getStackTraceString(e));
         }
 
-        OXLog.debug(TAG, "resize: x, y, width, height: " + offsetX + " " + offsetY + " " + twidth + " " + theight);
+        LogUtil.debug(TAG, "resize: x, y, width, height: " + offsetX + " " + offsetY + " " + twidth + " " + theight);
 
         showExpandDialog(twidth, theight, offsetX, offsetY, allowOffscreen);
     }
@@ -322,7 +322,7 @@ public class MraidResize {
                      + " region to appear within the max allowed size ("
                      + mScreenMetrics.getRootViewRectDips().width() + ", "
                      + mScreenMetrics.getRootViewRectDips().height() + ")";
-        OXLog.error(TAG, err);
+        LogUtil.error(TAG, err);
     }
 
     private boolean isContainerStateInvalid(String state) {

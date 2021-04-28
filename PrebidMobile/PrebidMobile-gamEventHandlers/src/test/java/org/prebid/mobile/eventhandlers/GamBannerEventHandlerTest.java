@@ -76,7 +76,7 @@ public class GamBannerEventHandlerTest {
 
         mBannerEventHandler.onEvent(AdEvent.APP_EVENT_RECEIVED);
 
-        verify(mMockBannerEventListener, times(1)).onOXBSdkWin();
+        verify(mMockBannerEventListener, times(1)).onPrebidSdkWin();
         assertFalse(getExpectingAppEventStatus());
     }
 

@@ -21,17 +21,17 @@ import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.eventhandlers.global.Constants;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.RewardedEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEventListener {
     private static final String TAG = GamRewardedEventHandler.class.getSimpleName();
@@ -79,7 +79,7 @@ public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEvent
     }
     //endregion ==================== EventListener Implementation
 
-    //region ==================== OX EventHandler Implementation
+    //region ==================== EventHandler Implementation
     @Override
     public void setRewardedEventListener(
         @NonNull
@@ -128,7 +128,7 @@ public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEvent
     public void destroy() {
         cancelTimer();
     }
-    //endregion ==================== OX EventHandler Implementation
+    //endregion ==================== EventHandler Implementation
 
     private void initPublisherRewardedAd() {
         mRewardedAd = RewardedAdWrapper.newInstance(mActivityWeakReference.get(), mGamAdUnitId, this);
@@ -137,7 +137,7 @@ public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEvent
     private void primaryAdReceived() {
         if (mIsExpectingAppEvent) {
             if (mAppEventHandler != null) {
-                OXLog.debug(TAG, "primaryAdReceived: AppEventTimer is not null. Skipping timer scheduling.");
+                LogUtil.debug(TAG, "primaryAdReceived: AppEventTimer is not null. Skipping timer scheduling.");
                 return;
             }
 
@@ -150,14 +150,14 @@ public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEvent
 
     private void handleAppEvent() {
         if (!mIsExpectingAppEvent) {
-            OXLog.debug(TAG, "appEventDetected: Skipping event handling. App event is not expected");
+            LogUtil.debug(TAG, "appEventDetected: Skipping event handling. App event is not expected");
             return;
         }
 
         cancelTimer();
         mIsExpectingAppEvent = false;
         mDidNotifiedBidWin = true;
-        mListener.onOXBSdkWin();
+        mListener.onPrebidSdkWin();
     }
 
     private void scheduleTimer() {

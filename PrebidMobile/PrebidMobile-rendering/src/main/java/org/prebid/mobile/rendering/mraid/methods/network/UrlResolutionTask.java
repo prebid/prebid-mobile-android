@@ -18,12 +18,8 @@ package org.prebid.mobile.rendering.mraid.methods.network;
 
 import android.os.AsyncTask;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +27,10 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 @VisibleForTesting
 public class UrlResolutionTask extends AsyncTask<String, Void, String> {
@@ -100,7 +100,7 @@ public class UrlResolutionTask extends AsyncTask<String, Void, String> {
                     }
                 }
                 catch (IOException e) {
-                    OXLog.error(TAG, "IOException when closing httpUrlConnection. Ignoring.");
+                    LogUtil.error(TAG, "IOException when closing httpUrlConnection. Ignoring.");
                 }
                 httpUrlConnection.disconnect();
             }
@@ -125,11 +125,11 @@ public class UrlResolutionTask extends AsyncTask<String, Void, String> {
             }
             catch (IllegalArgumentException e) {
                 // Ensure the request is cancelled instead of resolving an intermediary URL
-                OXLog.error(TAG, "Invalid URL redirection. baseUrl=" + baseUrl + "\n redirectUrl=" + redirectUrl);
+                LogUtil.error(TAG, "Invalid URL redirection. baseUrl=" + baseUrl + "\n redirectUrl=" + redirectUrl);
                 throw new URISyntaxException(redirectUrl, "Unable to parse invalid URL");
             }
             catch (NullPointerException e) {
-                OXLog.error(TAG, "Invalid URL redirection. baseUrl=" + baseUrl + "\n redirectUrl=" + redirectUrl);
+                LogUtil.error(TAG, "Invalid URL redirection. baseUrl=" + baseUrl + "\n redirectUrl=" + redirectUrl);
                 throw e;
             }
         }

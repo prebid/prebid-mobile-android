@@ -33,7 +33,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
-public class OXBAdUnitConfigurationTest {
+public class AdUnitConfigurationTest {
 
     private AdConfiguration mAdUnitConfig;
 

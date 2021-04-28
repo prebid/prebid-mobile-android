@@ -53,10 +53,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.LOADING;
-import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.OXB_LOADING;
+import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.PREBID_LOADING;
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
-import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_OXB;
+import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_PREBID;
 
 @RunWith(RobolectricTestRunner.class)
 public class RewardedAdUnitTest {
@@ -116,7 +116,7 @@ public class RewardedAdUnitTest {
         mRewardedAdUnit.loadAd();
         verifyZeroInteractions(mMockBidLoader);
 
-        changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_OXB);
+        changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_PREBID);
         mRewardedAdUnit.loadAd();
         verifyZeroInteractions(mMockBidLoader);
 
@@ -124,7 +124,7 @@ public class RewardedAdUnitTest {
         mRewardedAdUnit.loadAd();
         verifyZeroInteractions(mMockBidLoader);
 
-        changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.OXB_LOADING);
+        changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.PREBID_LOADING);
         mRewardedAdUnit.loadAd();
         verifyZeroInteractions(mMockBidLoader);
     }
@@ -153,10 +153,10 @@ public class RewardedAdUnitTest {
     }
 
     @Test
-    public void showWhenAuctionWinnerIsOXB_ShowOXB() {
+    public void showWhenAuctionWinnerIsPrebid_ShowPrebid() {
         final InterstitialController mockInterstitialController = mock(InterstitialController.class);
 
-        changeInterstitialState(READY_TO_DISPLAY_OXB);
+        changeInterstitialState(READY_TO_DISPLAY_PREBID);
 
         WhiteBox.setInternalState(mRewardedAdUnit, "mInterstitialController", mockInterstitialController);
         mRewardedAdUnit.show();
@@ -172,13 +172,13 @@ public class RewardedAdUnitTest {
         changeInterstitialState(LOADING);
         assertFalse(mRewardedAdUnit.isLoaded());
 
-        changeInterstitialState(OXB_LOADING);
+        changeInterstitialState(PREBID_LOADING);
         assertFalse(mRewardedAdUnit.isLoaded());
     }
 
     @Test
     public void isLoadedWhenAuctionIsReadyForDisplay_ReturnTrue() {
-        changeInterstitialState(READY_TO_DISPLAY_OXB);
+        changeInterstitialState(READY_TO_DISPLAY_PREBID);
         assertTrue(mRewardedAdUnit.isLoaded());
 
         changeInterstitialState(READY_TO_DISPLAY_GAM);
@@ -220,10 +220,10 @@ public class RewardedAdUnitTest {
 
     //region ================= EventListener tests
     @Test
-    public void onOxbSdkWinAndWinnerBidIsNull_AdStatusReadyForLoadNotifyErrorListener() {
+    public void onPrebidSdkWinAndWinnerBidIsNull_AdStatusReadyForLoadNotifyErrorListener() {
         final RewardedVideoEventListener eventListener = getEventListener();
 
-        eventListener.onOXBSdkWin();
+        eventListener.onPrebidSdkWin();
 
         verify(mMockRewardedAdUnitListener, times(1)).onAdFailed(eq(mRewardedAdUnit), any(AdException.class));
         assertEquals(READY_FOR_LOAD, mRewardedAdUnit.getAdUnitState());
@@ -264,7 +264,7 @@ public class RewardedAdUnitTest {
 
         spyEventListener.onAdFailed(new AdException(AdException.INTERNAL_ERROR, "Test"));
 
-        verify(spyEventListener, times(1)).onOXBSdkWin();
+        verify(spyEventListener, times(1)).onPrebidSdkWin();
         verify(mockInterstitialController, times(1)).loadAd(any(), any());
     }
 

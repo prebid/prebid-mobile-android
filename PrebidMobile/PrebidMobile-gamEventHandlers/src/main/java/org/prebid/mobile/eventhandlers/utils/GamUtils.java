@@ -26,7 +26,7 @@ import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.NativeFetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.NativeAdCallback;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.utils.ntv.NativeUtils;
 
 import java.util.HashMap;
@@ -53,7 +53,7 @@ public class GamUtils {
         removeUsedCustomTargetingForGam(adRequest);
 
         if (keywords == null || keywords.isEmpty()) {
-            OXLog.error(TAG, "prepare: Failed. Result contains invalid keywords");
+            LogUtil.error(TAG, "prepare: Failed. Result contains invalid keywords");
             return;
         }
 
@@ -68,7 +68,7 @@ public class GamUtils {
 
     public static void findNativeAd(NativeCustomFormatAd customFormatAd, NativeAdCallback callback) {
         if (customFormatAd == null || callback == null) {
-            OXLog.error(TAG, "findNativeAd: Failed. Passed nativeTemplateAd or callback is invalid");
+            LogUtil.error(TAG, "findNativeAd: Failed. Passed nativeTemplateAd or callback is invalid");
             return;
         }
 
@@ -81,7 +81,7 @@ public class GamUtils {
 
     public static void findNativeAd(NativeAd unifiedNativeAd, NativeAdCallback callback) {
         if (unifiedNativeAd == null || callback == null) {
-            OXLog.error(TAG, "findNativeAd: Failed. Passed nativeTemplateAd or callback is invalid");
+            LogUtil.error(TAG, "findNativeAd: Failed. Passed nativeTemplateAd or callback is invalid");
             return;
         }
 

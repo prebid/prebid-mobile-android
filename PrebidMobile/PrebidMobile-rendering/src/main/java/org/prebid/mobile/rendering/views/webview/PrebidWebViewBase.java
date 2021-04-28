@@ -34,7 +34,7 @@ import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposure;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
@@ -104,7 +104,7 @@ public class PrebidWebViewBase extends FrameLayout
                 readyForMraidExpanded();
             }
             catch (Exception e) {
-                OXLog.error(TAG, "initMraidExpanded failed: " + Log.getStackTraceString(e));
+                LogUtil.error(TAG, "initMraidExpanded failed: " + Log.getStackTraceString(e));
             }
         });
     }
@@ -202,7 +202,7 @@ public class PrebidWebViewBase extends FrameLayout
 
     protected void renderAdView(WebViewBase webViewBase) {
         if (webViewBase == null) {
-            OXLog.warn(TAG, "WebviewBase is null");
+            LogUtil.warn(TAG, "WebviewBase is null");
             return;
         }
         if (getContext() != null) {
@@ -234,12 +234,12 @@ public class PrebidWebViewBase extends FrameLayout
 
     private void renderPlacement(WebViewBase webViewBase, int width, int height) {
         if (mContext == null) {
-            OXLog.warn(TAG, "Context is null");
+            LogUtil.warn(TAG, "Context is null");
             return;
         }
 
         if (webViewBase == null) {
-            OXLog.warn(TAG, "WebviewBase is null");
+            LogUtil.warn(TAG, "WebviewBase is null");
             return;
         }
 

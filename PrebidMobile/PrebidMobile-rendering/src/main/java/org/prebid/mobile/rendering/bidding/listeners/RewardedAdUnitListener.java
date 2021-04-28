@@ -20,7 +20,7 @@ import org.prebid.mobile.rendering.bidding.parallel.RewardedAdUnit;
 import org.prebid.mobile.rendering.errors.AdException;
 
 /**
- * Listener interface representing OXBRewardedAdUnit events.
+ * Listener interface representing RewardedAdUnit events.
  * All methods will be invoked on the main thread.
  */
 public interface RewardedAdUnitListener {

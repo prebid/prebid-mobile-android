@@ -21,12 +21,12 @@ import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewParent;
 
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposure;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposureChecker;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
+
+import androidx.annotation.Nullable;
 
 import static org.prebid.mobile.rendering.models.ntv.NativeEventTracker.EventType.IMPRESSION;
 import static org.prebid.mobile.rendering.models.ntv.NativeEventTracker.EventType.OMID;
@@ -135,7 +135,7 @@ public class VisibilityChecker {
         }
 
         ViewExposure exposure = mViewExposureChecker.exposure(view);
-        OXLog.debug(TAG, exposure != null ? exposure.toString() : "null exposure");
+        LogUtil.debug(TAG, exposure != null ? exposure.toString() : "null exposure");
         return exposure;
     }
 

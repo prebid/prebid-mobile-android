@@ -20,7 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -60,7 +60,7 @@ public class URLComponents {
             }
         }
         catch (JSONException e) {
-            OXLog.error(TAG, "Failed to add OpenRTB query arg");
+            LogUtil.error(TAG, "Failed to add OpenRTB query arg");
         }
 
         StringBuilder queryArgString = new StringBuilder();
@@ -71,7 +71,7 @@ public class URLComponents {
                 value = URLEncoder.encode(value, "UTF-8");
             }
             catch (UnsupportedEncodingException e) {
-                OXLog.error(TAG, "Failed to encode value: " + value + " from key: " + key);
+                LogUtil.error(TAG, "Failed to encode value: " + value + " from key: " + key);
                 continue;
             }
             //URL encoder turns spaces to +. SDK to convert + to %20

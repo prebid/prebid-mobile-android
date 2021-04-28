@@ -18,8 +18,6 @@ package org.prebid.mobile.rendering.models;
 
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
@@ -30,10 +28,12 @@ import org.prebid.mobile.rendering.models.internal.VastExtractorResult;
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.utils.helpers.MacrosResolutionHelper;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.OmEventTracker;
 
 import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
 
 public class CreativeModelMakerBids {
     private static final String TAG = CreativeModelMakerBids.class.getSimpleName();
@@ -116,7 +116,7 @@ public class CreativeModelMakerBids {
         String html = "";
 
         if (bid == null) {
-            OXLog.error(TAG, "getAdHtml: Failed. Bid is null. Returning empty string.");
+            LogUtil.error(TAG, "getAdHtml: Failed. Bid is null. Returning empty string.");
             return html;
         }
 

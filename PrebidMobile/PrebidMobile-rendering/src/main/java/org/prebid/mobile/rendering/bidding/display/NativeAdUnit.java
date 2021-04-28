@@ -18,9 +18,6 @@ package org.prebid.mobile.rendering.bidding.display;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.NativeFetchDemandResult;
@@ -30,7 +27,10 @@ import org.prebid.mobile.rendering.bidding.listeners.OnNativeFetchCompleteListen
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class NativeAdUnit extends BaseAdUnit {
     private static final String TAG = NativeAdUnit.class.getSimpleName();
@@ -65,7 +65,7 @@ public class NativeAdUnit extends BaseAdUnit {
     @Override
     protected void onResponseReceived(BidResponse response) {
         if (mNativeFetchCompleteListener == null) {
-            OXLog.error(TAG, "Failed to pass callback. Ad object or OnFetchCompleteListener is null");
+            LogUtil.error(TAG, "Failed to pass callback. Ad object or OnFetchCompleteListener is null");
             return;
         }
 
@@ -79,7 +79,7 @@ public class NativeAdUnit extends BaseAdUnit {
     @Override
     protected void onErrorReceived(AdException exception) {
         if (mNativeFetchCompleteListener == null) {
-            OXLog.error(TAG, "Failed to pass callback. Ad object or OnFetchCompleteListener is null");
+            LogUtil.error(TAG, "Failed to pass callback. Ad object or OnFetchCompleteListener is null");
             return;
         }
         final FetchDemandResult fetchDemandResult = FetchDemandResult.parseErrorMessage(exception.getMessage());

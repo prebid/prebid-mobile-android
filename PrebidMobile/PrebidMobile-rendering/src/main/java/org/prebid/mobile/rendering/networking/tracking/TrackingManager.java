@@ -16,12 +16,12 @@
 
 package org.prebid.mobile.rendering.networking.tracking;
 
-import androidx.annotation.Nullable;
-
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 public class TrackingManager {
 
@@ -46,7 +46,7 @@ public class TrackingManager {
 
     public void fireEventTrackingURLs(@Nullable List<String> urls) {
         if (urls == null) {
-            OXLog.debug(TAG, "fireEventTrackingURLs(): Unable to execute event tracking requests. Provided list is null");
+            LogUtil.debug(TAG, "fireEventTrackingURLs(): Unable to execute event tracking requests. Provided list is null");
             return;
         }
         for (String url : urls) {

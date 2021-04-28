@@ -19,20 +19,20 @@ package org.prebid.mobile.rendering.bidding.data.bid;
 import android.content.Context;
 import android.util.Pair;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.utils.helpers.Dips;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class BidResponse {
     private final static String TAG = BidResponse.class.getSimpleName();
@@ -130,7 +130,7 @@ public class BidResponse {
             if (getWinningBid() == null) {
                 mHasParseError = true;
                 mParseError = "Failed to parse bids. No winning bids were found.";
-                OXLog.info(TAG, mParseError);
+                LogUtil.info(TAG, mParseError);
             }
 
             mCreationTime = System.currentTimeMillis();
@@ -138,7 +138,7 @@ public class BidResponse {
         catch (JSONException e) {
             mHasParseError = true;
             mParseError = "Failed to parse JSON String: " + e.getMessage();
-            OXLog.error(TAG, mParseError);
+            LogUtil.error(TAG, mParseError);
         }
     }
 

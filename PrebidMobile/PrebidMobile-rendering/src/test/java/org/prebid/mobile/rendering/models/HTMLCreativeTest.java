@@ -367,10 +367,10 @@ public class HTMLCreativeTest {
 
     @Test
     public void createOmAdSessionTest() throws IllegalAccessException {
-        PrebidWebViewBase mockOXWebView = mock(PrebidWebViewBase.class);
-        when(mockOXWebView.getWebView()).thenReturn(mock(WebViewBase.class));
+        PrebidWebViewBase mockWebView = mock(PrebidWebViewBase.class);
+        when(mockWebView.getWebView()).thenReturn(mock(WebViewBase.class));
 
-        mHtmlCreative.setCreativeView(mockOXWebView);
+        mHtmlCreative.setCreativeView(mockWebView);
 
         mHtmlCreative.createOmAdSession();
         verify(mMockOmAdSessionManager).initWebAdSessionManager(any(WebViewBase.class), any());

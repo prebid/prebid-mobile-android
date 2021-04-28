@@ -18,9 +18,6 @@ package org.prebid.mobile.rendering.bidding.parallel;
 
 import android.content.Context;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
@@ -31,16 +28,19 @@ import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.Set;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.LOADING;
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
-import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_OXB;
+import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_PREBID;
 
 public abstract class BaseInterstitialAdUnit {
     private static final String TAG = BaseInterstitialAdUnit.class.getSimpleName();
@@ -60,7 +60,7 @@ public abstract class BaseInterstitialAdUnit {
         public void onFetchCompleted(BidResponse response) {
             mBidResponse = response;
 
-            changeOxbInterstitialAdUnitState(LOADING);
+            changeInterstitialAdUnitState(LOADING);
             requestAdWithBid(getWinnerBid());
         }
 
@@ -74,7 +74,7 @@ public abstract class BaseInterstitialAdUnit {
     private final InterstitialControllerListener mControllerListener = new InterstitialControllerListener() {
         @Override
         public void onInterstitialReadyForDisplay() {
-            changeOxbInterstitialAdUnitState(READY_TO_DISPLAY_OXB);
+            changeInterstitialAdUnitState(READY_TO_DISPLAY_PREBID);
             notifyAdEventListener(AdListenerEvent.AD_LOADED);
         }
 
@@ -85,13 +85,13 @@ public abstract class BaseInterstitialAdUnit {
 
         @Override
         public void onInterstitialFailedToLoad(AdException exception) {
-            changeOxbInterstitialAdUnitState(READY_FOR_LOAD);
+            changeInterstitialAdUnitState(READY_FOR_LOAD);
             notifyErrorListener(exception);
         }
 
         @Override
         public void onInterstitialDisplayed() {
-            changeOxbInterstitialAdUnitState(READY_FOR_LOAD);
+            changeInterstitialAdUnitState(READY_FOR_LOAD);
             notifyAdEventListener(AdListenerEvent.AD_DISPLAYED);
         }
 
@@ -121,12 +121,12 @@ public abstract class BaseInterstitialAdUnit {
      */
     public void loadAd() {
         if (mBidLoader == null) {
-            OXLog.error(TAG, "loadAd: Failed. BidLoader is not initialized.");
+            LogUtil.error(TAG, "loadAd: Failed. BidLoader is not initialized.");
             return;
         }
 
         if (!isAdLoadAllowed()) {
-            OXLog.debug(TAG, "loadAd: Skipped. OXBInterstitialAdUnitState is: " + mInterstitialAdUnitState);
+            LogUtil.debug(TAG, "loadAd: Skipped. InterstitialAdUnitState is: " + mInterstitialAdUnitState);
             return;
         }
 
@@ -145,7 +145,7 @@ public abstract class BaseInterstitialAdUnit {
      */
     public void show() {
         if (!isAuctionWinnerReadyToDisplay()) {
-            OXLog.debug(TAG, "show(): Ad is not yet ready for display!");
+            LogUtil.debug(TAG, "show(): Ad is not yet ready for display!");
             return;
         }
 
@@ -153,7 +153,7 @@ public abstract class BaseInterstitialAdUnit {
             case READY_TO_DISPLAY_GAM:
                 showGamAd();
                 break;
-            case READY_TO_DISPLAY_OXB:
+            case READY_TO_DISPLAY_PREBID:
                 mInterstitialController.show();
                 break;
             default:
@@ -225,7 +225,7 @@ public abstract class BaseInterstitialAdUnit {
         initInterstitialController();
     }
 
-    protected void loadOxbAd() {
+    protected void loadPrebidAd() {
         if (mInterstitialController == null) {
             notifyErrorListener(new AdException(AdException.INTERNAL_ERROR, "InterstitialController is not defined. Unable to process bid."));
             return;
@@ -243,7 +243,7 @@ public abstract class BaseInterstitialAdUnit {
         return mBidResponse == null || mBidResponse.getWinningBid() == null;
     }
 
-    protected void changeOxbInterstitialAdUnitState(InterstitialAdUnitState state) {
+    protected void changeInterstitialAdUnitState(InterstitialAdUnitState state) {
         mInterstitialAdUnitState = state;
     }
 
@@ -274,7 +274,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     private boolean isAuctionWinnerReadyToDisplay() {
-        return mInterstitialAdUnitState == READY_TO_DISPLAY_OXB
+        return mInterstitialAdUnitState == READY_TO_DISPLAY_PREBID
                || mInterstitialAdUnitState == READY_TO_DISPLAY_GAM;
     }
 
@@ -298,8 +298,8 @@ public abstract class BaseInterstitialAdUnit {
     enum InterstitialAdUnitState {
         READY_FOR_LOAD,
         LOADING,
-        OXB_LOADING,
+        PREBID_LOADING,
         READY_TO_DISPLAY_GAM,
-        READY_TO_DISPLAY_OXB
+        READY_TO_DISPLAY_PREBID
     }
 }

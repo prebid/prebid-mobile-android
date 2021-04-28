@@ -72,8 +72,8 @@ abstract class BaseBidInterstitialFragment : AdFragment(), InterstitialAdUnitLis
         btnLoad?.isEnabled = true
     }
 
-    override fun onAdDisplayed(oxbInterstitialAdUnit: InterstitialAdUnit?) {
-        Log.d(TAG, "onAdDisplayed() called with: oxbInterstitialAdUnit = [$oxbInterstitialAdUnit]")
+    override fun onAdDisplayed(interstitialAdUnit: InterstitialAdUnit?) {
+        Log.d(TAG, "onAdDisplayed() called with: interstitialAdUnit = [$interstitialAdUnit]")
         btnAdDisplayed?.isEnabled = true
     }
 
@@ -87,8 +87,8 @@ abstract class BaseBidInterstitialFragment : AdFragment(), InterstitialAdUnitLis
         btnAdClicked?.isEnabled = true
     }
 
-    override fun onAdLoaded(oxbInterstitialAdUnit: InterstitialAdUnit?) {
-        Log.d(TAG, "onAdLoaded() called with: oxbInterstitialAdUnit = [$oxbInterstitialAdUnit]")
+    override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
+        Log.d(TAG, "onAdLoaded() called with: interstitialAdUnit = [$interstitialAdUnit]")
         btnAdLoaded?.isEnabled = true
         btnLoad?.setText(R.string.text_show)
         btnLoad?.isEnabled = true

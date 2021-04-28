@@ -22,7 +22,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.view.WindowManager;
 
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 public class OrientationBroadcastReceiver extends BroadcastReceiver {
 
@@ -36,7 +36,7 @@ public class OrientationBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        OXLog.debug(TAG, "onReceive");
+        LogUtil.debug(TAG, "onReceive");
         if (Intent.ACTION_CONFIGURATION_CHANGED.equals(intent.getAction())) {
             int orientation = getDisplayRotation();
             if (orientation != mLastRotation) {
@@ -50,17 +50,17 @@ public class OrientationBroadcastReceiver extends BroadcastReceiver {
     }
 
     public boolean isOrientationChanged() {
-        OXLog.debug(TAG, "isOrientationChanged: " + orientationChanged);
+        LogUtil.debug(TAG, "isOrientationChanged: " + orientationChanged);
         return orientationChanged;
     }
 
     public void setOrientationChanged(boolean orientationChanged) {
-        OXLog.debug(TAG, "setOrientationChanged: " + orientationChanged);
+        LogUtil.debug(TAG, "setOrientationChanged: " + orientationChanged);
         this.orientationChanged = orientationChanged;
     }
 
     public void handleOrientationChange(int currentRotation){
-        OXLog.debug(TAG, "handleOrientationChange currentRotation = " + currentRotation);
+        LogUtil.debug(TAG, "handleOrientationChange currentRotation = " + currentRotation);
     }
 
     private int getDisplayRotation() {
@@ -70,7 +70,7 @@ public class OrientationBroadcastReceiver extends BroadcastReceiver {
 
     public void register(final Context context) {
         if (context != null) {
-            OXLog.debug(TAG, "register");
+            LogUtil.debug(TAG, "register");
             mApplicationContext = context.getApplicationContext();
             if (mApplicationContext != null) {
                 mApplicationContext.registerReceiver(this,
@@ -81,7 +81,7 @@ public class OrientationBroadcastReceiver extends BroadcastReceiver {
 
     public void unregister() {
         if (mApplicationContext != null) {
-            OXLog.debug(TAG, "unregister");
+            LogUtil.debug(TAG, "unregister");
             mApplicationContext.unregisterReceiver(this);
             mApplicationContext = null;
         }

@@ -72,7 +72,7 @@ public class GamInterstitialEventHandlerTest {
 
         mEventHandler.onEvent(AdEvent.APP_EVENT_RECEIVED);
 
-        verify(mMockEventListener, times(1)).onOXBSdkWin();
+        verify(mMockEventListener, times(1)).onPrebidSdkWin();
         assertFalse(getExpectingAppEventStatus());
     }
 

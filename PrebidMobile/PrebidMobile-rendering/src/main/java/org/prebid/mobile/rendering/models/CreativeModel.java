@@ -16,16 +16,16 @@
 
 package org.prebid.mobile.rendering.models;
 
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.OmEventTracker;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import androidx.annotation.Nullable;
 
 // CreativeModel is visible to the publisher, and defines:
 // --- displayDurationInSeconds indicates the time the creative will display for
@@ -104,7 +104,7 @@ public class CreativeModel {
         ArrayList<String> trackingUrls = mTrackingURLs.get(event);
 
         if (trackingUrls == null || trackingUrls.isEmpty()) {
-            OXLog.debug(TAG, "Event" + event + ": url not found for tracking");
+            LogUtil.debug(TAG, "Event" + event + ": url not found for tracking");
             return;
         }
 

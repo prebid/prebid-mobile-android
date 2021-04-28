@@ -21,8 +21,6 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 
-import androidx.annotation.Nullable;
-
 import com.iab.omid.library.prebidorg.Omid;
 import com.iab.omid.library.prebidorg.ScriptInjector;
 import com.iab.omid.library.prebidorg.adsession.AdEvents;
@@ -44,7 +42,7 @@ import org.prebid.mobile.rendering.models.TrackingEvent;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.sdk.JSLibraryManager;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.vast.AdVerifications;
 import org.prebid.mobile.rendering.video.vast.Verification;
@@ -53,6 +51,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 /**
  * OmAdSessionManager is an implementation of Open Measurement used to track
@@ -86,7 +86,7 @@ public class OmAdSessionManager {
             return Omid.isActive();
         }
         catch (Throwable e) {
-            OXLog.error(TAG, "Did you add omsdk-android.aar? Failed to init openMeasurementSDK: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Did you add omsdk-android.aar? Failed to init openMeasurementSDK: " + Log.getStackTraceString(e));
         }
         return false;
     }
@@ -97,7 +97,7 @@ public class OmAdSessionManager {
     @Nullable
     public static OmAdSessionManager createNewInstance(JSLibraryManager jsLibraryManager) {
         if (!isActive()) {
-            OXLog.error(TAG, "Failed to initialize OmAdSessionManager. Did you activate OMSDK?");
+            LogUtil.error(TAG, "Failed to initialize OmAdSessionManager. Did you activate OMSDK?");
             return null;
         }
 
@@ -159,7 +159,7 @@ public class OmAdSessionManager {
      */
     public void displayAdLoaded() {
         if (mAdEvents == null) {
-            OXLog.error(TAG, "Failed to register displayAdLoaded. AdEvent is null");
+            LogUtil.error(TAG, "Failed to register displayAdLoaded. AdEvent is null");
             return;
         }
         mAdEvents.loaded();
@@ -172,7 +172,7 @@ public class OmAdSessionManager {
      */
     public void nonSkippableStandaloneVideoAdLoaded(final boolean isAutoPlay) {
         if (mAdEvents == null) {
-            OXLog.error(TAG, "Failed to register videoAdLoaded. adEvent is null");
+            LogUtil.error(TAG, "Failed to register videoAdLoaded. adEvent is null");
             return;
         }
         try {
@@ -181,7 +181,7 @@ public class OmAdSessionManager {
             mAdEvents.loaded(vastProperties);
         }
         catch (Exception e) {
-            OXLog.error(TAG, "Failed to register videoAdLoaded. Reason: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Failed to register videoAdLoaded. Reason: " + Log.getStackTraceString(e));
         }
     }
 
@@ -193,7 +193,7 @@ public class OmAdSessionManager {
      */
     public void videoAdStarted(final float duration, final float videoPlayerVolume) {
         if (mMediaEvents == null) {
-            OXLog.error(TAG, "Failed to register videoAdStarted. videoAdEvent is null");
+            LogUtil.error(TAG, "Failed to register videoAdStarted. videoAdEvent is null");
             return;
         }
         mMediaEvents.start(duration, videoPlayerVolume);
@@ -204,14 +204,14 @@ public class OmAdSessionManager {
      */
     public void registerImpression() {
         if (mAdEvents == null) {
-            OXLog.error(TAG, "Failed to registerImpression: AdEvent is null");
+            LogUtil.error(TAG, "Failed to registerImpression: AdEvent is null");
             return;
         }
         try {
             mAdEvents.impressionOccurred();
         }
         catch (IllegalArgumentException | IllegalStateException e) {
-            OXLog.error(TAG, "Failed to registerImpression: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Failed to registerImpression: " + Log.getStackTraceString(e));
         }
     }
 
@@ -222,7 +222,7 @@ public class OmAdSessionManager {
      */
     public void trackVolumeChange(float volume) {
         if (mMediaEvents == null) {
-            OXLog.error(TAG, "Failed to trackVolumeChange. videoAdEvent is null");
+            LogUtil.error(TAG, "Failed to trackVolumeChange. videoAdEvent is null");
             return;
         }
         mMediaEvents.volumeChange(volume);
@@ -253,7 +253,7 @@ public class OmAdSessionManager {
      */
     public void trackAdVideoEvent(VideoAdEvent.Event adEvent) {
         if (mMediaEvents == null) {
-            OXLog.error(TAG, "Failed to trackAdVideoEvent. videoAdEvent is null");
+            LogUtil.error(TAG, "Failed to trackAdVideoEvent. videoAdEvent is null");
             return;
         }
         switch (adEvent) {
@@ -321,7 +321,7 @@ public class OmAdSessionManager {
      */
     public void trackPlayerStateChangeEvent(InternalPlayerState playerState) {
         if (mMediaEvents == null) {
-            OXLog.error(TAG, "Failed to track PlayerStateChangeEvent. videoAdEvent is null");
+            LogUtil.error(TAG, "Failed to track PlayerStateChangeEvent. videoAdEvent is null");
             return;
         }
         mMediaEvents.playerStateChange(OmModelMapper.mapToPlayerState(playerState));
@@ -332,7 +332,7 @@ public class OmAdSessionManager {
      */
     public void startAdSession() {
         if (mAdSession == null) {
-            OXLog.error(TAG, "Failed to startAdSession. adSession is null");
+            LogUtil.error(TAG, "Failed to startAdSession. adSession is null");
             return;
         }
         mAdSession.start();
@@ -343,7 +343,7 @@ public class OmAdSessionManager {
      */
     public void stopAdSession() {
         if (mAdSession == null) {
-            OXLog.error(TAG, "Failed to stopAdSession. adSession is null");
+            LogUtil.error(TAG, "Failed to stopAdSession. adSession is null");
             return;
         }
         mAdSession.finish();
@@ -358,14 +358,14 @@ public class OmAdSessionManager {
      */
     public void registerAdView(View adView) {
         if (mAdSession == null) {
-            OXLog.error(TAG, "Failed to registerAdView. adSession is null");
+            LogUtil.error(TAG, "Failed to registerAdView. adSession is null");
             return;
         }
         try {
             mAdSession.registerAdView(adView);
         }
         catch (IllegalArgumentException e) {
-            OXLog.error(TAG, "Failed to registerAdView. " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Failed to registerAdView. " + Log.getStackTraceString(e));
         }
     }
 
@@ -375,7 +375,7 @@ public class OmAdSessionManager {
      */
     public void addObstruction(InternalFriendlyObstruction friendlyObstruction) {
         if (mAdSession == null) {
-            OXLog.error(TAG, "Failed to addObstruction: mAdSession is null");
+            LogUtil.error(TAG, "Failed to addObstruction: mAdSession is null");
             return;
         }
         try {
@@ -386,13 +386,13 @@ public class OmAdSessionManager {
                                               friendlyObstruction.getDetailedDescription());
         }
         catch (IllegalArgumentException e) {
-            OXLog.error(TAG, "Failed to addObstruction. Reason: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Failed to addObstruction. Reason: " + Log.getStackTraceString(e));
         }
     }
 
     private void trackAdUserInteractionEvent(InteractionType type) {
         if (mMediaEvents == null) {
-            OXLog.error(TAG, "Failed to register adUserInteractionEvent with type: " + type);
+            LogUtil.error(TAG, "Failed to register adUserInteractionEvent with type: " + type);
             return;
         }
 
@@ -410,7 +410,7 @@ public class OmAdSessionManager {
                                                                        false);
         }
         catch (IllegalArgumentException e) {
-            OXLog.error(TAG, "Failure createAdSessionConfiguration: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Failure createAdSessionConfiguration: " + Log.getStackTraceString(e));
             return null;
         }
     }
@@ -420,7 +420,7 @@ public class OmAdSessionManager {
             return Omid.isActive();
         }
         catch (Throwable ignore) {
-            OXLog.error(TAG, "Failed to check OpenMeasurement status. Did you include omsdk-android? " + Log.getStackTraceString(ignore));
+            LogUtil.error(TAG, "Failed to check OpenMeasurement status. Did you include omsdk-android? " + Log.getStackTraceString(ignore));
         }
         return false;
     }
@@ -433,7 +433,7 @@ public class OmAdSessionManager {
             mPartner = Partner.createPartner(PARTNER_NAME, PARTNER_VERSION);
         }
         catch (IllegalArgumentException e) {
-            OXLog.error(TAG, "Failed to initPartner. Reason: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Failed to initPartner. Reason: " + Log.getStackTraceString(e));
         }
     }
 
@@ -445,12 +445,12 @@ public class OmAdSessionManager {
      */
     private void initAdSession(AdSessionConfiguration adSessionConfiguration, AdSessionContext adSessionContext) {
         if (mAdSession != null) {
-            OXLog.debug(TAG, "initAdSession: adSession is already created");
+            LogUtil.debug(TAG, "initAdSession: adSession is already created");
             return;
         }
 
         if (adSessionConfiguration == null || adSessionContext == null) {
-            OXLog.error(TAG, "Failure initAdSession. adSessionConfiguration OR adSessionContext is null");
+            LogUtil.error(TAG, "Failure initAdSession. adSessionConfiguration OR adSessionContext is null");
             return;
         }
 
@@ -465,7 +465,7 @@ public class OmAdSessionManager {
             mMediaEvents = MediaEvents.createMediaEvents(mAdSession);
         }
         catch (IllegalArgumentException e) {
-            OXLog.error(TAG, "Failure initMediaAdEvents: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Failure initMediaAdEvents: " + Log.getStackTraceString(e));
         }
     }
 
@@ -477,7 +477,7 @@ public class OmAdSessionManager {
             mAdEvents = AdEvents.createAdEvents(mAdSession);
         }
         catch (IllegalArgumentException e) {
-            OXLog.error(TAG, "Failure initAdEvents: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Failure initAdEvents: " + Log.getStackTraceString(e));
         }
     }
 
@@ -488,7 +488,7 @@ public class OmAdSessionManager {
             return AdSessionContext.createHtmlAdSessionContext(mPartner, adView, contentUrl, customReferenceData);
         }
         catch (IllegalArgumentException e) {
-            OXLog.error(TAG, "Failure createAdSessionContext: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Failure createAdSessionContext: " + Log.getStackTraceString(e));
             return null;
         }
     }
@@ -503,7 +503,7 @@ public class OmAdSessionManager {
                                                                  null);
         }
         catch (IllegalArgumentException e) {
-            OXLog.error(TAG, "Failure createAdSessionContext: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Failure createAdSessionContext: " + Log.getStackTraceString(e));
             return null;
         }
     }
@@ -511,13 +511,13 @@ public class OmAdSessionManager {
     @Nullable
     private AdSessionContext createAdSessionContext(AdVerifications adVerifications, String contentUrl) {
         if (adVerifications == null) {
-            OXLog.error(TAG, "Unable to createAdSessionContext. AdVerification is null");
+            LogUtil.error(TAG, "Unable to createAdSessionContext. AdVerification is null");
             return null;
         }
 
         // Log all jsResources being used
         for (Verification verification : adVerifications.getVerifications()) {
-            OXLog.debug(TAG, "Using jsResource: " + verification.getJsResource());
+            LogUtil.debug(TAG, "Using jsResource: " + verification.getJsResource());
         }
 
         try {
@@ -525,11 +525,11 @@ public class OmAdSessionManager {
             return createAdSessionContext(verificationScriptResources, contentUrl);
         }
         catch (IllegalArgumentException e) {
-            OXLog.error(TAG, "Failure createAdSessionContext: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Failure createAdSessionContext: " + Log.getStackTraceString(e));
             return null;
         }
         catch (MalformedURLException e) {
-            OXLog.error(TAG, "Failure createAdSessionContext: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Failure createAdSessionContext: " + Log.getStackTraceString(e));
             return null;
         }
     }
@@ -561,7 +561,7 @@ public class OmAdSessionManager {
         if (nativeOmVerification.getOmidJsUrl() == null
             || nativeOmVerification.getVendorKey() == null
             || nativeOmVerification.getVerificationParameters() == null) {
-            OXLog.error(TAG, "Failed to create VerificationResource. $nativeOmVerification");
+            LogUtil.error(TAG, "Failed to create VerificationResource. $nativeOmVerification");
             return verificationScriptResources;
         }
 
@@ -572,7 +572,7 @@ public class OmAdSessionManager {
             verificationScriptResources.add(scriptResource);
         }
         catch (MalformedURLException e) {
-            OXLog.error(TAG, "Failed to generate VerificationResources: " + e.getMessage());
+            LogUtil.error(TAG, "Failed to generate VerificationResources: " + e.getMessage());
         }
 
         return verificationScriptResources;

@@ -16,9 +16,6 @@
 
 package org.prebid.mobile.rendering.bidding.data.ntv;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,10 +23,13 @@ import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetData;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetImage;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class NativeAdParser {
     private static final String TAG = NativeAdParser.class.getSimpleName();
@@ -48,7 +48,7 @@ public class NativeAdParser {
             Ext ext = parseExt(admJson);
 
             if (assetArray == null) {
-                OXLog.error(TAG, "parse: Failed. Asset array is null. Returning null.");
+                LogUtil.error(TAG, "parse: Failed. Asset array is null. Returning null.");
                 return null;
             }
 
@@ -60,7 +60,7 @@ public class NativeAdParser {
             for (int i = 0; i < assetArray.length(); i++) {
                 JSONObject asset = assetArray.optJSONObject(i);
                 if (asset == null) {
-                    OXLog.debug(TAG, "parse: Skipping asset parse at index: " + i + ". Reason: asset is null");
+                    LogUtil.debug(TAG, "parse: Skipping asset parse at index: " + i + ". Reason: asset is null");
                     continue;
                 }
 
@@ -93,7 +93,7 @@ public class NativeAdParser {
                                 nativeAdEventTrackerList);
         }
         catch (JSONException e) {
-            OXLog.error(TAG, "parse: Failed. Returning null. Details: " + e);
+            LogUtil.error(TAG, "parse: Failed. Returning null. Details: " + e);
         }
 
         return null;

@@ -78,7 +78,7 @@ public class GamRewardedEventHandlerTest {
 
         final boolean isExpectingAppEvent = ((boolean) WhiteBox.field(GamRewardedEventHandler.class, "mIsExpectingAppEvent").get(spyEventHandler));
 
-        verify(mMockEventListener, times(1)).onOXBSdkWin();
+        verify(mMockEventListener, times(1)).onPrebidSdkWin();
         assertFalse(isExpectingAppEvent);
     }
 

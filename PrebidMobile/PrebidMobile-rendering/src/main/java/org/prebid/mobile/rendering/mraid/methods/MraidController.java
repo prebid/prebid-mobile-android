@@ -22,20 +22,20 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.MraidEvent;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.ACTION_CLOSE;
 import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.ACTION_CREATE_CALENDAR_EVENT;
@@ -132,7 +132,7 @@ public class MraidController {
         switch (event.mraidAction) {
             case ACTION_EXPAND:
                 if (Utils.isBlank(event.mraidActionHelper)) {
-                    OXLog.debug(TAG, "One part expand");
+                    LogUtil.debug(TAG, "One part expand");
                     expand(oldWebViewBase, twoPartNewWebViewBase, event);
                 }
                 else {
@@ -182,7 +182,7 @@ public class MraidController {
                 mMraidExpand.getInterstitialViewController().handleSetOrientationProperties();
             }
             catch (AdException e) {
-                OXLog.error(TAG, Log.getStackTraceString(e));
+                LogUtil.error(TAG, Log.getStackTraceString(e));
             }
         }
     }
@@ -299,7 +299,7 @@ public class MraidController {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> {
             try {
-                OXLog.debug(TAG, "mraidExpand");
+                LogUtil.debug(TAG, "mraidExpand");
                 //send click event on expand
                 ((WebViewBase) adBaseView).sendClickCallBack(mraidEvent.mraidActionHelper);
                 mMraidExpand.expand(mraidEvent.mraidActionHelper, () -> {
@@ -312,7 +312,7 @@ public class MraidController {
                 });
             }
             catch (Exception e) {
-                OXLog.error(TAG, "mraidExpand failed at displayViewInInterstitial: " + Log.getStackTraceString(e));
+                LogUtil.error(TAG, "mraidExpand failed at displayViewInInterstitial: " + Log.getStackTraceString(e));
             }
         });
     }

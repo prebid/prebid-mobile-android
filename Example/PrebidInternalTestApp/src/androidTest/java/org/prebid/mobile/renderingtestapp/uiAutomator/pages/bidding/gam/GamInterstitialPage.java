@@ -16,17 +16,17 @@
 
 package org.prebid.mobile.renderingtestapp.uiAutomator.pages.bidding.gam;
 
+import org.prebid.mobile.renderingtestapp.uiAutomator.pages.AdBasePage;
+import org.prebid.mobile.renderingtestapp.uiAutomator.utils.WebViewLocator;
+
+import java.util.concurrent.TimeUnit;
+
 import androidx.test.espresso.web.webdriver.Locator;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.BySelector;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.Until;
-
-import org.prebid.mobile.renderingtestapp.uiAutomator.pages.AdBasePage;
-import org.prebid.mobile.renderingtestapp.uiAutomator.utils.WebViewLocator;
-
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertTrue;
 
@@ -35,7 +35,7 @@ public class GamInterstitialPage extends AdBasePage<GamInterstitialPage> {
     public static final int VIDEO_DURATION_TIMEOUT = (int) TimeUnit.SECONDS.toMillis(20);
 
     private static class Locators {
-        static BySelector oxbVideoCreative = By.res(TAG, "exo_content_frame");
+        static BySelector prebidVideoCreative = By.res(TAG, "exo_content_frame");
         static WebViewLocator gamVideoCreative = new WebViewLocator(Locator.ID, "adContainer");
 
         static BySelector prebidHtmlCreative = getWebViewSelectorVersionDepends("www.openx");
@@ -58,13 +58,13 @@ public class GamInterstitialPage extends AdBasePage<GamInterstitialPage> {
     public GamInterstitialPage gamOrPrebidVideoCreativeShouldBePresent() {
 
         boolean isCreativePresent = getGamVideoCreative() != null
-                                    || getUiObject(Locators.oxbVideoCreative) != null;
+                                    || getUiObject(Locators.prebidVideoCreative) != null;
         assertTrue("Interstitial is not displayed", isCreativePresent);
         return this;
     }
 
     /**
-     * Click is performed on top right corner after video duration delay in order to work with GAM and OXB end cards.
+     * Click is performed on top right corner after video duration delay in order to work with GAM and prebid end cards.
      */
     public GamInterstitialPage closeEndCard() throws InterruptedException {
         synchronized (device) {
@@ -83,15 +83,6 @@ public class GamInterstitialPage extends AdBasePage<GamInterstitialPage> {
             return this;
         }
         return super.closeInterstitial();
-    }
-
-    public GamInterstitialPage clickInterstitial() {
-        final UiObject2 oxbCreative = getUiObject(Locators.prebidHtmlCreative);
-        BySelector creativeSelector = oxbCreative != null
-                                      ? Locators.prebidHtmlCreative
-                                      : Locators.gamHtmlCreative;
-        clickOnView(creativeSelector, TIMEOUT * 2);
-        return this;
     }
 
     @Override

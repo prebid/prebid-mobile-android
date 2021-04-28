@@ -35,7 +35,7 @@ import org.prebid.mobile.rendering.R;
 import org.prebid.mobile.rendering.interstitial.AdBaseDialog;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.base.BaseAdView;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
@@ -140,12 +140,12 @@ public class InterstitialVideo extends AdBaseDialog {
     public void scheduleShowCloseBtnTask(View adView, int closeDelayInMs) {
         long delayInMs = getCloseDelayInMs(adView, closeDelayInMs);
         if (delayInMs == 0) {
-            OXLog.debug(TAG, "Delay is 0. Not scheduling skip button show.");
+            LogUtil.debug(TAG, "Delay is 0. Not scheduling skip button show.");
             return;
         }
 
         long videoLength = getDuration(adView);
-        OXLog.debug(TAG, "Video length: " + videoLength);
+        LogUtil.debug(TAG, "Video length: " + videoLength);
         if (videoLength <= delayInMs) {
             // Short video, show close at the end
             mShowCloseBtnOnComplete = true;
@@ -159,14 +159,14 @@ public class InterstitialVideo extends AdBaseDialog {
     }
 
     public void pauseVideo() {
-        OXLog.debug(TAG, "pauseVideo");
+        LogUtil.debug(TAG, "pauseVideo");
         mVideoPaused = true;
         stopTimer();
         stopCountDownTimer();
     }
 
     public void resumeVideo() {
-        OXLog.debug(TAG, "resumeVideo");
+        LogUtil.debug(TAG, "resumeVideo");
         mVideoPaused = false;
         if (getRemainingTimerTimeInMs() != AdConfiguration.SKIP_OFFSET_NOT_ASSIGNED
             && getRemainingTimerTimeInMs() > 500L) {
@@ -195,7 +195,7 @@ public class InterstitialVideo extends AdBaseDialog {
     }
 
     public void close() {
-        OXLog.debug(TAG, "closeableAdContainer -  onClose()");
+        LogUtil.debug(TAG, "closeableAdContainer -  onClose()");
         cancel();
 
         //IMPORTANT: call interstitialClosed() so it sends back to the mAdViewContainer to reimplant after closing an ad.
@@ -246,7 +246,7 @@ public class InterstitialVideo extends AdBaseDialog {
         if (delayInMs == AdConfiguration.SKIP_OFFSET_NOT_ASSIGNED) {
             delayInMs = CLOSE_DELAY_DEFAULT_IN_MS;
         }
-        OXLog.debug(TAG, "Picked skip offset: " + delayInMs + " ms.");
+        LogUtil.debug(TAG, "Picked skip offset: " + delayInMs + " ms.");
         return delayInMs;
     }
 
@@ -267,7 +267,7 @@ public class InterstitialVideo extends AdBaseDialog {
                         }
                     }
                     catch (Exception e) {
-                        OXLog.error(TAG, "Failed to render custom close icon: " + Log.getStackTraceString(e));
+                        LogUtil.error(TAG, "Failed to render custom close icon: " + Log.getStackTraceString(e));
                     }
                 });
             }
@@ -316,7 +316,7 @@ public class InterstitialVideo extends AdBaseDialog {
 
     @VisibleForTesting
     protected void scheduleTimer(long delayInMs) {
-        OXLog.debug(TAG, "Scheduling timer at: " + delayInMs);
+        LogUtil.debug(TAG, "Scheduling timer at: " + delayInMs);
 
         stopTimer();
 

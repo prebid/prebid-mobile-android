@@ -21,13 +21,13 @@ import android.os.Looper;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 
 import java.util.LinkedList;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class ScreenMetricsWaiter {
 
@@ -48,13 +48,13 @@ public class ScreenMetricsWaiter {
             newWaitRequest.start();
         }
         mWaitRequestQueue.addLast(newWaitRequest);
-        OXLog.debug(TAG, "New request queued. Queue size: " + mWaitRequestQueue.size());
+        LogUtil.debug(TAG, "New request queued. Queue size: " + mWaitRequestQueue.size());
     }
 
     void finishAndStartNextRequest() {
         mWaitRequestQueue.removeFirst();
         WaitRequest firstInQueueRequest = mWaitRequestQueue.peekFirst();
-        OXLog.debug(TAG, "Request finished. Queue size: " + mWaitRequestQueue.size());
+        LogUtil.debug(TAG, "Request finished. Queue size: " + mWaitRequestQueue.size());
         if (firstInQueueRequest != null) {
             firstInQueueRequest.start();
         }
@@ -114,7 +114,7 @@ public class ScreenMetricsWaiter {
                     // Immediately count down for any views that already have a size
                     if (view.getHeight() > 0 || view.getWidth() > 0 || mIsAnswerRequired || isTwoPart) {
                         countDown();
-                        OXLog.debug(TAG, "Get known metrics for: " + view.getClass().getSimpleName() + ", h: " + view.getHeight() + ", w: " + view.getWidth());
+                        LogUtil.debug(TAG, "Get known metrics for: " + view.getClass().getSimpleName() + ", h: " + view.getHeight() + ", w: " + view.getWidth());
                         continue;
                     }
 
@@ -122,11 +122,11 @@ public class ScreenMetricsWaiter {
                     // that this doesn't leak because the ViewTreeObserver gets detached when
                     // the view is no longer part of the view hierarchy.
 
-                    OXLog.debug(TAG, "Create listener for: " + view.getClass().getSimpleName());
+                    LogUtil.debug(TAG, "Create listener for: " + view.getClass().getSimpleName());
                     view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                         @Override
                         public boolean onPreDraw() {
-                            OXLog.debug(TAG, "Get metrics from listener for: " + view.getClass().getSimpleName() + ", h: " + view.getHeight() + ", w: " + view.getWidth());
+                            LogUtil.debug(TAG, "Get metrics from listener for: " + view.getClass().getSimpleName() + ", h: " + view.getHeight() + ", w: " + view.getWidth());
                             view.getViewTreeObserver().removeOnPreDrawListener(this);
                             countDown();
                             return true;

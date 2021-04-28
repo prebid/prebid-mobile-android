@@ -17,7 +17,7 @@
 package org.prebid.mobile.rendering.networking.parameters;
 
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -46,7 +46,7 @@ public class AdRequestInput {
             newAdRequestInput.mBidRequest = (BidRequest) ois.readObject();
         }
         catch (Exception e) {
-            OXLog.error(TAG, "Failed to make deep copy of bid request");
+            LogUtil.error(TAG, "Failed to make deep copy of bid request");
             return null;
         }
 

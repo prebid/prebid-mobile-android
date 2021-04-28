@@ -24,10 +24,6 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.rendering.R;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -52,11 +48,15 @@ import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
 import java.util.Map;
 import java.util.Set;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 public class BannerView extends FrameLayout {
     private final static String TAG = BannerView.class.getSimpleName();
@@ -137,15 +137,15 @@ public class BannerView extends FrameLayout {
 
     private final BannerEventListener mBannerEventListener = new BannerEventListener() {
         @Override
-        public void onOXBSdkWin() {
+        public void onPrebidSdkWin() {
             markPrimaryAdRequestFinished();
 
             if (isBidInvalid()) {
-                notifyErrorListener(new AdException(AdException.INTERNAL_ERROR, "WinnerBid is null when executing onOXBSdkWin."));
+                notifyErrorListener(new AdException(AdException.INTERNAL_ERROR, "WinnerBid is null when executing onPrebidSdkWin."));
                 return;
             }
 
-            displayOxbView();
+            displayPrebidView();
         }
 
         @Override
@@ -165,7 +165,7 @@ public class BannerView extends FrameLayout {
                 return;
             }
 
-            onOXBSdkWin();
+            onPrebidSdkWin();
         }
 
         @Override
@@ -234,12 +234,12 @@ public class BannerView extends FrameLayout {
      */
     public void loadAd() {
         if (mBidLoader == null) {
-            OXLog.error(TAG, "loadAd: Failed. BidLoader is not initialized.");
+            LogUtil.error(TAG, "loadAd: Failed. BidLoader is not initialized.");
             return;
         }
 
         if (mIsPrimaryAdServerRequestInProgress) {
-            OXLog.debug(TAG, "loadAd: Skipped. Loading is in progress.");
+            LogUtil.debug(TAG, "loadAd: Skipped. Loading is in progress.");
             return;
         }
 
@@ -283,11 +283,11 @@ public class BannerView extends FrameLayout {
     //region ==================== getters and setters
     public void setAutoRefreshDelay(int seconds) {
         if (!mAdUnitConfig.isAdType(AdConfiguration.AdUnitIdentifierType.BANNER)) {
-            OXLog.info(TAG, "Autorefresh is available only for Banner ad type");
+            LogUtil.info(TAG, "Autorefresh is available only for Banner ad type");
             return;
         }
         if (seconds < 0) {
-            OXLog.error(TAG, "setRefreshIntervalInSec: Failed. Refresh interval must be >= 0");
+            LogUtil.error(TAG, "setRefreshIntervalInSec: Failed. Refresh interval must be >= 0");
             return;
         }
         mAdUnitConfig.setAutoRefreshDelay(seconds);
@@ -391,7 +391,7 @@ public class BannerView extends FrameLayout {
 
     private void reflectAttrs(AttributeSet attrs) {
         if (attrs == null) {
-            OXLog.debug(TAG, "reflectAttrs. No attributes provided.");
+            LogUtil.debug(TAG, "reflectAttrs. No attributes provided.");
             return;
         }
         TypedArray typedArray = getContext()
@@ -451,7 +451,7 @@ public class BannerView extends FrameLayout {
         mAdUnitConfig.addSizes(mEventHandler.getAdSizeArray());
     }
 
-    private void displayOxbView() {
+    private void displayPrebidView() {
         if (indexOfChild(mDisplayView) != -1) {
             mDisplayView.destroy();
             mDisplayView = null;

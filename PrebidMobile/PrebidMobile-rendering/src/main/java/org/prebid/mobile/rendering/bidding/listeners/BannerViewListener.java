@@ -20,7 +20,7 @@ import org.prebid.mobile.rendering.bidding.parallel.BannerView;
 import org.prebid.mobile.rendering.errors.AdException;
 
 /**
- * Listener interface representing OXBBannerView events.
+ * Listener interface representing BannerView events.
  * All methods will be invoked on the main thread.
  */
 public interface BannerViewListener {

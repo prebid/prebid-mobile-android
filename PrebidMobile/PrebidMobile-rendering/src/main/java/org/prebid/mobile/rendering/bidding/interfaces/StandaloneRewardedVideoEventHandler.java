@@ -16,11 +16,11 @@
 
 package org.prebid.mobile.rendering.bidding.interfaces;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class StandaloneRewardedVideoEventHandler implements RewardedEventHandler {
     private RewardedVideoEventListener mListener;
@@ -36,7 +36,7 @@ public class StandaloneRewardedVideoEventHandler implements RewardedEventHandler
     public void requestAdWithBid(
         @Nullable
             Bid bid) {
-        mListener.onOXBSdkWin();
+        mListener.onPrebidSdkWin();
     }
 
     @Override

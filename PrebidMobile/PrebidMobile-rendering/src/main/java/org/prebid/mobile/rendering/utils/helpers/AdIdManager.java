@@ -21,16 +21,16 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 
-import androidx.annotation.VisibleForTesting;
-
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.prebid.mobile.rendering.listeners.AdIdFetchListener;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
+
+import androidx.annotation.VisibleForTesting;
 
 public class AdIdManager {
     private static final String TAG = AdIdManager.class.getSimpleName();
@@ -61,7 +61,7 @@ public class AdIdManager {
                 Handler handler = new Handler();
                 handler.postDelayed(() -> {
                     if (getAdIdInfoTask.getStatus() == AsyncTask.Status.RUNNING) {
-                        OXLog.debug(TAG, "Cancelling FetchAdIdInfoTask");
+                        LogUtil.debug(TAG, "Cancelling FetchAdIdInfoTask");
                         getAdIdInfoTask.cancel(true);
                         listener.adIdFetchFailure();
                     }
@@ -72,7 +72,7 @@ public class AdIdManager {
             }
         }
         catch (Throwable throwable) {
-            OXLog.error(TAG, "Failed to initAdId: " + Log.getStackTraceString(throwable) + "\nDid you add necessary dependencies?");
+            LogUtil.error(TAG, "Failed to initAdId: " + Log.getStackTraceString(throwable) + "\nDid you add necessary dependencies?");
         }
     }
 
@@ -126,7 +126,7 @@ public class AdIdManager {
                 sLimitAdTrackingEnabled = adInfo.isLimitAdTrackingEnabled();
             }
             catch (Throwable e) {
-                OXLog.error(TAG, "Failed to get advertising id and LMT: " + Log.getStackTraceString(e));
+                LogUtil.error(TAG, "Failed to get advertising id and LMT: " + Log.getStackTraceString(e));
             }
             return null;
         }

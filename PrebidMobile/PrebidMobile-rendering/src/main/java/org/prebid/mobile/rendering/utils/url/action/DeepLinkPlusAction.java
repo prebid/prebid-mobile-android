@@ -21,7 +21,7 @@ import android.net.Uri;
 
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.utils.url.ActionNotResolvedException;
 import org.prebid.mobile.rendering.utils.url.UrlHandler;
 
@@ -83,7 +83,7 @@ public class DeepLinkPlusAction implements UrlAction {
             return;
         }
         catch (ActionNotResolvedException e) {
-            OXLog.debug(TAG, "performAction(): Primary URL failed. Attempting to process fallback URL");
+            LogUtil.debug(TAG, "performAction(): Primary URL failed. Attempting to process fallback URL");
         }
 
         // 3. Attempt to handle the fallback URL

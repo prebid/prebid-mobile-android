@@ -31,5 +31,5 @@ public interface ConnectionInfoManager {
      *
      * @return the active connection type
      */
-    UserParameters.OXMConnectionType getConnectionType();
+    UserParameters.ConnectionType getConnectionType();
 }

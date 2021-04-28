@@ -29,7 +29,7 @@ import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
 import org.prebid.mobile.rendering.utils.constants.IntentActions;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.rendering.views.base.BaseAdView;
@@ -81,7 +81,7 @@ public class InterstitialView extends BaseAdView {
 
         @Override
         public void creativeInterstitialClosed() {
-            OXLog.debug(TAG, "interstitialAdClosed");
+            LogUtil.debug(TAG, "interstitialAdClosed");
             handleActionClose();
         }
     };
@@ -136,7 +136,7 @@ public class InterstitialView extends BaseAdView {
             mInterstitialManager.displayAdViewInInterstitial(getContext(), InterstitialView.this);
         }
         catch (final Exception e) {
-            OXLog.error(TAG, "Interstitial failed to show:" + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Interstitial failed to show:" + Log.getStackTraceString(e));
             notifyErrorListeners(new AdException(AdException.INTERNAL_ERROR, e.getMessage()));
         }
     }
@@ -153,7 +153,7 @@ public class InterstitialView extends BaseAdView {
             mInterstitialVideo.show();
         }
         catch (final Exception e) {
-            OXLog.error(TAG, "Video interstitial failed to show:" + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Video interstitial failed to show:" + Log.getStackTraceString(e));
 
             notifyErrorListeners(new AdException(AdException.INTERNAL_ERROR, e.getMessage()));
         }

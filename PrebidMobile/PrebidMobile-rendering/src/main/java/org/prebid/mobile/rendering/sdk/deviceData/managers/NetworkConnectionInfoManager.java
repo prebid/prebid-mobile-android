@@ -45,9 +45,9 @@ public final class NetworkConnectionInfoManager extends BaseManager implements C
      */
     @SuppressLint("MissingPermission")
     @Override
-    public UserParameters.OXMConnectionType getConnectionType() {
+    public UserParameters.ConnectionType getConnectionType() {
         NetworkInfo info = null;
-        UserParameters.OXMConnectionType result = UserParameters.OXMConnectionType.OFFLINE;
+        UserParameters.ConnectionType result = UserParameters.ConnectionType.OFFLINE;
         if (isInit() && getContext() != null) {
             if (mConnectivityManager != null) {
                 if (getContext().checkCallingOrSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED) {
@@ -59,8 +59,8 @@ public final class NetworkConnectionInfoManager extends BaseManager implements C
                 if (info.isConnected()) {
                     boolean isMobile = netType == ConnectivityManager.TYPE_MOBILE || netType == ConnectivityManager.TYPE_MOBILE_DUN || netType == ConnectivityManager.TYPE_MOBILE_HIPRI || netType == ConnectivityManager.TYPE_MOBILE_MMS || netType == ConnectivityManager.TYPE_MOBILE_SUPL;
                     result = isMobile
-                             ? UserParameters.OXMConnectionType.CELL
-                             : UserParameters.OXMConnectionType.WIFI;
+                             ? UserParameters.ConnectionType.CELL
+                             : UserParameters.ConnectionType.WIFI;
                 }
             }
         }

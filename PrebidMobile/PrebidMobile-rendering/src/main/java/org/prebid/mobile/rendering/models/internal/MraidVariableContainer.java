@@ -19,7 +19,7 @@ package org.prebid.mobile.rendering.models.internal;
 import android.text.TextUtils;
 
 import org.prebid.mobile.rendering.utils.helpers.MraidUtils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 public class MraidVariableContainer {
     private static final String TAG = MraidVariableContainer.class.getSimpleName();
@@ -133,7 +133,7 @@ public class MraidVariableContainer {
         }
 
         disabledFlags.append("};");
-        OXLog.debug(TAG, "Supported features: " + disabledFlags.toString());
+        LogUtil.debug(TAG, "Supported features: " + disabledFlags.toString());
 
         setDisabledFlags(disabledFlags.toString());
     }

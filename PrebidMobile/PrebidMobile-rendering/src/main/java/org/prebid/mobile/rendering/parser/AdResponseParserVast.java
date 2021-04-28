@@ -19,14 +19,10 @@ package org.prebid.mobile.rendering.parser;
 import android.text.TextUtils;
 import android.util.Xml;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.rendering.errors.VastParseError;
 import org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.vast.Ad;
 import org.prebid.mobile.rendering.video.vast.AdVerifications;
@@ -46,6 +42,10 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 public class AdResponseParserVast extends AdResponseParserBase {
 
@@ -382,9 +382,9 @@ public class AdResponseParserVast extends AdResponseParserBase {
         while (iterator.hasNext()) {
             org.prebid.mobile.rendering.video.vast.Tracking t = iterator.next();
             // Uncomment for debugging only; Else, too many log entries
-            // OXLog.debug(TAG, "iterating: " + t.event);
+            // PbLog.debug(TAG, "iterating: " + t.event);
             if (t.getEvent().equals(Tracking.EVENT_MAPPING[event.ordinal()])) {
-                // OXLog.debug(TAG, "iterating match: " + t.event);
+                // PbLog.debug(TAG, "iterating match: " + t.event);
                 urls.add(t.getValue());
             }
         }
@@ -585,7 +585,7 @@ public class AdResponseParserVast extends AdResponseParserBase {
                     }
                 }
                 catch (IllegalArgumentException e) {
-                    OXLog.error(TAG, e.getMessage());
+                    LogUtil.error(TAG, e.getMessage());
                 }
             }
         }

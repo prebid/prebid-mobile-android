@@ -16,10 +16,10 @@
 
 package org.prebid.mobile.rendering.bidding.interfaces;
 
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
+
+import androidx.annotation.Nullable;
 
 public class StandaloneInterstitialEventHandler implements InterstitialEventHandler {
     private InterstitialEventListener mInterstitialEventListener;
@@ -33,7 +33,7 @@ public class StandaloneInterstitialEventHandler implements InterstitialEventHand
     public void requestAdWithBid(
         @Nullable
             Bid bid) {
-        mInterstitialEventListener.onOXBSdkWin();
+        mInterstitialEventListener.onPrebidSdkWin();
     }
 
     @Override

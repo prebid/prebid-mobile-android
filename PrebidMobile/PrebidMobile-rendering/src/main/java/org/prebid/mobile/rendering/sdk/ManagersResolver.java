@@ -27,7 +27,7 @@ import org.prebid.mobile.rendering.sdk.deviceData.managers.LocationInfoManager;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.NetworkConnectionInfoManager;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.Hashtable;
@@ -185,7 +185,7 @@ public class ManagersResolver {
             }
         }
         catch (Exception e) {
-            OXLog.error(TAG, "Failed to register managers: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Failed to register managers: " + Log.getStackTraceString(e));
         }
         finally {
             PrebidRenderingSettings.increaseTaskCount();

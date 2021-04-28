@@ -30,7 +30,7 @@ import org.prebid.mobile.eventhandlers.global.Constants;
 import org.prebid.mobile.eventhandlers.utils.GamUtils;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -72,7 +72,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
                                               adSizes);
         }
         catch (Throwable throwable) {
-            OXLog.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
         return null;
     }
@@ -129,7 +129,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
             mAdView.loadAd(adRequest);
         }
         catch (Throwable throwable) {
-            OXLog.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
     }
 
@@ -138,7 +138,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
             mAdView.setManualImpressionsEnabled(enabled);
         }
         catch (Throwable throwable) {
-            OXLog.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
     }
 
@@ -147,7 +147,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
             mAdView.recordManualImpression();
         }
         catch (Throwable throwable) {
-            OXLog.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
     }
 
@@ -156,7 +156,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
             mAdView.destroy();
         }
         catch (Throwable throwable) {
-            OXLog.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
     }
 

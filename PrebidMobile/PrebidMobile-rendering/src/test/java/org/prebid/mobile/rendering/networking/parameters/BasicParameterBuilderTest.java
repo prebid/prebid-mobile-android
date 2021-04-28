@@ -276,7 +276,7 @@ public class BasicParameterBuilderTest {
         Targeting.setUserAge(USER_AGE);
         Targeting.setUserKeywords(USER_KEYWORDS);
         Targeting.setUserCustomData(USER_CUSTOM);
-        Targeting.setUserGender(UserParameters.OXMGender.MALE);
+        Targeting.setUserGender(UserParameters.Gender.MALE);
         Targeting.setBuyerUid(USER_BUYER_ID);
         Targeting.setUserExt(new Ext());
         Targeting.setEids(new JSONArray());

@@ -33,7 +33,7 @@ public class UserParameters {
     /**
      * User gender.
      */
-    public enum OXMGender {
+    public enum Gender {
         /**
          * User is male.
          */
@@ -50,7 +50,7 @@ public class UserParameters {
         OTHER
     }
 
-    public static String getGenderDescription(OXMGender gender) {
+    public static String getGenderDescription(Gender gender) {
         String desc = null;
         switch (gender) {
             case MALE:
@@ -69,7 +69,7 @@ public class UserParameters {
     /**
      * Device connection type.
      */
-    public enum OXMConnectionType {
+    public enum ConnectionType {
         /**
          * Device is off-line.
          */

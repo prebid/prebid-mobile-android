@@ -29,7 +29,7 @@ import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.sdk.JSLibraryManager;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 
 import java.util.regex.Matcher;
@@ -329,7 +329,7 @@ public class WebViewBase extends AdWebView implements AdAssetsLoadedListener {
         if (!TextUtils.isEmpty(scale)) {
 
             if (Utils.atLeastKitKat()) {
-                OXLog.debug(TAG, "Metatag is set correctly");
+                LogUtil.debug(TAG, "Metatag is set correctly");
                 metaTag = new StringBuilder("<meta name='viewport' content='width=device-width' />");
 
                 meta = metaTag.toString();
@@ -341,7 +341,7 @@ public class WebViewBase extends AdWebView implements AdAssetsLoadedListener {
             }
         }
         else {
-            OXLog.debug(TAG, "Scale is null. Please check");
+            LogUtil.debug(TAG, "Scale is null. Please check");
             metaTag = new StringBuilder("<meta name='viewport' content='width=device-width' />");
 
             meta = metaTag.toString();

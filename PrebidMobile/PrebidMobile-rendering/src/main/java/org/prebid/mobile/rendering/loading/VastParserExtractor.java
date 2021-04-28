@@ -19,9 +19,6 @@ package org.prebid.mobile.rendering.loading;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.errors.VastParseError;
 import org.prebid.mobile.rendering.models.internal.VastExtractorResult;
@@ -30,8 +27,11 @@ import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.modelcontrollers.AsyncVastLoader;
 import org.prebid.mobile.rendering.parser.AdResponseParserBase;
 import org.prebid.mobile.rendering.parser.AdResponseParserVast;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.vast.VASTErrorCodes;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 public class VastParserExtractor {
     private static final String TAG = VastParserExtractor.class.getSimpleName();
@@ -96,7 +96,7 @@ public class VastParserExtractor {
             adResponseParserVast = new AdResponseParserVast(vast);
         }
         catch (VastParseError e) {
-            OXLog.error(TAG, "AdResponseParserVast creation failed: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "AdResponseParserVast creation failed: " + Log.getStackTraceString(e));
 
             final AdException adException = new AdException(AdException.INTERNAL_ERROR, e.getMessage());
             mListener.onResult(createExtractorFailureResult(adException));
@@ -106,12 +106,12 @@ public class VastParserExtractor {
         // Check if this is the response from the initial request or from unwrapping a wrapper
         if (mRootVastParser == null) {
             // If mRootVastParser doesn't exist then it is the initial VAST request
-            OXLog.debug(TAG, "Initial VAST Request");
+            LogUtil.debug(TAG, "Initial VAST Request");
             mRootVastParser = adResponseParserVast;
         }
         else {
             // Otherwise, this is the result of unwrapping a Wrapper.
-            OXLog.debug(TAG, "Unwrapping VAST Wrapper");
+            LogUtil.debug(TAG, "Unwrapping VAST Wrapper");
             mLatestVastWrapperParser.setWrapper(adResponseParserVast);
         }
 
@@ -139,7 +139,7 @@ public class VastParserExtractor {
     }
 
     private void failedToLoadAd(String msg) {
-        OXLog.error(TAG, "Invalid ad response: " + msg);
+        LogUtil.error(TAG, "Invalid ad response: " + msg);
 
         final AdException adException = new AdException(AdException.INTERNAL_ERROR, "Invalid ad response: " + msg);
         mListener.onResult(createExtractorFailureResult(adException));

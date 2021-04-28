@@ -16,17 +16,17 @@
 
 package org.prebid.mobile.rendering.utils.ntv;
 
-import androidx.annotation.NonNull;
-
 import org.prebid.mobile.rendering.bidding.data.NativeFetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.data.ntv.NativeAd;
 import org.prebid.mobile.rendering.bidding.data.ntv.NativeAdParser;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.listeners.NativeAdCallback;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.Map;
+
+import androidx.annotation.NonNull;
 
 public class NativeUtils {
     private static final String TAG = NativeUtils.class.getSimpleName();
@@ -39,7 +39,7 @@ public class NativeUtils {
 
         final Map<String, String> keyWordsMap = fetchDemandResult.getKeyWordsMap();
         if (keyWordsMap == null || keyWordsMap.isEmpty()) {
-            OXLog.error(TAG, "findNativeAd: Failed. Callback or keyword map is null.");
+            LogUtil.error(TAG, "findNativeAd: Failed. Callback or keyword map is null.");
             return;
         }
 
@@ -47,7 +47,7 @@ public class NativeUtils {
         final BidResponse bidResponse = BidResponseCache.getInstance().popBidResponse(responseId);
 
         if (bidResponse == null || bidResponse.getWinningBid() == null) {
-            OXLog.debug(TAG, "findNativeAd: Returning null. BidResponse is null or winning bid is null.");
+            LogUtil.debug(TAG, "findNativeAd: Returning null. BidResponse is null or winning bid is null.");
             callback.onNativeAdReceived(null);
             return;
         }

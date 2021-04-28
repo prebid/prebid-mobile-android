@@ -51,7 +51,7 @@ open class GamBannerFragment : AdFragment(), BannerViewListener {
         bannerView = initBanner(
                 configId,
                 eventHandler)
-        bannerView?.addAdditionalSizes(*getAdditionalOxbBannerSizeArray())
+        bannerView?.addAdditionalSizes(*getAdditionalPrebidBannerSizeArray())
         bannerView?.setAutoRefreshDelay(refreshDelay)
         bannerView?.setBannerListener(this)
         viewContainer.addView(bannerView)
@@ -108,5 +108,5 @@ open class GamBannerFragment : AdFragment(), BannerViewListener {
 
     protected open fun getGamAdSizeArray(initialSize: AdSize) = arrayOf(initialSize)
 
-    protected open fun getAdditionalOxbBannerSizeArray() = emptyArray<AdSize>()
+    protected open fun getAdditionalPrebidBannerSizeArray() = emptyArray<AdSize>()
 }

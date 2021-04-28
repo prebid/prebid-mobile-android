@@ -27,7 +27,7 @@ import org.prebid.mobile.rendering.bidding.listeners.InterstitialAdUnitListener;
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,31 +46,31 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
     //region ==================== Listener implementation
     private final InterstitialEventListener mInterstitialEventListener = new InterstitialEventListener() {
         @Override
-        public void onOXBSdkWin() {
+        public void onPrebidSdkWin() {
             if (isBidInvalid()) {
-                changeOxbInterstitialAdUnitState(READY_FOR_LOAD);
-                notifyErrorListener(new AdException(AdException.INTERNAL_ERROR, "WinnerBid is null when executing onOXBSdkWin."));
+                changeInterstitialAdUnitState(READY_FOR_LOAD);
+                notifyErrorListener(new AdException(AdException.INTERNAL_ERROR, "WinnerBid is null when executing onPrebidSdkWin."));
                 return;
             }
 
-            loadOxbAd();
+            loadPrebidAd();
         }
 
         @Override
         public void onAdServerWin() {
-            changeOxbInterstitialAdUnitState(READY_TO_DISPLAY_GAM);
+            changeInterstitialAdUnitState(READY_TO_DISPLAY_GAM);
             notifyAdEventListener(AdListenerEvent.AD_LOADED);
         }
 
         @Override
         public void onAdFailed(AdException exception) {
             if (isBidInvalid()) {
-                changeOxbInterstitialAdUnitState(READY_FOR_LOAD);
+                changeInterstitialAdUnitState(READY_FOR_LOAD);
                 notifyErrorListener(exception);
                 return;
             }
 
-            onOXBSdkWin();
+            onPrebidSdkWin();
         }
 
         @Override
@@ -80,7 +80,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
 
         @Override
         public void onAdDisplayed() {
-            changeOxbInterstitialAdUnitState(READY_FOR_LOAD);
+            changeInterstitialAdUnitState(READY_FOR_LOAD);
             notifyAdEventListener(AdListenerEvent.AD_DISPLAYED);
         }
     };
@@ -113,7 +113,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
     }
 
     /**
-     * Instantiates an OXBInterstitialAdUnit for GAM prebid integration with given adUnitType.
+     * Instantiates an InterstitialAdUnit for GAM prebid integration with given adUnitType.
      */
     public InterstitialAdUnit(Context context, String configId,
                               @NonNull
@@ -135,7 +135,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         AdConfiguration adUnitConfiguration = new AdConfiguration();
         adUnitConfiguration.setConfigId(configId);
         adUnitConfiguration.setMinSizePercentage(minSizePercentage);
-        adUnitConfiguration.setAdUnitIdentifierType(mapOxbAdUnitTypeToAdConfigAdUnitType(adUnitFormat));
+        adUnitConfiguration.setAdUnitIdentifierType(mapPrebidAdUnitTypeToAdConfigAdUnitType(adUnitFormat));
 
         init(adUnitConfiguration);
     }
@@ -170,7 +170,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
     @Override
     void notifyAdEventListener(AdListenerEvent adListenerEvent) {
         if (mInterstitialAdUnitListener == null) {
-            OXLog.debug(TAG, "notifyAdEventListener: Failed. AdUnitListener is null. Passed listener event: " + adListenerEvent);
+            LogUtil.debug(TAG, "notifyAdEventListener: Failed. AdUnitListener is null. Passed listener event: " + adListenerEvent);
             return;
         }
 
@@ -197,14 +197,14 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         }
     }
 
-    private AdConfiguration.AdUnitIdentifierType mapOxbAdUnitTypeToAdConfigAdUnitType(AdUnitFormat adUnitFormat) {
+    private AdConfiguration.AdUnitIdentifierType mapPrebidAdUnitTypeToAdConfigAdUnitType(AdUnitFormat adUnitFormat) {
         switch (adUnitFormat) {
             case DISPLAY:
                 return AdConfiguration.AdUnitIdentifierType.INTERSTITIAL;
             case VIDEO:
                 return AdConfiguration.AdUnitIdentifierType.VAST;
             default:
-                OXLog.debug(TAG, "setAdUnitIdentifierType: Provided AdUnitType [" + adUnitFormat + "] doesn't match any expected adUnitType.");
+                LogUtil.debug(TAG, "setAdUnitIdentifierType: Provided AdUnitType [" + adUnitFormat + "] doesn't match any expected adUnitType.");
                 return null;
         }
     }

@@ -29,7 +29,7 @@ import com.google.android.gms.ads.admanager.AppEventListener;
 
 import org.prebid.mobile.eventhandlers.utils.GamUtils;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -94,7 +94,7 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
             return new PublisherInterstitialAdWrapper(activity, gamAdUnitId, eventListener);
         }
         catch (Throwable throwable) {
-            OXLog.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
         return null;
     }
@@ -140,7 +140,7 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
             return mInterstitialAd != null;
         }
         catch (Throwable throwable) {
-            OXLog.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
         return false;
     }
@@ -149,12 +149,12 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
         final Activity activity = mActivityWeakReference.get();
 
         if (activity == null) {
-            OXLog.error(TAG, "show: Failed. Activity is null.");
+            LogUtil.error(TAG, "show: Failed. Activity is null.");
             return;
         }
 
         if (mInterstitialAd == null) {
-            OXLog.error(TAG, "show: Failure. Interstitial ad is null.");
+            LogUtil.error(TAG, "show: Failure. Interstitial ad is null.");
             return;
         }
 
@@ -162,7 +162,7 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
             mInterstitialAd.show(activity);
         }
         catch (Throwable throwable) {
-            OXLog.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
     }
 
@@ -178,7 +178,7 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
             AdManagerInterstitialAd.load(mActivityWeakReference.get(), mAdUnitId, adRequest, mAdLoadCallback);
         }
         catch (Throwable throwable) {
-            OXLog.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
     }
 

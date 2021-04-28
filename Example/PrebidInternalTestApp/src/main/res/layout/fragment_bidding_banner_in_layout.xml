@@ -34,7 +34,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <org.prebid.mobile.rendering.bidding.parallel.BannerView
-            android:id="@+id/oxBannerView"
+            android:id="@+id/prebidBannerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:configId="@string/mock_config_id_banner_320x50"

@@ -22,9 +22,6 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.interstitial.InterstitialManagerVideoDelegate;
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
@@ -39,11 +36,14 @@ import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 public class VideoCreative extends VideoCreativeProtocol
     implements VideoCreativeViewListener, InterstitialManagerVideoDelegate {
@@ -103,7 +103,7 @@ public class VideoCreative extends VideoCreativeProtocol
 
     @Override
     public void skip() {
-        OXLog.debug(TAG, "Track 'skip' event");
+        LogUtil.debug(TAG, "Track 'skip' event");
         mModel.trackVideoEvent(VideoAdEvent.Event.AD_SKIP);
         // Send it to AdView
         getCreativeViewListener().creativeDidComplete(this);
@@ -144,7 +144,7 @@ public class VideoCreative extends VideoCreativeProtocol
 
         OmAdSessionManager omAdSessionManager = mWeakOmAdSessionManager.get();
         if (omAdSessionManager == null) {
-            OXLog.error(TAG, "trackVolume failed, OmAdSessionManager is null");
+            LogUtil.error(TAG, "trackVolume failed, OmAdSessionManager is null");
             return;
         }
         omAdSessionManager.trackVolumeChange(volume);
@@ -214,7 +214,7 @@ public class VideoCreative extends VideoCreativeProtocol
     public void createOmAdSession() {
         OmAdSessionManager omAdSessionManager = mWeakOmAdSessionManager.get();
         if (omAdSessionManager == null) {
-            OXLog.error(TAG, "Error creating AdSession. OmAdSessionManager is null");
+            LogUtil.error(TAG, "Error creating AdSession. OmAdSessionManager is null");
             return;
         }
 
@@ -343,12 +343,12 @@ public class VideoCreative extends VideoCreativeProtocol
         OmAdSessionManager omAdSessionManager = mWeakOmAdSessionManager.get();
 
         if (omAdSessionManager == null) {
-            OXLog.error(TAG, "startOmSession: Failed. omAdSessionManager is null");
+            LogUtil.error(TAG, "startOmSession: Failed. omAdSessionManager is null");
             return;
         }
 
         if (mVideoCreativeView == null) {
-            OXLog.error(TAG, "startOmSession: Failed. VideoCreativeView is null");
+            LogUtil.error(TAG, "startOmSession: Failed. VideoCreativeView is null");
             return;
         }
 
@@ -358,7 +358,7 @@ public class VideoCreative extends VideoCreativeProtocol
 
     private void trackVideoAdStart() {
         if (mVideoCreativeView == null || mVideoCreativeView.getVideoPlayerView() == null) {
-            OXLog.error(TAG, "trackVideoAdStart error. mVideoCreativeView or VideoPlayerView is null.");
+            LogUtil.error(TAG, "trackVideoAdStart error. mVideoCreativeView or VideoPlayerView is null.");
             return;
         }
 
@@ -370,7 +370,7 @@ public class VideoCreative extends VideoCreativeProtocol
     }
 
     protected void complete() {
-        OXLog.debug(TAG, "track 'complete' event");
+        LogUtil.debug(TAG, "track 'complete' event");
 
         mModel.trackVideoEvent(VideoAdEvent.Event.AD_COMPLETE);
 
@@ -432,7 +432,7 @@ public class VideoCreative extends VideoCreativeProtocol
         public void onFileDownloaded(String shortenedPath) {
             VideoCreative videoCreative = mWeakVideoCreative.get();
             if (videoCreative == null) {
-                OXLog.warn(TAG, "VideoCreative is null");
+                LogUtil.warn(TAG, "VideoCreative is null");
                 return;
             }
 
@@ -445,7 +445,7 @@ public class VideoCreative extends VideoCreativeProtocol
         public void onFileDownloadError(String error) {
             VideoCreative videoCreative = mWeakVideoCreative.get();
             if (videoCreative == null) {
-                OXLog.warn(TAG, "VideoCreative is null");
+                LogUtil.warn(TAG, "VideoCreative is null");
                 return;
             }
 

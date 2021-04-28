@@ -18,8 +18,6 @@ package org.prebid.mobile.rendering.networking.targeting;
 
 import android.util.Pair;
 
-import androidx.annotation.VisibleForTesting;
-
 import org.json.JSONArray;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.networking.parameters.UserParameters;
@@ -31,6 +29,8 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
+
+import androidx.annotation.VisibleForTesting;
 
 public class Targeting {
     static final String KEY_AGE = "age";
@@ -123,7 +123,7 @@ public class Targeting {
      *
      * @param gender the new user gender
      */
-    public static void setUserGender(UserParameters.OXMGender gender) {
+    public static void setUserGender(UserParameters.Gender gender) {
         putTargetingValue(KEY_GENDER, UserParameters.getGenderDescription(gender));
     }
 

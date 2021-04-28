@@ -19,7 +19,7 @@ package org.prebid.mobile.rendering.networking.tracking;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.BaseResponseHandler;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -42,7 +42,7 @@ class ImpressionUrlTask extends BaseNetworkTask {
             result = openConnectionCheckRedirects(urlConnection);
         }
         catch (Exception e) {
-            OXLog.error(TAG, "Redirection failed");
+            LogUtil.error(TAG, "Redirection failed");
             result = new GetUrlResult();
         }
         return result;
@@ -58,7 +58,7 @@ class ImpressionUrlTask extends BaseNetworkTask {
         while (redir) {
 
             if (!(urlConnection instanceof HttpURLConnection)) {
-                OXLog.error(TAG, "Redirect fail for impression event");
+                LogUtil.error(TAG, "Redirect fail for impression event");
                 return null;
             }
 
@@ -95,7 +95,7 @@ class ImpressionUrlTask extends BaseNetworkTask {
             }
             else {
                 String error = String.format("Redirect error - Bad server response - [HTTP Response code of %s]", httpResponseCode);
-                OXLog.error(TAG, error);
+                LogUtil.error(TAG, error);
                 //Don't set exception on result. But instead just bail out with an error log
                 throw new AdException(AdException.SERVER_ERROR, error);
             }

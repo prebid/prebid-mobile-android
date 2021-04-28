@@ -18,13 +18,11 @@ package org.prebid.mobile.rendering.networking;
 
 import android.os.AsyncTask;
 
-import androidx.annotation.Nullable;
-
 import org.apache.http.conn.ConnectTimeoutException;
 import org.prebid.mobile.rendering.networking.exception.BaseExceptionHolder;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -37,6 +35,8 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Locale;
+
+import androidx.annotation.Nullable;
 
 /**
  * Performs HTTP communication in the background, i.e. off the UI thread.
@@ -84,16 +84,16 @@ public class BaseNetworkTask
     @Override
     protected void onPostExecute(GetUrlResult urlResult) {
         if (urlResult == null) {
-            OXLog.debug(TAG, "URL result is null");
+            LogUtil.debug(TAG, "URL result is null");
             return;
         }
         if (mResponseHandler == null) {
-            OXLog.debug(TAG, "No ResponseHandler on: may be a tracking event");
+            LogUtil.debug(TAG, "No ResponseHandler on: may be a tracking event");
             return;
         }
 
         //For debugging purposes. Helps in client issues, if any.
-        OXLog.debug(TAG, "Result: " + urlResult.responseString);
+        LogUtil.debug(TAG, "Result: " + urlResult.responseString);
 
         long stop = System.currentTimeMillis();
         long delta = stop - mStart;
@@ -116,7 +116,7 @@ public class BaseNetworkTask
     @Override
     protected void onCancelled() {
         super.onCancelled();
-        OXLog.debug(TAG, "Request cancelled. Disconnecting connection");
+        LogUtil.debug(TAG, "Request cancelled. Disconnecting connection");
         if (mConnection instanceof HttpURLConnection) {
             ((HttpURLConnection) mConnection).disconnect();
         }
@@ -133,8 +133,8 @@ public class BaseNetworkTask
     }
 
     public GetUrlResult sendRequest(GetUrlParams param) throws Exception {
-        OXLog.debug(TAG, "url: " + param.url);
-        OXLog.debug(TAG, "queryParams: " + param.queryParams);
+        LogUtil.debug(TAG, "url: " + param.url);
+        LogUtil.debug(TAG, "queryParams: " + param.queryParams);
 
         int responseCode = 0;
         mConnection = setHttpURLConnectionProperty(param);
@@ -201,24 +201,24 @@ public class BaseNetworkTask
                 mResult = sendRequest(param);
             }
             catch (MalformedURLException e) {
-                OXLog.warn(TAG, "Network Error: MalformedURLException" + e.getMessage());
+                LogUtil.warn(TAG, "Network Error: MalformedURLException" + e.getMessage());
                 // This error will be handled in onPostExecute()- so no need to handle here - Nice
                 mResult.setException(e);
             }
             catch (SocketTimeoutException e) {
-                OXLog.warn(TAG, "Network Error: SocketTimeoutException" + e.getMessage());
+                LogUtil.warn(TAG, "Network Error: SocketTimeoutException" + e.getMessage());
                 mResult.setException(e);
             }
             catch (ConnectTimeoutException e) {
-                OXLog.warn(TAG, "Network Error: ConnectTimeoutException" + e.getMessage());
+                LogUtil.warn(TAG, "Network Error: ConnectTimeoutException" + e.getMessage());
                 mResult.setException(e);
             }
             catch (IOException e) {
-                OXLog.warn(TAG, "Network Error: IOException" + e.getMessage());
+                LogUtil.warn(TAG, "Network Error: IOException" + e.getMessage());
                 mResult.setException(e);
             }
             catch (Exception e) {
-                OXLog.warn(TAG, "Network Error: Exception" + e.getMessage());
+                LogUtil.warn(TAG, "Network Error: Exception" + e.getMessage());
                 mResult.setException(e);
             }
             finally {
@@ -287,7 +287,7 @@ public class BaseNetworkTask
                 URL base = connection.getURL();
                 String location = connection.getHeaderField("Location");
 
-                OXLog.debug(TAG, (location == null)
+                LogUtil.debug(TAG, (location == null)
                                  ? "not found location"
                                  : "location = " + location);
                 URL target = null;
@@ -303,7 +303,7 @@ public class BaseNetworkTask
                                         || target.getProtocol().equals("https"))
                     || redirects >= MAX_REDIRECTS_COUNT) {
                     String error = String.format("Bad server response - [HTTP Response code of %s]", status);
-                    OXLog.error(TAG, error);
+                    LogUtil.error(TAG, error);
                     throw new Exception(error);
                 }
                 redirected = true;
@@ -325,12 +325,12 @@ public class BaseNetworkTask
         }
         else if (httpURLResponseCode >= 400 && httpURLResponseCode < 600) {
             String status = String.format(Locale.getDefault(), "Code %d. %s", httpURLResponseCode, readResponse(((HttpURLConnection) mConnection).getErrorStream()));
-            OXLog.error(TAG, status);
+            LogUtil.error(TAG, status);
             throw new Exception(status);
         }
         else {
             String error = String.format("Bad server response - [HTTP Response code of %s]", httpURLResponseCode);
-            OXLog.error(TAG, error);
+            LogUtil.error(TAG, error);
             throw new Exception(error);
         }
         mResult.responseString = response;

@@ -33,16 +33,13 @@ import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
 
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.rendering.R;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.parser.AdResponseParserVast;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.vast.VAST;
 
 import java.io.InputStream;
@@ -65,6 +62,9 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import static org.prebid.mobile.rendering.sdk.PrebidRenderingSettings.AUTO_REFRESH_DELAY_MAX;
 import static org.prebid.mobile.rendering.sdk.PrebidRenderingSettings.AUTO_REFRESH_DELAY_MIN;
@@ -103,7 +103,7 @@ public final class Utils {
             }
         }
         catch (UnsupportedEncodingException e) {
-            OXLog.error(TAG, e.getMessage());
+            LogUtil.error(TAG, e.getMessage());
         }
         template.append("&")
                 .append(key)
@@ -444,7 +444,7 @@ public final class Utils {
 
     public static View createCloseView(Context context) {
         if (context == null) {
-            OXLog.error(TAG, "Unable to create close view. Context is null");
+            LogUtil.error(TAG, "Unable to create close view. Context is null");
             return null;
         }
 
@@ -457,7 +457,7 @@ public final class Utils {
 
     public static View createWatchAgainView(Context context) {
         if (context == null) {
-            OXLog.error(TAG, "Unable to create watch again view. Context is null");
+            LogUtil.error(TAG, "Unable to create watch again view. Context is null");
             return null;
         }
         View watchAgainView = LayoutInflater.from(context).inflate(R.layout.lyt_watch_again, null);
@@ -477,7 +477,7 @@ public final class Utils {
     public static boolean isPermissionGranted(final Context context,
                                               final String permission) {
         if (context == null || permission == null) {
-            OXLog.debug("Utils", "isPermissionGranted: Context or Permission is null");
+            LogUtil.debug("Utils", "isPermissionGranted: Context or Permission is null");
             return false;
         }
         // Bug in ContextCompat where it can return a RuntimeException in rare circumstances.
@@ -507,7 +507,7 @@ public final class Utils {
             date = dateFormat.parse(durationInString);
         }
         catch (ParseException e) {
-            OXLog.error(TAG, "Unable to convert the videoDuration into seconds: " + e.getMessage());
+            LogUtil.error(TAG, "Unable to convert the videoDuration into seconds: " + e.getMessage());
         }
         if (date != null) {
             miliseconds = date.getTime();
@@ -563,8 +563,8 @@ public final class Utils {
         final int clampedRefreshInterval = clampInMillis(userRefreshValue, AUTO_REFRESH_DELAY_MIN, AUTO_REFRESH_DELAY_MAX);
 
         if (userRefreshValue < AUTO_REFRESH_DELAY_MIN || userRefreshValue > AUTO_REFRESH_DELAY_MAX) {
-            OXLog.warn(TAG, "Refresh interval is out of range. Value which will be used for refresh: " + clampedRefreshInterval + ". "
-                            + "Make sure that the refresh interval is in the following range: [" + AUTO_REFRESH_DELAY_MIN + ", " + AUTO_REFRESH_DELAY_MAX + "]");
+            LogUtil.warn(TAG, "Refresh interval is out of range. Value which will be used for refresh: " + clampedRefreshInterval + ". "
+                              + "Make sure that the refresh interval is in the following range: [" + AUTO_REFRESH_DELAY_MIN + ", " + AUTO_REFRESH_DELAY_MAX + "]");
         }
 
         return clampedRefreshInterval;

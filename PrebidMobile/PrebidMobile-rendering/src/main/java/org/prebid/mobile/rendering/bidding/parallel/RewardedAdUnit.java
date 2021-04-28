@@ -18,8 +18,6 @@ package org.prebid.mobile.rendering.bidding.parallel;
 
 import android.content.Context;
 
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.RewardedEventHandler;
 import org.prebid.mobile.rendering.bidding.interfaces.StandaloneRewardedVideoEventHandler;
@@ -27,7 +25,9 @@ import org.prebid.mobile.rendering.bidding.listeners.RewardedAdUnitListener;
 import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
+
+import androidx.annotation.Nullable;
 
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
@@ -47,32 +47,32 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
 
     private final RewardedVideoEventListener mEventListener = new RewardedVideoEventListener() {
         @Override
-        public void onOXBSdkWin() {
+        public void onPrebidSdkWin() {
             if (isBidInvalid()) {
-                changeOxbInterstitialAdUnitState(READY_FOR_LOAD);
-                notifyErrorListener(new AdException(AdException.INTERNAL_ERROR, "WinnerBid is null when executing onOXBSdkWin."));
+                changeInterstitialAdUnitState(READY_FOR_LOAD);
+                notifyErrorListener(new AdException(AdException.INTERNAL_ERROR, "WinnerBid is null when executing onPrebidSdkWin."));
                 return;
             }
 
-            loadOxbAd();
+            loadPrebidAd();
         }
 
         @Override
         public void onAdServerWin(Object userReward) {
             mUserReward = userReward;
-            changeOxbInterstitialAdUnitState(READY_TO_DISPLAY_GAM);
+            changeInterstitialAdUnitState(READY_TO_DISPLAY_GAM);
             notifyAdEventListener(AdListenerEvent.AD_LOADED);
         }
 
         @Override
         public void onAdFailed(AdException exception) {
             if (isBidInvalid()) {
-                changeOxbInterstitialAdUnitState(READY_FOR_LOAD);
+                changeInterstitialAdUnitState(READY_FOR_LOAD);
                 notifyErrorListener(exception);
                 return;
             }
 
-            onOXBSdkWin();
+            onPrebidSdkWin();
         }
 
         @Override
@@ -87,7 +87,7 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
 
         @Override
         public void onAdDisplayed() {
-            changeOxbInterstitialAdUnitState(READY_FOR_LOAD);
+            changeInterstitialAdUnitState(READY_FOR_LOAD);
             notifyAdEventListener(AdListenerEvent.AD_DISPLAYED);
         }
 
@@ -159,7 +159,7 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
     @Override
     void notifyAdEventListener(AdListenerEvent adListenerEvent) {
         if (mRewardedAdUnitListener == null) {
-            OXLog.debug(TAG, "notifyAdEventListener: Failed. AdUnitListener is null. Passed listener event: " + adListenerEvent);
+            LogUtil.debug(TAG, "notifyAdEventListener: Failed. AdUnitListener is null. Passed listener event: " + adListenerEvent);
             return;
         }
 

@@ -43,7 +43,7 @@ object OpenRtbConfigs {
             Targeting.setUserId(openRtbExtra.userId)
         }
         if (openRtbExtra.gender != null) {
-            Targeting.setUserGender(UserParameters.OXMGender.valueOf(openRtbExtra.gender))
+            Targeting.setUserGender(UserParameters.Gender.valueOf(openRtbExtra.gender))
         }
         if (openRtbExtra.buyerId != null) {
             Targeting.setBuyerUid(openRtbExtra.buyerId)

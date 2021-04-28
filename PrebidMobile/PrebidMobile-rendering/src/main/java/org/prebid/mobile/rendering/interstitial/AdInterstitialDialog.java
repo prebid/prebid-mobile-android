@@ -22,7 +22,7 @@ import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
@@ -62,7 +62,7 @@ public class AdInterstitialDialog extends AdBaseDialog {
                 }
             }
             catch (Exception e) {
-                OXLog.error(TAG, "Interstitial ad closed but post-close events failed: " + Log.getStackTraceString(e));
+                LogUtil.error(TAG, "Interstitial ad closed but post-close events failed: " + Log.getStackTraceString(e));
             }
         });
     }

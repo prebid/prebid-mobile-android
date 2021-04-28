@@ -19,7 +19,7 @@ package org.prebid.mobile.rendering.bidding.display;
 import android.text.TextUtils;
 
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -53,7 +53,7 @@ public class ReflectionUtils {
             return Class.forName(className);
         }
         catch (ClassNotFoundException e) {
-            OXLog.debug(TAG, e.getMessage());
+            LogUtil.debug(TAG, e.getMessage());
         }
         return null;
     }
@@ -158,16 +158,16 @@ public class ReflectionUtils {
             return method.invoke(object, params);
         }
         catch (NullPointerException e) {
-            OXLog.debug(TAG, e.getMessage());
+            LogUtil.debug(TAG, e.getMessage());
         }
         catch (NoSuchMethodException e) {
-            OXLog.debug(TAG, e.getMessage());
+            LogUtil.debug(TAG, e.getMessage());
         }
         catch (InvocationTargetException e) {
-            OXLog.debug(TAG, e.getMessage());
+            LogUtil.debug(TAG, e.getMessage());
         }
         catch (IllegalAccessException e) {
-            OXLog.debug(TAG, e.getMessage());
+            LogUtil.debug(TAG, e.getMessage());
         }
         return null;
     }
@@ -178,16 +178,16 @@ public class ReflectionUtils {
             return method.invoke(object, param);
         }
         catch (NullPointerException e) {
-            OXLog.debug(TAG, e.getMessage());
+            LogUtil.debug(TAG, e.getMessage());
         }
         catch (NoSuchMethodException e) {
-            OXLog.debug(TAG, e.getMessage());
+            LogUtil.debug(TAG, e.getMessage());
         }
         catch (InvocationTargetException e) {
-            OXLog.debug(TAG, e.getMessage());
+            LogUtil.debug(TAG, e.getMessage());
         }
         catch (IllegalAccessException e) {
-            OXLog.debug(TAG, e.getMessage());
+            LogUtil.debug(TAG, e.getMessage());
         }
         return null;
     }

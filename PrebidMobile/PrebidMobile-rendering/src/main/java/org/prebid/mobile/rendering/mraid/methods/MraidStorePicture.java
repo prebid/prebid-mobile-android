@@ -25,7 +25,7 @@ import android.util.Log;
 
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
@@ -70,7 +70,7 @@ public class MraidStorePicture {
                         dialog.show();
                     }
                     else {
-                        OXLog.error(TAG, "Context is not activity or activity is finishing, can not show expand dialog");
+                        LogUtil.error(TAG, "Context is not activity or activity is finishing, can not show expand dialog");
                     }
                 });
             }
@@ -91,7 +91,7 @@ public class MraidStorePicture {
             catch (Exception e) {
                 //send a mraid error back to the ad
                 mJsi.onError("Failed to store picture", JSInterface.ACTION_STORE_PICTURE);
-                OXLog.error(TAG, "Failed to store picture: " + Log.getStackTraceString(e));
+                LogUtil.error(TAG, "Failed to store picture: " + Log.getStackTraceString(e));
             }
         }).start();
     }

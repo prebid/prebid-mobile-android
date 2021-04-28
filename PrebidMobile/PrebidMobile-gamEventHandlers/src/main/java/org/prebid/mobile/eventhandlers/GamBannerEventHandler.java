@@ -22,15 +22,15 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-
 import org.prebid.mobile.eventhandlers.global.Constants;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.BannerEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
+
+import androidx.annotation.NonNull;
 
 /**
  * This class is compatible with Prebid Rendering SDK v1.10.
@@ -50,7 +50,7 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
     private final String mGamAdUnitId;
 
     private PublisherAdViewWrapper mRequestBanner;
-    private PublisherAdViewWrapper mOxbProxyBanner;
+    private PublisherAdViewWrapper mProxyBanner;
     private PublisherAdViewWrapper mEmbeddedBanner;
     private PublisherAdViewWrapper mRecycledBanner;
 
@@ -106,7 +106,7 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
     }
     //endregion ==================== GAM AppEventsListener Implementation
 
-    //region ==================== OX EventHandler Implementation
+    //region ==================== EventHandler Implementation
     @Override
     public AdSize[] getAdSizeArray() {
         if (mAdSizes == null) {
@@ -129,7 +129,7 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
         mIsExpectingAppEvent = false;
 
         if (mRequestBanner != null) {
-            OXLog.error(TAG, "requestAdWithBid: Failed. Request to primaryAdServer is in progress.");
+            LogUtil.error(TAG, "requestAdWithBid: Failed. Request to primaryAdServer is in progress.");
             return;
         }
 
@@ -156,8 +156,8 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
 
     @Override
     public void trackImpression() {
-        if (mOxbProxyBanner != null) {
-            mOxbProxyBanner.recordManualImpression();
+        if (mProxyBanner != null) {
+            mProxyBanner.recordManualImpression();
         }
     }
 
@@ -166,7 +166,7 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
         cancelTimer();
         destroyGamViews();
     }
-    //endregion ==================== OX EventHandler Implementation
+    //endregion ==================== EventHandler Implementation
 
     private PublisherAdViewWrapper createPublisherAdView() {
         return PublisherAdViewWrapper.newInstance(mApplicationContext, mGamAdUnitId, this, mAdSizes);
@@ -175,7 +175,7 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
     private void primaryAdReceived() {
         if (mIsExpectingAppEvent) {
             if (mAppEventHandler != null) {
-                OXLog.debug(TAG, "primaryAdReceived: AppEventTimer is not null. Skipping timer scheduling.");
+                LogUtil.debug(TAG, "primaryAdReceived: AppEventTimer is not null. Skipping timer scheduling.");
                 return;
             }
 
@@ -193,7 +193,7 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
 
     private void handleAppEvent() {
         if (!mIsExpectingAppEvent) {
-            OXLog.debug(TAG, "appEventDetected: Skipping event handling. App event is not expected");
+            LogUtil.debug(TAG, "appEventDetected: Skipping event handling. App event is not expected");
             return;
         }
 
@@ -202,8 +202,8 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
         mRequestBanner = null;
         mIsExpectingAppEvent = false;
         recycleCurrentBanner();
-        mOxbProxyBanner = gamBannerView;
-        mBannerEventListener.onOXBSdkWin();
+        mProxyBanner = gamBannerView;
+        mBannerEventListener.onPrebidSdkWin();
     }
 
     private void scheduleTimer() {
@@ -261,9 +261,9 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
             mRecycledBanner = mEmbeddedBanner;
             mEmbeddedBanner = null;
         }
-        else if (mOxbProxyBanner != null) {
-            mRecycledBanner = mOxbProxyBanner;
-            mOxbProxyBanner = null;
+        else if (mProxyBanner != null) {
+            mRecycledBanner = mProxyBanner;
+            mProxyBanner = null;
             mRecycledBanner.setManualImpressionsEnabled(false);
         }
     }
@@ -272,8 +272,8 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
         if (mRequestBanner != null) {
             mRequestBanner.destroy();
         }
-        if (mOxbProxyBanner != null) {
-            mOxbProxyBanner.destroy();
+        if (mProxyBanner != null) {
+            mProxyBanner.destroy();
         }
         if (mEmbeddedBanner != null) {
             mEmbeddedBanner.destroy();

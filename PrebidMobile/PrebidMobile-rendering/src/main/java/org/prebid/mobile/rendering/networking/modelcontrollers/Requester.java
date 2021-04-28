@@ -44,7 +44,7 @@ import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -132,7 +132,7 @@ public abstract class Requester {
     protected abstract PathBuilderBase getPathBuilder();
 
     private void sendAdException(String logMsg, String exceptionMsg) {
-        OXLog.warn(TAG, logMsg);
+        LogUtil.warn(TAG, logMsg);
         AdException adException = new AdException(AdException.INIT_ERROR, exceptionMsg);
         mAdResponseCallBack.onErrorWithException(adException, 0);
     }
@@ -150,7 +150,7 @@ public abstract class Requester {
 
         // Check if device is connected to the internet
         ConnectionInfoManager connectionInfoManager = ManagersResolver.getInstance().getNetworkManager();
-        if (connectionInfoManager == null || connectionInfoManager.getConnectionType() == UserParameters.OXMConnectionType.OFFLINE) {
+        if (connectionInfoManager == null || connectionInfoManager.getConnectionType() == UserParameters.ConnectionType.OFFLINE) {
             sendAdException(
                 "Either Prebid networkManager is not initialized or Device is offline. Please check the internet connection",
                 "No internet connection detected"
@@ -189,20 +189,20 @@ public abstract class Requester {
 
         @Override
         public void adIdFetchCompletion() {
-            OXLog.info(TAG, "adIdFetchCompletion");
+            LogUtil.info(TAG, "adIdFetchCompletion");
             makeAdRequest();
         }
 
         @Override
         public void adIdFetchFailure() {
-            OXLog.warn(TAG, "adIdFetchFailure");
+            LogUtil.warn(TAG, "adIdFetchFailure");
             makeAdRequest();
         }
 
         private void makeAdRequest() {
             Requester requester = mWeakRequester.get();
             if (requester == null) {
-                OXLog.warn(TAG, "Requester is null");
+                LogUtil.warn(TAG, "Requester is null");
                 return;
             }
 

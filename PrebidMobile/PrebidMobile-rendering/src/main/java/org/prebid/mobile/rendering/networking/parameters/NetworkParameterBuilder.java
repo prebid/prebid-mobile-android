@@ -49,7 +49,7 @@ public class NetworkParameterBuilder extends ParameterBuilder {
 
     private void setNetworkParams(AdRequestInput adRequestInput, DeviceInfoManager deviceManager, ConnectionInfoManager connectionInfoManager) {
         if (deviceManager.isPermissionGranted("android.permission.ACCESS_NETWORK_STATE")) {
-            UserParameters.OXMConnectionType autoDetectedValue = connectionInfoManager.getConnectionType();
+            UserParameters.ConnectionType autoDetectedValue = connectionInfoManager.getConnectionType();
             switch (autoDetectedValue) {
                 case WIFI:
                     adRequestInput.getBidRequest().getDevice().connectiontype = CONNECTION_TYPE_WIFI;

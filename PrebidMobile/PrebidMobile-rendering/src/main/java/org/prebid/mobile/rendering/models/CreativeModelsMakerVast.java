@@ -16,15 +16,13 @@
 
 package org.prebid.mobile.rendering.models;
 
-import androidx.annotation.NonNull;
-
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.loading.AdLoadListener;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.parser.AdResponseParserBase;
 import org.prebid.mobile.rendering.parser.AdResponseParserVast;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.OmEventTracker;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;
@@ -35,6 +33,8 @@ import org.prebid.mobile.rendering.video.vast.Impression;
 import org.prebid.mobile.rendering.video.vast.Tracking;
 
 import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
 
 import static org.prebid.mobile.rendering.parser.AdResponseParserVast.RESOURCE_FORMAT_HTML;
 import static org.prebid.mobile.rendering.parser.AdResponseParserVast.RESOURCE_FORMAT_IFRAME;
@@ -215,7 +215,7 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
             mListener.onCreativeModelReady(result);
         }
         catch (Exception e) {
-            OXLog.error(TAG, "Video failed with: " + e.getMessage());
+            LogUtil.error(TAG, "Video failed with: " + e.getMessage());
             notifyErrorListener("Video failed: " + e.getMessage());
         }
     }

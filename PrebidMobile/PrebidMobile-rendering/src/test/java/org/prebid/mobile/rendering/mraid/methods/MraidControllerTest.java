@@ -241,19 +241,19 @@ public class MraidControllerTest {
         WebViewBase mockWebView = mock(WebViewBase.class);
         MraidEvent mockEvent = mock(MraidEvent.class);
         MraidExpand mockMraidExpand = mock(MraidExpand.class);
-        PrebidWebViewBase mockOxBase = mock(PrebidWebViewBase.class);
+        PrebidWebViewBase mockWebViewBase = mock(PrebidWebViewBase.class);
 
         mockEvent.mraidAction = JSInterface.ACTION_EXPAND;
         mockEvent.mraidActionHelper = "test";
 
         when(mockMraidExpand.getInterstitialViewController()).thenReturn(mock(AdBaseDialog.class));
-        when(mockWebView.getPreloadedListener()).thenReturn(mockOxBase);
+        when(mockWebView.getPreloadedListener()).thenReturn(mockWebViewBase);
 
         WhiteBox.field(MraidController.class, "mMraidExpand").set(mMraidController, mockMraidExpand);
         getMraidDelegate().displayPrebidWebViewForMraid(mockWebView, true, mockEvent);
 
         verify(mockMraidExpand, times(1)).setDisplayView(mockWebView);
-        verify(mockOxBase).initMraidExpanded();
+        verify(mockWebViewBase).initMraidExpanded();
     }
 
     @Test

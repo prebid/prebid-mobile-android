@@ -27,7 +27,7 @@ import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -157,7 +157,7 @@ public class PrebidRenderingSettings {
 
     public static void setBidServerHost(Host host) {
         if (host == null) {
-            OXLog.error(TAG, "setBidServerHost: Error. Can't assign a null host.");
+            LogUtil.error(TAG, "setBidServerHost: Error. Can't assign a null host.");
             return;
         }
 
@@ -198,14 +198,14 @@ public class PrebidRenderingSettings {
     }
 
     private static void initializeLogging() {
-        OXLog.setLogLevel(logLevel.getValue());//set to the publisher set value
+        LogUtil.setLogLevel(logLevel.getValue());//set to the publisher set value
         increaseTaskCount();
     }
 
     static void increaseTaskCount() {
         if (INIT_SDK_TASK_COUNT.incrementAndGet() >= MANDATORY_TASK_COUNT) {
             sIsSdkInitialized = true;
-            OXLog.debug(TAG, "Prebid Rendering SDK " + SDK_VERSION + " Initialized");
+            LogUtil.debug(TAG, "Prebid Rendering SDK " + SDK_VERSION + " Initialized");
 
             if (sInitSdkListener != null) {
                 sInitSdkListener.onSDKInit();

@@ -25,7 +25,7 @@ import org.prebid.mobile.rendering.listeners.CreativeViewListener;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
@@ -87,35 +87,35 @@ public abstract class AbstractCreative {
      * Pause creative execution
      */
     public void pause() {
-        OXLog.debug(TAG, "pause(): Base method implementation: ignoring");
+        LogUtil.debug(TAG, "pause(): Base method implementation: ignoring");
     }
 
     /**
      * Resume creative execution
      */
     public void resume() {
-        OXLog.debug(TAG, "resume(): Base method implementation: ignoring");
+        LogUtil.debug(TAG, "resume(): Base method implementation: ignoring");
     }
 
     /**
      * UnMute creative
      */
     public void unmute() {
-        OXLog.debug(TAG, "unMute(): Base method implementation: ignoring");
+        LogUtil.debug(TAG, "unMute(): Base method implementation: ignoring");
     }
 
     /**
      * Mute creative
      */
     public void mute() {
-        OXLog.debug(TAG, "mute(): Base method implementation: ignoring");
+        LogUtil.debug(TAG, "mute(): Base method implementation: ignoring");
     }
 
     /**
      * @return Whether the creative is playing
      */
     public boolean isPlaying() {
-        OXLog.debug(TAG, "isPlaying(): Returning default value: false");
+        LogUtil.debug(TAG, "isPlaying(): Returning default value: false");
         return false;
     }
 
@@ -125,14 +125,14 @@ public abstract class AbstractCreative {
      * @param state to track
      */
     public void trackVideoStateChange(InternalPlayerState state) {
-        OXLog.debug(TAG, "trackVideoStateChange: Base method implementation: ignoring");
+        LogUtil.debug(TAG, "trackVideoStateChange: Base method implementation: ignoring");
     }
 
     /**
      * @return if current creative is serving as interstitial that was closed
      */
     public boolean isInterstitialClosed() {
-        OXLog.debug(TAG, "isInterstitialClosed(): Returning default value: false");
+        LogUtil.debug(TAG, "isInterstitialClosed(): Returning default value: false");
         return false;
     }
 
@@ -140,7 +140,7 @@ public abstract class AbstractCreative {
      * @return media duration in ms
      */
     public long getMediaDuration() {
-        OXLog.debug(TAG, "getMediaDuration(): Returning default value: 0");
+        LogUtil.debug(TAG, "getMediaDuration(): Returning default value: 0");
         return 0;
     }
 
@@ -148,7 +148,7 @@ public abstract class AbstractCreative {
      * @return video skip offset in ms
      */
     public long getVideoSkipOffset() {
-        OXLog.debug(TAG, "getVideoSkipOffset(): Returning default value: -1");
+        LogUtil.debug(TAG, "getVideoSkipOffset(): Returning default value: -1");
         return AdConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
     }
 
@@ -156,7 +156,7 @@ public abstract class AbstractCreative {
      * VideoAdEvent.Event to track
      */
     public void trackVideoEvent(VideoAdEvent.Event event) {
-        OXLog.debug(TAG, "trackVideoEvent(): Base method implementation: ignoring");
+        LogUtil.debug(TAG, "trackVideoEvent(): Base method implementation: ignoring");
     }
 
     /**
@@ -219,7 +219,7 @@ public abstract class AbstractCreative {
      */
     public void changeVisibilityTrackerState(boolean adWebViewWindowFocus) {
         if (mCreativeVisibilityTracker == null) {
-            OXLog.debug(TAG, "handleAdWebViewWindowFocusChange(): Failed. CreativeVisibilityTracker is null.");
+            LogUtil.debug(TAG, "handleAdWebViewWindowFocusChange(): Failed. CreativeVisibilityTracker is null.");
             return;
         }
 
@@ -271,7 +271,7 @@ public abstract class AbstractCreative {
     public void updateAdView(View view) {
         OmAdSessionManager omAdSessionManager = mWeakOmAdSessionManager.get();
         if (omAdSessionManager == null) {
-            OXLog.error(TAG, "Unable to updateAdView. OmAdSessionManager is null");
+            LogUtil.error(TAG, "Unable to updateAdView. OmAdSessionManager is null");
             return;
         }
         omAdSessionManager.registerAdView(view);
@@ -283,13 +283,13 @@ public abstract class AbstractCreative {
 
     public void addOmFriendlyObstruction(InternalFriendlyObstruction friendlyObstruction) {
         if (friendlyObstruction == null) {
-            OXLog.debug(TAG, "addOmFriendlyObstruction: Obstruction view is null. Skip adding as friendlyObstruction");
+            LogUtil.debug(TAG, "addOmFriendlyObstruction: Obstruction view is null. Skip adding as friendlyObstruction");
             return;
         }
 
         OmAdSessionManager omAdSessionManager = mWeakOmAdSessionManager.get();
         if (omAdSessionManager == null) {
-            OXLog.error(TAG, "Unable to addOmFriendlyObstruction. OmAdSessionManager is null");
+            LogUtil.error(TAG, "Unable to addOmFriendlyObstruction. OmAdSessionManager is null");
             return;
         }
 

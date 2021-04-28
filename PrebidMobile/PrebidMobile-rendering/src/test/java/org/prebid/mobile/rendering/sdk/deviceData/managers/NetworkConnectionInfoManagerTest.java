@@ -61,6 +61,6 @@ public class NetworkConnectionInfoManagerTest {
         when(mockInfo.getType()).thenReturn(ConnectivityManager.TYPE_MOBILE);
         when(mConnectivityManager.getActiveNetworkInfo()).thenReturn(mockInfo);
 
-        assertEquals(UserParameters.OXMConnectionType.CELL, mNetworkConnectionManager.getConnectionType());
+        assertEquals(UserParameters.ConnectionType.CELL, mNetworkConnectionManager.getConnectionType());
     }
 }

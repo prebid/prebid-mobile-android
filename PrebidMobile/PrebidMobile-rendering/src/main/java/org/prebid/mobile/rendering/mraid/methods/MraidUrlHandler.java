@@ -18,15 +18,15 @@ package org.prebid.mobile.rendering.mraid.methods;
 
 import android.content.Context;
 
-import androidx.annotation.VisibleForTesting;
-
-import org.prebid.mobile.rendering.utils.logger.OXLog;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.utils.url.UrlHandler;
 import org.prebid.mobile.rendering.utils.url.action.DeepLinkAction;
 import org.prebid.mobile.rendering.utils.url.action.DeepLinkPlusAction;
 import org.prebid.mobile.rendering.utils.url.action.MraidInternalBrowserAction;
 import org.prebid.mobile.rendering.utils.url.action.UrlAction;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
+
+import androidx.annotation.VisibleForTesting;
 
 public class MraidUrlHandler {
 
@@ -75,7 +75,7 @@ public class MraidUrlHandler {
                 @Override
                 public void onFailure(String url) {
                     mUrlHandleInProgress = false;
-                    OXLog.debug(TAG, "Failed to handleUrl: " + url);
+                    LogUtil.debug(TAG, "Failed to handleUrl: " + url);
                 }
             })
             .build();
