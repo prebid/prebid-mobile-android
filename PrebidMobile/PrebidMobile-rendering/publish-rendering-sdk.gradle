@@ -1,0 +1,45 @@
+apply plugin: 'maven-publish'
+
+def ARTIFACT_ID = "prebid-mobile-sdk-rendering"
+def ARCHIVE_NAME = "PrebidMobile-rendering-release"
+
+publishing {
+    publications {
+        renderingSdk(MavenPublication) {
+            artifactId ARTIFACT_ID
+            artifact "${project.buildDir}/outputs/aar/${ARCHIVE_NAME}.aar"
+            version "${prebidVersionName}"
+            groupId "${artifactGroupId}"
+
+            //The publication doesn't know about our dependencies, so we have to manually add them to the pom
+            pom.withXml {
+                // for dependencies and exclusions
+                def dependenciesNode = asNode().appendNode('dependencies')
+                configurations.implementation.allDependencies.withType(ModuleDependency) { ModuleDependency dp ->
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', dp.group)
+                    dependencyNode.appendNode('artifactId', dp.name)
+                    dependencyNode.appendNode('version', dp.version)
+
+                    // for exclusions
+                    if (dp.excludeRules.size() > 0) {
+                        def exclusions = dependencyNode.appendNode('exclusions')
+                        dp.excludeRules.each { ExcludeRule ex ->
+                            def exclusion = exclusions.appendNode('exclusion')
+                            exclusion.appendNode('groupId', ex.group)
+                            exclusion.appendNode('artifactId', ex.module)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Using local repository for generated artifacts.
+    repositories {
+        maven {
+            name = 'LocalArtifacts'
+            url = "file://$artifactFolder"
+        }
+    }
+}

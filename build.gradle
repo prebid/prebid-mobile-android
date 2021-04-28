@@ -7,6 +7,11 @@ ext {
     targetSDKVersion = 28
     compileSdkVersion = 30
     buildToolsVersion = "28.0.3"
+
+    artifactGroupId = "org.prebid"
+    artifactFolder = "${buildDir}/generated-artifacts"
+    omSdkVersion = "1.3.17"
+    omSdkModuleName = "omsdk-android"
 }
 
 buildscript {

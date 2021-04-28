@@ -1,2 +1,5 @@
 configurations.maybeCreate("default")
-artifacts.add("default", file('omsdk-android-1.3.17.aar'))
+artifacts.add("default", file("${omSdkModuleName}-${omSdkVersion}.aar"))
+
+setGroup("${artifactGroupId}")
+setVersion("${omSdkVersion}")

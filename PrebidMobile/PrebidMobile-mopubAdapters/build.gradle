@@ -14,18 +14,12 @@
  *    limitations under the License.
  */
 
-apply plugin: 'com.android.library'
+apply from: '../shared-rendering.gradle'
+apply from: 'publish-adapters.gradle'
 
 android {
-    compileSdkVersion 30
-
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0.0"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -40,17 +34,6 @@ android {
             includeAndroidResources = true
         }
     }
-
-    packagingOptions {
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/INDEX.LIST'
-        exclude 'META-INF/LICENSE'
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
 }
 
 dependencies {
@@ -64,5 +47,4 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:4.5.1'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:3.7.7'
-    testImplementation project(path: ':TestUtils')
 }
