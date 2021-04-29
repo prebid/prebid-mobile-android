@@ -104,7 +104,7 @@ for n in ${!modules[@]}; do
 	# Handle ProGuard rules from .aar into .jar
 	# rename proguard.txt to proguard.pro
 	mv $AARPATH_ABSOLUTE/proguard.{txt,pro}
-	mkdir $AARPATH_ABSOLUTE/META-INF
+	mkdir -p $AARPATH_ABSOLUTE/META-INF
 	mkdir $AARPATH_ABSOLUTE/META-INF/proguard
 	mv $AARPATH_ABSOLUTE/proguard.pro $AARPATH_ABSOLUTE/META-INF/proguard
 	# move META-INF into a result direcotory
