@@ -20,6 +20,10 @@ import org.prebid.mobile.ResultCode;
 public class RubiconInterstitialMoPubDemoActivity extends AppCompatActivity {
     AdUnit adUnit;
 
+    //Used by UI tests
+    int refreshCount;
+    ResultCode resultCode;
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -80,6 +84,9 @@ public class RubiconInterstitialMoPubDemoActivity extends AppCompatActivity {
             @Override
             public void onComplete(ResultCode resultCode) {
                 mpInterstitial.load();
+
+                refreshCount++;
+                RubiconInterstitialMoPubDemoActivity.this.resultCode = resultCode;
             }
         });
 

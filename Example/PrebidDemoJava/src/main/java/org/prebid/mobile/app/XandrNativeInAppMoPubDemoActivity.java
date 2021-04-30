@@ -25,6 +25,7 @@ import com.mopub.nativeads.NativeErrorCode;
 import com.mopub.nativeads.RequestParameters;
 import com.mopub.nativeads.StaticNativeAd;
 
+import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.NativeAdUnit;
 import org.prebid.mobile.NativeDataAsset;
@@ -43,8 +44,14 @@ import org.prebid.mobile.addendum.AdViewUtils;
 import java.util.ArrayList;
 
 public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
-    private MoPubNative mMoPubNative;
+    private MoPubNative moPubNative;
     private NativeAd ad;
+
+    //Used by UI tests
+    int refreshCount;
+    ResultCode resultCode;
+    RequestParameters request;
+    AdUnit adUnit;
 
     private void removePreviousAds() {
         ((FrameLayout) findViewById(R.id.adFrame)).removeAllViews();
@@ -52,9 +59,9 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
             ad.destroy();
             ad = null;
         }
-        if (mMoPubNative != null) {
-            mMoPubNative.destroy();
-            mMoPubNative = null;
+        if (moPubNative != null) {
+            moPubNative.destroy();
+            moPubNative = null;
         }
     }
 
@@ -151,6 +158,7 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
             nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
             nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
             nativeAdUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
+            adUnit = nativeAdUnit;
             ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
             methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE);
             methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.JS);
@@ -191,7 +199,7 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
             cta.setDataType(NativeDataAsset.DATA_TYPE.CTATEXT);
             nativeAdUnit.addAsset(cta);
 
-            mMoPubNative = new MoPubNative(XandrNativeInAppMoPubDemoActivity.this, "2674981035164b2db5ef4b4546bf3d49", new MoPubNative.MoPubNativeNetworkListener() {
+            moPubNative = new MoPubNative(XandrNativeInAppMoPubDemoActivity.this, "2674981035164b2db5ef4b4546bf3d49", new MoPubNative.MoPubNativeNetworkListener() {
                 @Override
                 public void onNativeLoad(final NativeAd nativeAd) {
                     Log.d("Prebid", "MoPub native ad loaded");
@@ -221,17 +229,22 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
                     Log.d("Prebid", "MoPub native failed to load: " + errorCode.toString());
                 }
             });
-            mMoPubNative.registerAdRenderer(new MoPubStaticNativeAdRenderer(null));
+            moPubNative.registerAdRenderer(new MoPubStaticNativeAdRenderer(null));
             RequestParameters.Builder mRP = new RequestParameters.Builder();
+
             // Fetching the demannd using OnCompleteListener
             nativeAdUnit.fetchDemand(mRP, new OnCompleteListener() {
                 @Override
                 public void onComplete(ResultCode resultCode) {
                     if (resultCode == ResultCode.SUCCESS) {
-                        mMoPubNative.makeRequest(mRP.build());
+                        moPubNative.makeRequest(mRP.build());
                     } else {
                         Toast.makeText(XandrNativeInAppMoPubDemoActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
                     }
+
+                    refreshCount++;
+                    XandrNativeInAppMoPubDemoActivity.this.resultCode = resultCode;
+                    request = mRP.build();
                 }
             });
 
