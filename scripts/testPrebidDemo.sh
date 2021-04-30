@@ -17,4 +17,9 @@ echoX "clean previous build"
 ./gradlew clean
 
 echoX "start UI tests"
-./gradlew PrebidDemoJava:connectedSourceCodeDebugAndroidTest
+
+#building
+./gradlew assembleSourceCodeDebugAndroidTest
+
+# testing
+# ./gradlew PrebidDemoJava:connectedSourceCodeDebugAndroidTest
