@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~    Copyright 2018-2021 Prebid.org, Inc.
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -49,6 +48,7 @@
             android:id="@+id/viewContainer"
             android:layout_width="wrap_content"
             android:layout_height="250dp"
+            android:layout_marginTop="5dp"
             android:gravity="center" />
     </ScrollView>
 

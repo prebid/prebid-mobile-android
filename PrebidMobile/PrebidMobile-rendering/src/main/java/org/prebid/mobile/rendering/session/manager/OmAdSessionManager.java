@@ -38,6 +38,7 @@ import com.iab.omid.library.prebidorg.adsession.media.MediaEvents;
 import com.iab.omid.library.prebidorg.adsession.media.Position;
 import com.iab.omid.library.prebidorg.adsession.media.VastProperties;
 
+import org.prebid.mobile.rendering.BuildConfig;
 import org.prebid.mobile.rendering.models.TrackingEvent;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
@@ -61,8 +62,8 @@ import androidx.annotation.Nullable;
 public class OmAdSessionManager {
     private static final String TAG = OmAdSessionManager.class.getSimpleName();
 
-    public static final String PARTNER_NAME = "Openx";
-    public static final String PARTNER_VERSION = "5.0";
+    public static final String PARTNER_NAME = "Prebid";
+    public static final String PARTNER_VERSION = BuildConfig.VERSION;
 
     private MediaEvents mMediaEvents;
     private AdEvents mAdEvents;

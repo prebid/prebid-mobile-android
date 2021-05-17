@@ -129,6 +129,10 @@ public class VideoCreativeView extends RelativeLayout {
         addVolumeControlView();
     }
 
+    public VolumeControlView getVolumeControlView() {
+        return mVolumeControlView;
+    }
+
     public void hideVolumeControls() {
         if (mVolumeControlView != null) {
             removeView(mVolumeControlView);

@@ -267,8 +267,9 @@ public class VideoView extends BaseAdView {
         if (mEnableVideoPlayerClick) {
             videoCreativeView.enableVideoPlayerClick();
         }
-
         videoCreativeView.showVolumeControls();
+        addVideoControlObstruction(videoCreativeView.getVolumeControlView(), "Volume button");
+
         addView(view);
     }
 
@@ -292,10 +293,7 @@ public class VideoView extends BaseAdView {
             return;
         }
 
-        InternalFriendlyObstruction watchAgainObstruction = new InternalFriendlyObstruction(watchAgainButton,
-                                                                                            InternalFriendlyObstruction.Purpose.VIDEO_CONTROLS,
-                                                                                            "WatchAgain button");
-        mAdViewManager.addObstructions(watchAgainObstruction);
+        addVideoControlObstruction(watchAgainButton, "WatchAgain button");
 
         Views.removeFromParent(watchAgainButton);
         watchAgainButton.setOnClickListener(v -> {
@@ -306,6 +304,17 @@ public class VideoView extends BaseAdView {
         //     mVideoDialog.dismiss();
         // }
         addView(watchAgainButton);
+    }
+
+    private void addVideoControlObstruction(View view, String description) {
+        if (view == null) {
+            return;
+        }
+
+        InternalFriendlyObstruction obstruction = new InternalFriendlyObstruction(view,
+                                                                                  InternalFriendlyObstruction.Purpose.VIDEO_CONTROLS,
+                                                                                  description);
+        mAdViewManager.addObstructions(obstruction);
     }
 
     private void startVisibilityTracking() {
