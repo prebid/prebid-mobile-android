@@ -37,6 +37,7 @@ import org.json.JSONObject;
 import org.prebid.mobile.http.HTTPPost;
 import org.prebid.mobile.http.NoContextException;
 import org.prebid.mobile.http.TaskResult;
+import org.prebid.mobile.tasksmanager.TasksManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -217,7 +218,12 @@ class PrebidServerAdapter implements DemandAdapter {
         private void cancel() {
             isCancelled = true;
             if (timeoutFired) {
-                notifyDemandFailed(ResultCode.TIMEOUT);
+                TasksManager.getInstance().executeOnMainThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDemandFailed(ResultCode.TIMEOUT);
+                    }
+                });
             } else {
                 timeoutCountDownTimer.cancel();
             }
