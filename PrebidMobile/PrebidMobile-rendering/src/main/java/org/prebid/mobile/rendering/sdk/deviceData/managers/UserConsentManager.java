@@ -21,10 +21,10 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import org.prebid.mobile.rendering.sdk.BaseManager;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-
-import org.prebid.mobile.rendering.sdk.BaseManager;
 
 public class UserConsentManager extends BaseManager {
 
@@ -135,7 +135,7 @@ public class UserConsentManager extends BaseManager {
 
     public boolean canAccessDeviceData() {
         final String subjectToGdpr = getSubjectToGdpr();
-        final int deviceConsentIndex = 1;
+        final int deviceConsentIndex = 0;
 
         Boolean gdprApplies = TextUtils.isEmpty(subjectToGdpr) ? null : "1".equals(subjectToGdpr);
         Boolean deviceAccessConsent = getPurposeConsent(deviceConsentIndex);

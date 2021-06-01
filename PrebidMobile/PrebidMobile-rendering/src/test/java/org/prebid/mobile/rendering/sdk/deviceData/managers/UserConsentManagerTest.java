@@ -200,7 +200,7 @@ public class UserConsentManagerTest {
         when(spyConsentManager.shouldUseTcfV2()).thenReturn(true);
         when(spyConsentManager.getSubjectToGdpr()).thenReturn("0"); // false
 
-        WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", "01"); // true
+        WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", "10"); // true
         assertTrue(spyConsentManager.canAccessDeviceData());
 
         WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", "00"); // false
@@ -216,7 +216,7 @@ public class UserConsentManagerTest {
         when(spyConsentManager.shouldUseTcfV2()).thenReturn(true);
         when(spyConsentManager.getSubjectToGdpr()).thenReturn("1"); // true
 
-        WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", "01"); // true
+        WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", "10"); // true
         assertTrue(spyConsentManager.canAccessDeviceData());
 
         WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", "00"); // false
@@ -232,7 +232,7 @@ public class UserConsentManagerTest {
         when(spyConsentManager.shouldUseTcfV2()).thenReturn(true);
         when(spyConsentManager.getSubjectToGdpr()).thenReturn(""); // undefined
 
-        WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", "01"); // true
+        WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", "10"); // true
         assertTrue(spyConsentManager.canAccessDeviceData());
 
         WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", "00"); // false
