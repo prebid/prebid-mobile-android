@@ -56,13 +56,13 @@ public class MoPubBannerTest {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
-        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
+        assertEquals(ResultCode.SUCCESS, ((RubiconBannerMoPubDemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
-        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(1, ((RubiconBannerMoPubDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         Thread.sleep(120000);
-        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(1, ((RubiconBannerMoPubDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
     @Test
@@ -75,11 +75,11 @@ public class MoPubBannerTest {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
-        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
+        assertEquals(ResultCode.SUCCESS, ((RubiconBannerMoPubDemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
-        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(1, ((RubiconBannerMoPubDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
     @Test
@@ -91,13 +91,13 @@ public class MoPubBannerTest {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("15000"));
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
-        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
+        assertEquals(ResultCode.SUCCESS, ((RubiconBannerMoPubDemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("pbm.showAdFromCacheId")));
-        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(1, ((RubiconBannerMoPubDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         Thread.sleep(120000);
-        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(1, ((RubiconBannerMoPubDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
     @Test
@@ -107,15 +107,15 @@ public class MoPubBannerTest {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("30000"));
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
-        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
+        assertEquals(ResultCode.SUCCESS, ((RubiconBannerMoPubDemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame)).check(matches(isDisplayed()));
         onWebView().check(webMatches(getCurrentUrl(), containsString("ads.mopub.com")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
-        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(1, ((RubiconBannerMoPubDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         Thread.sleep(120000);
-        assertEquals(5, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
-        ((DemoActivity) TestUtil.getCurrentActivity()).stopAutoRefresh();
+        assertEquals(5, ((RubiconBannerMoPubDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        ((RubiconBannerMoPubDemoActivity) TestUtil.getCurrentActivity()).adUnit.stopAutoRefresh();
         Thread.sleep(120000);
-        assertEquals(5, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(5, ((RubiconBannerMoPubDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 }

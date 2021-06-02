@@ -51,15 +51,15 @@ public class DFPBannerTest {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
-        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
+        assertEquals(ResultCode.SUCCESS, ((RubiconBannerGamDemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame))
                 .check(matches(isDisplayed()))
                 .check(matches(new ViewMinSizeMatcher(2, 2)));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
-        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(1, ((RubiconBannerGamDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         Thread.sleep(120000);
-        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(1, ((RubiconBannerGamDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
     @Test
@@ -70,14 +70,14 @@ public class DFPBannerTest {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
-        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
+        assertEquals(ResultCode.SUCCESS, ((RubiconBannerGamDemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame))
                 .check(matches(isDisplayed()))
                 .check(matches(new ViewMinSizeMatcher(2, 2)));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
 
-        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(1, ((RubiconBannerGamDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
     @Test
@@ -87,15 +87,15 @@ public class DFPBannerTest {
 //        onData(allOf(is(instanceOf(String.class)), is("320x50"))).perform(click());
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
-        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
+        assertEquals(ResultCode.SUCCESS, ((RubiconBannerGamDemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame))
                 .check(matches(isDisplayed()))
                 .check(matches(new ViewMinSizeMatcher(2, 2)));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
-        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(1, ((RubiconBannerGamDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         Thread.sleep(120000);
-        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(1, ((RubiconBannerGamDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
     @Test
@@ -103,18 +103,18 @@ public class DFPBannerTest {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("30000"));
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
-        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
+        assertEquals(ResultCode.SUCCESS, ((RubiconBannerGamDemoActivity) TestUtil.getCurrentActivity()).resultCode);
         onView(withId(R.id.adFrame))
                 .check(matches(isDisplayed()))
                 .check(matches(new ViewMinSizeMatcher(2, 2)));
         onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
         onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
-        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(1, ((RubiconBannerGamDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         Thread.sleep(120000);
-        assertEquals(5, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
-        ((DemoActivity) TestUtil.getCurrentActivity()).stopAutoRefresh();
+        assertEquals(5, ((RubiconBannerGamDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        ((RubiconBannerGamDemoActivity) TestUtil.getCurrentActivity()).adUnit.stopAutoRefresh();
         Thread.sleep(12000);
-        assertEquals(5, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(5, ((RubiconBannerGamDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
 }

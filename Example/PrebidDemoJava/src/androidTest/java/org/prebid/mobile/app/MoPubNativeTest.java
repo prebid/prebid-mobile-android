@@ -29,14 +29,11 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.web.assertion.WebViewAssertions.webMatches;
-import static androidx.test.espresso.web.sugar.Web.onWebView;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
 public class MoPubNativeTest {
@@ -51,9 +48,9 @@ public class MoPubNativeTest {
         onData(allOf(is(instanceOf(String.class)), is("MoPub"))).perform(click());
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
-        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
-        assertTrue(((DemoActivity) TestUtil.getCurrentActivity()).adView.getKeywords().contains("hb_pb"));
-        assertTrue(((DemoActivity) TestUtil.getCurrentActivity()).adView.getKeywords().contains("hb_cache_id"));
+        assertEquals(ResultCode.SUCCESS, ((XandrNativeInAppMoPubDemoActivity) TestUtil.getCurrentActivity()).resultCode);
+        assertTrue(((XandrNativeInAppMoPubDemoActivity) TestUtil.getCurrentActivity()).request.getKeywords().contains("hb_pb"));
+        assertTrue(((XandrNativeInAppMoPubDemoActivity) TestUtil.getCurrentActivity()).request.getKeywords().contains("hb_cache_id"));
     }
 
     @Test
@@ -65,13 +62,13 @@ public class MoPubNativeTest {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("30000"));
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
-        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
-        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
+        assertEquals(1, ((XandrNativeInAppMoPubDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(ResultCode.SUCCESS, ((XandrNativeInAppMoPubDemoActivity) TestUtil.getCurrentActivity()).resultCode);
         Thread.sleep(30000);
-        assertEquals("Auto refresh not happening", 2, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
-        ((DemoActivity) TestUtil.getCurrentActivity()).stopAutoRefresh();
+        assertEquals("Auto refresh not happening", 2, ((XandrNativeInAppMoPubDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        ((XandrNativeInAppMoPubDemoActivity) TestUtil.getCurrentActivity()).adUnit.stopAutoRefresh();
         Thread.sleep(30000);
-        assertEquals("Auto refresh didn't stop", 2, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals("Auto refresh didn't stop", 2, ((XandrNativeInAppMoPubDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
     @Test
@@ -83,10 +80,10 @@ public class MoPubNativeTest {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
-        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
-        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
+        assertEquals(1, ((XandrNativeInAppMoPubDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(ResultCode.SUCCESS, ((XandrNativeInAppMoPubDemoActivity) TestUtil.getCurrentActivity()).resultCode);
         Thread.sleep(30000);
-        assertEquals("Auto refresh not happening", 1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals("Auto refresh not happening", 1, ((XandrNativeInAppMoPubDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 
     @Test
@@ -98,9 +95,9 @@ public class MoPubNativeTest {
         onView(withId(R.id.autoRefreshInput)).perform(typeText("20000"));
         onView(withId(R.id.showAd)).perform(click());
         Thread.sleep(10000);
-        assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
-        assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
+        assertEquals(1, ((XandrNativeInAppMoPubDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals(ResultCode.SUCCESS, ((XandrNativeInAppMoPubDemoActivity) TestUtil.getCurrentActivity()).resultCode);
         Thread.sleep(30000);
-        assertEquals("Auto refresh not happening", 1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+        assertEquals("Auto refresh not happening", 1, ((XandrNativeInAppMoPubDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
     }
 }

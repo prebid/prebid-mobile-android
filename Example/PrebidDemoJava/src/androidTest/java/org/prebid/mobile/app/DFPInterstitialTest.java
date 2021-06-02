@@ -16,14 +16,14 @@
 
 package org.prebid.mobile.app;
 
+import androidx.test.espresso.Espresso;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.rule.ActivityTestRule;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.ResultCode;
-
-import androidx.test.espresso.Espresso;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -60,9 +60,9 @@ public class DFPInterstitialTest {
             onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
             Espresso.pressBack();
             Thread.sleep(30000);
-            assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+            assertEquals(1, ((RubiconInterstitialGamDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         } else if ("org.prebid.mobile.app.DemoActivity".equals(activityName)) {
-            assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
+            assertEquals(ResultCode.SUCCESS, ((RubiconInterstitialGamDemoActivity) TestUtil.getCurrentActivity()).resultCode);
             fail("Prebid Demand was fetched successfully, but DFP interstitial not loaded and show successfully");
         } else {
             fail("Demo app not working properly.");
@@ -81,27 +81,27 @@ public class DFPInterstitialTest {
             onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
             onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
             Espresso.pressBack();
-            assertEquals(1, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+            assertEquals(1, ((RubiconInterstitialGamDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
             Thread.sleep(30000);
             activityName = TestUtil.getCurrentActivity().getClass().getName();
             if ("com.google.android.gms.ads.AdActivity".equals(activityName)) {
                 onWebView().check(webMatches(getCurrentUrl(), containsString("pubads.g.doubleclick.net/gampad/ads")));
                 onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
                 Espresso.pressBack();
-                assertEquals("Auto refresh not happening", 2, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
-                ((DemoActivity) TestUtil.getCurrentActivity()).stopAutoRefresh();
+                assertEquals("Auto refresh not happening", 2, ((RubiconInterstitialGamDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+                ((RubiconInterstitialGamDemoActivity) TestUtil.getCurrentActivity()).adUnit.stopAutoRefresh();
                 Thread.sleep(30000);
-                assertEquals("Auto refresh didn't stop", 2, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+                assertEquals("Auto refresh didn't stop", 2, ((RubiconInterstitialGamDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
             } else if ("org.prebid.mobile.app.DemoActivity".equals(activityName)) {
-                assertEquals("Auto refresh not happening", 2, ((DemoActivity) TestUtil.getCurrentActivity()).refreshCount);
-                assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
+                assertEquals("Auto refresh not happening", 2, ((RubiconInterstitialGamDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
+                assertEquals(ResultCode.SUCCESS, ((RubiconInterstitialGamDemoActivity) TestUtil.getCurrentActivity()).resultCode);
                 fail("Prebid Demand was fetched successfully, but DFP interstitial not loaded and show successfully");
             } else {
                 fail("Demo app not working properly.");
             }
 
         } else if ("org.prebid.mobile.app.DemoActivity".equals(activityName)) {
-            assertEquals(ResultCode.SUCCESS, ((DemoActivity) TestUtil.getCurrentActivity()).resultCode);
+            assertEquals(ResultCode.SUCCESS, ((RubiconInterstitialGamDemoActivity) TestUtil.getCurrentActivity()).resultCode);
             fail("Prebid Demand was fetched successfully, but DFP interstitial not loaded and show successfully");
         } else {
             fail("Demo app not working properly.");

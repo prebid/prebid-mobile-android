@@ -21,6 +21,7 @@ import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
 import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 
+import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.NativeAdUnit;
@@ -45,6 +46,12 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
     private AdManagerAdView adView;
     private AdLoader adLoader;
     private UnifiedNativeAd unifiedNativeAd;
+
+    //Used by UI tests
+    int refreshCount;
+    ResultCode resultCode;
+    AdManagerAdRequest request;
+    AdUnit adUnit;
 
     private void removePreviousAds() {
         ((FrameLayout) findViewById(R.id.adFrame)).removeAllViews();
@@ -106,6 +113,7 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
         nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
         nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
         nativeAdUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
+        adUnit = nativeAdUnit;
         ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD> methods = new ArrayList<>();
         methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE);
         methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.JS);
@@ -158,6 +166,10 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(XandrNativeInAppGAMDemoActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
                 }
+
+                refreshCount++;
+                XandrNativeInAppGAMDemoActivity.this.resultCode = resultCode;
+                request = adManagerAdRequest;
             }
         });
 

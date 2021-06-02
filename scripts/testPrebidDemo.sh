@@ -16,5 +16,10 @@ echo -e "✅ PREBID TESTLOG: $@"
 echoX "clean previous build"
 ./gradlew clean
 
+#building
+echoX "start building UI tests"
+./gradlew assembleSourceCodeDebugAndroidTest
+
+# testing
 echoX "start UI tests"
-./gradlew PrebidDemoJava:connectedSourceCodeDebugAndroidTest
+# ./gradlew PrebidDemoJava:connectedSourceCodeDebugAndroidTest

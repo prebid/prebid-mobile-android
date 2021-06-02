@@ -28,6 +28,10 @@ import java.util.Arrays;
 public class RubiconBannerGamDemoActivity extends AppCompatActivity {
     BannerAdUnit adUnit;
 
+    //Used by UI tests
+    int refreshCount;
+    ResultCode resultCode;
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -100,6 +104,9 @@ public class RubiconBannerGamDemoActivity extends AppCompatActivity {
 //                PublisherAdRequest request = builder.build();
                 AdManagerAdRequest request = builder.build();
                 amBanner.loadAd(request);
+
+                refreshCount++;
+                RubiconBannerGamDemoActivity.this.resultCode = resultCode;
             }
         });
 
