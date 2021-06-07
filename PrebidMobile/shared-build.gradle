@@ -31,6 +31,11 @@ android {
 
 }
 
+configurations {
+    javadocDeps
+}
+
 dependencies {
     implementation 'com.android.support:support-annotations:28.0.0'
+    javadocDeps 'com.android.support:support-annotations:28.0.0'
 }
