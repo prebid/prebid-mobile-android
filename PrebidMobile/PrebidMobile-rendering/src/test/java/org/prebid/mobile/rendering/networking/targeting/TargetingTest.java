@@ -83,26 +83,6 @@ public class TargetingTest {
     }
 
     @Test
-    public void setCarrier_EqualToGetCarrierAndIsInRequestParams() {
-        final String expected = "network_carrier";
-
-        Targeting.setCarrier(expected);
-
-        assertEquals(expected, Targeting.getCarrier());
-        assertEquals(expected, Targeting.getTargetingMap().get(Targeting.KEY_CARRIER));
-    }
-
-    @Test
-    public void setDeviceIpAddress_EqualToGetDeviceIpAddressAndIsInRequestParams() {
-        final String expected = "192.168.0.1";
-
-        Targeting.setDeviceIpAddress(expected);
-
-        assertEquals(expected, Targeting.getDeviceIpAddress());
-        assertEquals(expected, Targeting.getTargetingMap().get(Targeting.KEY_IP_ADDRESS));
-    }
-
-    @Test
     public void setAppStoreMarketUrl_EqualToGetAppStoreMarketUrlAndIsInRequestParams() {
         final String expected = "https://google.play.com";
 
@@ -156,8 +136,6 @@ public class TargetingTest {
 
         assertNull(Targeting.getAppStoreMarketUrl());
         assertNull(Targeting.getBuyerUid());
-        assertNull(Targeting.getCarrier());
-        assertNull(Targeting.getDeviceIpAddress());
         assertNull(Targeting.getPublisherName());
 
         assertNull(Targeting.getUserAge());

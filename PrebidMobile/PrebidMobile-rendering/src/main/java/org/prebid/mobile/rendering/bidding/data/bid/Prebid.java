@@ -16,15 +16,19 @@
 
 package org.prebid.mobile.rendering.bidding.data.bid;
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.networking.targeting.Targeting;
+import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import static org.prebid.mobile.rendering.utils.helpers.Utils.addValue;
 
@@ -73,7 +77,7 @@ public class Prebid {
         return prebidObject;
     }
 
-    public static JSONObject getJsonObjectForApp(String sdkName, String sdkVersion){
+    public static JSONObject getJsonObjectForApp(String sdkName, String sdkVersion) {
         JSONObject prebid = new JSONObject();
         Utils.addValue(prebid, "source", sdkName);
         Utils.addValue(prebid, "version", sdkVersion);
@@ -116,7 +120,39 @@ public class Prebid {
         JSONObject prebid = new JSONObject();
         StoredRequest storedRequest = new StoredRequest(configId);
         addValue(prebid, "storedrequest", storedRequest.toJSONObject());
+
+        addStoredAuctionResponse(prebid);
+        addStoredBidResponse(prebid);
+
         return prebid;
+    }
+
+    private static void addStoredAuctionResponse(JSONObject prebid) {
+        final String storedAuctionResponse = PrebidRenderingSettings.getStoredAuctionResponse();
+        if (!TextUtils.isEmpty(storedAuctionResponse)) {
+            JSONObject storedAuctionResponseJson = new JSONObject();
+            Utils.addValue(storedAuctionResponseJson, "id", storedAuctionResponse);
+            Utils.addValue(prebid, "storedauctionresponse", storedAuctionResponseJson);
+        }
+    }
+
+    private static void addStoredBidResponse(JSONObject prebid) {
+        final Map<String, String> storedBidResponseMap = PrebidRenderingSettings.getStoredBidResponseMap();
+        if (!storedBidResponseMap.isEmpty()) {
+            JSONArray bidResponseArray = new JSONArray();
+
+            for (Map.Entry<String, String> entry : storedBidResponseMap.entrySet()) {
+                final String bidder = entry.getKey();
+                final String bidId = entry.getValue();
+                if (!TextUtils.isEmpty(bidder) && !TextUtils.isEmpty(bidId)) {
+                    JSONObject storedBid = new JSONObject();
+                    Utils.addValue(storedBid, "bidder", bidder);
+                    Utils.addValue(storedBid, "id", bidId);
+                }
+            }
+
+            Utils.addValue(prebid, "storedbidresponse", bidResponseArray);
+        }
     }
 
     private static void toHashMap(HashMap<String, String> hashMap, JSONObject jsonObject) {

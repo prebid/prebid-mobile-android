@@ -19,8 +19,6 @@ package org.prebid.mobile.rendering.bidding.parallel;
 import android.app.Activity;
 import android.content.Context;
 
-import androidx.annotation.Nullable;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +34,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import androidx.annotation.Nullable;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -135,5 +135,12 @@ public class BaseInterstitialAdUnitTest {
         // add all
         mBaseInterstitialAdUnit.addContextKeywords(expectedSet);
         assertEquals(expectedSet, mBaseInterstitialAdUnit.getContextKeywordsSet());
+    }
+
+    @Test
+    public void setPbAdSlot_EqualsGetPbAdSlot() {
+        final String expected = "12345";
+        mBaseInterstitialAdUnit.setPbAdSlot(expected);
+        assertEquals(expected, mBaseInterstitialAdUnit.getPbAdSlot());
     }
 }

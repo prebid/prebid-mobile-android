@@ -48,6 +48,7 @@ import org.prebid.mobile.rendering.networking.targeting.Targeting;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
+import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -108,6 +109,8 @@ public class BasicParameterBuilderTest {
         PrebidRenderingSettings.sendMraidSupportParams = true;
         PrebidRenderingSettings.useExternalBrowser = false;
         PrebidRenderingSettings.isCoppaEnabled = false;
+        PrebidRenderingSettings.clearStoredBidResponses();
+        PrebidRenderingSettings.setStoredAuctionResponse(null);
     }
 
     @Test
@@ -115,6 +118,9 @@ public class BasicParameterBuilderTest {
         AdConfiguration adConfiguration = new AdConfiguration();
         adConfiguration.setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
+        adConfiguration.setPbAdSlot("12345");
+        PrebidRenderingSettings.addStoredBidResponse("bidderTest", "123456");
+        PrebidRenderingSettings.setStoredAuctionResponse("storedResponse");
 
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
         AdRequestInput adRequestInput = new AdRequestInput();
@@ -457,6 +463,16 @@ public class BasicParameterBuilderTest {
         }
         else {
             imp.banner = getExpectedBannerImpValues(imp, adConfiguration);
+        }
+
+        final String pbAdSlot = adConfiguration.getPbAdSlot();
+        if (pbAdSlot != null) {
+            JSONObject context = new JSONObject();
+            JSONObject data = new JSONObject();
+            Utils.addValue(data, "adslot", pbAdSlot);
+            Utils.addValue(context, "data", data);
+
+            imp.getExt().put("context", context);
         }
 
         return imp;

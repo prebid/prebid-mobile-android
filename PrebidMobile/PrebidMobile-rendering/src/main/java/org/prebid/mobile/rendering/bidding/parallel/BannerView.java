@@ -387,6 +387,15 @@ public class BannerView extends FrameLayout {
     public BannerAdPosition getAdPosition() {
         return BannerAdPosition.mapToDisplayAdPosition(mAdUnitConfig.getAdPositionValue());
     }
+
+    public void setPbAdSlot(String adSlot) {
+        mAdUnitConfig.setPbAdSlot(adSlot);
+    }
+
+    @Nullable
+    public String getPbAdSlot() {
+        return mAdUnitConfig.getPbAdSlot();
+    }
     //endregion ==================== getters and setters
 
     private void reflectAttrs(AttributeSet attrs) {

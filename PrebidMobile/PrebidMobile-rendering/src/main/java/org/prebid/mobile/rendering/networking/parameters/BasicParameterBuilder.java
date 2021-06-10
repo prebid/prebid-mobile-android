@@ -239,9 +239,11 @@ public class BasicParameterBuilder extends ParameterBuilder {
         imp.getExt().put("prebid", Prebid.getJsonObjectForImp(mAdConfiguration));
 
         final Map<String, Set<String>> contextDataDictionary = mAdConfiguration.getContextDataDictionary();
-        if (!contextDataDictionary.isEmpty()) {
-            JSONObject data = Utils.toJson(contextDataDictionary);
-            JSONObject context = new JSONObject();
+        JSONObject data = Utils.toJson(contextDataDictionary);
+        Utils.addValue(data, "adslot", mAdConfiguration.getPbAdSlot());
+        JSONObject context = new JSONObject();
+
+        if (data.length() > 0) {
             Utils.addValue(context, "data", data);
             imp.getExt().put("context", context);
         }

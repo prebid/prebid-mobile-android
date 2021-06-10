@@ -24,7 +24,6 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Device;
-import org.prebid.mobile.rendering.networking.targeting.Targeting;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
@@ -55,9 +54,6 @@ public class DeviceInfoParameterBuilderTest {
         final String ipAddress = "192.168.0.1";
         final String carrier = "carrier";
 
-        Targeting.setDeviceIpAddress(ipAddress);
-        Targeting.setCarrier(carrier);
-
         AdConfiguration adConfiguration = new AdConfiguration();
 
         ParameterBuilder builder = new DeviceInfoParameterBuilder(adConfiguration);
@@ -68,8 +64,6 @@ public class DeviceInfoParameterBuilderTest {
         expectedBidRequestDevice.w = SCREEN_WIDTH;
         expectedBidRequestDevice.h = SCREEN_HEIGHT;
         expectedBidRequestDevice.language = Locale.getDefault().getLanguage();
-        expectedBidRequestDevice.ip = ipAddress;
-        expectedBidRequestDevice.carrier = carrier;
         expectedBidRequestDevice.osv = "4.4";
         expectedBidRequestDevice.os = "Android";
         expectedBidRequestDevice.model = "robolectric";

@@ -36,8 +36,6 @@ public class Targeting {
     static final String KEY_AGE = "age";
     static final String KEY_GENDER = "gen";
     static final String KEY_APP_STORE_URL = "url";
-    static final String KEY_CARRIER = "crr";
-    static final String KEY_IP_ADDRESS = "ip";
     static final String KEY_USER_ID = "xid";
     static final String KEY_PUBLISHER_NAME = "pub_name";
     static final String KEY_BUYER_ID = "buyid";
@@ -143,32 +141,6 @@ public class Targeting {
 
     public static Pair<Float, Float> getUserLatLng() {
         return sUserLatLon;
-    }
-
-    /**
-     * Set a network carrier.
-     *
-     * @param networkCarrier the new user network carrier
-     */
-    public static void setCarrier(String networkCarrier) {
-        putTargetingValue(KEY_CARRIER, networkCarrier);
-    }
-
-    public static String getCarrier() {
-        return getTargetingValue(KEY_CARRIER);
-    }
-
-    /**
-     * Set an IP address.
-     *
-     * @param ipAddress - ip address
-     */
-    public static void setDeviceIpAddress(String ipAddress) {
-        putTargetingValue(KEY_IP_ADDRESS, ipAddress);
-    }
-
-    public static String getDeviceIpAddress() {
-        return getTargetingValue(KEY_IP_ADDRESS);
     }
 
     /**

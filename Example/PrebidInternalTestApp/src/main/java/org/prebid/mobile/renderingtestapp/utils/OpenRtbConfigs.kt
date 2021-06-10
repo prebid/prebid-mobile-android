@@ -33,12 +33,6 @@ object OpenRtbConfigs {
         if (openRtbExtra.appStoreUrl != null) {
             Targeting.setAppStoreMarketUrl(openRtbExtra.appStoreUrl)
         }
-        if (openRtbExtra.carrier != null) {
-            Targeting.setCarrier(openRtbExtra.carrier)
-        }
-        if (openRtbExtra.ipAddress != null) {
-            Targeting.setDeviceIpAddress(openRtbExtra.ipAddress)
-        }
         if (openRtbExtra.userId != null) {
             Targeting.setUserId(openRtbExtra.userId)
         }

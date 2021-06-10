@@ -229,6 +229,13 @@ public class BaseAdUnitTest {
         assertEquals(expectedSet, mBaseAdUnit.getContextKeywordsSet());
     }
 
+    @Test
+    public void setPbAdSlot_EqualsGetPbAdSlot() {
+        final String expected = "12345";
+        mBaseAdUnit.setPbAdSlot(expected);
+        assertEquals(expected, mBaseAdUnit.getPbAdSlot());
+    }
+
     private BaseAdUnit createAdUnit(String configId) {
         BaseAdUnit baseAdUnit = new BaseAdUnit(mContext, configId, mMockAdSize) {
             @Override

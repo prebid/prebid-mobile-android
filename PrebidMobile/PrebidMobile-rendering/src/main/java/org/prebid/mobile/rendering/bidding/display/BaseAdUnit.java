@@ -140,6 +140,15 @@ abstract class BaseAdUnit {
         mAdUnitConfig.clearContextKeywords();
     }
 
+    public void setPbAdSlot(String adSlot) {
+        mAdUnitConfig.setPbAdSlot(adSlot);
+    }
+
+    @Nullable
+    public String getPbAdSlot() {
+        return mAdUnitConfig.getPbAdSlot();
+    }
+
     public void destroy() {
         mOnFetchCompleteListener = null;
         mBidLoader.destroy();

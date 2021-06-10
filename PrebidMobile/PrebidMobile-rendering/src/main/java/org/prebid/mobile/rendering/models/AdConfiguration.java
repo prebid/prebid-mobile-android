@@ -16,8 +16,6 @@
 
 package org.prebid.mobile.rendering.models;
 
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.interstitial.InterstitialSizes;
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
@@ -30,6 +28,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import androidx.annotation.Nullable;
 
 public class AdConfiguration {
 
@@ -52,6 +52,8 @@ public class AdConfiguration {
     private String mInterstitialSize;
     private String mContentUrl;
     private String mConfigId;
+    @Nullable
+    private String mPbAdSlot;
 
     private boolean mIsRewarded;
     private boolean mIsBuiltInVideo = false;
@@ -228,6 +230,17 @@ public class AdConfiguration {
 
     public void setConfigId(String configId) {
         mConfigId = configId;
+    }
+
+    public void setPbAdSlot(
+        @Nullable
+            String pbAdSlot) {
+        mPbAdSlot = pbAdSlot;
+    }
+
+    @Nullable
+    public String getPbAdSlot() {
+        return mPbAdSlot;
     }
 
     @Nullable

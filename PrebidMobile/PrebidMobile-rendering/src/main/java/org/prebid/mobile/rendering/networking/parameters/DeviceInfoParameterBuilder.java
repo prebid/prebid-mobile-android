@@ -22,7 +22,6 @@ import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Device;
-import org.prebid.mobile.rendering.networking.targeting.Targeting;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
@@ -72,8 +71,6 @@ public class DeviceInfoParameterBuilder extends ParameterBuilder {
             // lmt and APP_ADVERTISING_ID_ENABLED are opposites
             boolean lmt = AdIdManager.isLimitAdTrackingEnabled();
             device.lmt = lmt ? 1 : 0;
-            device.carrier = Targeting.getCarrier();
-            device.ip = Targeting.getDeviceIpAddress();
 
             final AdSize minSizePercentage = mAdConfiguration.getMinSizePercentage();
             if (minSizePercentage != null) {

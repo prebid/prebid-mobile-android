@@ -202,6 +202,15 @@ public abstract class BaseInterstitialAdUnit {
     public void clearContextKeywords() {
         mAdUnitConfig.clearContextKeywords();
     }
+
+    public void setPbAdSlot(String adSlot) {
+        mAdUnitConfig.setPbAdSlot(adSlot);
+    }
+
+    @Nullable
+    public String getPbAdSlot() {
+        return mAdUnitConfig.getPbAdSlot();
+    }
     /// setters and getters end region
 
     /**

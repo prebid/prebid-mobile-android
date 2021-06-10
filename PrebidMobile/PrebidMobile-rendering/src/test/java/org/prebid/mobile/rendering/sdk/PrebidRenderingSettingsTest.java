@@ -34,8 +34,11 @@ import org.robolectric.annotation.Config;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -64,7 +67,8 @@ public class PrebidRenderingSettingsTest {
 
     @After
     public void tearDown() throws Exception {
-
+        PrebidRenderingSettings.setStoredAuctionResponse(null);
+        PrebidRenderingSettings.clearStoredBidResponses();
     }
 
     @Test
@@ -116,5 +120,28 @@ public class PrebidRenderingSettingsTest {
         PrebidRenderingSettings.setBidServerHost(host);
 
         assertEquals(host, PrebidRenderingSettings.getBidServerHost());
+    }
+
+    @Test
+    public void setStoreAuctionResponse_EqualsGetStoredAuctionResponse() {
+        final String expected = "11111";
+        PrebidRenderingSettings.setStoredAuctionResponse(expected);
+        assertEquals(expected, PrebidRenderingSettings.getStoredAuctionResponse());
+    }
+
+    @Test
+    public void addAndClearStoredBidResponseMap_ReturnExpectedResult() {
+        Map<String, String> expectedMap = new LinkedHashMap<>();
+        expectedMap.put("bidder1", "1111");
+        expectedMap.put("bidder2", "2222");
+
+        PrebidRenderingSettings.addStoredBidResponse("bidder1", "1111");
+        PrebidRenderingSettings.addStoredBidResponse("bidder2", "2222");
+
+        assertEquals(expectedMap, PrebidRenderingSettings.getStoredBidResponseMap());
+
+        PrebidRenderingSettings.clearStoredBidResponses();
+
+        assertTrue(PrebidRenderingSettings.getStoredBidResponseMap().isEmpty());
     }
 }

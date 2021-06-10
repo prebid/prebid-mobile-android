@@ -29,7 +29,12 @@ import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class PrebidRenderingSettings {
     private static final String TAG = PrebidRenderingSettings.class.getSimpleName();
@@ -92,6 +97,9 @@ public class PrebidRenderingSettings {
     private static Host sBidServerHost = Host.CUSTOM;
     private static String sAccountId;
 
+    private static String sStoredAuctionResponse;
+    private static final Map<String, String> sStoredBidResponseMap = new LinkedHashMap<>();
+
     private static int sConnectionTimeout = BaseNetworkTask.TIMEOUT_DEFAULT;
 
     private static boolean sIsSdkInitialized = false;
@@ -106,7 +114,7 @@ public class PrebidRenderingSettings {
      */
 
     public static void initializeSDK(Context context, final SdkInitListener sdkInitListener)
-            throws AdException {
+    throws AdException {
         Log.d(TAG, "Initializing Prebid Rendering SDK");
         if (context == null) {
             throw new AdException(AdException.INIT_ERROR, "Prebid Rendering SDK initialization failed. Context is null");
@@ -174,6 +182,28 @@ public class PrebidRenderingSettings {
 
     public static void setAccountId(String accountId) {
         sAccountId = accountId;
+    }
+
+    public static void setStoredAuctionResponse(String storedAuctionResponse) {
+        sStoredAuctionResponse = storedAuctionResponse;
+    }
+
+    @Nullable
+    public static String getStoredAuctionResponse() {
+        return sStoredAuctionResponse;
+    }
+
+    public static void addStoredBidResponse(String bidder, String responseId) {
+        sStoredBidResponseMap.put(bidder, responseId);
+    }
+
+    public static void clearStoredBidResponses() {
+        sStoredBidResponseMap.clear();
+    }
+
+    @NonNull
+    public static Map<String, String> getStoredBidResponseMap() {
+        return sStoredBidResponseMap;
     }
 
     /**

@@ -499,6 +499,13 @@ public class BannerViewTest {
         assertEquals(BannerAdPosition.UNKNOWN, mBannerView.getAdPosition());
     }
 
+    @Test
+    public void setPbAdSlot_EqualsGetPbAdSlot() {
+        final String expected = "12345";
+        mBannerView.setPbAdSlot(expected);
+        assertEquals(expected, mBannerView.getPbAdSlot());
+    }
+
     private BidRequesterListener getBidRequesterListener() {
         try {
             return (BidRequesterListener) WhiteBox.field(BannerView.class, "mBidRequesterListener").get(mBannerView);
