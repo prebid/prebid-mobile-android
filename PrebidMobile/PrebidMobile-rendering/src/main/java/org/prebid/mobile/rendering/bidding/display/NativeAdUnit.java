@@ -27,7 +27,10 @@ import org.prebid.mobile.rendering.bidding.listeners.OnNativeFetchCompleteListen
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
+import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
+
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,7 +49,7 @@ public class NativeAdUnit extends BaseAdUnit {
                         @NonNull
                                 NativeAdConfiguration nativeAdConfiguration) {
         super(context, configId, null);
-        mAdUnitConfig.setNativeAdConfiguration(nativeAdConfiguration);
+        setupNativeAdConfiguration(nativeAdConfiguration);
     }
 
     @Override
@@ -91,5 +94,14 @@ public class NativeAdUnit extends BaseAdUnit {
             OnNativeFetchCompleteListener listener) {
         mNativeFetchCompleteListener = listener;
         super.fetchDemand(null, mOnFetchCompleteListener);
+    }
+
+    private void setupNativeAdConfiguration(NativeAdConfiguration nativeAdConfiguration) {
+        ArrayList<NativeEventTracker.EventTrackingMethod> methodList = new ArrayList<>();
+        methodList.add(NativeEventTracker.EventTrackingMethod.JS);
+        NativeEventTracker tracker = new NativeEventTracker(NativeEventTracker.EventType.OMID,
+                                                            methodList);
+        nativeAdConfiguration.addTracker(tracker);
+        mAdUnitConfig.setNativeAdConfiguration(nativeAdConfiguration);
     }
 }

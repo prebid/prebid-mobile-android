@@ -30,6 +30,7 @@ import org.prebid.mobile.rendering.bidding.listeners.OnNativeFetchCompleteListen
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
+import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.test.utils.WhiteBox;
 
 import static org.junit.Assert.assertEquals;
@@ -55,7 +56,10 @@ public class NativeAdUnitTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        mSpyNativeAdUnit = spy(new NativeAdUnit(mMockContext, "123", new NativeAdConfiguration()));
+        final NativeAdConfiguration nativeAdConfiguration = new NativeAdConfiguration();
+        mSpyNativeAdUnit = spy(new NativeAdUnit(mMockContext, "123", nativeAdConfiguration));
+
+        assertEquals(NativeEventTracker.EventType.OMID, nativeAdConfiguration.getTrackers().get(0).getEventType());
     }
 
     @Test
