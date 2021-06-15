@@ -1,0 +1,55 @@
+{
+  "id": "bidId",
+  "impid": "impId",
+  "price": 0.15,
+  "adm": "adm",
+  "crid": "crid",
+  "nurl": "nurl",
+  "burl": "burl",
+  "lurl": "lurl",
+  "adid": "adid",
+  "adomain": [
+    "domain1",
+    "domain2"
+  ],
+  "bundle": "bundle",
+  "iurl": "iurl",
+  "cid": "cid",
+  "tactic": "tactic",
+  "cat": [
+    "cat1",
+    "cat2"
+  ],
+  "attr": [
+    1,
+    2
+  ],
+  "api": 111,
+  "protocol": 112,
+  "qagmediarating": 113,
+  "language": "language",
+  "dealid": "dealid",
+  "w": 320,
+  "h": 50,
+  "wratio": 114,
+  "hratio": 115,
+  "exp": 116,
+  "ext": {
+    "prebid": {
+      "cache": {
+        "key": "cacheKey",
+        "url": "cacheUrl",
+        "bids": {
+          "url": "bidsUrl",
+          "cacheId": "bidsCacheId"
+        }
+      },
+      "targeting": {
+        "key1": "value1",
+        "key2": "value2",
+        "key3": "value3"
+      },
+      "type": "type"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+    "description": "mayanApocalypse/End of world",
+    "location": "everywhere",
+    "recurrence": {
+        frequency: "monthly",
+        "interval": "1",
+         "daysInWeek": [
+                2,
+                3,
+                4
+         ]}
+
+        }
+}

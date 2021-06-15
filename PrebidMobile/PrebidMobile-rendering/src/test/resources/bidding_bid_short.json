@@ -1,0 +1,12 @@
+{
+  "id": "test-bid-id",
+  "impid": "0a4186cc-08e2-4ac7-801e-88114d1558ab",
+  "price": 0.1,
+  "adm": "test",
+  "adomain": [
+    "prebid.com"
+  ],
+  "crid": "test-crid-id",
+  "w": 320,
+  "h": 50
+}

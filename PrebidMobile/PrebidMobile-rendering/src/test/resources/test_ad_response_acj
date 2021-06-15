@@ -1,0 +1,21 @@
+{
+	"ads": {
+		"chain": 1,
+		"medium": "ma",
+		"record_tmpl": "http://delivery-us-west-1.prebid.net/{medium}/1.0/{rtype}?did.o1=53ee770abe4b962d817aa9a7b58a3af258b330e4&ph=a51065ab-17ee-4394-b5a7-32debc04780a&ts={txn_state}",
+		"oxt": 38.673,
+		"adunits": [{
+			"auid": "537454512",
+			"idx": "0",
+			"chain": [{
+				"is_fallback": 0,
+				"html": "<div id=\"ad\">\n<a href=\"http://prebid.com/product/ad-server/\">\n<img src=\"http://imageshack.us/a/img822/3231/f8nf.jpg\" alt=\"Banner Advertisement\" height=\"50\" width=\"320\"></a>\n</div>",
+				"ts": "2DAABBgABAAECAAIBAAsAAgAAAJ4cGApmbEt2MzNuZ3FKHBaYg5L12ZSfmrABFtvNssuCg9jYsgEAHBaxyO2b-5fmrzwWwYHXm5j6oLCZAQAW_MSQrgsVAhEAHBQCFAIAHBwVAgAcFQIAABwm4J7HgAQVDhUEJpC5poAEFqCAnIAE1hQAHCaIg5yABBa8_qmABBbgmOGABBbQgcOABBUUHBRkFIAFABUEFQgWFCYURQgAAAA",
+				"type": "html",
+				"pub_rev": "10",
+				"width": "320",
+				"height": "50",
+			}]
+		}]
+	}
+}

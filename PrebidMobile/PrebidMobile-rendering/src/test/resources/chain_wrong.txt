@@ -1,0 +1,22 @@
+{
+    "ads": {
+        "chain": 1,
+        "medium": "ma",
+        "record_tmpl": "http://qa-mobile-gateway-xv-01.xv.dc.prebid.org/{medium}/1.0/{rtype}?did.adid=60b0ff72-9b31-4d9b-a8e1-728d89c6261b&ts={txn_state}",
+        "adunits": [
+            {
+                "auid": "1610812068",
+                "chain": [
+                    {
+                        "is_fallback": 0,
+                        "html": "<b> ibarco test ad 1 </b>",
+                        "ts": "1fHU9MXxyaWQ9MGQxNjEzYjgtM2RiYy00YzQwLTlmMDUtMjZjY2FmZTlmNjg3fHJ0PTE0MTE0MjgxMTV8YXVpZD0xNjEwODEyMDY4fGF1bT1ETUlELk1PQklMRXxzaWQ9MTYxMDgwMDI3MnxwdWI9MTYxMDg3OTc5MnxwYz1VU0R8eHQ9Y29udHJvbCxhcGlfc3luY193cml0ZXxyYWlkPThiZTFkNGQ0LTI5Y2EtNDc1ZC04OTk4LTc2ZmM4YmIyYmViNHxjbD0xfGFpZD0xNjEwOTc2OTI5fHQ9NHxhcz0zMjB4NDgwfGxpZD0xNjEwODY4MTI3fG9pZD0xNjEwODI4NTkwfHA9MzkwfHByPTMxMHxhZHY9MTYxMDkxNzQ2NnxhYz1VU0R8cG09UFJJQ0lORy5DUE18bT0xfGFpPTkzODUwYWEwLWM2Y2QtNDkyNy04MzFhLTlmNDMyYmUwZWMzMHxtYz1VU0R8bXI9ODB8cGk9MzEwfG11aT0zOGZkNmYxYi04ZTA2LTQ4YzEtMmEyMy00NzZhYzljYmFlZGF8bWE9ZTE4NDdhYzItZDcyNC00NjMxLTlhYjktM2ZiNDRmNjcyYWNifG1ydD0xNDExNDI4MTE1fG1yYz1XT058bXdhPTE2MTA5MTc0NjZ8bXdiPTEwMDB8bWFwPTM5MHxlbGc9MXxtb2M9VVNEfG1vcj04MHxtcGM9VVNEfG1wcj0zMTB8bXBmPTUwfG1tZj01MHxtcG5mPTUwfG1tbmY9NTB8bW89T1gtTE1JfGFxdD1uZXR3b3JrfG13Yz0xNjEwODI4NTkwfG13cD0xNjEwODY4MTI3fG13Y3I9MTYxMDk3NjkyOXxjaT0xfHVyPVhxUGI4UGZvejc",
+                        "sdk_params": "",
+                        "type": "html",
+                        "mediation_url": ""
+                    }
+                ]
+            },
+        ]
+    }
+}

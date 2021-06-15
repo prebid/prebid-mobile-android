@@ -6,13 +6,26 @@
 
 # Merge Script
 if [ -d "Maven" ]; then
-cd Maven/
+  cd Maven/
 fi
 
 set -e
 
-function echoX {
-echo -e "PREBID DEPLOY-LOG: $@"
+function echoX() {
+  echo -e "PREBID DEPLOY-LOG: $@"
+}
+
+# $1 - absolute pom path, $2 - absolute aar path, $3 - absolute source path, $4 - absolute javadoc path
+function mavenDeploy() {
+  echoX "Deploying ${2} on Maven..."
+
+    mvn gpg:sign-and-deploy-file "-DpomFile=${1}" "-Dfile=${2}" "-DrepositoryId=ossrh" "-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/" "-DstagingRepositoryId=ossrh" "-Dsources=${3}" "-Djavadoc=${4}" || {
+      echoX "Deploy failed!"
+      echoX "End Script"
+      exit 1
+    }
+
+  echoX "Please complete the release process by promoting the jar at https://oss.sonatype.org/#stagingRepositories"
 }
 
 BASE_DIR="$PWD"
@@ -24,32 +37,56 @@ mkdir $DEPLOY_DIR_ABSOLUTE
 
 cd ..
 sh ./buildPrebidMobile.sh
+sh ./buildPrebidMobileRendering.sh
 
-cp ../generated/* $DEPLOY_DIR_ABSOLUTE || true
+cp -r ../generated/* $DEPLOY_DIR_ABSOLUTE || true
 
 modules=("PrebidMobile" "PrebidMobile-core")
 
 for n in ${!modules[@]}; do
 
-	rm -r $BASE_DIR/${modules[$n]}-pom.xml.asc || true
+  rm -r $BASE_DIR/${modules[$n]}-pom.xml.asc || true
 
-	#######
-	# Start
-	#######
+  #######
+  # Start
+  #######
 
-	echo -e "\n"
-	echoX "Deploying ${modules[$n]} on Maven..."
+  echo -e "\n"
+  echoX "Deploying ${modules[$n]} on Maven..."
 
-	#######
-	# Deploy
-	#######
-	mvn gpg:sign-and-deploy-file "-DpomFile=$BASE_DIR/${modules[$n]}-pom.xml" "-Dfile=$DEPLOY_DIR_ABSOLUTE/${modules[$n]}.jar" "-DrepositoryId=ossrh" "-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/" "-DstagingRepositoryId=ossrh" "-Dsources=$DEPLOY_DIR_ABSOLUTE/${modules[$n]}-sources.jar" "-Djavadoc=$DEPLOY_DIR_ABSOLUTE/${modules[$n]}-javadoc.jar" || { echoX "Deploy failed!"; echoX "End Script"; exit 1; } 
+  #######
+  # Deploy
+  #######
+  module="${modules[$n]}"
 
-	#######
-	# End
-	#######
-	echoX "Please complete the release process by promoting the jar at https://oss.sonatype.org/#stagingRepositories"
+  mavenDeploy $"$BASE_DIR/${module}-pom.xml" $"$DEPLOY_DIR_ABSOLUTE/${module}.jar" $"$DEPLOY_DIR_ABSOLUTE/${module}-sources.jar" $"$DEPLOY_DIR_ABSOLUTE/${module}-javadoc.jar"
+
+  #######
+  # End
+  #######
+  echoX "Please complete the release process by promoting the jar at https://oss.sonatype.org/#stagingRepositories"
 
 done
+
+#######
+# Deploy rendering artifacts
+#######
+renderingArtifacts=("prebid-mobile-sdk-rendering" "prebid-mobile-sdk-mopubAdapters" "prebid-mobile-sdk-gamEventHandlers" "omsdk-android")
+
+for n in "${!renderingArtifacts[@]}"; do
+  artifact=${renderingArtifacts[$n]}
+  artifactPath="${DEPLOY_DIR_ABSOLUTE}/rendering/${artifact}/${artifact}"
+
+  # no javadoc and sources for omsdk-android artifacts
+  if [ "${artifact}" == "omsdk-android" ]; then
+    mavenDeploy $"${artifactPath}.pom" $"${artifactPath}.aar"
+  else
+    mavenDeploy $"${artifactPath}.pom" $"${artifactPath}.aar" $"${artifactPath}-sources.jar" $"${artifactPath}-javadoc.jar"
+  fi
+done
+
+#######
+# Deploy rendering artifacts end
+#######
 
 echoX "End Script"

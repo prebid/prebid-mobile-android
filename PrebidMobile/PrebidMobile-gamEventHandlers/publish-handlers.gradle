@@ -1,0 +1,23 @@
+apply plugin: 'maven-publish'
+
+def ARTIFACT_ID = "prebid-mobile-sdk-gamEventHandlers"
+
+publishing {
+    publications {
+        eventHandler(MavenPublication) {
+            artifactId "$ARTIFACT_ID"
+            artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
+            version "$prebidVersionName"
+            groupId "$artifactGroupId"
+        }
+    }
+
+    // Using local repository for generated artifacts.
+    repositories {
+        maven {
+            name = 'LocalArtifacts'
+            url = "file://$artifactFolder"
+        }
+    }
+}
+

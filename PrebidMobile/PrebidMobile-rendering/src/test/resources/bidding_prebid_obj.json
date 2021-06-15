@@ -1,0 +1,16 @@
+{
+  "cache": {
+    "key": "cacheKey",
+    "url": "cacheUrl",
+    "bids": {
+      "url": "bidsUrl",
+      "cacheId": "bidsCacheId"
+    }
+  },
+  "targeting": {
+    "key1": "value1",
+    "key2": "value2",
+    "key3": "value3"
+  },
+  "type": "type"
+}

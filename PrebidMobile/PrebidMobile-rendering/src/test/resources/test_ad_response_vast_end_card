@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VAST version="3.0">
+    <Ad id="12345">
+        <InLine>
+            <AdSystem>Prebid</AdSystem>
+            <AdTitle>Linear Inline</AdTitle>
+            <Description><![CDATA[Linear Inline ad]]></Description>
+            <Error><![CDATA[https://example.com/error/[ERRORCODE]]]></Error>
+            <Impression><![CDATA[https://example.com/event/impression]]></Impression>
+            <Creatives>
+                <Creative id="6789" sequence="1">
+                    <Linear>
+                        <Duration>00:00:15</Duration>
+                        <TrackingEvents>
+                            <Tracking event="start"><![CDATA[https://example.com/event/start]]></Tracking>
+                            <Tracking event="firstQuartile"><![CDATA[https://example.com/event/firstQuartile]]></Tracking>
+                            <Tracking event="midpoint"><![CDATA[https://example.com/event/midpoint]]></Tracking>
+                            <Tracking event="thirdQuartile"><![CDATA[https://example.com/event/thirdQuartile]]></Tracking>
+                            <Tracking event="complete"><![CDATA[https://example.com/event/complete]]></Tracking>
+                            <Tracking event="mute"><![CDATA[https://example.com/event/mute]]></Tracking>
+                            <Tracking event="unmute"><![CDATA[https://example.com/event/unmute]]></Tracking>
+                            <Tracking event="rewind"><![CDATA[https://example.com/event/rewind]]></Tracking>
+                            <Tracking event="pause"><![CDATA[https://example.com/event/pause]]></Tracking>
+                            <Tracking event="resume"><![CDATA[https://example.com/event/resume]]></Tracking>
+                            <Tracking event="fullscreen"><![CDATA[https://example.com/event/fullscreen]]></Tracking>
+                            <Tracking event="creativeView"><![CDATA[https://example.com/event/creativeView]]></Tracking>
+                            <Tracking event="exitFullscreen"><![CDATA[https://example.com/event/exitFullscreen]]></Tracking>
+                            <Tracking event="acceptInvitationLinear"><![CDATA[https://example.com/event/acceptInvitationLinear]]></Tracking>
+                            <Tracking event="closeLinear"><![CDATA[https://example.com/event/closeLinear]]></Tracking>
+                        </TrackingEvents>
+                        <VideoClicks>
+                            <ClickThrough id="IAB-clickthrough"><![CDATA[https://www.iabtechlab.com]]></ClickThrough>
+                            <ClickTracking id="IAB-tracking"><![CDATA[https://example.com/event/VideoClickTracking]]></ClickTracking>
+                        </VideoClicks>
+                        <MediaFiles>
+                            <MediaFile id="5241" delivery="progressive" type="video/mp4" bitrate="500" width="400" height="300" minBitrate="360" maxBitrate="1080" scalable="1" maintainAspectRatio="1" codec="0"><![CDATA[https://iabtechlab.com/wp-content/uploads/2016/07/VAST-4.0-Short-Intro.mp4]]></MediaFile>
+                            <!-- <MediaFile id="OX" delivery="progressive" width="16" height="9" type="video/mp4" bitrate="241" scalable="true" maintainAspectRatio="true">                <![CDATA[https://ssl-i.cdn.prebid.com/videos/mobile/Prebid_15_Seconds_Fade_Small.mp4]]>              </MediaFile> -->
+                        </MediaFiles>
+                    </Linear>
+                </Creative>
+                <Creative id="5480" sequence="1">
+                    <CompanionAds>
+                        <Companion id="1232" width="300" height="250" assetWidth="250" assetHeight="200" expandedWidth="350" expandedHeight="250">
+                            <StaticResource creativeType="image/png"><![CDATA[https://www.iab.com/wp-content/uploads/2014/09/iab-tech-lab-6-644x290.png]]></StaticResource>
+                            <CompanionClickThrough><![CDATA[https://iabtechlab.com]]></CompanionClickThrough>
+                            <TrackingEvents>
+                                <Tracking event="creativeView"><![CDATA[https://example.com/event/creativeView]]></Tracking>
+                            </TrackingEvents>
+                        </Companion>
+                    </CompanionAds>
+                </Creative>
+            </Creatives>
+        </InLine>
+    </Ad>
+</VAST>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~    Copyright 2018-2021 Prebid.org, Inc.
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<resources>
+    
+    <color name="white">#ffffff</color>
+
+    <color name="list_background">#FFFFFF</color>
+    <color name="list_background_pressed">#ffbf00</color>
+
+    <color name="ads_list_item_title">#000000</color>
+    
+    <color name="action_bar_bkg">#0068b3</color>
+
+    <color name="dark_blue_bkg">#005a9a</color>
+
+    <color name="button_disabled">#ADADAD</color>
+    <color name="disabled_grey_color">#888888</color>
+    <color name="panel_background">#ECECEC</color>
+    <color name="grey_background">#949495</color>
+
+</resources>

@@ -1,0 +1,63 @@
+<!--
+  ~    Copyright 2018-2021 Prebid.org, Inc.
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<VAST version="2.0">
+    <Ad id="602678">
+        <InLine>
+
+            <AdTitle>NonLinear Test Campaign 1</AdTitle>
+            <Description>NonLinear Test Campaign 1</Description>
+            <Survey>http://mySurveyURL/survey</Survey>
+
+            <Creatives>
+                <Creative adID="602678-NonLinear">
+                    <NonLinearAds>
+                        <TrackingEvents>
+                            <Tracking event="creativeView">http://myTrackingURL/nonlinear/creativeView</Tracking>
+                        </TrackingEvents>
+
+                        <NonLinear height="50" minSuggestedDuration="00:00:15" width="300">
+                            <StaticResource creativeType="image/jpeg">
+                                http://demo.tremormedia.com/proddev/vast/50x300_static.jpg
+                            </StaticResource>
+                            <NonLinearClickThrough>http://www.tremormedia.com
+                            </NonLinearClickThrough>
+                        </NonLinear>
+
+                    </NonLinearAds>
+                </Creative>
+
+                <Creative adID="602678-Companion">
+                    <CompanionAds>
+
+                        <Companion height="90" width="728">
+                            <StaticResource creativeType="image/jpeg">
+                                http://demo.tremormedia.com/proddev/vast/728x90_banner1.jpg
+                            </StaticResource>
+                            <TrackingEvents>
+                                <Tracking event="creativeView">
+                                    http://myTrackingURL/secondCompanion
+                                </Tracking>
+                            </TrackingEvents>
+                            <CompanionClickThrough>http://www.tremormedia.com
+                            </CompanionClickThrough>
+                        </Companion>
+                    </CompanionAds>
+                </Creative>
+            </Creatives>
+        </InLine>
+    </Ad>
+</VAST>

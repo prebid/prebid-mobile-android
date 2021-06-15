@@ -1,0 +1,39 @@
+{
+    "sdk_configuration":{
+        "mraid_library":{
+            "version":"100500.0",
+            "download_url":"https://ssl-i.cdn.prebid.com/sdks/ssc/lib/mraid.js"
+        },
+        "omsdk_library":{
+            "version":"100500.0",
+            "download_url":"https://ssl-i.cdn.prebid.com/sdks/ssc/lib/omsdk.js"
+        },
+        "sdk_version":{
+            "version":"4.11",
+            "debug_message":"Hello SSC Configuration!!!"
+        }
+    },
+    "site_configuration":{
+        "creative_factory_timeout":"3",
+        "creative_factory_timeout_preload_content":"15"
+    },
+    "ad_unit_configurations":{
+        "ad_units":[
+            {
+                "domain":"foo.com1",
+                "ad_unit_id":"123456",
+                "ad_kind":"display",
+                "video_skip_offset":"5",
+                "interstitial_layout":"portrait"
+            },
+            {
+                "domain":"foo.com2",
+                "ad_unit_group_id":"123456",
+                "ad_kind":"video",
+                "preload":"true",
+                "video_skip_offset":"5",
+                "interstitial_layout":"landscape"
+            }
+        ]
+    }
+}
