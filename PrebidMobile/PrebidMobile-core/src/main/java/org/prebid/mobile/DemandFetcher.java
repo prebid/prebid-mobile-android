@@ -73,7 +73,7 @@ class DemandFetcher {
         }
     }
 
-    private void stop() {
+    void stop() {
         this.requestRunnable.cancelRequest();
         this.fetcherHandler.removeCallbacks(requestRunnable);
         // cancel existing requests
