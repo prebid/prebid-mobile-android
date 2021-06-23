@@ -98,7 +98,7 @@ class DemandFetcher {
                     } else {
                         stall = 0;
                     }
-                    fetcherHandler.postDelayed(requestRunnable, stall * 1000);
+                    fetcherHandler.postDelayed(requestRunnable, stall);
                 }
                 state = STATE.RUNNING;
                 break;
