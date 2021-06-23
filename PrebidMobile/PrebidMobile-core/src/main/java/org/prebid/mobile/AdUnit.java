@@ -67,17 +67,25 @@ public abstract class AdUnit {
         }
     }
 
-    public void startAutoRefresh() {
-        LogUtil.v("Starting auto refresh...");
+    public void resumeAutoRefresh() {
+        LogUtil.v("Resuming auto refresh...");
         if (fetcher != null) {
             fetcher.start();
+        }
+    }
+
+    public void pauseAutoRefresh() {
+        LogUtil.v("Pausing auto refresh...");
+        if (fetcher != null) {
+            fetcher.stop();
         }
     }
 
     public void stopAutoRefresh() {
         LogUtil.v("Stopping auto refresh...");
         if (fetcher != null) {
-            fetcher.stop();
+            fetcher.destroy();
+            fetcher = null;
         }
     }
 
