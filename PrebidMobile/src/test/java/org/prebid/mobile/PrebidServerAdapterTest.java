@@ -824,7 +824,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertEquals(Locale.getDefault().getLanguage(), device.getString("language"));
         assertEquals(String.valueOf(BaseSetup.testSDK), device.getString("osv"));
         assertEquals(320, device.getInt("w"));
-        assertEquals(0, device.getInt("h"));
+        assertEquals(470, device.getInt("h"));
         assertEquals(1, device.getInt("pxratio"));
         assertEquals(2, device.getInt("connectiontype"));
         JSONObject app = postData.getJSONObject("app");
