@@ -44,19 +44,51 @@
     </FrameLayout>
 
 
+    <ToggleButton
+        android:id="@+id/toggleConfigurationButton"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/selector_toggle_background"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textOff=""
+        android:textOn=""
+        android:textSize="0sp"
+        app:layout_constraintBottom_toBottomOf="@+id/switchUseMock"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/switchEnableGdpr"
+        app:layout_constraintTop_toTopOf="@+id/switchUseMock" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switchEnableGdpr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="@string/text_switch_enable_gdpr"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/switchUseMock"
+        app:layout_constraintEnd_toStartOf="@+id/toggleConfigurationButton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/switchUseMock"
+        app:layout_constraintTop_toTopOf="@+id/switchUseMock"
+        app:switchPadding="18dp" />
+
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switchUseMock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
+        android:padding="5dp"
         android:text="@string/text_switch_use_mock"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:padding="5dp"
         app:layout_constraintBottom_toTopOf="@+id/listDemos"
-        app:layout_constraintEnd_toStartOf="@+id/toggleConfigurationButton"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toStartOf="@+id/switchEnableGdpr"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/adCategoriesSegmentedControl"
         app:switchPadding="18dp" />
@@ -71,27 +103,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/switchUseMock" />
-
-    <segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl
-        android:id="@+id/integrationsSegmentedControl"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
-        android:layout_marginStart="6dp"
-        app:columnCount="6"
-        app:distributeEvenly="true"
-        app:layout_constraintBottom_toTopOf="@+id/adCategoriesSegmentedControl"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout"
-        app:radius="6dp"
-        app:selectedBackgroundColor="@color/action_bar_bkg"
-        app:textVerticalPadding="6dp">
-
-    </segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl>
 
     <segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl
         android:id="@+id/adCategoriesSegmentedControl"
@@ -114,19 +125,24 @@
 
     </segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl>
 
-    <ToggleButton
-        android:id="@+id/toggleConfigurationButton"
+    <segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl
+        android:id="@+id/integrationsSegmentedControl"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/selector_toggle_background"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:textOff=""
-        android:textOn=""
-        android:textSize="0sp"
-        app:layout_constraintBottom_toBottomOf="@+id/switchUseMock"
-        app:layout_constraintDimensionRatio="1:1"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginStart="6dp"
+        app:columnCount="6"
+        app:distributeEvenly="true"
+        app:layout_constraintBottom_toTopOf="@+id/adCategoriesSegmentedControl"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/switchUseMock" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout"
+        app:radius="6dp"
+        app:selectedBackgroundColor="@color/action_bar_bkg"
+        app:textVerticalPadding="6dp">
+
+    </segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl>
 </androidx.constraintlayout.widget.ConstraintLayout>

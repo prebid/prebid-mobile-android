@@ -292,6 +292,7 @@
 
     <string name="label_auid">AdUnitId: %1$s</string>
     <string name="text_switch_use_mock">Use Mock Server</string>
+    <string name="text_switch_enable_gdpr">Enable GDPR</string>
 
     <string name="dialog_configurator_title">Configure the Ad</string>
     <string name="dialog_configurator_load">Load the ad</string>

@@ -18,17 +18,17 @@ package org.prebid.mobile.renderingtestapp.uiAutomator.pages;
 
 import android.util.Log;
 
-import androidx.test.uiautomator.By;
-import androidx.test.uiautomator.BySelector;
-import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject2;
-import androidx.test.uiautomator.Until;
-
 import org.prebid.mobile.renderingtestapp.BuildConfig;
 import org.prebid.mobile.renderingtestapp.uiAutomator.pages.factory.BannerPageFactory;
 import org.prebid.mobile.renderingtestapp.uiAutomator.pages.factory.InterstitialPageFactory;
 import org.prebid.mobile.renderingtestapp.uiAutomator.pages.factory.MraidPageFactory;
 import org.prebid.mobile.renderingtestapp.uiAutomator.pages.factory.NativePageFactory;
+
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.BySelector;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject2;
+import androidx.test.uiautomator.Until;
 
 public class HomePage extends BasePage {
 
@@ -37,11 +37,13 @@ public class HomePage extends BasePage {
         static BySelector dismissDialog = By.res(TAG, "dismiss_button");
         static BySelector allowButton = By.res("com.android.packageinstaller", "permission_allow_button");
         static BySelector mockServerSwitch = By.res(TAG, "switchUseMock");
+        static BySelector gdprSwitch = By.res(TAG, "switchEnableGdpr");
     }
 
     public HomePage(UiDevice device) {
         super(device);
         setUseMockServer(BuildConfig.FLAVOR == "mock");
+        setUseGdpr(false);
     }
 
     public void dismissWelcomeDialog() {
@@ -88,10 +90,19 @@ public class HomePage extends BasePage {
     }
 
     public HomePage setUseMockServer(boolean state) {
-        UiObject2 switchUiObject = device.wait(Until.findObject(Locators.mockServerSwitch), 2000);
+        changeSwitchState(state, Locators.mockServerSwitch);
+        return this;
+    }
+
+    public HomePage setUseGdpr(boolean state) {
+        changeSwitchState(state, Locators.gdprSwitch);
+        return this;
+    }
+
+    private void changeSwitchState(boolean state, BySelector selector) {
+        UiObject2 switchUiObject = device.wait(Until.findObject(selector), 2000);
         if (switchUiObject != null && switchUiObject.isChecked() != state) {
             switchUiObject.click();
         }
-        return this;
     }
 }

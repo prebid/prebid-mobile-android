@@ -23,10 +23,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.data.DemoItem
 import org.prebid.mobile.renderingtestapp.utils.BaseFragment
+import org.prebid.mobile.renderingtestapp.utils.GdprHelper
 import org.prebid.mobile.renderingtestapp.utils.SegmentAdapterReImpl
 import org.prebid.mobile.renderingtestapp.utils.adapters.DemoItemClickListener
 import org.prebid.mobile.renderingtestapp.utils.adapters.DemoListAdapter
@@ -50,6 +52,7 @@ class HeaderBiddingFragment : BaseFragment() {
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         initViewModel()
         initMockSwitch()
+        initGdprSwitch()
         initIntegrationsSegmentControl(view)
         initAdCategoriesSegmentControl(view)
         initListView()
@@ -58,9 +61,13 @@ class HeaderBiddingFragment : BaseFragment() {
     }
 
     private fun initViewModel() {
-        val viewModelFactory = HeaderBiddingViewModelFactory(resources.getStringArray(integrationCategoriesArrayId),
-                resources.getStringArray(adCategoriesArrayId))
-        viewModel = ViewModelProviders.of(this, viewModelFactory)[HeaderBiddingViewModel::class.java]
+        val viewModelFactory = HeaderBiddingViewModelFactory(
+            resources.getStringArray(integrationCategoriesArrayId),
+            resources.getStringArray(adCategoriesArrayId),
+            GdprHelper(PreferenceManager.getDefaultSharedPreferences(requireContext()))
+        )
+        viewModel =
+            ViewModelProviders.of(this, viewModelFactory)[HeaderBiddingViewModel::class.java]
         viewModel.navigateToDemoExample.observe(this, Observer {
             it?.let {
                 searchDemos.clearFocus()
@@ -143,6 +150,13 @@ class HeaderBiddingFragment : BaseFragment() {
         switchUseMock.isChecked = viewModel.isMockServer()
         switchUseMock.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onMockSwitchStateChanged(isChecked)
+        }
+    }
+
+    private fun initGdprSwitch() {
+        switchEnableGdpr.isChecked = viewModel.isSubjectToGdpr()
+        switchEnableGdpr.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onGdprSwitchStateChanged(isChecked)
         }
     }
 

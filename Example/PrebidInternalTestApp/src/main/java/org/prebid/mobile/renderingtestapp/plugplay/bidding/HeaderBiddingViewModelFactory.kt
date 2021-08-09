@@ -18,12 +18,16 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import org.prebid.mobile.renderingtestapp.utils.GdprHelper
 
-class HeaderBiddingViewModelFactory(private val integrationCategories: Array<String>,
-                                    private val adCategories: Array<String>) : ViewModelProvider.Factory {
+class HeaderBiddingViewModelFactory(
+    private val integrationCategories: Array<String>,
+    private val adCategories: Array<String>,
+    private val gdprHelper: GdprHelper
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HeaderBiddingViewModel::class.java)) {
-            return HeaderBiddingViewModel(integrationCategories, adCategories) as T
+            return HeaderBiddingViewModel(integrationCategories, adCategories, gdprHelper) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

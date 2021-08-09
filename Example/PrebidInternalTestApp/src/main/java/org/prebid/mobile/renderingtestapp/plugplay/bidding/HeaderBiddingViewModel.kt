@@ -23,11 +23,13 @@ import org.prebid.mobile.renderingtestapp.data.DemoItem
 import org.prebid.mobile.renderingtestapp.data.Tag
 import org.prebid.mobile.renderingtestapp.utils.ConfigurationViewSettings
 import org.prebid.mobile.renderingtestapp.utils.DemoItemProvider
+import org.prebid.mobile.renderingtestapp.utils.GdprHelper
 import org.prebid.mobile.renderingtestapp.utils.SourcePicker
 
 class HeaderBiddingViewModel(
         private val integrationCategories: Array<String>,
-        private val adCategories: Array<String>
+        private val adCategories: Array<String>,
+        private val gdprHelper: GdprHelper
 ) : ViewModel() {
 
     private var demoItemList: MutableList<DemoItem> = DemoItemProvider.getDemoList()
@@ -78,6 +80,14 @@ class HeaderBiddingViewModel(
 
     fun isMockServer(): Boolean {
         return SourcePicker.useMockServer
+    }
+
+    fun isSubjectToGdpr(): Boolean {
+        return gdprHelper.isGdprEnabled()
+    }
+
+    fun onGdprSwitchStateChanged(isChecked: Boolean) {
+        gdprHelper.changeGdprState(isChecked)
     }
 
     fun onMockSwitchStateChanged(isChecked: Boolean) {
