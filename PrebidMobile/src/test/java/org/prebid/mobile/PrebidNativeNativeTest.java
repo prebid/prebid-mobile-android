@@ -97,7 +97,7 @@ public class PrebidNativeNativeTest extends BaseSetup {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
-        RequestParams requestParams = new RequestParams(PBS_CONFIG_ID_NATIVE_APPNEXUS, AdType.NATIVE, null, new HashMap<String, Set<String>>(), new HashSet<String>(), null, null, null, null);
+        RequestParams requestParams = new RequestParams(PBS_CONFIG_ID_NATIVE_APPNEXUS, AdType.NATIVE, null, new HashMap<String, Set<String>>(), new HashSet<String>(), null, null, null, null, null);
         requestParams.setNativeRequestParams(new NativeRequestParams());
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
@@ -175,7 +175,7 @@ public class PrebidNativeNativeTest extends BaseSetup {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
-        RequestParams requestParams = new RequestParams(PBS_CONFIG_ID_NATIVE_APPNEXUS, AdType.NATIVE, null, new HashMap<String, Set<String>>(), new HashSet<String>(), null, null, null, null);
+        RequestParams requestParams = new RequestParams(PBS_CONFIG_ID_NATIVE_APPNEXUS, AdType.NATIVE, null, new HashMap<String, Set<String>>(), new HashSet<String>(), null, null, null, null, null);
         requestParams.setNativeRequestParams(new NativeRequestParams());
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
@@ -274,7 +274,7 @@ public class PrebidNativeNativeTest extends BaseSetup {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
-        RequestParams requestParams = new RequestParams(PBS_CONFIG_ID_NATIVE_APPNEXUS, AdType.NATIVE, null, new HashMap<String, Set<String>>(), new HashSet<String>(), null, null, null, null);
+        RequestParams requestParams = new RequestParams(PBS_CONFIG_ID_NATIVE_APPNEXUS, AdType.NATIVE, null, new HashMap<String, Set<String>>(), new HashSet<String>(), null, null, null, null, null);
         requestParams.setNativeRequestParams(new NativeRequestParams());
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);

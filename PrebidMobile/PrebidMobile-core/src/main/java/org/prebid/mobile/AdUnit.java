@@ -43,6 +43,7 @@ public abstract class AdUnit {
 
     private final Map<String, Set<String>> contextDataDictionary;
     private final Set<String> contextKeywordsSet;
+    private ContentObject content;
 
     private String pbAdSlot;
 
@@ -170,7 +171,7 @@ public abstract class AdUnit {
 
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
-            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, pbAdSlot, bannerParameters, videoParameters);
+            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, pbAdSlot, bannerParameters, videoParameters, content);
             if (this.adType.equals(AdType.NATIVE)) {
                 requestParams.setNativeRequestParams(((NativeAdUnit) this).params);
             }
@@ -241,6 +242,13 @@ public abstract class AdUnit {
      */
     public void addContextKeywords(Set<String> keywords) {
         contextKeywordsSet.addAll(keywords);
+    }
+
+    /**
+     * This method obtains the content for adunit, content, in which impression will appear
+     */
+    public void addContent(ContentObject content) {
+        this.content = content;
     }
 
     /**
