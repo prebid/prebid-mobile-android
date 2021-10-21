@@ -47,7 +47,7 @@ public class AdUnitContentTest extends BaseSetup {
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         PrebidMobile.setPrebidServerAccountId("123456");
-        final CompletableFuture<Void> future = new CompletableFuture<>();
+        final CompletableFuture<JSONObject> future = new CompletableFuture<>();
         server.setDispatcher(new Dispatcher() {
             @Override
             public MockResponse dispatch(RecordedRequest request) throws InterruptedException {
@@ -55,13 +55,7 @@ public class AdUnitContentTest extends BaseSetup {
                 try {
                     JSONObject jsonObject = new JSONObject(postData);
 
-                    JSONObject app = jsonObject.getJSONObject("app");
-                    assertTrue(app.has("content"));
-                    JSONObject content = app.getJSONObject("content");
-                    assertTrue(content.has("url"));
-                    assertEquals(expectedContentUrl, content.getString("url"));
-
-                    future.complete(null);
+                    future.complete(jsonObject);
                 } catch (JSONException err) {
                     Log.d("Error", err.toString());
                     future.cancel(true);
@@ -91,6 +85,12 @@ public class AdUnitContentTest extends BaseSetup {
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
-        future.get(10, TimeUnit.SECONDS);
+        JSONObject requestBody = future.get(10, TimeUnit.SECONDS);
+
+        JSONObject app = requestBody.getJSONObject("app");
+        assertTrue(app.has("content"));
+        JSONObject content = app.getJSONObject("content");
+        assertTrue(content.has("url"));
+        assertEquals(expectedContentUrl, content.getString("url"));
     }
 }
