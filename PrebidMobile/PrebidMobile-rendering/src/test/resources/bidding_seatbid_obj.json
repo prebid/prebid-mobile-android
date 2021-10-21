@@ -1,0 +1,33 @@
+{
+  "bid": [
+    {
+      "id": "bidId",
+      "impid": "impId",
+      "price": 0.15,
+      "adm": "adm",
+      "crid": "crid",
+      "w": 320,
+      "h": 50,
+      "ext": {
+        "prebid": {
+          "cache": {
+            "key": "cacheKey",
+            "url": "cacheUrl",
+            "bids": {
+              "url": "bidsUrl",
+              "cacheId": "bidsCacheId"
+            }
+          },
+          "targeting": {
+            "key1": "value1",
+            "key2": "value2",
+            "key3": "value3"
+          },
+          "type": "type"
+        }
+      }
+    }
+  ],
+  "seat": "prebid",
+  "group": 1
+}

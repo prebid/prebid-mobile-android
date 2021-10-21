@@ -1,0 +1,34 @@
+{
+   "ads":{
+      "chain":1,
+      "medium":"ma",
+      "record_tmpl":"http://qa-v2-i16-lmi.del-qa.prebid.net/{medium}/1.0/{rtype}?did.adid=fa7685f4-f806-4c03-9211-6c43f49d10ad&ts={txn_state}",
+      "adunits":[
+         {
+            "auid":"1610813824",
+            "chain":[
+               {
+                  "is_fallback":0,
+                  "html":"",
+                  "ts":"1fHU9MXxyaWQ9Mzg5ZDdhMzYtOTUyZS00NGNmLWE1YmMtMDRmMjNjMzU5MGM0fHJ0PTE0MTI5NjE0Nzd8YXVpZD0xNjEwODEzODI0fGF1bT1ETUlELk1PQklMRXxzaWQ9MTYxMDgwMDI3MnxwdWI9MTYxMDg3OTc5MnxwYz1VU0R8eHQ9Y29udHJvbCxhcGlfc3luY193cml0ZXxyYWlkPTg0MzhlMzE4LTRjZDQtNDIxZi1iYjRjLWI1Y2RlMjBlZjFkNXxjbD0yfGFpZD0xNjExMDk0NjU1fHQ9MTV8YXM9MzIweDUwfGxpZD0xNjEwOTYyNDcxfG9pZD0xNjEwODc1MDAzfHA9NTB8cHI9NTB8YWR2PTE2MTA5ODQyMjZ8YWM9VVNEfHBtPVBSSUNJTkcuQ1BNfGJtPUJVWUlORy5OT05HVUFSQU5URUVEfGNpPTF8dXI9cnU0eUtRM0x0Mg",
+                  "sdk_params": "{mediation_method=native_sdk, apid=177904, network_uid=Millenial}",
+                  "type":"mediation",
+                  "width":"320",
+                  "height":"50",
+                  "mediation_url":""
+               },
+               {
+                  "is_fallback":0,
+                  "html":"<HTML><font color=\"green\">This is the i16 Fallback Ad for Reporting Testing for SDK Demand Partners</font></html>",
+                  "ts":"1fHU9MXxyaWQ9Mzg5ZDdhMzYtOTUyZS00NGNmLWE1YmMtMDRmMjNjMzU5MGM0fHJ0PTE0MTI5NjE0Nzd8YXVpZD0xNjEwODEzODI0fGF1bT1ETUlELk1PQklMRXxzaWQ9MTYxMDgwMDI3MnxwdWI9MTYxMDg3OTc5MnxwYz1VU0R8eHQ9Y29udHJvbCxhcGlfc3luY193cml0ZXxyYWlkPTg0MzhlMzE4LTRjZDQtNDIxZi1iYjRjLWI1Y2RlMjBlZjFkNXxjbD0yfGFpZD0xNjExMDk0NjU2fHQ9MTB8YXM9MzIweDUwfGxpZD0xNjEwOTYyNDcyfG9pZD0xNjEwODg2MTAxfHA9MHxwcj0wfGFkdj0xNjEwODc5Nzg1fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuSE9VU0V8Y2k9Mnx1cj1ydTR5S1EzTHQy",
+                  "sdk_params":"",
+                  "type":"html",
+                  "width":"320",
+                  "height":"50",
+                  "mediation_url":""
+               }
+            ]
+         }
+      ]
+   }
+}

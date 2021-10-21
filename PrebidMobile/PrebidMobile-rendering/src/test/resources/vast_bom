@@ -1,0 +1,84 @@
+﻿<VAST version="2.0">
+    <Ad id="539733507">
+        <InLine>
+            <AdSystem version="1.0">Prebid Enterprise</AdSystem>
+            <AdTitle/>
+            <Impression>
+                <![CDATA[http://delivery-us-west-1.prebid.net/v/1.0/ri?ph=a51065ab-17ee-4394-b5a7-32debc04780a&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA&vtqe=false]]>            </Impression>
+            <Error>
+                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=error_vast2_[ERRORCODE]&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>            </Error>
+            <Creatives>
+                <Creative id="539733507">
+                    <Linear>
+                        <Duration>00:00:15</Duration>
+                        <TrackingEvents>
+                            <Tracking event="creativeView">
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=creativeView&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </Tracking>
+                            <Tracking event="start">
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=start&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </Tracking>
+                            <Tracking event="midpoint">
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=midpoint&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </Tracking>
+                            <Tracking event="firstQuartile">
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=firstQuartile&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </Tracking>
+                            <Tracking event="thirdQuartile">
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=thirdQuartile&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </Tracking>
+                            <Tracking event="complete">
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=complete&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </Tracking>
+                            <Tracking event="mute">
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=mute&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </Tracking>
+                            <Tracking event="unmute">
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=unmute&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </Tracking>
+                            <Tracking event="pause">
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=pause&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </Tracking>
+                            <Tracking event="rewind">
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=rewind&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </Tracking>
+                            <Tracking event="resume">
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=resume&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </Tracking>
+                            <Tracking event="fullscreen">
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=fullscreen&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </Tracking>
+                            <Tracking event="expand">
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=expand&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </Tracking>
+                            <Tracking event="collapse">
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=collapse&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </Tracking>
+                            <Tracking event="acceptInvitation">
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=acceptInvitation&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </Tracking>
+                            <Tracking event="close">
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rv?t=close&ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </Tracking>
+                        </TrackingEvents>
+                        <VideoClicks>
+                            <ClickThrough>
+                                <![CDATA[http://mobile-d.prebid.net/v/1.0/rc?ts=2DAABBgABAAECAAIBAAsAAgAAAKIcGApnZ2F4WHVrYk1DHBaVyLXAwM3d_MEBFuv6_vzrq8-r3gEAHBbD5M2Yj6L3o5YBFvu9rqjQtNHF4QEAFvTl_bsLFQIAHBQCFAIAHBwVAgAcFQIAABwmhrjdggQVBhUGJsrysoAEFp6LoYAE1qwCABwmpouhgAQW_r64gAQW4LndggQW0rndggQVBhwUwAcUgAUAFQQVChasAiasAkUKAAAA]]>                            </ClickThrough>
+                        </VideoClicks>
+                        <MediaFiles>
+                            <MediaFile
+                                delivery="streaming"
+                                height="480"
+                                id="539733616"
+                                type="video/mp4"
+                                width="320">
+                                <![CDATA[http://i.cdn.prebid.com/videos/mobile/Prebid_15_Seconds_Fade_Small.mp4]]>                            </MediaFile>
+                        </MediaFiles>
+                    </Linear>
+                </Creative>
+            </Creatives>
+            <Extensions>
+                <Extension type="AdVerifications">
+                    <AdVerifications>
+                        <Verification vendor="iabtechlab.com-omid">
+                            <JavaScriptResource
+                                apiFramework="omid"
+                                browserOptional="true">
+                                <![CDATA[https://s3-us-west-2.amazonaws.com/omsdk-files/compliance-js/omid-validation-verification-script-v1.js]]>                            </JavaScriptResource>
+                            <TrackingEvents>
+                                <Tracking event="verificationNotExecuted">
+                                    <![CDATA[]]>                                </Tracking>
+                            </TrackingEvents>
+                            <VerificationParameters>
+                                <![CDATA["iabtechlab-prebid"]]>                            </VerificationParameters>
+                        </Verification>
+                    </AdVerifications>
+                </Extension>
+            </Extensions>
+        </InLine>
+    </Ad>
+</VAST>

@@ -1,0 +1,1 @@
+{"cur":["USD"],"at":1,"id":"80ce30c53c16e6ede735f123ef6e32361bfc7b22","user":{"geo":{},"data":[{"segment":[{"name":"seg","id":"seg1","value":"segValue"}],"name":"Data","id":"data1"}],"id":"55816b39711f9b5acf3b90e313ed29e51665623f"}}

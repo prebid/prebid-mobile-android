@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~    Copyright 2018-2021 Prebid.org, Inc.
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bidding_navigation"
+    app:startDestination="@id/headerBiddingFragment">
+
+    <fragment
+        android:id="@+id/headerBiddingFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.HeaderBiddingFragment"
+        android:label="@string/app_name">
+
+        <!--In-App actions-->
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_banner"
+            app:destination="@id/navigation_in_app_banner"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_multisize_banner"
+            app:destination="@id/navigation_in_app_multisize_banner"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_banners_and_interstitial"
+            app:destination="@id/navigation_in_app_banners_and_interstitial"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_interstitial"
+            app:destination="@id/navigation_in_app_interstitial"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_video_rewarded"
+            app:destination="@id/navigation_in_app_video_rewarded"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_multisize_interstitial"
+            app:destination="@id/navigation_in_app_interstitial"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_banner_video"
+            app:destination="@id/navigation_in_app_banner_video"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_banner_video_feed"
+            app:destination="@id/navigation_in_app_banner_video_feed"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_banner_in_layout"
+            app:destination="@id/navigation_in_app_banner_in_layout"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_banner_scrollable"
+            app:destination="@id/navigation_in_app_banner_scrollable"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_native_styles"
+            app:destination="@id/navigation_in_app_native_styles"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_native_styles_no_assets"
+            app:destination="@id/navigation_in_app_native_styles_no_assets"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_native_links"
+            app:destination="@id/navigation_in_app_native_links"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_native_video"
+            app:destination="@id/navigation_in_app_native_video"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_native"
+            app:destination="@id/navigation_in_app_native"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_in_app_native_feed"
+            app:destination="@id/navigation_in_app_native_feed"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <!--GAM actions-->
+        <action
+            android:id="@+id/action_header_bidding_to_gam_banner"
+            app:destination="@id/navigation_gam_banner"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_gam_multisize_banner"
+            app:destination="@id/navigation_gam_multisize_banner"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_gam_banners_and_interstitial"
+            app:destination="@id/navigation_gam_banners_and_interstitial"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_gam_interstitial"
+            app:destination="@id/navigation_gam_interstitial"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_gam_multisize_interstitial"
+            app:destination="@id/navigation_gam_interstitial"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_gam_video_rewarded"
+            app:destination="@id/navigation_gam_video_rewarded"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_gam_banner_video"
+            app:destination="@id/navigation_gam_video_300_250"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_gam_banner_video_feed"
+            app:destination="@id/navigation_gam_video_300_250_feed"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_gam_native_styles"
+            app:destination="@id/navigation_gam_native_styles"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_gam_native_styles_no_assets"
+            app:destination="@id/navigation_gam_native_styles_no_assets"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_gam_native"
+            app:destination="@id/navigation_gam_native"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_gam_native_feed"
+            app:destination="@id/navigation_gam_native_feed"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <!--MoPub actions-->
+        <action
+            android:id="@+id/action_header_bidding_to_mopub_banner"
+            app:destination="@id/navigation_mopub_banner"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_mopub_banner_multisize"
+            app:destination="@id/navigation_mopub_banner_multisize"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_mopub_banners_and_interstitial"
+            app:destination="@id/navigation_mopub_banners_and_interstitial"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_mopub_interstitial"
+            app:destination="@id/navigation_mopub_interstitial"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_mopub_rewarded_video"
+            app:destination="@id/navigation_mopub_rewarded_video"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_mopub_native_styles"
+            app:destination="@id/navigation_mopub_native_styles"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_mopub_native_styles_no_assets"
+            app:destination="@id/navigation_mopub_native_styles_no_assets"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_mopub_native"
+            app:destination="@id/navigation_mopub_native"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_mopub_native_feed"
+            app:destination="@id/navigation_mopub_native_feed"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_mopub_native_video"
+            app:destination="@id/navigation_mopub_native_video"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+    </fragment>
+
+    <include app:graph="@navigation/utilities_navigation" />
+
+    <!--In-App fragments-->
+    <fragment
+        android:id="@+id/navigation_in_app_banner"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmBannerFragment"
+        android:label="In-App Banner" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_banner_in_layout"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmBannerInLayoutFragment"
+        android:label="In-App Banner In Layout" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_banner_scrollable"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmBannerScrollableFragment" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_multisize_banner"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmMultisizeBannerFragment"
+        android:label="In-App Multisize Banner" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_banners_and_interstitial"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmBannersWithInterstitialFragment" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_interstitial"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmInterstitialFragment"
+        android:label="In-App Interstitial" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_video_rewarded"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmRewardedVideoFragment"
+        android:label="In-App Video Rewarded" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_banner_video"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmVideoFragment"
+        android:label="Video Outstream (In-App)" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_banner_video_feed"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmFeedVideoFragment"
+        android:label="Video Outstream Feed (In-App)" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_native_styles"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeStylesFragment" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_native_styles_no_assets"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeStylesNoAssetsFragment" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_native"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeFragment" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_native_links"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeLinksFragment" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_native_video"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeVideoFragment" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_native_feed"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeFeedFragment" />
+
+    <!--GAM fragments-->
+    <fragment
+        android:id="@+id/navigation_gam_banner"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamBannerFragment"
+        android:label="GAM Banner" />
+
+    <fragment
+        android:id="@+id/navigation_gam_multisize_banner"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamMultisizeBannerFragment"
+        android:label="GAM Multisize Banner" />
+
+    <fragment
+        android:id="@+id/navigation_gam_banners_and_interstitial"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamBannersAndInterstitialFragment" />
+
+    <fragment
+        android:id="@+id/navigation_gam_interstitial"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamInterstitialFragment"
+        android:label="GAM Interstitial" />
+
+    <fragment
+        android:id="@+id/navigation_gam_video_rewarded"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamRewardedVideoFragment"
+        android:label="GAM Video Rewarded" />
+
+    <fragment
+        android:id="@+id/navigation_gam_video_300_250"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamOutstreamFragment"
+        android:label="Video Outstream (GAM)" />
+
+    <fragment
+        android:id="@+id/navigation_gam_video_300_250_feed"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamOustreamFeedFragment"
+        android:label="Video Outstream Feed (GAM)" />
+
+    <fragment
+        android:id="@+id/navigation_gam_native_styles"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeStylesFragment" />
+
+    <fragment
+        android:id="@+id/navigation_gam_native_styles_no_assets"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeStylesNoAssetsFragment" />
+
+    <fragment
+        android:id="@+id/navigation_gam_native"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeFragment" />
+
+    <fragment
+        android:id="@+id/navigation_gam_native_feed"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeFeedFragment" />
+
+    <!--MoPub fragments-->
+    <fragment
+        android:id="@+id/navigation_mopub_banner"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MopubBannerFragment"
+        android:label="MoPub Banner" />
+
+    <fragment
+        android:id="@+id/navigation_mopub_banner_multisize"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MopubBannerMultisizeFragment"
+        android:label="MoPub Banner Multisize" />
+
+    <fragment
+        android:id="@+id/navigation_mopub_banners_and_interstitial"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MopubBannersWithInterstitialFragment" />
+
+    <fragment
+        android:id="@+id/navigation_mopub_interstitial"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MopubInterstitialFragment"
+        android:label="MoPub Interstitial" />
+
+    <fragment
+        android:id="@+id/navigation_mopub_rewarded_video"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MoPubRewardedVideoFragment"
+        android:label="MoPub Rewarded Video" />
+
+    <fragment
+        android:id="@+id/navigation_mopub_native_styles"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MopubNativeStylesFragment" />
+
+    <fragment
+        android:id="@+id/navigation_mopub_native_styles_no_assets"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MopubNativeStylesNoAssetsFragment" />
+
+    <fragment
+        android:id="@+id/navigation_mopub_native"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MopubNativeFragment" />
+
+    <fragment
+        android:id="@+id/navigation_mopub_native_feed"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MoPubNativeFeedFragment" />
+
+    <fragment
+        android:id="@+id/navigation_mopub_native_video"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MoPubNativeVideoFragment" />
+</navigation>

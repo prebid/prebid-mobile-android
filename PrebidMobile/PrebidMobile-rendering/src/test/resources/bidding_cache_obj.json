@@ -1,0 +1,8 @@
+{
+  "key": "cacheKey",
+  "url": "cacheUrl",
+  "bids": {
+    "url": "bidsUrl",
+    "cacheId": "bidsCacheId"
+  }
+}
