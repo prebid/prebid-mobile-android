@@ -54,6 +54,10 @@ android {
             }
         }
     }
+
+    defaultConfig {
+        consumerProguardFiles file('proguard-rules.pro')
+    }
 }
 
 dependencies {
