@@ -508,7 +508,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     request.put(NativeRequestParams.PRIVACY, params.isPrivacy() ? 1 : 0);
                     request.put(NativeRequestParams.EXT, params.getExt());
                     if (!params.getAssets().isEmpty()) {
-                        int idCount = 0;
+                        int idCount = 1;
                         for (NativeAsset asset : params.getAssets()) {
                             JSONObject assetObj;
                             switch (asset.getType()) {
@@ -523,8 +523,7 @@ class PrebidServerAdapter implements DemandAdapter {
                                     assetObj.put(NativeRequestParams.TITLE, title);
                                     assetObj.put(NativeRequestParams.REQUIRED, titleAsset.isRequired() ? 1 : 0);
                                     assetObj.put(NativeRequestParams.EXT, titleAsset.getAssetExt());
-                                    assetObj.put(NativeRequestParams.ID, idCount);
-                                    idCount++;
+                                    assetObj.put(NativeRequestParams.ID, idCount++);
                                     assets.put(assetObj);
                                     break;
                                 case IMAGE:
@@ -553,8 +552,7 @@ class PrebidServerAdapter implements DemandAdapter {
                                     assetObj.put(NativeRequestParams.IMAGE, image);
                                     assetObj.put(NativeRequestParams.REQUIRED, imageAsset.isRequired() ? 1 : 0);
                                     assetObj.put(NativeRequestParams.EXT, imageAsset.getAssetExt());
-                                    assetObj.put(NativeRequestParams.ID, idCount);
-                                    idCount++;
+                                    assetObj.put(NativeRequestParams.ID, idCount++);
                                     assets.put(assetObj);
                                     break;
                                 case DATA:
@@ -571,8 +569,7 @@ class PrebidServerAdapter implements DemandAdapter {
                                     assetObj.put(NativeRequestParams.DATA, data);
                                     assetObj.put(NativeRequestParams.REQUIRED, dataAsset.isRequired() ? 1 : 0);
                                     assetObj.put(NativeRequestParams.EXT, dataAsset.getAssetExt());
-                                    assetObj.put(NativeRequestParams.ID, idCount);
-                                    idCount++;
+                                    assetObj.put(NativeRequestParams.ID, idCount++);
                                     assets.put(assetObj);
 
                                     break;

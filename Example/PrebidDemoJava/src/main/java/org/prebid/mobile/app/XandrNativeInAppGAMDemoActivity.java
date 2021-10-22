@@ -104,6 +104,14 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
         loadInAppNative();
     }
 
+    private void setupNativePremium() {
+        Host custom = Host.CUSTOM;
+        custom.setHostUrl("https://ib.adnxs.com/openrtb2/prebid");
+        PrebidMobile.setPrebidServerHost(custom);
+        PrebidMobile.setPrebidServerAccountId("9325"); //1601
+        NativeAdUnit nativeAdUnit = new NativeAdUnit("18491617"); //22650327
+    }
+
     private void loadInAppNative() {
         removePreviousAds();
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
