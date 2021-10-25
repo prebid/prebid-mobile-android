@@ -882,6 +882,10 @@ class PrebidServerAdapter implements DemandAdapter {
                 if (!TextUtils.isEmpty(TargetingParams.getStoreUrl())) {
                     app.put("storeurl", TargetingParams.getStoreUrl());
                 }
+                if (this.requestParams.getContent() != null) {
+                    app.put("content", getContentObject());
+                }
+
                 JSONObject publisher = new JSONObject();
                 publisher.put("id", PrebidMobile.getPrebidServerAccountId());
                 app.put("publisher", publisher);
@@ -898,6 +902,14 @@ class PrebidServerAdapter implements DemandAdapter {
             }
             return app;
 
+        }
+
+        private JSONObject getContentObject() throws JSONException {
+            JSONObject contentJSON = new JSONObject();
+            if (this.requestParams.getContent().getUrl() != null) {
+                contentJSON.put("url", this.requestParams.getContent().getUrl());
+            }
+            return contentJSON;
         }
 
         private JSONObject getUserObject() {
