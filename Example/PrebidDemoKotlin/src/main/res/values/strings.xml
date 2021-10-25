@@ -9,6 +9,7 @@
     <string-array name="adServerArray">
         <item>DFP</item>
         <item>MoPub</item>
+        <item>PrebidRendering</item>
     </string-array>
     <string name="adSizeText">Ad Size</string>
     <string-array name="adSizeArray">

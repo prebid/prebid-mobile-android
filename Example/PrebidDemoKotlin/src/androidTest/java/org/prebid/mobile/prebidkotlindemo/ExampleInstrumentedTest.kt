@@ -1,12 +1,10 @@
 package org.prebid.mobile.prebidkotlindemo
 
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.ext.junit.runners.AndroidJUnit4
-
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -17,8 +15,7 @@ import org.junit.Assert.*
 class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
-        // Context of the app under test.
-        val appContext = androidx.test.platform.app.InstrumentationRegistry.getTargetContext()
-        assertEquals("org.prebid.mobile.prebidkotlindemo", appContext.packageName)
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        assertEquals("org.prebid.mobile.prebidkotlindemo", context.packageName)
     }
 }

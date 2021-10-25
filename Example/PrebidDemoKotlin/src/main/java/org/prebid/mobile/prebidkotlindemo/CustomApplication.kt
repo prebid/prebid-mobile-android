@@ -20,61 +20,53 @@ import android.app.Activity
 import android.app.Application
 import android.content.Intent
 import android.os.Bundle
-import android.view.WindowManager.LayoutParams.*
+import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
 import org.prebid.mobile.Host
 import org.prebid.mobile.PrebidMobile
-import java.util.*
 
 class CustomApplication : Application() {
+
     override fun onCreate() {
         super.onCreate()
-        //init MoPub SDK
+        initMopubSDK()
+        initPrebidSDK()
+        if (BuildConfig.DEBUG) {
+            activateKeepScreenOnFlag()
+        }
+    }
+
+    private fun initMopubSDK() {
         val networksToInit = ArrayList<String>()
         networksToInit.add("com.mopub.mobileads.VungleRewardedVideo")
         val sdkConfiguration = SdkConfiguration.Builder("a935eac11acd416f92640411234fbba6")
             .withNetworksToInit(networksToInit)
             .build()
         MoPub.initializeSdk(this, sdkConfiguration, null)
-        //set Prebid Mobile global Settings
-        //region PrebidMobile API
+    }
+
+    private fun initPrebidSDK() {
         PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID)
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS)
         PrebidMobile.setShareGeoLocation(true)
         PrebidMobile.setApplicationContext(applicationContext)
-        //endregion
-        if (BuildConfig.DEBUG) {
-            sendBroadcast(Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS))
-            this.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
-                override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                    activity.window.addFlags(FLAG_KEEP_SCREEN_ON)
-                }
-
-                override fun onActivityStarted(activity: Activity) {
-
-                }
-
-                override fun onActivityResumed(activity: Activity) {
-
-                }
-
-                override fun onActivityPaused(activity: Activity) {
-
-                }
-
-                override fun onActivityStopped(activity: Activity) {
-
-                }
-
-                override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
-
-                }
-
-                override fun onActivityDestroyed(activity: Activity) {
-
-                }
-            })
-        }
     }
+
+    private fun activateKeepScreenOnFlag() {
+        sendBroadcast(Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS))
+        this.registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+                activity.window.addFlags(FLAG_KEEP_SCREEN_ON)
+            }
+
+            override fun onActivityStarted(activity: Activity) {}
+            override fun onActivityResumed(activity: Activity) {}
+            override fun onActivityPaused(activity: Activity) {}
+            override fun onActivityStopped(activity: Activity) {}
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+            override fun onActivityDestroyed(activity: Activity) {}
+        })
+    }
+
 }

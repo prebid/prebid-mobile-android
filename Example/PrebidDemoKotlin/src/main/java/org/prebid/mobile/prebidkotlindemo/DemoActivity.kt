@@ -18,9 +18,9 @@ package org.prebid.mobile.prebidkotlindemo
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.FrameLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
@@ -36,219 +36,219 @@ import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
 import org.prebid.mobile.prebidkotlindemo.Constants.MOPUB_BANNER_ADUNIT_ID_300x250
 import org.prebid.mobile.prebidkotlindemo.Constants.MOPUB_BANNER_ADUNIT_ID_320x50
+import org.prebid.mobile.prebidkotlindemo.databinding.ActivityDemoBinding
 
 class DemoActivity : AppCompatActivity() {
-    internal var refreshCount: Int = 0
-    internal var adUnit: AdUnit? = null
-    lateinit var resultCode: ResultCode
+
+    private var refreshCount: Int = 0
+    private var adUnit: AdUnit? = null
+
+    private var adServerName = ""
+    private var adTypeName = ""
+    private var adSizeName: String? = null
+    private var adRefreshTime: Int? = null
+
+    private lateinit var binding: ActivityDemoBinding
+    private lateinit var resultCode: ResultCode
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        refreshCount = 0
-        setContentView(R.layout.activity_demo)
-        val intent = intent
-        if ("DFP" == intent.getStringExtra(Constants.AD_SERVER_NAME) && "Banner" == intent.getStringExtra(Constants.AD_TYPE_NAME)) {
-            val size = intent.getStringExtra(Constants.AD_SIZE_NAME) ?: ""
-            createDFPBanner(size)
-        } else if ("DFP" == intent.getStringExtra(Constants.AD_SERVER_NAME) && "Interstitial" == intent.getStringExtra(
-                Constants.AD_TYPE_NAME
-            )
-        ) {
-            createDFPInterstitial()
-        } else if ("MoPub" == intent.getStringExtra(Constants.AD_SERVER_NAME) && "Banner" == intent.getStringExtra(
-                Constants.AD_TYPE_NAME
-            )
-        ) {
-            val size = intent.getStringExtra(Constants.AD_SIZE_NAME) ?: ""
-            createMoPubBanner(size)
-        } else if ("MoPub" == intent.getStringExtra(Constants.AD_SERVER_NAME) && "Interstitial" == intent.getStringExtra(
-                Constants.AD_TYPE_NAME
-            )
-        ) {
-            createMoPubInterstitial()
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_demo)
+
+        parseArguments()
+        createBanner()
+    }
+
+    private fun parseArguments() {
+        intent.apply {
+            adServerName = getStringExtra(Constants.AD_SERVER_NAME) ?: ""
+            adTypeName = getStringExtra(Constants.AD_TYPE_NAME) ?: ""
+            adSizeName = getStringExtra(Constants.AD_SIZE_NAME)
+            val refreshExtra = getIntExtra(Constants.AUTO_REFRESH_NAME, -1)
+            if (refreshExtra != -1) {
+                adRefreshTime = refreshExtra
+            }
         }
     }
 
-    internal fun createDFPBanner(size: String) {
-        val adFrame = findViewById(R.id.adFrame) as FrameLayout
-        adFrame.removeAllViews()
-        val dfpAdView = AdManagerAdView(this)
-        val wAndH = size.split("x".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val width = Integer.valueOf(wAndH[0])
-        val height = Integer.valueOf(wAndH[1])
+    private fun createBanner() {
+        when {
+            adServerName == "DFP" && adTypeName == "Banner" -> {
+                createDFPBanner()
+            }
+            adServerName == "DFP" && adTypeName == "Interstitial" -> {
+                createDFPInterstitial()
+            }
+            adServerName == "MoPub" && adTypeName == "Banner" -> {
+                val size = intent.getStringExtra(Constants.AD_SIZE_NAME) ?: ""
+                createMoPubBanner(size)
+            }
+            adServerName == "MoPub" && adTypeName == "Interstitial" -> {
+                createMoPubInterstitial()
+            }
+        }
+    }
+
+    private fun createDFPBanner() {
+        val adWrapper = binding.frameAdWrapper
+        adWrapper.removeAllViews()
+
+        val adView = AdManagerAdView(this)
+        val wAndH = adSizeName?.split("x".toRegex())?.dropLastWhile { it.isEmpty() }?.toTypedArray() ?: emptyArray()
+        var width = 0
+        var height = 0
+        try {
+            width = Integer.valueOf(wAndH[0])
+            height = Integer.valueOf(wAndH[1])
+        } catch (exception: Exception) {}
+
         if (width == 300 && height == 250) {
-            dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES)
+            adView.adUnitId = Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES
             adUnit = BannerAdUnit(Constants.PBS_CONFIG_ID_300x250, width, height)
         } else if (width == 320 && height == 50) {
-            dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES)
+            adView.adUnitId = Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES
             adUnit = BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height)
         } else {
-            dfpAdView.setAdUnitId(Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES)
+            Log.w("DemoActivity", "Wrong size. Using 320x50.")
+            adView.adUnitId = Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES
             adUnit = BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, width, height)
         }
 
-        dfpAdView.setAdListener(object : AdListener() {
+        adView.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 super.onAdLoaded()
 
-                AdViewUtils.findPrebidCreativeSize(dfpAdView, object : AdViewUtils.PbFindSizeListener {
+                AdViewUtils.findPrebidCreativeSize(adView, object : AdViewUtils.PbFindSizeListener {
                     override fun success(width: Int, height: Int) {
-                        dfpAdView.setAdSizes(AdSize(width, height))
-
+                        adView.setAdSizes(AdSize(width, height))
                     }
 
                     override fun failure(error: PbFindSizeError) {
-                        Log.d("MyTag", "error: $error")
+                        Log.e("DemoActivity", "error: $error")
                     }
                 })
 
             }
-        })
+        }
 
-        dfpAdView.setAdSizes(AdSize(width, height))
-        adFrame.addView(dfpAdView)
+        adView.setAdSizes(AdSize(width, height))
+        adWrapper.addView(adView)
+
         val builder = AdManagerAdRequest.Builder()
-
-        //region PrebidMobile Mobile API 1.0 usage
-        val millis = intent.getIntExtra(Constants.AUTO_REFRESH_NAME, 0)
-        adUnit!!.setAutoRefreshPeriodMillis(millis)
-        adUnit!!.fetchDemand(builder, object : OnCompleteListener {
-            override fun onComplete(resultCode: ResultCode) {
-                this@DemoActivity.resultCode = resultCode
-                dfpAdView.loadAd(builder.build())
-                refreshCount++
-            }
-        })
-        //endregion
+        adUnit?.setAutoRefreshPeriodMillis(adRefreshTime ?: 0)
+        adUnit?.fetchDemand(builder) { resultCode ->
+            Log.d("DemoActivity", resultCode.toString())
+            this@DemoActivity.resultCode = resultCode
+            adView.loadAd(builder.build())
+            refreshCount++
+        }
     }
 
-    internal fun createDFPInterstitial() {
-
-        adUnit = InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL)
-        val millis = intent.getIntExtra(Constants.AUTO_REFRESH_NAME, 0)
-        adUnit!!.setAutoRefreshPeriodMillis(millis)
+    private fun createDFPInterstitial() {
         val builder = AdManagerAdRequest.Builder()
         val request = builder.build()
-        adUnit!!.fetchDemand(request, object : OnCompleteListener {
-            override fun onComplete(resultCode: ResultCode) {
-                this@DemoActivity.resultCode = resultCode
+        adUnit = InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL)
+        adUnit?.setAutoRefreshPeriodMillis(adRefreshTime ?: 0)
+        adUnit?.fetchDemand(request) { resultCode ->
+            this@DemoActivity.resultCode = resultCode
 
-                AdManagerInterstitialAd.load(
-                        this@DemoActivity,
-                        "/5300653/pavliuchyk_test_adunit_1x1_puc",
-                        request,
-                        object : AdManagerInterstitialAdLoadCallback() {
-                            override fun onAdLoaded(adManagerInterstitialAd: AdManagerInterstitialAd) {
-                                super.onAdLoaded(adManagerInterstitialAd)
-                                adManagerInterstitialAd.show(this@DemoActivity)
-                            }
+            val adLoadCallback = object : AdManagerInterstitialAdLoadCallback() {
+                override fun onAdLoaded(adManagerInterstitialAd: AdManagerInterstitialAd) {
+                    super.onAdLoaded(adManagerInterstitialAd)
+                    adManagerInterstitialAd.show(this@DemoActivity)
+                }
 
-                            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                                super.onAdFailedToLoad(loadAdError)
+                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                    super.onAdFailedToLoad(loadAdError)
 
-                                val builder: AlertDialog.Builder
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    builder = AlertDialog.Builder(this@DemoActivity, android.R.style.Theme_Material_Dialog_Alert)
-                                } else {
-                                    builder = AlertDialog.Builder(this@DemoActivity)
-                                }
-                                builder.setTitle("Failed to load DFP interstitial ad")
-                                        .setMessage("Error: $loadAdError")
-                                        .setIcon(android.R.drawable.ic_dialog_alert)
-                                        .show()
-                            }
-                        }
-                )
-
-                refreshCount++
+                    val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        AlertDialog.Builder(this@DemoActivity, android.R.style.Theme_Material_Dialog_Alert)
+                    } else {
+                        AlertDialog.Builder(this@DemoActivity)
+                    }
+                    builder.setTitle("Failed to load DFP interstitial ad")
+                        .setMessage("Error: $loadAdError")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show()
+                }
             }
-        })
+            AdManagerInterstitialAd.load(
+                this@DemoActivity,
+                "/5300653/pavliuchyk_test_adunit_1x1_puc",
+                request,
+                adLoadCallback
+            )
+
+            refreshCount++
+        }
 
     }
 
-    internal fun createMoPubBanner(size: String) {
-        val adFrame = findViewById(R.id.adFrame) as FrameLayout
-        adFrame.removeAllViews()
+    private fun createMoPubBanner(size: String) {
+        val adWrapper = binding.frameAdWrapper
+        adWrapper.removeAllViews()
         val wAndH = size.split("x".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         val width = Integer.valueOf(wAndH[0])
         val height = Integer.valueOf(wAndH[1])
         val adView = MoPubView(this)
         if (width == 300 && height == 250) {
-            adView.setAdUnitId(MOPUB_BANNER_ADUNIT_ID_300x250)
+            adView.adUnitId = MOPUB_BANNER_ADUNIT_ID_300x250
             adUnit = BannerAdUnit(Constants.PBS_CONFIG_ID_300x250, 300, 250)
         } else {
-            adView.setAdUnitId(MOPUB_BANNER_ADUNIT_ID_320x50)
+            adView.adUnitId = MOPUB_BANNER_ADUNIT_ID_320x50
             adUnit = BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, 320, 50)
         }
-        adView.setMinimumWidth(width)
-        adView.setMinimumHeight(height)
-        adFrame.addView(adView)
+        adView.minimumWidth = width
+        adView.minimumHeight = height
+        adWrapper.addView(adView)
 
-        adUnit!!.setAutoRefreshPeriodMillis(intent.getIntExtra(Constants.AUTO_REFRESH_NAME, 0))
-        adUnit!!.fetchDemand(adView, object : OnCompleteListener {
-            override fun onComplete(resultCode: ResultCode) {
-                this@DemoActivity.resultCode = resultCode
-                adView.loadAd()
-                refreshCount++
-            }
-        })
+        adUnit?.setAutoRefreshPeriodMillis(intent.getIntExtra(Constants.AUTO_REFRESH_NAME, 0))
+        adUnit?.fetchDemand(adView) { resultCode ->
+            this@DemoActivity.resultCode = resultCode
+            adView.loadAd()
+            refreshCount++
+        }
     }
 
-    internal fun createMoPubInterstitial() {
+    private fun createMoPubInterstitial() {
         val interstitial = MoPubInterstitial(this, Constants.MOPUB_INTERSTITIAL_ADUNIT_ID)
-        interstitial.setInterstitialAdListener(object : MoPubInterstitial.InterstitialAdListener {
+        interstitial.interstitialAdListener = object : MoPubInterstitial.InterstitialAdListener {
             override fun onInterstitialLoaded(interstitial: MoPubInterstitial) {
                 interstitial.show()
             }
 
             override fun onInterstitialFailed(interstitial: MoPubInterstitial, errorCode: MoPubErrorCode) {
-                val builder: AlertDialog.Builder
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder = AlertDialog.Builder(this@DemoActivity, android.R.style.Theme_Material_Dialog_Alert)
+                val builder: AlertDialog.Builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    AlertDialog.Builder(this@DemoActivity, android.R.style.Theme_Material_Dialog_Alert)
                 } else {
-                    builder = AlertDialog.Builder(this@DemoActivity)
+                    AlertDialog.Builder(this@DemoActivity)
                 }
                 builder.setTitle("Failed to load MoPub interstitial ad")
-                        .setMessage("Error code: " + errorCode.toString())
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show()
+                    .setMessage("Error code: $errorCode")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show()
             }
 
-            override fun onInterstitialShown(interstitial: MoPubInterstitial) {
-
-            }
-
-            override fun onInterstitialClicked(interstitial: MoPubInterstitial) {
-
-            }
-
-            override fun onInterstitialDismissed(interstitial: MoPubInterstitial) {
-
-            }
-        })
+            override fun onInterstitialShown(interstitial: MoPubInterstitial) {}
+            override fun onInterstitialClicked(interstitial: MoPubInterstitial) {}
+            override fun onInterstitialDismissed(interstitial: MoPubInterstitial) {}
+        }
         adUnit = InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL)
         val millis = intent.getIntExtra(Constants.AUTO_REFRESH_NAME, 0)
-        adUnit!!.setAutoRefreshPeriodMillis(millis)
-        adUnit!!.fetchDemand(interstitial, object : OnCompleteListener {
-            override fun onComplete(resultCode: ResultCode) {
-                this@DemoActivity.resultCode = resultCode
-                interstitial.load()
-                refreshCount++
-            }
-        })
+        adUnit?.setAutoRefreshPeriodMillis(millis)
+        adUnit?.fetchDemand(interstitial) { resultCode ->
+            this@DemoActivity.resultCode = resultCode
+            interstitial.load()
+            refreshCount++
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         if (adUnit != null) {
-            adUnit!!.stopAutoRefresh()
+            adUnit?.stopAutoRefresh()
             adUnit = null
         }
     }
 
-    internal fun stopAutoRefresh() {
-        if (adUnit != null) {
-            adUnit!!.stopAutoRefresh()
-        }
-    }
 }
