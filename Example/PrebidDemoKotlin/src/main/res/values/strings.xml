@@ -7,14 +7,14 @@
     </string-array>
     <string name="adServerText">Ad Server</string>
     <string-array name="adServerArray">
+        <item>In-App</item>
         <item>DFP</item>
         <item>MoPub</item>
-        <item>PrebidRendering</item>
     </string-array>
     <string name="adSizeText">Ad Size</string>
     <string-array name="adSizeArray">
-        <item>300x250</item>
         <item>320x50</item>
+        <item>300x250</item>
     </string-array>
     <string name="buttonText">Show Ad</string>
     <string name="autoRefreshText">Refresh Millis</string>

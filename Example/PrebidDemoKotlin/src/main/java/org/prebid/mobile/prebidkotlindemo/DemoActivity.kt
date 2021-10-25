@@ -21,6 +21,7 @@ import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.preference.PreferenceManager
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
@@ -37,8 +38,16 @@ import org.prebid.mobile.addendum.PbFindSizeError
 import org.prebid.mobile.prebidkotlindemo.Constants.MOPUB_BANNER_ADUNIT_ID_300x250
 import org.prebid.mobile.prebidkotlindemo.Constants.MOPUB_BANNER_ADUNIT_ID_320x50
 import org.prebid.mobile.prebidkotlindemo.databinding.ActivityDemoBinding
+import org.prebid.mobile.rendering.bidding.listeners.BannerViewListener
+import org.prebid.mobile.rendering.bidding.parallel.BannerView
+import org.prebid.mobile.rendering.errors.AdException
+import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 
 class DemoActivity : AppCompatActivity() {
+
+    companion object {
+        const val TAG = "DemoActivity"
+    }
 
     private var refreshCount: Int = 0
     private var adUnit: AdUnit? = null
@@ -57,6 +66,14 @@ class DemoActivity : AppCompatActivity() {
 
         parseArguments()
         createBanner()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (adUnit != null) {
+            adUnit?.stopAutoRefresh()
+            adUnit = null
+        }
     }
 
     private fun parseArguments() {
@@ -86,6 +103,12 @@ class DemoActivity : AppCompatActivity() {
             adServerName == "MoPub" && adTypeName == "Interstitial" -> {
                 createMoPubInterstitial()
             }
+            adServerName == "In-App" -> {
+                createInAppRenderingBanner()
+            }
+            else -> {
+                Log.e(TAG, "Can't create MoPubBanner")
+            }
         }
     }
 
@@ -94,14 +117,7 @@ class DemoActivity : AppCompatActivity() {
         adWrapper.removeAllViews()
 
         val adView = AdManagerAdView(this)
-        val wAndH = adSizeName?.split("x".toRegex())?.dropLastWhile { it.isEmpty() }?.toTypedArray() ?: emptyArray()
-        var width = 0
-        var height = 0
-        try {
-            width = Integer.valueOf(wAndH[0])
-            height = Integer.valueOf(wAndH[1])
-        } catch (exception: Exception) {}
-
+        val (width, height) = parseSizes()
         if (width == 300 && height == 250) {
             adView.adUnitId = Constants.DFP_BANNER_ADUNIT_ID_ALL_SIZES
             adUnit = BannerAdUnit(Constants.PBS_CONFIG_ID_300x250, width, height)
@@ -124,7 +140,7 @@ class DemoActivity : AppCompatActivity() {
                     }
 
                     override fun failure(error: PbFindSizeError) {
-                        Log.e("DemoActivity", "error: $error")
+                        Log.e(TAG, "error: $error")
                     }
                 })
 
@@ -137,7 +153,7 @@ class DemoActivity : AppCompatActivity() {
         val builder = AdManagerAdRequest.Builder()
         adUnit?.setAutoRefreshPeriodMillis(adRefreshTime ?: 0)
         adUnit?.fetchDemand(builder) { resultCode ->
-            Log.d("DemoActivity", resultCode.toString())
+            Log.d(TAG, resultCode.toString())
             this@DemoActivity.resultCode = resultCode
             adView.loadAd(builder.build())
             refreshCount++
@@ -181,15 +197,13 @@ class DemoActivity : AppCompatActivity() {
 
             refreshCount++
         }
-
     }
 
     private fun createMoPubBanner(size: String) {
         val adWrapper = binding.frameAdWrapper
         adWrapper.removeAllViews()
-        val wAndH = size.split("x".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val width = Integer.valueOf(wAndH[0])
-        val height = Integer.valueOf(wAndH[1])
+
+        val (width, height) = parseSizes()
         val adView = MoPubView(this)
         if (width == 300 && height == 250) {
             adView.adUnitId = MOPUB_BANNER_ADUNIT_ID_300x250
@@ -243,12 +257,65 @@ class DemoActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (adUnit != null) {
-            adUnit?.stopAutoRefresh()
-            adUnit = null
+    private fun createInAppRenderingBanner() {
+        val host = org.prebid.mobile.rendering.bidding.enums.Host.CUSTOM
+        host.hostUrl = "https://prebid.openx.net/openrtb2/auction"
+        PrebidRenderingSettings.setBidServerHost(host)
+        PrebidRenderingSettings.setAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
+
+        // Using fake GDPR
+        PreferenceManager.getDefaultSharedPreferences(this).edit().apply {
+            putInt("IABTCF_gdprApplies", 0)
+            putInt("IABTCF_CmpSdkID", 123)
+            apply()
         }
+
+        val adWrapper = binding.frameAdWrapper
+        adWrapper.removeAllViews()
+
+        val (width, height) = parseSizes()
+        val adView = BannerView(
+            this,
+            "50699c03-0910-477c-b4a4-911dbe2b9d42",
+            org.prebid.mobile.rendering.bidding.data.AdSize(width, height)
+        )
+        adView.setAutoRefreshDelay(adRefreshTime ?: 0)
+        adWrapper.addView(adView)
+        adView.setBannerListener(object : BannerViewListener {
+            override fun onAdLoaded(bannerView: BannerView?) {
+                Log.d(TAG, "On ad loaded!")
+            }
+
+            override fun onAdDisplayed(bannerView: BannerView?) {
+                Log.d(TAG, "On ad displayed!")
+            }
+
+            override fun onAdFailed(bannerView: BannerView?, exception: AdException?) {
+                Log.d(TAG, "On ad failed!")
+            }
+
+            override fun onAdClicked(bannerView: BannerView?) {
+                Log.d(TAG, "On ad clicked!")
+            }
+
+            override fun onAdClosed(bannerView: BannerView?) {
+                Log.d(TAG, "On ad closed!")
+            }
+        })
+
+        adView.loadAd()
+    }
+
+    private fun parseSizes(): List<Int> {
+        val wAndH = adSizeName?.split("x".toRegex())?.dropLastWhile { it.isEmpty() }?.toTypedArray() ?: emptyArray()
+        var width = 0
+        var height = 0
+        try {
+            width = Integer.valueOf(wAndH[0])
+            height = Integer.valueOf(wAndH[1])
+        } catch (exception: Exception) {
+        }
+        return listOf(width, height)
     }
 
 }
