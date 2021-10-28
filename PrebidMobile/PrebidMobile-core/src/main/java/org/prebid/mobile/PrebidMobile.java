@@ -85,6 +85,8 @@ public class PrebidMobile {
     }
 
     private static List<ExternalUserId> externalUserIds = new ArrayList<>();
+
+    private static boolean assignNativeAssetID = false;
     /**
      * List containing objects that hold External UserId parameters for the current application user.
      * @param externalUserIds
@@ -147,5 +149,13 @@ public class PrebidMobile {
 
     public static void setPbsDebug(boolean pbsDebug) {
         PrebidMobile.pbsDebug = pbsDebug;
+    }
+
+    public static boolean shouldAssignNativeAssetID() {
+        return assignNativeAssetID;
+    }
+
+    public static void assignNativeAssetID(boolean assignNativeAssetID) {
+        PrebidMobile.assignNativeAssetID = assignNativeAssetID;
     }
 }
