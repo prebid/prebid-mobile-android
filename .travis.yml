@@ -33,4 +33,4 @@ before_install:
 script:
   - "./scripts/buildPrebidMobile.sh"
   - "./scripts/testPrebidMobile.sh"
-  - "./scripts/testPrebidDemo.sh"
+#  - "./scripts/testPrebidDemo.sh"
