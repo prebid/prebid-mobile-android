@@ -18,6 +18,7 @@ package org.prebid.mobile.rendering.networking;
 
 import androidx.test.filters.Suppress;
 
+import org.hamcrest.MatcherAssert;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -35,6 +36,7 @@ import okhttp3.mockwebserver.MockWebServer;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.prebid.mobile.rendering.networking.BaseNetworkTask.REDIRECT_TASK;
 
 @RunWith(RobolectricTestRunner.class)
@@ -184,7 +186,6 @@ public class BaseNetworkTaskTest {
         Assert.assertEquals(false, sSuccess);
     }
 
-    @Ignore
     @Test
     public void test404ExceptionError() throws IOException {
         mServer.enqueue(new MockResponse().setResponseCode(404).setBody("404 not found"));
@@ -198,8 +199,8 @@ public class BaseNetworkTaskTest {
             e.printStackTrace();
         }
 
-        Assert.assertEquals("404", mException.getLocalizedMessage());
-        Assert.assertEquals(false, sSuccess);
+        MatcherAssert.assertThat(mException.getLocalizedMessage(), containsString("404"));
+        Assert.assertFalse(sSuccess);
     }
 
     @Test

@@ -19,3 +19,4 @@ echoX "clean previous build"
 
 echoX "start unit tests"
 ./gradlew PrebidMobile:testDebugUnitTest
+./gradlew PrebidMobile-rendering:testDebugUnitTest
