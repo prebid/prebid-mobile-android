@@ -151,10 +151,17 @@ public class PrebidMobile {
         PrebidMobile.pbsDebug = pbsDebug;
     }
 
+    /**
+     * @return boolean that states if the ID will be set to the Asset array (in the Native Ad Request)
+     * This value can be set using the {@link #assignNativeAssetID(boolean)}
+     * */
     public static boolean shouldAssignNativeAssetID() {
         return assignNativeAssetID;
     }
 
+    /**
+     * For assigning ID to the Assets in the Asset array (in Native Ad Request)
+     * */
     public static void assignNativeAssetID(boolean assignNativeAssetID) {
         PrebidMobile.assignNativeAssetID = assignNativeAssetID;
     }
