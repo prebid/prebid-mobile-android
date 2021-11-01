@@ -203,7 +203,7 @@ public class DeviceInfoImplTest {
 
         ShadowEnvironment.setExternalStorageState(Environment.MEDIA_MOUNTED);
         when(spyDeviceImpl.getOutPutStreamForQ(anyString(), any(Context.class)))
-            .thenReturn(mock(OutputStream.class));
+            .thenReturn(null);
 
         spyDeviceImpl.storePicture(url);
 
@@ -217,7 +217,7 @@ public class DeviceInfoImplTest {
         String url = "http://test.com/somefile.png";
 
         ShadowEnvironment.setExternalStorageState(Environment.MEDIA_MOUNTED);
-        doReturn(mock(OutputStream.class))
+        doReturn(null)
             .when(spyDeviceImpl).getOutputStreamPreQ(anyString());
 
         spyDeviceImpl.storePicture(url);

@@ -20,111 +20,117 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import android.text.TextUtils
 import android.view.View
 import android.webkit.WebView
 import android.widget.*
-import java.util.*
+import androidx.annotation.ArrayRes
+import androidx.databinding.DataBindingUtil
+import org.prebid.mobile.prebidkotlindemo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    // Default values
     private var adType = "Banner"
     private var adServer = "DFP"
     private var adSize = "300x250"
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(true)
         }
-        // Get all the components
-        val adTypeSpinner = findViewById(R.id.adTypeSpinner) as Spinner
-        // Ad Type Spinner set up
-        val adTypeAdapter = ArrayAdapter.createFromResource(
-            this, R.array.adTypeArray,
-            android.R.layout.simple_spinner_item
-        )
-        adTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        adTypeSpinner.adapter = adTypeAdapter
-        adTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            internal var adTypes = Arrays.asList(*resources.getStringArray(R.array.adTypeArray))
 
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, pos: Int, l: Long) {
-                if (pos > adTypes.size) {
-                    return
-                }
-                adType = adTypes[pos]
-                if (adType == "Banner") {
-                    // show size and refresh millis
-                    val adSizeRow = findViewById(R.id.adSizeRow) as LinearLayout
-                    adSizeRow.visibility = View.VISIBLE
-                } else {
-                    // hide size selection and refresh millis
-                    val adSizeRow = findViewById(R.id.adSizeRow) as LinearLayout
-                    adSizeRow.visibility = View.GONE
-                }
-            }
+        initAdTypeSpinner()
+        initAdServerSpinner()
+        initAdSizeSpinner()
 
-            override fun onNothingSelected(adapterView: AdapterView<*>) {}
+        binding.btnShowAd.setOnClickListener {
+            showAd()
         }
-        // Ad Server Spinner
-        val adServerSpinner = findViewById(R.id.adServerSpinner) as Spinner
-        val adServerAdapter = ArrayAdapter.createFromResource(
-            this, R.array.adServerArray,
-            android.R.layout.simple_spinner_item
-        )
-        adServerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        adServerSpinner.adapter = adServerAdapter
-        adServerSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            internal var adServers = Arrays.asList(*resources.getStringArray(R.array.adServerArray))
+    }
 
-            override fun onItemSelected(adapterView: AdapterView<*>, view: View, pos: Int, l: Long) {
-                if (pos > adServers.size) {
-                    return
-                }
-                adServer = adServers[pos]
+    private fun showAd() {
+        val refreshTime = getRefreshTime()
+        val intent = Intent(this, DemoActivity::class.java).apply {
+            putExtra(Constants.AD_SERVER_NAME, adServer)
+            putExtra(Constants.AD_TYPE_NAME, adType)
+            if (adType == "Banner") {
+                putExtra(Constants.AD_SIZE_NAME, adSize)
             }
-
-            override fun onNothingSelected(adapterView: AdapterView<*>) {}
+            if (refreshTime != null) {
+                putExtra(Constants.AUTO_REFRESH_NAME, refreshTime)
+            }
         }
-        // Ad Size Spinner
-        val adSizeSpinner = findViewById(R.id.adSizeSpinner) as Spinner
-        val adSizeAdapter = ArrayAdapter.createFromResource(
-            this, R.array.adSizeArray,
+        startActivity(intent)
+    }
+
+    private fun getRefreshTime(): Int? {
+        val refreshTimeString = binding.etAutoRefreshTime.text.toString()
+        return try {
+            Integer.valueOf(refreshTimeString)
+        } catch (exception: Exception) {
+            null
+        }
+    }
+
+    private fun initAdTypeSpinner() {
+        val spinner = binding.spinnerAdType
+        initSpinner(spinner, R.array.adTypeArray) {
+            adType = it
+            if (adType == "Banner") {
+                showSizeSpinner()
+            } else {
+                hideSizeSpinner()
+            }
+        }
+    }
+
+    private fun initAdServerSpinner() {
+        val spinner = binding.spinnerAdServer
+        initSpinner(spinner, R.array.adServerArray) {
+            adServer = it
+        }
+    }
+
+    private fun initAdSizeSpinner() {
+        val spinner = binding.spinnerAdSize
+        initSpinner(spinner, R.array.adSizeArray) {
+            adSize = it
+        }
+    }
+
+    private fun initSpinner(spinner: Spinner, @ArrayRes arrayResId: Int, onNewItemSelected: (String) -> Unit) {
+        val adapter = ArrayAdapter.createFromResource(
+            this, arrayResId,
             android.R.layout.simple_spinner_item
         )
-        adSizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        adSizeSpinner.adapter = adSizeAdapter
-        adSizeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            internal var adSizes = Arrays.asList(*resources.getStringArray(R.array.adSizeArray))
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = adapter
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            var array = listOf(*resources.getStringArray(arrayResId))
 
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, pos: Int, l: Long) {
-                if (pos > adSizes.size) {
+                if (pos > array.size) {
                     return
                 }
-                adSize = adSizes[pos]
+                onNewItemSelected(array[pos])
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>) {}
         }
     }
 
-    fun showAd(view: View) {
-        val demoActivityIntent = Intent(this, DemoActivity::class.java)
-        demoActivityIntent.putExtra(Constants.AD_SERVER_NAME, adServer)
-        demoActivityIntent.putExtra(Constants.AD_TYPE_NAME, adType)
-        if (adType == "Banner") {
-            demoActivityIntent.putExtra(Constants.AD_SIZE_NAME, adSize)
-        }
-        val autoRefreshMillis = findViewById(R.id.autoRefreshInput) as EditText
-        val refreshMillisString = autoRefreshMillis.text.toString()
-        if (!TextUtils.isEmpty(refreshMillisString)) {
-            val refreshMillis = Integer.valueOf(refreshMillisString)
-            demoActivityIntent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis)
-        }
-        startActivity(demoActivityIntent)
+    private fun showSizeSpinner() {
+        val adSizeRow = binding.adSizeRow
+        adSizeRow.visibility = View.VISIBLE
+    }
+
+    private fun hideSizeSpinner() {
+        val adSizeRow = binding.adSizeRow
+        adSizeRow.visibility = View.GONE
     }
 }
 

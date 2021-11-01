@@ -27,6 +27,9 @@ android {
             minifyEnabled false
         }
     }
+    defaultConfig {
+        consumerProguardFiles file('proguard-rules.pro')
+    }
 }
 
 dependencies {

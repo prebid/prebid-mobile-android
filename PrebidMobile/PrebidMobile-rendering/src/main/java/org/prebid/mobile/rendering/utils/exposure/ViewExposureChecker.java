@@ -362,8 +362,10 @@ public class ViewExposureChecker {
                                     : null;
         final Drawable background = child.getBackground();
 
-        final boolean isForegroundTransparent = foreground == null
-                                                || foreground.getAlpha() == 0;
+        boolean isForegroundTransparent = true;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+            isForegroundTransparent = foreground == null || foreground.getAlpha() == 0;
+        }
 
         final boolean isBackgroundTransparent = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
                                                 && (background == null || background.getAlpha() == 0);

@@ -34,6 +34,7 @@ allprojects {
     repositories {
 //        mavenLocal()
         google()
+        mavenCentral()
         jcenter() // includes the MoPub SDK and AVID library
 //        maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
         maven { url 'https://maven.google.com' } // necessary for Android API 26

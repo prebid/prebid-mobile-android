@@ -133,6 +133,9 @@ public class BaseNetworkTask
     }
 
     public GetUrlResult sendRequest(GetUrlParams param) throws Exception {
+        if (param.url.isEmpty()) {
+            LogUtil.error(TAG, "url is empty. Set url in PrebidMobile (PrebidRenderingSettings).");
+        }
         LogUtil.debug(TAG, "url: " + param.url);
         LogUtil.debug(TAG, "queryParams: " + param.queryParams);
 
