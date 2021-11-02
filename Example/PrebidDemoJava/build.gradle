@@ -55,7 +55,7 @@ project.gradle.taskGraph.whenReady {
 
 //repositories{
 //    maven {
-//        url 'https://oss.sonatype.org/content/repositories/orgprebid-1058'
+//        url 'https://oss.sonatype.org/content/repositories/orgprebid-1059'
 //    }
 //}
 
@@ -65,8 +65,8 @@ dependencies {
     implementation project(':PrebidMobile')
 
 //    Maven
-//    implementation 'org.prebid:prebid-mobile-sdk:1.12'
-//    implementation 'org.prebid:prebid-mobile-sdk-core:1.12'
+//    implementation 'org.prebid:prebid-mobile-sdk:1.12.1'
+//    implementation 'org.prebid:prebid-mobile-sdk-core:1.12.1'
 
 //    LocalMaven .aar
 //    implementation 'org.prebid:prebid-mobile-sdk:+'
