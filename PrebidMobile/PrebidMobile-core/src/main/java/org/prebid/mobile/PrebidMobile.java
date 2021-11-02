@@ -85,6 +85,8 @@ public class PrebidMobile {
     }
 
     private static List<ExternalUserId> externalUserIds = new ArrayList<>();
+
+    private static boolean assignNativeAssetID = false;
     /**
      * List containing objects that hold External UserId parameters for the current application user.
      * @param externalUserIds
@@ -147,5 +149,20 @@ public class PrebidMobile {
 
     public static void setPbsDebug(boolean pbsDebug) {
         PrebidMobile.pbsDebug = pbsDebug;
+    }
+
+    /**
+     * @return boolean that states if the ID will be set to the Asset array (in the Native Ad Request)
+     * This value can be set using the {@link #assignNativeAssetID(boolean)}
+     * */
+    public static boolean shouldAssignNativeAssetID() {
+        return assignNativeAssetID;
+    }
+
+    /**
+     * For assigning ID to the Assets in the Asset array (in Native Ad Request)
+     * */
+    public static void assignNativeAssetID(boolean assignNativeAssetID) {
+        PrebidMobile.assignNativeAssetID = assignNativeAssetID;
     }
 }
