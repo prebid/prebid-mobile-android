@@ -35,6 +35,7 @@ import com.mopub.mobileads.MoPubView
 import org.prebid.mobile.*
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
+import org.prebid.mobile.eventhandlers.GamBannerEventHandler
 import org.prebid.mobile.prebidkotlindemo.Constants.MOPUB_BANNER_ADUNIT_ID_300x250
 import org.prebid.mobile.prebidkotlindemo.Constants.MOPUB_BANNER_ADUNIT_ID_320x50
 import org.prebid.mobile.prebidkotlindemo.databinding.ActivityDemoBinding
@@ -90,11 +91,11 @@ class DemoActivity : AppCompatActivity() {
 
     private fun createBanner() {
         when {
-            adServerName == "DFP" && adTypeName == "Banner" -> {
-                createDFPBanner()
+            adServerName == "Google Ad Manager" && adTypeName == "Banner" -> {
+                createGamBanner()
             }
-            adServerName == "DFP" && adTypeName == "Interstitial" -> {
-                createDFPInterstitial()
+            adServerName == "Google Ad Manager" && adTypeName == "Interstitial" -> {
+                createGamInterstitial()
             }
             adServerName == "MoPub" && adTypeName == "Banner" -> {
                 val size = intent.getStringExtra(Constants.AD_SIZE_NAME) ?: ""
@@ -104,7 +105,10 @@ class DemoActivity : AppCompatActivity() {
                 createMoPubInterstitial()
             }
             adServerName == "In-App" -> {
-                createInAppRenderingBanner()
+                createInAppBanner()
+            }
+            adServerName == "In-App + Gam" -> {
+                createInAppGamBanner()
             }
             else -> {
                 Log.e(TAG, "Can't create MoPubBanner")
@@ -112,7 +116,7 @@ class DemoActivity : AppCompatActivity() {
         }
     }
 
-    private fun createDFPBanner() {
+    private fun createGamBanner() {
         val adWrapper = binding.frameAdWrapper
         adWrapper.removeAllViews()
 
@@ -160,7 +164,7 @@ class DemoActivity : AppCompatActivity() {
         }
     }
 
-    private fun createDFPInterstitial() {
+    private fun createGamInterstitial() {
         val builder = AdManagerAdRequest.Builder()
         val request = builder.build()
         adUnit = InterstitialAdUnit(Constants.PBS_CONFIG_ID_INTERSTITIAL)
@@ -205,12 +209,12 @@ class DemoActivity : AppCompatActivity() {
 
         val (width, height) = parseSizes()
         val adView = MoPubView(this)
-        if (width == 300 && height == 250) {
-            adView.adUnitId = MOPUB_BANNER_ADUNIT_ID_300x250
-            adUnit = BannerAdUnit(Constants.PBS_CONFIG_ID_300x250, 300, 250)
+        adUnit = if (width == 300 && height == 250) {
+            adView.setAdUnitId(MOPUB_BANNER_ADUNIT_ID_300x250)
+            BannerAdUnit(Constants.PBS_CONFIG_ID_300x250, 300, 250)
         } else {
-            adView.adUnitId = MOPUB_BANNER_ADUNIT_ID_320x50
-            adUnit = BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, 320, 50)
+            adView.setAdUnitId(MOPUB_BANNER_ADUNIT_ID_320x50)
+            BannerAdUnit(Constants.PBS_CONFIG_ID_320x50, 320, 50)
         }
         adView.minimumWidth = width
         adView.minimumHeight = height
@@ -257,18 +261,13 @@ class DemoActivity : AppCompatActivity() {
         }
     }
 
-    private fun createInAppRenderingBanner() {
+    private fun createInAppBanner() {
         val host = org.prebid.mobile.rendering.bidding.enums.Host.CUSTOM
         host.hostUrl = "https://prebid.openx.net/openrtb2/auction"
         PrebidRenderingSettings.setBidServerHost(host)
         PrebidRenderingSettings.setAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
 
-        // Using fake GDPR
-        PreferenceManager.getDefaultSharedPreferences(this).edit().apply {
-            putInt("IABTCF_gdprApplies", 0)
-            putInt("IABTCF_CmpSdkID", 123)
-            apply()
-        }
+        useFakeGDPR()
 
         val adWrapper = binding.frameAdWrapper
         adWrapper.removeAllViews()
@@ -278,30 +277,56 @@ class DemoActivity : AppCompatActivity() {
             this,
             "50699c03-0910-477c-b4a4-911dbe2b9d42",
             org.prebid.mobile.rendering.bidding.data.AdSize(width, height)
-        )
-        adView.setAutoRefreshDelay(adRefreshTime ?: 0)
+        ).apply {
+            setAutoRefreshDelay(adRefreshTime ?: 0)
+            setBannerListener(object : BannerViewListener {
+                override fun onAdLoaded(bannerView: BannerView?) {
+                    Log.d(TAG, "On ad loaded!")
+                }
+
+                override fun onAdDisplayed(bannerView: BannerView?) {
+                    Log.d(TAG, "On ad displayed!")
+                }
+
+                override fun onAdFailed(bannerView: BannerView?, exception: AdException?) {
+                    Log.d(TAG, "On ad failed!")
+                }
+
+                override fun onAdClicked(bannerView: BannerView?) {
+                    Log.d(TAG, "On ad clicked!")
+                }
+
+                override fun onAdClosed(bannerView: BannerView?) {
+                    Log.d(TAG, "On ad closed!")
+                }
+            })
+        }
+
         adWrapper.addView(adView)
-        adView.setBannerListener(object : BannerViewListener {
-            override fun onAdLoaded(bannerView: BannerView?) {
-                Log.d(TAG, "On ad loaded!")
-            }
+        adView.loadAd()
+    }
 
-            override fun onAdDisplayed(bannerView: BannerView?) {
-                Log.d(TAG, "On ad displayed!")
-            }
+    private fun createInAppGamBanner() {
+        val host = org.prebid.mobile.rendering.bidding.enums.Host.CUSTOM
+        host.hostUrl = "https://prebid.openx.net/openrtb2/auction"
+        PrebidRenderingSettings.setBidServerHost(host)
+        PrebidRenderingSettings.setAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
 
-            override fun onAdFailed(bannerView: BannerView?, exception: AdException?) {
-                Log.d(TAG, "On ad failed!")
-            }
+        useFakeGDPR()
 
-            override fun onAdClicked(bannerView: BannerView?) {
-                Log.d(TAG, "On ad clicked!")
-            }
+        val adWrapper = binding.frameAdWrapper
+        adWrapper.removeAllViews()
 
-            override fun onAdClosed(bannerView: BannerView?) {
-                Log.d(TAG, "On ad closed!")
-            }
-        })
+        val adSize = org.prebid.mobile.rendering.bidding.data.AdSize(320, 50)
+        val configId = "50699c03-0910-477c-b4a4-911dbe2b9d42"
+        val adUnitId = "/21808260008/prebid_oxb_320x50_banner"
+        val eventHandler = GamBannerEventHandler(this, adUnitId, adSize)
+
+        val adView = BannerView(this, configId, eventHandler).apply {
+            setAutoRefreshDelay(adRefreshTime ?: 0)
+        }
+
+        adWrapper.addView(adView)
 
         adView.loadAd()
     }
@@ -316,6 +341,15 @@ class DemoActivity : AppCompatActivity() {
         } catch (exception: Exception) {
         }
         return listOf(width, height)
+    }
+
+    private fun useFakeGDPR() {
+        // Only for test cases!!!
+        PreferenceManager.getDefaultSharedPreferences(this).edit().apply {
+            putInt("IABTCF_gdprApplies", 0)
+            putInt("IABTCF_CmpSdkID", 123)
+            apply()
+        }
     }
 
 }
