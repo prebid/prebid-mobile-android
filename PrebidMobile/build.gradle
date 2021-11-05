@@ -50,7 +50,7 @@ dependencies {
     // Ad test dependencies
     testImplementation 'org.apache.commons:commons-lang3:3.7'
     testImplementation 'com.google.android.gms:play-services-ads:20.0.0'
-    testImplementation('com.mopub:mopub-sdk:5.4.1@aar') {
+    testImplementation('com.mopub:mopub-sdk:5.17.0@aar') {
         transitive = true
         exclude module: 'libAvid-mopub' // To exclude AVID
         exclude module: 'moat-mobile-app-kit' // To exclude Moat

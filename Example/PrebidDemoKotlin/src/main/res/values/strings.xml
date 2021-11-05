@@ -7,9 +7,10 @@
     </string-array>
     <string name="adServerText">Ad Server</string>
     <string-array name="adServerArray">
-        <item>In-App</item>
-        <item>DFP</item>
+        <item>Google Ad Manager</item>
         <item>MoPub</item>
+        <item>In-App</item>
+        <item>In-App + Gam</item>
     </string-array>
     <string name="adSizeText">Ad Size</string>
     <string-array name="adSizeArray">

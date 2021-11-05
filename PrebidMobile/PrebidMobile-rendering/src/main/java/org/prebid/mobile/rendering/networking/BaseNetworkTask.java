@@ -186,6 +186,8 @@ public class BaseNetworkTask
             while ((charsRead = reader.read(buffer, 0, buffer.length)) > 0) {
                 response.append(buffer, 0, charsRead);
             }
+        } catch (Exception exception) {
+            LogUtil.error(TAG, "Exception in readResponse(): " + exception.getMessage());
         }
 
         return response.toString();

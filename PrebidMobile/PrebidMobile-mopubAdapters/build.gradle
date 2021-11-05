@@ -41,12 +41,11 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':PrebidMobile')
 
-    api('com.mopub:mopub-sdk:5.16.4@aar') {
+    api('com.mopub:mopub-sdk:5.17.0@aar') {
         transitive = true
     }
-    api project(path: ':PrebidMobile-rendering')
 
     testImplementation 'org.robolectric:robolectric:4.5.1'
     testImplementation 'junit:junit:4.13.2'

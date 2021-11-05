@@ -38,10 +38,8 @@ class CustomApplication : Application() {
     }
 
     private fun initMopubSDK() {
-        val networksToInit = ArrayList<String>()
-        networksToInit.add("com.mopub.mobileads.VungleRewardedVideo")
         val sdkConfiguration = SdkConfiguration.Builder("a935eac11acd416f92640411234fbba6")
-            .withNetworksToInit(networksToInit)
+            .withAdditionalNetwork("com.mopub.mobileads.VungleRewardedVideo")
             .build()
         MoPub.initializeSdk(this, sdkConfiguration, null)
     }
