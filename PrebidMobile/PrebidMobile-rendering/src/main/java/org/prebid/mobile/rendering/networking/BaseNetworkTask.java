@@ -180,14 +180,20 @@ public class BaseNetworkTask
         }
 
         StringBuilder response = new StringBuilder();
+        boolean runAtLeastOnce = false;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             final char[] buffer = new char[1024];
             int charsRead;
             while ((charsRead = reader.read(buffer, 0, buffer.length)) > 0) {
+                runAtLeastOnce = true;
                 response.append(buffer, 0, charsRead);
             }
         } catch (Exception exception) {
-            LogUtil.error(TAG, "Exception in readResponse(): " + exception.getMessage());
+            if (runAtLeastOnce) {
+                LogUtil.error(TAG, "Exception in readResponse(): " + exception.getMessage());
+            } else {
+                LogUtil.error(TAG, "Empty response: " + exception.getMessage());
+            }
         }
 
         return response.toString();

@@ -105,10 +105,10 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     // Mock server
-    implementation ('com.squareup.okhttp3:mockwebserver:3.1.0') {
+    implementation ('com.squareup.okhttp3:mockwebserver:4.9.2') {
         exclude group: 'junit'
     }
-    implementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'
 
     // Helper
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -118,11 +118,11 @@ dependencies {
 
     // Android tests
     androidTestImplementation 'com.jayway.android.robotium:robotium-solo:5.5.4'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test:rules:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-web:3.2.0'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test:rules:1.4.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.4.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-web:3.4.0'
     androidTestImplementation 'androidx.annotation:annotation:1.1.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }

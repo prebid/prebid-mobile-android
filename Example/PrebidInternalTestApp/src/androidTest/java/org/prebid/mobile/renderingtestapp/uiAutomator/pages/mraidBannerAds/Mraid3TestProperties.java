@@ -104,8 +104,11 @@ public class Mraid3TestProperties extends MraidBasicPage {
     }
 
     public Mraid3TestProperties turnVolumeDown() {
+        int counter = 0;
         while (getVolumeLevel() != 0) {
             volumeDown();
+            counter++;
+            if (counter > 10) break;
         }
         return this;
     }
