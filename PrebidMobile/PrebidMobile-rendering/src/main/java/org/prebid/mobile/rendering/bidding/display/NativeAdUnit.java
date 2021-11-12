@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class NativeAdUnit extends BaseAdUnit {
+class NativeAdUnit extends BaseAdUnit {
     private static final String TAG = NativeAdUnit.class.getSimpleName();
 
     private OnNativeFetchCompleteListener mNativeFetchCompleteListener;

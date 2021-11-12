@@ -134,41 +134,42 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@+id/headerBiddingFragment" />
 
-        <action
-            android:id="@+id/action_header_bidding_to_in_app_native_links"
-            app:destination="@id/navigation_in_app_native_links"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/headerBiddingFragment" />
+<!--        TODO: Uncomment when native module will be merged-->
+<!--        <action-->
+<!--            android:id="@+id/action_header_bidding_to_in_app_native_links"-->
+<!--            app:destination="@id/navigation_in_app_native_links"-->
+<!--            app:enterAnim="@anim/nav_default_enter_anim"-->
+<!--            app:exitAnim="@anim/nav_default_exit_anim"-->
+<!--            app:popEnterAnim="@anim/nav_default_pop_enter_anim"-->
+<!--            app:popExitAnim="@anim/nav_default_pop_exit_anim"-->
+<!--            app:popUpTo="@+id/headerBiddingFragment" />-->
 
-        <action
-            android:id="@+id/action_header_bidding_to_in_app_native_video"
-            app:destination="@id/navigation_in_app_native_video"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/headerBiddingFragment" />
+<!--        <action-->
+<!--            android:id="@+id/action_header_bidding_to_in_app_native_video"-->
+<!--            app:destination="@id/navigation_in_app_native_video"-->
+<!--            app:enterAnim="@anim/nav_default_enter_anim"-->
+<!--            app:exitAnim="@anim/nav_default_exit_anim"-->
+<!--            app:popEnterAnim="@anim/nav_default_pop_enter_anim"-->
+<!--            app:popExitAnim="@anim/nav_default_pop_exit_anim"-->
+<!--            app:popUpTo="@+id/headerBiddingFragment" />-->
 
-        <action
-            android:id="@+id/action_header_bidding_to_in_app_native"
-            app:destination="@id/navigation_in_app_native"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/headerBiddingFragment" />
+<!--        <action-->
+<!--            android:id="@+id/action_header_bidding_to_in_app_native"-->
+<!--            app:destination="@id/navigation_in_app_native"-->
+<!--            app:enterAnim="@anim/nav_default_enter_anim"-->
+<!--            app:exitAnim="@anim/nav_default_exit_anim"-->
+<!--            app:popEnterAnim="@anim/nav_default_pop_enter_anim"-->
+<!--            app:popExitAnim="@anim/nav_default_pop_exit_anim"-->
+<!--            app:popUpTo="@+id/headerBiddingFragment" />-->
 
-        <action
-            android:id="@+id/action_header_bidding_to_in_app_native_feed"
-            app:destination="@id/navigation_in_app_native_feed"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/headerBiddingFragment" />
+<!--        <action-->
+<!--            android:id="@+id/action_header_bidding_to_in_app_native_feed"-->
+<!--            app:destination="@id/navigation_in_app_native_feed"-->
+<!--            app:enterAnim="@anim/nav_default_enter_anim"-->
+<!--            app:exitAnim="@anim/nav_default_exit_anim"-->
+<!--            app:popEnterAnim="@anim/nav_default_pop_enter_anim"-->
+<!--            app:popExitAnim="@anim/nav_default_pop_exit_anim"-->
+<!--            app:popUpTo="@+id/headerBiddingFragment" />-->
 
         <!--GAM actions-->
         <action
@@ -261,23 +262,24 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@+id/headerBiddingFragment" />
 
-        <action
-            android:id="@+id/action_header_bidding_to_gam_native"
-            app:destination="@id/navigation_gam_native"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/headerBiddingFragment" />
+<!--        TODO: Uncomment when native module will be merged-->
+<!--        <action-->
+<!--            android:id="@+id/action_header_bidding_to_gam_native"-->
+<!--            app:destination="@id/navigation_gam_native"-->
+<!--            app:enterAnim="@anim/nav_default_enter_anim"-->
+<!--            app:exitAnim="@anim/nav_default_exit_anim"-->
+<!--            app:popEnterAnim="@anim/nav_default_pop_enter_anim"-->
+<!--            app:popExitAnim="@anim/nav_default_pop_exit_anim"-->
+<!--            app:popUpTo="@+id/headerBiddingFragment" />-->
 
-        <action
-            android:id="@+id/action_header_bidding_to_gam_native_feed"
-            app:destination="@id/navigation_gam_native_feed"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/headerBiddingFragment" />
+<!--        <action-->
+<!--            android:id="@+id/action_header_bidding_to_gam_native_feed"-->
+<!--            app:destination="@id/navigation_gam_native_feed"-->
+<!--            app:enterAnim="@anim/nav_default_enter_anim"-->
+<!--            app:exitAnim="@anim/nav_default_exit_anim"-->
+<!--            app:popEnterAnim="@anim/nav_default_pop_enter_anim"-->
+<!--            app:popExitAnim="@anim/nav_default_pop_exit_anim"-->
+<!--            app:popUpTo="@+id/headerBiddingFragment" />-->
 
         <!--MoPub actions-->
         <action
@@ -425,21 +427,23 @@
         android:id="@+id/navigation_in_app_native_styles_no_assets"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeStylesNoAssetsFragment" />
 
-    <fragment
-        android:id="@+id/navigation_in_app_native"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeFragment" />
 
-    <fragment
-        android:id="@+id/navigation_in_app_native_links"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeLinksFragment" />
+<!--    TODO: Uncomment when native module will be merged-->
+<!--    <fragment-->
+<!--        android:id="@+id/navigation_in_app_native"-->
+<!--        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeFragment" />-->
 
-    <fragment
-        android:id="@+id/navigation_in_app_native_video"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeVideoFragment" />
+<!--    <fragment-->
+<!--        android:id="@+id/navigation_in_app_native_links"-->
+<!--        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeLinksFragment" />-->
 
-    <fragment
-        android:id="@+id/navigation_in_app_native_feed"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeFeedFragment" />
+<!--    <fragment-->
+<!--        android:id="@+id/navigation_in_app_native_video"-->
+<!--        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeVideoFragment" />-->
+
+<!--    <fragment-->
+<!--        android:id="@+id/navigation_in_app_native_feed"-->
+<!--        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeFeedFragment" />-->
 
     <!--GAM fragments-->
     <fragment
@@ -484,13 +488,14 @@
         android:id="@+id/navigation_gam_native_styles_no_assets"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeStylesNoAssetsFragment" />
 
-    <fragment
-        android:id="@+id/navigation_gam_native"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeFragment" />
+<!--    TODO: Uncomment when native module will be merged-->
+<!--    <fragment-->
+<!--        android:id="@+id/navigation_gam_native"-->
+<!--        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeFragment" />-->
 
-    <fragment
-        android:id="@+id/navigation_gam_native_feed"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeFeedFragment" />
+<!--    <fragment-->
+<!--        android:id="@+id/navigation_gam_native_feed"-->
+<!--        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeFeedFragment" />-->
 
     <!--MoPub fragments-->
     <fragment

@@ -57,7 +57,8 @@ public class PpmNativeTests extends BaseUiAutomatorTest {
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdFailed);
     }
 
-    @Test
+    // TODO: Uncomment when native module will be merged
+//    @Test
     public void testPpmNative() {
         homePage.getNativePageFactory()
                 .goToPpmNativeStyles(getStringResource(R.string.demo_bidding_in_app_native))
@@ -75,7 +76,8 @@ public class PpmNativeTests extends BaseUiAutomatorTest {
                 .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.video50Event);
     }
 
-    @Test
+    // TODO: Uncomment when native module will be merged
+//    @Test
     public void testPpmNativeVideo() throws InterruptedException {
         homePage.getNativePageFactory()
                 .goToPpmNative(getStringResource(R.string.demo_bidding_in_app_native_video))
