@@ -95,10 +95,14 @@ public class AdConfiguration {
         return mAutoRefreshDelayInMillis;
     }
 
+    // TODO: Merge Native engine from original SDK and rendering codebase
+    @Deprecated
     public NativeAdConfiguration getNativeAdConfiguration() {
         return mNativeAdConfiguration;
     }
 
+    // TODO: Merge Native engine from original SDK and rendering codebase
+    @Deprecated
     public void setNativeAdConfiguration(NativeAdConfiguration nativeAdConfiguration) {
         mNativeAdConfiguration = nativeAdConfiguration;
     }

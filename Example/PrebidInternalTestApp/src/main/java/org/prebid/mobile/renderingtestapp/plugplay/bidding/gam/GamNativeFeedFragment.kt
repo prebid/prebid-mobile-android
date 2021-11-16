@@ -16,25 +16,26 @@
 
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam
 
-import com.google.android.gms.ads.AdLoader
-import org.prebid.mobile.rendering.bidding.display.NativeAdUnit
-import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseFeedFragment
-import org.prebid.mobile.renderingtestapp.utils.adapters.BaseFeedAdapter
-import org.prebid.mobile.renderingtestapp.utils.adapters.NativeGamFeedAdapter
-
-
-class GamNativeFeedFragment : BaseFeedFragment() {
-    override fun initFeedAdapter(): BaseFeedAdapter {
-        val nativeAdUnit = NativeAdUnit(context, configId, getNativeAdConfig()!!)
-        val customFormatId = arguments?.getString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "") ?: ""
-        val adLoader = createCustomFormatAdLoader(customFormatId)
-
-        return NativeGamFeedAdapter(requireContext(), nativeAdUnit, adLoader)
-    }
-
-    private fun createCustomFormatAdLoader(customFormatId: String) = AdLoader.Builder(requireContext(), adUnitId)
-            .forCustomFormatAd(customFormatId, { formatAd ->
-                (getAdapter() as? NativeGamFeedAdapter)?.handleCustomFormatAd(formatAd)
-            }, null)
-            .build()
-}
+// TODO: Uncomment when native module will be merged
+//import com.google.android.gms.ads.AdLoader
+//import org.prebid.mobile.rendering.bidding.display.NativeAdUnit
+//import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseFeedFragment
+//import org.prebid.mobile.renderingtestapp.utils.adapters.BaseFeedAdapter
+//import org.prebid.mobile.renderingtestapp.utils.adapters.NativeGamFeedAdapter
+//
+//
+//class GamNativeFeedFragment : BaseFeedFragment() {
+//    override fun initFeedAdapter(): BaseFeedAdapter {
+//        val nativeAdUnit = NativeAdUnit(context, configId, getNativeAdConfig()!!)
+//        val customFormatId = arguments?.getString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "") ?: ""
+//        val adLoader = createCustomFormatAdLoader(customFormatId)
+//
+//        return NativeGamFeedAdapter(requireContext(), nativeAdUnit, adLoader)
+//    }
+//
+//    private fun createCustomFormatAdLoader(customFormatId: String) = AdLoader.Builder(requireContext(), adUnitId)
+//            .forCustomFormatAd(customFormatId, { formatAd ->
+//                (getAdapter() as? NativeGamFeedAdapter)?.handleCustomFormatAd(formatAd)
+//            }, null)
+//            .build()
+//}
