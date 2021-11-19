@@ -12,12 +12,21 @@ object MoPubBanner {
 
     private var adUnit: AdUnit? = null
 
-    fun create(wrapper: ViewGroup, autoRefreshTime: Int, width: Int, height: Int, adUnitId: String, configId: String) {
+    fun create(
+        wrapper: ViewGroup,
+        autoRefreshTime: Int,
+        width: Int,
+        height: Int,
+        moPubViewAdSize: MoPubView.MoPubAdSize,
+        adUnitId: String,
+        configId: String
+    ) {
         val adView = MoPubView(wrapper.context)
 
         adView.setAdUnitId(adUnitId)
         adView.minimumWidth = width
         adView.minimumHeight = height
+        adView.adSize = moPubViewAdSize
         wrapper.addView(adView)
 
         adUnit = BannerAdUnit(configId, width, height)

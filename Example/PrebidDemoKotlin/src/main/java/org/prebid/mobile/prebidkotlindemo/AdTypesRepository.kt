@@ -1,5 +1,6 @@
 package org.prebid.mobile.prebidkotlindemo
 
+import com.mopub.mobileads.MoPubView
 import org.prebid.mobile.prebidkotlindemo.ads.GamBanner
 import org.prebid.mobile.prebidkotlindemo.ads.GamInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.MoPubBanner
@@ -19,12 +20,11 @@ object AdTypesRepository {
                 "Banner 320x50",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     GamBanner.create(
-                        wrapper,
-                        autoRefreshTime,
-                        320,
-                        50,
-                        "/19968336/PrebidMobileValidator_Banner_All_Sizes",
-                        "6ace8c7d-88c0-4623-8117-75bc3f0a2e45"
+                        wrapper, autoRefreshTime,
+                        320, 50,
+                        // TODO: Problem with ids
+                        "/5300653/pavliuchyk_test_adunit_1x1_puc",
+                        "625c6125-f19e-4d5b-95c5-55501526b2a4"
                     )
                 },
                 onDestroy = { GamBanner.destroy() }
@@ -33,12 +33,10 @@ object AdTypesRepository {
                 "Banner 300x250",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     GamBanner.create(
-                        wrapper,
-                        autoRefreshTime,
-                        300,
-                        250,
-                        "/19968336/PrebidMobileValidator_Banner_All_Sizes",
-                        "625c6125-f19e-4d5b-95c5-55501526b2a4"
+                        wrapper, autoRefreshTime,
+                        300, 250,
+                        "/5300653/pavliuchyk_test_adunit_1x1_puc",
+                        "6ace8c7d-88c0-4623-8117-75bc3f0a2e45"
                     )
                 },
                 onDestroy = { GamBanner.destroy() }
@@ -47,8 +45,8 @@ object AdTypesRepository {
                 "Interstitial",
                 onCreate = { activity, _, autoRefreshTime ->
                     GamInterstitial.create(
-                        activity,
-                        autoRefreshTime,
+                        activity, autoRefreshTime,
+                        // TODO: Problem with ids
                         "/5300653/pavliuchyk_test_adunit_1x1_puc",
                         "625c6125-f19e-4d5b-95c5-55501526b2a4"
                     )
@@ -63,8 +61,8 @@ object AdTypesRepository {
                 onCreate = { _, wrapper, autoRefreshTime ->
                     MoPubBanner.create(
                         wrapper, autoRefreshTime,
-                        320, 50,
-                        "a935eac11acd416f92640411234fbba6",
+                        320, 50, MoPubView.MoPubAdSize.HEIGHT_50,
+                        "42b99af979cd474ea32f497c044b5d71",
                         "625c6125-f19e-4d5b-95c5-55501526b2a4"
                     )
                 },
@@ -75,7 +73,8 @@ object AdTypesRepository {
                 onCreate = { _, wrapper, autoRefreshTime ->
                     MoPubBanner.create(
                         wrapper, autoRefreshTime,
-                        300, 250,
+                        300, 250, MoPubView.MoPubAdSize.HEIGHT_250,
+                        // TODO: Problem with ids
                         "a935eac11acd416f92640411234fbba6",
                         "6ace8c7d-88c0-4623-8117-75bc3f0a2e45"
                     )
@@ -87,6 +86,7 @@ object AdTypesRepository {
                 onCreate = { activity, _, autoRefreshTime ->
                     MoPubInterstitial.create(
                         activity, autoRefreshTime,
+                        // TODO: Problem with ids
                         "2829868d308643edbec0795977f17437",
                         "625c6125-f19e-4d5b-95c5-55501526b2a4"
                     )
@@ -134,7 +134,7 @@ object AdTypesRepository {
                 onCreate = { context, _, _ ->
                     InAppVideoInterstitial.create(
                         context,
-                        "28259226-68de-49f8-88d6-f0f2fab846e3"
+                        "12f58bc2-b664-4672-8d19-638bcc96fd5c"
                     )
                 },
                 onDestroy = { InAppVideoInterstitial.destroy() }

@@ -21,10 +21,14 @@ import android.app.Application
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 import android.webkit.WebView
+import com.google.android.gms.ads.MobileAds
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
+import com.mopub.common.SdkInitializationListener
+import com.mopub.common.logging.MoPubLog
 import org.prebid.mobile.Host
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
@@ -44,10 +48,11 @@ class CustomApplication : Application() {
     }
 
     private fun initMopubSDK() {
-        val sdkConfiguration = SdkConfiguration.Builder("a935eac11acd416f92640411234fbba6")
-            .withAdditionalNetwork("com.mopub.mobileads.VungleRewardedVideo")
-            .build()
-        MoPub.initializeSdk(this, sdkConfiguration, null)
+        val sdkConfiguration = SdkConfiguration.Builder("42b99af979cd474ea32f497c044b5d71")
+        sdkConfiguration.withLogLevel(MoPubLog.LogLevel.DEBUG)
+        MoPub.initializeSdk(this, sdkConfiguration.build()) {
+            Log.d("MoPub", "Initialized successfully!")
+        }
     }
 
     private fun initPrebidSDK() {

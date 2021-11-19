@@ -4,6 +4,8 @@ import android.util.Log
 import android.view.ViewGroup
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import org.prebid.mobile.AdUnit
@@ -31,15 +33,14 @@ object GamBanner {
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 super.onAdLoaded()
+                Log.d(TAG, "Banner loaded!")
 
                 AdViewUtils.findPrebidCreativeSize(adView, object : AdViewUtils.PbFindSizeListener {
                     override fun success(width: Int, height: Int) {
                         adView.setAdSizes(AdSize(width, height))
                     }
 
-                    override fun failure(error: PbFindSizeError) {
-                        Log.e(TAG, "Error in findPrebidCreativeSize: $error")
-                    }
+                    override fun failure(error: PbFindSizeError) {}
                 })
 
             }
@@ -48,12 +49,12 @@ object GamBanner {
 
         wrapper.addView(adView)
 
-        val builder = AdManagerAdRequest.Builder()
+        val request = AdManagerAdRequest.Builder().build()
         adUnit = BannerAdUnit(configId, width, height)
         adUnit?.setAutoRefreshPeriodMillis(autoRefreshTime)
-        adUnit?.fetchDemand(builder) { resultCode ->
+        adUnit?.fetchDemand(request) { resultCode ->
             Log.d(TAG, "Result code: $resultCode")
-            adView.loadAd(builder.build())
+            adView.loadAd(request)
         }
     }
 
