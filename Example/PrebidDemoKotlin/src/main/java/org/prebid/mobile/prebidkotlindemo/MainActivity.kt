@@ -16,121 +16,71 @@
 
 package org.prebid.mobile.prebidkotlindemo
 
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
-import android.webkit.WebView
-import android.widget.*
-import androidx.annotation.ArrayRes
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import org.prebid.mobile.prebidkotlindemo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private var adType = "Banner"
-    private var adServer = "DFP"
-    private var adSize = "300x250"
+    private var adType = ""
+    private var adServer = ""
 
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(true)
-        }
-
-        initAdTypeSpinner()
+        binding.btnShowAd.setOnClickListener { showAd() }
         initAdServerSpinner()
-        initAdSizeSpinner()
-
-        binding.btnShowAd.setOnClickListener {
-            showAd()
-        }
     }
 
     private fun showAd() {
         val refreshTime = getRefreshTime()
-        val intent = Intent(this, DemoActivity::class.java).apply {
-            putExtra(Constants.AD_SERVER_NAME, adServer)
-            putExtra(Constants.AD_TYPE_NAME, adType)
-            if (adType == "Banner") {
-                putExtra(Constants.AD_SIZE_NAME, adSize)
-            }
-            if (refreshTime != null) {
-                putExtra(Constants.AUTO_REFRESH_NAME, refreshTime)
-            }
-        }
+        val intent = DemoActivity.getIntent(this, adServer, adType, refreshTime)
         startActivity(intent)
     }
 
-    private fun getRefreshTime(): Int? {
+    private fun getRefreshTime(): Int {
         val refreshTimeString = binding.etAutoRefreshTime.text.toString()
         return try {
             Integer.valueOf(refreshTimeString)
         } catch (exception: Exception) {
-            null
-        }
-    }
-
-    private fun initAdTypeSpinner() {
-        val spinner = binding.spinnerAdType
-        initSpinner(spinner, R.array.adTypeArray) {
-            adType = it
-            if (adType == "Banner") {
-                showSizeSpinner()
-            } else {
-                hideSizeSpinner()
-            }
+            0
         }
     }
 
     private fun initAdServerSpinner() {
+        val primaryAdServers = ArrayList(AdTypesRepository.get().keys)
         val spinner = binding.spinnerAdServer
-        initSpinner(spinner, R.array.adServerArray) {
-            adServer = it
-        }
-    }
-
-    private fun initAdSizeSpinner() {
-        val spinner = binding.spinnerAdSize
-        initSpinner(spinner, R.array.adSizeArray) {
-            adSize = it
-        }
-    }
-
-    private fun initSpinner(spinner: Spinner, @ArrayRes arrayResId: Int, onNewItemSelected: (String) -> Unit) {
-        val adapter = ArrayAdapter.createFromResource(
-            this, arrayResId,
-            android.R.layout.simple_spinner_item
-        )
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
+        spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, primaryAdServers)
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            var array = listOf(*resources.getStringArray(arrayResId))
-
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, pos: Int, l: Long) {
-                if (pos > array.size) {
-                    return
-                }
-                onNewItemSelected(array[pos])
+                adServer = primaryAdServers[pos]
+                val types = AdTypesRepository.get()[adServer]?.map { it.name } ?: listOf()
+                binding.btnShowAd.isEnabled = types.isNotEmpty()
+                initAdTypeSpinner(ArrayList(types))
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>) {}
         }
     }
 
-    private fun showSizeSpinner() {
-        val adSizeRow = binding.adSizeRow
-        adSizeRow.visibility = View.VISIBLE
+    private fun initAdTypeSpinner(list: ArrayList<String>) {
+        val spinner = binding.spinnerAdType
+        spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, list)
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>, view: View, pos: Int, l: Long) {
+                binding.btnShowAd.isEnabled = true
+                adType = list[pos]
+            }
+
+            override fun onNothingSelected(adapterView: AdapterView<*>) {}
+        }
     }
 
-    private fun hideSizeSpinner() {
-        val adSizeRow = binding.adSizeRow
-        adSizeRow.visibility = View.GONE
-    }
 }
 
