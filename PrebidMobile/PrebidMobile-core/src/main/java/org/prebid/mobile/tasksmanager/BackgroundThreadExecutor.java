@@ -18,7 +18,7 @@ package org.prebid.mobile.tasksmanager;
 
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 
 public class BackgroundThreadExecutor implements CancellableExecutor {
 

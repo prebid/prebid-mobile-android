@@ -84,7 +84,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-core:2.11.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.11.1'
     implementation 'com.google.android.exoplayer:extension-ima:2.11.1'
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.multidex:multidex:2.0.0'
     implementation('com.mopub:mopub-sdk:5.8.0@aar') {
         transitive = true
 
