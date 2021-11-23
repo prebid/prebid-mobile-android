@@ -30,14 +30,14 @@ import org.prebid.mobile.rendering.models.AdPosition;
 
 import java.util.HashMap;
 
-public class MoPubRewardedVideoAdUnit extends BaseAdUnit {
+public class MediationRewardedVideoAdUnit extends MediationBaseAdUnit {
 
     private final String mMopubAdUnitId;
 
-    public MoPubRewardedVideoAdUnit(Context context,
-                                    @NonNull
-                                        String mopubAdUnitId, String configId) {
-        super(context, configId, null);
+    public MediationRewardedVideoAdUnit(Context context,
+                                        @NonNull
+                                        String mopubAdUnitId, String configId, PrebidMediationDelegate mediationDelegate) {
+        super(context, configId, null, mediationDelegate);
         mMopubAdUnitId = mopubAdUnitId;
     }
 
@@ -68,7 +68,7 @@ public class MoPubRewardedVideoAdUnit extends BaseAdUnit {
     protected final void onResponseReceived(BidResponse response) {
         if (mOnFetchCompleteListener != null && mAdViewReference != null && mAdViewReference.get() != null) {
             BidResponseCache.getInstance().putBidResponse(mMopubAdUnitId, response);
-            ReflectionUtils.handleMoPubKeywordsUpdate(mAdViewReference.get(), response.getTargeting());
+            mMediationDelegate.handleKeywordsUpdate(mAdViewReference.get(), response.getTargeting());
             mOnFetchCompleteListener.onComplete(FetchDemandResult.SUCCESS);
         }
     }

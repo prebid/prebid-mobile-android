@@ -4,15 +4,16 @@ import android.annotation.SuppressLint
 import android.view.ViewGroup
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
+import com.mopub.mediation.MoPubMediationUtils
 import com.mopub.mobileads.MoPubView
 import org.prebid.mobile.rendering.bidding.data.AdSize
-import org.prebid.mobile.rendering.bidding.display.MoPubBannerAdUnit
+import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
 
 object InAppMoPubBanner {
 
     @SuppressLint("StaticFieldLeak")
     private var bannerView: MoPubView? = null
-    private var adUnit: MoPubBannerAdUnit? = null
+    private var adUnit: MediationBannerAdUnit? = null
 
     fun create(
         wrapper: ViewGroup,
@@ -22,7 +23,12 @@ object InAppMoPubBanner {
         adUnitId: String,
         configId: String
     ) {
-        adUnit = MoPubBannerAdUnit(wrapper.context, configId, AdSize(width, height))
+        adUnit = MediationBannerAdUnit(
+            wrapper.context,
+            configId,
+            AdSize(width, height),
+            MoPubMediationUtils()
+        )
         adUnit?.setRefreshInterval(autoRefreshTime)
         bannerView = MoPubView(wrapper.context)
         bannerView?.setAdUnitId(adUnitId)

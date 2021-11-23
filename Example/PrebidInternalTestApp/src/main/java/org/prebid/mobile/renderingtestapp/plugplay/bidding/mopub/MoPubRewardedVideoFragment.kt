@@ -21,13 +21,14 @@ import android.view.View
 import com.mopub.common.MoPub
 import com.mopub.common.MoPubReward
 import com.mopub.common.SdkConfiguration
+import com.mopub.mediation.MoPubMediationUtils
 import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubRewardedAdListener
 import com.mopub.mobileads.MoPubRewardedAdManager
 import com.mopub.mobileads.MoPubRewardedAds
 import kotlinx.android.synthetic.main.events_mopub_rewarded.*
 import kotlinx.android.synthetic.main.fragment_mopub_interstitial_video_rewarded.*
-import org.prebid.mobile.rendering.bidding.display.MoPubRewardedVideoAdUnit
+import org.prebid.mobile.rendering.bidding.display.MediationRewardedVideoAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
@@ -36,7 +37,7 @@ import java.util.*
 class MoPubRewardedVideoFragment: AdFragment() {
     override val layoutRes = R.layout.fragment_mopub_interstitial_video_rewarded
 
-    private var rewardedAdUnit: MoPubRewardedVideoAdUnit? = null
+    private var rewardedAdUnit: MediationRewardedVideoAdUnit? = null
     private val keywordsMap = HashMap<String, String>()
     private val mListener = object : MoPubRewardedAdListener {
 
@@ -83,7 +84,12 @@ class MoPubRewardedVideoFragment: AdFragment() {
     }
 
     override fun initAd(): Any? {
-        rewardedAdUnit = MoPubRewardedVideoAdUnit(requireContext(), adUnitId, configId)
+        rewardedAdUnit = MediationRewardedVideoAdUnit(
+            requireContext(),
+            adUnitId,
+            configId,
+            MoPubMediationUtils()
+        )
         return rewardedAdUnit
     }
 

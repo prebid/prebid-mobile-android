@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.NativeFetchDemandResult;
@@ -57,7 +58,7 @@ public class NativeAdUnitTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         final NativeAdConfiguration nativeAdConfiguration = new NativeAdConfiguration();
-        mSpyNativeAdUnit = spy(new NativeAdUnit(mMockContext, "123", nativeAdConfiguration));
+        mSpyNativeAdUnit = spy(new NativeAdUnit(mMockContext, "123", nativeAdConfiguration, new MockMediationUtils()));
 
         assertEquals(NativeEventTracker.EventType.OMID, nativeAdConfiguration.getTrackers().get(0).getEventType());
     }

@@ -35,7 +35,6 @@ android {
 dependencies {
     api project(':PrebidMobile-core')
     api project(':PrebidMobile-rendering')
-    api project(':omsdk-android')
 
     // Main test dependencies
     testImplementation 'junit:junit:4.12'

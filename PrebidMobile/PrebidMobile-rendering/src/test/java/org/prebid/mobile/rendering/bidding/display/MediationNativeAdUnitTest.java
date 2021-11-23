@@ -23,28 +23,36 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
-import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
+import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdConfiguration;
+import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
-public class MoPubInterstitialAdUnitTest {
-
+public class MediationNativeAdUnitTest {
     private Context mContext;
-    private MoPubInterstitialAdUnit mMoPubInterstitialAdUnit;
+    private MediationNativeAdUnit mMediationNativeAdUnit;
+    @Mock
+    private BidLoader mMockBidLoader;
 
     @Before
-    public void setUp() throws Exception {
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
         mContext = Robolectric.buildActivity(Activity.class).create().get();
         PrebidRenderingSettings.setAccountId("id");
-        mMoPubInterstitialAdUnit = new MoPubInterstitialAdUnit(mContext, "config", new AdSize(1, 2));
+        mMediationNativeAdUnit = new MediationNativeAdUnit(mContext, "configId", mock(NativeAdConfiguration.class), new MockMediationUtils());
+        WhiteBox.setInternalState(mMediationNativeAdUnit, "mBidLoader", mMockBidLoader);
     }
 
     @After
@@ -53,18 +61,13 @@ public class MoPubInterstitialAdUnitTest {
     }
 
     @Test
-    public void whenInitAdConfig_PrepareAdConfigForInterstitial() {
-        AdSize adSize = new AdSize(1, 2);
-        mMoPubInterstitialAdUnit.initAdConfig("config", adSize);
-        AdConfiguration adConfiguration = mMoPubInterstitialAdUnit.mAdUnitConfig;
+    public void whenInitAdConfig_PrepareAdConfigForNative() {
+        mMediationNativeAdUnit.initAdConfig("config", null);
+        AdConfiguration adConfiguration = mMediationNativeAdUnit.mAdUnitConfig;
         assertEquals("config", adConfiguration.getConfigId());
-        assertEquals(AdConfiguration.AdUnitIdentifierType.INTERSTITIAL, adConfiguration.getAdUnitIdentifierType());
-        assertEquals(adSize, adConfiguration.getMinSizePercentage());
+        assertEquals(AdConfiguration.AdUnitIdentifierType.NATIVE, adConfiguration.getAdUnitIdentifierType());
     }
 
-    @Test
-    public void whenConstructorAndAdUnitFormatVideo_AdUnitIdentifierTypeVideo() {
-        mMoPubInterstitialAdUnit = new MoPubInterstitialAdUnit(mContext, "config", AdUnitFormat.VIDEO);
-        assertEquals(AdConfiguration.AdUnitIdentifierType.VAST, mMoPubInterstitialAdUnit.mAdUnitConfig.getAdUnitIdentifierType());
-    }
+
+
 }

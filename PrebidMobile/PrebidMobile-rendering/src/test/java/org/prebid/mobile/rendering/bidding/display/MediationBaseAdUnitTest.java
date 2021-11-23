@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -55,9 +56,9 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
-public class BaseAdUnitTest {
+public class MediationBaseAdUnitTest {
 
-    private BaseAdUnit mBaseAdUnit;
+    private MediationBaseAdUnit mBaseAdUnit;
     private Context mContext;
     private Object mMopubView = new Object();
     @Mock
@@ -83,7 +84,7 @@ public class BaseAdUnitTest {
 
     @Test
     public void whenFetchDemandAndNotMoPubViewPassed_InvalidAdObjectResult() {
-        new BaseAdUnit(mContext, "123", mMockAdSize) {
+        new MediationBaseAdUnit(mContext, "123", mMockAdSize, new MockMediationUtils()) {
             @Override
             protected void initAdConfig(String configId, AdSize adSize) {
                 mAdUnitConfig.setConfigId(configId);
@@ -138,24 +139,6 @@ public class BaseAdUnitTest {
     public void whenDestroy_DestroyBidLoader() {
         mBaseAdUnit.destroy();
         verify(mMockBidLoader).destroy();
-    }
-
-    @Test
-    public void whenOnResponseReceived_UpdateMoPubAndSuccessResult() throws IOException {
-        PrebidRenderingSettings.setAccountId("id");
-        String responseString = ResourceUtils.convertResourceToString("bidding_response_obj.json");
-        String keywordsString = "hb_pb:value1,hb_bidder:value2,hb_cache_id:value3,";
-        BidResponse bidResponse = new BidResponse(responseString);
-        OnFetchCompleteListener mockListener = mock(OnFetchCompleteListener.class);
-
-        MoPubViewMock moPubViewMock = new MoPubViewMock();
-
-        mBaseAdUnit.fetchDemand(moPubViewMock, mockListener);
-        mBaseAdUnit.onResponseReceived(bidResponse);
-
-        verify(mockListener).onComplete(FetchDemandResult.SUCCESS);
-        assertEquals(keywordsString, moPubViewMock.getKeywords());
-        assertNotNull(BidResponseCache.getInstance().popBidResponse(bidResponse.getId()));
     }
 
     @Test
@@ -236,8 +219,8 @@ public class BaseAdUnitTest {
         assertEquals(expected, mBaseAdUnit.getPbAdSlot());
     }
 
-    private BaseAdUnit createAdUnit(String configId) {
-        BaseAdUnit baseAdUnit = new BaseAdUnit(mContext, configId, mMockAdSize) {
+    private MediationBaseAdUnit createAdUnit(String configId) {
+        MediationBaseAdUnit baseAdUnit = new MediationBaseAdUnit(mContext, configId, mMockAdSize, new MockMediationUtils()) {
             @Override
             protected void initAdConfig(String configId, AdSize adSize) {
                 mAdUnitConfig.setConfigId(configId);
@@ -252,7 +235,7 @@ public class BaseAdUnitTest {
         return baseAdUnit;
     }
 
-    static class MoPubViewMock {
+    public static class MediationViewMock {
         private String mKeywords;
 
         public void setKeywords(String keywords) {

@@ -19,6 +19,7 @@ package org.prebid.mobile.mopub.adapters;
 import android.app.Activity;
 import android.view.View;
 
+import com.mopub.mediation.MoPubMediationUtils;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
 
@@ -26,7 +27,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.bidding.display.ReflectionUtils;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -46,6 +46,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 public class ReflectionUtilsTest {
     private static final String KEY_BID_RESPONSE = "PREBID_BID_RESPONSE_ID";
     private Activity mActivity;
+    private MoPubMediationUtils mediationUtils;
 
     public class TestObject {
         public String testString() {
@@ -56,12 +57,13 @@ public class ReflectionUtilsTest {
     @Before
     public void setup() {
         mActivity = Robolectric.buildActivity(Activity.class).create().get();
+        mediationUtils = new MoPubMediationUtils();
     }
 
     @Test
     public void callMethodOnObject_ExpectedResultIsEqual() {
         TestObject object = new TestObject();
-        Object result = ReflectionUtils.callMethodOnObject(object, "testString");
+        Object result = MoPubMediationUtils.callMethodOnObject(object, "testString");
         assertEquals("test", result);
     }
 
@@ -72,11 +74,11 @@ public class ReflectionUtilsTest {
         HashMap<String, String> bids = new HashMap<>();
         bids.put("hb_pb", "0.50");
         bids.put("hb_cache_id", "123456");
-        ReflectionUtils.handleMoPubKeywordsUpdate(adView, bids);
+        mediationUtils.handleKeywordsUpdate(adView, bids);
         String adViewKeywords = adView.getKeywords();
         assertEquals("hb_pb:0.50,hb_cache_id:123456,key1:value1,key2:value2", adViewKeywords);
 
-        ReflectionUtils.handleMoPubKeywordsUpdate(adView, null);
+        mediationUtils.handleKeywordsUpdate(adView, null);
         assertEquals("key1:value1,key2:value2", adView.getKeywords());
     }
 
@@ -88,10 +90,10 @@ public class ReflectionUtilsTest {
         bids.put("hb_cache_id", "123456");
 
         moPubInterstitial.setKeywords("key1:value1,key2:value2");
-        ReflectionUtils.handleMoPubKeywordsUpdate(moPubInterstitial, bids);
+        mediationUtils.handleKeywordsUpdate(moPubInterstitial, bids);
         assertEquals("hb_pb:0.50,hb_cache_id:123456,key1:value1,key2:value2", moPubInterstitial.getKeywords());
 
-        ReflectionUtils.handleMoPubKeywordsUpdate(moPubInterstitial, null);
+        mediationUtils.handleKeywordsUpdate(moPubInterstitial, null);
         assertEquals("key1:value1,key2:value2", moPubInterstitial.getKeywords());
     }
 
@@ -101,7 +103,7 @@ public class ReflectionUtilsTest {
         BidResponse response = new BidResponse("{\"response\":\"test\", \"id\":\"1234\"}");
         Map<String, Object> expectedLocalExtras = Collections.singletonMap(KEY_BID_RESPONSE, response.getId());
 
-        ReflectionUtils.setResponseIdToMoPubLocalExtras(moPubView, response);
+        mediationUtils.setResponseIdToLocalExtras(moPubView, response);
 
         assertEquals(expectedLocalExtras, moPubView.getLocalExtras());
     }
@@ -110,28 +112,28 @@ public class ReflectionUtilsTest {
     public void setResponseToMoPubLocalExtrasWithNonMoPubView_DoNothing() {
         View mockView = mock(View.class);
 
-        ReflectionUtils.setResponseIdToMoPubLocalExtras(mockView, new BidResponse("{}"));
+        mediationUtils.setResponseIdToLocalExtras(mockView, new BidResponse("{}"));
 
         verifyNoInteractions(mockView);
     }
 
     @Test
     public void isMoPubBannerViewWithMoPubBannerView_ReturnTrue() {
-        assertTrue(ReflectionUtils.isMoPubBannerView(new MoPubView(mActivity)));
+        assertTrue(mediationUtils.isBannerView(new MoPubView(mActivity)));
     }
 
     @Test
     public void isMoPubBannerViewWithMoPubInterstitialView_ReturnFalse() {
-        assertFalse(ReflectionUtils.isMoPubBannerView(new MoPubInterstitial(mActivity, "1234")));
+        assertFalse(mediationUtils.isBannerView(new MoPubInterstitial(mActivity, "1234")));
     }
 
     @Test
     public void isMoPubInterstitialViewWithMoPubInterstitialView_ReturnTrue() {
-        assertTrue(ReflectionUtils.isMoPubInterstitialView(new MoPubInterstitial(mActivity, "1234")));
+        assertTrue(mediationUtils.isInterstitialView(new MoPubInterstitial(mActivity, "1234")));
     }
 
     @Test
     public void isMoPubInterstitialViewWithMoPubBannerView_ReturnFalse() {
-        assertFalse(ReflectionUtils.isMoPubInterstitialView(new MoPubView(mActivity)));
+        assertFalse(mediationUtils.isInterstitialView(new MoPubView(mActivity)));
     }
 }

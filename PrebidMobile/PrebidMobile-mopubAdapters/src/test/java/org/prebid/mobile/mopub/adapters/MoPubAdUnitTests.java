@@ -19,6 +19,7 @@ package org.prebid.mobile.mopub.adapters;
 import android.app.Activity;
 import android.content.Context;
 
+import com.mopub.mediation.MoPubMediationUtils;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
 import com.mopub.nativeads.MoPubNative;
@@ -28,10 +29,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
-import org.prebid.mobile.rendering.bidding.display.MoPubBannerAdUnit;
-import org.prebid.mobile.rendering.bidding.display.MoPubInterstitialAdUnit;
-import org.prebid.mobile.rendering.bidding.display.MoPubNativeAdUnit;
-import org.prebid.mobile.rendering.bidding.display.MoPubRewardedVideoAdUnit;
+import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit;
+import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit;
+import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit;
+import org.prebid.mobile.rendering.bidding.display.MediationRewardedVideoAdUnit;
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
@@ -56,10 +57,10 @@ public class MoPubAdUnitTests {
     private MoPubView mMoPubView;
     private MoPubInterstitial mMoPubInterstitial;
 
-    private MoPubBannerAdUnit mMoPubBannerAdUnit;
-    private MoPubInterstitialAdUnit mMoPubInterstitialAdUnit;
-    private MoPubNativeAdUnit mMoPubNativeAdUnit;
-    private MoPubRewardedVideoAdUnit mMoPubRewardedAdUnit;
+    private MediationBannerAdUnit mMediationBannerAdUnit;
+    private MediationInterstitialAdUnit mMediationInterstitialAdUnit;
+    private MediationNativeAdUnit mMediationNativeAdUnit;
+    private MediationRewardedVideoAdUnit mMoPubRewardedAdUnit;
 
     @Before
     public void setup() {
@@ -70,10 +71,10 @@ public class MoPubAdUnitTests {
         mMoPubView = new MoPubView(mContext);
         mMoPubInterstitial = new MoPubInterstitial((Activity) mContext, ID);
 
-        mMoPubNativeAdUnit = new MoPubNativeAdUnit(mContext, ID, mock(NativeAdConfiguration.class));
-        mMoPubBannerAdUnit = new MoPubBannerAdUnit(mContext, ID, AD_SIZE);
-        mMoPubInterstitialAdUnit = new MoPubInterstitialAdUnit(mContext, ID, AD_SIZE);
-        mMoPubRewardedAdUnit = new MoPubRewardedVideoAdUnit(mContext, ID, ID);
+        mMediationNativeAdUnit = new MediationNativeAdUnit(mContext, ID, mock(NativeAdConfiguration.class), new MoPubMediationUtils());
+        mMediationBannerAdUnit = new MediationBannerAdUnit(mContext, ID, AD_SIZE, new MoPubMediationUtils());
+        mMediationInterstitialAdUnit = new MediationInterstitialAdUnit(mContext, ID, AD_SIZE, new MoPubMediationUtils());
+        mMoPubRewardedAdUnit = new MediationRewardedVideoAdUnit(mContext, ID, ID, new MoPubMediationUtils());
     }
 
     @Test
@@ -81,7 +82,7 @@ public class MoPubAdUnitTests {
         MoPubNative moPubNative = new MoPubNative(mContext, "", mock(MoPubNative.MoPubNativeNetworkListener.class));
 
         final boolean isAdObjectSupported =
-            invokeIsAdObjectSupported(MoPubNativeAdUnit.class, mMoPubNativeAdUnit, moPubNative);
+            invokeIsAdObjectSupported(MediationNativeAdUnit.class, mMediationNativeAdUnit, moPubNative);
 
         assertTrue(isAdObjectSupported);
     }
@@ -89,7 +90,7 @@ public class MoPubAdUnitTests {
     @Test
     public void whenIsMopubNativeViewAndAnyObjectPassed_ReturnFalse() {
         final boolean isAdObjectSupported =
-            invokeIsAdObjectSupported(MoPubNativeAdUnit.class, mMoPubNativeAdUnit, mMoPubInterstitial);
+            invokeIsAdObjectSupported(MediationNativeAdUnit.class, mMediationNativeAdUnit, mMoPubInterstitial);
 
         assertFalse(isAdObjectSupported);
     }
@@ -97,7 +98,7 @@ public class MoPubAdUnitTests {
     @Test
     public void whenIsMopubBannerViewAndMoPubBannerViewPassed_ReturnTrue() {
         final boolean isAdObjectSupported =
-            invokeIsAdObjectSupported(MoPubBannerAdUnit.class, mMoPubBannerAdUnit, mMoPubView);
+            invokeIsAdObjectSupported(MediationBannerAdUnit.class, mMediationBannerAdUnit, mMoPubView);
 
         assertTrue(isAdObjectSupported);
     }
@@ -105,7 +106,7 @@ public class MoPubAdUnitTests {
     @Test
     public void whenIsMopubBannerViewAndAnyObjectPassed_ReturnFalse() {
         final boolean isAdObjectSupported =
-            invokeIsAdObjectSupported(MoPubBannerAdUnit.class, mMoPubBannerAdUnit, mMoPubInterstitial);
+            invokeIsAdObjectSupported(MediationBannerAdUnit.class, mMediationBannerAdUnit, mMoPubInterstitial);
 
         assertFalse(isAdObjectSupported);
     }
@@ -113,7 +114,7 @@ public class MoPubAdUnitTests {
     @Test
     public void whenIsMopubInterstitialViewAndMoPubInterstitialPassed_ReturnTrue() {
         final boolean isAdObjectSupported =
-            invokeIsAdObjectSupported(MoPubInterstitialAdUnit.class, mMoPubInterstitialAdUnit, mMoPubInterstitial);
+            invokeIsAdObjectSupported(MediationInterstitialAdUnit.class, mMediationInterstitialAdUnit, mMoPubInterstitial);
 
         assertTrue(isAdObjectSupported);
     }
@@ -121,7 +122,7 @@ public class MoPubAdUnitTests {
     @Test
     public void whenIsMopubInterstitialViewAndAnyObjectPassed_ReturnFalse() {
         final boolean isAdObjectSupported =
-            invokeIsAdObjectSupported(MoPubInterstitialAdUnit.class, mMoPubInterstitialAdUnit, mMoPubView);
+            invokeIsAdObjectSupported(MediationInterstitialAdUnit.class, mMediationInterstitialAdUnit, mMoPubView);
 
         assertFalse(isAdObjectSupported);
     }
@@ -129,7 +130,7 @@ public class MoPubAdUnitTests {
     @Test
     public void whenIsMopubRewardedViewAndHashMapPassed_ReturnTrue() {
         final boolean isAdObjectSupported =
-            invokeIsAdObjectSupported(MoPubRewardedVideoAdUnit.class, mMoPubRewardedAdUnit, new HashMap<String, String>());
+            invokeIsAdObjectSupported(MediationRewardedVideoAdUnit.class, mMoPubRewardedAdUnit, new HashMap<String, String>());
 
         assertTrue(isAdObjectSupported);
     }
@@ -137,7 +138,7 @@ public class MoPubAdUnitTests {
     @Test
     public void whenIsMopubRewardedViewAndAnyObjectPassed_ReturnFalse() {
         final boolean isAdObjectSupported =
-            invokeIsAdObjectSupported(MoPubRewardedVideoAdUnit.class, mMoPubRewardedAdUnit, mMoPubView);
+            invokeIsAdObjectSupported(MediationRewardedVideoAdUnit.class, mMoPubRewardedAdUnit, mMoPubView);
 
         assertFalse(isAdObjectSupported);
     }

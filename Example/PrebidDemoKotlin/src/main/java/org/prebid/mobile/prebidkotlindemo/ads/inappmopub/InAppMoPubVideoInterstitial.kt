@@ -4,16 +4,17 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
+import com.mopub.mediation.MoPubMediationUtils
 import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubInterstitial
-import org.prebid.mobile.rendering.bidding.display.MoPubInterstitialAdUnit
+import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 
 object InAppMoPubVideoInterstitial {
 
     @SuppressLint("StaticFieldLeak")
     private var moPubInterstitial: MoPubInterstitial? = null
-    private var adUnit: MoPubInterstitialAdUnit? = null
+    private var adUnit: MediationInterstitialAdUnit? = null
 
     fun create(activity: Activity, adUnitId: String, configId: String) {
         moPubInterstitial = MoPubInterstitial(activity, adUnitId)
@@ -27,7 +28,12 @@ object InAppMoPubVideoInterstitial {
             override fun onInterstitialClicked(p0: MoPubInterstitial?) {}
             override fun onInterstitialDismissed(p0: MoPubInterstitial?) {}
         }
-        adUnit = MoPubInterstitialAdUnit(activity, configId, AdUnitFormat.VIDEO)
+        adUnit = MediationInterstitialAdUnit(
+            activity,
+            configId,
+            AdUnitFormat.VIDEO,
+            MoPubMediationUtils()
+        )
 
         MoPub.initializeSdk(activity, SdkConfiguration.Builder(adUnitId).build()) {
             adUnit?.fetchDemand(moPubInterstitial) {

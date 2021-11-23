@@ -30,12 +30,12 @@ import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 
 import java.util.HashMap;
 
-public class MoPubNativeAdUnit extends BaseAdUnit {
-    private static final String TAG = MoPubNativeAdUnit.class.getSimpleName();
+public class MediationNativeAdUnit extends MediationBaseAdUnit {
+    private static final String TAG = MediationNativeAdUnit.class.getSimpleName();
     private HashMap<String, String> mKeywordsMap;
 
-    public MoPubNativeAdUnit(Context context, String configId, NativeAdConfiguration nativeAdConfiguration) {
-        super(context, configId, null);
+    public MediationNativeAdUnit(Context context, String configId, NativeAdConfiguration nativeAdConfiguration, PrebidMediationDelegate mediationDelegate) {
+        super(context, configId, null, mediationDelegate);
         mAdUnitConfig.setNativeAdConfiguration(nativeAdConfiguration);
     }
 
@@ -60,15 +60,15 @@ public class MoPubNativeAdUnit extends BaseAdUnit {
     protected boolean isAdObjectSupported(
         @Nullable
             Object adObject) {
-        return ReflectionUtils.isMoPubNative(adObject);
+        return mMediationDelegate.isNativeView(adObject);
     }
 
     @Override
     protected void onResponseReceived(BidResponse response) {
         if (mOnFetchCompleteListener != null && mAdViewReference != null && mAdViewReference.get() != null) {
             BidResponseCache.getInstance().putBidResponse(response);
-            ReflectionUtils.handleMoPubKeywordsUpdate(mKeywordsMap, response.getTargetingWithCacheId());
-            ReflectionUtils.setResponseToMoPubLocalExtras(mAdViewReference.get(), response);
+            mMediationDelegate.handleKeywordsUpdate(mKeywordsMap, response.getTargetingWithCacheId());
+            mMediationDelegate.setResponseToLocalExtras(mAdViewReference.get(), response);
             mOnFetchCompleteListener.onComplete(FetchDemandResult.SUCCESS);
         }
     }

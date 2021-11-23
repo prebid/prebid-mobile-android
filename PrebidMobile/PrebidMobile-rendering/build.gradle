@@ -63,6 +63,8 @@ android {
 
 dependencies {
     // AndroidJUnitRunner and JUnit Rules
+    testImplementation project(':TestUtils')
+
     testImplementation 'androidx.test:runner:1.2.0'
     testImplementation 'androidx.test:rules:1.2.0'
 

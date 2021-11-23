@@ -29,10 +29,6 @@ android {
     }
 }
 
-dependencies {
-    testImplementation project(':TestUtils')
-}
-
 task javadoc(type: Javadoc) {
     failOnError false
 

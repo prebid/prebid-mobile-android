@@ -38,14 +38,15 @@ import java.util.Set;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-abstract class BaseAdUnit {
-    private static final String TAG = BaseAdUnit.class.getSimpleName();
+public abstract class MediationBaseAdUnit {
+    private static final String TAG = MediationBaseAdUnit.class.getSimpleName();
 
     protected OnFetchCompleteListener mOnFetchCompleteListener;
 
     protected WeakReference<Context> mContextWeakReference;
     protected WeakReference<Object> mAdViewReference;
     protected AdConfiguration mAdUnitConfig = new AdConfiguration();
+    protected PrebidMediationDelegate mMediationDelegate;
 
     protected BidLoader mBidLoader;
     private final BidRequesterListener mBidRequesterListener = new BidRequesterListener() {
@@ -60,8 +61,9 @@ abstract class BaseAdUnit {
         }
     };
 
-    protected BaseAdUnit(Context context, String configId, AdSize adSize) {
+    protected MediationBaseAdUnit(Context context, String configId, AdSize adSize, PrebidMediationDelegate mediationDelegate) {
         mContextWeakReference = new WeakReference<>(context);
+        mMediationDelegate = mediationDelegate;
         initSdk(context);
         initAdConfig(configId, adSize);
         initBidLoader();
@@ -168,8 +170,8 @@ abstract class BaseAdUnit {
             return;
         }
         BidResponseCache.getInstance().putBidResponse(response);
-        ReflectionUtils.handleMoPubKeywordsUpdate(mAdViewReference.get(), response.getTargeting());
-        ReflectionUtils.setResponseIdToMoPubLocalExtras(mAdViewReference.get(), response);
+        mMediationDelegate.handleKeywordsUpdate(mAdViewReference.get(), response.getTargeting());
+        mMediationDelegate.setResponseIdToLocalExtras(mAdViewReference.get(), response);
         mOnFetchCompleteListener.onComplete(FetchDemandResult.SUCCESS);
     }
 

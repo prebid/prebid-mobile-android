@@ -22,11 +22,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
+import com.mopub.mediation.MoPubMediationUtils
 import com.mopub.nativeads.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import kotlinx.android.synthetic.main.lyt_native_mopub_events.*
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult
-import org.prebid.mobile.rendering.bidding.display.MoPubNativeAdUnit
+import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
@@ -36,7 +37,7 @@ open class MopubNativeFragment : AdFragment() {
     override val layoutRes: Int = R.layout.fragment_native_mopub
 
     protected var mopubNative: MoPubNative? = null
-    protected var mopubNativeAdUnit: MoPubNativeAdUnit? = null
+    protected var mopubNativeAdUnit: MediationNativeAdUnit? = null
     protected lateinit var adapterHelper: AdapterHelper
     protected var nativeAd: NativeAd? = null
 
@@ -97,7 +98,12 @@ open class MopubNativeFragment : AdFragment() {
                 .build()
         mopubNative?.registerAdRenderer(PrebidNativeAdRenderer(viewBinder))
         mopubNative?.registerAdRenderer(MoPubStaticNativeAdRenderer(viewBinder))
-        mopubNativeAdUnit = MoPubNativeAdUnit(requireContext(), configId, getNativeAdConfig())
+        mopubNativeAdUnit = MediationNativeAdUnit(
+            requireContext(),
+            configId,
+            getNativeAdConfig(),
+            MoPubMediationUtils()
+        )
         return mopubNativeAdUnit
     }
 

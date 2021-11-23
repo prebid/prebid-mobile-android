@@ -22,8 +22,9 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
+import com.mopub.mediation.MoPubMediationUtils
 import com.mopub.nativeads.*
-import org.prebid.mobile.rendering.bidding.display.MoPubNativeAdUnit
+import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration
 import org.prebid.mobile.renderingtestapp.R
 
@@ -32,7 +33,7 @@ class MoPubNativeFeedAdapter(context: Context,
                              private val adUnitId: String,
                              private val nativeAdConfiguration: NativeAdConfiguration?) : BaseFeedAdapter(context) {
     private var mopubNative: MoPubNative? = null
-    private var mopubNativeAdUnit: MoPubNativeAdUnit? = null
+    private var mopubNativeAdUnit: MediationNativeAdUnit? = null
 
     override fun destroy() {
         mopubNative?.destroy()
@@ -60,7 +61,12 @@ class MoPubNativeFeedAdapter(context: Context,
                 .build()
         mopubNative?.registerAdRenderer(PrebidNativeAdRenderer(viewBinder))
         mopubNative?.registerAdRenderer(MoPubStaticNativeAdRenderer(viewBinder))
-        mopubNativeAdUnit = MoPubNativeAdUnit(context, configId, nativeAdConfiguration)
+        mopubNativeAdUnit = MediationNativeAdUnit(
+            context,
+            configId,
+            nativeAdConfiguration,
+            MoPubMediationUtils()
+        )
         MoPub.initializeSdk(context, SdkConfiguration.Builder(adUnitId).build()) {
             val keywordsContainer = HashMap<String, String>()
             mopubNativeAdUnit?.fetchDemand(keywordsContainer, mopubNative!!) {
