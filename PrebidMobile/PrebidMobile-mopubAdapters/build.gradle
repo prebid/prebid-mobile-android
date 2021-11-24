@@ -47,6 +47,8 @@ dependencies {
         transitive = true
     }
 
+    testImplementation project(':TestUtils')
+
     testImplementation 'org.robolectric:robolectric:4.5.1'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:3.7.7'

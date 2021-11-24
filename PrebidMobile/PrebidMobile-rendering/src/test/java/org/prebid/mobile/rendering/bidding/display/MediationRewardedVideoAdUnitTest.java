@@ -23,6 +23,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
@@ -47,16 +48,16 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
-public class MoPubRewardedVideoAdUnitTest {
+public class MediationRewardedVideoAdUnitTest {
 
     private Context mContext;
-    private MoPubRewardedVideoAdUnit mMopubRewardedAdUnit;
+    private MediationRewardedVideoAdUnit mMopubRewardedAdUnit;
 
     @Before
     public void setUp() throws Exception {
         mContext = Robolectric.buildActivity(Activity.class).create().get();
         PrebidRenderingSettings.setAccountId("id");
-        mMopubRewardedAdUnit = new MoPubRewardedVideoAdUnit(mContext, "mopub", "config");
+        mMopubRewardedAdUnit = new MediationRewardedVideoAdUnit(mContext, "mopub", "config", new MockMediationUtils());
         WhiteBox.setInternalState(mMopubRewardedAdUnit, "mBidLoader", mock(BidLoader.class));
     }
 
@@ -74,17 +75,4 @@ public class MoPubRewardedVideoAdUnitTest {
         assertTrue(adConfiguration.isRewarded());
     }
 
-    @Test
-    public void whenOnResponseReceived_UpdateHashMapAndBidCache() throws IOException {
-        String responseString = ResourceUtils.convertResourceToString("bidding_response_obj.json");
-        BidResponse bidResponse = new BidResponse(responseString);
-        OnFetchCompleteListener mockListener = mock(OnFetchCompleteListener.class);
-        HashMap<String, String> keywords = new HashMap<>();
-
-        mMopubRewardedAdUnit.fetchDemand(keywords, mockListener);
-        mMopubRewardedAdUnit.onResponseReceived(bidResponse);
-        assertNotNull(BidResponseCache.getInstance().popBidResponse("mopub"));
-        assertFalse(keywords.isEmpty());
-        verify(mockListener).onComplete(FetchDemandResult.SUCCESS);
-    }
 }

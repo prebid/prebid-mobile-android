@@ -33,15 +33,15 @@ import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 
-public class MoPubBannerAdUnit extends BaseAdUnit {
-    private static final String TAG = MoPubBannerAdUnit.class.getSimpleName();
+public class MediationBannerAdUnit extends MediationBaseAdUnit {
+    private static final String TAG = MediationBannerAdUnit.class.getSimpleName();
 
     private final ScreenStateReceiver mScreenStateReceiver = new ScreenStateReceiver();
 
     private boolean mAdFailed;
 
-    public MoPubBannerAdUnit(Context context, String configId, AdSize size) {
-        super(context, configId, size);
+    public MediationBannerAdUnit(Context context, String configId, AdSize size, PrebidMediationDelegate mediationDelegate) {
+        super(context, configId, size, mediationDelegate);
         mScreenStateReceiver.register(context);
     }
 
@@ -56,7 +56,7 @@ public class MoPubBannerAdUnit extends BaseAdUnit {
     protected final boolean isAdObjectSupported(
         @Nullable
             Object adObject) {
-        return ReflectionUtils.isMoPubBannerView(adObject);
+        return mMediationDelegate.isBannerView(adObject);
     }
 
     @Override

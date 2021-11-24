@@ -14,27 +14,20 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile.rendering.bidding.display;
+package com.mopub.mediation;
 
 import android.text.TextUtils;
-
+import androidx.annotation.Nullable;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
-import androidx.annotation.Nullable;
-
-public class ReflectionUtils {
-    private static final String TAG = ReflectionUtils.class.getSimpleName();
+public class MoPubMediationUtils implements PrebidMediationDelegate {
+    private static final String TAG = MoPubMediationUtils.class.getSimpleName();
 
     private static final HashSet<String> RESERVED_KEYS;
     private static final int MOPUB_QUERY_STRING_LIMIT = 4000;
@@ -58,13 +51,30 @@ public class ReflectionUtils {
         return null;
     }
 
-    public static void handleMoPubKeywordsUpdate(Object adObj, HashMap<String, String> keywords) {
-        removeUsedKeywordsForMoPub(adObj);
+
+    @Override
+    public boolean isBannerView(@Nullable Object adView) {
+        return adView != null && adView.getClass() == getClassForString(MOPUB_BANNER_VIEW_CLASS);
+    }
+
+    @Override
+    public boolean isInterstitialView(@Nullable Object adView) {
+        return adView != null && adView.getClass() == getClassForString(MOPUB_INTERSTITIAL_VIEW_CLASS);
+    }
+
+    @Override
+    public boolean isNativeView(@Nullable Object adView) {
+        return adView != null && adView.getClass() == getClassForString(MOPUB_NATIVE_CLASS);
+    }
+
+    @Override
+    public void handleKeywordsUpdate(@Nullable Object adView, HashMap<String, String> keywords) {
+        removeUsedKeywordsForMoPub(adView);
 
         if (keywords != null && !keywords.isEmpty()) {
-            if (adObj.getClass() == HashMap.class) {
-                ((HashMap) adObj).clear();
-                ((HashMap) adObj).putAll(keywords);
+            if (adView != null && adView.getClass() == HashMap.class) {
+                ((HashMap) adView).clear();
+                ((HashMap) adView).putAll(keywords);
             }
             else {
                 StringBuilder keywordsBuilder = new StringBuilder();
@@ -73,7 +83,7 @@ public class ReflectionUtils {
                     keywordsBuilder.append(key).append(":").append(keywords.get(key)).append(",");
                 }
                 String pbmKeywords = keywordsBuilder.toString();
-                String adViewKeywords = (String) callMethodOnObject(adObj, "getKeywords");
+                String adViewKeywords = (String) callMethodOnObject(adView, "getKeywords");
                 if (!TextUtils.isEmpty(adViewKeywords)) {
                     adViewKeywords = pbmKeywords + adViewKeywords;
                 }
@@ -82,45 +92,28 @@ public class ReflectionUtils {
                 }
                 // only set keywords if less than mopub query string limit
                 if (adViewKeywords.length() <= MOPUB_QUERY_STRING_LIMIT) {
-                    callMethodOnObject(adObj, "setKeywords", adViewKeywords);
+                    callMethodOnObject(adView, "setKeywords", adViewKeywords);
                 }
             }
         }
     }
 
-    public static void setResponseIdToMoPubLocalExtras(Object adViewObj, BidResponse response) {
-        if (isMoPubBannerView(adViewObj) || isMoPubInterstitialView(adViewObj)) {
-            Map<String, Object> localExtras = Collections.singletonMap(KEY_BID_RESPONSE, response.getId());
-            callMethodOnObjectWithParameter(adViewObj, "setLocalExtras", Map.class, localExtras);
-        }
-    }
-
-    public static void setResponseToMoPubLocalExtras(Object adViewObj, BidResponse response) {
-        if (isMoPubNative(adViewObj)) {
+    @Override
+    public void setResponseToLocalExtras(@Nullable Object adView, @Nullable BidResponse response) {
+        if (isNativeView(adView)) {
             Map<String, Object> localExtras = Collections.singletonMap(KEY_BID_RESPONSE, response);
-            callMethodOnObjectWithParameter(adViewObj, "setLocalExtras", Map.class, localExtras);
+            callMethodOnObjectWithParameter(adView, "setLocalExtras", Map.class, localExtras);
         }
     }
 
-    public static boolean isMoPubBannerView(
-        @Nullable
-            Object adViewObj) {
-        return adViewObj != null
-               && adViewObj.getClass() == getClassForString(MOPUB_BANNER_VIEW_CLASS);
-    }
-
-    public static boolean isMoPubInterstitialView(
-        @Nullable
-            Object adViewObj) {
-        return adViewObj != null
-               && adViewObj.getClass() == getClassForString(MOPUB_INTERSTITIAL_VIEW_CLASS);
-    }
-
-    public static boolean isMoPubNative(
-        @Nullable
-            Object adViewObj) {
-        return adViewObj != null
-               && adViewObj.getClass() == getClassForString(MOPUB_NATIVE_CLASS);
+    @Override
+    public void setResponseIdToLocalExtras(@Nullable Object adView, @Nullable BidResponse response) {
+        if (isBannerView(adView) || isInterstitialView(adView)) {
+            if (response != null) {
+                Map<String, Object> localExtras = Collections.singletonMap(KEY_BID_RESPONSE, response.getId());
+                callMethodOnObjectWithParameter(adView, "setLocalExtras", Map.class, localExtras);
+            }
+        }
     }
 
     private static void removeUsedKeywordsForMoPub(Object adViewObj) {

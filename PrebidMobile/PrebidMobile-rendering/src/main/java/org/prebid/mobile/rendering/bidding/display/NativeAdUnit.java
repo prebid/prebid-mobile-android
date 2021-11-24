@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-class NativeAdUnit extends BaseAdUnit {
+class NativeAdUnit extends MediationBaseAdUnit {
     private static final String TAG = NativeAdUnit.class.getSimpleName();
 
     private OnNativeFetchCompleteListener mNativeFetchCompleteListener;
@@ -47,8 +47,8 @@ class NativeAdUnit extends BaseAdUnit {
 
     public NativeAdUnit(Context context, String configId,
                         @NonNull
-                                NativeAdConfiguration nativeAdConfiguration) {
-        super(context, configId, null);
+                                NativeAdConfiguration nativeAdConfiguration, PrebidMediationDelegate mediationDelegate) {
+        super(context, configId, null, mediationDelegate);
         setupNativeAdConfiguration(nativeAdConfiguration);
     }
 

@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.enums.BannerAdPosition;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
@@ -46,9 +47,9 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
-public class MoPubBannerAdUnitTest {
+public class MediationBannerAdUnitTest {
     private Context mContext;
-    private MoPubBannerAdUnit mMoPubBannerAdUnit;
+    private MediationBannerAdUnit mMediationBannerAdUnit;
     @Mock
     private ScreenStateReceiver mMockScreenStateReceiver;
     @Mock
@@ -59,12 +60,12 @@ public class MoPubBannerAdUnitTest {
         MockitoAnnotations.initMocks(this);
         mContext = Robolectric.buildActivity(Activity.class).create().get();
         PrebidRenderingSettings.setAccountId("id");
-        mMoPubBannerAdUnit = new MoPubBannerAdUnit(mContext, "config", mock(AdSize.class));
+        mMediationBannerAdUnit = new MediationBannerAdUnit(mContext, "config", mock(AdSize.class), new MockMediationUtils());
 
-        WhiteBox.setInternalState(mMoPubBannerAdUnit, "mBidLoader", mMockBidLoader);
-        WhiteBox.setInternalState(mMoPubBannerAdUnit, "mScreenStateReceiver", mMockScreenStateReceiver);
+        WhiteBox.setInternalState(mMediationBannerAdUnit, "mBidLoader", mMockBidLoader);
+        WhiteBox.setInternalState(mMediationBannerAdUnit, "mScreenStateReceiver", mMockScreenStateReceiver);
 
-        assertEquals(BannerAdPosition.UNDEFINED.getValue(), mMoPubBannerAdUnit.getAdPosition().getValue());
+        assertEquals(BannerAdPosition.UNDEFINED.getValue(), mMediationBannerAdUnit.getAdPosition().getValue());
     }
 
     @After
@@ -75,8 +76,8 @@ public class MoPubBannerAdUnitTest {
     @Test
     public void whenInitAdConfig_PrepareAdConfigForBanner() {
         AdSize adSize = new AdSize(1, 2);
-        mMoPubBannerAdUnit.initAdConfig("config", adSize);
-        AdConfiguration adConfiguration = mMoPubBannerAdUnit.mAdUnitConfig;
+        mMediationBannerAdUnit.initAdConfig("config", adSize);
+        AdConfiguration adConfiguration = mMediationBannerAdUnit.mAdUnitConfig;
         assertEquals("config", adConfiguration.getConfigId());
         assertEquals(AdConfiguration.AdUnitIdentifierType.BANNER, adConfiguration.getAdUnitIdentifierType());
         assertTrue(adConfiguration.getAdSizes().contains(adSize));
@@ -84,21 +85,21 @@ public class MoPubBannerAdUnitTest {
 
     @Test
     public void whenSetRefreshInterval_ChangeRefreshIntervalInAdConfig() {
-        assertEquals(60000, mMoPubBannerAdUnit.mAdUnitConfig.getAutoRefreshDelay());
-        mMoPubBannerAdUnit.setRefreshInterval(15);
-        assertEquals(15000, mMoPubBannerAdUnit.mAdUnitConfig.getAutoRefreshDelay());
+        assertEquals(60000, mMediationBannerAdUnit.mAdUnitConfig.getAutoRefreshDelay());
+        mMediationBannerAdUnit.setRefreshInterval(15);
+        assertEquals(15000, mMediationBannerAdUnit.mAdUnitConfig.getAutoRefreshDelay());
     }
 
     @Test
     public void whenDestroy_UnregisterReceiver() {
-        mMoPubBannerAdUnit.destroy();
+        mMediationBannerAdUnit.destroy();
 
         verify(mMockScreenStateReceiver, times(1)).unregister();
     }
 
     @Test
     public void whenStopRefresh_BidLoaderCancelRefresh() {
-        mMoPubBannerAdUnit.stopRefresh();
+        mMediationBannerAdUnit.stopRefresh();
 
         verify(mMockBidLoader, times(1)).cancelRefresh();
     }
@@ -106,26 +107,26 @@ public class MoPubBannerAdUnitTest {
     @Test
     public void whenSetNativeAdConfiguration_ConfigAssignedToAdConfiguration() {
         AdConfiguration mockConfiguration = mock(AdConfiguration.class);
-        WhiteBox.setInternalState(mMoPubBannerAdUnit, "mAdUnitConfig", mockConfiguration);
-        mMoPubBannerAdUnit.setNativeAdConfiguration(mock(NativeAdConfiguration.class));
+        WhiteBox.setInternalState(mMediationBannerAdUnit, "mAdUnitConfig", mockConfiguration);
+        mMediationBannerAdUnit.setNativeAdConfiguration(mock(NativeAdConfiguration.class));
         verify(mockConfiguration).setNativeAdConfiguration(any(NativeAdConfiguration.class));
     }
 
     @Test
     public void setAdPosition_EqualsGetAdPosition() {
-        mMoPubBannerAdUnit.setAdPosition(null);
-        assertEquals(BannerAdPosition.UNDEFINED, mMoPubBannerAdUnit.getAdPosition());
+        mMediationBannerAdUnit.setAdPosition(null);
+        assertEquals(BannerAdPosition.UNDEFINED, mMediationBannerAdUnit.getAdPosition());
 
-        mMoPubBannerAdUnit.setAdPosition(BannerAdPosition.FOOTER);
-        assertEquals(BannerAdPosition.FOOTER, mMoPubBannerAdUnit.getAdPosition());
+        mMediationBannerAdUnit.setAdPosition(BannerAdPosition.FOOTER);
+        assertEquals(BannerAdPosition.FOOTER, mMediationBannerAdUnit.getAdPosition());
 
-        mMoPubBannerAdUnit.setAdPosition(BannerAdPosition.HEADER);
-        assertEquals(BannerAdPosition.HEADER, mMoPubBannerAdUnit.getAdPosition());
+        mMediationBannerAdUnit.setAdPosition(BannerAdPosition.HEADER);
+        assertEquals(BannerAdPosition.HEADER, mMediationBannerAdUnit.getAdPosition());
 
-        mMoPubBannerAdUnit.setAdPosition(BannerAdPosition.SIDEBAR);
-        assertEquals(BannerAdPosition.SIDEBAR, mMoPubBannerAdUnit.getAdPosition());
+        mMediationBannerAdUnit.setAdPosition(BannerAdPosition.SIDEBAR);
+        assertEquals(BannerAdPosition.SIDEBAR, mMediationBannerAdUnit.getAdPosition());
 
-        mMoPubBannerAdUnit.setAdPosition(BannerAdPosition.UNKNOWN);
-        assertEquals(BannerAdPosition.UNKNOWN, mMoPubBannerAdUnit.getAdPosition());
+        mMediationBannerAdUnit.setAdPosition(BannerAdPosition.UNKNOWN);
+        assertEquals(BannerAdPosition.UNKNOWN, mMediationBannerAdUnit.getAdPosition());
     }
 }

@@ -17,13 +17,14 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub
 
 import android.util.Log
+import com.mopub.mediation.MoPubMediationUtils
 import com.mopub.nativeads.*
 import kotlinx.android.synthetic.main.events_bids.*
 import kotlinx.android.synthetic.main.events_native_video.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import kotlinx.android.synthetic.main.video_controls.*
 import org.prebid.mobile.rendering.bidding.data.ntv.MediaView
-import org.prebid.mobile.rendering.bidding.display.MoPubNativeAdUnit
+import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
 import org.prebid.mobile.rendering.errors.AdException
 import org.prebid.mobile.rendering.listeners.MediaViewListener
 import org.prebid.mobile.renderingtestapp.R
@@ -111,7 +112,12 @@ class MoPubNativeVideoFragment : MopubNativeFragment() {
 
         mopubNative?.registerAdRenderer(addRenderer)
 
-        mopubNativeAdUnit = MoPubNativeAdUnit(requireContext(), configId, getNativeAdConfig())
+        mopubNativeAdUnit = MediationNativeAdUnit(
+            requireContext(),
+            configId,
+            getNativeAdConfig(),
+            MoPubMediationUtils()
+        )
     }
 
     override fun onDestroyView() {

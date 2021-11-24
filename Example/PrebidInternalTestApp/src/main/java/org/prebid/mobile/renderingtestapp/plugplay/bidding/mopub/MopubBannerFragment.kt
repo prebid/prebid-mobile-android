@@ -21,12 +21,13 @@ import android.util.Log
 import android.view.View
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
+import com.mopub.mediation.MoPubMediationUtils
 import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubView
 import kotlinx.android.synthetic.main.events_mopub_banner.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import org.prebid.mobile.rendering.bidding.data.AdSize
-import org.prebid.mobile.rendering.bidding.display.MoPubBannerAdUnit
+import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
@@ -37,7 +38,7 @@ open class MopubBannerFragment : AdFragment() {
     override val layoutRes = R.layout.fragment_bidding_banner_mopub
 
     protected var bannerView: MoPubView? = null
-    protected var bannerAdUnit: MoPubBannerAdUnit? = null
+    protected var bannerAdUnit: MediationBannerAdUnit? = null
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
@@ -61,7 +62,12 @@ open class MopubBannerFragment : AdFragment() {
         bannerView?.bannerAdListener = listener
         viewContainer.addView(bannerView)
 
-        bannerAdUnit = MoPubBannerAdUnit(requireContext(), configId, AdSize(width, height))
+        bannerAdUnit = MediationBannerAdUnit(
+            requireContext(),
+            configId,
+            AdSize(width, height),
+            MoPubMediationUtils()
+        )
         bannerAdUnit?.setRefreshInterval(refreshDelay)
         return bannerAdUnit
     }

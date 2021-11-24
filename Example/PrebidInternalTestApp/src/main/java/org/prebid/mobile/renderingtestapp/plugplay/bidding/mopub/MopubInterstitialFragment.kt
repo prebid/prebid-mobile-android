@@ -20,12 +20,13 @@ import android.os.Bundle
 import android.view.View
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
+import com.mopub.mediation.MoPubMediationUtils
 import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubInterstitial
 import kotlinx.android.synthetic.main.events_mopub_interstitial.*
 import kotlinx.android.synthetic.main.fragment_mopub_interstitial.*
 import org.prebid.mobile.rendering.bidding.data.AdSize
-import org.prebid.mobile.rendering.bidding.display.MoPubInterstitialAdUnit
+import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
@@ -35,7 +36,7 @@ class MopubInterstitialFragment : AdFragment() {
 
     override val layoutRes: Int = R.layout.fragment_mopub_interstitial
 
-    private lateinit var mopubInterstitialAdUnit: MoPubInterstitialAdUnit
+    private lateinit var mopubInterstitialAdUnit: MediationInterstitialAdUnit
     private lateinit var moPubInterstitial: MoPubInterstitial
     private val mListener = object : MoPubInterstitial.InterstitialAdListener {
         override fun onInterstitialLoaded(interstitial: MoPubInterstitial) {
@@ -101,10 +102,20 @@ class MopubInterstitialFragment : AdFragment() {
 
         val isVideo = (title.contains("Video", true) && !title.contains("MRAID", true))
         mopubInterstitialAdUnit = if (isVideo) {
-            MoPubInterstitialAdUnit(requireContext(), configId, AdUnitFormat.VIDEO)
+            MediationInterstitialAdUnit(
+                requireContext(),
+                configId,
+                AdUnitFormat.VIDEO,
+                MoPubMediationUtils()
+            )
         }
         else {
-            MoPubInterstitialAdUnit(requireContext(), configId, AdSize(minWidthPerc, minHeightPerc))
+            MediationInterstitialAdUnit(
+                requireContext(),
+                configId,
+                AdSize(minWidthPerc, minHeightPerc),
+                MoPubMediationUtils()
+            )
         }
     }
 

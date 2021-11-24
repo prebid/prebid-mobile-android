@@ -4,15 +4,16 @@ import android.app.Activity
 import com.mopub.common.MoPub
 import com.mopub.common.MoPubReward
 import com.mopub.common.SdkConfiguration
+import com.mopub.mediation.MoPubMediationUtils
 import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubRewardedAdListener
 import com.mopub.mobileads.MoPubRewardedAdManager
 import com.mopub.mobileads.MoPubRewardedAds
-import org.prebid.mobile.rendering.bidding.display.MoPubRewardedVideoAdUnit
+import org.prebid.mobile.rendering.bidding.display.MediationRewardedVideoAdUnit
 
 object InAppMoPubRewardedInterstitial {
 
-    private var adUnit: MoPubRewardedVideoAdUnit? = null
+    private var adUnit: MediationRewardedVideoAdUnit? = null
 
     fun create(activity: Activity, adUnitId: String, configId: String, keywordsMap: HashMap<String, String>) {
         val builder = SdkConfiguration.Builder(adUnitId)
@@ -31,7 +32,12 @@ object InAppMoPubRewardedInterstitial {
             override fun onRewardedAdStarted(adUnitId: String) {}
         })
 
-        adUnit = MoPubRewardedVideoAdUnit(activity, adUnitId, configId)
+        adUnit = MediationRewardedVideoAdUnit(
+            activity,
+            adUnitId,
+            configId,
+            MoPubMediationUtils()
+        )
         MoPub.initializeSdk(activity, builder.build()) {
             adUnit?.fetchDemand(keywordsMap) {
                 val keywordsString = convertMapToMoPubKeywords(keywordsMap)

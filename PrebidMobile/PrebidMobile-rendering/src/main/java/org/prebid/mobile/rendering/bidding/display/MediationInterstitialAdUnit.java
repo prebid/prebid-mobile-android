@@ -27,23 +27,23 @@ import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdPosition;
 
-public class MoPubInterstitialAdUnit extends BaseAdUnit {
-    private static final String TAG = MoPubInterstitialAdUnit.class.getSimpleName();
+public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
+    private static final String TAG = MediationInterstitialAdUnit.class.getSimpleName();
 
     /**
      * Constructor to fetch demand for a display interstitial ad with specified minHeightPercentage and minWidthPercentage
      */
-    public MoPubInterstitialAdUnit(Context context, String configId, AdSize minSizePercentage) {
-        super(context, configId, minSizePercentage);
+    public MediationInterstitialAdUnit(Context context, String configId, AdSize minSizePercentage, PrebidMediationDelegate mediationDelegate) {
+        super(context, configId, minSizePercentage, mediationDelegate);
     }
 
     /**
      * Constructor to fetch demand for either display or video interstitial ads
      */
-    public MoPubInterstitialAdUnit(Context context, String configId,
-                                   @NonNull
-                                           AdUnitFormat adUnitFormat) {
-        super(context, configId, null);
+    public MediationInterstitialAdUnit(Context context, String configId,
+                                       @NonNull
+                                           AdUnitFormat adUnitFormat, PrebidMediationDelegate mediationDelegate) {
+        super(context, configId, null, mediationDelegate);
         setAdUnitType(adUnitFormat);
     }
 
@@ -68,7 +68,7 @@ public class MoPubInterstitialAdUnit extends BaseAdUnit {
     protected final boolean isAdObjectSupported(
         @Nullable
             Object adObject) {
-        return ReflectionUtils.isMoPubInterstitialView(adObject);
+        return mMediationDelegate.isInterstitialView(adObject);
     }
 
     private void setAdUnitType(AdUnitFormat adUnitFormat) {
