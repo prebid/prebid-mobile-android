@@ -851,6 +851,40 @@ public class PrebidServerAdapterTest extends BaseSetup {
     }
 
     @Test
+    public void testContentUrlInPostData() throws Exception {
+        String expectedContentUrl = "http://www.something.com/item";
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        HttpUrl hostUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(hostUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setPrebidServerAccountId("12345");
+        PrebidMobile.setShareGeoLocation(true);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+
+        // set content somewhere here
+
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(320, 50));
+        ContentObject contentObject = new ContentObject();
+        contentObject.setUrl(expectedContentUrl);
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, null, null, null, null, null, null, contentObject);
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        @SuppressWarnings("unchecked")
+        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+
+        JSONObject app = postData.getJSONObject("app");
+        assertTrue(app.has("content"));
+        JSONObject content = app.getJSONObject("content");
+        assertTrue(content.has("url"));
+        assertEquals(expectedContentUrl, content.getString("url"));
+    }
+
+    @Test
     public void testExternalUserIdsInPostData() throws Exception {
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
         HttpUrl hostUrl = server.url("/");
@@ -1730,7 +1764,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, null, null, null, null, parameters, null);
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, null, null, null, null, parameters, null, null);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
@@ -1884,7 +1918,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.VIDEO, sizes, null, null, null, null, null, parameters);
+        RequestParams requestParams = new RequestParams("67890", AdType.VIDEO, sizes, null, null, null, null, null, parameters, null);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
@@ -2360,7 +2394,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
 
-        RequestParams requestParams = new RequestParams("67890", adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, adSlot, bannerParameters, videoParameters);
+        RequestParams requestParams = new RequestParams("67890", adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, adSlot, bannerParameters, videoParameters, null);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")

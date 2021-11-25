@@ -48,13 +48,16 @@ class RequestParams {
     @Nullable
     private BannerBaseAdUnit.Parameters bannerParameters;
 
+    @Nullable
+    private ContentObject content;
+
     RequestParams(String configId, AdType adType, HashSet<AdSize> sizes) {
         this.configId = configId;
         this.adType = adType;
         this.sizes = sizes; // for Interstitial this will be null, will use screen width & height in the request
     }
 
-    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc, @Nullable String pbAdSlot , @Nullable BannerBaseAdUnit.Parameters bannerParameters, @Nullable VideoBaseAdUnit.Parameters videoParameters) {
+    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc, @Nullable String pbAdSlot , @Nullable BannerBaseAdUnit.Parameters bannerParameters, @Nullable VideoBaseAdUnit.Parameters videoParameters, @Nullable ContentObject content) {
         this(configId, adType, sizes);
         this.contextDataDictionary = contextDataDictionary;
         this.contextKeywordsSet = contextKeywordsSet;
@@ -62,6 +65,7 @@ class RequestParams {
         this.pbAdSlot = pbAdSlot;
         this.bannerParameters = bannerParameters;
         this.videoParameters = videoParameters;
+        this.content = content;
     }
 
     void setNativeRequestParams(NativeRequestParams params) {
@@ -102,6 +106,11 @@ class RequestParams {
     @Nullable
     String getPbAdSlot() {
         return pbAdSlot;
+    }
+
+    @Nullable
+    ContentObject getContent() {
+        return content;
     }
 
     @Nullable
