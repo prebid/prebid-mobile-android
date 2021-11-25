@@ -9,11 +9,10 @@ import org.prebid.mobile.rendering.errors.AdException
 
 object InAppGamVideoInterstitial {
 
-    private var eventHandler: GamInterstitialEventHandler? = null
     private var adUnit: InterstitialAdUnit? = null
 
     fun create(activity: Activity, adUnitId: String, configId: String) {
-        eventHandler = GamInterstitialEventHandler(activity, adUnitId)
+        val eventHandler = GamInterstitialEventHandler(activity, adUnitId)
         adUnit = InterstitialAdUnit(activity, configId, AdUnitFormat.VIDEO, eventHandler)
         adUnit?.setInterstitialAdUnitListener(object : InterstitialAdUnitListener {
             override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
@@ -29,9 +28,6 @@ object InAppGamVideoInterstitial {
     }
 
     fun destroy() {
-        eventHandler?.destroy()
-        eventHandler = null
-
         adUnit?.destroy()
         adUnit = null
     }

@@ -8,7 +8,6 @@ import org.prebid.mobile.rendering.bidding.parallel.BannerView
 
 object InAppGamVideoBanner {
 
-    private var eventHandler: GamBannerEventHandler? = null
     private var bannerView: BannerView? = null
 
     fun create(
@@ -19,9 +18,9 @@ object InAppGamVideoBanner {
         adUnitId: String,
         configId: String
     ) {
-        eventHandler = GamBannerEventHandler(wrapper.context, adUnitId, AdSize(width, height))
+        val eventHandler = GamBannerEventHandler(wrapper.context, adUnitId, AdSize(width, height))
 
-        bannerView = BannerView(wrapper.context, configId, eventHandler!!)
+        bannerView = BannerView(wrapper.context, configId, eventHandler)
         bannerView?.videoPlacementType = VideoPlacementType.IN_BANNER
         bannerView?.setAutoRefreshDelay(autoRefreshTime)
         wrapper.addView(bannerView)
@@ -30,10 +29,7 @@ object InAppGamVideoBanner {
     }
 
     fun destroy() {
-        eventHandler?.destroy()
-        eventHandler = null
-
-        bannerView?.stopRefresh()
+        bannerView?.destroy()
         bannerView = null
     }
 

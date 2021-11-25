@@ -21,7 +21,7 @@ object InAppBanner {
     }
 
     fun destroy() {
-        adView?.stopRefresh()
+        adView?.destroy()
         adView = null
     }
 
