@@ -18,10 +18,12 @@ package org.prebid.mobile.rendering.bidding.display;
 
 import android.content.Context;
 import android.text.TextUtils;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.data.bid.ContentObject;
 import org.prebid.mobile.rendering.bidding.enums.Host;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
@@ -34,9 +36,6 @@ import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.Set;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public abstract class MediationBaseAdUnit {
     private static final String TAG = MediationBaseAdUnit.class.getSimpleName();
@@ -70,10 +69,10 @@ public abstract class MediationBaseAdUnit {
     }
 
     protected void fetchDemand(
-        @Nullable
-            Object adObject,
-        @NonNull
-            OnFetchCompleteListener listener) {
+            @Nullable
+                    Object adObject,
+            @NonNull
+                    OnFetchCompleteListener listener) {
         if (!isAdObjectSupported(adObject)) {
             LogUtil.error(TAG, "Demand fetch failed. MoPub view have to be passed in arguments.");
             listener.onComplete(FetchDemandResult.INVALID_AD_OBJECT);
@@ -151,6 +150,10 @@ public abstract class MediationBaseAdUnit {
         return mAdUnitConfig.getPbAdSlot();
     }
 
+    public void setContentObject(ContentObject content) {
+        mAdUnitConfig.setContentUrl(content.getUrl());
+    }
+
     public void destroy() {
         mOnFetchCompleteListener = null;
         mBidLoader.destroy();
@@ -160,8 +163,8 @@ public abstract class MediationBaseAdUnit {
     protected abstract void initAdConfig(String configId, AdSize adSize);
 
     protected abstract boolean isAdObjectSupported(
-        @Nullable
-            Object adObject);
+            @Nullable
+                    Object adObject);
 
     protected void onResponseReceived(BidResponse response) {
         if (mAdViewReference.get() == null || mOnFetchCompleteListener == null) {
@@ -190,9 +193,9 @@ public abstract class MediationBaseAdUnit {
 
     private void initSdk(Context context) {
         try {
-            PrebidRenderingSettings.initializeSDK(context, () -> { });
-        }
-        catch (AdException e) {
+            PrebidRenderingSettings.initializeSDK(context, () -> {
+            });
+        } catch (AdException e) {
             e.printStackTrace();
         }
     }

@@ -23,11 +23,14 @@ import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
 import android.widget.FrameLayout;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.rendering.R;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.data.bid.ContentObject;
 import org.prebid.mobile.rendering.bidding.display.DisplayView;
 import org.prebid.mobile.rendering.bidding.enums.BannerAdPosition;
 import org.prebid.mobile.rendering.bidding.enums.VideoPlacementType;
@@ -53,10 +56,6 @@ import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
 import java.util.Map;
 import java.util.Set;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 
 public class BannerView extends FrameLayout {
     private final static String TAG = BannerView.class.getSimpleName();
@@ -193,10 +192,10 @@ public class BannerView extends FrameLayout {
      *              refreshIntervalInSec
      */
     public BannerView(
-        @NonNull
-            Context context,
-        @Nullable
-            AttributeSet attrs) {
+            @NonNull
+                    Context context,
+            @Nullable
+                    AttributeSet attrs) {
         super(context, attrs);
 
         mEventHandler = new StandaloneBannerEventHandler();
@@ -221,7 +220,7 @@ public class BannerView extends FrameLayout {
      */
     public BannerView(Context context, String configId,
                       @NonNull
-                          BannerEventHandler eventHandler) {
+                              BannerEventHandler eventHandler) {
         super(context);
         mEventHandler = eventHandler;
         mConfigId = configId;
@@ -396,6 +395,10 @@ public class BannerView extends FrameLayout {
     public String getPbAdSlot() {
         return mAdUnitConfig.getPbAdSlot();
     }
+
+    public void setContentObject(ContentObject content) {
+        mAdUnitConfig.setContentUrl(content.getUrl());
+    }
     //endregion ==================== getters and setters
 
     private void reflectAttrs(AttributeSet attrs) {
@@ -404,8 +407,8 @@ public class BannerView extends FrameLayout {
             return;
         }
         TypedArray typedArray = getContext()
-            .getTheme()
-            .obtainStyledAttributes(attrs, R.styleable.BannerView, 0, 0);
+                .getTheme()
+                .obtainStyledAttributes(attrs, R.styleable.BannerView, 0, 0);
         try {
             mConfigId = typedArray.getString(R.styleable.BannerView_configId);
             mRefreshIntervalSec = typedArray.getInt(R.styleable.BannerView_refreshIntervalSec, 0);
@@ -414,8 +417,7 @@ public class BannerView extends FrameLayout {
             if (width >= 0 && height >= 0) {
                 mAdUnitConfig.addSize(new AdSize(width, height));
             }
-        }
-        finally {
+        } finally {
             typedArray.recycle();
         }
     }
@@ -429,9 +431,9 @@ public class BannerView extends FrameLayout {
 
     private void initPrebidRenderingSdk() {
         try {
-            PrebidRenderingSettings.initializeSDK(getContext(), () -> { });
-        }
-        catch (AdException e) {
+            PrebidRenderingSettings.initializeSDK(getContext(), () -> {
+            });
+        } catch (AdException e) {
             e.printStackTrace();
         }
     }

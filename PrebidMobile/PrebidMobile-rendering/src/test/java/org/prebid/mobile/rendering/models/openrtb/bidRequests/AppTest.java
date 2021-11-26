@@ -32,6 +32,7 @@ public class AppTest {
         app.domain = "com.us.prebid.net";
 
         app.storeurl = "test.url.com";
+        app.contentUrl = "test.content.com";
         app.cat = new String[]{"1", "2"};
         app.sectioncat = new String[]{"1", "2"};
         app.pagecat = new String[]{"1", "2"};
@@ -42,7 +43,7 @@ public class AppTest {
         app.getPublisher().name = "name";
 
         JSONObject actualObj = app.getJsonObject();
-        String expectedString = "{\"ver\":\"1\",\"privacypolicy\":1,\"keywords\":\"blah, blah\",\"sectioncat\":[\"1\",\"2\"],\"storeurl\":\"test.url.com\",\"domain\":\"com.us.prebid.net\",\"cat\":[\"1\",\"2\"],\"name\":\"test\",\"paid\":1,\"publisher\":{\"name\":\"name\"},\"id\":\"appId\",\"bundle\":\"com.test.test\",\"pagecat\":[\"1\",\"2\"]}";
+        String expectedString = "{\"ver\":\"1\",\"privacypolicy\":1,\"keywords\":\"blah, blah\",\"content\":{\"url\":\"test.content.com\"},\"sectioncat\":[\"1\",\"2\"],\"storeurl\":\"test.url.com\",\"domain\":\"com.us.prebid.net\",\"cat\":[\"1\",\"2\"],\"name\":\"test\",\"paid\":1,\"publisher\":{\"name\":\"name\"},\"id\":\"appId\",\"bundle\":\"com.test.test\",\"pagecat\":[\"1\",\"2\"]}";
         assertEquals("got: " + actualObj.toString(), expectedString, actualObj.toString());
     }
 }

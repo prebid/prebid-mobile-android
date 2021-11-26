@@ -17,9 +17,11 @@
 package org.prebid.mobile.rendering.bidding.parallel;
 
 import android.content.Context;
-
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.data.bid.ContentObject;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
@@ -34,13 +36,7 @@ import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.Set;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
-
-import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.LOADING;
-import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
-import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
-import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_PREBID;
+import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.*;
 
 public abstract class BaseInterstitialAdUnit {
     private static final String TAG = BaseInterstitialAdUnit.class.getSimpleName();
@@ -107,8 +103,8 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     abstract void requestAdWithBid(
-        @Nullable
-            Bid bid);
+            @Nullable
+                    Bid bid);
 
     abstract void showGamAd();
 
@@ -158,7 +154,7 @@ public abstract class BaseInterstitialAdUnit {
                 break;
             default:
                 notifyErrorListener(new AdException(AdException.INTERNAL_ERROR,
-                                                    "show(): Encountered an invalid mInterstitialAdUnitState - " + mInterstitialAdUnitState));
+                        "show(): Encountered an invalid mInterstitialAdUnitState - " + mInterstitialAdUnitState));
         }
     }
 
@@ -258,9 +254,9 @@ public abstract class BaseInterstitialAdUnit {
 
     private void initPrebidRenderingSdk() {
         try {
-            PrebidRenderingSettings.initializeSDK(getContext(), () -> { });
-        }
-        catch (AdException e) {
+            PrebidRenderingSettings.initializeSDK(getContext(), () -> {
+            });
+        } catch (AdException e) {
             e.printStackTrace();
         }
     }
@@ -272,8 +268,7 @@ public abstract class BaseInterstitialAdUnit {
     private void initInterstitialController() {
         try {
             mInterstitialController = new InterstitialController(getContext(), mControllerListener);
-        }
-        catch (AdException e) {
+        } catch (AdException e) {
             notifyErrorListener(e);
         }
     }
@@ -284,7 +279,7 @@ public abstract class BaseInterstitialAdUnit {
 
     private boolean isAuctionWinnerReadyToDisplay() {
         return mInterstitialAdUnitState == READY_TO_DISPLAY_PREBID
-               || mInterstitialAdUnitState == READY_TO_DISPLAY_GAM;
+                || mInterstitialAdUnitState == READY_TO_DISPLAY_GAM;
     }
 
     private boolean isAdLoadAllowed() {
@@ -294,6 +289,10 @@ public abstract class BaseInterstitialAdUnit {
     @VisibleForTesting
     final InterstitialAdUnitState getAdUnitState() {
         return mInterstitialAdUnitState;
+    }
+
+    public void setContentObject(ContentObject content) {
+        mAdUnitConfig.setContentUrl(content.getUrl());
     }
 
     enum AdListenerEvent {
