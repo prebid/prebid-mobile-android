@@ -8,11 +8,10 @@ import org.prebid.mobile.rendering.errors.AdException
 
 object InAppGamRewardedInterstitial {
 
-    private var eventHandler: GamRewardedEventHandler? = null
     private var adUnit: RewardedAdUnit? = null
 
     fun create(activity: Activity, adUnitId: String, configId: String) {
-        eventHandler = GamRewardedEventHandler(activity, adUnitId)
+        val eventHandler = GamRewardedEventHandler(activity, adUnitId)
         adUnit = RewardedAdUnit(activity, configId, eventHandler)
         adUnit?.setRewardedAdUnitListener(object : RewardedAdUnitListener {
             override fun onAdLoaded(rewardedAdUnit: RewardedAdUnit?) {
@@ -29,9 +28,6 @@ object InAppGamRewardedInterstitial {
     }
 
     fun destroy() {
-        eventHandler?.destroy()
-        eventHandler = null
-
         adUnit?.destroy()
         adUnit = null
     }

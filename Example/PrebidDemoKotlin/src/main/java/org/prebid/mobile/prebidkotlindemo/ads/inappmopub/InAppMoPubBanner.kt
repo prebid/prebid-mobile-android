@@ -46,7 +46,7 @@ object InAppMoPubBanner {
         bannerView?.destroy()
         bannerView = null
 
-        adUnit?.stopRefresh()
+        adUnit?.destroy()
         adUnit = null
     }
 

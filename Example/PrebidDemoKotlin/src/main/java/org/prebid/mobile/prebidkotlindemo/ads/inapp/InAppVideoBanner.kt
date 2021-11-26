@@ -19,7 +19,7 @@ object InAppVideoBanner {
     }
 
     fun destroy() {
-        bannerView?.stopRefresh()
+        bannerView?.destroy()
         bannerView = null
     }
 

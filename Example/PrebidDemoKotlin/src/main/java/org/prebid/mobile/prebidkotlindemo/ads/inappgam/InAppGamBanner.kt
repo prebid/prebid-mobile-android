@@ -8,7 +8,6 @@ import org.prebid.mobile.rendering.bidding.parallel.BannerView
 object InAppGamBanner {
 
     private var adView: BannerView? = null
-    private var eventHandler: GamBannerEventHandler? = null
 
     fun create(wrapper: ViewGroup, autoRefreshTime: Int, width: Int, height: Int, adUnitId: String, configId: String) {
         val eventHandler = GamBannerEventHandler(wrapper.context, adUnitId, AdSize(width, height))
@@ -20,11 +19,8 @@ object InAppGamBanner {
     }
 
     fun destroy() {
-        adView?.stopRefresh()
+        adView?.destroy()
         adView = null
-
-        eventHandler?.destroy()
-        eventHandler = null
     }
 
 }
