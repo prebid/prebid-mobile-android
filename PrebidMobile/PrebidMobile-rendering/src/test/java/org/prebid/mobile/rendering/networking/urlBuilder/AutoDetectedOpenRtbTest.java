@@ -115,7 +115,7 @@ public class AutoDetectedOpenRtbTest {
         AdIdManager.setAdId("bar");
         AdIdManager.setLimitAdTrackingEnabled(true);
 
-        mParamBuilderArray.add(new AppInfoParameterBuilder());
+        mParamBuilderArray.add(new AppInfoParameterBuilder(new AdConfiguration()));
         AdRequestInput newAdRequestInput = URLBuilder.buildParameters(mParamBuilderArray, mOriginalAdRequestInput);
         BidRequest newOpenRtbParams = newAdRequestInput.getBidRequest();
 

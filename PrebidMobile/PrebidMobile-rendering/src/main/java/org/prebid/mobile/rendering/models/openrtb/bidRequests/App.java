@@ -29,6 +29,7 @@ public class App extends BaseBid {
     public String domain = null;
     //TODO: ORTB2.5: remove this? After product's decision?
     public String storeurl = null;
+    public String contentUrl = null;
     public String[] cat = null;
     public String[] sectioncat = null;
     public String[] pagecat = null;
@@ -78,6 +79,12 @@ public class App extends BaseBid {
                 jsonArray.put(pageCat);
             }
             toJSON(jsonObject, "pagecat", jsonArray);
+        }
+
+        if (contentUrl != null) {
+            JSONObject contentObject = new JSONObject();
+            contentObject.put("url", contentUrl);
+            toJSON(jsonObject, "content", contentObject);
         }
 
         toJSON(jsonObject, "ver", ver);

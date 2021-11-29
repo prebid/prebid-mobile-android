@@ -97,7 +97,7 @@ public abstract class Requester {
         ArrayList<ParameterBuilder> parameterBuilderArray = new ArrayList<>();
         parameterBuilderArray.add(new BasicParameterBuilder(mAdConfiguration, resources, browserActivityAvailable));
         parameterBuilderArray.add(new GeoLocationParameterBuilder());
-        parameterBuilderArray.add(new AppInfoParameterBuilder());
+        parameterBuilderArray.add(new AppInfoParameterBuilder(mAdConfiguration));
         parameterBuilderArray.add(new DeviceInfoParameterBuilder(mAdConfiguration));
         parameterBuilderArray.add(new NetworkParameterBuilder());
         parameterBuilderArray.add(new UserConsentParameterBuilder(mUserConsentManager));

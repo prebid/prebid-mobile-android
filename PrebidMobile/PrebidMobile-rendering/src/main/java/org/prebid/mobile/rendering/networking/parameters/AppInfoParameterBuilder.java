@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.networking.parameters;
 
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
+import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.App;
 import org.prebid.mobile.rendering.networking.targeting.Targeting;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
@@ -27,6 +28,12 @@ import java.util.Map;
 import java.util.Set;
 
 public class AppInfoParameterBuilder extends ParameterBuilder {
+
+    private AdConfiguration mAdConfiguration;
+
+    public AppInfoParameterBuilder(AdConfiguration adConfiguration) {
+        mAdConfiguration = adConfiguration;
+    }
 
     @Override
     public void appendBuilderParameters(AdRequestInput adRequestInput) {
@@ -56,6 +63,11 @@ public class AppInfoParameterBuilder extends ParameterBuilder {
         String publisherName = Targeting.getPublisherName();
         if (Utils.isNotBlank(publisherName)) {
             app.getPublisher().name = publisherName;
+        }
+
+        String contentUrl = mAdConfiguration.getContentUrl();
+        if (Utils.isNotBlank(contentUrl)) {
+            app.contentUrl = contentUrl;
         }
 
         app.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidRenderingSettings.SDK_VERSION));

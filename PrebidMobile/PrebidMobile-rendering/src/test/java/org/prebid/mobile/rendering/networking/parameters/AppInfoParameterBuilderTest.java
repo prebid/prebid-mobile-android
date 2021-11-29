@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
+import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.App;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
@@ -30,6 +31,7 @@ import org.prebid.mobile.rendering.networking.targeting.Targeting;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
+import org.prebid.mobile.rendering.video.vast.Ad;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.RobolectricTestRunner;
 
@@ -59,7 +61,9 @@ public class AppInfoParameterBuilderTest {
 
     @Test
     public void testAppendBuilderParameters() throws Exception {
-        AppInfoParameterBuilder builder = new AppInfoParameterBuilder();
+        AdConfiguration adConfiguration = new AdConfiguration();
+        adConfiguration.setContentUrl("test.com");
+        AppInfoParameterBuilder builder = new AppInfoParameterBuilder(adConfiguration);
         AdRequestInput adRequestInput = new AdRequestInput();
 
         final String expectedStoreurl = "https://google.play.com";
@@ -77,6 +81,7 @@ public class AppInfoParameterBuilderTest {
         expectedApp.storeurl = expectedStoreurl;
         expectedApp.getPublisher().name = expectedPublisherName;
         expectedApp.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidRenderingSettings.SDK_VERSION));
+        expectedApp.contentUrl = "test.com";
 
         assertEquals(expectedBidRequest.getJsonObject().toString(),
                      adRequestInput.getBidRequest().getJsonObject().toString());
@@ -87,7 +92,7 @@ public class AppInfoParameterBuilderTest {
     throws JSONException {
         Targeting.addContextData("context", "contextData");
 
-        AppInfoParameterBuilder builder = new AppInfoParameterBuilder();
+        AppInfoParameterBuilder builder = new AppInfoParameterBuilder(new AdConfiguration());
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
