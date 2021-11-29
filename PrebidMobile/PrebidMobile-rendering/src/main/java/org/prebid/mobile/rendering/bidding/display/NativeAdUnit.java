@@ -39,9 +39,11 @@ class NativeAdUnit extends MediationBaseAdUnit {
     private static final String TAG = NativeAdUnit.class.getSimpleName();
 
     private OnNativeFetchCompleteListener mNativeFetchCompleteListener;
-    private final OnFetchCompleteListener mOnFetchCompleteListener = result -> {
+    private BidResponse mBidResponse;
+
+    private final OnFetchCompleteListener mOnFetchCompleteListener = (result) -> {
         if (mNativeFetchCompleteListener != null) {
-            mNativeFetchCompleteListener.onComplete(new NativeFetchDemandResult(result));
+            mNativeFetchCompleteListener.onComplete(new NativeFetchDemandResult(result, mBidResponse));
         }
     };
 
@@ -72,7 +74,9 @@ class NativeAdUnit extends MediationBaseAdUnit {
             return;
         }
 
-        final NativeFetchDemandResult result = new NativeFetchDemandResult(FetchDemandResult.SUCCESS);
+        mBidResponse = response;
+
+        final NativeFetchDemandResult result = new NativeFetchDemandResult(FetchDemandResult.SUCCESS, response);
         BidResponseCache.getInstance().putBidResponse(response);
         result.setKeyWordsMap(response.getTargetingWithCacheId());
 
@@ -86,7 +90,7 @@ class NativeAdUnit extends MediationBaseAdUnit {
             return;
         }
         final FetchDemandResult fetchDemandResult = FetchDemandResult.parseErrorMessage(exception.getMessage());
-        mNativeFetchCompleteListener.onComplete(new NativeFetchDemandResult(fetchDemandResult));
+        mNativeFetchCompleteListener.onComplete(new NativeFetchDemandResult(fetchDemandResult, null));
     }
 
     public void fetchDemand(

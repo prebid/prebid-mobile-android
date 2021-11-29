@@ -512,6 +512,10 @@ public class BannerView extends FrameLayout {
         return mBidResponse == null || mBidResponse.getWinningBid() == null;
     }
 
+    public BidResponse getBidResponse() {
+        return mBidResponse;
+    }
+
     //region ==================== HelperMethods for Unit Tests. Should be used only in tests
     @VisibleForTesting
     final void setBidResponse(BidResponse response) {

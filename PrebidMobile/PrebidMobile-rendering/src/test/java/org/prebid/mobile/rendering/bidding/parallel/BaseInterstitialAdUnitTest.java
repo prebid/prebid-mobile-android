@@ -23,9 +23,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdPosition;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -37,8 +40,9 @@ import java.util.Set;
 
 import androidx.annotation.Nullable;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -143,4 +147,46 @@ public class BaseInterstitialAdUnitTest {
         mBaseInterstitialAdUnit.setPbAdSlot(expected);
         assertEquals(expected, mBaseInterstitialAdUnit.getPbAdSlot());
     }
+
+    @Test
+    public void loadAd_BidResponseIsInitialized() {
+        BidResponse bidResponse = mBaseInterstitialAdUnit.getBidResponse();
+        assertNull(bidResponse);
+
+        final BidResponse mockBidResponse = mock(BidResponse.class);
+        final Bid mockBid = mock(Bid.class);
+        when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
+        BidRequesterListener listener = getBidRequesterListener();
+        listener.onFetchCompleted(mockBidResponse);
+
+        mBaseInterstitialAdUnit.loadAd();
+
+        BidResponse actualBidResponse = mBaseInterstitialAdUnit.getBidResponse();
+        assertEquals(mockBidResponse, actualBidResponse);
+    }
+
+    @Test
+    public void loadAdWithError_BidResponseIsNull() {
+        BidResponse bidResponse = mBaseInterstitialAdUnit.getBidResponse();
+        assertNull(bidResponse);
+
+        final AdException adException = mock(AdException.class);
+        BidRequesterListener listener = getBidRequesterListener();
+        listener.onError(adException);
+        mBaseInterstitialAdUnit.loadAd();
+
+        bidResponse = mBaseInterstitialAdUnit.getBidResponse();
+        assertNull(bidResponse);
+    }
+
+    private BidRequesterListener getBidRequesterListener() {
+        try {
+            return (BidRequesterListener) WhiteBox.field(BaseInterstitialAdUnit.class, "mBidRequesterListener").get(mBaseInterstitialAdUnit);
+        }
+        catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

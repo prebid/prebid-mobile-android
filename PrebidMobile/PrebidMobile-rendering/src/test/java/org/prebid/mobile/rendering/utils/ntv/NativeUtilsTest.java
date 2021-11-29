@@ -40,7 +40,7 @@ public class NativeUtilsTest {
 
     @Test
     public void findNativeAd_nullKeyWordMap_DoNothing() {
-        final NativeFetchDemandResult fetchDemandResult = new NativeFetchDemandResult(FetchDemandResult.SUCCESS);
+        final NativeFetchDemandResult fetchDemandResult = new NativeFetchDemandResult(FetchDemandResult.SUCCESS, null);
         final NativeAdCallback mockCallback = mock(NativeAdCallback.class);
 
         NativeUtils.findNativeAd(fetchDemandResult, mockCallback);
@@ -51,7 +51,7 @@ public class NativeUtilsTest {
     @Test
     public void findNativeAd_validAdWithBidResponse_InvokeCallbackWithNativeAd()
     throws InvocationTargetException, IllegalAccessException {
-        final NativeFetchDemandResult fetchDemandResult = new NativeFetchDemandResult(FetchDemandResult.SUCCESS);
+        final NativeFetchDemandResult fetchDemandResult = new NativeFetchDemandResult(FetchDemandResult.SUCCESS, null);
         final BidResponseCache instance = BidResponseCache.getInstance();
         final BidResponse mockBidResponse = mock(BidResponse.class);
         final Bid mockBid = mock(Bid.class);
@@ -77,7 +77,7 @@ public class NativeUtilsTest {
     @Test
     public void findNativeAd_validAdNoBidResponse_InvokeCallbackWithNull() {
         NativeAdCallback mockCallback = mock(NativeAdCallback.class);
-        final NativeFetchDemandResult fetchDemandResult = new NativeFetchDemandResult(FetchDemandResult.SUCCESS);
+        final NativeFetchDemandResult fetchDemandResult = new NativeFetchDemandResult(FetchDemandResult.SUCCESS, null);
         final HashMap<String, String> keyWordsMap = new HashMap<>();
         keyWordsMap.put("key", "value");
         fetchDemandResult.setKeyWordsMap(keyWordsMap);

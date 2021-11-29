@@ -16,14 +16,19 @@
 
 package org.prebid.mobile.rendering.bidding.data;
 
+import androidx.annotation.Nullable;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+
 import java.util.Map;
 
 public class NativeFetchDemandResult {
     private final FetchDemandResult mFetchDemandResult;
     private Map<String, String> mKeyWordsMap;
+    private BidResponse mBidResponse;
 
-    public NativeFetchDemandResult(FetchDemandResult fetchDemandResult) {
+    public NativeFetchDemandResult(FetchDemandResult fetchDemandResult, @Nullable BidResponse bidResponse) {
         mFetchDemandResult = fetchDemandResult;
+        mBidResponse = bidResponse;
     }
 
     public FetchDemandResult getFetchDemandResult() {
@@ -36,6 +41,10 @@ public class NativeFetchDemandResult {
 
     public void setKeyWordsMap(Map<String, String> keyWordsMap) {
         mKeyWordsMap = keyWordsMap;
+    }
+
+    public BidResponse getBidResponse() {
+        return mBidResponse;
     }
 
     @Override

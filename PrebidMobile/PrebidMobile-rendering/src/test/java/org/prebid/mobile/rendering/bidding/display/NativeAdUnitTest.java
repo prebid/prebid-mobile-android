@@ -109,6 +109,6 @@ public class NativeAdUnitTest {
 
         mSpyNativeAdUnit.onErrorReceived(new AdException("Timeout", "Timeout"));
 
-        verify(mMockListener, times(1)).onComplete(eq(new NativeFetchDemandResult(FetchDemandResult.TIMEOUT)));
+        verify(mMockListener, times(1)).onComplete(eq(new NativeFetchDemandResult(FetchDemandResult.TIMEOUT, null)));
     }
 }

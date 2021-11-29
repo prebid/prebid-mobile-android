@@ -277,6 +277,10 @@ public abstract class BaseInterstitialAdUnit {
         return mBidResponse != null ? mBidResponse.getWinningBid() : null;
     }
 
+    public BidResponse getBidResponse() {
+        return mBidResponse;
+    }
+
     private boolean isAuctionWinnerReadyToDisplay() {
         return mInterstitialAdUnitState == READY_TO_DISPLAY_PREBID
                 || mInterstitialAdUnitState == READY_TO_DISPLAY_GAM;
