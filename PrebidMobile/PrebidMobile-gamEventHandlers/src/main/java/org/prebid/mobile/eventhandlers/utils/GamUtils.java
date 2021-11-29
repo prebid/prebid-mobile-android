@@ -120,7 +120,7 @@ public class GamUtils {
     }
 
     private static NativeFetchDemandResult createSuccessDemandResult(String cacheId) {
-        final NativeFetchDemandResult nativeFetchDemandResult = new NativeFetchDemandResult(FetchDemandResult.SUCCESS);
+        final NativeFetchDemandResult nativeFetchDemandResult = new NativeFetchDemandResult(FetchDemandResult.SUCCESS, null);
         final Map<String, String> keywordMap = new HashMap<>();
         keywordMap.put(BidResponse.KEY_CACHE_ID, cacheId);
 

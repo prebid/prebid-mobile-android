@@ -180,8 +180,9 @@ public class GamUtilsTest {
 
     @Test
     public void prepare_AddReservedKeys() {
+        BidResponse bidResponse = mock(BidResponse.class);
         final AdManagerAdRequest publisherAdRequest = new AdManagerAdRequest.Builder().build();
-        final NativeFetchDemandResult fetchDemandResult = new NativeFetchDemandResult(FetchDemandResult.SUCCESS);
+        final NativeFetchDemandResult fetchDemandResult = new NativeFetchDemandResult(FetchDemandResult.SUCCESS, bidResponse);
         final HashMap<String, String> keyWordsMap = new HashMap<>();
         keyWordsMap.put("key", "value");
         fetchDemandResult.setKeyWordsMap(keyWordsMap);

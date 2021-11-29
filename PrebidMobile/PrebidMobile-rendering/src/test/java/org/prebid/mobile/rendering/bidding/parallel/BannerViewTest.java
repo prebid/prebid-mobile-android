@@ -141,6 +141,14 @@ public class BannerViewTest {
     }
 
     @Test
+    public void loadAd_bidResponseIsInitialized() {
+        mBannerView.loadAd();
+
+        BidResponse response = mBannerView.getBidResponse();
+        System.out.println(response);
+    }
+
+    @Test
     public void loadAd_NativeWithEmptyOrNullNativeStylesCreative_DoNothing()
     throws IllegalAccessException {
         NativeAdConfiguration nativeAdConfiguration = new NativeAdConfiguration();
@@ -250,8 +258,10 @@ public class BannerViewTest {
         listener.onFetchCompleted(mockBidResponse);
 
         Bid winningBid = mBannerView.getWinnerBid();
+        BidResponse actualResponse = mBannerView.getBidResponse();
 
         assertEquals(winningBid, mockBid);
+        assertEquals(mockBidResponse, actualResponse);
         verify(mMockEventHandler, times(1)).requestAdWithBid(eq(mockBid));
         assertTrue(mBannerView.isPrimaryAdServerRequestInProgress());
     }
@@ -268,6 +278,7 @@ public class BannerViewTest {
         listener.onError(any());
 
         assertNull(mBannerView.getWinnerBid());
+        assertNull(mBannerView.getBidResponse());
         verify(mMockEventHandler, times(1)).requestAdWithBid(eq(null));
     }
     //endregion ======================= BidRequestListener tests
