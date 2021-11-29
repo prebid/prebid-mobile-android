@@ -396,7 +396,7 @@ public class BannerView extends FrameLayout {
         return mAdUnitConfig.getPbAdSlot();
     }
 
-    public void setContentObject(ContentObject content) {
+    public void addContent(ContentObject content) {
         mAdUnitConfig.setContentUrl(content.getUrl());
     }
     //endregion ==================== getters and setters

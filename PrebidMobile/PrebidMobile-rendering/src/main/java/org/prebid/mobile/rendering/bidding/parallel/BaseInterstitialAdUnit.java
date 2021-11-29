@@ -291,7 +291,7 @@ public abstract class BaseInterstitialAdUnit {
         return mInterstitialAdUnitState;
     }
 
-    public void setContentObject(ContentObject content) {
+    public void addContent(ContentObject content) {
         mAdUnitConfig.setContentUrl(content.getUrl());
     }
 

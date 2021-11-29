@@ -150,7 +150,7 @@ public abstract class MediationBaseAdUnit {
         return mAdUnitConfig.getPbAdSlot();
     }
 
-    public void setContentObject(ContentObject content) {
+    public void addContent(ContentObject content) {
         mAdUnitConfig.setContentUrl(content.getUrl());
     }
 
