@@ -5,7 +5,7 @@ def ARCHIVE_NAME = "${omSdkModuleName}-${omSdkVersion}"
 publishing {
     publications {
         omsdk(MavenPublication) {
-            artifactId "${omSdkModuleName}"
+            artifactId "prebid-mobile-sdk-open-measurement"
             artifact "${project.rootDir}/PrebidMobile/${omSdkModuleName}/${ARCHIVE_NAME}.aar"
             version "$omSdkVersion"
             groupId "$artifactGroupId"

@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 apply from: '../shared-rendering.gradle'
-apply from: 'publish-rendering-sdk.gradle'
+apply from: '../publish.gradle'
 apply from: 'publish-omsdk.gradle'
 
 android {

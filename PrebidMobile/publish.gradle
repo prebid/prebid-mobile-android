@@ -1,0 +1,56 @@
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        mopubAdapter(MavenPublication) {
+            def artifactName = getArtifactId(project)
+            artifactId "$artifactName"
+            artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
+            version "$prebidVersionName"
+            groupId "$artifactGroupId"
+
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+                configurations.implementation.allDependencies.withType(ModuleDependency) { ModuleDependency dp ->
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    if (dp.group == "prebid-mobile") {
+                        def artifactId = ""
+                        if (dp.name.contains("core")) {
+                            artifactId = "prebid-mobile-sdk-core"
+                        } else if (dp.name.contains("rendering")) {
+                            artifactId = "prebid-mobile-sdk-rendering"
+                        } else if (dp.name.contains("omsdk")) {
+                            artifactId = "prebid-mobile-sdk-open-measurement"
+                        } else {
+                            artifactId = dp.name
+                        }
+
+                        dependencyNode.appendNode('groupId', "org.prebid")
+                        dependencyNode.appendNode('artifactId', artifactId)
+                        dependencyNode.appendNode('version', "$prebidVersionName")
+                    } else {
+                        dependencyNode.appendNode('groupId', dp.group)
+                        dependencyNode.appendNode('artifactId', dp.name)
+                        dependencyNode.appendNode('version', dp.version)
+                    }
+
+                    if (dp.excludeRules.size() > 0) {
+                        def exclusions = dependencyNode.appendNode('exclusions')
+                        dp.excludeRules.each { ExcludeRule ex ->
+                            def exclusion = exclusions.appendNode('exclusion')
+                            exclusion.appendNode('groupId', ex.group)
+                            exclusion.appendNode('artifactId', ex.module)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = 'LocalArtifacts'
+            url = "file://$artifactFolder"
+        }
+    }
+}

@@ -41,3 +41,17 @@ allprojects {
         maven { url 'https://jitpack.io' }
     }
 }
+
+String getArtifactId(Project project) {
+    if (project.name == "PrebidMobile") {
+        return "prebid-mobile-sdk"
+    } else if (project.name == "PrebidMobile-core") {
+        return "prebid-mobile-sdk-core"
+    } else if (project.name == "PrebidMobile-rendering") {
+        return "prebid-mobile-sdk-rendering"
+    } else if (project.name == "omsdk-android") {
+        return "prebid-mobile-sdk-open-measurement"
+    } else {
+        return project.name
+    }
+}

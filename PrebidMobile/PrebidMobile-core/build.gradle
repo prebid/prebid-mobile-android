@@ -1,18 +1,20 @@
 apply from: '../shared-build.gradle'
+apply from: '../publish.gradle'
+apply from: '../publisher.gradle'
 
-project.afterEvaluate {
-    publishing {
-        publications {
-            library(MavenPublication) {
-                setGroupId "org.prebid"
-                setArtifactId "prebid-mobile-sdk-core"
-                version android.defaultConfig.versionName
-
-                artifact bundleDebugAar
-            }
-        }
-    }
-}
+//project.afterEvaluate {
+//    publishing {
+//        publications {
+//            library(MavenPublication) {
+//                setGroupId "org.prebid"
+//                setArtifactId "prebid-mobile-sdk-core"
+//                version android.defaultConfig.versionName
+//
+//                artifact bundleDebugAar
+//            }
+//        }
+//    }
+//}
 
 android {
 
@@ -21,9 +23,3 @@ android {
     }
 
 }
-
-dependencies {
-
-}
-
-apply from: '../publisher.gradle'
