@@ -15,11 +15,7 @@ cd ..
 BASEDIR="$PWD"
 PATH_ARTIFACTS=$BASEDIR/build/generated-artifacts/org/prebid
 PATH_GENERATED=$BASEDIR/generated
-PATH_LOGS=$PATH_GENERATED/logs
-PATH_FAT=$PATH_GENERATED/fat
 PATH_TEMP=$PATH_GENERATED/temp
-PATH_AAR=build/outputs/aar
-PATH_LIBS=build/libs
 
 echo "$BASEDIR"
 
@@ -46,7 +42,42 @@ function generateArtifacts() {
   runGradle :"${1}":javadocJar
   runGradle :"${1}":sourcesJar
   runGradle :"${1}":publishAllPublicationsToLocalArtifactsRepository
-#  runGradle :"${1}":generateMetadataFileForLibraryPublication
+}
+
+# $1 - aar name (without extension)
+function aarToJar() {
+  echoX "Transforming aar to jar"
+
+  cd "$PATH_GENERATED"
+  mkdir "$PATH_TEMP"
+  cp "${1}.aar" "$PATH_TEMP/${1}.aar"
+  cd "$PATH_TEMP"
+
+  # Extracting aar and classes.jar
+  unzip -q -o "${1}.aar"
+  mkdir output
+  mv classes.jar output/
+  cd output
+  jar xf classes.jar
+  rm classes.jar
+
+  if [ -f "../proguard.txt" ]; then
+    # Copying proguard rules
+    mv ../proguard.txt proguard.pro
+    mkdir -p META-INF/proguard
+    mv ./proguard.pro META-INF/proguard/
+
+    # Creating a jar file
+    jar cf "${1}".jar org* META-INF*
+    mv "${1}.jar" "$PATH_GENERATED"
+  else
+    # Creating a jar file for Open Measurement SDK
+    jar cf "${1}".jar com*
+    mv "${1}.jar" "$PATH_GENERATED"
+  fi
+
+  cd "$BASEDIR"
+  rm -r "$PATH_TEMP"
 }
 
 # $1 - regex, $2 - file to search, $3 createDir
@@ -100,122 +131,49 @@ for n in "${!modules[@]}"; do
 	echoX "Work with module: ${modules[$n]}, artifact id: ${artifactIds[$n]}"
 	generateArtifacts "${modules[$n]}"
 
+	savePath="${PATH_GENERATED}/${artifactIds[$n]}"
   # Moving aar
-	mv "${PATH_ARTIFACTS}/${artifactIds[$n]}/${VERSION_PREBID}/${artifactIds[$n]}-${VERSION_PREBID}.aar" "${PATH_GENERATED}/${artifactIds[$n]}.aar"
+	mv "${PATH_ARTIFACTS}/${artifactIds[$n]}/${VERSION_PREBID}/${artifactIds[$n]}-${VERSION_PREBID}.aar" "${savePath}.aar"
 	# Moving pom
-	mv "${PATH_ARTIFACTS}/${artifactIds[$n]}/${VERSION_PREBID}/${artifactIds[$n]}-${VERSION_PREBID}.pom" "${PATH_GENERATED}/${artifactIds[$n]}.pom"
+	mv "${PATH_ARTIFACTS}/${artifactIds[$n]}/${VERSION_PREBID}/${artifactIds[$n]}-${VERSION_PREBID}.pom" "${savePath}.pom"
 	# Moving javadoc
-	mv "${projectPaths[$n]}/build/libs/${modules[$n]}-javadoc.jar" "${PATH_GENERATED}/${artifactIds[$n]}-javadoc.jar"
+	mv "${projectPaths[$n]}/build/libs/${modules[$n]}-javadoc.jar" "${savePath}-javadoc.jar"
 	# Moving sources$
-	mv "${projectPaths[$n]}/build/libs/${modules[$n]}-sources.jar" "${PATH_GENERATED}/${artifactIds[$n]}-sources.jar"
+	mv "${projectPaths[$n]}/build/libs/${modules[$n]}-sources.jar" "${savePath}-sources.jar"
+
+	aarToJar "${artifactIds[$n]}"
 done
 
 
 echoX "Work with Open measurement SDK"
-mv "${PATH_ARTIFACTS}/prebid-mobile-sdk-open-measurement/${VERSION_OM_SDK}/prebid-mobile-sdk-open-measurement-${VERSION_OM_SDK}.aar" "${PATH_GENERATED}/prebid-mobile-sdk-open-measurement.aar"
-mv "${PATH_ARTIFACTS}/prebid-mobile-sdk-open-measurement/${VERSION_OM_SDK}/prebid-mobile-sdk-open-measurement-${VERSION_OM_SDK}.pom" "${PATH_GENERATED}/prebid-mobile-sdk-open-measurement.pom"
+openMeasurementPath="${PATH_GENERATED}/prebid-mobile-sdk-open-measurement"
+mv "${PATH_ARTIFACTS}/prebid-mobile-sdk-open-measurement/${VERSION_OM_SDK}/prebid-mobile-sdk-open-measurement-${VERSION_OM_SDK}.aar" "${openMeasurementPath}.aar"
+mv "${PATH_ARTIFACTS}/prebid-mobile-sdk-open-measurement/${VERSION_OM_SDK}/prebid-mobile-sdk-open-measurement-${VERSION_OM_SDK}.pom" "${openMeasurementPath}.pom"
+aarToJar "prebid-mobile-sdk-open-measurement"
 
 
+echoX "Preparing fat PrebidDemo library (jar for local usages)"
+cd "$PATH_GENERATED"
+mkdir "$PATH_TEMP"
+cp *.jar temp
+cd "$PATH_TEMP"
+unzip -uo "${PATH_GENERATED}/prebid-mobile-sdk.jar"
+unzip -uo "${PATH_GENERATED}/prebid-mobile-sdk-core.jar"
+unzip -uo "${PATH_GENERATED}/prebid-mobile-sdk-rendering.jar"
+unzip -uo "${PATH_GENERATED}/prebid-mobile-sdk-open-measurement.jar"
+rm *.jar
+
+# Append proguard rules
+#unzip -B "$PATH_GENERATED/PrebidMobile.jar" "META-INF/proguard/proguard.pro"
+#cat "$PATH_TEMP/META-INF/proguard/proguard.pro~" >> "$PATH_TEMP/META-INF/proguard/proguard.pro"
+#rm "$PATH_TEMP/META-INF/proguard/proguard.pro~"
+
+rm "${PATH_TEMP}/org/prebid/mobile/core/BuildConfig.class"
+jar -cvf PrebidMobile.jar -C "$PATH_TEMP" .
+mv PrebidMobile.jar "$PATH_GENERATED/fat.jar"
+rm -r "$PATH_TEMP"
+
+echoX "Please find Prebid Mobile product in $PATH_GENERATED"
 echoX "Completed!"
 runGradle clean
 runGradle --stop
-
-#  # Make generated/temp/output folder
-#	mkdir "$PATH_TEMP"
-#	cd "$PATH_TEMP"
-#	mkdir output
-#
-#	MODULE_AAR="${projectPaths[$n]}/$PATH_AAR"
-#	cd "$MODULE_AAR"
-#	unzip -q -o "${modules[$n]}"-release.aar
-#	cd "$PATH_TEMP"/output
-#
-#	# Extracting the Contents of a JAR File
-#	jar xf $MODULE_AAR/classes.jar
-#	rm $MODULE_AAR/classes.jar
-#
-#	# Handle ProGuard rules from .aar into .jar
-#	# rename proguard.txt to proguard.pro
-#	mv $MODULE_AAR/proguard.{txt,pro}
-#	mkdir -p $MODULE_AAR/META-INF
-#	mkdir $MODULE_AAR/META-INF/proguard
-#	mv $MODULE_AAR/proguard.pro $MODULE_AAR/META-INF/proguard
-#	# move META-INF into a result direcotory
-#	mv $MODULE_AAR/META-INF $PATH_TEMP/output
-#
-#	# Creating a JAR File
-#	jar cf ${modules[$n]}.jar org* META-INF*
-#
-#	# move jar into a result direcotory
-#	mv ${modules[$n]}.jar $PATH_GENERATED
-#
-#	cd $BASEDIR
-#
-#	# Javadoc
-#	echoX "Preparing ${modules[$n]} Javadoc"
-#	./gradlew -i --no-daemon ${modules[$n]}:javadocJar>$PATH_LOGS/javadoc.log 2>&1 || die "Build Javadoc failed, check log in $PATH_LOGS/javadoc.log"
-#
-#	# Sources
-#	echoX "Preparing ${modules[$n]} Sources"
-#	./gradlew -i --no-daemon ${modules[$n]}:sourcesJar>$PATH_LOGS/sources.log 2>&1 || die "Build Sources failed, check log in $PATH_LOGS/sources.log"
-#
-#	# copy sources and javadoc into a result direcotory
-#	PATH_LIBS_ABSOLUTE="${projectPaths[$n]}/$PATH_LIBS"
-#	cp -a $PATH_LIBS_ABSOLUTE/. $PATH_GENERATED/
-#
-#	# clean tmp dir
-#	rm -r $PATH_TEMP
-#done
-
-#### omsdk
-#echo -e "\n"
-#echoX "Assembling omsdk"
-#
-#mkdir $PATH_TEMP
-#cd $PATH_TEMP
-#mkdir output
-#cd output
-#cp -a "$BASEDIR/PrebidMobile/omsdk-android/omsdk-android-1.3.17.aar" "$PATH_TEMP/output"
-#unzip -q -o omsdk-android-1.3.17.aar
-## Delete all files instead classes.jar
-#find . ! -name 'classes.jar' -type f -exec rm -f {} +
-#unzip -q -o classes.jar
-#rm classes.jar
-#
-#jar cf omsdk.jar com*
-#mv omsdk.jar $PATH_GENERATED
-#cd $BASEDIR
-#rm -r $PATH_TEMP
-#
-## Prepare fat PrebidDemo library which can be used for LocalJar
-#echo -e "\n"
-#echoX "Preparing fat PrebidDemo library"
-#cd $PATH_GENERATED
-#mkdir $PATH_TEMP
-#
-#cd $PATH_TEMP;
-#
-#unzip -uo $PATH_GENERATED/omsdk.jar
-#unzip -uo $PATH_GENERATED/PrebidMobile.jar
-#unzip -uo $PATH_GENERATED/PrebidMobile-core.jar
-#unzip -uo $PATH_GENERATED/PrebidMobile-rendering.jar
-#
-## unzip second proguard
-#unzip -B $PATH_GENERATED/PrebidMobile.jar "META-INF/proguard/proguard.pro"
-## append text from second proguard
-#cat "$PATH_TEMP/META-INF/proguard/proguard.pro~" >> "$PATH_TEMP/META-INF/proguard/proguard.pro"
-#rm "$PATH_TEMP/META-INF/proguard/proguard.pro~"
-#
-#rm $PATH_TEMP/org/prebid/mobile/core/BuildConfig.class
-#jar -cvf PrebidMobile.jar -C $PATH_TEMP .
-#
-#mkdir $PATH_FAT
-#mv PrebidMobile.jar $PATH_FAT
-#
-#rm -r $PATH_TEMP
-#
-########
-## End
-########
-#echoX "Please find Prebid Mobile product in $PATH_GENERATED"
-#echo -e "\n${GREEN}Done!${NO_COLOR} \n"
