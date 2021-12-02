@@ -181,7 +181,7 @@ class DemandFetcher {
             auctionId = UUID.randomUUID().toString();
             lastFetchTime = System.currentTimeMillis();
             // check input values
-            demandHandler.post(new Runnable() {
+            demandHandler.postAtFrontOfQueue(new Runnable() {
 
                 @Override
                 public void run() {
