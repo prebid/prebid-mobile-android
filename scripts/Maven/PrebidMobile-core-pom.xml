@@ -3,7 +3,7 @@
     <!-- SonaType Requirements -->
     <groupId>org.prebid</groupId>
     <artifactId>prebid-mobile-sdk-core</artifactId>
-    <version>1.12</version>
+    <version>1.12.1</version>
 
     <name>Prebid Mobile Android SDK</name>
     <description>Prebid Mobile</description>

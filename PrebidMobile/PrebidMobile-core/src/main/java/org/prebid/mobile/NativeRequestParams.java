@@ -36,6 +36,7 @@ class NativeRequestParams {
     static String DATA = "data";
     static String NATIVE = "native";
     static String REQUEST = "request";
+    static final String ID = "id";
 
     private NativeAdUnit.CONTEXT_TYPE contextType;
 
