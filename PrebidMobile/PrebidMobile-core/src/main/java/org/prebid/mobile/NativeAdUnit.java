@@ -1,6 +1,6 @@
 package org.prebid.mobile;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * For details of the configuration of native imps, please check this documentation:

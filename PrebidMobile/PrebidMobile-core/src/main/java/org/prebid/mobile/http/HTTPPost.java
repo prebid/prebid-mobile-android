@@ -17,7 +17,7 @@
 package org.prebid.mobile.http;
 
 import android.os.Looper;
-import android.support.annotation.MainThread;
+import androidx.annotation.MainThread;
 
 import org.json.JSONException;
 import org.json.JSONObject;
