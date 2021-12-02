@@ -5,7 +5,7 @@ ext {
     prebidVersionCode = 1
     minSDKVersion = 16
     targetSDKVersion = 28
-    compileSdkVersion = 28
+    compileSdkVersion = 30
     buildToolsVersion = "28.0.3"
 }
 
