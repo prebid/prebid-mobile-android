@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.prebid</groupId>
-    <artifactId>prebid-mobile-sdk</artifactId>
-    <version>1.13.0-beta1</version>
-    <packaging>jar</packaging>
+    <artifactId>prebid-mobile-sdk-open-measurement</artifactId>
+    <version>1.3.17</version>
 
+    <packaging>jar</packaging>
     <name>Prebid Mobile Android SDK</name>
     <description>Prebid Mobile</description>
     <url>https://www.prebid.org</url>
@@ -40,25 +40,4 @@
             <organizationUrl>https://rubiconproject.com</organizationUrl>
         </developer>
     </developers>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.android.support</groupId>
-            <artifactId>support-annotations</artifactId>
-            <version>28.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.prebid</groupId>
-            <artifactId>prebid-mobile-sdk-core</artifactId>
-            <version>1.13.0-beta1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.prebid</groupId>
-            <artifactId>prebid-mobile-sdk-rendering</artifactId>
-            <version>1.13.0-beta1</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
 </project>
