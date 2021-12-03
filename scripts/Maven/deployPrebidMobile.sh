@@ -28,6 +28,19 @@ function mavenDeploy() {
   echoX "Please complete the release process by promoting the jar at https://oss.sonatype.org/#stagingRepositories"
 }
 
+# $1 - absolute pom path, $2 - absolute aar path
+function mavenDeployWithoutSources() {
+  echoX "Deploying ${2} on Maven..."
+
+    mvn gpg:sign-and-deploy-file "-DpomFile=${1}" "-Dfile=${2}" "-DrepositoryId=ossrh" "-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/" "-DstagingRepositoryId=ossrh" || {
+      echoX "Deploy failed!"
+      echoX "End Script"
+      exit 1
+    }
+
+  echoX "Please complete the release process by promoting the jar at https://oss.sonatype.org/#stagingRepositories"
+}
+
 BASE_DIR="$PWD"
 DEPLOY_DIR_NAME="filesToDeploy"
 DEPLOY_DIR_ABSOLUTE="$BASE_DIR/$DEPLOY_DIR_NAME"
@@ -65,6 +78,6 @@ done
 #######
 # Open measurement SDK
 #######
-mavenDeploy $"PrebidMobile-open-measurement-pom.xml" $"$DEPLOY_DIR_ABSOLUTE/omsdk.jar"
+mavenDeployWithoutSources $"PrebidMobile-open-measurement-pom.xml" $"$DEPLOY_DIR_ABSOLUTE/omsdk.jar"
 
 echoX "End Script"
