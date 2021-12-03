@@ -17,7 +17,7 @@
 package org.prebid.mobile;
 
 import android.os.Handler;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
 
 import java.util.HashMap;

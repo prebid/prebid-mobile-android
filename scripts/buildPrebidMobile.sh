@@ -75,8 +75,16 @@ cd $LIBDIR
 # Generate modules
 ###########################
 
-modules=("PrebidMobile" "PrebidMobile-core")
-projectPaths=("$BASEDIR/PrebidMobile" "$BASEDIR/PrebidMobile/PrebidMobile-core")
+modules=(
+  "PrebidMobile"
+  "PrebidMobile-core"
+  "PrebidMobile-rendering"
+)
+projectPaths=(
+  "$BASEDIR/PrebidMobile"
+  "$BASEDIR/PrebidMobile/PrebidMobile-core"
+  "$BASEDIR/PrebidMobile/PrebidMobile-rendering"
+)
 
 for n in ${!modules[@]}; do
 
@@ -86,6 +94,7 @@ for n in ${!modules[@]}; do
 	# clean existing build results, exclude test task, and assemble new release build
 	(./gradlew -i --no-daemon ${modules[$n]}:assembleRelease > $LOGPATH/build.log 2>&1 || die "Build failed, check log in $LOGPATH/build.log" )
 
+  # Make folder generated/temp/output
 	echoX "Packaging ${modules[$n]}"
 	mkdir $TEMPDIR
 	cd $TEMPDIR
@@ -104,7 +113,7 @@ for n in ${!modules[@]}; do
 	# Handle ProGuard rules from .aar into .jar
 	# rename proguard.txt to proguard.pro
 	mv $AARPATH_ABSOLUTE/proguard.{txt,pro}
-	mkdir $AARPATH_ABSOLUTE/META-INF
+	mkdir -p $AARPATH_ABSOLUTE/META-INF
 	mkdir $AARPATH_ABSOLUTE/META-INF/proguard
 	mv $AARPATH_ABSOLUTE/proguard.pro $AARPATH_ABSOLUTE/META-INF/proguard
 	# move META-INF into a result direcotory
@@ -134,6 +143,26 @@ for n in ${!modules[@]}; do
 	rm -r $TEMPDIR
 done
 
+### omsdk
+echo -e "\n"
+echoX "Assembling omsdk"
+
+mkdir $TEMPDIR
+cd $TEMPDIR
+mkdir output
+cd output
+cp -a "$BASEDIR/PrebidMobile/omsdk-android/omsdk-android-1.3.17.aar" "$TEMPDIR/output"
+unzip -q -o omsdk-android-1.3.17.aar
+# Delete all files instead classes.jar
+find . ! -name 'classes.jar' -type f -exec rm -f {} +
+unzip -q -o classes.jar
+rm classes.jar
+
+jar cf omsdk.jar com*
+mv omsdk.jar $OUTDIR
+cd $LIBDIR
+rm -r $TEMPDIR
+
 # Prepare fat PrebidDemo library which can be used for LocalJar
 echo -e "\n"
 echoX "Preparing fat PrebidDemo library"
@@ -142,8 +171,10 @@ mkdir $TEMPDIR
 
 cd $TEMPDIR; 
 
-unzip -uo $OUTDIR/PrebidMobile-core.jar 
+unzip -uo $OUTDIR/omsdk.jar
 unzip -uo $OUTDIR/PrebidMobile.jar
+unzip -uo $OUTDIR/PrebidMobile-core.jar
+unzip -uo $OUTDIR/PrebidMobile-rendering.jar
 
 # unzip second proguard
 unzip -B $OUTDIR/PrebidMobile.jar "META-INF/proguard/proguard.pro"

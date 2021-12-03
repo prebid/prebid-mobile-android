@@ -18,7 +18,7 @@ package org.prebid.mobile.tasksmanager;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 
 public class MainThreadExecutor implements CancellableExecutor {
     private final Handler handler = new Handler(Looper.getMainLooper());

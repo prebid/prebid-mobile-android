@@ -1,0 +1,45 @@
+{
+  "id": "id",
+  "seatbid": [
+    {
+      "bid": [
+        {
+          "id": "bidId",
+          "impid": "impId",
+          "price": 0.15,
+          "adm": "adm",
+          "crid": "crid",
+          "w": 320,
+          "h": 50,
+          "ext": {
+            "prebid": {
+              "cache": {
+                "key": "cacheKey",
+                "url": "cacheUrl",
+                "bids": {
+                  "url": "bidsUrl",
+                  "cacheId": "bidsCacheId"
+                }
+              },
+              "targeting": {
+                "random": "value1"
+              },
+              "type": "type"
+            }
+          }
+        }
+      ],
+      "seat": "prebid"
+    }
+  ],
+  "cur": "USD",
+  "bidid": "bidid",
+  "customdata": "custom",
+  "nbr": 1,
+  "ext": {
+    "responsetimemillis": {
+      "prebid": 63
+    },
+    "tmaxrequest": 3000
+  }
+}

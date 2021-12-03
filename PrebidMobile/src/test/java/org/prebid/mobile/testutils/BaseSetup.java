@@ -40,6 +40,7 @@ public class BaseSetup {
 
     @Before
     public void setup() {
+        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
         activity = Robolectric.buildActivity(MockMainActivity.class).create().get();
         shadowOf(activity).grantPermissions("android.permission.INTERNET");
         shadowOf(activity).grantPermissions("android.permission.CHANGE_NETWORK_STATE");

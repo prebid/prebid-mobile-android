@@ -1,0 +1,77 @@
+<!--
+  ~    Copyright 2018-2021 Prebid.org, Inc.
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<VAST version="2.0">
+    <Ad id="602833">
+        <Wrapper>
+            <AdSystem>Acudeo Compatible</AdSystem>
+            <VASTAdTagURI>http://SecondaryAdServer.vast.tag</VASTAdTagURI>
+            <Error>http://myErrorURL/wrapper/error</Error>
+            <Impression>http://myTrackingURL/wrapper/impression</Impression>
+            <Creatives>
+                <Creative adID="602833">
+                    <Linear>
+                        <TrackingEvents>
+                            <Tracking event="creativeView">
+                                http://myTrackingURL/wrapper/creativeView
+                            </Tracking>
+                        </TrackingEvents>
+                        <AdParameters xmlEncoded="samplexmlEncoded"></AdParameters>
+                        <Icons>
+                            <Icon>
+                                <HTMLResource>
+                                    <![CDATA[http://ad3.liverail.com/util/non_linear_HTMLResource.php]]>
+                                </HTMLResource>
+                                <StaticResource>
+                                    http://demo.tremormedia.com/proddev/vast/StaticResource.jpg
+                                </StaticResource>
+                                <IFrameResource>
+                                    <![CDATA[http://ad3.liverail.com/util/IFrameResource.php]]>
+                                </IFrameResource>
+
+                                <IconViewTracking>
+                                    <![CDATA[http://IconViewTracking.com/info]]>
+                                </IconViewTracking>
+
+                                <IconClicks>
+                                    <IconClickThrough>
+                                        <![CDATA[http://iconprovider.com/info]]> </IconClickThrough>
+                                    <IconClickTracking>
+                                        <![CDATA[http://iconprovider.com/click.gif]]>
+                                    </IconClickTracking>
+
+                                </IconClicks>
+                            </Icon>
+                        </Icons>
+                    </Linear>
+                </Creative>
+                <Creative>
+                    <Linear>
+                        <VideoClicks>
+                            <ClickTracking>http://myTrackingURL/wrapper/click</ClickTracking>
+                            <CustomClick>http://mycustomclickURL/wrapper/click</CustomClick>
+                        </VideoClicks>
+                    </Linear>
+                </Creative>
+                <Creative adID="602833-NonLinearTracking">
+                    <NonLinearAds>
+                        <TrackingEvents></TrackingEvents>
+                    </NonLinearAds>
+                </Creative>
+            </Creatives>
+        </Wrapper>
+    </Ad>
+</VAST>

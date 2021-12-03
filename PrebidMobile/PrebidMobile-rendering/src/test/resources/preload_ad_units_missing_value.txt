@@ -1,0 +1,9 @@
+{
+  "precache_configuration":[
+    {
+       "auid":"539733507"
+    },
+    {
+       "domain":"mobile-d.prebid.net"
+    }]
+}

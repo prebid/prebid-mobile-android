@@ -16,8 +16,8 @@
 
 package org.prebid.mobile;
 
-import android.support.annotation.MainThread;
-import android.support.annotation.Nullable;
+import androidx.annotation.MainThread;
+import androidx.annotation.Nullable;
 
 import java.util.Map;
 
