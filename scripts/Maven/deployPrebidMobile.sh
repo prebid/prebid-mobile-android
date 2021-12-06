@@ -53,7 +53,7 @@ sh ./buildPrebidMobile.sh
 
 cp -r ../generated/* $DEPLOY_DIR_ABSOLUTE || true
 
-modules=("PrebidMobile" "PrebidMobile-core" "PrebidMobile-rendering")
+modules=("PrebidMobile" "PrebidMobile-core" "PrebidMobile-rendering" "PrebidMobile-gamEventHandlers" "PrebidMobile-mopubAdapters")
 for n in ${!modules[@]}; do
   #######
   # Start

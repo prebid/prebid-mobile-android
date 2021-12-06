@@ -79,11 +79,15 @@ modules=(
   "PrebidMobile"
   "PrebidMobile-core"
   "PrebidMobile-rendering"
+  "PrebidMobile-gamEventHandlers"
+  "PrebidMobile-mopubAdapters"
 )
 projectPaths=(
   "$BASEDIR/PrebidMobile"
   "$BASEDIR/PrebidMobile/PrebidMobile-core"
   "$BASEDIR/PrebidMobile/PrebidMobile-rendering"
+  "$BASEDIR/PrebidMobile/PrebidMobile-gamEventHandlers"
+  "$BASEDIR/PrebidMobile/PrebidMobile-mopubAdapters"
 )
 
 for n in ${!modules[@]}; do
