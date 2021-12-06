@@ -4,7 +4,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.prebid</groupId>
-    <artifactId>prebid-mobile-sdk-core</artifactId>
+    <artifactId>prebid-mobile-sdk-mopub-adapters</artifactId>
 
     <version>1.13.0-beta1</version>
     <packaging>jar</packaging>
@@ -48,12 +48,17 @@
         </developer>
     </developers>
 
-
     <dependencies>
         <dependency>
-            <groupId>com.android.support</groupId>
-            <artifactId>support-annotations</artifactId>
-            <version>28.0.0</version>
+            <groupId>org.prebid</groupId>
+            <artifactId>prebid-mobile-sdk</artifactId>
+            <version>1.13.0-beta1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.mopub</groupId>
+            <artifactId>mopub-sdk</artifactId>
+            <version>5.17.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

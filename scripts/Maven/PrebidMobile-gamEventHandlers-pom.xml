@@ -4,9 +4,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.prebid</groupId>
-    <artifactId>prebid-mobile-sdk-core</artifactId>
-
+    <artifactId>prebid-mobile-sdk-gam-event-handlers</artifactId>
     <version>1.13.0-beta1</version>
+
     <packaging>jar</packaging>
     <name>Prebid Mobile Android SDK</name>
     <description>Prebid Mobile</description>
@@ -48,12 +48,17 @@
         </developer>
     </developers>
 
-
     <dependencies>
         <dependency>
-            <groupId>com.android.support</groupId>
-            <artifactId>support-annotations</artifactId>
-            <version>28.0.0</version>
+            <groupId>org.prebid</groupId>
+            <artifactId>prebid-mobile-sdk</artifactId>
+            <version>1.13.0-beta1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.android.gms</groupId>
+            <artifactId>play-services-ads</artifactId>
+            <version>20.4.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
