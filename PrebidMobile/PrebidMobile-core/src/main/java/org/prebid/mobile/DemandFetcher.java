@@ -74,13 +74,15 @@ class DemandFetcher {
     }
 
     void stop() {
-        if (requestRunnable != null) {
-            this.requestRunnable.cancelRequest();
+        if (state != STATE.DESTROYED) {
+            if (requestRunnable != null) {
+                this.requestRunnable.cancelRequest();
+            }
+            this.fetcherHandler.removeCallbacks(requestRunnable);
+            // cancel existing requests
+            timePausedAt = System.currentTimeMillis();
+            state = STATE.STOPPED;
         }
-        this.fetcherHandler.removeCallbacks(requestRunnable);
-        // cancel existing requests
-        timePausedAt = System.currentTimeMillis();
-        state = STATE.STOPPED;
     }
 
     void start() {
