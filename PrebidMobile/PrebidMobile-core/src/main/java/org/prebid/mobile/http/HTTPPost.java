@@ -17,6 +17,8 @@
 package org.prebid.mobile.http;
 
 import android.os.Looper;
+import android.util.Log;
+
 import androidx.annotation.MainThread;
 
 import org.json.JSONException;
@@ -110,7 +112,9 @@ public abstract class HTTPPost {
 
             entry.setResponseCode(httpResult);
 
-            if (httpResult == HttpURLConnection.HTTP_OK) {
+            Log.e("RESPONSE_CODE", httpResult + "");
+
+            if (httpResult == HttpURLConnection.HTTP_OK || httpResult == HttpURLConnection.HTTP_NO_CONTENT) {
                 StringBuilder builder = new StringBuilder();
                 InputStream is = conn.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"));
@@ -122,20 +126,25 @@ public abstract class HTTPPost {
                 is.close();
                 String result = builder.toString();
                 entry.setResponse(result);
-                JSONObject response = new JSONObject(result);
-                httpCookieSync(conn.getHeaderFields());
-                // in the future, this can be improved to parse response base on request versions
-                if (!isTimeoutMillisUpdated()) {
-                    int tmaxRequest = -1;
-                    try {
-                        tmaxRequest = response.getJSONObject("ext").getInt("tmaxrequest");
-                    } catch (JSONException e) {
-                        // ignore this
+                JSONObject response = null;
+                if (httpResult == HttpURLConnection.HTTP_OK) {
+                    response = new JSONObject(result);
+                    httpCookieSync(conn.getHeaderFields());
+                    // in the future, this can be improved to parse response base on request versions
+                    if (!isTimeoutMillisUpdated()) {
+                        int tmaxRequest = -1;
+                        try {
+                            tmaxRequest = response.getJSONObject("ext").getInt("tmaxrequest");
+                        } catch (JSONException e) {
+                            // ignore this
+                        }
+                        if (tmaxRequest >= 0) {
+                            PrebidMobile.setTimeoutMillis(Math.min((int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200, 2000)); // adding 200ms as safe time
+                            setTimeoutMillisUpdated(true);
+                        }
                     }
-                    if (tmaxRequest >= 0) {
-                        PrebidMobile.setTimeoutMillis(Math.min((int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200, 2000)); // adding 200ms as safe time
-                        setTimeoutMillisUpdated(true);
-                    }
+                } else {
+                    response = new JSONObject();
                 }
 
                 BidLog.getInstance().setLastEntry(entry);
@@ -174,9 +183,12 @@ public abstract class HTTPPost {
                 } else {
                     return new TaskResult<>(ResultCode.PREBID_SERVER_ERROR);
                 }
+//            } else if (httpResult >= HttpURLConnection.HTTP_NO_CONTENT) {
+//                // TODO: return NO_BID
+//                return new TaskResult<>(new JSONObject());
             }
 
-        } catch (MalformedURLException e) {
+            } catch (MalformedURLException e) {
             return new TaskResult<>(e);
         } catch (UnsupportedEncodingException e) {
             return new TaskResult<>(e);
