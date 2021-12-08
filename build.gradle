@@ -32,12 +32,11 @@ buildscript {
 
 allprojects {
     repositories {
-//        mavenLocal()
         google()
         mavenCentral()
-        jcenter() // includes the MoPub SDK and AVID library
-//        maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
-        maven { url 'https://maven.google.com' } // necessary for Android API 26
+        jcenter() // For exoplayer and MoPub
+        maven { url 'https://maven.google.com' }
         maven { url 'https://jitpack.io' }
+        maven { url "https://oss.sonatype.org/content/repositories/orgprebid-1070" }
     }
 }

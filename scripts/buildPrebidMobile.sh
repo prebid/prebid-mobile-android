@@ -90,6 +90,7 @@ projectPaths=(
   "$BASEDIR/PrebidMobile/PrebidMobile-mopubAdapters"
 )
 
+mkdir "$OUTDIR/aar"
 for n in ${!modules[@]}; do
 
 	echo -e "\n"
@@ -107,6 +108,7 @@ for n in ${!modules[@]}; do
 	AARPATH_ABSOLUTE="${projectPaths[$n]}/$AARPATH"
 
 	cd $AARPATH_ABSOLUTE
+	cp ${modules[$n]}-release.aar $OUTDIR/aar
 	unzip -q -o ${modules[$n]}-release.aar
 	cd $TEMPDIR/output
 
@@ -123,8 +125,14 @@ for n in ${!modules[@]}; do
 	# move META-INF into a result direcotory
 	mv $AARPATH_ABSOLUTE/META-INF $TEMPDIR/output
 
+	rm -r $TEMPDIR/output/META-INF/com
+
 	# Creating a JAR File
-	jar cf ${modules[$n]}.jar org* META-INF*
+	if [ "${modules[$n]}" == "PrebidMobile-mopubAdapters" ]; then
+	  jar cf ${modules[$n]}.jar org* com* META-INF*
+	else
+	  jar cf ${modules[$n]}.jar org* META-INF*
+  fi
 
 	# move jar into a result direcotory
 	mv ${modules[$n]}.jar $OUTDIR
