@@ -23,8 +23,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- Android P changes -->
-    <application
-        android:allowBackup="true">
+    <application>
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false"/>
