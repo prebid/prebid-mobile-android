@@ -76,7 +76,7 @@ public class RubiconInstreamVideoIMADemoActivity extends AppCompatActivity {
                 HashSet<AdSize> sizes = new HashSet<>();
                 sizes.add(new AdSize(640, 480));
                 String uri = Util.generateInstreamUriForGam(Constants.DFP_VAST_ADUNIT_ID_RUBICON, sizes, unmodifiableMap);
-                adsLoader = new ImaAdsLoader(RubiconInstreamVideoIMADemoActivity.this, Uri.parse(uri));
+//                adsLoader = new ImaAdsLoader(this, RubiconInstreamVideoIMADemoActivity.this, Uri.parse(uri));
                 initializePlayer();
             }
         });
@@ -112,12 +112,12 @@ public class RubiconInstreamVideoIMADemoActivity extends AppCompatActivity {
         MediaSource mediaSource =
                 mediaSourceFactory.createMediaSource(Uri.parse(getString(R.string.content_url)));
 
-        // Create the AdsMediaSource using the AdsLoader and the MediaSource.
-        AdsMediaSource adsMediaSource =
-                new AdsMediaSource(mediaSource, dataSourceFactory, adsLoader, playerView);
-
-        // Prepare the content and ad to be played with the SimpleExoPlayer.
-        player.prepare(adsMediaSource);
+//        // Create the AdsMediaSource using the AdsLoader and the MediaSource.
+//        AdsMediaSource adsMediaSource =
+//                new AdsMediaSource(mediaSource, dataSourceFactory, adsLoader, playerView);
+//
+//        // Prepare the content and ad to be played with the SimpleExoPlayer.
+//        player.prepare(adsMediaSource);
 
         // Set PlayWhenReady. If true, content and ads autoplay.
         player.setPlayWhenReady(false);

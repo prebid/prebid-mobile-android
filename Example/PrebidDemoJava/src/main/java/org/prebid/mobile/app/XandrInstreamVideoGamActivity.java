@@ -75,7 +75,7 @@ public class XandrInstreamVideoGamActivity extends AppCompatActivity {
                 HashSet<AdSize> sizes = new HashSet<>();
                 sizes.add(new AdSize(640, 480));
                 String uri = Util.generateInstreamUriForGam("/19968336/Punnaghai_Instream_Video1", sizes, unmodifiableMap);
-                adsLoader = new ImaAdsLoader(XandrInstreamVideoGamActivity.this, Uri.parse(uri));
+//                adsLoader = new ImaAdsLoader(XandrInstreamVideoGamActivity.this, Uri.parse(uri));
                 initializePlayer();
             }
         });
@@ -112,11 +112,11 @@ public class XandrInstreamVideoGamActivity extends AppCompatActivity {
                 mediaSourceFactory.createMediaSource(Uri.parse(getString(R.string.content_url)));
 
         // Create the AdsMediaSource using the AdsLoader and the MediaSource.
-        AdsMediaSource adsMediaSource =
-                new AdsMediaSource(mediaSource, dataSourceFactory, adsLoader, playerView);
-
-        // Prepare the content and ad to be played with the SimpleExoPlayer.
-        player.prepare(adsMediaSource);
+//        AdsMediaSource adsMediaSource =
+//                new AdsMediaSource(mediaSource, dataSourceFactory, adsLoader, playerView);
+//
+//        // Prepare the content and ad to be played with the SimpleExoPlayer.
+//        player.prepare(adsMediaSource);
 
         // Set PlayWhenReady. If true, content and ads autoplay.
         player.setPlayWhenReady(false);
