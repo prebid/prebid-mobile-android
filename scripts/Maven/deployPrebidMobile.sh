@@ -32,46 +32,30 @@ BASE_DIR="$PWD"
 DEPLOY_DIR_NAME="filesToDeploy"
 DEPLOY_DIR_ABSOLUTE="$BASE_DIR/$DEPLOY_DIR_NAME"
 
-rm -r $DEPLOY_DIR_ABSOLUTE || true
-mkdir $DEPLOY_DIR_ABSOLUTE
+rm -r "$DEPLOY_DIR_ABSOLUTE" || true
+mkdir "$DEPLOY_DIR_ABSOLUTE"
 
 cd ..
 sh ./buildPrebidMobile.sh
 
-cp -r ../generated/* $DEPLOY_DIR_ABSOLUTE || true
+cp -r ../generated/* "$DEPLOY_DIR_ABSOLUTE" || true
 
 modules=("PrebidMobile" "PrebidMobile-core" "PrebidMobile-rendering" "PrebidMobile-gamEventHandlers" "PrebidMobile-mopubAdapters")
 extensions=("jar" "jar" "aar" "jar" "jar")
 for n in ${!modules[@]}; do
-  #######
-  # Start
-  #######
-
   echo -e "\n"
   echoX "Deploying ${modules[$n]} on Maven..."
 
-  #######
-  # Deploy
-  #######
   extension="${extensions[$n]}"
   module="${modules[$n]}"
-  if [ $extension == "aar" ]; then
+  if [ "$extension" == "aar" ]; then
     compiledPath=$"$DEPLOY_DIR_ABSOLUTE/aar/${module}-release.aar"
   else
     compiledPath=$"$DEPLOY_DIR_ABSOLUTE/${module}.jar"
   fi
   mavenDeploy $"$BASE_DIR/${module}-pom.xml" "$compiledPath" $"$DEPLOY_DIR_ABSOLUTE/${module}-sources.jar" $"$DEPLOY_DIR_ABSOLUTE/${module}-javadoc.jar"
 
-  #######
-  # End
-  #######
   echoX "Please complete the release process by promoting the jar at https://oss.sonatype.org/#stagingRepositories"
-
 done
-
-#######
-# Open measurement SDK
-#######
-mavenDeploy $"$BASE_DIR/PrebidMobile-open-measurement-pom.xml" $"$DEPLOY_DIR_ABSOLUTE/omsdk.jar" $"$BASE_DIR/stub.jar" $"$BASE_DIR/stub.jar"
 
 echoX "End Script"
