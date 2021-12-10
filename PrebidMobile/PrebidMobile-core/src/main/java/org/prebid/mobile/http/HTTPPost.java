@@ -17,7 +17,6 @@
 package org.prebid.mobile.http;
 
 import android.os.Looper;
-
 import androidx.annotation.MainThread;
 
 import org.json.JSONException;
@@ -181,7 +180,7 @@ public abstract class HTTPPost {
                 }
             }
 
-            } catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             return new TaskResult<>(e);
         } catch (UnsupportedEncodingException e) {
             return new TaskResult<>(e);
