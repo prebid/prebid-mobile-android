@@ -17,7 +17,6 @@
 package org.prebid.mobile.http;
 
 import android.os.Looper;
-import android.util.Log;
 
 import androidx.annotation.MainThread;
 
@@ -112,9 +111,7 @@ public abstract class HTTPPost {
 
             entry.setResponseCode(httpResult);
 
-            Log.e("RESPONSE_CODE", httpResult + "");
-
-            if (httpResult == HttpURLConnection.HTTP_OK || httpResult == HttpURLConnection.HTTP_NO_CONTENT) {
+            if (httpResult == HttpURLConnection.HTTP_OK) {
                 StringBuilder builder = new StringBuilder();
                 InputStream is = conn.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"));
@@ -126,30 +123,29 @@ public abstract class HTTPPost {
                 is.close();
                 String result = builder.toString();
                 entry.setResponse(result);
-                JSONObject response = null;
-                if (httpResult == HttpURLConnection.HTTP_OK) {
-                    response = new JSONObject(result);
-                    httpCookieSync(conn.getHeaderFields());
-                    // in the future, this can be improved to parse response base on request versions
-                    if (!isTimeoutMillisUpdated()) {
-                        int tmaxRequest = -1;
-                        try {
-                            tmaxRequest = response.getJSONObject("ext").getInt("tmaxrequest");
-                        } catch (JSONException e) {
-                            // ignore this
-                        }
-                        if (tmaxRequest >= 0) {
-                            PrebidMobile.setTimeoutMillis(Math.min((int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200, 2000)); // adding 200ms as safe time
-                            setTimeoutMillisUpdated(true);
-                        }
+                JSONObject response = new JSONObject(result);
+                httpCookieSync(conn.getHeaderFields());
+                // in the future, this can be improved to parse response base on request versions
+                if (!isTimeoutMillisUpdated()) {
+                    int tmaxRequest = -1;
+                    try {
+                        tmaxRequest = response.getJSONObject("ext").getInt("tmaxrequest");
+                    } catch (JSONException e) {
+                        // ignore this
                     }
-                } else {
-                    response = new JSONObject();
+                    if (tmaxRequest >= 0) {
+                        PrebidMobile.setTimeoutMillis(Math.min((int) (demandFetchEndTime - demandFetchStartTime) + tmaxRequest + 200, 2000)); // adding 200ms as safe time
+                        setTimeoutMillisUpdated(true);
+                    }
                 }
 
                 BidLog.getInstance().setLastEntry(entry);
 
                 return new TaskResult<>(response);
+            } else if (httpResult == HttpURLConnection.HTTP_NO_CONTENT) {
+                entry.setResponse("");
+                BidLog.getInstance().setLastEntry(entry);
+                return new TaskResult<>(new JSONObject());
             } else if (httpResult >= HttpURLConnection.HTTP_BAD_REQUEST) {
                 StringBuilder builder = new StringBuilder();
                 InputStream is = conn.getErrorStream();
@@ -183,9 +179,6 @@ public abstract class HTTPPost {
                 } else {
                     return new TaskResult<>(ResultCode.PREBID_SERVER_ERROR);
                 }
-//            } else if (httpResult >= HttpURLConnection.HTTP_NO_CONTENT) {
-//                // TODO: return NO_BID
-//                return new TaskResult<>(new JSONObject());
             }
 
             } catch (MalformedURLException e) {
