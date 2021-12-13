@@ -2,10 +2,9 @@ package org.prebid.mobile.app;
 
 import android.net.Uri;
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ext.ima.ImaAdsLoader;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -13,27 +12,31 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.ads.AdsMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-
-import org.prebid.mobile.AdSize;
-import org.prebid.mobile.AdUnit;
-import org.prebid.mobile.Host;
-import org.prebid.mobile.OnCompleteListener2;
-import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.ResultCode;
-import org.prebid.mobile.Signals;
 import org.prebid.mobile.Util;
-import org.prebid.mobile.VideoAdUnit;
+import org.prebid.mobile.*;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 
 public class RubiconInstreamVideoIMADemoActivity extends AppCompatActivity {
-    AdUnit adUnit;
+
+    VideoAdUnit adUnit;
     private PlayerView playerView;
     private SimpleExoPlayer player;
     private ImaAdsLoader adsLoader;
+    private Uri adsUri;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_instream_video);
+        playerView = findViewById(R.id.player_view);
+
+        initPrebid();
+        initVideoAdUnit();
+    }
 
     @Override
     protected void onDestroy() {
@@ -45,40 +48,30 @@ public class RubiconInstreamVideoIMADemoActivity extends AppCompatActivity {
         adsLoader.release();
     }
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_instream_video);
-        playerView = findViewById(R.id.player_view);
-
+    private void initPrebid() {
         PrebidMobile.setPrebidServerHost(Host.RUBICON);
         PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
         PrebidMobile.setStoredAuctionResponse(Constants.PBS_STORED_RESPONSE_VAST_RUBICON);
+    }
+
+    private void initVideoAdUnit() {
         VideoAdUnit.Parameters parameters = new VideoAdUnit.Parameters();
-        parameters.setMimes(Arrays.asList("video/mp4"));
-
-        parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0));
-        // parameters.setProtocols(Arrays.asList(new Signals.Protocols(2)));
-
-        parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOff));
-        // parameters.setPlaybackMethod(Arrays.asList(new Signals.PlaybackMethod(2)));
-
+        parameters.setMimes(Collections.singletonList("video/mp4"));
+        parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
+        parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));
         parameters.setPlacement(Signals.Placement.InStream);
-        // parameters.setPlacement(new Signals.Placement(2));
 
-        VideoAdUnit adUnit = new VideoAdUnit("1001-1", 640, 480);
+        adUnit = new VideoAdUnit("1001-1", 640, 480);
         adUnit.setParameters(parameters);
-        this.adUnit = adUnit;
-        // Create an AdsLoader with the ad tag url.
-        adUnit.fetchDemand(new OnCompleteListener2() {
-            @Override
-            public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
-                HashSet<AdSize> sizes = new HashSet<>();
-                sizes.add(new AdSize(640, 480));
-                String uri = Util.generateInstreamUriForGam(Constants.DFP_VAST_ADUNIT_ID_RUBICON, sizes, unmodifiableMap);
-//                adsLoader = new ImaAdsLoader(this, RubiconInstreamVideoIMADemoActivity.this, Uri.parse(uri));
-                initializePlayer();
-            }
+        adUnit.fetchDemand((resultCode, keysMap) -> {
+            HashSet<AdSize> sizes = new HashSet<>();
+            sizes.add(new AdSize(640, 480));
+            adsUri = Uri.parse(Util.generateInstreamUriForGam(Constants.DFP_VAST_ADUNIT_ID_RUBICON, sizes, keysMap));
+
+            ImaAdsLoader.Builder imaBuilder = new ImaAdsLoader.Builder(RubiconInstreamVideoIMADemoActivity.this);
+            adsLoader = imaBuilder.build();
+
+            initializePlayer();
         });
     }
 
@@ -93,34 +86,26 @@ public class RubiconInstreamVideoIMADemoActivity extends AppCompatActivity {
             player.release();
             player = null;
         }
-
     }
 
     private void initializePlayer() {
-        // Create a SimpleExoPlayer and set is as the player for content and ads.
-        player = new SimpleExoPlayer.Builder(this).build();
+        SimpleExoPlayer.Builder playerBuilder = new SimpleExoPlayer.Builder(this);
+        player = playerBuilder.build();
         playerView.setPlayer(player);
         adsLoader.setPlayer(player);
 
-        DataSource.Factory dataSourceFactory =
-                new DefaultDataSourceFactory(this, getString(R.string.app_name));
+        Uri uri = Uri.parse(getString(R.string.content_url));
+        MediaItem mediaItem = MediaItem.fromUri(uri);
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, getString(R.string.app_name));
+        ProgressiveMediaSource.Factory mediaSourceFactory = new ProgressiveMediaSource.Factory(dataSourceFactory);
+        MediaSource mediaSource = mediaSourceFactory.createMediaSource(mediaItem);
 
-        ProgressiveMediaSource.Factory mediaSourceFactory =
-                new ProgressiveMediaSource.Factory(dataSourceFactory);
+        DataSpec dataSpec = new DataSpec(adsUri);
+        AdsMediaSource adsMediaSource = new AdsMediaSource(mediaSource, dataSpec, "ad", mediaSourceFactory, adsLoader, playerView);
 
-        // Create the MediaSource for the content you wish to play.
-        MediaSource mediaSource =
-                mediaSourceFactory.createMediaSource(Uri.parse(getString(R.string.content_url)));
-
-//        // Create the AdsMediaSource using the AdsLoader and the MediaSource.
-//        AdsMediaSource adsMediaSource =
-//                new AdsMediaSource(mediaSource, dataSourceFactory, adsLoader, playerView);
-//
-//        // Prepare the content and ad to be played with the SimpleExoPlayer.
-//        player.prepare(adsMediaSource);
-
-        // Set PlayWhenReady. If true, content and ads autoplay.
-        player.setPlayWhenReady(false);
+        player.setMediaSource(adsMediaSource);
+        player.setPlayWhenReady(true);
+        player.prepare();
     }
 
     @Override
