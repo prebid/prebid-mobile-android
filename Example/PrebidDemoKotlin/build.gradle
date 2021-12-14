@@ -35,6 +35,7 @@ dependencies {
     implementation project(':PrebidMobile')
     implementation project(':PrebidMobile-gamEventHandlers')
     implementation project(':PrebidMobile-mopubAdapters')
+    implementation project(':PrebidMobile-admobAdapters')
 
     // For testing staging releases
 //    implementation 'org.prebid:prebid-mobile-sdk:1.13.0-beta1'

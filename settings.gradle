@@ -1,26 +1,26 @@
 include ':PrebidMobile',
         ':PrebidMobile-core',
+        ':PrebidMobile-rendering',
         ':PrebidMobile-gamEventHandlers',
         ':PrebidMobile-mopubAdapters',
+        ':PrebidMobile-admobAdapters',
         ':omsdk-android',
-        ':PrebidMobile-rendering',
-
-//Prebid Demo apps
+        // Prebid Demo apps
         ':PrebidDemoJava',
         ':PrebidDemoKotlin',
         ':PrebidInternalTestApp',
-
-//tools
+        // Other
         ':DrPrebid',
         ':TestUtils'
 
 
 project(':PrebidMobile').projectDir = new File('PrebidMobile')
 project(':PrebidMobile-core').projectDir = new File('PrebidMobile/PrebidMobile-core')
+project(':PrebidMobile-rendering').projectDir = new File('PrebidMobile/PrebidMobile-rendering')
 project(':PrebidMobile-gamEventHandlers').projectDir = new File('PrebidMobile/PrebidMobile-gamEventHandlers')
 project(':PrebidMobile-mopubAdapters').projectDir = new File('PrebidMobile/PrebidMobile-mopubAdapters')
+project(':PrebidMobile-admobAdapters').projectDir = new File('PrebidMobile/PrebidMobile-admobAdapters')
 project(':omsdk-android').projectDir = new File('PrebidMobile/omsdk-android')
-project(':PrebidMobile-rendering').projectDir = new File('PrebidMobile/PrebidMobile-rendering')
 
 project(':PrebidDemoJava').projectDir = new File('Example/PrebidDemoJava')
 project(':PrebidDemoKotlin').projectDir = new File('Example/PrebidDemoKotlin')
