@@ -53,37 +53,20 @@ project.gradle.taskGraph.whenReady {
     }
 }
 
-//repositories{
-//    maven {
-//        url 'https://oss.sonatype.org/content/repositories/orgprebid-1059'
-//    }
-//}
-
 dependencies {
 
 //    Source code
     implementation project(':PrebidMobile')
 
-//    Maven
-//    implementation 'org.prebid:prebid-mobile-sdk:1.12.1'
-//    implementation 'org.prebid:prebid-mobile-sdk-core:1.12.1'
-
-//    LocalMaven .aar
-//    implementation 'org.prebid:prebid-mobile-sdk:+'
-//    implementation 'org.prebid:prebid-mobile-sdk-core:+'
-
-//    LocalJar .jar
-//    Fat library
-//    implementation files('libs/PrebidMobile.jar')
-//    implementation files('libs/PrebidMobile-core.jar')
-
-//    localJarImplementation fileTree(dir: 'libs', include: ['*.jar'])
+    // For testing staging releases
+//    implementation 'org.prebid:prebid-mobile-sdk:1.13.0-beta2'
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.gms:play-services-ads:20.0.0'
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.11.1'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.11.1'
-    implementation 'com.google.android.exoplayer:extension-ima:2.11.1'
+    implementation 'com.google.android.exoplayer:exoplayer:2.13.3'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.13.3'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.13.3'
+    implementation 'com.google.android.exoplayer:extension-ima:2.13.3'
     implementation 'androidx.multidex:multidex:2.0.0'
     implementation('com.mopub:mopub-sdk:5.8.0@aar') {
         transitive = true

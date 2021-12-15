@@ -6,7 +6,7 @@
     <groupId>org.prebid</groupId>
     <artifactId>prebid-mobile-sdk-core</artifactId>
 
-    <version>1.13.0-beta1</version>
+    <version>1.13.0-beta2</version>
     <packaging>jar</packaging>
     <name>Prebid Mobile Android SDK</name>
     <description>Prebid Mobile</description>
@@ -38,6 +38,13 @@
             <email>sdk@https://rubiconproject.com/</email>
             <organization>The Rubicon Project, Inc.</organization>
             <organizationUrl>https://rubiconproject.com</organizationUrl>
+        </developer>
+
+        <developer>
+            <name>Postindustria AdTech Team</name>
+            <email>hello@postindustria.com </email>
+            <organization>Postindustria LTD</organization>
+            <organizationUrl>https://postindustria.com/</organizationUrl>
         </developer>
     </developers>
 

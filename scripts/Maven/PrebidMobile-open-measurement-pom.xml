@@ -39,5 +39,12 @@
             <organization>The Rubicon Project, Inc.</organization>
             <organizationUrl>https://rubiconproject.com</organizationUrl>
         </developer>
+
+        <developer>
+            <name>Postindustria AdTech Team</name>
+            <email>hello@postindustria.com </email>
+            <organization>Postindustria LTD</organization>
+            <organizationUrl>https://postindustria.com/</organizationUrl>
+        </developer>
     </developers>
 </project>
