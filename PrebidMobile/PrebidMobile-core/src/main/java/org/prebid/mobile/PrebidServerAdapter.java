@@ -89,6 +89,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
         private final AdType adType;
         private boolean isCancelled;
+        private boolean alreadyPostedResult = false;
 
         ServerConnector(PrebidServerAdapter prebidServerAdapter, DemandAdapterListener listener, RequestParams requestParams, String auctionId) {
             this.prebidServerAdapter = new WeakReference<>(prebidServerAdapter);
@@ -254,7 +255,10 @@ class PrebidServerAdapter implements DemandAdapter {
                 return;
             }
 
-            listener.onDemandReady(keywords, getAuctionId());
+            if (!alreadyPostedResult) {
+                alreadyPostedResult = true;
+                listener.onDemandReady(keywords, getAuctionId());
+            }
         }
 
         @MainThread
@@ -263,7 +267,10 @@ class PrebidServerAdapter implements DemandAdapter {
                 return;
             }
 
-            listener.onDemandFailed(code, getAuctionId());
+            if (!alreadyPostedResult) {
+                alreadyPostedResult = true;
+                listener.onDemandFailed(code, getAuctionId());
+            }
         }
 
         private void notifyContainsTopBid(boolean contains) {

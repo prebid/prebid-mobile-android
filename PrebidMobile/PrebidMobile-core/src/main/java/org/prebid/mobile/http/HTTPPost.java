@@ -87,6 +87,7 @@ public abstract class HTTPPost {
             }
             conn.setRequestMethod("POST");
             conn.setConnectTimeout(PrebidMobile.getTimeoutMillis());
+            conn.setReadTimeout(PrebidMobile.getTimeoutMillis());
 
             // Add post data
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");

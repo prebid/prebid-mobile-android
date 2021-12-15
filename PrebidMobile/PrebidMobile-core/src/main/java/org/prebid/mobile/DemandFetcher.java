@@ -74,13 +74,15 @@ class DemandFetcher {
     }
 
     void stop() {
-        if (requestRunnable != null) {
-            this.requestRunnable.cancelRequest();
+        if (state != STATE.DESTROYED) {
+            if (requestRunnable != null) {
+                this.requestRunnable.cancelRequest();
+            }
+            this.fetcherHandler.removeCallbacks(requestRunnable);
+            // cancel existing requests
+            timePausedAt = System.currentTimeMillis();
+            state = STATE.STOPPED;
         }
-        this.fetcherHandler.removeCallbacks(requestRunnable);
-        // cancel existing requests
-        timePausedAt = System.currentTimeMillis();
-        state = STATE.STOPPED;
     }
 
     void start() {
@@ -183,7 +185,7 @@ class DemandFetcher {
             auctionId = UUID.randomUUID().toString();
             lastFetchTime = System.currentTimeMillis();
             // check input values
-            demandHandler.post(new Runnable() {
+            demandHandler.postAtFrontOfQueue(new Runnable() {
 
                 @Override
                 public void run() {

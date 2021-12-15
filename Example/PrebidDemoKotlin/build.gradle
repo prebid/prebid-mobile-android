@@ -42,6 +42,11 @@ dependencies {
 //    implementation 'org.prebid:prebid-mobile-sdk-gam-event-handlers:1.13.0-beta1'
 //    implementation 'org.prebid:prebid-mobile-sdk-mopub-adapters:1.13.0-beta1'
 
+    // For testing staging releases
+//    implementation 'org.prebid:prebid-mobile-sdk:1.13.0-beta2'
+//    implementation 'org.prebid:prebid-mobile-sdk-gam-event-handlers:1.13.0-beta2'
+//    implementation 'org.prebid:prebid-mobile-sdk-mopub-adapters:1.13.0-beta2'
+
     // Standard libraries
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.3.1'

@@ -79,8 +79,8 @@ dependencies {
     // Google play services
     implementation 'com.google.android.gms:play-services-base:17.6.0'
     implementation 'com.google.android.gms:play-services-ads-identifier:17.0.0'
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.11.0'
-    implementation 'com.google.android.exoplayer:exoplayer-ui:2.11.0'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.13.3'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.13.3'
 
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation project(path: ':omsdk-android')
