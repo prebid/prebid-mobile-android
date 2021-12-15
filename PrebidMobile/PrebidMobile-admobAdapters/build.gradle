@@ -1,0 +1,23 @@
+apply from: '../shared-rendering.gradle'
+apply from: 'publish-adapters.gradle'
+
+android {
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+        }
+    }
+    defaultConfig {
+        consumerProguardFiles file('proguard-rules.pro')
+    }
+}
+
+dependencies {
+    implementation project(":PrebidMobile")
+
+    implementation 'com.google.android.gms:play-services-ads:20.4.0'
+}

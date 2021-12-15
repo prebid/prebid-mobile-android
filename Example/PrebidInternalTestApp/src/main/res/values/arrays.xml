@@ -29,6 +29,7 @@
         <item>@string/segment_title_in_app</item>
         <item>@string/segment_title_mopub</item>
         <item>@string/segment_title_gam</item>
+        <item>@string/segment_title_admob</item>
         <item>@string/segment_title_all</item>
     </string-array>
 
@@ -40,5 +41,6 @@
     <string name="segment_title_all">All</string>
     <string name="segment_title_mopub">MoPub</string>
     <string name="segment_title_gam">GAM</string>
+    <string name="segment_title_admob">AdMob</string>
     <string name="segment_title_in_app">In-App</string>
 </resources>
