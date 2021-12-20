@@ -18,6 +18,7 @@ package org.prebid.mobile.rendering.bidding.display;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
@@ -169,7 +170,13 @@ public abstract class MediationBaseAdUnit {
     protected void onResponseReceived(BidResponse response) {
         if (mAdViewReference.get() == null || mOnFetchCompleteListener == null) {
             mBidLoader.cancelRefresh();
-            LogUtil.error(TAG, "Failed to pass callback. Ad object or OnFetchCompleteListener is null");
+            LogUtil.error(TAG, "Failed to pass callback (onResponseReceived)");
+            if (mAdViewReference.get() == null) {
+                LogUtil.error(TAG, "Ad object is null");
+            }
+            if (mOnFetchCompleteListener == null) {
+                LogUtil.error(TAG, "OnFetchCompleteListener is null");
+            }
             return;
         }
         BidResponseCache.getInstance().putBidResponse(response);
@@ -181,7 +188,13 @@ public abstract class MediationBaseAdUnit {
     protected void onErrorReceived(AdException exception) {
         if (mAdViewReference.get() == null || mOnFetchCompleteListener == null) {
             mBidLoader.cancelRefresh();
-            LogUtil.error(TAG, "Failed to pass callback. Ad object or OnFetchCompleteListener is null");
+            LogUtil.error(TAG, "Failed to pass callback (onErrorReceived)");
+            if (mAdViewReference.get() == null) {
+                LogUtil.error(TAG, "Ad object is null");
+            }
+            if (mOnFetchCompleteListener == null) {
+                LogUtil.error(TAG, "OnFetchCompleteListener is null");
+            }
             return;
         }
         mOnFetchCompleteListener.onComplete(FetchDemandResult.parseErrorMessage(exception.getMessage()));

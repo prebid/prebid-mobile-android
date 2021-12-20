@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.bidding.display;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -72,28 +73,27 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
         final VisibilityTrackerOption visibilityTrackerOption = new VisibilityTrackerOption(NativeEventTracker.EventType.IMPRESSION);
         final VisibilityChecker visibilityChecker = new VisibilityChecker(visibilityTrackerOption);
         mBidLoader.setBidRefreshListener(() -> {
-            Object moPubView = mAdViewReference.get();
-            if (!(moPubView instanceof View)) {
-                return false;
-            }
+            Object adView = mAdViewReference.get();
+
+            boolean result = mMediationDelegate.canPerformRefresh(adView, visibilityChecker, mScreenStateReceiver, mAdFailed);
 
             if (mAdFailed) {
                 mAdFailed = false;
-                return true;
             }
 
-            final boolean isWindowVisibleToUser = mScreenStateReceiver.isScreenOn();
-            return visibilityChecker.isVisibleForRefresh(((View) moPubView)) && isWindowVisibleToUser;
+            Log.d(TAG, "Can perform refresh: " + result);
+
+            return result;
         });
     }
 
     @Override
     public final void fetchDemand(
         @Nullable
-            Object mopubView,
+            Object adView,
         @NonNull
             OnFetchCompleteListener listener) {
-        super.fetchDemand(mopubView, listener);
+        super.fetchDemand(adView, listener);
     }
 
     /**

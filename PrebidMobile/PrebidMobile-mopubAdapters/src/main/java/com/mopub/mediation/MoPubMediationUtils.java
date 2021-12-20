@@ -17,9 +17,13 @@
 package com.mopub.mediation;
 
 import android.text.TextUtils;
+import android.view.View;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
+import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
+import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.reflect.InvocationTargetException;
@@ -44,8 +48,7 @@ public class MoPubMediationUtils implements PrebidMediationDelegate {
     static Class getClassForString(String className) {
         try {
             return Class.forName(className);
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             LogUtil.debug(TAG, e.getMessage());
         }
         return null;
@@ -75,8 +78,7 @@ public class MoPubMediationUtils implements PrebidMediationDelegate {
             if (adView != null && adView.getClass() == HashMap.class) {
                 ((HashMap) adView).clear();
                 ((HashMap) adView).putAll(keywords);
-            }
-            else {
+            } else {
                 StringBuilder keywordsBuilder = new StringBuilder();
                 for (String key : keywords.keySet()) {
                     addReservedKeys(key);
@@ -86,8 +88,7 @@ public class MoPubMediationUtils implements PrebidMediationDelegate {
                 String adViewKeywords = (String) callMethodOnObject(adView, "getKeywords");
                 if (!TextUtils.isEmpty(adViewKeywords)) {
                     adViewKeywords = pbmKeywords + adViewKeywords;
-                }
-                else {
+                } else {
                     adViewKeywords = pbmKeywords;
                 }
                 // only set keywords if less than mopub query string limit
@@ -114,6 +115,27 @@ public class MoPubMediationUtils implements PrebidMediationDelegate {
                 callMethodOnObjectWithParameter(adView, "setLocalExtras", Map.class, localExtras);
             }
         }
+    }
+
+    @Override
+    public boolean canPerformRefresh(@Nullable Object adView, @NonNull VisibilityChecker visibilityChecker, @NonNull ScreenStateReceiver screenStateReceiver, boolean isAdFailed) {
+        if (isAdFailed) {
+            return true;
+        }
+
+        final boolean isWindowVisibleToUser;
+        final boolean isVisibleForRefresh;
+        try {
+            if (!(adView instanceof View)) {
+                return false;
+            }
+            isWindowVisibleToUser = screenStateReceiver.isScreenOn();
+            isVisibleForRefresh = visibilityChecker.isVisibleForRefresh(((View) adView));
+        } catch (Exception exception) {
+            return false;
+        }
+
+        return isVisibleForRefresh && isWindowVisibleToUser;
     }
 
     private static void removeUsedKeywordsForMoPub(Object adViewObj) {
@@ -149,17 +171,13 @@ public class MoPubMediationUtils implements PrebidMediationDelegate {
             }
             Method method = object.getClass().getMethod(methodName, classes);
             return method.invoke(object, params);
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             LogUtil.debug(TAG, e.getMessage());
-        }
-        catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             LogUtil.debug(TAG, e.getMessage());
-        }
-        catch (InvocationTargetException e) {
+        } catch (InvocationTargetException e) {
             LogUtil.debug(TAG, e.getMessage());
-        }
-        catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             LogUtil.debug(TAG, e.getMessage());
         }
         return null;
@@ -169,17 +187,13 @@ public class MoPubMediationUtils implements PrebidMediationDelegate {
         try {
             Method method = object.getClass().getMethod(methodName, paramType);
             return method.invoke(object, param);
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             LogUtil.debug(TAG, e.getMessage());
-        }
-        catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             LogUtil.debug(TAG, e.getMessage());
-        }
-        catch (InvocationTargetException e) {
+        } catch (InvocationTargetException e) {
             LogUtil.debug(TAG, e.getMessage());
-        }
-        catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             LogUtil.debug(TAG, e.getMessage());
         }
         return null;
