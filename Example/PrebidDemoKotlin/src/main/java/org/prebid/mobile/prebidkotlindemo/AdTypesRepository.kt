@@ -101,7 +101,7 @@ object AdTypesRepository {
                 "Banner 320x50",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppBanner.create(
-                        wrapper, autoRefreshTime,
+                        wrapper, autoRefreshTime / 1000,
                         320, 50,
                         "50699c03-0910-477c-b4a4-911dbe2b9d42"
                     )
@@ -123,7 +123,7 @@ object AdTypesRepository {
                 "Video Banner",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppVideoBanner.create(
-                        wrapper, autoRefreshTime,
+                        wrapper, autoRefreshTime / 1000,
                         300, 250,
                         "9007b76d-c73c-49c6-b0a8-1c7890a84b33"
                     )
@@ -157,7 +157,7 @@ object AdTypesRepository {
                 "Banner 320x50",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppGamBanner.create(
-                        wrapper, autoRefreshTime,
+                        wrapper, autoRefreshTime / 1000,
                         320, 50,
                         "/21808260008/prebid_oxb_320x50_banner",
                         "50699c03-0910-477c-b4a4-911dbe2b9d42"
@@ -181,7 +181,7 @@ object AdTypesRepository {
                 "Video Banner",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppGamVideoBanner.create(
-                        wrapper, autoRefreshTime,
+                        wrapper, autoRefreshTime / 1000,
                         300, 250,
                         "/21808260008/prebid_oxb_300x250_banner",
                         "9007b76d-c73c-49c6-b0a8-1c7890a84b33"
@@ -218,7 +218,7 @@ object AdTypesRepository {
                 "Banner 320x50",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppMoPubBanner.create(
-                        wrapper, autoRefreshTime,
+                        wrapper, autoRefreshTime / 1000,
                         320, 50,
                         "093eef131ec7455b9bda52b7eb456c51",
                         "50699c03-0910-477c-b4a4-911dbe2b9d42"

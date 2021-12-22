@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
+import com.mopub.mediation.MoPubInterstitialMediationUtils
 import com.mopub.mediation.MoPubMediationUtils
 import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubInterstitial
@@ -34,15 +35,16 @@ object InAppMoPubInterstitial {
             override fun onInterstitialClicked(p0: MoPubInterstitial?) {}
             override fun onInterstitialDismissed(p0: MoPubInterstitial?) {}
         }
+        val mediationUtils = MoPubInterstitialMediationUtils(moPubInterstitial)
         adUnit = MediationInterstitialAdUnit(
             activity,
             configId,
             AdSize(minPercentageWidth, minPercentageHeight),
-            MoPubMediationUtils()
+            mediationUtils
         )
 
         MoPub.initializeSdk(activity, SdkConfiguration.Builder(adUnitId).build()) {
-            adUnit?.fetchDemand(moPubInterstitial) {
+            adUnit?.fetchDemand {
                 moPubInterstitial?.load()
             }
         }

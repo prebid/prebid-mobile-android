@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
 import com.google.android.gms.ads.*
-import org.prebid.mobile.admob.PrebidAdMobMediationDelegate
+//import org.prebid.mobile.admob.PrebidAdMobMediationDelegate
 import org.prebid.mobile.admob.PrebidAdMobRequest
 import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
 
@@ -55,18 +55,18 @@ object InAppAdMobBanner {
         wrapper.addView(bannerView)
 
         val request = PrebidAdMobRequest.create()
-        val mediationUtils = PrebidAdMobMediationDelegate()
-        adUnit = MediationBannerAdUnit(
-            wrapper.context,
-            configId,
-            org.prebid.mobile.rendering.bidding.data.AdSize(width, height),
-            mediationUtils
-        )
-        adUnit?.setRefreshInterval(autoRefreshTime / 1000)
-        adUnit?.fetchDemand(request) { result ->
-            Log.d("Prebid", "Fetch demand result: $result")
-            bannerView?.loadAd(request)
-        }
+////        val mediationUtils = PrebidAdMobMediationDelegate()
+//        adUnit = MediationBannerAdUnit(
+//            wrapper.context,
+//            configId,
+//            org.prebid.mobile.rendering.bidding.data.AdSize(width, height),
+////            mediationUtils
+//        )
+//        adUnit?.setRefreshInterval(autoRefreshTime / 1000)
+//        adUnit?.fetchDemand(request) { result ->
+//            Log.d("Prebid", "Fetch demand result: $result")
+//            bannerView?.loadAd(request)
+//        }
     }
 
     fun destroy() {

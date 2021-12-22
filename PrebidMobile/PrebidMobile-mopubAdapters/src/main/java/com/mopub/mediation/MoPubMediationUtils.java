@@ -30,6 +30,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+@Deprecated
 public class MoPubMediationUtils implements PrebidMediationDelegate {
     private static final String TAG = MoPubMediationUtils.class.getSimpleName();
 
@@ -55,22 +56,22 @@ public class MoPubMediationUtils implements PrebidMediationDelegate {
     }
 
 
-    @Override
-    public boolean isBannerView(@Nullable Object adView) {
-        return adView != null && adView.getClass() == getClassForString(MOPUB_BANNER_VIEW_CLASS);
-    }
+//    @Override
+//    public boolean isBannerView(@Nullable Object adView) {
+//        return adView != null && adView.getClass() == getClassForString(MOPUB_BANNER_VIEW_CLASS);
+//    }
+//
+//    @Override
+//    public boolean isInterstitialView(@Nullable Object adView) {
+//        return adView != null && adView.getClass() == getClassForString(MOPUB_INTERSTITIAL_VIEW_CLASS);
+//    }
+//
+//    @Override
+//    public boolean isNativeView(@Nullable Object adView) {
+//        return adView != null && adView.getClass() == getClassForString(MOPUB_NATIVE_CLASS);
+//    }
 
-    @Override
-    public boolean isInterstitialView(@Nullable Object adView) {
-        return adView != null && adView.getClass() == getClassForString(MOPUB_INTERSTITIAL_VIEW_CLASS);
-    }
-
-    @Override
-    public boolean isNativeView(@Nullable Object adView) {
-        return adView != null && adView.getClass() == getClassForString(MOPUB_NATIVE_CLASS);
-    }
-
-    @Override
+//    @Override
     public void handleKeywordsUpdate(@Nullable Object adView, HashMap<String, String> keywords) {
         removeUsedKeywordsForMoPub(adView);
 
@@ -99,25 +100,22 @@ public class MoPubMediationUtils implements PrebidMediationDelegate {
         }
     }
 
-    @Override
+//    @Override
     public void setResponseToLocalExtras(@Nullable Object adView, @Nullable BidResponse response) {
-        if (isNativeView(adView)) {
-            Map<String, Object> localExtras = Collections.singletonMap(KEY_BID_RESPONSE, response);
-            callMethodOnObjectWithParameter(adView, "setLocalExtras", Map.class, localExtras);
-        }
-    }
-
-    @Override
-    public void setResponseIdToLocalExtras(@Nullable Object adView, @Nullable BidResponse response) {
-        if (isBannerView(adView) || isInterstitialView(adView)) {
+//        if (isBannerView(adView) || isInterstitialView(adView)) {
             if (response != null) {
                 Map<String, Object> localExtras = Collections.singletonMap(KEY_BID_RESPONSE, response.getId());
                 callMethodOnObjectWithParameter(adView, "setLocalExtras", Map.class, localExtras);
             }
-        }
+//        }
+
+//        if (isNativeView(adView)) {
+//        Map<String, Object> localExtras = Collections.singletonMap(KEY_BID_RESPONSE, response);
+//        callMethodOnObjectWithParameter(adView, "setLocalExtras", Map.class, localExtras);
+//        }
     }
 
-    @Override
+//    @Override
     public boolean canPerformRefresh(@Nullable Object adView, @NonNull VisibilityChecker visibilityChecker, @NonNull ScreenStateReceiver screenStateReceiver, boolean isAdFailed) {
         if (isAdFailed) {
             return true;
@@ -203,5 +201,25 @@ public class MoPubMediationUtils implements PrebidMediationDelegate {
         synchronized (RESERVED_KEYS) {
             RESERVED_KEYS.add(key);
         }
+    }
+
+    @Override
+    public void handleKeywordsUpdate(@Nullable HashMap<String, String> keywords) {
+
+    }
+
+    @Override
+    public void setResponseToLocalExtras(@Nullable BidResponse response) {
+
+    }
+
+//    @Override
+    public boolean canPerformRefresh(@NonNull VisibilityChecker visibilityChecker, @NonNull ScreenStateReceiver screenStateReceiver, boolean isAdFailed) {
+        return false;
+    }
+
+    @Override
+    public Object getAdObject() {
+        return null;
     }
 }

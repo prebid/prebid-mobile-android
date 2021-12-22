@@ -61,13 +61,6 @@ class NativeAdUnit extends MediationBaseAdUnit {
     }
 
     @Override
-    protected boolean isAdObjectSupported(
-        @Nullable
-            Object adObject) {
-        return true;
-    }
-
-    @Override
     protected void onResponseReceived(BidResponse response) {
         if (mNativeFetchCompleteListener == null) {
             LogUtil.error(TAG, "Failed to pass callback. Ad object or OnFetchCompleteListener is null");

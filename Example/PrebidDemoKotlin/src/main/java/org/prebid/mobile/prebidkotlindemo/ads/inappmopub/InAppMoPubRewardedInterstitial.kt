@@ -5,6 +5,7 @@ import com.mopub.common.MoPub
 import com.mopub.common.MoPubReward
 import com.mopub.common.SdkConfiguration
 import com.mopub.mediation.MoPubMediationUtils
+import com.mopub.mediation.MoPubRewardedVideoMediationUtils
 import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubRewardedAdListener
 import com.mopub.mobileads.MoPubRewardedAdManager
@@ -32,14 +33,15 @@ object InAppMoPubRewardedInterstitial {
             override fun onRewardedAdStarted(adUnitId: String) {}
         })
 
+        val mediationUtils = MoPubRewardedVideoMediationUtils(keywordsMap)
         adUnit = MediationRewardedVideoAdUnit(
             activity,
             adUnitId,
             configId,
-            MoPubMediationUtils()
+            mediationUtils
         )
         MoPub.initializeSdk(activity, builder.build()) {
-            adUnit?.fetchDemand(keywordsMap) {
+            adUnit?.fetchDemand {
                 val keywordsString = convertMapToMoPubKeywords(keywordsMap)
                 val params = MoPubRewardedAdManager.RequestParameters(keywordsString)
 

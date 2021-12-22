@@ -49,11 +49,9 @@ public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
 
     @Override
     public final void fetchDemand(
-        @Nullable
-            Object mopubView,
         @NonNull
             OnFetchCompleteListener listener) {
-        super.fetchDemand(mopubView, listener);
+        super.fetchDemand(listener);
     }
 
     @Override
@@ -62,13 +60,6 @@ public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
         mAdUnitConfig.setConfigId(configId);
         mAdUnitConfig.setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.INTERSTITIAL);
         mAdUnitConfig.setAdPosition(AdPosition.FULLSCREEN);
-    }
-
-    @Override
-    protected final boolean isAdObjectSupported(
-        @Nullable
-            Object adObject) {
-        return mMediationDelegate.isInterstitialView(adObject);
     }
 
     private void setAdUnitType(AdUnitFormat adUnitFormat) {

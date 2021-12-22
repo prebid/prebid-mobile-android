@@ -4,7 +4,8 @@ import android.annotation.SuppressLint
 import android.view.ViewGroup
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
-import com.mopub.mediation.MoPubMediationUtils
+import com.mopub.mediation.MoPubBannerMediationUtils
+import com.mopub.mediation.MoPubBaseMediationUtils
 import com.mopub.mobileads.MoPubView
 import org.prebid.mobile.rendering.bidding.data.AdSize
 import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
@@ -23,20 +24,22 @@ object InAppMoPubBanner {
         adUnitId: String,
         configId: String
     ) {
+        bannerView = MoPubView(wrapper.context)
+        bannerView?.setAdUnitId(adUnitId)
+        val mediationUtils = MoPubBannerMediationUtils(bannerView)
+
         adUnit = MediationBannerAdUnit(
             wrapper.context,
             configId,
             AdSize(width, height),
-            MoPubMediationUtils()
+            mediationUtils
         )
         adUnit?.setRefreshInterval(autoRefreshTime)
-        bannerView = MoPubView(wrapper.context)
-        bannerView?.setAdUnitId(adUnitId)
 
         wrapper.addView(bannerView)
 
         MoPub.initializeSdk(wrapper.context, SdkConfiguration.Builder(adUnitId).build()) {
-            adUnit?.fetchDemand(bannerView) {
+            adUnit?.fetchDemand {
                 bannerView?.loadAd()
             }
         }

@@ -33,6 +33,7 @@ import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 public class MediationBannerAdUnit extends MediationBaseAdUnit {
     private static final String TAG = MediationBannerAdUnit.class.getSimpleName();
@@ -54,13 +55,6 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
     }
 
     @Override
-    protected final boolean isAdObjectSupported(
-        @Nullable
-            Object adObject) {
-        return mMediationDelegate.isBannerView(adObject);
-    }
-
-    @Override
     public void destroy() {
         super.destroy();
         mScreenStateReceiver.unregister();
@@ -70,30 +64,37 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
     protected void initBidLoader() {
         super.initBidLoader();
 
-        final VisibilityTrackerOption visibilityTrackerOption = new VisibilityTrackerOption(NativeEventTracker.EventType.IMPRESSION);
-        final VisibilityChecker visibilityChecker = new VisibilityChecker(visibilityTrackerOption);
         mBidLoader.setBidRefreshListener(() -> {
-            Object adView = mAdViewReference.get();
-
-            boolean result = mMediationDelegate.canPerformRefresh(adView, visibilityChecker, mScreenStateReceiver, mAdFailed);
-
             if (mAdFailed) {
                 mAdFailed = false;
+                LogUtil.debug(TAG, "Ad failed, can perform refresh.");
+                return true;
             }
 
-            Log.d(TAG, "Can perform refresh: " + result);
+            Object adObject = mMediationDelegate.getAdObject();
+            boolean isVisible = true;
+            if (adObject instanceof View) {
+                final VisibilityTrackerOption visibilityTrackerOption = new VisibilityTrackerOption(NativeEventTracker.EventType.IMPRESSION);
+                final VisibilityChecker checker = new VisibilityChecker(visibilityTrackerOption);
+                isVisible = checker.isVisibleForRefresh((View) adObject);
+                if (isVisible) {
+                    LogUtil.debug(TAG, "Visibility checker result: " + isVisible);
+                } else {
+                    LogUtil.error(TAG, "Can't perform refresh. Ad view is not visible.");
+                }
+            }
 
-            return result;
+            boolean canRefresh = mScreenStateReceiver.isScreenOn() && isVisible;
+            LogUtil.debug(TAG, "Can perform refresh: " + canRefresh);
+            return canRefresh;
         });
     }
 
     @Override
     public final void fetchDemand(
-        @Nullable
-            Object adView,
         @NonNull
             OnFetchCompleteListener listener) {
-        super.fetchDemand(adView, listener);
+        super.fetchDemand(listener);
     }
 
     /**

@@ -57,18 +57,11 @@ public class MediationNativeAdUnit extends MediationBaseAdUnit {
     }
 
     @Override
-    protected boolean isAdObjectSupported(
-        @Nullable
-            Object adObject) {
-        return mMediationDelegate.isNativeView(adObject);
-    }
-
-    @Override
     protected void onResponseReceived(BidResponse response) {
-        if (mOnFetchCompleteListener != null && mAdViewReference != null && mAdViewReference.get() != null) {
+        if (mOnFetchCompleteListener != null && mMediationDelegate.getAdObject() != null) {
             BidResponseCache.getInstance().putBidResponse(response);
-            mMediationDelegate.handleKeywordsUpdate(mKeywordsMap, response.getTargetingWithCacheId());
-            mMediationDelegate.setResponseToLocalExtras(mAdViewReference.get(), response);
+            mMediationDelegate.handleKeywordsUpdate(response.getTargetingWithCacheId());
+            mMediationDelegate.setResponseToLocalExtras(response);
             mOnFetchCompleteListener.onComplete(FetchDemandResult.SUCCESS);
         }
     }
