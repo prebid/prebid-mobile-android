@@ -21,7 +21,7 @@ import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 
 object SourcePicker {
 
-    private const val MOCK_SERVER_DOMAIN = "https://10.0.2.2:8000/openrtb2/auction"
+    private const val MOCK_SERVER_DOMAIN = "http://10.0.2.2:8080/openrtb2/auction"
 
     private const val PROD_SERVER_DOMAIN = "https://prebid.openx.net/openrtb2/auction"
     private const val PROD_ACCOUNT_ID = "0689a263-318d-448b-a3d4-b02e8a709d9d"

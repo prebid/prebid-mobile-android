@@ -120,7 +120,7 @@ public class Prebid {
         JSONObject prebid = new JSONObject();
         StoredRequest storedRequest = new StoredRequest(configId);
         addValue(prebid, "storedrequest", storedRequest.toJSONObject());
-
+        PrebidRenderingSettings.setStoredAuctionResponse("f381a00c-1e20-42cf-b3db-f04a3e053e01");
         addStoredAuctionResponse(prebid);
         addStoredBidResponse(prebid);
 
