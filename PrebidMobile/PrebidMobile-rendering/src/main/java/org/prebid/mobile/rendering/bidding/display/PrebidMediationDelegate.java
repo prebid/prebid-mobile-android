@@ -1,10 +1,7 @@
 package org.prebid.mobile.rendering.bidding.display;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
-import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 
 import java.util.HashMap;
 
@@ -24,8 +21,8 @@ public interface PrebidMediationDelegate {
     public void setResponseToLocalExtras(@Nullable BidResponse response);
 
     /**
-     * Returns ad object of current mediation delegate.
+     * Checks if banner view is visible, and it is possible to make refresh.
      */
-    public Object getAdObject();
+    public boolean canPerformRefresh();
 
 }

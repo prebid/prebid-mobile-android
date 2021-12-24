@@ -68,8 +68,8 @@ public abstract class MediationBaseAdUnit {
     }
 
     protected void fetchDemand(@NonNull OnFetchCompleteListener listener) {
-        if (mMediationDelegate.getAdObject() == null) {
-            LogUtil.error(TAG, "Demand fetch failed. Mediation delegate's ad object must be not null");
+        if (mMediationDelegate == null) {
+            LogUtil.error(TAG, "Demand fetch failed. Mediation delegate object must be not null");
             listener.onComplete(FetchDemandResult.INVALID_AD_OBJECT);
             return;
         }
@@ -91,41 +91,6 @@ public abstract class MediationBaseAdUnit {
             return;
         }
 
-        mOnFetchCompleteListener = listener;
-        mBidLoader.load();
-    }
-
-    // TODO: Remove
-    protected void fetchDemand(
-            @Nullable
-                    Object adObject,
-            @NonNull
-                    OnFetchCompleteListener listener) {
-        if (mMediationDelegate.getAdObject() == null) {
-            LogUtil.error(TAG, "Demand fetch failed. Mediation delegate's ad object must be not null");
-            listener.onComplete(FetchDemandResult.INVALID_AD_OBJECT);
-            return;
-        }
-        if (TextUtils.isEmpty(PrebidRenderingSettings.getAccountId())) {
-            LogUtil.error(TAG, "Empty account id");
-            listener.onComplete(FetchDemandResult.INVALID_ACCOUNT_ID);
-            return;
-        }
-        if (TextUtils.isEmpty(mAdUnitConfig.getConfigId())) {
-            LogUtil.error(TAG, "Empty config id");
-            listener.onComplete(FetchDemandResult.INVALID_CONFIG_ID);
-            return;
-        }
-
-        final Host bidServerHost = PrebidRenderingSettings.getBidServerHost();
-        if (bidServerHost.equals(Host.CUSTOM) && bidServerHost.getHostUrl().isEmpty()) {
-            LogUtil.error(TAG, "Empty host url for custom Prebid Server host.");
-            listener.onComplete(FetchDemandResult.INVALID_HOST_URL);
-            return;
-        }
-
-        LogUtil.error("MEDIATION BASE AD UNIT TODO", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//        mAdViewReference = new WeakReference<>(adObject);
         mOnFetchCompleteListener = listener;
         mBidLoader.load();
     }
@@ -193,7 +158,7 @@ public abstract class MediationBaseAdUnit {
 
     protected void onResponseReceived(BidResponse response) {
         LogUtil.debug(TAG, "On response received");
-        if (mMediationDelegate.getAdObject() == null || mOnFetchCompleteListener == null) {
+        if (mOnFetchCompleteListener == null) {
             cancelRefresh();
             return;
         }
@@ -205,7 +170,7 @@ public abstract class MediationBaseAdUnit {
 
     protected void onErrorReceived(AdException exception) {
         LogUtil.warn(TAG, "On error received");
-        if (mMediationDelegate.getAdObject() == null || mOnFetchCompleteListener == null) {
+        if (mOnFetchCompleteListener == null) {
             cancelRefresh();
             return;
         }
@@ -228,9 +193,6 @@ public abstract class MediationBaseAdUnit {
     private void cancelRefresh() {
         mBidLoader.cancelRefresh();
         LogUtil.error(TAG, "Failed to pass callback");
-        if (mMediationDelegate.getAdObject() == null) {
-            LogUtil.error(TAG, "Ad object is null");
-        }
         if (mOnFetchCompleteListener == null) {
             LogUtil.error(TAG, "OnFetchCompleteListener is null");
         }

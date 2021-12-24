@@ -5,7 +5,6 @@ import android.app.Activity
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
 import com.mopub.mediation.MoPubInterstitialMediationUtils
-import com.mopub.mediation.MoPubMediationUtils
 import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubInterstitial
 import org.prebid.mobile.rendering.bidding.data.AdSize

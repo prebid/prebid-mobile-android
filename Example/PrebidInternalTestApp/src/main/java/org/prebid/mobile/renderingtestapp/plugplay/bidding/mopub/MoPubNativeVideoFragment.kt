@@ -17,7 +17,7 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub
 
 import android.util.Log
-import com.mopub.mediation.MoPubMediationUtils
+import com.mopub.mediation.MoPubNativeMediationUtils
 import com.mopub.nativeads.*
 import kotlinx.android.synthetic.main.events_bids.*
 import kotlinx.android.synthetic.main.events_native_video.*
@@ -112,11 +112,12 @@ class MoPubNativeVideoFragment : MopubNativeFragment() {
 
         mopubNative?.registerAdRenderer(addRenderer)
 
+        val mediationUtils = MoPubNativeMediationUtils(keywordsContainer, mopubNative)
         mopubNativeAdUnit = MediationNativeAdUnit(
             requireContext(),
             configId,
             getNativeAdConfig(),
-            MoPubMediationUtils()
+            mediationUtils
         )
     }
 

@@ -52,7 +52,7 @@ public class MediationRewardedVideoAdUnit extends MediationBaseAdUnit {
 
     @Override
     protected final void onResponseReceived(BidResponse response) {
-        if (mOnFetchCompleteListener != null && mMediationDelegate.getAdObject() != null) {
+        if (mOnFetchCompleteListener != null) {
             LogUtil.debug(TAG, "On response received");
             BidResponseCache.getInstance().putBidResponse(mMopubAdUnitId, response);
             mMediationDelegate.handleKeywordsUpdate(response.getTargeting());

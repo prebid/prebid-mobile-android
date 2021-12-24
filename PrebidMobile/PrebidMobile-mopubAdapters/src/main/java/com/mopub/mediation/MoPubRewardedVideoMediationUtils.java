@@ -3,31 +3,32 @@ package com.mopub.mediation;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 
 public class MoPubRewardedVideoMediationUtils extends MoPubBaseMediationUtils {
 
-    public MoPubRewardedVideoMediationUtils(HashMap<String, String> keywordsMap) {
-        super(keywordsMap);
+    private HashMap<String, String> keywords;
+
+    public MoPubRewardedVideoMediationUtils(HashMap<String, String> keywords) {
+        super(keywords);
+        this.keywords = keywords;
     }
 
     @Override
     public void setResponseToLocalExtras(@Nullable BidResponse response) {
-        Map<String, Object> localExtras = Collections.singletonMap(KEY_BID_RESPONSE, response);
-        callMethodOnObjectWithParameter(adObject, "setLocalExtras", Map.class, localExtras);
+
     }
 
     @Override
-    public void handleKeywordsUpdate(@Nullable HashMap<String, String> keywords) {
-        removeUsedKeywordsForMoPub(adObject);
+    public void handleKeywordsUpdate(@Nullable HashMap<String, String> prebidKeywords) {
+        removeUsedKeywordsForMoPub(keywords);
 
-        if (keywords != null && !keywords.isEmpty()) {
-            if (adObject != null && adObject.getClass() == HashMap.class) {
-                ((HashMap) adObject).clear();
-                ((HashMap) adObject).putAll(keywords);
+        if (prebidKeywords != null && !prebidKeywords.isEmpty()) {
+            if (keywords != null) {
+                keywords.clear();
+                keywords.putAll(prebidKeywords);
             }
         }
     }
+
 }

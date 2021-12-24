@@ -17,22 +17,14 @@
 package org.prebid.mobile.rendering.bidding.display;
 
 import android.content.Context;
-import android.util.Log;
-import android.view.View;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.enums.BannerAdPosition;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdPosition;
-import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
-import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
-import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 public class MediationBannerAdUnit extends MediationBaseAdUnit {
@@ -71,20 +63,8 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
                 return true;
             }
 
-            Object adObject = mMediationDelegate.getAdObject();
-            boolean isVisible = true;
-            if (adObject instanceof View) {
-                final VisibilityTrackerOption visibilityTrackerOption = new VisibilityTrackerOption(NativeEventTracker.EventType.IMPRESSION);
-                final VisibilityChecker checker = new VisibilityChecker(visibilityTrackerOption);
-                isVisible = checker.isVisibleForRefresh((View) adObject);
-                if (isVisible) {
-                    LogUtil.debug(TAG, "Visibility checker result: " + isVisible);
-                } else {
-                    LogUtil.error(TAG, "Can't perform refresh. Ad view is not visible.");
-                }
-            }
-
-            boolean canRefresh = mScreenStateReceiver.isScreenOn() && isVisible;
+            boolean isViewVisible = mMediationDelegate.canPerformRefresh();
+            boolean canRefresh = mScreenStateReceiver.isScreenOn() && isViewVisible;
             LogUtil.debug(TAG, "Can perform refresh: " + canRefresh);
             return canRefresh;
         });

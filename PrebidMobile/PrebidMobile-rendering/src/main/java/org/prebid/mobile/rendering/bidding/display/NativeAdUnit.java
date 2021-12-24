@@ -17,7 +17,7 @@
 package org.prebid.mobile.rendering.bidding.display;
 
 import android.content.Context;
-
+import androidx.annotation.NonNull;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.NativeFetchDemandResult;
@@ -31,9 +31,6 @@ import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.ArrayList;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 class NativeAdUnit extends MediationBaseAdUnit {
     private static final String TAG = NativeAdUnit.class.getSimpleName();
@@ -90,7 +87,7 @@ class NativeAdUnit extends MediationBaseAdUnit {
         @NonNull
             OnNativeFetchCompleteListener listener) {
         mNativeFetchCompleteListener = listener;
-        super.fetchDemand(null, mOnFetchCompleteListener);
+        super.fetchDemand(mOnFetchCompleteListener);
     }
 
     private void setupNativeAdConfiguration(NativeAdConfiguration nativeAdConfiguration) {
