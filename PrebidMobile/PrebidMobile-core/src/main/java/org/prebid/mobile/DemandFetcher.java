@@ -18,9 +18,9 @@ package org.prebid.mobile;
 
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import org.prebid.mobile.tasksmanager.TasksManager;
 
@@ -73,12 +73,16 @@ class DemandFetcher {
         }
     }
 
-    private void stop() {
-        this.requestRunnable.cancelRequest();
-        this.fetcherHandler.removeCallbacks(requestRunnable);
-        // cancel existing requests
-        timePausedAt = System.currentTimeMillis();
-        state = STATE.STOPPED;
+    void stop() {
+        if (state != STATE.DESTROYED) {
+            if (requestRunnable != null) {
+                this.requestRunnable.cancelRequest();
+            }
+            this.fetcherHandler.removeCallbacks(requestRunnable);
+            // cancel existing requests
+            timePausedAt = System.currentTimeMillis();
+            state = STATE.STOPPED;
+        }
     }
 
     void start() {
@@ -98,7 +102,7 @@ class DemandFetcher {
                     } else {
                         stall = 0;
                     }
-                    fetcherHandler.postDelayed(requestRunnable, stall * 1000);
+                    fetcherHandler.postDelayed(requestRunnable, stall);
                 }
                 state = STATE.RUNNING;
                 break;
@@ -181,7 +185,7 @@ class DemandFetcher {
             auctionId = UUID.randomUUID().toString();
             lastFetchTime = System.currentTimeMillis();
             // check input values
-            demandHandler.post(new Runnable() {
+            demandHandler.postAtFrontOfQueue(new Runnable() {
 
                 @Override
                 public void run() {

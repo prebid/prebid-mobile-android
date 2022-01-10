@@ -1,0 +1,147 @@
+{
+id: "0123456",
+app: {
+id: "1",
+publisher: {
+domain: "prebid.com",
+name: "Prebid"
+},
+domain: "com.prebid.demo",
+ver: "0.0.1",
+keywords: "demo, app, test",
+storeurl: "itunes.com/apps/129487234975692834897298375892375",
+name: "PrebidDemoApp"
+},
+device: {
+geo: {
+lon: 30.5,
+city: "Pasadena",
+country: "USA",
+zip: "99999",
+lat: 18.3,
+region: "CA",
+metro: "Los Angeles"
+},
+w: 320,
+os: "iOS",
+language: "EN_US",
+h: 480,
+osv: "8.3"
+},
+regs: {
+coppa: 1
+},
+site: {
+content: {
+title: "content title",
+embeddable: 1,
+producer: {
+name: "Prebid Films"
+}
+},
+mobile: 1,
+name: "fake"
+},
+imp: [
+{
+banner: {
+topframe: 0,
+w: 320,
+mimes: [
+"text/html"
+],
+h: 50
+},
+bidfloor: 0.25,
+pmp: {
+deals: [
+{
+wadomain: [
+"domain.com"
+],
+at: 1
+},
+{
+wadomain: [
+"otherdomain.com"
+],
+at: 2
+}
+]
+}
+},
+{
+video: {
+maxbitrate: 320,
+w: 320,
+companionad: [
+{
+topframe: 0,
+w: 320,
+mimes: [
+"text/html"
+],
+h: 50
+}
+],
+h: 240,
+mimes: [
+"avi"
+]
+},
+banner: {
+topframe: 0
+}
+},
+{
+native: {
+request: "native req",
+ver: "1.0"
+},
+banner: {
+topframe: 0
+}
+}
+],
+user: {
+data: [
+{
+segment: [
+{
+value: "hyundai",
+name: "car"
+},
+{
+value: "windows",
+name: "pc"
+}
+],
+name: "data A"
+},
+{
+segment: [
+{
+value: "ikea",
+name: "bed"
+},
+{
+value: "lagavulin",
+name: "scotch"
+}
+],
+name: "data B"
+}
+],
+buyerid: "0987654321",
+geo: {
+lon: 20.5,
+city: "Los Angeles",
+country: "USA",
+zip: "9007",
+lat: 17.3,
+region: "CA",
+metro: "Los Angeles"
+}
+},
+test: 0
+}

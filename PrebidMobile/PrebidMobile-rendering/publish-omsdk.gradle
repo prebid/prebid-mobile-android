@@ -1,0 +1,14 @@
+apply plugin: 'maven-publish'
+
+def ARCHIVE_NAME = "${omSdkModuleName}-${omSdkVersion}"
+
+publishing {
+    publications {
+        omsdk(MavenPublication) {
+            artifactId "${omSdkModuleName}"
+            artifact "${project.rootDir}/PrebidMobile/${omSdkModuleName}/${ARCHIVE_NAME}.aar"
+            version "$omSdkVersion"
+            groupId "$artifactGroupId"
+        }
+    }
+}

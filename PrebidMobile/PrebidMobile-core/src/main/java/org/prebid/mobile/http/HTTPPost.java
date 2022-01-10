@@ -17,7 +17,7 @@
 package org.prebid.mobile.http;
 
 import android.os.Looper;
-import android.support.annotation.MainThread;
+import androidx.annotation.MainThread;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -87,6 +87,7 @@ public abstract class HTTPPost {
             }
             conn.setRequestMethod("POST");
             conn.setConnectTimeout(PrebidMobile.getTimeoutMillis());
+            conn.setReadTimeout(PrebidMobile.getTimeoutMillis());
 
             // Add post data
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.prebid</groupId>
+    <artifactId>prebid-mobile-sdk-rendering</artifactId>
+
+    <version>1.13.0-beta2</version>
+    <packaging>aar</packaging>
+    <name>Prebid Mobile Android SDK</name>
+    <description>Prebid Mobile</description>
+    <url>https://www.prebid.org</url>
+
+    <scm>
+        <connection>scm:git:git@github.com:prebid/prebid-mobile-android.git</connection>
+        <developerConnection>scm:git:git@github.com:prebid/prebid-mobile-android.git</developerConnection>
+        <url>git@github.com:prebid/prebid-mobile-android.git</url>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>AppNexus Mobile Team</name>
+            <email>sdk@appnexus.com</email>
+            <organization>AppNexus, Inc.</organization>
+            <organizationUrl>http://www.appnexus.com</organizationUrl>
+        </developer>
+
+        <developer>
+            <name>RubiconProject Mobile Team</name>
+            <email>sdk@https://rubiconproject.com/</email>
+            <organization>The Rubicon Project, Inc.</organization>
+            <organizationUrl>https://rubiconproject.com</organizationUrl>
+        </developer>
+
+        <developer>
+            <name>Postindustria AdTech Team</name>
+            <email>hello@postindustria.com </email>
+            <organization>Postindustria LTD</organization>
+            <organizationUrl>https://postindustria.com/</organizationUrl>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.android.gms</groupId>
+            <artifactId>play-services-base</artifactId>
+            <version>17.6.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.android.gms</groupId>
+            <artifactId>play-services-ads-identifier</artifactId>
+            <version>17.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.android.exoplayer</groupId>
+            <artifactId>exoplayer-core</artifactId>
+            <version>2.13.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.android.exoplayer</groupId>
+            <artifactId>exoplayer-ui</artifactId>
+            <version>2.13.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>androidx.annotation</groupId>
+            <artifactId>annotation</artifactId>
+            <version>1.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.prebid</groupId>
+            <artifactId>prebid-mobile-sdk-open-measurement</artifactId>
+            <version>1.3.17</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>

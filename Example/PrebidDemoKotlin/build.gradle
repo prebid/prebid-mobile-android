@@ -5,12 +5,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "29.0.0"
+    compileSdkVersion 30
+    buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "org.prebid.mobile.prebidkotlindemo"
-        minSdkVersion 16
-        targetSdkVersion 28
+        minSdkVersion 19
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -22,25 +22,42 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        dataBinding true
+    }
 }
 
 dependencies {
-
-    implementation 'com.android.support:multidex:1.0.3'
-
     implementation project(':PrebidMobile')
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':PrebidMobile-gamEventHandlers')
+    implementation project(':PrebidMobile-mopubAdapters')
 
+    // For testing staging releases
+//    implementation 'org.prebid:prebid-mobile-sdk:1.13.0-beta2'
+//    implementation 'org.prebid:prebid-mobile-sdk-gam-event-handlers:1.13.0-beta2'
+//    implementation 'org.prebid:prebid-mobile-sdk-mopub-adapters:1.13.0-beta2'
+
+    // Standard libraries
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'com.google.android.gms:play-services-ads:20.0.0'
-    implementation('com.mopub:mopub-sdk:5.4.1@aar') {
-        transitive = true
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.preference:preference-ktx:1.1.1'
 
+    // Advertisement
+    implementation 'com.google.android.gms:play-services-ads:20.4.0'
+    implementation('com.mopub:mopub-sdk:5.17.0@aar') {
+        transitive = true
         exclude module: 'libAvid-mopub' // To exclude AVID
         exclude module: 'moat-mobile-app-kit' // To exclude Moat
     }
 
+    // Multidex
+    implementation 'androidx.multidex:multidex:2.0.0'
+
+    // Tests
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'

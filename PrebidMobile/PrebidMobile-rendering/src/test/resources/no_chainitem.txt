@@ -1,0 +1,13 @@
+{
+    "ads": {
+        "chain": 1,
+        "medium": "ma",
+        "record_tmpl": "http://qa-mobile-gateway-xv-01.xv.dc.prebid.org/{medium}/1.0/{rtype}?did.adid=60b0ff72-9b31-4d9b-a8e1-728d89c6261b&ts={txn_state}",
+        "adunits": [
+            {
+                "auid": "1610812068"
+
+            }
+        ]
+    }
+}
