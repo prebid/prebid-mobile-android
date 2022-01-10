@@ -1,8 +1,10 @@
 package org.prebid.mobile.mopub.mock;
 
+import java.util.HashMap;
+
 public class TestResponse {
 
-    public static String get() {
+    public static String getResponse() {
         return "{\n" +
                 "  \"id\": \"id\",\n" +
                 "  \"seatbid\": [\n" +
@@ -50,6 +52,18 @@ public class TestResponse {
                 "    \"tmaxrequest\": 3000\n" +
                 "  }\n" +
                 "}";
+    }
+
+    public static HashMap<String, String> getKeywordsMap() {
+        HashMap<String, String> result = new HashMap<>();
+        result.put("hb_pb", "value1");
+        result.put("hb_bidder", "value2");
+        result.put("hb_cache_id", "value3");
+        return result;
+    }
+
+    public static String getKeywordsString() {
+        return "hb_pb:value1,hb_bidder:value2,hb_cache_id:value3,";
     }
 
 }

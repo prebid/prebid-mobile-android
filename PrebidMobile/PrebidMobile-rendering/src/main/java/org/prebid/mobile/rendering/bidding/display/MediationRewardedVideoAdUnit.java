@@ -38,7 +38,7 @@ public class MediationRewardedVideoAdUnit extends MediationBaseAdUnit {
         mMopubAdUnitId = mopubAdUnitId;
     }
 
-    public final void fetchDemand(@NonNull OnFetchCompleteListener listener) {
+    public void fetchDemand(@NonNull OnFetchCompleteListener listener) {
         super.fetchDemand(listener);
     }
 

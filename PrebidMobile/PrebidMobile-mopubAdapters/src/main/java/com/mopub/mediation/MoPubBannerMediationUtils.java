@@ -23,7 +23,7 @@ public class MoPubBannerMediationUtils extends MoPubBaseMediationUtils {
             final VisibilityChecker checker = new VisibilityChecker(visibilityTrackerOption);
             isVisible = checker.isVisibleForRefresh((View) adObject);
             if (isVisible) {
-                Log.d(TAG, "Visibility checker result: " + isVisible);
+                Log.d(TAG, "Visibility checker result: " + true);
             } else {
                 Log.e(TAG, "Can't perform refresh. Ad view is not visible.");
             }

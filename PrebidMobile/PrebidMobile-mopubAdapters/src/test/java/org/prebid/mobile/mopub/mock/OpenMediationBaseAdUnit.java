@@ -2,7 +2,6 @@ package org.prebid.mobile.mopub.mock;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.MediationBaseAdUnit;
@@ -16,8 +15,8 @@ public class OpenMediationBaseAdUnit extends MediationBaseAdUnit {
     }
 
     @Override
-    public void fetchDemand(@Nullable Object adObject, @NonNull OnFetchCompleteListener listener) {
-        super.fetchDemand(adObject, listener);
+    public void fetchDemand(@NonNull OnFetchCompleteListener listener) {
+        super.fetchDemand(listener);
     }
 
     @Override
@@ -30,9 +29,5 @@ public class OpenMediationBaseAdUnit extends MediationBaseAdUnit {
         mAdUnitConfig.setConfigId(configId);
     }
 
-    @Override
-    protected boolean isAdObjectSupported(@Nullable Object adObject) {
-        return true;
-    }
 
 }
