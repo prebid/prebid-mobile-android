@@ -10,7 +10,6 @@ public class MoPubRewardedVideoMediationUtils extends MoPubBaseMediationUtils {
     private HashMap<String, String> keywords;
 
     public MoPubRewardedVideoMediationUtils(HashMap<String, String> keywords) {
-        super(keywords);
         this.keywords = keywords;
     }
 
@@ -21,8 +20,6 @@ public class MoPubRewardedVideoMediationUtils extends MoPubBaseMediationUtils {
 
     @Override
     public void handleKeywordsUpdate(@Nullable HashMap<String, String> prebidKeywords) {
-        removeUsedKeywordsForMoPub(keywords);
-
         if (prebidKeywords != null && !prebidKeywords.isEmpty()) {
             if (keywords != null) {
                 keywords.clear();

@@ -18,7 +18,6 @@ package org.prebid.mobile.mopub.tests;
 
 import android.app.Activity;
 import com.mopub.mediation.MoPubBannerMediationUtils;
-import com.mopub.mediation.MoPubBaseMediationUtils;
 import com.mopub.mediation.MoPubInterstitialMediationUtils;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
@@ -46,13 +45,6 @@ public class KeywordsSetupTest {
     @Before
     public void setup() {
         mActivity = Robolectric.buildActivity(Activity.class).create().get();
-    }
-
-    @Test
-    public void callMethodOnObject_ExpectedResultIsEqual() {
-        TestObject object = new TestObject();
-        Object result = MoPubBaseMediationUtils.callMethodOnObject(object, "testString");
-        assertEquals("test", result);
     }
 
     @Test
@@ -100,10 +92,4 @@ public class KeywordsSetupTest {
         assertEquals(expectedLocalExtras, moPubView.getLocalExtras());
     }
 
-    public static class TestObject {
-        @SuppressWarnings("unused")
-        public String testString() {
-            return "test";
-        }
-    }
 }
