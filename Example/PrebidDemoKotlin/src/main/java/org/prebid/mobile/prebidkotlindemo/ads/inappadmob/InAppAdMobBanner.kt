@@ -1,6 +1,5 @@
 package org.prebid.mobile.prebidkotlindemo.ads.inappadmob
 
-//import org.prebid.mobile.admob.PrebidAdMobMediationDelegate
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log

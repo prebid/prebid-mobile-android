@@ -270,7 +270,7 @@ object AdTypesRepository {
                     InAppAdMobBanner.create(
                         activity, wrapper, autoRefreshTime,
                         320, 50,
-                        "ca-app-pub-3940256099942544/6300978111",
+                        "ca-app-pub-1875909575462531/3793078260",
                         "50699c03-0910-477c-b4a4-911dbe2b9d42"
                     )
                 },
