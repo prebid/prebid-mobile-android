@@ -17,7 +17,9 @@
 package org.prebid.mobile.rendering.bidding.display;
 
 import android.text.TextUtils;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
@@ -25,10 +27,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 
 /**
  * Holds BidResponses in memory until they are used
@@ -109,12 +107,22 @@ public class BidResponseCache {
             //check if the available BidResponse is not stale
 
             bidResponse = sCachedBidResponses.remove(responseId);
-        }
-        else {
+        } else {
             LogUtil.warn(TAG, "No cached ad to retrieve in the final map");
         }
         LogUtil.debug(TAG, "Cached ad count after popping: " + getCachedResponsesCount());
         return bidResponse;
+    }
+
+    @Nullable
+    public HashMap<String, String> getKeywords(String responseId) {
+        if (sCachedBidResponses.containsKey(responseId)) {
+            BidResponse bidResponse = sCachedBidResponses.get(responseId);
+            if (bidResponse != null) {
+                return bidResponse.getTargeting();
+            }
+        }
+        return null;
     }
 
     @VisibleForTesting
