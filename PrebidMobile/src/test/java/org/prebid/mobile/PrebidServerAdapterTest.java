@@ -1281,21 +1281,20 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
     @Test
     public void testConnectionHasSetCustomHeaders() throws Exception {
-        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
         HttpUrl hostUrl = server.url("/");
         Host.CUSTOM.setHostUrl(hostUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setPrebidServerAccountId("12345");
+        PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         HashMap<String, String> customHeaders = new HashMap<>();
         customHeaders.put("test-key", "test-value");
         PrebidMobile.setCustomHeaders(customHeaders);
-
-        // User Id from External Third Party Sources
-        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, null));
-
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
-        sizes.add(new AdSize(320, 50));
+        sizes.add(new AdSize(300, 250));
         RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
