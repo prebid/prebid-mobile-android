@@ -355,22 +355,49 @@
             app:popUpTo="@+id/headerBiddingFragment" />
 
         <action
-            android:id="@+id/action_header_bidding_to_mopub_native_feed"
-            app:destination="@id/navigation_mopub_native_feed"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/headerBiddingFragment" />
+                android:id="@+id/action_header_bidding_to_mopub_native_feed"
+                app:destination="@id/navigation_mopub_native_feed"
+                app:enterAnim="@anim/nav_default_enter_anim"
+                app:exitAnim="@anim/nav_default_exit_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"
+                app:popUpTo="@+id/headerBiddingFragment"/>
 
         <action
-            android:id="@+id/action_header_bidding_to_mopub_native_video"
-            app:destination="@id/navigation_mopub_native_video"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/headerBiddingFragment" />
+                android:id="@+id/action_header_bidding_to_mopub_native_video"
+                app:destination="@id/navigation_mopub_native_video"
+                app:enterAnim="@anim/nav_default_enter_anim"
+                app:exitAnim="@anim/nav_default_exit_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"
+                app:popUpTo="@+id/headerBiddingFragment"/>
+
+        <!-- AdMob actions -->
+        <action
+                android:id="@+id/action_header_bidding_to_admob_banner"
+                app:destination="@+id/navigation_admob_banner"
+                app:enterAnim="@anim/nav_default_enter_anim"
+                app:exitAnim="@anim/nav_default_exit_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"
+                app:popUpTo="@+id/headerBiddingFragment"/>
+        <action
+                android:id="@+id/action_header_bidding_to_admob_random_banner"
+                app:destination="@+id/navigation_admob_random_banner"
+                app:enterAnim="@anim/nav_default_enter_anim"
+                app:exitAnim="@anim/nav_default_exit_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"
+                app:popUpTo="@+id/headerBiddingFragment"/>
+        <action
+                android:id="@+id/action_header_bidding_to_admob_flexible_banner"
+                app:destination="@+id/navigation_admob_flexible_banner"
+                app:enterAnim="@anim/nav_default_enter_anim"
+                app:exitAnim="@anim/nav_default_exit_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"
+                app:popUpTo="@+id/headerBiddingFragment"/>
+
     </fragment>
 
     <include app:graph="@navigation/utilities_navigation" />
@@ -531,14 +558,25 @@
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MopubNativeStylesNoAssetsFragment" />
 
     <fragment
-        android:id="@+id/navigation_mopub_native"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MopubNativeFragment" />
+            android:id="@+id/navigation_mopub_native"
+            android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MopubNativeFragment"/>
 
     <fragment
-        android:id="@+id/navigation_mopub_native_feed"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MoPubNativeFeedFragment" />
+            android:id="@+id/navigation_mopub_native_feed"
+            android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MoPubNativeFeedFragment"/>
 
     <fragment
-        android:id="@+id/navigation_mopub_native_video"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MoPubNativeVideoFragment" />
+            android:id="@+id/navigation_mopub_native_video"
+            android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MoPubNativeVideoFragment"/>
+
+    <!-- AdMob fragments -->
+    <fragment
+            android:id="@+id/navigation_admob_banner"
+            android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobBannerFragment"/>
+    <fragment
+            android:id="@+id/navigation_admob_random_banner"
+            android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.RandomAdMobBannerFragment"/>
+    <fragment
+            android:id="@+id/navigation_admob_flexible_banner"
+            android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.FlexibleAdMobBannerFragment"/>
 </navigation>

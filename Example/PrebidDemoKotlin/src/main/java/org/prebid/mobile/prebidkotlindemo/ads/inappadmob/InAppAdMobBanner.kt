@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
 import com.google.android.gms.ads.*
+import com.google.android.gms.ads.initialization.InitializationStatus
 import org.prebid.mobile.admob.AdMobBannerMediationUtils
 import org.prebid.mobile.admob.PrebidBannerAdapter
 import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
@@ -26,16 +27,8 @@ object InAppAdMobBanner {
         configId: String
     ) {
         MobileAds.initialize(wrapper.context) { status ->
-            val statusMap = status.adapterStatusMap
-            for (adapterClass in statusMap.keys) {
-                val adapterStatus = statusMap[adapterClass]
-                val adapterDescription = adapterStatus?.description ?: ""
-                if (adapterDescription.isNotBlank()) {
-                    Log.e("MobileAds", "Mediation adapter: $adapterClass $adapterDescription")
-                } else {
-                    Log.d("MobileAds", "Mediation adapter: $adapterClass")
-                }
-            }
+            Log.d("MobileAds", "Initialization complete.")
+            logAdaptersInitializationStatus(status)
         }
 
         /** Google recommends put activity for mediation ad networks */
@@ -79,6 +72,19 @@ object InAppAdMobBanner {
 
         adUnit?.destroy()
         adUnit = null
+    }
+
+    private fun logAdaptersInitializationStatus(status: InitializationStatus) {
+        val statusMap = status.adapterStatusMap
+        for (adapterClass in statusMap.keys) {
+            val adapterStatus = statusMap[adapterClass]
+            val adapterDescription = adapterStatus?.description ?: ""
+            if (adapterDescription.isNotBlank()) {
+                Log.e("MobileAds", "Mediation adapter: $adapterClass $adapterDescription")
+            } else {
+                Log.d("MobileAds", "Mediation adapter: $adapterClass")
+            }
+        }
     }
 
 }
