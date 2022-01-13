@@ -59,6 +59,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
@@ -68,6 +69,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -1275,6 +1277,37 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertTrue(user.has("ext"));
         assertTrue(user.getJSONObject("ext").getJSONArray("eids").getJSONObject(0).getJSONArray("uids").getJSONObject(0).has("atype"));
         assertFalse(user.getJSONObject("ext").getJSONArray("eids").getJSONObject(0).getJSONArray("uids").getJSONObject(0).has("ext"));
+    }
+
+    @Test
+    public void testConnectionHasSetCustomHeaders() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        HttpUrl hostUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(hostUrl.toString());
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        HashMap<String, String> customHeaders = new HashMap<>();
+        customHeaders.put("test-key", "test-value");
+        PrebidMobile.setCustomHeaders(customHeaders);
+
+        // User Id from External Third Party Sources
+        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, null));
+
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(320, 50));
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+
+        Headers headers = server.takeRequest().getHeaders();
+        assertEquals("test-value", headers.get("test-key"));
     }
 
     @Test

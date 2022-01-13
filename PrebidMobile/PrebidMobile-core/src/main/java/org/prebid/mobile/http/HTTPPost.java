@@ -79,6 +79,8 @@ public abstract class HTTPPost {
             conn.setDoInput(true);
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("Accept", "application/json");
+            setCustomHeadersIfAvailable(conn);
+
             if(canIAccessDeviceData()) {
                 String existingCookie = getExistingCookie();
                 if (existingCookie != null) {
@@ -190,6 +192,14 @@ public abstract class HTTPPost {
             return new TaskResult<>(e);
         }
         return new TaskResult<>(new RuntimeException("ServerConnector exception"));
+    }
+
+    private void setCustomHeadersIfAvailable(HttpURLConnection conn) {
+        if(!PrebidMobile.getCustomHeaders().isEmpty()) {
+            for (Map.Entry<String, String> customHeader: PrebidMobile.getCustomHeaders().entrySet()) {
+                conn.setRequestProperty(customHeader.getKey(), customHeader.getValue());
+            }
+        }
     }
 
     private void postResultOnMainThread(final TaskResult<JSONObject> result) {

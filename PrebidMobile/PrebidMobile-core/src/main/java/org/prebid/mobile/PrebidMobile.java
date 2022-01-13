@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +87,8 @@ public class PrebidMobile {
 
     private static List<ExternalUserId> externalUserIds = new ArrayList<>();
 
+    private static HashMap<String, String> customHeaders = new HashMap<>();
+
     private static boolean assignNativeAssetID = false;
     /**
      * List containing objects that hold External UserId parameters for the current application user.
@@ -101,6 +104,22 @@ public class PrebidMobile {
      */
     public static List<ExternalUserId> getExternalUserIds() {
         return PrebidMobile.externalUserIds;
+    }
+
+    /**
+     * HashMap containing a list of custom headers to add to requests
+     * @param customHeaders
+     */
+    public static void setCustomHeaders(HashMap<String, String> customHeaders){
+        PrebidMobile.customHeaders = customHeaders;
+    }
+
+    /**
+     * Returns the HashMap containing a list of custom headers to add to requests
+     * @@return externalUserIds as Array.
+     */
+    public static HashMap<String, String> getCustomHeaders() {
+        return PrebidMobile.customHeaders;
     }
 
     private static WeakReference<Context> applicationContextWeak;
