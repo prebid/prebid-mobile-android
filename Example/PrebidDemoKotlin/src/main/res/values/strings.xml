@@ -1,20 +1,10 @@
 <resources>
+
     <string name="app_name">Prebid Kotlin Demo</string>
-    <string name="adTypeText">Ad Type</string>
-    <string-array name="adTypeArray">
-        <item>Banner</item>
-        <item>Interstitial</item>
-    </string-array>
+
     <string name="adServerText">Ad Server</string>
-    <string-array name="adServerArray">
-        <item>DFP</item>
-        <item>MoPub</item>
-    </string-array>
-    <string name="adSizeText">Ad Size</string>
-    <string-array name="adSizeArray">
-        <item>300x250</item>
-        <item>320x50</item>
-    </string-array>
+    <string name="adTypeText">Ad Type</string>
     <string name="buttonText">Show Ad</string>
     <string name="autoRefreshText">Refresh Millis</string>
+
 </resources>

@@ -1,0 +1,77 @@
+{
+  "ver": "1.2",
+  "link": {
+    "url": "http: //i.am.a/URL"
+  },
+  "assets": [
+    {
+      "id": 123,
+      "required": 1,
+      "title": {
+        "text": "Learn about this awesome thing",
+        "len": 50,
+        "ext": {
+          "extKeyTitle": "extValue"
+        }
+      }
+    },
+    {
+      "id": 124,
+      "required": 1,
+      "img": {
+        "type": 3,
+        "url": "http://www.myads.com/thumbnail1.png",
+        "w": 50,
+        "h": 150,
+        "ext": {
+          "extKeyImg": "extValue"
+        }
+      }
+    },
+    {
+      "id": 128,
+      "required": 1,
+      "img": {
+        "type": 1,
+        "url": "http://www.myads.com/largethumb1.png",
+        "w": 100,
+        "h": 100,
+        "ext": {
+          "extKeyImg": "extValue"
+        }
+      }
+    },
+    {
+      "id": 126,
+      "required": 1,
+      "data": {
+        "type": 12,
+        "value": "My Brand",
+        "len": 6,
+        "ext": {
+          "extKeyData": "extValue"
+        }
+      }
+    },
+    {
+      "id": 127,
+      "required": 1,
+      "data": {
+        "type": 2,
+        "value": "Learn all about this awesome story of someone using my product.",
+        "len": 20,
+        "ext": {
+          "extKeyData": "extValue"
+        }
+      }
+    },
+    {
+      "id": 127,
+      "required": 1,
+      "video": {
+        "vasttag": "<vasttag/>"
+      }
+    }
+  ],
+  "privacy": "http://www.myprivacyurl.com"
+}

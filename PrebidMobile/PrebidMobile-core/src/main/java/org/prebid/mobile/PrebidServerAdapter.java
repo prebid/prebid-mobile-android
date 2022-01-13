@@ -24,8 +24,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.CountDownTimer;
-import android.support.annotation.MainThread;
-import android.support.annotation.Nullable;
+import androidx.annotation.MainThread;
+import androidx.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.webkit.CookieManager;
@@ -89,6 +89,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
         private final AdType adType;
         private boolean isCancelled;
+        private boolean alreadyPostedResult = false;
 
         ServerConnector(PrebidServerAdapter prebidServerAdapter, DemandAdapterListener listener, RequestParams requestParams, String auctionId) {
             this.prebidServerAdapter = new WeakReference<>(prebidServerAdapter);
@@ -254,7 +255,10 @@ class PrebidServerAdapter implements DemandAdapter {
                 return;
             }
 
-            listener.onDemandReady(keywords, getAuctionId());
+            if (!alreadyPostedResult) {
+                alreadyPostedResult = true;
+                listener.onDemandReady(keywords, getAuctionId());
+            }
         }
 
         @MainThread
@@ -263,7 +267,10 @@ class PrebidServerAdapter implements DemandAdapter {
                 return;
             }
 
-            listener.onDemandFailed(code, getAuctionId());
+            if (!alreadyPostedResult) {
+                alreadyPostedResult = true;
+                listener.onDemandFailed(code, getAuctionId());
+            }
         }
 
         private void notifyContainsTopBid(boolean contains) {
@@ -508,6 +515,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     request.put(NativeRequestParams.PRIVACY, params.isPrivacy() ? 1 : 0);
                     request.put(NativeRequestParams.EXT, params.getExt());
                     if (!params.getAssets().isEmpty()) {
+                        int idCount = 1;
                         for (NativeAsset asset : params.getAssets()) {
                             JSONObject assetObj;
                             switch (asset.getType()) {
@@ -522,6 +530,9 @@ class PrebidServerAdapter implements DemandAdapter {
                                     assetObj.put(NativeRequestParams.TITLE, title);
                                     assetObj.put(NativeRequestParams.REQUIRED, titleAsset.isRequired() ? 1 : 0);
                                     assetObj.put(NativeRequestParams.EXT, titleAsset.getAssetExt());
+                                    if (PrebidMobile.shouldAssignNativeAssetID()) {
+                                        assetObj.put(NativeRequestParams.ID, idCount++);
+                                    }
                                     assets.put(assetObj);
                                     break;
                                 case IMAGE:
@@ -550,6 +561,9 @@ class PrebidServerAdapter implements DemandAdapter {
                                     assetObj.put(NativeRequestParams.IMAGE, image);
                                     assetObj.put(NativeRequestParams.REQUIRED, imageAsset.isRequired() ? 1 : 0);
                                     assetObj.put(NativeRequestParams.EXT, imageAsset.getAssetExt());
+                                    if (PrebidMobile.shouldAssignNativeAssetID()) {
+                                        assetObj.put(NativeRequestParams.ID, idCount++);
+                                    }
                                     assets.put(assetObj);
                                     break;
                                 case DATA:
@@ -566,6 +580,9 @@ class PrebidServerAdapter implements DemandAdapter {
                                     assetObj.put(NativeRequestParams.DATA, data);
                                     assetObj.put(NativeRequestParams.REQUIRED, dataAsset.isRequired() ? 1 : 0);
                                     assetObj.put(NativeRequestParams.EXT, dataAsset.getAssetExt());
+                                    if (PrebidMobile.shouldAssignNativeAssetID()) {
+                                        assetObj.put(NativeRequestParams.ID, idCount++);
+                                    }
                                     assets.put(assetObj);
 
                                     break;

@@ -6,50 +6,56 @@
 
 # Merge Script
 if [ -d "Maven" ]; then
-cd Maven/
+  cd Maven/
 fi
 
 set -e
 
-function echoX {
-echo -e "PREBID DEPLOY-LOG: $@"
+function echoX() {
+  echo -e "PREBID DEPLOY-LOG: $@"
+}
+
+# $1 - absolute pom path, $2 - absolute aar path, $3 - absolute source path, $4 - absolute javadoc path
+function mavenDeploy() {
+  echoX "Deploying ${2} on Maven..."
+
+    mvn gpg:sign-and-deploy-file "-DpomFile=${1}" "-Dfile=${2}" "-DrepositoryId=ossrh" "-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/" "-DstagingRepositoryId=ossrh" "-Dsources=${3}" "-Djavadoc=${4}" || {
+      echoX "Deploy failed!"
+      echoX "End Script"
+      exit 1
+    }
+
+  echoX "Please complete the release process by promoting the jar at https://oss.sonatype.org/#stagingRepositories"
 }
 
 BASE_DIR="$PWD"
 DEPLOY_DIR_NAME="filesToDeploy"
 DEPLOY_DIR_ABSOLUTE="$BASE_DIR/$DEPLOY_DIR_NAME"
 
-rm -r $DEPLOY_DIR_ABSOLUTE || true
-mkdir $DEPLOY_DIR_ABSOLUTE
+rm -r "$DEPLOY_DIR_ABSOLUTE" || true
+mkdir "$DEPLOY_DIR_ABSOLUTE"
 
 cd ..
 sh ./buildPrebidMobile.sh
 
-cp ../generated/* $DEPLOY_DIR_ABSOLUTE || true
+cp -r ../generated/* "$DEPLOY_DIR_ABSOLUTE" || true
 
-modules=("PrebidMobile" "PrebidMobile-core")
-
+modules=("PrebidMobile" "PrebidMobile-core" "PrebidMobile-rendering" "PrebidMobile-gamEventHandlers" "PrebidMobile-mopubAdapters")
+extensions=("jar" "jar" "aar" "jar" "jar")
 for n in ${!modules[@]}; do
+  echo -e "\n"
+  echoX "Deploying ${modules[$n]} on Maven..."
 
-	rm -r $BASE_DIR/${modules[$n]}-pom.xml.asc || true
+  extension="${extensions[$n]}"
+  module="${modules[$n]}"
+  if [ "$extension" == "aar" ]; then
+    compiledPath=$"$DEPLOY_DIR_ABSOLUTE/aar/${module}-release.aar"
+  else
+    compiledPath=$"$DEPLOY_DIR_ABSOLUTE/${module}.jar"
+  fi
+  mavenDeploy $"$BASE_DIR/${module}-pom.xml" "$compiledPath" $"$DEPLOY_DIR_ABSOLUTE/${module}-sources.jar" $"$DEPLOY_DIR_ABSOLUTE/${module}-javadoc.jar"
 
-	#######
-	# Start
-	#######
-
-	echo -e "\n"
-	echoX "Deploying ${modules[$n]} on Maven..."
-
-	#######
-	# Deploy
-	#######
-	mvn gpg:sign-and-deploy-file "-DpomFile=$BASE_DIR/${modules[$n]}-pom.xml" "-Dfile=$DEPLOY_DIR_ABSOLUTE/${modules[$n]}.jar" "-DrepositoryId=ossrh" "-Durl=https://oss.sonatype.org/service/local/staging/deploy/maven2/" "-DstagingRepositoryId=ossrh" "-Dsources=$DEPLOY_DIR_ABSOLUTE/${modules[$n]}-sources.jar" "-Djavadoc=$DEPLOY_DIR_ABSOLUTE/${modules[$n]}-javadoc.jar" || { echoX "Deploy failed!"; echoX "End Script"; exit 1; } 
-
-	#######
-	# End
-	#######
-	echoX "Please complete the release process by promoting the jar at https://oss.sonatype.org/#stagingRepositories"
-
+  echoX "Please complete the release process by promoting the jar at https://oss.sonatype.org/#stagingRepositories"
 done
 
 echoX "End Script"

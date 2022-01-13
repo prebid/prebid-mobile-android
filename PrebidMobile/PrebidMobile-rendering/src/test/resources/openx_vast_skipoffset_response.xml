@@ -1,0 +1,116 @@
+<!--
+  ~    Copyright 2018-2021 Prebid.org, Inc.
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<VAST version="2.0">
+    <Ad id="537123792">
+        <InLine>
+            <AdSystem version="1.0">Prebid Enterprise</AdSystem>
+            <AdTitle/>
+            <Impression>
+                <![CDATA[ http://mobile-d.prebid.net/v/1.0/ri?ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi&amp;vtqe=false]]>
+            </Impression>
+            <Error>
+                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=error_vast2_[ERRORCODE]&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+            </Error>
+            <Creatives>
+                <Creative id="537123792">
+                    <Linear skipoffset="00:00:25">
+                        <Duration>00:01:36</Duration>
+                        <TrackingEvents>
+                            <Tracking event="creativeView">
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=creativeView&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </Tracking>
+                            <Tracking event="start">
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=start&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </Tracking>
+                            <Tracking event="midpoint">
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=midpoint&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </Tracking>
+                            <Tracking event="firstQuartile">
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=firstQuartile&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </Tracking>
+                            <Tracking event="thirdQuartile">
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=thirdQuartile&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </Tracking>
+                            <Tracking event="complete">
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=complete&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </Tracking>
+                            <Tracking event="mute">
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=mute&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </Tracking>
+                            <Tracking event="unmute">
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=unmute&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </Tracking>
+                            <Tracking event="pause">
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=pause&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </Tracking>
+                            <Tracking event="rewind">
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=rewind&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </Tracking>
+                            <Tracking event="resume">
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=resume&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </Tracking>
+                            <Tracking event="fullscreen">
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=fullscreen&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </Tracking>
+                            <Tracking event="expand">
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=expand&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </Tracking>
+                            <Tracking event="collapse">
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=collapse&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </Tracking>
+                            <Tracking event="acceptInvitation">
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=acceptInvitation&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </Tracking>
+                            <Tracking event="close">
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rv?t=close&amp;ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </Tracking>
+                        </TrackingEvents>
+                        <VideoClicks>
+                            <ClickThrough>
+                                <![CDATA[ http://mobile-d.prebid.net/v/1.0/rc?ee=fpa_exp&amp;did.ia=CE11F0C1-B9E3-48EB-89BC-FAEF617AC9C4&amp;ts=1fHJpZD1hODQyNzYzNi01Y2ZhLTQ2NTUtYTM3OC01Y2MxNjdhNDU1NGN8cnQ9MTUwNTk1MzQ5MnxhdWlkPTUzNzEyMzc5MnxhdW09RE1JRC5MSU5FQVJWSURFT3xhdXBmPWludGVyc3RpdGlhbHxzaWQ9NTM3MDkyMjA0fHB1Yj01MzcwNzkzNzd8cGM9VVNEfHh0PWZwYV9leHB8cmFpZD0xNzhiMzIwYy02NjNmLTRmNGYtYTNhYi00NWUzOWU1ZTI2ZDJ8cnM9MXxhaWQ9NTM3ODYxNDk4fHQ9M3xhcz02NDB4MzYwfGxpZD01Mzc1MTA5OTl8b2lkPTUzNzEzNTIxM3xwPTUwMHxwcj01MDB8YXRiPTUwMHxhZHY9NTM3MDc5Mzc2fGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuR1VBUkFOVEVFREVYQ0xVU0lWRXxsaXQ9RXx1cj0yY1hsSzFXWDFi]]>
+                            </ClickThrough>
+                        </VideoClicks>
+                        <MediaFiles>
+                            <MediaFile delivery="streaming" height="360" id="537861498"
+                                       type="video/mp4" width="640">
+                                <![CDATA[http://get_video_file]]>
+                            </MediaFile>
+                        </MediaFiles>
+                    </Linear>
+                </Creative>
+            </Creatives>
+
+            <Extensions>
+                <Extension type="AdVerifications">
+                    <AdVerifications>
+                        <Verification vendor="prebid">
+                            <JavaScriptResource apiFramework="omid" browserOptional="true">
+                                <![CDATA[http://127.0.0.1:66/omid-validation-verification-script.js]]>
+                            </JavaScriptResource>
+                            <VerificationParameters>
+                                <![CDATA[
+                                    parameter1=value1&parameter2=value2&parameter3=value3
+                                ]]>
+                            </VerificationParameters>
+                        </Verification>
+                    </AdVerifications>
+                </Extension>
+            </Extensions>
+
+        </InLine>
+    </Ad>
+</VAST>

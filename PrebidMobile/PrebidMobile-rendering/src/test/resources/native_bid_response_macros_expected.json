@@ -1,0 +1,55 @@
+{
+  "id": "123456",
+  "impid": "impId",
+  "price": 0.15,
+  "adm": "{\n  \"link\": {\n    \"url\": \"http: //i.am.a/URL?pp=MC4xNQ==&aid=123456\"\n  },\n  \"assets\": [\n    {\n      \"id\": 123,\n      \"required\": 1,\n      \"title\": {\n        \"text\": \"Learn about this awesome thing\"\n      }\n    },\n    {\n      \"id\": 124,\n      \"required\": 1,\n      \"img\": {\n        \"url\": \"http://www.myads.com/thumbnail1.png\"\n      }\n    },\n    {\n      \"id\": 128,\n      \"required\": 1,\n      \"img\": {\n        \"url\": \"http://www.myads.com/largethumb1.png\"\n      }\n    },\n    {\n      \"id\": 126,\n      \"required\": 1,\n      \"data\": {\n        \"value\": \"My Brand\"\n      }\n    },\n    {\n      \"id\": 127,\n      \"required\": 1,\n      \"data\": {\n        \"value\": \"Learn all about this awesome story of someone using my product.\"\n      }\n    }\n  ],\n  \"eventtrackers\": [\n    {\n      \"event\": 1,\n      \"method\": 2,\n      \"url\": \"http://www.mytracker.com/tracker.js?price=0.15\"\n    },\n    {\n      \"event\": 2,\n      \"method\": 1,\n      \"url\": \"http://www.mytracker.com/tracker.php?price=0.15\"\n    }\n  ],\n  \"privacy\": \"http://www.myprivacyurl.com\"\n}",
+  "crid": "crid",
+  "nurl": "https://example.com?price=0.15",
+  "burl": "burl",
+  "lurl": "https://example.com?price=0.15&aid=123456",
+  "adid": "adid",
+  "adomain": [
+    "domain1",
+    "domain2"
+  ],
+  "bundle": "bundle",
+  "iurl": "iurl",
+  "cid": "cid",
+  "tactic": "tactic",
+  "cat": [
+    "cat1",
+    "cat2"
+  ],
+  "attr": [
+    1,
+    2
+  ],
+  "api": 111,
+  "protocol": 112,
+  "qagmediarating": 113,
+  "language": "language",
+  "dealid": "dealid",
+  "w": 320,
+  "h": 50,
+  "wratio": 114,
+  "hratio": 115,
+  "exp": 116,
+  "ext": {
+    "prebid": {
+      "cache": {
+        "key": "cacheKey",
+        "url": "cacheUrl",
+        "bids": {
+          "url": "bidsUrl",
+          "cacheId": "bidsCacheId"
+        }
+      },
+      "targeting": {
+        "key1": "value1",
+        "key2": "value2",
+        "key3": "value3"
+      },
+      "type": "type"
+    }
+  }
+}
