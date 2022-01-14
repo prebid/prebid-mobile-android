@@ -2,7 +2,7 @@
 
 # Prebid Mobile Android SDK
 
-Get started with Prebid Mobile by creating a Prebid Server account [here](http://prebid.org/prebid-mobile/prebid-mobile-pbs.html)
+To work with Prebid Mobile, you will need accesss to a Prebid Server. See [this page](http://prebid.org/prebid-mobile/prebid-mobile-pbs.html) for options.
 
 ## Use Maven?
 
