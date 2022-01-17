@@ -35,7 +35,6 @@ object InAppMoPubRewardedInterstitial {
         val mediationUtils = MoPubRewardedVideoMediationUtils(keywordsMap)
         adUnit = MediationRewardedVideoAdUnit(
             activity,
-            adUnitId,
             configId,
             mediationUtils
         )

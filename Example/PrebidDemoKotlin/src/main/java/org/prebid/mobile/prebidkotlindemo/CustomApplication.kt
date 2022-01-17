@@ -25,9 +25,9 @@ import android.util.Log
 import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 import android.webkit.WebView
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
-import com.mopub.common.SdkInitializationListener
 import com.mopub.common.logging.MoPubLog
 import org.prebid.mobile.Host
 import org.prebid.mobile.PrebidMobile
@@ -39,6 +39,7 @@ class CustomApplication : Application() {
         super.onCreate()
         initMopubSDK()
         initPrebidSDK()
+        initAdMob()
         if (BuildConfig.DEBUG) {
             activateKeepScreenOnFlag()
         }
@@ -65,6 +66,16 @@ class CustomApplication : Application() {
         host.hostUrl = "https://prebid.openx.net/openrtb2/auction"
         PrebidRenderingSettings.setBidServerHost(host)
         PrebidRenderingSettings.setAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
+    }
+
+    private fun initAdMob() {
+        MobileAds.initialize(this) { status ->
+            Log.d("MobileAds", "Initialization complete.")
+        }
+        val configuration = RequestConfiguration.Builder().setTestDeviceIds(
+            listOf("38250D98D8E3A07A2C03CD3552013B29")
+        ).build()
+        MobileAds.setRequestConfiguration(configuration)
     }
 
     private fun activateKeepScreenOnFlag() {

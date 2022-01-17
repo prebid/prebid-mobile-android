@@ -28,14 +28,10 @@ import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 public class MediationRewardedVideoAdUnit extends MediationBaseAdUnit {
 
-    private final String mMopubAdUnitId;
     private static final String TAG = "MediationRewardedVideoAdUnit";
 
-    public MediationRewardedVideoAdUnit(Context context,
-                                        @NonNull
-                                                String mopubAdUnitId, String configId, PrebidMediationDelegate mediationDelegate) {
+    public MediationRewardedVideoAdUnit(Context context, String configId, PrebidMediationDelegate mediationDelegate) {
         super(context, configId, null, mediationDelegate);
-        mMopubAdUnitId = mopubAdUnitId;
     }
 
     public void fetchDemand(@NonNull OnFetchCompleteListener listener) {
@@ -54,7 +50,8 @@ public class MediationRewardedVideoAdUnit extends MediationBaseAdUnit {
     protected final void onResponseReceived(BidResponse response) {
         if (mOnFetchCompleteListener != null) {
             LogUtil.debug(TAG, "On response received");
-            BidResponseCache.getInstance().putBidResponse(mMopubAdUnitId, response);
+            BidResponseCache.getInstance().putBidResponse(response.getId(), response);
+            mMediationDelegate.setResponseToLocalExtras(response);
             mMediationDelegate.handleKeywordsUpdate(response.getTargeting());
             mOnFetchCompleteListener.onComplete(FetchDemandResult.SUCCESS);
         }

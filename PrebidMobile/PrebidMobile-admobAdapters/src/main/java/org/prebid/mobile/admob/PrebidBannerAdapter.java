@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.mediation.*;
+import com.google.android.gms.ads.mediation.MediationAdRequest;
 import com.google.android.gms.ads.mediation.customevent.CustomEventBanner;
 import com.google.android.gms.ads.mediation.customevent.CustomEventBannerListener;
 import org.prebid.mobile.LogUtil;
@@ -20,10 +20,9 @@ import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 
 import java.util.HashMap;
-import java.util.List;
 
 @Keep
-public class PrebidBannerAdapter extends Adapter implements CustomEventBanner {
+public class PrebidBannerAdapter extends PrebidBaseAdapter implements CustomEventBanner {
 
     private static final String TAG = "PrebidBannerAdapter";
     public static final String EXTRA_RESPONSE_ID = "PrebidBannerAdapterExtraId";
@@ -53,8 +52,8 @@ public class PrebidBannerAdapter extends Adapter implements CustomEventBanner {
             return;
         }
 
-        HashMap<String, String> adMobParameters = BidResponseCache.getInstance().getKeywords(responseId);
-        if (!ParametersMatcher.doParametersMatch(serverParameter, adMobParameters)) {
+        HashMap<String, String> prebidParameters = BidResponseCache.getInstance().getKeywords(responseId);
+        if (!ParametersMatcher.doParametersMatch(serverParameter, prebidParameters)) {
             String error = "Parameters are different";
             adMobListener.onAdFailedToLoad(new AdError(1003, error, "prebid"));
             return;
@@ -78,24 +77,6 @@ public class PrebidBannerAdapter extends Adapter implements CustomEventBanner {
                 response
         );
     }
-
-    @Override
-    public void initialize(@NonNull Context context, @NonNull InitializationCompleteCallback initializationCompleteCallback, @NonNull List<MediationConfiguration> mediationList) {
-
-    }
-
-    @NonNull
-    @Override
-    public VersionInfo getVersionInfo() {
-        return new VersionInfo(1, 0, 0);
-    }
-
-    @NonNull
-    @Override
-    public VersionInfo getSDKVersionInfo() {
-        return new VersionInfo(1, 13, 0);
-    }
-
     @Override
     public void onResume() {
 
