@@ -3,7 +3,10 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.admob
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.google.android.gms.ads.*
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
 import kotlinx.android.synthetic.main.events_admob.*
 import kotlinx.android.synthetic.main.events_mopub_banner.*
 import kotlinx.android.synthetic.main.events_mopub_banner.btnAdClicked
@@ -46,10 +49,6 @@ open class AdMobBannerFragment : AdFragment() {
     }
 
     override fun initAd(): Any? {
-        MobileAds.initialize(requireContext()) {
-            Log.d("MobileAds", "Initialization complete.")
-        }
-
         bannerView = AdView(requireActivity())
         bannerView?.adSize = com.google.android.gms.ads.AdSize(width, height)
         bannerView?.adUnitId = adUnitId

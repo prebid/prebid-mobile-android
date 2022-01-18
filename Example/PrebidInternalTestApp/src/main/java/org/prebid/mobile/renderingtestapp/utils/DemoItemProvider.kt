@@ -46,6 +46,8 @@ class DemoItemProvider private constructor() {
         private const val adMobBannerAction = R.id.action_header_bidding_to_admob_banner
         private const val adMobRandomBannerAction = R.id.action_header_bidding_to_admob_random_banner
         private const val adMobFlexibleBannerAction = R.id.action_header_bidding_to_admob_flexible_banner
+        private const val adMobRewardedAction = R.id.action_header_bidding_to_admob_rewarded
+        private const val adMobRewardedRandomAction = R.id.action_header_bidding_to_admob_rewarded_random
 
         fun init(context: Context) {
             if (demoList.isNotEmpty()) {
@@ -975,6 +977,7 @@ class DemoItemProvider private constructor() {
 
             // AdMob Integration
             val adMobBannerTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.BANNER, Tag.MOCK)
+            val adMobRewardedTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.INTERSTITIAL, Tag.MOCK)
 
             demoList.add(
                 DemoItem(
@@ -1057,6 +1060,55 @@ class DemoItemProvider private constructor() {
                         R.string.mock_config_id_banner_300x250,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
                         300, 250
+                    )
+                )
+            )
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_rewarded_adapter),
+                    adMobRewardedAction,
+                    adMobRewardedTagList,
+                    createBannerBundle(
+                        R.string.mock_config_id_video_rewarded_end_card_320_480,
+                        R.string.admob_rewarded_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_rewarded_admob),
+                    adMobRewardedAction,
+                    adMobRewardedTagList,
+                    createBannerBundle(
+                        R.string.prebid_config_id_no_bids,
+                        R.string.admob_rewarded_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_rewarded_adapter_no_end_card),
+                    adMobRewardedAction,
+                    adMobRewardedTagList,
+                    createBannerBundle(
+                        R.string.mock_config_id_video_rewarded_320_480,
+                        R.string.admob_rewarded_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_rewarded_random),
+                    adMobRewardedRandomAction,
+                    adMobRewardedTagList,
+                    createBannerBundle(
+                        R.string.mock_config_id_video_rewarded_end_card_320_480,
+                        R.string.admob_rewarded_bidding_ad_unit_id_adapter,
+                        320, 480
                     )
                 )
             )
@@ -1523,6 +1575,7 @@ class DemoItemProvider private constructor() {
 
             // AdMob Integration
             val adMobBannerTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.BANNER, Tag.REMOTE)
+            val adMobRewardedTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.INTERSTITIAL, Tag.REMOTE)
 
             demoList.add(
                 DemoItem(
@@ -1545,6 +1598,31 @@ class DemoItemProvider private constructor() {
                         R.string.prebid_config_id_no_bids,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
                         320, 50
+                    )
+                )
+            )
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_rewarded_adapter),
+                    adMobRewardedAction,
+                    adMobRewardedTagList,
+                    createBannerBundle(
+                        R.string.prebid_config_id_video_rewarded_320_480,
+                        R.string.admob_rewarded_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_rewarded_admob),
+                    adMobRewardedAction,
+                    adMobRewardedTagList,
+                    createBannerBundle(
+                        R.string.prebid_config_id_no_bids,
+                        R.string.admob_rewarded_bidding_ad_unit_id_adapter,
+                        320, 480
                     )
                 )
             )

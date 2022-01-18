@@ -203,6 +203,11 @@
     <string name="demo_bidding_admob_banner_300_250_ok_random">Banner 300x250 (AdMob) [OK, Random]</string>
     <string name="demo_bidding_admob_flexible_banner_ok_random">Flexible banner (AdMob) [OK, Random]</string>
 
+    <string name="demo_bidding_admob_rewarded_adapter">Rewarded (AdMob) [OK, Adapter]</string>
+    <string name="demo_bidding_admob_rewarded_adapter_no_end_card">Rewarded no EndCard (AdMob) [OK, Adapter]</string>
+    <string name="demo_bidding_admob_rewarded_admob">Rewarded (AdMob) [noBids, AdMob ad]</string>
+    <string name="demo_bidding_admob_rewarded_random">Rewarded (AdMob) [OK, Random]</string>
+
     <!--GAM AdUnits-->
     <string name="adunit_gam_banner_320_50_app_event">/21808260008/prebid_oxb_320x50_banner</string>
     <string name="adunit_gam_banner_320_50_gam_ad">/21808260008/prebid_oxb_320x50_banner_static</string>
@@ -252,7 +257,8 @@
     <string name="mopub_native_no_bids">27a0aca8ce2c41e19195ea9beeb05e67</string>
 
     <!--AdMob AdUnits-->
-    <string name="admob_banner_bidding_ad_unit_id_adapter">"ca-app-pub-1875909575462531/3793078260"</string>
+    <string name="admob_banner_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/3793078260</string>
+    <string name="admob_rewarded_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/1908212572</string>
 
     <!--    Bidding configs-->
     <string name="prebid_account_id_prod">0689a263-318d-448b-a3d4-b02e8a709d9d</string>
