@@ -51,7 +51,7 @@ object InAppAdMobBanner {
             .Builder()
             .addCustomEventExtrasBundle(PrebidBannerAdapter::class.java, extras)
             .build()
-        val mediationUtils = AdMobBannerMediationUtils(extras)
+        val mediationUtils = AdMobBannerMediationUtils(extras, bannerView)
 
         adUnit = MediationBannerAdUnit(
             wrapper.context,
