@@ -60,7 +60,7 @@ open class AdMobBannerFragment : AdFragment() {
             .Builder()
             .addCustomEventExtrasBundle(PrebidBannerAdapter::class.java, adRequestExtras!!)
             .build()
-        val mediationUtils = AdMobBannerMediationUtils(adRequestExtras)
+        val mediationUtils = AdMobBannerMediationUtils(adRequestExtras, bannerView)
 
 
         adUnit = MediationBannerAdUnit(

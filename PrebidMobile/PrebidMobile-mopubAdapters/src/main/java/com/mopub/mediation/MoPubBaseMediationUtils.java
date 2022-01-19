@@ -52,7 +52,7 @@ public abstract class MoPubBaseMediationUtils implements PrebidMediationDelegate
 
     @Override
     public boolean canPerformRefresh() {
-        return true;
+        return false;
     }
 
     /**
