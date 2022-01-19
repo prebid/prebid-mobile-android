@@ -68,7 +68,7 @@ public class PrebidInterstitialAdapter extends PrebidBaseAdapter implements Cust
 
     @Override
     public void showInterstitial() {
-
+        interstitialController.show();
     }
 
     @Override
@@ -91,7 +91,6 @@ public class PrebidInterstitialAdapter extends PrebidBaseAdapter implements Cust
             @Override
             public void onInterstitialReadyForDisplay() {
                 adMobListener.onAdLoaded();
-                interstitialController.show();
             }
 
             @Override
