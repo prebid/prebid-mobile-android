@@ -17,10 +17,7 @@
 package org.prebid.mobile.rendering.bidding.display;
 
 import android.content.Context;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -28,11 +25,8 @@ import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 
-import java.util.HashMap;
-
 public class MediationNativeAdUnit extends MediationBaseAdUnit {
     private static final String TAG = MediationNativeAdUnit.class.getSimpleName();
-    private HashMap<String, String> mKeywordsMap;
 
     public MediationNativeAdUnit(Context context, String configId, NativeAdConfiguration nativeAdConfiguration, PrebidMediationDelegate mediationDelegate) {
         super(context, configId, null, mediationDelegate);
@@ -41,13 +35,8 @@ public class MediationNativeAdUnit extends MediationBaseAdUnit {
 
     public void fetchDemand(
         @NonNull
-            HashMap<String, String> keywords,
-        @NonNull
-            Object mopubNative,
-        @NonNull
             OnFetchCompleteListener listener) {
-        mKeywordsMap = keywords;
-        super.fetchDemand(mopubNative, listener);
+        super.fetchDemand(listener);
     }
 
     @Override
@@ -57,18 +46,11 @@ public class MediationNativeAdUnit extends MediationBaseAdUnit {
     }
 
     @Override
-    protected boolean isAdObjectSupported(
-        @Nullable
-            Object adObject) {
-        return mMediationDelegate.isNativeView(adObject);
-    }
-
-    @Override
     protected void onResponseReceived(BidResponse response) {
-        if (mOnFetchCompleteListener != null && mAdViewReference != null && mAdViewReference.get() != null) {
+        if (mOnFetchCompleteListener != null) {
             BidResponseCache.getInstance().putBidResponse(response);
-            mMediationDelegate.handleKeywordsUpdate(mKeywordsMap, response.getTargetingWithCacheId());
-            mMediationDelegate.setResponseToLocalExtras(mAdViewReference.get(), response);
+            mMediationDelegate.handleKeywordsUpdate(response.getTargetingWithCacheId());
+            mMediationDelegate.setResponseToLocalExtras(response);
             mOnFetchCompleteListener.onComplete(FetchDemandResult.SUCCESS);
         }
     }

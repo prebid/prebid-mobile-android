@@ -37,9 +37,12 @@ import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 import org.prebid.mobile.renderingtestapp.plugplay.config.*
 import org.prebid.mobile.renderingtestapp.utils.*
 
-const val CONFIGURATOR_REQUEST_CODE = 0
-
 abstract class AdFragment : BaseFragment() {
+
+    companion object {
+        const val CONFIGURATOR_REQUEST_CODE = 0
+    }
+
     var idlingResource = CountingIdlingResource(AdFragment::class.java.simpleName)
 
     protected var mockAssetName: String? = null

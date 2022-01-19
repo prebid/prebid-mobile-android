@@ -21,6 +21,7 @@ import org.prebid.mobile.rendering.interstitial.InterstitialSizes;
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.ExoPlayerView;
 
 import java.util.Arrays;
@@ -34,6 +35,7 @@ import androidx.annotation.Nullable;
 public class AdConfiguration {
 
     public static final int SKIP_OFFSET_NOT_ASSIGNED = -1;
+    private static final String TAG = "AdConfiguration";
 
     private final Map<String, Set<String>> mContextDataDictionary = new HashMap<>();
     private final Set<String> mContextKeywordsSet = new HashSet<>();
@@ -74,9 +76,11 @@ public class AdConfiguration {
 
     public void setAutoRefreshDelay(int autoRefreshDelay) {
         if (autoRefreshDelay < 0) {
+            LogUtil.error(TAG, "Auto refresh delay can't be less then 0.");
             return;
         }
         if (autoRefreshDelay == 0) {
+            LogUtil.debug(TAG, "Only one request, without auto refresh.");
             mAutoRefreshDelayInMillis = 0;
             return;
         }

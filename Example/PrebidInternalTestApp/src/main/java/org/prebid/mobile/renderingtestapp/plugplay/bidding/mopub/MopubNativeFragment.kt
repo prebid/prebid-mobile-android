@@ -22,7 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
-import com.mopub.mediation.MoPubMediationUtils
+import com.mopub.mediation.MoPubNativeMediationUtils
 import com.mopub.nativeads.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import kotlinx.android.synthetic.main.lyt_native_mopub_events.*
@@ -38,6 +38,7 @@ open class MopubNativeFragment : AdFragment() {
 
     protected var mopubNative: MoPubNative? = null
     protected var mopubNativeAdUnit: MediationNativeAdUnit? = null
+    protected var keywordsContainer = HashMap<String, String>()
     protected lateinit var adapterHelper: AdapterHelper
     protected var nativeAd: NativeAd? = null
 
@@ -89,38 +90,38 @@ open class MopubNativeFragment : AdFragment() {
         adapterHelper = AdapterHelper(requireContext(), 0, 3);
         mopubNative = MoPubNative(requireContext(), adUnitId, nativeNetworkListener)
         val viewBinder = ViewBinder.Builder(R.layout.lyt_native_ad)
-                .titleId(R.id.tvNativeTitle)
-                .textId(R.id.tvNativeBody)
-                .sponsoredTextId(R.id.tvNativeBrand)
-                .mainImageId(R.id.ivNativeMain)
-                .iconImageId(R.id.ivNativeIcon)
-                .callToActionId(R.id.btnNativeAction)
-                .build()
+            .titleId(R.id.tvNativeTitle)
+            .textId(R.id.tvNativeBody)
+            .sponsoredTextId(R.id.tvNativeBrand)
+            .mainImageId(R.id.ivNativeMain)
+            .iconImageId(R.id.ivNativeIcon)
+            .callToActionId(R.id.btnNativeAction)
+            .build()
         mopubNative?.registerAdRenderer(PrebidNativeAdRenderer(viewBinder))
         mopubNative?.registerAdRenderer(MoPubStaticNativeAdRenderer(viewBinder))
+
+        val mediationUtils = MoPubNativeMediationUtils(keywordsContainer, mopubNative)
         mopubNativeAdUnit = MediationNativeAdUnit(
             requireContext(),
             configId,
             getNativeAdConfig(),
-            MoPubMediationUtils()
+            mediationUtils
         )
         return mopubNativeAdUnit
     }
 
     override fun loadAd() {
         MoPub.initializeSdk(requireContext(), SdkConfiguration.Builder(adUnitId).build()) {
-            val keywordsContainer = HashMap<String, String>()
-            mopubNativeAdUnit?.fetchDemand(keywordsContainer, mopubNative!!) {
+            mopubNativeAdUnit?.fetchDemand {
                 if (it == FetchDemandResult.SUCCESS) {
                     btnFetchDemandResultSuccess?.isEnabled = true
-                }
-                else {
+                } else {
                     btnFetchDemandResultFailure?.isEnabled = true
                 }
 
                 val requestParameters = RequestParameters.Builder()
-                        .keywords(convertMapToMoPubKeywords(keywordsContainer))
-                        .build()
+                    .keywords(convertMapToMoPubKeywords(keywordsContainer))
+                    .build()
                 mopubNative?.makeRequest(requestParameters)
             }
         }

@@ -43,7 +43,6 @@ public abstract class MediationBaseAdUnit {
     protected OnFetchCompleteListener mOnFetchCompleteListener;
 
     protected WeakReference<Context> mContextWeakReference;
-    protected WeakReference<Object> mAdViewReference;
     protected AdConfiguration mAdUnitConfig = new AdConfiguration();
     protected PrebidMediationDelegate mMediationDelegate;
 
@@ -68,13 +67,9 @@ public abstract class MediationBaseAdUnit {
         initBidLoader();
     }
 
-    protected void fetchDemand(
-            @Nullable
-                    Object adObject,
-            @NonNull
-                    OnFetchCompleteListener listener) {
-        if (!isAdObjectSupported(adObject)) {
-            LogUtil.error(TAG, "Demand fetch failed. MoPub view have to be passed in arguments.");
+    protected void fetchDemand(@NonNull OnFetchCompleteListener listener) {
+        if (mMediationDelegate == null) {
+            LogUtil.error(TAG, "Demand fetch failed. Mediation delegate object must be not null");
             listener.onComplete(FetchDemandResult.INVALID_AD_OBJECT);
             return;
         }
@@ -96,7 +91,6 @@ public abstract class MediationBaseAdUnit {
             return;
         }
 
-        mAdViewReference = new WeakReference<>(adObject);
         mOnFetchCompleteListener = listener;
         mBidLoader.load();
     }
@@ -162,26 +156,22 @@ public abstract class MediationBaseAdUnit {
 
     protected abstract void initAdConfig(String configId, AdSize adSize);
 
-    protected abstract boolean isAdObjectSupported(
-            @Nullable
-                    Object adObject);
-
     protected void onResponseReceived(BidResponse response) {
-        if (mAdViewReference.get() == null || mOnFetchCompleteListener == null) {
-            mBidLoader.cancelRefresh();
-            LogUtil.error(TAG, "Failed to pass callback. Ad object or OnFetchCompleteListener is null");
+        LogUtil.debug(TAG, "On response received");
+        if (mOnFetchCompleteListener == null) {
+            cancelRefresh();
             return;
         }
         BidResponseCache.getInstance().putBidResponse(response);
-        mMediationDelegate.handleKeywordsUpdate(mAdViewReference.get(), response.getTargeting());
-        mMediationDelegate.setResponseIdToLocalExtras(mAdViewReference.get(), response);
+        mMediationDelegate.handleKeywordsUpdate(response.getTargeting());
+        mMediationDelegate.setResponseToLocalExtras(response);
         mOnFetchCompleteListener.onComplete(FetchDemandResult.SUCCESS);
     }
 
     protected void onErrorReceived(AdException exception) {
-        if (mAdViewReference.get() == null || mOnFetchCompleteListener == null) {
-            mBidLoader.cancelRefresh();
-            LogUtil.error(TAG, "Failed to pass callback. Ad object or OnFetchCompleteListener is null");
+        LogUtil.warn(TAG, "On error received");
+        if (mOnFetchCompleteListener == null) {
+            cancelRefresh();
             return;
         }
         mOnFetchCompleteListener.onComplete(FetchDemandResult.parseErrorMessage(exception.getMessage()));
@@ -199,4 +189,13 @@ public abstract class MediationBaseAdUnit {
             e.printStackTrace();
         }
     }
+
+    private void cancelRefresh() {
+        mBidLoader.cancelRefresh();
+        LogUtil.error(TAG, "Failed to pass callback");
+        if (mOnFetchCompleteListener == null) {
+            LogUtil.error(TAG, "OnFetchCompleteListener is null");
+        }
+    }
+
 }

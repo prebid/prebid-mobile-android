@@ -17,21 +17,15 @@
 package org.prebid.mobile.rendering.bidding.display;
 
 import android.content.Context;
-import android.view.View;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.enums.BannerAdPosition;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdPosition;
-import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
-import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
-import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 public class MediationBannerAdUnit extends MediationBaseAdUnit {
     private static final String TAG = MediationBannerAdUnit.class.getSimpleName();
@@ -53,13 +47,6 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
     }
 
     @Override
-    protected final boolean isAdObjectSupported(
-        @Nullable
-            Object adObject) {
-        return mMediationDelegate.isBannerView(adObject);
-    }
-
-    @Override
     public void destroy() {
         super.destroy();
         mScreenStateReceiver.unregister();
@@ -69,31 +56,25 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
     protected void initBidLoader() {
         super.initBidLoader();
 
-        final VisibilityTrackerOption visibilityTrackerOption = new VisibilityTrackerOption(NativeEventTracker.EventType.IMPRESSION);
-        final VisibilityChecker visibilityChecker = new VisibilityChecker(visibilityTrackerOption);
         mBidLoader.setBidRefreshListener(() -> {
-            Object moPubView = mAdViewReference.get();
-            if (!(moPubView instanceof View)) {
-                return false;
-            }
-
             if (mAdFailed) {
                 mAdFailed = false;
+                LogUtil.debug(TAG, "Ad failed, can perform refresh.");
                 return true;
             }
 
-            final boolean isWindowVisibleToUser = mScreenStateReceiver.isScreenOn();
-            return visibilityChecker.isVisibleForRefresh(((View) moPubView)) && isWindowVisibleToUser;
+            boolean isViewVisible = mMediationDelegate.canPerformRefresh();
+            boolean canRefresh = mScreenStateReceiver.isScreenOn() && isViewVisible;
+            LogUtil.debug(TAG, "Can perform refresh: " + canRefresh);
+            return canRefresh;
         });
     }
 
     @Override
     public final void fetchDemand(
-        @Nullable
-            Object mopubView,
         @NonNull
             OnFetchCompleteListener listener) {
-        super.fetchDemand(mopubView, listener);
+        super.fetchDemand(listener);
     }
 
     /**

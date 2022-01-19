@@ -22,7 +22,8 @@ import android.view.View
 import android.widget.Button
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
-import com.mopub.mediation.MoPubMediationUtils
+import com.mopub.mediation.MoPubBannerMediationUtils
+import com.mopub.mediation.MoPubInterstitialMediationUtils
 import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubInterstitial
 import com.mopub.mobileads.MoPubView
@@ -54,15 +55,17 @@ class MopubBannersWithInterstitialFragment : BaseBannersWithInterstitialFragment
         val adUnitId = getString(R.string.mopub_interstitial_bidding_ad_unit_id_ok)
         tvInterstitialAdUnitDescription.text = "Interstitial ConfigId: ${interstitialConfigId}"
 
+        mopubInterstitial = MoPubInterstitial(requireActivity(), adUnitId)
+        mopubInterstitial?.interstitialAdListener = getInterstitialAdListener()
+
+        val mediationUtils = MoPubInterstitialMediationUtils(mopubInterstitial)
         mediationInterstitialAdUnit =
             MediationInterstitialAdUnit(
                 requireContext(),
                 interstitialConfigId,
                 AdSize(30, 30),
-                MoPubMediationUtils()
+                mediationUtils
             )
-        mopubInterstitial = MoPubInterstitial(requireActivity(), adUnitId)
-        mopubInterstitial?.interstitialAdListener = getInterstitialAdListener()
 
         fetchInterstitial()
     }
@@ -70,38 +73,42 @@ class MopubBannersWithInterstitialFragment : BaseBannersWithInterstitialFragment
     override fun loadBanners() {
         val mopubAdUnitId = getString(R.string.mopub_banner_bidding_ad_unit_id_adapter)
 
+        mopubBannerViewTop = MoPubView(context)
+        mopubBannerViewTop?.setAdUnitId(mopubAdUnitId)
+        mopubBannerViewTop?.bannerAdListener =
+            getBannerAdListener(bannerConfigId, REFRESH_BANNER_TOP_SEC, btnTopBannerAdShown)
+
+        mopubBannerViewBottom = MoPubView(context)
+        mopubBannerViewBottom?.setAdUnitId(mopubAdUnitId)
+        mopubBannerViewBottom?.bannerAdListener =
+            getBannerAdListener(bannerConfigId, REFRESH_BANNER_BOTTOM_SEC, btnBottomBannerAdShown)
+
+        val topMediationUtils = MoPubBannerMediationUtils(mopubBannerViewTop)
         mediationBannerAdUnitTop = MediationBannerAdUnit(
             requireContext(),
             bannerConfigId,
             AdSize(320, 50),
-            MoPubMediationUtils()
+            topMediationUtils
         )
         mediationBannerAdUnitTop?.setRefreshInterval(REFRESH_BANNER_TOP_SEC)
 
+        val bottomMediationUtils = MoPubBannerMediationUtils(mopubBannerViewBottom)
         mediationBannerAdUnitBottom =
             MediationBannerAdUnit(
                 requireContext(),
                 bannerConfigId,
                 AdSize(320, 50),
-                MoPubMediationUtils()
+                bottomMediationUtils
             )
         mediationBannerAdUnitBottom?.setRefreshInterval(REFRESH_BANNER_BOTTOM_SEC)
-
-        mopubBannerViewTop = MoPubView(context)
-        mopubBannerViewTop?.setAdUnitId(mopubAdUnitId)
-        mopubBannerViewTop?.bannerAdListener = getBannerAdListener(bannerConfigId, REFRESH_BANNER_TOP_SEC, btnTopBannerAdShown)
-
-        mopubBannerViewBottom = MoPubView(context)
-        mopubBannerViewBottom?.setAdUnitId(mopubAdUnitId)
-        mopubBannerViewBottom?.bannerAdListener = getBannerAdListener(bannerConfigId, REFRESH_BANNER_BOTTOM_SEC, btnBottomBannerAdShown)
 
         viewContainerTop?.addView(mopubBannerViewTop)
         viewContainerBottom?.addView(mopubBannerViewBottom)
 
-        mediationBannerAdUnitTop?.fetchDemand(mopubBannerViewTop!!) {
+        mediationBannerAdUnitTop?.fetchDemand {
             mopubBannerViewTop?.loadAd()
         }
-        mediationBannerAdUnitBottom?.fetchDemand(mopubBannerViewBottom!!) {
+        mediationBannerAdUnitBottom?.fetchDemand {
             mopubBannerViewBottom?.loadAd()
         }
     }
@@ -119,7 +126,7 @@ class MopubBannersWithInterstitialFragment : BaseBannersWithInterstitialFragment
 
     private fun fetchInterstitial() {
         if (mopubInterstitial != null) {
-            mediationInterstitialAdUnit?.fetchDemand(mopubInterstitial!!) {
+            mediationInterstitialAdUnit?.fetchDemand {
                 mopubInterstitial?.load()
             }
         }

@@ -48,6 +48,13 @@
     <string name="event_mopub_interstitial_clicked">onInterstitialClicked</string>
     <string name="event_mopub_interstitial_dismissed">onInterstitialDismissed</string>
 
+    <string name="event_admob_loaded">onAdLoaded</string>
+    <string name="event_admob_clicked">onAdClicked</string>
+    <string name="event_admob_opened">onAdOpened</string>
+    <string name="event_admob_impression">onAdImpression</string>
+    <string name="event_admob_closed">onAdClosed</string>
+    <string name="event_admob_failed">onAdFailed</string>
+
     <!-- TCF V1 -->
     <string name="key_subject_to_gdpr">IABConsent_SubjectToGDPR</string>
     <string name="key_consent_string">IABConsent_ConsentString</string>
@@ -187,6 +194,15 @@
     <string name="demo_bidding_mopub_native_adapter">Native Ad (MoPub) [OK, OXANativeAdAdapter]</string>
     <string name="demo_bidding_mopub_native_adapter_video">Native Ad Video (MoPub) [OK, OXANativeAdAdapter]</string>
 
+    <!--AdMob Titles-->
+    <string name="demo_bidding_admob_banner_320_50_adapter">Banner 320x50 (AdMob) [OK, Adapter]</string>
+    <string name="demo_bidding_admob_banner_320_50_ok_random">Banner 320x50 (AdMob) [OK, Random]</string>
+    <string name="demo_bidding_admob_banner_320_50_no_bids">Banner 320x50 (AdMob) [noBids, AdMob ad]</string>
+    <string name="demo_bidding_admob_banner_320_50_random_respectively">Banner 320x50 (AdMob) [Random, Respectively]</string>
+    <string name="demo_bidding_admob_banner_300_250_adapter">Banner 300x250 (AdMob) [OK, Adapter]</string>
+    <string name="demo_bidding_admob_banner_300_250_ok_random">Banner 300x250 (AdMob) [OK, Random]</string>
+    <string name="demo_bidding_admob_flexible_banner_ok_random">Flexible banner (AdMob) [OK, Random]</string>
+
     <!--GAM AdUnits-->
     <string name="adunit_gam_banner_320_50_app_event">/21808260008/prebid_oxb_320x50_banner</string>
     <string name="adunit_gam_banner_320_50_gam_ad">/21808260008/prebid_oxb_320x50_banner_static</string>
@@ -235,6 +251,9 @@
     <string name="mopub_native_adapter">2916ffe4c05443408cef74f815d6d668</string>
     <string name="mopub_native_no_bids">27a0aca8ce2c41e19195ea9beeb05e67</string>
 
+    <!--AdMob AdUnits-->
+    <string name="admob_banner_bidding_ad_unit_id_adapter">"ca-app-pub-1875909575462531/3793078260"</string>
+
     <!--    Bidding configs-->
     <string name="prebid_account_id_prod">0689a263-318d-448b-a3d4-b02e8a709d9d</string>
     <string name="prebid_account_id_prod_no_bids">1768035c-74d3-4786-b056-13bd41f34bde</string>
@@ -249,9 +268,11 @@
     <string name="prebid_config_id_qa_native_styles">51fe68ba-aff2-401e-9e15-f3ed89d5c036</string>
 
     <string name="mock_config_id_banner_320x50">mock-banner-320-50</string>
+    <string name="mock_config_id_banner_320x50_high_price">mock-banner-320-50-high-price</string>
     <string name="mock_config_id_banner_320x50_deeplink">mock-banner-deeplink</string>
     <string name="mock_config_id_banner_320x50_vast">mock-banner-incorrect-vast</string>
     <string name="mock_config_id_banner_300x250">mock-banner-300-250</string>
+    <string name="mock_config_id_banner_300x250_high_price">mock-banner-300-250-high-price</string>
     <string name="mock_config_id_banner_728x90">mock-banner-728-90</string>
     <string name="mock_config_id_banner_multisize">mock-banner-multisize</string>
     <string name="mock_config_id_interstitial_320_480">mock-display-interstitial-320-480</string>
