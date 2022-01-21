@@ -91,7 +91,7 @@ public class MoPubMediationUtilsMethodsTest {
         mMediationNativeAdUnit = new MediationNativeAdUnit(mContext, ID, mock(NativeAdConfiguration.class), nativeUtils);
 
         rewardedUtils = new MoPubRewardedVideoMediationUtils(mMoPubRewardedKeywords);
-        mMoPubRewardedAdUnit = new MediationRewardedVideoAdUnit(mContext, ID, ID, rewardedUtils);
+        mMoPubRewardedAdUnit = new MediationRewardedVideoAdUnit(mContext, ID, rewardedUtils);
     }
 
     @Test

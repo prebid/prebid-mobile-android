@@ -397,6 +397,22 @@
                 app:popEnterAnim="@anim/nav_default_pop_enter_anim"
                 app:popExitAnim="@anim/nav_default_pop_exit_anim"
                 app:popUpTo="@+id/headerBiddingFragment"/>
+        <action
+                android:id="@+id/action_header_bidding_to_admob_rewarded"
+                app:destination="@+id/navigation_admob_rewarded"
+                app:enterAnim="@anim/nav_default_enter_anim"
+                app:exitAnim="@anim/nav_default_exit_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"
+                app:popUpTo="@+id/headerBiddingFragment"/>
+        <action
+                android:id="@+id/action_header_bidding_to_admob_rewarded_random"
+                app:destination="@+id/navigation_admob_rewarded_random"
+                app:enterAnim="@anim/nav_default_enter_anim"
+                app:exitAnim="@anim/nav_default_exit_anim"
+                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+                app:popExitAnim="@anim/nav_default_pop_exit_anim"
+                app:popUpTo="@+id/headerBiddingFragment"/>
 
     </fragment>
 
@@ -579,4 +595,10 @@
     <fragment
             android:id="@+id/navigation_admob_flexible_banner"
             android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.FlexibleAdMobBannerFragment"/>
+    <fragment
+            android:id="@+id/navigation_admob_rewarded"
+            android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobRewardedFragment"/>
+    <fragment
+            android:id="@+id/navigation_admob_rewarded_random"
+            android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobRewardedRandomFragment"/>
 </navigation>

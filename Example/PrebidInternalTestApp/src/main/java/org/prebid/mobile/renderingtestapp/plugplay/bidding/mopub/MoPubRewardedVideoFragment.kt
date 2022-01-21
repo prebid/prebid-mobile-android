@@ -86,7 +86,6 @@ class MoPubRewardedVideoFragment: AdFragment() {
         val mediationUtils = MoPubRewardedVideoMediationUtils(keywordsMap)
         rewardedAdUnit = MediationRewardedVideoAdUnit(
             requireContext(),
-            adUnitId,
             configId,
             mediationUtils
         )
