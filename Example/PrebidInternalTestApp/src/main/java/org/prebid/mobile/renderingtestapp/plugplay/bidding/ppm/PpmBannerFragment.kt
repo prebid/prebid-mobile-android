@@ -24,6 +24,7 @@ import org.prebid.mobile.rendering.bidding.data.AdSize
 import org.prebid.mobile.rendering.bidding.listeners.BannerViewListener
 import org.prebid.mobile.rendering.bidding.parallel.BannerView
 import org.prebid.mobile.rendering.errors.AdException
+import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
@@ -53,6 +54,7 @@ open class PpmBannerFragment : AdFragment(), BannerViewListener {
 
     override fun initAd(): Any? {
         bannerView = BannerView(requireContext(), configId, AdSize(width, height))
+
         bannerView?.setAutoRefreshDelay(refreshDelay)
         bannerView?.setBannerListener(this)
         viewContainer.addView(bannerView)

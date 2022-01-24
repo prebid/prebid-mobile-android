@@ -19,6 +19,7 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 import org.prebid.mobile.rendering.bidding.data.AdSize
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 import org.prebid.mobile.rendering.bidding.parallel.InterstitialAdUnit
+import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
 
 open class PpmInterstitialFragment : BaseBidInterstitialFragment() {

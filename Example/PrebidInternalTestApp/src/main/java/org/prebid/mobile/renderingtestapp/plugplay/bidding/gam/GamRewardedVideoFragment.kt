@@ -18,6 +18,7 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam
 
 import org.prebid.mobile.eventhandlers.GamRewardedEventHandler
 import org.prebid.mobile.rendering.bidding.parallel.RewardedAdUnit
+import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidRewardedFragment
 
 class GamRewardedVideoFragment : BaseBidRewardedFragment() {

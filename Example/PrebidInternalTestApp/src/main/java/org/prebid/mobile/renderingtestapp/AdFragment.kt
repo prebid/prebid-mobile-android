@@ -56,6 +56,7 @@ abstract class AdFragment : BaseFragment() {
         arguments?.let {
             configId = it.getString(getString(R.string.key_bid_config_id), "")
             adUnitId = it.getString(getString(R.string.key_ad_unit), "")
+            PrebidRenderingSettings.setStoredAuctionResponse(it.getString(getString(R.string.stored_auction_response),""))
             width = it.getInt(getString(R.string.key_width))
             height = it.getInt(getString(R.string.key_height))
             val title = it.getString(getString(R.string.key_title), getString(R.string.segment_title_in_app))

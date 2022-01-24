@@ -28,6 +28,7 @@ import kotlinx.android.synthetic.main.events_mopub_banner.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import org.prebid.mobile.rendering.bidding.data.AdSize
 import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
+import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
@@ -58,6 +59,7 @@ open class MopubBannerFragment : AdFragment() {
 
     override fun initAd(): Any? {
         bannerView = MoPubView(requireContext())
+
         bannerView?.setAdUnitId(adUnitId)
         bannerView?.bannerAdListener = listener
         viewContainer.addView(bannerView)

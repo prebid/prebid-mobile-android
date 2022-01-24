@@ -16,6 +16,7 @@
 
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 
+import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseFeedFragment
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.adapters.BaseFeedAdapter

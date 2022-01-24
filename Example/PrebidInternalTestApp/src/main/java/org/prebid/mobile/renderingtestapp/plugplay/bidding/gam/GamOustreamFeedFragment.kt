@@ -16,12 +16,14 @@
 
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam
 
+import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseFeedFragment
 import org.prebid.mobile.renderingtestapp.utils.adapters.BaseFeedAdapter
 import org.prebid.mobile.renderingtestapp.utils.adapters.FeedGamAdapter
 
 class GamOustreamFeedFragment : BaseFeedFragment() {
     override fun initFeedAdapter(): BaseFeedAdapter {
+
         return FeedGamAdapter(requireContext(), width, height, configId, adUnitId)
     }
 }

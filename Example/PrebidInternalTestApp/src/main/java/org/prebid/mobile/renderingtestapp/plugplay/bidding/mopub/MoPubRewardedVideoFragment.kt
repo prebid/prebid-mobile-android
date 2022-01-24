@@ -29,6 +29,7 @@ import com.mopub.mobileads.MoPubRewardedAds
 import kotlinx.android.synthetic.main.events_mopub_rewarded.*
 import kotlinx.android.synthetic.main.fragment_mopub_interstitial_video_rewarded.*
 import org.prebid.mobile.rendering.bidding.display.MediationRewardedVideoAdUnit
+import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment

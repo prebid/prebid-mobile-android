@@ -39,7 +39,7 @@ public class WinNotifier {
     private static final String KEY_CACHE_PATH = "hb_cache_path";
     private static final String KEY_CACHE_ID = "hb_cache_id";
     private static final String KEY_UUID = "hb_uuid";
-    private static final String CACHE_URL_TEMPLATE = "https://%1$s%2$s?uuid=%3$s";
+    private static final String CACHE_URL_TEMPLATE = "http://%1$s%2$s?uuid=%3$s";
 
     private final LinkedList<String> mUrlQueue = new LinkedList<>();
     private WinNotifierListener mWinNotifierListener;

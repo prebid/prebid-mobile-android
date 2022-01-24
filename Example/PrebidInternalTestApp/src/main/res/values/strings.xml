@@ -319,4 +319,5 @@
     <string name="events_mopub_rewarded_completed">onRewardedVideoCompleted</string>
     <string name="event_fetch_demand_failed">fetchDemand failed</string>
     <string name="event_fetch_demand_success">fetchDemand success</string>
+    <string name="stored_auction_response">Stored Auction response</string>
 </resources>

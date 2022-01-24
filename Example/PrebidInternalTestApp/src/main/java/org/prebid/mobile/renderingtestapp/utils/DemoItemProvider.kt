@@ -71,78 +71,78 @@ class DemoItemProvider private constructor() {
 
             // In-App Banner
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_banner_320_50), ppmBannerAction,
-                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50, null, 320, 50)))
+                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50, null, 320, 50,"response-prebid-banner-320-50")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_banner_320_50_mock_random_bid), ppmBannerAction,
-                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50, null, 320, 50)))
+                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50, null, 320, 50,"response-prebid-banner-320-50")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_banner_300_250), ppmBannerAction, ppmBannerTagList,
-                    createBannerBundle(R.string.mock_config_id_banner_300x250, null, 300, 250)))
+                    createBannerBundle(R.string.mock_config_id_banner_300x250, null, 300, 250,"response-prebid-banner-300-250")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_banner_728_90), ppmBannerAction,
-                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_728x90, null, 728, 90)))
+                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_728x90, null, 728, 90,"response-prebid-banner-728-90")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_banner_320_50_vast), ppmBannerAction,
-                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50_vast, null, 320, 50)))
+                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50_vast, null, 320, 50,"response-prebid-banner-incorrect-vast")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_banner_320_50_scrollable), R.id.action_header_bidding_to_in_app_banner_scrollable,
-                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50, null, 320, 50)))
+                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50, null, 320, 50,"response-prebid-banner-320-50")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_banner_320_50_deeplink), ppmBannerAction,
-                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50_deeplink, null, 320, 50)))
+                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50_deeplink, null, 320, 50,"response-prebid-banner-deeplink")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_banner_layout), R.id.action_header_bidding_to_in_app_banner_in_layout, ppmBannerTagList,
                     createBannerBundle(null, null, 320, 50)))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_banner_multisize), R.id.action_header_bidding_to_in_app_multisize_banner,
-                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_multisize, null, 320, 50)))
+                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_multisize, null, 320, 50,"response-prebid-banner-multisize")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_banners_and_interstitial), R.id.action_header_bidding_to_in_app_banners_and_interstitial, ppmBannerTagList,
                     createBannerBundle(null, null, 0, 0)))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_mraid_expand), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_expand, null, 320, 50)))
+                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_expand, null, 320, 50,"response-prebid-mraid-expand-1-part")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_mraid_expand_2), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_expand_two_part, null, 320, 50)))
+                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_expand_two_part, null, 320, 50,"response-prebid-mraid-expand-2-part")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_mraid_resize), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_resize, null, 320, 50)))
+                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_resize, null, 320, 50,"response-prebid-mraid-resize")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_mraid_resize_with_errors), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_resize_with_errors, null, 300, 100)))
+                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_resize_with_errors, null, 300, 100,"response-prebid-mraid-resize-with-errors")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_mraid_fullscreen), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_fullscreen, null, 320, 480)))
+                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_fullscreen, null, 320, 480,"response-prebid-mraid-fullscreen")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_mraid_fullscreen_video), ppmInterstitialAction, ppmMraidTagList,
-                    createBannerBundle(R.string.mock_config_id_mraid_video_interstitial, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_mraid_video_interstitial, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-mraid-video-interstitial")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_mraid_viewability_compliance), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_3_viewability_compliance, null, 320, 480)))
+                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_3_viewability_compliance, null, 320, 480,"response-prebid-mraid-viewability-compliance")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_mraid_resize_negative), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_3_resize_negative, null, 320, 480)))
+                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_3_resize_negative, null, 320, 480,"response-prebid-mraid-resize-negative-test")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_mraid_load_and_events), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_3_load_and_events, null, 320, 50)))
+                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_3_load_and_events, null, 320, 50,"response-prebid-mraid-load-and-events")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_mraid_test_properties), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_ox_test_properties, null, 320, 50)))
+                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_ox_test_properties, null, 320, 50,"response-prebid-mraid-test-properties-3")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_mraid_test_methods), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_ox_test_methods, null, 320, 50)))
+                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_ox_test_methods, null, 320, 50,"response-prebid-mraid-test-methods-3")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_mraid_resize_scroll), R.id.action_header_bidding_to_in_app_banner_scrollable,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_resize, null, 320, 50)))
+                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_resize, null, 320, 50,"response-prebid-mraid-resize")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_mraid_resize_expandable), R.id.action_header_bidding_to_in_app_banner,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_ox_resize_expandable, null, 320, 50)))
+                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_ox_resize_expandable, null, 320, 50,"response-prebid-mraid-resize-expandable")))
 
             // In-App Interstitial
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_interstitial_320_480), ppmInterstitialAction, ppmInterstitialTagList,
-                    createBannerBundle(R.string.mock_config_id_interstitial_320_480, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_interstitial_320_480, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-display-interstitial-320-480")))
 
             /// In-App Video
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_interstitial_video_320_480), ppmInterstitialAction, ppmVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_interstitial_320_480, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_video_interstitial_320_480, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-video-interstitial-320-480")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_interstitial_video_320_480_skipoffset), ppmInterstitialAction, ppmVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_interstitial_skipoffset, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_video_interstitial_skipoffset, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-video-interstitial-320-480-skip-offset")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_interstitial_video_320_480_deeplink), ppmInterstitialAction, ppmVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_interstitial_deeplink, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_video_interstitial_deeplink, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-video-interstitial-320-480-deeplink")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_interstitial_video_320_480_end_card), ppmInterstitialAction, ppmVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_rewarded_end_card_320_480, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_video_rewarded_end_card_320_480, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-video-interstitial-320-480-with-end-card")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_interstitial_video_320_480_mraid_end_card), ppmInterstitialAction, ppmMraidTagList,
-                    createBannerBundle(R.string.mock_config_id_video_interstitial_mraid_end_card, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_video_interstitial_mraid_end_card, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-video-interstitial-mraid-end-card")))
 
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_video_rewarded_320_480), ppmRewardedAction, ppmVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_rewarded_320_480, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_video_rewarded_320_480, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-video-rewarded-320-480-without-end-card")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_video_rewarded_end_card_320_480), ppmRewardedAction, ppmVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_rewarded_end_card_320_480, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_video_rewarded_end_card_320_480, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-video-rewarded-320-480")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_banner_video_outstream), R.id.action_header_bidding_to_in_app_banner_video, ppmVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_outstream, null, 300, 250)))
+                    createBannerBundle(R.string.mock_config_id_video_outstream, null, 300, 250,"response-prebid-video-outstream")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_banner_video_outstream_feed), R.id.action_header_bidding_to_in_app_banner_video_feed, ppmVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_outstream, null, 300, 250)))
+                    createBannerBundle(R.string.mock_config_id_video_outstream, null, 300, 250,"response-prebid-video-outstream")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_banner_video_outstream_end_card), R.id.action_header_bidding_to_in_app_banner_video, ppmVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_outstream_end_card, null, 300, 250)))
+                    createBannerBundle(R.string.mock_config_id_video_outstream_end_card, null, 300, 250,"response-prebid-video-outstream-with-end-card")))
 
             // Native
             demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_native_styles_map), R.id.action_header_bidding_to_in_app_native_styles,
@@ -174,49 +174,49 @@ class DemoItemProvider private constructor() {
 
             /// GAM Banner
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_banner_320_50_app_event), gamBannerAction, gamBannerTagList,
-                    createBannerBundle(R.string.mock_config_id_banner_320x50, R.string.adunit_gam_banner_320_50_app_event, 320, 50)))
+                    createBannerBundle(R.string.mock_config_id_banner_320x50, R.string.adunit_gam_banner_320_50_app_event, 320, 50,"response-prebid-banner-320-50")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_banner_320_50_gam_ad), gamBannerAction, gamBannerTagList,
-                    createBannerBundle(R.string.mock_config_id_banner_320x50, R.string.adunit_gam_banner_320_50_gam_ad, 320, 50)))
+                    createBannerBundle(R.string.mock_config_id_banner_320x50, R.string.adunit_gam_banner_320_50_gam_ad, 320, 50,"response-prebid-banner-320-50")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_banner_320_50_random), gamBannerAction, gamBannerTagList,
-                    createBannerBundle(R.string.mock_config_id_banner_320x50, R.string.adunit_gam_banner_320_50_random, 320, 50)))
+                    createBannerBundle(R.string.mock_config_id_banner_320x50, R.string.adunit_gam_banner_320_50_random, 320, 50,"response-prebid-banner-320-50")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_banner_300_250), gamBannerAction, gamBannerTagList,
-                    createBannerBundle(R.string.mock_config_id_banner_300x250, R.string.adunit_gam_banner_300_250, 300, 250)))
+                    createBannerBundle(R.string.mock_config_id_banner_300x250, R.string.adunit_gam_banner_300_250, 300, 250,"response-prebid-banner-300-250")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_banner_728_90), gamBannerAction, gamBannerTagList,
-                    createBannerBundle(R.string.mock_config_id_banner_728x90, R.string.adunit_gam_banner_728_90, 728, 90)))
+                    createBannerBundle(R.string.mock_config_id_banner_728x90, R.string.adunit_gam_banner_728_90, 728, 90,"response-prebid-banner-728-90")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_banner_multisize), R.id.action_header_bidding_to_gam_multisize_banner, gamBannerTagList,
-                    createBannerBundle(R.string.mock_config_id_banner_multisize, R.string.adunit_gam_banner_multisize, 320, 50)))
+                    createBannerBundle(R.string.mock_config_id_banner_multisize, R.string.adunit_gam_banner_multisize, 320, 50,"response-prebid-banner-multisize")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_banners_and_interstitial), R.id.action_header_bidding_to_gam_banners_and_interstitial, gamBannerTagList,
                     createBannerBundle(null, null, 0, 0)))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_mraid_expand), gamBannerAction, gamMraidTagList,
-                    createBannerBundle(R.string.mock_config_id_mraid_expand, R.string.adunit_gam_banner_320_50_app_event, 320, 50)))
+                    createBannerBundle(R.string.mock_config_id_mraid_expand, R.string.adunit_gam_banner_320_50_app_event, 320, 50,"response-prebid-mraid-expand-1-part")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_mraid_resize), gamBannerAction, gamMraidTagList,
-                    createBannerBundle(R.string.mock_config_id_mraid_resize, R.string.adunit_gam_banner_320_50_app_event, 320, 50)))
+                    createBannerBundle(R.string.mock_config_id_mraid_resize, R.string.adunit_gam_banner_320_50_app_event, 320, 50,"response-prebid-mraid-resize")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_mraid_fullscreen_video), gamInterstitialAction, gamMraidTagList,
-                    createBannerBundle(R.string.mock_config_id_mraid_video_interstitial, R.string.adunit_gam_interstitial_320_480_app_event, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_mraid_video_interstitial, R.string.adunit_gam_interstitial_320_480_app_event, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-mraid-video-interstitial")))
 
             // GAM Interstitial
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_interstitial_320_480_app_event), gamInterstitialAction, gamInterstitialTagList,
-                    createBannerBundle(R.string.mock_config_id_interstitial_320_480, R.string.adunit_gam_interstitial_320_480_app_event, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_interstitial_320_480, R.string.adunit_gam_interstitial_320_480_app_event, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-display-interstitial-320-480")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_interstitial_320_480_random), gamInterstitialAction, gamInterstitialTagList,
-                    createBannerBundle(R.string.mock_config_id_interstitial_320_480, R.string.adunit_gam_interstitial_320_480_random, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_interstitial_320_480, R.string.adunit_gam_interstitial_320_480_random, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-display-interstitial-320-480")))
 
             ///GAM Video
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_interstitial_video_320_480_app_event), gamInterstitialAction, gamVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_interstitial_320_480, R.string.adunit_gam_interstitial_video_320_480_app_event, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_video_interstitial_320_480, R.string.adunit_gam_interstitial_video_320_480_app_event, MIN_WIDTH_PERC, MIN_HEIGHT_PERC, "response-prebid-video-interstitial-320-480")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_interstitial_video_320_480_random), gamInterstitialAction, gamVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_interstitial_320_480, R.string.adunit_gam_interstitial_video_320_480_random, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_video_interstitial_320_480, R.string.adunit_gam_interstitial_video_320_480_random, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-video-interstitial-320-480")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_video_rewarded_320_480_metadata), gamRewardedAction, gamVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_rewarded_320_480, R.string.adunit_gam_video_rewarded_320_480_metadata, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_video_rewarded_320_480, R.string.adunit_gam_video_rewarded_320_480_metadata, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-video-interstitial-320-480-with-end-card")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_video_rewarded_end_card_320_480_metadata), gamRewardedAction, gamVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_rewarded_end_card_320_480, R.string.adunit_gam_video_rewarded_320_480_metadata, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_video_rewarded_end_card_320_480, R.string.adunit_gam_video_rewarded_320_480_metadata, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-video-rewarded-320-480")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_video_rewarded_end_card_320_480_random), gamRewardedAction, gamVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_rewarded_end_card_320_480, R.string.adunit_gam_video_rewarded_320_480_random, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_video_rewarded_end_card_320_480, R.string.adunit_gam_video_rewarded_320_480_random, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-video-rewarded-320-480")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_video_oustream_app_event), R.id.action_header_bidding_to_gam_banner_video, gamVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_outstream, R.string.adunit_gam_banner_300_250, 300, 250)))
+                    createBannerBundle(R.string.mock_config_id_video_outstream, R.string.adunit_gam_banner_300_250, 300, 250,"response-prebid-video-outstream")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_video_outstream_random), R.id.action_header_bidding_to_gam_banner_video, gamVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_outstream, R.string.adunit_gam_video_300_250_random, 300, 250)))
+                    createBannerBundle(R.string.mock_config_id_video_outstream, R.string.adunit_gam_video_300_250_random, 300, 250,"response-prebid-video-outstream")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_video_outstream_feed), R.id.action_header_bidding_to_gam_banner_video_feed, gamVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_outstream, R.string.adunit_gam_video_300_250_random, 300, 250)))
+                    createBannerBundle(R.string.mock_config_id_video_outstream, R.string.adunit_gam_video_300_250_random, 300, 250,"response-prebid-video-outstream")))
 
             // Native
             demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_styles_mrect), R.id.action_header_bidding_to_gam_native_styles,
@@ -263,49 +263,49 @@ class DemoItemProvider private constructor() {
 
             /// Mopub Banner
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_banner_320_50_adapter), mopubBannerAction,
-                    mopubBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50, R.string.mopub_banner_bidding_ad_unit_id_adapter, 320, 50)))
+                    mopubBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50, R.string.mopub_banner_bidding_ad_unit_id_adapter, 320, 50,"response-prebid-banner-320-50")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_banner_320_50_random), mopubBannerAction,
-                    mopubBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50, R.string.mopub_banner_bidding_ad_unit_id_random, 320, 50)))
+                    mopubBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50, R.string.mopub_banner_bidding_ad_unit_id_random, 320, 50,"response-prebid-banner-320-50")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_banner_300_250), mopubBannerAction,
-                    mopubBannerTagList, createBannerBundle(R.string.mock_config_id_banner_300x250, R.string.mopub_banner_bidding_ad_unit_id_adapter, 300, 250)))
+                    mopubBannerTagList, createBannerBundle(R.string.mock_config_id_banner_300x250, R.string.mopub_banner_bidding_ad_unit_id_adapter, 300, 250,"response-prebid-banner-300-250")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_banner_728_90), mopubBannerAction,
-                    mopubBannerTagList, createBannerBundle(R.string.mock_config_id_banner_728x90, R.string.mopub_banner_bidding_ad_unit_id_adapter, 728, 90)))
+                    mopubBannerTagList, createBannerBundle(R.string.mock_config_id_banner_728x90, R.string.mopub_banner_bidding_ad_unit_id_adapter, 728, 90,"response-prebid-banner-728-90")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_banner_multisize), R.id.action_header_bidding_to_mopub_banner_multisize,
-                    mopubBannerTagList, createBannerBundle(R.string.mock_config_id_banner_multisize, R.string.mopub_banner_bidding_ad_unit_id_adapter, 320, 50)))
+                    mopubBannerTagList, createBannerBundle(R.string.mock_config_id_banner_multisize, R.string.mopub_banner_bidding_ad_unit_id_adapter, 320, 50,"response-prebid-banner-multisize")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_banners_and_interstitial), R.id.action_header_bidding_to_mopub_banners_and_interstitial, mopubBannerTagList,
                     createBannerBundle(null, null, 0, 0)))
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_mraid_expand), mopubBannerAction,
-                    mopubMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_expand, R.string.mopub_banner_bidding_ad_unit_id_adapter, 320, 50)))
+                    mopubMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_expand, R.string.mopub_banner_bidding_ad_unit_id_adapter, 320, 50,"response-prebid-mraid-expand-1-part")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_mraid_resize), mopubBannerAction,
-                    mopubMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_resize, R.string.mopub_banner_bidding_ad_unit_id_adapter, 320, 50)))
+                    mopubMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_resize, R.string.mopub_banner_bidding_ad_unit_id_adapter, 320, 50,"response-prebid-mraid-resize")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_mraid_fullscreen_video),
                     mopubInterstitialAction, mopubMraidTagList,
-                    createBannerBundle(R.string.mock_config_id_mraid_video_interstitial, R.string.mopub_interstitial_bidding_ad_unit_id_ok, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_mraid_video_interstitial, R.string.mopub_interstitial_bidding_ad_unit_id_ok, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-mraid-video-interstitial")))
 
             // MoPub Interstitial
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_interstitial_320_480_adapter),
                     mopubInterstitialAction, mopubInterstitialTagList,
-                    createBannerBundle(R.string.mock_config_id_interstitial_320_480, R.string.mopub_interstitial_bidding_ad_unit_id_ok, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_interstitial_320_480, R.string.mopub_interstitial_bidding_ad_unit_id_ok, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-display-interstitial-320-480")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_interstitial_320_480_random),
                     mopubInterstitialAction, mopubInterstitialTagList,
-                    createBannerBundle(R.string.mock_config_id_interstitial_320_480, R.string.mopub_interstitial_bidding_ad_unit_id_random, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)))
+                    createBannerBundle(R.string.mock_config_id_interstitial_320_480, R.string.mopub_interstitial_bidding_ad_unit_id_random, MIN_WIDTH_PERC, MIN_HEIGHT_PERC,"response-prebid-display-interstitial-320-480")))
 
             // MoPub Video
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_video_interstitial_320_480_adapter),
                     R.id.action_header_bidding_to_mopub_interstitial, mopubVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_interstitial_320_480, R.string.mopub_video_interstitial_bidding_adapter)))
+                    createBannerBundle(R.string.mock_config_id_video_interstitial_320_480, R.string.mopub_video_interstitial_bidding_adapter,storedAuctionResponse = "response-prebid-video-interstitial-320-480")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_video_interstitial_320_480_random),
                     R.id.action_header_bidding_to_mopub_interstitial, mopubVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_interstitial_320_480, R.string.mopub_video_interstitial_bidding_random)))
+                    createBannerBundle(R.string.mock_config_id_video_interstitial_320_480, R.string.mopub_video_interstitial_bidding_random,storedAuctionResponse = "response-prebid-video-interstitial-320-480")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_rewarded_video_320_480_adapter),
                     mopubRewardedAction, mopubVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_rewarded_320_480, R.string.mopub_rewarded_video_bidding_adapter)))
+                    createBannerBundle(R.string.mock_config_id_video_rewarded_320_480, R.string.mopub_rewarded_video_bidding_adapter,storedAuctionResponse = "response-prebid-video-interstitial-320-480-with-end-card")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_rewarded_video_end_card_320_480_adapter),
                     mopubRewardedAction, mopubVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_rewarded_end_card_320_480, R.string.mopub_rewarded_video_bidding_adapter)))
+                    createBannerBundle(R.string.mock_config_id_video_rewarded_end_card_320_480, R.string.mopub_rewarded_video_bidding_adapter,storedAuctionResponse = "response-prebid-video-rewarded-320-480")))
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_rewarded_video_end_card_320_480_random),
                     mopubRewardedAction, mopubVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_rewarded_end_card_320_480, R.string.mopub_rewarded_video_bidding_random)))
+                    createBannerBundle(R.string.mock_config_id_video_rewarded_end_card_320_480, R.string.mopub_rewarded_video_bidding_random,storedAuctionResponse = "response-prebid-video-rewarded-320-480")))
 
             // Native
             demoList.add(DemoItem(getString(R.string.demo_bidding_mopub_native_styles), R.id.action_header_bidding_to_mopub_native_styles,
@@ -449,13 +449,16 @@ class DemoItemProvider private constructor() {
 //                    ppmNativeTagList, createBannerBundle(R.string.prebid_config_id_qa_native_styles)))
         }
 
-        private fun createBannerBundle(configIdRes: Int?, adUnitIdRes: Int? = null, width: Int = 0, height: Int = 0): Bundle {
+        private fun createBannerBundle(configIdRes: Int?, adUnitIdRes: Int? = null, width: Int = 0, height: Int = 0,storedAuctionResponse:String?=null): Bundle {
             return Bundle().apply {
                 if (configIdRes != null) {
                     putString(getString(R.string.key_bid_config_id), getString(configIdRes))
                 }
                 if (adUnitIdRes != null) {
                     putString(getString(R.string.key_ad_unit), getString(adUnitIdRes))
+                }
+                if(storedAuctionResponse!=null){
+                    putString(getString(R.string.stored_auction_response),storedAuctionResponse)
                 }
                 putInt(getString(R.string.key_width), width)
                 putInt(getString(R.string.key_height), height)
