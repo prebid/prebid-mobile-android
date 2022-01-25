@@ -49,6 +49,8 @@ import java.util.Map;
 import java.util.UUID;
 
 class PrebidServerAdapter implements DemandAdapter {
+
+    public CacheIdSaver cacheIdSaver = new CacheIdSaver();
     private ArrayList<ServerConnector> serverConnectors;
 
     PrebidServerAdapter() {
@@ -57,7 +59,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
     @Override
     public void requestDemand(RequestParams params, DemandAdapterListener listener, String auctionId) {
-        final ServerConnector connector = new ServerConnector(this, listener, params, auctionId);
+        final ServerConnector connector = new ServerConnector(this, listener, params, auctionId, cacheIdSaver);
         serverConnectors.add(connector);
         connector.execute();
     }
@@ -91,11 +93,14 @@ class PrebidServerAdapter implements DemandAdapter {
         private boolean isCancelled;
         private boolean alreadyPostedResult = false;
 
-        ServerConnector(PrebidServerAdapter prebidServerAdapter, DemandAdapterListener listener, RequestParams requestParams, String auctionId) {
+        private CacheIdSaver cacheIdSaver;
+
+        ServerConnector(PrebidServerAdapter prebidServerAdapter, DemandAdapterListener listener, RequestParams requestParams, String auctionId, CacheIdSaver cacheIdSaver) {
             this.prebidServerAdapter = new WeakReference<>(prebidServerAdapter);
             this.listener = listener;
             this.requestParams = requestParams;
             this.auctionId = auctionId;
+            this.cacheIdSaver = cacheIdSaver;
             timeoutCountDownTimer = new TimeoutCountDownTimer(PrebidMobile.getTimeoutMillis(), TIMEOUT_COUNT_DOWN_INTERVAL);
             adType = requestParams.getAdType();
         }
@@ -187,6 +192,7 @@ class PrebidServerAdapter implements DemandAdapter {
                                             if (bid.getJSONObject("ext").getJSONObject("prebid").getString("type").equalsIgnoreCase("native")) {
                                                 String cacheId = CacheManager.save(bid.toString());
                                                 if (cacheId != null) {
+                                                    this.cacheIdSaver.setCacheId(cacheId);
                                                     if (bid.has("exp")) {
                                                         Long exp = bid.optLong("exp");
                                                         CacheManager.setExpiry(cacheId, exp);
@@ -1092,5 +1098,19 @@ class PrebidServerAdapter implements DemandAdapter {
 
             }
         }
+    }
+
+    class CacheIdSaver {
+
+        private String cacheId;
+
+        public void setCacheId(String cacheId) {
+            this.cacheId = cacheId;
+        }
+
+        public String getCacheId() {
+            return cacheId;
+        }
+
     }
 }

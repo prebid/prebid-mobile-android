@@ -47,7 +47,7 @@ public class PrebidNativeAd {
     private ArrayList<ImpressionTracker> impressionTrackers;
 
 
-    static PrebidNativeAd create(String cacheId) {
+    public static PrebidNativeAd create(String cacheId) {
         String content = CacheManager.get(cacheId);
         if (!TextUtils.isEmpty(content)) {
             try {
@@ -93,15 +93,14 @@ public class PrebidNativeAd {
                     }
 
                     if (adObject.has("img")) {
-                        if (adObject.optInt("id") == 1) {
-                            JSONObject img = adObject.getJSONObject("img");
-                            if (img.has("url")) {
-                                ad.setIconUrl(img.getString("url"));
-                            }
-                        } else if (adObject.optInt("id") == 2) {
-                            JSONObject img = adObject.getJSONObject("img");
-                            if (img.has("url")) {
-                                ad.setImageUrl(img.getString("url"));
+                        JSONObject img = adObject.getJSONObject("img");
+                        if (img.has("url")) {
+                            String url = img.getString("url");
+                            int type = img.optInt("type");
+                            if (type == 1) {
+                                ad.setIconUrl(url);
+                            } else if (type == 3) {
+                                ad.setImageUrl(url);
                             }
                         }
                     }
@@ -143,12 +142,17 @@ public class PrebidNativeAd {
     }
 
     private boolean isValid() {
-        return URLUtil.isValidUrl(clickUrl) &&
+        // TODO: Rewrite
+        boolean result = URLUtil.isValidUrl(clickUrl) &&
                 !TextUtils.isEmpty(title) &&
                 !TextUtils.isEmpty(description) &&
                 URLUtil.isValidUrl(iconUrl) &&
                 URLUtil.isValidUrl(imageUrl) &&
                 !TextUtils.isEmpty(cta);
+        if (!result) {
+            LogUtil.e("PrebidNativeAd", "Not valid response");
+        }
+        return result;
     }
 
     private PrebidNativeAd() {

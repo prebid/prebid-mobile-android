@@ -195,22 +195,25 @@
     <string name="demo_bidding_mopub_native_adapter_video">Native Ad Video (MoPub) [OK, OXANativeAdAdapter]</string>
 
     <!--AdMob Titles-->
-    <string name="demo_bidding_admob_banner_320_50_adapter">Banner 320x50 (AdMob) [OK, Adapter]</string>
+    <string name="demo_bidding_admob_banner_320_50_adapter">Banner 320x50 (AdMob) [OK, OXB Adapter]</string>
     <string name="demo_bidding_admob_banner_320_50_ok_random">Banner 320x50 (AdMob) [OK, Random]</string>
     <string name="demo_bidding_admob_banner_320_50_no_bids">Banner 320x50 (AdMob) [noBids, AdMob ad]</string>
     <string name="demo_bidding_admob_banner_320_50_random_respectively">Banner 320x50 (AdMob) [Random, Respectively]</string>
-    <string name="demo_bidding_admob_banner_300_250_adapter">Banner 300x250 (AdMob) [OK, Adapter]</string>
+    <string name="demo_bidding_admob_banner_300_250_adapter">Banner 300x250 (AdMob) [OK, OXB Adapter]</string>
     <string name="demo_bidding_admob_banner_300_250_ok_random">Banner 300x250 (AdMob) [OK, Random]</string>
-    <string name="demo_bidding_admob_flexible_banner_ok_random">Flexible banner (AdMob) [OK, Random]</string>
+    <string name="demo_bidding_admob_flexible_banner_ok_random">Banner Adaptive (AdMob) [OK, Random]</string>
 
-    <string name="demo_bidding_admob_interstitial_adapter">Interstitial (AdMob) [OK, Adapter]</string>
+    <string name="demo_bidding_admob_interstitial_adapter">Interstitial (AdMob) [OK, OXB Adapter]</string>
     <string name="demo_bidding_admob_interstitial_admob">Interstitial (AdMob) [noBids, AdMob ad]</string>
     <string name="demo_bidding_admob_interstitial_random">Interstitial (AdMob) [OK, Random]</string>
 
-    <string name="demo_bidding_admob_rewarded_adapter">Rewarded (AdMob) [OK, Adapter]</string>
-    <string name="demo_bidding_admob_rewarded_adapter_no_end_card">Rewarded no EndCard (AdMob) [OK, Adapter]</string>
+    <string name="demo_bidding_admob_rewarded_adapter">Rewarded (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_rewarded_adapter_no_end_card">Rewarded no EndCard (AdMob) [OK, OXB Adapter]</string>
     <string name="demo_bidding_admob_rewarded_admob">Rewarded (AdMob) [noBids, AdMob ad]</string>
     <string name="demo_bidding_admob_rewarded_random">Rewarded (AdMob) [OK, Random]</string>
+
+    <string name="demo_bidding_admob_native_adapter">Native Ad (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_native_no_bids">Native Ad (AdMob) [noBids, AdMob ad]</string>
 
     <!--GAM AdUnits-->
     <string name="adunit_gam_banner_320_50_app_event">/21808260008/prebid_oxb_320x50_banner</string>

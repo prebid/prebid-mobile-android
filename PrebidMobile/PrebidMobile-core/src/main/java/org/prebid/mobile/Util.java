@@ -52,11 +52,12 @@ public class Util {
 
     static final String MOPUB_BANNER_VIEW_CLASS = "com.mopub.mobileads.MoPubView";
     static final String MOPUB_INTERSTITIAL_CLASS = "com.mopub.mobileads.MoPubInterstitial";
+    static final String MOPUB_NATIVE_CLASS = "com.mopub.nativeads.RequestParameters$Builder";
     static final String AD_MANAGER_REQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
     static final String AD_MANAGER_REQUEST_CLASS_V20 = "com.google.android.gms.ads.admanager.AdManagerAdRequest";
     static final String AD_MANAGER_REQUEST_BUILDER_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest$Builder";
     static final String AD_MANAGER_REQUEST_BUILDER_CLASS_V20 = "com.google.android.gms.ads.admanager.AdManagerAdRequest$Builder";
-    static final String MOPUB_NATIVE_CLASS = "com.mopub.nativeads.RequestParameters$Builder";
+    static final String ANDROID_OS_BUNDLE = "android.os.Bundle";
     public static final int HTTP_CONNECTION_TIMEOUT = 15000;
     public static final int HTTP_SOCKET_TIMEOUT = 20000;
     public static final int NATIVE_AD_VISIBLE_PERIOD_MILLIS = 1000;
@@ -399,6 +400,7 @@ public class Util {
                 || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS)
                 || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS_V20)
                 || adObj.getClass() == getClassFromString(MOPUB_NATIVE_CLASS)
+                || adObj.getClass() == getClassFromString(ANDROID_OS_BUNDLE)
                 || adObj.getClass() == HashMap.class)
             return true;
         return false;
@@ -415,11 +417,29 @@ public class Util {
             handleAdManagerCustomTargeting(bids, adObj);
         } else if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS) || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS_V20)) {
             handleAdManagerBuilderCustomTargeting(bids, adObj);
+        } else if (adObj.getClass() == getClassFromString(ANDROID_OS_BUNDLE)) {
+            handleAndroidBundleCustomTargeting(bids, adObj);
         } else if (adObj.getClass() == HashMap.class) {
             if (bids != null && !bids.isEmpty()) {
                 HashMap map = ((HashMap) adObj);
                 map.clear();
                 map.putAll(bids);
+            }
+        }
+    }
+
+    static void saveCacheId(@NonNull String cacheId, Object adObject) {
+        if (adObject.getClass() == getClassFromString(ANDROID_OS_BUNDLE)) {
+            Bundle adBundle = (Bundle) adObject;
+            adBundle.putString(NativeAdUnit.BUNDLE_KEY_CACHE_ID, cacheId);
+        }
+    }
+
+    static void handleAndroidBundleCustomTargeting(@Nullable HashMap<String, String> bids, Object adObject) {
+        Bundle adBundle = (Bundle) adObject;
+        if (bids != null) {
+            for (Map.Entry<String, String> entry : bids.entrySet()) {
+                adBundle.putString(entry.getKey(), entry.getValue());
             }
         }
     }
