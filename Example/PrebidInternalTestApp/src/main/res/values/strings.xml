@@ -267,6 +267,7 @@
     <string name="admob_banner_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/3793078260</string>
     <string name="admob_interstitial_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/6393291067</string>
     <string name="admob_rewarded_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/1908212572</string>
+    <string name="admob_native_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/9720985924</string>
 
     <!--    Bidding configs-->
     <string name="prebid_account_id_prod">0689a263-318d-448b-a3d4-b02e8a709d9d</string>
