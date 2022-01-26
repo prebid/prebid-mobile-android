@@ -66,7 +66,7 @@ class AdMobNativeFragment : AdFragment() {
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    btnAdFailed.isEnabled = true
+                    btnAdFailed?.isEnabled = true
                     Log.e(TAG, "Error: ${adError.message}")
                 }
             })
