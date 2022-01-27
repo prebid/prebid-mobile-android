@@ -34,7 +34,7 @@ import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit;
 import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit;
-import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit;
+import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit_old;
 import org.prebid.mobile.rendering.bidding.display.MediationRewardedVideoAdUnit;
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.robolectric.Robolectric;
@@ -64,7 +64,7 @@ public class MoPubMediationUtilsMethodsTest {
 
     private MediationBannerAdUnit mMediationBannerAdUnit;
     private MediationInterstitialAdUnit mMediationInterstitialAdUnit;
-    private MediationNativeAdUnit mMediationNativeAdUnit;
+    private MediationNativeAdUnit_old mMediationNativeAdUnit;
     private MediationRewardedVideoAdUnit mMoPubRewardedAdUnit;
 
     private MoPubBannerMediationUtils bannerUtils;
@@ -88,7 +88,7 @@ public class MoPubMediationUtilsMethodsTest {
 
         mMoPubNative = mock(MoPubNative.class);
         nativeUtils = new MoPubNativeMediationUtils(mMoPubNativeKeywords, mMoPubNative);
-        mMediationNativeAdUnit = new MediationNativeAdUnit(mContext, ID, mock(NativeAdConfiguration.class), nativeUtils);
+        mMediationNativeAdUnit = new MediationNativeAdUnit_old(mContext, ID, mock(NativeAdConfiguration.class), nativeUtils);
 
         rewardedUtils = new MoPubRewardedVideoMediationUtils(mMoPubRewardedKeywords);
         mMoPubRewardedAdUnit = new MediationRewardedVideoAdUnit(mContext, ID, rewardedUtils);

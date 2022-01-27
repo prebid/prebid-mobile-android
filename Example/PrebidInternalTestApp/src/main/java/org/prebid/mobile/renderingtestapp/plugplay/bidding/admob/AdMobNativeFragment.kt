@@ -74,6 +74,8 @@ class AdMobNativeFragment : AdFragment() {
             .build()
 
         extras = Bundle()
+        adUnit = MediationNativeAdUnit(configId, extras!!)
+        configureNativeAdUnit(adUnit!!)
         return adUnit
     }
 
@@ -83,9 +85,7 @@ class AdMobNativeFragment : AdFragment() {
             .addCustomEventExtrasBundle(PrebidNativeAdapter::class.java, extras!!)
             .build()
 
-        val nativeAdUnit = NativeAdUnit(configId)
-        configureNativeAdUnit(nativeAdUnit)
-        nativeAdUnit.fetchDemand(extras!!) { resultCode ->
+        adUnit?.fetchDemand { resultCode ->
             Log.d(TAG, "Fetch demand result: $resultCode")
 
             /** For mediation use loadAd() not loadAds() */
@@ -97,7 +97,6 @@ class AdMobNativeFragment : AdFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        adUnit?.destroy()
         nativeAd?.destroy()
     }
 
@@ -132,7 +131,7 @@ class AdMobNativeFragment : AdFragment() {
         wrapper.addView(binding.root)
     }
 
-    private fun configureNativeAdUnit(nativeAdUnit: NativeAdUnit) {
+    private fun configureNativeAdUnit(nativeAdUnit: MediationNativeAdUnit) {
         nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC)
         nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED)
         nativeAdUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL)

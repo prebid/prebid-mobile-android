@@ -18,7 +18,6 @@ package org.prebid.mobile.rendering.bidding.display;
 
 import android.app.Activity;
 import android.content.Context;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,9 +39,9 @@ import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
-public class MediationNativeAdUnitTest {
+public class MediationNativeAdUnitOldTest {
     private Context mContext;
-    private MediationNativeAdUnit mMediationNativeAdUnit;
+    private MediationNativeAdUnit_old mMediationNativeAdUnit;
     @Mock
     private BidLoader mMockBidLoader;
 
@@ -51,7 +50,7 @@ public class MediationNativeAdUnitTest {
         MockitoAnnotations.initMocks(this);
         mContext = Robolectric.buildActivity(Activity.class).create().get();
         PrebidRenderingSettings.setAccountId("id");
-        mMediationNativeAdUnit = new MediationNativeAdUnit(mContext, "configId", mock(NativeAdConfiguration.class), new MockMediationUtils());
+        mMediationNativeAdUnit = new MediationNativeAdUnit_old(mContext, "configId", mock(NativeAdConfiguration.class), new MockMediationUtils());
         WhiteBox.setInternalState(mMediationNativeAdUnit, "mBidLoader", mMockBidLoader);
     }
 

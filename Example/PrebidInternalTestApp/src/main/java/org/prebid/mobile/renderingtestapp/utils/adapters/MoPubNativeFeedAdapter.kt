@@ -24,7 +24,7 @@ import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
 import com.mopub.mediation.MoPubNativeMediationUtils
 import com.mopub.nativeads.*
-import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
+import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit_old
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration
 import org.prebid.mobile.renderingtestapp.R
 
@@ -33,7 +33,7 @@ class MoPubNativeFeedAdapter(context: Context,
                              private val adUnitId: String,
                              private val nativeAdConfiguration: NativeAdConfiguration?) : BaseFeedAdapter(context) {
     private var mopubNative: MoPubNative? = null
-    private var mopubNativeAdUnit: MediationNativeAdUnit? = null
+    private var mopubNativeAdUnit: MediationNativeAdUnit_old? = null
     private var keywordsContainer = HashMap<String, String>()
 
     override fun destroy() {
@@ -64,7 +64,7 @@ class MoPubNativeFeedAdapter(context: Context,
         mopubNative?.registerAdRenderer(MoPubStaticNativeAdRenderer(viewBinder))
 
         val mediationUtils = MoPubNativeMediationUtils(keywordsContainer, mopubNative)
-        mopubNativeAdUnit = MediationNativeAdUnit(
+        mopubNativeAdUnit = MediationNativeAdUnit_old(
             context,
             configId,
             nativeAdConfiguration,

@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.events_native_video.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import kotlinx.android.synthetic.main.video_controls.*
 import org.prebid.mobile.rendering.bidding.data.ntv.MediaView
-import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
+import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit_old
 import org.prebid.mobile.rendering.errors.AdException
 import org.prebid.mobile.rendering.listeners.MediaViewListener
 import org.prebid.mobile.renderingtestapp.R
@@ -113,7 +113,7 @@ class MoPubNativeVideoFragment : MopubNativeFragment() {
         mopubNative?.registerAdRenderer(addRenderer)
 
         val mediationUtils = MoPubNativeMediationUtils(keywordsContainer, mopubNative)
-        mopubNativeAdUnit = MediationNativeAdUnit(
+        mopubNativeAdUnit = MediationNativeAdUnit_old(
             requireContext(),
             configId,
             getNativeAdConfig(),

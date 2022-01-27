@@ -1,57 +1,112 @@
-/*
- *    Copyright 2018-2021 Prebid.org, Inc.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
- */
-
 package org.prebid.mobile.rendering.bidding.display;
 
-import android.content.Context;
 import androidx.annotation.NonNull;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
+import org.prebid.mobile.NativeAdUnit;
+import org.prebid.mobile.NativeAsset;
+import org.prebid.mobile.NativeEventTracker;
+import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
-import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
-import org.prebid.mobile.rendering.models.AdConfiguration;
-import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
-public class MediationNativeAdUnit extends MediationBaseAdUnit {
-    private static final String TAG = MediationNativeAdUnit.class.getSimpleName();
+public class MediationNativeAdUnit {
 
-    public MediationNativeAdUnit(Context context, String configId, NativeAdConfiguration nativeAdConfiguration, PrebidMediationDelegate mediationDelegate) {
-        super(context, configId, null, mediationDelegate);
-        mAdUnitConfig.setNativeAdConfiguration(nativeAdConfiguration);
+    private static final String TAG = "MediationNativeAdUnit";
+
+    private final Object adObject;
+    private final NativeAdUnit nativeAdUnit;
+
+    public MediationNativeAdUnit(
+            @NonNull String configId,
+            @NonNull Object adObject
+    ) {
+        this.adObject = adObject;
+        this.nativeAdUnit = new NativeAdUnit(configId);
     }
 
     public void fetchDemand(
-        @NonNull
-            OnFetchCompleteListener listener) {
-        super.fetchDemand(listener);
+            @NonNull OnFetchCompleteListener listener
+    ) {
+        nativeAdUnit.fetchDemand(adObject, resultCode ->
+                listener.onComplete(convertResultCode(resultCode))
+        );
     }
 
-    @Override
-    protected void initAdConfig(String configId, AdSize adSize) {
-        mAdUnitConfig.setConfigId(configId);
-        mAdUnitConfig.setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.NATIVE);
+    public void addAsset(NativeAsset asset) {
+        nativeAdUnit.addAsset(asset);
     }
 
-    @Override
-    protected void onResponseReceived(BidResponse response) {
-        if (mOnFetchCompleteListener != null) {
-            BidResponseCache.getInstance().putBidResponse(response);
-            mMediationDelegate.handleKeywordsUpdate(response.getTargetingWithCacheId());
-            mMediationDelegate.setResponseToLocalExtras(response);
-            mOnFetchCompleteListener.onComplete(FetchDemandResult.SUCCESS);
+    public void addEventTracker(NativeEventTracker tracker) {
+        nativeAdUnit.addEventTracker(tracker);
+    }
+
+    public void setContextType(NativeAdUnit.CONTEXT_TYPE type) {
+        nativeAdUnit.setContextType(type);
+    }
+
+    public void setContextSubType(NativeAdUnit.CONTEXTSUBTYPE subType) {
+        nativeAdUnit.setContextSubType(subType);
+    }
+
+    public void setExt(Object jsonObject) {
+        nativeAdUnit.setExt(jsonObject);
+    }
+
+    public void setSeq(int seq) {
+        nativeAdUnit.setSeq(seq);
+    }
+
+    public void setPrivacy(boolean privacy) {
+        nativeAdUnit.setPrivacy(privacy);
+    }
+
+    public void setPlacementType(NativeAdUnit.PLACEMENTTYPE type) {
+        nativeAdUnit.setPlacementType(type);
+    }
+
+    public void setPlacementCount(int implementCount) {
+        nativeAdUnit.setPlacementCount(implementCount);
+    }
+
+    public void setAUrlSupport(boolean support) {
+        nativeAdUnit.setAUrlSupport(support);
+    }
+
+    public void setDUrlSupport(boolean support) {
+        nativeAdUnit.setDUrlSupport(support);
+    }
+
+    private FetchDemandResult convertResultCode(ResultCode originalResult) {
+        switch (originalResult) {
+            case SUCCESS:
+                return FetchDemandResult.SUCCESS;
+            case INVALID_ACCOUNT_ID:
+                return FetchDemandResult.INVALID_ACCOUNT_ID;
+            case INVALID_CONFIG_ID:
+                return FetchDemandResult.INVALID_CONFIG_ID;
+            case INVALID_CONTEXT:
+                return FetchDemandResult.INVALID_CONTEXT;
+            case INVALID_HOST_URL:
+                return FetchDemandResult.INVALID_HOST_URL;
+            case INVALID_SIZE:
+                return FetchDemandResult.INVALID_SIZE;
+            case INVALID_AD_OBJECT:
+                return FetchDemandResult.INVALID_AD_OBJECT;
+            case NO_BIDS:
+                return FetchDemandResult.NO_BIDS;
+            case PREBID_SERVER_ERROR:
+                return FetchDemandResult.SERVER_ERROR;
+            case TIMEOUT:
+                return FetchDemandResult.TIMEOUT;
+            case NETWORK_ERROR:
+                return FetchDemandResult.NETWORK_ERROR;
+            case INVALID_NATIVE_REQUEST:
+                LogUtil.error(TAG, "Invalid native request!");
+                return FetchDemandResult.NETWORK_ERROR;
+            default:
+                LogUtil.error(TAG, "Something went wrong!");
+                return FetchDemandResult.NETWORK_ERROR;
         }
     }
+
 }

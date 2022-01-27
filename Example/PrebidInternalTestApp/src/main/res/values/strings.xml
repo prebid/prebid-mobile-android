@@ -203,14 +203,14 @@
     <string name="demo_bidding_admob_banner_300_250_ok_random">Banner 300x250 (AdMob) [OK, Random]</string>
     <string name="demo_bidding_admob_flexible_banner_ok_random">Banner Adaptive (AdMob) [OK, Random]</string>
 
-    <string name="demo_bidding_admob_interstitial_adapter">Interstitial (AdMob) [OK, OXB Adapter]</string>
-    <string name="demo_bidding_admob_interstitial_admob">Interstitial (AdMob) [noBids, AdMob ad]</string>
-    <string name="demo_bidding_admob_interstitial_random">Interstitial (AdMob) [OK, Random]</string>
+    <string name="demo_bidding_admob_interstitial_adapter">Video Interstitial 320x480 (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_interstitial_admob">Video Interstitial 320x480 (AdMob) [noBids, AdMob ad]</string>
+    <string name="demo_bidding_admob_interstitial_random">Video Interstitial 320x480 (AdMob) [OK, Random]</string>
 
-    <string name="demo_bidding_admob_rewarded_adapter">Rewarded (AdMob) [OK, OXB Adapter]</string>
-    <string name="demo_bidding_admob_rewarded_adapter_no_end_card">Rewarded no EndCard (AdMob) [OK, OXB Adapter]</string>
-    <string name="demo_bidding_admob_rewarded_admob">Rewarded (AdMob) [noBids, AdMob ad]</string>
-    <string name="demo_bidding_admob_rewarded_random">Rewarded (AdMob) [OK, Random]</string>
+    <string name="demo_bidding_admob_rewarded_adapter">Video Rewarded 320x480 (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_rewarded_adapter_no_end_card">Video Rewarded 320x480 no EndCard (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_rewarded_admob">Video Rewarded 320x480 (AdMob) [noBids, AdMob ad]</string>
+    <string name="demo_bidding_admob_rewarded_random">Video Rewarded 320x480 (AdMob) [OK, Random]</string>
 
     <string name="demo_bidding_admob_native_adapter">Native Ad (AdMob) [OK, OXB Adapter]</string>
     <string name="demo_bidding_admob_native_no_bids">Native Ad (AdMob) [noBids, AdMob ad]</string>
