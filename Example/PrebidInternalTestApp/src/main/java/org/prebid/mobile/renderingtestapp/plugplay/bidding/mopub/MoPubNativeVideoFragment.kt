@@ -17,14 +17,13 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub
 
 import android.util.Log
-import com.mopub.mediation.MoPubNativeMediationUtils
+import com.mopub.mediation.MoPubNativeMediationUtils_old
 import com.mopub.nativeads.*
 import kotlinx.android.synthetic.main.events_bids.*
 import kotlinx.android.synthetic.main.events_native_video.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import kotlinx.android.synthetic.main.video_controls.*
 import org.prebid.mobile.rendering.bidding.data.ntv.MediaView
-import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit_old
 import org.prebid.mobile.rendering.errors.AdException
 import org.prebid.mobile.rendering.listeners.MediaViewListener
 import org.prebid.mobile.renderingtestapp.R
@@ -106,19 +105,21 @@ class MoPubNativeVideoFragment : MopubNativeFragment() {
         adapterHelper = AdapterHelper(requireContext(), 0, 3);
         mopubNative = MoPubNative(requireContext(), adUnitId, nativeNetworkListener)
         val viewBinder = ViewBinder.Builder(R.layout.lyt_native_ad_video).build()
-        val addRenderer = PrebidNativeAdRenderer(viewBinder)
+        val addRenderer = PrebidNativeAdRenderer_OLD(viewBinder)
         addRenderer.setMediaViewResId(R.id.mediaView)
         addRenderer.setMediaViewListener(mediaViewListener)
 
         mopubNative?.registerAdRenderer(addRenderer)
 
-        val mediationUtils = MoPubNativeMediationUtils(keywordsContainer, mopubNative)
-        mopubNativeAdUnit = MediationNativeAdUnit_old(
-            requireContext(),
-            configId,
-            getNativeAdConfig(),
-            mediationUtils
-        )
+        val mediationUtils =
+            MoPubNativeMediationUtils_old(keywordsContainer, mopubNative)
+        TODO()
+//        mopubNativeAdUnit = MediationNativeAdUnit_old(
+//            requireContext(),
+//            configId,
+//            getNativeAdConfig(),
+//            mediationUtils
+//        )
     }
 
     override fun onDestroyView() {

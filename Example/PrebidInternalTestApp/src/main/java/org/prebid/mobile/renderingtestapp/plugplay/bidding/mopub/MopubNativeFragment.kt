@@ -17,6 +17,7 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,8 +27,9 @@ import com.mopub.mediation.MoPubNativeMediationUtils
 import com.mopub.nativeads.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import kotlinx.android.synthetic.main.lyt_native_mopub_events.*
+import org.prebid.mobile.*
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult
-import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit_old
+import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
@@ -37,8 +39,9 @@ open class MopubNativeFragment : AdFragment() {
     override val layoutRes: Int = R.layout.fragment_native_mopub
 
     protected var mopubNative: MoPubNative? = null
-    protected var mopubNativeAdUnit: MediationNativeAdUnit_old? = null
+    protected var mopubNativeAdUnit: MediationNativeAdUnit? = null
     protected var keywordsContainer = HashMap<String, String>()
+    protected var requestParametersBuilder: RequestParameters.Builder? = null
     protected lateinit var adapterHelper: AdapterHelper
     protected var nativeAd: NativeAd? = null
 
@@ -54,7 +57,9 @@ open class MopubNativeFragment : AdFragment() {
         }
 
         override fun onNativeFail(errorCode: NativeErrorCode?) {
+            Log.d("MoPubNativeFragment", "Error: $errorCode")
             btnNativeAdFailed?.isEnabled = true
+            btnLoad?.isEnabled = true
         }
 
     }
@@ -87,6 +92,8 @@ open class MopubNativeFragment : AdFragment() {
     }
 
     override fun initAd(): Any? {
+        configureOriginalPrebid()
+
         adapterHelper = AdapterHelper(requireContext(), 0, 3);
         mopubNative = MoPubNative(requireContext(), adUnitId, nativeNetworkListener)
         val viewBinder = ViewBinder.Builder(R.layout.lyt_native_ad)
@@ -97,16 +104,16 @@ open class MopubNativeFragment : AdFragment() {
             .iconImageId(R.id.ivNativeIcon)
             .callToActionId(R.id.btnNativeAction)
             .build()
-        mopubNative?.registerAdRenderer(PrebidNativeAdRenderer(viewBinder))
+        mopubNative?.registerAdRenderer(PrebidNativeAdRenderer(viewBinder, null))
         mopubNative?.registerAdRenderer(MoPubStaticNativeAdRenderer(viewBinder))
 
+        requestParametersBuilder = RequestParameters.Builder()
         val mediationUtils = MoPubNativeMediationUtils(keywordsContainer, mopubNative)
-        mopubNativeAdUnit = MediationNativeAdUnit_old(
-            requireContext(),
+        mopubNativeAdUnit = MediationNativeAdUnit(
             configId,
-            getNativeAdConfig(),
             mediationUtils
         )
+        configureNativeAdUnit()
         return mopubNativeAdUnit
     }
 
@@ -114,11 +121,11 @@ open class MopubNativeFragment : AdFragment() {
         MoPub.initializeSdk(requireContext(), SdkConfiguration.Builder(adUnitId).build()) {
             mopubNativeAdUnit?.fetchDemand {
                 if (it == FetchDemandResult.SUCCESS) {
+                    Log.d("MoPubNativeFragment", "Fetch demand result: $it")
                     btnFetchDemandResultSuccess?.isEnabled = true
                 } else {
                     btnFetchDemandResultFailure?.isEnabled = true
                 }
-
                 val requestParameters = RequestParameters.Builder()
                     .keywords(convertMapToMoPubKeywords(keywordsContainer))
                     .build()
@@ -132,7 +139,7 @@ open class MopubNativeFragment : AdFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         mopubNative?.destroy()
-        mopubNativeAdUnit?.destroy()
+//        mopubNativeAdUnit?.destroy()
         nativeAd?.destroy()
         if (!SourcePicker.useMockServer) {
             SourcePicker.enableQaEndpoint(false)
@@ -149,4 +156,55 @@ open class MopubNativeFragment : AdFragment() {
         }
         return result.toString()
     }
+
+    private fun configureNativeAdUnit() {
+        mopubNativeAdUnit?.apply {
+            setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC)
+            setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL)
+            setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED)
+
+            val methods = arrayListOf(
+                NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE,
+                NativeEventTracker.EVENT_TRACKING_METHOD.JS
+            )
+            val eventTracker = NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods)
+            addEventTracker(eventTracker)
+
+            val assetTitle = NativeTitleAsset()
+            assetTitle.setLength(90)
+            assetTitle.isRequired = true
+            addAsset(assetTitle)
+
+            val assetIcon = NativeImageAsset()
+            assetIcon.imageType = NativeImageAsset.IMAGE_TYPE.ICON
+            assetIcon.wMin = 20
+            assetIcon.hMin = 20
+            assetIcon.isRequired = true
+            addAsset(assetIcon)
+
+            val image = NativeImageAsset()
+            image.imageType = NativeImageAsset.IMAGE_TYPE.MAIN
+            image.hMin = 20
+            image.wMin = 200
+            image.isRequired = true
+            addAsset(image)
+
+            val data = NativeDataAsset()
+            data.len = 90
+            data.dataType = NativeDataAsset.DATA_TYPE.SPONSORED
+            data.isRequired = true
+            addAsset(data)
+
+            val body = NativeDataAsset()
+            body.isRequired = true
+            body.dataType = NativeDataAsset.DATA_TYPE.DESC
+            addAsset(body)
+
+            val cta = NativeDataAsset()
+            cta.isRequired = true
+            cta.dataType = NativeDataAsset.DATA_TYPE.CTATEXT
+            addAsset(cta)
+        }
+    }
+
 }

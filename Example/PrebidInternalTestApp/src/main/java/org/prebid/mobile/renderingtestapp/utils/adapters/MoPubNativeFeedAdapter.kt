@@ -22,7 +22,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
-import com.mopub.mediation.MoPubNativeMediationUtils
+import com.mopub.mediation.MoPubNativeMediationUtils_old
 import com.mopub.nativeads.*
 import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit_old
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration
@@ -60,10 +60,11 @@ class MoPubNativeFeedAdapter(context: Context,
             .iconImageId(R.id.ivNativeIcon)
             .callToActionId(R.id.btnNativeAction)
             .build()
-        mopubNative?.registerAdRenderer(PrebidNativeAdRenderer(viewBinder))
+        mopubNative?.registerAdRenderer(PrebidNativeAdRenderer_OLD(viewBinder))
         mopubNative?.registerAdRenderer(MoPubStaticNativeAdRenderer(viewBinder))
 
-        val mediationUtils = MoPubNativeMediationUtils(keywordsContainer, mopubNative)
+        val mediationUtils =
+            MoPubNativeMediationUtils_old(keywordsContainer, mopubNative)
         mopubNativeAdUnit = MediationNativeAdUnit_old(
             context,
             configId,

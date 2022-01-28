@@ -28,6 +28,8 @@ import android.widget.ProgressBar
 import androidx.preference.PreferenceManager
 import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.android.synthetic.main.events_bids.*
+import org.prebid.mobile.Host
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration
 import org.prebid.mobile.rendering.models.ntv.NativeEventTracker
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetData
@@ -226,4 +228,14 @@ abstract class AdFragment : BaseFragment() {
     private fun setImpContextData() {
         OpenRtbConfigs.setImpContextDataTo(adView)
     }
+
+    protected fun configureOriginalPrebid() {
+        val hostUrl = PrebidRenderingSettings.getBidServerHost().hostUrl
+        val host = Host.CUSTOM
+        host.hostUrl = hostUrl
+        PrebidMobile.setApplicationContext(requireContext())
+        PrebidMobile.setPrebidServerHost(host)
+        PrebidMobile.setPrebidServerAccountId(PrebidRenderingSettings.getAccountId())
+    }
+
 }

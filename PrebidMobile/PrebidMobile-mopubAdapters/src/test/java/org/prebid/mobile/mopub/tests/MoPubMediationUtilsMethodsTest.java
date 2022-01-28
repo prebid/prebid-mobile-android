@@ -20,7 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import com.mopub.mediation.MoPubBannerMediationUtils;
 import com.mopub.mediation.MoPubInterstitialMediationUtils;
-import com.mopub.mediation.MoPubNativeMediationUtils;
+import com.mopub.mediation.MoPubNativeMediationUtils_old;
 import com.mopub.mediation.MoPubRewardedVideoMediationUtils;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
@@ -69,7 +69,7 @@ public class MoPubMediationUtilsMethodsTest {
 
     private MoPubBannerMediationUtils bannerUtils;
     private MoPubInterstitialMediationUtils interstitialUtils;
-    private MoPubNativeMediationUtils nativeUtils;
+    private MoPubNativeMediationUtils_old nativeUtils;
     private MoPubRewardedVideoMediationUtils rewardedUtils;
 
     @Before
@@ -87,7 +87,7 @@ public class MoPubMediationUtilsMethodsTest {
         mMediationInterstitialAdUnit = new MediationInterstitialAdUnit(mContext, ID, AD_SIZE, interstitialUtils);
 
         mMoPubNative = mock(MoPubNative.class);
-        nativeUtils = new MoPubNativeMediationUtils(mMoPubNativeKeywords, mMoPubNative);
+        nativeUtils = new MoPubNativeMediationUtils_old(mMoPubNativeKeywords, mMoPubNative);
         mMediationNativeAdUnit = new MediationNativeAdUnit_old(mContext, ID, mock(NativeAdConfiguration.class), nativeUtils);
 
         rewardedUtils = new MoPubRewardedVideoMediationUtils(mMoPubRewardedKeywords);

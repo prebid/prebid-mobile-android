@@ -23,7 +23,6 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.URLUtil;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -331,7 +330,9 @@ public class PrebidNativeAd {
 
         // open browser
         if (openNativeIntent(clickUrl, v.getContext())) {
-            listener.onAdClicked();
+            if (listener != null) {
+                listener.onAdClicked();
+            }
             return true;
         }
         return false;

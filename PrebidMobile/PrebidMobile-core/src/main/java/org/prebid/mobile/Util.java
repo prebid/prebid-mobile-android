@@ -20,39 +20,29 @@ import android.annotation.TargetApi;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.annotation.CheckResult;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-
+import androidx.annotation.CheckResult;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class Util {
 
     static final String MOPUB_BANNER_VIEW_CLASS = "com.mopub.mobileads.MoPubView";
     static final String MOPUB_INTERSTITIAL_CLASS = "com.mopub.mobileads.MoPubInterstitial";
     static final String MOPUB_NATIVE_CLASS = "com.mopub.nativeads.RequestParameters$Builder";
+    static final String MOPUB_NATIVE_OBJECT = "com.mopub.mediation.MoPubNativeMediationUtils";
     static final String AD_MANAGER_REQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
     static final String AD_MANAGER_REQUEST_CLASS_V20 = "com.google.android.gms.ads.admanager.AdManagerAdRequest";
     static final String AD_MANAGER_REQUEST_BUILDER_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest$Builder";
@@ -395,6 +385,7 @@ public class Util {
         if (adObj == null) return false;
         if (adObj.getClass() == getClassFromString(MOPUB_BANNER_VIEW_CLASS)
                 || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)
+                || adObj.getClass() == getClassFromString(MOPUB_NATIVE_OBJECT)
                 || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS)
                 || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)
                 || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS)
@@ -413,6 +404,8 @@ public class Util {
             handleMoPubKeywordsUpdate(bids, adObj);
         } else if (adObj.getClass() == getClassFromString(MOPUB_NATIVE_CLASS)) {
             handleMoPubBuilderCustomTargeting(bids, adObj);
+        } else if (adObj.getClass() == getClassFromString(MOPUB_NATIVE_OBJECT)) {
+            handleMoPubNativeObjectKeywordsUpdate(bids, adObj);
         } else if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS) || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)) {
             handleAdManagerCustomTargeting(bids, adObj);
         } else if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS) || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS_V20)) {
@@ -432,6 +425,8 @@ public class Util {
         if (adObject.getClass() == getClassFromString(ANDROID_OS_BUNDLE)) {
             Bundle adBundle = (Bundle) adObject;
             adBundle.putString(NativeAdUnit.BUNDLE_KEY_CACHE_ID, cacheId);
+        } else if (adObject.getClass() == getClassFromString(MOPUB_NATIVE_OBJECT)) {
+            Util.callMethodOnObject(adObject, "saveCacheId", cacheId);
         }
     }
 
@@ -443,6 +438,11 @@ public class Util {
             }
         }
     }
+
+    static void handleMoPubNativeObjectKeywordsUpdate(HashMap<String, String> bids, Object adObj) {
+        Util.callMethodOnObject(adObj, "handleKeywordsUpdate", bids);
+    }
+
 
     private static void handleMoPubKeywordsUpdate(HashMap<String, String> bids, Object adObj) {
         removeUsedKeywordsForMoPub(adObj);
