@@ -17,13 +17,14 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub
 
 import android.util.Log
-import com.mopub.mediation.MoPubNativeMediationUtils_old
+import com.mopub.mediation.MoPubNativeMediationUtils
 import com.mopub.nativeads.*
 import kotlinx.android.synthetic.main.events_bids.*
 import kotlinx.android.synthetic.main.events_native_video.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import kotlinx.android.synthetic.main.video_controls.*
 import org.prebid.mobile.rendering.bidding.data.ntv.MediaView
+import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
 import org.prebid.mobile.rendering.errors.AdException
 import org.prebid.mobile.rendering.listeners.MediaViewListener
 import org.prebid.mobile.renderingtestapp.R
@@ -105,21 +106,20 @@ class MoPubNativeVideoFragment : MopubNativeFragment() {
         adapterHelper = AdapterHelper(requireContext(), 0, 3);
         mopubNative = MoPubNative(requireContext(), adUnitId, nativeNetworkListener)
         val viewBinder = ViewBinder.Builder(R.layout.lyt_native_ad_video).build()
-        val addRenderer = PrebidNativeAdRenderer_OLD(viewBinder)
-        addRenderer.setMediaViewResId(R.id.mediaView)
-        addRenderer.setMediaViewListener(mediaViewListener)
+        val addRenderer = PrebidNativeAdRenderer(viewBinder, null)
+
+        // TODO: This fragment doesn't work anymore, it needs support of MediaView
+        //        addRenderer.setMediaViewResId(R.id.mediaView)
+        //        addRenderer.setMediaViewListener(mediaViewListener)
 
         mopubNative?.registerAdRenderer(addRenderer)
 
         val mediationUtils =
-            MoPubNativeMediationUtils_old(keywordsContainer, mopubNative)
-        TODO()
-//        mopubNativeAdUnit = MediationNativeAdUnit_old(
-//            requireContext(),
-//            configId,
-//            getNativeAdConfig(),
-//            mediationUtils
-//        )
+            MoPubNativeMediationUtils(keywordsContainer, mopubNative)
+        mopubNativeAdUnit = MediationNativeAdUnit(
+            configId,
+            mediationUtils
+        )
     }
 
     override fun onDestroyView() {

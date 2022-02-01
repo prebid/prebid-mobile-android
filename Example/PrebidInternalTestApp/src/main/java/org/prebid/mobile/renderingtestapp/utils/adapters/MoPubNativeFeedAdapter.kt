@@ -22,18 +22,18 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
-import com.mopub.mediation.MoPubNativeMediationUtils_old
+import com.mopub.mediation.MoPubNativeMediationUtils
 import com.mopub.nativeads.*
-import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit_old
-import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration
+import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
 import org.prebid.mobile.renderingtestapp.R
 
-class MoPubNativeFeedAdapter(context: Context,
-                             private val configId: String,
-                             private val adUnitId: String,
-                             private val nativeAdConfiguration: NativeAdConfiguration?) : BaseFeedAdapter(context) {
+class MoPubNativeFeedAdapter(
+    context: Context,
+    private val configId: String,
+    private val adUnitId: String
+) : BaseFeedAdapter(context) {
     private var mopubNative: MoPubNative? = null
-    private var mopubNativeAdUnit: MediationNativeAdUnit_old? = null
+    private var mopubNativeAdUnit: MediationNativeAdUnit? = null
     private var keywordsContainer = HashMap<String, String>()
 
     override fun destroy() {
@@ -60,15 +60,14 @@ class MoPubNativeFeedAdapter(context: Context,
             .iconImageId(R.id.ivNativeIcon)
             .callToActionId(R.id.btnNativeAction)
             .build()
-        mopubNative?.registerAdRenderer(PrebidNativeAdRenderer_OLD(viewBinder))
+        mopubNative?.registerAdRenderer(PrebidNativeAdRenderer(viewBinder, null))
         mopubNative?.registerAdRenderer(MoPubStaticNativeAdRenderer(viewBinder))
 
         val mediationUtils =
-            MoPubNativeMediationUtils_old(keywordsContainer, mopubNative)
-        mopubNativeAdUnit = MediationNativeAdUnit_old(
-            context,
+            MoPubNativeMediationUtils(keywordsContainer, mopubNative)
+
+        mopubNativeAdUnit = MediationNativeAdUnit(
             configId,
-            nativeAdConfiguration,
             mediationUtils
         )
         MoPub.initializeSdk(context, SdkConfiguration.Builder(adUnitId).build()) {

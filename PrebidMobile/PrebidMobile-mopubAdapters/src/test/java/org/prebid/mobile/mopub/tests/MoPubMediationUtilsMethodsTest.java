@@ -20,7 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import com.mopub.mediation.MoPubBannerMediationUtils;
 import com.mopub.mediation.MoPubInterstitialMediationUtils;
-import com.mopub.mediation.MoPubNativeMediationUtils_old;
+import com.mopub.mediation.MoPubNativeMediationUtils;
 import com.mopub.mediation.MoPubRewardedVideoMediationUtils;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
@@ -34,9 +34,8 @@ import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit;
 import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit;
-import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit_old;
+import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit;
 import org.prebid.mobile.rendering.bidding.display.MediationRewardedVideoAdUnit;
-import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -44,7 +43,6 @@ import org.robolectric.annotation.Config;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -64,12 +62,12 @@ public class MoPubMediationUtilsMethodsTest {
 
     private MediationBannerAdUnit mMediationBannerAdUnit;
     private MediationInterstitialAdUnit mMediationInterstitialAdUnit;
-    private MediationNativeAdUnit_old mMediationNativeAdUnit;
+    private MediationNativeAdUnit mMediationNativeAdUnit;
     private MediationRewardedVideoAdUnit mMoPubRewardedAdUnit;
 
     private MoPubBannerMediationUtils bannerUtils;
     private MoPubInterstitialMediationUtils interstitialUtils;
-    private MoPubNativeMediationUtils_old nativeUtils;
+    private MoPubNativeMediationUtils nativeUtils;
     private MoPubRewardedVideoMediationUtils rewardedUtils;
 
     @Before
@@ -87,8 +85,8 @@ public class MoPubMediationUtilsMethodsTest {
         mMediationInterstitialAdUnit = new MediationInterstitialAdUnit(mContext, ID, AD_SIZE, interstitialUtils);
 
         mMoPubNative = mock(MoPubNative.class);
-        nativeUtils = new MoPubNativeMediationUtils_old(mMoPubNativeKeywords, mMoPubNative);
-        mMediationNativeAdUnit = new MediationNativeAdUnit_old(mContext, ID, mock(NativeAdConfiguration.class), nativeUtils);
+        nativeUtils = new MoPubNativeMediationUtils(mMoPubNativeKeywords, mMoPubNative);
+        mMediationNativeAdUnit = new MediationNativeAdUnit(ID, nativeUtils);
 
         rewardedUtils = new MoPubRewardedVideoMediationUtils(mMoPubRewardedKeywords);
         mMoPubRewardedAdUnit = new MediationRewardedVideoAdUnit(mContext, ID, rewardedUtils);
@@ -96,9 +94,8 @@ public class MoPubMediationUtilsMethodsTest {
 
     @Test
     public void canPerformRefresh_ReturnTrueByDefault() {
-        assertTrue(interstitialUtils.canPerformRefresh());
-        assertTrue(nativeUtils.canPerformRefresh());
-        assertTrue(rewardedUtils.canPerformRefresh());
+        assertFalse(interstitialUtils.canPerformRefresh());
+        assertFalse(rewardedUtils.canPerformRefresh());
     }
 
     @Test
@@ -124,16 +121,6 @@ public class MoPubMediationUtilsMethodsTest {
         HashMap<String, String> responseId = new HashMap<>();
         responseId.put("PREBID_BID_RESPONSE_ID", "id");
         verify(mMoPubInterstitial).setLocalExtras(responseId);
-    }
-
-    @Test
-    public void setResponseToLocalExtrasInNative_MoPubViewSetsResponse() {
-        BidResponse bidResponse = new BidResponse(TestResponse.getResponse());
-        nativeUtils.setResponseToLocalExtras(bidResponse);
-
-        HashMap<String, Object> responseMap = new HashMap<>();
-        responseMap.put("PREBID_BID_RESPONSE_ID", bidResponse);
-        verify(mMoPubNative).setLocalExtras(responseMap);
     }
 
     @Test

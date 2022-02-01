@@ -9,8 +9,8 @@ import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 
 public class OpenMediationRewardedVideoAdUnit extends MediationRewardedVideoAdUnit {
 
-    public OpenMediationRewardedVideoAdUnit(Context context, @NonNull String mopubAdUnitId, String configId, PrebidMediationDelegate mediationDelegate) {
-        super(context, mopubAdUnitId, configId, mediationDelegate);
+    public OpenMediationRewardedVideoAdUnit(Context context, String configId, PrebidMediationDelegate mediationDelegate) {
+        super(context, configId, mediationDelegate);
     }
 
     @Override

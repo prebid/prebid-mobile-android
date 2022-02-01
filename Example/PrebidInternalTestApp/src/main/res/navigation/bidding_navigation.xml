@@ -262,7 +262,7 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@+id/headerBiddingFragment" />
 
-<!--        TODO: Uncomment when native module will be merged-->
+<!--        TODO: Uncomment when native module will be merged -->
 <!--        <action-->
 <!--            android:id="@+id/action_header_bidding_to_gam_native"-->
 <!--            app:destination="@id/navigation_gam_native"-->
@@ -357,15 +357,6 @@
         <action
                 android:id="@+id/action_header_bidding_to_mopub_native_feed"
                 app:destination="@id/navigation_mopub_native_feed"
-                app:enterAnim="@anim/nav_default_enter_anim"
-                app:exitAnim="@anim/nav_default_exit_anim"
-                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-                app:popExitAnim="@anim/nav_default_pop_exit_anim"
-                app:popUpTo="@+id/headerBiddingFragment"/>
-
-        <action
-                android:id="@+id/action_header_bidding_to_mopub_native_video"
-                app:destination="@id/navigation_mopub_native_video"
                 app:enterAnim="@anim/nav_default_enter_anim"
                 app:exitAnim="@anim/nav_default_exit_anim"
                 app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -594,8 +585,8 @@
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MopubNativeStylesFragment" />
 
     <fragment
-        android:id="@+id/navigation_mopub_native_styles_no_assets"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MopubNativeStylesNoAssetsFragment" />
+            android:id="@+id/navigation_mopub_native_styles_no_assets"
+            android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MopubNativeStylesNoAssetsFragment"/>
 
     <fragment
             android:id="@+id/navigation_mopub_native"
@@ -605,9 +596,10 @@
             android:id="@+id/navigation_mopub_native_feed"
             android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MoPubNativeFeedFragment"/>
 
-    <fragment
-            android:id="@+id/navigation_mopub_native_video"
-            android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MoPubNativeVideoFragment"/>
+    <!-- TODO: Uncomment when support of media view will be added to PrebidNativeAd -->
+    <!--    <fragment-->
+    <!--            android:id="@+id/navigation_mopub_native_video"-->
+    <!--            android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MoPubNativeVideoFragment"/>-->
 
     <!-- AdMob fragments -->
     <fragment

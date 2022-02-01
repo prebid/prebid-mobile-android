@@ -979,14 +979,15 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(R.string.mock_config_id_native_styles, R.string.mopub_native_adapter)
                 )
             )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_mopub_native_adapter_video),
-                    R.id.action_header_bidding_to_mopub_native_video,
-                    mopubNativeTagList,
-                    createBannerBundle(R.string.mock_config_id_native_video, R.string.mopub_native_adapter)
-                )
-            )
+            // TODO: Uncomment when support of media view will be added to PrebidNativeAd
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_mopub_native_adapter_video),
+//                    R.id.action_header_bidding_to_mopub_native_video,
+//                    mopubNativeTagList,
+//                    createBannerBundle(R.string.mock_config_id_native_video, R.string.mopub_native_adapter)
+//                )
+//            )
             demoList.add(
                 DemoItem(
                     getString(R.string.demo_bidding_mopub_native_feed_no_bids),

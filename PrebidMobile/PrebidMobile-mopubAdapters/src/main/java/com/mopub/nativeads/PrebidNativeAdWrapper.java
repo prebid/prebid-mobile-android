@@ -7,7 +7,7 @@ import org.prebid.mobile.PrebidNativeAdEventListener;
 
 public class PrebidNativeAdWrapper extends BaseNativeAd {
 
-    private PrebidNativeAd nativeAd;
+    private final PrebidNativeAd nativeAd;
     private PrebidNativeAdEventListener prebidListener;
 
     public PrebidNativeAdWrapper(PrebidNativeAd nativeAd) {

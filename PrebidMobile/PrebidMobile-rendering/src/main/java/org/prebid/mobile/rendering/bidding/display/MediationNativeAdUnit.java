@@ -32,6 +32,10 @@ public class MediationNativeAdUnit {
         );
     }
 
+    public void destroy() {
+        nativeAdUnit.stopAutoRefresh();
+    }
+
     public void addAsset(NativeAsset asset) {
         nativeAdUnit.addAsset(asset);
     }
