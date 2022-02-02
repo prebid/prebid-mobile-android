@@ -3,7 +3,9 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.admob
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
@@ -44,7 +46,7 @@ open class AdMobRewardedFragment : AdFragment() {
         return adUnit
     }
 
-    open override fun loadAd() {
+    override fun loadAd() {
         val request = AdRequest
             .Builder()
             .addNetworkExtrasBundle(PrebidRewardedAdapter::class.java, extras!!)
@@ -60,6 +62,7 @@ open class AdMobRewardedFragment : AdFragment() {
                     btnLoad?.text = getString(R.string.text_show)
 
                     rewardedAd = ad
+                    rewardedAd?.fullScreenContentCallback = createFullScreenContentCallback()
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
@@ -85,7 +88,12 @@ open class AdMobRewardedFragment : AdFragment() {
 
     private fun resetAdEvents() {
         btnAdLoaded?.isEnabled = false
+        btnAdShowed?.isEnabled = false
+        btnAdImpression?.isEnabled = false
+        btnAdDismissed?.isEnabled = false
+        btnAdFailedFullScreen?.isEnabled = false
         btnAdFailed?.isEnabled = false
+        btnAdClicked?.isEnabled = false
     }
 
     private fun handleLoadButtonClick() {
@@ -102,6 +110,30 @@ open class AdMobRewardedFragment : AdFragment() {
             btnLoad?.isEnabled = false
             btnLoad?.text = "Loading..."
             loadAd()
+        }
+    }
+
+    protected fun createFullScreenContentCallback(): FullScreenContentCallback {
+        return object : FullScreenContentCallback() {
+            override fun onAdClicked() {
+                btnAdClicked?.isEnabled = true
+            }
+
+            override fun onAdImpression() {
+                btnAdImpression?.isEnabled = true
+            }
+
+            override fun onAdShowedFullScreenContent() {
+                btnAdShowed?.isEnabled = true
+            }
+
+            override fun onAdDismissedFullScreenContent() {
+                btnAdDismissed?.isEnabled = true
+            }
+
+            override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+                btnAdFailedFullScreen?.isEnabled = true
+            }
         }
     }
 

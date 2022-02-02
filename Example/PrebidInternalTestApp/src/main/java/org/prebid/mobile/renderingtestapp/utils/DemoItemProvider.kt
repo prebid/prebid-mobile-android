@@ -1684,7 +1684,7 @@ class DemoItemProvider private constructor() {
                     adMobInterstitialAction,
                     adMobInterstitialTagList,
                     createBannerBundle(
-                        R.string.prebid_config_id_interstitial_320_480,
+                        R.string.prebid_config_id_video_rewarded_320_480,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
                         320, 50
                     )

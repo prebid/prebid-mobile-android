@@ -38,6 +38,7 @@ class AdMobRewardedRandomFragment : AdMobRewardedFragment() {
                     btnLoad?.text = getString(R.string.text_show)
 
                     rewardedAd = ad
+                    rewardedAd?.fullScreenContentCallback = createFullScreenContentCallback()
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {

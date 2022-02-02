@@ -110,7 +110,7 @@ open class AdMobInterstitialFragment : AdFragment() {
         }
     }
 
-    private fun createFullScreenContentCallback(): FullScreenContentCallback {
+    protected fun createFullScreenContentCallback(): FullScreenContentCallback {
         return object : FullScreenContentCallback() {
             override fun onAdClicked() {
                 btnAdClicked?.isEnabled = true
