@@ -344,6 +344,7 @@
     <string name="version_tag_prebid_rendering">Prebid Rendering:</string>
     <string name="version_tag_mopub">MoPub:</string>
     <string name="version_tag_gam">GAM:</string>
+    <string name="version_tag_omsdk">OMSDK:</string>
 
     <string name="event_counter">%1$d ( %2$s )</string>
     <string name="event_counter_default">0 ( 0 )</string>
