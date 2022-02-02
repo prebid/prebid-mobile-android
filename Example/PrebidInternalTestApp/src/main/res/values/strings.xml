@@ -54,6 +54,9 @@
     <string name="event_admob_impression">onAdImpression</string>
     <string name="event_admob_closed">onAdClosed</string>
     <string name="event_admob_failed">onAdFailed</string>
+    <string name="event_admob_interstitial_showed_full_screen">onAdShowedFullScreenContent</string>
+    <string name="event_admob_interstitial_failed_full_screen">onAdFailedToShowFullScreenContent</string>
+    <string name="event_admob_interstitial_dismissed_full_screen">onAdDismissedFullScreenContent</string>
 
     <!-- TCF V1 -->
     <string name="key_subject_to_gdpr">IABConsent_SubjectToGDPR</string>
