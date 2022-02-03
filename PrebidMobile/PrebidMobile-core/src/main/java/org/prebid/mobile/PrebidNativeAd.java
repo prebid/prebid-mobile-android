@@ -22,7 +22,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
-import android.webkit.URLUtil;
+import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,12 +31,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PrebidNativeAd {
-    private String title;
-    private String description;
-    private String iconUrl;
-    private String imageUrl;
-    private String cta;
-    private String sponsoredBy;
+
+    private static final String TAG = "PrebidNativeAd";
+
+    private final ArrayList<NativeTitle> titles = new ArrayList<>();
+    private final ArrayList<NativeImage> images = new ArrayList<>();
+    private final ArrayList<NativeData> dataList = new ArrayList<>();
     private String clickUrl;
     private ArrayList<String> imp_trackers;
     private VisibilityDetector visibilityDetector;
@@ -77,30 +77,40 @@ public class PrebidNativeAd {
                     if (adObject.has("title")) {
                         JSONObject title = adObject.getJSONObject("title");
                         if (title.has("text")) {
-                            ad.setTitle(title.getString("text"));
+                            String titleText = title.getString("text");
+                            if (!titleText.isEmpty()) {
+                                ad.addTitle(new NativeTitle(titleText));
+                            }
+                        } else {
+                            LogUtil.w(TAG, "Json title object doesn't have text field");
                         }
                     }
                     if (adObject.has("data")) {
                         JSONObject data = adObject.getJSONObject("data");
-                        if (data.optInt("type") == 1) {
-                            ad.setSponsoredBy(data.getString("value"));
-                        } else if (data.optInt("type") == 2) {
-                            ad.setDescription(data.getString("value"));
-                        } else if (data.optInt("type") == 12) {
-                            ad.setCallToAction(data.getString("value"));
+
+                        if (data.has("value")) {
+                            int type = 0;
+                            if (data.has("type")) {
+                                type = data.optInt("type");
+                            }
+                            String value = data.getString("value");
+                            ad.addData(new NativeData(type, value));
+                        } else {
+                            LogUtil.w(TAG, "Json data object doesn't have type or value field");
                         }
                     }
 
                     if (adObject.has("img")) {
                         JSONObject img = adObject.getJSONObject("img");
                         if (img.has("url")) {
-                            String url = img.getString("url");
-                            int type = img.optInt("type");
-                            if (type == 1) {
-                                ad.setIconUrl(url);
-                            } else if (type == 3) {
-                                ad.setImageUrl(url);
+                            int type = 0;
+                            if (img.has("type")) {
+                                type = img.optInt("type");
                             }
+                            String url = img.getString("url");
+                            ad.addImage(new NativeImage(type, url));
+                        } else {
+                            LogUtil.w(TAG, "Json image object doesn't have url or type field");
                         }
                     }
                 }
@@ -132,7 +142,7 @@ public class PrebidNativeAd {
                         }
                     }
                 }
-                return ad.isValid() ? ad : null;
+                return ad;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -140,98 +150,119 @@ public class PrebidNativeAd {
         return null;
     }
 
-    private boolean isValid() {
-        // TODO: Rewrite
-        boolean result = URLUtil.isValidUrl(clickUrl) &&
-                !TextUtils.isEmpty(title) &&
-                !TextUtils.isEmpty(description) &&
-                URLUtil.isValidUrl(iconUrl) &&
-                URLUtil.isValidUrl(imageUrl) &&
-                !TextUtils.isEmpty(cta);
-        if (!result) {
-            LogUtil.e("PrebidNativeAd", "Not valid response");
-        }
-        return result;
+    private PrebidNativeAd() {
     }
 
-    private PrebidNativeAd() {
+    public void addTitle(NativeTitle title) {
+        titles.add(title);
+    }
+
+    public void addData(NativeData data) {
+        dataList.add(data);
+    }
+
+    public void addImage(NativeImage image) {
+        images.add(image);
+    }
+
+    public ArrayList<NativeTitle> getTitles() {
+        return titles;
+    }
+
+    public ArrayList<NativeImage> getImages() {
+        return images;
+    }
+
+    public ArrayList<NativeData> getDataList() {
+        return dataList;
     }
 
     private void setClickUrl(String clickUrl) {
         this.clickUrl = clickUrl;
     }
 
-    private void setTitle(String title) {
-        this.title = title;
-    }
-
-    private void setDescription(String description) {
-        this.description = description;
-    }
-
-    private void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl;
-    }
-
-    private void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    private void setCallToAction(String cta) {
-        this.cta = cta;
-    }
-
-    private void setSponsoredBy(String sponsoredBy) {
-        this.sponsoredBy = sponsoredBy;
-    }
-
     /**
      * @return String title of the Native Ad
-     * */
+     */
+    @Nullable
     public String getTitle() {
-        return title;
+        if (!titles.isEmpty()) {
+            return titles.get(0).getText();
+        }
+        return null;
     }
 
     /**
      * @return String description of the Native Ad
-     * */
+     */
+    @Nullable
     public String getDescription() {
-        return description;
+        for (NativeData data : dataList) {
+            if (data.getType() == NativeData.Type.DESCRIPTION) {
+                return data.getValue();
+            }
+        }
+        return null;
     }
 
     /**
      * @return String iconUrl of the Native Ad
-     * */
+     */
+    @Nullable
     public String getIconUrl() {
-        return iconUrl;
+        for (NativeImage image : images) {
+            if (image.getType() == NativeImage.Type.ICON) {
+                return image.getUrl();
+            }
+        }
+        return null;
     }
 
     /**
      * @return String imageUrl of the Native Ad
-     * */
+     */
+    @Nullable
     public String getImageUrl() {
-        return imageUrl;
+        for (NativeImage image : images) {
+            if (image.getType() == NativeImage.Type.MAIN_IMAGE) {
+                return image.getUrl();
+            }
+        }
+        return null;
     }
 
     /**
      * @return String callToAction of the Native Ad
-     * */
+     */
+    @Nullable
     public String getCallToAction() {
-        return cta;
+        for (NativeData data : dataList) {
+            if (data.getType() == NativeData.Type.CALL_TO_ACTION) {
+                return data.getValue();
+            }
+        }
+        return null;
     }
 
     /**
      * @return String sponsoredBy of the Native Ad
-     * */
+     */
+    @Nullable
     public String getSponsoredBy() {
-        return sponsoredBy;
+        for (NativeData data : dataList) {
+            if (data.getType() == NativeData.Type.SPONSORED_BY) {
+                return data.getValue();
+            }
+        }
+        return null;
     }
 
     /**
      * This API is used to register the view for Ad Events (#onAdClicked(), #onAdImpression, #onAdExpired)
+     *
      * @param view
      * @param listener
-     * */
+     */
     public boolean registerView(View view, final PrebidNativeAdEventListener listener) {
         if (!expired && view != null) {
             this.listener = listener;
@@ -267,10 +298,11 @@ public class PrebidNativeAd {
 
     /**
      * This API is used to register a list of views for Ad Events (#onAdClicked(), #onAdImpression, #onAdExpired)
+     *
      * @param container
      * @param viewList
      * @param listener
-     * */
+     */
     public boolean registerViewList(View container, List<View> viewList, final PrebidNativeAdEventListener listener) {
         if (container == null || viewList == null || viewList.isEmpty()) {
             return false;
