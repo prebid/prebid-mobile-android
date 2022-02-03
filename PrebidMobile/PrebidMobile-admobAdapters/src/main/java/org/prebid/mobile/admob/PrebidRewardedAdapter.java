@@ -9,6 +9,7 @@ import com.google.android.gms.ads.mediation.MediationAdLoadCallback;
 import com.google.android.gms.ads.mediation.MediationRewardedAd;
 import com.google.android.gms.ads.mediation.MediationRewardedAdCallback;
 import com.google.android.gms.ads.mediation.MediationRewardedAdConfiguration;
+import com.google.android.gms.ads.rewarded.RewardItem;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
@@ -24,6 +25,7 @@ public class PrebidRewardedAdapter extends PrebidBaseAdapter {
     public static final String EXTRA_RESPONSE_ID = "PrebidRewardedAdapterExtraId";
 
     private InterstitialController interstitialController;
+    private MediationRewardedAdCallback rewardedAdCallback;
 
     @Override
     public void loadRewardedAd(
@@ -75,30 +77,37 @@ public class PrebidRewardedAdapter extends PrebidBaseAdapter {
         return new InterstitialControllerListener() {
             @Override
             public void onInterstitialReadyForDisplay() {
-                adMobCallback.onSuccess(context -> {
+                rewardedAdCallback = adMobCallback.onSuccess(context -> {
                     interstitialController.show();
                 });
             }
 
             @Override
-            public void onInterstitialClicked() {
+            public void onInterstitialDisplayed() {
+                rewardedAdCallback.onAdOpened();
+                rewardedAdCallback.onVideoStart();
+                rewardedAdCallback.reportAdImpression();
+            }
 
+            @Override
+            public void onInterstitialClicked() {
+                rewardedAdCallback.reportAdClicked();
             }
 
             @Override
             public void onInterstitialFailedToLoad(AdException exception) {
                 String errorMessage = exception.getMessage() != null ? exception.getMessage() : "Failed to load ad";
-                adMobCallback.onFailure(new AdError(1006, errorMessage, "prebid"));
-            }
-
-            @Override
-            public void onInterstitialDisplayed() {
-
+                AdError adError = new AdError(1006, errorMessage, "prebid");
+                adMobCallback.onFailure(adError);
+                if (rewardedAdCallback != null) {
+                    rewardedAdCallback.onAdFailedToShow(adError);
+                }
             }
 
             @Override
             public void onInterstitialClosed() {
-
+                rewardedAdCallback.onVideoComplete();
+                rewardedAdCallback.onAdClosed();
             }
         };
     }

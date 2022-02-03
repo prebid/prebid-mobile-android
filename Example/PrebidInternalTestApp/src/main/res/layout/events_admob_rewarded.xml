@@ -28,6 +28,41 @@
             android:text="@string/event_admob_loaded"/>
 
     <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
+            android:id="@+id/btnAdClicked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/event_top_margin"
+            android:text="@string/event_admob_clicked"/>
+
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
+            android:id="@+id/btnAdShowed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/event_top_margin"
+            android:text="@string/event_admob_impression"/>
+
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
+            android:id="@+id/btnAdImpression"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/event_top_margin"
+            android:text="@string/event_admob_interstitial_showed_full_screen"/>
+
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
+            android:id="@+id/btnAdDismissed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/event_top_margin"
+            android:text="@string/event_admob_interstitial_dismissed_full_screen"/>
+
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
+            android:id="@+id/btnAdFailedFullScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/event_top_margin"
+            android:text="@string/event_admob_interstitial_failed_full_screen"/>
+
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
             android:id="@+id/btnAdFailed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

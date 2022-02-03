@@ -279,12 +279,23 @@ object AdTypesRepository {
                 onDestroy = { InAppAdMobBanner.destroy() }
             ),
             AdType(
-                "Interstitial",
+                "Display Interstitial",
                 onCreate = { activity, _, _ ->
                     InAppAdMobInterstitial.create(
                         activity,
                         "ca-app-pub-1875909575462531/6393291067",
                         "5a4b8dcf-f984-4b04-9448-6529908d6cb6"
+                    )
+                },
+                onDestroy = { InAppAdMobInterstitial.destroy() }
+            ),
+            AdType(
+                "Video Interstitial",
+                onCreate = { activity, _, _ ->
+                    InAppAdMobInterstitial.create(
+                        activity,
+                        "ca-app-pub-1875909575462531/6393291067",
+                        "12f58bc2-b664-4672-8d19-638bcc96fd5c"
                     )
                 },
                 onDestroy = { InAppAdMobInterstitial.destroy() }

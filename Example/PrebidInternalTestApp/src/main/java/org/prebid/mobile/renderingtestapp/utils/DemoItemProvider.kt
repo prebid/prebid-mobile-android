@@ -1151,6 +1151,43 @@ class DemoItemProvider private constructor() {
                     )
                 )
             )
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_interstitial_display_adapter),
+                    adMobInterstitialAction,
+                    adMobInterstitialTagList,
+                    createBannerBundle(
+                        R.string.mock_config_id_interstitial_320_480,
+                        R.string.admob_interstitial_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_interstitial_display_admob),
+                    adMobInterstitialAction,
+                    adMobInterstitialTagList,
+                    createBannerBundle(
+                        R.string.prebid_config_id_no_bids,
+                        R.string.admob_interstitial_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_interstitial_display_random),
+                    adMobInterstitialRandomAction,
+                    adMobInterstitialTagList,
+                    createBannerBundle(
+                        R.string.mock_config_id_interstitial_320_480,
+                        R.string.admob_interstitial_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
         }
 
         private fun formProdDemoList() {
@@ -1647,7 +1684,7 @@ class DemoItemProvider private constructor() {
                     adMobInterstitialAction,
                     adMobInterstitialTagList,
                     createBannerBundle(
-                        R.string.prebid_config_id_interstitial_320_480,
+                        R.string.prebid_config_id_video_rewarded_320_480,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
                         320, 50
                     )
@@ -1686,6 +1723,43 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.prebid_config_id_no_bids,
                         R.string.admob_rewarded_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_interstitial_display_adapter),
+                    adMobInterstitialAction,
+                    adMobInterstitialTagList,
+                    createBannerBundle(
+                        R.string.prebid_config_id_interstitial_320_480,
+                        R.string.admob_interstitial_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_interstitial_display_admob),
+                    adMobInterstitialAction,
+                    adMobInterstitialTagList,
+                    createBannerBundle(
+                        R.string.prebid_config_id_no_bids,
+                        R.string.admob_interstitial_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_interstitial_display_random),
+                    adMobInterstitialRandomAction,
+                    adMobInterstitialTagList,
+                    createBannerBundle(
+                        R.string.prebid_config_id_interstitial_320_480,
+                        R.string.admob_interstitial_bidding_ad_unit_id_adapter,
                         320, 480
                     )
                 )

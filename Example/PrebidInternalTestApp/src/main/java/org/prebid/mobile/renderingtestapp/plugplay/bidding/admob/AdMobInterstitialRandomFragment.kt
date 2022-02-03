@@ -38,6 +38,7 @@ class AdMobInterstitialRandomFragment : AdMobInterstitialFragment() {
                     btnLoad?.text = getString(R.string.text_show)
 
                     interstitialAd = ad
+                    interstitialAd?.fullScreenContentCallback = createFullScreenContentCallback()
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
