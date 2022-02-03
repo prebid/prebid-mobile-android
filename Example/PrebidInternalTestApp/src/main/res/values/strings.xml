@@ -54,6 +54,9 @@
     <string name="event_admob_impression">onAdImpression</string>
     <string name="event_admob_closed">onAdClosed</string>
     <string name="event_admob_failed">onAdFailed</string>
+    <string name="event_admob_interstitial_showed_full_screen">onAdShowedFullScreenContent</string>
+    <string name="event_admob_interstitial_failed_full_screen">onAdFailedToShowFullScreenContent</string>
+    <string name="event_admob_interstitial_dismissed_full_screen">onAdDismissedFullScreenContent</string>
 
     <!-- TCF V1 -->
     <string name="key_subject_to_gdpr">IABConsent_SubjectToGDPR</string>
@@ -203,6 +206,9 @@
     <string name="demo_bidding_admob_banner_300_250_ok_random">Banner 300x250 (AdMob) [OK, Random]</string>
     <string name="demo_bidding_admob_flexible_banner_ok_random">Banner Adaptive (AdMob) [OK, Random]</string>
 
+    <string name="demo_bidding_admob_interstitial_display_adapter">Display Interstitial 320x480 (AdMob) [OK, Adapter]</string>
+    <string name="demo_bidding_admob_interstitial_display_admob">Display Interstitial 320x480 (AdMob) [noBids, AdMob Ad]</string>
+    <string name="demo_bidding_admob_interstitial_display_random">Display Interstitial 320x480 (AdMob) [OK, Random]</string>
     <string name="demo_bidding_admob_interstitial_adapter">Video Interstitial 320x480 (AdMob) [OK, OXB Adapter]</string>
     <string name="demo_bidding_admob_interstitial_admob">Video Interstitial 320x480 (AdMob) [noBids, AdMob ad]</string>
     <string name="demo_bidding_admob_interstitial_random">Video Interstitial 320x480 (AdMob) [OK, Random]</string>
@@ -342,6 +348,7 @@
     <string name="version_tag_prebid_rendering">Prebid Rendering:</string>
     <string name="version_tag_mopub">MoPub:</string>
     <string name="version_tag_gam">GAM:</string>
+    <string name="version_tag_omsdk">OMSDK:</string>
 
     <string name="event_counter">%1$d ( %2$s )</string>
     <string name="event_counter_default">0 ( 0 )</string>

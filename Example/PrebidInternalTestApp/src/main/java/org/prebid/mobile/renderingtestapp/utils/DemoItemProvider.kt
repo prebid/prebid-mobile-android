@@ -1000,7 +1000,8 @@ class DemoItemProvider private constructor() {
 
         private fun addAdMobMockExamples() {
             val adMobBannerTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.BANNER, Tag.MOCK)
-            val adMobInterstitialTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.VIDEO, Tag.MOCK)
+            val adMobInterstitialTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.INTERSTITIAL, Tag.MOCK)
+            val adMobInterstitialVideoTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.VIDEO, Tag.MOCK)
             val adMobNativeTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.NATIVE, Tag.MOCK)
 
             demoList.add(
@@ -1083,7 +1084,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.mock_config_id_banner_728x90,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        728, 90
+                        300, 250
                     )
                 )
             )
@@ -1092,7 +1093,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_admob_interstitial_adapter),
                     adMobInterstitialAction,
-                    adMobInterstitialTagList,
+                    adMobInterstitialVideoTagList,
                     createBannerBundle(
                         R.string.mock_config_id_video_interstitial_320_480,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
@@ -1104,7 +1105,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_admob_interstitial_admob),
                     adMobInterstitialAction,
-                    adMobInterstitialTagList,
+                    adMobInterstitialVideoTagList,
                     createBannerBundle(
                         R.string.prebid_config_id_no_bids,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
@@ -1116,7 +1117,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_admob_interstitial_random),
                     adMobInterstitialRandomAction,
-                    adMobInterstitialTagList,
+                    adMobInterstitialVideoTagList,
                     createBannerBundle(
                         R.string.mock_config_id_video_interstitial_320_480,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
@@ -1129,7 +1130,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_admob_rewarded_adapter),
                     adMobRewardedAction,
-                    adMobInterstitialTagList,
+                    adMobInterstitialVideoTagList,
                     createBannerBundle(
                         R.string.mock_config_id_video_rewarded_end_card_320_480,
                         R.string.admob_rewarded_bidding_ad_unit_id_adapter,
@@ -1141,7 +1142,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_admob_rewarded_admob),
                     adMobRewardedAction,
-                    adMobInterstitialTagList,
+                    adMobInterstitialVideoTagList,
                     createBannerBundle(
                         R.string.prebid_config_id_no_bids,
                         R.string.admob_rewarded_bidding_ad_unit_id_adapter,
@@ -1153,7 +1154,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_admob_rewarded_adapter_no_end_card),
                     adMobRewardedAction,
-                    adMobInterstitialTagList,
+                    adMobInterstitialVideoTagList,
                     createBannerBundle(
                         R.string.mock_config_id_video_rewarded_320_480,
                         R.string.admob_rewarded_bidding_ad_unit_id_adapter,
@@ -1165,7 +1166,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_admob_rewarded_random),
                     adMobRewardedRandomAction,
-                    adMobInterstitialTagList,
+                    adMobInterstitialVideoTagList,
                     createBannerBundle(
                         R.string.mock_config_id_video_rewarded_end_card_320_480,
                         R.string.admob_rewarded_bidding_ad_unit_id_adapter,
@@ -1173,7 +1174,44 @@ class DemoItemProvider private constructor() {
                     )
                 )
             )
-            // TODO: It doesn't work!
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_interstitial_display_adapter),
+                    adMobInterstitialAction,
+                    adMobInterstitialVideoTagList,
+                    createBannerBundle(
+                        R.string.mock_config_id_interstitial_320_480,
+                        R.string.admob_interstitial_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_interstitial_display_admob),
+                    adMobInterstitialAction,
+                    adMobInterstitialTagList,
+                    createBannerBundle(
+                        R.string.prebid_config_id_no_bids,
+                        R.string.admob_interstitial_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_interstitial_display_random),
+                    adMobInterstitialRandomAction,
+                    adMobInterstitialTagList,
+                    createBannerBundle(
+                        R.string.mock_config_id_interstitial_320_480,
+                        R.string.admob_interstitial_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
+
             demoList.add(
                 DemoItem(
                     getString(R.string.demo_bidding_admob_native_adapter),
@@ -1658,7 +1696,8 @@ class DemoItemProvider private constructor() {
 
         private fun addAdMobProdExamples() {
             val adMobBannerTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.BANNER, Tag.REMOTE)
-            val adMobInterstitialTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.VIDEO, Tag.REMOTE)
+            val adMobInterstitialTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.INTERSTITIAL, Tag.REMOTE)
+            val adMobInterstitialVideoTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.VIDEO, Tag.REMOTE)
             val adMobNativeTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.NATIVE, Tag.REMOTE)
 
             demoList.add(
@@ -1690,9 +1729,9 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_admob_interstitial_adapter),
                     adMobInterstitialAction,
-                    adMobInterstitialTagList,
+                    adMobInterstitialVideoTagList,
                     createBannerBundle(
-                        R.string.prebid_config_id_interstitial_320_480,
+                        R.string.prebid_config_id_video_rewarded_320_480,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
                         320, 50
                     )
@@ -1702,7 +1741,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_admob_interstitial_admob),
                     adMobInterstitialAction,
-                    adMobInterstitialTagList,
+                    adMobInterstitialVideoTagList,
                     createBannerBundle(
                         R.string.prebid_config_id_no_bids,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
@@ -1715,7 +1754,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_admob_rewarded_adapter),
                     adMobRewardedAction,
-                    adMobInterstitialTagList,
+                    adMobInterstitialVideoTagList,
                     createBannerBundle(
                         R.string.prebid_config_id_video_rewarded_320_480,
                         R.string.admob_rewarded_bidding_ad_unit_id_adapter,
@@ -1727,7 +1766,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_admob_rewarded_admob),
                     adMobRewardedAction,
-                    adMobInterstitialTagList,
+                    adMobInterstitialVideoTagList,
                     createBannerBundle(
                         R.string.prebid_config_id_no_bids,
                         R.string.admob_rewarded_bidding_ad_unit_id_adapter,
@@ -1735,6 +1774,44 @@ class DemoItemProvider private constructor() {
                     )
                 )
             )
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_interstitial_display_adapter),
+                    adMobInterstitialAction,
+                    adMobInterstitialTagList,
+                    createBannerBundle(
+                        R.string.prebid_config_id_interstitial_320_480,
+                        R.string.admob_interstitial_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_interstitial_display_admob),
+                    adMobInterstitialAction,
+                    adMobInterstitialTagList,
+                    createBannerBundle(
+                        R.string.prebid_config_id_no_bids,
+                        R.string.admob_interstitial_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_interstitial_display_random),
+                    adMobInterstitialRandomAction,
+                    adMobInterstitialTagList,
+                    createBannerBundle(
+                        R.string.prebid_config_id_interstitial_320_480,
+                        R.string.admob_interstitial_bidding_ad_unit_id_adapter,
+                        320, 480
+                    )
+                )
+            )
+
             demoList.add(
                 DemoItem(
                     getString(R.string.demo_bidding_admob_native_no_bids),

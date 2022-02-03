@@ -33,5 +33,6 @@ class VersionInfoFragment : BaseFragment() {
         tvPrebidRenderingVersion.text = PrebidRenderingSettings.SDK_VERSION
         tvMopubVersion.text = MoPub.SDK_VERSION
         tvGamVersion.text = MobileAds.getVersionString()
+        tvOmsdkVersion.text = PrebidRenderingSettings.OMSDK_VERSION
     }
 }

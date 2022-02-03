@@ -30,6 +30,7 @@ android {
     defaultConfig {
         buildConfigField "String", "GitHash", "\"${getGitHash()}\""
         buildConfigField "String", "VERSION", "\"${versionName}\""
+        buildConfigField "String", "OMSDK_VERSION", "\"${omSdkVersion}\""
     }
 
     dexOptions {
