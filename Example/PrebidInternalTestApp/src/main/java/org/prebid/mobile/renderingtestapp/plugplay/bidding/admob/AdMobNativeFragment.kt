@@ -11,7 +11,8 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
 import kotlinx.android.synthetic.main.events_admob_rewarded.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
-import org.prebid.mobile.*
+import org.prebid.mobile.Host
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.admob.PrebidNativeAdapter
 import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
@@ -130,58 +131,6 @@ class AdMobNativeFragment : AdFragment() {
 
         wrapper.addView(binding.root)
     }
-
-    private fun configureNativeAdUnit(nativeAdUnit: MediationNativeAdUnit) {
-        nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC)
-        nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED)
-        nativeAdUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL)
-
-        val methods: ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD> = ArrayList()
-        methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE)
-        methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.JS)
-        try {
-            val tracker = NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods)
-            nativeAdUnit.addEventTracker(tracker)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        val title = NativeTitleAsset()
-        title.setLength(90)
-        title.isRequired = true
-        nativeAdUnit.addAsset(title)
-
-        val icon = NativeImageAsset()
-        icon.imageType = NativeImageAsset.IMAGE_TYPE.ICON
-        icon.wMin = 20
-        icon.hMin = 20
-        icon.isRequired = true
-        nativeAdUnit.addAsset(icon)
-
-        val image = NativeImageAsset()
-        image.imageType = NativeImageAsset.IMAGE_TYPE.MAIN
-        image.hMin = 200
-        image.wMin = 200
-        image.isRequired = true
-        nativeAdUnit.addAsset(image)
-
-        val data = NativeDataAsset()
-        data.len = 90
-        data.dataType = NativeDataAsset.DATA_TYPE.SPONSORED
-        data.isRequired = true
-        nativeAdUnit.addAsset(data)
-
-        val body = NativeDataAsset()
-        body.isRequired = true
-        body.dataType = NativeDataAsset.DATA_TYPE.DESC
-        nativeAdUnit.addAsset(body)
-
-        val cta = NativeDataAsset()
-        cta.isRequired = true
-        cta.dataType = NativeDataAsset.DATA_TYPE.CTATEXT
-        nativeAdUnit.addAsset(cta)
-    }
-
 
     class PrebidNativeAdMediaContent(private val image: NativeAd.Image) : MediaContent {
         override fun getAspectRatio(): Float {

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~    Copyright 2018-2021 Prebid.org, Inc.
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,14 +14,37 @@
   ~    limitations under the License.
   -->
 
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
+        android:id="@+id/btnFetchDemandResultSuccess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="fetchDemand success"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/adContainer" />
+
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
+        android:id="@+id/btnFetchDemandResultFailure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="fetchDemand failed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnFetchDemandResultSuccess" />
 
     <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnGetNativeAdResultSuccess"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="getNativeAd success"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -32,49 +54,40 @@
         android:id="@+id/btnGetNativeAdResultFailure"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="getNativeAd failed"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnGetNativeAdResultSuccess" />
 
     <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
-        android:id="@+id/btnFetchDemandResultFailure"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="fetchDemand failed"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnFetchDemandResultSuccess" />
-
-    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
         android:id="@+id/btnAdClicked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/onAdClicked"
+        android:layout_marginTop="16dp"
+        android:text="onAdClicked"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnGetNativeAdResultFailure" />
 
     <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
-        android:id="@+id/btnFetchDemandResultSuccess"
+        android:id="@+id/btnAdImpression"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="fetchDemand success"
+        android:layout_marginTop="16dp"
+        android:text="onAdImpression"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/adContainer" />
+        app:layout_constraintTop_toBottomOf="@id/btnAdClicked" />
 
-    <include
-        android:id="@+id/impressionEvents"
-        layout="@layout/lyt_native_ad_events"
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
+        android:id="@+id/btnAdExpired"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAdClicked" />
+        android:layout_marginTop="16dp"
+        android:text="onAdExpired"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnAdImpression" />
 
 </merge>

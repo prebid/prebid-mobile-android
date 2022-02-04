@@ -1084,7 +1084,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.mock_config_id_banner_728x90,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        300, 250
+                        728, 90
                     )
                 )
             )
@@ -1336,8 +1336,14 @@ class DemoItemProvider private constructor() {
                 )
             )
             // Native Ad
-//            demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_native), R.id.action_header_bidding_to_in_app_native,
-//                    ppmNativeTagList, createBannerBundle(R.string.prebid_config_id_qa_native_styles)))
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_in_app_native),
+                    R.id.action_header_bidding_to_in_app_native,
+                    ppmNativeTagList,
+                    createBannerBundle(R.string.prebid_config_id_qa_native_styles)
+                )
+            )
         }
 
         private fun addGamProdExamples() {
