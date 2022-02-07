@@ -42,7 +42,7 @@ public class NativeImage {
         return typeNumber == that.typeNumber && url.equals(that.url);
     }
 
-    enum Type {
+    public enum Type {
         ICON,
         MAIN_IMAGE,
         CUSTOM;

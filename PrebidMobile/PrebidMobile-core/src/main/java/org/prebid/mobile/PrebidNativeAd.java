@@ -22,7 +22,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -165,14 +165,17 @@ public class PrebidNativeAd {
         images.add(image);
     }
 
+    @NonNull
     public ArrayList<NativeTitle> getTitles() {
         return titles;
     }
 
+    @NonNull
     public ArrayList<NativeImage> getImages() {
         return images;
     }
 
+    @NonNull
     public ArrayList<NativeData> getDataList() {
         return dataList;
     }
@@ -182,79 +185,79 @@ public class PrebidNativeAd {
     }
 
     /**
-     * @return String title of the Native Ad
+     * @return First title or empty string if it doesn't exist
      */
-    @Nullable
+    @NonNull
     public String getTitle() {
         if (!titles.isEmpty()) {
             return titles.get(0).getText();
         }
-        return null;
+        return "";
     }
 
     /**
-     * @return String description of the Native Ad
+     * @return First description data value or empty string if it doesn't exist
      */
-    @Nullable
+    @NonNull
     public String getDescription() {
         for (NativeData data : dataList) {
             if (data.getType() == NativeData.Type.DESCRIPTION) {
                 return data.getValue();
             }
         }
-        return null;
+        return "";
     }
 
     /**
-     * @return String iconUrl of the Native Ad
+     * @return First icon url or empty string if it doesn't exist
      */
-    @Nullable
+    @NonNull
     public String getIconUrl() {
         for (NativeImage image : images) {
             if (image.getType() == NativeImage.Type.ICON) {
                 return image.getUrl();
             }
         }
-        return null;
+        return "";
     }
 
     /**
-     * @return String imageUrl of the Native Ad
+     * @return First main image url or empty string if it doesn't exist
      */
-    @Nullable
+    @NonNull
     public String getImageUrl() {
         for (NativeImage image : images) {
             if (image.getType() == NativeImage.Type.MAIN_IMAGE) {
                 return image.getUrl();
             }
         }
-        return null;
+        return "";
     }
 
     /**
-     * @return String callToAction of the Native Ad
+     * @return First call to action data value or empty string if it doesn't exist
      */
-    @Nullable
+    @NonNull
     public String getCallToAction() {
         for (NativeData data : dataList) {
             if (data.getType() == NativeData.Type.CALL_TO_ACTION) {
                 return data.getValue();
             }
         }
-        return null;
+        return "";
     }
 
     /**
-     * @return String sponsoredBy of the Native Ad
+     * @return First sponsored by data value or empty string if it doesn't exist
      */
-    @Nullable
+    @NonNull
     public String getSponsoredBy() {
         for (NativeData data : dataList) {
             if (data.getType() == NativeData.Type.SPONSORED_BY) {
                 return data.getValue();
             }
         }
-        return null;
+        return "";
     }
 
     /**

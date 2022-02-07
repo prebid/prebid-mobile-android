@@ -33,7 +33,7 @@
 
     <include
         android:id="@+id/include"
-        layout="@layout/events_bids"
+        layout="@layout/lyt_native_in_app_events"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

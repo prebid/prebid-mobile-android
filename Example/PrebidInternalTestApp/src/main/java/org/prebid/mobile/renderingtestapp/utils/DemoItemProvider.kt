@@ -421,16 +421,30 @@ class DemoItemProvider private constructor() {
             )
 
 
-            // TODO: Uncomment when native module will be merged
-//            demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_native), R.id.action_header_bidding_to_in_app_native,
-//                    ppmNativeTagList, createBannerBundle(R.string.mock_config_id_native_styles)))
-//            demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_native_feed), R.id.action_header_bidding_to_in_app_native_feed,
-//                    ppmNativeTagList, createBannerBundle(R.string.mock_config_id_native_styles)))
-//            demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_native_links), R.id.action_header_bidding_to_in_app_native_links,
-//                    ppmNativeTagList, createBannerBundle(R.string.mock_config_id_native_links)))
-//            demoList.add(DemoItem(getString(R.string.demo_bidding_in_app_native_video), R.id.action_header_bidding_to_in_app_native_video,
-//                    ppmNativeTagList, createBannerBundle(R.string.mock_config_id_native_video)))
-
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_in_app_native),
+                    R.id.action_header_bidding_to_in_app_native,
+                    ppmNativeTagList,
+                    createBannerBundle(R.string.mock_config_id_native_styles)
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_in_app_native_feed),
+                    R.id.action_header_bidding_to_in_app_native_feed,
+                    ppmNativeTagList,
+                    createBannerBundle(R.string.mock_config_id_native_styles)
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_in_app_native_links),
+                    R.id.action_header_bidding_to_in_app_native_links,
+                    ppmNativeTagList,
+                    createBannerBundle(R.string.mock_config_id_native_links)
+                )
+            )
         }
 
         private fun addGamMockExamples() {

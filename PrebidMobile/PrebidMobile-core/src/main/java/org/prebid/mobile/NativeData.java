@@ -42,10 +42,11 @@ public class NativeData {
         return typeNumber == that.typeNumber && value.equals(that.value);
     }
 
-    enum Type {
+    public enum Type {
         SPONSORED_BY,
         DESCRIPTION,
         CALL_TO_ACTION,
+        RATING,
         CUSTOM;
 
         public static Type getFromTypeNumber(int typeNumber) {
@@ -54,6 +55,8 @@ public class NativeData {
                     return SPONSORED_BY;
                 case 2:
                     return DESCRIPTION;
+                case 3:
+                    return RATING;
                 case 12:
                     return CALL_TO_ACTION;
                 default:
@@ -67,6 +70,8 @@ public class NativeData {
                     return 1;
                 case DESCRIPTION:
                     return 2;
+                case RATING:
+                    return 3;
                 case CALL_TO_ACTION:
                     return 12;
                 default:

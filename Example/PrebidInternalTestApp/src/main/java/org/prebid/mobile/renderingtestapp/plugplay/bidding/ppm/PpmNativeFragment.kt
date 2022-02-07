@@ -111,11 +111,11 @@ open class PpmNativeFragment : AdFragment() {
         tvNativeBrand?.text = nativeAd.sponsoredBy
         btnNativeAction?.text = nativeAd.callToAction
 
-        nativeAd.imageUrl?.let {
-            loadImage(ivNativeMain, it)
+        if (nativeAd.imageUrl.isNotBlank()) {
+            loadImage(ivNativeMain, nativeAd.imageUrl)
         }
-        nativeAd.iconUrl?.let {
-            loadImage(ivNativeIcon, it)
+        if (nativeAd.iconUrl.isNotBlank()) {
+            loadImage(ivNativeIcon, nativeAd.iconUrl)
         }
     }
 
@@ -139,7 +139,7 @@ open class PpmNativeFragment : AdFragment() {
 
     private fun doInMainThread(function: () -> Unit) {
         val handler = Handler(Looper.getMainLooper())
-        handler.post(function)
+        handler.postAtFrontOfQueue(function)
     }
 
 }
