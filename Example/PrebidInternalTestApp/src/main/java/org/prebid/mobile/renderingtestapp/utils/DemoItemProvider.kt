@@ -22,6 +22,7 @@ import com.google.android.gms.ads.AdSize
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.data.DemoItem
 import org.prebid.mobile.renderingtestapp.data.Tag
+import org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeFragment
 
 class DemoItemProvider private constructor() {
 
@@ -740,34 +741,94 @@ class DemoItemProvider private constructor() {
                 )
             )
 
-            // TODO: Uncomment when native module will be merged
-//            var gamNativeBundle = createBannerBundle(R.string.mock_config_id_native_styles, R.string.adunit_gam_native_custom_template)
-//            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11934135")
-//            demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_custom_templates), R.id.action_header_bidding_to_gam_native, gamNativeTagList, gamNativeBundle))
-//
-//            gamNativeBundle = createBannerBundle(R.string.mock_config_id_native_styles, R.string.adunit_gam_native_custom_template)
-//            val staticCustomFormatId = "11982639"
-//            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, staticCustomFormatId)
-//            demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_custom_templates_prebid_ok), R.id.action_header_bidding_to_gam_native,
-//                    gamNativeTagList, gamNativeBundle))
-//
-//            gamNativeBundle = createBannerBundle(R.string.mock_config_id_no_bids, R.string.adunit_gam_native_custom_template)
-//            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, staticCustomFormatId)
-//            demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_custom_templates_no_bids), R.id.action_header_bidding_to_gam_native,
-//                    gamNativeTagList, gamNativeBundle))
-//
-//            demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_unified_ads), R.id.action_header_bidding_to_gam_native, gamNativeTagList,
-//                    createBannerBundle(R.string.mock_config_id_native_styles, R.string.adunit_gam_native_unified)))
-//            demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_unified_ads_prebid_ok), R.id.action_header_bidding_to_gam_native, gamNativeTagList,
-//                    createBannerBundle(R.string.mock_config_id_native_styles, R.string.adunit_gam_native_unified_static)))
-//            demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_unified_ads_no_bids), R.id.action_header_bidding_to_gam_native, gamNativeTagList,
-//                    createBannerBundle(R.string.mock_config_id_no_bids, R.string.adunit_gam_native_unified_static)))
-//
-//            gamNativeBundle = createBannerBundle(R.string.mock_config_id_native_styles, R.string.adunit_gam_native_custom_template)
-//            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11934135")
-//            demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_feed), R.id.action_header_bidding_to_gam_native_feed,
-//                    gamNativeTagList, gamNativeBundle))
+            var gamNativeBundle = createBannerBundle(
+                R.string.mock_config_id_native_styles,
+                R.string.adunit_gam_native_custom_template
+            )
+            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11934135")
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_native_custom_templates),
+                    R.id.action_header_bidding_to_gam_native,
+                    gamNativeTagList,
+                    gamNativeBundle
+                )
+            )
 
+            gamNativeBundle = createBannerBundle(
+                R.string.mock_config_id_native_styles,
+                R.string.adunit_gam_native_custom_template
+            )
+            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11982639")
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_native_custom_templates_prebid_ok),
+                    R.id.action_header_bidding_to_gam_native,
+                    gamNativeTagList,
+                    gamNativeBundle
+                )
+            )
+
+            gamNativeBundle = createBannerBundle(
+                R.string.mock_config_id_no_bids,
+                R.string.adunit_gam_native_custom_template
+            )
+            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11982639")
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_native_custom_templates_no_bids),
+                    R.id.action_header_bidding_to_gam_native,
+                    gamNativeTagList,
+                    gamNativeBundle
+                )
+            )
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_native_unified_ads),
+                    R.id.action_header_bidding_to_gam_native,
+                    gamNativeTagList,
+                    createBannerBundle(
+                        R.string.mock_config_id_native_styles,
+                        R.string.adunit_gam_native_unified
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_native_unified_ads_prebid_ok),
+                    R.id.action_header_bidding_to_gam_native,
+                    gamNativeTagList,
+                    createBannerBundle(
+                        R.string.mock_config_id_native_styles,
+                        R.string.adunit_gam_native_unified_static
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_native_unified_ads_no_bids),
+                    R.id.action_header_bidding_to_gam_native,
+                    gamNativeTagList,
+                    createBannerBundle(
+                        R.string.mock_config_id_no_bids,
+                        R.string.adunit_gam_native_unified_static
+                    )
+                )
+            )
+
+            gamNativeBundle = createBannerBundle(
+                R.string.mock_config_id_native_styles,
+                R.string.adunit_gam_native_custom_template
+            )
+            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11934135")
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_native_feed),
+                    R.id.action_header_bidding_to_gam_native_feed,
+                    gamNativeTagList, gamNativeBundle
+                )
+            )
         }
 
         private fun addMoPubMockExamples() {
@@ -993,15 +1054,6 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(R.string.mock_config_id_native_styles, R.string.mopub_native_adapter)
                 )
             )
-            // TODO: Uncomment when support of media view will be added to PrebidNativeAd
-//            demoList.add(
-//                DemoItem(
-//                    getString(R.string.demo_bidding_mopub_native_adapter_video),
-//                    R.id.action_header_bidding_to_mopub_native_video,
-//                    mopubNativeTagList,
-//                    createBannerBundle(R.string.mock_config_id_native_video, R.string.mopub_native_adapter)
-//                )
-//            )
             demoList.add(
                 DemoItem(
                     getString(R.string.demo_bidding_mopub_native_feed_no_bids),
@@ -1500,13 +1552,34 @@ class DemoItemProvider private constructor() {
                 )
             )
 
-            // TODO: Uncomment when native module will be merged
-//            val gamNativeBundle = createBannerBundle(R.string.prebid_config_id_qa_native_styles, R.string.adunit_gam_native_custom_template, 300, 250)
-//            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11934135")
-//            demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_custom_templates), R.id.action_header_bidding_to_gam_native, gamNativeTagList, gamNativeBundle))
-//
-//            demoList.add(DemoItem(getString(R.string.demo_bidding_gam_native_unified_ads), R.id.action_header_bidding_to_gam_native, gamNativeTagList,
-//                    createBannerBundle(R.string.prebid_config_id_qa_native_styles, R.string.adunit_gam_native_unified, 300, 250)))
+            val gamNativeBundle = createBannerBundle(
+                R.string.prebid_config_id_qa_native_styles,
+                R.string.adunit_gam_native_custom_template,
+                300,
+                250
+            )
+            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11934135")
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_native_custom_templates),
+                    R.id.action_header_bidding_to_gam_native,
+                    gamNativeTagList,
+                    gamNativeBundle
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_native_unified_ads),
+                    R.id.action_header_bidding_to_gam_native,
+                    gamNativeTagList,
+                    createBannerBundle(
+                        R.string.prebid_config_id_qa_native_styles,
+                        R.string.adunit_gam_native_unified,
+                        300,
+                        250
+                    )
+                )
+            )
 
             demoList.add(
                 DemoItem(
