@@ -23,11 +23,13 @@ open class AdMobInterstitialFragment : AdFragment() {
 
     companion object {
         private const val TAG = "AdMobInterstitial"
+        const val ARG_IS_VIDEO = "${TAG}_isVideo"
     }
 
     protected var extras: Bundle? = null
     protected var interstitialAd: InterstitialAd? = null
     protected var adUnit: MediationInterstitialAdUnit? = null
+    protected var isVideo = false
 
     override val layoutRes = R.layout.fragment_admob_rewarded
 
@@ -43,7 +45,12 @@ open class AdMobInterstitialFragment : AdFragment() {
     override fun initAd(): Any? {
         extras = Bundle()
         val mediationUtils = AdMobInterstitialMediationUtils(extras)
-        adUnit = MediationInterstitialAdUnit(activity, configId, AdUnitFormat.DISPLAY, mediationUtils)
+
+        isVideo = arguments?.getBoolean(ARG_IS_VIDEO) ?: false
+        var adUnitFormat = AdUnitFormat.DISPLAY
+        if (isVideo) adUnitFormat = AdUnitFormat.VIDEO
+        adUnit = MediationInterstitialAdUnit(activity, configId, adUnitFormat, mediationUtils)
+        adUnit?.setMinSizePercentage(30, 30)
         return adUnit
     }
 
@@ -101,7 +108,6 @@ open class AdMobInterstitialFragment : AdFragment() {
         if (btnLoad?.text == getString(R.string.text_show)) {
             interstitialAd?.show(requireActivity())
             btnLoad?.text = getString(R.string.text_retry)
-            resetAdEvents()
         } else if (btnLoad.text == getString(R.string.text_retry)) {
             resetAdEvents()
             btnLoad?.isEnabled = false

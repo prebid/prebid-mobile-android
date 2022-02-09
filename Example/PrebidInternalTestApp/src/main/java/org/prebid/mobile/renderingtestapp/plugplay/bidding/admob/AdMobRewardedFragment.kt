@@ -104,7 +104,6 @@ open class AdMobRewardedFragment : AdFragment() {
                 Log.d(TAG, "User earned the reward ($rewardAmount, $rewardType)")
             }
             btnLoad?.text = getString(R.string.text_retry)
-            resetAdEvents()
         } else if (btnLoad.text == getString(R.string.text_retry)) {
             resetAdEvents()
             btnLoad?.isEnabled = false
