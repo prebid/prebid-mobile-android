@@ -20,17 +20,12 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.TextUtils;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
-import android.text.TextUtils;
-
 import org.prebid.mobile.tasksmanager.TasksManager;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public abstract class AdUnit {
     private static final int MIN_AUTO_REFRESH_PERIOD_MILLIS = 30_000;
@@ -159,6 +154,7 @@ public abstract class AdUnit {
                 }
             }
         } else {
+            LogUtil.e("Invalid context");
             listener.onComplete(ResultCode.INVALID_CONTEXT);
             return;
         }

@@ -198,25 +198,28 @@
     <string name="demo_bidding_mopub_native_adapter_video">Native Ad Video (MoPub) [OK, OXANativeAdAdapter]</string>
 
     <!--AdMob Titles-->
-    <string name="demo_bidding_admob_banner_320_50_adapter">Banner 320x50 (AdMob) [OK, Adapter]</string>
+    <string name="demo_bidding_admob_banner_320_50_adapter">Banner 320x50 (AdMob) [OK, OXB Adapter]</string>
     <string name="demo_bidding_admob_banner_320_50_ok_random">Banner 320x50 (AdMob) [OK, Random]</string>
     <string name="demo_bidding_admob_banner_320_50_no_bids">Banner 320x50 (AdMob) [noBids, AdMob ad]</string>
     <string name="demo_bidding_admob_banner_320_50_random_respectively">Banner 320x50 (AdMob) [Random, Respectively]</string>
-    <string name="demo_bidding_admob_banner_300_250_adapter">Banner 300x250 (AdMob) [OK, Adapter]</string>
+    <string name="demo_bidding_admob_banner_300_250_adapter">Banner 300x250 (AdMob) [OK, OXB Adapter]</string>
     <string name="demo_bidding_admob_banner_300_250_ok_random">Banner 300x250 (AdMob) [OK, Random]</string>
-    <string name="demo_bidding_admob_flexible_banner_ok_random">Flexible banner (AdMob) [OK, Random]</string>
+    <string name="demo_bidding_admob_flexible_banner_ok_random">Banner Adaptive (AdMob) [OK, Random]</string>
 
-    <string name="demo_bidding_admob_interstitial_adapter">Interstitial (AdMob) [OK, Adapter]</string>
-    <string name="demo_bidding_admob_interstitial_admob">Interstitial (AdMob) [noBids, AdMob ad]</string>
-    <string name="demo_bidding_admob_interstitial_random">Interstitial (AdMob) [OK, Random]</string>
     <string name="demo_bidding_admob_interstitial_display_adapter">Display Interstitial 320x480 (AdMob) [OK, Adapter]</string>
     <string name="demo_bidding_admob_interstitial_display_admob">Display Interstitial 320x480 (AdMob) [noBids, AdMob Ad]</string>
     <string name="demo_bidding_admob_interstitial_display_random">Display Interstitial 320x480 (AdMob) [OK, Random]</string>
+    <string name="demo_bidding_admob_interstitial_adapter">Video Interstitial 320x480 (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_interstitial_admob">Video Interstitial 320x480 (AdMob) [noBids, AdMob ad]</string>
+    <string name="demo_bidding_admob_interstitial_random">Video Interstitial 320x480 (AdMob) [OK, Random]</string>
 
-    <string name="demo_bidding_admob_rewarded_adapter">Rewarded (AdMob) [OK, Adapter]</string>
-    <string name="demo_bidding_admob_rewarded_adapter_no_end_card">Rewarded no EndCard (AdMob) [OK, Adapter]</string>
-    <string name="demo_bidding_admob_rewarded_admob">Rewarded (AdMob) [noBids, AdMob ad]</string>
-    <string name="demo_bidding_admob_rewarded_random">Rewarded (AdMob) [OK, Random]</string>
+    <string name="demo_bidding_admob_rewarded_adapter">Video Rewarded 320x480 (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_rewarded_adapter_no_end_card">Video Rewarded 320x480 no EndCard (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_rewarded_admob">Video Rewarded 320x480 (AdMob) [noBids, AdMob ad]</string>
+    <string name="demo_bidding_admob_rewarded_random">Video Rewarded 320x480 (AdMob) [OK, Random]</string>
+
+    <string name="demo_bidding_admob_native_adapter">Native Ad (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_native_no_bids">Native Ad (AdMob) [noBids, AdMob ad]</string>
 
     <!--GAM AdUnits-->
     <string name="adunit_gam_banner_320_50_app_event">/21808260008/prebid_oxb_320x50_banner</string>
@@ -270,6 +273,7 @@
     <string name="admob_banner_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/3793078260</string>
     <string name="admob_interstitial_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/6393291067</string>
     <string name="admob_rewarded_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/1908212572</string>
+    <string name="admob_native_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/9720985924</string>
 
     <!--    Bidding configs-->
     <string name="prebid_account_id_prod">0689a263-318d-448b-a3d4-b02e8a709d9d</string>

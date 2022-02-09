@@ -84,14 +84,12 @@ public class MoPubMediationUtilsWithAdUnitsTest {
         OpenMediationRewardedVideoAdUnit adUnit = new OpenMediationRewardedVideoAdUnit(
                 context,
                 "mopub",
-                "config",
                 mediationUtils
         );
         WhiteBox.setInternalState(adUnit, "mBidLoader", mMockBidLoader);
         adUnit.fetchDemand(mockListener);
         adUnit.onResponse(bidResponse);
 
-        assertNotNull(BidResponseCache.getInstance().popBidResponse("mopub"));
         verify(mockListener).onComplete(FetchDemandResult.SUCCESS);
         verify(mediationUtils).handleKeywordsUpdate(keywordsMap);
     }

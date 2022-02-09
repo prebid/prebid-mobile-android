@@ -39,10 +39,16 @@ public enum Host {
         return mUrl;
     }
 
-
     public void setHostUrl(String url) {
         if (this.equals(CUSTOM) && url != null) {
             mUrl = url;
         }
     }
+
+    public static Host createCustomHost(String url) {
+        Host custom = Host.CUSTOM;
+        custom.setHostUrl(url);
+        return custom;
+    }
+
 }

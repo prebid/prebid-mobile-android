@@ -36,7 +36,6 @@ import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit;
 import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit;
 import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit;
 import org.prebid.mobile.rendering.bidding.display.MediationRewardedVideoAdUnit;
-import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -44,7 +43,6 @@ import org.robolectric.annotation.Config;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -88,7 +86,7 @@ public class MoPubMediationUtilsMethodsTest {
 
         mMoPubNative = mock(MoPubNative.class);
         nativeUtils = new MoPubNativeMediationUtils(mMoPubNativeKeywords, mMoPubNative);
-        mMediationNativeAdUnit = new MediationNativeAdUnit(mContext, ID, mock(NativeAdConfiguration.class), nativeUtils);
+        mMediationNativeAdUnit = new MediationNativeAdUnit(ID, nativeUtils);
 
         rewardedUtils = new MoPubRewardedVideoMediationUtils(mMoPubRewardedKeywords);
         mMoPubRewardedAdUnit = new MediationRewardedVideoAdUnit(mContext, ID, rewardedUtils);
@@ -96,9 +94,8 @@ public class MoPubMediationUtilsMethodsTest {
 
     @Test
     public void canPerformRefresh_ReturnTrueByDefault() {
-        assertTrue(interstitialUtils.canPerformRefresh());
-        assertTrue(nativeUtils.canPerformRefresh());
-        assertTrue(rewardedUtils.canPerformRefresh());
+        assertFalse(interstitialUtils.canPerformRefresh());
+        assertFalse(rewardedUtils.canPerformRefresh());
     }
 
     @Test
@@ -124,16 +121,6 @@ public class MoPubMediationUtilsMethodsTest {
         HashMap<String, String> responseId = new HashMap<>();
         responseId.put("PREBID_BID_RESPONSE_ID", "id");
         verify(mMoPubInterstitial).setLocalExtras(responseId);
-    }
-
-    @Test
-    public void setResponseToLocalExtrasInNative_MoPubViewSetsResponse() {
-        BidResponse bidResponse = new BidResponse(TestResponse.getResponse());
-        nativeUtils.setResponseToLocalExtras(bidResponse);
-
-        HashMap<String, Object> responseMap = new HashMap<>();
-        responseMap.put("PREBID_BID_RESPONSE_ID", bidResponse);
-        verify(mMoPubNative).setLocalExtras(responseMap);
     }
 
     @Test

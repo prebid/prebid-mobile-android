@@ -106,17 +106,18 @@ class MoPubNativeVideoFragment : MopubNativeFragment() {
         adapterHelper = AdapterHelper(requireContext(), 0, 3);
         mopubNative = MoPubNative(requireContext(), adUnitId, nativeNetworkListener)
         val viewBinder = ViewBinder.Builder(R.layout.lyt_native_ad_video).build()
-        val addRenderer = PrebidNativeAdRenderer(viewBinder)
-        addRenderer.setMediaViewResId(R.id.mediaView)
-        addRenderer.setMediaViewListener(mediaViewListener)
+        val addRenderer = PrebidNativeAdRenderer(viewBinder, null)
+
+        // TODO: This fragment doesn't work anymore, it needs support of MediaView
+        //        addRenderer.setMediaViewResId(R.id.mediaView)
+        //        addRenderer.setMediaViewListener(mediaViewListener)
 
         mopubNative?.registerAdRenderer(addRenderer)
 
-        val mediationUtils = MoPubNativeMediationUtils(keywordsContainer, mopubNative)
+        val mediationUtils =
+            MoPubNativeMediationUtils(keywordsContainer, mopubNative)
         mopubNativeAdUnit = MediationNativeAdUnit(
-            requireContext(),
             configId,
-            getNativeAdConfig(),
             mediationUtils
         )
     }

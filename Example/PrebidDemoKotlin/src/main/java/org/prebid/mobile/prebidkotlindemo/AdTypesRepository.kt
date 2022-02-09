@@ -8,6 +8,7 @@ import org.prebid.mobile.prebidkotlindemo.ads.MoPubInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.inapp.*
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobBanner
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobInterstitial
+import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobNative
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobRewarded
 import org.prebid.mobile.prebidkotlindemo.ads.inappgam.*
 import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubBanner
@@ -310,6 +311,19 @@ object AdTypesRepository {
                     )
                 },
                 onDestroy = { InAppAdMobRewarded.destroy() }
+            ),
+            AdType(
+                "Native",
+                onCreate = { _, wrapper, _ ->
+                    InAppAdMobNative.create(
+                        wrapper,
+                        "ca-app-pub-1875909575462531/9720985924",
+                        "51fe68ba-aff2-401e-9e15-f3ed89d5c036"
+                    )
+                },
+                onDestroy = {
+                    InAppAdMobNative.destroy()
+                }
             )
         )
 

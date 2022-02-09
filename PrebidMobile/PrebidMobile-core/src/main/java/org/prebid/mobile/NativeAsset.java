@@ -1,6 +1,6 @@
 package org.prebid.mobile;
 
-abstract class NativeAsset {
+public abstract class NativeAsset {
     enum REQUEST_ASSET {
         TITLE,
         IMAGE,

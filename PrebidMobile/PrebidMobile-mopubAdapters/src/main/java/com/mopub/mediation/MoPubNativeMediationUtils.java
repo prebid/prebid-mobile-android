@@ -2,15 +2,12 @@ package com.mopub.mediation;
 
 import androidx.annotation.Nullable;
 import com.mopub.nativeads.MoPubNative;
-import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MoPubNativeMediationUtils extends MoPubBaseMediationUtils {
-
-    private static final String TAG = "MoPubNativeMediation";
+public class MoPubNativeMediationUtils {
 
     private final MoPubNative adView;
     private final HashMap<String, String> keywords;
@@ -20,13 +17,13 @@ public class MoPubNativeMediationUtils extends MoPubBaseMediationUtils {
         this.adView = nativeView;
     }
 
-    @Override
-    public void setResponseToLocalExtras(@Nullable BidResponse response) {
-        Map<String, Object> localExtras = Collections.singletonMap(KEY_BID_RESPONSE, response);
+    public void saveCacheId(@Nullable String cacheId) {
+        Map<String, Object> localExtras = Collections.singletonMap(
+                MoPubBaseMediationUtils.KEY_BID_RESPONSE, cacheId
+        );
         adView.setLocalExtras(localExtras);
     }
 
-    @Override
     public void handleKeywordsUpdate(@Nullable HashMap<String, String> prebidKeywords) {
         if (prebidKeywords != null && !prebidKeywords.isEmpty()) {
             if (keywords != null) {
@@ -35,4 +32,5 @@ public class MoPubNativeMediationUtils extends MoPubBaseMediationUtils {
             }
         }
     }
+
 }

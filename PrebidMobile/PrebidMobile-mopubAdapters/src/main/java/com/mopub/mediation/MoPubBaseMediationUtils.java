@@ -16,7 +16,7 @@ public abstract class MoPubBaseMediationUtils implements PrebidMediationDelegate
 
     protected static final HashSet<String> RESERVED_KEYS = new HashSet<>();
     protected static final int MOPUB_QUERY_STRING_LIMIT = 4000;
-    protected static final String KEY_BID_RESPONSE = "PREBID_BID_RESPONSE_ID";
+    public static final String KEY_BID_RESPONSE = "PREBID_BID_RESPONSE_ID";
 
     final protected void setResponseToLocalExtras(@Nullable BidResponse response, @NonNull LocalExtrasManager setter) {
         if (response == null) {
