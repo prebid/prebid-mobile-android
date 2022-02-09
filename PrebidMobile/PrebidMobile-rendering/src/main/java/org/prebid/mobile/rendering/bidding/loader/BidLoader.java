@@ -142,7 +142,7 @@ public class BidLoader {
         boolean isRefreshAvailable = mAdConfiguration != null
                                      && mAdConfiguration.isAdType(AdConfiguration.AdUnitIdentifierType.BANNER);
         if (!isRefreshAvailable) {
-            LogUtil.debug(TAG, "setupRefreshTimer: Failed. AdConfiguration is null or AdType is not Banner");
+            LogUtil.debug(TAG, "setupRefreshTimer: Canceled. AdConfiguration is null or AdType is not Banner");
             return;
         }
 

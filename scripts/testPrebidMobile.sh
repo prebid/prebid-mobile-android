@@ -22,3 +22,4 @@ echoX "start unit tests"
 ./gradlew PrebidMobile-rendering:testDebugUnitTest
 ./gradlew PrebidMobile-gamEventHandlers:testDebugUnitTest
 ./gradlew PrebidMobile-mopubAdapters:testDebugUnitTest
+./gradlew PrebidMobile-admobAdapters:testDebugUnitTest

@@ -6,6 +6,10 @@ import org.prebid.mobile.prebidkotlindemo.ads.GamInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.MoPubBanner
 import org.prebid.mobile.prebidkotlindemo.ads.MoPubInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.inapp.*
+import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobBanner
+import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobInterstitial
+import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobNative
+import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobRewarded
 import org.prebid.mobile.prebidkotlindemo.ads.inappgam.*
 import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubBanner
 import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubInterstitial
@@ -100,7 +104,7 @@ object AdTypesRepository {
                 "Banner 320x50",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppBanner.create(
-                        wrapper, autoRefreshTime,
+                        wrapper, autoRefreshTime / 1000,
                         320, 50,
                         "50699c03-0910-477c-b4a4-911dbe2b9d42"
                     )
@@ -122,7 +126,7 @@ object AdTypesRepository {
                 "Video Banner",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppVideoBanner.create(
-                        wrapper, autoRefreshTime,
+                        wrapper, autoRefreshTime / 1000,
                         300, 250,
                         "9007b76d-c73c-49c6-b0a8-1c7890a84b33"
                     )
@@ -156,7 +160,7 @@ object AdTypesRepository {
                 "Banner 320x50",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppGamBanner.create(
-                        wrapper, autoRefreshTime,
+                        wrapper, autoRefreshTime / 1000,
                         320, 50,
                         "/21808260008/prebid_oxb_320x50_banner",
                         "50699c03-0910-477c-b4a4-911dbe2b9d42"
@@ -180,7 +184,7 @@ object AdTypesRepository {
                 "Video Banner",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppGamVideoBanner.create(
-                        wrapper, autoRefreshTime,
+                        wrapper, autoRefreshTime / 1000,
                         300, 250,
                         "/21808260008/prebid_oxb_300x250_banner",
                         "9007b76d-c73c-49c6-b0a8-1c7890a84b33"
@@ -217,7 +221,7 @@ object AdTypesRepository {
                 "Banner 320x50",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppMoPubBanner.create(
-                        wrapper, autoRefreshTime,
+                        wrapper, autoRefreshTime / 1000,
                         320, 50,
                         "093eef131ec7455b9bda52b7eb456c51",
                         "50699c03-0910-477c-b4a4-911dbe2b9d42"
@@ -260,7 +264,69 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppMoPubRewardedInterstitial.destroy() }
             )
+        ),
+
+        "In-App + AdMob" to listOf(
+            AdType(
+                "Banner",
+                onCreate = { activity, wrapper, autoRefreshTime ->
+                    InAppAdMobBanner.create(
+                        activity, wrapper, autoRefreshTime,
+                        320, 50,
+                        "ca-app-pub-1875909575462531/3793078260",
+                        "50699c03-0910-477c-b4a4-911dbe2b9d42"
+                    )
+                },
+                onDestroy = { InAppAdMobBanner.destroy() }
+            ),
+            AdType(
+                "Display Interstitial",
+                onCreate = { activity, _, _ ->
+                    InAppAdMobInterstitial.create(
+                        activity,
+                        "ca-app-pub-1875909575462531/6393291067",
+                        "5a4b8dcf-f984-4b04-9448-6529908d6cb6"
+                    )
+                },
+                onDestroy = { InAppAdMobInterstitial.destroy() }
+            ),
+            AdType(
+                "Video Interstitial",
+                onCreate = { activity, _, _ ->
+                    InAppAdMobInterstitial.create(
+                        activity,
+                        "ca-app-pub-1875909575462531/6393291067",
+                        "12f58bc2-b664-4672-8d19-638bcc96fd5c"
+                    )
+                },
+                onDestroy = { InAppAdMobInterstitial.destroy() }
+            ),
+            AdType(
+                "Rewarded",
+                onCreate = { activity, _, _ ->
+                    InAppAdMobRewarded.create(
+                        activity,
+                        "ca-app-pub-1875909575462531/1908212572",
+                        "9007b76d-c73c-49c6-b0a8-1c7890a84b33"
+                    )
+                },
+                onDestroy = { InAppAdMobRewarded.destroy() }
+            ),
+            AdType(
+                "Native",
+                onCreate = { _, wrapper, _ ->
+                    InAppAdMobNative.create(
+                        wrapper,
+                        "ca-app-pub-1875909575462531/9720985924",
+                        "51fe68ba-aff2-401e-9e15-f3ed89d5c036"
+                    )
+                },
+                onDestroy = {
+                    InAppAdMobNative.destroy()
+                }
+            )
         )
+
     )
 
 }

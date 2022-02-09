@@ -563,7 +563,7 @@ public final class Utils {
         final int clampedRefreshInterval = clampInMillis(userRefreshValue, AUTO_REFRESH_DELAY_MIN, AUTO_REFRESH_DELAY_MAX);
 
         if (userRefreshValue < AUTO_REFRESH_DELAY_MIN || userRefreshValue > AUTO_REFRESH_DELAY_MAX) {
-            LogUtil.warn(TAG, "Refresh interval is out of range. Value which will be used for refresh: " + clampedRefreshInterval + ". "
+            LogUtil.error(TAG, "Refresh interval is out of range. Value which will be used for refresh: " + clampedRefreshInterval + ". "
                               + "Make sure that the refresh interval is in the following range: [" + AUTO_REFRESH_DELAY_MIN + ", " + AUTO_REFRESH_DELAY_MAX + "]");
         }
 

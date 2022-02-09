@@ -17,36 +17,25 @@
 package org.prebid.mobile.rendering.bidding.display;
 
 import android.content.Context;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdPosition;
-
-import java.util.HashMap;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 public class MediationRewardedVideoAdUnit extends MediationBaseAdUnit {
 
-    private final String mMopubAdUnitId;
+    private static final String TAG = "MediationRewardedVideoAdUnit";
 
-    public MediationRewardedVideoAdUnit(Context context,
-                                        @NonNull
-                                        String mopubAdUnitId, String configId, PrebidMediationDelegate mediationDelegate) {
+    public MediationRewardedVideoAdUnit(Context context, String configId, PrebidMediationDelegate mediationDelegate) {
         super(context, configId, null, mediationDelegate);
-        mMopubAdUnitId = mopubAdUnitId;
     }
 
-    public final void fetchDemand(
-        @Nullable
-            HashMap<String, String> hashMap,
-        @NonNull
-            OnFetchCompleteListener listener) {
-        super.fetchDemand(hashMap, listener);
+    public void fetchDemand(@NonNull OnFetchCompleteListener listener) {
+        super.fetchDemand(listener);
     }
 
     @Override
@@ -58,17 +47,12 @@ public class MediationRewardedVideoAdUnit extends MediationBaseAdUnit {
     }
 
     @Override
-    protected final boolean isAdObjectSupported(
-        @Nullable
-            Object adObject) {
-        return adObject instanceof HashMap;
-    }
-
-    @Override
     protected final void onResponseReceived(BidResponse response) {
-        if (mOnFetchCompleteListener != null && mAdViewReference != null && mAdViewReference.get() != null) {
-            BidResponseCache.getInstance().putBidResponse(mMopubAdUnitId, response);
-            mMediationDelegate.handleKeywordsUpdate(mAdViewReference.get(), response.getTargeting());
+        if (mOnFetchCompleteListener != null) {
+            LogUtil.debug(TAG, "On response received");
+            BidResponseCache.getInstance().putBidResponse(response.getId(), response);
+            mMediationDelegate.setResponseToLocalExtras(response);
+            mMediationDelegate.handleKeywordsUpdate(response.getTargeting());
             mOnFetchCompleteListener.onComplete(FetchDemandResult.SUCCESS);
         }
     }

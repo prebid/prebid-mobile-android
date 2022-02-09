@@ -18,33 +18,22 @@ package org.prebid.mobile.rendering.bidding.display;
 
 import android.app.Activity;
 import android.content.Context;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
-import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
-import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
-import org.prebid.mobile.test.utils.ResourceUtils;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.IOException;
-import java.util.HashMap;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -57,7 +46,7 @@ public class MediationRewardedVideoAdUnitTest {
     public void setUp() throws Exception {
         mContext = Robolectric.buildActivity(Activity.class).create().get();
         PrebidRenderingSettings.setAccountId("id");
-        mMopubRewardedAdUnit = new MediationRewardedVideoAdUnit(mContext, "mopub", "config", new MockMediationUtils());
+        mMopubRewardedAdUnit = new MediationRewardedVideoAdUnit(mContext, "config", new MockMediationUtils());
         WhiteBox.setInternalState(mMopubRewardedAdUnit, "mBidLoader", mock(BidLoader.class));
     }
 

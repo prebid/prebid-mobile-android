@@ -17,30 +17,39 @@
 package org.prebid.mobile.eventhandlers.utils;
 
 import android.os.Bundle;
-
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd;
-
-import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
+import org.prebid.mobile.NativeAdUnit;
 import org.prebid.mobile.rendering.bidding.data.NativeFetchDemandResult;
-import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.bidding.listeners.NativeAdCallback;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
-import org.prebid.mobile.rendering.utils.ntv.NativeUtils;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
 public class GamUtils {
+
     private static final String TAG = GamUtils.class.getSimpleName();
     static final HashSet<String> RESERVED_KEYS;
-
     private static final String KEY_IS_PREBID_CREATIVE = "isPrebid";
 
     static {
         RESERVED_KEYS = new HashSet<>();
+    }
+
+    public static void prepare(AdManagerAdRequest adRequest, Bundle extras) {
+        Map<String, String> keywords = new HashMap<>();
+        for (String key : extras.keySet()) {
+            Object value = extras.get(key);
+            if (value instanceof String) {
+                if (!value.equals(NativeAdUnit.BUNDLE_KEY_CACHE_ID)) {
+                    keywords.put(key, (String) value);
+                }
+            }
+        }
+
+        handleGamCustomTargetingUpdate(adRequest, keywords);
     }
 
     public static void prepare(AdManagerAdRequest adRequest, NativeFetchDemandResult result) {
@@ -57,38 +66,11 @@ public class GamUtils {
             return;
         }
 
-        if (keywords != null && !keywords.isEmpty()) {
-            Bundle bundle = adRequest.getCustomTargeting();
-            for (String key : keywords.keySet()) {
-                bundle.putString(key, keywords.get(key));
-                addReservedKeys(key);
-            }
+        Bundle bundle = adRequest.getCustomTargeting();
+        for (String key : keywords.keySet()) {
+            bundle.putString(key, keywords.get(key));
+            addReservedKeys(key);
         }
-    }
-
-    public static void findNativeAd(NativeCustomFormatAd customFormatAd, NativeAdCallback callback) {
-        if (customFormatAd == null || callback == null) {
-            LogUtil.error(TAG, "findNativeAd: Failed. Passed nativeTemplateAd or callback is invalid");
-            return;
-        }
-
-        final CharSequence cacheIdText = customFormatAd.getText(BidResponse.KEY_CACHE_ID);
-        final String cacheId = cacheIdText != null ? cacheIdText.toString() : null;
-        final NativeFetchDemandResult fetchDemandResult = createSuccessDemandResult(cacheId);
-
-        NativeUtils.findNativeAd(fetchDemandResult, callback);
-    }
-
-    public static void findNativeAd(NativeAd unifiedNativeAd, NativeAdCallback callback) {
-        if (unifiedNativeAd == null || callback == null) {
-            LogUtil.error(TAG, "findNativeAd: Failed. Passed nativeTemplateAd or callback is invalid");
-            return;
-        }
-
-        final String cacheId = unifiedNativeAd.getCallToAction();
-        final NativeFetchDemandResult fetchDemandResult = createSuccessDemandResult(cacheId);
-
-        NativeUtils.findNativeAd(fetchDemandResult, callback);
     }
 
     public static boolean didPrebidWin(NativeAd unifiedNativeAd) {
@@ -117,15 +99,6 @@ public class GamUtils {
                 bundle.remove(key);
             }
         }
-    }
-
-    private static NativeFetchDemandResult createSuccessDemandResult(String cacheId) {
-        final NativeFetchDemandResult nativeFetchDemandResult = new NativeFetchDemandResult(FetchDemandResult.SUCCESS, null);
-        final Map<String, String> keywordMap = new HashMap<>();
-        keywordMap.put(BidResponse.KEY_CACHE_ID, cacheId);
-
-        nativeFetchDemandResult.setKeyWordsMap(keywordMap);
-        return nativeFetchDemandResult;
     }
 
     private static void addReservedKeys(String key) {

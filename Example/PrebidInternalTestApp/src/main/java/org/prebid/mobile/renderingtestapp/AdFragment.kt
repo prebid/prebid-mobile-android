@@ -28,6 +28,8 @@ import android.widget.ProgressBar
 import androidx.preference.PreferenceManager
 import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.android.synthetic.main.events_bids.*
+import org.prebid.mobile.*
+import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
 import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration
 import org.prebid.mobile.rendering.models.ntv.NativeEventTracker
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetData
@@ -37,9 +39,12 @@ import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 import org.prebid.mobile.renderingtestapp.plugplay.config.*
 import org.prebid.mobile.renderingtestapp.utils.*
 
-const val CONFIGURATOR_REQUEST_CODE = 0
-
 abstract class AdFragment : BaseFragment() {
+
+    companion object {
+        const val CONFIGURATOR_REQUEST_CODE = 0
+    }
+
     var idlingResource = CountingIdlingResource(AdFragment::class.java.simpleName)
 
     protected var mockAssetName: String? = null
@@ -105,6 +110,58 @@ abstract class AdFragment : BaseFragment() {
 
     abstract fun configuratorMode(): AdConfiguratorDialogFragment.AdConfiguratorMode?
 
+    protected open fun configureNativeAdUnit(nativeAdUnit: MediationNativeAdUnit) {
+        nativeAdUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC)
+        nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED)
+        nativeAdUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL)
+
+        val methods: ArrayList<org.prebid.mobile.NativeEventTracker.EVENT_TRACKING_METHOD> = ArrayList()
+        methods.add(org.prebid.mobile.NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE)
+        methods.add(org.prebid.mobile.NativeEventTracker.EVENT_TRACKING_METHOD.JS)
+        try {
+            val tracker = NativeEventTracker(org.prebid.mobile.NativeEventTracker.EVENT_TYPE.IMPRESSION, methods)
+            nativeAdUnit.addEventTracker(tracker)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        val title = NativeTitleAsset()
+        title.setLength(90)
+        title.isRequired = true
+        nativeAdUnit.addAsset(title)
+
+        val icon = NativeImageAsset()
+        icon.imageType = NativeImageAsset.IMAGE_TYPE.ICON
+        icon.wMin = 20
+        icon.hMin = 20
+        icon.isRequired = true
+        nativeAdUnit.addAsset(icon)
+
+        val image = NativeImageAsset()
+        image.imageType = NativeImageAsset.IMAGE_TYPE.MAIN
+        image.hMin = 200
+        image.wMin = 200
+        image.isRequired = true
+        nativeAdUnit.addAsset(image)
+
+        val data = NativeDataAsset()
+        data.len = 90
+        data.dataType = NativeDataAsset.DATA_TYPE.SPONSORED
+        data.isRequired = true
+        nativeAdUnit.addAsset(data)
+
+        val body = NativeDataAsset()
+        body.isRequired = true
+        body.dataType = NativeDataAsset.DATA_TYPE.DESC
+        nativeAdUnit.addAsset(body)
+
+        val cta = NativeDataAsset()
+        cta.isRequired = true
+        cta.dataType = NativeDataAsset.DATA_TYPE.CTATEXT
+        nativeAdUnit.addAsset(cta)
+    }
+
+    @Deprecated("Use configureNativeAdUnit()")
     protected open fun getNativeAdConfig(): NativeAdConfiguration? {
         if (ConfigurationViewSettings.isEnabled && NativeConfigurationStore.getStoredNativeConfig() != null) {
             return NativeConfigurationStore.getStoredNativeConfig()
@@ -223,4 +280,14 @@ abstract class AdFragment : BaseFragment() {
     private fun setImpContextData() {
         OpenRtbConfigs.setImpContextDataTo(adView)
     }
+
+    protected fun configureOriginalPrebid() {
+        val hostUrl = PrebidRenderingSettings.getBidServerHost().hostUrl
+        val host = Host.CUSTOM
+        host.hostUrl = hostUrl
+        PrebidMobile.setApplicationContext(requireContext())
+        PrebidMobile.setPrebidServerHost(host)
+        PrebidMobile.setPrebidServerAccountId(PrebidRenderingSettings.getAccountId())
+    }
+
 }

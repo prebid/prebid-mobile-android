@@ -30,6 +30,7 @@ android {
     defaultConfig {
         buildConfigField "String", "GitHash", "\"${getGitHash()}\""
         buildConfigField "String", "VERSION", "\"${versionName}\""
+        buildConfigField "String", "OMSDK_VERSION", "\"${omSdkVersion}\""
     }
 
     dexOptions {
@@ -77,6 +78,8 @@ dependencies {
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.0'
 
     // Google play services
+    implementation project(":PrebidMobile-core")
+
     implementation 'com.google.android.gms:play-services-base:17.6.0'
     implementation 'com.google.android.gms:play-services-ads-identifier:17.0.0'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.13.3'

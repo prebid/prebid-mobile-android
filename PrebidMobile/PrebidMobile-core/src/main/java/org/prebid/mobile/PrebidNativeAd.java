@@ -22,8 +22,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
-import android.webkit.URLUtil;
-
+import androidx.annotation.NonNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,12 +31,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PrebidNativeAd {
-    private String title;
-    private String description;
-    private String iconUrl;
-    private String imageUrl;
-    private String cta;
-    private String sponsoredBy;
+
+    private static final String TAG = "PrebidNativeAd";
+
+    private final ArrayList<NativeTitle> titles = new ArrayList<>();
+    private final ArrayList<NativeImage> images = new ArrayList<>();
+    private final ArrayList<NativeData> dataList = new ArrayList<>();
     private String clickUrl;
     private ArrayList<String> imp_trackers;
     private VisibilityDetector visibilityDetector;
@@ -47,7 +46,7 @@ public class PrebidNativeAd {
     private ArrayList<ImpressionTracker> impressionTrackers;
 
 
-    static PrebidNativeAd create(String cacheId) {
+    public static PrebidNativeAd create(String cacheId) {
         String content = CacheManager.get(cacheId);
         if (!TextUtils.isEmpty(content)) {
             try {
@@ -78,31 +77,40 @@ public class PrebidNativeAd {
                     if (adObject.has("title")) {
                         JSONObject title = adObject.getJSONObject("title");
                         if (title.has("text")) {
-                            ad.setTitle(title.getString("text"));
+                            String titleText = title.getString("text");
+                            if (!titleText.isEmpty()) {
+                                ad.addTitle(new NativeTitle(titleText));
+                            }
+                        } else {
+                            LogUtil.w(TAG, "Json title object doesn't have text field");
                         }
                     }
                     if (adObject.has("data")) {
                         JSONObject data = adObject.getJSONObject("data");
-                        if (data.optInt("type") == 1) {
-                            ad.setSponsoredBy(data.getString("value"));
-                        } else if (data.optInt("type") == 2) {
-                            ad.setDescription(data.getString("value"));
-                        } else if (data.optInt("type") == 12) {
-                            ad.setCallToAction(data.getString("value"));
+
+                        if (data.has("value")) {
+                            int type = 0;
+                            if (data.has("type")) {
+                                type = data.optInt("type");
+                            }
+                            String value = data.getString("value");
+                            ad.addData(new NativeData(type, value));
+                        } else {
+                            LogUtil.w(TAG, "Json data object doesn't have type or value field");
                         }
                     }
 
                     if (adObject.has("img")) {
-                        if (adObject.optInt("id") == 1) {
-                            JSONObject img = adObject.getJSONObject("img");
-                            if (img.has("url")) {
-                                ad.setIconUrl(img.getString("url"));
+                        JSONObject img = adObject.getJSONObject("img");
+                        if (img.has("url")) {
+                            int type = 0;
+                            if (img.has("type")) {
+                                type = img.optInt("type");
                             }
-                        } else if (adObject.optInt("id") == 2) {
-                            JSONObject img = adObject.getJSONObject("img");
-                            if (img.has("url")) {
-                                ad.setImageUrl(img.getString("url"));
-                            }
+                            String url = img.getString("url");
+                            ad.addImage(new NativeImage(type, url));
+                        } else {
+                            LogUtil.w(TAG, "Json image object doesn't have url or type field");
                         }
                     }
                 }
@@ -134,7 +142,7 @@ public class PrebidNativeAd {
                         }
                     }
                 }
-                return ad.isValid() ? ad : null;
+                return ad;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -142,93 +150,122 @@ public class PrebidNativeAd {
         return null;
     }
 
-    private boolean isValid() {
-        return URLUtil.isValidUrl(clickUrl) &&
-                !TextUtils.isEmpty(title) &&
-                !TextUtils.isEmpty(description) &&
-                URLUtil.isValidUrl(iconUrl) &&
-                URLUtil.isValidUrl(imageUrl) &&
-                !TextUtils.isEmpty(cta);
+    private PrebidNativeAd() {
     }
 
-    private PrebidNativeAd() {
+    public void addTitle(NativeTitle title) {
+        titles.add(title);
+    }
+
+    public void addData(NativeData data) {
+        dataList.add(data);
+    }
+
+    public void addImage(NativeImage image) {
+        images.add(image);
+    }
+
+    @NonNull
+    public ArrayList<NativeTitle> getTitles() {
+        return titles;
+    }
+
+    @NonNull
+    public ArrayList<NativeImage> getImages() {
+        return images;
+    }
+
+    @NonNull
+    public ArrayList<NativeData> getDataList() {
+        return dataList;
     }
 
     private void setClickUrl(String clickUrl) {
         this.clickUrl = clickUrl;
     }
 
-    private void setTitle(String title) {
-        this.title = title;
-    }
-
-    private void setDescription(String description) {
-        this.description = description;
-    }
-
-    private void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl;
-    }
-
-    private void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    private void setCallToAction(String cta) {
-        this.cta = cta;
-    }
-
-    private void setSponsoredBy(String sponsoredBy) {
-        this.sponsoredBy = sponsoredBy;
-    }
-
     /**
-     * @return String title of the Native Ad
-     * */
+     * @return First title or empty string if it doesn't exist
+     */
+    @NonNull
     public String getTitle() {
-        return title;
+        if (!titles.isEmpty()) {
+            return titles.get(0).getText();
+        }
+        return "";
     }
 
     /**
-     * @return String description of the Native Ad
-     * */
+     * @return First description data value or empty string if it doesn't exist
+     */
+    @NonNull
     public String getDescription() {
-        return description;
+        for (NativeData data : dataList) {
+            if (data.getType() == NativeData.Type.DESCRIPTION) {
+                return data.getValue();
+            }
+        }
+        return "";
     }
 
     /**
-     * @return String iconUrl of the Native Ad
-     * */
+     * @return First icon url or empty string if it doesn't exist
+     */
+    @NonNull
     public String getIconUrl() {
-        return iconUrl;
+        for (NativeImage image : images) {
+            if (image.getType() == NativeImage.Type.ICON) {
+                return image.getUrl();
+            }
+        }
+        return "";
     }
 
     /**
-     * @return String imageUrl of the Native Ad
-     * */
+     * @return First main image url or empty string if it doesn't exist
+     */
+    @NonNull
     public String getImageUrl() {
-        return imageUrl;
+        for (NativeImage image : images) {
+            if (image.getType() == NativeImage.Type.MAIN_IMAGE) {
+                return image.getUrl();
+            }
+        }
+        return "";
     }
 
     /**
-     * @return String callToAction of the Native Ad
-     * */
+     * @return First call to action data value or empty string if it doesn't exist
+     */
+    @NonNull
     public String getCallToAction() {
-        return cta;
+        for (NativeData data : dataList) {
+            if (data.getType() == NativeData.Type.CALL_TO_ACTION) {
+                return data.getValue();
+            }
+        }
+        return "";
     }
 
     /**
-     * @return String sponsoredBy of the Native Ad
-     * */
+     * @return First sponsored by data value or empty string if it doesn't exist
+     */
+    @NonNull
     public String getSponsoredBy() {
-        return sponsoredBy;
+        for (NativeData data : dataList) {
+            if (data.getType() == NativeData.Type.SPONSORED_BY) {
+                return data.getValue();
+            }
+        }
+        return "";
     }
 
     /**
      * This API is used to register the view for Ad Events (#onAdClicked(), #onAdImpression, #onAdExpired)
+     *
      * @param view
      * @param listener
-     * */
+     */
     public boolean registerView(View view, final PrebidNativeAdEventListener listener) {
         if (!expired && view != null) {
             this.listener = listener;
@@ -264,10 +301,11 @@ public class PrebidNativeAd {
 
     /**
      * This API is used to register a list of views for Ad Events (#onAdClicked(), #onAdImpression, #onAdExpired)
+     *
      * @param container
      * @param viewList
      * @param listener
-     * */
+     */
     public boolean registerViewList(View container, List<View> viewList, final PrebidNativeAdEventListener listener) {
         if (container == null || viewList == null || viewList.isEmpty()) {
             return false;
@@ -327,7 +365,9 @@ public class PrebidNativeAd {
 
         // open browser
         if (openNativeIntent(clickUrl, v.getContext())) {
-            listener.onAdClicked();
+            if (listener != null) {
+                listener.onAdClicked();
+            }
             return true;
         }
         return false;

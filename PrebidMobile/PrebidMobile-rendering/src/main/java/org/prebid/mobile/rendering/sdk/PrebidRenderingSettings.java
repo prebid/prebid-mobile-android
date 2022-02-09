@@ -77,6 +77,11 @@ public class PrebidRenderingSettings {
      */
     public static final int AUTO_REFRESH_DELAY_MIN = 15000;
 
+    /**
+     * Open measurement SDK version
+     */
+    public static final String OMSDK_VERSION = BuildConfig.OMSDK_VERSION;
+
     private static final AtomicInteger INIT_SDK_TASK_COUNT = new AtomicInteger();
     private static final int MANDATORY_TASK_COUNT = 3;
 

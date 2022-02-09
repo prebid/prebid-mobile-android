@@ -21,7 +21,7 @@ import android.view.View
 import com.mopub.common.MoPub
 import com.mopub.common.MoPubReward
 import com.mopub.common.SdkConfiguration
-import com.mopub.mediation.MoPubMediationUtils
+import com.mopub.mediation.MoPubRewardedVideoMediationUtils
 import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubRewardedAdListener
 import com.mopub.mobileads.MoPubRewardedAdManager
@@ -32,7 +32,6 @@ import org.prebid.mobile.rendering.bidding.display.MediationRewardedVideoAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
-import java.util.*
 
 class MoPubRewardedVideoFragment: AdFragment() {
     override val layoutRes = R.layout.fragment_mopub_interstitial_video_rewarded
@@ -84,11 +83,11 @@ class MoPubRewardedVideoFragment: AdFragment() {
     }
 
     override fun initAd(): Any? {
+        val mediationUtils = MoPubRewardedVideoMediationUtils(keywordsMap)
         rewardedAdUnit = MediationRewardedVideoAdUnit(
             requireContext(),
-            adUnitId,
             configId,
-            MoPubMediationUtils()
+            mediationUtils
         )
         return rewardedAdUnit
     }
@@ -113,7 +112,7 @@ class MoPubRewardedVideoFragment: AdFragment() {
     }
 
     private fun fetchAdUnit(adUnitId: String) {
-        rewardedAdUnit?.fetchDemand(keywordsMap) {
+        rewardedAdUnit?.fetchDemand {
             val keywordsString = convertMapToMoPubKeywords(keywordsMap)
             val params = MoPubRewardedAdManager.RequestParameters(keywordsString)
 

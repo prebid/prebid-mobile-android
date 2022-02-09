@@ -21,7 +21,7 @@ import android.util.Log
 import android.view.View
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
-import com.mopub.mediation.MoPubMediationUtils
+import com.mopub.mediation.MoPubBannerMediationUtils
 import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubView
 import kotlinx.android.synthetic.main.events_mopub_banner.*
@@ -62,11 +62,12 @@ open class MopubBannerFragment : AdFragment() {
         bannerView?.bannerAdListener = listener
         viewContainer.addView(bannerView)
 
+        val mediationUtils = MoPubBannerMediationUtils(bannerView)
         bannerAdUnit = MediationBannerAdUnit(
             requireContext(),
             configId,
             AdSize(width, height),
-            MoPubMediationUtils()
+            mediationUtils
         )
         bannerAdUnit?.setRefreshInterval(refreshDelay)
         return bannerAdUnit
@@ -74,7 +75,7 @@ open class MopubBannerFragment : AdFragment() {
 
     override fun loadAd() {
         MoPub.initializeSdk(requireContext(), SdkConfiguration.Builder(adUnitId).build()) {
-            bannerAdUnit?.fetchDemand(bannerView!!) {
+            bannerAdUnit?.fetchDemand {
                 bannerView?.loadAd()
             }
         }

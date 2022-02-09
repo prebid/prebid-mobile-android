@@ -195,6 +195,12 @@ class DemandFetcher {
                         public void onDemandReady(final HashMap<String, String> demand, String auctionId) {
                             if (RequestRunnable.this.auctionId.equals(auctionId)) {
                                 Util.apply(demand, DemandFetcher.this.adObject);
+                                if (demandAdapter instanceof PrebidServerAdapter) {
+                                    String cacheId = ((PrebidServerAdapter) demandAdapter).cacheIdSaver.getCacheId();
+                                    if (cacheId != null) {
+                                        Util.saveCacheId(cacheId, DemandFetcher.this.adObject);
+                                    }
+                                }
                                 LogUtil.i("Successfully set the following keywords: " + demand.toString());
                                 notifyListener(ResultCode.SUCCESS);
                             }

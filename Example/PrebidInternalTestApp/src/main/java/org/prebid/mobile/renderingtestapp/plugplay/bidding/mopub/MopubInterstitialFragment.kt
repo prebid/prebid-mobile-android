@@ -20,7 +20,7 @@ import android.os.Bundle
 import android.view.View
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
-import com.mopub.mediation.MoPubMediationUtils
+import com.mopub.mediation.MoPubInterstitialMediationUtils
 import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubInterstitial
 import kotlinx.android.synthetic.main.events_mopub_interstitial.*
@@ -80,7 +80,7 @@ class MopubInterstitialFragment : AdFragment() {
 
     override fun loadAd() {
         MoPub.initializeSdk(requireContext(), SdkConfiguration.Builder(adUnitId).build()) {
-            mopubInterstitialAdUnit.fetchDemand(moPubInterstitial) {
+            mopubInterstitialAdUnit.fetchDemand {
                 moPubInterstitial.load()
             }
         }
@@ -101,12 +101,13 @@ class MopubInterstitialFragment : AdFragment() {
         moPubInterstitial.interstitialAdListener = mListener
 
         val isVideo = (title.contains("Video", true) && !title.contains("MRAID", true))
+        val mediationUtils = MoPubInterstitialMediationUtils(moPubInterstitial)
         mopubInterstitialAdUnit = if (isVideo) {
             MediationInterstitialAdUnit(
                 requireContext(),
                 configId,
                 AdUnitFormat.VIDEO,
-                MoPubMediationUtils()
+                mediationUtils
             )
         }
         else {
@@ -114,7 +115,7 @@ class MopubInterstitialFragment : AdFragment() {
                 requireContext(),
                 configId,
                 AdSize(minWidthPerc, minHeightPerc),
-                MoPubMediationUtils()
+                mediationUtils
             )
         }
     }
