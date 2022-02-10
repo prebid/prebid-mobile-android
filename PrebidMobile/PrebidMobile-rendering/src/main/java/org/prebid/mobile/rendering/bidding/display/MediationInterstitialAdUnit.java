@@ -17,10 +17,8 @@
 package org.prebid.mobile.rendering.bidding.display;
 
 import android.content.Context;
-
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
@@ -72,4 +70,15 @@ public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
                 break;
         }
     }
+
+    /**
+     * Sets min width and height in percentage. Range from 0 to 100.
+     */
+    public void setMinSizePercentage(
+            @IntRange(from = 0, to = 100) int width,
+            @IntRange(from = 0, to = 100) int height
+    ) {
+        mAdUnitConfig.setMinSizePercentage(new AdSize(width, height));
+    }
+
 }

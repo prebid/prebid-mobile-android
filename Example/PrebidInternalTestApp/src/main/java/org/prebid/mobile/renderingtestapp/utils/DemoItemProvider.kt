@@ -22,6 +22,7 @@ import com.google.android.gms.ads.AdSize
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.data.DemoItem
 import org.prebid.mobile.renderingtestapp.data.Tag
+import org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobInterstitialFragment
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeFragment
 
 class DemoItemProvider private constructor() {
@@ -1164,9 +1165,10 @@ class DemoItemProvider private constructor() {
                         R.string.mock_config_id_video_interstitial_320_480,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
                         320, 480
-                    )
+                    ).apply { putBoolean(AdMobInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
+
             demoList.add(
                 DemoItem(
                     getString(R.string.demo_bidding_admob_interstitial_admob),
@@ -1176,7 +1178,7 @@ class DemoItemProvider private constructor() {
                         R.string.prebid_config_id_no_bids,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
                         320, 480
-                    )
+                    ).apply { putBoolean(AdMobInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
             demoList.add(
@@ -1188,7 +1190,7 @@ class DemoItemProvider private constructor() {
                         R.string.mock_config_id_video_interstitial_320_480,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
                         320, 480
-                    )
+                    ).apply { putBoolean(AdMobInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
 
@@ -1245,7 +1247,7 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_admob_interstitial_display_adapter),
                     adMobInterstitialAction,
-                    adMobInterstitialVideoTagList,
+                    adMobInterstitialTagList,
                     createBannerBundle(
                         R.string.mock_config_id_interstitial_320_480,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
@@ -1827,7 +1829,7 @@ class DemoItemProvider private constructor() {
                         R.string.prebid_config_id_video_rewarded_320_480,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
                         320, 50
-                    )
+                    ).apply { putBoolean(AdMobInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
             demoList.add(
@@ -1839,7 +1841,7 @@ class DemoItemProvider private constructor() {
                         R.string.prebid_config_id_no_bids,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
                         320, 50
-                    )
+                    ).apply { putBoolean(AdMobInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
 
