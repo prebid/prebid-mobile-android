@@ -18,7 +18,6 @@ package org.prebid.mobile.rendering.bidding.loader;
 
 import android.app.Activity;
 import android.content.Context;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +25,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.models.AdConfiguration;
-import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetData;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetImage;
 import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
@@ -39,9 +37,7 @@ import org.robolectric.annotation.Config;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)

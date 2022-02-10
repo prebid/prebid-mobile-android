@@ -20,18 +20,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.prebid.mobile.rendering.bidding.listeners.NativeAdListener;
 import org.prebid.mobile.rendering.models.CreativeVisibilityTracker;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerResult;
 import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetData;
-import org.prebid.mobile.rendering.session.manager.NativeOmVerification;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposure;
 import org.prebid.mobile.test.utils.ResourceUtils;
@@ -41,18 +38,11 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.prebid.mobile.rendering.views.browser.AdBrowserActivity.EXTRA_URL;
 
 @RunWith(RobolectricTestRunner.class)

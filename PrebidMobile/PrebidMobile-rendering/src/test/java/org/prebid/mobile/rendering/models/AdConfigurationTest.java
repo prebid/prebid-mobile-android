@@ -20,16 +20,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)

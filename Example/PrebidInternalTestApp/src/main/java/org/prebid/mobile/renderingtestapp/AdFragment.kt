@@ -30,14 +30,12 @@ import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.android.synthetic.main.events_bids.*
 import org.prebid.mobile.*
 import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
-import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration
-import org.prebid.mobile.rendering.models.ntv.NativeEventTracker
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetData
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetImage
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetTitle
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 import org.prebid.mobile.renderingtestapp.plugplay.config.*
-import org.prebid.mobile.renderingtestapp.utils.*
+import org.prebid.mobile.renderingtestapp.utils.BaseFragment
+import org.prebid.mobile.renderingtestapp.utils.ConfigurationViewSettings
+import org.prebid.mobile.renderingtestapp.utils.MockServerUtils
+import org.prebid.mobile.renderingtestapp.utils.OpenRtbConfigs
 
 abstract class AdFragment : BaseFragment() {
 
@@ -159,60 +157,6 @@ abstract class AdFragment : BaseFragment() {
         cta.isRequired = true
         cta.dataType = NativeDataAsset.DATA_TYPE.CTATEXT
         nativeAdUnit.addAsset(cta)
-    }
-
-    @Deprecated("Use configureNativeAdUnit()")
-    protected open fun getNativeAdConfig(): NativeAdConfiguration? {
-        if (ConfigurationViewSettings.isEnabled && NativeConfigurationStore.getStoredNativeConfig() != null) {
-            return NativeConfigurationStore.getStoredNativeConfig()
-        }
-
-        val nativeAdConfiguration = NativeAdConfiguration()
-        nativeAdConfiguration.contextType = NativeAdConfiguration.ContextType.SOCIAL_CENTRIC
-        nativeAdConfiguration.placementType = NativeAdConfiguration.PlacementType.CONTENT_FEED
-        nativeAdConfiguration.contextSubType = NativeAdConfiguration.ContextSubType.GENERAL_SOCIAL
-
-        val methods = ArrayList<NativeEventTracker.EventTrackingMethod>()
-        methods.add(NativeEventTracker.EventTrackingMethod.IMAGE)
-        methods.add(NativeEventTracker.EventTrackingMethod.JS)
-        val eventTracker = NativeEventTracker(NativeEventTracker.EventType.IMPRESSION, methods)
-        nativeAdConfiguration.addTracker(eventTracker)
-
-        val assetTitle = NativeAssetTitle()
-        assetTitle.len = 90
-        assetTitle.isRequired = true
-        nativeAdConfiguration.addAsset(assetTitle)
-
-        val assetIcon = NativeAssetImage()
-        assetIcon.type = NativeAssetImage.ImageType.ICON
-        assetIcon.wMin = 20
-        assetIcon.hMin = 20
-        assetIcon.isRequired = true
-        nativeAdConfiguration.addAsset(assetIcon)
-
-        val assetImage = NativeAssetImage()
-        assetImage.hMin = 20
-        assetImage.wMin = 200
-        assetImage.isRequired = true
-        nativeAdConfiguration.addAsset(assetImage)
-
-        val assetData = NativeAssetData()
-        assetData.len = 90
-        assetData.type = NativeAssetData.DataType.SPONSORED
-        assetData.isRequired = true
-        nativeAdConfiguration.addAsset(assetData)
-
-        val assetBody = NativeAssetData()
-        assetBody.isRequired = true
-        assetBody.type = NativeAssetData.DataType.DESC
-        nativeAdConfiguration.addAsset(assetBody)
-
-        val assetCta = NativeAssetData()
-        assetCta.isRequired = true
-        assetCta.type = NativeAssetData.DataType.CTA_TEXT
-        nativeAdConfiguration.addAsset(assetCta)
-
-        return nativeAdConfiguration
     }
 
     private fun startAd() {

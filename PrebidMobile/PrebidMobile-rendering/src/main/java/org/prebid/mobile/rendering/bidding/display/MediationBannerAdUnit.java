@@ -23,7 +23,6 @@ import org.prebid.mobile.rendering.bidding.enums.BannerAdPosition;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdPosition;
-import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
@@ -75,15 +74,6 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
         @NonNull
             OnFetchCompleteListener listener) {
         super.fetchDemand(listener);
-    }
-
-    /**
-     * Sets NativeAdConfiguration and enables Native Ad requests
-     *
-     * @param configuration - configured NativeAdConfiguration class
-     */
-    public void setNativeAdConfiguration(NativeAdConfiguration configuration) {
-        mAdUnitConfig.setNativeAdConfiguration(configuration);
     }
 
     public final void addAdditionalSizes(AdSize... sizes) {

@@ -16,21 +16,15 @@
 
 package org.prebid.mobile.rendering.models;
 
+import androidx.annotation.Nullable;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.interstitial.InterstitialSizes;
-import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.ExoPlayerView;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import androidx.annotation.Nullable;
+import java.util.*;
 
 public class AdConfiguration {
 
@@ -49,7 +43,6 @@ public class AdConfiguration {
     @Nullable
     private AdPosition mAdPosition;
 
-    private NativeAdConfiguration mNativeAdConfiguration;
 
     private String mInterstitialSize;
     private String mContentUrl;
@@ -97,18 +90,6 @@ public class AdConfiguration {
 
     public int getAutoRefreshDelay() {
         return mAutoRefreshDelayInMillis;
-    }
-
-    // TODO: Merge Native engine from original SDK and rendering codebase
-    @Deprecated
-    public NativeAdConfiguration getNativeAdConfiguration() {
-        return mNativeAdConfiguration;
-    }
-
-    // TODO: Merge Native engine from original SDK and rendering codebase
-    @Deprecated
-    public void setNativeAdConfiguration(NativeAdConfiguration nativeAdConfiguration) {
-        mNativeAdConfiguration = nativeAdConfiguration;
     }
 
     public AdUnitIdentifierType getAdUnitIdentifierType() {
@@ -215,10 +196,6 @@ public class AdConfiguration {
 
     public void clearContextKeywords() {
         mContextKeywordsSet.clear();
-    }
-
-    public boolean isNative() {
-        return mNativeAdConfiguration != null;
     }
 
     private <E, U> void addValue(Map<E, Set<U>> map, E key, U value) {

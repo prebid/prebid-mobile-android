@@ -20,7 +20,6 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-
 import org.prebid.mobile.rendering.R;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.InterstitialView;
@@ -442,9 +441,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
         List<CreativeFactory> creativeFactories = transaction.getCreativeFactories();
         if (!creativeFactories.isEmpty()) {
             mCurrentCreative = creativeFactories.get(0).getCreative();
-            if (!mAdConfiguration.isNative()) {
                 mCurrentCreative.createOmAdSession();
-            }
         }
         try {
             final AdDetails adDetails = new AdDetails();

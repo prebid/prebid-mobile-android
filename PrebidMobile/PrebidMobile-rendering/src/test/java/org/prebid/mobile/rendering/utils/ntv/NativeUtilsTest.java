@@ -18,23 +18,16 @@ package org.prebid.mobile.rendering.utils.ntv;
 
 import org.junit.Test;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
-import org.prebid.mobile.rendering.bidding.data.NativeFetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.bidding.data.ntv.NativeAd;
-import org.prebid.mobile.rendering.bidding.data.ntv.NativeAdParser;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
-import org.prebid.mobile.rendering.bidding.listeners.NativeAdCallback;
 import org.prebid.mobile.test.utils.WhiteBox;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class NativeUtilsTest {
 

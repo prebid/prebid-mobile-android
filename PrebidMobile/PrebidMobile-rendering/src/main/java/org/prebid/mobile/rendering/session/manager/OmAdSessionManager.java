@@ -20,24 +20,14 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
-
+import androidx.annotation.Nullable;
 import com.iab.omid.library.prebidorg.Omid;
 import com.iab.omid.library.prebidorg.ScriptInjector;
-import com.iab.omid.library.prebidorg.adsession.AdEvents;
-import com.iab.omid.library.prebidorg.adsession.AdSession;
-import com.iab.omid.library.prebidorg.adsession.AdSessionConfiguration;
-import com.iab.omid.library.prebidorg.adsession.AdSessionContext;
-import com.iab.omid.library.prebidorg.adsession.CreativeType;
-import com.iab.omid.library.prebidorg.adsession.FriendlyObstructionPurpose;
-import com.iab.omid.library.prebidorg.adsession.ImpressionType;
-import com.iab.omid.library.prebidorg.adsession.Owner;
-import com.iab.omid.library.prebidorg.adsession.Partner;
-import com.iab.omid.library.prebidorg.adsession.VerificationScriptResource;
+import com.iab.omid.library.prebidorg.adsession.*;
 import com.iab.omid.library.prebidorg.adsession.media.InteractionType;
 import com.iab.omid.library.prebidorg.adsession.media.MediaEvents;
 import com.iab.omid.library.prebidorg.adsession.media.Position;
 import com.iab.omid.library.prebidorg.adsession.media.VastProperties;
-
 import org.prebid.mobile.rendering.BuildConfig;
 import org.prebid.mobile.rendering.models.TrackingEvent;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
@@ -52,8 +42,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.Nullable;
 
 /**
  * OmAdSessionManager is an implementation of Open Measurement used to track
@@ -134,25 +122,6 @@ public class OmAdSessionManager {
         initAdSession(adSessionConfiguration, adSessionContext);
         initAdEvents();
         initMediaAdEvents();
-    }
-
-    /**
-     * Initializes Native Display AdSession from NativeOmVerification
-     *
-     * @param view                 - native ad view
-     * @param nativeOmVerification - parsed NativeOmVerification
-     */
-    public void initNativeDisplayAdSession(View view,
-                                           NativeOmVerification nativeOmVerification, String contentUrl) {
-        List<VerificationScriptResource> verificationScriptResources = createVerificationScriptResources(nativeOmVerification);
-        AdSessionContext adSessionContext = createAdSessionContext(verificationScriptResources, contentUrl);
-        AdSessionConfiguration adSessionConfiguration = createAdSessionConfiguration(CreativeType.NATIVE_DISPLAY,
-                                                                                     ImpressionType.ONE_PIXEL,
-                                                                                     Owner.NATIVE,
-                                                                                     Owner.NONE);
-        initAdSession(adSessionConfiguration, adSessionContext);
-        registerAdView(view);
-        initAdEvents();
     }
 
     /**
@@ -557,25 +526,4 @@ public class OmAdSessionManager {
         return verificationScriptResources;
     }
 
-    private List<VerificationScriptResource> createVerificationScriptResources(NativeOmVerification nativeOmVerification) {
-        List<VerificationScriptResource> verificationScriptResources = new ArrayList<>();
-        if (nativeOmVerification.getOmidJsUrl() == null
-            || nativeOmVerification.getVendorKey() == null
-            || nativeOmVerification.getVerificationParameters() == null) {
-            LogUtil.error(TAG, "Failed to create VerificationResource. $nativeOmVerification");
-            return verificationScriptResources;
-        }
-
-        try {
-            VerificationScriptResource scriptResource = VerificationScriptResource.createVerificationScriptResourceWithParameters(nativeOmVerification.getVendorKey(),
-                                                                                                                                  new URL(nativeOmVerification.getOmidJsUrl()),
-                                                                                                                                  nativeOmVerification.getVerificationParameters());
-            verificationScriptResources.add(scriptResource);
-        }
-        catch (MalformedURLException e) {
-            LogUtil.error(TAG, "Failed to generate VerificationResources: " + e.getMessage());
-        }
-
-        return verificationScriptResources;
-    }
 }

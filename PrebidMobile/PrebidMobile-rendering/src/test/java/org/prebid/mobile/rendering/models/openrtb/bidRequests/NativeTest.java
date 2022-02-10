@@ -22,7 +22,6 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetData;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetImage;
@@ -30,8 +29,6 @@ import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
-
-import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
 public class NativeTest {

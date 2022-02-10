@@ -27,7 +27,6 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdConfiguration;
-import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;

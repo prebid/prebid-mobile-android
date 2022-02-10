@@ -18,7 +18,6 @@ package org.prebid.mobile.renderingtestapp.utils
 
 import android.content.Context
 import android.os.Bundle
-import com.google.android.gms.ads.AdSize
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.data.DemoItem
 import org.prebid.mobile.renderingtestapp.data.Tag
@@ -390,40 +389,6 @@ class DemoItemProvider private constructor() {
             // Native
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_native_styles_map),
-                    R.id.action_header_bidding_to_in_app_native_styles,
-                    ppmNativeTagList,
-                    createBannerBundle(R.string.mock_config_id_native_styles, null, 300, 250)
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_in_app_native_styles_keys),
-                    R.id.action_header_bidding_to_in_app_native_styles,
-                    ppmNativeTagList,
-                    createBannerBundle(R.string.mock_config_id_native_styles, null, 300, 250)
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_in_app_native_styles_no_assets),
-                    R.id.action_header_bidding_to_in_app_native_styles_no_assets,
-                    ppmNativeTagList,
-                    createBannerBundle(R.string.mock_config_id_native_styles, null, 300, 250)
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_in_app_native_styles_no_creative),
-                    R.id.action_header_bidding_to_in_app_native_styles,
-                    ppmNativeTagList,
-                    createBannerBundle(R.string.mock_config_id_native_styles, null, 300, 250)
-                )
-            )
-
-
-            demoList.add(
-                DemoItem(
                     getString(R.string.demo_bidding_in_app_native),
                     R.id.action_header_bidding_to_in_app_native,
                     ppmNativeTagList,
@@ -701,46 +666,6 @@ class DemoItemProvider private constructor() {
             )
 
             // Native
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_gam_native_styles_mrect),
-                    R.id.action_header_bidding_to_gam_native_styles,
-                    gamNativeTagList,
-                    createBannerBundle(
-                        R.string.mock_config_id_native_styles,
-                        R.string.adunit_gam_native_mrect,
-                        300,
-                        250
-                    )
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_gam_native_styles_no_assets),
-                    R.id.action_header_bidding_to_gam_native_styles_no_assets,
-                    gamNativeTagList,
-                    createBannerBundle(
-                        R.string.mock_config_id_native_styles,
-                        R.string.adunit_gam_native_mrect,
-                        300,
-                        250
-                    )
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_gam_native_styles_fluid),
-                    R.id.action_header_bidding_to_gam_native_styles,
-                    gamNativeTagList,
-                    createBannerBundle(
-                        R.string.mock_config_id_native_styles,
-                        R.string.adunit_gam_native_fluid,
-                        AdSize.FLUID.width,
-                        AdSize.FLUID.height
-                    )
-                )
-            )
-
             var gamNativeBundle = createBannerBundle(
                 R.string.mock_config_id_native_styles,
                 R.string.adunit_gam_native_custom_template
@@ -1032,22 +957,6 @@ class DemoItemProvider private constructor() {
             // Native
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_mopub_native_styles),
-                    R.id.action_header_bidding_to_mopub_native_styles,
-                    mopubNativeTagList,
-                    createBannerBundle(R.string.mock_config_id_native_styles, R.string.mopub_native_styles, 300, 250)
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_mopub_native_styles_no_assets),
-                    R.id.action_header_bidding_to_mopub_native_styles_no_assets,
-                    mopubNativeTagList,
-                    createBannerBundle(R.string.mock_config_id_native_styles, R.string.mopub_native_styles, 300, 250)
-                )
-            )
-            demoList.add(
-                DemoItem(
                     getString(R.string.demo_bidding_mopub_native_adapter),
                     R.id.action_header_bidding_to_mopub_native,
                     mopubNativeTagList,
@@ -1307,7 +1216,6 @@ class DemoItemProvider private constructor() {
             val ppmInterstitialTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.INTERSTITIAL, Tag.REMOTE)
             val ppmMraidTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.MRAID, Tag.REMOTE)
             val ppmVideoTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.VIDEO, Tag.REMOTE)
-            val ppmNativeTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.NATIVE, Tag.REMOTE)
 
             demoList.add(
                 DemoItem(
@@ -1391,23 +1299,6 @@ class DemoItemProvider private constructor() {
                     R.id.action_header_bidding_to_in_app_banner_video,
                     ppmVideoTagList,
                     createBannerBundle(R.string.prebid_config_id_no_bids, null, 300, 250)
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_in_app_native_styles_map),
-                    R.id.action_header_bidding_to_in_app_native_styles,
-                    ppmNativeTagList,
-                    createBannerBundle(R.string.prebid_config_id_native_styles, null, 300, 250)
-                )
-            )
-            // Native Ad
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_in_app_native),
-                    R.id.action_header_bidding_to_in_app_native,
-                    ppmNativeTagList,
-                    createBannerBundle(R.string.prebid_config_id_qa_native_styles)
                 )
             )
         }
@@ -1535,19 +1426,6 @@ class DemoItemProvider private constructor() {
                         R.string.adunit_gam_interstitial_video_320_480_no_bids,
                         MIN_WIDTH_PERC,
                         MIN_HEIGHT_PERC
-                    )
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_gam_native_styles_mrect),
-                    R.id.action_header_bidding_to_gam_native_styles,
-                    gamNativeTagList,
-                    createBannerBundle(
-                        R.string.prebid_config_id_native_styles,
-                        R.string.adunit_gam_native_mrect,
-                        300,
-                        250
                     )
                 )
             )
@@ -1715,14 +1593,6 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_mopub_rewarded_video_end_card_320_480_no_bids),
                     mopubRewardedAction, mopubVideoTagList,
                     createBannerBundle(R.string.prebid_config_id_no_bids, R.string.mopub_rewarded_video_bidding_no_bids)
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_mopub_native_styles),
-                    R.id.action_header_bidding_to_mopub_native_styles,
-                    mopubNativeTagList,
-                    createBannerBundle(R.string.prebid_config_id_native_styles, R.string.mopub_native_styles, 300, 250)
                 )
             )
             demoList.add(
