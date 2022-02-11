@@ -16,7 +16,6 @@
 
 package org.prebid.mobile.rendering.models;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.errors.AdException;
@@ -25,18 +24,10 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.*;
-import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class AdConfigurationTest {
-
-    private AdConfiguration mAdConfiguration;
-
-    @Before
-    public void setUp() throws Exception {
-        mAdConfiguration = new AdConfiguration();
-    }
 
     @Test
     public void testAdConfiguration() {
@@ -46,16 +37,5 @@ public class AdConfigurationTest {
         assertNotNull(adConfig);
         assertNull(err);
         assertEquals(PrebidRenderingSettings.AUTO_REFRESH_DELAY_DEFAULT, adConfig.getAutoRefreshDelay());
-    }
-
-    @Test
-    public void whenIsNativeAndNativeAdConfigurationIsNull_ReturnFalse() {
-        assertFalse(mAdConfiguration.isNative());
-    }
-
-    @Test
-    public void whenIsNativeAndNativeAdConfigurationIsNotNull_ReturnTrue() {
-        mAdConfiguration.setNativeAdConfiguration(mock(NativeAdConfiguration.class));
-        assertTrue(mAdConfiguration.isNative());
     }
 }

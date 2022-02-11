@@ -18,8 +18,6 @@ package org.prebid.mobile.rendering.bidding.display;
 
 import android.app.Activity;
 import android.content.Context;
-import android.view.View;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,27 +27,23 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
-import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.enums.BannerAdPosition;
 import org.prebid.mobile.rendering.bidding.enums.Host;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
-import org.prebid.mobile.test.utils.ResourceUtils;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -84,24 +78,20 @@ public class MediationBaseAdUnitTest {
 
     @Test
     public void whenFetchDemandAndNotMoPubViewPassed_InvalidAdObjectResult() {
+        PrebidRenderingSettings.setAccountId("testAccountId");
         new MediationBaseAdUnit(mContext, "123", mMockAdSize, new MockMediationUtils()) {
             @Override
             protected void initAdConfig(String configId, AdSize adSize) {
                 mAdUnitConfig.setConfigId(configId);
             }
-
-            @Override
-            protected boolean isAdObjectSupported(Object adObject) {
-                return false;
-            }
-        }.fetchDemand(mock(View.class), result -> {
+        }.fetchDemand(result -> {
             assertEquals(FetchDemandResult.INVALID_AD_OBJECT, result);
         });
     }
 
     @Test
     public void whenFetchDemandAndNoAccountId_InvalidAccountIdResult() {
-        mBaseAdUnit.fetchDemand(mMopubView, result -> {
+        mBaseAdUnit.fetchDemand(result -> {
             assertEquals(FetchDemandResult.INVALID_ACCOUNT_ID, result);
         });
     }
@@ -110,7 +100,7 @@ public class MediationBaseAdUnitTest {
     public void whenFetchDemandAndNoConfigId_InvalidConfigIdResult() {
         PrebidRenderingSettings.setAccountId("id");
         mBaseAdUnit = createAdUnit("");
-        mBaseAdUnit.fetchDemand(mMopubView, result -> {
+        mBaseAdUnit.fetchDemand(result -> {
             assertEquals(FetchDemandResult.INVALID_CONFIG_ID, result);
         });
     }
@@ -122,7 +112,7 @@ public class MediationBaseAdUnitTest {
         custom.setHostUrl("");
         PrebidRenderingSettings.setBidServerHost(custom);
         mBaseAdUnit = createAdUnit("123");
-        mBaseAdUnit.fetchDemand(mMopubView, result -> {
+        mBaseAdUnit.fetchDemand(result -> {
             assertEquals(FetchDemandResult.INVALID_HOST_URL, result);
         });
     }
@@ -130,7 +120,7 @@ public class MediationBaseAdUnitTest {
     @Test
     public void whenFetchDemandAndEverythingOK_BidLoaderLoadCalled() {
         PrebidRenderingSettings.setAccountId("id");
-        mBaseAdUnit.fetchDemand(mMopubView, result -> {
+        mBaseAdUnit.fetchDemand(result -> {
         });
         verify(mMockBidLoader).load();
     }
@@ -147,7 +137,7 @@ public class MediationBaseAdUnitTest {
         OnFetchCompleteListener mockListener = mock(OnFetchCompleteListener.class);
         AdException adException = new AdException(AdException.INTERNAL_ERROR, "");
 
-        mBaseAdUnit.fetchDemand(mMopubView, mockListener);
+        mBaseAdUnit.fetchDemand(mockListener);
         mBaseAdUnit.onErrorReceived(adException);
         verify(mockListener).onComplete(FetchDemandResult.SERVER_ERROR);
     }
@@ -224,11 +214,6 @@ public class MediationBaseAdUnitTest {
             @Override
             protected void initAdConfig(String configId, AdSize adSize) {
                 mAdUnitConfig.setConfigId(configId);
-            }
-
-            @Override
-            protected boolean isAdObjectSupported(Object adObject) {
-                return true;
             }
         };
         WhiteBox.setInternalState(baseAdUnit, "mBidLoader", mMockBidLoader);

@@ -38,7 +38,6 @@ import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -98,14 +97,6 @@ public class MediationBannerAdUnitTest {
         mMediationBannerAdUnit.stopRefresh();
 
         verify(mMockBidLoader, times(1)).cancelRefresh();
-    }
-
-    @Test
-    public void whenSetNativeAdConfiguration_ConfigAssignedToAdConfiguration() {
-        AdConfiguration mockConfiguration = mock(AdConfiguration.class);
-        WhiteBox.setInternalState(mMediationBannerAdUnit, "mAdUnitConfig", mockConfiguration);
-        mMediationBannerAdUnit.setNativeAdConfiguration(mock(NativeAdConfiguration.class));
-        verify(mockConfiguration).setNativeAdConfiguration(any(NativeAdConfiguration.class));
     }
 
     @Test

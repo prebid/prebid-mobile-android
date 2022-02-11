@@ -138,24 +138,6 @@ public class BannerViewTest {
     }
 
     @Test
-    public void loadAd_NativeWithEmptyOrNullNativeStylesCreative_DoNothing()
-    throws IllegalAccessException {
-        NativeAdConfiguration nativeAdConfiguration = new NativeAdConfiguration();
-        BannerView ppmBannerView = new BannerView(mMockContext, AD_UNIT_ID, AD_SIZE);
-        WhiteBox.field(BannerView.class, "mBidLoader").set(ppmBannerView, mMockBidLoader);
-
-        nativeAdConfiguration.setNativeStylesCreative("");
-        ppmBannerView.setNativeAdConfiguration(nativeAdConfiguration);
-
-        ppmBannerView.loadAd();
-
-        nativeAdConfiguration.setNativeStylesCreative(null);
-        ppmBannerView.loadAd();
-
-        verifyZeroInteractions(mMockBidLoader);
-    }
-
-    @Test
     public void loadAdWithValidBidLoaderAndPrimaryAdRequestNotInProgress_ExecuteBidLoad() {
         mBannerView.loadAd();
 
@@ -226,15 +208,6 @@ public class BannerViewTest {
         mBannerView.setVideoPlacementType(VideoPlacementType.IN_FEED);
         assertEquals(VideoPlacementType.IN_FEED, mBannerView.getVideoPlacementType());
     }
-
-    @Test
-    public void whenSetNativeAdConfiguration_ConfigAssignedToAdConfiguration() {
-        AdConfiguration mockConfiguration = mock(AdConfiguration.class);
-        WhiteBox.setInternalState(mBannerView, "mAdUnitConfig", mockConfiguration);
-        mBannerView.setNativeAdConfiguration(mock(NativeAdConfiguration.class));
-        verify(mockConfiguration).setNativeAdConfiguration(any(NativeAdConfiguration.class));
-    }
-
     //region ======================= BidRequestListener tests
     @Test
     public void onFetchComplete_AssignWinningBidMarkPrimaryServerRequestInProgressRequestAdWithBid() {
