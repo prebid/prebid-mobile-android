@@ -25,7 +25,6 @@ import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubInterstitial
 import kotlinx.android.synthetic.main.events_mopub_interstitial.*
 import kotlinx.android.synthetic.main.fragment_mopub_interstitial.*
-import org.prebid.mobile.rendering.bidding.data.AdSize
 import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.AdFragment
@@ -114,10 +113,11 @@ class MopubInterstitialFragment : AdFragment() {
             MediationInterstitialAdUnit(
                 requireContext(),
                 configId,
-                AdSize(minWidthPerc, minHeightPerc),
+                AdUnitFormat.DISPLAY,
                 mediationUtils
             )
         }
+        mopubInterstitialAdUnit.setMinSizePercentage(30, 30)
     }
 
     private fun handleLoadButtonClick() {

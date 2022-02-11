@@ -15,6 +15,7 @@ import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubBanner
 import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubRewardedInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubVideoInterstitial
+import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 
 object AdTypesRepository {
 
@@ -247,7 +248,8 @@ object AdTypesRepository {
                     InAppMoPubVideoInterstitial.create(
                         activity,
                         "062a5be1c0764e84b45244ecd58b237f",
-                        "28259226-68de-49f8-88d6-f0f2fab846e3"
+                        "28259226-68de-49f8-88d6-f0f2fab846e3",
+                        30, 30
                     )
                 },
                 onDestroy = { InAppMoPubVideoInterstitial.destroy() }
@@ -285,7 +287,8 @@ object AdTypesRepository {
                     InAppAdMobInterstitial.create(
                         activity,
                         "ca-app-pub-1875909575462531/6393291067",
-                        "5a4b8dcf-f984-4b04-9448-6529908d6cb6"
+                        "5a4b8dcf-f984-4b04-9448-6529908d6cb6",
+                        AdUnitFormat.DISPLAY
                     )
                 },
                 onDestroy = { InAppAdMobInterstitial.destroy() }
@@ -296,7 +299,8 @@ object AdTypesRepository {
                     InAppAdMobInterstitial.create(
                         activity,
                         "ca-app-pub-1875909575462531/6393291067",
-                        "12f58bc2-b664-4672-8d19-638bcc96fd5c"
+                        "12f58bc2-b664-4672-8d19-638bcc96fd5c",
+                        AdUnitFormat.VIDEO
                     )
                 },
                 onDestroy = { InAppAdMobInterstitial.destroy() }

@@ -31,6 +31,7 @@ import kotlinx.android.synthetic.main.fragment_interstitial_html_with_banners.*
 import org.prebid.mobile.rendering.bidding.data.AdSize
 import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
 import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit
+import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBannersWithInterstitialFragment
 import org.prebid.mobile.renderingtestapp.utils.getAdDescription
@@ -63,9 +64,10 @@ class MopubBannersWithInterstitialFragment : BaseBannersWithInterstitialFragment
             MediationInterstitialAdUnit(
                 requireContext(),
                 interstitialConfigId,
-                AdSize(30, 30),
+                AdUnitFormat.DISPLAY,
                 mediationUtils
             )
+        mediationInterstitialAdUnit?.setMinSizePercentage(30, 30)
 
         fetchInterstitial()
     }

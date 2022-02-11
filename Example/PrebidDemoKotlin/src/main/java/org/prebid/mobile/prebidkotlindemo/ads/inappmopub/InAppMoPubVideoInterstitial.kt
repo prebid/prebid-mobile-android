@@ -16,7 +16,13 @@ object InAppMoPubVideoInterstitial {
     private var moPubInterstitial: MoPubInterstitial? = null
     private var adUnit: MediationInterstitialAdUnit? = null
 
-    fun create(activity: Activity, adUnitId: String, configId: String) {
+    fun create(
+        activity: Activity,
+        adUnitId: String,
+        configId: String,
+        minPercentageWidth: Int,
+        minPercentageHeight: Int
+    ) {
         moPubInterstitial = MoPubInterstitial(activity, adUnitId)
         moPubInterstitial?.interstitialAdListener = object : MoPubInterstitial.InterstitialAdListener {
             override fun onInterstitialLoaded(p0: MoPubInterstitial?) {
@@ -35,6 +41,7 @@ object InAppMoPubVideoInterstitial {
             AdUnitFormat.VIDEO,
             mediationUtils
         )
+        adUnit?.setMinSizePercentage(minPercentageWidth, minPercentageHeight)
 
         MoPub.initializeSdk(activity, SdkConfiguration.Builder(adUnitId).build()) {
             adUnit?.fetchDemand {
