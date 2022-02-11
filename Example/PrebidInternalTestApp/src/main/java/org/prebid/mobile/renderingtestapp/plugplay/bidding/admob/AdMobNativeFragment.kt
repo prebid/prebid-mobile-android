@@ -61,9 +61,11 @@ class AdMobNativeFragment : AdFragment() {
         adLoader = AdLoader
             .Builder(requireContext(), adUnitId)
             .forNativeAd { ad: NativeAd ->
-                btnAdLoaded.isEnabled = true
+                btnAdLoaded?.isEnabled = true
                 nativeAd = ad
-                createCustomView(viewContainer, nativeAd!!)
+                viewContainer?.let {
+                    createCustomView(it, nativeAd!!)
+                }
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
@@ -102,8 +104,8 @@ class AdMobNativeFragment : AdFragment() {
     }
 
     private fun resetAdEvents() {
-        btnAdLoaded.isEnabled = false
-        btnAdFailed.isEnabled = false
+        btnAdLoaded?.isEnabled = false
+        btnAdFailed?.isEnabled = false
     }
 
     private fun createCustomView(wrapper: ViewGroup, nativeAd: NativeAd) {
