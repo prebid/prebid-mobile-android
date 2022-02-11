@@ -184,7 +184,7 @@ open class MopubNativeFragment : AdFragment() {
 
             val image = NativeImageAsset()
             image.imageType = NativeImageAsset.IMAGE_TYPE.MAIN
-            image.hMin = 20
+            image.hMin = 200
             image.wMin = 200
             image.isRequired = true
             addAsset(image)

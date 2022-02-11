@@ -157,13 +157,13 @@
     <string name="demo_bidding_gam_native_styles_mrect">Banner Native Styles (GAM) [MRect]</string>
     <string name="demo_bidding_gam_native_styles_fluid">Banner Native Styles (GAM) [Fluid]</string>
     <string name="demo_bidding_gam_native_styles_no_assets">Banner Native Styles No Assets (GAM) [MRect]</string>
-    <string name="demo_bidding_gam_native_custom_templates">Native Ad Custom Templates (GAM) [OK, OXANativeAd]</string>
+    <string name="demo_bidding_gam_native_custom_templates">Native Ad Custom Templates (GAM) [OK, NativeAd]</string>
     <string name="demo_bidding_gam_native_custom_templates_no_bids">Native Ad (GAM) [noBids, GADNativeCustomTemplateAd]</string>
-    <string name="demo_bidding_gam_native_unified_ads">Native Ad Unified Ad (GAM) [OK, OXANativeAd]</string>
+    <string name="demo_bidding_gam_native_unified_ads">Native Ad Unified Ad (GAM) [OK, NativeAd]</string>
     <string name="demo_bidding_gam_native_unified_ads_no_bids">Native Ad (GAM) [noBids, GADUnifiedNativeAd]</string>
     <string name="demo_bidding_gam_native_custom_templates_prebid_ok">Native Ad (GAM) [OK, GADNativeCustomTemplateAd]</string>
     <string name="demo_bidding_gam_native_unified_ads_prebid_ok">Native Ad (GAM) [OK, GADUnifiedNativeAd]</string>
-    <string name="demo_bidding_gam_native_feed">Native Ad Feed (GAM) [OK, OXANativeAd]</string>
+    <string name="demo_bidding_gam_native_feed">Native Ad Feed (GAM) [OK, NativeAd]</string>
 
 
     <!--MoPub Titles-->
@@ -194,8 +194,8 @@
     <string name="demo_bidding_mopub_native_styles_no_assets">Banner Native Styles No Assets (MoPub)</string>
     <string name="demo_bidding_mopub_native_no_bids">Native Ad (MoPub) [noBids, MPNativeAd] </string>
     <string name="demo_bidding_mopub_native_feed_no_bids">Native Ad Feed (MoPub) [noBids, MPNativeAd] </string>
-    <string name="demo_bidding_mopub_native_adapter">Native Ad (MoPub) [OK, OXANativeAdAdapter]</string>
-    <string name="demo_bidding_mopub_native_adapter_video">Native Ad Video (MoPub) [OK, OXANativeAdAdapter]</string>
+    <string name="demo_bidding_mopub_native_adapter">Native Ad (MoPub) [OK, NativeAdAdapter]</string>
+    <string name="demo_bidding_mopub_native_adapter_video">Native Ad Video (MoPub) [OK, NativeAdAdapter]</string>
 
     <!--AdMob Titles-->
     <string name="demo_bidding_admob_banner_320_50_adapter">Banner 320x50 (AdMob) [OK, OXB Adapter]</string>
