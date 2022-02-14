@@ -7,8 +7,8 @@ import com.mopub.common.SdkConfiguration
 import com.mopub.mediation.MoPubInterstitialMediationUtils
 import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubInterstitial
-import org.prebid.mobile.rendering.bidding.data.AdSize
 import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit
+import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 
 object InAppMoPubInterstitial {
 
@@ -38,9 +38,10 @@ object InAppMoPubInterstitial {
         adUnit = MediationInterstitialAdUnit(
             activity,
             configId,
-            AdSize(minPercentageWidth, minPercentageHeight),
+            AdUnitFormat.DISPLAY,
             mediationUtils
         )
+        adUnit?.setMinSizePercentage(minPercentageWidth, minPercentageHeight)
 
         MoPub.initializeSdk(activity, SdkConfiguration.Builder(adUnitId).build()) {
             adUnit?.fetchDemand {

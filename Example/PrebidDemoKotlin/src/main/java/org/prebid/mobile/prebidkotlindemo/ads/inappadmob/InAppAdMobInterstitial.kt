@@ -20,7 +20,8 @@ object InAppAdMobInterstitial {
     fun create(
         activity: Activity,
         adUnitId: String,
-        configId: String
+        configId: String,
+        adUnitFormat: AdUnitFormat
     ) {
         val extras = Bundle()
         val request = AdRequest
@@ -32,7 +33,7 @@ object InAppAdMobInterstitial {
         adUnit = MediationInterstitialAdUnit(
             activity,
             configId,
-            AdUnitFormat.DISPLAY,
+            adUnitFormat,
             mediationUtils
         )
         adUnit?.fetchDemand { result ->
