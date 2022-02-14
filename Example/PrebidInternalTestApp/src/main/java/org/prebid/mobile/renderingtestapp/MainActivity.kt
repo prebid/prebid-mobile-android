@@ -37,11 +37,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
-import org.json.JSONException
 import org.prebid.mobile.rendering.networking.targeting.Targeting
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener
 import org.prebid.mobile.renderingtestapp.plugplay.utilities.consent.ConsentUpdateManager
-import org.prebid.mobile.renderingtestapp.utils.NativeConfigurationStore
 import org.prebid.mobile.renderingtestapp.utils.OpenRtbConfigs
 import org.prebid.mobile.renderingtestapp.utils.OpenRtbExtra
 import org.prebid.mobile.renderingtestapp.utils.PermissionHelper
@@ -144,10 +142,6 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
         if (intent.extras?.containsKey(EXTRA_EIDS) == true) {
             extractEidsExtras()
         }
-
-        if (intent.extras?.containsKey(EXTRA_NATIVE) == true) {
-            extractNativeExtra()
-        }
     }
 
 
@@ -207,10 +201,13 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
     private fun parseOpenRtbJson(openRtbJson: String?): OpenRtbExtra? {
         try {
             return Gson().fromJson<OpenRtbExtra>(openRtbJson, object : TypeToken<OpenRtbExtra>() {}.type)
-        }
-        catch (ex: Exception) {
+        } catch (ex: Exception) {
             Log.d(TAG, "Unable to parse provided OpenRTB list ${Log.getStackTraceString(ex)}")
-            Toast.makeText(this, "Unable to parse provided OpenRTB. Provided JSON might contain an error", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this,
+                "Unable to parse provided OpenRTB. Provided JSON might contain an error",
+                Toast.LENGTH_LONG
+            ).show()
         }
         return null
     }
@@ -227,20 +224,6 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
         val eidsJsonString = intent.extras?.getString(EXTRA_EIDS)
         val eidsJsonArray = JSONArray(eidsJsonString)
         Targeting.setEids(eidsJsonArray)
-    }
-
-    private fun extractNativeExtra() {
-        val nativeJsonString = intent.extras?.getString(EXTRA_NATIVE)
-        if (nativeJsonString != null) {
-            try {
-                NativeConfigurationStore.createNativeConfigFrom(nativeJsonString)
-            }
-            catch (e: JSONException) {
-                e.printStackTrace()
-                Toast.makeText(this, "Failed to parse native JSON", Toast.LENGTH_SHORT).show()
-            }
-
-        }
     }
 
     private fun handleConsentExtra() {

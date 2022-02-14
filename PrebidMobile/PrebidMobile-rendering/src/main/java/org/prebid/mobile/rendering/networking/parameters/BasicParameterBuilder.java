@@ -19,7 +19,6 @@ package org.prebid.mobile.rendering.networking.parameters;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.Pair;
-
 import org.json.JSONObject;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
@@ -38,13 +37,7 @@ import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class BasicParameterBuilder extends ParameterBuilder {
 
@@ -110,13 +103,9 @@ public class BasicParameterBuilder extends ParameterBuilder {
         if (mAdConfiguration != null) {
             setDisplayManager(imp);
             setCommonImpValues(imp, uuid);
-            if (mAdConfiguration.getNativeAdConfiguration() != null) {
-                setNativeImpValues(imp);
-            }
-            else if (mAdConfiguration.isAdType(AdUnitIdentifierType.VAST)) {
+            if (mAdConfiguration.isAdType(AdUnitIdentifierType.VAST)) {
                 setVideoImpValues(imp);
-            }
-            else {
+            } else {
                 setBannerImpValues(imp);
             }
         }
@@ -250,12 +239,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
         // TODO: 15.12.2020 uncomment when Prebid server will be able to process Ext content not related to bidders
         //imp.getExt().put(KEY_DEEPLINK_PLUS, 1);
-    }
-
-    private void setNativeImpValues(Imp imp) {
-        if (mAdConfiguration.getNativeAdConfiguration() != null) {
-            imp.getNative().setRequestFrom(mAdConfiguration.getNativeAdConfiguration());
-        }
     }
 
     private void setDisplayManager(Imp imp) {

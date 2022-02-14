@@ -17,23 +17,18 @@
 package org.prebid.mobile.rendering.models;
 
 import android.text.TextUtils;
-
+import androidx.annotation.NonNull;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.loading.AdLoadListener;
 import org.prebid.mobile.rendering.loading.VastParserExtractor;
 import org.prebid.mobile.rendering.models.internal.VastExtractorResult;
-import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
-import org.prebid.mobile.rendering.utils.helpers.MacrosResolutionHelper;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.OmEventTracker;
 
 import java.util.ArrayList;
-
-import androidx.annotation.NonNull;
 
 public class CreativeModelMakerBids {
     private static final String TAG = CreativeModelMakerBids.class.getSimpleName();
@@ -45,8 +40,8 @@ public class CreativeModelMakerBids {
     private AdConfiguration mAdConfiguration;
 
     public CreativeModelMakerBids(
-        @NonNull
-            AdLoadListener listener) {
+            @NonNull
+                    AdLoadListener listener) {
         mListener = listener;
     }
 
@@ -69,8 +64,7 @@ public class CreativeModelMakerBids {
 
         if (bidResponse.isVideo()) {
             makeVideoModels(adConfiguration, winningBid.getAdm());
-        }
-        else {
+        } else {
             parseAcj(adConfiguration, bidResponse);
         }
     }
@@ -120,16 +114,7 @@ public class CreativeModelMakerBids {
             return html;
         }
 
-        if (!adConfiguration.isNative()) {
-            html = bid.getAdm();
-        }
-        else {
-            NativeAdConfiguration nativeAdConfiguration = adConfiguration.getNativeAdConfiguration();
-            Prebid prebid = bid.getPrebid();
-
-            html = MacrosResolutionHelper.resolveTargetingMarcos(nativeAdConfiguration.getNativeStylesCreative(),
-                                                                 prebid.getTargeting());
-        }
+        html = bid.getAdm();
 
         return html;
     }

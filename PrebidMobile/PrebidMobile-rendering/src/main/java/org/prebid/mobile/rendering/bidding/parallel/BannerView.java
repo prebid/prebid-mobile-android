@@ -18,7 +18,6 @@ package org.prebid.mobile.rendering.bidding.parallel;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
@@ -46,7 +45,6 @@ import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
-import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
@@ -78,6 +76,8 @@ public class BannerView extends FrameLayout {
 
     private boolean mIsPrimaryAdServerRequestInProgress;
     private boolean mAdFailed;
+
+    private String nativeStylesCreative = null;
 
     //region ==================== Listener implementation
     private final DisplayViewListener mDisplayViewListener = new DisplayViewListener() {
@@ -242,14 +242,6 @@ public class BannerView extends FrameLayout {
             return;
         }
 
-        boolean isNativePpm = mAdUnitConfig.isNative() && mEventHandler instanceof StandaloneBannerEventHandler;
-        NativeAdConfiguration nativeAdConfiguration = mAdUnitConfig.getNativeAdConfiguration();
-
-        if (isNativePpm && TextUtils.isEmpty(nativeAdConfiguration.getNativeStylesCreative())) {
-            notifyErrorListener(new AdException(AdException.INVALID_REQUEST, "Failed. PPM native bid request won't be performed without a valid nativeStylesCreative."));
-            return;
-        }
-
         mBidLoader.load();
     }
 
@@ -318,15 +310,6 @@ public class BannerView extends FrameLayout {
     @Nullable
     public VideoPlacementType getVideoPlacementType() {
         return VideoPlacementType.mapToVideoPlacementType(mAdUnitConfig.getPlacementTypeValue());
-    }
-
-    /**
-     * Sets NativeAdConfiguration and enables Native Ad requests
-     *
-     * @param configuration - configured NativeAdConfiguration class
-     */
-    public void setNativeAdConfiguration(NativeAdConfiguration configuration) {
-        mAdUnitConfig.setNativeAdConfiguration(configuration);
     }
 
     /**

@@ -117,24 +117,6 @@
             app:popUpTo="@+id/headerBiddingFragment" />
 
         <action
-            android:id="@+id/action_header_bidding_to_in_app_native_styles"
-            app:destination="@id/navigation_in_app_native_styles"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/headerBiddingFragment" />
-
-        <action
-            android:id="@+id/action_header_bidding_to_in_app_native_styles_no_assets"
-            app:destination="@id/navigation_in_app_native_styles_no_assets"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/headerBiddingFragment" />
-
-        <action
             android:id="@+id/action_header_bidding_to_in_app_native"
             app:destination="@id/navigation_in_app_native"
             app:enterAnim="@anim/nav_default_enter_anim"
@@ -236,24 +218,6 @@
             app:popUpTo="@+id/headerBiddingFragment" />
 
         <action
-            android:id="@+id/action_header_bidding_to_gam_native_styles"
-            app:destination="@id/navigation_gam_native_styles"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/headerBiddingFragment" />
-
-        <action
-            android:id="@+id/action_header_bidding_to_gam_native_styles_no_assets"
-            app:destination="@id/navigation_gam_native_styles_no_assets"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/headerBiddingFragment" />
-
-        <action
             android:id="@+id/action_header_bidding_to_gam_native"
             app:destination="@id/navigation_gam_native"
             app:enterAnim="@anim/nav_default_enter_anim"
@@ -311,24 +275,6 @@
         <action
             android:id="@+id/action_header_bidding_to_mopub_rewarded_video"
             app:destination="@id/navigation_mopub_rewarded_video"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/headerBiddingFragment" />
-
-        <action
-            android:id="@+id/action_header_bidding_to_mopub_native_styles"
-            app:destination="@id/navigation_mopub_native_styles"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@+id/headerBiddingFragment" />
-
-        <action
-            android:id="@+id/action_header_bidding_to_mopub_native_styles_no_assets"
-            app:destination="@id/navigation_mopub_native_styles_no_assets"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -468,15 +414,6 @@
         android:label="Video Outstream Feed (In-App)" />
 
     <fragment
-        android:id="@+id/navigation_in_app_native_styles"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeStylesFragment" />
-
-    <fragment
-        android:id="@+id/navigation_in_app_native_styles_no_assets"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeStylesNoAssetsFragment" />
-
-
-    <fragment
         android:id="@+id/navigation_in_app_native"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeFragment" />
 
@@ -524,14 +461,6 @@
         android:label="Video Outstream Feed (GAM)" />
 
     <fragment
-        android:id="@+id/navigation_gam_native_styles"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeStylesFragment" />
-
-    <fragment
-        android:id="@+id/navigation_gam_native_styles_no_assets"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeStylesNoAssetsFragment" />
-
-    <fragment
         android:id="@+id/navigation_gam_native"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeFragment" />
 
@@ -563,15 +492,6 @@
         android:id="@+id/navigation_mopub_rewarded_video"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MoPubRewardedVideoFragment"
         android:label="MoPub Rewarded Video" />
-
-    <fragment
-        android:id="@+id/navigation_mopub_native_styles"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MopubNativeStylesFragment" />
-
-    <fragment
-            android:id="@+id/navigation_mopub_native_styles_no_assets"
-            android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MopubNativeStylesNoAssetsFragment"/>
-
     <fragment
             android:id="@+id/navigation_mopub_native"
             android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub.MopubNativeFragment"/>

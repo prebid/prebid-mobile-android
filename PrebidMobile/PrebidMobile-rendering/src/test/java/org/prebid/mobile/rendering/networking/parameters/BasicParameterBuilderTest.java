@@ -19,7 +19,6 @@ package org.prebid.mobile.rendering.networking.parameters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,13 +31,10 @@ import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
-import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Imp;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.User;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetData;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetImage;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
@@ -57,14 +53,8 @@ import org.robolectric.annotation.Config;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.KEY_OM_PARTNER_NAME;
-import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.KEY_OM_PARTNER_VERSION;
-import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.VIDEO_INTERSTITIAL_PLAYBACK_END;
+import static org.junit.Assert.*;
+import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19, qualifiers = "w1920dp-h1080dp")
@@ -81,8 +71,6 @@ public class BasicParameterBuilderTest {
     private static final String USER_BUYER_ID = "bid";
 
     private Context mContext;
-    private NativeAssetData mNativeAssetData;
-    private NativeAssetImage mNativeAssetImage;
 
     private final boolean mBrowserActivityAvailable = true;
 
@@ -90,17 +78,6 @@ public class BasicParameterBuilderTest {
     public void setUp() throws Exception {
         mContext = Robolectric.buildActivity(Activity.class).create().get();
         ManagersResolver.getInstance().prepare(mContext);
-
-        mNativeAssetData = new NativeAssetData();
-        mNativeAssetData.setLen(100);
-        mNativeAssetData.setType(NativeAssetData.DataType.SPONSORED);
-        mNativeAssetData.setRequired(true);
-
-        mNativeAssetImage = new NativeAssetImage();
-        mNativeAssetImage.setW(100);
-        mNativeAssetImage.setH(200);
-        mNativeAssetImage.setType(NativeAssetImage.ImageType.ICON);
-        mNativeAssetImage.setRequired(true);
     }
 
     @After
@@ -134,7 +111,6 @@ public class BasicParameterBuilderTest {
         assertNotNull(actualImp.banner);
         assertTrue(actualImp.banner.getFormats().containsAll(expectedBidRequest.getImp().get(0).banner.getFormats()));
         assertNull(actualImp.video);
-        assertNull(actualImp.nativeObj);
         assertEquals(1, actualImp.secure.intValue());
         assertEquals(0, actualImp.instl.intValue());
     }
@@ -159,7 +135,6 @@ public class BasicParameterBuilderTest {
         Format expectedFormat = new Format(1920, 1080);
         assertTrue(actualImp.banner.getFormats().contains(expectedFormat));
         assertNull(actualImp.video);
-        assertNull(actualImp.nativeObj);
         assertEquals(1, actualImp.secure.intValue());
         assertEquals(1, actualImp.instl.intValue());
     }
@@ -182,7 +157,6 @@ public class BasicParameterBuilderTest {
         Imp actualImp = actualBidRequest.getImp().get(0);
         assertNotNull(actualImp.video);
         assertNull(actualImp.banner);
-        assertNull(actualImp.nativeObj);
         assertNull(actualImp.secure);
         assertEquals(1920, actualImp.video.w.intValue());
         assertEquals(1080, actualImp.video.h.intValue());
@@ -210,35 +184,11 @@ public class BasicParameterBuilderTest {
         Imp actualImp = actualBidRequest.getImp().get(0);
         assertNotNull(actualImp.video);
         assertNull(actualImp.banner);
-        assertNull(actualImp.nativeObj);
         assertNull(actualImp.secure);
         assertEquals(1, actualImp.instl.intValue());
         assertEquals(300, actualImp.video.w.intValue());
         assertEquals(250, actualImp.video.h.intValue());
         assertNotEquals(VIDEO_INTERSTITIAL_PLACEMENT, actualImp.video.placement.intValue());
-    }
-
-    @Test
-    public void whenAppendParametersAndNativeType_ImpWithValidNativeObject() throws JSONException {
-        AdConfiguration adConfiguration = new AdConfiguration();
-        // nothing should be applied for native imp
-        adConfiguration.setAdPosition(AdPosition.SIDEBAR);
-        adConfiguration.setNativeAdConfiguration(getNativeAdConfiguration());
-
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
-        AdRequestInput adRequestInput = new AdRequestInput();
-        builder.appendBuilderParameters(adRequestInput);
-
-        BidRequest actualBidRequest = adRequestInput.getBidRequest();
-        BidRequest expectedBidRequest = getExpectedBidRequest(adConfiguration, actualBidRequest.getId());
-
-        assertEquals(expectedBidRequest.getJsonObject().toString(), actualBidRequest.getJsonObject().toString());
-        Imp actualImp = actualBidRequest.getImp().get(0);
-        assertNotNull(actualImp.nativeObj);
-        assertNull(actualImp.banner);
-        assertNull(actualImp.video);
-        assertEquals(0, actualImp.instl.intValue());
-        assertEquals(1, actualImp.secure.intValue());
     }
 
     @Test
@@ -455,13 +405,9 @@ public class BasicParameterBuilderTest {
         imp.id = uuid;
         imp.getExt().put("prebid", Prebid.getJsonObjectForImp(adConfiguration));
 
-        if (adConfiguration.getNativeAdConfiguration() != null) {
-            imp.getNative().setRequestFrom(adConfiguration.getNativeAdConfiguration());
-        }
-        else if (adConfiguration.isAdType(AdConfiguration.AdUnitIdentifierType.VAST)) {
+        if (adConfiguration.isAdType(AdConfiguration.AdUnitIdentifierType.VAST)) {
             imp.video = getExpectedVideoImpValues(imp, adConfiguration);
-        }
-        else {
+        } else {
             imp.banner = getExpectedBannerImpValues(imp, adConfiguration);
         }
 
@@ -548,32 +494,4 @@ public class BasicParameterBuilderTest {
         return user;
     }
 
-    private NativeAdConfiguration getNativeAdConfiguration() throws JSONException {
-        NativeAdConfiguration nativeConfiguration = new NativeAdConfiguration();
-        nativeConfiguration.setContextType(NativeAdConfiguration.ContextType.CONTENT_CENTRIC);
-        nativeConfiguration.setContextSubType(NativeAdConfiguration.ContextSubType.GENERAL);
-        nativeConfiguration.setPlacementType(NativeAdConfiguration.PlacementType.CONTENT_FEED);
-
-        NativeAssetData assetData = new NativeAssetData();
-        assetData.setLen(100);
-        assetData.setType(NativeAssetData.DataType.SPONSORED);
-        assetData.setRequired(true);
-
-        NativeAssetImage assetImage = new NativeAssetImage();
-        assetImage.setW(100);
-        assetImage.setH(200);
-        assetImage.setType(NativeAssetImage.ImageType.ICON);
-        assetImage.setRequired(true);
-
-        nativeConfiguration.getAssets().add(mNativeAssetData);
-        nativeConfiguration.getAssets().add(mNativeAssetImage);
-
-        JSONObject extJson = new JSONObject();
-        extJson.put("test", "test");
-        Ext ext = new Ext();
-        ext.put(extJson);
-        nativeConfiguration.setExt(ext);
-
-        return nativeConfiguration;
-    }
 }

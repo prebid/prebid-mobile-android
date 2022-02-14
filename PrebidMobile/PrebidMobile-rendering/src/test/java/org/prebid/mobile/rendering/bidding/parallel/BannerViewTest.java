@@ -21,7 +21,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.View;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +41,6 @@ import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
-import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
@@ -54,19 +52,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -149,24 +138,6 @@ public class BannerViewTest {
     }
 
     @Test
-    public void loadAd_NativeWithEmptyOrNullNativeStylesCreative_DoNothing()
-    throws IllegalAccessException {
-        NativeAdConfiguration nativeAdConfiguration = new NativeAdConfiguration();
-        BannerView ppmBannerView = new BannerView(mMockContext, AD_UNIT_ID, AD_SIZE);
-        WhiteBox.field(BannerView.class, "mBidLoader").set(ppmBannerView, mMockBidLoader);
-
-        nativeAdConfiguration.setNativeStylesCreative("");
-        ppmBannerView.setNativeAdConfiguration(nativeAdConfiguration);
-
-        ppmBannerView.loadAd();
-
-        nativeAdConfiguration.setNativeStylesCreative(null);
-        ppmBannerView.loadAd();
-
-        verifyZeroInteractions(mMockBidLoader);
-    }
-
-    @Test
     public void loadAdWithValidBidLoaderAndPrimaryAdRequestNotInProgress_ExecuteBidLoad() {
         mBannerView.loadAd();
 
@@ -237,15 +208,6 @@ public class BannerViewTest {
         mBannerView.setVideoPlacementType(VideoPlacementType.IN_FEED);
         assertEquals(VideoPlacementType.IN_FEED, mBannerView.getVideoPlacementType());
     }
-
-    @Test
-    public void whenSetNativeAdConfiguration_ConfigAssignedToAdConfiguration() {
-        AdConfiguration mockConfiguration = mock(AdConfiguration.class);
-        WhiteBox.setInternalState(mBannerView, "mAdUnitConfig", mockConfiguration);
-        mBannerView.setNativeAdConfiguration(mock(NativeAdConfiguration.class));
-        verify(mockConfiguration).setNativeAdConfiguration(any(NativeAdConfiguration.class));
-    }
-
     //region ======================= BidRequestListener tests
     @Test
     public void onFetchComplete_AssignWinningBidMarkPrimaryServerRequestInProgressRequestAdWithBid() {

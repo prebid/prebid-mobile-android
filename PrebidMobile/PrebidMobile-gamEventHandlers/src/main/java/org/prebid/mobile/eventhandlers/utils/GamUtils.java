@@ -21,7 +21,6 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd;
 import org.prebid.mobile.NativeAdUnit;
-import org.prebid.mobile.rendering.bidding.data.NativeFetchDemandResult;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.HashMap;
@@ -50,12 +49,6 @@ public class GamUtils {
         }
 
         handleGamCustomTargetingUpdate(adRequest, keywords);
-    }
-
-    public static void prepare(AdManagerAdRequest adRequest, NativeFetchDemandResult result) {
-        Map<String, String> targeting = result.getKeyWordsMap();
-
-        handleGamCustomTargetingUpdate(adRequest, targeting);
     }
 
     public static void handleGamCustomTargetingUpdate(AdManagerAdRequest adRequest, Map<String, String> keywords) {

@@ -27,7 +27,6 @@ import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.NativeAdUnit;
 import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
-import org.prebid.mobile.rendering.bidding.data.NativeFetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider;
 import org.robolectric.RobolectricTestRunner;

@@ -18,7 +18,6 @@ package org.prebid.mobile.rendering.bidding.loader;
 
 import android.app.Activity;
 import android.content.Context;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,9 +25,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.models.AdConfiguration;
-import org.prebid.mobile.rendering.models.ntv.NativeAdConfiguration;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetData;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetImage;
 import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
 import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
 import org.prebid.mobile.test.utils.WhiteBox;
@@ -39,9 +35,7 @@ import org.robolectric.annotation.Config;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -121,25 +115,5 @@ public class BidLoaderTest {
         WhiteBox.setInternalState(bidLoader, "mBidRequester", mMockRequester);
         WhiteBox.setInternalState(bidLoader, "mRefreshTimerTask", mMockTimerTask);
         return bidLoader;
-    }
-
-    private NativeAdConfiguration getNativeAdConfiguration() {
-        NativeAdConfiguration nativeConfiguration = new NativeAdConfiguration();
-
-        NativeAssetData nativeAssetData = new NativeAssetData();
-        nativeAssetData.setLen(100);
-        nativeAssetData.setType(NativeAssetData.DataType.SPONSORED);
-        nativeAssetData.setRequired(true);
-
-        NativeAssetImage nativeAssetImage = new NativeAssetImage();
-        nativeAssetImage.setW(100);
-        nativeAssetImage.setH(200);
-        nativeAssetImage.setType(NativeAssetImage.ImageType.ICON);
-        nativeAssetImage.setRequired(true);
-
-        nativeConfiguration.getAssets().add(nativeAssetData);
-        nativeConfiguration.getAssets().add(nativeAssetImage);
-
-        return nativeConfiguration;
     }
 }
