@@ -42,7 +42,7 @@ public class GamUtils {
         for (String key : extras.keySet()) {
             Object value = extras.get(key);
             if (value instanceof String) {
-                if (!value.equals(NativeAdUnit.BUNDLE_KEY_CACHE_ID)) {
+                if (!key.equals(NativeAdUnit.BUNDLE_KEY_CACHE_ID)) {
                     keywords.put(key, (String) value);
                 }
             }

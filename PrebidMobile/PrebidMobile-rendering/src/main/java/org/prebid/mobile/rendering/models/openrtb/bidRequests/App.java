@@ -19,6 +19,7 @@ package org.prebid.mobile.rendering.models.openrtb.bidRequests;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.apps.Publisher;
 
 public class App extends BaseBid {
@@ -29,7 +30,6 @@ public class App extends BaseBid {
     public String domain = null;
     //TODO: ORTB2.5: remove this? After product's decision?
     public String storeurl = null;
-    public String contentUrl = null;
     public String[] cat = null;
     public String[] sectioncat = null;
     public String[] pagecat = null;
@@ -37,6 +37,7 @@ public class App extends BaseBid {
     public Integer privacypolicy = null;
     public Integer paid = null;
     public String keywords = null;
+    public ContentObject contentObject = null;
     private Publisher mPublisher = null;
     private Ext mExt = null;
 
@@ -81,10 +82,9 @@ public class App extends BaseBid {
             toJSON(jsonObject, "pagecat", jsonArray);
         }
 
-        if (contentUrl != null) {
-            JSONObject contentObject = new JSONObject();
-            contentObject.put("url", contentUrl);
-            toJSON(jsonObject, "content", contentObject);
+        if (contentObject != null && contentObject.getJsonObject() != null) {
+            JSONObject contentJson = contentObject.getJsonObject();
+            toJSON(jsonObject, "content", contentJson);
         }
 
         toJSON(jsonObject, "ver", ver);
@@ -92,8 +92,8 @@ public class App extends BaseBid {
         toJSON(jsonObject, "paid", paid);
         toJSON(jsonObject, "keywords", keywords);
         toJSON(jsonObject, "publisher", (mPublisher != null)
-                                        ? this.mPublisher.getJsonObject()
-                                        : null);
+                ? this.mPublisher.getJsonObject()
+                : null);
         toJSON(jsonObject, "ext", (mExt != null)
                                   ? mExt.getJsonObject()
                                   : null);

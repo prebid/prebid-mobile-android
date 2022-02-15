@@ -319,6 +319,7 @@ object AdTypesRepository {
             AdType(
                 "Native",
                 onCreate = { _, wrapper, _ ->
+                    // TODO: Problems with ids (current example's type is not Native)
                     InAppAdMobNative.create(
                         wrapper,
                         "ca-app-pub-1875909575462531/9720985924",

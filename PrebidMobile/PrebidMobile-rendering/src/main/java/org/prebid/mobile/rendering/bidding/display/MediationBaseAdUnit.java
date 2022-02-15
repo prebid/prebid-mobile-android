@@ -20,10 +20,10 @@ import android.content.Context;
 import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.bidding.data.bid.ContentObject;
 import org.prebid.mobile.rendering.bidding.enums.Host;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
@@ -145,7 +145,7 @@ public abstract class MediationBaseAdUnit {
     }
 
     public void addContent(ContentObject content) {
-        mAdUnitConfig.setContentUrl(content.getUrl());
+        mAdUnitConfig.setContentObject(content);
     }
 
     public void destroy() {
