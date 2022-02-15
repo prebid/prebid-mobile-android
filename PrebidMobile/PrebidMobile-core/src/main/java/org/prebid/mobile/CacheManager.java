@@ -17,8 +17,8 @@
 package org.prebid.mobile;
 
 import android.os.Handler;
-import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
+import androidx.annotation.VisibleForTesting;
 
 import java.util.HashMap;
 import java.util.UUID;

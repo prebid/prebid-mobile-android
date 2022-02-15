@@ -18,15 +18,14 @@ package org.prebid.mobile.addendum;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.Size;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.Size;
 import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidNativeAd;
@@ -34,11 +33,7 @@ import org.prebid.mobile.PrebidNativeAdListener;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

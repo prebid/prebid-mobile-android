@@ -16,9 +16,8 @@
 
 package org.prebid.mobile.http;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import org.prebid.mobile.ResultCode;
 
 public class TaskResult<T> {

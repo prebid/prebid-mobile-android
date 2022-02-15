@@ -1,12 +1,15 @@
 package org.prebid.mobile;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * For details of the configuration of native imps, please check this documentation:
  * https://www.iab.com/wp-content/uploads/2018/03/OpenRTB-Native-Ads-Specification-Final-1.2.pdf
  */
 public class NativeAdUnit extends AdUnit {
+
+    public static final String BUNDLE_KEY_CACHE_ID = "NativeAdUnitCacheId";
+
     NativeRequestParams params;
 
     public NativeAdUnit(@NonNull String configId) {

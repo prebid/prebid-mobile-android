@@ -20,17 +20,12 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
-
+import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
 import org.prebid.mobile.tasksmanager.TasksManager;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public abstract class AdUnit {
     private static final int MIN_AUTO_REFRESH_PERIOD_MILLIS = 30_000;
@@ -43,6 +38,8 @@ public abstract class AdUnit {
 
     private final Map<String, Set<String>> contextDataDictionary;
     private final Set<String> contextKeywordsSet;
+    private ContentObject content;
+    private final ArrayList<DataObject> userDataObjects = new ArrayList<>();
 
     private String pbAdSlot;
 
@@ -67,11 +64,17 @@ public abstract class AdUnit {
         }
     }
 
+    public void resumeAutoRefresh() {
+        LogUtil.v("Resuming auto refresh...");
+        if (fetcher != null) {
+            fetcher.start();
+        }
+    }
+
     public void stopAutoRefresh() {
         LogUtil.v("Stopping auto refresh...");
         if (fetcher != null) {
-            fetcher.destroy();
-            fetcher = null;
+            fetcher.stop();
         }
     }
 
@@ -152,6 +155,7 @@ public abstract class AdUnit {
                 }
             }
         } else {
+            LogUtil.e("Invalid context");
             listener.onComplete(ResultCode.INVALID_CONTEXT);
             return;
         }
@@ -170,7 +174,7 @@ public abstract class AdUnit {
 
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
-            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, pbAdSlot, bannerParameters, videoParameters);
+            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, pbAdSlot, bannerParameters, videoParameters, content, userDataObjects);
             if (this.adType.equals(AdType.NATIVE)) {
                 requestParams.setNativeRequestParams(((NativeAdUnit) this).params);
             }
@@ -241,6 +245,29 @@ public abstract class AdUnit {
      */
     public void addContextKeywords(Set<String> keywords) {
         contextKeywordsSet.addAll(keywords);
+    }
+
+    /**
+     * This method obtains the content for adunit, content, in which impression will appear
+     */
+    public void setAppContent(ContentObject content) {
+        this.content = content;
+    }
+
+    public ContentObject getAppContent() {
+        return content;
+    }
+
+    public void addUserData(DataObject dataObject) {
+        userDataObjects.add(dataObject);
+    }
+
+    public ArrayList<DataObject> getUserData() {
+        return userDataObjects;
+    }
+
+    public void clearUserData() {
+        userDataObjects.clear();
     }
 
     /**

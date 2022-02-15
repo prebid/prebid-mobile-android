@@ -16,13 +16,10 @@
 
 package org.prebid.mobile;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 class RequestParams {
 
@@ -48,13 +45,31 @@ class RequestParams {
     @Nullable
     private BannerBaseAdUnit.Parameters bannerParameters;
 
+    @Nullable
+    private ContentObject content;
+
+    @NonNull
+    private ArrayList<DataObject> userDataObjects = new ArrayList<>();
+
     RequestParams(String configId, AdType adType, HashSet<AdSize> sizes) {
         this.configId = configId;
         this.adType = adType;
         this.sizes = sizes; // for Interstitial this will be null, will use screen width & height in the request
     }
 
-    RequestParams(String configId, AdType adType, HashSet<AdSize> sizes, @Nullable Map<String, Set<String>> contextDataDictionary, @Nullable Set<String> contextKeywordsSet, @Nullable AdSize minSizePerc, @Nullable String pbAdSlot , @Nullable BannerBaseAdUnit.Parameters bannerParameters, @Nullable VideoBaseAdUnit.Parameters videoParameters) {
+    RequestParams(
+            String configId,
+            AdType adType,
+            HashSet<AdSize> sizes,
+            @Nullable Map<String, Set<String>> contextDataDictionary,
+            @Nullable Set<String> contextKeywordsSet,
+            @Nullable AdSize minSizePerc,
+            @Nullable String pbAdSlot,
+            @Nullable BannerBaseAdUnit.Parameters bannerParameters,
+            @Nullable VideoBaseAdUnit.Parameters videoParameters,
+            @Nullable ContentObject content,
+            @NonNull ArrayList<DataObject> userDataObjects
+    ) {
         this(configId, adType, sizes);
         this.contextDataDictionary = contextDataDictionary;
         this.contextKeywordsSet = contextKeywordsSet;
@@ -62,6 +77,8 @@ class RequestParams {
         this.pbAdSlot = pbAdSlot;
         this.bannerParameters = bannerParameters;
         this.videoParameters = videoParameters;
+        this.content = content;
+        this.userDataObjects = userDataObjects;
     }
 
     void setNativeRequestParams(NativeRequestParams params) {
@@ -105,6 +122,11 @@ class RequestParams {
     }
 
     @Nullable
+    ContentObject getAppContent() {
+        return content;
+    }
+
+    @Nullable
     BannerBaseAdUnit.Parameters getBannerParameters() {
         return bannerParameters;
     }
@@ -112,5 +134,10 @@ class RequestParams {
     @Nullable
     VideoBaseAdUnit.Parameters getVideoParameters() {
         return videoParameters;
+    }
+
+    @NonNull
+    ArrayList<DataObject> getUserData() {
+        return userDataObjects;
     }
 }

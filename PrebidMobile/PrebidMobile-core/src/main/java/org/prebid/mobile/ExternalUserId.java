@@ -16,17 +16,12 @@
 
 package org.prebid.mobile;
 
-import android.support.annotation.NonNull;
-
+import androidx.annotation.NonNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Defines the User Id Object from an External Third Party Source
