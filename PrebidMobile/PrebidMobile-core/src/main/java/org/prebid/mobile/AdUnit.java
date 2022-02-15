@@ -249,6 +249,7 @@ public abstract class AdUnit {
     /**
      * This method obtains the content for adunit, content, in which impression will appear
      */
+    // TODO: Rename to set
     public void addContent(ContentObject content) {
         this.content = content;
     }

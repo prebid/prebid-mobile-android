@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.models;
 
 import androidx.annotation.Nullable;
+import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.interstitial.InterstitialSizes;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
@@ -42,10 +43,11 @@ public class AdConfiguration {
     private PlacementType mPlacementType;
     @Nullable
     private AdPosition mAdPosition;
+    @Nullable
+    private ContentObject contentObject;
 
 
     private String mInterstitialSize;
-    private String mContentUrl;
     private String mConfigId;
     @Nullable
     private String mPbAdSlot;
@@ -132,12 +134,13 @@ public class AdConfiguration {
         return mVideoInitialVolume;
     }
 
-    public void setContentUrl(String contentUrl) {
-        mContentUrl = contentUrl;
+    public void setContentObject(@Nullable ContentObject contentObject) {
+        this.contentObject = contentObject;
     }
 
-    public String getContentUrl() {
-        return mContentUrl;
+    @Nullable
+    public ContentObject getContentObject() {
+        return contentObject;
     }
 
     public boolean isAdType(AdUnitIdentifierType type) {

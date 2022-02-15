@@ -20,7 +20,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.ViewGroup;
-
+import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.interstitial.InterstitialManagerDisplayDelegate;
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
@@ -38,8 +39,6 @@ import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
-
-import androidx.annotation.VisibleForTesting;
 
 public class HTMLCreative extends AbstractCreative
     implements WebViewDelegate, InterstitialManagerDisplayDelegate, Comparable {
@@ -150,7 +149,10 @@ public class HTMLCreative extends AbstractCreative
         WebViewBase webView = getCreativeView().getWebView();
 
         AdConfiguration adConfiguration = getCreativeModel().getAdConfiguration();
-        omAdSessionManager.initWebAdSessionManager(webView, adConfiguration.getContentUrl());
+        ContentObject contentObject = adConfiguration.getContentObject();
+        String contentUrl = null;
+        if (contentObject != null) contentUrl = contentObject.getUrl();
+        omAdSessionManager.initWebAdSessionManager(webView, contentUrl);
         startOmSession(omAdSessionManager, webView);
     }
 

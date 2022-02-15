@@ -18,6 +18,7 @@ package org.prebid.mobile.rendering.models.openrtb.bidRequests;
 
 import org.json.JSONObject;
 import org.junit.Test;
+import org.prebid.mobile.ContentObject;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -32,7 +33,6 @@ public class AppTest {
         app.domain = "com.us.prebid.net";
 
         app.storeurl = "test.url.com";
-        app.contentUrl = "test.content.com";
         app.cat = new String[]{"1", "2"};
         app.sectioncat = new String[]{"1", "2"};
         app.pagecat = new String[]{"1", "2"};
@@ -41,6 +41,10 @@ public class AppTest {
         app.paid = 1;
         app.keywords = "blah, blah";
         app.getPublisher().name = "name";
+
+        ContentObject contentObject = new ContentObject();
+        contentObject.setUrl("test.content.com");
+        app.contentObject = contentObject;
 
         JSONObject actualObj = app.getJsonObject();
         String expectedString = "{\"ver\":\"1\",\"privacypolicy\":1,\"keywords\":\"blah, blah\",\"content\":{\"url\":\"test.content.com\"},\"sectioncat\":[\"1\",\"2\"],\"storeurl\":\"test.url.com\",\"domain\":\"com.us.prebid.net\",\"cat\":[\"1\",\"2\"],\"name\":\"test\",\"paid\":1,\"publisher\":{\"name\":\"name\"},\"id\":\"appId\",\"bundle\":\"com.test.test\",\"pagecat\":[\"1\",\"2\"]}";

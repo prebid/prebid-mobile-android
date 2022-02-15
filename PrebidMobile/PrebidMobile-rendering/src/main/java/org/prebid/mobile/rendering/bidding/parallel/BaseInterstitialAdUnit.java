@@ -19,9 +19,9 @@ package org.prebid.mobile.rendering.bidding.parallel;
 import android.content.Context;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.bidding.data.bid.ContentObject;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
@@ -296,7 +296,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     public void addContent(ContentObject content) {
-        mAdUnitConfig.setContentUrl(content.getUrl());
+        mAdUnitConfig.setContentObject(content);
     }
 
     enum AdListenerEvent {

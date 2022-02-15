@@ -21,7 +21,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.View;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.interstitial.InterstitialManagerVideoDelegate;
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
@@ -41,9 +43,6 @@ import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.VisibleForTesting;
 
 public class VideoCreative extends VideoCreativeProtocol
     implements VideoCreativeViewListener, InterstitialManagerVideoDelegate {
@@ -219,7 +218,10 @@ public class VideoCreative extends VideoCreativeProtocol
         }
 
         AdConfiguration adConfiguration = mModel.getAdConfiguration();
-        omAdSessionManager.initVideoAdSession(mModel.getAdVerifications(), adConfiguration.getContentUrl());
+        ContentObject contentObject = adConfiguration.getContentObject();
+        String contentUrl = null;
+        if (contentObject != null) contentUrl = contentObject.getUrl();
+        omAdSessionManager.initVideoAdSession(mModel.getAdVerifications(), contentUrl);
         startOmSession();
     }
 

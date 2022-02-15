@@ -25,11 +25,11 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.rendering.R;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.bidding.data.bid.ContentObject;
 import org.prebid.mobile.rendering.bidding.display.DisplayView;
 import org.prebid.mobile.rendering.bidding.enums.BannerAdPosition;
 import org.prebid.mobile.rendering.bidding.enums.VideoPlacementType;
@@ -380,7 +380,7 @@ public class BannerView extends FrameLayout {
     }
 
     public void addContent(ContentObject content) {
-        mAdUnitConfig.setContentUrl(content.getUrl());
+        mAdUnitConfig.setContentObject(content);
     }
     //endregion ==================== getters and setters
 

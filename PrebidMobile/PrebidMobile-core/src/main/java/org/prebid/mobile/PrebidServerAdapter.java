@@ -24,13 +24,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.CountDownTimer;
-import androidx.annotation.MainThread;
-import androidx.annotation.Nullable;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-
+import androidx.annotation.MainThread;
+import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,13 +39,7 @@ import org.prebid.mobile.http.TaskResult;
 import org.prebid.mobile.tasksmanager.TasksManager;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 class PrebidServerAdapter implements DemandAdapter {
 
@@ -905,9 +898,7 @@ class PrebidServerAdapter implements DemandAdapter {
                 if (!TextUtils.isEmpty(TargetingParams.getStoreUrl())) {
                     app.put("storeurl", TargetingParams.getStoreUrl());
                 }
-                if (this.requestParams.getContent() != null) {
-                    app.put("content", getContentObject());
-                }
+                putContentObjectIfExists(app);
 
                 JSONObject publisher = new JSONObject();
                 publisher.put("id", PrebidMobile.getPrebidServerAccountId());
@@ -927,12 +918,18 @@ class PrebidServerAdapter implements DemandAdapter {
 
         }
 
-        private JSONObject getContentObject() throws JSONException {
-            JSONObject contentJSON = new JSONObject();
-            if (this.requestParams.getContent().getUrl() != null) {
-                contentJSON.put("url", this.requestParams.getContent().getUrl());
+        private void putContentObjectIfExists(JSONObject appJsonObject) {
+            ContentObject contentObject = requestParams.getContent();
+            if (contentObject == null) return;
+
+            JSONObject jsonContentObject = contentObject.getJsonObject();
+            if (jsonContentObject == null) return;
+
+            try {
+                appJsonObject.put("content", jsonContentObject);
+            } catch (Exception any) {
+                LogUtil.e("PrebidServerAdapter", "Can't create content json object!");
             }
-            return contentJSON;
         }
 
         private JSONObject getUserObject() {

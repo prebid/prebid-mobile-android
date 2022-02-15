@@ -26,8 +26,6 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.NativeAdUnit;
 import org.prebid.mobile.PrebidNativeAd;
-import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
-import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -101,17 +99,19 @@ public class GamUtilsTest {
 
     @Test
     public void prepare_AddReservedKeys() {
-        BidResponse bidResponse = mock(BidResponse.class);
         final AdManagerAdRequest publisherAdRequest = new AdManagerAdRequest.Builder().build();
-        final NativeFetchDemandResult fetchDemandResult = new NativeFetchDemandResult(FetchDemandResult.SUCCESS, bidResponse);
-        final HashMap<String, String> keyWordsMap = new HashMap<>();
-        keyWordsMap.put("key", "value");
-        fetchDemandResult.setKeyWordsMap(keyWordsMap);
+        Bundle extras = new Bundle();
+        extras.putString("key1", "param1");
+        extras.putString("key2", "param2");
+        extras.putString("key3", "param3");
+        extras.putString(NativeAdUnit.BUNDLE_KEY_CACHE_ID, "param4");
 
-        GamUtils.prepare(publisherAdRequest, fetchDemandResult);
+        GamUtils.prepare(publisherAdRequest, extras);
 
-        assertEquals(1, GamUtils.RESERVED_KEYS.size());
-        assertEquals("[key]", GamUtils.RESERVED_KEYS.toString());
+        Bundle actualTargeting = publisherAdRequest.getCustomTargeting();
+
+        assertEquals(3, actualTargeting.size());
+        assertEquals("Bundle[{key1=param1, key2=param2, key3=param3}]", actualTargeting.toString());
     }
 
     @Test

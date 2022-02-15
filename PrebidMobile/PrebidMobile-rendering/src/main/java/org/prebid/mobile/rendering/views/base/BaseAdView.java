@@ -20,7 +20,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-
+import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
@@ -72,12 +72,12 @@ public abstract class BaseAdView extends FrameLayout {
         return AdConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
     }
 
-    public void setContentUrl(String contentUrl) {
+    public void setContentObject(ContentObject contentObject) {
         if (mAdViewManager == null) {
-            LogUtil.error(TAG, "setContentUrl: Failed. AdViewManager is null");
+            LogUtil.error(TAG, "setContentUrl: Failed. AdViewManager is null. Can't set content object. ");
             return;
         }
-        mAdViewManager.getAdConfiguration().setContentUrl(contentUrl);
+        mAdViewManager.getAdConfiguration().setContentObject(contentObject);
     }
 
     /**

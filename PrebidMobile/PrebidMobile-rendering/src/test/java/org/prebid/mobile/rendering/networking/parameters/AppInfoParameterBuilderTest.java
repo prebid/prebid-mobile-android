@@ -22,6 +22,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
@@ -31,7 +32,6 @@ import org.prebid.mobile.rendering.networking.targeting.Targeting;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
-import org.prebid.mobile.rendering.video.vast.Ad;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.RobolectricTestRunner;
 
@@ -62,7 +62,9 @@ public class AppInfoParameterBuilderTest {
     @Test
     public void testAppendBuilderParameters() throws Exception {
         AdConfiguration adConfiguration = new AdConfiguration();
-        adConfiguration.setContentUrl("test.com");
+        ContentObject contentObject = new ContentObject();
+        contentObject.setUrl("test.com");
+        adConfiguration.setContentObject(contentObject);
         AppInfoParameterBuilder builder = new AppInfoParameterBuilder(adConfiguration);
         AdRequestInput adRequestInput = new AdRequestInput();
 
@@ -81,10 +83,12 @@ public class AppInfoParameterBuilderTest {
         expectedApp.storeurl = expectedStoreurl;
         expectedApp.getPublisher().name = expectedPublisherName;
         expectedApp.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidRenderingSettings.SDK_VERSION));
-        expectedApp.contentUrl = "test.com";
+        ContentObject expectedContentObject = new ContentObject();
+        expectedContentObject.setUrl("test.com");
+        expectedApp.contentObject = expectedContentObject;
 
         assertEquals(expectedBidRequest.getJsonObject().toString(),
-                     adRequestInput.getBidRequest().getJsonObject().toString());
+                adRequestInput.getBidRequest().getJsonObject().toString());
     }
 
     @Test
