@@ -17,26 +17,16 @@
 package org.prebid.mobile.rendering.networking;
 
 import android.os.AsyncTask;
-
+import androidx.annotation.Nullable;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.prebid.mobile.rendering.networking.exception.BaseExceptionHolder;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.*;
+import java.net.*;
 import java.util.Locale;
-
-import androidx.annotation.Nullable;
 
 /**
  * Performs HTTP communication in the background, i.e. off the UI thread.
@@ -341,6 +331,7 @@ public class BaseNetworkTask
         }
         else {
             String error = String.format("Bad server response - [HTTP Response code of %s]", httpURLResponseCode);
+            if (httpURLResponseCode == 204) error = "Response code 204. No bids.";
             LogUtil.error(TAG, error);
             throw new Exception(error);
         }

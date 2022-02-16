@@ -141,6 +141,10 @@ public abstract class HTTPPost {
                 BidLog.getInstance().setLastEntry(entry);
 
                 return new TaskResult<>(response);
+            } else if (httpResult == HttpURLConnection.HTTP_NO_CONTENT) {
+                entry.setResponse("");
+                BidLog.getInstance().setLastEntry(entry);
+                return new TaskResult<>(new JSONObject());
             } else if (httpResult >= HttpURLConnection.HTTP_BAD_REQUEST) {
                 StringBuilder builder = new StringBuilder();
                 InputStream is = conn.getErrorStream();
