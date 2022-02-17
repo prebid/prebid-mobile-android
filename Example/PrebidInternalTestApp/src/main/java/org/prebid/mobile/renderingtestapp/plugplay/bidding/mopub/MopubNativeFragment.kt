@@ -17,6 +17,8 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -65,6 +67,7 @@ open class MopubNativeFragment : AdFragment() {
     }
 
     protected val nativeEventListener = object : NativeAd.MoPubNativeEventListener {
+
         override fun onImpression(view: View?) {
             btnAdEventImpression?.isEnabled = true
         }
@@ -104,7 +107,8 @@ open class MopubNativeFragment : AdFragment() {
             .iconImageId(R.id.ivNativeIcon)
             .callToActionId(R.id.btnNativeAction)
             .build()
-        mopubNative?.registerAdRenderer(PrebidNativeAdRenderer(viewBinder, null))
+
+        mopubNative?.registerAdRenderer(PrebidNativeAdRenderer(viewBinder, createPrebidListener()))
         mopubNative?.registerAdRenderer(MoPubStaticNativeAdRenderer(viewBinder))
 
         requestParametersBuilder = RequestParameters.Builder()
@@ -157,6 +161,22 @@ open class MopubNativeFragment : AdFragment() {
         return result.toString()
     }
 
+    private fun createPrebidListener() = object : PrebidNativeAdEventListener {
+
+        override fun onAdClicked() {
+            btnAdClicked?.isEnabled = true
+        }
+
+        override fun onAdImpression() {
+            doInMainThread {
+                btnAdEventImpression?.isEnabled = true
+            }
+        }
+
+        override fun onAdExpired() {}
+
+    }
+
     private fun configureNativeAdUnit() {
         mopubNativeAdUnit?.apply {
             setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC)
@@ -205,6 +225,11 @@ open class MopubNativeFragment : AdFragment() {
             cta.dataType = NativeDataAsset.DATA_TYPE.CTATEXT
             addAsset(cta)
         }
+    }
+
+    private fun doInMainThread(function: () -> Unit) {
+        val handler = Handler(Looper.getMainLooper())
+        handler.postAtFrontOfQueue(function)
     }
 
 }

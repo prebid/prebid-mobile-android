@@ -110,13 +110,14 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/adContainer" />
 
-    <include
-        android:id="@+id/impressionEvents"
-        layout="@layout/lyt_native_ad_events"
+    <org.prebid.mobile.renderingtestapp.widgets.EventCounterView
+        android:id="@+id/btnAdImpression"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="8dp"
+        android:text="onAdImpression"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnAdClicked" />
 
 </merge>
