@@ -19,14 +19,12 @@ package com.mopub.mobileads;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.mopub.common.LifecycleListener;
 import com.mopub.common.MoPubReward;
 import com.mopub.common.logging.MoPubLog;
-
+import com.mopub.mediation.MoPubRewardedVideoMediationUtils;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.errors.AdException;
@@ -90,25 +88,24 @@ public class PrebidRewardedVideoAdapter extends BaseAd {
 
     @Override
     protected boolean checkAndInitializeSdk(
-        @NonNull
-            Activity launcherActivity,
-        @NonNull
-            AdData adData) {
+            @NonNull Activity launcherActivity,
+            @NonNull AdData adData
+    ) {
         return false;
     }
 
     @Override
     protected void load(
-        @NonNull
-            Context context,
-        @NonNull
-            AdData adData) {
-        if (TextUtils.isEmpty(adData.getAdUnit())) {
+            @NonNull Context context,
+            @NonNull AdData adData
+    ) {
+        String cacheId = MoPubRewardedVideoMediationUtils.cacheId;
+        if (TextUtils.isEmpty(cacheId)) {
             mLoadListener.onAdLoadFailed(MoPubErrorCode.ADAPTER_CONFIGURATION_ERROR);
             return;
         }
 
-        initInterstitialController(context, adData.getAdUnit());
+        initInterstitialController(context, cacheId);
     }
 
     @Override

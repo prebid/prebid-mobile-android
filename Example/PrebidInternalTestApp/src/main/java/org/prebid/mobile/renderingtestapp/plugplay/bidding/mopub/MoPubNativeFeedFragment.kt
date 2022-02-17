@@ -21,7 +21,10 @@ import org.prebid.mobile.renderingtestapp.utils.adapters.BaseFeedAdapter
 import org.prebid.mobile.renderingtestapp.utils.adapters.MoPubNativeFeedAdapter
 
 class MoPubNativeFeedFragment : BaseFeedFragment() {
+
     override fun initFeedAdapter(): BaseFeedAdapter {
+        configureOriginalPrebid()
         return MoPubNativeFeedAdapter(requireContext(), configId, adUnitId)
     }
+
 }

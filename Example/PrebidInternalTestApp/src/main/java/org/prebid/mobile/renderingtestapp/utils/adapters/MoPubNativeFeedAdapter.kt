@@ -24,6 +24,7 @@ import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
 import com.mopub.mediation.MoPubNativeMediationUtils
 import com.mopub.nativeads.*
+import org.prebid.mobile.*
 import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
 import org.prebid.mobile.renderingtestapp.R
 
@@ -32,9 +33,9 @@ class MoPubNativeFeedAdapter(
     private val configId: String,
     private val adUnitId: String
 ) : BaseFeedAdapter(context) {
+
     private var mopubNative: MoPubNative? = null
     private var mopubNativeAdUnit: MediationNativeAdUnit? = null
-    private var keywordsContainer = HashMap<String, String>()
 
     override fun destroy() {
         mopubNative?.destroy()
@@ -43,9 +44,9 @@ class MoPubNativeFeedAdapter(
 
     override fun initAndLoadAdView(parent: ViewGroup?, container: FrameLayout): View? {
         val context = container.context
+        val adapterHelper = AdapterHelper(context, 0, 3)
         mopubNative = MoPubNative(context, adUnitId, object : MoPubNative.MoPubNativeNetworkListener {
             override fun onNativeLoad(nativeAd: NativeAd?) {
-                val adapterHelper = AdapterHelper(context, 0, 3)
                 val view = adapterHelper.getAdView(null, parent, nativeAd)
                 container.addView(view)
             }
@@ -63,17 +64,18 @@ class MoPubNativeFeedAdapter(
         mopubNative?.registerAdRenderer(PrebidNativeAdRenderer(viewBinder, null))
         mopubNative?.registerAdRenderer(MoPubStaticNativeAdRenderer(viewBinder))
 
-        val mediationUtils =
-            MoPubNativeMediationUtils(keywordsContainer, mopubNative)
+        val keywords = HashMap<String, String>()
+        val mediationUtils = MoPubNativeMediationUtils(keywords, mopubNative)
 
         mopubNativeAdUnit = MediationNativeAdUnit(
             configId,
             mediationUtils
         )
+        configureNativeAdUnit()
         MoPub.initializeSdk(context, SdkConfiguration.Builder(adUnitId).build()) {
             mopubNativeAdUnit?.fetchDemand {
                 val requestParameters = RequestParameters.Builder()
-                    .keywords(convertMapToMoPubKeywords(keywordsContainer))
+                    .keywords(convertMapToMoPubKeywords(keywords))
                     .build()
                 mopubNative?.makeRequest(requestParameters)
             }
@@ -92,4 +94,56 @@ class MoPubNativeFeedAdapter(
         }
         return result.toString()
     }
+
+
+    private fun configureNativeAdUnit() {
+        mopubNativeAdUnit?.apply {
+            setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC)
+            setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL)
+            setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED)
+
+            val methods = arrayListOf(
+                NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE,
+                NativeEventTracker.EVENT_TRACKING_METHOD.JS
+            )
+            val eventTracker = NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods)
+            addEventTracker(eventTracker)
+
+            val assetTitle = NativeTitleAsset()
+            assetTitle.setLength(90)
+            assetTitle.isRequired = true
+            addAsset(assetTitle)
+
+            val assetIcon = NativeImageAsset()
+            assetIcon.imageType = NativeImageAsset.IMAGE_TYPE.ICON
+            assetIcon.wMin = 20
+            assetIcon.hMin = 20
+            assetIcon.isRequired = true
+            addAsset(assetIcon)
+
+            val image = NativeImageAsset()
+            image.imageType = NativeImageAsset.IMAGE_TYPE.MAIN
+            image.hMin = 200
+            image.wMin = 200
+            image.isRequired = true
+            addAsset(image)
+
+            val data = NativeDataAsset()
+            data.len = 90
+            data.dataType = NativeDataAsset.DATA_TYPE.SPONSORED
+            data.isRequired = true
+            addAsset(data)
+
+            val body = NativeDataAsset()
+            body.isRequired = true
+            body.dataType = NativeDataAsset.DATA_TYPE.DESC
+            addAsset(body)
+
+            val cta = NativeDataAsset()
+            cta.isRequired = true
+            cta.dataType = NativeDataAsset.DATA_TYPE.CTATEXT
+            addAsset(cta)
+        }
+    }
+
 }
