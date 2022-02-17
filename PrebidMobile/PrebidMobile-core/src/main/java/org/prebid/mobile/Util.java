@@ -440,7 +440,9 @@ public class Util {
     }
 
     static void handleMoPubNativeObjectKeywordsUpdate(HashMap<String, String> bids, Object adObj) {
-        Util.callMethodOnObject(adObj, "handleKeywordsUpdate", bids);
+        if (bids != null) {
+            Util.callMethodOnObject(adObj, "handleKeywordsUpdate", bids);
+        }
     }
 
 
