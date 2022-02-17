@@ -103,15 +103,7 @@ class GamNativeFragment(
             btnUnifiedRequestSuccess?.isEnabled = true
             handleNativeAd(unifiedAd)
         }
-        .withAdListener(object : AdListener() {
-            override fun onAdFailedToLoad(p0: LoadAdError) {
-                btnPrimaryAdRequestFailure?.isEnabled = true
-            }
-
-            override fun onAdClicked() {
-                btnAdClicked?.isEnabled = true
-            }
-        })
+        .withAdListener(getGamAdListener())
         .build()
 
     private fun createCustomFormatAdLoader() = AdLoader
@@ -124,11 +116,7 @@ class GamNativeFragment(
             },
             null
         )
-        .withAdListener(object : AdListener() {
-            override fun onAdFailedToLoad(p0: LoadAdError) {
-                btnPrimaryAdRequestFailure?.isEnabled = true
-            }
-        })
+        .withAdListener(getGamAdListener())
         .build()
 
     private fun handleNativeAd(nativeAd: NativeAd?) {
@@ -182,6 +170,8 @@ class GamNativeFragment(
             customFormatAd.performClick("cta")
             btnAdClicked?.isEnabled = true
         }
+
+        customFormatAd.recordImpression()
     }
 
     private fun inflateNativeAd(nativeAd: NativeAd?) {
@@ -246,5 +236,19 @@ class GamNativeFragment(
     }
 
     private fun isCustomFormatExample() = !TextUtils.isEmpty(customFormatId)
+
+    private fun getGamAdListener() = object : AdListener() {
+        override fun onAdFailedToLoad(p0: LoadAdError) {
+            btnPrimaryAdRequestFailure?.isEnabled = true
+        }
+
+        override fun onAdClicked() {
+            btnAdClicked?.isEnabled = true
+        }
+
+        override fun onAdImpression() {
+            btnAdImpression?.isEnabled = true
+        }
+    }
 
 }

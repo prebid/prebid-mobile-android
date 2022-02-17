@@ -9,13 +9,10 @@ import android.view.ViewGroup
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
-import kotlinx.android.synthetic.main.events_admob_rewarded.*
+import kotlinx.android.synthetic.main.events_admob_native.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
-import org.prebid.mobile.Host
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.admob.PrebidNativeAdapter
 import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.ViewNativeAdBinding
@@ -32,7 +29,7 @@ class AdMobNativeFragment : AdFragment() {
     protected var adUnit: MediationNativeAdUnit? = null
     protected var adLoader: AdLoader? = null
 
-    override val layoutRes = R.layout.fragment_admob_rewarded
+    override val layoutRes = R.layout.fragment_admob_native
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
@@ -46,14 +43,7 @@ class AdMobNativeFragment : AdFragment() {
     }
 
     override fun initAd(): Any? {
-        val hostUrl = PrebidRenderingSettings.getBidServerHost().hostUrl
-        val accountId = PrebidRenderingSettings.getAccountId()
-
-        val host = Host.CUSTOM
-        host.hostUrl = hostUrl
-        PrebidMobile.setPrebidServerHost(host)
-        PrebidMobile.setPrebidServerAccountId(accountId)
-        PrebidMobile.setApplicationContext(requireContext())
+        configureOriginalPrebid()
 
         val nativeAdOptions = NativeAdOptions
             .Builder()
@@ -62,16 +52,32 @@ class AdMobNativeFragment : AdFragment() {
             .Builder(requireContext(), adUnitId)
             .forNativeAd { ad: NativeAd ->
                 btnAdLoaded?.isEnabled = true
+                btnLoad?.isEnabled = true
                 nativeAd = ad
                 viewContainer?.let {
                     createCustomView(it, nativeAd!!)
                 }
             }
             .withAdListener(object : AdListener() {
+
+                override fun onAdImpression() {
+                    btnAdShowed?.isEnabled = true
+                }
+
+                override fun onAdOpened() {
+                    btnAdOpened?.isEnabled = true
+                }
+
+                override fun onAdClicked() {
+                    btnAdClicked?.isEnabled = true
+                }
+
                 override fun onAdFailedToLoad(adError: LoadAdError) {
                     btnAdFailed?.isEnabled = true
+                    btnLoad?.isEnabled = true
                     Log.e(TAG, "Error: ${adError.message}")
                 }
+
             })
             .withNativeAdOptions(nativeAdOptions)
             .build()
@@ -106,6 +112,8 @@ class AdMobNativeFragment : AdFragment() {
     private fun resetAdEvents() {
         btnAdLoaded?.isEnabled = false
         btnAdFailed?.isEnabled = false
+        btnAdClicked?.isEnabled = false
+        btnAdShowed?.isEnabled = false
     }
 
     private fun createCustomView(wrapper: ViewGroup, nativeAd: NativeAd) {

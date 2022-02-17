@@ -206,7 +206,7 @@
     <string name="demo_bidding_admob_banner_300_250_ok_random">Banner 300x250 (AdMob) [OK, Random]</string>
     <string name="demo_bidding_admob_flexible_banner_ok_random">Banner Adaptive (AdMob) [OK, Random]</string>
 
-    <string name="demo_bidding_admob_interstitial_display_adapter">Display Interstitial 320x480 (AdMob) [OK, Adapter]</string>
+    <string name="demo_bidding_admob_interstitial_display_adapter">Display Interstitial 320x480 (AdMob) [OK, OXB Adapter]</string>
     <string name="demo_bidding_admob_interstitial_display_admob">Display Interstitial 320x480 (AdMob) [noBids, AdMob Ad]</string>
     <string name="demo_bidding_admob_interstitial_display_random">Display Interstitial 320x480 (AdMob) [OK, Random]</string>
     <string name="demo_bidding_admob_interstitial_adapter">Video Interstitial 320x480 (AdMob) [OK, OXB Adapter]</string>
