@@ -51,7 +51,7 @@ class HeaderBiddingFragment : BaseFragment() {
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         initViewModel()
-        initMockSwitch()
+//        initMockSwitch()
         initGdprSwitch()
         initIntegrationsSegmentControl(view)
         initAdCategoriesSegmentControl(view)
@@ -146,12 +146,12 @@ class HeaderBiddingFragment : BaseFragment() {
         })
     }
 
-    private fun initMockSwitch() {
-        switchUseMock.isChecked = viewModel.isMockServer()
-        switchUseMock.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.onMockSwitchStateChanged(isChecked)
-        }
-    }
+//    private fun initMockSwitch() {
+//        switchUseMock.isChecked = viewModel.isMockServer()
+//        switchUseMock.setOnCheckedChangeListener { _, isChecked ->
+//            viewModel.onMockSwitchStateChanged(isChecked)
+//        }
+//    }
 
     private fun initGdprSwitch() {
         switchEnableGdpr.isChecked = viewModel.isSubjectToGdpr()
