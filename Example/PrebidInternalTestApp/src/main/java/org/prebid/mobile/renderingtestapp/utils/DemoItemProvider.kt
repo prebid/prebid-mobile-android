@@ -46,12 +46,16 @@ class DemoItemProvider private constructor() {
         private const val mopubRewardedAction = R.id.action_header_bidding_to_mopub_rewarded_video
 
         private const val adMobBannerAction = R.id.action_header_bidding_to_admob_banner
-        private const val adMobRandomBannerAction = R.id.action_header_bidding_to_admob_random_banner
-        private const val adMobFlexibleBannerAction = R.id.action_header_bidding_to_admob_flexible_banner
+        private const val adMobRandomBannerAction =
+            R.id.action_header_bidding_to_admob_random_banner
+        private const val adMobFlexibleBannerAction =
+            R.id.action_header_bidding_to_admob_flexible_banner
         private const val adMobInterstitialAction = R.id.action_header_bidding_to_admob_interstitial
-        private const val adMobInterstitialRandomAction = R.id.action_header_bidding_to_admob_interstitial_random
+        private const val adMobInterstitialRandomAction =
+            R.id.action_header_bidding_to_admob_interstitial_random
         private const val adMobRewardedAction = R.id.action_header_bidding_to_admob_rewarded
-        private const val adMobRewardedRandomAction = R.id.action_header_bidding_to_admob_rewarded_random
+        private const val adMobRewardedRandomAction =
+            R.id.action_header_bidding_to_admob_rewarded_random
         private const val adMobNativeAction = R.id.action_header_bidding_to_admob_native
 
         fun init(context: Context) {
@@ -87,7 +91,7 @@ class DemoItemProvider private constructor() {
         }
 
         private fun addInAppMockExamples() {
-            val ppmBannerTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.BANNER, Tag.MOCK)
+            val ppmBannerTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.BANNER, Tag.REMOTE)
             val ppmInterstitialTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.INTERSTITIAL, Tag.MOCK)
             val ppmMraidTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.MRAID, Tag.MOCK)
             val ppmVideoTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.VIDEO, Tag.MOCK)
@@ -96,32 +100,42 @@ class DemoItemProvider private constructor() {
             // In-App Banner
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_banner_320_50), ppmBannerAction,
-                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50, null, 320, 50)
+                    getString(R.string.demo_bidding_in_app_banner_320_50),
+                    ppmBannerAction,
+                    ppmBannerTagList,
+                    createBannerBundle(R.string.mock_config_id_banner_320x50, null, 320, 50,R.string.response_prebid_banner_320_50)
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_banner_320_50_mock_random_bid), ppmBannerAction,
-                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50, null, 320, 50)
+                    getString(R.string.demo_bidding_in_app_banner_320_50_mock_random_bid),
+                    ppmBannerAction,
+                    ppmBannerTagList,
+                    createBannerBundle(R.string.mock_config_id_banner_320x50, null, 320, 50, R.string.response_prebid_banner_320_50)
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_banner_300_250), ppmBannerAction, ppmBannerTagList,
-                    createBannerBundle(R.string.mock_config_id_banner_300x250, null, 300, 250)
+                    getString(R.string.demo_bidding_in_app_banner_300_250),
+                    ppmBannerAction,
+                    ppmBannerTagList,
+                    createBannerBundle(R.string.mock_config_id_banner_300x250, null, 300, 250,R.string.response_prebid_banner_300_250)
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_banner_728_90), ppmBannerAction,
-                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_728x90, null, 728, 90)
+                    getString(R.string.demo_bidding_in_app_banner_728_90),
+                    ppmBannerAction,
+                    ppmBannerTagList,
+                    createBannerBundle(R.string.mock_config_id_banner_728x90, null, 728, 90, R.string.response_prebid_banner_728_90)
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_banner_320_50_vast), ppmBannerAction,
-                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50_vast, null, 320, 50)
+                    getString(R.string.demo_bidding_in_app_banner_320_50_vast),
+                    ppmBannerAction,
+                    ppmBannerTagList,
+                    createBannerBundle(R.string.mock_config_id_banner_320x50_vast, null, 320, 50,R.string.response_prebid_banner_incorrect_vast)
                 )
             )
             demoList.add(
@@ -129,13 +143,21 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_banner_320_50_scrollable),
                     R.id.action_header_bidding_to_in_app_banner_scrollable,
                     ppmBannerTagList,
-                    createBannerBundle(R.string.mock_config_id_banner_320x50, null, 320, 50)
+                    createBannerBundle(R.string.mock_config_id_banner_320x50, null, 320, 50,R.string.response_prebid_banner_320_50)
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_banner_320_50_deeplink), ppmBannerAction,
-                    ppmBannerTagList, createBannerBundle(R.string.mock_config_id_banner_320x50_deeplink, null, 320, 50)
+                    getString(R.string.demo_bidding_in_app_banner_320_50_deeplink),
+                    ppmBannerAction,
+                    ppmBannerTagList,
+                    createBannerBundle(
+                        R.string.mock_config_id_banner_320x50_deeplink,
+                        null,
+                        320,
+                        50,
+                        R.string.response_prebid_banner_deeplink
+                    )
                 )
             )
             demoList.add(
@@ -151,7 +173,7 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_banner_multisize),
                     R.id.action_header_bidding_to_in_app_multisize_banner,
                     ppmBannerTagList,
-                    createBannerBundle(R.string.mock_config_id_banner_multisize, null, 320, 50)
+                    createBannerBundle(R.string.mock_config_id_banner_multisize, null, 320, 50,R.string.response_prebid_banner_multisize)
                 )
             )
             demoList.add(
@@ -164,20 +186,26 @@ class DemoItemProvider private constructor() {
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_mraid_expand), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_expand, null, 320, 50)
+                    getString(R.string.demo_bidding_in_app_mraid_expand),
+                    ppmBannerAction,
+                    ppmMraidTagList,
+                    createBannerBundle(R.string.mock_config_id_mraid_expand, null, 320, 50)
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_mraid_expand_2), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_expand_two_part, null, 320, 50)
+                    getString(R.string.demo_bidding_in_app_mraid_expand_2),
+                    ppmBannerAction,
+                    ppmMraidTagList,
+                    createBannerBundle(R.string.mock_config_id_mraid_expand_two_part, null, 320, 50)
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_mraid_resize), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_resize, null, 320, 50)
+                    getString(R.string.demo_bidding_in_app_mraid_resize),
+                    ppmBannerAction,
+                    ppmMraidTagList,
+                    createBannerBundle(R.string.mock_config_id_mraid_resize, null, 320, 50)
                 )
             )
             demoList.add(
@@ -185,13 +213,20 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_mraid_resize_with_errors),
                     ppmBannerAction,
                     ppmMraidTagList,
-                    createBannerBundle(R.string.mock_config_id_mraid_resize_with_errors, null, 300, 100)
+                    createBannerBundle(
+                        R.string.mock_config_id_mraid_resize_with_errors,
+                        null,
+                        300,
+                        100
+                    )
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_mraid_fullscreen), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_fullscreen, null, 320, 480)
+                    getString(R.string.demo_bidding_in_app_mraid_fullscreen),
+                    ppmBannerAction,
+                    ppmMraidTagList,
+                    createBannerBundle(R.string.mock_config_id_mraid_fullscreen, null, 320, 480)
                 )
             )
             demoList.add(
@@ -212,31 +247,59 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_mraid_viewability_compliance),
                     ppmBannerAction,
                     ppmMraidTagList,
-                    createBannerBundle(R.string.mock_config_id_mraid_3_viewability_compliance, null, 320, 480)
+                    createBannerBundle(
+                        R.string.mock_config_id_mraid_3_viewability_compliance,
+                        null,
+                        320,
+                        480
+                    )
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_mraid_resize_negative), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_3_resize_negative, null, 320, 480)
+                    getString(R.string.demo_bidding_in_app_mraid_resize_negative),
+                    ppmBannerAction,
+                    ppmMraidTagList,
+                    createBannerBundle(
+                        R.string.mock_config_id_mraid_3_resize_negative,
+                        null,
+                        320,
+                        480
+                    )
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_mraid_load_and_events), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_3_load_and_events, null, 320, 50)
+                    getString(R.string.demo_bidding_in_app_mraid_load_and_events),
+                    ppmBannerAction,
+                    ppmMraidTagList,
+                    createBannerBundle(
+                        R.string.mock_config_id_mraid_3_load_and_events,
+                        null,
+                        320,
+                        50
+                    )
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_mraid_test_properties), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_ox_test_properties, null, 320, 50)
+                    getString(R.string.demo_bidding_in_app_mraid_test_properties),
+                    ppmBannerAction,
+                    ppmMraidTagList,
+                    createBannerBundle(
+                        R.string.mock_config_id_mraid_ox_test_properties,
+                        null,
+                        320,
+                        50
+                    )
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_mraid_test_methods), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.mock_config_id_mraid_ox_test_methods, null, 320, 50)
+                    getString(R.string.demo_bidding_in_app_mraid_test_methods),
+                    ppmBannerAction,
+                    ppmMraidTagList,
+                    createBannerBundle(R.string.mock_config_id_mraid_ox_test_methods, null, 320, 50)
                 )
             )
             demoList.add(
@@ -252,7 +315,12 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_mraid_resize_expandable),
                     R.id.action_header_bidding_to_in_app_banner,
                     ppmMraidTagList,
-                    createBannerBundle(R.string.mock_config_id_mraid_ox_resize_expandable, null, 320, 50)
+                    createBannerBundle(
+                        R.string.mock_config_id_mraid_ox_resize_expandable,
+                        null,
+                        320,
+                        50
+                    )
                 )
             )
 
@@ -340,7 +408,9 @@ class DemoItemProvider private constructor() {
 
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_video_rewarded_320_480), ppmRewardedAction, ppmVideoTagList,
+                    getString(R.string.demo_bidding_in_app_video_rewarded_320_480),
+                    ppmRewardedAction,
+                    ppmVideoTagList,
                     createBannerBundle(
                         R.string.mock_config_id_video_rewarded_320_480,
                         null,
@@ -383,7 +453,12 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_banner_video_outstream_end_card),
                     R.id.action_header_bidding_to_in_app_banner_video,
                     ppmVideoTagList,
-                    createBannerBundle(R.string.mock_config_id_video_outstream_end_card, null, 300, 250)
+                    createBannerBundle(
+                        R.string.mock_config_id_video_outstream_end_card,
+                        null,
+                        300,
+                        250
+                    )
                 )
             )
 
@@ -415,7 +490,7 @@ class DemoItemProvider private constructor() {
         }
 
         private fun addGamMockExamples() {
-            val gamBannerTagList = listOf(Tag.ALL, Tag.GAM, Tag.BANNER, Tag.MOCK)
+            val gamBannerTagList = listOf(Tag.ALL, Tag.GAM, Tag.BANNER, Tag.REMOTE)
             val gamInterstitialTagList = listOf(Tag.ALL, Tag.GAM, Tag.INTERSTITIAL, Tag.MOCK)
             val gamMraidTagList = listOf(Tag.ALL, Tag.GAM, Tag.MRAID, Tag.MOCK)
             val gamVideoTagList = listOf(Tag.ALL, Tag.GAM, Tag.VIDEO, Tag.MOCK)
@@ -424,56 +499,66 @@ class DemoItemProvider private constructor() {
             /// GAM Banner
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_gam_banner_320_50_app_event), gamBannerAction, gamBannerTagList,
+                    getString(R.string.demo_bidding_gam_banner_320_50_app_event),
+                    gamBannerAction,
+                    gamBannerTagList,
                     createBannerBundle(
                         R.string.mock_config_id_banner_320x50,
                         R.string.adunit_gam_banner_320_50_app_event,
                         320,
-                        50
+                        50,R.string.response_prebid_banner_320_50
                     )
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_gam_banner_320_50_gam_ad), gamBannerAction, gamBannerTagList,
+                    getString(R.string.demo_bidding_gam_banner_320_50_gam_ad),
+                    gamBannerAction,
+                    gamBannerTagList,
                     createBannerBundle(
                         R.string.mock_config_id_banner_320x50,
                         R.string.adunit_gam_banner_320_50_gam_ad,
                         320,
-                        50
+                        50,R.string.response_prebid_banner_320_50
                     )
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_gam_banner_320_50_random), gamBannerAction, gamBannerTagList,
+                    getString(R.string.demo_bidding_gam_banner_320_50_random),
+                    gamBannerAction,
+                    gamBannerTagList,
                     createBannerBundle(
                         R.string.mock_config_id_banner_320x50,
                         R.string.adunit_gam_banner_320_50_random,
                         320,
-                        50
+                        50,R.string.response_prebid_banner_320_50
                     )
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_gam_banner_300_250), gamBannerAction, gamBannerTagList,
+                    getString(R.string.demo_bidding_gam_banner_300_250),
+                    gamBannerAction,
+                    gamBannerTagList,
                     createBannerBundle(
                         R.string.mock_config_id_banner_300x250,
                         R.string.adunit_gam_banner_300_250,
                         300,
-                        250
+                        250,R.string.response_prebid_banner_300_250
                     )
                 )
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_gam_banner_728_90), gamBannerAction, gamBannerTagList,
+                    getString(R.string.demo_bidding_gam_banner_728_90),
+                    gamBannerAction,
+                    gamBannerTagList,
                     createBannerBundle(
                         R.string.mock_config_id_banner_728x90,
                         R.string.adunit_gam_banner_728_90,
                         728,
-                        90
+                        90,R.string.response_prebid_banner_728_90
                     )
                 )
             )
@@ -486,7 +571,7 @@ class DemoItemProvider private constructor() {
                         R.string.mock_config_id_banner_multisize,
                         R.string.adunit_gam_banner_multisize,
                         320,
-                        50
+                        50,R.string.response_prebid_banner_multisize
                     )
                 )
             )
@@ -500,7 +585,9 @@ class DemoItemProvider private constructor() {
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_gam_mraid_expand), gamBannerAction, gamMraidTagList,
+                    getString(R.string.demo_bidding_gam_mraid_expand),
+                    gamBannerAction,
+                    gamMraidTagList,
                     createBannerBundle(
                         R.string.mock_config_id_mraid_expand,
                         R.string.adunit_gam_banner_320_50_app_event,
@@ -511,7 +598,9 @@ class DemoItemProvider private constructor() {
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_gam_mraid_resize), gamBannerAction, gamMraidTagList,
+                    getString(R.string.demo_bidding_gam_mraid_resize),
+                    gamBannerAction,
+                    gamMraidTagList,
                     createBannerBundle(
                         R.string.mock_config_id_mraid_resize,
                         R.string.adunit_gam_banner_320_50_app_event,
@@ -522,7 +611,9 @@ class DemoItemProvider private constructor() {
             )
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_gam_mraid_fullscreen_video), gamInterstitialAction, gamMraidTagList,
+                    getString(R.string.demo_bidding_gam_mraid_fullscreen_video),
+                    gamInterstitialAction,
+                    gamMraidTagList,
                     createBannerBundle(
                         R.string.mock_config_id_mraid_video_interstitial,
                         R.string.adunit_gam_interstitial_320_480_app_event,
@@ -758,7 +849,7 @@ class DemoItemProvider private constructor() {
         }
 
         private fun addMoPubMockExamples() {
-            val mopubBannerTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.BANNER, Tag.MOCK)
+            val mopubBannerTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.BANNER, Tag.REMOTE)
             val mopubInterstitialTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.INTERSTITIAL, Tag.MOCK)
             val mopubMraidTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.MRAID, Tag.MOCK)
             val mopubVideoTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.VIDEO, Tag.MOCK)
@@ -774,7 +865,7 @@ class DemoItemProvider private constructor() {
                         R.string.mock_config_id_banner_320x50,
                         R.string.mopub_banner_bidding_ad_unit_id_adapter,
                         320,
-                        50
+                        50,R.string.response_prebid_banner_320_50
                     )
                 )
             )
@@ -787,7 +878,7 @@ class DemoItemProvider private constructor() {
                         R.string.mock_config_id_banner_320x50,
                         R.string.mopub_banner_bidding_ad_unit_id_random,
                         320,
-                        50
+                        50,R.string.response_prebid_banner_320_50
                     )
                 )
             )
@@ -800,7 +891,7 @@ class DemoItemProvider private constructor() {
                         R.string.mock_config_id_banner_300x250,
                         R.string.mopub_banner_bidding_ad_unit_id_adapter,
                         300,
-                        250
+                        250,R.string.response_prebid_banner_300_250
                     )
                 )
             )
@@ -813,7 +904,7 @@ class DemoItemProvider private constructor() {
                         R.string.mock_config_id_banner_728x90,
                         R.string.mopub_banner_bidding_ad_unit_id_adapter,
                         728,
-                        90
+                        90,R.string.response_prebid_banner_728_90
                     )
                 )
             )
@@ -826,7 +917,7 @@ class DemoItemProvider private constructor() {
                         R.string.mock_config_id_banner_multisize,
                         R.string.mopub_banner_bidding_ad_unit_id_adapter,
                         320,
-                        50
+                        50,R.string.response_prebid_banner_multisize
                     )
                 )
             )
@@ -961,7 +1052,10 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_mopub_native_adapter),
                     R.id.action_header_bidding_to_mopub_native,
                     mopubNativeTagList,
-                    createBannerBundle(R.string.mock_config_id_native_styles, R.string.mopub_native_adapter)
+                    createBannerBundle(
+                        R.string.mock_config_id_native_styles,
+                        R.string.mopub_native_adapter
+                    )
                 )
             )
             demoList.add(
@@ -969,7 +1063,10 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_mopub_native_feed_no_bids),
                     R.id.action_header_bidding_to_mopub_native_feed,
                     mopubNativeTagList,
-                    createBannerBundle(R.string.mock_config_id_no_bids, R.string.mopub_native_no_bids)
+                    createBannerBundle(
+                        R.string.mock_config_id_no_bids,
+                        R.string.mopub_native_no_bids
+                    )
                 )
             )
         }
@@ -1221,20 +1318,10 @@ class DemoItemProvider private constructor() {
 
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_in_app_banner_320_50), ppmBannerAction,
-                    ppmBannerTagList, createBannerBundle(R.string.prebid_config_id_banner_320x50, null, 320, 50)
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_in_app_banner_320_50_no_bids), ppmBannerAction,
-                    ppmBannerTagList, createBannerBundle(R.string.prebid_config_id_no_bids, null, 320, 50)
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_in_app_mraid_resize), ppmBannerAction,
-                    ppmMraidTagList, createBannerBundle(R.string.prebid_config_id_mraid_resize, null, 320, 50)
+                    getString(R.string.demo_bidding_in_app_mraid_resize),
+                    ppmBannerAction,
+                    ppmMraidTagList,
+                    createBannerBundle(R.string.prebid_config_id_mraid_resize, null, 320, 50)
                 )
             )
             demoList.add(
@@ -1255,7 +1342,12 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_interstitial_320_480_no_bids),
                     ppmInterstitialAction,
                     ppmInterstitialTagList,
-                    createBannerBundle(R.string.prebid_config_id_no_bids, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)
+                    createBannerBundle(
+                        R.string.prebid_config_id_no_bids,
+                        null,
+                        MIN_WIDTH_PERC,
+                        MIN_HEIGHT_PERC
+                    )
                 )
             )
             demoList.add(
@@ -1276,7 +1368,12 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_interstitial_video_320_480_no_bids),
                     ppmInterstitialAction,
                     ppmVideoTagList,
-                    createBannerBundle(R.string.prebid_config_id_no_bids, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)
+                    createBannerBundle(
+                        R.string.prebid_config_id_no_bids,
+                        null,
+                        MIN_WIDTH_PERC,
+                        MIN_HEIGHT_PERC
+                    )
                 )
             )
             demoList.add(
@@ -1284,7 +1381,12 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_video_rewarded_end_card_320_480_no_bids),
                     ppmRewardedAction,
                     ppmVideoTagList,
-                    createBannerBundle(R.string.prebid_config_id_no_bids, null, MIN_WIDTH_PERC, MIN_HEIGHT_PERC)
+                    createBannerBundle(
+                        R.string.prebid_config_id_no_bids,
+                        null,
+                        MIN_WIDTH_PERC,
+                        MIN_HEIGHT_PERC
+                    )
                 )
             )
             demoList.add(
@@ -1292,7 +1394,12 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_banner_video_outstream),
                     R.id.action_header_bidding_to_in_app_banner_video,
                     ppmVideoTagList,
-                    createBannerBundle(R.string.prebid_config_id_video_outstream_end_card, null, 300, 250)
+                    createBannerBundle(
+                        R.string.prebid_config_id_video_outstream_end_card,
+                        null,
+                        300,
+                        250
+                    )
                 )
             )
             demoList.add(
@@ -1312,31 +1419,12 @@ class DemoItemProvider private constructor() {
             val gamVideoTagList = listOf(Tag.ALL, Tag.GAM, Tag.VIDEO, Tag.REMOTE)
             val gamNativeTagList = listOf(Tag.ALL, Tag.GAM, Tag.NATIVE, Tag.REMOTE)
 
+
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_gam_banner_320_50_app_event), gamBannerAction, gamBannerTagList,
-                    createBannerBundle(
-                        R.string.prebid_config_id_banner_320x50,
-                        R.string.adunit_gam_banner_320_50_app_event,
-                        320,
-                        50
-                    )
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_gam_banner_320_50_no_bids), gamBannerAction, gamBannerTagList,
-                    createBannerBundle(
-                        R.string.prebid_config_id_no_bids,
-                        R.string.adunit_gam_banner_320_50_no_bids,
-                        320,
-                        50
-                    )
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_gam_mraid_resize), gamBannerAction, gamMraidTagList,
+                    getString(R.string.demo_bidding_gam_mraid_resize),
+                    gamBannerAction,
+                    gamMraidTagList,
                     createBannerBundle(
                         R.string.prebid_config_id_mraid_resize,
                         R.string.adunit_gam_banner_320_50_app_event,
@@ -1389,7 +1477,12 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_gam_video_outstream_no_bids),
                     R.id.action_header_bidding_to_gam_banner_video,
                     gamVideoTagList,
-                    createBannerBundle(R.string.prebid_config_id_no_bids, R.string.adunit_gam_video_300_250, 300, 250)
+                    createBannerBundle(
+                        R.string.prebid_config_id_no_bids,
+                        R.string.adunit_gam_video_300_250,
+                        300,
+                        250
+                    )
                 )
             )
             demoList.add(
@@ -1463,7 +1556,9 @@ class DemoItemProvider private constructor() {
 
             demoList.add(
                 DemoItem(
-                    getString(R.string.demo_bidding_gam_banner_320_50_vanilla), gamBannerAction, gamBannerTagList,
+                    getString(R.string.demo_bidding_gam_banner_320_50_vanilla),
+                    gamBannerAction,
+                    gamBannerTagList,
                     createBannerBundle(
                         R.string.prebid_config_id_banner_320x50,
                         R.string.adunit_gam_banner_320_50_vanilla,
@@ -1507,32 +1602,7 @@ class DemoItemProvider private constructor() {
             val mopubVideoTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.VIDEO, Tag.REMOTE)
             val mopubNativeTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.NATIVE, Tag.REMOTE)
 
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_mopub_banner_320_50_adapter),
-                    mopubBannerAction,
-                    mopubBannerTagList,
-                    createBannerBundle(
-                        R.string.prebid_config_id_banner_320x50,
-                        R.string.mopub_banner_bidding_ad_unit_id_adapter,
-                        320,
-                        50
-                    )
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_mopub_banner_320_50_no_bids),
-                    mopubBannerAction,
-                    mopubBannerTagList,
-                    createBannerBundle(
-                        R.string.prebid_config_id_no_bids,
-                        R.string.mopub_banner_bidding_ad_unit_id_no_bids,
-                        320,
-                        50
-                    )
-                )
-            )
+
             demoList.add(
                 DemoItem(
                     getString(R.string.demo_bidding_mopub_mraid_resize),
@@ -1594,7 +1664,10 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_mopub_rewarded_video_end_card_320_480_no_bids),
                     mopubRewardedAction, mopubVideoTagList,
-                    createBannerBundle(R.string.prebid_config_id_no_bids, R.string.mopub_rewarded_video_bidding_no_bids)
+                    createBannerBundle(
+                        R.string.prebid_config_id_no_bids,
+                        R.string.mopub_rewarded_video_bidding_no_bids
+                    )
                 )
             )
             demoList.add(
@@ -1602,7 +1675,10 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_mopub_native_adapter),
                     R.id.action_header_bidding_to_mopub_native,
                     mopubNativeTagList,
-                    createBannerBundle(R.string.prebid_config_id_qa_native_styles, R.string.mopub_native_adapter)
+                    createBannerBundle(
+                        R.string.prebid_config_id_qa_native_styles,
+                        R.string.mopub_native_adapter
+                    )
                 )
             )
             demoList.add(
@@ -1610,7 +1686,10 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_mopub_native_no_bids),
                     R.id.action_header_bidding_to_mopub_native,
                     mopubNativeTagList,
-                    createBannerBundle(R.string.prebid_config_id_no_bids, R.string.mopub_native_no_bids)
+                    createBannerBundle(
+                        R.string.prebid_config_id_no_bids,
+                        R.string.mopub_native_no_bids
+                    )
                 )
             )
             demoList.add(
@@ -1618,7 +1697,10 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_mopub_native_feed_no_bids),
                     R.id.action_header_bidding_to_mopub_native_feed,
                     mopubNativeTagList,
-                    createBannerBundle(R.string.prebid_config_id_no_bids, R.string.mopub_native_no_bids)
+                    createBannerBundle(
+                        R.string.prebid_config_id_no_bids,
+                        R.string.mopub_native_no_bids
+                    )
                 )
             )
             demoList.add(
@@ -1665,30 +1747,6 @@ class DemoItemProvider private constructor() {
             val adMobInterstitialVideoTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.VIDEO, Tag.REMOTE)
             val adMobNativeTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.NATIVE, Tag.REMOTE)
 
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_admob_banner_320_50_adapter),
-                    adMobBannerAction,
-                    adMobBannerTagList,
-                    createBannerBundle(
-                        R.string.prebid_config_id_banner_320x50,
-                        R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        320, 50
-                    )
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_admob_banner_320_50_no_bids),
-                    adMobBannerAction,
-                    adMobBannerTagList,
-                    createBannerBundle(
-                        R.string.prebid_config_id_no_bids,
-                        R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        320, 50
-                    )
-                )
-            )
 
             demoList.add(
                 DemoItem(
@@ -1794,7 +1852,8 @@ class DemoItemProvider private constructor() {
             configIdRes: Int?,
             adUnitIdRes: Int? = null,
             width: Int = 0,
-            height: Int = 0
+            height: Int = 0,
+            storedResponse: Int? = null
         ): Bundle {
             return Bundle().apply {
                 if (configIdRes != null) {
@@ -1802,6 +1861,9 @@ class DemoItemProvider private constructor() {
                 }
                 if (adUnitIdRes != null) {
                     putString(getString(R.string.key_ad_unit), getString(adUnitIdRes))
+                }
+                if (storedResponse != null) {
+                    putString(getString(R.string.stored_auction_response), getString(storedResponse))
                 }
                 putInt(getString(R.string.key_width), width)
                 putInt(getString(R.string.key_height), height)
