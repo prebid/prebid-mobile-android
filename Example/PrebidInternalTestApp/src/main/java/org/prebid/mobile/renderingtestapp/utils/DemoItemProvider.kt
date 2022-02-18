@@ -1058,9 +1058,9 @@ class DemoItemProvider private constructor() {
                     adMobFlexibleBannerAction,
                     adMobBannerTagList,
                     createBannerBundle(
-                        R.string.mock_config_id_banner_728x90,
+                        R.string.mock_config_id_banner_320x50,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        728, 90
+                        320, 50
                     )
                 )
             )

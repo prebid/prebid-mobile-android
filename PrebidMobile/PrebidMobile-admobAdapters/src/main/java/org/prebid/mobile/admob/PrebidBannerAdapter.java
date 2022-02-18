@@ -117,6 +117,7 @@ public class PrebidBannerAdapter extends PrebidBaseAdapter implements CustomEven
             @Override
             public void onAdClicked() {
                 adMobListener.onAdClicked();
+                adMobListener.onAdOpened();
             }
 
             @Override

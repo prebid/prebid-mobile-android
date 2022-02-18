@@ -50,7 +50,9 @@ open class AdMobInterstitialFragment : AdFragment() {
         var adUnitFormat = AdUnitFormat.DISPLAY
         if (isVideo) adUnitFormat = AdUnitFormat.VIDEO
         adUnit = MediationInterstitialAdUnit(activity, configId, adUnitFormat, mediationUtils)
-        adUnit?.setMinSizePercentage(30, 30)
+        if (!isVideo) {
+            adUnit?.setMinSizePercentage(30, 30)
+        }
         return adUnit
     }
 
