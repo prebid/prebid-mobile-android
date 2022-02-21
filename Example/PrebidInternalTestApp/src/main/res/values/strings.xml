@@ -79,7 +79,7 @@
     <!--In-App Titles-->
     <string name="demo_bidding_in_app_banner_320_50">Banner 320x50 (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_no_bids">Banner 320x50 [noBids] (In-App)</string>
-    <string name="demo_bidding_in_app_banner_320_50_mock_random_bid"> Banner 320x50 [Bid - RANDOM noBids, Ad - RESPECTIVE]</string>
+    <string name="demo_bidding_in_app_banner_320_50_imp_prebid_random_bid"> Banner 320x50 [Bid - RANDOM noBids, Ad - RESPECTIVE]</string>
     <string name="demo_bidding_in_app_banner_300_250">Banner 300x250 (In-App)</string>
     <string name="demo_bidding_in_app_banner_728_90">Banner 728x90 (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_scrollable">Banner 320x50 Scrollable (In-App)</string>
@@ -288,40 +288,40 @@
     <string name="prebid_config_id_no_bids">28259226-68de-49f8-88d6-f0f2fab846e3</string>
     <string name="prebid_config_id_qa_native_styles">51fe68ba-aff2-401e-9e15-f3ed89d5c036</string>
 
-    <string name="mock_config_id_banner_320x50">mock-banner-320-50</string>
-    <string name="mock_config_id_banner_320x50_high_price">mock-banner-320-50-high-price</string>
-    <string name="mock_config_id_banner_320x50_deeplink">mock-banner-deeplink</string>
-    <string name="mock_config_id_banner_320x50_vast">mock-banner-incorrect-vast</string>
-    <string name="mock_config_id_banner_300x250">mock-banner-300-250</string>
-    <string name="mock_config_id_banner_300x250_high_price">mock-banner-300-250-high-price</string>
-    <string name="mock_config_id_banner_728x90">mock-banner-728-90</string>
-    <string name="mock_config_id_banner_multisize">mock-banner-multisize</string>
-    <string name="mock_config_id_interstitial_320_480">mock-display-interstitial-320-480</string>
+    <string name="imp_prebid_id_banner_320x50">imp-prebid-banner-320-50</string>
+    <string name="imp_prebid_id_banner_320x50_high_price">imp-prebid-banner-320-50-high-price</string>
+    <string name="imp_prebid_id_banner_320x50_deeplink">imp-prebid-banner-deeplink</string>
+    <string name="imp_prebid_id_banner_320x50_vast">imp-prebid-banner-incorrect-vast</string>
+    <string name="imp_prebid_id_banner_300x250">imp-prebid-banner-300-250</string>
+    <string name="imp_prebid_id_banner_300x250_high_price">imp-prebid-banner-300-250-high-price</string>
+    <string name="imp_prebid_id_banner_728x90">imp-prebid-banner-728-90</string>
+    <string name="imp_prebid_id_banner_multisize">imp-prebid-banner-multisize</string>
+    <string name="imp_prebid_id_interstitial_320_480">imp-prebid-display-interstitial-320-480</string>
 
-    <string name="mock_config_id_video_outstream">mock-video-outstream</string>
-    <string name="mock_config_id_video_outstream_end_card">mock-video-outstream-with-end-card</string>
-    <string name="mock_config_id_video_interstitial_320_480">mock-video-interstitial-320-480</string>
-    <string name="mock_config_id_video_interstitial_deeplink">mock-video-interstitial-320-480-deeplink</string>
-    <string name="mock_config_id_video_interstitial_skipoffset">mock-video-interstitial-320-480-skip-offset</string>
-    <string name="mock_config_id_video_interstitial_mraid_end_card">mock-video-interstitial-mraid-end-card</string>
-    <string name="mock_config_id_video_rewarded_end_card_320_480">mock-video-rewarded-320-480</string>
-    <string name="mock_config_id_video_rewarded_320_480">mock-video-rewarded-320-480-without-end-card</string>
-    <string name="mock_config_id_mraid_resize">mock-mraid-resize</string>
-    <string name="mock_config_id_mraid_resize_with_errors">mock-mraid-resize-with-errors</string>
-    <string name="mock_config_id_mraid_expand">mock-mraid-expand-1-part</string>
-    <string name="mock_config_id_mraid_expand_two_part">mock-mraid-expand-2-part</string>
-    <string name="mock_config_id_mraid_fullscreen">mock-mraid-fullscreen</string>
-    <string name="mock_config_id_mraid_video_interstitial">mock-mraid-video-interstitial</string>
-    <string name="mock_config_id_mraid_3_viewability_compliance">mock-mraid-viewability-compliance</string>
-    <string name="mock_config_id_mraid_3_resize_negative">mock-mraid-resize-negative-test</string>
-    <string name="mock_config_id_mraid_3_load_and_events">mock-mraid-load-and-events</string>
-    <string name="mock_config_id_mraid_ox_test_properties">mock-mraid-test-properties-3</string>
-    <string name="mock_config_id_mraid_ox_test_methods">mock-mraid-test-methods-3</string>
-    <string name="mock_config_id_mraid_ox_resize_expandable">mock-mraid-resize-expandable</string>
-    <string name="mock_config_id_native_styles">mock-banner-native-styles</string>
-    <string name="mock_config_id_native_links">mock-native-links</string>
-    <string name="mock_config_id_native_video">mock-native-video-with-end-card</string>
-    <string name="mock_config_id_no_bids">no_bids</string>
+    <string name="imp_prebid_id_video_outstream">imp-prebid-video-outstream</string>
+    <string name="imp_prebid_id_video_outstream_end_card">imp-prebid-video-outstream-with-end-card</string>
+    <string name="imp_prebid_id_video_interstitial_320_480">imp-prebid-video-interstitial-320-480</string>
+    <string name="imp_prebid_id_video_interstitial_deeplink">imp-prebid-video-interstitial-320-480-deeplink</string>
+    <string name="imp_prebid_id_video_interstitial_skipoffset">imp-prebid-video-interstitial-320-480-skip-offset</string>
+    <string name="imp_prebid_id_video_interstitial_mraid_end_card">imp-prebid-video-interstitial-mraid-end-card</string>
+    <string name="imp_prebid_id_video_rewarded_end_card_320_480">imp-prebid-video-rewarded-320-480</string>
+    <string name="imp_prebid_id_video_rewarded_320_480">imp-prebid-video-rewarded-320-480-without-end-card</string>
+    <string name="imp_prebid_id_mraid_resize">imp-prebid-mraid-resize</string>
+    <string name="imp_prebid_id_mraid_resize_with_errors">imp-prebid-mraid-resize-with-errors</string>
+    <string name="imp_prebid_id_mraid_expand">imp-prebid-mraid-expand-1-part</string>
+    <string name="imp_prebid_id_mraid_expand_two_part">imp-prebid-mraid-expand-2-part</string>
+    <string name="imp_prebid_id_mraid_fullscreen">imp-prebid-mraid-fullscreen</string>
+    <string name="imp_prebid_id_mraid_video_interstitial">imp-prebid-mraid-video-interstitial</string>
+    <string name="imp_prebid_id_mraid_3_viewability_compliance">imp-prebid-mraid-viewability-compliance</string>
+    <string name="imp_prebid_id_mraid_3_resize_negative">imp-prebid-mraid-resize-negative-test</string>
+    <string name="imp_prebid_id_mraid_3_load_and_events">imp-prebid-mraid-load-and-events</string>
+    <string name="imp_prebid_id_mraid_ox_test_properties">imp-prebid-mraid-test-properties-3</string>
+    <string name="imp_prebid_id_mraid_ox_test_methods">imp-prebid-mraid-test-methods-3</string>
+    <string name="imp_prebid_id_mraid_ox_resize_expandable">imp-prebid-mraid-resize-expandable</string>
+    <string name="imp_prebid_id_native_styles">imp-prebid-banner-native-styles</string>
+    <string name="imp_prebid_id_native_links">imp-prebid-native-links</string>
+    <string name="imp_prebid_id_native_video">imp-prebid-native-video-with-end-card</string>
+    <string name="imp_prebid_id_no_bids">no_bids</string>
 
     <!--  APP SETTINGS  -->
     <string name="key_show_progress_dialog">key_show_progress_dialog</string>
@@ -333,7 +333,6 @@
     <string name="loading">Loading…</string>
 
     <string name="label_auid">AdUnitId: %1$s</string>
-    <string name="text_switch_use_mock">Use Mock Server</string>
     <string name="text_switch_enable_gdpr">Enable GDPR</string>
 
     <string name="dialog_configurator_title">Configure the Ad</string>
@@ -370,4 +369,5 @@
     <string name="response_prebid_banner_incorrect_vast">response-prebid-banner-incorrect-vast</string>
     <string name="response_prebid_banner_deeplink">response-prebid-banner-deeplink</string>
     <string name="response_prebid_banner_multisize">response-prebid-banner-multisize</string>
+    <string name="response_prebid_no_bids">response-prebid-no-bids</string>
 </resources>

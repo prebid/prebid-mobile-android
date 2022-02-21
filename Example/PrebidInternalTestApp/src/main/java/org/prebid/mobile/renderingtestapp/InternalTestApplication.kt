@@ -24,10 +24,8 @@ import android.webkit.WebView
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.rendering.bidding.enums.Host
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 import org.prebid.mobile.renderingtestapp.utils.DemoItemProvider
-import org.prebid.mobile.renderingtestapp.utils.MockServerUtils
 import org.prebid.mobile.renderingtestapp.utils.SourcePicker
 
 

@@ -34,7 +34,6 @@ import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 import org.prebid.mobile.renderingtestapp.plugplay.config.*
 import org.prebid.mobile.renderingtestapp.utils.BaseFragment
 import org.prebid.mobile.renderingtestapp.utils.ConfigurationViewSettings
-import org.prebid.mobile.renderingtestapp.utils.MockServerUtils
 import org.prebid.mobile.renderingtestapp.utils.OpenRtbConfigs
 
 abstract class AdFragment : BaseFragment() {
@@ -219,9 +218,6 @@ abstract class AdFragment : BaseFragment() {
 
     private fun isNoBids(): Boolean = configId == getString(R.string.prebid_config_id_no_bids)
 
-    private fun disableNoBids() {
-        MockServerUtils.cancelRandomNoBids()
-    }
 
     private fun setImpContextData() {
         OpenRtbConfigs.setImpContextDataTo(adView)
