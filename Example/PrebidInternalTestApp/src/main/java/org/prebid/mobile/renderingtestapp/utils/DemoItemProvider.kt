@@ -1090,7 +1090,7 @@ class DemoItemProvider private constructor() {
         }
 
         private fun addAdMobMockExamples() {
-            val adMobBannerTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.BANNER, Tag.MOCK)
+            val adMobBannerTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.BANNER, Tag.REMOTE)
             val adMobInterstitialTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.INTERSTITIAL, Tag.MOCK)
             val adMobInterstitialVideoTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.VIDEO, Tag.MOCK)
             val adMobNativeTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.NATIVE, Tag.MOCK)
@@ -1103,7 +1103,8 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_320x50_high_price,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        320, 50
+                        320, 50,
+                        R.string.response_prebid_banner_320_50
                     )
                 )
             )
@@ -1115,7 +1116,8 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_320x50,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        320, 50
+                        320, 50,
+                                R.string.response_prebid_banner_320_50
                     )
                 )
             )
@@ -1125,9 +1127,10 @@ class DemoItemProvider private constructor() {
                     adMobBannerAction,
                     adMobBannerTagList,
                     createBannerBundle(
-                        R.string.prebid_config_id_no_bids,
+                        R.string.imp_prebid_id_no_bids,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        320, 50
+                        320, 50,
+                        R.string.response_prebid_no_bids
                     )
                 )
             )
@@ -1139,7 +1142,8 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_320x50_high_price,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        320, 50
+                        320, 50,
+                        R.string.response_prebid_banner_320_50
                     )
                 )
             )
@@ -1151,7 +1155,8 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_300x250_high_price,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        300, 250
+                        300, 250,
+                        R.string.response_prebid_banner_300_250
                     )
                 )
             )
@@ -1163,7 +1168,8 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_300x250,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        300, 250
+                        300, 250,
+                        R.string.response_prebid_banner_300_250
                     )
                 )
             )
@@ -1175,7 +1181,8 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_728x90,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        728, 90
+                        728, 90,
+                        R.string.response_prebid_banner_multisize
                     )
                 )
             )
