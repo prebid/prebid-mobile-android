@@ -12,7 +12,6 @@ Easily include the Prebid Mobile SDK using Maven. Simply add this line to your g
 implementation 'org.prebid:prebid-mobile-sdk:1.12.1'
 ```
 
-
 ## Build from source
 
 Build Prebid Mobile from source code. After cloning the repo, from the root directory run
