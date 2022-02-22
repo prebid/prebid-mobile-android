@@ -321,7 +321,7 @@
     <string name="imp_prebid_id_native_styles">imp-prebid-banner-native-styles</string>
     <string name="imp_prebid_id_native_links">imp-prebid-native-links</string>
     <string name="imp_prebid_id_native_video">imp-prebid-native-video-with-end-card</string>
-    <string name="imp_prebid_id_no_bids">no_bids</string>
+    <string name="imp_prebid_id_no_bids">imp_prebid_no_bids</string>
 
     <!--  APP SETTINGS  -->
     <string name="key_show_progress_dialog">key_show_progress_dialog</string>
