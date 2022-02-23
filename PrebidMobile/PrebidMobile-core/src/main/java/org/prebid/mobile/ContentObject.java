@@ -1,5 +1,6 @@
 package org.prebid.mobile;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,7 +74,7 @@ public class ContentObject {
     /**
      * Array of IAB content categories that describe the content producer.
      */
-    @Nullable
+    @NonNull
     private ArrayList<String> categories = new ArrayList<>();
 
     /**
@@ -145,14 +146,14 @@ public class ContentObject {
     /**
      * Additional content data.
      */
-    @Nullable
-    private ArrayList<ContentDataObject> contentDataObjects = new ArrayList<>();
+    @NonNull
+    private ArrayList<DataObject> dataObjects = new ArrayList<>();
 
     /**
      * This object defines the producer of the content in which the ad will be shown.
      */
     @Nullable
-    private ContentProducerObject contentProducerObject;
+    private ProducerObject producerObject;
 
     /**
      * @return JSONObject if at least one parameter was set; otherwise null.
@@ -183,11 +184,11 @@ public class ContentObject {
             result.putOpt("language", language);
             result.putOpt("embeddable", embeddable);
 
-            if (contentProducerObject != null) {
-                result.putOpt("producer", contentProducerObject.getJsonObject());
+            if (producerObject != null) {
+                result.putOpt("producer", producerObject.getJsonObject());
             }
 
-            if (categories != null && !categories.isEmpty()) {
+            if (!categories.isEmpty()) {
                 JSONArray jsonCategories = new JSONArray();
                 for (String category : categories) {
                     jsonCategories.put(category);
@@ -195,9 +196,9 @@ public class ContentObject {
                 result.putOpt("cat", jsonCategories);
             }
 
-            if (contentDataObjects != null && !contentDataObjects.isEmpty()) {
+            if (!dataObjects.isEmpty()) {
                 JSONArray dataJson = new JSONArray();
-                for (ContentDataObject dataObject : contentDataObjects) {
+                for (DataObject dataObject : dataObjects) {
                     dataJson.put(dataObject.getJsonObject());
                 }
                 result.put("data", dataJson);
@@ -303,18 +304,16 @@ public class ContentObject {
         this.url = url;
     }
 
-    public void addCategory(@Nullable String category) {
-        if (categories != null && category != null) {
-            categories.add(category);
-        }
+    public void addCategory(@NonNull String category) {
+        categories.add(category);
     }
 
-    @Nullable
+    @NonNull
     public ArrayList<String> getCategories() {
         return categories;
     }
 
-    public void setCategories(@Nullable ArrayList<String> categories) {
+    public void setCategories(@NonNull ArrayList<String> categories) {
         this.categories = categories;
     }
 
@@ -417,106 +416,33 @@ public class ContentObject {
         this.embeddable = embeddable;
     }
 
-    public void addContentDataObject(@Nullable ContentDataObject contentDataObject) {
-        if (contentDataObjects != null && contentDataObject != null) {
-            contentDataObjects.add(contentDataObject);
-        }
+    public void addDataObject(@NonNull DataObject dataObject) {
+        dataObjects.add(dataObject);
+    }
+
+    @NonNull
+    public ArrayList<DataObject> getDataObjects() {
+        return dataObjects;
+    }
+
+    public void setDataObjects(@NonNull ArrayList<DataObject> dataObjects) {
+        this.dataObjects = dataObjects;
+    }
+
+    public void clearDataObjects() {
+        dataObjects.clear();
     }
 
     @Nullable
-    public ArrayList<ContentDataObject> getContentDataObjects() {
-        return contentDataObjects;
+    public ProducerObject getProducerObject() {
+        return producerObject;
     }
 
-    public void setContentDataObjects(@Nullable ArrayList<ContentDataObject> contentDataObjects) {
-        this.contentDataObjects = contentDataObjects;
+    public void setProducerObject(@Nullable ProducerObject producerObject) {
+        this.producerObject = producerObject;
     }
 
-    @Nullable
-    public ContentProducerObject getContentProducerObject() {
-        return contentProducerObject;
-    }
-
-    public void setContentProducerObject(@Nullable ContentProducerObject contentProducerObject) {
-        this.contentProducerObject = contentProducerObject;
-    }
-
-    public static class ContentDataObject {
-
-        /**
-         * Exchange-specific ID for the data provider.
-         */
-        @Nullable
-        private String id;
-
-        /**
-         * Exchange-specific name for the data provider.
-         */
-        @Nullable
-        private String name;
-
-        /**
-         * Segment objects are essentially key-value pairs that convey specific units of data.
-         */
-        @Nullable
-        private ArrayList<ContentSegmentObject> segments = new ArrayList<>();
-
-        public JSONObject getJsonObject() {
-            JSONObject result = new JSONObject();
-
-            try {
-                result.putOpt("id", id);
-                result.putOpt("name", name);
-
-                if (segments != null && !segments.isEmpty()) {
-                    JSONArray segmentsJson = new JSONArray();
-                    for (ContentSegmentObject segment : segments) {
-                        segmentsJson.put(segment.getJsonObject());
-                    }
-                    result.put("segment", segmentsJson);
-                }
-            } catch (JSONException exception) {
-                LogUtil.e("ContentObject", "Can't create json data content object.");
-            }
-
-            return result;
-        }
-
-        @Nullable
-        public String getId() {
-            return id;
-        }
-
-        public void setId(@Nullable String id) {
-            this.id = id;
-        }
-
-        @Nullable
-        public String getName() {
-            return name;
-        }
-
-        public void setName(@Nullable String name) {
-            this.name = name;
-        }
-
-        public void addSegment(ContentSegmentObject contentSegmentObject) {
-            if (segments != null) {
-                segments.add(contentSegmentObject);
-            }
-        }
-
-        @Nullable
-        public ArrayList<ContentSegmentObject> getSegments() {
-            return segments;
-        }
-
-        public void setSegments(@Nullable ArrayList<ContentSegmentObject> segments) {
-            this.segments = segments;
-        }
-    }
-
-    public static class ContentProducerObject {
+    public static class ProducerObject {
 
         /**
          * Content producer or originator ID.
@@ -533,8 +459,8 @@ public class ContentObject {
         /**
          * Array of IAB content categories that describe the content producer.
          */
-        @Nullable
-        private List<String> categories;
+        @NonNull
+        private ArrayList<String> categories = new ArrayList<>();
 
         /**
          * Highest level domain of the content producer (e.g., “producer.com”).
@@ -551,7 +477,7 @@ public class ContentObject {
                 result.putOpt("name", name);
                 result.putOpt("domain", domain);
 
-                if (categories != null && !categories.isEmpty()) {
+                if (!categories.isEmpty()) {
                     JSONArray categoriesJson = new JSONArray();
                     for (String category : categories) {
                         categoriesJson.put(category);
@@ -584,18 +510,16 @@ public class ContentObject {
             this.name = name;
         }
 
-        public void addCategory(@Nullable String category) {
-            if (category != null && categories != null) {
-                categories.add(category);
-            }
+        public void addCategory(@NonNull String category) {
+            categories.add(category);
         }
 
-        @Nullable
+        @NonNull
         public List<String> getCategories() {
             return categories;
         }
 
-        public void setCategories(@Nullable List<String> categories) {
+        public void setCategories(@NonNull ArrayList<String> categories) {
             this.categories = categories;
         }
 
@@ -608,69 +532,6 @@ public class ContentObject {
             this.domain = domain;
         }
 
-    }
-
-    public static class ContentSegmentObject {
-
-        /**
-         * ID of the data segment specific to the data provider.
-         */
-        @Nullable
-        private String id;
-
-        /**
-         * Name of the data segment specific to the data provider.
-         */
-        @Nullable
-        private String name;
-
-        /**
-         * String representation of the data segment value.
-         */
-        @Nullable
-        private String value;
-
-        @Nullable
-        public JSONObject getJsonObject() {
-            JSONObject result = new JSONObject();
-
-            try {
-                result.putOpt("id", id);
-                result.putOpt("name", name);
-                result.putOpt("value", value);
-            } catch (JSONException exception) {
-                LogUtil.e("ContentObject", "Can't create json segment content object.");
-            }
-
-            return result;
-        }
-
-        @Nullable
-        public String getId() {
-            return id;
-        }
-
-        public void setId(@Nullable String id) {
-            this.id = id;
-        }
-
-        @Nullable
-        public String getName() {
-            return name;
-        }
-
-        public void setName(@Nullable String name) {
-            this.name = name;
-        }
-
-        @Nullable
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(@Nullable String value) {
-            this.value = value;
-        }
     }
 
 }

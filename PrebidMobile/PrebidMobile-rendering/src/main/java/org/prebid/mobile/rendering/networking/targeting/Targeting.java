@@ -17,20 +17,13 @@
 package org.prebid.mobile.rendering.networking.targeting;
 
 import android.util.Pair;
-
+import androidx.annotation.VisibleForTesting;
 import org.json.JSONArray;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.networking.parameters.UserParameters;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Set;
-
-import androidx.annotation.VisibleForTesting;
+import java.util.*;
 
 public class Targeting {
     static final String KEY_AGE = "age";
@@ -244,41 +237,6 @@ public class Targeting {
         return new HashSet<>(sAccessControlList);
     }
 
-    /// user.ext.data
-
-    /**
-     * Obtains the user data keyword & value for global user targeting
-     * if the key already exists the value will be appended to the list. No duplicates will be added
-     */
-    public static void addUserData(String key, String value) {
-        Utils.addValue(sUserDataMap, key, value);
-    }
-
-    /**
-     * Obtains the user data keyword & values set for global user targeting
-     * the values if the key already exist will be replaced with the new set of values
-     */
-    public static void updateUserData(String key, Set<String> value) {
-        sUserDataMap.put(key, value);
-    }
-
-    /**
-     * Removes specific user data keyword & value set from global user targeting
-     */
-    public static void removeUserData(String key) {
-        sUserDataMap.remove(key);
-    }
-
-    /**
-     * Removes all user data set from global user targeting
-     */
-    public static void clearUserData() {
-        sUserDataMap.clear();
-    }
-
-    public static Map<String, Set<String>> getUserDataDictionary() {
-        return new HashMap<>(sUserDataMap);
-    }
     /// app.ext.data
 
     /**

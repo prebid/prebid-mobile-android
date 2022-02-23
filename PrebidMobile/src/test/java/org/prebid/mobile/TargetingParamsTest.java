@@ -18,7 +18,6 @@ package org.prebid.mobile;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,17 +27,9 @@ import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 
@@ -59,7 +50,6 @@ public class TargetingParamsTest extends BaseSetup {
         TargetingParams.clearStoredExternalUserIds();
 
         TargetingParams.clearAccessControlList();
-        TargetingParams.clearUserData();
         TargetingParams.clearContextData();
         TargetingParams.clearContextKeywords();
         TargetingParams.clearUserKeywords();
@@ -345,22 +335,6 @@ public class TargetingParamsTest extends BaseSetup {
 
         //when
         Map<String, Set<String>> dictionary = TargetingParams.getContextDataDictionary();
-        Set<String> set = dictionary.get("key1");
-
-        //then
-        Assert.assertEquals(1, dictionary.size());
-
-        Assert.assertEquals(1, set.size());
-        assertThat(set, containsInAnyOrder("value10"));
-    }
-
-    @Test
-    public void testUserData() {
-        // given
-        TargetingParams.addUserData("key1", "value10");
-
-        //when
-        Map<String, Set<String>> dictionary = TargetingParams.getUserDataDictionary();
         Set<String> set = dictionary.get("key1");
 
         //then

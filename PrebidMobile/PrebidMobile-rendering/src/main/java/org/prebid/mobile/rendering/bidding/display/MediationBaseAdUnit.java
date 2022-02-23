@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.DataObject;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -34,6 +35,7 @@ import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -146,6 +148,18 @@ public abstract class MediationBaseAdUnit {
 
     public void addContent(ContentObject content) {
         mAdUnitConfig.setContentObject(content);
+    }
+
+    public void addUserDataObject(DataObject dataObject) {
+        mAdUnitConfig.addUserDataObject(dataObject);
+    }
+
+    public void clearUserDataObjects() {
+        mAdUnitConfig.clearUserDataObjects();
+    }
+
+    public ArrayList<DataObject> getUserDataObjects() {
+        return mAdUnitConfig.getUserDataObjects();
     }
 
     public void destroy() {

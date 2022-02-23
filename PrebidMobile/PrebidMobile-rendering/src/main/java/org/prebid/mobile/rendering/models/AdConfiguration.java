@@ -18,6 +18,7 @@ package org.prebid.mobile.rendering.models;
 
 import androidx.annotation.Nullable;
 import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.DataObject;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.interstitial.InterstitialSizes;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
@@ -35,6 +36,7 @@ public class AdConfiguration {
     private final Map<String, Set<String>> mContextDataDictionary = new HashMap<>();
     private final Set<String> mContextKeywordsSet = new HashSet<>();
     private final Set<AdSize> mAdSizes = new HashSet<>();
+    private final ArrayList<DataObject> userDataObjects = new ArrayList<>();
 
     private AdUnitIdentifierType mAdUnitIdentifierType;
     @Nullable
@@ -274,6 +276,18 @@ public class AdConfiguration {
 
     public boolean isPlacementTypeValid() {
         return getPlacementTypeValue() != PlacementType.UNDEFINED.getValue();
+    }
+
+    public ArrayList<DataObject> getUserDataObjects() {
+        return userDataObjects;
+    }
+
+    public void addUserDataObject(DataObject dataObject) {
+        userDataObjects.add(dataObject);
+    }
+
+    public void clearUserDataObjects() {
+        userDataObjects.clear();
     }
 
     public enum AdUnitIdentifierType {

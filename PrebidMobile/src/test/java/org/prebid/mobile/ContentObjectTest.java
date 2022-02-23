@@ -113,33 +113,33 @@ public class ContentObjectTest {
         content.setEmbeddable(embeddable);
         assertEquals(embeddable, content.getEmbeddable());
 
-        ArrayList<ContentObject.ContentDataObject> contentDataObjects = new ArrayList<>();
+        ArrayList<DataObject> dataObjects = new ArrayList<>();
 
-        ContentObject.ContentSegmentObject segment1 = new ContentObject.ContentSegmentObject();
+        DataObject.SegmentObject segment1 = new DataObject.SegmentObject();
         segment1.setId("testSegmentId1");
         segment1.setName("testSegmentName1");
         segment1.setValue("testSegmentValue1");
 
-        ContentObject.ContentSegmentObject segment2 = new ContentObject.ContentSegmentObject();
+        DataObject.SegmentObject segment2 = new DataObject.SegmentObject();
         segment2.setId("testSegmentId2");
         segment2.setName("testSegmentName2");
         segment2.setValue("testSegmentValue2");
 
-        ContentObject.ContentDataObject dataObject1 = new ContentObject.ContentDataObject();
+        DataObject dataObject1 = new DataObject();
         dataObject1.setId("testId1");
         dataObject1.setName("testName1");
         dataObject1.setSegments(Lists.newArrayList(segment1));
         dataObject1.addSegment(segment2);
-        contentDataObjects.add(dataObject1);
+        dataObjects.add(dataObject1);
 
-        ContentObject.ContentDataObject dataObject2 = new ContentObject.ContentDataObject();
+        DataObject dataObject2 = new DataObject();
         dataObject2.setId("testId2");
         dataObject2.setName("testName2");
-        contentDataObjects.add(dataObject2);
+        dataObjects.add(dataObject2);
 
-        content.setContentDataObjects(contentDataObjects);
+        content.setDataObjects(dataObjects);
 
-        ContentObject.ContentProducerObject producer = new ContentObject.ContentProducerObject();
+        ContentObject.ProducerObject producer = new ContentObject.ProducerObject();
         producer.setId("testProducerId1");
         producer.setName("testProducerName1");
         producer.setDomain("testProducerDomain1");
@@ -154,7 +154,7 @@ public class ContentObjectTest {
                 "testProducerCategory3"
         ));
 
-        content.setContentProducerObject(producer);
+        content.setProducerObject(producer);
 
         String json = content.getJsonObject().toString();
         assertEquals(

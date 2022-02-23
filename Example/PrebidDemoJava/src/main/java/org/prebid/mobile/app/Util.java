@@ -25,7 +25,7 @@ public class Util {
         adUnit.setPbAdSlot("/1111111/homepage/med-rect-2");
 
         //global user data
-        TargetingParams.addUserData("globalUserDataKey1", "globalUserDataValue1");
+//        TargetingParams.addUserData("globalUserDataKey1", "globalUserDataValue1");
 
         //global context data
         TargetingParams.addContextData("globalContextDataKey1", "globalContextDataValue1");
