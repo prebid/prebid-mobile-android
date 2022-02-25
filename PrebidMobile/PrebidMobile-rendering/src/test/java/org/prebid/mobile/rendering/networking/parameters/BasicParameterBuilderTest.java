@@ -332,13 +332,31 @@ public class BasicParameterBuilderTest {
 
     @Test
     public void whenAppendParametersAndTargetingUserDataNotEmpty_UserDataAddedToUserExt()
-    throws JSONException {
+            throws JSONException {
+        Targeting.addUserData("user", "userData");
+
+        AdConfiguration adConfiguration = new AdConfiguration();
+        adConfiguration.setConfigId("config");
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), false);
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        User user = adRequestInput.getBidRequest().getUser();
+        assertTrue(user.getExt().getMap().containsKey("data"));
+        JSONObject userDataJson = (JSONObject) user.getExt().getMap().get("data");
+        assertTrue(userDataJson.has("user"));
+        assertEquals("userData", userDataJson.getJSONArray("user").get(0));
+    }
+
+    @Test
+    public void whenAppendUserData_UserDataAddedToUser()
+            throws JSONException {
         AdConfiguration adConfiguration = new AdConfiguration();
         adConfiguration.setConfigId("config");
         DataObject dataObject = new DataObject();
         String testName = "testDataObject";
         dataObject.setName(testName);
-        adConfiguration.addUserDataObject(dataObject);
+        adConfiguration.addUserData(dataObject);
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), false);
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);

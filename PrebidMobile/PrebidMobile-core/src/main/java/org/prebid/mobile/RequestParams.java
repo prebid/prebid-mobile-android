@@ -137,7 +137,7 @@ class RequestParams {
     }
 
     @NonNull
-    ArrayList<DataObject> getUserDataObjects() {
+    ArrayList<DataObject> getUserDataList() {
         return userDataObjects;
     }
 }

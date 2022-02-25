@@ -250,20 +250,23 @@ public abstract class AdUnit {
     /**
      * This method obtains the content for adunit, content, in which impression will appear
      */
-    // TODO: Rename to set
-    public void addContent(ContentObject content) {
+    public void setContent(ContentObject content) {
         this.content = content;
     }
 
-    public void addUserDataObject(DataObject dataObject) {
+    public ContentObject getContent() {
+        return content;
+    }
+
+    public void addUserData(DataObject dataObject) {
         userDataObjects.add(dataObject);
     }
 
-    public ArrayList<DataObject> getUserDataObjects() {
+    public ArrayList<DataObject> getUserDataList() {
         return userDataObjects;
     }
 
-    public void clearUserDataObject() {
+    public void clearUserDataList() {
         userDataObjects.clear();
     }
 

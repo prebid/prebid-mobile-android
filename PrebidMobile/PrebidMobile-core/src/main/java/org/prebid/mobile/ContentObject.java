@@ -416,29 +416,29 @@ public class ContentObject {
         this.embeddable = embeddable;
     }
 
-    public void addDataObject(@NonNull DataObject dataObject) {
+    public void addData(@NonNull DataObject dataObject) {
         dataObjects.add(dataObject);
     }
 
     @NonNull
-    public ArrayList<DataObject> getDataObjects() {
+    public ArrayList<DataObject> getDataList() {
         return dataObjects;
     }
 
-    public void setDataObjects(@NonNull ArrayList<DataObject> dataObjects) {
+    public void setDataList(@NonNull ArrayList<DataObject> dataObjects) {
         this.dataObjects = dataObjects;
     }
 
-    public void clearDataObjects() {
+    public void clearDataList() {
         dataObjects.clear();
     }
 
     @Nullable
-    public ProducerObject getProducerObject() {
+    public ProducerObject getProducer() {
         return producerObject;
     }
 
-    public void setProducerObject(@Nullable ProducerObject producerObject) {
+    public void setProducer(@Nullable ProducerObject producerObject) {
         this.producerObject = producerObject;
     }
 

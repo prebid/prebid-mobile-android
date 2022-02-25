@@ -50,6 +50,7 @@ public class TargetingParamsTest extends BaseSetup {
         TargetingParams.clearStoredExternalUserIds();
 
         TargetingParams.clearAccessControlList();
+        TargetingParams.clearUserData();
         TargetingParams.clearContextData();
         TargetingParams.clearContextKeywords();
         TargetingParams.clearUserKeywords();
@@ -335,6 +336,22 @@ public class TargetingParamsTest extends BaseSetup {
 
         //when
         Map<String, Set<String>> dictionary = TargetingParams.getContextDataDictionary();
+        Set<String> set = dictionary.get("key1");
+
+        //then
+        Assert.assertEquals(1, dictionary.size());
+
+        Assert.assertEquals(1, set.size());
+        assertThat(set, containsInAnyOrder("value10"));
+    }
+
+    @Test
+    public void testUserData() {
+        // given
+        TargetingParams.addUserData("key1", "value10");
+
+        //when
+        Map<String, Set<String>> dictionary = TargetingParams.getUserDataDictionary();
         Set<String> set = dictionary.get("key1");
 
         //then

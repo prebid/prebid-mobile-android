@@ -136,12 +136,12 @@ public class AdConfiguration {
         return mVideoInitialVolume;
     }
 
-    public void setContentObject(@Nullable ContentObject contentObject) {
+    public void setContent(@Nullable ContentObject contentObject) {
         this.contentObject = contentObject;
     }
 
     @Nullable
-    public ContentObject getContentObject() {
+    public ContentObject getContent() {
         return contentObject;
     }
 
@@ -278,15 +278,15 @@ public class AdConfiguration {
         return getPlacementTypeValue() != PlacementType.UNDEFINED.getValue();
     }
 
-    public ArrayList<DataObject> getUserDataObjects() {
+    public ArrayList<DataObject> getUserDataList() {
         return userDataObjects;
     }
 
-    public void addUserDataObject(DataObject dataObject) {
+    public void addUserData(DataObject dataObject) {
         userDataObjects.add(dataObject);
     }
 
-    public void clearUserDataObjects() {
+    public void clearUserDataList() {
         userDataObjects.clear();
     }
 

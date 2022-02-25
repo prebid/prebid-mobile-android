@@ -146,20 +146,24 @@ public abstract class MediationBaseAdUnit {
         return mAdUnitConfig.getPbAdSlot();
     }
 
-    public void addContent(ContentObject content) {
-        mAdUnitConfig.setContentObject(content);
+    public void setContent(ContentObject content) {
+        mAdUnitConfig.setContent(content);
     }
 
-    public void addUserDataObject(DataObject dataObject) {
-        mAdUnitConfig.addUserDataObject(dataObject);
+    public ContentObject getContent() {
+        return mAdUnitConfig.getContent();
     }
 
-    public void clearUserDataObjects() {
-        mAdUnitConfig.clearUserDataObjects();
+    public void addUserData(DataObject dataObject) {
+        mAdUnitConfig.addUserData(dataObject);
     }
 
-    public ArrayList<DataObject> getUserDataObjects() {
-        return mAdUnitConfig.getUserDataObjects();
+    public void clearUserDataList() {
+        mAdUnitConfig.clearUserDataList();
+    }
+
+    public ArrayList<DataObject> getUserDataList() {
+        return mAdUnitConfig.getUserDataList();
     }
 
     public void destroy() {

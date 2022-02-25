@@ -40,6 +40,7 @@ public class TargetingParams {
     public static final String BIDDER_NAME_APP_NEXUS = "appnexus";
     public static final String BIDDER_NAME_RUBICON_PROJECT = "rubicon";
 
+    private static final Map<String, Set<String>> userDataMap = new HashMap<>();
     private static final Set<String> accessControlList = new HashSet<>();
     private static final Set<String> userKeywordsSet = new HashSet<>();
     private static final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
@@ -403,7 +404,41 @@ public class TargetingParams {
         return accessControlList;
     }
 
-    // MARK: - global user keywords (user.keywords)
+    /**
+     * This method obtains the user data keyword & value for global user targeting
+     * if the key already exists the value will be appended to the list. No duplicates will be added
+     */
+    public static void addUserData(String key, String value) {
+
+        Util.addValue(userDataMap, key, value);
+
+    }
+
+    /**
+     * This method obtains the user data keyword & values set for global user targeting
+     * the values if the key already exist will be replaced with the new set of values
+     */
+    public static void updateUserData(String key, Set<String> value) {
+        userDataMap.put(key, value);
+    }
+
+    /**
+     * This method allows to remove specific user data keyword & value set from global user targeting
+     */
+    public static void removeUserData(String key) {
+        userDataMap.remove(key);
+    }
+
+    /**
+     * This method allows to remove all user data set from global user targeting
+     */
+    public static void clearUserData() {
+        userDataMap.clear();
+    }
+
+    static Map<String, Set<String>> getUserDataDictionary() {
+        return userDataMap;
+    }
 
     /**
      * This method obtains the user keyword for global user targeting

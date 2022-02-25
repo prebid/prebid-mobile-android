@@ -79,16 +79,24 @@ public class MediationNativeAdUnit {
         nativeAdUnit.setDUrlSupport(support);
     }
 
-    public void addUserDataObject(DataObject dataObject) {
-        nativeAdUnit.addUserDataObject(dataObject);
+    public void setContent(ContentObject content) {
+        nativeAdUnit.setContent(content);
     }
 
-    public void clearUserDataObject() {
-        nativeAdUnit.clearUserDataObject();
+    public ContentObject getContent() {
+        return nativeAdUnit.getContent();
     }
 
-    public ArrayList<DataObject> getUserDataObjects() {
-        return nativeAdUnit.getUserDataObjects();
+    public void addUserData(DataObject dataObject) {
+        nativeAdUnit.addUserData(dataObject);
+    }
+
+    public void clearUserDataList() {
+        nativeAdUnit.clearUserDataList();
+    }
+
+    public ArrayList<DataObject> getUserDataList() {
+        return nativeAdUnit.getUserDataList();
     }
 
     private FetchDemandResult convertResultCode(ResultCode originalResult) {

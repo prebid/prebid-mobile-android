@@ -72,6 +72,7 @@ public class PrebidNativeNativeTest extends BaseSetup {
         adExpired = false;
         adClicked = false;
         TargetingParams.clearAccessControlList();
+        TargetingParams.clearUserData();
         TargetingParams.clearContextData();
         TargetingParams.clearContextKeywords();
         TargetingParams.clearUserKeywords();

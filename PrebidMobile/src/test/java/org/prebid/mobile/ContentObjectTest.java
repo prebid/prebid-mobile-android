@@ -137,7 +137,7 @@ public class ContentObjectTest {
         dataObject2.setName("testName2");
         dataObjects.add(dataObject2);
 
-        content.setDataObjects(dataObjects);
+        content.setDataList(dataObjects);
 
         ContentObject.ProducerObject producer = new ContentObject.ProducerObject();
         producer.setId("testProducerId1");
@@ -154,7 +154,7 @@ public class ContentObjectTest {
                 "testProducerCategory3"
         ));
 
-        content.setProducerObject(producer);
+        content.setProducer(producer);
 
         String json = content.getJsonObject().toString();
         assertEquals(

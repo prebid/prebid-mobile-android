@@ -149,7 +149,7 @@ public class HTMLCreative extends AbstractCreative
         WebViewBase webView = getCreativeView().getWebView();
 
         AdConfiguration adConfiguration = getCreativeModel().getAdConfiguration();
-        ContentObject contentObject = adConfiguration.getContentObject();
+        ContentObject contentObject = adConfiguration.getContent();
         String contentUrl = null;
         if (contentObject != null) contentUrl = contentObject.getUrl();
         omAdSessionManager.initWebAdSessionManager(webView, contentUrl);

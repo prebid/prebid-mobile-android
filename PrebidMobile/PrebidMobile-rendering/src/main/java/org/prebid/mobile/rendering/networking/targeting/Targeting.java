@@ -239,6 +239,41 @@ public class Targeting {
 
     /// app.ext.data
 
+
+    /**
+     * Obtains the user data keyword & value for global user targeting
+     * if the key already exists the value will be appended to the list. No duplicates will be added
+     */
+    public static void addUserData(String key, String value) {
+        Utils.addValue(sUserDataMap, key, value);
+    }
+
+    /**
+     * Obtains the user data keyword & values set for global user targeting
+     * the values if the key already exist will be replaced with the new set of values
+     */
+    public static void updateUserData(String key, Set<String> value) {
+        sUserDataMap.put(key, value);
+    }
+
+    /**
+     * Removes specific user data keyword & value set from global user targeting
+     */
+    public static void removeUserData(String key) {
+        sUserDataMap.remove(key);
+    }
+
+    /**
+     * Removes all user data set from global user targeting
+     */
+    public static void clearUserData() {
+        sUserDataMap.clear();
+    }
+
+    public static Map<String, Set<String>> getUserDataDictionary() {
+        return new HashMap<>(sUserDataMap);
+    }
+
     /**
      * Obtains the context data keyword & value context for global context targeting
      * if the key already exists the value will be appended to the list. No duplicates will be added

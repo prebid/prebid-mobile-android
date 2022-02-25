@@ -67,6 +67,16 @@ object OpenRtbConfigs {
                 Targeting.addBidderToAccessControlList(bidder)
             }
         }
+        if (openRtbExtra.userData?.isNotEmpty() == true) {
+            for (key in openRtbExtra.userData.keys) {
+                val dataList = openRtbExtra.userData[key]
+                if (dataList != null) {
+                    for (data in dataList) {
+                        Targeting.addUserData(key, data)
+                    }
+                }
+            }
+        }
         if (openRtbExtra.appContextData?.isNotEmpty() == true) {
             for (key in openRtbExtra.appContextData.keys) {
                 val dataList = openRtbExtra.appContextData[key]

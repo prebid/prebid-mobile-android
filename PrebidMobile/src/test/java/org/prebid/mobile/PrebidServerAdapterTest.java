@@ -83,6 +83,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidMobile.setExternalUserIds(null);
 
         TargetingParams.clearAccessControlList();
+        TargetingParams.clearUserData();
         TargetingParams.clearContextData();
         TargetingParams.clearContextKeywords();
         TargetingParams.clearUserKeywords();
@@ -2163,6 +2164,40 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertEquals(TargetingParams.BIDDER_NAME_RUBICON_PROJECT, biddersJsonArray.get(0).toString());
 
     }
+
+    @Test
+    public void testPostDataWithGlobalUserData() throws Exception {
+
+        //given
+        TargetingParams.addUserData("key1", "value10");
+        TargetingParams.addUserData("key2", "value20");
+        TargetingParams.addUserData("key2", "value21");
+
+        //when
+        JSONObject postData = getPostDataHelper(AdType.BANNER, null, null, null, null, null, null);
+
+        JSONObject dataJsonObject = null;
+        try {
+            dataJsonObject = postData.getJSONObject("user").getJSONObject("ext").getJSONObject("data");
+        } catch (Exception ex) {
+            fail("keywords parsing fail");
+        }
+
+        List<String> listKey1 = Util.convertJSONArray(dataJsonObject.getJSONArray("key1"));
+
+        List<String> listKey2 = Util.convertJSONArray(dataJsonObject.getJSONArray("key2"));
+
+        //then
+        assertNotNull(dataJsonObject);
+        assertEquals(2, dataJsonObject.length());
+
+        assertEquals(listKey1.size(), 1);
+        assertThat(listKey1, containsInAnyOrder("value10"));
+
+        assertEquals(listKey2.size(), 2);
+        assertThat(listKey2, containsInAnyOrder("value20", "value21"));
+    }
+
 
     @Test
     public void testPostDataWithGlobalContextData() throws Exception {

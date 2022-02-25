@@ -30,15 +30,15 @@ public class JsonUserDataTest {
                 userDataObjects
         );
 
-        assertEquals(1, requestParams.getUserDataObjects().size());
-        assertThat(requestParams.getUserDataObjects(), Matchers.contains(dataObject));
+        assertEquals(1, requestParams.getUserDataList().size());
+        assertThat(requestParams.getUserDataList(), Matchers.contains(dataObject));
 
         DataObject secondObject = new DataObject();
         secondObject.setId("secondId");
         userDataObjects.add(secondObject);
 
-        assertEquals(2, requestParams.getUserDataObjects().size());
-        assertThat(requestParams.getUserDataObjects(), hasItems(
+        assertEquals(2, requestParams.getUserDataList().size());
+        assertThat(requestParams.getUserDataList(), hasItems(
                 dataObject,
                 secondObject
         ));
