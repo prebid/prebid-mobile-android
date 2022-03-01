@@ -28,9 +28,7 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -115,7 +113,7 @@ public class RequestParamsTest {
 
         AdSize minSizePerc = new AdSize(50, 70);
 
-        RequestParams requestParams = new RequestParams("123456", AdType.INTERSTITIAL, sizes, null, null, minSizePerc, null, null, null);
+        RequestParams requestParams = new RequestParams("123456", AdType.INTERSTITIAL, sizes, null, null, minSizePerc, null, null, null, null, new ArrayList<DataObject>());
 
         AdSize minAdSizePerc = requestParams.getMinSizePerc();
         assertNotNull(minAdSizePerc);

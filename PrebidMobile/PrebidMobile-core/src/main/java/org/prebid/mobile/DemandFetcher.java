@@ -18,10 +18,9 @@ package org.prebid.mobile;
 
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
-
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.tasksmanager.TasksManager;
 
 import java.util.HashMap;
@@ -73,7 +72,7 @@ class DemandFetcher {
         }
     }
 
-    private void stop() {
+    protected void stop() {
         this.requestRunnable.cancelRequest();
         this.fetcherHandler.removeCallbacks(requestRunnable);
         // cancel existing requests

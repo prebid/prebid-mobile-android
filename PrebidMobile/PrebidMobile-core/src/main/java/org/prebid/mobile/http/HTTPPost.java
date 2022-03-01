@@ -17,8 +17,7 @@
 package org.prebid.mobile.http;
 
 import android.os.Looper;
-import android.support.annotation.MainThread;
-
+import androidx.annotation.MainThread;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.BidLog;
@@ -27,12 +26,7 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.tasksmanager.TasksManager;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;

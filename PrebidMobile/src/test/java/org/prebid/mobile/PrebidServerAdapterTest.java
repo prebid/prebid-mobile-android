@@ -19,11 +19,12 @@ package org.prebid.mobile;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
 import androidx.annotation.Nullable;
-
 import com.mopub.mobileads.MoPubView;
-
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.Dispatcher;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.json.JSONArray;
@@ -46,38 +47,17 @@ import org.robolectric.shadows.ShadowLooper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import okhttp3.HttpUrl;
-import okhttp3.mockwebserver.Dispatcher;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.RecordedRequest;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import static junit.framework.Assert.*;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
@@ -129,7 +109,8 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
     }
 
-    @Test
+    //    @Test
+    // TODO: Activate this test after setting up test server
     public void testInvalidPrebidServerAccountIdForAppNexusHostedPrebidServer() {
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-ffffffffffff");
@@ -178,7 +159,8 @@ public class PrebidServerAdapterTest extends BaseSetup {
         verify(mockListener).onDemandFailed(ResultCode.INVALID_ACCOUNT_ID, uuid);
     }
 
-    @Test
+    //    @Test
+    // TODO: Activate this test after setting up test server
     public void testInvalidPrebidServerConfigIdForAppNexusHostedPrebidServer() {
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
@@ -226,7 +208,8 @@ public class PrebidServerAdapterTest extends BaseSetup {
         verify(mockListener).onDemandFailed(ResultCode.INVALID_CONFIG_ID, uuid);
     }
 
-    @Test
+    //    @Test
+    // TODO: Activate this test after setting up test server
     public void testInvalidPrebidServerIdSyntaxForAppNexusHostedPrebidServer() {
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888d"); // invalid account id
@@ -248,7 +231,8 @@ public class PrebidServerAdapterTest extends BaseSetup {
         verify(mockListener).onDemandFailed(ResultCode.INVALID_ACCOUNT_ID, uuid);
     }
 
-    @Test
+    //    @Test
+    // TODO: Activate this test after setting up test server
     public void testInvalidPrebidServerIdSyntaxForAppNexusHostedPrebidServer2() {
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
@@ -270,7 +254,8 @@ public class PrebidServerAdapterTest extends BaseSetup {
         verify(mockListener).onDemandFailed(ResultCode.INVALID_CONFIG_ID, uuid);
     }
 
-    @Test
+    //    @Test
+    // TODO: Activate this test after setting up test server
     public void testUpdateTimeoutMillis() {
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         assertEquals(2000, PrebidMobile.getTimeoutMillis());
@@ -824,7 +809,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertEquals(Locale.getDefault().getLanguage(), device.getString("language"));
         assertEquals(String.valueOf(BaseSetup.testSDK), device.getString("osv"));
         assertEquals(320, device.getInt("w"));
-        assertEquals(0, device.getInt("h"));
+        assertEquals(470, device.getInt("h"));
         assertEquals(1, device.getInt("pxratio"));
         assertEquals(2, device.getInt("connectiontype"));
         JSONObject app = postData.getJSONObject("app");
@@ -848,6 +833,40 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertEquals(0, ext.getJSONObject("prebid").getJSONObject("cache").getJSONObject("bids").length());
         assertEquals("12345", ext.getJSONObject("prebid").getJSONObject("storedrequest").getString("id"));
         assertTrue(ext.getJSONObject("prebid").has("targeting"));
+    }
+
+    @Test
+    public void testContentUrlInPostData() throws Exception {
+        String expectedContentUrl = "http://www.something.com/item";
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        HttpUrl hostUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(hostUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setPrebidServerAccountId("12345");
+        PrebidMobile.setShareGeoLocation(true);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+
+        // set content somewhere here
+
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(320, 50));
+        ContentObject contentObject = new ContentObject();
+        contentObject.setUrl(expectedContentUrl);
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, null, null, null, null, null, null, contentObject, new ArrayList<DataObject>());
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+        @SuppressWarnings("unchecked")
+        ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
+        PrebidServerAdapter.ServerConnector connector = connectors.get(0);
+        JSONObject postData = (JSONObject) MethodUtils.invokeMethod(connector, true, "getPostData");
+
+        JSONObject app = postData.getJSONObject("app");
+        assertTrue(app.has("content"));
+        JSONObject content = app.getJSONObject("content");
+        assertTrue(content.has("url"));
+        assertEquals(expectedContentUrl, content.getString("url"));
     }
 
     @Test
@@ -1730,7 +1749,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, null, null, null, null, parameters, null);
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, null, null, null, null, parameters, null, null, new ArrayList<DataObject>());
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
@@ -1884,7 +1903,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.VIDEO, sizes, null, null, null, null, null, parameters);
+        RequestParams requestParams = new RequestParams("67890", AdType.VIDEO, sizes, null, null, null, null, null, parameters, null, new ArrayList<DataObject>());
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
@@ -2121,6 +2140,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertEquals(listKey2.size(), 2);
         assertThat(listKey2, containsInAnyOrder("value20", "value21"));
     }
+
 
     @Test
     public void testPostDataWithGlobalContextData() throws Exception {
@@ -2360,7 +2380,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
 
-        RequestParams requestParams = new RequestParams("67890", adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, adSlot, bannerParameters, videoParameters);
+        RequestParams requestParams = new RequestParams("67890", adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, adSlot, bannerParameters, videoParameters, null, new ArrayList<DataObject>());
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
