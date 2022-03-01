@@ -83,6 +83,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
         private final AdType adType;
         private boolean isCancelled;
+        private boolean alreadyPostedResult = false;
 
         ServerConnector(PrebidServerAdapter prebidServerAdapter, DemandAdapterListener listener, RequestParams requestParams, String auctionId) {
             this.prebidServerAdapter = new WeakReference<>(prebidServerAdapter);
@@ -248,7 +249,10 @@ class PrebidServerAdapter implements DemandAdapter {
                 return;
             }
 
-            listener.onDemandReady(keywords, getAuctionId());
+            if (!alreadyPostedResult) {
+                alreadyPostedResult = true;
+                listener.onDemandReady(keywords, getAuctionId());
+            }
         }
 
         @MainThread
@@ -257,7 +261,10 @@ class PrebidServerAdapter implements DemandAdapter {
                 return;
             }
 
-            listener.onDemandFailed(code, getAuctionId());
+            if (!alreadyPostedResult) {
+                alreadyPostedResult = true;
+                listener.onDemandFailed(code, getAuctionId());
+            }
         }
 
         private void notifyContainsTopBid(boolean contains) {
@@ -399,6 +406,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
             return source;
         }
+
         private JSONObject getRequestExtData() {
             JSONObject ext = new JSONObject();
             JSONObject prebid = new JSONObject();
@@ -725,7 +733,7 @@ class PrebidServerAdapter implements DemandAdapter {
                 }
                 // limited ad tracking
                 device.put(PrebidServerSettings.REQUEST_LMT, AdvertisingIDUtil.isLimitAdTracking() ? 1 : 0);
-                if(canIAccessDeviceData()) {
+                if (canIAccessDeviceData()) {
                     if (!AdvertisingIDUtil.isLimitAdTracking() && !TextUtils.isEmpty(AdvertisingIDUtil.getAAID())) {
                         // put ifa
                         device.put(PrebidServerSettings.REQUEST_IFA, AdvertisingIDUtil.getAAID());
@@ -989,12 +997,10 @@ class PrebidServerAdapter implements DemandAdapter {
                         JSONArray uidArray = new JSONArray();
                         JSONObject uidObject = new JSONObject();
                         uidObject.put("id", externaluserId.getIdentifier());
-                        if (externaluserId.getAtype() != null)
-                        {
+                        if (externaluserId.getAtype() != null) {
                             uidObject.put("atype", externaluserId.getAtype());
                         }
-                        if (externaluserId.getExt() != null)
-                        {
+                        if (externaluserId.getExt() != null) {
                             JSONObject extObject = new JSONObject(externaluserId.getExt());
                             uidObject.put("ext", extObject);
                         }
@@ -1003,7 +1009,7 @@ class PrebidServerAdapter implements DemandAdapter {
                         transformedUserIdArray.put(transformedUserIdObject);
                     }
                 }
-            }catch (JSONException e) {
+            } catch (JSONException e) {
                 LogUtil.d("PrebidServerAdapter getExternalUserIdArray() " + e.getMessage());
             }
 
@@ -1050,7 +1056,7 @@ class PrebidServerAdapter implements DemandAdapter {
             Boolean gdprApplies = TargetingParams.isSubjectToGDPR();
             Boolean deviceAccessConsent = TargetingParams.getDeviceAccessConsent();
 
-            if((deviceAccessConsent == null && (gdprApplies == null || Boolean.FALSE.equals(gdprApplies)))
+            if ((deviceAccessConsent == null && (gdprApplies == null || Boolean.FALSE.equals(gdprApplies)))
                     || Boolean.TRUE.equals(deviceAccessConsent)) {
 
                 setDeviceId = true;

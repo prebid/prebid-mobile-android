@@ -18,8 +18,12 @@
 package org.prebid.mobile;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.codehaus.plexus.util.ReflectionUtils;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -27,13 +31,41 @@ import org.robolectric.annotation.Config;
 import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
+import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
 public class AdUnitSuccessorTest {
+
+    @Mock
+    DemandFetcher mockDemandFetcher;
+
+    @Before
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    //Base AdUnit
+    @Test
+    public void testResumeAutoRefresh() throws IllegalAccessException {
+        AdUnit adUnit = new BannerAdUnit("123456", 320, 50);
+        ReflectionUtils.setVariableValueInObject(adUnit, "fetcher", mockDemandFetcher);
+
+        adUnit.resumeAutoRefresh();
+
+        verify(mockDemandFetcher).start();
+    }
+
+    @Test
+    public void testStopAutoRefresh() throws IllegalAccessException {
+        AdUnit adUnit = new BannerAdUnit("123456", 320, 50);
+        ReflectionUtils.setVariableValueInObject(adUnit, "fetcher", mockDemandFetcher);
+
+        adUnit.stopAutoRefresh();
+
+        verify(mockDemandFetcher).stop();
+    }
 
     //Banner AdUnit
     @Test

@@ -72,12 +72,16 @@ class DemandFetcher {
         }
     }
 
-    protected void stop() {
-        this.requestRunnable.cancelRequest();
-        this.fetcherHandler.removeCallbacks(requestRunnable);
-        // cancel existing requests
-        timePausedAt = System.currentTimeMillis();
-        state = STATE.STOPPED;
+    void stop() {
+        if (state != STATE.DESTROYED) {
+            if (requestRunnable != null) {
+                this.requestRunnable.cancelRequest();
+            }
+            this.fetcherHandler.removeCallbacks(requestRunnable);
+            // cancel existing requests
+            timePausedAt = System.currentTimeMillis();
+            state = STATE.STOPPED;
+        }
     }
 
     void start() {
@@ -97,7 +101,7 @@ class DemandFetcher {
                     } else {
                         stall = 0;
                     }
-                    fetcherHandler.postDelayed(requestRunnable, stall * 1000);
+                    fetcherHandler.postDelayed(requestRunnable, stall);
                 }
                 state = STATE.RUNNING;
                 break;
@@ -180,7 +184,7 @@ class DemandFetcher {
             auctionId = UUID.randomUUID().toString();
             lastFetchTime = System.currentTimeMillis();
             // check input values
-            demandHandler.post(new Runnable() {
+            demandHandler.postAtFrontOfQueue(new Runnable() {
 
                 @Override
                 public void run() {
