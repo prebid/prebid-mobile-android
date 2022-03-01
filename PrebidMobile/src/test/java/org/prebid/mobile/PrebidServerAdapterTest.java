@@ -21,6 +21,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import com.mopub.mobileads.MoPubView;
+import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
@@ -320,6 +321,31 @@ public class PrebidServerAdapterTest extends BaseSetup {
     @Test
     public void testNoBidResponse() {
         server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.noBid()));
+        HttpUrl hostUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(hostUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setPrebidServerAccountId("12345");
+        PrebidMobile.setShareGeoLocation(true);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(320, 50));
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        verify(mockListener).onDemandFailed(ResultCode.NO_BIDS, uuid);
+    }
+
+    @Test
+    public void testBlankResponseReturnsNoBid() {
+        server.enqueue(new MockResponse().setResponseCode(204).setBody(""));
         HttpUrl hostUrl = server.url("/");
         Host.CUSTOM.setHostUrl(hostUrl.toString());
         PrebidMobile.setPrebidServerHost(Host.CUSTOM);
@@ -1260,6 +1286,37 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertTrue(user.has("ext"));
         assertTrue(user.getJSONObject("ext").getJSONArray("eids").getJSONObject(0).getJSONArray("uids").getJSONObject(0).has("atype"));
         assertFalse(user.getJSONObject("ext").getJSONArray("eids").getJSONObject(0).getJSONArray("uids").getJSONObject(0).has("ext"));
+    }
+
+    @Test
+    public void testConnectionHasSetCustomHeaders() throws Exception {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(MockPrebidServerResponses.oneBidFromAppNexus()));
+        HttpUrl hostUrl = server.url("/");
+        Host.CUSTOM.setHostUrl(hostUrl.toString());
+        PrebidMobile.setPrebidServerHost(Host.CUSTOM);
+        PrebidMobile.setPrebidServerAccountId("12345");
+        PrebidMobile.setShareGeoLocation(true);
+        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        HashMap<String, String> customHeaders = new HashMap<>();
+        customHeaders.put("test-key", "test-value");
+        PrebidMobile.setCustomHeaders(customHeaders);
+        DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
+        PrebidServerAdapter adapter = new PrebidServerAdapter();
+        HashSet<AdSize> sizes = new HashSet<>();
+        sizes.add(new AdSize(300, 250));
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        String uuid = UUID.randomUUID().toString();
+        adapter.requestDemand(requestParams, mockListener, uuid);
+
+        ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
+        bgLooper.runToEndOfTasks();
+
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+
+        RecordedRequest recordedRequest = server.takeRequest();
+        Headers headers = recordedRequest.getHeaders();
+        assertEquals("test-value", headers.get("test-key"));
     }
 
     @Test

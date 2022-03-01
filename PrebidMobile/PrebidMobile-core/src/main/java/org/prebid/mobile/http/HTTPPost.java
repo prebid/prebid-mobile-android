@@ -73,7 +73,9 @@ public abstract class HTTPPost {
             conn.setDoInput(true);
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("Accept", "application/json");
-            if(canIAccessDeviceData()) {
+            setCustomHeadersIfAvailable(conn);
+
+            if (canIAccessDeviceData()) {
                 String existingCookie = getExistingCookie();
                 if (existingCookie != null) {
                     conn.setRequestProperty(COOKIE_HEADER, existingCookie);
@@ -81,6 +83,7 @@ public abstract class HTTPPost {
             }
             conn.setRequestMethod("POST");
             conn.setConnectTimeout(PrebidMobile.getTimeoutMillis());
+            conn.setReadTimeout(PrebidMobile.getTimeoutMillis());
 
             // Add post data
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
@@ -132,6 +135,10 @@ public abstract class HTTPPost {
                 BidLog.getInstance().setLastEntry(entry);
 
                 return new TaskResult<>(response);
+            } else if (httpResult == HttpURLConnection.HTTP_NO_CONTENT) {
+                entry.setResponse("");
+                BidLog.getInstance().setLastEntry(entry);
+                return new TaskResult<>(new JSONObject());
             } else if (httpResult >= HttpURLConnection.HTTP_BAD_REQUEST) {
                 StringBuilder builder = new StringBuilder();
                 InputStream is = conn.getErrorStream();
@@ -183,6 +190,14 @@ public abstract class HTTPPost {
             return new TaskResult<>(e);
         }
         return new TaskResult<>(new RuntimeException("ServerConnector exception"));
+    }
+
+    private void setCustomHeadersIfAvailable(HttpURLConnection conn) {
+        if (!PrebidMobile.getCustomHeaders().isEmpty()) {
+            for (Map.Entry<String, String> customHeader : PrebidMobile.getCustomHeaders().entrySet()) {
+                conn.setRequestProperty(customHeader.getKey(), customHeader.getValue());
+            }
+        }
     }
 
     private void postResultOnMainThread(final TaskResult<JSONObject> result) {
