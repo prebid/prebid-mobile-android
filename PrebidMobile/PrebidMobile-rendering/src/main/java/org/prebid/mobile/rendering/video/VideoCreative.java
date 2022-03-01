@@ -218,7 +218,7 @@ public class VideoCreative extends VideoCreativeProtocol
         }
 
         AdConfiguration adConfiguration = mModel.getAdConfiguration();
-        ContentObject contentObject = adConfiguration.getContent();
+        ContentObject contentObject = adConfiguration.getAppContent();
         String contentUrl = null;
         if (contentObject != null) contentUrl = contentObject.getUrl();
         omAdSessionManager.initVideoAdSession(mModel.getAdVerifications(), contentUrl);

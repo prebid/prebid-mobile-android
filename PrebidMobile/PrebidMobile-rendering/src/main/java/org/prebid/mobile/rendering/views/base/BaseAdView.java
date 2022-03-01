@@ -72,12 +72,12 @@ public abstract class BaseAdView extends FrameLayout {
         return AdConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
     }
 
-    public void setContent(ContentObject contentObject) {
+    public void setAppContent(ContentObject contentObject) {
         if (mAdViewManager == null) {
             LogUtil.error(TAG, "setContentUrl: Failed. AdViewManager is null. Can't set content object. ");
             return;
         }
-        mAdViewManager.getAdConfiguration().setContent(contentObject);
+        mAdViewManager.getAdConfiguration().setAppContent(contentObject);
     }
 
     /**

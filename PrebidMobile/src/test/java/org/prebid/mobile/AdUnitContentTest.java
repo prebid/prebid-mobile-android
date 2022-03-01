@@ -65,7 +65,7 @@ public class AdUnitContentTest extends BaseSetup {
         BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
         ContentObject contentObject = new ContentObject();
         contentObject.setUrl(expectedContentUrl);
-        adUnit.setContent(contentObject);
+        adUnit.setAppContent(contentObject);
 
 
         adUnit.fetchDemand(new OnCompleteListener2() {

@@ -122,7 +122,7 @@ class RequestParams {
     }
 
     @Nullable
-    ContentObject getContent() {
+    ContentObject getAppContent() {
         return content;
     }
 
@@ -137,7 +137,7 @@ class RequestParams {
     }
 
     @NonNull
-    ArrayList<DataObject> getUserDataList() {
+    ArrayList<DataObject> getUserData() {
         return userDataObjects;
     }
 }

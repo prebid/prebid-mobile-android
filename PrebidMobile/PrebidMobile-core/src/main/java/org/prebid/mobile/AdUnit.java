@@ -250,11 +250,11 @@ public abstract class AdUnit {
     /**
      * This method obtains the content for adunit, content, in which impression will appear
      */
-    public void setContent(ContentObject content) {
+    public void setAppContent(ContentObject content) {
         this.content = content;
     }
 
-    public ContentObject getContent() {
+    public ContentObject getAppContent() {
         return content;
     }
 
@@ -262,11 +262,11 @@ public abstract class AdUnit {
         userDataObjects.add(dataObject);
     }
 
-    public ArrayList<DataObject> getUserDataList() {
+    public ArrayList<DataObject> getUserData() {
         return userDataObjects;
     }
 
-    public void clearUserDataList() {
+    public void clearUserData() {
         userDataObjects.clear();
     }
 

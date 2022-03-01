@@ -138,7 +138,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
         user.gender = Targeting.getUserGender();
         user.buyerUid = Targeting.getBuyerUid();
         user.ext = Targeting.getUserExt();
-        user.dataObjects = mAdConfiguration.getUserDataList();
+        user.dataObjects = mAdConfiguration.getUserData();
 
         final Map<String, Set<String>> userDataDictionary = Targeting.getUserDataDictionary();
         if (!userDataDictionary.isEmpty()) {

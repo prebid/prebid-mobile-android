@@ -64,7 +64,7 @@ public class AppInfoParameterBuilderTest {
         AdConfiguration adConfiguration = new AdConfiguration();
         ContentObject contentObject = new ContentObject();
         contentObject.setUrl("test.com");
-        adConfiguration.setContent(contentObject);
+        adConfiguration.setAppContent(contentObject);
         AppInfoParameterBuilder builder = new AppInfoParameterBuilder(adConfiguration);
         AdRequestInput adRequestInput = new AdRequestInput();
 
