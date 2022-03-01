@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 ext {
-    prebidVersionName = "1.12.1"
+    prebidVersionName = "1.12.2"
     prebidVersionCode = 1
     minSDKVersion = 16
     targetSDKVersion = 28
