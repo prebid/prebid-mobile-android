@@ -951,6 +951,15 @@ class PrebidServerAdapter implements DemandAdapter {
                     ext.put("consent", TargetingParams.getGDPRConsentString());
                 }
 
+                ArrayList<DataObject> userDataObjects = requestParams.getUserData();
+                if (!userDataObjects.isEmpty()) {
+                    JSONArray userDataJsonArray = new JSONArray();
+                    for (DataObject dataObject : userDataObjects) {
+                        userDataJsonArray.put(dataObject.getJsonObject());
+                    }
+                    user.put("data", userDataJsonArray);
+                }
+
                 ext.put("data", Util.toJson(TargetingParams.getUserDataDictionary()));
 
                 ext.put("eids", getExternalUserIdArray());

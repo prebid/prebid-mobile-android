@@ -17,7 +17,7 @@
 package org.prebid.mobile.testutils;
 
 import android.app.Activity;
-
+import okhttp3.mockwebserver.MockWebServer;
 import org.junit.After;
 import org.junit.Before;
 import org.robolectric.Robolectric;
@@ -25,8 +25,6 @@ import org.robolectric.shadows.httpclient.FakeHttp;
 import org.robolectric.util.Scheduler;
 
 import java.io.IOException;
-
-import okhttp3.mockwebserver.MockWebServer;
 
 import static org.junit.Assert.fail;
 import static org.robolectric.Shadows.shadowOf;
@@ -40,6 +38,7 @@ public class BaseSetup {
 
     @Before
     public void setup() {
+        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
         activity = Robolectric.buildActivity(MockMainActivity.class).create().get();
         shadowOf(activity).grantPermissions("android.permission.INTERNET");
         shadowOf(activity).grantPermissions("android.permission.CHANGE_NETWORK_STATE");
