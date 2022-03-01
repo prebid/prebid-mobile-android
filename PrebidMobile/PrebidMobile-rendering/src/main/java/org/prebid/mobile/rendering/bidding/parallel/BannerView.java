@@ -380,7 +380,7 @@ public class BannerView extends FrameLayout {
     }
 
     public void addContent(ContentObject content) {
-        mAdUnitConfig.setContentObject(content);
+        mAdUnitConfig.setAppContent(content);
     }
     //endregion ==================== getters and setters
 

@@ -919,7 +919,7 @@ class PrebidServerAdapter implements DemandAdapter {
         }
 
         private void putContentObjectIfExists(JSONObject appJsonObject) {
-            ContentObject contentObject = requestParams.getContent();
+            ContentObject contentObject = requestParams.getAppContent();
             if (contentObject == null) return;
 
             JSONObject jsonContentObject = contentObject.getJsonObject();
@@ -961,6 +961,15 @@ class PrebidServerAdapter implements DemandAdapter {
                 Boolean isSubjectToGDPR = TargetingParams.isSubjectToGDPR();
                 if (Boolean.TRUE.equals(isSubjectToGDPR)) {
                     ext.put("consent", TargetingParams.getGDPRConsentString());
+                }
+
+                ArrayList<DataObject> userDataObjects = requestParams.getUserData();
+                if (!userDataObjects.isEmpty()) {
+                    JSONArray userDataJsonArray = new JSONArray();
+                    for (DataObject dataObject : userDataObjects) {
+                        userDataJsonArray.put(dataObject.getJsonObject());
+                    }
+                    user.put("data", userDataJsonArray);
                 }
 
                 ext.put("data", Util.toJson(TargetingParams.getUserDataDictionary()));

@@ -296,7 +296,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     public void addContent(ContentObject content) {
-        mAdUnitConfig.setContentObject(content);
+        mAdUnitConfig.setAppContent(content);
     }
 
     enum AdListenerEvent {

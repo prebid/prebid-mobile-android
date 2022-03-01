@@ -39,6 +39,7 @@ public abstract class AdUnit {
     private final Map<String, Set<String>> contextDataDictionary;
     private final Set<String> contextKeywordsSet;
     private ContentObject content;
+    private final ArrayList<DataObject> userDataObjects = new ArrayList<>();
 
     private String pbAdSlot;
 
@@ -173,7 +174,7 @@ public abstract class AdUnit {
 
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
-            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, pbAdSlot, bannerParameters, videoParameters, content);
+            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, pbAdSlot, bannerParameters, videoParameters, content, userDataObjects);
             if (this.adType.equals(AdType.NATIVE)) {
                 requestParams.setNativeRequestParams(((NativeAdUnit) this).params);
             }
@@ -249,9 +250,24 @@ public abstract class AdUnit {
     /**
      * This method obtains the content for adunit, content, in which impression will appear
      */
-    // TODO: Rename to set
-    public void addContent(ContentObject content) {
+    public void setAppContent(ContentObject content) {
         this.content = content;
+    }
+
+    public ContentObject getAppContent() {
+        return content;
+    }
+
+    public void addUserData(DataObject dataObject) {
+        userDataObjects.add(dataObject);
+    }
+
+    public ArrayList<DataObject> getUserData() {
+        return userDataObjects;
+    }
+
+    public void clearUserData() {
+        userDataObjects.clear();
     }
 
     /**

@@ -18,16 +18,11 @@
 package org.prebid.mobile;
 
 import android.content.Context;
+import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -45,8 +40,8 @@ public class TargetingParams {
     public static final String BIDDER_NAME_APP_NEXUS = "appnexus";
     public static final String BIDDER_NAME_RUBICON_PROJECT = "rubicon";
 
-    private static final Set<String> accessControlList = new HashSet<>();
     private static final Map<String, Set<String>> userDataMap = new HashMap<>();
+    private static final Set<String> accessControlList = new HashSet<>();
     private static final Set<String> userKeywordsSet = new HashSet<>();
     private static final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
     private static final Set<String> contextKeywordsSet = new HashSet<>();
@@ -409,8 +404,6 @@ public class TargetingParams {
         return accessControlList;
     }
 
-    // MARK: - global user data aka visitor data (user.ext.data)
-
     /**
      * This method obtains the user data keyword & value for global user targeting
      * if the key already exists the value will be appended to the list. No duplicates will be added
@@ -446,8 +439,6 @@ public class TargetingParams {
     static Map<String, Set<String>> getUserDataDictionary() {
         return userDataMap;
     }
-
-    // MARK: - global user keywords (user.keywords)
 
     /**
      * This method obtains the user keyword for global user targeting

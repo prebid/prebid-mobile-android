@@ -65,7 +65,7 @@ public class AppInfoParameterBuilder extends ParameterBuilder {
             app.getPublisher().name = publisherName;
         }
 
-        app.contentObject = mAdConfiguration.getContentObject();
+        app.contentObject = mAdConfiguration.getAppContent();
 
         app.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidRenderingSettings.SDK_VERSION));
         final Map<String, Set<String>> contextDataDictionary = Targeting.getContextDataDictionary();
