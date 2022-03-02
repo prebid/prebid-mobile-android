@@ -25,6 +25,15 @@ public class PrebidNativeAdRenderer implements MoPubAdRenderer<PrebidNativeAdWra
         this.listener = listener;
     }
 
+    @Override
+    public boolean supports(@NonNull BaseNativeAd baseNativeAd) {
+        if (baseNativeAd instanceof PrebidNativeAdWrapper) {
+            PrebidNativeAdWrapper adWrapper = (PrebidNativeAdWrapper) baseNativeAd;
+            adWrapper.setListener(listener);
+        }
+        return baseNativeAd instanceof PrebidNativeAdWrapper;
+    }
+
     @NonNull
     @Override
     public View createAdView(
@@ -42,8 +51,6 @@ public class PrebidNativeAdRenderer implements MoPubAdRenderer<PrebidNativeAdWra
             @NonNull View view,
             @NonNull PrebidNativeAdWrapper adWrapper
     ) {
-        adWrapper.setListener(listener);
-
         StaticNativeViewHolder viewHolder = viewHolderMap.get(view);
         if (viewHolder == null) {
             viewHolder = StaticNativeViewHolder.fromViewBinder(view, viewBinder);
@@ -52,11 +59,6 @@ public class PrebidNativeAdRenderer implements MoPubAdRenderer<PrebidNativeAdWra
 
         update(viewHolder, adWrapper);
         makeViewVisible(viewHolder);
-    }
-
-    @Override
-    public boolean supports(@NonNull BaseNativeAd baseNativeAd) {
-        return baseNativeAd instanceof PrebidNativeAdWrapper;
     }
 
 

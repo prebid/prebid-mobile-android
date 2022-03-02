@@ -102,9 +102,7 @@ class MoPubRewardedVideoFragment: AdFragment() {
         }
     }
 
-    override fun configuratorMode(): AdConfiguratorDialogFragment.AdConfiguratorMode? {
-        return AdConfiguratorDialogFragment.AdConfiguratorMode.INTERSTITIAL
-    }
+    override fun configuratorMode() = AdConfiguratorDialogFragment.AdConfiguratorMode.INTERSTITIAL
 
     override fun onDestroyView() {
         super.onDestroyView()

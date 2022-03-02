@@ -5,7 +5,7 @@ import org.prebid.mobile.admob.PrebidBannerAdapter
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache
 import kotlin.random.Random
 
-class RandomAdMobBannerFragment : AdMobBannerFragment() {
+class AdMobBannerRandomFragment : AdMobBannerFragment() {
 
     private val random = Random.Default
 

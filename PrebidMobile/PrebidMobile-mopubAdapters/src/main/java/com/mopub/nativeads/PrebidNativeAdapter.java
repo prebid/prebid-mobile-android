@@ -17,12 +17,14 @@
 package com.mopub.nativeads;
 
 import android.content.Context;
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import com.mopub.mediation.MoPubBaseMediationUtils;
 import org.prebid.mobile.PrebidNativeAd;
 
 import java.util.Map;
 
+@Keep
 public class PrebidNativeAdapter extends CustomEventNative {
 
     @Override

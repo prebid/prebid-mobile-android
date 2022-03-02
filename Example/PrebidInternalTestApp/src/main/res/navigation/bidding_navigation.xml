@@ -505,11 +505,11 @@
             android:id="@+id/navigation_admob_banner"
             android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobBannerFragment"/>
     <fragment
-            android:id="@+id/navigation_admob_random_banner"
-            android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.RandomAdMobBannerFragment"/>
+        android:id="@+id/navigation_admob_random_banner"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobBannerRandomFragment" />
     <fragment
-            android:id="@+id/navigation_admob_flexible_banner"
-            android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.FlexibleAdMobBannerFragment"/>
+        android:id="@+id/navigation_admob_flexible_banner"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobBannerFlexibleFragment" />
     <fragment
             android:id="@+id/navigation_admob_interstitial"
             android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobInterstitialFragment"/>

@@ -13,7 +13,7 @@ import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
 import com.google.android.gms.ads.AdSize as GamAdSize
 
 
-class FlexibleAdMobBannerFragment : AdMobBannerFragment() {
+class AdMobBannerFlexibleFragment : AdMobBannerFragment() {
 
     companion object {
         private const val TAG = "FlexibleAdMobBanner"
@@ -44,7 +44,7 @@ class FlexibleAdMobBannerFragment : AdMobBannerFragment() {
             AdSize(width, height),
             mediationUtils
         )
-        adUnit?.addAdditionalSizes(AdSize(320, 50))
+        adUnit?.addAdditionalSizes(AdSize(728, 90))
         adUnit?.setRefreshInterval(refreshDelay)
         return adUnit
     }

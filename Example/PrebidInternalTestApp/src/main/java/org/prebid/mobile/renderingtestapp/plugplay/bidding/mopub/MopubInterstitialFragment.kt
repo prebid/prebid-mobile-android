@@ -73,7 +73,7 @@ class MopubInterstitialFragment : AdFragment() {
     }
 
     override fun initAd(): Any? {
-        initInterstitialView(adUnitId, configId, width, height, getTitle())
+        initInterstitialView(adUnitId, configId, getTitle())
         return mopubInterstitialAdUnit
     }
 
@@ -95,7 +95,7 @@ class MopubInterstitialFragment : AdFragment() {
         moPubInterstitial.destroy()
     }
 
-    private fun initInterstitialView(adUnitId: String, configId: String, minWidthPerc: Int, minHeightPerc: Int, title: String) {
+    private fun initInterstitialView(adUnitId: String, configId: String, title: String) {
         moPubInterstitial = MoPubInterstitial(requireActivity(), adUnitId)
         moPubInterstitial.interstitialAdListener = mListener
 
@@ -108,8 +108,7 @@ class MopubInterstitialFragment : AdFragment() {
                 AdUnitFormat.VIDEO,
                 mediationUtils
             )
-        }
-        else {
+        } else {
             MediationInterstitialAdUnit(
                 requireContext(),
                 configId,
@@ -117,7 +116,9 @@ class MopubInterstitialFragment : AdFragment() {
                 mediationUtils
             )
         }
-        mopubInterstitialAdUnit.setMinSizePercentage(30, 30)
+        if (!isVideo) {
+            mopubInterstitialAdUnit.setMinSizePercentage(width, height)
+        }
     }
 
     private fun handleLoadButtonClick() {

@@ -72,7 +72,7 @@ public class PrebidNativeAdapter extends PrebidBaseAdapter implements CustomEven
             return;
         }
 
-        PrebidNativeAdMapper mapper = new PrebidNativeAdMapper(nativeAd);
+        PrebidNativeAdMapper mapper = new PrebidNativeAdMapper(nativeAd, adMobListener);
         configureMapper(mapper, nativeAd, context);
         adMobListener.onAdLoaded(mapper);
     }
@@ -112,7 +112,7 @@ public class PrebidNativeAdapter extends PrebidBaseAdapter implements CustomEven
         mapper.setCallToAction(prebidAd.getCallToAction());
         mapper.setIcon(new PrebidImage(prebidAd.getIconUrl(), context));
         mapper.setAdvertiser(prebidAd.getSponsoredBy());
-        mapper.setOverrideClickHandling(false);
+        mapper.setOverrideClickHandling(true);
         mapper.setOverrideImpressionRecording(false);
     }
 

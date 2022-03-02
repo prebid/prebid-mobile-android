@@ -1,9 +1,12 @@
 package com.mopub.nativeads;
 
 import android.view.View;
+import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.PrebidNativeAdEventListener;
+
+import java.util.ArrayList;
 
 public class PrebidNativeAdWrapper extends BaseNativeAd {
 
@@ -16,6 +19,17 @@ public class PrebidNativeAdWrapper extends BaseNativeAd {
 
     @Override
     public void prepare(@NonNull View view) {
+        if (view instanceof ViewGroup && ((ViewGroup) view).getChildCount() > 0) {
+            ViewGroup viewGroup = (ViewGroup) view;
+            int size = viewGroup.getChildCount();
+            ArrayList<View> children = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                View child = viewGroup.getChildAt(i);
+                children.add(child);
+            }
+            nativeAd.registerViewList(view, children, prebidListener);
+            return;
+        }
         nativeAd.registerView(view, prebidListener);
     }
 

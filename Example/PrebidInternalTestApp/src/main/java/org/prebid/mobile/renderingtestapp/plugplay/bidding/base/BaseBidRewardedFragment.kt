@@ -28,7 +28,8 @@ import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 
-abstract class BaseBidRewardedFragment : AdFragment(), RewardedAdUnitListener {
+abstract class BaseBidRewardedFragment : AdFragment() {
+
     private val TAG = BaseBidRewardedFragment::class.java.simpleName
 
     override val layoutRes = R.layout.fragment_bidding_interstitial
@@ -61,38 +62,6 @@ abstract class BaseBidRewardedFragment : AdFragment(), RewardedAdUnitListener {
         rewardedAdUnit?.destroy()
     }
 
-    override fun onAdFailed(rewardedAdUnit: RewardedAdUnit?, exception: AdException?) {
-        Log.d(TAG, "onAdFailed() called with: rewardedAdUnit = [$rewardedAdUnit], exception = [$exception]")
-        btnAdFailed?.isEnabled = true
-        btnLoad?.isEnabled = true
-    }
-
-    override fun onAdDisplayed(rewardedAdUnit: RewardedAdUnit?) {
-        Log.d(TAG, "onAdDisplayed() called with: rewardedAdUnit = [$rewardedAdUnit]")
-        btnAdDisplayed?.isEnabled = true
-    }
-
-    override fun onAdClosed(rewardedAdUnit: RewardedAdUnit?) {
-        Log.d(TAG, "onAdClosed() called with: rewardedAdUnit = [$rewardedAdUnit]")
-        btnAdClosed?.isEnabled = true
-    }
-
-    override fun onAdClicked(rewardedAdUnit: RewardedAdUnit?) {
-        Log.d(TAG, "onAdClicked() called with: rewardedAdUnit = [$rewardedAdUnit]")
-        btnAdClicked?.isEnabled = true
-    }
-
-    override fun onAdLoaded(rewardedAdUnit: RewardedAdUnit?) {
-        Log.d(TAG, "onAdLoaded() called with: reward = [${rewardedAdUnit?.userReward}]")
-        btnAdLoaded?.isEnabled = true
-        btnLoad?.setText(R.string.text_show)
-        btnLoad?.isEnabled = true
-    }
-
-    override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?) {
-        Log.d(TAG, "onUserEarnedReward() called with: reward = [${rewardedAdUnit?.userReward}]")
-    }
-
     private fun handleLoadInterstitialClick() {
         when (btnLoad?.text) {
             getString(R.string.text_load) -> {
@@ -105,5 +74,41 @@ abstract class BaseBidRewardedFragment : AdFragment(), RewardedAdUnitListener {
                 rewardedAdUnit?.show()
             }
         }
+    }
+
+    protected fun createRewardedAdUnitListener() = object : RewardedAdUnitListener {
+
+        override fun onAdLoaded(rewardedAdUnit: RewardedAdUnit?) {
+            Log.d(TAG, "onAdLoaded() called with: reward = [${rewardedAdUnit?.userReward}]")
+            btnAdLoaded?.isEnabled = true
+            btnLoad?.setText(R.string.text_show)
+            btnLoad?.isEnabled = true
+        }
+
+        override fun onAdDisplayed(rewardedAdUnit: RewardedAdUnit?) {
+            Log.d(TAG, "onAdDisplayed() called with: rewardedAdUnit = [$rewardedAdUnit]")
+            btnAdDisplayed?.isEnabled = true
+        }
+
+        override fun onAdFailed(rewardedAdUnit: RewardedAdUnit?, exception: AdException?) {
+            Log.d(TAG, "onAdFailed() called with: rewardedAdUnit = [$rewardedAdUnit], exception = [$exception]")
+            btnAdFailed?.isEnabled = true
+            btnLoad?.isEnabled = true
+        }
+
+        override fun onAdClicked(rewardedAdUnit: RewardedAdUnit?) {
+            Log.d(TAG, "onAdClicked() called with: rewardedAdUnit = [$rewardedAdUnit]")
+            btnAdClicked?.isEnabled = true
+        }
+
+        override fun onAdClosed(rewardedAdUnit: RewardedAdUnit?) {
+            Log.d(TAG, "onAdClosed() called with: rewardedAdUnit = [$rewardedAdUnit]")
+            btnAdClosed?.isEnabled = true
+        }
+
+        override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?) {
+            Log.d(TAG, "onUserEarnedReward() called with: reward = [${rewardedAdUnit?.userReward}]")
+        }
+
     }
 }
