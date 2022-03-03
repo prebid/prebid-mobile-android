@@ -5,7 +5,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-class NativeRequestParams {
+public class NativeRequestParams {
     //    // constants
     static String VERSION = "ver";
     static String SUPPORTED_VERSION = "1.2";

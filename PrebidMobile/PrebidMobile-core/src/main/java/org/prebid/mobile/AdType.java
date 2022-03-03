@@ -16,7 +16,7 @@
 
 package org.prebid.mobile;
 
-enum AdType {
+public enum AdType {
     BANNER,
     INTERSTITIAL,
     NATIVE,
