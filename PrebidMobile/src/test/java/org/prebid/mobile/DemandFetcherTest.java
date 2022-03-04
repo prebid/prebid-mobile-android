@@ -17,10 +17,10 @@
 package org.prebid.mobile;
 
 import android.os.Bundle;
-
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.mopub.mobileads.MoPubView;
-
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -38,12 +38,7 @@ import org.robolectric.shadows.ShadowLooper;
 
 import java.util.HashSet;
 
-import okhttp3.HttpUrl;
-import okhttp3.mockwebserver.MockResponse;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotSame;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -72,7 +67,7 @@ public class DemandFetcherTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
         RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+        demandFetcher.setConfiguration(requestParams);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
         demandFetcher.start();
         assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
@@ -103,7 +98,7 @@ public class DemandFetcherTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
         RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+        demandFetcher.setConfiguration(requestParams);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         demandFetcher.setListener(mockListener);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
@@ -140,7 +135,7 @@ public class DemandFetcherTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
         RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+        demandFetcher.setConfiguration(requestParams);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         demandFetcher.setListener(mockListener);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
@@ -179,7 +174,7 @@ public class DemandFetcherTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
         RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+        demandFetcher.setConfiguration(requestParams);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         demandFetcher.setListener(mockListener);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
@@ -236,7 +231,7 @@ public class DemandFetcherTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
         RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+        demandFetcher.setConfiguration(requestParams);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         demandFetcher.setListener(mockListener);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
@@ -324,7 +319,7 @@ public class DemandFetcherTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
         RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+        demandFetcher.setConfiguration(requestParams);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         demandFetcher.setListener(mockListener);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
@@ -361,7 +356,7 @@ public class DemandFetcherTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
         RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+        demandFetcher.setConfiguration(requestParams);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         demandFetcher.setListener(mockListener);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
@@ -399,7 +394,7 @@ public class DemandFetcherTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
         RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+        demandFetcher.setConfiguration(requestParams);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         demandFetcher.setListener(mockListener);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
@@ -447,7 +442,7 @@ public class DemandFetcherTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
         RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+        demandFetcher.setConfiguration(requestParams);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         demandFetcher.setListener(mockListener);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));

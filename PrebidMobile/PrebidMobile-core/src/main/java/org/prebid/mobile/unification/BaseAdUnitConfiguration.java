@@ -85,7 +85,7 @@ public abstract class BaseAdUnitConfiguration implements BaseAdUnitConfiguration
     }
 
     @Override
-    public void updateContextData(String key, Set<String> value) {
+    public void addContextData(String key, Set<String> value) {
         if (key != null && value != null) {
             contextDataDictionary.put(key, value);
         }
@@ -122,7 +122,7 @@ public abstract class BaseAdUnitConfiguration implements BaseAdUnitConfiguration
     }
 
     @Override
-    public void removeContextKeywords(String key) {
+    public void removeContextKeyword(String key) {
         if (key != null) {
             contextKeywordsSet.remove(key);
         }
@@ -137,6 +137,20 @@ public abstract class BaseAdUnitConfiguration implements BaseAdUnitConfiguration
     @Override
     public void clearContextKeywords() {
         contextKeywordsSet.clear();
+    }
+
+    public AdUnitConfiguration castToOriginal() {
+        if (this instanceof AdUnitConfiguration) {
+            return (AdUnitConfiguration) this;
+        }
+        throw new IllegalStateException("Can't cast to AdUnitConfiguration.");
+    }
+
+    public NativeAdUnitConfiguration castToNative() {
+        if (this instanceof NativeAdUnitConfiguration) {
+            return (NativeAdUnitConfiguration) this;
+        }
+        throw new IllegalStateException("Can't cast to NativeAdUnitConfiguration.");
     }
 
 }

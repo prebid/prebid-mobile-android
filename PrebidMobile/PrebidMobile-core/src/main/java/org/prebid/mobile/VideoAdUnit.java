@@ -18,17 +18,18 @@ package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
 
-public class VideoAdUnit extends VideoBaseAdUnit {
+import java.util.HashSet;
 
-    private final AdSize adSize;
+public class VideoAdUnit extends VideoBaseAdUnit {
 
     public VideoAdUnit(@NonNull String configId, int width, int height) {
         super(configId, AdType.VIDEO);
-        adSize = new AdSize(width, height);
+        configuration.castToOriginal().addSize(new AdSize(width, height));
     }
 
     AdSize getAdSize() {
-        return adSize;
+        HashSet<AdSize> sizes = configuration.castToOriginal().getSizes();
+        return sizes.iterator().next();
     }
 
 }

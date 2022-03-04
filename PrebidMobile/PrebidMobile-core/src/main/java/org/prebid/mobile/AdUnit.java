@@ -24,33 +24,22 @@ import android.text.TextUtils;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import org.prebid.mobile.tasksmanager.TasksManager;
+import org.prebid.mobile.unification.AdUnitConfiguration;
+import org.prebid.mobile.unification.BaseAdUnitConfiguration;
 
 import java.util.*;
 
 public abstract class AdUnit {
+
     private static final int MIN_AUTO_REFRESH_PERIOD_MILLIS = 30_000;
 
-    private String configId;
-    private AdType adType;
-
+    private int periodMillis = 0; // No auto refresh
     private DemandFetcher fetcher;
-    private int periodMillis;
-
-    private final Map<String, Set<String>> contextDataDictionary;
-    private final Set<String> contextKeywordsSet;
-    private ContentObject content;
-    private final ArrayList<DataObject> userDataObjects = new ArrayList<>();
-
-    private String pbAdSlot;
+    protected BaseAdUnitConfiguration configuration = createConfiguration();
 
     AdUnit(@NonNull String configId, @NonNull AdType adType) {
-        this.configId = configId;
-        this.adType = adType;
-        this.periodMillis = 0; // by default no auto refresh
-
-        this.contextDataDictionary = new HashMap<>();
-        this.contextKeywordsSet = new HashSet<>();
-
+        configuration.setConfigId(configId);
+        configuration.setAdType(adType);
     }
 
     public void setAutoRefreshPeriodMillis(@IntRange(from = MIN_AUTO_REFRESH_PERIOD_MILLIS) int periodMillis) {
@@ -101,7 +90,7 @@ public abstract class AdUnit {
             listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);
             return;
         }
-        if (TextUtils.isEmpty(configId)) {
+        if (TextUtils.isEmpty(configuration.getConfigId())) {
             LogUtil.e("Empty config id.");
             listener.onComplete(ResultCode.INVALID_CONFIG_ID);
             return;
@@ -114,34 +103,14 @@ public abstract class AdUnit {
             }
         }
 
-        HashSet<AdSize> sizes = null;
-        if (adType == AdType.BANNER) {
-            sizes = ((BannerAdUnit) this).getSizes();
+        if (configuration.getAdType() == AdType.BANNER || configuration.getAdType() == AdType.VIDEO) {
+            HashSet<AdSize> sizes = configuration.castToOriginal().getSizes();
             for (AdSize size : sizes) {
                 if (size.getWidth() < 0 || size.getHeight() < 0) {
                     listener.onComplete(ResultCode.INVALID_SIZE);
                     return;
                 }
             }
-        } else if (adType == AdType.VIDEO) {
-
-            VideoAdUnit videoAdUnit = (VideoAdUnit) this;
-
-            sizes = new HashSet<>(1);
-            sizes.add(videoAdUnit.getAdSize());
-            for (AdSize size : sizes) {
-                if (size.getWidth() < 0 || size.getHeight() < 0) {
-                    listener.onComplete(ResultCode.INVALID_SIZE);
-                    return;
-                }
-            }
-
-        }
-        AdSize minSizePerc = null;
-        if (this instanceof InterstitialAdUnit) {
-            InterstitialAdUnit interstitialAdUnit = (InterstitialAdUnit) this;
-
-            minSizePerc = interstitialAdUnit.getMinSizePerc();
         }
 
         Context context = PrebidMobile.getApplicationContext();
@@ -160,26 +129,10 @@ public abstract class AdUnit {
             return;
         }
 
-        BannerBaseAdUnit.Parameters bannerParameters = null;
-        if (this instanceof BannerBaseAdUnit) {
-            BannerBaseAdUnit bannerBaseAdUnit = (BannerBaseAdUnit) this;
-            bannerParameters = bannerBaseAdUnit.parameters;
-        }
-
-        VideoBaseAdUnit.Parameters videoParameters = null;
-        if (this instanceof VideoBaseAdUnit) {
-            VideoBaseAdUnit videoBaseAdUnit = (VideoBaseAdUnit) this;
-            videoParameters = videoBaseAdUnit.parameters;
-        }
-
         if (Util.supportedAdObject(adObj)) {
             fetcher = new DemandFetcher(adObj);
-            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, pbAdSlot, bannerParameters, videoParameters, content, userDataObjects);
-            if (this.adType.equals(AdType.NATIVE)) {
-                requestParams.setNativeRequestParams(((NativeAdUnit) this).params);
-            }
             fetcher.setPeriodMillis(periodMillis);
-            fetcher.setRequestParams(requestParams);
+            fetcher.setConfiguration(configuration);
             fetcher.setListener(listener);
             if (periodMillis >= 30000) {
                 LogUtil.v("Start fetching bids with auto refresh millis: " + periodMillis);
@@ -200,7 +153,7 @@ public abstract class AdUnit {
      * if the key already exists the value will be appended to the list. No duplicates will be added
      */
     public void addContextData(String key, String value) {
-        Util.addValue(contextDataDictionary, key, value);
+        configuration.addContextData(key, value);
     }
 
     /**
@@ -208,25 +161,25 @@ public abstract class AdUnit {
      * the values if the key already exist will be replaced with the new set of values
      */
     public void updateContextData(String key, Set<String> value) {
-        contextDataDictionary.put(key, value);
+        configuration.addContextData(key, value);
     }
 
     /**
      * This method allows to remove specific context data keyword & values set from adunit context targeting
      */
     public void removeContextData(String key) {
-        contextDataDictionary.remove(key);
+        configuration.removeContextData(key);
     }
 
     /**
      * This method allows to remove all context data set from adunit context targeting
      */
     public void clearContextData() {
-        contextDataDictionary.clear();
+        configuration.clearContextData();
     }
 
     Map<String, Set<String>> getContextDataDictionary() {
-        return contextDataDictionary;
+        return configuration.getContextDataDictionary();
     }
 
     // MARK: - adunit context keywords (imp[].ext.context.keywords)
@@ -236,7 +189,7 @@ public abstract class AdUnit {
      * Inserts the given element in the set if it is not already present.
      */
     public void addContextKeyword(String keyword) {
-        contextKeywordsSet.add(keyword);
+        configuration.addContextKeyword(keyword);
     }
 
     /**
@@ -244,56 +197,61 @@ public abstract class AdUnit {
      * Adds the elements of the given set to the set.
      */
     public void addContextKeywords(Set<String> keywords) {
-        contextKeywordsSet.addAll(keywords);
-    }
-
-    /**
-     * This method obtains the content for adunit, content, in which impression will appear
-     */
-    public void setAppContent(ContentObject content) {
-        this.content = content;
-    }
-
-    public ContentObject getAppContent() {
-        return content;
-    }
-
-    public void addUserData(DataObject dataObject) {
-        userDataObjects.add(dataObject);
-    }
-
-    public ArrayList<DataObject> getUserData() {
-        return userDataObjects;
-    }
-
-    public void clearUserData() {
-        userDataObjects.clear();
+        configuration.addContextKeywords(keywords);
     }
 
     /**
      * This method allows to remove specific context keyword from adunit context targeting
      */
     public void removeContextKeyword(String keyword) {
-        contextKeywordsSet.remove(keyword);
+        configuration.removeContextKeyword(keyword);
     }
 
     /**
      * This method allows to remove all keywords from the set of adunit context targeting
      */
     public void clearContextKeywords() {
-        contextKeywordsSet.clear();
+        configuration.clearContextKeywords();
     }
 
     Set<String> getContextKeywordsSet() {
-        return contextKeywordsSet;
+        return configuration.getContextKeywordsSet();
+    }
+
+    /**
+     * This method obtains the content for adunit, content, in which impression will appear
+     */
+    public void setAppContent(ContentObject content) {
+        configuration.setAppContent(content);
+    }
+
+    public ContentObject getAppContent() {
+        return configuration.getAppContent();
+    }
+
+    public void addUserData(DataObject dataObject) {
+        configuration.addUserData(dataObject);
+    }
+
+    public ArrayList<DataObject> getUserData() {
+        return configuration.getUserData();
+    }
+
+    public void clearUserData() {
+        configuration.clearUserData();
     }
 
     public String getPbAdSlot() {
-        return pbAdSlot;
+        return configuration.getPbAdSlot();
     }
 
     public void setPbAdSlot(String pbAdSlot) {
-        this.pbAdSlot = pbAdSlot;
+        configuration.setPbAdSlot(pbAdSlot);
     }
+
+    protected BaseAdUnitConfiguration createConfiguration() {
+        return new AdUnitConfiguration();
+    }
+
 }
 

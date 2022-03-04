@@ -23,23 +23,18 @@ import java.util.List;
 
 public abstract class BannerBaseAdUnit extends AdUnit {
 
-    @Nullable
-    Parameters parameters;
-
     BannerBaseAdUnit(@NonNull String configId, @NonNull AdType adType) {
         super(configId, adType);
     }
 
     @Nullable
     public Parameters getParameters() {
-        return parameters;
+        return configuration.castToOriginal().getBannerParameters();
     }
 
     public void setParameters(@Nullable Parameters parameters) {
-        this.parameters = parameters;
+        configuration.castToOriginal().setBannerParameters(parameters);
     }
-
-    //Parameters class
 
     /**
      * Describes an <a href="https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf">OpenRTB</a> banner object
@@ -52,7 +47,6 @@ public abstract class BannerBaseAdUnit extends AdUnit {
         @Nullable
         private List<Signals.Api> api;
 
-        //Getters and setters
         @Nullable
         public List<Signals.Api> getApi() {
             return api;
@@ -62,4 +56,5 @@ public abstract class BannerBaseAdUnit extends AdUnit {
             this.api = api;
         }
     }
+
 }

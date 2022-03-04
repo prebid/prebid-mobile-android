@@ -5,6 +5,7 @@ import org.prebid.mobile.BannerBaseAdUnit;
 import org.prebid.mobile.VideoBaseAdUnit;
 
 import java.util.HashSet;
+import java.util.Set;
 
 public interface AdUnitConfigurationInterface extends BaseAdUnitConfigurationInterface {
 
@@ -13,7 +14,9 @@ public interface AdUnitConfigurationInterface extends BaseAdUnitConfigurationInt
     public AdSize getMinSizePercentage();
 
 
-    public void addSize(AdSize additionalSize);
+    public void addSize(AdSize size);
+
+    public void addSizes(Set<AdSize> sizes);
 
     public HashSet<AdSize> getSizes();
 

@@ -5,6 +5,7 @@ import org.prebid.mobile.BannerBaseAdUnit;
 import org.prebid.mobile.VideoBaseAdUnit;
 
 import java.util.HashSet;
+import java.util.Set;
 
 public class AdUnitConfiguration extends BaseAdUnitConfiguration implements AdUnitConfigurationInterface {
 
@@ -24,8 +25,13 @@ public class AdUnitConfiguration extends BaseAdUnitConfiguration implements AdUn
     }
 
     @Override
-    public void addSize(AdSize additionalSize) {
-        sizes.add(additionalSize);
+    public void addSize(AdSize size) {
+        sizes.add(size);
+    }
+
+    @Override
+    public void addSizes(Set<AdSize> sizes) {
+        this.sizes.addAll(sizes);
     }
 
     @Override

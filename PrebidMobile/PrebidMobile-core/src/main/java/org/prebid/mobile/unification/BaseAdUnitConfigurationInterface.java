@@ -39,7 +39,7 @@ public abstract interface BaseAdUnitConfigurationInterface {
 
     public void addContextData(String key, String value);
 
-    public void updateContextData(String key, Set<String> value);
+    public void addContextData(String key, Set<String> value);
 
     public void removeContextData(String key);
 
@@ -52,7 +52,7 @@ public abstract interface BaseAdUnitConfigurationInterface {
 
     public void addContextKeywords(Set<String> keywords);
 
-    public void removeContextKeywords(String key);
+    public void removeContextKeyword(String key);
 
     public Set<String> getContextKeywordsSet();
 
