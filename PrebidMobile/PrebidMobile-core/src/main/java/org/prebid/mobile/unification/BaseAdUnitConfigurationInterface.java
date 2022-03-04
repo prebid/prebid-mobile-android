@@ -58,4 +58,9 @@ public abstract interface BaseAdUnitConfigurationInterface {
 
     public void clearContextKeywords();
 
+
+    public AdUnitConfiguration castToOriginal();
+
+    public NativeAdUnitConfiguration castToNative();
+
 }

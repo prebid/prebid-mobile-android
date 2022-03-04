@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.unification.AdUnitConfiguration;
 import org.prebid.mobile.unification.BaseAdUnitConfiguration;
+import org.prebid.mobile.unification.BaseAdUnitConfigurationInterface;
 
 import java.util.*;
 
@@ -35,7 +36,7 @@ public abstract class AdUnit {
 
     private int periodMillis = 0; // No auto refresh
     private DemandFetcher fetcher;
-    protected BaseAdUnitConfiguration configuration = createConfiguration();
+    protected BaseAdUnitConfigurationInterface configuration = createConfiguration();
 
     AdUnit(@NonNull String configId, @NonNull AdType adType) {
         configuration.setConfigId(configId);

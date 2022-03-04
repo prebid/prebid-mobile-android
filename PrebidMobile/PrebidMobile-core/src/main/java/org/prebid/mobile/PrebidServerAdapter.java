@@ -37,7 +37,7 @@ import org.prebid.mobile.http.HTTPPost;
 import org.prebid.mobile.http.NoContextException;
 import org.prebid.mobile.http.TaskResult;
 import org.prebid.mobile.tasksmanager.TasksManager;
-import org.prebid.mobile.unification.BaseAdUnitConfiguration;
+import org.prebid.mobile.unification.BaseAdUnitConfigurationInterface;
 import org.prebid.mobile.unification.NativeAdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
@@ -53,7 +53,7 @@ class PrebidServerAdapter implements DemandAdapter {
     }
 
     @Override
-    public void requestDemand(BaseAdUnitConfiguration configuration, DemandAdapterListener listener, String auctionId) {
+    public void requestDemand(BaseAdUnitConfigurationInterface configuration, DemandAdapterListener listener, String auctionId) {
         final ServerConnector connector = new ServerConnector(this, listener, configuration, auctionId, cacheIdSaver);
         serverConnectors.add(connector);
         connector.execute();
@@ -78,7 +78,7 @@ class PrebidServerAdapter implements DemandAdapter {
         private final WeakReference<PrebidServerAdapter> prebidServerAdapter;
         private final TimeoutCountDownTimer timeoutCountDownTimer;
 
-        private final BaseAdUnitConfiguration configuration;
+        private final BaseAdUnitConfigurationInterface configuration;
         private final String auctionId;
 
         private DemandAdapterListener listener;
@@ -90,7 +90,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
         private CacheIdSaver cacheIdSaver;
 
-        ServerConnector(PrebidServerAdapter prebidServerAdapter, DemandAdapterListener listener, BaseAdUnitConfiguration configuration, String auctionId, CacheIdSaver cacheIdSaver) {
+        ServerConnector(PrebidServerAdapter prebidServerAdapter, DemandAdapterListener listener, BaseAdUnitConfigurationInterface configuration, String auctionId, CacheIdSaver cacheIdSaver) {
             this.prebidServerAdapter = new WeakReference<>(prebidServerAdapter);
             this.listener = listener;
             this.configuration = configuration;

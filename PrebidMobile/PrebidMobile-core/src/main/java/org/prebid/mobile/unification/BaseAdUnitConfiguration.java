@@ -139,6 +139,7 @@ public abstract class BaseAdUnitConfiguration implements BaseAdUnitConfiguration
         contextKeywordsSet.clear();
     }
 
+    @Override
     public AdUnitConfiguration castToOriginal() {
         if (this instanceof AdUnitConfiguration) {
             return (AdUnitConfiguration) this;
@@ -146,6 +147,7 @@ public abstract class BaseAdUnitConfiguration implements BaseAdUnitConfiguration
         throw new IllegalStateException("Can't cast to AdUnitConfiguration.");
     }
 
+    @Override
     public NativeAdUnitConfiguration castToNative() {
         if (this instanceof NativeAdUnitConfiguration) {
             return (NativeAdUnitConfiguration) this;
