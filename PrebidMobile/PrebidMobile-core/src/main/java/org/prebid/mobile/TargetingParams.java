@@ -18,8 +18,10 @@ package org.prebid.mobile;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Pair;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import org.json.JSONArray;
 
 import java.util.*;
 
@@ -31,14 +33,24 @@ public class TargetingParams {
 
     public static final String BIDDER_NAME_APP_NEXUS = "appnexus";
     public static final String BIDDER_NAME_RUBICON_PROJECT = "rubicon";
+    private static final String TAG = "TargetingParams";
 
-    private static int yob = 0;
+    private static Integer yearOfBirth = null;
+    private static Integer userAge = null;
     private static GENDER gender = GENDER.UNKNOWN;
+    private static String userId;
+    private static String publisherName;
+    private static String buyerUserId;
     private static String domain = "";
     private static String storeUrl = "";
     private static String bundleName = null;
     private static String omidPartnerName;
     private static String omidPartnerVersion;
+    private static String userCustomData;
+    private static Pair<Float, Float> userLatLon;
+    private static ExtObject userExt;
+    private static JSONArray extendedUserIds;
+
 
     private static final Map<String, Set<String>> userDataMap = new HashMap<>();
     private static final Set<String> accessControlList = new HashSet<>();
@@ -52,23 +64,49 @@ public class TargetingParams {
 
     /* -------------------- User data -------------------- */
 
+    public static void setUserAge(@Nullable Integer age) {
+        if (age == null) {
+            yearOfBirth = null;
+            userAge = null;
+            return;
+        }
+
+        if (age < 0 || age > 120) {
+            LogUtil.e(TAG, "Can't set age, it must be in range from 0 to 120");
+            return;
+        }
+
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        int yearOfBirth = currentYear - age;
+
+        TargetingParams.userAge = age;
+        TargetingParams.yearOfBirth = yearOfBirth;
+    }
+
+    @Nullable
+    public static Integer getUserAge() {
+        return userAge;
+    }
+
     /**
      * Get the year of birth for targeting
      *
      * @return yob
      */
     public static int getYearOfBirth() {
-        return yob;
+        return yearOfBirth;
     }
 
     /**
-     * Set the year of birth for targeting
+     * Set the year of birth and user age for targeting
      *
      * @param yob yob of the user
      */
     public static void setYearOfBirth(int yob) throws Exception {
-        if (yob >= 1900 && yob < Calendar.getInstance().get(Calendar.YEAR)) {
-            TargetingParams.yob = yob;
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        if (yob >= 1900 && yob < currentYear) {
+            TargetingParams.yearOfBirth = yob;
+            TargetingParams.userAge = currentYear - yearOfBirth;
         } else {
             throw new Exception("Year of birth must be between 1900 and " + Calendar.getInstance().get(Calendar.YEAR));
         }
@@ -98,6 +136,20 @@ public class TargetingParams {
      */
     public static void setGender(GENDER gender) {
         TargetingParams.gender = gender;
+    }
+
+    /**
+     * Sets user latitude and longitude
+     *
+     * @param latitude  User latitude
+     * @param longitude User longitude
+     */
+    public static void setUserLatLng(Float latitude, Float longitude) {
+        userLatLon = new Pair<>(latitude, longitude);
+    }
+
+    public static Pair<Float, Float> getUserLatLng() {
+        return userLatLon;
     }
 
     /**
@@ -168,8 +220,129 @@ public class TargetingParams {
         return userKeywordsSet;
     }
 
+    /**
+     * Optional feature to pass bidder data that was set in the
+     * exchange’s cookie. The string must be in base85 cookie safe
+     * characters and be in any format. Proper JSON encoding must
+     * be used to include “escaped” quotation marks.
+     *
+     * @param data Custom data to be passed
+     */
+    public static void setUserCustomData(@Nullable String data) {
+        userCustomData = data;
+    }
 
-    /* -------------------- Context data -------------------- */
+    @Nullable
+    public static String getUserCustomData() {
+        return userCustomData;
+    }
+
+
+    /* -------------------- Ids -------------------- */
+
+    /**
+     * Set the user identifier.
+     *
+     * @param userId the new user identifier
+     */
+    public static void setUserId(String userId) {
+        TargetingParams.userId = userId;
+    }
+
+    public static String getUserId() {
+        return TargetingParams.userId;
+    }
+
+    /**
+     * Sets buyerId
+     *
+     * @param buyerId Buyer-specific ID for the user as mapped by the exchange for
+     *                the buyer. At least one of buyeruid or id is recommended.
+     */
+    public static void setBuyerId(@Nullable String buyerId) {
+        buyerUserId = buyerId;
+    }
+
+    @Nullable
+    public static String getBuyerId() {
+        return buyerUserId;
+    }
+
+    /**
+     * Use this API for storing the externalUserId in the SharedPreference
+     *
+     * @param externalUserId the externalUserId instance to be stored in the SharedPreference
+     */
+    public static void storeExternalUserId(ExternalUserId externalUserId) {
+        if (externalUserId != null) {
+            StorageUtils.storeExternalUserId(externalUserId);
+        } else {
+            LogUtil.e("Targeting", "External User ID can't be set as null");
+
+        }
+    }
+
+    /**
+     * Returns the stored (in the SharedPreference) ExternalUserId instance for a given source
+     */
+    public static ExternalUserId fetchStoredExternalUserId(@NonNull String source) {
+        if (!TextUtils.isEmpty(source)) {
+            return StorageUtils.fetchStoredExternalUserId(source);
+        }
+        return null;
+    }
+
+    /**
+     * Returns the stored (in the SharedPreferences) External User Id list
+     */
+    public static List<ExternalUserId> fetchStoredExternalUserIds() {
+        return StorageUtils.fetchStoredExternalUserIds();
+    }
+
+    /**
+     * Removes the stored (in the SharedPreference) ExternalUserId instance for a given source
+     */
+    public static void removeStoredExternalUserId(@NonNull String source) {
+        if (!TextUtils.isEmpty(source)) {
+            StorageUtils.removeStoredExternalUserId(source);
+        }
+    }
+
+    /**
+     * Clear the Stored ExternalUserId list from the SharedPreference
+     */
+    public static void clearStoredExternalUserIds() {
+        StorageUtils.clearStoredExternalUserIds();
+    }
+
+    /**
+     * Sets extended user ids. Prebid server provide them
+     * to participating server-side bid adapters.
+     */
+    public static void setExtendedUserIds(JSONArray ids) {
+        extendedUserIds = ids;
+    }
+
+    public static JSONArray getExtendedUserIds() {
+        return extendedUserIds;
+    }
+
+
+    /* -------------------- Context and application data -------------------- */
+
+    /**
+     * Sets publisher name
+     *
+     * @param publisherName Publisher name
+     */
+    public static void setPublisherName(String publisherName) {
+        TargetingParams.publisherName = publisherName;
+    }
+
+    public static String getPublisherName() {
+        return TargetingParams.publisherName;
+    }
+
 
     /**
      * Set the domain of your app for targeting purpose
@@ -299,54 +472,7 @@ public class TargetingParams {
     }
 
 
-    /* -------------------- Metadata -------------------- */
-
-    /**
-     * Use this API for storing the externalUserId in the SharedPreference
-     *
-     * @param externalUserId the externalUserId instance to be stored in the SharedPreference
-     */
-    public static void storeExternalUserId(ExternalUserId externalUserId) {
-        if (externalUserId != null) {
-            StorageUtils.storeExternalUserId(externalUserId);
-        } else {
-            LogUtil.e("Targeting", "External User ID can't be set as null");
-
-        }
-    }
-
-    /**
-     * Returns the stored (in the SharedPreference) ExternalUserId instance for a given source
-     */
-    public static ExternalUserId fetchStoredExternalUserId(@NonNull String source) {
-        if (!TextUtils.isEmpty(source)) {
-            return StorageUtils.fetchStoredExternalUserId(source);
-        }
-        return null;
-    }
-
-    /**
-     * Returns the stored (in the SharedPreferences) External User Id list
-     */
-    public static List<ExternalUserId> fetchStoredExternalUserIds() {
-        return StorageUtils.fetchStoredExternalUserIds();
-    }
-
-    /**
-     * Removes the stored (in the SharedPreference) ExternalUserId instance for a given source
-     */
-    public static void removeStoredExternalUserId(@NonNull String source) {
-        if (!TextUtils.isEmpty(source)) {
-            StorageUtils.removeStoredExternalUserId(source);
-        }
-    }
-
-    /**
-     * Clear the Stored ExternalUserId list from the SharedPreference
-     */
-    public static void clearStoredExternalUserIds() {
-        StorageUtils.clearStoredExternalUserIds();
-    }
+    /* -------------------- Publishers -------------------- */
 
     /**
      * This method obtains a bidder name allowed to receive global targeting
@@ -541,5 +667,20 @@ public class TargetingParams {
         return deviceAccessConsent;
     }
 
+
+    /* -------------------- Ext -------------------- */
+
+    /**
+     * Sets user Ext
+     *
+     * @param ext Placeholder for exchange-specific extensions to OpenRTB.
+     */
+    public static void setUserExt(ExtObject ext) {
+        userExt = ext;
+    }
+
+    public static ExtObject getUserExt() {
+        return userExt;
+    }
 
 }
