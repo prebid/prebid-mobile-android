@@ -17,12 +17,11 @@
 package org.prebid.mobile.rendering.bidding.data.bid;
 
 import android.text.TextUtils;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.models.AdConfiguration;
-import org.prebid.mobile.rendering.networking.targeting.Targeting;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
@@ -96,9 +95,9 @@ public class Prebid {
         Utils.addValue(prebid, "cache", cache);
         Utils.addValue(prebid, "targeting", new JSONObject());
 
-        if (!Targeting.getAccessControlList().isEmpty()) {
+        if (!TargetingParams.getAccessControlList().isEmpty()) {
             JSONObject data = new JSONObject();
-            Utils.addValue(data, "bidders", new JSONArray(Targeting.getAccessControlList()));
+            Utils.addValue(data, "bidders", new JSONArray(TargetingParams.getAccessControlList()));
             Utils.addValue(prebid, "data", data);
         }
 

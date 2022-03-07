@@ -115,7 +115,29 @@ public class TargetingParams {
     public enum GENDER {
         FEMALE,
         MALE,
-        UNKNOWN
+        UNKNOWN;
+
+        public String getKey() {
+            switch (this) {
+                case MALE:
+                    return "M";
+                case FEMALE:
+                    return "F";
+                default:
+                    return "O";
+            }
+        }
+
+        public static GENDER genderByKey(String key) {
+            switch (key) {
+                case "M":
+                    return MALE;
+                case "F":
+                    return FEMALE;
+                default:
+                    return UNKNOWN;
+            }
+        }
     }
 
     /**
@@ -182,7 +204,7 @@ public class TargetingParams {
         userDataMap.clear();
     }
 
-    static Map<String, Set<String>> getUserDataDictionary() {
+    public static Map<String, Set<String>> getUserDataDictionary() {
         return userDataMap;
     }
 
@@ -216,7 +238,11 @@ public class TargetingParams {
         userKeywordsSet.clear();
     }
 
-    static Set<String> getUserKeywordsSet() {
+    public static String getUserKeywords() {
+        return TextUtils.join(",", userKeywordsSet);
+    }
+
+    public static Set<String> getUserKeywordsSet() {
         return userKeywordsSet;
     }
 
@@ -432,7 +458,7 @@ public class TargetingParams {
         contextDataDictionary.clear();
     }
 
-    static Map<String, Set<String>> getContextDataDictionary() {
+    public static Map<String, Set<String>> getContextDataDictionary() {
         return contextDataDictionary;
     }
 
@@ -467,7 +493,7 @@ public class TargetingParams {
         contextKeywordsSet.clear();
     }
 
-    static Set<String> getContextKeywordsSet() {
+    public static Set<String> getContextKeywordsSet() {
         return contextKeywordsSet;
     }
 
@@ -496,7 +522,7 @@ public class TargetingParams {
         accessControlList.clear();
     }
 
-    static Set<String> getAccessControlList() {
+    public static Set<String> getAccessControlList() {
         return accessControlList;
     }
 
@@ -611,7 +637,7 @@ public class TargetingParams {
         }
     }
 
-    static Boolean getPurposeConsent(int index) {
+    public static Boolean getPurposeConsent(int index) {
         Boolean purposeConsent = null;
         String purposeConsents = getPurposeConsents();
 

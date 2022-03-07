@@ -17,7 +17,6 @@
 package org.prebid.mobile.rendering.networking.targeting;
 
 import android.util.Pair;
-
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,48 +26,47 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.util.Calendar;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
-public class TargetingTest {
+public class TargetingParamsTest {
 
     @Test
     public void setUserAge_CalculateYobAndSetAgeParameter() {
         final int age = 20;
         Integer expectedYob = Calendar.getInstance().get(Calendar.YEAR) - age;
 
-        Targeting.setUserAge(age);
+        TargetingParams.setUserAge(age);
 
-        assertEquals(String.valueOf(age), Targeting.getTargetingMap().get(Targeting.KEY_AGE));
-        assertEquals(expectedYob, Targeting.getUserYob());
+        assertEquals(String.valueOf(age), TargetingParams.getTargetingMap().get(TargetingParams.KEY_AGE));
+        assertEquals(expectedYob, TargetingParams.getYearOfBirth());
     }
 
     @Test
     public void setUserKeywords_EqualToGetUserKeywords() {
         final String expectedKeywords = "keyworkds";
-        Targeting.setUserKeywords(expectedKeywords);
+        TargetingParams.setUserKeywords(expectedKeywords);
 
-        assertEquals(expectedKeywords, Targeting.getUserKeyWords());
+        assertEquals(expectedKeywords, TargetingParams.getUserKeywordsSet());
     }
 
     @Test
     public void setUserCustomData_EqualToGetUserCustomData() {
         final String expectedCustomData = "custom_data";
-        Targeting.setUserCustomData(expectedCustomData);
+        TargetingParams.setUserCustomData(expectedCustomData);
 
-        assertEquals(expectedCustomData, Targeting.getUserCustomData());
+        assertEquals(expectedCustomData, TargetingParams.getUserCustomData());
     }
 
     @Test
     public void setUserGender_EqualToGetUserGenderAndIsInRequestParams() {
         final String expected = UserParameters.GENDER_FEMALE;
 
-        Targeting.setUserGender(UserParameters.Gender.FEMALE);
+        TargetingParams.setGender(UserParameters.Gender.FEMALE);
 
-        assertEquals(expected, Targeting.getUserGender());
-        assertEquals(expected, Targeting.getTargetingMap().get(Targeting.KEY_GENDER));
+        assertEquals(expected, TargetingParams.getGender());
+        assertEquals(expected, TargetingParams.getTargetingMap().get(TargetingParams.KEY_GENDER));
     }
 
     @Test
@@ -77,19 +75,19 @@ public class TargetingTest {
         float longitude = 14f;
         Pair<Float, Float> expectedLatLng = new Pair<>(latitude, longitude);
 
-        Targeting.setUserLatLng(latitude, longitude);
+        TargetingParams.setUserLatLng(latitude, longitude);
 
-        assertEquals(expectedLatLng, Targeting.getUserLatLng());
+        assertEquals(expectedLatLng, TargetingParams.getUserLatLng());
     }
 
     @Test
     public void setAppStoreMarketUrl_EqualToGetAppStoreMarketUrlAndIsInRequestParams() {
         final String expected = "https://google.play.com";
 
-        Targeting.setAppStoreMarketUrl(expected);
+        TargetingParams.setStoreUrl(expected);
 
-        assertEquals(expected, Targeting.getAppStoreMarketUrl());
-        assertEquals(expected, Targeting.getTargetingMap().get(Targeting.KEY_APP_STORE_URL));
+        assertEquals(expected, TargetingParams.getStoreUrl());
+        assertEquals(expected, TargetingParams.getTargetingMap().get(TargetingParams.KEY_APP_STORE_URL));
     }
 
     @Test
@@ -97,54 +95,54 @@ public class TargetingTest {
         final Ext expected = new Ext();
         expected.put("external", "value");
 
-        Targeting.setUserExt(expected);
+        TargetingParams.setUserExt(expected);
 
-        assertEquals(expected, Targeting.getUserExt());
+        assertEquals(expected, TargetingParams.getUserExt());
     }
 
     @Test
     public void setUserId_EqualToGetUserIdAndIsInRequestParams() {
         final String expected = "123";
 
-        Targeting.setUserId(expected);
+        TargetingParams.setUserId(expected);
 
-        assertEquals(expected, Targeting.getUserId());
-        assertEquals(expected, Targeting.getTargetingMap().get(Targeting.KEY_USER_ID));
+        assertEquals(expected, TargetingParams.getUserId());
+        assertEquals(expected, TargetingParams.getTargetingMap().get(TargetingParams.KEY_USER_ID));
     }
 
     @Test
     public void setBuyerUid_EqualToGetBuyerUid() {
         final String expected = "12345";
 
-        Targeting.setBuyerUid(expected);
+        TargetingParams.setBuyerId(expected);
 
-        assertEquals(expected, Targeting.getBuyerUid());
+        assertEquals(expected, TargetingParams.getBuyerId());
     }
 
     @Test
     public void setPublisherName_EqualToGetPublisherName() {
         final String expected = "prebid";
 
-        Targeting.setPublisherName(expected);
+        TargetingParams.setPublisherName(expected);
 
-        assertEquals(expected, Targeting.getPublisherName());
+        assertEquals(expected, TargetingParams.getPublisherName());
     }
 
     @After
     public void cleanup() {
-        Targeting.clear();
+        TargetingParams.clear();
 
-        assertNull(Targeting.getAppStoreMarketUrl());
-        assertNull(Targeting.getBuyerUid());
-        assertNull(Targeting.getPublisherName());
+        assertNull(TargetingParams.getStoreUrl());
+        assertNull(TargetingParams.getBuyerId());
+        assertNull(TargetingParams.getPublisherName());
 
-        assertNull(Targeting.getUserAge());
-        assertNull(Targeting.getUserCustomData());
-        assertNull(Targeting.getUserExt());
-        assertNull(Targeting.getUserId());
-        assertNull(Targeting.getUserGender());
-        assertNull(Targeting.getUserLatLng());
+        assertNull(TargetingParams.getUserAge());
+        assertNull(TargetingParams.getUserCustomData());
+        assertNull(TargetingParams.getUserExt());
+        assertNull(TargetingParams.getUserId());
+        assertNull(TargetingParams.getGender());
+        assertNull(TargetingParams.getUserLatLng());
 
-        assertTrue(Targeting.getTargetingMap().isEmpty());
+        assertTrue(TargetingParams.getTargetingMap().isEmpty());
     }
 }

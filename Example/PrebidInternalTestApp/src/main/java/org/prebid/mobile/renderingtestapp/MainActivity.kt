@@ -37,7 +37,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
-import org.prebid.mobile.rendering.networking.targeting.Targeting
+import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener
 import org.prebid.mobile.renderingtestapp.plugplay.utilities.consent.ConsentUpdateManager
 import org.prebid.mobile.renderingtestapp.utils.OpenRtbConfigs
@@ -223,7 +223,7 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
     private fun extractEidsExtras() {
         val eidsJsonString = intent.extras?.getString(EXTRA_EIDS)
         val eidsJsonArray = JSONArray(eidsJsonString)
-        Targeting.setEids(eidsJsonArray)
+        TargetingParams.setExtendedUserIds(eidsJsonArray)
     }
 
     private fun handleConsentExtra() {

@@ -955,8 +955,7 @@ class PrebidServerAdapter implements DemandAdapter {
                 }
                 user.put("gender", g);
 
-                String globalUserKeywordString = TextUtils.join(",", TargetingParams.getUserKeywordsSet());
-                user.put("keywords", globalUserKeywordString);
+                user.put("keywords", TargetingParams.getUserKeywords());
 
                 JSONObject ext = new JSONObject();
 

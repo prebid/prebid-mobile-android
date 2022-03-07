@@ -17,9 +17,8 @@
 package org.prebid.mobile.renderingtestapp.utils
 
 import com.google.gson.Gson
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext
-import org.prebid.mobile.rendering.networking.parameters.UserParameters
-import org.prebid.mobile.rendering.networking.targeting.Targeting
+import org.prebid.mobile.ExtObject
+import org.prebid.mobile.TargetingParams
 import java.lang.reflect.InvocationTargetException
 
 object OpenRtbConfigs {
@@ -28,43 +27,45 @@ object OpenRtbConfigs {
 
     fun setTargeting(openRtbExtra: OpenRtbExtra) {
         if (openRtbExtra.age != 0) {
-            Targeting.setUserAge(openRtbExtra.age)
+            TargetingParams.setUserAge(openRtbExtra.age)
         }
         if (openRtbExtra.appStoreUrl != null) {
-            Targeting.setAppStoreMarketUrl(openRtbExtra.appStoreUrl)
+            TargetingParams.setStoreUrl(openRtbExtra.appStoreUrl)
         }
         if (openRtbExtra.userId != null) {
-            Targeting.setUserId(openRtbExtra.userId)
+            TargetingParams.setUserId(openRtbExtra.userId)
         }
         if (openRtbExtra.gender != null) {
-            Targeting.setUserGender(UserParameters.Gender.valueOf(openRtbExtra.gender))
+            TargetingParams.setGender(TargetingParams.GENDER.genderByKey(openRtbExtra.gender))
         }
         if (openRtbExtra.buyerId != null) {
-            Targeting.setBuyerUid(openRtbExtra.buyerId)
+            TargetingParams.setBuyerId(openRtbExtra.buyerId)
         }
         if (openRtbExtra.customData != null) {
-            Targeting.setUserCustomData(openRtbExtra.customData)
+            TargetingParams.setUserCustomData(openRtbExtra.customData)
         }
         if (openRtbExtra.keywords != null) {
-            Targeting.setUserKeywords(openRtbExtra.keywords)
+            openRtbExtra.keywords.split(",").forEach {
+                TargetingParams.addUserKeyword(it)
+            }
         }
         if (openRtbExtra.geo != null) {
-            Targeting.setUserLatLng(openRtbExtra.geo.lat, openRtbExtra.geo.lon)
+            TargetingParams.setUserLatLng(openRtbExtra.geo.lat, openRtbExtra.geo.lon)
         }
         if (openRtbExtra.publisherName != null) {
-            Targeting.setPublisherName(openRtbExtra.publisherName)
+            TargetingParams.setPublisherName(openRtbExtra.publisherName)
         }
         if (openRtbExtra.userExt?.isNotEmpty() == true) {
-            val ext = Ext()
+            val ext = ExtObject()
             val gson = Gson()
             for (key in openRtbExtra.userExt.keys) {
                 ext.put(key, gson.toJson(openRtbExtra.userExt[key]))
             }
-            Targeting.setUserExt(ext)
+            TargetingParams.setUserExt(ext)
         }
         if (openRtbExtra.accessControl?.isNotEmpty() == true) {
             for (bidder in openRtbExtra.accessControl) {
-                Targeting.addBidderToAccessControlList(bidder)
+                TargetingParams.addBidderToAccessControlList(bidder)
             }
         }
         if (openRtbExtra.userData?.isNotEmpty() == true) {
@@ -72,7 +73,7 @@ object OpenRtbConfigs {
                 val dataList = openRtbExtra.userData[key]
                 if (dataList != null) {
                     for (data in dataList) {
-                        Targeting.addUserData(key, data)
+                        TargetingParams.addUserData(key, data)
                     }
                 }
             }
@@ -82,7 +83,7 @@ object OpenRtbConfigs {
                 val dataList = openRtbExtra.appContextData[key]
                 if (dataList != null) {
                     for (data in dataList) {
-                        Targeting.addContextData(key, data)
+                        TargetingParams.addContextData(key, data)
                     }
                 }
             }

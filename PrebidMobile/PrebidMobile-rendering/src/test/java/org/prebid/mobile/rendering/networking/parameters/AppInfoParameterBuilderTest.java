@@ -28,7 +28,6 @@ import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.App;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
-import org.prebid.mobile.rendering.networking.targeting.Targeting;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
@@ -56,7 +55,7 @@ public class AppInfoParameterBuilderTest {
 
     @After
     public void cleanup() throws Exception {
-        WhiteBox.method(Targeting.class, "clear").invoke(null);
+        WhiteBox.method(TargetingParams.class, "clear").invoke(null);
     }
 
     @Test
@@ -71,8 +70,8 @@ public class AppInfoParameterBuilderTest {
         final String expectedStoreurl = "https://google.play.com";
         final String expectedPublisherName = "prebid";
 
-        Targeting.setPublisherName(expectedPublisherName);
-        Targeting.setAppStoreMarketUrl(expectedStoreurl);
+        TargetingParams.setPublisherName(expectedPublisherName);
+        TargetingParams.setStoreUrl(expectedStoreurl);
 
         builder.appendBuilderParameters(adRequestInput);
 
@@ -94,7 +93,7 @@ public class AppInfoParameterBuilderTest {
     @Test
     public void whenAppendParametersAndTargetingContextDataNotEmpty_ContextDataAddedToAppExt()
     throws JSONException {
-        Targeting.addContextData("context", "contextData");
+        TargetingParams.addContextData("context", "contextData");
 
         AppInfoParameterBuilder builder = new AppInfoParameterBuilder(new AdConfiguration());
         AdRequestInput adRequestInput = new AdRequestInput();
