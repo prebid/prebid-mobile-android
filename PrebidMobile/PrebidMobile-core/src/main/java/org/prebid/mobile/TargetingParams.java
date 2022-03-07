@@ -14,7 +14,6 @@
  *    limitations under the License.
  */
 
-
 package org.prebid.mobile;
 
 import android.content.Context;
@@ -24,21 +23,22 @@ import androidx.annotation.Nullable;
 
 import java.util.*;
 
-
 /**
  * TargetingParams class sets the Targeting parameters like yob, gender, location
  * and other custom parameters for the adUnits to be made available in the auction.
  */
 public class TargetingParams {
-    //region Static Variables
+
+    public static final String BIDDER_NAME_APP_NEXUS = "appnexus";
+    public static final String BIDDER_NAME_RUBICON_PROJECT = "rubicon";
+
     private static int yob = 0;
     private static GENDER gender = GENDER.UNKNOWN;
     private static String domain = "";
     private static String storeUrl = "";
     private static String bundleName = null;
-
-    public static final String BIDDER_NAME_APP_NEXUS = "appnexus";
-    public static final String BIDDER_NAME_RUBICON_PROJECT = "rubicon";
+    private static String omidPartnerName;
+    private static String omidPartnerVersion;
 
     private static final Map<String, Set<String>> userDataMap = new HashMap<>();
     private static final Set<String> accessControlList = new HashSet<>();
@@ -46,230 +46,11 @@ public class TargetingParams {
     private static final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
     private static final Set<String> contextKeywordsSet = new HashSet<>();
 
-    @Nullable
-    private static String omidPartnerName;
-
-    @Nullable
-    private static String omidPartnerVersion;
-
-    //endregion
-
-    //region Private Constructor
     private TargetingParams() {
     }
-    //endregion
 
-    //region Public APIs
 
-    //COPPA
-    public static boolean isSubjectToCOPPA() {
-
-        try {
-            return StorageUtils.getPbCoppa();
-        } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "can not get COPPA", ex);
-            return false;
-        }
-
-    }
-
-    public static void setSubjectToCOPPA(boolean isCoppa) {
-
-        try {
-            StorageUtils.setPbCoppa(isCoppa);
-        } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "Coppa was not updated", ex);
-        }
-    }
-
-    //GDPR Subject
-    @Nullable
-    public static Boolean isSubjectToGDPR() {
-
-        Boolean gdprSubject = null;
-
-        try {
-            Boolean pbGdpr = StorageUtils.getPbGdprSubject();
-            if (pbGdpr != null) {
-                gdprSubject = pbGdpr;
-            } else {
-                Boolean iabGdpr = StorageUtils.getIabGdprSubject();
-
-                if (iabGdpr != null) {
-                    gdprSubject = iabGdpr;
-                }
-            }
-        } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "can not get GDPR Subject", ex);
-        }
-
-        return gdprSubject;
-    }
-
-    public static void setSubjectToGDPR(@Nullable Boolean consent) {
-
-        try {
-            StorageUtils.setPbGdprSubject(consent);
-        } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "GDPR Subject was not updated", ex);
-        }
-    }
-
-    //GDPR Consent
-    @Nullable
-    public static String getGDPRConsentString() {
-
-        String gdprConsent = null;
-
-        try {
-            // TCF consent string
-            String iabGdprConsent = StorageUtils.getIabGdprConsent();
-            if (!TextUtils.isEmpty(iabGdprConsent)) {
-                gdprConsent = iabGdprConsent;
-            } else {
-                // GDPR consent string
-                String pbGdprConsent = StorageUtils.getPbGdprConsent();
-                if (!TextUtils.isEmpty(pbGdprConsent)) {
-                    gdprConsent = pbGdprConsent;
-                }
-            }
-        } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "can not get GDPR Consent", ex);
-        }
-
-        return gdprConsent;
-    }
-
-    public static void setGDPRConsentString(@Nullable String string) {
-        try {
-            StorageUtils.setPbGdprConsent(string);
-        } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "GDPR Consent was not updated", ex);
-        }
-    }
-
-    //TCF 2.0 device access consent
-    public static void setPurposeConsents(@Nullable String purposeConsents) {
-        try {
-            StorageUtils.setPbPurposeConsents(purposeConsents);
-        } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "GDPR Device access Consent was not updated", ex);
-        }
-    }
-
-    public static String getPurposeConsents() {
-
-        String savedPurposeConsents = null;
-
-        try {
-            // TCF purpose consent
-            String iabPurposeConsentsString = StorageUtils.getIabPurposeConsents();
-            if (iabPurposeConsentsString != null) {
-                savedPurposeConsents = iabPurposeConsentsString;
-            } else {
-                // GDPR purpose consent
-                String pbPurposeConsentsString = StorageUtils.getPbPurposeConsents();
-                if (pbPurposeConsentsString != null) {
-                    savedPurposeConsents = pbPurposeConsentsString;
-                }
-            }
-
-        } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "GDPR Device access Consent was not updated", ex);
-        }
-
-        return savedPurposeConsents;
-    }
-
-    /**
-     * Returns the stored (in the SharedPreferences) External User Id list
-     * */
-    public static List<ExternalUserId> fetchStoredExternalUserIds() {
-        return StorageUtils.fetchStoredExternalUserIds();
-    }
-
-    /**
-     * Returns the stored (in the SharedPreference) ExternalUserId instance for a given source
-     * @param source
-     * */
-    public static ExternalUserId fetchStoredExternalUserId(@NonNull String source) {
-        if (!TextUtils.isEmpty(source)) {
-            return StorageUtils.fetchStoredExternalUserId(source);
-        }
-        return null;
-    }
-
-    /**
-     * Removes the stored (in the SharedPreference) ExternalUserId instance for a given source
-     * @param source
-     * */
-    public static void removeStoredExternalUserId(@NonNull String source) {
-        if (!TextUtils.isEmpty(source)) {
-            StorageUtils.removeStoredExternalUserId(source);
-        }
-    }
-
-    /**
-     * Use this API for storing the externalUserId in the SharedPreference
-     * @param externalUserId the externalUserId instance to be stored in the SharedPreference
-     * */
-    public static void storeExternalUserId(ExternalUserId externalUserId) {
-        if (externalUserId != null) {
-            StorageUtils.storeExternalUserId(externalUserId);
-        } else {
-            LogUtil.e("Targeting", "External User ID can't be set as null");
-
-        }
-    }
-
-    /**
-     * Clear the Stored ExternalUserId list from the SharedPreference
-     * */
-    public static void clearStoredExternalUserIds() {
-        StorageUtils.clearStoredExternalUserIds();
-    }
-
-    /**
-     * Get the device access Consent set by the publisher.
-     *
-     * @return A valid Base64 encode consent string as per https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework
-     * or null if not set
-     */
-    @Nullable
-    public static Boolean getDeviceAccessConsent() {
-
-        Boolean deviceAccessConsent = null;
-        try {
-            int deviceAccessConsentIndex = 0;
-
-            deviceAccessConsent = getPurposeConsent(deviceAccessConsentIndex);
-
-        } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "cannot get Device access Consent", ex);
-        }
-
-        return deviceAccessConsent;
-    }
-
-    static Boolean getPurposeConsent(int index) {
-
-        Boolean purposeConsent = null;
-        String purposeConsents = getPurposeConsents();
-
-        if (purposeConsents != null) {
-            char purposeConsentChar = purposeConsents.charAt(index);
-
-            if (purposeConsentChar == '1') {
-                purposeConsent = true;
-            } else if (purposeConsentChar == '0') {
-                purposeConsent = false;
-            } else {
-                LogUtil.w("invalid char:" + purposeConsent);
-            }
-        }
-
-        return purposeConsent;
-    }
+    /* -------------------- User data -------------------- */
 
     /**
      * Get the year of birth for targeting
@@ -320,98 +101,11 @@ public class TargetingParams {
     }
 
     /**
-     * Get the platform-specific identifier, should be bundle/package name
-     */
-    public static synchronized String getBundleName() {
-        if (TextUtils.isEmpty(bundleName)) {
-            Context context = PrebidMobile.getApplicationContext();
-            if (context != null) {
-                return context.getPackageName();
-            }
-        }
-        return bundleName;
-    }
-
-    /**
-     * Set the platform-specific identifier for targeting purpose
-     * Should be bundle/package name
-     */
-    public static synchronized void setBundleName(String bundleName) {
-        TargetingParams.bundleName = bundleName;
-    }
-
-    /**
-     * Set the domain of your app for targeting purpose
-     *
-     * @param domain domain of your app
-     */
-    public static synchronized void setDomain(String domain) {
-        TargetingParams.domain = domain;
-    }
-
-    /**
-     * Get the domain of your app
-     *
-     * @return domain of your app
-     */
-    public static synchronized String getDomain() {
-        return domain;
-    }
-
-    /**
-     * Set the store url of your app
-     *
-     * @param storeUrl store url
-     */
-    public static synchronized void setStoreUrl(String storeUrl) {
-        TargetingParams.storeUrl = storeUrl;
-    }
-
-    /**
-     * Get the store url of your app
-     *
-     * @return store url
-     */
-    public static synchronized String getStoreUrl() {
-        return storeUrl;
-    }
-
-
-    // MARK: - access control list (ext.prebid.data)
-
-    /**
-     * This method obtains a bidder name allowed to receive global targeting
-     */
-    public static void addBidderToAccessControlList(String bidderName) {
-        accessControlList.add(bidderName);
-    }
-
-    /**
-     * This method allows to remove specific bidder name
-     */
-    public static void removeBidderFromAccessControlList(String bidderName) {
-        accessControlList.remove(bidderName);
-    }
-
-    /**
-     * This method allows to remove all the bidder name set
-     */
-    public static void clearAccessControlList() {
-        accessControlList.clear();
-    }
-
-    static Set<String> getAccessControlList() {
-        return accessControlList;
-    }
-
-    /**
      * This method obtains the user data keyword & value for global user targeting
      * if the key already exists the value will be appended to the list. No duplicates will be added
      */
     public static void addUserData(String key, String value) {
-
         Util.addValue(userDataMap, key, value);
-
     }
 
     /**
@@ -474,11 +168,70 @@ public class TargetingParams {
         return userKeywordsSet;
     }
 
-    // MARK: - global context data aka inventory data (app.ext.data)
+
+    /* -------------------- Context data -------------------- */
+
+    /**
+     * Set the domain of your app for targeting purpose
+     *
+     * @param domain domain of your app
+     */
+    public static synchronized void setDomain(String domain) {
+        TargetingParams.domain = domain;
+    }
+
+    /**
+     * Get the domain of your app
+     *
+     * @return domain of your app
+     */
+    public static synchronized String getDomain() {
+        return domain;
+    }
+
+    /**
+     * Set the store url of your app
+     *
+     * @param storeUrl store url
+     */
+    public static synchronized void setStoreUrl(String storeUrl) {
+        TargetingParams.storeUrl = storeUrl;
+    }
+
+    /**
+     * Get the store url of your app
+     *
+     * @return store url
+     */
+    public static synchronized String getStoreUrl() {
+        return storeUrl;
+    }
+
+    /**
+     * Get the platform-specific identifier, should be bundle/package name
+     */
+    public static synchronized String getBundleName() {
+        if (TextUtils.isEmpty(bundleName)) {
+            Context context = PrebidMobile.getApplicationContext();
+            if (context != null) {
+                return context.getPackageName();
+            }
+        }
+        return bundleName;
+    }
+
+    /**
+     * Set the platform-specific identifier for targeting purpose
+     * Should be bundle/package name
+     */
+    public static synchronized void setBundleName(String bundleName) {
+        TargetingParams.bundleName = bundleName;
+    }
 
     /**
      * This method obtains the context data keyword & value context for global context targeting
      * if the key already exists the value will be appended to the list. No duplicates will be added
+     * (app.ext.data)
      */
     public static void addContextData(String key, String value) {
         Util.addValue(contextDataDictionary, key, value);
@@ -510,11 +263,10 @@ public class TargetingParams {
         return contextDataDictionary;
     }
 
-    // MARK: - adunit context keywords (imp[].ext.context.keywords)
-
     /**
      * This method obtains the context keyword for adunit context targeting
      * Inserts the given element in the set if it is not already present.
+     * (imp[].ext.context.keywords)
      */
     public static void addContextKeyword(String keyword) {
         contextKeywordsSet.add(keyword);
@@ -542,11 +294,89 @@ public class TargetingParams {
         contextKeywordsSet.clear();
     }
 
-    static Set<String> getContextKeywordsSet()  {
+    static Set<String> getContextKeywordsSet() {
         return contextKeywordsSet;
     }
 
-    //OMID signaling
+
+    /* -------------------- Metadata -------------------- */
+
+    /**
+     * Use this API for storing the externalUserId in the SharedPreference
+     *
+     * @param externalUserId the externalUserId instance to be stored in the SharedPreference
+     */
+    public static void storeExternalUserId(ExternalUserId externalUserId) {
+        if (externalUserId != null) {
+            StorageUtils.storeExternalUserId(externalUserId);
+        } else {
+            LogUtil.e("Targeting", "External User ID can't be set as null");
+
+        }
+    }
+
+    /**
+     * Returns the stored (in the SharedPreference) ExternalUserId instance for a given source
+     */
+    public static ExternalUserId fetchStoredExternalUserId(@NonNull String source) {
+        if (!TextUtils.isEmpty(source)) {
+            return StorageUtils.fetchStoredExternalUserId(source);
+        }
+        return null;
+    }
+
+    /**
+     * Returns the stored (in the SharedPreferences) External User Id list
+     */
+    public static List<ExternalUserId> fetchStoredExternalUserIds() {
+        return StorageUtils.fetchStoredExternalUserIds();
+    }
+
+    /**
+     * Removes the stored (in the SharedPreference) ExternalUserId instance for a given source
+     */
+    public static void removeStoredExternalUserId(@NonNull String source) {
+        if (!TextUtils.isEmpty(source)) {
+            StorageUtils.removeStoredExternalUserId(source);
+        }
+    }
+
+    /**
+     * Clear the Stored ExternalUserId list from the SharedPreference
+     */
+    public static void clearStoredExternalUserIds() {
+        StorageUtils.clearStoredExternalUserIds();
+    }
+
+    /**
+     * This method obtains a bidder name allowed to receive global targeting
+     * (ext.prebid.data)
+     */
+    public static void addBidderToAccessControlList(String bidderName) {
+        accessControlList.add(bidderName);
+    }
+
+    /**
+     * This method allows to remove specific bidder name
+     */
+    public static void removeBidderFromAccessControlList(String bidderName) {
+        accessControlList.remove(bidderName);
+    }
+
+    /**
+     * This method allows to remove all the bidder name set
+     */
+    public static void clearAccessControlList() {
+        accessControlList.clear();
+    }
+
+    static Set<String> getAccessControlList() {
+        return accessControlList;
+    }
+
+    /**
+     * OMID signaling
+     */
     @Nullable
     public static String getOmidPartnerName() {
         return omidPartnerName;
@@ -565,5 +395,151 @@ public class TargetingParams {
         TargetingParams.omidPartnerVersion = omidPartnerVersion;
     }
 
-//endregion
+
+    /* -------------------- Consents -------------------- */
+
+    public static void setSubjectToCOPPA(boolean isCoppa) {
+        try {
+            StorageUtils.setPbCoppa(isCoppa);
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "Coppa was not updated", ex);
+        }
+    }
+
+    public static boolean isSubjectToCOPPA() {
+        try {
+            return StorageUtils.getPbCoppa();
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "Can't get COPPA", ex);
+            return false;
+        }
+    }
+
+    public static void setSubjectToGDPR(@Nullable Boolean consent) {
+        try {
+            StorageUtils.setPbGdprSubject(consent);
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "GDPR Subject was not updated", ex);
+        }
+    }
+
+    @Nullable
+    public static Boolean isSubjectToGDPR() {
+        Boolean gdprSubject = null;
+
+        try {
+            Boolean pbGdpr = StorageUtils.getPbGdprSubject();
+            if (pbGdpr != null) {
+                gdprSubject = pbGdpr;
+            } else {
+                Boolean iabGdpr = StorageUtils.getIabGdprSubject();
+                if (iabGdpr != null) {
+                    gdprSubject = iabGdpr;
+                }
+            }
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "Can't get GDPR subject", ex);
+        }
+
+        return gdprSubject;
+    }
+
+    public static void setGDPRConsentString(@Nullable String string) {
+        try {
+            StorageUtils.setPbGdprConsent(string);
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "GDPR Consent was not updated", ex);
+        }
+    }
+
+    @Nullable
+    public static String getGDPRConsentString() {
+        String gdprConsent = null;
+        try {
+            // TCF consent string
+            String iabGdprConsent = StorageUtils.getIabGdprConsent();
+            if (!TextUtils.isEmpty(iabGdprConsent)) {
+                gdprConsent = iabGdprConsent;
+            } else {
+                // GDPR consent string
+                String pbGdprConsent = StorageUtils.getPbGdprConsent();
+                if (!TextUtils.isEmpty(pbGdprConsent)) {
+                    gdprConsent = pbGdprConsent;
+                }
+            }
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "can not get GDPR Consent", ex);
+        }
+
+        return gdprConsent;
+    }
+
+    /**
+     * TCF 2.0 device access consent
+     */
+    public static void setPurposeConsents(@Nullable String purposeConsents) {
+        try {
+            StorageUtils.setPbPurposeConsents(purposeConsents);
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "GDPR Device access Consent was not updated", ex);
+        }
+    }
+
+    static Boolean getPurposeConsent(int index) {
+        Boolean purposeConsent = null;
+        String purposeConsents = getPurposeConsents();
+
+        if (purposeConsents != null) {
+            char purposeConsentChar = purposeConsents.charAt(index);
+            if (purposeConsentChar == '1') {
+                purposeConsent = true;
+            } else if (purposeConsentChar == '0') {
+                purposeConsent = false;
+            } else {
+                LogUtil.w("invalid char:" + purposeConsent);
+            }
+        }
+        return purposeConsent;
+    }
+
+    public static String getPurposeConsents() {
+        String savedPurposeConsents = null;
+        try {
+            // TCF purpose consent
+            String iabPurposeConsentsString = StorageUtils.getIabPurposeConsents();
+            if (iabPurposeConsentsString != null) {
+                savedPurposeConsents = iabPurposeConsentsString;
+            } else {
+                // GDPR purpose consent
+                String pbPurposeConsentsString = StorageUtils.getPbPurposeConsents();
+                if (pbPurposeConsentsString != null) {
+                    savedPurposeConsents = pbPurposeConsentsString;
+                }
+            }
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "GDPR Device access Consent was not updated", ex);
+        }
+        return savedPurposeConsents;
+    }
+
+    /**
+     * Get the device access Consent set by the publisher.
+     *
+     * @return A valid Base64 encode consent string as per
+     * https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework
+     * or null if not set
+     */
+    @Nullable
+    public static Boolean getDeviceAccessConsent() {
+        Boolean deviceAccessConsent = null;
+        try {
+            int deviceAccessConsentIndex = 0;
+            deviceAccessConsent = getPurposeConsent(deviceAccessConsentIndex);
+        } catch (PbContextNullException ex) {
+            LogUtil.e("Targeting", "cannot get Device access Consent", ex);
+        }
+        return deviceAccessConsent;
+    }
+
+
 }
