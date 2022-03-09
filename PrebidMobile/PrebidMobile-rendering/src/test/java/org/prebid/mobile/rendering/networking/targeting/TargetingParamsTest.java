@@ -20,14 +20,15 @@ import android.util.Pair;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
+import org.prebid.mobile.ExtObject;
+import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.rendering.networking.parameters.UserParameters;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.Calendar;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class TargetingParamsTest {
@@ -35,20 +36,21 @@ public class TargetingParamsTest {
     @Test
     public void setUserAge_CalculateYobAndSetAgeParameter() {
         final int age = 20;
-        Integer expectedYob = Calendar.getInstance().get(Calendar.YEAR) - age;
+        int expectedYob = Calendar.getInstance().get(Calendar.YEAR) - age;
 
         TargetingParams.setUserAge(age);
 
-        assertEquals(String.valueOf(age), TargetingParams.getTargetingMap().get(TargetingParams.KEY_AGE));
+        assert TargetingParams.getUserAge() != null;
+        assertEquals(age, TargetingParams.getUserAge().intValue());
         assertEquals(expectedYob, TargetingParams.getYearOfBirth());
     }
 
     @Test
     public void setUserKeywords_EqualToGetUserKeywords() {
         final String expectedKeywords = "keyworkds";
-        TargetingParams.setUserKeywords(expectedKeywords);
+        TargetingParams.addUserKeyword(expectedKeywords);
 
-        assertEquals(expectedKeywords, TargetingParams.getUserKeywordsSet());
+        assertEquals(expectedKeywords, TargetingParams.getUserKeywords());
     }
 
     @Test
@@ -63,10 +65,8 @@ public class TargetingParamsTest {
     public void setUserGender_EqualToGetUserGenderAndIsInRequestParams() {
         final String expected = UserParameters.GENDER_FEMALE;
 
-        TargetingParams.setGender(UserParameters.Gender.FEMALE);
-
-        assertEquals(expected, TargetingParams.getGender());
-        assertEquals(expected, TargetingParams.getTargetingMap().get(TargetingParams.KEY_GENDER));
+        TargetingParams.setGender(TargetingParams.GENDER.FEMALE);
+        assertEquals(expected, TargetingParams.getGender().getKey());
     }
 
     @Test
@@ -87,12 +87,11 @@ public class TargetingParamsTest {
         TargetingParams.setStoreUrl(expected);
 
         assertEquals(expected, TargetingParams.getStoreUrl());
-        assertEquals(expected, TargetingParams.getTargetingMap().get(TargetingParams.KEY_APP_STORE_URL));
     }
 
     @Test
     public void setUserExt_EqualToGetUserExt() {
-        final Ext expected = new Ext();
+        final ExtObject expected = new ExtObject();
         expected.put("external", "value");
 
         TargetingParams.setUserExt(expected);
@@ -105,9 +104,7 @@ public class TargetingParamsTest {
         final String expected = "123";
 
         TargetingParams.setUserId(expected);
-
         assertEquals(expected, TargetingParams.getUserId());
-        assertEquals(expected, TargetingParams.getTargetingMap().get(TargetingParams.KEY_USER_ID));
     }
 
     @Test
@@ -130,19 +127,24 @@ public class TargetingParamsTest {
 
     @After
     public void cleanup() {
-        TargetingParams.clear();
+        TargetingParams.setStoreUrl(null);
+        TargetingParams.setBuyerId(null);
+        TargetingParams.setPublisherName(null);
+        TargetingParams.setUserAge(null);
+        TargetingParams.setUserCustomData(null);
+        TargetingParams.setUserExt(null);
+        TargetingParams.setUserId(null);
+        TargetingParams.setGender(null);
+        TargetingParams.setUserLatLng(null, null);
 
         assertNull(TargetingParams.getStoreUrl());
         assertNull(TargetingParams.getBuyerId());
         assertNull(TargetingParams.getPublisherName());
-
         assertNull(TargetingParams.getUserAge());
         assertNull(TargetingParams.getUserCustomData());
         assertNull(TargetingParams.getUserExt());
         assertNull(TargetingParams.getUserId());
         assertNull(TargetingParams.getGender());
         assertNull(TargetingParams.getUserLatLng());
-
-        assertTrue(TargetingParams.getTargetingMap().isEmpty());
     }
 }

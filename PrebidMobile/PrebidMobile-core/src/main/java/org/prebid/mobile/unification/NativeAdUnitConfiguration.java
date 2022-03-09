@@ -14,11 +14,11 @@ public class NativeAdUnitConfiguration extends BaseAdUnitConfiguration implement
     private NativeAdUnit.CONTEXT_TYPE contextType;
     private NativeAdUnit.CONTEXTSUBTYPE contextSubtype;
     private NativeAdUnit.PLACEMENTTYPE placementType;
-    private Integer placementCount;
-    private Integer sequence;
-    private Boolean aUrlSupport;
-    private Boolean dUrlSupport;
-    private Boolean privacy;
+    private int placementCount = 1;
+    private int sequence = 0;
+    private boolean aUrlSupport = false;
+    private boolean dUrlSupport = false;
+    private boolean privacy = false;
     private JSONObject ext;
 
     @Override
@@ -27,12 +27,12 @@ public class NativeAdUnitConfiguration extends BaseAdUnitConfiguration implement
     }
 
     @Override
-    public ArrayList<NativeEventTracker> getNativeEventTrackers() {
+    public ArrayList<NativeEventTracker> getEventTrackers() {
         return nativeEventTrackers;
     }
 
     @Override
-    public void clearNativeEventTrackers() {
+    public void clearEventTrackers() {
         nativeEventTrackers.clear();
     }
 
@@ -42,12 +42,12 @@ public class NativeAdUnitConfiguration extends BaseAdUnitConfiguration implement
     }
 
     @Override
-    public ArrayList<NativeAsset> getNativeAssets() {
+    public ArrayList<NativeAsset> getAssets() {
         return nativeAssets;
     }
 
     @Override
-    public void clearNativeAssets() {
+    public void clearAssets() {
         nativeAssets.clear();
     }
 
@@ -87,7 +87,7 @@ public class NativeAdUnitConfiguration extends BaseAdUnitConfiguration implement
     }
 
     @Override
-    public Integer getPlacementCount() {
+    public int getPlacementCount() {
         return placementCount;
     }
 
@@ -97,7 +97,7 @@ public class NativeAdUnitConfiguration extends BaseAdUnitConfiguration implement
     }
 
     @Override
-    public Integer getSeq() {
+    public int getSeq() {
         return sequence;
     }
 
@@ -107,7 +107,7 @@ public class NativeAdUnitConfiguration extends BaseAdUnitConfiguration implement
     }
 
     @Override
-    public Boolean getAUrlSupport() {
+    public boolean getAUrlSupport() {
         return aUrlSupport;
     }
 
@@ -117,7 +117,7 @@ public class NativeAdUnitConfiguration extends BaseAdUnitConfiguration implement
     }
 
     @Override
-    public Boolean getDUrlSupport() {
+    public boolean getDUrlSupport() {
         return dUrlSupport;
     }
 
@@ -127,7 +127,7 @@ public class NativeAdUnitConfiguration extends BaseAdUnitConfiguration implement
     }
 
     @Override
-    public Boolean getPrivacy() {
+    public boolean getPrivacy() {
         return privacy;
     }
 

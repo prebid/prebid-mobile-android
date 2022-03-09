@@ -27,6 +27,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.DataObject;
+import org.prebid.mobile.ExtObject;
+import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.AdConfiguration;
@@ -45,7 +47,6 @@ import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -82,7 +83,16 @@ public class BasicParameterBuilderTest {
 
     @After
     public void cleanup() throws Exception {
-        WhiteBox.method(TargetingParams.class, "clear").invoke(null);
+        TargetingParams.clearUserData();
+        TargetingParams.clearUserKeywords();
+        TargetingParams.setUserLatLng(null, null);
+        TargetingParams.setGender(TargetingParams.GENDER.UNKNOWN);
+        TargetingParams.setExtendedUserIds(null);
+        TargetingParams.setBuyerId(null);
+        TargetingParams.setUserId(null);
+        TargetingParams.setUserCustomData(null);
+        TargetingParams.setYearOfBirth(0);
+
         PrebidRenderingSettings.sendMraidSupportParams = true;
         PrebidRenderingSettings.useExternalBrowser = false;
         PrebidRenderingSettings.isCoppaEnabled = false;
@@ -230,11 +240,11 @@ public class BasicParameterBuilderTest {
 
         TargetingParams.setUserId(USER_ID);
         TargetingParams.setUserAge(USER_AGE);
-        TargetingParams.setUserKeywords(USER_KEYWORDS);
+        TargetingParams.addUserKeyword(USER_KEYWORDS);
         TargetingParams.setUserCustomData(USER_CUSTOM);
-        TargetingParams.setGender(UserParameters.Gender.MALE);
+        TargetingParams.setGender(TargetingParams.GENDER.MALE);
         TargetingParams.setBuyerId(USER_BUYER_ID);
-        TargetingParams.setUserExt(new Ext());
+        TargetingParams.setUserExt(new ExtObject());
         TargetingParams.setExtendedUserIds(new JSONArray());
         TargetingParams.setUserLatLng(USER_LAT, USER_LON);
 
@@ -508,8 +518,11 @@ public class BasicParameterBuilderTest {
         user.customData = USER_CUSTOM;
         user.gender = USER_GENDER;
         user.buyerUid = USER_BUYER_ID;
-        user.ext = new Ext();
-        user.ext.put("eids", TargetingParams.getExtendedUserIds());
+        JSONArray extendedUserIds = TargetingParams.getExtendedUserIds();
+        if (extendedUserIds != null && extendedUserIds.length() > 0) {
+            user.ext = new ExtObject();
+            user.ext.put("eids", extendedUserIds);
+        }
 
         final Geo userGeo = user.getGeo();
         userGeo.lat = USER_LAT;

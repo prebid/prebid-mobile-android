@@ -59,7 +59,7 @@ public class TargetingParamsTest extends BaseSetup {
     @Test
     public void testYearOfBirth() throws Exception {
         // force initial state since it's static might be changed from other tests
-        FieldUtils.writeStaticField(TargetingParams.class, "yob", 0, true);
+        FieldUtils.writeStaticField(TargetingParams.class, "yearOfBirth", 0, true);
         assertEquals(0, TargetingParams.getYearOfBirth());
         boolean errorThrown1 = false;
         try {

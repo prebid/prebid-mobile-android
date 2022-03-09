@@ -35,7 +35,7 @@ public class TargetingParams {
     public static final String BIDDER_NAME_RUBICON_PROJECT = "rubicon";
     private static final String TAG = "TargetingParams";
 
-    private static Integer yearOfBirth = null;
+    private static Integer yearOfBirth = 0;
     private static Integer userAge = null;
     private static GENDER gender = GENDER.UNKNOWN;
     private static String userId;
@@ -103,6 +103,12 @@ public class TargetingParams {
      * @param yob yob of the user
      */
     public static void setYearOfBirth(int yob) throws Exception {
+        if (yob == 0) {
+            TargetingParams.yearOfBirth = 0;
+            TargetingParams.userAge = null;
+            return;
+        }
+
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         if (yob >= 1900 && yob < currentYear) {
             TargetingParams.yearOfBirth = yob;
@@ -167,6 +173,10 @@ public class TargetingParams {
      * @param longitude User longitude
      */
     public static void setUserLatLng(Float latitude, Float longitude) {
+        if (latitude == null || longitude == null) {
+            userLatLon = null;
+            return;
+        }
         userLatLon = new Pair<>(latitude, longitude);
     }
 
@@ -239,7 +249,9 @@ public class TargetingParams {
     }
 
     public static String getUserKeywords() {
-        return TextUtils.join(",", userKeywordsSet);
+        String result = TextUtils.join(",", userKeywordsSet);
+        if (result.isEmpty()) return null;
+        return result;
     }
 
     public static Set<String> getUserKeywordsSet() {

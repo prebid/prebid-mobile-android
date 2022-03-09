@@ -32,6 +32,7 @@ import org.prebid.mobile.tasksmanager.MainThreadExecutor;
 import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
+import org.prebid.mobile.unification.NativeAdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.Shadows;
@@ -39,7 +40,8 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLooper;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static junit.framework.Assert.*;
@@ -89,10 +91,13 @@ public class PrebidNativeNativeTest extends BaseSetup {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
-        RequestParams requestParams = new RequestParams(PBS_CONFIG_ID_NATIVE_APPNEXUS, AdType.NATIVE, null, new HashMap<String, Set<String>>(), new HashSet<String>(), null, null, null, null, null, new ArrayList<DataObject>());
-        requestParams.setNativeRequestParams(new NativeRequestParams());
+
+        NativeAdUnitConfiguration configuration = new NativeAdUnitConfiguration();
+        configuration.setConfigId(PBS_CONFIG_ID_NATIVE_APPNEXUS);
+        configuration.setAdType(AdType.NATIVE);
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runOneTask();
         bgLooper.runOneTask();
@@ -167,10 +172,13 @@ public class PrebidNativeNativeTest extends BaseSetup {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
-        RequestParams requestParams = new RequestParams(PBS_CONFIG_ID_NATIVE_APPNEXUS, AdType.NATIVE, null, new HashMap<String, Set<String>>(), new HashSet<String>(), null, null, null, null, null, new ArrayList<DataObject>());
-        requestParams.setNativeRequestParams(new NativeRequestParams());
+
+        NativeAdUnitConfiguration configuration = new NativeAdUnitConfiguration();
+        configuration.setConfigId(PBS_CONFIG_ID_NATIVE_APPNEXUS);
+        configuration.setAdType(AdType.NATIVE);
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runOneTask();
         bgLooper.runOneTask();
@@ -266,10 +274,13 @@ public class PrebidNativeNativeTest extends BaseSetup {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
-        RequestParams requestParams = new RequestParams(PBS_CONFIG_ID_NATIVE_APPNEXUS, AdType.NATIVE, null, new HashMap<String, Set<String>>(), new HashSet<String>(), null, null, null, null, null, new ArrayList<DataObject>());
-        requestParams.setNativeRequestParams(new NativeRequestParams());
+
+        NativeAdUnitConfiguration configuration = new NativeAdUnitConfiguration();
+        configuration.setConfigId(PBS_CONFIG_ID_NATIVE_APPNEXUS);
+        configuration.setAdType(AdType.NATIVE);
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runOneTask();
         bgLooper.runOneTask();

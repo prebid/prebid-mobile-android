@@ -10,7 +10,7 @@ import java.util.Set;
 public class AdUnitConfiguration extends BaseAdUnitConfiguration implements AdUnitConfigurationInterface {
 
     private AdSize minSizePercentage;
-    private HashSet<AdSize> sizes;
+    private final HashSet<AdSize> sizes = new HashSet<>();
     private BannerBaseAdUnit.Parameters bannerParameters;
     private VideoBaseAdUnit.Parameters videoParameters;
 

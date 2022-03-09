@@ -11,16 +11,16 @@ public interface NativeAdUnitConfigurationInterface extends BaseAdUnitConfigurat
 
     public void addEventTracker(NativeEventTracker tracker);
 
-    public ArrayList<NativeEventTracker> getNativeEventTrackers();
+    public ArrayList<NativeEventTracker> getEventTrackers();
 
-    public void clearNativeEventTrackers();
+    public void clearEventTrackers();
 
 
     public void addAsset(NativeAsset nativeAsset);
 
-    public ArrayList<NativeAsset> getNativeAssets();
+    public ArrayList<NativeAsset> getAssets();
 
-    public void clearNativeAssets();
+    public void clearAssets();
 
 
     public void setContextType(NativeAdUnit.CONTEXT_TYPE contextType);
@@ -37,23 +37,23 @@ public interface NativeAdUnitConfigurationInterface extends BaseAdUnitConfigurat
 
     public void setPlacementCount(int placementCount);
 
-    public Integer getPlacementCount();
+    public int getPlacementCount();
 
     public void setSeq(int seq);
 
-    public Integer getSeq();
+    public int getSeq();
 
     public void setAUrlSupport(boolean support);
 
-    public Boolean getAUrlSupport();
+    public boolean getAUrlSupport();
 
     public void setDUrlSupport(boolean support);
 
-    public Boolean getDUrlSupport();
+    public boolean getDUrlSupport();
 
     public void setPrivacy(boolean privacy);
 
-    public Boolean getPrivacy();
+    public boolean getPrivacy();
 
     public void setExt(JSONObject jsonObject);
 

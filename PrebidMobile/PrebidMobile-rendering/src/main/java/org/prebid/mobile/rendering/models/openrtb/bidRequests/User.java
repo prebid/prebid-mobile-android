@@ -48,7 +48,13 @@ public class User extends BaseBid {
         toJSON(jsonObject, "keywords", this.keywords);
         toJSON(jsonObject, "customdata", this.customData);
         toJSON(jsonObject, "geo", (geo != null) ? this.geo.getJsonObject() : null);
-        toJSON(jsonObject, "ext", (ext != null) ? this.ext.getJsonObject() : null);
+
+        if (ext != null) {
+            JSONObject extJson = this.ext.getJsonObject();
+            if (extJson.length() > 0) {
+                toJSON(jsonObject, "ext", extJson);
+            }
+        }
         JSONArray dataJsonArray = getDataJsonArray();
         if (dataJsonArray != null) {
             toJSON(jsonObject, "data", dataJsonArray);

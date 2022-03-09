@@ -1,6 +1,7 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import org.json.JSONObject;
 import org.prebid.mobile.unification.BaseAdUnitConfiguration;
 import org.prebid.mobile.unification.NativeAdUnitConfiguration;
@@ -13,7 +14,7 @@ public class NativeAdUnit extends AdUnit {
 
     public static final String BUNDLE_KEY_CACHE_ID = "NativeAdUnitCacheId";
 
-    private NativeAdUnitConfiguration nativeConfiguration = configuration.castToNative();
+    private final NativeAdUnitConfiguration nativeConfiguration = configuration.castToNative();
 
     public NativeAdUnit(@NonNull String configId) {
         super(configId, AdType.NATIVE);
@@ -176,4 +177,10 @@ public class NativeAdUnit extends AdUnit {
     protected BaseAdUnitConfiguration createConfiguration() {
         return new NativeAdUnitConfiguration();
     }
+
+    @VisibleForTesting
+    public NativeAdUnitConfiguration getNativeConfiguration() {
+        return nativeConfiguration;
+    }
+
 }

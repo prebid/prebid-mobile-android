@@ -25,6 +25,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.testutils.BaseSetup;
+import org.prebid.mobile.unification.AdUnitConfiguration;
+import org.prebid.mobile.unification.BaseAdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -32,7 +34,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 
@@ -42,20 +43,18 @@ public class AdUnitSuccessorTest {
 
     @Mock
     DemandFetcher mockDemandFetcher;
+    String testConfigId = "123456";
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
-    //Base AdUnit
     @Test
     public void testResumeAutoRefresh() throws IllegalAccessException {
         AdUnit adUnit = new BannerAdUnit("123456", 320, 50);
         ReflectionUtils.setVariableValueInObject(adUnit, "fetcher", mockDemandFetcher);
-
         adUnit.resumeAutoRefresh();
-
         verify(mockDemandFetcher).start();
     }
 
@@ -72,10 +71,12 @@ public class AdUnitSuccessorTest {
     //Banner AdUnit
     @Test
     public void testBannerAdUnitCreation() throws Exception {
-        BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
-        assertEquals(1, adUnit.getSizes().size());
-        assertEquals("123456", FieldUtils.readField(adUnit, "configId", true));
-        assertEquals(AdType.BANNER, FieldUtils.readField(adUnit, "adType", true));
+        BannerAdUnit adUnit = new BannerAdUnit(testConfigId, 320, 50);
+        AdUnitConfiguration configuration = (AdUnitConfiguration) adUnit.getConfiguration();
+
+        assertEquals(1, configuration.getSizes().size());
+        assertEquals(testConfigId, configuration.getConfigId());
+        assertEquals(AdType.BANNER, configuration.getAdType());
         assertEquals(0, FieldUtils.readField(adUnit, "periodMillis", true));
     }
 
@@ -97,10 +98,10 @@ public class AdUnitSuccessorTest {
         BannerAdUnit.Parameters parameters = new BannerAdUnit.Parameters();
         parameters.setApi(Arrays.asList(Signals.Api.VPAID_1, Signals.Api.VPAID_2));
 
-        bannerAdUnit.parameters = parameters;
+        bannerAdUnit.setParameters(parameters);
 
         //when
-        BannerAdUnit.Parameters testedBannerParameters = bannerAdUnit.parameters;
+        BannerAdUnit.Parameters testedBannerParameters = bannerAdUnit.getParameters();
         List<Signals.Api> api = testedBannerParameters.getApi();
 
         //then
@@ -109,50 +110,55 @@ public class AdUnitSuccessorTest {
 
     }
 
-    //Interstitial AdUnit
     @Test
     public void testInterstitialAdUnitCreation() throws Exception {
-        InterstitialAdUnit adUnit = new InterstitialAdUnit("12345");
-        assertEquals("12345", FieldUtils.readField(adUnit, "configId", true));
-        assertEquals(AdType.INTERSTITIAL, FieldUtils.readField(adUnit, "adType", true));
+        InterstitialAdUnit adUnit = new InterstitialAdUnit(testConfigId);
+        AdUnitConfiguration configuration = (AdUnitConfiguration) adUnit.getConfiguration();
+        assertEquals(testConfigId, configuration.getConfigId());
+        assertEquals(AdType.INTERSTITIAL, configuration.getAdType());
     }
 
 
     @Test
-    public void testAdvancedInterstitialAdUnitCreation() throws Exception {
-        InterstitialAdUnit adUnit = new InterstitialAdUnit("12345", 50, 70);
-        assertEquals(AdType.INTERSTITIAL, FieldUtils.readField(adUnit, "adType", true));
+    public void testAdvancedInterstitialAdUnitCreation() {
+        InterstitialAdUnit adUnit = new InterstitialAdUnit(testConfigId, 50, 70);
+        AdUnitConfiguration configuration = (AdUnitConfiguration) adUnit.getConfiguration();
 
-        assertNotNull(adUnit.getMinSizePerc());
-        assertTrue(adUnit.getMinSizePerc().getWidth() == 50 && adUnit.getMinSizePerc().getHeight() == 70);
+        assertEquals(AdType.INTERSTITIAL, configuration.getAdType());
+        assertEquals(testConfigId, configuration.getConfigId());
+        assertEquals(50, configuration.getMinSizePercentage().getWidth());
+        assertEquals(70, configuration.getMinSizePercentage().getHeight());
     }
 
-    //Video AdUnit
     @Test
-    public void testVideoAdUnitCreation() throws Exception {
-        VideoAdUnit adUnit = new VideoAdUnit("123456", 320, 50);
-        assertEquals(new AdSize(320, 50), adUnit.getAdSize());
-        assertEquals("123456", FieldUtils.readField(adUnit, "configId", true));
-        assertEquals(AdType.VIDEO, FieldUtils.readField(adUnit, "adType", true));
+    public void testVideoAdUnitCreation() {
+        VideoAdUnit adUnit = new VideoAdUnit(testConfigId, 320, 50);
+        AdUnitConfiguration configuration = (AdUnitConfiguration) adUnit.getConfiguration();
+
+        AdSize size = configuration.getSizes().iterator().next();
+        assertEquals(320, size.getWidth());
+        assertEquals(50, size.getHeight());
+        assertEquals(testConfigId, configuration.getConfigId());
+        assertEquals(AdType.VIDEO, configuration.getAdType());
     }
 
-    //VideoInterstitial AdUnit
     @Test
-    public void testVideoInterstitialAdUnitCreation() throws Exception {
-        VideoInterstitialAdUnit adUnit = new VideoInterstitialAdUnit("123456");
-        assertEquals("123456", FieldUtils.readField(adUnit, "configId", true));
-        assertEquals(AdType.VIDEO_INTERSTITIAL, FieldUtils.readField(adUnit, "adType", true));
+    public void testVideoInterstitialAdUnitCreation() {
+        VideoInterstitialAdUnit adUnit = new VideoInterstitialAdUnit(testConfigId);
+        AdUnitConfiguration configuration = (AdUnitConfiguration) adUnit.getConfiguration();
+
+        assertEquals(testConfigId, configuration.getConfigId());
+        assertEquals(AdType.VIDEO_INTERSTITIAL, configuration.getAdType());
     }
 
-    //RewardedVideo AdUnit
     @Test
-    public void testRewardedVideoAdUnitCreation() throws Exception {
+    public void testRewardedVideoAdUnitCreation() {
         RewardedVideoAdUnit adUnit = new RewardedVideoAdUnit("123456");
-        assertEquals("123456", FieldUtils.readField(adUnit, "configId", true));
-        assertEquals(AdType.REWARDED_VIDEO, FieldUtils.readField(adUnit, "adType", true));
+        BaseAdUnitConfiguration configuration = adUnit.getConfiguration();
+        assertEquals("123456", configuration.getConfigId());
+        assertEquals(AdType.REWARDED_VIDEO, configuration.getAdType());
     }
 
-    //VideoBase AdUnit
     @Test
     public void testVideoParametersCreation() {
 
@@ -184,10 +190,10 @@ public class AdUnitSuccessorTest {
         parameters.setStartDelay(Signals.StartDelay.PreRoll);
         parameters.setPlacement(Signals.Placement.InBanner);
 
-        videoBaseAdUnit.parameters = parameters;
+        videoBaseAdUnit.setParameters(parameters);
 
         //when
-        VideoAdUnit.Parameters testedVideoParameters = videoBaseAdUnit.parameters;
+        VideoAdUnit.Parameters testedVideoParameters = videoBaseAdUnit.getParameters();
 
         List<Signals.Api> api = testedVideoParameters.getApi();
         Integer maxBitrate = testedVideoParameters.getMaxBitrate();

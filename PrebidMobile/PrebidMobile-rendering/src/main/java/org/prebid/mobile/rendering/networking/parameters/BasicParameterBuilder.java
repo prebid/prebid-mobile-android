@@ -19,7 +19,9 @@ package org.prebid.mobile.rendering.networking.parameters;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.Pair;
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.prebid.mobile.DataObject;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
@@ -132,21 +134,34 @@ public class BasicParameterBuilder extends ParameterBuilder {
         final User user = bidRequest.getUser();
 
         user.id = TargetingParams.getUserId();
-        user.yob = TargetingParams.getYearOfBirth();
         user.keywords = TargetingParams.getUserKeywords();
         user.customData = TargetingParams.getUserCustomData();
-        user.gender = TargetingParams.getGender().getKey();
         user.buyerUid = TargetingParams.getBuyerId();
         user.ext = TargetingParams.getUserExt();
-        user.dataObjects = mAdConfiguration.getUserData();
+
+        ArrayList<DataObject> userData = mAdConfiguration.getUserData();
+        if (!userData.isEmpty()) {
+            user.dataObjects = userData;
+        }
+
+        int yearOfBirth = TargetingParams.getYearOfBirth();
+        if (yearOfBirth != 0) {
+            user.yob = TargetingParams.getYearOfBirth();
+        }
+
+        TargetingParams.GENDER gender = TargetingParams.getGender();
+        if (gender != TargetingParams.GENDER.UNKNOWN) {
+            user.gender = gender.getKey();
+        }
 
         final Map<String, Set<String>> userDataDictionary = TargetingParams.getUserDataDictionary();
         if (!userDataDictionary.isEmpty()) {
             user.getExt().put("data", Utils.toJson(userDataDictionary));
         }
 
-        if (TargetingParams.getExtendedUserIds() != null) {
-            user.getExt().put("eids", TargetingParams.getExtendedUserIds());
+        JSONArray extendedIds = TargetingParams.getExtendedUserIds();
+        if (extendedIds != null && extendedIds.length() > 0) {
+            user.getExt().put("eids", extendedIds);
         }
 
         final Pair<Float, Float> userLatLng = TargetingParams.getUserLatLng();

@@ -40,6 +40,7 @@ import org.prebid.mobile.tasksmanager.BackgroundThreadExecutor;
 import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
+import org.prebid.mobile.unification.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.Shadows;
@@ -71,14 +72,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
     @Override
     public void setup() {
         super.setup();
-        ((BackgroundThreadExecutor)TasksManager.getInstance().backgroundThreadExecutor).startThread();
+        ((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).startThread();
     }
 
     @Override
     public void tearDown() {
         super.tearDown();
 
-        ((BackgroundThreadExecutor)TasksManager.getInstance().backgroundThreadExecutor).shutdown();
+        ((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).shutdown();
         TargetingParams.clearStoredExternalUserIds();
         PrebidMobile.setExternalUserIds(null);
 
@@ -121,9 +122,16 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e45", AdType.BANNER, sizes);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("6ace8c7d-88c0-4623-8117-75bc3f0a2e45");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -147,9 +155,16 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("1001-1", AdType.BANNER, sizes);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("1001-1");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -171,9 +186,16 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-ffffffffffff", AdType.BANNER, sizes);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("6ace8c7d-88c0-4623-8117-ffffffffffff");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -197,9 +219,16 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("1001-1_INVALID_CONFIG_ID", AdType.BANNER, sizes);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("1001-1_INVALID_CONFIG_ID");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -220,9 +249,16 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e45", AdType.BANNER, sizes);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("6ace8c7d-88c0-4623-8117-75bc3f0a2e45");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -243,9 +279,17 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("6ace8c7d-88c0-4623-8117-75bc3f0a2e", AdType.BANNER, sizes);
+
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("6ace8c7d-88c0-4623-8117-75bc3f0a2e");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -268,9 +312,16 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("e2edc23f-0b3b-4203-81b5-7cc97132f418", AdType.BANNER, sizes);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("e2edc23f-0b3b-4203-81b5-7cc97132f418");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -296,9 +347,16 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -307,7 +365,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Robolectric.flushForegroundThreadScheduler();
         assertEquals("Actual Prebid Mobile timeout is " + PrebidMobile.getTimeoutMillis(), 2000, PrebidMobile.getTimeoutMillis());
         assertTrue(!PrebidMobile.timeoutMillisUpdated);
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -331,9 +389,16 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -356,9 +421,16 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -381,9 +453,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -407,9 +484,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -443,9 +525,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -487,9 +574,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -512,9 +604,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -537,9 +634,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -573,9 +675,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -609,9 +716,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -634,9 +746,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -679,11 +796,16 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid1 = UUID.randomUUID().toString();
         String uuid2 = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener1, uuid1);
-        adapter.requestDemand(requestParams, mockListener2, uuid2);
+        adapter.requestDemand(configuration, mockListener1, uuid1);
+        adapter.requestDemand(configuration, mockListener2, uuid2);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -712,9 +834,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         final PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        final RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        final AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         final String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         bgScheduler.runOneTask();
         adapter.stopRequest(uuid);
         Robolectric.flushBackgroundThreadScheduler();
@@ -803,9 +930,15 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -880,9 +1013,17 @@ public class PrebidServerAdapterTest extends BaseSetup {
         sizes.add(new AdSize(320, 50));
         ContentObject contentObject = new ContentObject();
         contentObject.setUrl(expectedContentUrl);
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, null, null, null, null, null, null, contentObject, new ArrayList<DataObject>());
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+        configuration.setAppContent(contentObject);
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -904,20 +1045,29 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
         // User Id from External Third Party Sources
         ArrayList<ExternalUserId> externalUserIdArray = new ArrayList<>();
-        externalUserIdArray.add(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+        externalUserIdArray.add(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{
+            put("rtiPartner", "TDID");
+        }}));
         externalUserIdArray.add(new ExternalUserId("netid.de", "999888777", null, null));
         externalUserIdArray.add(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
         externalUserIdArray.add(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
-        externalUserIdArray.add(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
+        externalUserIdArray.add(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{
+            put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");
+        }}));
         PrebidMobile.setExternalUserIds(externalUserIdArray);
 
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -968,9 +1118,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -998,9 +1153,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -1020,19 +1180,28 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
 
         // User Id from External Third Party Sources
-        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{
+            put("rtiPartner", "TDID");
+        }}));
         TargetingParams.storeExternalUserId(new ExternalUserId("netid.de", "999888777", null, null));
         TargetingParams.storeExternalUserId(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
         TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
+        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{
+            put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");
+        }}));
 
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -1075,19 +1244,28 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
 
         // User Id from External Third Party Sources
-        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+        TargetingParams.storeExternalUserId(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{
+            put("rtiPartner", "TDID");
+        }}));
         TargetingParams.storeExternalUserId(new ExternalUserId("netid.de", "999888777", null, null));
         TargetingParams.storeExternalUserId(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
         TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
+        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{
+            put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");
+        }}));
 
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -1139,21 +1317,30 @@ public class PrebidServerAdapterTest extends BaseSetup {
 
         // User Id from External Third Party Sources
         ArrayList<ExternalUserId> externalUserIdArray = new ArrayList<>();
-        externalUserIdArray.add(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+        externalUserIdArray.add(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{
+            put("rtiPartner", "TDID");
+        }}));
         externalUserIdArray.add(new ExternalUserId("netid.de", "999888777", null, null));
         PrebidMobile.setExternalUserIds(externalUserIdArray);
 
         TargetingParams.storeExternalUserId(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
         TargetingParams.storeExternalUserId(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
-        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{ put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}));
+        TargetingParams.storeExternalUserId(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{
+            put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");
+        }}));
 
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -1188,9 +1375,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -1216,9 +1408,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -1238,15 +1435,22 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
 
         // User Id from External Third Party Sources
-        TargetingParams.storeExternalUserId(new ExternalUserId("netid.de", "999888777", null, new HashMap() {{ put("rtiPartner", "TDID");}}));
+        TargetingParams.storeExternalUserId(new ExternalUserId("netid.de", "999888777", null, new HashMap() {{
+            put("rtiPartner", "TDID");
+        }}));
 
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -1273,9 +1477,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -1302,11 +1511,18 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidMobile.setCustomHeaders(customHeaders);
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
+
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -1331,9 +1547,14 @@ public class PrebidServerAdapterTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(320, 50));
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();
@@ -1460,7 +1681,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         //before
         Method method = AdvertisingIDUtil.class.getDeclaredMethod("setAAID", String.class);
         method.setAccessible(true);
-        method.invoke(null,"10000000-1000-1000-1000-100000000000");
+        method.invoke(null, "10000000-1000-1000-1000-100000000000");
 
         //given
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
@@ -1495,7 +1716,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         //before
         Method method = AdvertisingIDUtil.class.getDeclaredMethod("setAAID", String.class);
         method.setAccessible(true);
-        method.invoke(null,"10000000-1000-1000-1000-100000000000");
+        method.invoke(null, "10000000-1000-1000-1000-100000000000");
 
         //(1)
         postDataIfaHelper(false, "100000000000000000000000", true);
@@ -1676,9 +1897,16 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.INTERSTITIAL, sizes);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.INTERSTITIAL);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -1775,9 +2003,15 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.INTERSTITIAL, sizes);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.INTERSTITIAL);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -1806,9 +2040,17 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, null, null, null, null, parameters, null, null, new ArrayList<DataObject>());
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.BANNER);
+        configuration.setBannerParameters(parameters);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -1837,9 +2079,15 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.VIDEO, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.VIDEO);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -1873,9 +2121,15 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.VIDEO_INTERSTITIAL, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.VIDEO_INTERSTITIAL);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -1909,9 +2163,15 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.REWARDED_VIDEO, sizes);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.REWARDED_VIDEO);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -1960,9 +2220,16 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.VIDEO, sizes, null, null, null, null, null, parameters, null, new ArrayList<DataObject>());
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(AdType.VIDEO);
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+        configuration.setVideoParameters(parameters);
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);
@@ -2437,9 +2704,27 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
 
-        RequestParams requestParams = new RequestParams("67890", adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, adSlot, bannerParameters, videoParameters, null, new ArrayList<DataObject>());
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("67890");
+        configuration.setAdType(adType);
+        configuration.addContextKeywords(contextKeywordsSet);
+        configuration.setMinSizePercentage(minSizePerc);
+        configuration.setPbAdSlot(adSlot);
+        configuration.setBannerParameters(bannerParameters);
+        configuration.setVideoParameters(videoParameters);
+
+        for (AdSize size : sizes) {
+            configuration.addSize(size);
+        }
+
+        if (contextDataDictionary != null) {
+            for (String key : contextDataDictionary.keySet()) {
+                configuration.addContextData(key, contextDataDictionary.get(key));
+            }
+        }
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
         PrebidServerAdapter.ServerConnector connector = connectors.get(0);

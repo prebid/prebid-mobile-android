@@ -498,9 +498,9 @@ class PrebidServerAdapter implements DemandAdapter {
                     request.put(NativeRequestParams.SEQ, params.getSeq());
                     request.put(NativeRequestParams.A_URL_SUPPORT, params.getAUrlSupport() ? 1 : 0);
                     request.put(NativeRequestParams.D_URL_SUPPORT, params.getDUrlSupport() ? 1 : 0);
-                    if (!params.getNativeEventTrackers().isEmpty()) {
+                    if (!params.getEventTrackers().isEmpty()) {
                         JSONArray trackers = new JSONArray();
-                        for (NativeEventTracker tracker : params.getNativeEventTrackers()) {
+                        for (NativeEventTracker tracker : params.getEventTrackers()) {
                             JSONObject trackerObject = new JSONObject();
                             trackerObject.put(NativeRequestParams.EVENT, tracker.getEvent().getID());
                             JSONArray methodsArray = new JSONArray();
@@ -515,9 +515,9 @@ class PrebidServerAdapter implements DemandAdapter {
                     }
                     request.put(NativeRequestParams.PRIVACY, params.getPrivacy() ? 1 : 0);
                     request.put(NativeRequestParams.EXT, params.getExt());
-                    if (!params.getNativeAssets().isEmpty()) {
+                    if (!params.getAssets().isEmpty()) {
                         int idCount = 1;
-                        for (NativeAsset asset : params.getNativeAssets()) {
+                        for (NativeAsset asset : params.getAssets()) {
                             JSONObject assetObj;
                             switch (asset.getType()) {
                                 case TITLE:
