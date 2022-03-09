@@ -26,9 +26,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.DataObject;
-import org.prebid.mobile.ExtObject;
-import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.*;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.AdConfiguration;
@@ -53,6 +51,7 @@ import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.*;
@@ -78,6 +77,7 @@ public class BasicParameterBuilderTest {
     @Before
     public void setUp() throws Exception {
         mContext = Robolectric.buildActivity(Activity.class).create().get();
+        PrebidMobile.setApplicationContext(mContext);
         ManagersResolver.getInstance().prepare(mContext);
     }
 
@@ -87,7 +87,7 @@ public class BasicParameterBuilderTest {
         TargetingParams.clearUserKeywords();
         TargetingParams.setUserLatLng(null, null);
         TargetingParams.setGender(TargetingParams.GENDER.UNKNOWN);
-        TargetingParams.setExtendedUserIds(null);
+        TargetingParams.clearStoredExternalUserIds();
         TargetingParams.setBuyerId(null);
         TargetingParams.setUserId(null);
         TargetingParams.setUserCustomData(null);
@@ -245,7 +245,6 @@ public class BasicParameterBuilderTest {
         TargetingParams.setGender(TargetingParams.GENDER.MALE);
         TargetingParams.setBuyerId(USER_BUYER_ID);
         TargetingParams.setUserExt(new ExtObject());
-        TargetingParams.setExtendedUserIds(new JSONArray());
         TargetingParams.setUserLatLng(USER_LAT, USER_LON);
 
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
@@ -518,10 +517,14 @@ public class BasicParameterBuilderTest {
         user.customData = USER_CUSTOM;
         user.gender = USER_GENDER;
         user.buyerUid = USER_BUYER_ID;
-        JSONArray extendedUserIds = TargetingParams.getExtendedUserIds();
-        if (extendedUserIds != null && extendedUserIds.length() > 0) {
+        List<ExternalUserId> extendedUserIds = TargetingParams.fetchStoredExternalUserIds();
+        if (extendedUserIds != null && extendedUserIds.size() > 0) {
             user.ext = new ExtObject();
-            user.ext.put("eids", extendedUserIds);
+            JSONArray idsJson = new JSONArray();
+            for (ExternalUserId id : extendedUserIds) {
+                idsJson.put(id.getJson());
+            }
+            user.ext.put("eids", idsJson);
         }
 
         final Geo userGeo = user.getGeo();

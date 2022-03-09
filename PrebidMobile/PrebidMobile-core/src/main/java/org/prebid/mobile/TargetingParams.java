@@ -307,7 +307,8 @@ public class TargetingParams {
     }
 
     /**
-     * Use this API for storing the externalUserId in the SharedPreference
+     * Use this API for storing the externalUserId in the SharedPreference.
+     * Prebid server provide them participating server-side bid adapters.
      *
      * @param externalUserId the externalUserId instance to be stored in the SharedPreference
      */
@@ -352,19 +353,6 @@ public class TargetingParams {
     public static void clearStoredExternalUserIds() {
         StorageUtils.clearStoredExternalUserIds();
     }
-
-    /**
-     * Sets extended user ids. Prebid server provide them
-     * to participating server-side bid adapters.
-     */
-    public static void setExtendedUserIds(JSONArray ids) {
-        extendedUserIds = ids;
-    }
-
-    public static JSONArray getExtendedUserIds() {
-        return extendedUserIds;
-    }
-
 
     /* -------------------- Context and application data -------------------- */
 

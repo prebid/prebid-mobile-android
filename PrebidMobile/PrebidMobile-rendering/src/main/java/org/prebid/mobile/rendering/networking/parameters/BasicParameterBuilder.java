@@ -22,6 +22,7 @@ import android.util.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.DataObject;
+import org.prebid.mobile.ExternalUserId;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
@@ -159,9 +160,15 @@ public class BasicParameterBuilder extends ParameterBuilder {
             user.getExt().put("data", Utils.toJson(userDataDictionary));
         }
 
-        JSONArray extendedIds = TargetingParams.getExtendedUserIds();
-        if (extendedIds != null && extendedIds.length() > 0) {
-            user.getExt().put("eids", extendedIds);
+        List<ExternalUserId> extendedIds = TargetingParams.fetchStoredExternalUserIds();
+        if (extendedIds != null && extendedIds.size() > 0) {
+            JSONArray idsJson = new JSONArray();
+            for (ExternalUserId id : extendedIds) {
+                if (id != null) {
+                    idsJson.put(id.getJson());
+                }
+            }
+            user.getExt().put("eids", idsJson);
         }
 
         final Pair<Float, Float> userLatLng = TargetingParams.getUserLatLng();
