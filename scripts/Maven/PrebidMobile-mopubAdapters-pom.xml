@@ -6,7 +6,7 @@
     <groupId>org.prebid</groupId>
     <artifactId>prebid-mobile-sdk-mopub-adapters</artifactId>
 
-    <version>1.13.0-beta2</version>
+    <version>1.14.0</version>
     <packaging>jar</packaging>
     <name>Prebid Mobile Android SDK</name>
     <description>Prebid Mobile</description>
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>org.prebid</groupId>
             <artifactId>prebid-mobile-sdk</artifactId>
-            <version>1.13.0-beta2</version>
+            <version>1.14.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

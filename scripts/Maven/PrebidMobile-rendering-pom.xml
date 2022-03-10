@@ -7,7 +7,7 @@
     <groupId>org.prebid</groupId>
     <artifactId>prebid-mobile-sdk-rendering</artifactId>
 
-    <version>1.13.0-beta2</version>
+    <version>1.14.0</version>
     <packaging>aar</packaging>
     <name>Prebid Mobile Android SDK</name>
     <description>Prebid Mobile</description>
