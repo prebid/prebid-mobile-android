@@ -37,6 +37,8 @@ import org.prebid.mobile.http.HTTPPost;
 import org.prebid.mobile.http.NoContextException;
 import org.prebid.mobile.http.TaskResult;
 import org.prebid.mobile.tasksmanager.TasksManager;
+import org.prebid.mobile.unification.BaseAdUnitConfigurationInterface;
+import org.prebid.mobile.unification.NativeAdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -51,8 +53,8 @@ class PrebidServerAdapter implements DemandAdapter {
     }
 
     @Override
-    public void requestDemand(RequestParams params, DemandAdapterListener listener, String auctionId) {
-        final ServerConnector connector = new ServerConnector(this, listener, params, auctionId, cacheIdSaver);
+    public void requestDemand(BaseAdUnitConfigurationInterface configuration, DemandAdapterListener listener, String auctionId) {
+        final ServerConnector connector = new ServerConnector(this, listener, configuration, auctionId, cacheIdSaver);
         serverConnectors.add(connector);
         connector.execute();
     }
@@ -76,7 +78,7 @@ class PrebidServerAdapter implements DemandAdapter {
         private final WeakReference<PrebidServerAdapter> prebidServerAdapter;
         private final TimeoutCountDownTimer timeoutCountDownTimer;
 
-        private final RequestParams requestParams;
+        private final BaseAdUnitConfigurationInterface configuration;
         private final String auctionId;
 
         private DemandAdapterListener listener;
@@ -88,14 +90,14 @@ class PrebidServerAdapter implements DemandAdapter {
 
         private CacheIdSaver cacheIdSaver;
 
-        ServerConnector(PrebidServerAdapter prebidServerAdapter, DemandAdapterListener listener, RequestParams requestParams, String auctionId, CacheIdSaver cacheIdSaver) {
+        ServerConnector(PrebidServerAdapter prebidServerAdapter, DemandAdapterListener listener, BaseAdUnitConfigurationInterface configuration, String auctionId, CacheIdSaver cacheIdSaver) {
             this.prebidServerAdapter = new WeakReference<>(prebidServerAdapter);
             this.listener = listener;
-            this.requestParams = requestParams;
+            this.configuration = configuration;
             this.auctionId = auctionId;
             this.cacheIdSaver = cacheIdSaver;
             timeoutCountDownTimer = new TimeoutCountDownTimer(PrebidMobile.getTimeoutMillis(), TIMEOUT_COUNT_DOWN_INTERVAL);
-            adType = requestParams.getAdType();
+            adType = configuration.getAdType();
         }
 
         @MainThread
@@ -447,7 +449,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     JSONArray format = new JSONArray();
 
                     if (adType.equals(AdType.BANNER)) {
-                        for (AdSize size : requestParams.getAdSizes()) {
+                        for (AdSize size : configuration.castToOriginal().getSizes()) {
                             format.put(new JSONObject().put("w", size.getWidth()).put("h", size.getHeight()));
                         }
                     } else if (adType.equals(AdType.INTERSTITIAL)) {
@@ -462,7 +464,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
                     banner.put("format", format);
 
-                    BannerBaseAdUnit.Parameters parameters = requestParams.getBannerParameters();
+                    BannerBaseAdUnit.Parameters parameters = configuration.castToOriginal().getBannerParameters();
                     if (parameters != null) {
 
                         List<Integer> apiList = Util.convertCollection(parameters.getApi(), new Util.Function1<Integer, Signals.Api>() {
@@ -482,20 +484,20 @@ class PrebidServerAdapter implements DemandAdapter {
                     JSONObject nativeObj = new JSONObject();
                     JSONObject request = new JSONObject();
                     JSONArray assets = new JSONArray();
-                    NativeRequestParams params = requestParams.getNativeRequestParams();
+                    NativeAdUnitConfiguration params = configuration.castToNative();
                     if (params.getContextType() != null) {
                         request.put(NativeRequestParams.CONTEXT, params.getContextType().getID());
                     }
-                    if (params.getContextsubtype() != null) {
-                        request.put(NativeRequestParams.CONTEXT_SUB_TYPE, params.getContextsubtype().getID());
+                    if (params.getContextSubtype() != null) {
+                        request.put(NativeRequestParams.CONTEXT_SUB_TYPE, params.getContextSubtype().getID());
                     }
                     if (params.getPlacementType() != null) {
                         request.put(NativeRequestParams.PLACEMENT_TYPE, params.getPlacementType().getID());
                     }
                     request.put(NativeRequestParams.PLACEMENT_COUNT, params.getPlacementCount());
                     request.put(NativeRequestParams.SEQ, params.getSeq());
-                    request.put(NativeRequestParams.A_URL_SUPPORT, params.isAUrlSupport() ? 1 : 0);
-                    request.put(NativeRequestParams.D_URL_SUPPORT, params.isDUrlSupport() ? 1 : 0);
+                    request.put(NativeRequestParams.A_URL_SUPPORT, params.getAUrlSupport() ? 1 : 0);
+                    request.put(NativeRequestParams.D_URL_SUPPORT, params.getDUrlSupport() ? 1 : 0);
                     if (!params.getEventTrackers().isEmpty()) {
                         JSONArray trackers = new JSONArray();
                         for (NativeEventTracker tracker : params.getEventTrackers()) {
@@ -511,7 +513,7 @@ class PrebidServerAdapter implements DemandAdapter {
                         }
                         request.put(NativeRequestParams.EVENT_TRACKERS, trackers);
                     }
-                    request.put(NativeRequestParams.PRIVACY, params.isPrivacy() ? 1 : 0);
+                    request.put(NativeRequestParams.PRIVACY, params.getPrivacy() ? 1 : 0);
                     request.put(NativeRequestParams.EXT, params.getExt());
                     if (!params.getAssets().isEmpty()) {
                         int idCount = 1;
@@ -598,7 +600,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     JSONObject video = new JSONObject();
                     Integer placementValue = null;
 
-                    VideoBaseAdUnit.Parameters parameters = requestParams.getVideoParameters();
+                    VideoBaseAdUnit.Parameters parameters = configuration.castToOriginal().getVideoParameters();
                     if (parameters != null) {
 
                         List<Integer> apiList = Util.convertCollection(parameters.getApi(), new Util.Function1<Integer, Signals.Api>() {
@@ -646,7 +648,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
                     Integer placementValueDefault = null;
                     if (adType.equals(AdType.VIDEO)) {
-                        for (AdSize size : requestParams.getAdSizes()) {
+                        for (AdSize size : configuration.castToOriginal().getSizes()) {
                             video.put("w", size.getWidth());
                             video.put("h", size.getHeight());
                         }
@@ -677,16 +679,16 @@ class PrebidServerAdapter implements DemandAdapter {
                 ext.put("prebid", prebid);
                 JSONObject context = new JSONObject();
 
-                JSONObject contextData = Util.toJson(requestParams.getContextDataDictionary());
+                JSONObject contextData = Util.toJson(configuration.getContextDataDictionary());
                 JSONObject data = new JSONObject(contextData.toString());
-                data.put("adslot", requestParams.getPbAdSlot());
+                data.put("adslot", configuration.getPbAdSlot());
 
                 context.put("data", data);
-                context.put("keywords", TextUtils.join(",", requestParams.getContextKeywordsSet()));
+                context.put("keywords", TextUtils.join(",", configuration.getContextKeywordsSet()));
                 ext.put("context", context);
                 JSONObject storedrequest = new JSONObject();
                 prebid.put("storedrequest", storedrequest);
-                storedrequest.put("id", requestParams.getConfigId());
+                storedrequest.put("id", configuration.getConfigId());
 
                 if (!TextUtils.isEmpty(PrebidMobile.getStoredAuctionResponse())) {
                     JSONObject storedAuctionResponse = new JSONObject();
@@ -757,7 +759,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     Integer minSizePercWidth = null;
                     Integer minSizePercHeight = null;
 
-                    AdSize minSizePerc = requestParams.getMinSizePerc();
+                    AdSize minSizePerc = configuration.castToOriginal().getMinSizePercentage();
                     if (minSizePerc != null) {
 
                         minSizePercWidth = minSizePerc.getWidth();
@@ -919,7 +921,7 @@ class PrebidServerAdapter implements DemandAdapter {
         }
 
         private void putContentObjectIfExists(JSONObject appJsonObject) {
-            ContentObject contentObject = requestParams.getAppContent();
+            ContentObject contentObject = configuration.getAppContent();
             if (contentObject == null) return;
 
             JSONObject jsonContentObject = contentObject.getJsonObject();
@@ -953,8 +955,7 @@ class PrebidServerAdapter implements DemandAdapter {
                 }
                 user.put("gender", g);
 
-                String globalUserKeywordString = TextUtils.join(",", TargetingParams.getUserKeywordsSet());
-                user.put("keywords", globalUserKeywordString);
+                user.put("keywords", TargetingParams.getUserKeywords());
 
                 JSONObject ext = new JSONObject();
 
@@ -963,7 +964,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     ext.put("consent", TargetingParams.getGDPRConsentString());
                 }
 
-                ArrayList<DataObject> userDataObjects = requestParams.getUserData();
+                ArrayList<DataObject> userDataObjects = configuration.getUserData();
                 if (!userDataObjects.isEmpty()) {
                     JSONArray userDataJsonArray = new JSONArray();
                     for (DataObject dataObject : userDataObjects) {

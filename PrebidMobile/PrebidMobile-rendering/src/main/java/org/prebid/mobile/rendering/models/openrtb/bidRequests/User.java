@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.DataObject;
+import org.prebid.mobile.ExtObject;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class User extends BaseBid {
     public Geo geo = null;
     public String customData = null;
     public String id = null;
-    public Ext ext = null;
+    public ExtObject ext = null;
     public String buyerUid = null;
     public ArrayList<DataObject> dataObjects = new ArrayList<>();
 
@@ -47,7 +48,13 @@ public class User extends BaseBid {
         toJSON(jsonObject, "keywords", this.keywords);
         toJSON(jsonObject, "customdata", this.customData);
         toJSON(jsonObject, "geo", (geo != null) ? this.geo.getJsonObject() : null);
-        toJSON(jsonObject, "ext", (ext != null) ? this.ext.getJsonObject() : null);
+
+        if (ext != null) {
+            JSONObject extJson = this.ext.getJsonObject();
+            if (extJson.length() > 0) {
+                toJSON(jsonObject, "ext", extJson);
+            }
+        }
         JSONArray dataJsonArray = getDataJsonArray();
         if (dataJsonArray != null) {
             toJSON(jsonObject, "data", dataJsonArray);
@@ -71,14 +78,14 @@ public class User extends BaseBid {
         this.geo = geo;
     }
 
-    public Ext getExt() {
+    public ExtObject getExt() {
         if (ext == null) {
-            ext = new Ext();
+            ext = new ExtObject();
         }
         return ext;
     }
 
-    public void setExt(Ext ext) {
+    public void setExt(ExtObject ext) {
         this.ext = ext;
     }
 

@@ -18,21 +18,19 @@ package org.prebid.mobile.rendering.networking.parameters;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.App;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
-import org.prebid.mobile.rendering.networking.targeting.Targeting;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
-import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.RobolectricTestRunner;
 
 import static org.junit.Assert.assertEquals;
@@ -54,13 +52,10 @@ public class AppInfoParameterBuilderTest {
         AdIdManager.setLimitAdTrackingEnabled(!ADVERTISING_ID_ENABLED);
     }
 
-    @After
-    public void cleanup() throws Exception {
-        WhiteBox.method(Targeting.class, "clear").invoke(null);
-    }
-
     @Test
     public void testAppendBuilderParameters() throws Exception {
+        TargetingParams.clearContextData();
+
         AdConfiguration adConfiguration = new AdConfiguration();
         ContentObject contentObject = new ContentObject();
         contentObject.setUrl("test.com");
@@ -71,8 +66,8 @@ public class AppInfoParameterBuilderTest {
         final String expectedStoreurl = "https://google.play.com";
         final String expectedPublisherName = "prebid";
 
-        Targeting.setPublisherName(expectedPublisherName);
-        Targeting.setAppStoreMarketUrl(expectedStoreurl);
+        TargetingParams.setPublisherName(expectedPublisherName);
+        TargetingParams.setStoreUrl(expectedStoreurl);
 
         builder.appendBuilderParameters(adRequestInput);
 
@@ -94,7 +89,7 @@ public class AppInfoParameterBuilderTest {
     @Test
     public void whenAppendParametersAndTargetingContextDataNotEmpty_ContextDataAddedToAppExt()
     throws JSONException {
-        Targeting.addContextData("context", "contextData");
+        TargetingParams.addContextData("context", "contextData");
 
         AppInfoParameterBuilder builder = new AppInfoParameterBuilder(new AdConfiguration());
         AdRequestInput adRequestInput = new AdRequestInput();

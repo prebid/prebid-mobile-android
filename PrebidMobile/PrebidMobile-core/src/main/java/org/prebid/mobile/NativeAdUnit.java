@@ -1,6 +1,10 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
+import org.json.JSONObject;
+import org.prebid.mobile.unification.BaseAdUnitConfiguration;
+import org.prebid.mobile.unification.NativeAdUnitConfiguration;
 
 /**
  * For details of the configuration of native imps, please check this documentation:
@@ -10,11 +14,10 @@ public class NativeAdUnit extends AdUnit {
 
     public static final String BUNDLE_KEY_CACHE_ID = "NativeAdUnitCacheId";
 
-    NativeRequestParams params;
+    private final NativeAdUnitConfiguration nativeConfiguration = configuration.castToNative();
 
     public NativeAdUnit(@NonNull String configId) {
         super(configId, AdType.NATIVE);
-        params = new NativeRequestParams();
     }
 
     public enum CONTEXT_TYPE {
@@ -50,7 +53,7 @@ public class NativeAdUnit extends AdUnit {
     }
 
     public void setContextType(CONTEXT_TYPE type) {
-        params.setContextType(type);
+        nativeConfiguration.setContextType(type);
     }
 
     public enum CONTEXTSUBTYPE {
@@ -95,7 +98,7 @@ public class NativeAdUnit extends AdUnit {
     }
 
     public void setContextSubType(CONTEXTSUBTYPE type) {
-        params.setContextSubType(type);
+        nativeConfiguration.setContextSubtype(type);
     }
 
     public enum PLACEMENTTYPE {
@@ -133,39 +136,51 @@ public class NativeAdUnit extends AdUnit {
     }
 
     public void setPlacementType(PLACEMENTTYPE placementType) {
-        params.setPlacementType(placementType);
+        nativeConfiguration.setPlacementType(placementType);
     }
 
     public void setPlacementCount(int placementCount) {
-        params.setPlacementCount(placementCount);
+        nativeConfiguration.setPlacementCount(placementCount);
     }
 
     public void setSeq(int seq) {
-        params.setSeq(seq);
+        nativeConfiguration.setSeq(seq);
     }
 
     public void setAUrlSupport(boolean support) {
-        params.setAUrlSupport(support);
+        nativeConfiguration.setAUrlSupport(support);
     }
 
     public void setDUrlSupport(boolean support) {
-        params.setDUrlSupport(support);
+        nativeConfiguration.setDUrlSupport(support);
     }
 
     public void setPrivacy(boolean privacy) {
-        params.setPrivacy(privacy);
+        nativeConfiguration.setPrivacy(privacy);
     }
 
     public void setExt(Object jsonObject) {
-        params.setExt(jsonObject);
+        if (jsonObject instanceof JSONObject) {
+            nativeConfiguration.setExt((JSONObject) jsonObject);
+        }
     }
 
     public void addEventTracker(NativeEventTracker tracker) {
-        params.addEventTracker(tracker);
+        nativeConfiguration.addEventTracker(tracker);
     }
 
     public void addAsset(NativeAsset asset) {
-        params.addAsset(asset);
+        nativeConfiguration.addAsset(asset);
+    }
+
+    @Override
+    protected BaseAdUnitConfiguration createConfiguration() {
+        return new NativeAdUnitConfiguration();
+    }
+
+    @VisibleForTesting
+    public NativeAdUnitConfiguration getNativeConfiguration() {
+        return nativeConfiguration;
     }
 
 }

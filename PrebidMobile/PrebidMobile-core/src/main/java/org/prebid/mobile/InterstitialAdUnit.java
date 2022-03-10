@@ -21,21 +21,18 @@ import androidx.annotation.Nullable;
 
 public class InterstitialAdUnit extends BannerBaseAdUnit {
 
-    @Nullable
-    private AdSize minSizePerc = null;
-
     public InterstitialAdUnit(@NonNull String configId) {
         super(configId, AdType.INTERSTITIAL);
     }
 
     public InterstitialAdUnit(@NonNull String configId, int minWidthPerc, int minHeightPerc) {
-
         this(configId);
-        minSizePerc = new AdSize(minWidthPerc, minHeightPerc);
+        configuration.castToOriginal().setMinSizePercentage(new AdSize(minWidthPerc, minHeightPerc));
     }
 
     @Nullable
     AdSize getMinSizePerc() {
-        return minSizePerc;
+        return configuration.castToOriginal().getMinSizePercentage();
     }
+
 }

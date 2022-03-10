@@ -19,7 +19,11 @@ package org.prebid.mobile.rendering.networking.parameters;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.Pair;
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.prebid.mobile.DataObject;
+import org.prebid.mobile.ExternalUserId;
+import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.AdConfiguration;
@@ -32,7 +36,6 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
-import org.prebid.mobile.rendering.networking.targeting.Targeting;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
@@ -131,25 +134,44 @@ public class BasicParameterBuilder extends ParameterBuilder {
         final BidRequest bidRequest = adRequestInput.getBidRequest();
         final User user = bidRequest.getUser();
 
-        user.id = Targeting.getUserId();
-        user.yob = Targeting.getUserYob();
-        user.keywords = Targeting.getUserKeyWords();
-        user.customData = Targeting.getUserCustomData();
-        user.gender = Targeting.getUserGender();
-        user.buyerUid = Targeting.getBuyerUid();
-        user.ext = Targeting.getUserExt();
-        user.dataObjects = mAdConfiguration.getUserData();
+        user.id = TargetingParams.getUserId();
+        user.keywords = TargetingParams.getUserKeywords();
+        user.customData = TargetingParams.getUserCustomData();
+        user.buyerUid = TargetingParams.getBuyerId();
+        user.ext = TargetingParams.getUserExt();
 
-        final Map<String, Set<String>> userDataDictionary = Targeting.getUserDataDictionary();
+        ArrayList<DataObject> userData = mAdConfiguration.getUserData();
+        if (!userData.isEmpty()) {
+            user.dataObjects = userData;
+        }
+
+        int yearOfBirth = TargetingParams.getYearOfBirth();
+        if (yearOfBirth != 0) {
+            user.yob = TargetingParams.getYearOfBirth();
+        }
+
+        TargetingParams.GENDER gender = TargetingParams.getGender();
+        if (gender != TargetingParams.GENDER.UNKNOWN) {
+            user.gender = gender.getKey();
+        }
+
+        final Map<String, Set<String>> userDataDictionary = TargetingParams.getUserDataDictionary();
         if (!userDataDictionary.isEmpty()) {
             user.getExt().put("data", Utils.toJson(userDataDictionary));
         }
 
-        if (Targeting.getEids() != null) {
-            user.getExt().put("eids", Targeting.getEids());
+        List<ExternalUserId> extendedIds = TargetingParams.fetchStoredExternalUserIds();
+        if (extendedIds != null && extendedIds.size() > 0) {
+            JSONArray idsJson = new JSONArray();
+            for (ExternalUserId id : extendedIds) {
+                if (id != null) {
+                    idsJson.put(id.getJson());
+                }
+            }
+            user.getExt().put("eids", idsJson);
         }
 
-        final Pair<Float, Float> userLatLng = Targeting.getUserLatLng();
+        final Pair<Float, Float> userLatLng = TargetingParams.getUserLatLng();
         if (userLatLng != null) {
             final Geo userGeo = user.getGeo();
             userGeo.lat = userLatLng.first;

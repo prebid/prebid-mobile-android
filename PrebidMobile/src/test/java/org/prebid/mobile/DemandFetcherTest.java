@@ -17,10 +17,10 @@
 package org.prebid.mobile;
 
 import android.os.Bundle;
-
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.mopub.mobileads.MoPubView;
-
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,6 +30,7 @@ import org.prebid.mobile.tasksmanager.BackgroundThreadExecutor;
 import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
+import org.prebid.mobile.unification.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.Shadows;
@@ -38,12 +39,7 @@ import org.robolectric.shadows.ShadowLooper;
 
 import java.util.HashSet;
 
-import okhttp3.HttpUrl;
-import okhttp3.mockwebserver.MockResponse;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotSame;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -71,8 +67,15 @@ public class DemandFetcherTest extends BaseSetup {
         demandFetcher.setPeriodMillis(0);
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setConfigId("12345");
+        adUnitConfiguration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            adUnitConfiguration.addSize(size);
+        }
+
+        demandFetcher.setConfiguration(adUnitConfiguration);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
         demandFetcher.start();
         assertEquals(DemandFetcher.STATE.RUNNING, FieldUtils.readField(demandFetcher, "state", true));
@@ -102,8 +105,15 @@ public class DemandFetcherTest extends BaseSetup {
         demandFetcher.setPeriodMillis(0);
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setConfigId("12345");
+        adUnitConfiguration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            adUnitConfiguration.addSize(size);
+        }
+
+        demandFetcher.setConfiguration(adUnitConfiguration);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         demandFetcher.setListener(mockListener);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
@@ -139,8 +149,15 @@ public class DemandFetcherTest extends BaseSetup {
         demandFetcher.setPeriodMillis(30);
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setConfigId("12345");
+        adUnitConfiguration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            adUnitConfiguration.addSize(size);
+        }
+
+        demandFetcher.setConfiguration(adUnitConfiguration);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         demandFetcher.setListener(mockListener);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
@@ -178,8 +195,15 @@ public class DemandFetcherTest extends BaseSetup {
         demandFetcher.setPeriodMillis(0);
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setConfigId("12345");
+        adUnitConfiguration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            adUnitConfiguration.addSize(size);
+        }
+
+        demandFetcher.setConfiguration(adUnitConfiguration);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         demandFetcher.setListener(mockListener);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
@@ -235,8 +259,15 @@ public class DemandFetcherTest extends BaseSetup {
         demandFetcher.setPeriodMillis(0);
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setConfigId("12345");
+        adUnitConfiguration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            adUnitConfiguration.addSize(size);
+        }
+
+        demandFetcher.setConfiguration(adUnitConfiguration);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         demandFetcher.setListener(mockListener);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
@@ -323,8 +354,15 @@ public class DemandFetcherTest extends BaseSetup {
         demandFetcher.setPeriodMillis(0);
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setConfigId("12345");
+        adUnitConfiguration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            adUnitConfiguration.addSize(size);
+        }
+
+        demandFetcher.setConfiguration(adUnitConfiguration);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         demandFetcher.setListener(mockListener);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
@@ -360,8 +398,15 @@ public class DemandFetcherTest extends BaseSetup {
         demandFetcher.setPeriodMillis(0);
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setConfigId("12345");
+        adUnitConfiguration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            adUnitConfiguration.addSize(size);
+        }
+
+        demandFetcher.setConfiguration(adUnitConfiguration);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         demandFetcher.setListener(mockListener);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
@@ -398,8 +443,15 @@ public class DemandFetcherTest extends BaseSetup {
         demandFetcher.setPeriodMillis(2000);
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setConfigId("12345");
+        adUnitConfiguration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            adUnitConfiguration.addSize(size);
+        }
+
+        demandFetcher.setConfiguration(adUnitConfiguration);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         demandFetcher.setListener(mockListener);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));
@@ -446,8 +498,15 @@ public class DemandFetcherTest extends BaseSetup {
         demandFetcher.setPeriodMillis(2000);
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
-        RequestParams requestParams = new RequestParams("12345", AdType.BANNER, sizes);
-        demandFetcher.setRequestParams(requestParams);
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setConfigId("12345");
+        adUnitConfiguration.setAdType(AdType.BANNER);
+        for (AdSize size : sizes) {
+            adUnitConfiguration.addSize(size);
+        }
+
+        demandFetcher.setConfiguration(adUnitConfiguration);
         OnCompleteListener mockListener = mock(OnCompleteListener.class);
         demandFetcher.setListener(mockListener);
         assertEquals(DemandFetcher.STATE.STOPPED, FieldUtils.readField(demandFetcher, "state", true));

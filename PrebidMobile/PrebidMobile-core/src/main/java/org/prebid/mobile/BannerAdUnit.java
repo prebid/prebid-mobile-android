@@ -22,20 +22,17 @@ import java.util.HashSet;
 
 public class BannerAdUnit extends BannerBaseAdUnit {
 
-    private HashSet<AdSize> sizes;
-
     public BannerAdUnit(@NonNull String configId, int width, int height) {
         super(configId, AdType.BANNER);
-        this.sizes = new HashSet<>();
-        this.sizes.add(new AdSize(width, height));
+        configuration.castToOriginal().addSize(new AdSize(width, height));
     }
 
     public void addAdditionalSize(int width, int height) {
-        sizes.add(new AdSize(width, height));
+        configuration.castToOriginal().addSize(new AdSize(width, height));
     }
 
     HashSet<AdSize> getSizes() {
-        return this.sizes;
+        return configuration.castToOriginal().getSizes();
     }
 
 }

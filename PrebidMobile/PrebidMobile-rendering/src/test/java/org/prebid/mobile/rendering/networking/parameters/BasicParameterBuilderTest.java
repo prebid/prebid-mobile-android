@@ -26,7 +26,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.DataObject;
+import org.prebid.mobile.*;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.AdConfiguration;
@@ -41,18 +41,17 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.pmps.Format;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
-import org.prebid.mobile.rendering.networking.targeting.Targeting;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.*;
@@ -78,12 +77,22 @@ public class BasicParameterBuilderTest {
     @Before
     public void setUp() throws Exception {
         mContext = Robolectric.buildActivity(Activity.class).create().get();
+        PrebidMobile.setApplicationContext(mContext);
         ManagersResolver.getInstance().prepare(mContext);
     }
 
     @After
     public void cleanup() throws Exception {
-        WhiteBox.method(Targeting.class, "clear").invoke(null);
+        TargetingParams.clearUserData();
+        TargetingParams.clearUserKeywords();
+        TargetingParams.setUserLatLng(null, null);
+        TargetingParams.setGender(TargetingParams.GENDER.UNKNOWN);
+        TargetingParams.clearStoredExternalUserIds();
+        TargetingParams.setBuyerId(null);
+        TargetingParams.setUserId(null);
+        TargetingParams.setUserCustomData(null);
+        TargetingParams.setYearOfBirth(0);
+
         PrebidRenderingSettings.sendMraidSupportParams = true;
         PrebidRenderingSettings.useExternalBrowser = false;
         PrebidRenderingSettings.isCoppaEnabled = false;
@@ -229,15 +238,14 @@ public class BasicParameterBuilderTest {
         adConfiguration.setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
 
-        Targeting.setUserId(USER_ID);
-        Targeting.setUserAge(USER_AGE);
-        Targeting.setUserKeywords(USER_KEYWORDS);
-        Targeting.setUserCustomData(USER_CUSTOM);
-        Targeting.setUserGender(UserParameters.Gender.MALE);
-        Targeting.setBuyerUid(USER_BUYER_ID);
-        Targeting.setUserExt(new Ext());
-        Targeting.setEids(new JSONArray());
-        Targeting.setUserLatLng(USER_LAT, USER_LON);
+        TargetingParams.setUserId(USER_ID);
+        TargetingParams.setUserAge(USER_AGE);
+        TargetingParams.addUserKeyword(USER_KEYWORDS);
+        TargetingParams.setUserCustomData(USER_CUSTOM);
+        TargetingParams.setGender(TargetingParams.GENDER.MALE);
+        TargetingParams.setBuyerId(USER_BUYER_ID);
+        TargetingParams.setUserExt(new ExtObject());
+        TargetingParams.setUserLatLng(USER_LAT, USER_LON);
 
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
         AdRequestInput adRequestInput = new AdRequestInput();
@@ -315,7 +323,7 @@ public class BasicParameterBuilderTest {
     @Test
     public void whenAppendParametersAndTargetingAccessControlNotEmpty_BiddersAddedToExt()
     throws JSONException {
-        Targeting.addBidderToAccessControlList("bidder");
+        TargetingParams.addBidderToAccessControlList("bidder");
 
         AdConfiguration adConfiguration = new AdConfiguration();
         adConfiguration.setConfigId("config");
@@ -333,7 +341,7 @@ public class BasicParameterBuilderTest {
     @Test
     public void whenAppendParametersAndTargetingUserDataNotEmpty_UserDataAddedToUserExt()
             throws JSONException {
-        Targeting.addUserData("user", "userData");
+        TargetingParams.addUserData("user", "userData");
 
         AdConfiguration adConfiguration = new AdConfiguration();
         adConfiguration.setConfigId("config");
@@ -509,8 +517,15 @@ public class BasicParameterBuilderTest {
         user.customData = USER_CUSTOM;
         user.gender = USER_GENDER;
         user.buyerUid = USER_BUYER_ID;
-        user.ext = new Ext();
-        user.ext.put("eids", Targeting.getEids());
+        List<ExternalUserId> extendedUserIds = TargetingParams.fetchStoredExternalUserIds();
+        if (extendedUserIds != null && extendedUserIds.size() > 0) {
+            user.ext = new ExtObject();
+            JSONArray idsJson = new JSONArray();
+            for (ExternalUserId id : extendedUserIds) {
+                idsJson.put(id.getJson());
+            }
+            user.ext.put("eids", idsJson);
+        }
 
         final Geo userGeo = user.getGeo();
         userGeo.lat = USER_LAT;

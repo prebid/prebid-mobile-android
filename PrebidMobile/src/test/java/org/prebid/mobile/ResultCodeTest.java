@@ -30,6 +30,7 @@ import org.prebid.mobile.tasksmanager.BackgroundThreadExecutor;
 import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
+import org.prebid.mobile.unification.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.Shadows;
@@ -38,7 +39,6 @@ import org.robolectric.shadows.ShadowLooper;
 import org.robolectric.shadows.ShadowNetworkInfo;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -261,11 +261,14 @@ public class ResultCodeTest extends BaseSetup {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
-        HashSet<AdSize> sizes = new HashSet<>();
-        sizes.add(new AdSize(0, 250));
-        RequestParams requestParams = new RequestParams("e2edc23f-0b3b-4203-81b5-7cc97132f418", AdType.BANNER, sizes);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("e2edc23f-0b3b-4203-81b5-7cc97132f418");
+        configuration.setAdType(AdType.BANNER);
+        configuration.addSize(new AdSize(0, 250));
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         @SuppressWarnings("unchecked")
         ArrayList<PrebidServerAdapter.ServerConnector> connectors = (ArrayList<PrebidServerAdapter.ServerConnector>) FieldUtils.readDeclaredField(adapter, "serverConnectors", true);
@@ -398,11 +401,14 @@ public class ResultCodeTest extends BaseSetup {
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
-        HashSet<AdSize> sizes = new HashSet<>();
-        sizes.add(new AdSize(0, 250));
-        RequestParams requestParams = new RequestParams("e2edc23f-0b3b-4203-81b5-7cc97132f418", AdType.BANNER, sizes);
+
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("e2edc23f-0b3b-4203-81b5-7cc97132f418");
+        configuration.setAdType(AdType.BANNER);
+        configuration.addSize(new AdSize(0, 250));
+
         String uuid = UUID.randomUUID().toString();
-        adapter.requestDemand(requestParams, mockListener, uuid);
+        adapter.requestDemand(configuration, mockListener, uuid);
 
         ShadowLooper bgLooper = Shadows.shadowOf(((BackgroundThreadExecutor) TasksManager.getInstance().backgroundThreadExecutor).getBackgroundHandler().getLooper());
         bgLooper.runToEndOfTasks();

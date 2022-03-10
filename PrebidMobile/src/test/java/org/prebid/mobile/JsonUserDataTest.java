@@ -2,6 +2,7 @@ package org.prebid.mobile;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.prebid.mobile.unification.AdUnitConfiguration;
 
 import java.util.ArrayList;
 
@@ -24,21 +25,22 @@ public class JsonUserDataTest {
         dataObject.addSegment(segment);
         userDataObjects.add(dataObject);
 
-        RequestParams requestParams = new RequestParams(
-                "configId", AdType.BANNER,
-                null, null, null, null, null, null, null, null,
-                userDataObjects
-        );
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setConfigId("configId");
+        configuration.setAdType(AdType.BANNER);
+        for (DataObject data : userDataObjects) {
+            configuration.addUserData(data);
+        }
 
-        assertEquals(1, requestParams.getUserData().size());
-        assertThat(requestParams.getUserData(), Matchers.contains(dataObject));
+        assertEquals(1, configuration.getUserData().size());
+        assertThat(configuration.getUserData(), Matchers.contains(dataObject));
 
         DataObject secondObject = new DataObject();
         secondObject.setId("secondId");
-        userDataObjects.add(secondObject);
+        configuration.addUserData(secondObject);
 
-        assertEquals(2, requestParams.getUserData().size());
-        assertThat(requestParams.getUserData(), hasItems(
+        assertEquals(2, configuration.getUserData().size());
+        assertThat(configuration.getUserData(), hasItems(
                 dataObject,
                 secondObject
         ));

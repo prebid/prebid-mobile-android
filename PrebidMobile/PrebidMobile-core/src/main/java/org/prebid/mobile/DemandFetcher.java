@@ -21,8 +21,8 @@ import android.os.HandlerThread;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-
 import org.prebid.mobile.tasksmanager.TasksManager;
+import org.prebid.mobile.unification.BaseAdUnitConfigurationInterface;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -43,7 +43,7 @@ class DemandFetcher {
     private RequestRunnable requestRunnable;
     private long lastFetchTime = -1;
     private long timePausedAt = -1;
-    private RequestParams requestParams;
+    private BaseAdUnitConfigurationInterface configuration;
 
     DemandFetcher(@NonNull Object adObj) {
         this.state = STATE.STOPPED;
@@ -59,8 +59,8 @@ class DemandFetcher {
         this.listener = listener;
     }
 
-    void setRequestParams(RequestParams requestParams) {
-        this.requestParams = requestParams;
+    void setConfiguration(BaseAdUnitConfigurationInterface configuration) {
+        this.configuration = configuration;
     }
 
 
@@ -189,7 +189,7 @@ class DemandFetcher {
 
                 @Override
                 public void run() {
-                    demandAdapter.requestDemand(requestParams, new DemandAdapter.DemandAdapterListener() {
+                    demandAdapter.requestDemand(configuration, new DemandAdapter.DemandAdapterListener() {
                         @Override
                         @MainThread
                         public void onDemandReady(final HashMap<String, String> demand, String auctionId) {
