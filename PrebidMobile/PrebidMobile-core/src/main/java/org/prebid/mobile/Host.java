@@ -21,7 +21,7 @@ public enum Host {
     /**
      * URL <a href=https://prebid.adnxs.com/pbs/v1/openrtb2/auction>https://prebid.adnxs.com/pbs/v1/openrtb2/auction</a>
      */
-    APPNEXUS("https://prebid.adnxs.com/pbs/v1/openrtb2/auction"),
+    APPNEXUS("https://ib.adnxs.com/openrtb2/prebid"),
 
     /**
      * URL <a href=https://prebid-server.rubiconproject.com/openrtb2/auction>https://prebid-server.rubiconproject.com/openrtb2/auction</a>

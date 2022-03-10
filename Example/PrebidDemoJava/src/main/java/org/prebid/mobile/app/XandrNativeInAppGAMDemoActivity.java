@@ -1,6 +1,7 @@
 package org.prebid.mobile.app;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -101,6 +102,7 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
+        PrebidMobile.assignNativeAssetID(true);
         loadInAppNative();
     }
 
@@ -109,7 +111,7 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
         custom.setHostUrl("https://ib.adnxs.com/openrtb2/prebid");
         PrebidMobile.setPrebidServerHost(custom);
         PrebidMobile.setPrebidServerAccountId("9325"); //1601
-        NativeAdUnit nativeAdUnit = new NativeAdUnit("18491617"); //22650327
+        NativeAdUnit nativeAdUnit = new NativeAdUnit("23986603"); //22650327
     }
 
     private void loadInAppNative() {
@@ -135,6 +137,7 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
         NativeTitleAsset title = new NativeTitleAsset();
         title.setLength(90);
         title.setRequired(true);
+
         nativeAdUnit.addAsset(title);
         NativeImageAsset icon = new NativeImageAsset();
         icon.setImageType(NativeImageAsset.IMAGE_TYPE.ICON);
@@ -144,15 +147,15 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
         nativeAdUnit.addAsset(icon);
         NativeImageAsset image = new NativeImageAsset();
         image.setImageType(NativeImageAsset.IMAGE_TYPE.MAIN);
-        image.setHMin(200);
-        image.setWMin(200);
+        image.setHMin(100);
+        image.setWMin(100);
         image.setRequired(true);
         nativeAdUnit.addAsset(image);
-        NativeDataAsset data = new NativeDataAsset();
-        data.setLen(90);
-        data.setDataType(NativeDataAsset.DATA_TYPE.SPONSORED);
-        data.setRequired(true);
-        nativeAdUnit.addAsset(data);
+//        NativeDataAsset data = new NativeDataAsset();
+//        data.setLen(90);
+//        data.setDataType(NativeDataAsset.DATA_TYPE.SPONSORED);
+//        data.setRequired(true);
+//        nativeAdUnit.addAsset(data);
         NativeDataAsset body = new NativeDataAsset();
         body.setRequired(true);
         body.setDataType(NativeDataAsset.DATA_TYPE.DESC);
@@ -170,6 +173,7 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
             @Override
             public void onComplete(ResultCode resultCode) {
                 if (resultCode == ResultCode.SUCCESS) {
+                    Log.d("Kowshick","Prebid Native Demand Fetch Success Loading DFP");
                     loadDfp(adManagerAdRequest);
                 } else {
                     Toast.makeText(XandrNativeInAppGAMDemoActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();

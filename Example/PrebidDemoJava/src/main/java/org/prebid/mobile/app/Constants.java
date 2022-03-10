@@ -28,11 +28,11 @@ public class Constants {
 
     //AppNexus
     // Prebid server config ids
-    static final String PBS_ACCOUNT_ID_APPNEXUS = "bfa84af2-bd16-4d35-96ad-31c6bb888df0";
-    static final String PBS_CONFIG_ID_300x250_APPNEXUS = "6ace8c7d-88c0-4623-8117-75bc3f0a2e45";
-    static final String PBS_CONFIG_ID_320x50_APPNEXUS = "625c6125-f19e-4d5b-95c5-55501526b2a4";
+    static final String PBS_ACCOUNT_ID_APPNEXUS = "9325";
+    static final String PBS_CONFIG_ID_300x250_APPNEXUS = "23986602";
+    static final String PBS_CONFIG_ID_320x50_APPNEXUS = "23986602";
     static final String PBS_CONFIG_ID_INTERSTITIAL_APPNEXUS = "625c6125-f19e-4d5b-95c5-55501526b2a4";
-    static final String PBS_CONFIG_ID_NATIVE_APPNEXUS = "03f3341f-1737-402c-bc7d-bc81dfebe9cf"; // 25e17008-5081-4676-94d5-923ced4359d3
+    static final String PBS_CONFIG_ID_NATIVE_APPNEXUS = "16795459"; // 25e17008-5081-4676-94d5-923ced4359d3
     // MoPub ad unit ids
     static final String MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS = "a935eac11acd416f92640411234fbba6";
     static final String MOPUB_BANNER_ADUNIT_ID_320x50_APPNEXUS = "9dbccb87ab4d4a178450c0bc986b4571";
