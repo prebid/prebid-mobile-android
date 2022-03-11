@@ -423,12 +423,13 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_in_app_interstitial_video_320_480_end_card),
                     ppmInterstitialAction,
-                    ppmVideoTagList,
+                    ppmVideoTempTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_rewarded_end_card_320_480,
+                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC
+                        MIN_HEIGHT_PERC,
+                        R.string.response_prebid_video_interstitial_320_480_with_end_card
                     )
                 )
             )
