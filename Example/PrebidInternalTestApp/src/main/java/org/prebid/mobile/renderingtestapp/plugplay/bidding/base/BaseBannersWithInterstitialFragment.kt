@@ -36,8 +36,8 @@ abstract class BaseBannersWithInterstitialFragment : AdFragment() {
     abstract fun loadBanners()
 
     override fun initAd() {
-        bannerConfigId = getString(R.string.mock_config_id_banner_320x50)
-        interstitialConfigId = getString(R.string.mock_config_id_interstitial_320_480)
+        bannerConfigId = getString(R.string.imp_prebid_id_banner_320x50)
+        interstitialConfigId = getString(R.string.imp_prebid_id_interstitial_320_480)
     }
 
     override fun loadAd() {
