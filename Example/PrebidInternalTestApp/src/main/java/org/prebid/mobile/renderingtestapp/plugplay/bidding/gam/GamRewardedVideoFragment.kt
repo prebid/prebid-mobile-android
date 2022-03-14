@@ -25,6 +25,7 @@ class GamRewardedVideoFragment : BaseBidRewardedFragment() {
     override fun initRewardedAd(adUnitId: String?, configId: String?) {
         val eventHandler = GamRewardedEventHandler(activity, adUnitId)
         rewardedAdUnit = RewardedAdUnit(context, configId, eventHandler)
-        rewardedAdUnit?.setRewardedAdUnitListener(this)
+        rewardedAdUnit?.setRewardedAdUnitListener(createRewardedAdUnitListener())
     }
+
 }

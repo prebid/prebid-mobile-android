@@ -83,6 +83,7 @@ modules=(
   "PrebidMobile-mopubAdapters"
   "PrebidMobile-admobAdapters"
 )
+
 projectPaths=(
   "$BASEDIR/PrebidMobile"
   "$BASEDIR/PrebidMobile/PrebidMobile-core"
@@ -101,7 +102,7 @@ for n in ${!modules[@]}; do
 	# clean existing build results, exclude test task, and assemble new release build
 	(./gradlew -i --no-daemon ${modules[$n]}:assembleRelease > $LOGPATH/build.log 2>&1 || die "Build failed, check log in $LOGPATH/build.log" )
 
-  # Make folder generated/temp/output
+    # Make folder generated/temp/output
 	echoX "Packaging ${modules[$n]}"
 	mkdir $TEMPDIR
 	cd $TEMPDIR
@@ -185,13 +186,14 @@ mkdir $TEMPDIR
 
 cd $TEMPDIR; 
 
-unzip -uo $OUTDIR/omsdk.jar
-unzip -uo $OUTDIR/PrebidMobile.jar
-unzip -uo $OUTDIR/PrebidMobile-core.jar
-unzip -uo $OUTDIR/PrebidMobile-rendering.jar
+unzip -qq -uo $OUTDIR/omsdk.jar
+unzip -qq -uo $OUTDIR/PrebidMobile.jar
+unzip -qq -uo $OUTDIR/PrebidMobile-core.jar
+unzip -qq -uo $OUTDIR/PrebidMobile-rendering.jar
 
 # unzip second proguard
-unzip -B $OUTDIR/PrebidMobile.jar "META-INF/proguard/proguard.pro"
+unzip -qq -B $OUTDIR/PrebidMobile.jar "META-INF/proguard/proguard.pro"
+
 # append text from second proguard
 cat "$TEMPDIR/META-INF/proguard/proguard.pro~" >> "$TEMPDIR/META-INF/proguard/proguard.pro"
 rm "$TEMPDIR/META-INF/proguard/proguard.pro~"

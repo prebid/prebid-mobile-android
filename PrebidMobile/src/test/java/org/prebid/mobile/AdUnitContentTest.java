@@ -1,7 +1,10 @@
 package org.prebid.mobile;
 
 import android.util.Log;
-
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.Dispatcher;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,11 +22,6 @@ import org.robolectric.shadows.ShadowLooper;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-
-import okhttp3.HttpUrl;
-import okhttp3.mockwebserver.Dispatcher;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.RecordedRequest;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -67,7 +65,7 @@ public class AdUnitContentTest extends BaseSetup {
         BannerAdUnit adUnit = new BannerAdUnit("123456", 320, 50);
         ContentObject contentObject = new ContentObject();
         contentObject.setUrl(expectedContentUrl);
-        adUnit.addContent(contentObject);
+        adUnit.setAppContent(contentObject);
 
 
         adUnit.fetchDemand(new OnCompleteListener2() {

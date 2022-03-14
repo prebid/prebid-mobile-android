@@ -1,13 +1,12 @@
 package org.prebid.mobile.rendering.bidding.display;
 
 import androidx.annotation.NonNull;
-import org.prebid.mobile.NativeAdUnit;
-import org.prebid.mobile.NativeAsset;
-import org.prebid.mobile.NativeEventTracker;
-import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.*;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
+
+import java.util.ArrayList;
 
 public class MediationNativeAdUnit {
 
@@ -78,6 +77,26 @@ public class MediationNativeAdUnit {
 
     public void setDUrlSupport(boolean support) {
         nativeAdUnit.setDUrlSupport(support);
+    }
+
+    public void setAppContent(ContentObject content) {
+        nativeAdUnit.setAppContent(content);
+    }
+
+    public ContentObject getAppContent() {
+        return nativeAdUnit.getAppContent();
+    }
+
+    public void addUserData(DataObject dataObject) {
+        nativeAdUnit.addUserData(dataObject);
+    }
+
+    public void clearUserData() {
+        nativeAdUnit.clearUserData();
+    }
+
+    public ArrayList<DataObject> getUserData() {
+        return nativeAdUnit.getUserData();
     }
 
     private FetchDemandResult convertResultCode(ResultCode originalResult) {

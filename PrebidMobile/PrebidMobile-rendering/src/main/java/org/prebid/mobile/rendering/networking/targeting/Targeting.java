@@ -17,20 +17,13 @@
 package org.prebid.mobile.rendering.networking.targeting;
 
 import android.util.Pair;
-
+import androidx.annotation.VisibleForTesting;
 import org.json.JSONArray;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.networking.parameters.UserParameters;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Set;
-
-import androidx.annotation.VisibleForTesting;
+import java.util.*;
 
 public class Targeting {
     static final String KEY_AGE = "age";
@@ -244,7 +237,8 @@ public class Targeting {
         return new HashSet<>(sAccessControlList);
     }
 
-    /// user.ext.data
+    /// app.ext.data
+
 
     /**
      * Obtains the user data keyword & value for global user targeting
@@ -279,7 +273,6 @@ public class Targeting {
     public static Map<String, Set<String>> getUserDataDictionary() {
         return new HashMap<>(sUserDataMap);
     }
-    /// app.ext.data
 
     /**
      * Obtains the context data keyword & value context for global context targeting

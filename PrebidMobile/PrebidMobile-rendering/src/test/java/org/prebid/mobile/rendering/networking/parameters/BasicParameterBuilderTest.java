@@ -26,6 +26,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.DataObject;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.AdConfiguration;
@@ -331,7 +332,7 @@ public class BasicParameterBuilderTest {
 
     @Test
     public void whenAppendParametersAndTargetingUserDataNotEmpty_UserDataAddedToUserExt()
-    throws JSONException {
+            throws JSONException {
         Targeting.addUserData("user", "userData");
 
         AdConfiguration adConfiguration = new AdConfiguration();
@@ -345,6 +346,30 @@ public class BasicParameterBuilderTest {
         JSONObject userDataJson = (JSONObject) user.getExt().getMap().get("data");
         assertTrue(userDataJson.has("user"));
         assertEquals("userData", userDataJson.getJSONArray("user").get(0));
+    }
+
+    @Test
+    public void whenAppendUserData_UserDataAddedToUser()
+            throws JSONException {
+        AdConfiguration adConfiguration = new AdConfiguration();
+        adConfiguration.setConfigId("config");
+        DataObject dataObject = new DataObject();
+        String testName = "testDataObject";
+        dataObject.setName(testName);
+        adConfiguration.addUserData(dataObject);
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), false);
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        User user = adRequestInput.getBidRequest().getUser();
+        assertEquals(1, user.dataObjects.size());
+        JSONObject jsonUser = user.getJsonObject();
+        assertTrue(jsonUser.has("data"));
+        JSONArray jsonData = jsonUser.getJSONArray("data");
+        JSONObject jsonDataObject = jsonData.getJSONObject(0);
+        assertTrue(jsonDataObject.has("name"));
+        String dataName = jsonDataObject.getString("name");
+        assertEquals(testName, dataName);
     }
 
     @Test

@@ -880,7 +880,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         sizes.add(new AdSize(320, 50));
         ContentObject contentObject = new ContentObject();
         contentObject.setUrl(expectedContentUrl);
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, null, null, null, null, null, null, contentObject);
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, null, null, null, null, null, null, contentObject, new ArrayList<DataObject>());
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
@@ -1314,7 +1314,8 @@ public class PrebidServerAdapterTest extends BaseSetup {
         Robolectric.flushBackgroundThreadScheduler();
         Robolectric.flushForegroundThreadScheduler();
 
-        Headers headers = server.takeRequest().getHeaders();
+        RecordedRequest recordedRequest = server.takeRequest();
+        Headers headers = recordedRequest.getHeaders();
         assertEquals("test-value", headers.get("test-key"));
     }
 
@@ -1805,7 +1806,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, null, null, null, null, parameters, null, null);
+        RequestParams requestParams = new RequestParams("67890", AdType.BANNER, sizes, null, null, null, null, parameters, null, null, new ArrayList<DataObject>());
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
@@ -1959,7 +1960,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(500, 700));
 
-        RequestParams requestParams = new RequestParams("67890", AdType.VIDEO, sizes, null, null, null, null, null, parameters, null);
+        RequestParams requestParams = new RequestParams("67890", AdType.VIDEO, sizes, null, null, null, null, null, parameters, null, new ArrayList<DataObject>());
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
@@ -2196,6 +2197,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         assertEquals(listKey2.size(), 2);
         assertThat(listKey2, containsInAnyOrder("value20", "value21"));
     }
+
 
     @Test
     public void testPostDataWithGlobalContextData() throws Exception {
@@ -2435,7 +2437,7 @@ public class PrebidServerAdapterTest extends BaseSetup {
         HashSet<AdSize> sizes = new HashSet<>();
         sizes.add(new AdSize(300, 250));
 
-        RequestParams requestParams = new RequestParams("67890", adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, adSlot, bannerParameters, videoParameters, null);
+        RequestParams requestParams = new RequestParams("67890", adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, adSlot, bannerParameters, videoParameters, null, new ArrayList<DataObject>());
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(requestParams, mockListener, uuid);
         @SuppressWarnings("unchecked")
