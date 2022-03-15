@@ -1198,7 +1198,7 @@ class DemoItemProvider private constructor() {
                     mopubRewardedAction, mopubVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_no_bids,
-                        R.string.mopub_rewarded_video_bidding_no_bids,R.string.response_prebid_no_bids
+                        R.string.mopub_rewarded_video_bidding_no_bids,storedResponse = R.string.response_prebid_no_bids
                     )
                 )
             )
