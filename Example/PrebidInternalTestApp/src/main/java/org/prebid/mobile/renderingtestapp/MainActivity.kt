@@ -35,8 +35,10 @@ import androidx.preference.PreferenceManager
 import androidx.test.espresso.IdlingResource
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
+import org.prebid.mobile.ExternalUserId
 import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener
 import org.prebid.mobile.renderingtestapp.plugplay.utilities.consent.ConsentUpdateManager
@@ -223,7 +225,23 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
     private fun extractEidsExtras() {
         val eidsJsonString = intent.extras?.getString(EXTRA_EIDS)
         val eidsJsonArray = JSONArray(eidsJsonString)
-        TargetingParams.setExtendedUserIds(eidsJsonArray)
+        for (i in 0 until eidsJsonArray.length()) {
+            val jsonObject = eidsJsonArray.get(i)
+            if (jsonObject is JsonObject) {
+                val source = jsonObject.get("source").asString
+                val identifier = jsonObject.get("identifier").asString
+                if (source == null || identifier == null) {
+                    val aType = jsonObject.get("atype")
+                    TargetingParams.storeExternalUserId(
+                        if (aType == null) {
+                            ExternalUserId(source, identifier, null, null)
+                        } else {
+                            ExternalUserId(source, identifier, aType.asInt, null)
+                        }
+                    )
+                }
+            }
+        }
     }
 
     private fun handleConsentExtra() {
