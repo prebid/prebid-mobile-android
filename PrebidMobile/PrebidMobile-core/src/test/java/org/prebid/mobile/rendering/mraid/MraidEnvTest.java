@@ -19,6 +19,7 @@ package org.prebid.mobile.rendering.mraid;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.prebid.mobile.PrebidMobile;
 
 import static junit.framework.TestCase.assertEquals;
 

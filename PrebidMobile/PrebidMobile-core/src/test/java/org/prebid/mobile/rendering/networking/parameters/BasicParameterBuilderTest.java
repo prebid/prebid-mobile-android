@@ -399,7 +399,7 @@ public class BasicParameterBuilderTest {
         BidRequest bidRequest = new BidRequest();
         bidRequest.setId(uuid);
         boolean isVideo = adConfiguration.isAdType(AdConfiguration.AdUnitIdentifierType.VAST);
-        bidRequest.getExt().put("prebid", Prebid.getJsonObjectForBidRequest(PrebidMobile.getAccountId(), isVideo));
+        bidRequest.getExt().put("prebid", Prebid.getJsonObjectForBidRequest(PrebidMobile.getPrebidServerAccountId(), isVideo));
         //if coppaEnabled - set 1, else No coppa is sent
         if (PrebidMobile.isCoppaEnabled) {
             bidRequest.getRegs().coppa = 1;

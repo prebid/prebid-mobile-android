@@ -35,7 +35,7 @@ public class TargetingParams {
     public static final String BIDDER_NAME_RUBICON_PROJECT = "rubicon";
     private static final String TAG = "TargetingParams";
 
-    private static Integer yearOfBirth = 0;
+    private static int yearOfBirth = 0;
     private static Integer userAge = null;
     private static GENDER gender = GENDER.UNKNOWN;
     private static String userId;
@@ -66,12 +66,12 @@ public class TargetingParams {
 
     public static void setUserAge(@Nullable Integer age) {
         if (age == null) {
-            yearOfBirth = null;
+            yearOfBirth = 0;
             userAge = null;
             return;
         }
 
-        if (age < 0 || age > 120) {
+        if (age <= 0 || age > 120) {
             LogUtil.e(TAG, "Can't set age, it must be in range from 0 to 120");
             return;
         }
@@ -151,6 +151,7 @@ public class TargetingParams {
      *
      * @return The user's gender.
      */
+    @NonNull
     public static GENDER getGender() {
         return gender;
     }
@@ -162,8 +163,10 @@ public class TargetingParams {
      *
      * @param gender The user's gender.
      */
-    public static void setGender(GENDER gender) {
-        TargetingParams.gender = gender;
+    public static void setGender(@Nullable GENDER gender) {
+        if (gender != null) {
+            TargetingParams.gender = gender;
+        }
     }
 
     /**

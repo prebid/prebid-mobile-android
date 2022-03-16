@@ -22,6 +22,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat;
@@ -42,13 +43,13 @@ public class MediationInterstitialAdUnitTest {
     @Before
     public void setUp() throws Exception {
         mContext = Robolectric.buildActivity(Activity.class).create().get();
-        PrebidMobile.setAccountId("id");
+        PrebidMobile.setPrebidServerAccountId("id");
         mMediationInterstitialAdUnit = new MediationInterstitialAdUnit(mContext, "config", new AdSize(1, 2), new MockMediationUtils());
     }
 
     @After
     public void cleanup() {
-        PrebidMobile.setAccountId(null);
+        PrebidMobile.setPrebidServerAccountId(null);
     }
 
     @Test

@@ -144,7 +144,6 @@ public class TargetingParamsTest {
         assertNull(TargetingParams.getUserCustomData());
         assertNull(TargetingParams.getUserExt());
         assertNull(TargetingParams.getUserId());
-        assertNull(TargetingParams.getGender());
         assertNull(TargetingParams.getUserLatLng());
     }
 }

@@ -230,7 +230,7 @@ class PrebidServerAdapter implements DemandAdapter {
                 timeoutCountDownTimer.cancel();
             }
         }
-        
+
         private void removeThisTask() {
             @Nullable
             PrebidServerAdapter prebidServerAdapter = this.prebidServerAdapter.get();
@@ -413,6 +413,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
             return source;
         }
+
         private JSONObject getRequestExtData() {
             JSONObject ext = new JSONObject();
             JSONObject prebid = new JSONObject();
@@ -1005,12 +1006,10 @@ class PrebidServerAdapter implements DemandAdapter {
                         JSONArray uidArray = new JSONArray();
                         JSONObject uidObject = new JSONObject();
                         uidObject.put("id", externaluserId.getIdentifier());
-                        if (externaluserId.getAtype() != null)
-                        {
+                        if (externaluserId.getAtype() != null) {
                             uidObject.put("atype", externaluserId.getAtype());
                         }
-                        if (externaluserId.getExt() != null)
-                        {
+                        if (externaluserId.getExt() != null) {
                             JSONObject extObject = new JSONObject(externaluserId.getExt());
                             uidObject.put("ext", extObject);
                         }
@@ -1019,7 +1018,7 @@ class PrebidServerAdapter implements DemandAdapter {
                         transformedUserIdArray.put(transformedUserIdObject);
                     }
                 }
-            }catch (JSONException e) {
+            } catch (JSONException e) {
                 LogUtil.d("PrebidServerAdapter getExternalUserIdArray() " + e.getMessage());
             }
 
@@ -1066,7 +1065,7 @@ class PrebidServerAdapter implements DemandAdapter {
             Boolean gdprApplies = TargetingParams.isSubjectToGDPR();
             Boolean deviceAccessConsent = TargetingParams.getDeviceAccessConsent();
 
-            if((deviceAccessConsent == null && (gdprApplies == null || Boolean.FALSE.equals(gdprApplies)))
+            if ((deviceAccessConsent == null && (gdprApplies == null || Boolean.FALSE.equals(gdprApplies)))
                     || Boolean.TRUE.equals(deviceAccessConsent)) {
 
                 setDeviceId = true;

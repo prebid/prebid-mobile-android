@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.enums.BannerAdPosition;
@@ -53,7 +54,7 @@ public class MediationBannerAdUnitTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mContext = Robolectric.buildActivity(Activity.class).create().get();
-        PrebidMobile.setAccountId("id");
+        PrebidMobile.setPrebidServerAccountId("id");
         mMediationBannerAdUnit = new MediationBannerAdUnit(mContext, "config", mock(AdSize.class), new MockMediationUtils());
 
         WhiteBox.setInternalState(mMediationBannerAdUnit, "mBidLoader", mMockBidLoader);
@@ -64,7 +65,7 @@ public class MediationBannerAdUnitTest {
 
     @After
     public void cleanup() {
-        PrebidMobile.setAccountId(null);
+        PrebidMobile.setPrebidServerAccountId(null);
     }
 
     @Test
