@@ -16,16 +16,7 @@
 
 package org.prebid.mobile;
 
-import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
-import android.text.TextUtils;
-import android.util.AndroidRuntimeException;
-import android.webkit.WebView;
 
 class PrebidServerSettings {
     static final String AN_UUID = "uuid2";
@@ -63,51 +54,11 @@ class PrebidServerSettings {
     static final String deviceMake = Build.MANUFACTURER;
     static final String deviceModel = Build.MODEL;
     static final String os = "android";
-    static String userAgent = null;
     static String sdk_version = "1.13.0-beta2";
-    static String pkgVersion = "";
     static String appName = "";
     private static int mnc = -1;
     private static int mcc = -1;
     private static String carrierName = null;
-
-
-    static synchronized void update(final Context context) {
-        if (userAgent == null) {
-            // todo update this to latest method in API 0.5.1
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        WebView wv = new WebView(context);
-                        userAgent = wv.getSettings().getUserAgentString();
-                    } catch (AndroidRuntimeException e) {
-                        userAgent = "unavailable";
-                    }
-                }
-            });
-        }
-        if (TextUtils.isEmpty(pkgVersion)) {
-            try {
-                PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-                pkgVersion = pInfo.versionName;
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-        if (TextUtils.isEmpty(appName)) {
-            ApplicationInfo applicationInfo = context.getApplicationInfo();
-            int stringId = applicationInfo.labelRes;
-            if (stringId == 0) {
-                if (applicationInfo.nonLocalizedLabel != null) {
-                    appName = applicationInfo.nonLocalizedLabel.toString();
-                }
-            } else {
-                appName = context.getString(stringId);
-            }
-        }
-    }
 
 
     static synchronized int getMCC() {

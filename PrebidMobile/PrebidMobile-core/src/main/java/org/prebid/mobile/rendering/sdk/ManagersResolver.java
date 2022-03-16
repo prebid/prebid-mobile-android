@@ -18,6 +18,7 @@ package org.prebid.mobile.rendering.sdk;
 
 import android.content.Context;
 import android.util.Log;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.*;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
@@ -181,7 +182,7 @@ public class ManagersResolver {
             LogUtil.error(TAG, "Failed to register managers: " + Log.getStackTraceString(e));
         }
         finally {
-            PrebidRenderingSettings.increaseTaskCount();
+            PrebidMobile.increaseTaskCount();
         }
     }
 

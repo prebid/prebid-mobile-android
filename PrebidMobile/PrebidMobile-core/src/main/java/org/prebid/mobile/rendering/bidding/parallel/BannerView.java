@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -46,7 +47,6 @@ import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
 import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
@@ -413,12 +413,8 @@ public class BannerView extends FrameLayout {
     }
 
     private void initPrebidRenderingSdk() {
-        try {
-            PrebidRenderingSettings.initializeSDK(getContext(), () -> {
-            });
-        } catch (AdException e) {
-            e.printStackTrace();
-        }
+        PrebidMobile.setApplicationContext(getContext(), () -> {
+        });
     }
 
     private void initBidLoader() {

@@ -28,7 +28,6 @@ import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.App;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.robolectric.RobolectricTestRunner;
@@ -77,7 +76,7 @@ public class AppInfoParameterBuilderTest {
         expectedApp.bundle = APP_BUNDLE;
         expectedApp.storeurl = expectedStoreurl;
         expectedApp.getPublisher().name = expectedPublisherName;
-        expectedApp.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidRenderingSettings.SDK_VERSION));
+        expectedApp.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidMobile.SDK_VERSION));
         ContentObject expectedContentObject = new ContentObject();
         expectedContentObject.setUrl("test.com");
         expectedApp.contentObject = expectedContentObject;

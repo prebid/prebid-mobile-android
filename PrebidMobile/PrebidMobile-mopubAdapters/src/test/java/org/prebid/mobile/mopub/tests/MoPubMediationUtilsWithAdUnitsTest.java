@@ -19,7 +19,6 @@ import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.enums.Host;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -48,8 +47,8 @@ public class MoPubMediationUtilsWithAdUnitsTest {
 
         context = Robolectric.buildActivity(Activity.class).create().get();
 
-        PrebidRenderingSettings.setAccountId("id");
-        PrebidRenderingSettings.setBidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId("id");
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
     }
 
     @Test

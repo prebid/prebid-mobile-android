@@ -20,7 +20,7 @@ import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.io.IOException;
@@ -55,7 +55,7 @@ public class UrlResolutionTask extends AsyncTask<String, Void, String> {
             while (locationUrl != null && redirectCount < GetOriginalUrlTask.MAX_REDIRECTS) {
                 // if location url is not http(s), assume it's an Android deep link
                 // this scheme will fail URL validation so we have to check early
-                if (!locationUrl.startsWith(PrebidRenderingSettings.SCHEME_HTTP)) {
+                if (!locationUrl.startsWith(PrebidMobile.SCHEME_HTTP)) {
                     return locationUrl;
                 }
 

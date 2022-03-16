@@ -42,7 +42,7 @@ import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
-public class PrebidRenderingSettingsTest {
+public class PrebidMobileTest {
 
     @Before
     public void setUp() throws Exception {
@@ -64,8 +64,8 @@ public class PrebidRenderingSettingsTest {
 
     @After
     public void tearDown() throws Exception {
-        PrebidRenderingSettings.setStoredAuctionResponse(null);
-        PrebidRenderingSettings.clearStoredBidResponses();
+        PrebidMobile.setStoredAuctionResponse(null);
+        PrebidMobile.clearStoredBidResponses();
     }
 
     @Test
@@ -76,36 +76,36 @@ public class PrebidRenderingSettingsTest {
     @Test
     public void testOnSDKInitWithoutVideoPreCache() throws Exception {
         //test if sdkinit is sent even if precache fails for any reason, as it is optional & should not avoid further sdk actions
-        WhiteBox.field(PrebidRenderingSettings.class, "sIsSdkInitialized").set(null, false);
+        WhiteBox.field(PrebidMobile.class, "sIsSdkInitialized").set(null, false);
         Context context = Robolectric.buildActivity(Activity.class).create().get();
         SdkInitListener mockSdkInitListener = mock(SdkInitListener.class);
 
-        PrebidRenderingSettings.initializeSDK(context, mockSdkInitListener);
+        PrebidMobile.initializeSDK(context, mockSdkInitListener);
         verify(mockSdkInitListener, times(1)).onSDKInit();
     }
 
     @Test
     public void testWebViewHttpsEnabledTrue() {
-        PrebidRenderingSettings.useHttpsWebViewBaseUrl(true);
+        PrebidMobile.useHttpsWebViewBaseUrl(true);
 
-        assertEquals(PrebidRenderingSettings.SCHEME_HTTPS, PrebidRenderingSettings.getWebViewBaseUrlScheme());
+        assertEquals(PrebidMobile.SCHEME_HTTPS, PrebidMobile.getWebViewBaseUrlScheme());
 
-        PrebidRenderingSettings.useHttpsWebViewBaseUrl(false);
+        PrebidMobile.useHttpsWebViewBaseUrl(false);
     }
 
     @Test
     public void testWebViewHttpsEnabledFalse() {
-        PrebidRenderingSettings.useHttpsWebViewBaseUrl(false);
+        PrebidMobile.useHttpsWebViewBaseUrl(false);
 
-        assertEquals(PrebidRenderingSettings.SCHEME_HTTP, PrebidRenderingSettings.getWebViewBaseUrlScheme());
+        assertEquals(PrebidMobile.SCHEME_HTTP, PrebidMobile.getWebViewBaseUrlScheme());
     }
 
     @Test
     public void setBidServerHost_nullValue_ReturnDefaultBidServerHost() {
-        String expected = PrebidRenderingSettings.getBidServerHost().getHostUrl();
+        String expected = PrebidMobile.getBidServerHost().getHostUrl();
 
-        PrebidRenderingSettings.setBidServerHost(null);
-        assertEquals(expected, PrebidRenderingSettings.getBidServerHost().getHostUrl());
+        PrebidMobile.setBidServerHost(null);
+        assertEquals(expected, PrebidMobile.getBidServerHost().getHostUrl());
     }
 
     @Test
@@ -114,16 +114,16 @@ public class PrebidRenderingSettingsTest {
         final Host host = Host.CUSTOM;
         host.setHostUrl(hostUrl);
 
-        PrebidRenderingSettings.setBidServerHost(host);
+        PrebidMobile.setBidServerHost(host);
 
-        assertEquals(host, PrebidRenderingSettings.getBidServerHost());
+        assertEquals(host, PrebidMobile.getBidServerHost());
     }
 
     @Test
     public void setStoreAuctionResponse_EqualsGetStoredAuctionResponse() {
         final String expected = "11111";
-        PrebidRenderingSettings.setStoredAuctionResponse(expected);
-        assertEquals(expected, PrebidRenderingSettings.getStoredAuctionResponse());
+        PrebidMobile.setStoredAuctionResponse(expected);
+        assertEquals(expected, PrebidMobile.getStoredAuctionResponse());
     }
 
     @Test
@@ -132,13 +132,13 @@ public class PrebidRenderingSettingsTest {
         expectedMap.put("bidder1", "1111");
         expectedMap.put("bidder2", "2222");
 
-        PrebidRenderingSettings.addStoredBidResponse("bidder1", "1111");
-        PrebidRenderingSettings.addStoredBidResponse("bidder2", "2222");
+        PrebidMobile.addStoredBidResponse("bidder1", "1111");
+        PrebidMobile.addStoredBidResponse("bidder2", "2222");
 
-        assertEquals(expectedMap, PrebidRenderingSettings.getStoredBidResponseMap());
+        assertEquals(expectedMap, PrebidMobile.getStoredBidResponseMap());
 
-        PrebidRenderingSettings.clearStoredBidResponses();
+        PrebidMobile.clearStoredBidResponses();
 
-        assertTrue(PrebidRenderingSettings.getStoredBidResponseMap().isEmpty());
+        assertTrue(PrebidMobile.getStoredBidResponseMap().isEmpty());
     }
 }

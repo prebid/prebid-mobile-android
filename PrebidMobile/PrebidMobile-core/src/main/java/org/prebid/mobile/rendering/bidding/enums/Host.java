@@ -16,6 +16,8 @@
 
 package org.prebid.mobile.rendering.bidding.enums;
 
+// TODO:Unification: Remove or fix
+@Deprecated
 public enum Host {
     /**
      * URL <a href=https://prebid.adnxs.com/pbs/v1/openrtb2/auction>https://prebid.adnxs.com/pbs/v1/openrtb2/auction</a>

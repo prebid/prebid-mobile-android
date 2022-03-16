@@ -21,12 +21,13 @@ import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.DataObject;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.interstitial.InterstitialSizes;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.ExoPlayerView;
 
 import java.util.*;
+
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_DEFAULT;
 
 public class AdConfiguration {
 
@@ -58,7 +59,7 @@ public class AdConfiguration {
     private boolean mIsBuiltInVideo = false;
 
     private int mVideoSkipOffset = SKIP_OFFSET_NOT_ASSIGNED;
-    private int mAutoRefreshDelayInMillis = PrebidRenderingSettings.AUTO_REFRESH_DELAY_DEFAULT;
+    private int mAutoRefreshDelayInMillis = AUTO_REFRESH_DELAY_DEFAULT;
     private final int mBroadcastId = Utils.generateRandomInt();
 
     private float mVideoInitialVolume = ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME;

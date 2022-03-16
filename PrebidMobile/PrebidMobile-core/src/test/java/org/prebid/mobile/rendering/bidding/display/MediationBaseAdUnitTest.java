@@ -32,7 +32,6 @@ import org.prebid.mobile.rendering.bidding.enums.Host;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -66,19 +65,19 @@ public class MediationBaseAdUnitTest {
 
         mContext = Robolectric.buildActivity(Activity.class).create().get();
         mBaseAdUnit = createAdUnit("config");
-        PrebidRenderingSettings.setBidServerHost(Host.APPNEXUS);
+        PrebidMobile.setBidServerHost(Host.APPNEXUS);
 
         assertEquals(BannerAdPosition.UNDEFINED.getValue(), mBaseAdUnit.mAdUnitConfig.getAdPositionValue());
     }
 
     @After
     public void cleanup() {
-        PrebidRenderingSettings.setAccountId(null);
+        PrebidMobile.setAccountId(null);
     }
 
     @Test
     public void whenFetchDemandAndNotMoPubViewPassed_InvalidAdObjectResult() {
-        PrebidRenderingSettings.setAccountId("testAccountId");
+        PrebidMobile.setAccountId("testAccountId");
         new MediationBaseAdUnit(mContext, "123", mMockAdSize, new MockMediationUtils()) {
             @Override
             protected void initAdConfig(String configId, AdSize adSize) {
@@ -98,7 +97,7 @@ public class MediationBaseAdUnitTest {
 
     @Test
     public void whenFetchDemandAndNoConfigId_InvalidConfigIdResult() {
-        PrebidRenderingSettings.setAccountId("id");
+        PrebidMobile.setAccountId("id");
         mBaseAdUnit = createAdUnit("");
         mBaseAdUnit.fetchDemand(result -> {
             assertEquals(FetchDemandResult.INVALID_CONFIG_ID, result);
@@ -107,10 +106,10 @@ public class MediationBaseAdUnitTest {
 
     @Test
     public void whenFetchDemandAndNoUrlForCustomHost_InvalidHostUrl() {
-        PrebidRenderingSettings.setAccountId("id");
+        PrebidMobile.setAccountId("id");
         final Host custom = Host.CUSTOM;
         custom.setHostUrl("");
-        PrebidRenderingSettings.setBidServerHost(custom);
+        PrebidMobile.setBidServerHost(custom);
         mBaseAdUnit = createAdUnit("123");
         mBaseAdUnit.fetchDemand(result -> {
             assertEquals(FetchDemandResult.INVALID_HOST_URL, result);
@@ -119,7 +118,7 @@ public class MediationBaseAdUnitTest {
 
     @Test
     public void whenFetchDemandAndEverythingOK_BidLoaderLoadCalled() {
-        PrebidRenderingSettings.setAccountId("id");
+        PrebidMobile.setAccountId("id");
         mBaseAdUnit.fetchDemand(result -> {
         });
         verify(mMockBidLoader).load();
@@ -133,7 +132,7 @@ public class MediationBaseAdUnitTest {
 
     @Test
     public void whenOnErrorReceived_PassErrorMessage() {
-        PrebidRenderingSettings.setAccountId("id");
+        PrebidMobile.setAccountId("id");
         OnFetchCompleteListener mockListener = mock(OnFetchCompleteListener.class);
         AdException adException = new AdException(AdException.INTERNAL_ERROR, "");
 

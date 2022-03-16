@@ -19,8 +19,8 @@ package org.prebid.mobile.rendering.networking;
 import android.os.AsyncTask;
 import androidx.annotation.Nullable;
 import org.apache.http.conn.ConnectTimeoutException;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.networking.exception.BaseExceptionHolder;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
@@ -249,7 +249,7 @@ public class BaseNetworkTask
         mConnection.setRequestProperty(CONTENT_TYPE_HEADER, CONTENT_TYPE_HEADER_VALUE);
 
         mConnection.setReadTimeout(SOCKET_TIMEOUT);
-        mConnection.setConnectTimeout(PrebidRenderingSettings.getTimeoutMillis());
+        mConnection.setConnectTimeout(PrebidMobile.getTimeoutMillis());
 
         if ("POST".equals(param.requestType)) {
             // Send post request

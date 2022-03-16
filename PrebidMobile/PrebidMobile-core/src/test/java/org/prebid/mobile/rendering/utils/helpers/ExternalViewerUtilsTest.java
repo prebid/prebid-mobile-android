@@ -29,7 +29,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.listeners.OnBrowserActionResultListener;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.url.ActionNotResolvedException;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -58,7 +57,7 @@ public class ExternalViewerUtilsTest {
 
     @After
     public void tearDown() throws Exception {
-        PrebidRenderingSettings.useExternalBrowser = false;
+        PrebidMobile.useExternalBrowser = false;
     }
 
     @Test
@@ -109,7 +108,7 @@ public class ExternalViewerUtilsTest {
 
     @Test
     public void whenStartBrowserAndUseExternalBrowserFalseAndActivityCallable_NotifyInternalBrowserSuccess() {
-        PrebidRenderingSettings.useExternalBrowser = false;
+        PrebidMobile.useExternalBrowser = false;
         PackageManager mockManager = mock(PackageManager.class);
         List<ResolveInfo> mockList = Collections.singletonList(mock(ResolveInfo.class));
         when(mockManager.queryIntentActivities(any(Intent.class), anyInt())).thenReturn(mockList);
@@ -122,7 +121,7 @@ public class ExternalViewerUtilsTest {
 
     @Test
     public void whenStartBrowserAndUseExternalBrowserFalseAndActivityNotCallable_NotifyExternalBrowserSuccess() {
-        PrebidRenderingSettings.useExternalBrowser = false;
+        PrebidMobile.useExternalBrowser = false;
         PackageManager mockManager = mock(PackageManager.class);
         List<ResolveInfo> mockList = Collections.singletonList(mock(ResolveInfo.class));
         when(mockManager.queryIntentActivities(any(Intent.class), anyInt())).thenReturn(mockList);
@@ -135,7 +134,7 @@ public class ExternalViewerUtilsTest {
 
     @Test
     public void whenStartBrowserAndUseExternalBrowserTrue_NotifyExternalBrowserSuccess() {
-        PrebidRenderingSettings.useExternalBrowser = true;
+        PrebidMobile.useExternalBrowser = true;
 
         ExternalViewerUtils.startBrowser(mMockContext, "https://url.com", true, mMockResultListener);
         verify(mMockContext).startActivity(any(Intent.class));

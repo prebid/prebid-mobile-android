@@ -33,7 +33,6 @@ import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.test.utils.ResourceUtils;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -370,7 +369,7 @@ public class UtilsTest extends TestCase {
         int refreshDelaySec = 130;
         int clampAutoRefresh = Utils.clampAutoRefresh(refreshDelaySec);
 
-        assertEquals(PrebidRenderingSettings.AUTO_REFRESH_DELAY_MAX, clampAutoRefresh);
+        assertEquals(PrebidMobile.AUTO_REFRESH_DELAY_MAX, clampAutoRefresh);
     }
 
     @Test
@@ -378,7 +377,7 @@ public class UtilsTest extends TestCase {
         int refreshDelaySec = 14;
         int clampAutoRefresh = Utils.clampAutoRefresh(refreshDelaySec);
 
-        assertEquals(PrebidRenderingSettings.AUTO_REFRESH_DELAY_MIN, clampAutoRefresh);
+        assertEquals(PrebidMobile.AUTO_REFRESH_DELAY_MIN, clampAutoRefresh);
     }
 
     @Test

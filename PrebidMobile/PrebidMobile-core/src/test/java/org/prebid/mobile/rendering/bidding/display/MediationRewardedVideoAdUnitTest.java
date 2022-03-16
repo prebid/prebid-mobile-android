@@ -25,7 +25,6 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdConfiguration;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -45,14 +44,14 @@ public class MediationRewardedVideoAdUnitTest {
     @Before
     public void setUp() throws Exception {
         mContext = Robolectric.buildActivity(Activity.class).create().get();
-        PrebidRenderingSettings.setAccountId("id");
+        PrebidMobile.setAccountId("id");
         mMopubRewardedAdUnit = new MediationRewardedVideoAdUnit(mContext, "config", new MockMediationUtils());
         WhiteBox.setInternalState(mMopubRewardedAdUnit, "mBidLoader", mock(BidLoader.class));
     }
 
     @After
     public void cleanup() {
-        PrebidRenderingSettings.setAccountId(null);
+        PrebidMobile.setAccountId(null);
     }
 
     @Test

@@ -21,9 +21,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.mraid.methods.network.RedirectUrlListener;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
@@ -47,7 +47,7 @@ public class MraidInternalBrowserAction implements UrlAction {
     @Override
     public boolean shouldOverrideUrlLoading(Uri uri) {
         String scheme = uri.getScheme();
-        return PrebidRenderingSettings.SCHEME_HTTP.equals(scheme) || PrebidRenderingSettings.SCHEME_HTTPS.equals(scheme);
+        return PrebidMobile.SCHEME_HTTP.equals(scheme) || PrebidMobile.SCHEME_HTTPS.equals(scheme);
     }
 
     @Override
@@ -79,16 +79,13 @@ public class MraidInternalBrowserAction implements UrlAction {
 
                     try {
                         context.getApplicationContext().startActivity(intent);
-                    }
-                    catch (ActivityNotFoundException e) {
+                    } catch (ActivityNotFoundException e) {
                         LogUtil.error(TAG, "Unable to open url " + url + ". Activity was not found");
                     }
-                }
-                else if (url != null && (url.startsWith(PrebidRenderingSettings.SCHEME_HTTP) || url.startsWith(PrebidRenderingSettings.SCHEME_HTTPS))) {
+                } else if (url != null && (url.startsWith(PrebidMobile.SCHEME_HTTP) || url.startsWith(PrebidMobile.SCHEME_HTTPS))) {
                     if (Utils.isVideoContent(contentType)) {
                         baseJSInterface.playVideo(url);
-                    }
-                    else {
+                    } else {
                         launchBrowserActivity(context, baseJSInterface, url);
                     }
                 }

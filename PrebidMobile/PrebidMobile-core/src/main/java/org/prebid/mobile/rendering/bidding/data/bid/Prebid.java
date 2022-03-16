@@ -19,10 +19,10 @@ package org.prebid.mobile.rendering.bidding.data.bid;
 import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.models.AdConfiguration;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
 import java.util.HashMap;
@@ -127,7 +127,7 @@ public class Prebid {
     }
 
     private static void addStoredAuctionResponse(JSONObject prebid) {
-        final String storedAuctionResponse = PrebidRenderingSettings.getStoredAuctionResponse();
+        final String storedAuctionResponse = PrebidMobile.getStoredAuctionResponse();
         if (!TextUtils.isEmpty(storedAuctionResponse)) {
             JSONObject storedAuctionResponseJson = new JSONObject();
             Utils.addValue(storedAuctionResponseJson, "id", storedAuctionResponse);
@@ -136,7 +136,7 @@ public class Prebid {
     }
 
     private static void addStoredBidResponse(JSONObject prebid) {
-        final Map<String, String> storedBidResponseMap = PrebidRenderingSettings.getStoredBidResponseMap();
+        final Map<String, String> storedBidResponseMap = PrebidMobile.getStoredBidResponses();
         if (!storedBidResponseMap.isEmpty()) {
             JSONArray bidResponseArray = new JSONArray();
 

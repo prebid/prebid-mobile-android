@@ -734,17 +734,19 @@ class PrebidServerAdapter implements DemandAdapter {
                 if (!TextUtils.isEmpty(PrebidServerSettings.deviceModel))
                     device.put(PrebidServerSettings.REQUEST_DEVICE_MODEL, PrebidServerSettings.deviceModel);
                 // Default User Agent
-                if (!TextUtils.isEmpty(PrebidServerSettings.userAgent)) {
-                    device.put(PrebidServerSettings.REQUEST_USERAGENT, PrebidServerSettings.userAgent);
-                }
-                // limited ad tracking
-                device.put(PrebidServerSettings.REQUEST_LMT, AdvertisingIDUtil.isLimitAdTracking() ? 1 : 0);
-                if(canIAccessDeviceData()) {
-                    if (!AdvertisingIDUtil.isLimitAdTracking() && !TextUtils.isEmpty(AdvertisingIDUtil.getAAID())) {
-                        // put ifa
-                        device.put(PrebidServerSettings.REQUEST_IFA, AdvertisingIDUtil.getAAID());
-                    }
-                }
+
+                // TODO:Unification: Remove or fix
+//                if (!TextUtils.isEmpty(PrebidServerSettings.userAgent)) {
+//                    device.put(PrebidServerSettings.REQUEST_USERAGENT, PrebidServerSettings.userAgent);
+//                }
+//                // limited ad tracking
+//                device.put(PrebidServerSettings.REQUEST_LMT, AdvertisingIDUtil.isLimitAdTracking() ? 1 : 0);
+//                if(canIAccessDeviceData()) {
+//                    if (!AdvertisingIDUtil.isLimitAdTracking() && !TextUtils.isEmpty(AdvertisingIDUtil.getAAID())) {
+//                        // put ifa
+//                        device.put(PrebidServerSettings.REQUEST_IFA, AdvertisingIDUtil.getAAID());
+//                    }
+//                }
 
                 // os
                 device.put(PrebidServerSettings.REQUEST_OS, PrebidServerSettings.os);
@@ -888,9 +890,10 @@ class PrebidServerAdapter implements DemandAdapter {
                 if (!TextUtils.isEmpty(TargetingParams.getBundleName())) {
                     app.put("bundle", TargetingParams.getBundleName());
                 }
-                if (!TextUtils.isEmpty(PrebidServerSettings.pkgVersion)) {
-                    app.put("ver", PrebidServerSettings.pkgVersion);
-                }
+                // TODO:Unification: Remove or fix
+//                if (!TextUtils.isEmpty(PrebidServerSettings.pkgVersion)) {
+//                    app.put("ver", PrebidServerSettings.pkgVersion);
+//                }
                 if (!TextUtils.isEmpty(PrebidServerSettings.appName)) {
                     app.put("name", PrebidServerSettings.appName);
                 }
