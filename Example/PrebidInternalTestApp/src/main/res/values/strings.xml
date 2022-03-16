@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~    Copyright 2018-2021 Prebid.org, Inc.
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -385,4 +384,10 @@
     <string name="response_prebid_video_interstitial_320_480_with_end_card">response-prebid-video-interstitial-320-480-with-end-card</string>
     <string name="response_prebid_video_interstitial_deeplink">response-prebid-video-interstitial-320-480-deeplink</string>
     <string name="response_prebid_video_interstitial_skipoffset">response-prebid-video-interstitial-320-480-skip-offset</string>
+    <!--  Video Outstream  -->
+    <string name="response_prebid_video_outstream">response-prebid-video-outstream</string>
+    <string name="response_prebid_video_outstream_end_card">response-prebid-video-outstream-with-end-card</string>
+    <!--  Video Rewarded  -->
+    <string name="response_prebid_video_rewarded_end_card_320_480">response-prebid-video-rewarded-320-480-without-end-card</string>
+    <string name="response_prebid_video_rewarded_320_480">response-prebid-video-rewarded-320-480</string>
 </resources>
