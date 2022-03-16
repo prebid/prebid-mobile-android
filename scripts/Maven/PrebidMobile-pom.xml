@@ -50,20 +50,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.android.support</groupId>
-            <artifactId>support-annotations</artifactId>
-            <version>28.0.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.prebid</groupId>
             <artifactId>prebid-mobile-sdk-core</artifactId>
-            <version>1.13.0-beta2</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.prebid</groupId>
-            <artifactId>prebid-mobile-sdk-rendering</artifactId>
             <version>1.13.0-beta2</version>
             <scope>compile</scope>
         </dependency>
