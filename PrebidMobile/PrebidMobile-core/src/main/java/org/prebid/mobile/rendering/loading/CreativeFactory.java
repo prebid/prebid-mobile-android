@@ -23,7 +23,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.listeners.CreativeResolutionListener;
-import org.prebid.mobile.rendering.models.*;
+import org.prebid.mobile.rendering.models.AbstractCreative;
+import org.prebid.mobile.rendering.models.CreativeModel;
+import org.prebid.mobile.rendering.models.HTMLCreative;
+import org.prebid.mobile.rendering.models.TrackingEvent;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
@@ -33,6 +36,7 @@ import org.prebid.mobile.rendering.video.VideoCreative;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;
 import org.prebid.mobile.rendering.video.vast.VASTErrorCodes;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -81,7 +85,7 @@ public class CreativeFactory {
 
     public void start() {
         try {
-            AdConfiguration.AdUnitIdentifierType adUnitIdentifierType = mCreativeModel.getAdConfiguration().getAdUnitIdentifierType();
+            AdUnitConfiguration.AdUnitIdentifierType adUnitIdentifierType = mCreativeModel.getAdConfiguration().getAdUnitIdentifierType();
             switch (adUnitIdentifierType) {
                 case BANNER:
                 case INTERSTITIAL:

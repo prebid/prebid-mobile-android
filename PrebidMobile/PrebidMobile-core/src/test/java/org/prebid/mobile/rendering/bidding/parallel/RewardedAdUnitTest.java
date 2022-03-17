@@ -33,9 +33,9 @@ import org.prebid.mobile.rendering.bidding.listeners.RewardedAdUnitListener;
 import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
@@ -74,7 +74,7 @@ public class RewardedAdUnitTest {
         WhiteBox.setInternalState(mRewardedAdUnit, "mBidLoader", mMockBidLoader);
         WhiteBox.setInternalState(mRewardedAdUnit, "mInterstitialController", mMockInterstitialController);
 
-        final AdConfiguration adUnitConfig = mRewardedAdUnit.mAdUnitConfig;
+        final AdUnitConfiguration adUnitConfig = mRewardedAdUnit.mAdUnitConfig;
         assertEquals(AdPosition.FULLSCREEN.getValue(), adUnitConfig.getAdPositionValue());
     }
 

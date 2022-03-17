@@ -3,8 +3,8 @@ package org.prebid.mobile;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import org.json.JSONObject;
-import org.prebid.mobile.unification.BaseAdUnitConfiguration;
-import org.prebid.mobile.unification.NativeAdUnitConfiguration;
+import org.prebid.mobile.units.configuration.BaseAdUnitConfiguration;
+import org.prebid.mobile.units.configuration.NativeAdUnitConfiguration;
 
 /**
  * For details of the configuration of native imps, please check this documentation:

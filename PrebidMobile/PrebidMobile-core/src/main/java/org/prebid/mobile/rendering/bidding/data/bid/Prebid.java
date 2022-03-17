@@ -19,11 +19,11 @@ package org.prebid.mobile.rendering.bidding.data.bid;
 import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -66,7 +66,7 @@ public class Prebid {
         return prebid;
     }
 
-    public static JSONObject getJsonObjectForImp(AdConfiguration adUnitConfiguration) {
+    public static JSONObject getJsonObjectForImp(AdUnitConfiguration adUnitConfiguration) {
         final JSONObject prebidObject = getPrebidObject(adUnitConfiguration.getConfigId());
 
         if (adUnitConfiguration.isRewarded()) {
@@ -107,8 +107,8 @@ public class Prebid {
     public static JSONObject getJsonObjectForDeviceMinSizePerc(AdSize minSizePercentage) {
         JSONObject prebid = new JSONObject();
         JSONObject interstitial = new JSONObject();
-        Utils.addValue(interstitial, "minwidthperc", minSizePercentage.width);
-        Utils.addValue(interstitial, "minheightperc", minSizePercentage.height);
+        Utils.addValue(interstitial, "minwidthperc", minSizePercentage.getWidth());
+        Utils.addValue(interstitial, "minheightperc", minSizePercentage.getHeight());
 
         Utils.addValue(prebid, "interstitial", interstitial);
 

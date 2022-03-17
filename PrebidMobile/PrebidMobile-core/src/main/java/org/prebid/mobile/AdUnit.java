@@ -25,9 +25,9 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.tasksmanager.TasksManager;
-import org.prebid.mobile.unification.AdUnitConfiguration;
-import org.prebid.mobile.unification.BaseAdUnitConfiguration;
 import org.prebid.mobile.unification.BaseAdUnitConfigurationInterface;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.units.configuration.BaseAdUnitConfiguration;
 
 import java.util.*;
 

@@ -1,8 +1,8 @@
 package org.prebid.mobile.prebidkotlindemo.ads.inappgam
 
 import android.view.ViewGroup
+import org.prebid.mobile.AdSize
 import org.prebid.mobile.eventhandlers.GamBannerEventHandler
-import org.prebid.mobile.rendering.bidding.data.AdSize
 import org.prebid.mobile.rendering.bidding.enums.VideoPlacementType
 import org.prebid.mobile.rendering.bidding.parallel.BannerView
 

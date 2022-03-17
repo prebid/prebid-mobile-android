@@ -21,8 +21,8 @@ import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.events_bids.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
+import org.prebid.mobile.AdSize
 import org.prebid.mobile.eventhandlers.GamBannerEventHandler
-import org.prebid.mobile.rendering.bidding.data.AdSize
 import org.prebid.mobile.rendering.bidding.listeners.BannerViewListener
 import org.prebid.mobile.rendering.bidding.parallel.BannerView
 import org.prebid.mobile.rendering.errors.AdException

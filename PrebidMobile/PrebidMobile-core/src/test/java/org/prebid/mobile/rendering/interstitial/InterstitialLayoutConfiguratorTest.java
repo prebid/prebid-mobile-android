@@ -21,8 +21,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 public class InterstitialLayoutConfiguratorTest {
 
     private InterstitialDisplayPropertiesInternal mDisplayProperties = new InterstitialDisplayPropertiesInternal();
-    private AdConfiguration mAdConfiguration = new AdConfiguration();
+    private AdUnitConfiguration mAdConfiguration = new AdUnitConfiguration();
 
     @Before
     public void setUp() throws Exception {

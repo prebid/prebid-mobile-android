@@ -26,12 +26,12 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.bidding.display.InterstitialView;
 import org.prebid.mobile.rendering.models.AbstractCreative;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -51,7 +51,7 @@ public class InterstitialVideoTest {
     @Mock
     private InterstitialManager mMockInterstitialManager;
     @Mock
-    private AdConfiguration mMockAdConfiguration;
+    private AdUnitConfiguration mMockAdConfiguration;
 
     private InterstitialVideo mSpyInterstitialVideo;
 
@@ -190,7 +190,7 @@ public class InterstitialVideoTest {
         Context context = mock(Context.class);
         AdViewManager adViewManager = new AdViewManager(context, mock(AdViewManagerListener.class), mMockAdView, mMockInterstitialManager);
 
-        AdConfiguration adConfiguration = adViewManager.getAdConfiguration();
+        AdUnitConfiguration adConfiguration = adViewManager.getAdConfiguration();
         adConfiguration.setVideoSkipOffset(10000);
 
         AbstractCreative mockCreative = mock(AbstractCreative.class);
@@ -210,7 +210,7 @@ public class InterstitialVideoTest {
         Context context = mock(Context.class);
         AdViewManager adViewManager = new AdViewManager(context, mock(AdViewManagerListener.class), mMockAdView, mMockInterstitialManager);
 
-        AdConfiguration adConfiguration = adViewManager.getAdConfiguration();
+        AdUnitConfiguration adConfiguration = adViewManager.getAdConfiguration();
         adConfiguration.setVideoSkipOffset(10000);
 
         AbstractCreative mockCreative = mock(AbstractCreative.class);
@@ -230,7 +230,7 @@ public class InterstitialVideoTest {
         Context context = mock(Context.class);
         AdViewManager adViewManager = new AdViewManager(context, mock(AdViewManagerListener.class), mMockAdView, mock(InterstitialManager.class));
 
-        AdConfiguration adConfiguration = adViewManager.getAdConfiguration();
+        AdUnitConfiguration adConfiguration = adViewManager.getAdConfiguration();
         adConfiguration.setVideoSkipOffset(10);
 
         AbstractCreative mockCreative = mock(AbstractCreative.class);

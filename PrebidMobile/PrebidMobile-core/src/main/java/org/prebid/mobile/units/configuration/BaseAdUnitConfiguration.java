@@ -1,21 +1,22 @@
-package org.prebid.mobile.unification;
+package org.prebid.mobile.units.configuration;
 
 import androidx.annotation.NonNull;
 import org.prebid.mobile.AdType;
 import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.DataObject;
+import org.prebid.mobile.unification.BaseAdUnitConfigurationInterface;
 
 import java.util.*;
 
 public abstract class BaseAdUnitConfiguration implements BaseAdUnitConfigurationInterface {
 
-    private AdType adType;
-    private String configId;
-    private ContentObject appContent;
-    private String pbAdSlot;
-    private final ArrayList<DataObject> userDataObjects = new ArrayList<>();
-    private final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
-    private final Set<String> contextKeywordsSet = new HashSet<>();
+    protected AdType adType;
+    protected String configId;
+    protected ContentObject appContent;
+    protected String pbAdSlot;
+    protected final ArrayList<DataObject> userDataObjects = new ArrayList<>();
+    protected final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
+    protected final Set<String> contextKeywordsSet = new HashSet<>();
 
     @Override
     public void setAdType(AdType adType) {

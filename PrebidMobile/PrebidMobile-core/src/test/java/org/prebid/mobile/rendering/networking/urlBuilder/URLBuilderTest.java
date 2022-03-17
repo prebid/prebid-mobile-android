@@ -21,9 +21,9 @@ import android.content.Context;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
 import org.prebid.mobile.rendering.networking.parameters.ParameterBuilder;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -38,13 +38,13 @@ import static org.mockito.Mockito.mock;
 @Config(sdk = 19)
 public class URLBuilderTest {
 
-    private AdConfiguration mMockConfig;
+    private AdUnitConfiguration mMockConfig;
     private Context mContext;
     private final boolean mBrowserActivityAvailable = true;
 
     @Before
     public void setUp() throws Exception {
-        mMockConfig = mock(AdConfiguration.class);
+        mMockConfig = mock(AdUnitConfiguration.class);
         mContext = Robolectric.buildActivity(Activity.class).create().get();
     }
 

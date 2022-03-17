@@ -18,6 +18,7 @@ package org.prebid.mobile.rendering.bidding.data;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.AdSize;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -30,8 +31,8 @@ public class AdSizeTest {
     @Test
     public void whenInit_FieldsAssignedCorrectly() {
         AdSize adSize = new AdSize(1, 2);
-        assertEquals(adSize.width, 1);
-        assertEquals(adSize.height, 2);
+        assertEquals(adSize.getWidth(), 1);
+        assertEquals(adSize.getHeight(), 2);
     }
 
     @Test

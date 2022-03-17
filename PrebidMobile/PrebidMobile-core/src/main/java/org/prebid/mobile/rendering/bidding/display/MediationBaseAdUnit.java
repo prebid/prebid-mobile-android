@@ -20,19 +20,15 @@ import android.content.Context;
 import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.prebid.mobile.ContentObject;
-import org.prebid.mobile.DataObject;
-import org.prebid.mobile.Host;
-import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
+import org.prebid.mobile.*;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -45,7 +41,7 @@ public abstract class MediationBaseAdUnit {
     protected OnFetchCompleteListener mOnFetchCompleteListener;
 
     protected WeakReference<Context> mContextWeakReference;
-    protected AdConfiguration mAdUnitConfig = new AdConfiguration();
+    protected AdUnitConfiguration mAdUnitConfig = new AdUnitConfiguration();
     protected PrebidMediationDelegate mMediationDelegate;
 
     protected BidLoader mBidLoader;
@@ -102,7 +98,7 @@ public abstract class MediationBaseAdUnit {
     }
 
     public void updateContextData(String key, Set<String> value) {
-        mAdUnitConfig.updateContextData(key, value);
+        mAdUnitConfig.addContextData(key, value);
     }
 
     public void removeContextData(String key) {

@@ -38,7 +38,7 @@ import org.prebid.mobile.http.NoContextException;
 import org.prebid.mobile.http.TaskResult;
 import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.unification.BaseAdUnitConfigurationInterface;
-import org.prebid.mobile.unification.NativeAdUnitConfiguration;
+import org.prebid.mobile.units.configuration.NativeAdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
 import java.util.*;

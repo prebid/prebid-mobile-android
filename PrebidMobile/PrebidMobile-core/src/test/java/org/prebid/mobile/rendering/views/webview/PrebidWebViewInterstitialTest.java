@@ -22,12 +22,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.listeners.WebViewDelegate;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.CreativeModel;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.test.utils.ResourceUtils;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -62,8 +62,8 @@ public class PrebidWebViewInterstitialTest {
         CreativeModel mockModel = mock(CreativeModel.class);
         when(mPrebidWebViewInterstitial.mCreative.getCreativeModel()).thenReturn(mockModel);
         when(mockModel.getHtml()).thenReturn(ResourceUtils.convertResourceToString("ad_contains_iframe"));
-        when(mockModel.getAdConfiguration()).thenReturn(new AdConfiguration());
-        mPrebidWebViewInterstitial.loadHTML(mAdHTML, 100 ,200);
+        when(mockModel.getAdConfiguration()).thenReturn(new AdUnitConfiguration());
+        mPrebidWebViewInterstitial.loadHTML(mAdHTML, 100, 200);
 
         assertNotNull(mPrebidWebViewInterstitial.mWebView);
         assertEquals("WebViewInterstitial", mPrebidWebViewInterstitial.mWebView.mMRAIDBridgeName);

@@ -20,12 +20,12 @@ import android.app.Activity;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Device;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -53,7 +53,7 @@ public class DeviceInfoParameterBuilderTest {
         final String ipAddress = "192.168.0.1";
         final String carrier = "carrier";
 
-        AdConfiguration adConfiguration = new AdConfiguration();
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
 
         ParameterBuilder builder = new DeviceInfoParameterBuilder(adConfiguration);
         AdRequestInput adRequestInput = new AdRequestInput();

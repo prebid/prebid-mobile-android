@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.testutils.BaseSetup;
-import org.prebid.mobile.unification.NativeAdUnitConfiguration;
+import org.prebid.mobile.units.configuration.NativeAdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 

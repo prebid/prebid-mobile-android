@@ -28,9 +28,9 @@ import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerList
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -42,7 +42,7 @@ public abstract class BaseInterstitialAdUnit {
     private static final String TAG = BaseInterstitialAdUnit.class.getSimpleName();
 
     private final WeakReference<Context> mWeakContext;
-    protected AdConfiguration mAdUnitConfig;
+    protected AdUnitConfiguration mAdUnitConfig;
 
     private BidLoader mBidLoader;
     private BidResponse mBidResponse;
@@ -164,7 +164,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     public void updateContextData(String key, Set<String> value) {
-        mAdUnitConfig.updateContextData(key, value);
+        mAdUnitConfig.addContextData(key, value);
     }
 
     public void removeContextData(String key) {
@@ -221,7 +221,7 @@ public abstract class BaseInterstitialAdUnit {
         }
     }
 
-    protected void init(AdConfiguration adUnitConfiguration) {
+    protected void init(AdUnitConfiguration adUnitConfiguration) {
         mAdUnitConfig = adUnitConfiguration;
         mAdUnitConfig.setAdPosition(AdPosition.FULLSCREEN);
 

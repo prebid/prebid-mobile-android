@@ -21,17 +21,17 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class InterstitialController {
     private static final String TAG = InterstitialController.class.getSimpleName();
 
     private final InterstitialView mBidInterstitialView;
     private final InterstitialControllerListener mListener;
-    private AdConfiguration.AdUnitIdentifierType mAdUnitIdentifierType;
+    private AdUnitConfiguration.AdUnitIdentifierType mAdUnitIdentifierType;
 
     private final InterstitialViewListener mInterstitialViewListener = new InterstitialViewListener() {
         @Override
@@ -92,12 +92,12 @@ public class InterstitialController {
         mBidInterstitialView.setPubBackGroundOpacity(1.0f);
     }
 
-    public void loadAd(AdConfiguration adUnitConfiguration, BidResponse bidResponse) {
+    public void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(bidResponse, () -> {
             mAdUnitIdentifierType = bidResponse.isVideo()
-                                    ? AdConfiguration.AdUnitIdentifierType.VAST
-                                    : AdConfiguration.AdUnitIdentifierType.INTERSTITIAL;
+                    ? AdUnitConfiguration.AdUnitIdentifierType.VAST
+                    : AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL;
             adUnitConfiguration.setAdUnitIdentifierType(mAdUnitIdentifierType);
             mBidInterstitialView.loadAd(adUnitConfiguration, bidResponse);
         });
@@ -111,7 +111,7 @@ public class InterstitialController {
             }
             return;
         }
-        AdConfiguration adUnitConfiguration = new AdConfiguration();
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         adUnitConfiguration.setRewarded(isRewarded);
         loadAd(adUnitConfiguration, bidResponse);
     }

@@ -24,8 +24,8 @@ import org.prebid.mobile.rendering.bidding.interfaces.StandaloneRewardedVideoEve
 import org.prebid.mobile.rendering.bidding.listeners.RewardedAdUnitListener;
 import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
@@ -103,9 +103,9 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
         mEventHandler = eventHandler;
         mEventHandler.setRewardedEventListener(mEventListener);
 
-        AdConfiguration adUnitConfiguration = new AdConfiguration();
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         adUnitConfiguration.setConfigId(configId);
-        adUnitConfiguration.setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.VAST);
+        adUnitConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.VAST);
         adUnitConfiguration.setRewarded(true);
 
         init(adUnitConfiguration);

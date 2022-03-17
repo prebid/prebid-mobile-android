@@ -29,6 +29,7 @@ import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
 
@@ -147,7 +148,7 @@ public abstract class AbstractCreative {
      */
     public long getVideoSkipOffset() {
         LogUtil.debug(TAG, "getVideoSkipOffset(): Returning default value: -1");
-        return AdConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
+        return AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
     }
 
     /**

@@ -21,13 +21,13 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
 import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
 import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class BidLoader {
     private static boolean sTimeoutHasChanged = false;
 
     private WeakReference<Context> mContextReference;
-    private AdConfiguration mAdConfiguration;
+    private AdUnitConfiguration mAdConfiguration;
     private BidRequester mBidRequester;
     private AtomicBoolean mCurrentlyLoading;
 
@@ -100,7 +100,7 @@ public class BidLoader {
         load();
     });
 
-    public BidLoader(Context context, AdConfiguration adConfiguration, BidRequesterListener requestListener) {
+    public BidLoader(Context context, AdUnitConfiguration adConfiguration, BidRequesterListener requestListener) {
         mContextReference = new WeakReference<>(context);
         mAdConfiguration = adConfiguration;
         mRequestListener = requestListener;
@@ -139,7 +139,7 @@ public class BidLoader {
         LogUtil.debug(TAG, "Schedule refresh timer");
 
         boolean isRefreshAvailable = mAdConfiguration != null
-                                     && mAdConfiguration.isAdType(AdConfiguration.AdUnitIdentifierType.BANNER);
+                && mAdConfiguration.isAdType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
         if (!isRefreshAvailable) {
             LogUtil.debug(TAG, "setupRefreshTimer: Canceled. AdConfiguration is null or AdType is not Banner");
             return;
@@ -177,7 +177,7 @@ public class BidLoader {
         mBidRefreshListener = null;
     }
 
-    private void sendBidRequest(Context context, AdConfiguration config) {
+    private void sendBidRequest(Context context, AdUnitConfiguration config) {
         mCurrentlyLoading.set(true);
         if (mBidRequester == null) {
             mBidRequester = new BidRequester(context, config, new AdRequestInput(), mResponseHandler);

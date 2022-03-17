@@ -25,12 +25,12 @@ import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.App;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 
 import static org.junit.Assert.assertEquals;
@@ -56,7 +56,7 @@ public class AppInfoParameterBuilderTest {
     public void testAppendBuilderParameters() throws Exception {
         TargetingParams.clearContextData();
 
-        AdConfiguration adConfiguration = new AdConfiguration();
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         ContentObject contentObject = new ContentObject();
         contentObject.setUrl("test.com");
         adConfiguration.setAppContent(contentObject);
@@ -94,7 +94,7 @@ public class AppInfoParameterBuilderTest {
     throws JSONException {
         TargetingParams.addContextData("context", "contextData");
 
-        AppInfoParameterBuilder builder = new AppInfoParameterBuilder(new AdConfiguration());
+        AppInfoParameterBuilder builder = new AppInfoParameterBuilder(new AdUnitConfiguration());
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 

@@ -1,9 +1,10 @@
-package org.prebid.mobile.unification;
+package org.prebid.mobile.units.configuration;
 
 import org.json.JSONObject;
 import org.prebid.mobile.NativeAdUnit;
 import org.prebid.mobile.NativeAsset;
 import org.prebid.mobile.NativeEventTracker;
+import org.prebid.mobile.unification.NativeAdUnitConfigurationInterface;
 
 import java.util.ArrayList;
 

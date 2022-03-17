@@ -26,9 +26,9 @@ import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -74,7 +74,7 @@ public class BaseInterstitialAdUnitTest {
 
             }
         };
-        final AdConfiguration adUnitConfiguration = new AdConfiguration();
+        final AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         mBaseInterstitialAdUnit.init(adUnitConfiguration);
         assertEquals(AdPosition.FULLSCREEN.getValue(), adUnitConfiguration.getAdPositionValue());
     }

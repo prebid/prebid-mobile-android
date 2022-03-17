@@ -19,7 +19,7 @@ package org.prebid.mobile.rendering.bidding.parallel;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialEventHandler;
@@ -27,8 +27,8 @@ import org.prebid.mobile.rendering.bidding.interfaces.StandaloneInterstitialEven
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialAdUnitListener;
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
@@ -130,7 +130,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         mEventHandler = eventHandler;
         mEventHandler.setInterstitialEventListener(mInterstitialEventListener);
 
-        AdConfiguration adUnitConfiguration = new AdConfiguration();
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         adUnitConfiguration.setConfigId(configId);
         adUnitConfiguration.setMinSizePercentage(minSizePercentage);
         adUnitConfiguration.setAdUnitIdentifierType(mapPrebidAdUnitTypeToAdConfigAdUnitType(adUnitFormat));
@@ -195,12 +195,12 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         }
     }
 
-    private AdConfiguration.AdUnitIdentifierType mapPrebidAdUnitTypeToAdConfigAdUnitType(AdUnitFormat adUnitFormat) {
+    private AdUnitConfiguration.AdUnitIdentifierType mapPrebidAdUnitTypeToAdConfigAdUnitType(AdUnitFormat adUnitFormat) {
         switch (adUnitFormat) {
             case DISPLAY:
-                return AdConfiguration.AdUnitIdentifierType.INTERSTITIAL;
+                return AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL;
             case VIDEO:
-                return AdConfiguration.AdUnitIdentifierType.VAST;
+                return AdUnitConfiguration.AdUnitIdentifierType.VAST;
             default:
                 LogUtil.debug(TAG, "setAdUnitIdentifierType: Provided AdUnitType [" + adUnitFormat + "] doesn't match any expected adUnitType.");
                 return null;

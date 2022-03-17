@@ -23,7 +23,6 @@ import android.widget.FrameLayout;
 import androidx.core.content.ContextCompat;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.models.CreativeVisibilityTracker;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
@@ -39,6 +38,7 @@ import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.rendering.views.base.BaseAdView;
 import org.prebid.mobile.rendering.views.video.VideoViewListener;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class VideoView extends BaseAdView {
     private final static String TAG = VideoView.class.getSimpleName();
@@ -127,17 +127,17 @@ public class VideoView extends BaseAdView {
         init();
     }
 
-    public VideoView(Context context, AdConfiguration adUnitConfiguration) throws AdException {
+    public VideoView(Context context, AdUnitConfiguration adUnitConfiguration) throws AdException {
         super(context);
         prepareAdConfiguration(adUnitConfiguration);
         init();
     }
 
-    void loadAd(AdConfiguration adUnitConfiguration, BidResponse bidResponse) {
+    void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
         mAdViewManager.loadBidTransaction(adUnitConfiguration, bidResponse);
     }
 
-    public void loadAd(AdConfiguration adConfiguration, String vastXml) {
+    public void loadAd(AdUnitConfiguration adConfiguration, String vastXml) {
         stopVisibilityTracking();
         changeState(State.UNDEFINED);
 
@@ -253,7 +253,7 @@ public class VideoView extends BaseAdView {
         mListener.onLoadFailed(VideoView.this, adException);
     }
 
-    private void prepareAdConfiguration(AdConfiguration adUnitConfiguration) {
+    private void prepareAdConfiguration(AdUnitConfiguration adUnitConfiguration) {
         adUnitConfiguration.setAutoRefreshDelay(0);
         adUnitConfiguration.setBuiltInVideo(true);
         adUnitConfiguration.setVideoInitialVolume(0.0f);

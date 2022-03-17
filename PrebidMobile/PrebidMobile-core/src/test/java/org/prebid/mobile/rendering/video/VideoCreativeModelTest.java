@@ -20,9 +20,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class VideoCreativeModelTest {
 
     @Before
     public void setup() {
-        AdConfiguration adConfiguration = mock(AdConfiguration.class);
+        AdUnitConfiguration adConfiguration = mock(AdUnitConfiguration.class);
         mMockOmEventTracker = mock(OmEventTracker.class);
 
         mMockTrackingManager = mock(TrackingManager.class);

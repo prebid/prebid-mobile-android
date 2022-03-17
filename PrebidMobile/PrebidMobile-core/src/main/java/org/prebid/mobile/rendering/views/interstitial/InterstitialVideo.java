@@ -33,11 +33,11 @@ import android.widget.TextView;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.interstitial.AdBaseDialog;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.base.BaseAdView;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
 import java.util.Locale;
@@ -58,7 +58,7 @@ public class InterstitialVideo extends AdBaseDialog {
     // "If these are pure JVM unit tests (i.e. run on your computer's JVM and not on an Android emulator/device), then you have no real implementations of methods on any Android classes.
     // You are using a mockable jar which just contains empty classes and methods with "final" removed so you can mock them, but they don't really work like when running normal Android."
     private final WeakReference<Context> mContextReference;
-    private final AdConfiguration mAdConfiguration;
+    private final AdUnitConfiguration mAdConfiguration;
 
     private Handler mHandler;
 
@@ -79,7 +79,7 @@ public class InterstitialVideo extends AdBaseDialog {
     public InterstitialVideo(Context context,
                              FrameLayout adView,
                              InterstitialManager interstitialManager,
-                             AdConfiguration adConfiguration) {
+                             AdUnitConfiguration adConfiguration) {
         super(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen, interstitialManager);
 
         mContextReference = new WeakReference<>(context);
@@ -132,7 +132,7 @@ public class InterstitialVideo extends AdBaseDialog {
     }
 
     public void scheduleShowCloseBtnTask(View adView) {
-        scheduleShowCloseBtnTask(adView, AdConfiguration.SKIP_OFFSET_NOT_ASSIGNED);
+        scheduleShowCloseBtnTask(adView, AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED);
     }
 
     public void scheduleShowCloseBtnTask(View adView, int closeDelayInMs) {
@@ -166,8 +166,8 @@ public class InterstitialVideo extends AdBaseDialog {
     public void resumeVideo() {
         LogUtil.debug(TAG, "resumeVideo");
         mVideoPaused = false;
-        if (getRemainingTimerTimeInMs() != AdConfiguration.SKIP_OFFSET_NOT_ASSIGNED
-            && getRemainingTimerTimeInMs() > 500L) {
+        if (getRemainingTimerTimeInMs() != AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED
+                && getRemainingTimerTimeInMs() > 500L) {
             scheduleShowCloseBtnTask(mAdViewContainer, getRemainingTimerTimeInMs());
         }
     }
@@ -224,12 +224,12 @@ public class InterstitialVideo extends AdBaseDialog {
 
     private long getOffsetLong(View view) {
         return (view instanceof BaseAdView)
-               ? ((BaseAdView) view).getMediaOffset()
-               : AdConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
+                ? ((BaseAdView) view).getMediaOffset()
+                : AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
     }
 
     private long getCloseDelayInMs(View adView, int closeDelayInMs) {
-        long delayInMs = AdConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
+        long delayInMs = AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
 
         long offsetLong = getOffsetLong(adView);
         if (offsetLong >= 0) {
@@ -241,7 +241,7 @@ public class InterstitialVideo extends AdBaseDialog {
             delayInMs = closeDelayInMs;
         }
 
-        if (delayInMs == AdConfiguration.SKIP_OFFSET_NOT_ASSIGNED) {
+        if (delayInMs == AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED) {
             delayInMs = CLOSE_DELAY_DEFAULT_IN_MS;
         }
         LogUtil.debug(TAG, "Picked skip offset: " + delayInMs + " ms.");

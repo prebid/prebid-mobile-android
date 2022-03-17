@@ -27,7 +27,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.CreativeVisibilityTracker;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerResult;
 import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
@@ -37,6 +36,7 @@ import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.rendering.views.video.VideoViewListener;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -91,7 +91,7 @@ public class VideoViewTest {
     @Test
     public void videoViewConstructor_InstanceNotNull() throws Exception {
         VideoView videoView = new VideoView(mContext);
-        VideoView secondVideoView = new VideoView(mContext, mock(AdConfiguration.class));
+        VideoView secondVideoView = new VideoView(mContext, mock(AdUnitConfiguration.class));
 
         assertNotNull(videoView);
         assertNotNull(secondVideoView);
@@ -142,7 +142,7 @@ public class VideoViewTest {
 
     @Test
     public void loadAd_LoadBidTransaction() {
-        final AdConfiguration adUnitConfiguration = new AdConfiguration();
+        final AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         final BidResponse bidResponse = new BidResponse("");
 
         mVideoView.loadAd(adUnitConfiguration, bidResponse);
@@ -154,7 +154,7 @@ public class VideoViewTest {
     public void loadAd_vastXml_StopVisibilityTrackingChangeStateToUndefined() {
         changeVideoViewState(PAUSED_AUTO);
 
-        mVideoView.loadAd(new AdConfiguration(), "somexml");
+        mVideoView.loadAd(new AdUnitConfiguration(), "somexml");
         VideoView.State stateAfterLoad = WhiteBox.getInternalState(mVideoView, "mVideoViewState");
 
         assertEquals(UNDEFINED, stateAfterLoad);

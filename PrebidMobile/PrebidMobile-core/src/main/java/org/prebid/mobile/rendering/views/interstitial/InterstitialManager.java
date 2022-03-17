@@ -25,7 +25,6 @@ import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.rendering.bidding.display.InterstitialView;
 import org.prebid.mobile.rendering.bidding.display.VideoView;
 import org.prebid.mobile.rendering.interstitial.*;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.mraid.methods.InterstitialManagerMraidDelegate;
@@ -34,6 +33,7 @@ import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.rendering.views.webview.WebViewBanner;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.Stack;
 
@@ -57,7 +57,7 @@ public class InterstitialManager implements InterstitialManagerInterface {
         mMraidDelegate = mraidDelegate;
     }
 
-    public void configureInterstitialProperties(AdConfiguration adConfiguration) {
+    public void configureInterstitialProperties(AdUnitConfiguration adConfiguration) {
         InterstitialLayoutConfigurator.configureDisplayProperties(adConfiguration, mInterstitialDisplayProperties);
     }
 

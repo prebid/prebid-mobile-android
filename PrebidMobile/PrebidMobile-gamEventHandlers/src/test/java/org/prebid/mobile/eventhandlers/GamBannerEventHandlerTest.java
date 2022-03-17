@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener;
@@ -162,11 +162,11 @@ public class GamBannerEventHandlerTest {
     @Test
     public void convertGamAdSize_ReturnPrebidSizesArray() {
         AdSize[] prebidSizes = GamBannerEventHandler.convertGamAdSize(com.google.android.gms.ads.AdSize.FLUID,
-                                                                      com.google.android.gms.ads.AdSize.BANNER);
-        assertEquals(com.google.android.gms.ads.AdSize.FLUID.getWidth(), prebidSizes[0].width);
-        assertEquals(com.google.android.gms.ads.AdSize.FLUID.getHeight(), prebidSizes[0].height);
-        assertEquals(com.google.android.gms.ads.AdSize.BANNER.getWidth(), prebidSizes[1].width);
-        assertEquals(com.google.android.gms.ads.AdSize.BANNER.getHeight(), prebidSizes[1].height);
+                com.google.android.gms.ads.AdSize.BANNER);
+        assertEquals(com.google.android.gms.ads.AdSize.FLUID.getWidth(), prebidSizes[0].getWidth());
+        assertEquals(com.google.android.gms.ads.AdSize.FLUID.getHeight(), prebidSizes[0].getHeight());
+        assertEquals(com.google.android.gms.ads.AdSize.BANNER.getWidth(), prebidSizes[1].getWidth());
+        assertEquals(com.google.android.gms.ads.AdSize.BANNER.getHeight(), prebidSizes[1].getHeight());
     }
 
     @Test

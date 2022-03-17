@@ -30,7 +30,6 @@ import org.prebid.mobile.rendering.loading.Transaction;
 import org.prebid.mobile.rendering.loading.TransactionManager;
 import org.prebid.mobile.rendering.loading.TransactionManagerListener;
 import org.prebid.mobile.rendering.models.AbstractCreative;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
@@ -41,6 +40,7 @@ import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreative;
 import org.prebid.mobile.rendering.video.VideoCreativeView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -50,7 +50,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     private final InterstitialManager mInterstitialManager;
 
-    private AdConfiguration mAdConfiguration = new AdConfiguration();
+    private AdUnitConfiguration mAdConfiguration = new AdUnitConfiguration();
     private TransactionManager mTransactionManager;
     private WeakReference<Context> mContextReference;
     private ViewGroup mAdView;
@@ -205,12 +205,12 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
         }
     }
 
-    public AdConfiguration getAdConfiguration() {
+    public AdUnitConfiguration getAdConfiguration() {
         return mAdConfiguration;
     }
 
     public boolean isAutoDisplayOnLoad() {
-        return mAdConfiguration.getAdUnitIdentifierType() == AdConfiguration.AdUnitIdentifierType.BANNER;
+        return mAdConfiguration.getAdUnitIdentifierType() == AdUnitConfiguration.AdUnitIdentifierType.BANNER;
     }
 
     public void destroy() {
@@ -309,8 +309,8 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
         }
 
         return mCurrentCreative != null
-               ? mCurrentCreative.getVideoSkipOffset()
-               : AdConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
+                ? mCurrentCreative.getVideoSkipOffset()
+                : AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
     }
 
     public void addObstructions(InternalFriendlyObstruction... friendlyObstructions) {
@@ -346,13 +346,13 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
         handleCreativeDisplay();
     }
 
-    public void loadBidTransaction(AdConfiguration adConfiguration, BidResponse bidResponse) {
+    public void loadBidTransaction(AdUnitConfiguration adConfiguration, BidResponse bidResponse) {
         mAdConfiguration = adConfiguration;
         resetTransactionState();
         mTransactionManager.fetchBidTransaction(adConfiguration, bidResponse);
     }
 
-    public void loadVideoTransaction(AdConfiguration adConfiguration, String vastXml) {
+    public void loadVideoTransaction(AdUnitConfiguration adConfiguration, String vastXml) {
         mAdConfiguration = adConfiguration;
         resetTransactionState();
         mTransactionManager.fetchVideoTransaction(adConfiguration, vastXml);
@@ -387,7 +387,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
             return;
         }
 
-        if (mAdConfiguration.getAdUnitIdentifierType() == AdConfiguration.AdUnitIdentifierType.BANNER) {
+        if (mAdConfiguration.getAdUnitIdentifierType() == AdUnitConfiguration.AdUnitIdentifierType.BANNER) {
             if (!mCurrentCreative.equals(mLastCreativeShown)) {
                 displayCreative(creativeView);
             }

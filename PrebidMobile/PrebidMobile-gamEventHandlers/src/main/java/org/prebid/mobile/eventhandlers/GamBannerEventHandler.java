@@ -21,16 +21,14 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
-
+import androidx.annotation.NonNull;
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.eventhandlers.global.Constants;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.BannerEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
-
-import androidx.annotation.NonNull;
 
 /**
  * This class is compatible with Prebid Rendering SDK v1.10.

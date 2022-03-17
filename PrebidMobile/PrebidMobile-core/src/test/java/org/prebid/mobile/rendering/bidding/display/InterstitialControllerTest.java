@@ -26,9 +26,9 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -56,7 +56,7 @@ public class InterstitialControllerTest {
 
     @Test
     public void loadAd_ExecuteInterstitialViewLoadAd() {
-        final AdConfiguration mockAdUnitConfiguration = mock(AdConfiguration.class);
+        final AdUnitConfiguration mockAdUnitConfiguration = mock(AdUnitConfiguration.class);
         final BidResponse mockBidResponse = mock(BidResponse.class);
 
         mInterstitialController.loadAd(mockAdUnitConfiguration, mockBidResponse);
@@ -66,7 +66,7 @@ public class InterstitialControllerTest {
 
     @Test
     public void showInterstitialType_ExecuteInterstitialViewShowInterstitialFromRoot() {
-        WhiteBox.setInternalState(mInterstitialController, "mAdUnitIdentifierType", AdConfiguration.AdUnitIdentifierType.INTERSTITIAL);
+        WhiteBox.setInternalState(mInterstitialController, "mAdUnitIdentifierType", AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL);
         mInterstitialController.show();
 
         verify(mMockInterstitialView, times(1)).showAsInterstitialFromRoot();
@@ -74,7 +74,7 @@ public class InterstitialControllerTest {
 
     @Test
     public void showVastType_ExecuteInterstitialViewShowVideoAsInterstitial() {
-        WhiteBox.setInternalState(mInterstitialController, "mAdUnitIdentifierType", AdConfiguration.AdUnitIdentifierType.VAST);
+        WhiteBox.setInternalState(mInterstitialController, "mAdUnitIdentifierType", AdUnitConfiguration.AdUnitIdentifierType.VAST);
         mInterstitialController.show();
 
         verify(mMockInterstitialView, times(1)).showVideoAsInterstitial();

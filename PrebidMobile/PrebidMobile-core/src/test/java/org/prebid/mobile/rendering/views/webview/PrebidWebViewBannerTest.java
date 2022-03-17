@@ -27,7 +27,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.listeners.WebViewDelegate;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.CreativeModel;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.MraidEvent;
@@ -39,6 +38,7 @@ import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JsExecutor;
 import org.prebid.mobile.test.utils.ResourceUtils;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -153,7 +153,7 @@ public class PrebidWebViewBannerTest {
         CreativeModel mockCreativeModel = mock(CreativeModel.class);
         when(mockCreative.getCreativeModel()).thenReturn(mockCreativeModel);
         when(mockCreativeModel.getHtml()).thenReturn(ResourceUtils.convertResourceToString("ad_contains_iframe"));
-        when(mockCreativeModel.getAdConfiguration()).thenReturn(new AdConfiguration());
+        when(mockCreativeModel.getAdConfiguration()).thenReturn(new AdUnitConfiguration());
         mBanner.mCreative = mockCreative;
 
         mBanner.loadHTML(mAdHTML, 100 ,200);

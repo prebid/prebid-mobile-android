@@ -24,10 +24,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
 import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -44,7 +44,7 @@ public class BidLoaderTest {
     private BidLoader mBidLoader;
     private Context mContext;
     @Mock
-    private AdConfiguration mMockAdConfiguration;
+    private AdUnitConfiguration mMockAdConfiguration;
     @Mock
     private BidRequesterListener mBidRequesterListener;
     @Mock
@@ -56,7 +56,7 @@ public class BidLoaderTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         mContext = Robolectric.buildActivity(Activity.class).create().get();
-        when(mMockAdConfiguration.isAdType(any(AdConfiguration.AdUnitIdentifierType.class))).thenReturn(true);
+        when(mMockAdConfiguration.isAdType(any(AdUnitConfiguration.AdUnitIdentifierType.class))).thenReturn(true);
         when(mMockAdConfiguration.getAutoRefreshDelay()).thenReturn(60000);
         mBidLoader = createBidLoader(mContext, mMockAdConfiguration, mBidRequesterListener);
     }
@@ -110,7 +110,7 @@ public class BidLoaderTest {
         verify(mMockTimerTask).cancelRefreshTimer();
     }
 
-    private BidLoader createBidLoader(Context context, AdConfiguration adConfiguration, BidRequesterListener requestListener) {
+    private BidLoader createBidLoader(Context context, AdUnitConfiguration adConfiguration, BidRequesterListener requestListener) {
         BidLoader bidLoader = new BidLoader(context, adConfiguration, requestListener);
         WhiteBox.setInternalState(bidLoader, "mBidRequester", mMockRequester);
         WhiteBox.setInternalState(bidLoader, "mRefreshTimerTask", mMockTimerTask);

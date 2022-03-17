@@ -22,6 +22,7 @@ import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.OmEventTracker;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class CreativeModel {
     private static String TAG = CreativeModel.class.getSimpleName();
 
     //internal data
-    private AdConfiguration mAdConfiguration;
+    private AdUnitConfiguration mAdConfiguration;
     //helper to get the right creative class
     private String mName;
     private int mDisplayDurationInSeconds = 0;
@@ -82,7 +83,7 @@ public class CreativeModel {
     // This is important for the display layer to perform end card functions
     private boolean mHasEndCard = false;
 
-    public CreativeModel(TrackingManager trackingManager, OmEventTracker omEventTracker, AdConfiguration adConfiguration) {
+    public CreativeModel(TrackingManager trackingManager, OmEventTracker omEventTracker, AdUnitConfiguration adConfiguration) {
         mTrackingManager = trackingManager;
         mAdConfiguration = adConfiguration;
         mOmEventTracker = omEventTracker;
@@ -135,11 +136,11 @@ public class CreativeModel {
         }
     }
 
-    public AdConfiguration getAdConfiguration() {
+    public AdUnitConfiguration getAdConfiguration() {
         return mAdConfiguration;
     }
 
-    public void setAdConfiguration(AdConfiguration adConfiguration) {
+    public void setAdConfiguration(AdUnitConfiguration adConfiguration) {
         mAdConfiguration = adConfiguration;
     }
 

@@ -32,6 +32,7 @@ import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -109,7 +110,7 @@ public class ViewPoolTest {
     @Test
     public void getUnoccupiedViewTest() throws AdException {
         VideoCreativeViewListener mockVideoCreativeViewListener = mock(VideoCreativeViewListener.class);
-        AdConfiguration.AdUnitIdentifierType adType = AdConfiguration.AdUnitIdentifierType.BANNER;
+        AdUnitConfiguration.AdUnitIdentifierType adType = AdUnitConfiguration.AdUnitIdentifierType.BANNER;
         InterstitialManager mockInterstitialManager = mock(InterstitialManager.class);
 
         View result = mViewPool.getUnoccupiedView(mContext, mockVideoCreativeViewListener, adType, mockInterstitialManager);
@@ -122,13 +123,13 @@ public class ViewPoolTest {
         assertEquals(3, mViewPool.sizeOfOccupied());
         assertEquals(0, mViewPool.sizeOfUnoccupied());
 
-        adType = AdConfiguration.AdUnitIdentifierType.VAST;
+        adType = AdUnitConfiguration.AdUnitIdentifierType.VAST;
         result = mViewPool.getUnoccupiedView(mContext, mock(VideoCreative.class), adType, mockInterstitialManager);
         assertThat(result, instanceOf(ExoPlayerView.class));
         assertEquals(4, mViewPool.sizeOfOccupied());
         assertEquals(0, mViewPool.sizeOfUnoccupied());
 
-        adType = AdConfiguration.AdUnitIdentifierType.INTERSTITIAL;
+        adType = AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL;
         result = mViewPool.getUnoccupiedView(mContext, mockVideoCreativeViewListener, adType, mockInterstitialManager);
         assertThat(result, instanceOf(PrebidWebViewInterstitial.class));
         assertEquals(5, mViewPool.sizeOfOccupied());

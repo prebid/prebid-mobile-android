@@ -26,11 +26,11 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.CreativeModel;
 import org.prebid.mobile.rendering.models.CreativeModelsMaker;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -176,7 +176,7 @@ public class TransactionManagerTest {
         BidResponse mockBidResponse = mock(BidResponse.class);
         when(mockBidResponse.getWinningBid()).thenReturn(mock(Bid.class));
         when(mockBidResponse.getWinningBid().getAdm()).thenReturn("adm");
-        mTransactionManager.fetchBidTransaction(mock(AdConfiguration.class), mockBidResponse);
+        mTransactionManager.fetchBidTransaction(mock(AdUnitConfiguration.class), mockBidResponse);
         verify(mMockListener).onFetchingFailed(any(AdException.class));
     }
 }

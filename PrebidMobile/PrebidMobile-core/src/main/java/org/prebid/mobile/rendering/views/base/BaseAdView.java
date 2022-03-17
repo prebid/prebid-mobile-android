@@ -23,12 +23,12 @@ import android.widget.FrameLayout;
 import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.utils.broadcast.local.EventForwardingLocalBroadcastReceiver;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 /**
  * This class provides common functionality for Interstitial and Banner ads.
@@ -69,7 +69,7 @@ public abstract class BaseAdView extends FrameLayout {
         if (mAdViewManager != null) {
             return mAdViewManager.getSkipOffset();
         }
-        return AdConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
+        return AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
     }
 
     public void setAppContent(ContentObject contentObject) {

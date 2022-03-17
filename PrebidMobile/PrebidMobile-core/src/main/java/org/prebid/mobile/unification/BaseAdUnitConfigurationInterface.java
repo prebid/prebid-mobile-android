@@ -3,6 +3,8 @@ package org.prebid.mobile.unification;
 import org.prebid.mobile.AdType;
 import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.DataObject;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.units.configuration.NativeAdUnitConfiguration;
 
 import java.util.ArrayList;
 import java.util.Map;

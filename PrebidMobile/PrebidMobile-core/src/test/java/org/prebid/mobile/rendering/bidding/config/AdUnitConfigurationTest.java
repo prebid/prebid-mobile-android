@@ -19,8 +19,8 @@ package org.prebid.mobile.rendering.bidding.config;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
-import org.prebid.mobile.rendering.models.AdConfiguration;
+import org.prebid.mobile.AdSize;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -33,33 +33,33 @@ import static org.junit.Assert.*;
 @Config(sdk = 19)
 public class AdUnitConfigurationTest {
 
-    private AdConfiguration mAdUnitConfig;
+    private AdUnitConfiguration mAdUnitConfig;
 
     @Before
     public void setUp() throws Exception {
-        mAdUnitConfig = new AdConfiguration();
+        mAdUnitConfig = new AdUnitConfiguration();
     }
 
     @Test
     public void whenAddSize_SetContainsSize() {
         AdSize adSize = new AdSize(0, 0);
-        assertTrue(mAdUnitConfig.getAdSizes().isEmpty());
+        assertTrue(mAdUnitConfig.getSizes().isEmpty());
 
         mAdUnitConfig.addSize(adSize);
-        assertEquals(1, mAdUnitConfig.getAdSizes().size());
-        assertTrue(mAdUnitConfig.getAdSizes().contains(adSize));
+        assertEquals(1, mAdUnitConfig.getSizes().size());
+        assertTrue(mAdUnitConfig.getSizes().contains(adSize));
     }
 
     @Test
     public void whenAddSizes_SetContainsSizes() {
         AdSize adSize = new AdSize(0, 0);
         AdSize adSize1 = new AdSize(1, 1);
-        assertTrue(mAdUnitConfig.getAdSizes().isEmpty());
+        assertTrue(mAdUnitConfig.getSizes().isEmpty());
 
         mAdUnitConfig.addSizes(adSize, adSize1);
-        assertEquals(2, mAdUnitConfig.getAdSizes().size());
-        assertTrue(mAdUnitConfig.getAdSizes().contains(adSize));
-        assertTrue(mAdUnitConfig.getAdSizes().contains(adSize1));
+        assertEquals(2, mAdUnitConfig.getSizes().size());
+        assertTrue(mAdUnitConfig.getSizes().contains(adSize));
+        assertTrue(mAdUnitConfig.getSizes().contains(adSize1));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class AdUnitConfigurationTest {
         Set<String> stringSet = new HashSet<>();
         stringSet.add("value0");
         stringSet.add("value1");
-        mAdUnitConfig.updateContextData("key", stringSet);
+        mAdUnitConfig.addContextData("key", stringSet);
         assertTrue(mAdUnitConfig.getContextDataDictionary().get("key").containsAll(stringSet));
     }
 

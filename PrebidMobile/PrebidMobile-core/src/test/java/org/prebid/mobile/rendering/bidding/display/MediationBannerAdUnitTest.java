@@ -24,14 +24,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.enums.BannerAdPosition;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -72,10 +72,10 @@ public class MediationBannerAdUnitTest {
     public void whenInitAdConfig_PrepareAdConfigForBanner() {
         AdSize adSize = new AdSize(1, 2);
         mMediationBannerAdUnit.initAdConfig("config", adSize);
-        AdConfiguration adConfiguration = mMediationBannerAdUnit.mAdUnitConfig;
+        AdUnitConfiguration adConfiguration = mMediationBannerAdUnit.mAdUnitConfig;
         assertEquals("config", adConfiguration.getConfigId());
-        assertEquals(AdConfiguration.AdUnitIdentifierType.BANNER, adConfiguration.getAdUnitIdentifierType());
-        assertTrue(adConfiguration.getAdSizes().contains(adSize));
+        assertEquals(AdUnitConfiguration.AdUnitIdentifierType.BANNER, adConfiguration.getAdUnitIdentifierType());
+        assertTrue(adConfiguration.getSizes().contains(adSize));
     }
 
     @Test

@@ -24,12 +24,12 @@ import android.telephony.TelephonyManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.networking.parameters.*;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -109,7 +109,7 @@ public class AutoDetectedOpenRtbTest {
         AdIdManager.setAdId("bar");
         AdIdManager.setLimitAdTrackingEnabled(true);
 
-        mParamBuilderArray.add(new AppInfoParameterBuilder(new AdConfiguration()));
+        mParamBuilderArray.add(new AppInfoParameterBuilder(new AdUnitConfiguration()));
         AdRequestInput newAdRequestInput = URLBuilder.buildParameters(mParamBuilderArray, mOriginalAdRequestInput);
         BidRequest newOpenRtbParams = newAdRequestInput.getBidRequest();
 
@@ -126,7 +126,7 @@ public class AutoDetectedOpenRtbTest {
         mOriginalOpenRtbParams.getDevice().w = 0;
         mOriginalOpenRtbParams.getDevice().h = 0;
 
-        mParamBuilderArray.add(new DeviceInfoParameterBuilder(new AdConfiguration()));
+        mParamBuilderArray.add(new DeviceInfoParameterBuilder(new AdUnitConfiguration()));
         AdRequestInput newAdRequestInput = URLBuilder.buildParameters(mParamBuilderArray, mOriginalAdRequestInput);
         BidRequest newOpenRtbParams = newAdRequestInput.getBidRequest();
 

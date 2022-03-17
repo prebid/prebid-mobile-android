@@ -33,10 +33,10 @@ import org.prebid.mobile.rendering.utils.url.action.DeepLinkAction;
 import org.prebid.mobile.rendering.utils.url.action.DeepLinkPlusAction;
 import org.prebid.mobile.rendering.utils.url.action.UrlAction;
 import org.prebid.mobile.rendering.views.VolumeControlView;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import static android.widget.RelativeLayout.LayoutParams.MATCH_PARENT;
 import static android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT;
-import static org.prebid.mobile.rendering.models.AdConfiguration.AdUnitIdentifierType.VAST;
 
 public class VideoCreativeView extends RelativeLayout {
     private static final String TAG = VideoCreativeView.class.getSimpleName();
@@ -168,8 +168,8 @@ public class VideoCreativeView extends RelativeLayout {
         setLayoutParams(layoutParams);
 
         mExoPlayerView = (ExoPlayerView) ViewPool
-            .getInstance()
-            .getUnoccupiedView(getContext(), mVideoCreativeViewListener, VAST, null);
+                .getInstance()
+                .getUnoccupiedView(getContext(), mVideoCreativeViewListener, AdUnitConfiguration.AdUnitIdentifierType.VAST, null);
 
         addView(mExoPlayerView);
     }

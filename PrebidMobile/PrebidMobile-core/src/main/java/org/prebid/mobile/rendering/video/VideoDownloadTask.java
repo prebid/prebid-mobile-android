@@ -22,8 +22,8 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import org.prebid.mobile.rendering.loading.FileDownloadListener;
 import org.prebid.mobile.rendering.loading.FileDownloadTask;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.io.*;
 import java.net.URLConnection;
@@ -36,10 +36,10 @@ public class VideoDownloadTask extends FileDownloadTask {
 
     private static final String TAG = VideoDownloadTask.class.getSimpleName();
     private Context mApplicationContext;
-    private AdConfiguration mAdConfiguration;
+    private AdUnitConfiguration mAdConfiguration;
 
     public VideoDownloadTask(Context context, File file, FileDownloadListener fileDownloadListener,
-                             AdConfiguration adConfiguration) {
+                             AdUnitConfiguration adConfiguration) {
         super(fileDownloadListener, file);
         if (context == null) {
             String contextIsNull = "Context is null";

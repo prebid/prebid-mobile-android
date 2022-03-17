@@ -39,7 +39,7 @@ public class AdSize {
      *
      * @return width
      */
-    int getWidth() {
+    public int getWidth() {
         return width;
     }
 
@@ -48,7 +48,7 @@ public class AdSize {
      *
      * @return height
      */
-    int getHeight() {
+    public int getHeight() {
         return height;
     }
 

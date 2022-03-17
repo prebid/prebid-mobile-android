@@ -25,8 +25,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.testutils.BaseSetup;
-import org.prebid.mobile.unification.AdUnitConfiguration;
-import org.prebid.mobile.unification.BaseAdUnitConfiguration;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.units.configuration.BaseAdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 

@@ -24,7 +24,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.MraidEvent;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
@@ -34,6 +33,7 @@ import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.*;
 
@@ -141,7 +141,7 @@ public class MraidController {
                 break;
 
             case ACTION_OPEN:
-                final AdConfiguration adConfiguration = creative.getCreativeModel().getAdConfiguration();
+                final AdUnitConfiguration adConfiguration = creative.getCreativeModel().getAdConfiguration();
                 open(oldWebViewBase, event.mraidActionHelper, adConfiguration.getBroadcastId());
                 break;
 

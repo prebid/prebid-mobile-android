@@ -24,10 +24,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -42,7 +42,7 @@ import static org.mockito.Mockito.*;
 public class BidRequesterTest {
 
     private Context mContext;
-    private AdConfiguration mAdConfiguration;
+    private AdUnitConfiguration mAdConfiguration;
     private AdRequestInput mAdRequestInput;
 
     @Mock
@@ -52,7 +52,7 @@ public class BidRequesterTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mContext = Robolectric.buildActivity(Activity.class).create().get();
-        mAdConfiguration = new AdConfiguration();
+        mAdConfiguration = new AdUnitConfiguration();
         mAdRequestInput = new AdRequestInput();
         ManagersResolver.getInstance().prepare(mContext);
     }

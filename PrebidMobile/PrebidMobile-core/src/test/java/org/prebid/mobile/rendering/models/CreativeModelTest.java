@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.video.OmEventTracker;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -37,7 +38,7 @@ public class CreativeModelTest {
     public void testRegisterTrackingEvent() throws Exception {
         TrackingManager trackingManager = TrackingManager.getInstance();
         OmEventTracker mockOmEventTracker = mock(OmEventTracker.class);
-        AdConfiguration mockConfig = mock(AdConfiguration.class);
+        AdUnitConfiguration mockConfig = mock(AdUnitConfiguration.class);
 
         CreativeModel creativeModel = new CreativeModel(trackingManager, mockOmEventTracker, mockConfig);
         ArrayList<String> urls = new ArrayList<String>();
@@ -56,7 +57,7 @@ public class CreativeModelTest {
         TrackingManager trackingManager = TrackingManager.getInstance();
         TrackingManager mockTrackingManager = spy(trackingManager);
         OmEventTracker mockOmEventTracker = mock(OmEventTracker.class);
-        AdConfiguration mockConfig = mock(AdConfiguration.class);
+        AdUnitConfiguration mockConfig = mock(AdUnitConfiguration.class);
 
         CreativeModel creativeModel = new CreativeModel(mockTrackingManager, mockOmEventTracker, mockConfig);
         ArrayList<String> urls = new ArrayList<String>();
@@ -72,7 +73,7 @@ public class CreativeModelTest {
         TrackingManager trackingManager = TrackingManager.getInstance();
         TrackingManager mockTrackingManager = spy(trackingManager);
         OmEventTracker mockOmEventTracker = mock(OmEventTracker.class);
-        AdConfiguration mockConfig = mock(AdConfiguration.class);
+        AdUnitConfiguration mockConfig = mock(AdUnitConfiguration.class);
 
         CreativeModel creativeModel = new CreativeModel(mockTrackingManager, mockOmEventTracker, mockConfig);
         ArrayList<String> urls = new ArrayList<String>();
