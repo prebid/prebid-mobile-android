@@ -26,7 +26,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
-import org.prebid.mobile.units.configuration.BaseAdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -154,7 +153,7 @@ public class AdUnitSuccessorTest {
     @Test
     public void testRewardedVideoAdUnitCreation() {
         RewardedVideoAdUnit adUnit = new RewardedVideoAdUnit("123456");
-        BaseAdUnitConfiguration configuration = adUnit.getConfiguration();
+        AdUnitConfiguration configuration = adUnit.getConfiguration();
         assertEquals("123456", configuration.getConfigId());
         assertEquals(AdType.REWARDED_VIDEO, configuration.getAdType());
     }

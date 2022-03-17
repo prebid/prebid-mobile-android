@@ -22,7 +22,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;

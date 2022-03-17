@@ -26,7 +26,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
-import org.prebid.mobile.units.configuration.BaseAdUnitConfiguration;
 
 import java.util.*;
 
@@ -36,7 +35,7 @@ public abstract class AdUnit {
 
     private int periodMillis = 0; // No auto refresh
     private DemandFetcher fetcher;
-    protected BaseAdUnitConfiguration configuration = createConfiguration();
+    protected AdUnitConfiguration configuration = new AdUnitConfiguration();
 
     AdUnit(@NonNull String configId, @NonNull AdType adType) {
         configuration.setConfigId(configId);
@@ -105,7 +104,7 @@ public abstract class AdUnit {
         }
 
         if (configuration.getAdType() == AdType.BANNER || configuration.getAdType() == AdType.VIDEO) {
-            HashSet<AdSize> sizes = configuration.castToOriginal().getSizes();
+            HashSet<AdSize> sizes = configuration.getSizes();
             for (AdSize size : sizes) {
                 if (size.getWidth() < 0 || size.getHeight() < 0) {
                     listener.onComplete(ResultCode.INVALID_SIZE);
@@ -250,13 +249,9 @@ public abstract class AdUnit {
         configuration.setPbAdSlot(pbAdSlot);
     }
 
-    protected BaseAdUnitConfiguration createConfiguration() {
-        return new AdUnitConfiguration();
-    }
-
     @VisibleForTesting
-    public BaseAdUnitConfiguration getConfiguration() {
-        return (BaseAdUnitConfiguration) configuration;
+    public AdUnitConfiguration getConfiguration() {
+        return configuration;
     }
 
 }

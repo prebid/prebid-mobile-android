@@ -17,7 +17,7 @@
 package org.prebid.mobile;
 
 import androidx.annotation.MainThread;
-import org.prebid.mobile.units.configuration.BaseAdUnitConfiguration;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.HashMap;
 
@@ -40,7 +40,7 @@ interface DemandAdapter {
      * @param auctionId an unique identifier
      */
 
-    void requestDemand(BaseAdUnitConfiguration configuration, DemandAdapterListener listener, String auctionId);
+    void requestDemand(AdUnitConfiguration configuration, DemandAdapterListener listener, String auctionId);
 
     void stopRequest(String auctionId);
 

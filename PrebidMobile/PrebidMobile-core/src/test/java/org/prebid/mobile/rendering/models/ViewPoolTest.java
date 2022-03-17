@@ -32,7 +32,6 @@ import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.test.utils.WhiteBox;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;

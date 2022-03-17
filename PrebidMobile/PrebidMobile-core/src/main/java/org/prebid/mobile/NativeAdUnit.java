@@ -3,7 +3,6 @@ package org.prebid.mobile;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import org.json.JSONObject;
-import org.prebid.mobile.units.configuration.BaseAdUnitConfiguration;
 import org.prebid.mobile.units.configuration.NativeAdUnitConfiguration;
 
 /**
@@ -14,10 +13,12 @@ public class NativeAdUnit extends AdUnit {
 
     public static final String BUNDLE_KEY_CACHE_ID = "NativeAdUnitCacheId";
 
-    private final NativeAdUnitConfiguration nativeConfiguration = configuration.castToNative();
+    private final NativeAdUnitConfiguration nativeConfiguration;
 
     public NativeAdUnit(@NonNull String configId) {
         super(configId, AdType.NATIVE);
+        configuration.initNativeConfiguration();
+        nativeConfiguration = configuration.getNativeConfiguration();
     }
 
     public enum CONTEXT_TYPE {
@@ -171,11 +172,6 @@ public class NativeAdUnit extends AdUnit {
 
     public void addAsset(NativeAsset asset) {
         nativeConfiguration.addAsset(asset);
-    }
-
-    @Override
-    protected BaseAdUnitConfiguration createConfiguration() {
-        return new NativeAdUnitConfiguration();
     }
 
     @VisibleForTesting

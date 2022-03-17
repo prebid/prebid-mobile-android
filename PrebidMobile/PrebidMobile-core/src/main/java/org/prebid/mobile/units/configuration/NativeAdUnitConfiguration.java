@@ -7,7 +7,7 @@ import org.prebid.mobile.NativeEventTracker;
 
 import java.util.ArrayList;
 
-public class NativeAdUnitConfiguration extends BaseAdUnitConfiguration {
+public class NativeAdUnitConfiguration {
 
     private final ArrayList<NativeAsset> nativeAssets = new ArrayList<>();
     private final ArrayList<NativeEventTracker> nativeEventTrackers = new ArrayList<>();

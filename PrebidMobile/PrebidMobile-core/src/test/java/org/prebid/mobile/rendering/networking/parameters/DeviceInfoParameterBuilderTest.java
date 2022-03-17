@@ -25,7 +25,6 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.Device;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;

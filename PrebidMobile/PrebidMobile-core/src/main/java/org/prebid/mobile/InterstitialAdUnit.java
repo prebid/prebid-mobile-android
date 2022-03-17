@@ -27,12 +27,12 @@ public class InterstitialAdUnit extends BannerBaseAdUnit {
 
     public InterstitialAdUnit(@NonNull String configId, int minWidthPerc, int minHeightPerc) {
         this(configId);
-        configuration.castToOriginal().setMinSizePercentage(new AdSize(minWidthPerc, minHeightPerc));
+        configuration.setMinSizePercentage(new AdSize(minWidthPerc, minHeightPerc));
     }
 
     @Nullable
     AdSize getMinSizePerc() {
-        return configuration.castToOriginal().getMinSizePercentage();
+        return configuration.getMinSizePercentage();
     }
 
 }

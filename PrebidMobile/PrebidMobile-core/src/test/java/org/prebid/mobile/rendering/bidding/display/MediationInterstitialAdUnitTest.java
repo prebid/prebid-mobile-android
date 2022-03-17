@@ -26,12 +26,9 @@ import org.prebid.mobile.AdSize;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-
-import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)

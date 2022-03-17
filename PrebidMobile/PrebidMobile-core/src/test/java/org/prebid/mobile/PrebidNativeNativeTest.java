@@ -32,7 +32,7 @@ import org.prebid.mobile.tasksmanager.MainThreadExecutor;
 import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.prebid.mobile.testutils.MockPrebidServerResponses;
-import org.prebid.mobile.units.configuration.NativeAdUnitConfiguration;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.Shadows;
@@ -92,7 +92,7 @@ public class PrebidNativeNativeTest extends BaseSetup {
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
 
-        NativeAdUnitConfiguration configuration = new NativeAdUnitConfiguration();
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setConfigId(PBS_CONFIG_ID_NATIVE_APPNEXUS);
         configuration.setAdType(AdType.NATIVE);
 
@@ -173,7 +173,7 @@ public class PrebidNativeNativeTest extends BaseSetup {
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
 
-        NativeAdUnitConfiguration configuration = new NativeAdUnitConfiguration();
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setConfigId(PBS_CONFIG_ID_NATIVE_APPNEXUS);
         configuration.setAdType(AdType.NATIVE);
 
@@ -275,7 +275,7 @@ public class PrebidNativeNativeTest extends BaseSetup {
         DemandAdapter.DemandAdapterListener mockListener = mock(DemandAdapter.DemandAdapterListener.class);
         PrebidServerAdapter adapter = new PrebidServerAdapter();
 
-        NativeAdUnitConfiguration configuration = new NativeAdUnitConfiguration();
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setConfigId(PBS_CONFIG_ID_NATIVE_APPNEXUS);
         configuration.setAdType(AdType.NATIVE);
 

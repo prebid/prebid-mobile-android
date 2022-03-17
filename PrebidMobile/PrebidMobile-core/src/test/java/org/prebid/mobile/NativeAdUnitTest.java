@@ -27,7 +27,7 @@ public class NativeAdUnitTest {
     @Test
     public void testNativeAdUnitCreation() throws Exception {
         NativeAdUnit nativeUnit = new NativeAdUnit(PBS_CONFIG_ID_NATIVE_APPNEXUS);
-        NativeAdUnitConfiguration configuration = (NativeAdUnitConfiguration) nativeUnit.getConfiguration();
+        NativeAdUnitConfiguration configuration = nativeUnit.getConfiguration().getNativeConfiguration();
 
         assertNotNull(nativeUnit);
         assertEquals(PBS_CONFIG_ID_NATIVE_APPNEXUS, configuration.getConfigId());

@@ -30,7 +30,6 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.App;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 
 import static org.junit.Assert.assertEquals;

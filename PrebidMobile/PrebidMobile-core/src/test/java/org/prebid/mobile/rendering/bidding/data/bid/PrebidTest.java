@@ -20,7 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.prebid.mobile.test.utils.ResourceUtils;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.io.IOException;
 

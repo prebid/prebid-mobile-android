@@ -29,11 +29,11 @@ public abstract class BannerBaseAdUnit extends AdUnit {
 
     @Nullable
     public Parameters getParameters() {
-        return configuration.castToOriginal().getBannerParameters();
+        return configuration.getBannerParameters();
     }
 
     public void setParameters(@Nullable Parameters parameters) {
-        configuration.castToOriginal().setBannerParameters(parameters);
+        configuration.setBannerParameters(parameters);
     }
 
     /**

@@ -2,9 +2,7 @@ package org.prebid.mobile.units.configuration;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.prebid.mobile.AdSize;
-import org.prebid.mobile.BannerBaseAdUnit;
-import org.prebid.mobile.VideoBaseAdUnit;
+import org.prebid.mobile.*;
 import org.prebid.mobile.rendering.interstitial.InterstitialSizes;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
@@ -12,13 +10,11 @@ import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.ExoPlayerView;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_DEFAULT;
 
-public class AdUnitConfiguration extends BaseAdUnitConfiguration {
+public class AdUnitConfiguration {
 
     public static final String TAG = "AdUnitConfiguration";
     public static final int SKIP_OFFSET_NOT_ASSIGNED = -1;
@@ -31,16 +27,126 @@ public class AdUnitConfiguration extends BaseAdUnitConfiguration {
     private final int broadcastId = Utils.generateRandomInt();
     private float videoInitialVolume = ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME;
 
+    private String configId;
+    private String pbAdSlot;
     private String interstitialSize;
 
+    private AdType adType;
     private AdUnitIdentifierType adUnitIdentifierType;
     private AdSize minSizePercentage;
     private PlacementType placementType;
     private AdPosition adPosition;
+    private ContentObject appContent;
     private BannerBaseAdUnit.Parameters bannerParameters;
     private VideoBaseAdUnit.Parameters videoParameters;
+    private NativeAdUnitConfiguration nativeConfiguration;
 
     private final HashSet<AdSize> adSizes = new HashSet<>();
+    private final ArrayList<DataObject> userDataObjects = new ArrayList<>();
+    private final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
+    private final Set<String> contextKeywordsSet = new HashSet<>();
+
+
+    public void setAdType(AdType adType) {
+        this.adType = adType;
+    }
+
+    public AdType getAdType() {
+        return adType;
+    }
+
+    public void setConfigId(String configId) {
+        this.configId = configId;
+    }
+
+    public String getConfigId() {
+        return configId;
+    }
+
+    public void setAppContent(ContentObject content) {
+        appContent = content;
+    }
+
+    public ContentObject getAppContent() {
+        return appContent;
+    }
+
+    public void setPbAdSlot(String pbAdSlot) {
+        this.pbAdSlot = pbAdSlot;
+    }
+
+    public String getPbAdSlot() {
+        return pbAdSlot;
+    }
+
+    public void addUserData(DataObject dataObject) {
+        if (dataObject != null) {
+            userDataObjects.add(dataObject);
+        }
+    }
+
+    @NonNull
+    public ArrayList<DataObject> getUserData() {
+        return userDataObjects;
+    }
+
+    public void clearUserData() {
+        userDataObjects.clear();
+    }
+
+    public void addContextData(String key, String value) {
+        if (key != null && value != null) {
+            HashSet<String> hashSet = new HashSet<>();
+            hashSet.add(value);
+            contextDataDictionary.put(key, hashSet);
+        }
+    }
+
+    public void addContextData(String key, Set<String> value) {
+        if (key != null && value != null) {
+            contextDataDictionary.put(key, value);
+        }
+    }
+
+    public void removeContextData(String key) {
+        contextDataDictionary.remove(key);
+    }
+
+    @NonNull
+    public Map<String, Set<String>> getContextDataDictionary() {
+        return contextDataDictionary;
+    }
+
+    public void clearContextData() {
+        contextDataDictionary.clear();
+    }
+
+    public void addContextKeyword(String keyword) {
+        if (keyword != null) {
+            contextKeywordsSet.add(keyword);
+        }
+    }
+
+    public void addContextKeywords(Set<String> keywords) {
+        if (keywords != null) {
+            contextKeywordsSet.addAll(keywords);
+        }
+    }
+
+    public void removeContextKeyword(String key) {
+        if (key != null) {
+            contextKeywordsSet.remove(key);
+        }
+    }
+
+    @NonNull
+    public Set<String> getContextKeywordsSet() {
+        return contextKeywordsSet;
+    }
+
+    public void clearContextKeywords() {
+        contextKeywordsSet.clear();
+    }
 
     public void setMinSizePercentage(@Nullable AdSize minSizePercentage) {
         this.minSizePercentage = minSizePercentage;
@@ -198,6 +304,23 @@ public class AdUnitConfiguration extends BaseAdUnitConfiguration {
 
     public int getBroadcastId() {
         return broadcastId;
+    }
+
+
+    public boolean isNative() {
+        return nativeConfiguration != null;
+    }
+
+    /**
+     * Creates native configuration.
+     */
+    public void initNativeConfiguration() {
+        nativeConfiguration = new NativeAdUnitConfiguration();
+    }
+
+    @Nullable
+    public NativeAdUnitConfiguration getNativeConfiguration() {
+        return nativeConfiguration;
     }
 
 

@@ -24,15 +24,15 @@ public class BannerAdUnit extends BannerBaseAdUnit {
 
     public BannerAdUnit(@NonNull String configId, int width, int height) {
         super(configId, AdType.BANNER);
-        configuration.castToOriginal().addSize(new AdSize(width, height));
+        configuration.addSize(new AdSize(width, height));
     }
 
     public void addAdditionalSize(int width, int height) {
-        configuration.castToOriginal().addSize(new AdSize(width, height));
+        configuration.addSize(new AdSize(width, height));
     }
 
     HashSet<AdSize> getSizes() {
-        return configuration.castToOriginal().getSizes();
+        return configuration.getSizes();
     }
 
 }
