@@ -11,7 +11,6 @@ import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.ExoPlayerView;
-import org.prebid.mobile.unification.AdUnitConfigurationInterface;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -19,7 +18,7 @@ import java.util.Set;
 
 import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_DEFAULT;
 
-public class AdUnitConfiguration extends BaseAdUnitConfiguration implements AdUnitConfigurationInterface {
+public class AdUnitConfiguration extends BaseAdUnitConfiguration {
 
     public static final String TAG = "AdUnitConfiguration";
     public static final int SKIP_OFFSET_NOT_ASSIGNED = -1;
@@ -43,18 +42,15 @@ public class AdUnitConfiguration extends BaseAdUnitConfiguration implements AdUn
 
     private final HashSet<AdSize> adSizes = new HashSet<>();
 
-    @Override
     public void setMinSizePercentage(@Nullable AdSize minSizePercentage) {
         this.minSizePercentage = minSizePercentage;
     }
 
-    @Override
     @Nullable
     public AdSize getMinSizePercentage() {
         return minSizePercentage;
     }
 
-    @Override
     public void addSize(@Nullable AdSize size) {
         if (size != null) {
             adSizes.add(size);
@@ -65,35 +61,29 @@ public class AdUnitConfiguration extends BaseAdUnitConfiguration implements AdUn
         adSizes.addAll(Arrays.asList(sizes));
     }
 
-    @Override
     public void addSizes(@Nullable Set<AdSize> sizes) {
         if (sizes != null) {
             adSizes.addAll(sizes);
         }
     }
 
-    @Override
     @NonNull
     public HashSet<AdSize> getSizes() {
         return adSizes;
     }
 
-    @Override
     public void setBannerParameters(BannerBaseAdUnit.Parameters parameters) {
         bannerParameters = parameters;
     }
 
-    @Override
     public BannerBaseAdUnit.Parameters getBannerParameters() {
         return bannerParameters;
     }
 
-    @Override
     public void setVideoParameters(VideoBaseAdUnit.Parameters parameters) {
         videoParameters = parameters;
     }
 
-    @Override
     public VideoBaseAdUnit.Parameters getVideoParameters() {
         return videoParameters;
     }
