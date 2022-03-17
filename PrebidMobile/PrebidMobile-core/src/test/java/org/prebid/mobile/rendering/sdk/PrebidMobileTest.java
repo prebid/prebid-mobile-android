@@ -86,22 +86,6 @@ public class PrebidMobileTest {
     }
 
     @Test
-    public void testWebViewHttpsEnabledTrue() {
-        PrebidMobile.useHttpsWebViewBaseUrl(true);
-
-        assertEquals(PrebidMobile.SCHEME_HTTPS, PrebidMobile.getWebViewBaseUrlScheme());
-
-        PrebidMobile.useHttpsWebViewBaseUrl(false);
-    }
-
-    @Test
-    public void testWebViewHttpsEnabledFalse() {
-        PrebidMobile.useHttpsWebViewBaseUrl(false);
-
-        assertEquals(PrebidMobile.SCHEME_HTTP, PrebidMobile.getWebViewBaseUrlScheme());
-    }
-
-    @Test
     public void setBidServerHost_nullValue_ReturnDefaultBidServerHost() {
         String expected = PrebidMobile.getPrebidServerHost().getHostUrl();
 

@@ -23,7 +23,9 @@ import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.Until;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
+import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 
 import static org.junit.Assert.*;
 

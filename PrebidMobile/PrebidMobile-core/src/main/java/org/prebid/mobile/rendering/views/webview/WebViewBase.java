@@ -137,7 +137,7 @@ public class WebViewBase extends AdWebView implements AdAssetsLoadedListener {
          * ://stackoverflow.com/questions/2969949/cant-loadAdConfiguration-image-in-webview-
          * via-javascript
          * ***/
-        loadDataWithBaseURL(PrebidMobile.getWebViewBaseUrlScheme() + "://" + mDomain + "/", mAdHTML,
+        loadDataWithBaseURL(PrebidMobile.SCHEME_HTTPS + "://" + mDomain + "/", mAdHTML,
                 "text/html", "utf-8", null);
     }
 

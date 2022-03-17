@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.Host;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.mopub.mock.OpenMediationBaseAdUnit;
 import org.prebid.mobile.mopub.mock.OpenMediationRewardedVideoAdUnit;
 import org.prebid.mobile.mopub.mock.TestResponse;

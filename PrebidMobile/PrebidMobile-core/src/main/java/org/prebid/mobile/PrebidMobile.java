@@ -260,37 +260,12 @@ public class PrebidMobile {
         PrebidMobile.assignNativeAssetID = assignNativeAssetID;
     }
 
-
-    /**
-     * Helper to know the last commit hash of Prebid Rendering SDK
-     */
-    public static String getSDKCommitHash() {
-        return BuildConfig.GitHash;
-    }
-
     /**
      * Return 'true' if Prebid Rendering SDK is initialized completely
      */
     public static boolean isSdkInitialized() {
         return isSdkInitialized;
     }
-
-    /**
-     * Set whether to use SCHEME_HTTP or SCHEME_HTTPS for WebView base urls.
-     */
-    public static void useHttpsWebViewBaseUrl(boolean useHttps) {
-        PrebidMobile.useHttps = useHttps;
-    }
-
-    /**
-     * Allow the publisher to use either http or https. This only affects WebView base urls.
-     *
-     * @return "https://" if sUseHttps is true; "http://" otherwise.
-     */
-    public static String getWebViewBaseUrlScheme() {
-        return useHttps ? SCHEME_HTTPS : SCHEME_HTTP;
-    }
-
 
     private static void initOpenMeasurementSDK(Context context) {
         OmAdSessionManager.activateOmSdk(context.getApplicationContext());

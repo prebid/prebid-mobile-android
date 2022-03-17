@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,11 +20,7 @@ import org.prebid.mobile.ServerRequestSettings;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.drprebid.model.AdSize;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class DemandRequestBuilder {
     private static final String TAG = DemandRequestBuilder.class.getSimpleName();
@@ -186,7 +181,11 @@ public class DemandRequestBuilder {
         object.put("model", Build.MODEL);
         object.put("os", "Android");
         object.put("osv", Build.VERSION.RELEASE);
-        object.put("ua", ServerRequestSettings.getUserAgent());
+        try {
+            object.put("ua", ServerRequestSettings.getUserAgent());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
 
         Display display = ((Activity) context).getWindowManager().getDefaultDisplay();
         Point size = new Point();
