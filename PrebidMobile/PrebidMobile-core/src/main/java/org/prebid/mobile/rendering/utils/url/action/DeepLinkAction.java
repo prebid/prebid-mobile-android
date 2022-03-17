@@ -23,8 +23,8 @@ import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 import org.prebid.mobile.rendering.utils.url.ActionNotResolvedException;
 import org.prebid.mobile.rendering.utils.url.UrlHandler;
 
-import static org.prebid.mobile.rendering.sdk.PrebidRenderingSettings.SCHEME_HTTP;
-import static org.prebid.mobile.rendering.sdk.PrebidRenderingSettings.SCHEME_HTTPS;
+import static org.prebid.mobile.PrebidMobile.SCHEME_HTTP;
+import static org.prebid.mobile.PrebidMobile.SCHEME_HTTPS;
 
 public class DeepLinkAction implements UrlAction {
     @Override

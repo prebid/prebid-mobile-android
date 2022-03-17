@@ -16,11 +16,11 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.App;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
@@ -38,7 +38,7 @@ public class AppInfoParameterBuilder extends ParameterBuilder {
     @Override
     public void appendBuilderParameters(AdRequestInput adRequestInput) {
         App app = adRequestInput.getBidRequest().getApp();
-        app.getPublisher().id = PrebidRenderingSettings.getAccountId();
+        app.getPublisher().id = PrebidMobile.getPrebidServerAccountId();
 
         String appName = AppInfoManager.getAppName();
         if (Utils.isNotBlank(appName)) {
@@ -67,7 +67,7 @@ public class AppInfoParameterBuilder extends ParameterBuilder {
 
         app.contentObject = mAdConfiguration.getAppContent();
 
-        app.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidRenderingSettings.SDK_VERSION));
+        app.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidMobile.SDK_VERSION));
         final Map<String, Set<String>> contextDataDictionary = TargetingParams.getContextDataDictionary();
         if (!contextDataDictionary.isEmpty()) {
             app.getExt().put("data", Utils.toJson(contextDataDictionary));

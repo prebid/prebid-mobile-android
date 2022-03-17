@@ -52,8 +52,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.prebid.mobile.rendering.sdk.PrebidRenderingSettings.AUTO_REFRESH_DELAY_MAX;
-import static org.prebid.mobile.rendering.sdk.PrebidRenderingSettings.AUTO_REFRESH_DELAY_MIN;
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
 
 public final class Utils {
     private static final String TAG = Utils.class.getSimpleName();

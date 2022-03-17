@@ -22,13 +22,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.App;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.robolectric.RobolectricTestRunner;
@@ -76,14 +76,17 @@ public class AppInfoParameterBuilderTest {
         expectedApp.name = APP_NAME;
         expectedApp.bundle = APP_BUNDLE;
         expectedApp.storeurl = expectedStoreurl;
+        expectedApp.getPublisher().id = PrebidMobile.getPrebidServerAccountId();
         expectedApp.getPublisher().name = expectedPublisherName;
-        expectedApp.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidRenderingSettings.SDK_VERSION));
+        expectedApp.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidMobile.SDK_VERSION));
         ContentObject expectedContentObject = new ContentObject();
         expectedContentObject.setUrl("test.com");
         expectedApp.contentObject = expectedContentObject;
 
-        assertEquals(expectedBidRequest.getJsonObject().toString(),
-                adRequestInput.getBidRequest().getJsonObject().toString());
+        assertEquals(
+                expectedBidRequest.getJsonObject().toString(),
+                adRequestInput.getBidRequest().getJsonObject().toString()
+        );
     }
 
     @Test

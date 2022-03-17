@@ -21,8 +21,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.webkit.URLUtil;
 import androidx.annotation.Nullable;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.listeners.OnBrowserActionResultListener;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 import org.prebid.mobile.rendering.utils.url.ActionNotResolvedException;
 import org.prebid.mobile.rendering.utils.url.UrlHandler;
@@ -40,7 +40,7 @@ public class BrowserAction implements UrlAction {
     @Override
     public boolean shouldOverrideUrlLoading(Uri uri) {
         String scheme = uri.getScheme();
-        return PrebidRenderingSettings.SCHEME_HTTP.equals(scheme) || PrebidRenderingSettings.SCHEME_HTTPS.equals(scheme);
+        return PrebidMobile.SCHEME_HTTP.equals(scheme) || PrebidMobile.SCHEME_HTTPS.equals(scheme);
     }
 
     @Override

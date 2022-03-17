@@ -22,16 +22,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.DataObject;
+import org.prebid.mobile.Host;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.bidding.enums.Host;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
@@ -75,7 +75,7 @@ public abstract class MediationBaseAdUnit {
             listener.onComplete(FetchDemandResult.INVALID_AD_OBJECT);
             return;
         }
-        if (TextUtils.isEmpty(PrebidRenderingSettings.getAccountId())) {
+        if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
             LogUtil.error(TAG, "Empty account id");
             listener.onComplete(FetchDemandResult.INVALID_ACCOUNT_ID);
             return;
@@ -86,7 +86,7 @@ public abstract class MediationBaseAdUnit {
             return;
         }
 
-        final Host bidServerHost = PrebidRenderingSettings.getBidServerHost();
+        final Host bidServerHost = PrebidMobile.getPrebidServerHost();
         if (bidServerHost.equals(Host.CUSTOM) && bidServerHost.getHostUrl().isEmpty()) {
             LogUtil.error(TAG, "Empty host url for custom Prebid Server host.");
             listener.onComplete(FetchDemandResult.INVALID_HOST_URL);
@@ -200,12 +200,8 @@ public abstract class MediationBaseAdUnit {
     }
 
     private void initSdk(Context context) {
-        try {
-            PrebidRenderingSettings.initializeSDK(context, () -> {
-            });
-        } catch (AdException e) {
-            e.printStackTrace();
-        }
+        PrebidMobile.setApplicationContext(context, () -> {
+        });
     }
 
     private void cancelRefresh() {

@@ -199,6 +199,11 @@ public class TargetingParamsTest extends BaseSetup {
     //GDPR Consent
     @Test
     public void testGDPRConsentPBString() {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.remove(StorageUtils.IABTCF_SUBJECT_TO_GDPR);
+        editor.apply();
+
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
         TargetingParams.setGDPRConsentString("testString");
         assertEquals("testString", TargetingParams.getGDPRConsentString());

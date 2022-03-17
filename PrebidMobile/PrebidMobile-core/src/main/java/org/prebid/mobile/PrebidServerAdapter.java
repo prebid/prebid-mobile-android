@@ -230,7 +230,7 @@ class PrebidServerAdapter implements DemandAdapter {
                 timeoutCountDownTimer.cancel();
             }
         }
-        
+
         private void removeThisTask() {
             @Nullable
             PrebidServerAdapter prebidServerAdapter = this.prebidServerAdapter.get();
@@ -413,6 +413,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
             return source;
         }
+
         private JSONObject getRequestExtData() {
             JSONObject ext = new JSONObject();
             JSONObject prebid = new JSONObject();
@@ -734,17 +735,19 @@ class PrebidServerAdapter implements DemandAdapter {
                 if (!TextUtils.isEmpty(PrebidServerSettings.deviceModel))
                     device.put(PrebidServerSettings.REQUEST_DEVICE_MODEL, PrebidServerSettings.deviceModel);
                 // Default User Agent
-                if (!TextUtils.isEmpty(PrebidServerSettings.userAgent)) {
-                    device.put(PrebidServerSettings.REQUEST_USERAGENT, PrebidServerSettings.userAgent);
-                }
-                // limited ad tracking
-                device.put(PrebidServerSettings.REQUEST_LMT, AdvertisingIDUtil.isLimitAdTracking() ? 1 : 0);
-                if(canIAccessDeviceData()) {
-                    if (!AdvertisingIDUtil.isLimitAdTracking() && !TextUtils.isEmpty(AdvertisingIDUtil.getAAID())) {
-                        // put ifa
-                        device.put(PrebidServerSettings.REQUEST_IFA, AdvertisingIDUtil.getAAID());
-                    }
-                }
+
+                // TODO:Unification: Remove or fix
+//                if (!TextUtils.isEmpty(PrebidServerSettings.userAgent)) {
+//                    device.put(PrebidServerSettings.REQUEST_USERAGENT, PrebidServerSettings.userAgent);
+//                }
+//                // limited ad tracking
+//                device.put(PrebidServerSettings.REQUEST_LMT, AdvertisingIDUtil.isLimitAdTracking() ? 1 : 0);
+//                if(canIAccessDeviceData()) {
+//                    if (!AdvertisingIDUtil.isLimitAdTracking() && !TextUtils.isEmpty(AdvertisingIDUtil.getAAID())) {
+//                        // put ifa
+//                        device.put(PrebidServerSettings.REQUEST_IFA, AdvertisingIDUtil.getAAID());
+//                    }
+//                }
 
                 // os
                 device.put(PrebidServerSettings.REQUEST_OS, PrebidServerSettings.os);
@@ -888,9 +891,10 @@ class PrebidServerAdapter implements DemandAdapter {
                 if (!TextUtils.isEmpty(TargetingParams.getBundleName())) {
                     app.put("bundle", TargetingParams.getBundleName());
                 }
-                if (!TextUtils.isEmpty(PrebidServerSettings.pkgVersion)) {
-                    app.put("ver", PrebidServerSettings.pkgVersion);
-                }
+                // TODO:Unification: Remove or fix
+//                if (!TextUtils.isEmpty(PrebidServerSettings.pkgVersion)) {
+//                    app.put("ver", PrebidServerSettings.pkgVersion);
+//                }
                 if (!TextUtils.isEmpty(PrebidServerSettings.appName)) {
                     app.put("name", PrebidServerSettings.appName);
                 }
@@ -1002,12 +1006,10 @@ class PrebidServerAdapter implements DemandAdapter {
                         JSONArray uidArray = new JSONArray();
                         JSONObject uidObject = new JSONObject();
                         uidObject.put("id", externaluserId.getIdentifier());
-                        if (externaluserId.getAtype() != null)
-                        {
+                        if (externaluserId.getAtype() != null) {
                             uidObject.put("atype", externaluserId.getAtype());
                         }
-                        if (externaluserId.getExt() != null)
-                        {
+                        if (externaluserId.getExt() != null) {
                             JSONObject extObject = new JSONObject(externaluserId.getExt());
                             uidObject.put("ext", extObject);
                         }
@@ -1016,7 +1018,7 @@ class PrebidServerAdapter implements DemandAdapter {
                         transformedUserIdArray.put(transformedUserIdObject);
                     }
                 }
-            }catch (JSONException e) {
+            } catch (JSONException e) {
                 LogUtil.d("PrebidServerAdapter getExternalUserIdArray() " + e.getMessage());
             }
 
@@ -1063,7 +1065,7 @@ class PrebidServerAdapter implements DemandAdapter {
             Boolean gdprApplies = TargetingParams.isSubjectToGDPR();
             Boolean deviceAccessConsent = TargetingParams.getDeviceAccessConsent();
 
-            if((deviceAccessConsent == null && (gdprApplies == null || Boolean.FALSE.equals(gdprApplies)))
+            if ((deviceAccessConsent == null && (gdprApplies == null || Boolean.FALSE.equals(gdprApplies)))
                     || Boolean.TRUE.equals(deviceAccessConsent)) {
 
                 setDeviceId = true;

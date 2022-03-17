@@ -27,9 +27,9 @@ import android.webkit.URLUtil;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.listeners.OnBrowserActionResultListener;
 import org.prebid.mobile.rendering.listeners.OnBrowserActionResultListener.BrowserActionResult;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.utils.url.ActionNotResolvedException;
 import org.prebid.mobile.rendering.views.browser.AdBrowserActivity;
@@ -104,11 +104,10 @@ public class ExternalViewerUtils {
             intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
         }
 
-        if (!PrebidRenderingSettings.useExternalBrowser && isActivityCallable(context, intent)) {
+        if (!PrebidMobile.useExternalBrowser && isActivityCallable(context, intent)) {
             context.startActivity(intent);
             notifyBrowserActionSuccess(BrowserActionResult.INTERNAL_BROWSER, onBrowserActionResultListener);
-        }
-        else {
+        } else {
             startExternalBrowser(context, url);
             notifyBrowserActionSuccess(BrowserActionResult.EXTERNAL_BROWSER, onBrowserActionResultListener);
         }

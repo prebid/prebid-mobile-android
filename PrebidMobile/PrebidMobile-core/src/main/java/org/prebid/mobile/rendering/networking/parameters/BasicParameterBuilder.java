@@ -23,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.DataObject;
 import org.prebid.mobile.ExternalUserId;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
@@ -36,19 +37,20 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
 import java.util.*;
 
+import static org.prebid.mobile.PrebidMobile.SDK_VERSION;
+
 public class BasicParameterBuilder extends ParameterBuilder {
 
     public static final String[] SUPPORTED_VIDEO_MIME_TYPES = new String[]{
-        "video/mp4",
-        "video/3gpp",
-        "video/webm",
-        "video/mkv"};
+            "video/mp4",
+            "video/3gpp",
+            "video/webm",
+            "video/mkv"};
 
     static final String DISPLAY_MANAGER_VALUE = "prebid-mobile";
     static final String KEY_OM_PARTNER_NAME = "omidpn";
@@ -117,9 +119,9 @@ public class BasicParameterBuilder extends ParameterBuilder {
     private void configureBidRequest(BidRequest bidRequest, String uuid) {
         bidRequest.setId(uuid);
         boolean isVideo = mAdConfiguration.isAdType(AdConfiguration.AdUnitIdentifierType.VAST);
-        bidRequest.getExt().put("prebid", Prebid.getJsonObjectForBidRequest(PrebidRenderingSettings.getAccountId(), isVideo));
+        bidRequest.getExt().put("prebid", Prebid.getJsonObjectForBidRequest(PrebidMobile.getPrebidServerAccountId(), isVideo));
         //if coppaEnabled - set 1, else No coppa is sent
-        if (PrebidRenderingSettings.isCoppaEnabled) {
+        if (PrebidMobile.isCoppaEnabled) {
             bidRequest.getRegs().coppa = 1;
         }
     }
@@ -243,7 +245,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
         //Send 1 for interstitial/interstitial video and 0 for banners
         imp.instl = isInterstitial ? 1 : 0;
         // 0 == embedded, 1 == native
-        imp.clickBrowser = !PrebidRenderingSettings.useExternalBrowser && mBrowserActivityAvailable ? 0 : 1;
+        imp.clickBrowser = !PrebidMobile.useExternalBrowser && mBrowserActivityAvailable ? 0 : 1;
         //set secure=1 for https or secure=0 for http
         if (!mAdConfiguration.isAdType(AdUnitIdentifierType.VAST)) {
             imp.secure = 1;
@@ -266,14 +268,14 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
     private void setDisplayManager(Imp imp) {
         imp.displaymanager = DISPLAY_MANAGER_VALUE;
-        imp.displaymanagerver = PrebidRenderingSettings.SDK_VERSION;
+        imp.displaymanagerver = SDK_VERSION;
     }
 
     private int[] getApiFrameworks() {
         List<Integer> supportedApiFrameworks = new ArrayList<>();
 
         // If MRAID is on, then add api(3,5)
-        if (PrebidRenderingSettings.sendMraidSupportParams) {
+        if (PrebidMobile.sendMraidSupportParams) {
             supportedApiFrameworks.addAll(SUPPORTED_MRAID_VERSIONS);
         }
 

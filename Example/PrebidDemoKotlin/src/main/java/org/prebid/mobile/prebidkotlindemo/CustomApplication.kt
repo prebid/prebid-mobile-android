@@ -31,7 +31,6 @@ import com.mopub.common.SdkConfiguration
 import com.mopub.common.logging.MoPubLog
 import org.prebid.mobile.Host
 import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 
 class CustomApplication : Application() {
 
@@ -62,10 +61,10 @@ class CustomApplication : Application() {
         PrebidMobile.setShareGeoLocation(true)
         PrebidMobile.setApplicationContext(applicationContext)
 
-        val host = org.prebid.mobile.rendering.bidding.enums.Host.CUSTOM
+        val host = Host.CUSTOM
         host.hostUrl = "https://prebid.openx.net/openrtb2/auction"
-        PrebidRenderingSettings.setBidServerHost(host)
-        PrebidRenderingSettings.setAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
+        PrebidMobile.setPrebidServerHost(host)
+        PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
     }
 
     private fun initAdMob() {

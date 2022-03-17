@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.bidding.loader;
 
 import android.content.Context;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.errors.AdException;
@@ -25,7 +26,6 @@ import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
 import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
@@ -205,7 +205,7 @@ public class BidLoader {
             int tmaxRequest = (int) extMap.get(TMAX_REQUEST_KEY);
             // adding 200ms as safe time
             int timeout = (int) Math.min(response.responseTime + tmaxRequest + 200, BaseNetworkTask.TIMEOUT_DEFAULT);
-            PrebidRenderingSettings.setTimeoutMillis(timeout);
+            PrebidMobile.setTimeoutMillis(timeout);
             sTimeoutHasChanged = true;
         }
     }

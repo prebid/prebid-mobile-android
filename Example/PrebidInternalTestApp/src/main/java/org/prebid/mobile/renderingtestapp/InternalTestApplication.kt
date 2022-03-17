@@ -24,7 +24,6 @@ import android.webkit.WebView
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 import org.prebid.mobile.renderingtestapp.utils.DemoItemProvider
 import org.prebid.mobile.renderingtestapp.utils.MockServerUtils
 import org.prebid.mobile.renderingtestapp.utils.SourcePicker
@@ -43,8 +42,8 @@ class InternalTestApplication : MultiDexApplication() {
         instance = this
 
         PrebidMobile.setApplicationContext(this)
-        PrebidRenderingSettings.setAccountId(getString(R.string.prebid_account_id_prod))
-        PrebidRenderingSettings.logLevel = PrebidRenderingSettings.LogLevel.DEBUG
+        PrebidMobile.setPrebidServerAccountId(getString(R.string.prebid_account_id_prod))
+        PrebidMobile.logLevel = PrebidMobile.LogLevel.DEBUG
 
         // Setup mock responses only in mock build
         val isMock = BuildConfig.FLAVOR == "mock"

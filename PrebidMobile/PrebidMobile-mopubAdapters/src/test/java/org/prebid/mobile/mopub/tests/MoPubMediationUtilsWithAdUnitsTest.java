@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.Host;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.mopub.mock.OpenMediationBaseAdUnit;
 import org.prebid.mobile.mopub.mock.OpenMediationRewardedVideoAdUnit;
 import org.prebid.mobile.mopub.mock.TestResponse;
@@ -16,10 +18,8 @@ import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
-import org.prebid.mobile.rendering.bidding.enums.Host;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -48,8 +48,8 @@ public class MoPubMediationUtilsWithAdUnitsTest {
 
         context = Robolectric.buildActivity(Activity.class).create().get();
 
-        PrebidRenderingSettings.setAccountId("id");
-        PrebidRenderingSettings.setBidServerHost(Host.APPNEXUS);
+        PrebidMobile.setPrebidServerAccountId("id");
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
     }
 
     @Test

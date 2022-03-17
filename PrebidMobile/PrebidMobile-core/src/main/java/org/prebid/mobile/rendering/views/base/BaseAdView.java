@@ -21,9 +21,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdConfiguration;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
 import org.prebid.mobile.rendering.utils.broadcast.local.EventForwardingLocalBroadcastReceiver;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
@@ -91,7 +91,7 @@ public abstract class BaseAdView extends FrameLayout {
         int visibility = getVisibility();
 
         setScreenVisibility(visibility);
-        PrebidRenderingSettings.initializeSDK(getContext(), null);
+        PrebidMobile.setApplicationContext(getContext(), null);
     }
 
     protected void registerEventBroadcast() {

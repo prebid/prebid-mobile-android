@@ -18,8 +18,8 @@ package org.prebid.mobile.rendering.networking.urlBuilder;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.rendering.bidding.enums.Host;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
+import org.prebid.mobile.Host;
+import org.prebid.mobile.PrebidMobile;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -32,7 +32,7 @@ public class BidPathBuilderTest {
     public void testBuildUrlPath() {
         final Host custom = Host.CUSTOM;
         custom.setHostUrl("https://prebid.customhost.net/openrtb2/auction");
-        PrebidRenderingSettings.setBidServerHost(custom);
+        PrebidMobile.setPrebidServerHost(custom);
 
         assertEquals("https://prebid.customhost.net/openrtb2/auction", new BidPathBuilder().buildURLPath(null));
     }

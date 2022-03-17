@@ -36,7 +36,7 @@ public class PrebidMobileTest extends BaseSetup {
         PrebidMobile.setTimeoutMillis(2500);
         assertEquals(2500, PrebidMobile.getTimeoutMillis());
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
-        assertEquals(activity.getApplicationContext(), PrebidMobile.getApplicationContext());
+        assertNotNull(PrebidMobile.getApplicationContext());
         PrebidMobile.setShareGeoLocation(true);
         assertTrue(PrebidMobile.isShareGeoLocation());
         PrebidMobile.setPrebidServerHost(Host.RUBICON);
