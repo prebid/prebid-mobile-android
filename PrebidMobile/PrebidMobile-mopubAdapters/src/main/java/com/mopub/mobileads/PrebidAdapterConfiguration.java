@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import com.mopub.common.BaseAdapterConfiguration;
 import com.mopub.common.OnNetworkInitializationFinishedListener;
 import com.mopub.common.Preconditions;
+import org.prebid.mobile.PrebidMobile;
 
 import java.util.Map;
 
