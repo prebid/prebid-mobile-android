@@ -29,6 +29,7 @@ import org.prebid.mobile.rendering.loading.AdLoadListener;
 import org.prebid.mobile.rendering.loading.VastParserExtractor;
 import org.prebid.mobile.test.utils.ResourceUtils;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 

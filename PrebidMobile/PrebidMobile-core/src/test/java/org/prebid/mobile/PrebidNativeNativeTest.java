@@ -93,6 +93,7 @@ public class PrebidNativeNativeTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
 
         AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.initNativeConfiguration();
         configuration.setConfigId(PBS_CONFIG_ID_NATIVE_APPNEXUS);
         configuration.setAdType(AdType.NATIVE);
 
@@ -176,6 +177,7 @@ public class PrebidNativeNativeTest extends BaseSetup {
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setConfigId(PBS_CONFIG_ID_NATIVE_APPNEXUS);
         configuration.setAdType(AdType.NATIVE);
+        configuration.initNativeConfiguration();
 
         String uuid = UUID.randomUUID().toString();
         adapter.requestDemand(configuration, mockListener, uuid);
@@ -276,6 +278,7 @@ public class PrebidNativeNativeTest extends BaseSetup {
         PrebidServerAdapter adapter = new PrebidServerAdapter();
 
         AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.initNativeConfiguration();
         configuration.setConfigId(PBS_CONFIG_ID_NATIVE_APPNEXUS);
         configuration.setAdType(AdType.NATIVE);
 
