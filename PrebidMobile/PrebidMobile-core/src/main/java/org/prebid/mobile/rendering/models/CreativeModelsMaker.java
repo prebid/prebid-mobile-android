@@ -17,12 +17,13 @@
 package org.prebid.mobile.rendering.models;
 
 import org.prebid.mobile.rendering.parser.AdResponseParserBase;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.List;
 
 public abstract class CreativeModelsMaker {
 
-    public abstract void makeModels(AdConfiguration adConfiguration, AdResponseParserBase... parsers);
+    public abstract void makeModels(AdUnitConfiguration adConfiguration, AdResponseParserBase... parsers);
 
     public static class Result {
         public String transactionState;

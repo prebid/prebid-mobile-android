@@ -24,9 +24,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -56,7 +56,7 @@ public class BaseAdViewTest {
             }
         };
         mMockAdViewManager = Mockito.mock(AdViewManager.class);
-        when(mMockAdViewManager.getAdConfiguration()).thenReturn(new AdConfiguration());
+        when(mMockAdViewManager.getAdConfiguration()).thenReturn(new AdUnitConfiguration());
         Field field = WhiteBox.field(BaseAdView.class, "mAdViewManager");
         field.set(mBaseAdView, mMockAdViewManager);
     }

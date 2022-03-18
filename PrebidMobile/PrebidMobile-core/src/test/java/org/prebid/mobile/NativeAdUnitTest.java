@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.testutils.BaseSetup;
-import org.prebid.mobile.unification.NativeAdUnitConfiguration;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -27,7 +27,7 @@ public class NativeAdUnitTest {
     @Test
     public void testNativeAdUnitCreation() throws Exception {
         NativeAdUnit nativeUnit = new NativeAdUnit(PBS_CONFIG_ID_NATIVE_APPNEXUS);
-        NativeAdUnitConfiguration configuration = (NativeAdUnitConfiguration) nativeUnit.getConfiguration();
+        AdUnitConfiguration configuration = nativeUnit.getConfiguration();
 
         assertNotNull(nativeUnit);
         assertEquals(PBS_CONFIG_ID_NATIVE_APPNEXUS, configuration.getConfigId());

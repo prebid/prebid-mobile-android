@@ -24,11 +24,11 @@ public class VideoAdUnit extends VideoBaseAdUnit {
 
     public VideoAdUnit(@NonNull String configId, int width, int height) {
         super(configId, AdType.VIDEO);
-        configuration.castToOriginal().addSize(new AdSize(width, height));
+        configuration.addSize(new AdSize(width, height));
     }
 
     AdSize getAdSize() {
-        HashSet<AdSize> sizes = configuration.castToOriginal().getSizes();
+        HashSet<AdSize> sizes = configuration.getSizes();
         return sizes.iterator().next();
     }
 

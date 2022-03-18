@@ -20,11 +20,11 @@ import android.content.Context;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AbstractCreative;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.CreativeModelMakerBids;
 import org.prebid.mobile.rendering.models.CreativeModelsMaker;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -92,11 +92,11 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
      * @param adConfiguration - AdConfiguration
      * @param bidResponse     - parsed bid response
      */
-    public void fetchBidTransaction(AdConfiguration adConfiguration, BidResponse bidResponse) {
+    public void fetchBidTransaction(AdUnitConfiguration adConfiguration, BidResponse bidResponse) {
         mCreativeModelMakerBids.makeModels(adConfiguration, bidResponse);
     }
 
-    public void fetchVideoTransaction(AdConfiguration adConfiguration, String vastXml) {
+    public void fetchVideoTransaction(AdUnitConfiguration adConfiguration, String vastXml) {
         mCreativeModelMakerBids.makeVideoModels(adConfiguration, vastXml);
     }
 

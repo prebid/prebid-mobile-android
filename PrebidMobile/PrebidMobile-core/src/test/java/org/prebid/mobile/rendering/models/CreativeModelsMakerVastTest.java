@@ -37,6 +37,7 @@ import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;
 import org.prebid.mobile.test.utils.ResourceUtils;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -57,12 +58,12 @@ import static org.prebid.mobile.rendering.video.VideoAdEvent.Event.AD_IMPRESSION
 @SuppressWarnings("unchecked")
 public class CreativeModelsMakerVastTest {
 
-    private AdConfiguration mAdConfiguration;
+    private AdUnitConfiguration mAdConfiguration;
     private AdLoadListener mMockListener;
 
     @Before
     public void setUp() throws Exception {
-        mAdConfiguration = new AdConfiguration();
+        mAdConfiguration = new AdUnitConfiguration();
         mAdConfiguration.setRewarded(true);
         mMockListener = mock(AdLoadListener.class);
     }

@@ -22,7 +22,7 @@ import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.tasksmanager.TasksManager;
-import org.prebid.mobile.unification.BaseAdUnitConfigurationInterface;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -43,7 +43,7 @@ class DemandFetcher {
     private RequestRunnable requestRunnable;
     private long lastFetchTime = -1;
     private long timePausedAt = -1;
-    private BaseAdUnitConfigurationInterface configuration;
+    private AdUnitConfiguration configuration;
 
     DemandFetcher(@NonNull Object adObj) {
         this.state = STATE.STOPPED;
@@ -59,7 +59,7 @@ class DemandFetcher {
         this.listener = listener;
     }
 
-    void setConfiguration(BaseAdUnitConfigurationInterface configuration) {
+    void setConfiguration(AdUnitConfiguration configuration) {
         this.configuration = configuration;
     }
 

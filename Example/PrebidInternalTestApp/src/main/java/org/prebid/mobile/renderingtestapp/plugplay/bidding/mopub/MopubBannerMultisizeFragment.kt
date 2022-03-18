@@ -16,7 +16,7 @@
 
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.mopub
 
-import org.prebid.mobile.rendering.bidding.data.AdSize
+import org.prebid.mobile.AdSize
 
 class MopubBannerMultisizeFragment : MopubBannerFragment() {
     override fun initAd(): Any? {

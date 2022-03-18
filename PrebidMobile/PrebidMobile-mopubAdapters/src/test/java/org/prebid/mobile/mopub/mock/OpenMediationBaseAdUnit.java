@@ -2,7 +2,7 @@ package org.prebid.mobile.mopub.mock;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.MediationBaseAdUnit;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;

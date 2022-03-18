@@ -29,11 +29,11 @@ import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -47,7 +47,7 @@ public class DisplayViewTest {
 
     private DisplayView mDisplayView;
     private Context mContext;
-    private AdConfiguration mAdUnitConfiguration;
+    private AdUnitConfiguration mAdUnitConfiguration;
     @Mock
     private BidResponse mBidResponse;
     @Mock
@@ -61,8 +61,8 @@ public class DisplayViewTest {
 
         mContext = Robolectric.buildActivity(Activity.class).create().get();
 
-        mAdUnitConfiguration = new AdConfiguration();
-        mAdUnitConfiguration.setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.BANNER);
+        mAdUnitConfiguration = new AdUnitConfiguration();
+        mAdUnitConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
 
         BidResponse mockResponse = mock(BidResponse.class);
         Bid mockBid = mock(Bid.class);

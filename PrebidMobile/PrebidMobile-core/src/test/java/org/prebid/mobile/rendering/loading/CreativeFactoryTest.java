@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AbstractCreative;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.CreativeModel;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
@@ -33,6 +32,7 @@ import org.prebid.mobile.rendering.video.VideoCreative;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -105,8 +105,8 @@ public class CreativeFactoryTest {
 
     @Test
     public void testAttemptAuidCreative() throws Exception {
-        AdConfiguration adConfiguration = new AdConfiguration();
-        adConfiguration.setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.BANNER);
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        adConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
         Handler mockHandler = mock(Handler.class);
         when(mMockModel.getAdConfiguration()).thenReturn(adConfiguration);
         when(mMockModel.getName()).thenReturn(HTML_CREATIVE_TAG);
@@ -127,9 +127,9 @@ public class CreativeFactoryTest {
     @Test
     public void testAttemptVastCreative() throws Exception {
         VideoCreativeModel mockVideoModel = mock(VideoCreativeModel.class);
-        AdConfiguration adConfiguration = new AdConfiguration();
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         Handler mockHandler = mock(Handler.class);
-        adConfiguration.setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.VAST);
+        adConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.VAST);
         HashMap<VideoAdEvent.Event, ArrayList<String>> videoEventsUrls = new HashMap<>();
         videoEventsUrls.put(VideoAdEvent.Event.AD_EXPAND,
                             new ArrayList<>(Arrays.asList("AD_EXPAND")));

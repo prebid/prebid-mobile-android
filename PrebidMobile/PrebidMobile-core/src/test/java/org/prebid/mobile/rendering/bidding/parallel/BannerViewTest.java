@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.DisplayView;
@@ -40,9 +40,9 @@ import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -185,13 +185,13 @@ public class BannerViewTest {
     public void setVideoPlacementType_AdUnitIdentifierTypeIsVASTAndVideoPlacementIsUpdated()
     throws IllegalAccessException {
         final VideoPlacementType videoPlacement = VideoPlacementType.IN_BANNER;
-        AdConfiguration mockAdConfiguration = mock(AdConfiguration.class);
+        AdUnitConfiguration mockAdConfiguration = mock(AdUnitConfiguration.class);
         WhiteBox.field(BannerView.class, "mAdUnitConfig").set(mBannerView, mockAdConfiguration);
 
         mBannerView.setVideoPlacementType(videoPlacement);
 
         verify(mockAdConfiguration, times(1)).setPlacementType(eq(VideoPlacementType.mapToPlacementType(videoPlacement)));
-        verify(mockAdConfiguration, times(1)).setAdUnitIdentifierType(eq(AdConfiguration.AdUnitIdentifierType.VAST));
+        verify(mockAdConfiguration, times(1)).setAdUnitIdentifierType(eq(AdUnitConfiguration.AdUnitIdentifierType.VAST));
     }
 
     @Test

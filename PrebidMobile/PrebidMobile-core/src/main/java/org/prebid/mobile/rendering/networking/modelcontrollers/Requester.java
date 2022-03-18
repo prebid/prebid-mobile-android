@@ -21,7 +21,6 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.listeners.AdIdFetchListener;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.parameters.*;
@@ -36,6 +35,7 @@ import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -48,12 +48,12 @@ public abstract class Requester {
 
     protected String mRequestName;
     protected WeakReference<Context> mContextReference;
-    protected AdConfiguration mAdConfiguration;
+    protected AdUnitConfiguration mAdConfiguration;
     protected URLBuilder mUrlBuilder;
     protected ResponseHandler mAdResponseCallBack;
     protected AsyncTask mNetworkTask;
 
-    Requester(Context context, AdConfiguration config, AdRequestInput adRequestInput, ResponseHandler responseHandler) {
+    Requester(Context context, AdUnitConfiguration config, AdRequestInput adRequestInput, ResponseHandler responseHandler) {
         mRequestName = "";
         mContextReference = new WeakReference<>(context);
         mAdConfiguration = config;

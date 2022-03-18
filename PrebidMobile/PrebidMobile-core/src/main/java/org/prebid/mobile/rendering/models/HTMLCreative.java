@@ -39,6 +39,7 @@ import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class HTMLCreative extends AbstractCreative
     implements WebViewDelegate, InterstitialManagerDisplayDelegate, Comparable {
@@ -75,9 +76,9 @@ public class HTMLCreative extends AbstractCreative
             throw new AdException(AdException.INTERNAL_ERROR, "Context is null. Could not load adHtml");
         }
         CreativeModel model = getCreativeModel();
-        AdConfiguration.AdUnitIdentifierType adType = model.getAdConfiguration().getAdUnitIdentifierType();
+        AdUnitConfiguration.AdUnitIdentifierType adType = model.getAdConfiguration().getAdUnitIdentifierType();
         if (model.getAdConfiguration().isBuiltInVideo()) {
-            adType = AdConfiguration.AdUnitIdentifierType.BANNER;
+            adType = AdUnitConfiguration.AdUnitIdentifierType.BANNER;
         }
 
         if (adType == null) {
@@ -85,15 +86,14 @@ public class HTMLCreative extends AbstractCreative
         }
         //create a webview here
         PrebidWebViewBase prebidWebView = null;
-        if (adType == AdConfiguration.AdUnitIdentifierType.BANNER) {
+        if (adType == AdUnitConfiguration.AdUnitIdentifierType.BANNER) {
             //do all banner
             prebidWebView = (PrebidWebViewBanner) ViewPool.getInstance()
-                                                        .getUnoccupiedView(mContextReference.get(), null, adType, mInterstitialManager);
-        }
-        else if (adType == AdConfiguration.AdUnitIdentifierType.INTERSTITIAL) {
+                    .getUnoccupiedView(mContextReference.get(), null, adType, mInterstitialManager);
+        } else if (adType == AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL) {
             //do all interstitials
             prebidWebView = (PrebidWebViewInterstitial) ViewPool.getInstance()
-                                                              .getUnoccupiedView(mContextReference.get(), null, adType, mInterstitialManager);
+                    .getUnoccupiedView(mContextReference.get(), null, adType, mInterstitialManager);
         }
 
         if (prebidWebView == null) {
@@ -148,7 +148,7 @@ public class HTMLCreative extends AbstractCreative
 
         WebViewBase webView = getCreativeView().getWebView();
 
-        AdConfiguration adConfiguration = getCreativeModel().getAdConfiguration();
+        AdUnitConfiguration adConfiguration = getCreativeModel().getAdConfiguration();
         ContentObject contentObject = adConfiguration.getAppContent();
         String contentUrl = null;
         if (contentObject != null) contentUrl = contentObject.getUrl();

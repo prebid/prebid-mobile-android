@@ -25,10 +25,10 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.core.R;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.DisplayView;
@@ -42,7 +42,6 @@ import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
@@ -51,6 +50,7 @@ import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.Map;
 import java.util.Set;
@@ -58,7 +58,7 @@ import java.util.Set;
 public class BannerView extends FrameLayout {
     private final static String TAG = BannerView.class.getSimpleName();
 
-    private final AdConfiguration mAdUnitConfig = new AdConfiguration();
+    private final AdUnitConfiguration mAdUnitConfig = new AdUnitConfiguration();
     private BannerEventHandler mEventHandler;
 
     private String mConfigId;
@@ -273,7 +273,7 @@ public class BannerView extends FrameLayout {
 
     //region ==================== getters and setters
     public void setAutoRefreshDelay(int seconds) {
-        if (!mAdUnitConfig.isAdType(AdConfiguration.AdUnitIdentifierType.BANNER)) {
+        if (!mAdUnitConfig.isAdType(AdUnitConfiguration.AdUnitIdentifierType.BANNER)) {
             LogUtil.info(TAG, "Autorefresh is available only for Banner ad type");
             return;
         }
@@ -293,7 +293,7 @@ public class BannerView extends FrameLayout {
     }
 
     public Set<AdSize> getAdditionalSizes() {
-        return mAdUnitConfig.getAdSizes();
+        return mAdUnitConfig.getSizes();
     }
 
     public void setBannerListener(BannerViewListener bannerListener) {
@@ -301,7 +301,7 @@ public class BannerView extends FrameLayout {
     }
 
     public void setVideoPlacementType(VideoPlacementType videoPlacement) {
-        mAdUnitConfig.setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.VAST);
+        mAdUnitConfig.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.VAST);
 
         final PlacementType placementType = VideoPlacementType.mapToPlacementType(videoPlacement);
         mAdUnitConfig.setPlacementType(placementType);
@@ -326,7 +326,7 @@ public class BannerView extends FrameLayout {
     }
 
     public void updateContextData(String key, Set<String> value) {
-        mAdUnitConfig.updateContextData(key, value);
+        mAdUnitConfig.addContextData(key, value);
     }
 
     public void removeContextData(String key) {
@@ -437,7 +437,7 @@ public class BannerView extends FrameLayout {
         mAdUnitConfig.setConfigId(mConfigId);
         mAdUnitConfig.setAutoRefreshDelay(mRefreshIntervalSec);
         mEventHandler.setBannerEventListener(mBannerEventListener);
-        mAdUnitConfig.setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.BANNER);
+        mAdUnitConfig.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
         mAdUnitConfig.addSizes(mEventHandler.getAdSizeArray());
     }
 

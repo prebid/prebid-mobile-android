@@ -37,8 +37,8 @@ import org.prebid.mobile.http.HTTPPost;
 import org.prebid.mobile.http.NoContextException;
 import org.prebid.mobile.http.TaskResult;
 import org.prebid.mobile.tasksmanager.TasksManager;
-import org.prebid.mobile.unification.BaseAdUnitConfigurationInterface;
-import org.prebid.mobile.unification.NativeAdUnitConfiguration;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.units.configuration.NativeAdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
@@ -53,7 +53,7 @@ class PrebidServerAdapter implements DemandAdapter {
     }
 
     @Override
-    public void requestDemand(BaseAdUnitConfigurationInterface configuration, DemandAdapterListener listener, String auctionId) {
+    public void requestDemand(AdUnitConfiguration configuration, DemandAdapterListener listener, String auctionId) {
         final ServerConnector connector = new ServerConnector(this, listener, configuration, auctionId, cacheIdSaver);
         serverConnectors.add(connector);
         connector.execute();
@@ -78,7 +78,7 @@ class PrebidServerAdapter implements DemandAdapter {
         private final WeakReference<PrebidServerAdapter> prebidServerAdapter;
         private final TimeoutCountDownTimer timeoutCountDownTimer;
 
-        private final BaseAdUnitConfigurationInterface configuration;
+        private final AdUnitConfiguration configuration;
         private final String auctionId;
 
         private DemandAdapterListener listener;
@@ -90,7 +90,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
         private CacheIdSaver cacheIdSaver;
 
-        ServerConnector(PrebidServerAdapter prebidServerAdapter, DemandAdapterListener listener, BaseAdUnitConfigurationInterface configuration, String auctionId, CacheIdSaver cacheIdSaver) {
+        ServerConnector(PrebidServerAdapter prebidServerAdapter, DemandAdapterListener listener, AdUnitConfiguration configuration, String auctionId, CacheIdSaver cacheIdSaver) {
             this.prebidServerAdapter = new WeakReference<>(prebidServerAdapter);
             this.listener = listener;
             this.configuration = configuration;
@@ -450,7 +450,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     JSONArray format = new JSONArray();
 
                     if (adType.equals(AdType.BANNER)) {
-                        for (AdSize size : configuration.castToOriginal().getSizes()) {
+                        for (AdSize size : configuration.getSizes()) {
                             format.put(new JSONObject().put("w", size.getWidth()).put("h", size.getHeight()));
                         }
                     } else if (adType.equals(AdType.INTERSTITIAL)) {
@@ -465,7 +465,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
                     banner.put("format", format);
 
-                    BannerBaseAdUnit.Parameters parameters = configuration.castToOriginal().getBannerParameters();
+                    BannerBaseAdUnit.Parameters parameters = configuration.getBannerParameters();
                     if (parameters != null) {
 
                         List<Integer> apiList = Util.convertCollection(parameters.getApi(), new Util.Function1<Integer, Signals.Api>() {
@@ -485,7 +485,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     JSONObject nativeObj = new JSONObject();
                     JSONObject request = new JSONObject();
                     JSONArray assets = new JSONArray();
-                    NativeAdUnitConfiguration params = configuration.castToNative();
+                    NativeAdUnitConfiguration params = configuration.getNativeConfiguration();
                     if (params.getContextType() != null) {
                         request.put(NativeRequestParams.CONTEXT, params.getContextType().getID());
                     }
@@ -601,7 +601,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     JSONObject video = new JSONObject();
                     Integer placementValue = null;
 
-                    VideoBaseAdUnit.Parameters parameters = configuration.castToOriginal().getVideoParameters();
+                    VideoBaseAdUnit.Parameters parameters = configuration.getVideoParameters();
                     if (parameters != null) {
 
                         List<Integer> apiList = Util.convertCollection(parameters.getApi(), new Util.Function1<Integer, Signals.Api>() {
@@ -649,7 +649,7 @@ class PrebidServerAdapter implements DemandAdapter {
 
                     Integer placementValueDefault = null;
                     if (adType.equals(AdType.VIDEO)) {
-                        for (AdSize size : configuration.castToOriginal().getSizes()) {
+                        for (AdSize size : configuration.getSizes()) {
                             video.put("w", size.getWidth());
                             video.put("h", size.getHeight());
                         }
@@ -762,7 +762,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     Integer minSizePercWidth = null;
                     Integer minSizePercHeight = null;
 
-                    AdSize minSizePerc = configuration.castToOriginal().getMinSizePercentage();
+                    AdSize minSizePerc = configuration.getMinSizePercentage();
                     if (minSizePerc != null) {
 
                         minSizePercWidth = minSizePerc.getWidth();

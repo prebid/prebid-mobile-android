@@ -26,9 +26,9 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
@@ -49,13 +49,13 @@ public class InterstitialViewTest {
 
         mSpyBidInterstitialView = spy(new InterstitialView(context));
 
-        when(mMockAdViewManager.getAdConfiguration()).thenReturn(mock(AdConfiguration.class));
+        when(mMockAdViewManager.getAdConfiguration()).thenReturn(mock(AdUnitConfiguration.class));
         WhiteBox.field(InterstitialView.class, "mAdViewManager").set(mSpyBidInterstitialView, mMockAdViewManager);
     }
 
     @Test
     public void loadAd_ExecuteBidTransactionLoad() {
-        AdConfiguration mockAdUnitConfiguration = mock(AdConfiguration.class);
+        AdUnitConfiguration mockAdUnitConfiguration = mock(AdUnitConfiguration.class);
         BidResponse mockBidResponse = mock(BidResponse.class);
 
         mSpyBidInterstitialView.loadAd(mockAdUnitConfiguration, mockBidResponse);

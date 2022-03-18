@@ -2,7 +2,7 @@ package org.prebid.mobile;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.prebid.mobile.unification.AdUnitConfiguration;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.ArrayList;
 

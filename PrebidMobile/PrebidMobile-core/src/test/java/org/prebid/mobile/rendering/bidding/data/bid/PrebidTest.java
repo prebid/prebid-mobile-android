@@ -19,8 +19,8 @@ package org.prebid.mobile.rendering.bidding.data.bid;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.test.utils.ResourceUtils;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.io.IOException;
 
@@ -49,7 +49,7 @@ public class PrebidTest {
     @Test
     public void whenGetJsonObjectForImp_EqualsExpected() throws JSONException {
         final String configId = "test";
-        final AdConfiguration adUnitConfiguration = new AdConfiguration();
+        final AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
 
         adUnitConfiguration.setConfigId(configId);
 

@@ -29,6 +29,7 @@ import org.prebid.mobile.rendering.loading.AdLoadListener;
 import org.prebid.mobile.rendering.loading.VastParserExtractor;
 import org.prebid.mobile.test.utils.ResourceUtils;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -66,7 +67,7 @@ public class CreativeModelMakerBidsTest {
 
     @Test
     public void whenMakeModelsAndNoBidResponse_CallErrorListener() {
-        mModelMakerBids.makeModels(mock(AdConfiguration.class), null);
+        mModelMakerBids.makeModels(mock(AdUnitConfiguration.class), null);
         verify(mMockLoadListener).onFailedToLoadAd(any(AdException.class), any());
     }
 
@@ -80,8 +81,8 @@ public class CreativeModelMakerBidsTest {
 
     @Test
     public void whenMakeModelsAndBidRequestContainsAcjAd_CreateAcjModel() throws IOException {
-        AdConfiguration configuration = new AdConfiguration();
-        configuration.setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.BANNER);
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
 
         String responseString = ResourceUtils.convertResourceToString("bidding_response_obj.json");
         BidResponse bidResponse = new BidResponse(responseString);
@@ -101,12 +102,12 @@ public class CreativeModelMakerBidsTest {
 
     @Test
     public void makeVideoModels_ExecuteVastParserExtractor() {
-        final AdConfiguration mockConfig = mock(AdConfiguration.class);
+        final AdUnitConfiguration mockConfig = mock(AdUnitConfiguration.class);
         final String vast = "1234";
 
         mModelMakerBids.makeVideoModels(mockConfig, vast);
 
-        verify(mockConfig).setAdUnitIdentifierType(eq(AdConfiguration.AdUnitIdentifierType.VAST));
+        verify(mockConfig).setAdUnitIdentifierType(eq(AdUnitConfiguration.AdUnitIdentifierType.VAST));
         verify(mMockExtractor).extract(eq(vast));
     }
 

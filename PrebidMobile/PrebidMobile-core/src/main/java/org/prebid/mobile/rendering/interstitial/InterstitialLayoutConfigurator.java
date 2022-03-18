@@ -17,26 +17,24 @@
 package org.prebid.mobile.rendering.interstitial;
 
 import android.text.TextUtils;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.models.InterstitialLayout;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 /**
  * Util class to configure InterstitialDisplayProperties based on adConfiguration
  */
 public class InterstitialLayoutConfigurator {
 
-    public static void configureDisplayProperties(AdConfiguration adConfiguration, InterstitialDisplayPropertiesInternal displayProperties) {
+    public static void configureDisplayProperties(AdUnitConfiguration adConfiguration, InterstitialDisplayPropertiesInternal displayProperties) {
         String size = adConfiguration.getInterstitialSize();
         if (TextUtils.isEmpty(size) || InterstitialSizes.isPortrait(size)) {
             displayProperties.isRotationEnabled = false;
             displayProperties.orientation = InterstitialLayout.PORTRAIT.getOrientation();
-        }
-        else if (InterstitialSizes.isLandscape(size)) {
+        } else if (InterstitialSizes.isLandscape(size)) {
             displayProperties.isRotationEnabled = false;
             displayProperties.orientation = InterstitialLayout.LANDSCAPE.getOrientation();
-        }
-        else {
+        } else {
             displayProperties.isRotationEnabled = true;
         }
     }

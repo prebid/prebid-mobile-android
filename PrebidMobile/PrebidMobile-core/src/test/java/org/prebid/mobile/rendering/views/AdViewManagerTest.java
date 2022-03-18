@@ -35,13 +35,13 @@ import org.prebid.mobile.rendering.loading.CreativeFactory;
 import org.prebid.mobile.rendering.loading.Transaction;
 import org.prebid.mobile.rendering.loading.TransactionManager;
 import org.prebid.mobile.rendering.models.AbstractCreative;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.video.*;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -221,7 +221,7 @@ public class AdViewManagerTest {
 
         VideoCreative mockVideoCreative = mock(VideoCreative.class);
         when(mockVideoCreative.getCreativeModel())
-            .thenReturn(new VideoCreativeModel(mock(TrackingManager.class), mock(OmEventTracker.class), new AdConfiguration()));
+                .thenReturn(new VideoCreativeModel(mock(TrackingManager.class), mock(OmEventTracker.class), new AdUnitConfiguration()));
         when(mockVideoCreative.isVideo()).thenReturn(true);
         Transaction mockTransaction = mock(Transaction.class);
         ArrayList<CreativeFactory> creativeFactories = new ArrayList<>();

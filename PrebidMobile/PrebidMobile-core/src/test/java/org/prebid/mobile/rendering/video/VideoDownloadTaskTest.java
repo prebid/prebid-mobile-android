@@ -27,9 +27,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.prebid.mobile.rendering.loading.FileDownloadListener;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.test.utils.ResourceUtils;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
@@ -85,7 +85,7 @@ public class VideoDownloadTaskTest {
         String body = ResourceUtils.convertResourceToString("mraid.js");
         mServer.enqueue(new MockResponse().setResponseCode(200).setBody(body));
 
-        VideoDownloadTask baseNetworkTask = new VideoDownloadTask(mContext.getApplicationContext(), mFile, mListener, Mockito.mock(AdConfiguration.class));
+        VideoDownloadTask baseNetworkTask = new VideoDownloadTask(mContext.getApplicationContext(), mFile, mListener, Mockito.mock(AdUnitConfiguration.class));
 
         baseNetworkTask.execute(mParams);
 
@@ -94,14 +94,14 @@ public class VideoDownloadTaskTest {
 
     @Test(expected = NullPointerException.class)
     public void testNullFile() {
-        VideoDownloadTask task = new VideoDownloadTask(mContext.getApplicationContext(), null, mListener, Mockito.mock(AdConfiguration.class));
+        VideoDownloadTask task = new VideoDownloadTask(mContext.getApplicationContext(), null, mListener, Mockito.mock(AdUnitConfiguration.class));
         task.execute(mParams);
     }
 
     @Test
     public void testWrongData() {
         mServer.enqueue(new MockResponse().setResponseCode(401).setBody("Not found"));
-        VideoDownloadTask task = new VideoDownloadTask(mContext.getApplicationContext(), mFile, mListener, Mockito.mock(AdConfiguration.class));
+        VideoDownloadTask task = new VideoDownloadTask(mContext.getApplicationContext(), mFile, mListener, Mockito.mock(AdUnitConfiguration.class));
         task.execute(mParams);
         assertNotNull(mError);
     }

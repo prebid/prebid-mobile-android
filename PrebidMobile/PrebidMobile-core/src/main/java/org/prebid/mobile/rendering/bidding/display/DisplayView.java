@@ -23,7 +23,6 @@ import androidx.annotation.NonNull;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 import org.prebid.mobile.rendering.utils.broadcast.local.EventForwardingLocalBroadcastReceiver;
@@ -33,12 +32,13 @@ import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.video.VideoViewListener;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class DisplayView extends FrameLayout {
     private final static String TAG = DisplayView.class.getSimpleName();
     private static final String CONTENT_DESCRIPTION_AD_VIEW = "adView";
 
-    private AdConfiguration mAdUnitConfiguration;
+    private AdUnitConfiguration mAdUnitConfiguration;
     private DisplayViewListener mDisplayViewListener;
     private InterstitialManager mInterstitialManager;
     private AdViewManager mAdViewManager;
@@ -122,13 +122,13 @@ public class DisplayView extends FrameLayout {
     };
 
     public DisplayView(
-        @NonNull
-            Context context,
-        DisplayViewListener listener,
-        @NonNull
-            AdConfiguration adUnitConfiguration,
-        @NonNull
-            BidResponse response) {
+            @NonNull
+                    Context context,
+            DisplayViewListener listener,
+            @NonNull
+                    AdUnitConfiguration adUnitConfiguration,
+            @NonNull
+                    BidResponse response) {
         super(context);
         mInterstitialManager = new InterstitialManager();
         mAdUnitConfiguration = adUnitConfiguration;
@@ -151,13 +151,13 @@ public class DisplayView extends FrameLayout {
     }
 
     public DisplayView(
-        @NonNull
-            Context context,
-        DisplayViewListener listener,
-        @NonNull
-            AdConfiguration adUnitConfiguration,
-        @NonNull
-            String responseId) throws AdException {
+            @NonNull
+                    Context context,
+            DisplayViewListener listener,
+            @NonNull
+                    AdUnitConfiguration adUnitConfiguration,
+            @NonNull
+                    String responseId) throws AdException {
         this(context, listener, adUnitConfiguration, getBidResponseFromCache(responseId));
     }
 

@@ -25,8 +25,8 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -58,9 +58,9 @@ public class MediationRewardedVideoAdUnitTest {
     @Test
     public void whenInitAdConfig_PrepareAdConfigForInterstitial() {
         mMopubRewardedAdUnit.initAdConfig("config", null);
-        AdConfiguration adConfiguration = mMopubRewardedAdUnit.mAdUnitConfig;
+        AdUnitConfiguration adConfiguration = mMopubRewardedAdUnit.mAdUnitConfig;
         assertEquals("config", adConfiguration.getConfigId());
-        assertEquals(AdConfiguration.AdUnitIdentifierType.VAST, adConfiguration.getAdUnitIdentifierType());
+        assertEquals(AdUnitConfiguration.AdUnitIdentifierType.VAST, adConfiguration.getAdUnitIdentifierType());
         assertTrue(adConfiguration.isRewarded());
     }
 

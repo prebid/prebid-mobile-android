@@ -19,17 +19,14 @@ package com.mopub.mobileads;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.mopub.common.LifecycleListener;
 import com.mopub.common.logging.MoPubLog;
-
 import org.prebid.mobile.rendering.bidding.display.DisplayView;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 /**
  * To integrate, place a copy of this class into 'com.mopub.mobileads'
@@ -123,8 +120,8 @@ public class PrebidBannerAdapter extends BaseAd {
 
     private void initDisplayView(Context context, String responseId) {
         try {
-            AdConfiguration adUnitConfiguration = new AdConfiguration();
-            adUnitConfiguration.setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.BANNER);
+            AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+            adUnitConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
             mDisplayView = new DisplayView(context, mDisplayViewListener, adUnitConfiguration, responseId);
         }
         catch (AdException e) {

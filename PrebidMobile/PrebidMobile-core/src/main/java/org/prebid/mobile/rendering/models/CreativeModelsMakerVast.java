@@ -29,6 +29,7 @@ import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;
 import org.prebid.mobile.rendering.video.vast.Tracking;
 import org.prebid.mobile.rendering.video.vast.*;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.ArrayList;
 
@@ -44,7 +45,7 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
     @NonNull
     private final AdLoadListener mListener;
 
-    private AdConfiguration mAdConfiguration;
+    private AdUnitConfiguration mAdConfiguration;
 
     private AdResponseParserVast mRootVastParser;
     private AdResponseParserVast mLatestVastWrapperParser;
@@ -59,7 +60,7 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
     }
 
     @Override
-    public void makeModels(AdConfiguration adConfiguration, AdResponseParserBase... parsers) {
+    public void makeModels(AdUnitConfiguration adConfiguration, AdResponseParserBase... parsers) {
         if (adConfiguration == null) {
             notifyErrorListener("Successful ad response but has a null config to continue ");
             return;
@@ -197,8 +198,8 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
 
                 endCardModel.setWidth(Integer.parseInt(companionAd.getWidth()));
                 endCardModel.setHeight(Integer.parseInt(companionAd.getHeight()));
-                endCardModel.setAdConfiguration(new AdConfiguration());
-                endCardModel.getAdConfiguration().setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.INTERSTITIAL);
+                endCardModel.setAdConfiguration(new AdUnitConfiguration());
+                endCardModel.getAdConfiguration().setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL);
                 endCardModel.setRequireImpressionUrl(false);
                 result.creativeModels.add(endCardModel);
 

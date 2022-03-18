@@ -29,7 +29,6 @@ import org.prebid.mobile.rendering.interstitial.InterstitialManagerVideoDelegate
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
 import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
 import org.prebid.mobile.rendering.loading.FileDownloadListener;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.CreativeVisibilityTracker;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
@@ -40,6 +39,7 @@ import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -82,7 +82,7 @@ public class VideoCreative extends VideoCreativeProtocol
 
         Context context = mContextReference.get();
         if (context != null) {
-            AdConfiguration adConfiguration = mModel.getAdConfiguration();
+            AdUnitConfiguration adConfiguration = mModel.getAdConfiguration();
             String shortenedPath = LruController.getShortenedPath(params.url);
             File file = new File(context.getFilesDir(), shortenedPath);
             VideoDownloadTask videoDownloadTask = new VideoDownloadTask(context, file,
@@ -217,7 +217,7 @@ public class VideoCreative extends VideoCreativeProtocol
             return;
         }
 
-        AdConfiguration adConfiguration = mModel.getAdConfiguration();
+        AdUnitConfiguration adConfiguration = mModel.getAdConfiguration();
         ContentObject contentObject = adConfiguration.getAppContent();
         String contentUrl = null;
         if (contentObject != null) contentUrl = contentObject.getUrl();
@@ -325,7 +325,7 @@ public class VideoCreative extends VideoCreativeProtocol
 
         final Context context = mContextReference.get();
         if (context != null) {
-            final AdConfiguration adConfiguration = mModel.getAdConfiguration();
+            final AdUnitConfiguration adConfiguration = mModel.getAdConfiguration();
             mVideoCreativeView = new VideoCreativeView(context, this);
             mVideoCreativeView.setBroadcastId(adConfiguration.getBroadcastId());
 

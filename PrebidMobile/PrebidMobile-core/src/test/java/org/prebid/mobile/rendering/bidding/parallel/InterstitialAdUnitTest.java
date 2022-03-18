@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
@@ -35,9 +35,9 @@ import org.prebid.mobile.rendering.bidding.listeners.InterstitialAdUnitListener;
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
@@ -76,7 +76,7 @@ public class InterstitialAdUnitTest {
         WhiteBox.setInternalState(mInterstitialAdUnit, "mBidLoader", mMockBidLoader);
         WhiteBox.setInternalState(mInterstitialAdUnit, "mInterstitialController", mMockInterstitialController);
 
-        final AdConfiguration adUnitConfig = mInterstitialAdUnit.mAdUnitConfig;
+        final AdUnitConfiguration adUnitConfig = mInterstitialAdUnit.mAdUnitConfig;
         assertEquals(AdPosition.FULLSCREEN.getValue(), adUnitConfig.getAdPositionValue());
     }
 

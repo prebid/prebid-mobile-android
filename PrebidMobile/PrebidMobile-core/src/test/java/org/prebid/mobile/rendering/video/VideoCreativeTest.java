@@ -27,11 +27,11 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
 import org.prebid.mobile.rendering.models.AbstractCreative;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -63,7 +63,7 @@ public class VideoCreativeTest {
         MockitoAnnotations.initMocks(this);
         mContext = Robolectric.buildActivity(Activity.class).create().get();
 
-        AdConfiguration mockConfig = mock(AdConfiguration.class);
+        AdUnitConfiguration mockConfig = mock(AdUnitConfiguration.class);
         when(mMockModel.getAdConfiguration()).thenReturn(mockConfig);
 
         mVideoCreative = new VideoCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
@@ -171,7 +171,7 @@ public class VideoCreativeTest {
     public void loadTest() throws Exception {
         VideoCreativeModel mockModel = mock(VideoCreativeModel.class);
         when(mockModel.getMediaUrl()).thenReturn("/video.mp4");
-        AdConfiguration mockAdConfig = mock(AdConfiguration.class);
+        AdUnitConfiguration mockAdConfig = mock(AdUnitConfiguration.class);
         when(mockModel.getAdConfiguration()).thenReturn(mockAdConfig);
         WhiteBox.field(VideoCreative.class, "mModel").set(mVideoCreative, mockModel);
 

@@ -27,6 +27,7 @@ import org.prebid.mobile.rendering.models.internal.VastExtractorResult;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.OmEventTracker;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.ArrayList;
 
@@ -37,7 +38,7 @@ public class CreativeModelMakerBids {
     private final AdLoadListener mListener;
     private final VastParserExtractor mParserExtractor = new VastParserExtractor(this::handleExtractorResult);
 
-    private AdConfiguration mAdConfiguration;
+    private AdUnitConfiguration mAdConfiguration;
 
     public CreativeModelMakerBids(
             @NonNull
@@ -45,7 +46,7 @@ public class CreativeModelMakerBids {
         mListener = listener;
     }
 
-    public void makeModels(AdConfiguration adConfiguration, BidResponse bidResponse) {
+    public void makeModels(AdUnitConfiguration adConfiguration, BidResponse bidResponse) {
         if (adConfiguration == null) {
             notifyErrorListener("Successful ad response but has a null config to continue");
             return;
@@ -69,9 +70,9 @@ public class CreativeModelMakerBids {
         }
     }
 
-    public void makeVideoModels(AdConfiguration adConfiguration, String vast) {
+    public void makeVideoModels(AdUnitConfiguration adConfiguration, String vast) {
         mAdConfiguration = adConfiguration;
-        mAdConfiguration.setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.VAST);
+        mAdConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.VAST);
         mParserExtractor.extract(vast);
     }
 
@@ -85,7 +86,7 @@ public class CreativeModelMakerBids {
         mListener.onFailedToLoadAd(new AdException(AdException.INTERNAL_ERROR, msg), null);
     }
 
-    private void parseAcj(AdConfiguration adConfiguration, BidResponse bidResponse) {
+    private void parseAcj(AdUnitConfiguration adConfiguration, BidResponse bidResponse) {
         CreativeModelsMaker.Result result = new CreativeModelsMaker.Result();
         result.creativeModels = new ArrayList<>();
 
@@ -106,7 +107,7 @@ public class CreativeModelMakerBids {
         mListener.onCreativeModelReady(result);
     }
 
-    private String getAdHtml(AdConfiguration adConfiguration, Bid bid) {
+    private String getAdHtml(AdUnitConfiguration adConfiguration, Bid bid) {
         String html = "";
 
         if (bid == null) {

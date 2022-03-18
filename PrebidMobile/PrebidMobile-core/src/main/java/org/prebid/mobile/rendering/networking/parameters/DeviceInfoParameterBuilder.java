@@ -17,15 +17,15 @@
 package org.prebid.mobile.rendering.networking.parameters;
 
 import android.os.Build;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Device;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.Locale;
 
@@ -33,9 +33,9 @@ public class DeviceInfoParameterBuilder extends ParameterBuilder {
 
     static final String PLATFORM_VALUE = "Android";
 
-    private AdConfiguration mAdConfiguration;
+    private AdUnitConfiguration mAdConfiguration;
 
-    public DeviceInfoParameterBuilder(AdConfiguration configuration) {
+    public DeviceInfoParameterBuilder(AdUnitConfiguration configuration) {
         mAdConfiguration = configuration;
     }
 

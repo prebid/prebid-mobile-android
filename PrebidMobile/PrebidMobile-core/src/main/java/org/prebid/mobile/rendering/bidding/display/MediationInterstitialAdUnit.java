@@ -19,11 +19,11 @@ package org.prebid.mobile.rendering.bidding.display;
 import android.content.Context;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdPosition;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
     private static final String TAG = MediationInterstitialAdUnit.class.getSimpleName();
@@ -56,17 +56,17 @@ public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
     protected final void initAdConfig(String configId, AdSize minSizePercentage) {
         mAdUnitConfig.setMinSizePercentage(minSizePercentage);
         mAdUnitConfig.setConfigId(configId);
-        mAdUnitConfig.setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.INTERSTITIAL);
+        mAdUnitConfig.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL);
         mAdUnitConfig.setAdPosition(AdPosition.FULLSCREEN);
     }
 
     private void setAdUnitType(AdUnitFormat adUnitFormat) {
         switch (adUnitFormat) {
             case DISPLAY:
-                mAdUnitConfig.setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.INTERSTITIAL);
+                mAdUnitConfig.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL);
                 break;
             case VIDEO:
-                mAdUnitConfig.setAdUnitIdentifierType(AdConfiguration.AdUnitIdentifierType.VAST);
+                mAdUnitConfig.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.VAST);
                 break;
         }
     }

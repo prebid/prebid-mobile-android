@@ -16,7 +16,7 @@
 
 package org.prebid.mobile.rendering.bidding.interfaces;
 
-import org.prebid.mobile.rendering.bidding.data.AdSize;
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener;
 

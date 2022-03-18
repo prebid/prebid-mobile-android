@@ -28,7 +28,6 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.interstitial.AdBaseDialog;
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.CreativeModel;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.MraidEvent;
@@ -42,6 +41,7 @@ import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -290,7 +290,7 @@ public class MraidControllerTest {
         final WebViewBase mockOldWebView = mock(WebViewBase.class);
 
         when(mockCreative.getCreativeModel()).thenReturn(mockCreativeModel);
-        when(mockCreativeModel.getAdConfiguration()).thenReturn(mock(AdConfiguration.class));
+        when(mockCreativeModel.getAdConfiguration()).thenReturn(mock(AdUnitConfiguration.class));
         when(mockOldWebView.getContext()).thenReturn(mContext);
 
         mMraidController.handleMraidEvent(event, mockCreative, mockOldWebView, mock(PrebidWebViewBase.class));

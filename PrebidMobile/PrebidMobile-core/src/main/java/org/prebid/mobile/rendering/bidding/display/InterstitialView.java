@@ -24,7 +24,6 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.interstitial.DialogEventListener;
-import org.prebid.mobile.rendering.models.AdConfiguration;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
 import org.prebid.mobile.rendering.utils.constants.IntentActions;
@@ -33,6 +32,7 @@ import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.rendering.views.base.BaseAdView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialVideo;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class InterstitialView extends BaseAdView {
     private static final String TAG = InterstitialView.class.getSimpleName();
@@ -95,7 +95,7 @@ public class InterstitialView extends BaseAdView {
         mInterstitialManager.getInterstitialDisplayProperties().setPubBackGroundOpacity(opacity);
     }
 
-    public void loadAd(AdConfiguration adUnitConfiguration, BidResponse bidResponse) {
+    public void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
         mAdViewManager.loadBidTransaction(adUnitConfiguration, bidResponse);
     }
 
@@ -142,7 +142,7 @@ public class InterstitialView extends BaseAdView {
 
     public void showVideoAsInterstitial() {
         try {
-            final AdConfiguration adConfiguration = mAdViewManager.getAdConfiguration();
+            final AdUnitConfiguration adConfiguration = mAdViewManager.getAdConfiguration();
             mInterstitialManager.configureInterstitialProperties(adConfiguration);
             mInterstitialVideo = new InterstitialVideo(getContext(),
                                                        InterstitialView.this,
@@ -195,7 +195,7 @@ public class InterstitialView extends BaseAdView {
 
     protected void setAdViewManagerValues() throws AdException {
         mAdViewManager = new AdViewManager(getContext(), mOnAdViewManagerListener, this, mInterstitialManager);
-        AdConfiguration adConfiguration = mAdViewManager.getAdConfiguration();
+        AdUnitConfiguration adConfiguration = mAdViewManager.getAdConfiguration();
         adConfiguration.setAutoRefreshDelay(0);
     }
 
