@@ -23,7 +23,12 @@ import android.net.NetworkInfo;
 import android.text.TextUtils;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
+import org.prebid.mobile.rendering.bidding.loader.BidLoader;
+import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
@@ -37,14 +42,17 @@ public abstract class AdUnit {
     private DemandFetcher fetcher;
     protected AdUnitConfiguration configuration = new AdUnitConfiguration();
 
-    AdUnit(@NonNull String configId, @NonNull AdType adType) {
+    @Nullable
+    protected Object adObject;
+
+    AdUnit(@NonNull String configId, @NonNull AdUnitConfiguration.AdUnitIdentifierType adType) {
         configuration.setConfigId(configId);
-        configuration.setAdType(adType);
+        configuration.setAdUnitIdentifierType(adType);
     }
 
     public void setAutoRefreshPeriodMillis(@IntRange(from = MIN_AUTO_REFRESH_PERIOD_MILLIS) int periodMillis) {
         if (periodMillis < MIN_AUTO_REFRESH_PERIOD_MILLIS) {
-            LogUtil.warning("periodMillis less then:" + MIN_AUTO_REFRESH_PERIOD_MILLIS);
+            LogUtil.w("periodMillis less then:" + MIN_AUTO_REFRESH_PERIOD_MILLIS);
             return;
         }
         this.periodMillis = periodMillis;
@@ -54,50 +62,43 @@ public abstract class AdUnit {
     }
 
     public void resumeAutoRefresh() {
-        LogUtil.verbose("Resuming auto refresh...");
+        LogUtil.v("Resuming auto refresh...");
         if (fetcher != null) {
             fetcher.start();
         }
     }
 
     public void stopAutoRefresh() {
-        LogUtil.verbose("Stopping auto refresh...");
+        LogUtil.v("Stopping auto refresh...");
         if (fetcher != null) {
             fetcher.stop();
         }
     }
 
     public void fetchDemand(@NonNull final OnCompleteListener2 listener) {
-
         final Map<String, String> keywordsMap = new HashMap<>();
 
-        fetchDemand(keywordsMap, new OnCompleteListener() {
-            @Override
-            public void onComplete(final ResultCode resultCode) {
-                TasksManager.getInstance().executeOnMainThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        listener.onComplete(resultCode, keywordsMap.size() != 0 ? Collections.unmodifiableMap(keywordsMap) : null);
-                    }
-                });
-            }
+        fetchDemand(keywordsMap, resultCode -> {
+            TasksManager.getInstance().executeOnMainThread(() ->
+                    listener.onComplete(resultCode, keywordsMap.size() != 0 ? Collections.unmodifiableMap(keywordsMap) : null)
+            );
         });
     }
 
     public void fetchDemand(@NonNull Object adObj, @NonNull OnCompleteListener listener) {
         if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
-            LogUtil.error("Empty account id.");
+            LogUtil.e("Empty account id.");
             listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);
             return;
         }
         if (TextUtils.isEmpty(configuration.getConfigId())) {
-            LogUtil.error("Empty config id.");
+            LogUtil.e("Empty config id.");
             listener.onComplete(ResultCode.INVALID_CONFIG_ID);
             return;
         }
         if (PrebidMobile.getPrebidServerHost().equals(Host.CUSTOM)) {
             if (TextUtils.isEmpty(PrebidMobile.getPrebidServerHost().getHostUrl())) {
-                LogUtil.error("Empty host url for custom Prebid Server host.");
+                LogUtil.e("Empty host url for custom Prebid Server host.");
                 listener.onComplete(ResultCode.INVALID_HOST_URL);
                 return;
             }
@@ -124,23 +125,32 @@ public abstract class AdUnit {
                 }
             }
         } else {
-            LogUtil.error("Invalid context");
+            LogUtil.e("Invalid context");
             listener.onComplete(ResultCode.INVALID_CONTEXT);
             return;
         }
 
         if (Util.supportedAdObject(adObj)) {
-            fetcher = new DemandFetcher(adObj);
-            fetcher.setPeriodMillis(periodMillis);
-            fetcher.setConfiguration(configuration);
-            fetcher.setListener(listener);
-            if (periodMillis >= 30000) {
-                LogUtil.verbose("Start fetching bids with auto refresh millis: " + periodMillis);
-            } else {
-                LogUtil.verbose("Start a single fetching.");
-            }
-            fetcher.start();
+            adObject = adObj;
+            BidLoader loader = new BidLoader(
+                    context,
+                    configuration,
+                    createBidListener(listener)
+            );
+            loader.load();
+            // TODO:Unification: Add auto refresh
+//            fetcher = new DemandFetcher(adObj);
+//            fetcher.setPeriodMillis(periodMillis);
+//            fetcher.setConfiguration(configuration);
+//            fetcher.setListener(listener);
+//            if (periodMillis >= 30000) {
+//                LogUtil.v("Start fetching bids with auto refresh millis: " + periodMillis);
+//            } else {
+//                LogUtil.v("Start a single fetching.");
+//            }
+//            fetcher.start();
         } else {
+            adObject = null;
             listener.onComplete(ResultCode.INVALID_AD_OBJECT);
         }
 
@@ -248,6 +258,26 @@ public abstract class AdUnit {
     public void setPbAdSlot(String pbAdSlot) {
         configuration.setPbAdSlot(pbAdSlot);
     }
+
+
+    protected BidRequesterListener createBidListener(OnCompleteListener originalListener) {
+        return new BidRequesterListener() {
+            @Override
+            public void onFetchCompleted(BidResponse response) {
+                HashMap<String, String> keywords = response.getTargeting();
+                Util.apply(keywords, adObject);
+                originalListener.onComplete(ResultCode.SUCCESS);
+            }
+
+            @Override
+            public void onError(AdException exception) {
+                Util.apply(null, adObject);
+                // TODO:Unification: Change code
+                originalListener.onComplete(ResultCode.NETWORK_ERROR);
+            }
+        };
+    }
+
 
     @VisibleForTesting
     public AdUnitConfiguration getConfiguration() {

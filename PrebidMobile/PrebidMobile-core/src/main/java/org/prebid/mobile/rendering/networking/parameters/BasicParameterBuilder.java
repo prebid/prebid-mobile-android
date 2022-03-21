@@ -103,7 +103,9 @@ public class BasicParameterBuilder extends ParameterBuilder {
         if (mAdConfiguration != null) {
             setDisplayManager(imp);
             setCommonImpValues(imp, uuid);
-            if (mAdConfiguration.isAdType(AdUnitConfiguration.AdUnitIdentifierType.VAST)) {
+            if (mAdConfiguration.getNativeConfiguration() != null) {
+                setNativeImpValues(imp);
+            } else if (mAdConfiguration.isAdType(AdUnitConfiguration.AdUnitIdentifierType.VAST)) {
                 setVideoImpValues(imp);
             } else {
                 setBannerImpValues(imp);
@@ -230,6 +232,12 @@ public class BasicParameterBuilder extends ParameterBuilder {
         }
 
         imp.banner = banner;
+    }
+
+    private void setNativeImpValues(Imp imp) {
+        if (mAdConfiguration.getNativeConfiguration() != null) {
+            imp.getNative().setRequestFrom(mAdConfiguration.getNativeConfiguration());
+        }
     }
 
     private void setCommonImpValues(Imp imp, String uuid) {

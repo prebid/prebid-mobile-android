@@ -6,6 +6,7 @@ import org.prebid.mobile.NativeAsset;
 import org.prebid.mobile.NativeEventTracker;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class NativeAdUnitConfiguration {
 
@@ -25,7 +26,7 @@ public class NativeAdUnitConfiguration {
         nativeEventTrackers.add(tracker);
     }
 
-    public ArrayList<NativeEventTracker> getEventTrackers() {
+    public List<NativeEventTracker> getEventTrackers() {
         return nativeEventTrackers;
     }
 

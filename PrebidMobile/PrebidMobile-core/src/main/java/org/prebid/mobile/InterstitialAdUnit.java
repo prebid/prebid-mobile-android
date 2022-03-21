@@ -18,11 +18,12 @@ package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class InterstitialAdUnit extends BannerBaseAdUnit {
 
     public InterstitialAdUnit(@NonNull String configId) {
-        super(configId, AdType.INTERSTITIAL);
+        super(configId, AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL);
     }
 
     public InterstitialAdUnit(@NonNull String configId, int minWidthPerc, int minHeightPerc) {

@@ -306,12 +306,8 @@ public class AdUnitConfiguration {
     }
 
 
-    public boolean isNative() {
-        return nativeConfiguration != null;
-    }
-
     /**
-     * Creates native configuration.
+     * Creates native configuration. It must be used for Native ad units.
      */
     public void initNativeConfiguration() {
         nativeConfiguration = new NativeAdUnitConfiguration();

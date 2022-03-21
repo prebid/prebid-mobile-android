@@ -2,6 +2,7 @@ package org.prebid.mobile;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.ArrayList;
 
@@ -52,7 +53,7 @@ public class NativeImageAsset extends NativeAsset {
         return type;
     }
 
-    private int wmin = -1;
+    private int wmin = 0;
 
     public void setWMin(int wmin) {
         this.wmin = wmin;
@@ -62,7 +63,7 @@ public class NativeImageAsset extends NativeAsset {
         return wmin;
     }
 
-    private int hmin = -1;
+    private int hmin = 0;
 
     public int getHMin() {
         return hmin;
@@ -72,7 +73,7 @@ public class NativeImageAsset extends NativeAsset {
         this.hmin = hmin;
     }
 
-    private int w = -1;
+    private int w = 0;
 
     public int getW() {
         return w;
@@ -82,7 +83,7 @@ public class NativeImageAsset extends NativeAsset {
         this.w = w;
     }
 
-    private int h = -1;
+    private int h = 0;
 
     public void setH(int h) {
         this.h = h;
@@ -134,5 +135,39 @@ public class NativeImageAsset extends NativeAsset {
 
     public Object getImageExt() {
         return imageExt;
+    }
+
+
+    @Override
+    public JSONObject getJsonObject() {
+        JSONObject result = new JSONObject();
+
+        try {
+            result.putOpt("required", required ? 1 : 0);
+            result.putOpt("ext", assetExt);
+
+            JSONObject imageObject = new JSONObject();
+            imageObject.putOpt("type", type != null ? type.getID() : null);
+
+            imageObject.put("w", w);
+            imageObject.put("wmin", wmin);
+            imageObject.put("h", h);
+            imageObject.put("hmin", hmin);
+            imageObject.putOpt("ext", imageExt);
+
+            if (!mimes.isEmpty()) {
+                JSONArray mimesArray = new JSONArray();
+                for (String mime : mimes) {
+                    mimesArray.put(mime);
+                }
+                imageObject.putOpt("mimes", mimesArray);
+            }
+
+            result.put("img", imageObject);
+        } catch (Exception exception) {
+            LogUtil.error("NativeImageAsset", "Can't create json object: " + exception.getMessage());
+        }
+
+        return result;
     }
 }

@@ -17,11 +17,12 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class RewardedVideoAdUnit extends VideoBaseAdUnit {
 
     public RewardedVideoAdUnit(@NonNull String configId) {
-        super(configId, AdType.REWARDED_VIDEO);
+        super(configId, AdUnitConfiguration.AdUnitIdentifierType.VAST);
     }
 
 }
