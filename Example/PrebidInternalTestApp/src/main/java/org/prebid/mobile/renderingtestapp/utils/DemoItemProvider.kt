@@ -84,7 +84,6 @@ class DemoItemProvider private constructor() {
         }
 
         private fun formProdDemoList() {
-            addInAppProdExamples()
             addGamProdExamples()
             addMoPubProdExamples()
             addAdMobProdExamples()
@@ -93,7 +92,7 @@ class DemoItemProvider private constructor() {
         private fun addInAppPbsExamples() {
             val ppmBannerTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.BANNER, Tag.REMOTE)
             val ppmInterstitialTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.INTERSTITIAL, Tag.REMOTE)
-            val ppmMraidTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.MRAID, Tag.MOCK)
+            val ppmMraidTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.MRAID, Tag.REMOTE)
             val ppmVideoTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.VIDEO, Tag.REMOTE)
 
             val ppmNativeTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.NATIVE, Tag.MOCK)
@@ -196,7 +195,7 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_mraid_expand),
                     ppmBannerAction,
                     ppmMraidTagList,
-                    createBannerBundle(R.string.imp_prebid_id_mraid_expand, null, 320, 50)
+                    createBannerBundle(R.string.imp_prebid_id_mraid_expand, null, 320, 50, R.string.response_prebid_mraid_expand)
                 )
             )
             demoList.add(
@@ -204,7 +203,7 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_mraid_expand_2),
                     ppmBannerAction,
                     ppmMraidTagList,
-                    createBannerBundle(R.string.imp_prebid_id_mraid_expand_two_part, null, 320, 50)
+                    createBannerBundle(R.string.imp_prebid_id_mraid_expand_two_part, null, 320, 50,R.string.response_prebid_mraid_expand_two_part)
                 )
             )
             demoList.add(
@@ -212,7 +211,7 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_mraid_resize),
                     ppmBannerAction,
                     ppmMraidTagList,
-                    createBannerBundle(R.string.imp_prebid_id_mraid_resize, null, 320, 50)
+                    createBannerBundle(R.string.imp_prebid_id_mraid_resize, null, 320, 50,R.string.response_prebid_mraid_resize)
                 )
             )
             demoList.add(
@@ -224,7 +223,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_resize_with_errors,
                         null,
                         300,
-                        100
+                        100,R.string.response_prebid_mraid_resize_with_errors
                     )
                 )
             )
@@ -233,7 +232,7 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_mraid_fullscreen),
                     ppmBannerAction,
                     ppmMraidTagList,
-                    createBannerBundle(R.string.imp_prebid_id_mraid_fullscreen, null, 320, 480)
+                    createBannerBundle(R.string.imp_prebid_id_mraid_fullscreen, null, 320, 480,R.string.response_prebid_mraid_fullscreen)
                 )
             )
             demoList.add(
@@ -245,7 +244,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_video_interstitial,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC
+                        MIN_HEIGHT_PERC,R.string.response_prebid_mraid_video_interstitial
                     )
                 )
             )
@@ -258,7 +257,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_3_viewability_compliance,
                         null,
                         320,
-                        480
+                        480,R.string.response_prebid_mraid_3_viewability_compliance
                     )
                 )
             )
@@ -271,7 +270,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_3_resize_negative,
                         null,
                         320,
-                        480
+                        480,R.string.response_prebid_mraid_3_resize_negative
                     )
                 )
             )
@@ -284,7 +283,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_3_load_and_events,
                         null,
                         320,
-                        50
+                        50,R.string.response_prebid_mraid_3_load_and_events
                     )
                 )
             )
@@ -297,7 +296,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_ox_test_properties,
                         null,
                         320,
-                        50
+                        50,R.string.response_prebid_mraid_ox_test_properties
                     )
                 )
             )
@@ -306,7 +305,7 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_mraid_test_methods),
                     ppmBannerAction,
                     ppmMraidTagList,
-                    createBannerBundle(R.string.imp_prebid_id_mraid_ox_test_methods, null, 320, 50)
+                    createBannerBundle(R.string.imp_prebid_id_mraid_ox_test_methods, null, 320, 50,R.string.response_prebid_mraid_ox_test_methods)
                 )
             )
             demoList.add(
@@ -314,7 +313,7 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_mraid_resize_scroll),
                     R.id.action_header_bidding_to_in_app_banner_scrollable,
                     ppmMraidTagList,
-                    createBannerBundle(R.string.imp_prebid_id_mraid_resize, null, 320, 50)
+                    createBannerBundle(R.string.imp_prebid_id_mraid_resize, null, 320, 50,R.string.response_prebid_mraid_resize)
                 )
             )
             demoList.add(
@@ -326,7 +325,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_ox_resize_expandable,
                         null,
                         320,
-                        50
+                        50,R.string.response_prebid_mraid_ox_resize_expandable
                     )
                 )
             )
@@ -552,7 +551,7 @@ class DemoItemProvider private constructor() {
         private fun addGamPbsExamples() {
             val gamBannerTagList = listOf(Tag.ALL, Tag.GAM, Tag.BANNER, Tag.REMOTE)
             val gamInterstitialTagList = listOf(Tag.ALL, Tag.GAM, Tag.INTERSTITIAL, Tag.REMOTE)
-            val gamMraidTagList = listOf(Tag.ALL, Tag.GAM, Tag.MRAID, Tag.MOCK)
+            val gamMraidTagList = listOf(Tag.ALL, Tag.GAM, Tag.MRAID, Tag.REMOTE)
             val gamVideoTagList = listOf(Tag.ALL, Tag.GAM, Tag.VIDEO, Tag.REMOTE)
             val gamNativeTagList = listOf(Tag.ALL, Tag.GAM, Tag.NATIVE, Tag.MOCK)
 
@@ -658,7 +657,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_expand,
                         R.string.adunit_gam_banner_320_50_app_event,
                         320,
-                        50
+                        50,R.string.response_prebid_mraid_expand
                     )
                 )
             )
@@ -671,7 +670,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_resize,
                         R.string.adunit_gam_banner_320_50_app_event,
                         320,
-                        50
+                        50,R.string.response_prebid_mraid_resize
                     )
                 )
             )
@@ -684,7 +683,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_video_interstitial,
                         R.string.adunit_gam_interstitial_320_480_app_event,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC
+                        MIN_HEIGHT_PERC,R.string.response_prebid_mraid_video_interstitial
                     )
                 )
             )
@@ -975,7 +974,7 @@ class DemoItemProvider private constructor() {
         private fun addMoPubPbsExamples() {
             val mopubBannerTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.BANNER, Tag.REMOTE)
             val mopubInterstitialTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.INTERSTITIAL, Tag.REMOTE)
-            val mopubMraidTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.MRAID, Tag.MOCK)
+            val mopubMraidTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.MRAID, Tag.REMOTE)
             val mopubVideoTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.VIDEO, Tag.REMOTE)
             val mopubNativeTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.NATIVE, Tag.MOCK)
 
@@ -1068,7 +1067,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_expand,
                         R.string.mopub_banner_bidding_ad_unit_id_adapter,
                         320,
-                        50
+                        50,R.string.response_prebid_mraid_expand
                     )
                 )
             )
@@ -1081,7 +1080,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_resize,
                         R.string.mopub_banner_bidding_ad_unit_id_adapter,
                         320,
-                        50
+                        50,R.string.response_prebid_mraid_resize
                     )
                 )
             )
@@ -1093,7 +1092,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_video_interstitial,
                         R.string.mopub_interstitial_bidding_ad_unit_id_ok,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC
+                        MIN_HEIGHT_PERC,R.string.response_prebid_mraid_video_interstitial
                     )
                 )
             )
@@ -1487,43 +1486,8 @@ class DemoItemProvider private constructor() {
             )
         }
 
-        private fun addInAppProdExamples() {
-
-            val ppmMraidTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.MRAID, Tag.REMOTE)
-
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_in_app_mraid_resize),
-                    ppmBannerAction,
-                    ppmMraidTagList,
-                    createBannerBundle(R.string.prebid_config_id_mraid_resize, null, 320, 50)
-                )
-            )
-
-
-
-        }
-
         private fun addGamProdExamples() {
-
-            val gamMraidTagList = listOf(Tag.ALL, Tag.GAM, Tag.MRAID, Tag.REMOTE)
             val gamNativeTagList = listOf(Tag.ALL, Tag.GAM, Tag.NATIVE, Tag.REMOTE)
-
-
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_gam_mraid_resize),
-                    gamBannerAction,
-                    gamMraidTagList,
-                    createBannerBundle(
-                        R.string.prebid_config_id_mraid_resize,
-                        R.string.adunit_gam_banner_320_50_app_event,
-                        320,
-                        50
-                    )
-                )
-            )
-
 
 
             val gamNativeBundle = createBannerBundle(
@@ -1559,24 +1523,7 @@ class DemoItemProvider private constructor() {
 
         private fun addMoPubProdExamples() {
 
-            val mopubMraidTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.MRAID, Tag.REMOTE)
             val mopubNativeTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.NATIVE, Tag.REMOTE)
-
-
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_mopub_mraid_resize),
-                    mopubBannerAction,
-                    mopubMraidTagList,
-                    createBannerBundle(
-                        R.string.prebid_config_id_mraid_resize,
-                        R.string.mopub_banner_bidding_ad_unit_id_adapter,
-                        320,
-                        50
-                    )
-                )
-            )
-
 
             demoList.add(
                 DemoItem(
