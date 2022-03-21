@@ -21,6 +21,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.preference.PreferenceManager
+import org.prebid.mobile.Host
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.prebidkotlindemo.databinding.ActivityDemoBinding
 
 class DemoActivity : AppCompatActivity() {
@@ -55,6 +57,7 @@ class DemoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_demo)
 
+        useOpenXServer()
         useFakeGDPR()
         parseArguments()
         initViews()
@@ -95,6 +98,11 @@ class DemoActivity : AppCompatActivity() {
             putInt("IABTCF_CmpSdkID", 123)
             apply()
         }
+    }
+
+    private fun useOpenXServer() {
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid.openx.net/openrtb2/auction"))
+        PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
     }
 
 }

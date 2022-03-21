@@ -25,6 +25,7 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
@@ -38,10 +39,15 @@ public abstract class AdUnit {
 
     private static final int MIN_AUTO_REFRESH_PERIOD_MILLIS = 30_000;
 
-    private int periodMillis = 0; // No auto refresh
-    private DemandFetcher fetcher;
+    /**
+     * Auto refresh time period in millis. 0 for disabling auto refresh.
+     * Can't be less than MIN_AUTO_REFRESH_PERIOD_MILLIS.
+     */
+    private int periodMillis = 0;
     protected AdUnitConfiguration configuration = new AdUnitConfiguration();
 
+    @Nullable
+    protected BidLoader bidLoader;
     @Nullable
     protected Object adObject;
 
@@ -52,26 +58,23 @@ public abstract class AdUnit {
 
     public void setAutoRefreshPeriodMillis(@IntRange(from = MIN_AUTO_REFRESH_PERIOD_MILLIS) int periodMillis) {
         if (periodMillis < MIN_AUTO_REFRESH_PERIOD_MILLIS) {
-            LogUtil.w("periodMillis less then:" + MIN_AUTO_REFRESH_PERIOD_MILLIS);
+            LogUtil.w("Auto refresh time can't be less then: " + MIN_AUTO_REFRESH_PERIOD_MILLIS);
             return;
         }
         this.periodMillis = periodMillis;
-        if (fetcher != null) {
-            fetcher.setPeriodMillis(periodMillis);
-        }
     }
 
     public void resumeAutoRefresh() {
         LogUtil.v("Resuming auto refresh...");
-        if (fetcher != null) {
-            fetcher.start();
+        if (bidLoader != null) {
+            bidLoader.setupRefreshTimer();
         }
     }
 
     public void stopAutoRefresh() {
         LogUtil.v("Stopping auto refresh...");
-        if (fetcher != null) {
-            fetcher.stop();
+        if (bidLoader != null) {
+            bidLoader.cancelRefresh();
         }
     }
 
@@ -132,23 +135,22 @@ public abstract class AdUnit {
 
         if (Util.supportedAdObject(adObj)) {
             adObject = adObj;
-            BidLoader loader = new BidLoader(
+            bidLoader = new BidLoader(
                     context,
                     configuration,
                     createBidListener(listener)
             );
-            loader.load();
-            // TODO:Unification: Add auto refresh
-//            fetcher = new DemandFetcher(adObj);
-//            fetcher.setPeriodMillis(periodMillis);
-//            fetcher.setConfiguration(configuration);
-//            fetcher.setListener(listener);
-//            if (periodMillis >= 30000) {
-//                LogUtil.v("Start fetching bids with auto refresh millis: " + periodMillis);
-//            } else {
-//                LogUtil.v("Start a single fetching.");
-//            }
-//            fetcher.start();
+
+            if (periodMillis > 0) {
+                BidLoader.BidRefreshListener bidRefreshListener = () -> true;
+                bidLoader.setBidRefreshListener(bidRefreshListener);
+                LogUtil.v("Start fetching bids with auto refresh millis: " + periodMillis);
+            } else {
+                bidLoader.setBidRefreshListener(null);
+                LogUtil.v("Start a single fetching.");
+            }
+
+            bidLoader.load();
         } else {
             adObject = null;
             listener.onComplete(ResultCode.INVALID_AD_OBJECT);
@@ -272,10 +274,36 @@ public abstract class AdUnit {
             @Override
             public void onError(AdException exception) {
                 Util.apply(null, adObject);
-                // TODO:Unification: Change code
-                originalListener.onComplete(ResultCode.NETWORK_ERROR);
+                originalListener.onComplete(convertToResultCode(exception));
             }
         };
+    }
+
+    protected ResultCode convertToResultCode(AdException renderingException) {
+        FetchDemandResult fetchDemandResult = FetchDemandResult.parseErrorMessage(renderingException.getMessage());
+        LogUtil.e("Prebid", "Can't download bids: " + fetchDemandResult);
+        switch (fetchDemandResult) {
+            case INVALID_ACCOUNT_ID:
+                return ResultCode.INVALID_ACCOUNT_ID;
+            case INVALID_CONFIG_ID:
+                return ResultCode.INVALID_CONFIG_ID;
+            case INVALID_SIZE:
+                return ResultCode.INVALID_SIZE;
+            case INVALID_CONTEXT:
+                return ResultCode.INVALID_CONTEXT;
+            case INVALID_AD_OBJECT:
+                return ResultCode.INVALID_AD_OBJECT;
+            case INVALID_HOST_URL:
+                return ResultCode.INVALID_HOST_URL;
+            case NETWORK_ERROR:
+                return ResultCode.NETWORK_ERROR;
+            case TIMEOUT:
+                return ResultCode.TIMEOUT;
+            case NO_BIDS:
+                return ResultCode.NO_BIDS;
+            default:
+                return ResultCode.PREBID_SERVER_ERROR;
+        }
     }
 
 

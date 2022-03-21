@@ -44,8 +44,7 @@ public class NativeAdUnit extends AdUnit {
             @Override
             public void onError(AdException exception) {
                 Util.apply(null, adObject);
-                // TODO:Unification: Change code
-                originalListener.onComplete(ResultCode.NETWORK_ERROR);
+                originalListener.onComplete(convertToResultCode(exception));
             }
         };
     }

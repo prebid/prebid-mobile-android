@@ -21,6 +21,7 @@ import androidx.annotation.VisibleForTesting;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.*;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 
@@ -58,6 +59,7 @@ public class BidRequest extends BaseBid {
         toJSON(jsonObject, "user", (mUser != null) ? mUser.getJsonObject() : null);
         toJSON(jsonObject, "source", mSource != null ? mSource.getJsonObject() : null);
         toJSON(jsonObject, "ext", mExt != null ? mExt.getJsonObject() : null);
+        toJSON(jsonObject, "test", PrebidMobile.getPbsDebug() ? 1 : null);
 
         return jsonObject;
     }
