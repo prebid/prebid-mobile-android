@@ -17,7 +17,6 @@
 package org.prebid.mobile;
 
 import android.content.Context;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.core.BuildConfig;
@@ -198,7 +197,7 @@ public class PrebidMobile {
         if (isSdkInitialized) {
             return;
         }
-        Log.d(TAG, "Initializing Prebid Rendering SDK");
+        LogUtil.d(TAG, "Initializing Prebid Rendering SDK");
 
         sdkInitListener = listener;
         INIT_SDK_TASK_COUNT.set(0);
@@ -284,7 +283,7 @@ public class PrebidMobile {
     public static void increaseTaskCount() {
         if (INIT_SDK_TASK_COUNT.incrementAndGet() >= MANDATORY_TASK_COUNT) {
             isSdkInitialized = true;
-            LogUtil.debug(TAG, "Prebid Rendering SDK " + SDK_VERSION + " Initialized");
+            LogUtil.d(TAG, "Prebid Rendering SDK " + SDK_VERSION + " Initialized");
 
             if (sdkInitListener != null) {
                 sdkInitListener.onSDKInit();

@@ -27,7 +27,7 @@ import android.util.Log;
 import android.webkit.WebView;
 import androidx.annotation.VisibleForTesting;
 import com.google.android.gms.security.ProviderInstaller;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 
 public class AppInfoManager {
     private static final String TAG = AppInfoManager.class.getSimpleName();
@@ -87,11 +87,11 @@ public class AppInfoManager {
                     sAppVersion = pm.getPackageInfo(sPackageName, 0).versionName;
                 }
                 catch (Exception e) {
-                    LogUtil.error(TAG, "Failed to get app name: " + Log.getStackTraceString(e));
+                    LogUtil.e(TAG, "Failed to get app name: " + Log.getStackTraceString(e));
                 }
             }
             catch (Exception e) {
-                LogUtil.error(TAG, "Failed to get package name: " + Log.getStackTraceString(e));
+                LogUtil.e(TAG, "Failed to get package name: " + Log.getStackTraceString(e));
             }
         }
     }
@@ -108,7 +108,7 @@ public class AppInfoManager {
             }
         }
         catch (Exception e) {
-            LogUtil.error(TAG, "Failed to get user agent");
+            LogUtil.e(TAG, "Failed to get user agent");
         }
     }
 
@@ -125,17 +125,17 @@ public class AppInfoManager {
             ProviderInstaller.installIfNeededAsync(context, new ProviderInstaller.ProviderInstallListener() {
                 @Override
                 public void onProviderInstalled() {
-                    LogUtil.debug(TAG, "Provider installed successfully");
+                    LogUtil.d(TAG, "Provider installed successfully");
                 }
 
                 @Override
                 public void onProviderInstallFailed(int i, Intent intent) {
-                    LogUtil.debug(TAG, "Provider installed failed. Error code: " + i);
+                    LogUtil.d(TAG, "Provider installed failed. Error code: " + i);
                 }
             });
         }
         catch (Throwable throwable) {
-            LogUtil.error(TAG, "patchSecurityProvider Failed! Reason: " + Log.getStackTraceString(throwable));
+            LogUtil.e(TAG, "patchSecurityProvider Failed! Reason: " + Log.getStackTraceString(throwable));
         }
     }
 

@@ -20,9 +20,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.loading.FileDownloadListener;
 import org.prebid.mobile.rendering.loading.FileDownloadTask;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.io.*;
@@ -52,8 +52,8 @@ public class VideoDownloadTask extends FileDownloadTask {
 
     @Override
     public GetUrlResult sendRequest(GetUrlParams param) throws Exception {
-        LogUtil.debug(TAG, "url: " + param.url);
-        LogUtil.debug(TAG, "queryParams: " + param.queryParams);
+        LogUtil.d(TAG, "url: " + param.url);
+        LogUtil.d(TAG, "queryParams: " + param.queryParams);
 
         return createResult(param);
     }
@@ -68,13 +68,13 @@ public class VideoDownloadTask extends FileDownloadTask {
     protected void processData(URLConnection connection, GetUrlResult result) throws IOException {
         String shortenedPath = getShortenedPath();
         if (mFile.exists() && !LruController.isAlreadyCached(shortenedPath)) {
-            LogUtil.debug(TAG, "Video saved to cache");
+            LogUtil.d(TAG, "Video saved to cache");
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             readAndWriteData(connection, result, outputStream, false);
             LruController.putVideoCache(shortenedPath, outputStream.toByteArray());
         }
         else {
-            LogUtil.debug(TAG, "Video saved to file: " + shortenedPath);
+            LogUtil.d(TAG, "Video saved to file: " + shortenedPath);
             readAndWriteData(connection, result, new FileOutputStream(mFile), true);
         }
     }
@@ -130,9 +130,9 @@ public class VideoDownloadTask extends FileDownloadTask {
         mResult = new GetUrlResult();
         String shortenedPath = getShortenedPath();
         if (mFile.exists()) {
-            LogUtil.debug(TAG, "File exists: " + shortenedPath);
+            LogUtil.d(TAG, "File exists: " + shortenedPath);
             if (isVideoFileExpired(mFile) || !isVideoFileValid(mApplicationContext, mFile)) {
-                LogUtil.debug(TAG, "File " + shortenedPath + " is expired or broken. Downloading a new one");
+                LogUtil.d(TAG, "File " + shortenedPath + " is expired or broken. Downloading a new one");
                 mFile.delete();
                 mResult = super.sendRequest(param);
             }

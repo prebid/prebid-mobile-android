@@ -16,10 +16,10 @@
 
 package org.prebid.mobile.rendering.video;
 
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.CreativeModel;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.vast.AdVerifications;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
@@ -57,13 +57,13 @@ public class VideoCreativeModel extends CreativeModel {
         mOmEventTracker.trackOmVideoAdEvent(videoEvent);
         ArrayList<String> urls = mVideoEventUrls.get(videoEvent);
         if (urls == null) {
-            LogUtil.debug(TAG, "Event" + videoEvent + " not found");
+            LogUtil.d(TAG, "Event" + videoEvent + " not found");
             return;
         }
 
         mTrackingManager.fireEventTrackingURLs(urls);
 
-        LogUtil.info(TAG, "Video event '" + videoEvent.name() + "' was fired with urls: " + urls.toString());
+        LogUtil.i(TAG, "Video event '" + videoEvent.name() + "' was fired with urls: " + urls.toString());
     }
 
     public void trackPlayerStateChange(InternalPlayerState changedPlayerState) {

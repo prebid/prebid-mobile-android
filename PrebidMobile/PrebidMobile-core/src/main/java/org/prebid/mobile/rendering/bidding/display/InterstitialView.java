@@ -19,6 +19,7 @@ package org.prebid.mobile.rendering.bidding.display;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
@@ -27,7 +28,6 @@ import org.prebid.mobile.rendering.interstitial.DialogEventListener;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
 import org.prebid.mobile.rendering.utils.constants.IntentActions;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.rendering.views.base.BaseAdView;
@@ -80,7 +80,7 @@ public class InterstitialView extends BaseAdView {
 
         @Override
         public void creativeInterstitialClosed() {
-            LogUtil.debug(TAG, "interstitialAdClosed");
+            LogUtil.d(TAG, "interstitialAdClosed");
             handleActionClose();
         }
     };
@@ -135,7 +135,7 @@ public class InterstitialView extends BaseAdView {
             mInterstitialManager.displayAdViewInInterstitial(getContext(), InterstitialView.this);
         }
         catch (final Exception e) {
-            LogUtil.error(TAG, "Interstitial failed to show:" + Log.getStackTraceString(e));
+            LogUtil.e(TAG, "Interstitial failed to show:" + Log.getStackTraceString(e));
             notifyErrorListeners(new AdException(AdException.INTERNAL_ERROR, e.getMessage()));
         }
     }
@@ -152,7 +152,7 @@ public class InterstitialView extends BaseAdView {
             mInterstitialVideo.show();
         }
         catch (final Exception e) {
-            LogUtil.error(TAG, "Video interstitial failed to show:" + Log.getStackTraceString(e));
+            LogUtil.e(TAG, "Video interstitial failed to show:" + Log.getStackTraceString(e));
 
             notifyErrorListeners(new AdException(AdException.INTERNAL_ERROR, e.getMessage()));
         }

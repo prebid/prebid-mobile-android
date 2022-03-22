@@ -21,10 +21,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
 import org.prebid.mobile.rendering.models.AbstractCreative;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
 
@@ -82,7 +82,7 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
                                         long newCurrent = videoView.getCurrentPosition();
 
                                         if (mVastVideoDuration != -1 && newCurrent >= mVastVideoDuration) {
-                                            LogUtil.debug(VideoCreativeView.class.getName(), "VAST duration reached, video interrupted. VAST duration:" + mVastVideoDuration + " ms, Video duration: " + mDuration + " ms");
+                                            LogUtil.d(VideoCreativeView.class.getName(), "VAST duration reached, video interrupted. VAST duration:" + mVastVideoDuration + " ms, Video duration: " + mDuration + " ms");
                                             videoView.forceStop();
                                         }
 
@@ -95,7 +95,7 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
                                     }
                                 }
                                 catch (Exception e) {
-                                    LogUtil.error(TAG, "Getting currentPosition from VideoCreativeView  failed: " + Log.getStackTraceString(e));
+                                    LogUtil.e(TAG, "Getting currentPosition from VideoCreativeView  failed: " + Log.getStackTraceString(e));
                                 }
                             });
                         }
@@ -109,7 +109,7 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
                             }
                         }
                         catch (Exception e) {
-                            LogUtil.error(TAG, "Failed to publish video progress: " + Log.getStackTraceString(e));
+                            LogUtil.e(TAG, "Failed to publish video progress: " + Log.getStackTraceString(e));
                         }
                     }
                     mLastTime = System.currentTimeMillis();
@@ -118,7 +118,7 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
             while (mCurrent <= mDuration && !isCancelled());
         }
         catch (Exception e) {
-            LogUtil.error(TAG, "Failed to update video progress: " + Log.getStackTraceString(e));
+            LogUtil.e(TAG, "Failed to update video progress: " + Log.getStackTraceString(e));
         }
         return null;
     }
@@ -142,17 +142,17 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
         //trackEventListener.countdown(values[1]);
 
         if (!mFirstQuartile && values[0] >= 25) {
-            LogUtil.debug(TAG, "firstQuartile: " + values[0]);
+            LogUtil.d(TAG, "firstQuartile: " + values[0]);
             mFirstQuartile = true;
             mTrackEventListener.onEvent(VideoAdEvent.Event.AD_FIRSTQUARTILE);
         }
         if (!mMidpoint && values[0] >= 50) {
-            LogUtil.debug(TAG, "midpoint: " + values[0]);
+            LogUtil.d(TAG, "midpoint: " + values[0]);
             mMidpoint = true;
             mTrackEventListener.onEvent(VideoAdEvent.Event.AD_MIDPOINT);
         }
         if (!mThirdQuartile && values[0] >= 75) {
-            LogUtil.debug(TAG, "thirdQuartile: " + values[0]);
+            LogUtil.d(TAG, "thirdQuartile: " + values[0]);
             mThirdQuartile = true;
             mTrackEventListener.onEvent(VideoAdEvent.Event.AD_THIRDQUARTILE);
         }

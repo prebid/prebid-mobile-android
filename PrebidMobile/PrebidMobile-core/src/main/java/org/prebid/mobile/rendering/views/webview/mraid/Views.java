@@ -22,7 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 
 public class Views {
 
@@ -78,7 +78,7 @@ public class Views {
         }
 
         if (!ViewCompat.isAttachedToWindow(view)) {
-            LogUtil.debug(TAG, "Attempting to call View.getRootView() on an unattached View.");
+            LogUtil.d(TAG, "Attempting to call View.getRootView() on an unattached View.");
         }
 
         final View rootView = view.getRootView();

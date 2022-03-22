@@ -22,12 +22,12 @@ import android.util.Log;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import org.json.JSONObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.mraid.handler.FetchPropertiesHandler;
 import org.prebid.mobile.rendering.sdk.JSLibraryManager;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
@@ -44,7 +44,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
 
         @Override
         public void onError(Throwable throwable) {
-            LogUtil.error(TAG, "executeGetExpandProperties failed: " + Log.getStackTraceString(throwable));
+            LogUtil.e(TAG, "executeGetExpandProperties failed: " + Log.getStackTraceString(throwable));
         }
     };
 
@@ -57,7 +57,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
     public void loadMraidExpandProperties() {
         Context context = getContext();
         if (!(context instanceof Activity)) {
-            LogUtil.warn(TAG, "Context is null or is not activity context");
+            LogUtil.w(TAG, "Context is null or is not activity context");
             return;
         }
 
@@ -76,7 +76,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
                           .executeGetExpandProperties(new FetchPropertiesHandler(mExpandPropertiesCallback));
         }
         else {
-            LogUtil.warn(TAG, "Error getting expand properties");
+            LogUtil.w(TAG, "Error getting expand properties");
         }
     }
 
@@ -120,7 +120,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
         if (adBaseView == null) {
 
             //This should never happen.
-            LogUtil.error(TAG, "Failed to preload a banner ad. Webview is null.");
+            LogUtil.e(TAG, "Failed to preload a banner ad. Webview is null.");
 
             if (mWebViewDelegate != null) {
                 mWebViewDelegate.webViewFailedToLoad(new AdException(AdException.INTERNAL_ERROR, "Preloaded adview is null!"));
@@ -138,7 +138,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
 
                 if (getChildCount() >= 1) {
 
-                    LogUtil.debug(TAG, "Adding second view");
+                    LogUtil.d(TAG, "Adding second view");
                     //safe removal from parent before adding
                     Views.removeFromParent(adBaseView);
 
@@ -147,7 +147,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
                     swapWebViews();
                 }
                 else {
-                    LogUtil.debug(TAG, "Adding first view");
+                    LogUtil.d(TAG, "Adding first view");
                     //safe removal from parent before adding
                     Views.removeFromParent(adBaseView);
 
@@ -156,7 +156,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
                 }
             }
             else {
-                LogUtil.debug(TAG, "Adding the only view");
+                LogUtil.d(TAG, "Adding the only view");
 
                 adBaseView.bringToFront();
                 swapWebViews();
@@ -215,7 +215,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
             }
         }
         catch (Exception e) {
-            LogUtil.error(TAG, "handleExpandPropertiesResult: Failed. Reason: " + Log.getStackTraceString(e));
+            LogUtil.e(TAG, "handleExpandPropertiesResult: Failed. Reason: " + Log.getStackTraceString(e));
         }
     }
 }

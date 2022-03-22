@@ -32,12 +32,12 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.WindowManager;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.sdk.BaseManager;
 import org.prebid.mobile.rendering.sdk.calendar.CalendarEventWrapper;
 import org.prebid.mobile.rendering.sdk.calendar.CalendarFactory;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.browser.AdBrowserActivity;
 
 import java.io.*;
@@ -197,7 +197,7 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
     @Override
     public boolean isActivityOrientationLocked(Context context) {
         if (!(context instanceof Activity)) {
-            LogUtil.debug(TAG, "isScreenOrientationLocked() executed with non-activity context. Returning false.");
+            LogUtil.d(TAG, "isScreenOrientationLocked() executed with non-activity context. Returning false.");
             return false;
         }
 
@@ -224,7 +224,7 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
     @Override
     public void storePicture(String url) throws Exception {
         if (!Utils.isExternalStorageAvailable()) {
-            LogUtil.error(TAG, "storePicture: Failed. External storage is not available");
+            LogUtil.e(TAG, "storePicture: Failed. External storage is not available");
             return;
         }
         String fileName = Utils.md5(url);
@@ -237,7 +237,7 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
         OutputStream outputStream = getOutputStream(fileName);
 
         if (outputStream == null) {
-            LogUtil.error(TAG, "Could not get Outputstream to write file to");
+            LogUtil.e(TAG, "Could not get Outputstream to write file to");
             return;
         }
 
@@ -308,7 +308,7 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
     OutputStream getOutPutStreamForQ(String filename, Context context)
     throws FileNotFoundException {
         if (context == null) {
-            LogUtil.debug(TAG, "getOutPutStreamForQ: Failed. Context is null");
+            LogUtil.d(TAG, "getOutPutStreamForQ: Failed. Context is null");
             return null;
         }
 
@@ -319,7 +319,7 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
         Uri contentUri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);
         Uri insert = contentResolver.insert(contentUri, contentValues);
         if (insert == null) {
-            LogUtil.debug(TAG, "Could not save content uri");
+            LogUtil.d(TAG, "Could not save content uri");
             return null;
         }
         return contentResolver.openOutputStream(insert);

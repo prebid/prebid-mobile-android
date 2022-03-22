@@ -16,9 +16,9 @@
 
 package org.prebid.mobile.rendering.mraid.methods;
 
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.MraidEvent;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
@@ -47,7 +47,7 @@ public class TwoPartExpandRunnable implements Runnable {
     public void run() {
         HTMLCreative htmlCreative = mWeakHtmlCreative.get();
         if (htmlCreative == null) {
-            LogUtil.error(TAG, "HTMLCreative object is null");
+            LogUtil.e(TAG, "HTMLCreative object is null");
             return;
         }
 

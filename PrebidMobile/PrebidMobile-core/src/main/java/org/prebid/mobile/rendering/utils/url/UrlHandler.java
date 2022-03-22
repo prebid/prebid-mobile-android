@@ -23,9 +23,9 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.mraid.methods.network.UrlResolutionTask;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.utils.url.action.*;
 
 import java.util.HashSet;
@@ -128,7 +128,7 @@ public class UrlHandler {
     public void handleUrl(Context context, String url, List<String> trackingUrls, boolean isFromUserAction) {
         if (url == null || TextUtils.isEmpty(url.trim())) {
             mUrlHandlerResultListener.onFailure(url);
-            LogUtil.error(TAG, "handleUrl(): Attempted to handle empty url.");
+            LogUtil.e(TAG, "handleUrl(): Attempted to handle empty url.");
             return;
         }
 
@@ -143,7 +143,7 @@ public class UrlHandler {
             public void onFailure(@NonNull String message, @Nullable Throwable throwable) {
                 mTaskPending = false;
                 mUrlHandlerResultListener.onFailure(url);
-                LogUtil.error(TAG, message);
+                LogUtil.e(TAG, message);
             }
         };
 
@@ -166,7 +166,7 @@ public class UrlHandler {
                                      final boolean isFromUserAction) {
         if (TextUtils.isEmpty(url)) {
             mUrlHandlerResultListener.onFailure(url);
-            LogUtil.error(TAG, "handleResolvedUrl(): Attempted to handle empty url.");
+            LogUtil.e(TAG, "handleResolvedUrl(): Attempted to handle empty url.");
             return false;
         }
 
@@ -180,7 +180,7 @@ public class UrlHandler {
                     return true;
                 }
                 catch (ActionNotResolvedException e) {
-                    LogUtil.error(TAG, "handleResolvedUrl(): Unable to handle action: " + urlAction + " for given uri: " + destinationUri);
+                    LogUtil.e(TAG, "handleResolvedUrl(): Unable to handle action: " + urlAction + " for given uri: " + destinationUri);
                 }
             }
         }
@@ -211,7 +211,7 @@ public class UrlHandler {
                                @Nullable List<String> trackingUrlList,
                                UrlAction urlAction) {
         if (mAlreadySucceeded || mTaskPending) {
-            LogUtil.warn(TAG, "notifySuccess(): Action is finished or action is still pending.");
+            LogUtil.w(TAG, "notifySuccess(): Action is finished or action is still pending.");
             return;
         }
 

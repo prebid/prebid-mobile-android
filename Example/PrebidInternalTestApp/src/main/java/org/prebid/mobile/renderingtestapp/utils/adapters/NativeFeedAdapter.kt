@@ -23,11 +23,11 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.lyt_native_ad.view.*
+import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidNativeAd
 import org.prebid.mobile.PrebidNativeAdEventListener
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult
 import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
-import org.prebid.mobile.rendering.utils.logger.LogUtil
 import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.utils.loadImage
@@ -54,7 +54,7 @@ class NativeFeedAdapter(
 
             val nativeAd = NativeAdProvider.getNativeAd(extras)
             if (nativeAd == null) {
-                LogUtil.error(TAG, "Native ad is null")
+                LogUtil.e(TAG, "Native ad is null")
                 return@fetchDemand
             }
 

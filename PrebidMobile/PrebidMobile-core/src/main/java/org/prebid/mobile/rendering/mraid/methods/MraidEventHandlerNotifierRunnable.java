@@ -16,9 +16,9 @@
 
 package org.prebid.mobile.rendering.mraid.methods;
 
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.MraidEvent;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.JsExecutor;
 
@@ -48,14 +48,14 @@ public class MraidEventHandlerNotifierRunnable implements Runnable {
         HTMLCreative htmlCreative = mWeakHtmlCreative.get();
         WebViewBase webViewBase = mWeakWebViewBase.get();
         if (htmlCreative == null || webViewBase == null) {
-            LogUtil.debug(TAG, "Unable to pass event to handler. HtmlCreative or webviewBase is null");
+            LogUtil.d(TAG, "Unable to pass event to handler. HtmlCreative or webviewBase is null");
             return;
         }
         htmlCreative.handleMRAIDEventsInCreative(mMraidEvent, webViewBase);
 
         final JsExecutor jsExecutor = mWeakJsExecutor.get();
         if (jsExecutor == null) {
-            LogUtil.debug(TAG, "Unable to executeNativeCallComplete(). JsExecutor is null.");
+            LogUtil.d(TAG, "Unable to executeNativeCallComplete(). JsExecutor is null.");
             return;
         }
 

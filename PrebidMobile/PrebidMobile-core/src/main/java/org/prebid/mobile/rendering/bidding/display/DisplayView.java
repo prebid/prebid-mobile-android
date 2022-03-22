@@ -20,6 +20,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.errors.AdException;
@@ -27,7 +28,6 @@ import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 import org.prebid.mobile.rendering.utils.broadcast.local.EventForwardingLocalBroadcastReceiver;
 import org.prebid.mobile.rendering.utils.constants.IntentActions;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
@@ -197,35 +197,35 @@ public class DisplayView extends FrameLayout {
     }
 
     private void notifyListenerError(AdException e) {
-        LogUtil.debug(TAG, "onAdFailed");
+        LogUtil.d(TAG, "onAdFailed");
         if (mDisplayViewListener != null) {
             mDisplayViewListener.onAdFailed(e);
         }
     }
 
     private void notifyListenerClicked() {
-        LogUtil.debug(TAG, "onAdClicked");
+        LogUtil.d(TAG, "onAdClicked");
         if (mDisplayViewListener != null) {
             mDisplayViewListener.onAdClicked();
         }
     }
 
     private void notifyListenerClose() {
-        LogUtil.debug(TAG, "onAdClosed");
+        LogUtil.d(TAG, "onAdClosed");
         if (mDisplayViewListener != null) {
             mDisplayViewListener.onAdClosed();
         }
     }
 
     private void notifyListenerDisplayed() {
-        LogUtil.debug(TAG, "onAdDisplayed");
+        LogUtil.d(TAG, "onAdDisplayed");
         if (mDisplayViewListener != null) {
             mDisplayViewListener.onAdDisplayed();
         }
     }
 
     private void notifyListenerLoaded() {
-        LogUtil.debug(TAG, "onAdLoaded");
+        LogUtil.d(TAG, "onAdLoaded");
         if (mDisplayViewListener != null) {
             mDisplayViewListener.onAdLoaded();
         }

@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.interstitial.InterstitialManagerDisplayDelegate;
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
@@ -33,7 +34,6 @@ import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.mraid.methods.MraidController;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposure;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
@@ -108,7 +108,7 @@ public class HTMLCreative extends AbstractCreative
 
         if (TextUtils.isEmpty(html)) {
             String msg = "No HTML in creative data";
-            LogUtil.error(TAG, msg);
+            LogUtil.e(TAG, msg);
             throw new AdException(AdException.SERVER_ERROR, msg);
         }
         else {
@@ -124,7 +124,7 @@ public class HTMLCreative extends AbstractCreative
     public void display() {
 
         if (!(getCreativeView() instanceof PrebidWebViewBase)) {
-            LogUtil.error(TAG, "Could not cast mCreativeView to a PrebidWebViewBase");
+            LogUtil.e(TAG, "Could not cast mCreativeView to a PrebidWebViewBase");
             return;
         }
         PrebidWebViewBase creativeWebView = (PrebidWebViewBase) getCreativeView();
@@ -136,13 +136,13 @@ public class HTMLCreative extends AbstractCreative
     @Override
     public void createOmAdSession() {
         if (getCreativeView() == null || getCreativeView().getWebView() == null) {
-            LogUtil.error(TAG, "initOmAdSession error. Opex webView is null");
+            LogUtil.e(TAG, "initOmAdSession error. Opex webView is null");
             return;
         }
 
         OmAdSessionManager omAdSessionManager = mWeakOmAdSessionManager.get();
         if (omAdSessionManager == null) {
-            LogUtil.error(TAG, "Error creating adSession. OmAdSessionManager is null");
+            LogUtil.e(TAG, "Error creating adSession. OmAdSessionManager is null");
             return;
         }
 
@@ -222,7 +222,7 @@ public class HTMLCreative extends AbstractCreative
 
     @Override
     public void interstitialAdClosed() {
-        LogUtil.debug(TAG, "MRAID Expand/Resize is closing.");
+        LogUtil.d(TAG, "MRAID Expand/Resize is closing.");
         //For mraid banner, this is same as mraidAdCollapsed
         //For mraid interstitials with custom
         if (getCreativeViewListener() != null) {
@@ -234,7 +234,7 @@ public class HTMLCreative extends AbstractCreative
     public void interstitialDialogShown(ViewGroup rootViewGroup) {
         CreativeViewListener creativeViewListener = getCreativeViewListener();
         if (creativeViewListener == null) {
-            LogUtil.debug(TAG, "interstitialDialogShown(): Failed to notify creativeViewListener. creativeViewListener is null.");
+            LogUtil.d(TAG, "interstitialDialogShown(): Failed to notify creativeViewListener. creativeViewListener is null.");
             return;
         }
         creativeViewListener.creativeInterstitialDialogShown(rootViewGroup);
@@ -254,7 +254,7 @@ public class HTMLCreative extends AbstractCreative
     }
 
     public void mraidAdExpanded() {
-        LogUtil.debug(TAG, "MRAID ad expanded");
+        LogUtil.d(TAG, "MRAID ad expanded");
         //send callback to pubs when an internal browser is closed
         if (getCreativeViewListener() != null) {
             getCreativeViewListener().creativeDidExpand(this);
@@ -268,7 +268,7 @@ public class HTMLCreative extends AbstractCreative
         ViewExposure viewExposure = result.getViewExposure();
 
         if (shouldFireImpression && isViewable) {
-            LogUtil.debug(TAG, "Impression fired");
+            LogUtil.d(TAG, "Impression fired");
             getCreativeModel().trackDisplayAdEvent(TrackingEvent.Events.IMPRESSION);
         }
         getCreativeView().onWindowFocusChanged(isViewable);
@@ -305,7 +305,7 @@ public class HTMLCreative extends AbstractCreative
     }
 
     public void mraidAdCollapsed() {
-        LogUtil.debug(TAG, "MRAID ad collapsed");
+        LogUtil.d(TAG, "MRAID ad collapsed");
         if (getCreativeViewListener() != null) {
             getCreativeViewListener().creativeDidCollapse(this);
         }
@@ -328,13 +328,13 @@ public class HTMLCreative extends AbstractCreative
         try {
             OmAdSessionManager omAdSessionManager = mWeakOmAdSessionManager.get();
             if (omAdSessionManager == null) {
-                LogUtil.debug(TAG, "Unable to injectScriptContent. AdSessionManager is null.");
+                LogUtil.d(TAG, "Unable to injectScriptContent. AdSessionManager is null.");
                 return html;
             }
             return omAdSessionManager.injectValidationScriptIntoHtml(html);
         }
         catch (IllegalArgumentException | IllegalStateException e) {
-            LogUtil.error(TAG, "Failed to inject script content into html  " + Log.getStackTraceString(e));
+            LogUtil.e(TAG, "Failed to inject script content into html  " + Log.getStackTraceString(e));
             return html;
         }
     }

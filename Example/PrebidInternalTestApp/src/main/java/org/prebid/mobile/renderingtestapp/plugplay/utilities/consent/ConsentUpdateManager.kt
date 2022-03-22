@@ -19,7 +19,7 @@ package org.prebid.mobile.renderingtestapp.plugplay.utilities.consent
 import android.content.SharedPreferences
 import android.util.Log
 import com.google.gson.Gson
-import org.prebid.mobile.rendering.utils.logger.LogUtil
+import org.prebid.mobile.LogUtil
 import org.prebid.mobile.renderingtestapp.data.ConsentConfiguration
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
@@ -67,7 +67,7 @@ class ConsentUpdateManager(private val defaultSharedPreferences: SharedPreferenc
 
     private fun startTimer(updateIntervalSec: Long?, updateOptionsList: List<Map<String, Any?>>?) {
         if (updateIntervalSec == null || updateOptionsList == null) {
-            LogUtil.error(TAG, "startTimer(): Failed. Provided update internal or updateOptionsList is null.")
+            LogUtil.e(TAG, "startTimer(): Failed. Provided update internal or updateOptionsList is null.")
             return
         }
 
@@ -105,7 +105,7 @@ class ConsentUpdateManager(private val defaultSharedPreferences: SharedPreferenc
 
     private fun updateConsentPreferences(updateOptionsMap: Map<String, Any?>?) {
         if (updateOptionsMap == null) {
-            LogUtil.error(TAG, "updateConsentPreferences(): Failed. Provided options map is null")
+            LogUtil.e(TAG, "updateConsentPreferences(): Failed. Provided options map is null")
             return
         }
 

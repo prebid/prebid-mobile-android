@@ -20,8 +20,8 @@ import android.os.Bundle;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.NativeAdUnit;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -55,7 +55,7 @@ public class GamUtils {
         removeUsedCustomTargetingForGam(adRequest);
 
         if (keywords == null || keywords.isEmpty()) {
-            LogUtil.error(TAG, "prepare: Failed. Result contains invalid keywords");
+            LogUtil.e(TAG, "prepare: Failed. Result contains invalid keywords");
             return;
         }
 

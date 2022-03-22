@@ -27,10 +27,10 @@ import android.webkit.URLUtil;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.listeners.OnBrowserActionResultListener;
 import org.prebid.mobile.rendering.listeners.OnBrowserActionResultListener.BrowserActionResult;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.utils.url.ActionNotResolvedException;
 import org.prebid.mobile.rendering.views.browser.AdBrowserActivity;
 
@@ -44,7 +44,7 @@ public class ExternalViewerUtils {
 
     public static boolean isBrowserActivityCallable(Context context) {
         if (context == null) {
-            LogUtil.debug(TAG, "isBrowserActivityCallable(): returning false. Context is null");
+            LogUtil.d(TAG, "isBrowserActivityCallable(): returning false. Context is null");
             return false;
         }
 
@@ -57,7 +57,7 @@ public class ExternalViewerUtils {
      */
     public static boolean isActivityCallable(Context context, Intent intent) {
         if (context == null || intent == null) {
-            LogUtil.debug(TAG, "isActivityCallable(): returning false. Intent or context is null");
+            LogUtil.d(TAG, "isActivityCallable(): returning false. Intent or context is null");
             return false;
         }
 
@@ -115,7 +115,7 @@ public class ExternalViewerUtils {
 
     private static void startExternalBrowser(Context context, String url) {
         if (context == null || url == null) {
-            LogUtil.error(TAG, "startExternalBrowser: Failure. Context or URL is null");
+            LogUtil.e(TAG, "startExternalBrowser: Failure. Context or URL is null");
             return;
         }
         Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -124,7 +124,7 @@ public class ExternalViewerUtils {
             context.startActivity(intent);
         }
         else {
-            LogUtil.error(TAG, "No activity available to handle action " + intent.toString());
+            LogUtil.e(TAG, "No activity available to handle action " + intent.toString());
         }
     }
 
@@ -152,7 +152,7 @@ public class ExternalViewerUtils {
                                                        OnBrowserActionResultListener onBrowserActionResultListener) {
 
         if (onBrowserActionResultListener == null) {
-            LogUtil.debug(TAG, "notifyBrowserActionSuccess(): Failed. BrowserActionResultListener is null.");
+            LogUtil.d(TAG, "notifyBrowserActionSuccess(): Failed. BrowserActionResultListener is null.");
             return;
         }
 

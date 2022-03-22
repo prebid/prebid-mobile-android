@@ -31,6 +31,7 @@ import android.widget.RelativeLayout;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import org.json.JSONObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.mraid.handler.FetchPropertiesHandler;
@@ -39,7 +40,6 @@ import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
 import org.prebid.mobile.rendering.utils.broadcast.OrientationBroadcastReceiver;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.JsExecutor;
@@ -84,7 +84,7 @@ public abstract class AdBaseDialog extends Dialog {
 
         @Override
         public void onError(Throwable throwable) {
-            LogUtil.error(TAG, "ExpandProperties failed: " + Log.getStackTraceString(throwable));
+            LogUtil.e(TAG, "ExpandProperties failed: " + Log.getStackTraceString(throwable));
         }
     };
     private DialogEventListener mListener;
@@ -184,7 +184,7 @@ public abstract class AdBaseDialog extends Dialog {
         }
         catch (IllegalArgumentException e) {
 
-            LogUtil.error(TAG, Log.getStackTraceString(e));
+            LogUtil.e(TAG, Log.getStackTraceString(e));
         }
         cancel();
     }
@@ -236,7 +236,7 @@ public abstract class AdBaseDialog extends Dialog {
                 applyOrientation();
             }
             catch (AdException e) {
-                LogUtil.error(TAG, Log.getStackTraceString(e));
+                LogUtil.e(TAG, Log.getStackTraceString(e));
             }
             //Register orientation change listener for MRAID ads only
             if (mContextReference.get() != null) {
@@ -282,7 +282,7 @@ public abstract class AdBaseDialog extends Dialog {
     protected void lockOrientation() {
         Activity activity = getActivity();
         if (activity == null) {
-            LogUtil.error(TAG, "lockOrientation failure. Activity is null");
+            LogUtil.e(TAG, "lockOrientation failure. Activity is null");
             return;
         }
         Display getOrient = activity.getWindowManager().getDefaultDisplay();
@@ -297,7 +297,7 @@ public abstract class AdBaseDialog extends Dialog {
     protected void lockOrientation(final int screenOrientation) {
         Activity activity = getActivity();
         if (activity == null) {
-            LogUtil.error(TAG, "lockOrientation failure. Activity is null");
+            LogUtil.e(TAG, "lockOrientation failure. Activity is null");
             return;
         }
 
@@ -321,21 +321,21 @@ public abstract class AdBaseDialog extends Dialog {
             return (Activity) mContextReference.get();
         }
         catch (Exception e) {
-            LogUtil.error(TAG, "Context is not an activity");
+            LogUtil.e(TAG, "Context is not an activity");
             return null;
         }
     }
 
     protected void addCloseView() {
         if (mAdViewContainer == null) {
-            LogUtil.error(TAG, "Unable to add close button. Container is null");
+            LogUtil.e(TAG, "Unable to add close button. Container is null");
             return;
         }
 
         mCloseView = Utils.createCloseView(mContextReference.get());
 
         if (mCloseView == null) {
-            LogUtil.error(TAG, "Unable to add close button. Close view is null");
+            LogUtil.e(TAG, "Unable to add close button. Close view is null");
             return;
         }
 
@@ -374,7 +374,7 @@ public abstract class AdBaseDialog extends Dialog {
 
     private void handleExpandPropertiesResult(String expandProperties) {
         if (mWebViewBase == null || mWebViewBase.getMRAIDInterface() == null) {
-            LogUtil.debug(TAG, "handleExpandPropertiesResult: WebViewBase or MraidInterface is null. Skipping.");
+            LogUtil.d(TAG, "handleExpandPropertiesResult: WebViewBase or MraidInterface is null. Skipping.");
             return;
         }
 
@@ -403,7 +403,7 @@ public abstract class AdBaseDialog extends Dialog {
             forceOrientation = orientationProperties.optString("forceOrientation", "none");
         }
         catch (Exception e) {
-            LogUtil.error(TAG, "Failed to get the orientation details from JSON for MRAID: " + Log.getStackTraceString(e));
+            LogUtil.e(TAG, "Failed to get the orientation details from JSON for MRAID: " + Log.getStackTraceString(e));
         }
 
         if (!mraidVariableContainer.isLaunchedWithUrl()) {
@@ -423,7 +423,7 @@ public abstract class AdBaseDialog extends Dialog {
         public void onShow(DialogInterface dialog) {
             AdBaseDialog adBaseDialog = mWeakAdBaseDialog.get();
             if (adBaseDialog == null) {
-                LogUtil.debug(TAG, "onShown(): Error notifying show listeners. AdBaseDialog is null.");
+                LogUtil.d(TAG, "onShown(): Error notifying show listeners. AdBaseDialog is null.");
                 return;
             }
             adBaseDialog.handleDialogShow();

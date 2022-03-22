@@ -21,11 +21,11 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.utils.broadcast.local.EventForwardingLocalBroadcastReceiver;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
@@ -74,7 +74,7 @@ public abstract class BaseAdView extends FrameLayout {
 
     public void setAppContent(ContentObject contentObject) {
         if (mAdViewManager == null) {
-            LogUtil.error(TAG, "setContentUrl: Failed. AdViewManager is null. Can't set content object. ");
+            LogUtil.e(TAG, "setContentUrl: Failed. AdViewManager is null. Can't set content object. ");
             return;
         }
         mAdViewManager.getAdConfiguration().setAppContent(contentObject);
@@ -105,7 +105,7 @@ public abstract class BaseAdView extends FrameLayout {
     }
 
     protected void handleBroadcastAction(String action) {
-        LogUtil.debug(TAG, "handleBroadcastAction: parent method executed. No default action handling. " + action);
+        LogUtil.d(TAG, "handleBroadcastAction: parent method executed. No default action handling. " + action);
     }
 
     protected void handleWindowFocusChange(boolean hasWindowFocus) {

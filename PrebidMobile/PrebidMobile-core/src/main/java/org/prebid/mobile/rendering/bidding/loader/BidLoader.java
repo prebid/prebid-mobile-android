@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.bidding.loader;
 
 import android.content.Context;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
@@ -26,7 +27,6 @@ import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
 import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
 import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
@@ -81,22 +81,22 @@ public class BidLoader {
 
     private final RefreshTimerTask mRefreshTimerTask = new RefreshTimerTask(() -> {
         if (mAdConfiguration == null) {
-            LogUtil.error(TAG, "handleRefresh(): Failure. AdConfiguration is null");
+            LogUtil.e(TAG, "handleRefresh(): Failure. AdConfiguration is null");
             return;
         }
 
         if (mBidRefreshListener == null) {
-            LogUtil.error(TAG, "RefreshListener is null. No refresh or load will be performed.");
+            LogUtil.e(TAG, "RefreshListener is null. No refresh or load will be performed.");
             return;
         }
 
         if (!mBidRefreshListener.canPerformRefresh()) {
-            LogUtil.debug(TAG, "handleRefresh(): Loading skipped, rescheduling timer. View is not visible.");
+            LogUtil.d(TAG, "handleRefresh(): Loading skipped, rescheduling timer. View is not visible.");
             setupRefreshTimer();
             return;
         }
 
-        LogUtil.debug(TAG, "refresh triggered: load() being called ");
+        LogUtil.d(TAG, "refresh triggered: load() being called ");
         load();
     });
 
@@ -113,22 +113,22 @@ public class BidLoader {
 
     public void load() {
         if (mRequestListener == null) {
-            LogUtil.warn(TAG, "Listener is null");
+            LogUtil.w(TAG, "Listener is null");
             return;
         }
         if (mAdConfiguration == null) {
-            LogUtil.warn(TAG, "No ad request configuration to load");
+            LogUtil.w(TAG, "No ad request configuration to load");
             return;
         }
         if (mContextReference.get() == null) {
-            LogUtil.warn(TAG, "Context is null");
+            LogUtil.w(TAG, "Context is null");
             return;
         }
 
         // If mCurrentlyLoading == false, set it to true and return true; else return false
         // If compareAndSet returns false, it means mCurrentlyLoading was already true and therefore we should skip loading
         if (!mCurrentlyLoading.compareAndSet(false, true)) {
-            LogUtil.warn(TAG, "Previous load is in progress. Load() ignored.");
+            LogUtil.w(TAG, "Previous load is in progress. Load() ignored.");
             return;
         }
 
@@ -136,12 +136,12 @@ public class BidLoader {
     }
 
     public void setupRefreshTimer() {
-        LogUtil.debug(TAG, "Schedule refresh timer");
+        LogUtil.d(TAG, "Schedule refresh timer");
 
         boolean isRefreshAvailable = mAdConfiguration != null
                 && mAdConfiguration.isAdType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
         if (!isRefreshAvailable) {
-            LogUtil.debug(TAG, "setupRefreshTimer: Canceled. AdConfiguration is null or AdType is not Banner");
+            LogUtil.d(TAG, "setupRefreshTimer: Canceled. AdConfiguration is null or AdType is not Banner");
             return;
         }
 
@@ -151,8 +151,8 @@ public class BidLoader {
         //So, check it against it to stop it from creating a refreshtask
 
         if (refreshTimeMillis == Integer.MAX_VALUE || refreshTimeMillis <= 0) {
-            LogUtil.debug(TAG, "setupRefreshTimer(): refreshTimeMillis is: "
-                               + refreshTimeMillis + ". Skipping refresh timer initialization");
+            LogUtil.d(TAG, "setupRefreshTimer(): refreshTimeMillis is: "
+                    + refreshTimeMillis + ". Skipping refresh timer initialization");
             return;
         }
 
@@ -162,7 +162,7 @@ public class BidLoader {
     }
 
     public void cancelRefresh() {
-        LogUtil.debug(TAG, "Cancel refresh timer");
+        LogUtil.d(TAG, "Cancel refresh timer");
         mRefreshTimerTask.cancelRefreshTimer();
     }
 
@@ -186,11 +186,11 @@ public class BidLoader {
     }
 
     private void failedToLoadBid(String msg) {
-        LogUtil.error(TAG, "Invalid bid response: " + msg);
+        LogUtil.e(TAG, "Invalid bid response: " + msg);
         mCurrentlyLoading.set(false);
 
         if (mRequestListener == null) {
-            LogUtil.warn(TAG, "onFailedToLoad: Listener is null.");
+            LogUtil.w(TAG, "onFailedToLoad: Listener is null.");
             cancelRefresh();
             return;
         }

@@ -17,8 +17,8 @@
 package org.prebid.mobile.rendering.networking.urlBuilder;
 
 import org.json.JSONObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 public class BidUrlComponents extends URLComponents {
     private final static String TAG = BidUrlComponents.class.getSimpleName();
@@ -37,7 +37,7 @@ public class BidUrlComponents extends URLComponents {
             }
         }
         catch (Exception e) {
-            LogUtil.error(TAG, "Failed to add OpenRTB query arg");
+            LogUtil.e(TAG, "Failed to add OpenRTB query arg");
         }
 
         return openrtb;

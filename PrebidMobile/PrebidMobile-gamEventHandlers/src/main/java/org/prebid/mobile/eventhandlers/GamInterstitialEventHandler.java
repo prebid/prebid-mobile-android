@@ -20,17 +20,15 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
-
+import androidx.annotation.NonNull;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.eventhandlers.global.Constants;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
-
-import androidx.annotation.NonNull;
 
 public class GamInterstitialEventHandler implements InterstitialEventHandler, GamAdEventListener {
     private static final String TAG = GamInterstitialEventHandler.class.getSimpleName();
@@ -136,7 +134,7 @@ public class GamInterstitialEventHandler implements InterstitialEventHandler, Ga
     private void primaryAdReceived() {
         if (mIsExpectingAppEvent) {
             if (mAppEventHandler != null) {
-                LogUtil.debug(TAG, "primaryAdReceived: AppEventTimer is not null. Skipping timer scheduling.");
+                LogUtil.d(TAG, "primaryAdReceived: AppEventTimer is not null. Skipping timer scheduling.");
                 return;
             }
 
@@ -149,7 +147,7 @@ public class GamInterstitialEventHandler implements InterstitialEventHandler, Ga
 
     private void handleAppEvent() {
         if (!mIsExpectingAppEvent) {
-            LogUtil.debug(TAG, "appEventDetected: Skipping event handling. App event is not expected");
+            LogUtil.d(TAG, "appEventDetected: Skipping event handling. App event is not expected");
             return;
         }
 

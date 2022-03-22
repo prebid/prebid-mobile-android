@@ -20,6 +20,7 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -29,7 +30,6 @@ import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdPosition;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
@@ -117,12 +117,12 @@ public abstract class BaseInterstitialAdUnit {
      */
     public void loadAd() {
         if (mBidLoader == null) {
-            LogUtil.error(TAG, "loadAd: Failed. BidLoader is not initialized.");
+            LogUtil.e(TAG, "loadAd: Failed. BidLoader is not initialized.");
             return;
         }
 
         if (!isAdLoadAllowed()) {
-            LogUtil.debug(TAG, "loadAd: Skipped. InterstitialAdUnitState is: " + mInterstitialAdUnitState);
+            LogUtil.d(TAG, "loadAd: Skipped. InterstitialAdUnitState is: " + mInterstitialAdUnitState);
             return;
         }
 
@@ -141,7 +141,7 @@ public abstract class BaseInterstitialAdUnit {
      */
     public void show() {
         if (!isAuctionWinnerReadyToDisplay()) {
-            LogUtil.debug(TAG, "show(): Ad is not yet ready for display!");
+            LogUtil.d(TAG, "show(): Ad is not yet ready for display!");
             return;
         }
 

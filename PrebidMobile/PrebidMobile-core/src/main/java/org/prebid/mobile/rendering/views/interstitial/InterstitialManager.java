@@ -22,13 +22,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.display.InterstitialView;
 import org.prebid.mobile.rendering.bidding.display.VideoView;
 import org.prebid.mobile.rendering.interstitial.*;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.mraid.methods.InterstitialManagerMraidDelegate;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.rendering.views.webview.WebViewBanner;
@@ -94,7 +94,7 @@ public class InterstitialManager implements InterstitialManagerInterface {
     // Note: The context should be the Activity this view will display on top of
     public void displayAdViewInInterstitial(Context context, View view) {
         if (!(context instanceof Activity)) {
-            LogUtil.error(TAG, "displayAdViewInInterstitial(): Can not display interstitial without activity context");
+            LogUtil.e(TAG, "displayAdViewInInterstitial(): Can not display interstitial without activity context");
             return;
         }
 
@@ -108,8 +108,8 @@ public class InterstitialManager implements InterstitialManagerInterface {
 
     public void displayVideoAdViewInInterstitial(Context context, View adView) {
         if (!(context instanceof Activity && adView instanceof VideoView)) {
-            LogUtil.error(TAG, "displayAdViewInInterstitial(): Can not display interstitial. "
-                               + "Context is not activity or adView is not an instance of VideoAdView");
+            LogUtil.e(TAG, "displayAdViewInInterstitial(): Can not display interstitial. "
+                    + "Context is not activity or adView is not an instance of VideoAdView");
             return;
         }
         show();
@@ -143,7 +143,7 @@ public class InterstitialManager implements InterstitialManagerInterface {
 
     @Override
     public void interstitialClosed(View viewToClose) {
-        LogUtil.debug(TAG, "interstitialClosed");
+        LogUtil.d(TAG, "interstitialClosed");
 
         try {
             if (!mViewStack.isEmpty() && mMraidDelegate != null) {
@@ -173,14 +173,14 @@ public class InterstitialManager implements InterstitialManagerInterface {
             }
         }
         catch (Exception e) {
-            LogUtil.error(TAG, "InterstitialClosed failed: " + Log.getStackTraceString(e));
+            LogUtil.e(TAG, "InterstitialClosed failed: " + Log.getStackTraceString(e));
         }
     }
 
     @Override
     public void interstitialDialogShown(ViewGroup rootViewGroup) {
         if (mInterstitialDisplayDelegate == null) {
-            LogUtil.debug(TAG, "interstitialDialogShown(): Failed. mInterstitialDelegate == null");
+            LogUtil.d(TAG, "interstitialDialogShown(): Failed. mInterstitialDelegate == null");
             return;
         }
         mInterstitialDisplayDelegate.interstitialDialogShown(rootViewGroup);

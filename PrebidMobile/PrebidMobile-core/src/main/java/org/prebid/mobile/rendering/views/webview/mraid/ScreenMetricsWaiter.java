@@ -22,7 +22,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 
 import java.util.LinkedList;
@@ -46,13 +46,13 @@ public class ScreenMetricsWaiter {
             newWaitRequest.start();
         }
         mWaitRequestQueue.addLast(newWaitRequest);
-        LogUtil.debug(TAG, "New request queued. Queue size: " + mWaitRequestQueue.size());
+        LogUtil.d(TAG, "New request queued. Queue size: " + mWaitRequestQueue.size());
     }
 
     void finishAndStartNextRequest() {
         mWaitRequestQueue.removeFirst();
         WaitRequest firstInQueueRequest = mWaitRequestQueue.peekFirst();
-        LogUtil.debug(TAG, "Request finished. Queue size: " + mWaitRequestQueue.size());
+        LogUtil.d(TAG, "Request finished. Queue size: " + mWaitRequestQueue.size());
         if (firstInQueueRequest != null) {
             firstInQueueRequest.start();
         }
@@ -112,7 +112,7 @@ public class ScreenMetricsWaiter {
                     // Immediately count down for any views that already have a size
                     if (view.getHeight() > 0 || view.getWidth() > 0 || mIsAnswerRequired || isTwoPart) {
                         countDown();
-                        LogUtil.debug(TAG, "Get known metrics for: " + view.getClass().getSimpleName() + ", h: " + view.getHeight() + ", w: " + view.getWidth());
+                        LogUtil.d(TAG, "Get known metrics for: " + view.getClass().getSimpleName() + ", h: " + view.getHeight() + ", w: " + view.getWidth());
                         continue;
                     }
 
@@ -120,11 +120,11 @@ public class ScreenMetricsWaiter {
                     // that this doesn't leak because the ViewTreeObserver gets detached when
                     // the view is no longer part of the view hierarchy.
 
-                    LogUtil.debug(TAG, "Create listener for: " + view.getClass().getSimpleName());
+                    LogUtil.d(TAG, "Create listener for: " + view.getClass().getSimpleName());
                     view.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                         @Override
                         public boolean onPreDraw() {
-                            LogUtil.debug(TAG, "Get metrics from listener for: " + view.getClass().getSimpleName() + ", h: " + view.getHeight() + ", w: " + view.getWidth());
+                            LogUtil.d(TAG, "Get metrics from listener for: " + view.getClass().getSimpleName() + ", h: " + view.getHeight() + ", w: " + view.getWidth());
                             view.getViewTreeObserver().removeOnPreDrawListener(this);
                             countDown();
                             return true;

@@ -16,19 +16,19 @@
 
 package org.prebid.mobile;
 
-import android.text.TextUtils;
 import android.util.Log;
+import androidx.annotation.Size;
 
 public class LogUtil {
     private static final String BASE_TAG = "PrebidMobile";
 
-    private static final int NONE = -1;
-    private static final int VERBOSE = android.util.Log.VERBOSE; //2
-    private static final int DEBUG = android.util.Log.DEBUG; //3
-    private static final int INFO = android.util.Log.INFO; //4
-    private static final int WARN = android.util.Log.WARN; //5
-    private static final int ERROR = android.util.Log.ERROR; //6
-    private static final int ASSERT = android.util.Log.ASSERT; //7
+    public static final int NONE = -1;
+    public static final int VERBOSE = android.util.Log.VERBOSE; // 2
+    public static final int DEBUG = android.util.Log.DEBUG; // 3
+    public static final int INFO = android.util.Log.INFO; // 4
+    public static final int WARN = android.util.Log.WARN; // 5
+    public static final int ERROR = android.util.Log.ERROR; // 6
+    public static final int ASSERT = android.util.Log.ASSERT; // 7
 
     private static int logLevel;
 
@@ -43,55 +43,6 @@ public class LogUtil {
     public static int getLogLevel() {
         return logLevel;
     }
-
-    /**
-     * Prints a message with VERBOSE priority.
-     */
-    public static void verbose(String tag, String msg) {
-        v(tag, msg);
-    }
-
-    /**
-     * Prints a message with DEBUG priority.
-     *
-     * @param tag Tag for for the log data. Can be used to organize log statements.
-     * @param msg The actual message to be logged.
-     */
-    public static void debug(String tag, String msg) {
-        d(tag, msg);
-    }
-
-    /**
-     * Prints a message with INFO priority.
-     *
-     * @param tag Tag for for the log data. Can be used to organize log statements.
-     * @param msg The actual message to be logged.
-     */
-    public static void info(String tag, String msg) {
-        i(tag, msg);
-    }
-
-    /**
-     * Prints a message with WARN priority.
-     */
-    public static void warn(String tag, String msg) {
-        w(tag, msg);
-    }
-
-    /**
-     * Prints a message with ERROR priority.
-     */
-    public static void error(String tag, String msg) {
-        e(tag, msg);
-    }
-
-    /**
-     * Prints a message with ASSERT priority.
-     */
-    public static void assertLog(String tag, String msg) {
-        wtf(tag, msg);
-    }
-
 
     /**
      * Prints a message with VERBOSE priority and default BASE_TAG
@@ -131,93 +82,88 @@ public class LogUtil {
     /**
      * Prints a message with VERBOSE priority.
      */
-    public static void v(String tag, String msg) {
+    public static void v(@Size(max = 23) String tag, String msg) {
         print(VERBOSE, tag, msg);
     }
 
     /**
      * Prints a message with DEBUG priority.
      */
-    public static void d(String tag, String msg) {
+    public static void d(@Size(max = 23) String tag, String msg) {
         print(DEBUG, tag, msg);
     }
 
     /**
      * Prints a message with INFO priority.
-     *
-     * @param tag Tag for for the log data. Can be used to organize log statements.
-     * @param msg The actual message to be logged.
      */
-    public static void i(String tag, String msg) {
+    public static void i(@Size(max = 23) String tag, String msg) {
         print(INFO, tag, msg);
     }
 
     /**
      * Prints a message with WARN priority.
-     *
-     * @param tag Tag for for the log data. Can be used to organize log statements.
-     * @param msg The actual message to be logged.
      */
-    public static void w(String tag, String msg) {
+    public static void w(@Size(max = 23) String tag, String msg) {
         print(WARN, tag, msg);
     }
 
     /**
      * Prints a message with ERROR priority.
      */
-    public static void e(String tag, String msg) {
+    public static void e(@Size(max = 23) String tag, String msg) {
         print(ERROR, tag, msg);
     }
 
     /**
      * Prints a message with ASSERT priority.
      */
-    public static void wtf(String tag, String msg) {
+    public static void wtf(@Size(max = 23) String tag, String msg) {
         print(ASSERT, tag, msg);
     }
 
     /**
      * Prints a message with ERROR priority and exception.
      */
-    public static void e(final String tag, String message, Throwable cause) {
-        try {
-            if (Log.isLoggable(tag, Log.ERROR)) {
-                Log.e(tag, message, cause);
-                return;
-            }
-        } catch (IllegalArgumentException e) {
-            Log.e(BASE_TAG, "Tried to log a message with tag length >23: " + tag);
+    public static void e(final String tag, String message, Throwable throwable) {
+        if (tag == null || message == null) {
+            return;
         }
-        Log.e(BASE_TAG, message, cause);
+
+        if (ERROR >= getLogLevel()) {
+            Log.e(getTagWithBase(tag), message, throwable);
+        }
     }
 
     /**
-     * Prints information with set priority.
+     * Prints information with set priority. Every tag
      */
-    private static void print(int messagePriority, String tag, String msg) {
-        String useMsg = msg;
-        if (useMsg == null) {
-            useMsg = "";
+    private static void print(int messagePriority, String tag, String message) {
+        if (tag == null || message == null) {
+            return;
         }
 
         if (messagePriority >= getLogLevel()) {
-            Log.println(messagePriority, tag, useMsg);
+            Log.println(messagePriority, getTagWithBase(tag), message);
         }
     }
 
     /**
-     * Helper method to get Prebid log tag that is shorter than 23 characters
+     * Helper method to add Prebid tag to logging messages.
      */
-    @Deprecated
-    public static String getTagWithBase(String tagSuffix) {
-        StringBuilder sb = new StringBuilder().append(BASE_TAG);
-        if (!TextUtils.isEmpty(tagSuffix)) {
-            sb.append("-").append(tagSuffix);
-        }
-        if (sb.length() > 23) {
-            return sb.substring(0, 22); // guarantee that tag length <=23
+    private static String getTagWithBase(String tag) {
+        StringBuilder result = new StringBuilder();
+
+        String prefix = "Prebid";
+        if (tag.startsWith(prefix)) {
+            result.append(tag);
         } else {
-            return sb.toString();
+            result.append(prefix).append(tag);
+        }
+
+        if (result.length() > 23) {
+            return result.substring(0, 22);
+        } else {
+            return result.toString();
         }
     }
 

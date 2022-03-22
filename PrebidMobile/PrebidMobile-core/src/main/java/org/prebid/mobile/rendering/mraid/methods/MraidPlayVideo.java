@@ -17,8 +17,8 @@
 package org.prebid.mobile.rendering.mraid.methods;
 
 import android.text.TextUtils;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 public class MraidPlayVideo {
 
@@ -27,7 +27,7 @@ public class MraidPlayVideo {
     public void playVideo(String url) {
 
         if (TextUtils.isEmpty(url)) {
-            LogUtil.error(TAG, "playVideo(): Failed. Provided url is empty or null");
+            LogUtil.e(TAG, "playVideo(): Failed. Provided url is empty or null");
             return;
         }
         ManagersResolver.getInstance().getDeviceManager().playVideo(url);

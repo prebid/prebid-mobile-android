@@ -23,8 +23,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.core.R;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class ViewExposureChecker {
 
     public ViewExposure exposure(View view) {
         if (view == null) {
-            LogUtil.debug(TAG, "exposure: Returning zeroExposure. Test View is null.");
+            LogUtil.d(TAG, "exposure: Returning zeroExposure. Test View is null.");
             return null;
         }
 
@@ -62,7 +62,7 @@ public class ViewExposureChecker {
         boolean visitParent = visitParent(((ViewGroup) view.getParent()), view);
         boolean collapseBoundingBox = collapseBoundingBox();
 
-        LogUtil.debug(TAG, "exposure: visitParent " + visitParent + " collapseBox " + collapseBoundingBox);
+        LogUtil.d(TAG, "exposure: visitParent " + visitParent + " collapseBox " + collapseBoundingBox);
         boolean potentiallyExposed = visitParent && collapseBoundingBox;
         if (!potentiallyExposed) {
             return zeroExposure;
@@ -265,7 +265,7 @@ public class ViewExposureChecker {
         boolean isRectTrimmed = trimmedRect.intersect(valueRect);
 
         if (!isRectTrimmed) {
-            LogUtil.debug(TAG, "fragmentize: Error. Rect is not trimmed");
+            LogUtil.d(TAG, "fragmentize: Error. Rect is not trimmed");
             return;
         }
 
@@ -311,7 +311,7 @@ public class ViewExposureChecker {
 
     private Rect convertRect(Rect fromRect, View fromView, View toView) {
         if (fromRect == null || fromView == null || toView == null) {
-            LogUtil.debug(TAG, "convertRect: Failed. One of the provided param is null. Returning empty rect.");
+            LogUtil.d(TAG, "convertRect: Failed. One of the provided param is null. Returning empty rect.");
             return new Rect();
         }
 

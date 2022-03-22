@@ -23,12 +23,12 @@ import android.os.Looper;
 import android.view.View;
 import androidx.annotation.NonNull;
 import org.prebid.mobile.AdSize;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.eventhandlers.global.Constants;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.BannerEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 /**
  * This class is compatible with Prebid Rendering SDK v1.10.
@@ -127,7 +127,7 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
         mIsExpectingAppEvent = false;
 
         if (mRequestBanner != null) {
-            LogUtil.error(TAG, "requestAdWithBid: Failed. Request to primaryAdServer is in progress.");
+            LogUtil.e(TAG, "requestAdWithBid: Failed. Request to primaryAdServer is in progress.");
             return;
         }
 
@@ -173,7 +173,7 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
     private void primaryAdReceived() {
         if (mIsExpectingAppEvent) {
             if (mAppEventHandler != null) {
-                LogUtil.debug(TAG, "primaryAdReceived: AppEventTimer is not null. Skipping timer scheduling.");
+                LogUtil.d(TAG, "primaryAdReceived: AppEventTimer is not null. Skipping timer scheduling.");
                 return;
             }
 
@@ -191,7 +191,7 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
 
     private void handleAppEvent() {
         if (!mIsExpectingAppEvent) {
-            LogUtil.debug(TAG, "appEventDetected: Skipping event handling. App event is not expected");
+            LogUtil.d(TAG, "appEventDetected: Skipping event handling. App event is not expected");
             return;
         }
 

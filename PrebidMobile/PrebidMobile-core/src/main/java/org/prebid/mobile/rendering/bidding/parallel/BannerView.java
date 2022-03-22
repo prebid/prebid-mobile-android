@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -48,7 +49,6 @@ import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
 import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
@@ -233,12 +233,12 @@ public class BannerView extends FrameLayout {
      */
     public void loadAd() {
         if (mBidLoader == null) {
-            LogUtil.error(TAG, "loadAd: Failed. BidLoader is not initialized.");
+            LogUtil.e(TAG, "loadAd: Failed. BidLoader is not initialized.");
             return;
         }
 
         if (mIsPrimaryAdServerRequestInProgress) {
-            LogUtil.debug(TAG, "loadAd: Skipped. Loading is in progress.");
+            LogUtil.d(TAG, "loadAd: Skipped. Loading is in progress.");
             return;
         }
 
@@ -274,11 +274,11 @@ public class BannerView extends FrameLayout {
     //region ==================== getters and setters
     public void setAutoRefreshDelay(int seconds) {
         if (!mAdUnitConfig.isAdType(AdUnitConfiguration.AdUnitIdentifierType.BANNER)) {
-            LogUtil.info(TAG, "Autorefresh is available only for Banner ad type");
+            LogUtil.i(TAG, "Autorefresh is available only for Banner ad type");
             return;
         }
         if (seconds < 0) {
-            LogUtil.error(TAG, "setRefreshIntervalInSec: Failed. Refresh interval must be >= 0");
+            LogUtil.e(TAG, "setRefreshIntervalInSec: Failed. Refresh interval must be >= 0");
             return;
         }
         mAdUnitConfig.setAutoRefreshDelay(seconds);
@@ -386,7 +386,7 @@ public class BannerView extends FrameLayout {
 
     private void reflectAttrs(AttributeSet attrs) {
         if (attrs == null) {
-            LogUtil.debug(TAG, "reflectAttrs. No attributes provided.");
+            LogUtil.d(TAG, "reflectAttrs. No attributes provided.");
             return;
         }
         TypedArray typedArray = getContext()

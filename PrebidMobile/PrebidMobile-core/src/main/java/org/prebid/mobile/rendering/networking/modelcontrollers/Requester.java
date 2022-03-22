@@ -19,6 +19,7 @@ package org.prebid.mobile.rendering.networking.modelcontrollers;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.listeners.AdIdFetchListener;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
@@ -34,7 +35,6 @@ import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
@@ -123,7 +123,7 @@ public abstract class Requester {
     protected abstract PathBuilderBase getPathBuilder();
 
     private void sendAdException(String logMsg, String exceptionMsg) {
-        LogUtil.warn(TAG, logMsg);
+        LogUtil.w(TAG, logMsg);
         AdException adException = new AdException(AdException.INIT_ERROR, exceptionMsg);
         mAdResponseCallBack.onErrorWithException(adException, 0);
     }
@@ -180,20 +180,20 @@ public abstract class Requester {
 
         @Override
         public void adIdFetchCompletion() {
-            LogUtil.info(TAG, "adIdFetchCompletion");
+            LogUtil.i(TAG, "adIdFetchCompletion");
             makeAdRequest();
         }
 
         @Override
         public void adIdFetchFailure() {
-            LogUtil.warn(TAG, "adIdFetchFailure");
+            LogUtil.w(TAG, "adIdFetchFailure");
             makeAdRequest();
         }
 
         private void makeAdRequest() {
             Requester requester = mWeakRequester.get();
             if (requester == null) {
-                LogUtil.warn(TAG, "Requester is null");
+                LogUtil.w(TAG, "Requester is null");
                 return;
             }
 

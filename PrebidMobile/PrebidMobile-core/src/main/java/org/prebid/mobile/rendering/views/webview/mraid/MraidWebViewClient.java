@@ -20,9 +20,9 @@ import android.net.Uri;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.mraid.MraidEnv;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.AdWebViewClient;
 
 import java.io.ByteArrayInputStream;
@@ -67,7 +67,7 @@ public class MraidWebViewClient extends AdWebViewClient {
             return new WebResourceResponse("text/javascript", "UTF-8", data);
         }
         else {
-            LogUtil.error(TAG, "Failed to inject mraid.js into twoPart mraid webview");
+            LogUtil.e(TAG, "Failed to inject mraid.js into twoPart mraid webview");
         }
         return null;
     }

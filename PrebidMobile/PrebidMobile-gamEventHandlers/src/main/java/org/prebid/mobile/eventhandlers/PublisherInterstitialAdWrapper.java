@@ -18,7 +18,8 @@ package org.prebid.mobile.eventhandlers;
 
 import android.app.Activity;
 import android.util.Log;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
@@ -26,17 +27,13 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 import com.google.android.gms.ads.admanager.AppEventListener;
-
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.eventhandlers.utils.GamUtils;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import static org.prebid.mobile.eventhandlers.global.Constants.APP_EVENT;
 
@@ -94,7 +91,7 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
             return new PublisherInterstitialAdWrapper(activity, gamAdUnitId, eventListener);
         }
         catch (Throwable throwable) {
-            LogUtil.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.e(TAG, Log.getStackTraceString(throwable));
         }
         return null;
     }
@@ -140,7 +137,7 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
             return mInterstitialAd != null;
         }
         catch (Throwable throwable) {
-            LogUtil.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.e(TAG, Log.getStackTraceString(throwable));
         }
         return false;
     }
@@ -149,12 +146,12 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
         final Activity activity = mActivityWeakReference.get();
 
         if (activity == null) {
-            LogUtil.error(TAG, "show: Failed. Activity is null.");
+            LogUtil.e(TAG, "show: Failed. Activity is null.");
             return;
         }
 
         if (mInterstitialAd == null) {
-            LogUtil.error(TAG, "show: Failure. Interstitial ad is null.");
+            LogUtil.e(TAG, "show: Failure. Interstitial ad is null.");
             return;
         }
 
@@ -162,7 +159,7 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
             mInterstitialAd.show(activity);
         }
         catch (Throwable throwable) {
-            LogUtil.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.e(TAG, Log.getStackTraceString(throwable));
         }
     }
 
@@ -178,7 +175,7 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
             AdManagerInterstitialAd.load(mActivityWeakReference.get(), mAdUnitId, adRequest, mAdLoadCallback);
         }
         catch (Throwable throwable) {
-            LogUtil.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.e(TAG, Log.getStackTraceString(throwable));
         }
     }
 

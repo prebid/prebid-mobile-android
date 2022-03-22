@@ -24,8 +24,8 @@ import androidx.annotation.VisibleForTesting;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.listeners.AdIdFetchListener;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
 
@@ -58,7 +58,7 @@ public class AdIdManager {
                 Handler handler = new Handler();
                 handler.postDelayed(() -> {
                     if (getAdIdInfoTask.getStatus() == AsyncTask.Status.RUNNING) {
-                        LogUtil.debug(TAG, "Cancelling FetchAdIdInfoTask");
+                        LogUtil.d(TAG, "Cancelling FetchAdIdInfoTask");
                         getAdIdInfoTask.cancel(true);
                         listener.adIdFetchFailure();
                     }
@@ -69,7 +69,7 @@ public class AdIdManager {
             }
         }
         catch (Throwable throwable) {
-            LogUtil.error(TAG, "Failed to initAdId: " + Log.getStackTraceString(throwable) + "\nDid you add necessary dependencies?");
+            LogUtil.e(TAG, "Failed to initAdId: " + Log.getStackTraceString(throwable) + "\nDid you add necessary dependencies?");
         }
     }
 
@@ -123,7 +123,7 @@ public class AdIdManager {
                 sLimitAdTrackingEnabled = adInfo.isLimitAdTrackingEnabled();
             }
             catch (Throwable e) {
-                LogUtil.error(TAG, "Failed to get advertising id and LMT: " + Log.getStackTraceString(e));
+                LogUtil.e(TAG, "Failed to get advertising id and LMT: " + Log.getStackTraceString(e));
             }
             return null;
         }

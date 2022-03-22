@@ -19,11 +19,11 @@ package org.prebid.mobile.rendering.bidding.display;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import org.prebid.mobile.AdSize;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.enums.BannerAdPosition;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class MediationBannerAdUnit extends MediationBaseAdUnit {
@@ -58,13 +58,13 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
         mBidLoader.setBidRefreshListener(() -> {
             if (mAdFailed) {
                 mAdFailed = false;
-                LogUtil.debug(TAG, "Ad failed, can perform refresh.");
+                LogUtil.d(TAG, "Ad failed, can perform refresh.");
                 return true;
             }
 
             boolean isViewVisible = mMediationDelegate.canPerformRefresh();
             boolean canRefresh = mScreenStateReceiver.isScreenOn() && isViewVisible;
-            LogUtil.debug(TAG, "Can perform refresh: " + canRefresh);
+            LogUtil.d(TAG, "Can perform refresh: " + canRefresh);
             return canRefresh;
         });
     }

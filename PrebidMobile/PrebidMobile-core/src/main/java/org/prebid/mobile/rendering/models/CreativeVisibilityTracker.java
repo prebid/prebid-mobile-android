@@ -24,12 +24,12 @@ import android.view.ViewTreeObserver;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerResult;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposure;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposureChecker;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
 import java.lang.ref.WeakReference;
@@ -65,7 +65,7 @@ public class CreativeVisibilityTracker {
         final View trackedView,
         final Set<VisibilityTrackerOption> visibilityTrackerOptionSet) {
         if (trackedView == null) {
-            LogUtil.debug(TAG, "Tracked view can't be null");
+            LogUtil.d(TAG, "Tracked view can't be null");
             return;
         }
 
@@ -118,20 +118,20 @@ public class CreativeVisibilityTracker {
         final View view) {
         final ViewTreeObserver originalViewTreeObserver = mWeakViewTreeObserver.get();
         if (originalViewTreeObserver != null && originalViewTreeObserver.isAlive()) {
-            LogUtil.debug(TAG, "Original ViewTreeObserver is still alive.");
+            LogUtil.d(TAG, "Original ViewTreeObserver is still alive.");
             return;
         }
 
         final View rootView = Views.getTopmostView(context, view);
         if (rootView == null) {
-            LogUtil.debug(TAG, "Unable to set Visibility Tracker due to no available root view.");
+            LogUtil.d(TAG, "Unable to set Visibility Tracker due to no available root view.");
             return;
         }
 
         final ViewTreeObserver viewTreeObserver = rootView.getViewTreeObserver();
         if (!viewTreeObserver.isAlive()) {
-            LogUtil.debug(TAG, "Visibility Tracker was unable to track views because the"
-                               + " root view tree observer was not alive");
+            LogUtil.d(TAG, "Visibility Tracker was unable to track views because the"
+                    + " root view tree observer was not alive");
             return;
         }
 
@@ -147,7 +147,7 @@ public class CreativeVisibilityTracker {
 
     public void startVisibilityCheck(Context context) {
         if (mTrackedView == null || mTrackedView.get() == null) {
-            LogUtil.error(TAG, "Couldn't start visibility check. Target view is null");
+            LogUtil.e(TAG, "Couldn't start visibility check. Target view is null");
             return;
         }
         setViewTreeObserver(context, mTrackedView.get());

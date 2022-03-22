@@ -20,7 +20,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
@@ -29,17 +30,13 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
-
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.eventhandlers.utils.GamUtils;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import static org.prebid.mobile.eventhandlers.global.Constants.APP_EVENT;
 
@@ -99,7 +96,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
             return new RewardedAdWrapper(context, gamAdUnitId, eventListener);
         }
         catch (Throwable throwable) {
-            LogUtil.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.e(TAG, Log.getStackTraceString(throwable));
         }
         return null;
     }
@@ -145,7 +142,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
             RewardedAd.load(mContextWeakReference.get(), mAdUnitId, adRequest, mRewardedAdLoadCallback);
         }
         catch (Throwable throwable) {
-            LogUtil.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.e(TAG, Log.getStackTraceString(throwable));
         }
     }
 
@@ -154,7 +151,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
             return mRewardedAd != null;
         }
         catch (Throwable throwable) {
-            LogUtil.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.e(TAG, Log.getStackTraceString(throwable));
         }
 
         return false;
@@ -162,7 +159,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
 
     public void show(Activity activity) {
         if (mRewardedAd == null) {
-            LogUtil.error(TAG, "show: Failed! Rewarded ad is null.");
+            LogUtil.e(TAG, "show: Failed! Rewarded ad is null.");
             return;
         }
 
@@ -170,7 +167,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
             mRewardedAd.show(activity, this);
         }
         catch (Throwable throwable) {
-            LogUtil.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.e(TAG, Log.getStackTraceString(throwable));
         }
     }
 
@@ -188,7 +185,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
     private boolean metadataContainsAdEvent() {
         try {
             if (mRewardedAd == null) {
-                LogUtil.debug(TAG, "metadataContainsAdEvent: Failed to process. RewardedAd is null.");
+                LogUtil.d(TAG, "metadataContainsAdEvent: Failed to process. RewardedAd is null.");
                 return false;
             }
 
@@ -196,7 +193,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
             return APP_EVENT.equals(adMetadata.getString(KEY_METADATA));
         }
         catch (Throwable throwable) {
-            LogUtil.error(TAG, Log.getStackTraceString(throwable));
+            LogUtil.e(TAG, Log.getStackTraceString(throwable));
         }
         return false;
     }

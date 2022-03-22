@@ -17,12 +17,12 @@
 package org.prebid.mobile.rendering.loading;
 
 import android.content.Context;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.CreativeModel;
 import org.prebid.mobile.rendering.models.CreativeModelsMaker;
 import org.prebid.mobile.rendering.sdk.JSLibraryManager;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 
 import java.lang.ref.WeakReference;
@@ -112,7 +112,7 @@ public class Transaction {
             }
         }
         catch (Exception e) {
-            LogUtil.error(TAG, "Failed to check for built in video override");
+            LogUtil.e(TAG, "Failed to check for built in video override");
         }
     }
 
@@ -163,7 +163,7 @@ public class Transaction {
 
     private void stopOmAdSession() {
         if (mOmAdSessionManager == null) {
-            LogUtil.error(TAG, "Failed to stopOmAdSession. OmAdSessionManager is null");
+            LogUtil.e(TAG, "Failed to stopOmAdSession. OmAdSessionManager is null");
             return;
         }
 
@@ -207,7 +207,7 @@ public class Transaction {
         public void onSuccess() {
             Transaction transaction = mWeakTransaction.get();
             if (transaction == null) {
-                LogUtil.warn(TAG, "CreativeMaker is null");
+                LogUtil.w(TAG, "CreativeMaker is null");
                 return;
             }
 
@@ -224,7 +224,7 @@ public class Transaction {
         public void onFailure(AdException e) {
             Transaction transaction = mWeakTransaction.get();
             if (transaction == null) {
-                LogUtil.warn(TAG, "CreativeMaker is null");
+                LogUtil.w(TAG, "CreativeMaker is null");
                 return;
             }
 

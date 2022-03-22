@@ -19,7 +19,7 @@ package org.prebid.mobile.rendering.utils.helpers;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.VisibleForTesting;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 
 public class RefreshTimerTask {
     private static final String TAG = RefreshTimerTask.class.getSimpleName();
@@ -34,7 +34,7 @@ public class RefreshTimerTask {
         @Override
         public void run() {
             if (mRefreshTriggerListener == null) {
-                LogUtil.error(TAG, "Failed to notify mRefreshTriggerListener. mRefreshTriggerListener instance is null");
+                LogUtil.e(TAG, "Failed to notify mRefreshTriggerListener. mRefreshTriggerListener instance is null");
                 return;
             }
 

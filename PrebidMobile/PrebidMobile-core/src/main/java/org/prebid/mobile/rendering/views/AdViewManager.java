@@ -20,6 +20,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.InterstitialView;
@@ -35,7 +36,6 @@ import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreative;
 import org.prebid.mobile.rendering.video.VideoCreativeView;
@@ -86,7 +86,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     @Override
     public void onFetchingFailed(AdException exception) {
-        LogUtil.error(TAG, "There was an error fetching an ad " + exception.toString());
+        LogUtil.e(TAG, "There was an error fetching an ad " + exception.toString());
         mAdViewListener.failedToLoad(exception);
     }
 
@@ -97,7 +97,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     @Override
     public void creativeInterstitialDidClose(AbstractCreative creative) {
-        LogUtil.debug(TAG, "creativeInterstitialDidClose");
+        LogUtil.d(TAG, "creativeInterstitialDidClose");
 
         Transaction currentTransaction = mTransactionManager.getCurrentTransaction();
         if (creative.isDisplay() && creative.isEndCard()) {
@@ -150,7 +150,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     @Override
     public void creativeDidComplete(AbstractCreative creative) {
-        LogUtil.debug(TAG, "creativeDidComplete");
+        LogUtil.d(TAG, "creativeDidComplete");
 
         // NOTE: This is currently hard-wired to work for video + end card only
         //       To truly support continuous ads in a queue, there would need to be significant changes
@@ -179,7 +179,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     public void hide() {
         if (mCurrentCreative == null) {
-            LogUtil.warn(TAG, "Can not hide a null creative");
+            LogUtil.w(TAG, "Can not hide a null creative");
             return;
         }
 
@@ -191,7 +191,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     public void setAdVisibility(int visibility) {
         if (mCurrentCreative == null) {
-            LogUtil.debug(TAG, "setAdVisibility(): Skipping creative window focus notification. mCurrentCreative is null");
+            LogUtil.d(TAG, "setAdVisibility(): Skipping creative window focus notification. mCurrentCreative is null");
             return;
         }
 
@@ -315,12 +315,12 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     public void addObstructions(InternalFriendlyObstruction... friendlyObstructions) {
         if (friendlyObstructions == null || friendlyObstructions.length == 0) {
-            LogUtil.debug(TAG, "addObstructions(): Failed. Obstructions list is empty or null");
+            LogUtil.d(TAG, "addObstructions(): Failed. Obstructions list is empty or null");
             return;
         }
 
         if (mCurrentCreative == null) {
-            LogUtil.debug(TAG, "addObstructions(): Failed. Current creative is null.");
+            LogUtil.d(TAG, "addObstructions(): Failed. Current creative is null.");
             return;
         }
 
@@ -331,12 +331,12 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     public void show() {
         if (!isCreativeResolved()) {
-            LogUtil.debug(TAG, "Couldn't proceed show(): Video or HTML is not resolved.");
+            LogUtil.d(TAG, "Couldn't proceed show(): Video or HTML is not resolved.");
             return;
         }
         AbstractCreative creative = mTransactionManager.getCurrentCreative();
         if (creative == null) {
-            LogUtil.error(TAG, "Show called with no ad");
+            LogUtil.e(TAG, "Show called with no ad");
             return;
         }
         // Display current creative
@@ -383,7 +383,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
     private void handleCreativeDisplay() {
         View creativeView = mCurrentCreative.getCreativeView();
         if (creativeView == null) {
-            LogUtil.error(TAG, "Creative has no view");
+            LogUtil.e(TAG, "Creative has no view");
             return;
         }
 
@@ -424,13 +424,13 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
             show();
         }
         else {
-            LogUtil.info(TAG, "AdViewManager - Ad will be displayed when show is called");
+            LogUtil.i(TAG, "AdViewManager - Ad will be displayed when show is called");
         }
     }
 
     private void addHtmlInterstitialObstructions(ViewGroup rootViewGroup) {
         if (rootViewGroup == null) {
-            LogUtil.debug(TAG, "addHtmlInterstitialObstructions(): rootViewGroup is null.");
+            LogUtil.d(TAG, "addHtmlInterstitialObstructions(): rootViewGroup is null.");
             return;
         }
         View closeButtonView = rootViewGroup.findViewById(R.id.iv_close_interstitial);
@@ -450,7 +450,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
             trackAdLoaded();
         }
         catch (Exception e) {
-            LogUtil.error(TAG, "adLoaded failed: " + Log.getStackTraceString(e));
+            LogUtil.e(TAG, "adLoaded failed: " + Log.getStackTraceString(e));
         }
 
         handleAutoDisplay();

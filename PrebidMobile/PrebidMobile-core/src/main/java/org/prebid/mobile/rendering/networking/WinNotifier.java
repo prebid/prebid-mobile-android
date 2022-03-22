@@ -21,10 +21,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.networking.tracking.ServerConnection;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -64,13 +64,13 @@ public class WinNotifier {
 
         @Override
         public void onError(String msg, long responseTime) {
-            LogUtil.error(TAG, "Failed to send win event: " + msg);
+            LogUtil.e(TAG, "Failed to send win event: " + msg);
             sendNextWinRequest();
         }
 
         @Override
         public void onErrorWithException(Exception e, long responseTime) {
-            LogUtil.error(TAG, "Failed to send win event: " + e.getMessage());
+            LogUtil.e(TAG, "Failed to send win event: " + e.getMessage());
             sendNextWinRequest();
         }
     };
@@ -123,7 +123,7 @@ public class WinNotifier {
         }
         else {
             // Fire async event and wait for its result
-            LogUtil.debug(TAG, "Bid.adm is null or empty. Getting the ad from prebid cache");
+            LogUtil.d(TAG, "Bid.adm is null or empty. Getting the ad from prebid cache");
             ServerConnection.fireWithResult(winUrl, mWinResponseHandler);
         }
     }

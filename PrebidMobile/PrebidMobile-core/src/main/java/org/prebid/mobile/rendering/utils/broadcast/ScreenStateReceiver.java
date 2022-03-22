@@ -20,7 +20,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 
 public class ScreenStateReceiver extends BroadcastReceiver {
     private static final String TAG = ScreenStateReceiver.class.getSimpleName();
@@ -51,7 +51,7 @@ public class ScreenStateReceiver extends BroadcastReceiver {
 
     public void register(final Context context) {
         if (context == null) {
-            LogUtil.debug(TAG, "register: Failed. Context is null");
+            LogUtil.d(TAG, "register: Failed. Context is null");
             return;
         }
 
@@ -64,7 +64,7 @@ public class ScreenStateReceiver extends BroadcastReceiver {
 
     public void unregister() {
         if (mApplicationContext == null) {
-            LogUtil.debug(TAG, "unregister: Failed. Context is null");
+            LogUtil.d(TAG, "unregister: Failed. Context is null");
             return;
         }
 

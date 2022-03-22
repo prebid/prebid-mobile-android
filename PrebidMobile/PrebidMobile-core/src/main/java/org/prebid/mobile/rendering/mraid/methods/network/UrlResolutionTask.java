@@ -20,8 +20,8 @@ import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -98,7 +98,7 @@ public class UrlResolutionTask extends AsyncTask<String, Void, String> {
                     }
                 }
                 catch (IOException e) {
-                    LogUtil.error(TAG, "IOException when closing httpUrlConnection. Ignoring.");
+                    LogUtil.e(TAG, "IOException when closing httpUrlConnection. Ignoring.");
                 }
                 httpUrlConnection.disconnect();
             }
@@ -123,11 +123,11 @@ public class UrlResolutionTask extends AsyncTask<String, Void, String> {
             }
             catch (IllegalArgumentException e) {
                 // Ensure the request is cancelled instead of resolving an intermediary URL
-                LogUtil.error(TAG, "Invalid URL redirection. baseUrl=" + baseUrl + "\n redirectUrl=" + redirectUrl);
+                LogUtil.e(TAG, "Invalid URL redirection. baseUrl=" + baseUrl + "\n redirectUrl=" + redirectUrl);
                 throw new URISyntaxException(redirectUrl, "Unable to parse invalid URL");
             }
             catch (NullPointerException e) {
-                LogUtil.error(TAG, "Invalid URL redirection. baseUrl=" + baseUrl + "\n redirectUrl=" + redirectUrl);
+                LogUtil.e(TAG, "Invalid URL redirection. baseUrl=" + baseUrl + "\n redirectUrl=" + redirectUrl);
                 throw e;
             }
         }

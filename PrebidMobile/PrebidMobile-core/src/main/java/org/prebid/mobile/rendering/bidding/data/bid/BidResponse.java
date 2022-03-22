@@ -23,10 +23,10 @@ import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.utils.helpers.Dips;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -128,7 +128,7 @@ public class BidResponse {
             if (getWinningBid() == null) {
                 mHasParseError = true;
                 mParseError = "Failed to parse bids. No winning bids were found.";
-                LogUtil.info(TAG, mParseError);
+                LogUtil.i(TAG, mParseError);
             }
 
             mCreationTime = System.currentTimeMillis();
@@ -136,7 +136,7 @@ public class BidResponse {
         catch (JSONException e) {
             mHasParseError = true;
             mParseError = "Failed to parse JSON String: " + e.getMessage();
-            LogUtil.error(TAG, mParseError);
+            LogUtil.e(TAG, mParseError);
         }
     }
 

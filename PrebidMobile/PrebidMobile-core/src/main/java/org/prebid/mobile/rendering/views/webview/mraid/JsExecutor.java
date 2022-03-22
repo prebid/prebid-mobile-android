@@ -25,10 +25,10 @@ import android.util.Log;
 import android.webkit.WebView;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposure;
 import org.prebid.mobile.rendering.utils.helpers.HandlerQueueManager;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 
 import java.lang.ref.WeakReference;
@@ -159,17 +159,17 @@ public class JsExecutor {
     @VisibleForTesting
     void evaluateJavaScript(final String script) {
         if (mWebView == null) {
-            LogUtil.debug(TAG, "evaluateJavaScript failure. mWebView is null");
+            LogUtil.d(TAG, "evaluateJavaScript failure. mWebView is null");
             return;
         }
 
-        LogUtil.debug(TAG, "evaluateJavaScript: " + script);
+        LogUtil.d(TAG, "evaluateJavaScript: " + script);
         try {
             String scriptToEvaluate = "javascript: if (window.mraid && (window.mraid.getState() != 'loading' ) && ( window.mraid.getState() != 'hidden') ) { " + script + " }";
             mScriptExecutionHandler.post(new EvaluateScriptRunnable(mWebView, scriptToEvaluate));
         }
         catch (Exception e) {
-            LogUtil.error(TAG, "evaluateJavaScript failed for script " + script + Log.getStackTraceString(e));
+            LogUtil.e(TAG, "evaluateJavaScript failed for script " + script + Log.getStackTraceString(e));
         }
     }
 
@@ -197,7 +197,7 @@ public class JsExecutor {
     @VisibleForTesting
     void evaluateMraidScript(final String script) {
         if (mWebView == null) {
-            LogUtil.debug(TAG, "evaluateMraidScript failure. mWebView is null");
+            LogUtil.d(TAG, "evaluateMraidScript failure. mWebView is null");
             return;
         }
 
@@ -206,7 +206,7 @@ public class JsExecutor {
             mScriptExecutionHandler.post(new EvaluateScriptRunnable(mWebView, scriptToEvaluate));
         }
         catch (Exception e) {
-            LogUtil.error(TAG, "evaluateMraidScript failed: " + Log.getStackTraceString(e));
+            LogUtil.e(TAG, "evaluateMraidScript failed: " + Log.getStackTraceString(e));
         }
     }
 
@@ -226,7 +226,7 @@ public class JsExecutor {
         public void run() {
             WebView webView = mWeakAdView.get();
             if (webView == null) {
-                LogUtil.error(TAG, "Failed to evaluate script. WebView is null");
+                LogUtil.e(TAG, "Failed to evaluate script. WebView is null");
                 return;
             }
 

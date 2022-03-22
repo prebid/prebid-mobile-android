@@ -22,12 +22,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.interstitial.AdBaseDialog;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.sdk.JSLibraryManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 
 import java.util.regex.Matcher;
@@ -327,7 +327,7 @@ public class WebViewBase extends AdWebView implements AdAssetsLoadedListener {
         if (!TextUtils.isEmpty(scale)) {
 
             if (Utils.atLeastKitKat()) {
-                LogUtil.debug(TAG, "Metatag is set correctly");
+                LogUtil.d(TAG, "Metatag is set correctly");
                 metaTag = new StringBuilder("<meta name='viewport' content='width=device-width' />");
 
                 meta = metaTag.toString();
@@ -339,7 +339,7 @@ public class WebViewBase extends AdWebView implements AdAssetsLoadedListener {
             }
         }
         else {
-            LogUtil.debug(TAG, "Scale is null. Please check");
+            LogUtil.d(TAG, "Scale is null. Please check");
             metaTag = new StringBuilder("<meta name='viewport' content='width=device-width' />");
 
             meta = metaTag.toString();

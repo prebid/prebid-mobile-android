@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import org.prebid.mobile.*;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.ArrayList;
 
@@ -124,10 +123,10 @@ public class MediationNativeAdUnit {
             case NETWORK_ERROR:
                 return FetchDemandResult.NETWORK_ERROR;
             case INVALID_NATIVE_REQUEST:
-                LogUtil.error(TAG, "Invalid native request!");
+                LogUtil.e(TAG, "Invalid native request!");
                 return FetchDemandResult.NETWORK_ERROR;
             default:
-                LogUtil.error(TAG, "Something went wrong!");
+                LogUtil.e(TAG, "Something went wrong!");
                 return FetchDemandResult.NETWORK_ERROR;
         }
     }

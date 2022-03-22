@@ -18,7 +18,7 @@ package org.prebid.mobile.rendering.views.browser;
 
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.utils.url.UrlHandler;
 import org.prebid.mobile.rendering.utils.url.action.DeepLinkAction;
 import org.prebid.mobile.rendering.utils.url.action.DeepLinkPlusAction;
@@ -74,7 +74,7 @@ class AdBrowserActivityWebViewClient extends WebViewClient {
 
                 @Override
                 public void onFailure(String url) {
-                    LogUtil.debug(TAG, "Failed to handleUrl: " + url);
+                    LogUtil.d(TAG, "Failed to handleUrl: " + url);
                     mUrlHandleInProgress = false;
                 }
             })

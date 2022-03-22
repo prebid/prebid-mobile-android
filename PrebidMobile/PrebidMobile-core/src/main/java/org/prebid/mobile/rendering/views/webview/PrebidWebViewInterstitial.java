@@ -17,8 +17,8 @@
 package org.prebid.mobile.rendering.views.webview;
 
 import android.content.Context;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 
 public class PrebidWebViewInterstitial extends PrebidWebViewBase
@@ -50,7 +50,7 @@ public class PrebidWebViewInterstitial extends PrebidWebViewBase
     public void preloaded(WebViewBase adBaseView) {
         if (adBaseView == null) {
             //This should never happen.
-            LogUtil.error(TAG, "Failed to preload an interstitial. Webview is null.");
+            LogUtil.e(TAG, "Failed to preload an interstitial. Webview is null.");
 
             if (mWebViewDelegate != null) {
                 mWebViewDelegate.webViewFailedToLoad(new AdException(AdException.INTERNAL_ERROR, "Preloaded adview is null!"));

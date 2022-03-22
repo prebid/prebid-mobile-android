@@ -20,6 +20,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.AdSize;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialEventHandler;
@@ -27,7 +28,6 @@ import org.prebid.mobile.rendering.bidding.interfaces.StandaloneInterstitialEven
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialAdUnitListener;
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
@@ -168,7 +168,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
     @Override
     void notifyAdEventListener(AdListenerEvent adListenerEvent) {
         if (mInterstitialAdUnitListener == null) {
-            LogUtil.debug(TAG, "notifyAdEventListener: Failed. AdUnitListener is null. Passed listener event: " + adListenerEvent);
+            LogUtil.d(TAG, "notifyAdEventListener: Failed. AdUnitListener is null. Passed listener event: " + adListenerEvent);
             return;
         }
 
@@ -202,7 +202,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
             case VIDEO:
                 return AdUnitConfiguration.AdUnitIdentifierType.VAST;
             default:
-                LogUtil.debug(TAG, "setAdUnitIdentifierType: Provided AdUnitType [" + adUnitFormat + "] doesn't match any expected adUnitType.");
+                LogUtil.d(TAG, "setAdUnitIdentifierType: Provided AdUnitType [" + adUnitFormat + "] doesn't match any expected adUnitType.");
                 return null;
         }
     }

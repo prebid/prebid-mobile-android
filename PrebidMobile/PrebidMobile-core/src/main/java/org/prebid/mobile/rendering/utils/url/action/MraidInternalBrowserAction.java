@@ -21,12 +21,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.mraid.methods.network.RedirectUrlListener;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.utils.url.ActionNotResolvedException;
 import org.prebid.mobile.rendering.utils.url.UrlHandler;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
@@ -72,7 +72,7 @@ public class MraidInternalBrowserAction implements UrlAction {
             @Override
             public void onSuccess(String url, String contentType) {
                 if (Utils.isMraidActionUrl(url) && context != null) {
-                    LogUtil.debug(TAG, "Redirection succeeded");
+                    LogUtil.d(TAG, "Redirection succeeded");
 
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -80,7 +80,7 @@ public class MraidInternalBrowserAction implements UrlAction {
                     try {
                         context.getApplicationContext().startActivity(intent);
                     } catch (ActivityNotFoundException e) {
-                        LogUtil.error(TAG, "Unable to open url " + url + ". Activity was not found");
+                        LogUtil.e(TAG, "Unable to open url " + url + ". Activity was not found");
                     }
                 } else if (url != null && (url.startsWith(PrebidMobile.SCHEME_HTTP) || url.startsWith(PrebidMobile.SCHEME_HTTPS))) {
                     if (Utils.isVideoContent(contentType)) {
@@ -94,7 +94,7 @@ public class MraidInternalBrowserAction implements UrlAction {
             @Override
             public void onFailed() {
                 // Nothing to do
-                LogUtil.debug(TAG, "Open: redirection failed");
+                LogUtil.d(TAG, "Open: redirection failed");
             }
         });
     }

@@ -17,8 +17,8 @@
 package org.prebid.mobile.rendering.utils.helpers;
 
 import org.json.JSONObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.internal.MacrosModel;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.Map;
 
@@ -37,7 +37,7 @@ public class MacrosResolutionHelper {
 
     public static String resolveTargetingMarcos(String creative, Map<String, String> targetingMap) {
         if (targetingMap == null) {
-            LogUtil.error(TAG, "resolveMacros: Failed. Targeting map is null.");
+            LogUtil.e(TAG, "resolveMacros: Failed. Targeting map is null.");
             return creative;
         }
 
@@ -56,7 +56,7 @@ public class MacrosResolutionHelper {
 
     public static String resolveAuctionMacros(String target, Map<String, MacrosModel> replaceMacrosMap) {
         if (replaceMacrosMap == null || replaceMacrosMap.isEmpty()) {
-            LogUtil.error(TAG, "resolveAuctionMacros: Failed. Macros map is null or empty.");
+            LogUtil.e(TAG, "resolveAuctionMacros: Failed. Macros map is null or empty.");
             return target;
         }
 
@@ -72,12 +72,12 @@ public class MacrosResolutionHelper {
 
     private static String replace(String macros, String input, String replacement) {
         if (input == null || input.isEmpty()) {
-            LogUtil.error(TAG, "replace: Failed. Input string is null or empty.");
+            LogUtil.e(TAG, "replace: Failed. Input string is null or empty.");
             return "";
         }
 
         if (replacement == null) {
-            LogUtil.error(TAG, "replace: Failed. Replacement string is null. Maybe you need to use NativeAdConfiguration.setNativeStylesCreative");
+            LogUtil.e(TAG, "replace: Failed. Replacement string is null. Maybe you need to use NativeAdConfiguration.setNativeStylesCreative");
             return "";
         }
 

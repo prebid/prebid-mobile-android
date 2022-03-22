@@ -23,7 +23,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.views.browser.AdBrowserActivity;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBanner;
@@ -47,7 +47,7 @@ public class MraidClose {
     public void closeThroughJS() {
         final Context context = mContext;
         if (context == null) {
-            LogUtil.error(TAG, "Context is null");
+            LogUtil.e(TAG, "Context is null");
             return;
         }
 
@@ -58,7 +58,7 @@ public class MraidClose {
                 WebViewBase webViewBase = mWebViewBase;
 
                 if (isContainerStateInvalid(state)) {
-                    LogUtil.debug(TAG, "closeThroughJS: Skipping. Wrong container state: " + state);
+                    LogUtil.d(TAG, "closeThroughJS: Skipping. Wrong container state: " + state);
                     return;
                 }
 
@@ -69,7 +69,7 @@ public class MraidClose {
                 }
             }
             catch (Exception e) {
-                LogUtil.error(TAG, "closeThroughJS failed: " + Log.getStackTraceString(e));
+                LogUtil.e(TAG, "closeThroughJS failed: " + Log.getStackTraceString(e));
             }
         });
     }
@@ -134,7 +134,7 @@ public class MraidClose {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> {
             if (mWebViewBase == null) {
-                LogUtil.error(TAG, "makeViewInvisible failed: webViewBase is null");
+                LogUtil.e(TAG, "makeViewInvisible failed: webViewBase is null");
                 return;
             }
             mWebViewBase.setVisibility(View.INVISIBLE);

@@ -29,9 +29,9 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.vast.VASTErrorCodes;
 
 public class ExoPlayerView extends PlayerView implements VideoPlayerView {
@@ -64,7 +64,7 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
             if (mPlayer == null) {
-                LogUtil.debug(TAG, "onPlayerStateChanged(): Skipping state handling. Player is null");
+                LogUtil.d(TAG, "onPlayerStateChanged(): Skipping state handling. Player is null");
                 return;
             }
             switch (playbackState) {
@@ -96,7 +96,7 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
 
     @Override
     public void start(float initialVolume) {
-        LogUtil.debug(TAG, "start() called");
+        LogUtil.d(TAG, "start() called");
         initLayout();
         initPlayer(initialVolume);
         preparePlayer(true);
@@ -133,14 +133,14 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
 
     @Override
     public void resume() {
-        LogUtil.debug(TAG, "resume() called");
+        LogUtil.d(TAG, "resume() called");
         preparePlayer(false);
         mVideoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_RESUME);
     }
 
     @Override
     public void pause() {
-        LogUtil.debug(TAG, "pause() called");
+        LogUtil.d(TAG, "pause() called");
         if (mPlayer != null) {
             mPlayer.stop();
             mVideoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_PAUSE);
@@ -155,7 +155,7 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
 
     @Override
     public void destroy() {
-        LogUtil.debug(TAG, "destroy() called");
+        LogUtil.d(TAG, "destroy() called");
         killUpdateTask();
         if (mPlayer != null) {
             mPlayer.stop();
@@ -190,7 +190,7 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
 
     private void initPlayer(float initialVolume) {
         if (mPlayer != null) {
-            LogUtil.debug(TAG, "Skipping initPlayer(): Player is already initialized.");
+            LogUtil.d(TAG, "Skipping initPlayer(): Player is already initialized.");
             return;
         }
         mPlayer = ExoPlayerFactory.newSimpleInstance(getContext());
@@ -202,7 +202,7 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
 
     private void initUpdateTask() {
         if (mAdViewProgressUpdateTask != null) {
-            LogUtil.debug(TAG, "initUpdateTask: AdViewProgressUpdateTask is already initialized. Skipping.");
+            LogUtil.d(TAG, "initUpdateTask: AdViewProgressUpdateTask is already initialized. Skipping.");
             return;
         }
 
@@ -220,7 +220,7 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
     void preparePlayer(boolean resetPosition) {
         ExtractorMediaSource extractorMediaSource = buildMediaSource(mVideoUri);
         if (extractorMediaSource == null || mPlayer == null) {
-            LogUtil.debug(TAG, "preparePlayer(): ExtractorMediaSource or SimpleExoPlayer is null. Skipping prepare.");
+            LogUtil.d(TAG, "preparePlayer(): ExtractorMediaSource or SimpleExoPlayer is null. Skipping prepare.");
             return;
         }
         mPlayer.prepare(extractorMediaSource, resetPosition, true);
@@ -236,7 +236,7 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
     }
 
     private void killUpdateTask() {
-        LogUtil.debug(TAG, "killUpdateTask() called");
+        LogUtil.d(TAG, "killUpdateTask() called");
         if (mAdViewProgressUpdateTask != null) {
             mAdViewProgressUpdateTask.cancel(true);
             mAdViewProgressUpdateTask = null;

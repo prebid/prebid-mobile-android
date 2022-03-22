@@ -19,8 +19,8 @@ package org.prebid.mobile.rendering.views.webview;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.utils.helpers.HandlerQueueManager;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.PreloadManager.PreloadedListener;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.InterstitialJSInterface;
@@ -50,7 +50,7 @@ public class WebViewInterstitial extends WebViewBase {
                                                                                                new HandlerQueueManager()));
 
         addJavascriptInterface(mraid, "jsBridge");
-        LogUtil.debug(TAG, "JS bridge initialized");
+        LogUtil.d(TAG, "JS bridge initialized");
         setBaseJSInterface(mraid);
     }
 }

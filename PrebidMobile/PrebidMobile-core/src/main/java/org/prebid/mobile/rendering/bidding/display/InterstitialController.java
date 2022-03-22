@@ -17,13 +17,13 @@
 package org.prebid.mobile.rendering.bidding.display;
 
 import android.content.Context;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.networking.WinNotifier;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class InterstitialController {
@@ -36,7 +36,7 @@ public class InterstitialController {
     private final InterstitialViewListener mInterstitialViewListener = new InterstitialViewListener() {
         @Override
         public void onAdLoaded(InterstitialView interstitialView, AdDetails adDetails) {
-            LogUtil.debug(TAG, "onAdLoaded");
+            LogUtil.d(TAG, "onAdLoaded");
             if (mListener != null) {
                 mListener.onInterstitialReadyForDisplay();
             }
@@ -44,7 +44,7 @@ public class InterstitialController {
 
         @Override
         public void onAdFailed(InterstitialView interstitialView, AdException error) {
-            LogUtil.debug(TAG, "onAdFailed");
+            LogUtil.d(TAG, "onAdFailed");
             if (mListener != null) {
                 mListener.onInterstitialFailedToLoad(error);
             }
@@ -52,7 +52,7 @@ public class InterstitialController {
 
         @Override
         public void onAdDisplayed(InterstitialView interstitialView) {
-            LogUtil.debug(TAG, "onAdDisplayed");
+            LogUtil.d(TAG, "onAdDisplayed");
             if (mListener != null) {
                 mListener.onInterstitialDisplayed();
             }
@@ -64,7 +64,7 @@ public class InterstitialController {
 
         @Override
         public void onAdClicked(InterstitialView interstitialView) {
-            LogUtil.debug(TAG, "onAdClicked");
+            LogUtil.d(TAG, "onAdClicked");
             if (mListener != null) {
                 mListener.onInterstitialClicked();
             }
@@ -77,7 +77,7 @@ public class InterstitialController {
 
         @Override
         public void onAdClosed(InterstitialView interstitialView) {
-            LogUtil.debug(TAG, "onAdClosed");
+            LogUtil.d(TAG, "onAdClosed");
             if (mListener != null) {
                 mListener.onInterstitialClosed();
             }
@@ -118,7 +118,7 @@ public class InterstitialController {
 
     public void show() {
         if (mAdUnitIdentifierType == null) {
-            LogUtil.error(TAG, "show: Failed. AdUnitIdentifierType is not defined!");
+            LogUtil.e(TAG, "show: Failed. AdUnitIdentifierType is not defined!");
             return;
         }
 
@@ -130,9 +130,9 @@ public class InterstitialController {
                 mBidInterstitialView.showVideoAsInterstitial();
                 break;
             default:
-                LogUtil.error(TAG, "show: Failed. Did you specify correct AdUnitConfigurationType? "
-                                   + "Supported types: VAST, INTERSTITIAL. "
-                                   + "Provided type: " + mAdUnitIdentifierType);
+                LogUtil.e(TAG, "show: Failed. Did you specify correct AdUnitConfigurationType? "
+                        + "Supported types: VAST, INTERSTITIAL. "
+                        + "Provided type: " + mAdUnitIdentifierType);
         }
     }
 

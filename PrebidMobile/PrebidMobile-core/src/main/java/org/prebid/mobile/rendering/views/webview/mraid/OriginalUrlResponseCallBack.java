@@ -16,10 +16,10 @@
 
 package org.prebid.mobile.rendering.views.webview.mraid;
 
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.mraid.methods.network.RedirectUrlListener;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 class OriginalUrlResponseCallBack implements ResponseHandler {
     private static final String TAG = OriginalUrlResponseCallBack.class.getSimpleName();
@@ -33,7 +33,7 @@ class OriginalUrlResponseCallBack implements ResponseHandler {
     @Override
     public void onResponse(BaseNetworkTask.GetUrlResult result) {
         if (result == null) {
-            LogUtil.error(TAG, "getOriginalURLCallback onResponse failed. Result is null");
+            LogUtil.e(TAG, "getOriginalURLCallback onResponse failed. Result is null");
             notifyFailureListener();
             return;
         }
@@ -45,13 +45,13 @@ class OriginalUrlResponseCallBack implements ResponseHandler {
 
     @Override
     public void onError(String msg, long responseTime) {
-        LogUtil.error(TAG, "Failed with " + msg);
+        LogUtil.e(TAG, "Failed with " + msg);
         notifyFailureListener();
     }
 
     @Override
     public void onErrorWithException(Exception e, long responseTime) {
-        LogUtil.error(TAG, "Failed with " + e.getMessage());
+        LogUtil.e(TAG, "Failed with " + e.getMessage());
         notifyFailureListener();
     }
 

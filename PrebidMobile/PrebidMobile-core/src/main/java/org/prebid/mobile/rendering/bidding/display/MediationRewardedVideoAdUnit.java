@@ -19,11 +19,11 @@ package org.prebid.mobile.rendering.bidding.display;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import org.prebid.mobile.AdSize;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.models.AdPosition;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class MediationRewardedVideoAdUnit extends MediationBaseAdUnit {
@@ -49,7 +49,7 @@ public class MediationRewardedVideoAdUnit extends MediationBaseAdUnit {
     @Override
     protected final void onResponseReceived(BidResponse response) {
         if (mOnFetchCompleteListener != null) {
-            LogUtil.debug(TAG, "On response received");
+            LogUtil.d(TAG, "On response received");
             BidResponseCache.getInstance().putBidResponse(response.getId(), response);
             mMediationDelegate.setResponseToLocalExtras(response);
             mMediationDelegate.handleKeywordsUpdate(response.getTargeting());
