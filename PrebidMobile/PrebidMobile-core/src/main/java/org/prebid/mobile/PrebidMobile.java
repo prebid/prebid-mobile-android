@@ -56,18 +56,18 @@ public class PrebidMobile {
     /**
      * Maximum refresh interval allowed. 120 seconds
      */
-    public static final int AUTO_REFRESH_DELAY_MAX = 120000;
+    public static final int AUTO_REFRESH_DELAY_MAX = 120_000;
 
     /**
      * Default refresh interval. 60 seconds
      * Used when the refresh interval is not in the AUTO_REFRESH_DELAY_MIN & AUTO_REFRESH_DELAY_MAX range.
      */
-    public static final int AUTO_REFRESH_DELAY_DEFAULT = 60000;
+    public static final int AUTO_REFRESH_DELAY_DEFAULT = 60_000;
 
     /**
-     * Minimum refresh interval allowed. 15 seconds
+     * Minimum refresh interval allowed. 30 seconds
      */
-    public static final int AUTO_REFRESH_DELAY_MIN = 15000;
+    public static final int AUTO_REFRESH_DELAY_MIN = 30_000;
 
     /**
      * Open measurement SDK version

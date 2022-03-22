@@ -202,17 +202,17 @@ public class AdUnitConfiguration {
         return isBuiltInVideo;
     }
 
-    public void setAutoRefreshDelay(int autoRefreshDelay) {
-        if (autoRefreshDelay < 0) {
+    public void setAutoRefreshDelay(int autoRefreshDelayInSeconds) {
+        if (autoRefreshDelayInSeconds < 0) {
             LogUtil.error(TAG, "Auto refresh delay can't be less then 0.");
             return;
         }
-        if (autoRefreshDelay == 0) {
+        if (autoRefreshDelayInSeconds == 0) {
             LogUtil.debug(TAG, "Only one request, without auto refresh.");
             autoRefreshDelayInMillis = 0;
             return;
         }
-        autoRefreshDelayInMillis = Utils.clampAutoRefresh(autoRefreshDelay);
+        autoRefreshDelayInMillis = Utils.clampAutoRefresh(autoRefreshDelayInSeconds);
     }
 
     public int getAutoRefreshDelay() {

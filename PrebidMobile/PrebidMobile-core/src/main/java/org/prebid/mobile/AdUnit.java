@@ -35,15 +35,11 @@ import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.*;
 
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
+
 public abstract class AdUnit {
 
-    private static final int MIN_AUTO_REFRESH_PERIOD_MILLIS = 30_000;
-
-    /**
-     * Auto refresh time period in millis. 0 for disabling auto refresh.
-     * Can't be less than MIN_AUTO_REFRESH_PERIOD_MILLIS.
-     */
-    private int periodMillis = 0;
     protected AdUnitConfiguration configuration = new AdUnitConfiguration();
 
     @Nullable
@@ -56,12 +52,20 @@ public abstract class AdUnit {
         configuration.setAdUnitIdentifierType(adType);
     }
 
-    public void setAutoRefreshPeriodMillis(@IntRange(from = MIN_AUTO_REFRESH_PERIOD_MILLIS) int periodMillis) {
-        if (periodMillis < MIN_AUTO_REFRESH_PERIOD_MILLIS) {
-            LogUtil.w("Auto refresh time can't be less then: " + MIN_AUTO_REFRESH_PERIOD_MILLIS);
-            return;
-        }
-        this.periodMillis = periodMillis;
+    /**
+     * @deprecated Please use setAutoRefreshInterval() in seconds!
+     */
+    @Deprecated
+    public void setAutoRefreshPeriodMillis(
+            @IntRange(from = AUTO_REFRESH_DELAY_MIN, to = AUTO_REFRESH_DELAY_MAX) int periodMillis
+    ) {
+        configuration.setAutoRefreshDelay(periodMillis / 1000);
+    }
+
+    public void setAutoRefreshInterval(
+            @IntRange(from = AUTO_REFRESH_DELAY_MIN / 1000, to = AUTO_REFRESH_DELAY_MAX / 1000) int seconds
+    ) {
+        configuration.setAutoRefreshDelay(seconds);
     }
 
     public void resumeAutoRefresh() {
@@ -141,10 +145,10 @@ public abstract class AdUnit {
                     createBidListener(listener)
             );
 
-            if (periodMillis > 0) {
+            if (configuration.getAutoRefreshDelay() > 0) {
                 BidLoader.BidRefreshListener bidRefreshListener = () -> true;
                 bidLoader.setBidRefreshListener(bidRefreshListener);
-                LogUtil.v("Start fetching bids with auto refresh millis: " + periodMillis);
+                LogUtil.v("Start fetching bids with auto refresh millis: " + configuration.getAutoRefreshDelay());
             } else {
                 bidLoader.setBidRefreshListener(null);
                 LogUtil.v("Start a single fetching.");
