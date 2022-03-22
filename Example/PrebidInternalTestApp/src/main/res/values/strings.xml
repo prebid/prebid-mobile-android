@@ -390,4 +390,18 @@
     <!--  Video Rewarded  -->
     <string name="response_prebid_video_rewarded_end_card_320_480">response-prebid-video-rewarded-320-480-without-end-card</string>
     <string name="response_prebid_video_rewarded_320_480">response-prebid-video-rewarded-320-480</string>
+
+    <!--  MRAID  -->
+    <string name="response_prebid_mraid_resize">response-prebid-mraid-resize</string>
+    <string name="response_prebid_mraid_resize_with_errors">response-prebid-mraid-resize-with-errors</string>
+    <string name="response_prebid_mraid_expand">response-prebid-mraid-expand-1-part</string>
+    <string name="response_prebid_mraid_expand_two_part">response-prebid-mraid-expand-2-part</string>
+    <string name="response_prebid_mraid_fullscreen">response-prebid-mraid-fullscreen</string>
+    <string name="response_prebid_mraid_video_interstitial">response-prebid-mraid-video-interstitial</string>
+    <string name="response_prebid_mraid_3_viewability_compliance">response-prebid-mraid-viewability-compliance</string>
+    <string name="response_prebid_mraid_3_resize_negative">response-prebid-mraid-resize-negative-test</string>
+    <string name="response_prebid_mraid_3_load_and_events">response-prebid-mraid-load-and-events</string>
+    <string name="response_prebid_mraid_ox_test_properties">response-prebid-mraid-test-properties-3</string>
+    <string name="response_prebid_mraid_ox_test_methods">response-prebid-mraid-test-methods-3</string>
+    <string name="response_prebid_mraid_ox_resize_expandable">response-prebid-mraid-resize-expandable</string>
 </resources>
