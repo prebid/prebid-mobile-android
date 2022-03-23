@@ -17,13 +17,14 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.HashSet;
 
 public class VideoAdUnit extends VideoBaseAdUnit {
 
     public VideoAdUnit(@NonNull String configId, int width, int height) {
-        super(configId, AdType.VIDEO);
+        super(configId, AdUnitConfiguration.AdUnitIdentifierType.VAST);
         configuration.addSize(new AdSize(width, height));
     }
 

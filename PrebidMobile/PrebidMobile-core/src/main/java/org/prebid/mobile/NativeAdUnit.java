@@ -3,7 +3,13 @@ package org.prebid.mobile;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import org.json.JSONObject;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
+import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.prebid.mobile.units.configuration.NativeAdUnitConfiguration;
+
+import java.util.HashMap;
 
 /**
  * For details of the configuration of native imps, please check this documentation:
@@ -16,9 +22,30 @@ public class NativeAdUnit extends AdUnit {
     private final NativeAdUnitConfiguration nativeConfiguration;
 
     public NativeAdUnit(@NonNull String configId) {
-        super(configId, AdType.NATIVE);
-        configuration.initNativeConfiguration();
+        super(configId, AdUnitConfiguration.AdUnitIdentifierType.NATIVE);
         nativeConfiguration = configuration.getNativeConfiguration();
+    }
+
+    @Override
+    protected BidRequesterListener createBidListener(OnCompleteListener originalListener) {
+        return new BidRequesterListener() {
+            @Override
+            public void onFetchCompleted(BidResponse response) {
+                HashMap<String, String> keywords = response.getTargeting();
+                Util.apply(keywords, adObject);
+
+                String cacheId = CacheManager.save(response.getWinningBidJson());
+                Util.saveCacheId(cacheId, adObject);
+
+                originalListener.onComplete(ResultCode.SUCCESS);
+            }
+
+            @Override
+            public void onError(AdException exception) {
+                Util.apply(null, adObject);
+                originalListener.onComplete(convertToResultCode(exception));
+            }
+        };
     }
 
     public enum CONTEXT_TYPE {

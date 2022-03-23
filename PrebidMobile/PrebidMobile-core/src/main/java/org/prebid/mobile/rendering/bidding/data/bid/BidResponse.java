@@ -57,6 +57,7 @@ public class BidResponse {
 
     private boolean mHasParseError = false;
     private String mParseError;
+    private String winningBidJson;
 
     private long mCreationTime;
 
@@ -104,7 +105,13 @@ public class BidResponse {
         return mNbr;
     }
 
+    public String getWinningBidJson() {
+        return winningBidJson;
+    }
+
     private void parseJson(String json) {
+        winningBidJson = json;
+
         try {
             JSONObject responseJson = new JSONObject(json);
             mId = responseJson.optString("id");
@@ -153,6 +160,7 @@ public class BidResponse {
         for (Seatbid seatbid : mSeatbids) {
             for (Bid bid : seatbid.getBids()) {
                 if (hasWinningKeywords(bid.getPrebid())) {
+                    winningBidJson = bid.getJsonString();
                     return bid;
                 }
             }

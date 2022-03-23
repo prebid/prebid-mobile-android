@@ -84,6 +84,9 @@ public class Bid {
     // of creatives for which iurl should be representative
     private String mCid;
 
+    // Bid json string. Used only for CacheManager.
+    private String jsonString;
+
     // Tactic ID to enable buyers to label bids for reporting to the
     // exchange the tactic through which their bid was submitted
     private String mTactic;
@@ -236,11 +239,16 @@ public class Bid {
         return mExp;
     }
 
+    public String getJsonString() {
+        return jsonString;
+    }
+
     public static Bid fromJSONObject(JSONObject jsonObject) {
         Bid bid = new Bid();
         if (jsonObject == null) {
             return bid;
         }
+        bid.jsonString = jsonObject.toString();
         bid.mId = jsonObject.optString("id", null);
         bid.mImpId = jsonObject.optString("impid", null);
         bid.mPrice = jsonObject.optDouble("price", 0);

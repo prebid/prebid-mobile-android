@@ -65,8 +65,8 @@ public class BidResponseCache {
      *
      * @param response Parsed bid response
      */
-    void putBidResponse(
-        final BidResponse response) {
+    public void putBidResponse(
+            final BidResponse response) {
         putBidResponse(response.getId(), response);
     }
 

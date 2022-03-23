@@ -23,64 +23,72 @@ import android.net.NetworkInfo;
 import android.text.TextUtils;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
+import org.prebid.mobile.rendering.bidding.loader.BidLoader;
+import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.tasksmanager.TasksManager;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.*;
 
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
+
 public abstract class AdUnit {
 
-    private static final int MIN_AUTO_REFRESH_PERIOD_MILLIS = 30_000;
-
-    private int periodMillis = 0; // No auto refresh
-    private DemandFetcher fetcher;
     protected AdUnitConfiguration configuration = new AdUnitConfiguration();
 
-    AdUnit(@NonNull String configId, @NonNull AdType adType) {
+    @Nullable
+    protected BidLoader bidLoader;
+    @Nullable
+    protected Object adObject;
+
+    AdUnit(@NonNull String configId, @NonNull AdUnitConfiguration.AdUnitIdentifierType adType) {
         configuration.setConfigId(configId);
-        configuration.setAdType(adType);
+        configuration.setAdUnitIdentifierType(adType);
     }
 
-    public void setAutoRefreshPeriodMillis(@IntRange(from = MIN_AUTO_REFRESH_PERIOD_MILLIS) int periodMillis) {
-        if (periodMillis < MIN_AUTO_REFRESH_PERIOD_MILLIS) {
-            LogUtil.warning("periodMillis less then:" + MIN_AUTO_REFRESH_PERIOD_MILLIS);
-            return;
-        }
-        this.periodMillis = periodMillis;
-        if (fetcher != null) {
-            fetcher.setPeriodMillis(periodMillis);
-        }
+    /**
+     * @deprecated Please use setAutoRefreshInterval() in seconds!
+     */
+    @Deprecated
+    public void setAutoRefreshPeriodMillis(
+            @IntRange(from = AUTO_REFRESH_DELAY_MIN, to = AUTO_REFRESH_DELAY_MAX) int periodMillis
+    ) {
+        configuration.setAutoRefreshDelay(periodMillis / 1000);
+    }
+
+    public void setAutoRefreshInterval(
+            @IntRange(from = AUTO_REFRESH_DELAY_MIN / 1000, to = AUTO_REFRESH_DELAY_MAX / 1000) int seconds
+    ) {
+        configuration.setAutoRefreshDelay(seconds);
     }
 
     public void resumeAutoRefresh() {
         LogUtil.verbose("Resuming auto refresh...");
-        if (fetcher != null) {
-            fetcher.start();
+        if (bidLoader != null) {
+            bidLoader.setupRefreshTimer();
         }
     }
 
     public void stopAutoRefresh() {
         LogUtil.verbose("Stopping auto refresh...");
-        if (fetcher != null) {
-            fetcher.stop();
+        if (bidLoader != null) {
+            bidLoader.cancelRefresh();
         }
     }
 
     public void fetchDemand(@NonNull final OnCompleteListener2 listener) {
-
         final Map<String, String> keywordsMap = new HashMap<>();
 
-        fetchDemand(keywordsMap, new OnCompleteListener() {
-            @Override
-            public void onComplete(final ResultCode resultCode) {
-                TasksManager.getInstance().executeOnMainThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        listener.onComplete(resultCode, keywordsMap.size() != 0 ? Collections.unmodifiableMap(keywordsMap) : null);
-                    }
-                });
-            }
+        fetchDemand(keywordsMap, resultCode -> {
+            TasksManager.getInstance().executeOnMainThread(() ->
+                    listener.onComplete(resultCode, keywordsMap.size() != 0 ? Collections.unmodifiableMap(keywordsMap) : null)
+            );
         });
     }
 
@@ -130,17 +138,25 @@ public abstract class AdUnit {
         }
 
         if (Util.supportedAdObject(adObj)) {
-            fetcher = new DemandFetcher(adObj);
-            fetcher.setPeriodMillis(periodMillis);
-            fetcher.setConfiguration(configuration);
-            fetcher.setListener(listener);
-            if (periodMillis >= 30000) {
-                LogUtil.verbose("Start fetching bids with auto refresh millis: " + periodMillis);
+            adObject = adObj;
+            bidLoader = new BidLoader(
+                    context,
+                    configuration,
+                    createBidListener(listener)
+            );
+
+            if (configuration.getAutoRefreshDelay() > 0) {
+                BidLoader.BidRefreshListener bidRefreshListener = () -> true;
+                bidLoader.setBidRefreshListener(bidRefreshListener);
+                LogUtil.verbose("Start fetching bids with auto refresh millis: " + configuration.getAutoRefreshDelay());
             } else {
+                bidLoader.setBidRefreshListener(null);
                 LogUtil.verbose("Start a single fetching.");
             }
-            fetcher.start();
+
+            bidLoader.load();
         } else {
+            adObject = null;
             listener.onComplete(ResultCode.INVALID_AD_OBJECT);
         }
 
@@ -248,6 +264,52 @@ public abstract class AdUnit {
     public void setPbAdSlot(String pbAdSlot) {
         configuration.setPbAdSlot(pbAdSlot);
     }
+
+
+    protected BidRequesterListener createBidListener(OnCompleteListener originalListener) {
+        return new BidRequesterListener() {
+            @Override
+            public void onFetchCompleted(BidResponse response) {
+                HashMap<String, String> keywords = response.getTargeting();
+                Util.apply(keywords, adObject);
+                originalListener.onComplete(ResultCode.SUCCESS);
+            }
+
+            @Override
+            public void onError(AdException exception) {
+                Util.apply(null, adObject);
+                originalListener.onComplete(convertToResultCode(exception));
+            }
+        };
+    }
+
+    protected ResultCode convertToResultCode(AdException renderingException) {
+        FetchDemandResult fetchDemandResult = FetchDemandResult.parseErrorMessage(renderingException.getMessage());
+        LogUtil.error("Prebid", "Can't download bids: " + fetchDemandResult);
+        switch (fetchDemandResult) {
+            case INVALID_ACCOUNT_ID:
+                return ResultCode.INVALID_ACCOUNT_ID;
+            case INVALID_CONFIG_ID:
+                return ResultCode.INVALID_CONFIG_ID;
+            case INVALID_SIZE:
+                return ResultCode.INVALID_SIZE;
+            case INVALID_CONTEXT:
+                return ResultCode.INVALID_CONTEXT;
+            case INVALID_AD_OBJECT:
+                return ResultCode.INVALID_AD_OBJECT;
+            case INVALID_HOST_URL:
+                return ResultCode.INVALID_HOST_URL;
+            case NETWORK_ERROR:
+                return ResultCode.NETWORK_ERROR;
+            case TIMEOUT:
+                return ResultCode.TIMEOUT;
+            case NO_BIDS:
+                return ResultCode.NO_BIDS;
+            default:
+                return ResultCode.PREBID_SERVER_ERROR;
+        }
+    }
+
 
     @VisibleForTesting
     public AdUnitConfiguration getConfiguration() {
