@@ -69,14 +69,14 @@ public abstract class AdUnit {
     }
 
     public void resumeAutoRefresh() {
-        LogUtil.v("Resuming auto refresh...");
+        LogUtil.verbose("Resuming auto refresh...");
         if (bidLoader != null) {
             bidLoader.setupRefreshTimer();
         }
     }
 
     public void stopAutoRefresh() {
-        LogUtil.v("Stopping auto refresh...");
+        LogUtil.verbose("Stopping auto refresh...");
         if (bidLoader != null) {
             bidLoader.cancelRefresh();
         }
@@ -94,18 +94,18 @@ public abstract class AdUnit {
 
     public void fetchDemand(@NonNull Object adObj, @NonNull OnCompleteListener listener) {
         if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
-            LogUtil.e("Empty account id.");
+            LogUtil.error("Empty account id.");
             listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);
             return;
         }
         if (TextUtils.isEmpty(configuration.getConfigId())) {
-            LogUtil.e("Empty config id.");
+            LogUtil.error("Empty config id.");
             listener.onComplete(ResultCode.INVALID_CONFIG_ID);
             return;
         }
         if (PrebidMobile.getPrebidServerHost().equals(Host.CUSTOM)) {
             if (TextUtils.isEmpty(PrebidMobile.getPrebidServerHost().getHostUrl())) {
-                LogUtil.e("Empty host url for custom Prebid Server host.");
+                LogUtil.error("Empty host url for custom Prebid Server host.");
                 listener.onComplete(ResultCode.INVALID_HOST_URL);
                 return;
             }
@@ -132,7 +132,7 @@ public abstract class AdUnit {
                 }
             }
         } else {
-            LogUtil.e("Invalid context");
+            LogUtil.error("Invalid context");
             listener.onComplete(ResultCode.INVALID_CONTEXT);
             return;
         }
@@ -148,10 +148,10 @@ public abstract class AdUnit {
             if (configuration.getAutoRefreshDelay() > 0) {
                 BidLoader.BidRefreshListener bidRefreshListener = () -> true;
                 bidLoader.setBidRefreshListener(bidRefreshListener);
-                LogUtil.v("Start fetching bids with auto refresh millis: " + configuration.getAutoRefreshDelay());
+                LogUtil.verbose("Start fetching bids with auto refresh millis: " + configuration.getAutoRefreshDelay());
             } else {
                 bidLoader.setBidRefreshListener(null);
-                LogUtil.v("Start a single fetching.");
+                LogUtil.verbose("Start a single fetching.");
             }
 
             bidLoader.load();
@@ -285,7 +285,7 @@ public abstract class AdUnit {
 
     protected ResultCode convertToResultCode(AdException renderingException) {
         FetchDemandResult fetchDemandResult = FetchDemandResult.parseErrorMessage(renderingException.getMessage());
-        LogUtil.e("Prebid", "Can't download bids: " + fetchDemandResult);
+        LogUtil.error("Prebid", "Can't download bids: " + fetchDemandResult);
         switch (fetchDemandResult) {
             case INVALID_ACCOUNT_ID:
                 return ResultCode.INVALID_ACCOUNT_ID;
