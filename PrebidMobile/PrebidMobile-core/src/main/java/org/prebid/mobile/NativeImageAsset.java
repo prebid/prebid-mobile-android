@@ -53,7 +53,7 @@ public class NativeImageAsset extends NativeAsset {
         return type;
     }
 
-    private int wmin = 0;
+    private int wmin = -1;
 
     public void setWMin(int wmin) {
         this.wmin = wmin;
@@ -63,7 +63,7 @@ public class NativeImageAsset extends NativeAsset {
         return wmin;
     }
 
-    private int hmin = 0;
+    private int hmin = -1;
 
     public int getHMin() {
         return hmin;
@@ -73,7 +73,7 @@ public class NativeImageAsset extends NativeAsset {
         this.hmin = hmin;
     }
 
-    private int w = 0;
+    private int w = -1;
 
     public int getW() {
         return w;
@@ -83,7 +83,7 @@ public class NativeImageAsset extends NativeAsset {
         this.w = w;
     }
 
-    private int h = 0;
+    private int h = -1;
 
     public void setH(int h) {
         this.h = h;

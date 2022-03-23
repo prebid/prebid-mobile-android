@@ -23,7 +23,6 @@ public class NativeAdUnit extends AdUnit {
 
     public NativeAdUnit(@NonNull String configId) {
         super(configId, AdUnitConfiguration.AdUnitIdentifierType.NATIVE);
-        configuration.initNativeConfiguration();
         nativeConfiguration = configuration.getNativeConfiguration();
     }
 

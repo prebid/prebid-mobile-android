@@ -228,6 +228,9 @@ public class AdUnitConfiguration {
     }
 
     public void setAdUnitIdentifierType(@Nullable AdUnitIdentifierType adUnitIdentifierType) {
+        if (adUnitIdentifierType == AdUnitIdentifierType.NATIVE) {
+            nativeConfiguration = new NativeAdUnitConfiguration();
+        }
         this.adUnitIdentifierType = adUnitIdentifierType;
     }
 
@@ -305,13 +308,6 @@ public class AdUnitConfiguration {
         return broadcastId;
     }
 
-
-    /**
-     * Creates native configuration. It must be used for Native ad units.
-     */
-    public void initNativeConfiguration() {
-        nativeConfiguration = new NativeAdUnitConfiguration();
-    }
 
     @Nullable
     public NativeAdUnitConfiguration getNativeConfiguration() {
