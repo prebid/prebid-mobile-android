@@ -61,7 +61,7 @@ public class AdInterstitialDialog extends AdBaseDialog {
                 }
             }
             catch (Exception e) {
-                LogUtil.e(TAG, "Interstitial ad closed but post-close events failed: " + Log.getStackTraceString(e));
+                LogUtil.error(TAG, "Interstitial ad closed but post-close events failed: " + Log.getStackTraceString(e));
             }
         });
     }

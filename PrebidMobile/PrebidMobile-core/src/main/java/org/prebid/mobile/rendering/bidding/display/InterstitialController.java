@@ -36,7 +36,7 @@ public class InterstitialController {
     private final InterstitialViewListener mInterstitialViewListener = new InterstitialViewListener() {
         @Override
         public void onAdLoaded(InterstitialView interstitialView, AdDetails adDetails) {
-            LogUtil.d(TAG, "onAdLoaded");
+            LogUtil.debug(TAG, "onAdLoaded");
             if (mListener != null) {
                 mListener.onInterstitialReadyForDisplay();
             }
@@ -44,7 +44,7 @@ public class InterstitialController {
 
         @Override
         public void onAdFailed(InterstitialView interstitialView, AdException error) {
-            LogUtil.d(TAG, "onAdFailed");
+            LogUtil.debug(TAG, "onAdFailed");
             if (mListener != null) {
                 mListener.onInterstitialFailedToLoad(error);
             }
@@ -52,7 +52,7 @@ public class InterstitialController {
 
         @Override
         public void onAdDisplayed(InterstitialView interstitialView) {
-            LogUtil.d(TAG, "onAdDisplayed");
+            LogUtil.debug(TAG, "onAdDisplayed");
             if (mListener != null) {
                 mListener.onInterstitialDisplayed();
             }
@@ -64,7 +64,7 @@ public class InterstitialController {
 
         @Override
         public void onAdClicked(InterstitialView interstitialView) {
-            LogUtil.d(TAG, "onAdClicked");
+            LogUtil.debug(TAG, "onAdClicked");
             if (mListener != null) {
                 mListener.onInterstitialClicked();
             }
@@ -77,7 +77,7 @@ public class InterstitialController {
 
         @Override
         public void onAdClosed(InterstitialView interstitialView) {
-            LogUtil.d(TAG, "onAdClosed");
+            LogUtil.debug(TAG, "onAdClosed");
             if (mListener != null) {
                 mListener.onInterstitialClosed();
             }
@@ -118,7 +118,7 @@ public class InterstitialController {
 
     public void show() {
         if (mAdUnitIdentifierType == null) {
-            LogUtil.e(TAG, "show: Failed. AdUnitIdentifierType is not defined!");
+            LogUtil.error(TAG, "show: Failed. AdUnitIdentifierType is not defined!");
             return;
         }
 
@@ -130,7 +130,7 @@ public class InterstitialController {
                 mBidInterstitialView.showVideoAsInterstitial();
                 break;
             default:
-                LogUtil.e(TAG, "show: Failed. Did you specify correct AdUnitConfigurationType? "
+                LogUtil.error(TAG, "show: Failed. Did you specify correct AdUnitConfigurationType? "
                         + "Supported types: VAST, INTERSTITIAL. "
                         + "Provided type: " + mAdUnitIdentifierType);
         }

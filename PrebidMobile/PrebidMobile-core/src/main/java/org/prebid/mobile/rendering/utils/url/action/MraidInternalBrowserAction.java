@@ -72,7 +72,7 @@ public class MraidInternalBrowserAction implements UrlAction {
             @Override
             public void onSuccess(String url, String contentType) {
                 if (Utils.isMraidActionUrl(url) && context != null) {
-                    LogUtil.d(TAG, "Redirection succeeded");
+                    LogUtil.debug(TAG, "Redirection succeeded");
 
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -80,7 +80,7 @@ public class MraidInternalBrowserAction implements UrlAction {
                     try {
                         context.getApplicationContext().startActivity(intent);
                     } catch (ActivityNotFoundException e) {
-                        LogUtil.e(TAG, "Unable to open url " + url + ". Activity was not found");
+                        LogUtil.error(TAG, "Unable to open url " + url + ". Activity was not found");
                     }
                 } else if (url != null && (url.startsWith(PrebidMobile.SCHEME_HTTP) || url.startsWith(PrebidMobile.SCHEME_HTTPS))) {
                     if (Utils.isVideoContent(contentType)) {
@@ -94,7 +94,7 @@ public class MraidInternalBrowserAction implements UrlAction {
             @Override
             public void onFailed() {
                 // Nothing to do
-                LogUtil.d(TAG, "Open: redirection failed");
+                LogUtil.debug(TAG, "Open: redirection failed");
             }
         });
     }

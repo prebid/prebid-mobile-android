@@ -80,7 +80,7 @@ public class InterstitialView extends BaseAdView {
 
         @Override
         public void creativeInterstitialClosed() {
-            LogUtil.d(TAG, "interstitialAdClosed");
+            LogUtil.debug(TAG, "interstitialAdClosed");
             handleActionClose();
         }
     };
@@ -135,7 +135,7 @@ public class InterstitialView extends BaseAdView {
             mInterstitialManager.displayAdViewInInterstitial(getContext(), InterstitialView.this);
         }
         catch (final Exception e) {
-            LogUtil.e(TAG, "Interstitial failed to show:" + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Interstitial failed to show:" + Log.getStackTraceString(e));
             notifyErrorListeners(new AdException(AdException.INTERNAL_ERROR, e.getMessage()));
         }
     }
@@ -152,7 +152,7 @@ public class InterstitialView extends BaseAdView {
             mInterstitialVideo.show();
         }
         catch (final Exception e) {
-            LogUtil.e(TAG, "Video interstitial failed to show:" + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Video interstitial failed to show:" + Log.getStackTraceString(e));
 
             notifyErrorListeners(new AdException(AdException.INTERNAL_ERROR, e.getMessage()));
         }

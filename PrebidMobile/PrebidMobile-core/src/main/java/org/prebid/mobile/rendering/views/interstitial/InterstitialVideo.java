@@ -138,12 +138,12 @@ public class InterstitialVideo extends AdBaseDialog {
     public void scheduleShowCloseBtnTask(View adView, int closeDelayInMs) {
         long delayInMs = getCloseDelayInMs(adView, closeDelayInMs);
         if (delayInMs == 0) {
-            LogUtil.d(TAG, "Delay is 0. Not scheduling skip button show.");
+            LogUtil.debug(TAG, "Delay is 0. Not scheduling skip button show.");
             return;
         }
 
         long videoLength = getDuration(adView);
-        LogUtil.d(TAG, "Video length: " + videoLength);
+        LogUtil.debug(TAG, "Video length: " + videoLength);
         if (videoLength <= delayInMs) {
             // Short video, show close at the end
             mShowCloseBtnOnComplete = true;
@@ -157,14 +157,14 @@ public class InterstitialVideo extends AdBaseDialog {
     }
 
     public void pauseVideo() {
-        LogUtil.d(TAG, "pauseVideo");
+        LogUtil.debug(TAG, "pauseVideo");
         mVideoPaused = true;
         stopTimer();
         stopCountDownTimer();
     }
 
     public void resumeVideo() {
-        LogUtil.d(TAG, "resumeVideo");
+        LogUtil.debug(TAG, "resumeVideo");
         mVideoPaused = false;
         if (getRemainingTimerTimeInMs() != AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED
                 && getRemainingTimerTimeInMs() > 500L) {
@@ -193,7 +193,7 @@ public class InterstitialVideo extends AdBaseDialog {
     }
 
     public void close() {
-        LogUtil.d(TAG, "closeableAdContainer -  onClose()");
+        LogUtil.debug(TAG, "closeableAdContainer -  onClose()");
         cancel();
 
         //IMPORTANT: call interstitialClosed() so it sends back to the mAdViewContainer to reimplant after closing an ad.
@@ -244,7 +244,7 @@ public class InterstitialVideo extends AdBaseDialog {
         if (delayInMs == AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED) {
             delayInMs = CLOSE_DELAY_DEFAULT_IN_MS;
         }
-        LogUtil.d(TAG, "Picked skip offset: " + delayInMs + " ms.");
+        LogUtil.debug(TAG, "Picked skip offset: " + delayInMs + " ms.");
         return delayInMs;
     }
 
@@ -265,7 +265,7 @@ public class InterstitialVideo extends AdBaseDialog {
                         }
                     }
                     catch (Exception e) {
-                        LogUtil.e(TAG, "Failed to render custom close icon: " + Log.getStackTraceString(e));
+                        LogUtil.error(TAG, "Failed to render custom close icon: " + Log.getStackTraceString(e));
                     }
                 });
             }
@@ -314,7 +314,7 @@ public class InterstitialVideo extends AdBaseDialog {
 
     @VisibleForTesting
     protected void scheduleTimer(long delayInMs) {
-        LogUtil.d(TAG, "Scheduling timer at: " + delayInMs);
+        LogUtil.debug(TAG, "Scheduling timer at: " + delayInMs);
 
         stopTimer();
 

@@ -34,7 +34,7 @@ public class RefreshTimerTask {
         @Override
         public void run() {
             if (mRefreshTriggerListener == null) {
-                LogUtil.e(TAG, "Failed to notify mRefreshTriggerListener. mRefreshTriggerListener instance is null");
+                LogUtil.error(TAG, "Failed to notify mRefreshTriggerListener. mRefreshTriggerListener instance is null");
                 return;
             }
 

@@ -89,7 +89,7 @@ public final class Utils {
             }
         }
         catch (UnsupportedEncodingException e) {
-            LogUtil.e(TAG, e.getMessage());
+            LogUtil.error(TAG, e.getMessage());
         }
         template.append("&")
                 .append(key)
@@ -430,7 +430,7 @@ public final class Utils {
 
     public static View createCloseView(Context context) {
         if (context == null) {
-            LogUtil.e(TAG, "Unable to create close view. Context is null");
+            LogUtil.error(TAG, "Unable to create close view. Context is null");
             return null;
         }
 
@@ -443,7 +443,7 @@ public final class Utils {
 
     public static View createWatchAgainView(Context context) {
         if (context == null) {
-            LogUtil.e(TAG, "Unable to create watch again view. Context is null");
+            LogUtil.error(TAG, "Unable to create watch again view. Context is null");
             return null;
         }
         View watchAgainView = LayoutInflater.from(context).inflate(R.layout.lyt_watch_again, null);
@@ -463,7 +463,7 @@ public final class Utils {
     public static boolean isPermissionGranted(final Context context,
                                               final String permission) {
         if (context == null || permission == null) {
-            LogUtil.d("Utils", "isPermissionGranted: Context or Permission is null");
+            LogUtil.debug("Utils", "isPermissionGranted: Context or Permission is null");
             return false;
         }
         // Bug in ContextCompat where it can return a RuntimeException in rare circumstances.
@@ -493,7 +493,7 @@ public final class Utils {
             date = dateFormat.parse(durationInString);
         }
         catch (ParseException e) {
-            LogUtil.e(TAG, "Unable to convert the videoDuration into seconds: " + e.getMessage());
+            LogUtil.error(TAG, "Unable to convert the videoDuration into seconds: " + e.getMessage());
         }
         if (date != null) {
             miliseconds = date.getTime();
@@ -549,7 +549,7 @@ public final class Utils {
         final int clampedRefreshInterval = clampInMillis(userRefreshValue, AUTO_REFRESH_DELAY_MIN, AUTO_REFRESH_DELAY_MAX);
 
         if (userRefreshValue < AUTO_REFRESH_DELAY_MIN || userRefreshValue > AUTO_REFRESH_DELAY_MAX) {
-            LogUtil.e(TAG, "Refresh interval is out of range. Value which will be used for refresh: " + clampedRefreshInterval + ". "
+            LogUtil.error(TAG, "Refresh interval is out of range. Value which will be used for refresh: " + clampedRefreshInterval + ". "
                     + "Make sure that the refresh interval is in the following range: [" + AUTO_REFRESH_DELAY_MIN + ", " + AUTO_REFRESH_DELAY_MAX + "]");
         }
 

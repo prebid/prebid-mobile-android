@@ -104,7 +104,7 @@ public class CreativeModel {
         ArrayList<String> trackingUrls = mTrackingURLs.get(event);
 
         if (trackingUrls == null || trackingUrls.isEmpty()) {
-            LogUtil.d(TAG, "Event" + event + ": url not found for tracking");
+            LogUtil.debug(TAG, "Event" + event + ": url not found for tracking");
             return;
         }
 

@@ -74,7 +74,7 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
     public void onTransactionSuccess(Transaction transaction) {
         mLatestTransaction = null;
         if (mListener == null) {
-            LogUtil.w(TAG, "Unable to notify listener. Listener is null");
+            LogUtil.warning(TAG, "Unable to notify listener. Listener is null");
             return;
         }
         mTransactions.add(transaction);
@@ -127,7 +127,7 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
     public AbstractCreative getCurrentCreative() {
         Transaction transaction = getCurrentTransaction();
         if (transaction == null) {
-            LogUtil.e(TAG, "Get Current creative called with no ad");
+            LogUtil.error(TAG, "Get Current creative called with no ad");
             return null;
         }
         return transaction.getCreativeFactories().get(mCurrentTransactionCreativeIndex).getCreative();
@@ -181,7 +181,7 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
 
     private void notifyListenerError(AdException e) {
         if (mListener == null) {
-            LogUtil.w(TAG, "Unable to notify listener. Listener is null");
+            LogUtil.warning(TAG, "Unable to notify listener. Listener is null");
             return;
         }
         mListener.onFetchingFailed(e);

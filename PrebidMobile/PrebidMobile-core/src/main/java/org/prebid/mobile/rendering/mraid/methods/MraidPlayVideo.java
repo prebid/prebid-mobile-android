@@ -27,7 +27,7 @@ public class MraidPlayVideo {
     public void playVideo(String url) {
 
         if (TextUtils.isEmpty(url)) {
-            LogUtil.e(TAG, "playVideo(): Failed. Provided url is empty or null");
+            LogUtil.error(TAG, "playVideo(): Failed. Provided url is empty or null");
             return;
         }
         ManagersResolver.getInstance().getDeviceManager().playVideo(url);

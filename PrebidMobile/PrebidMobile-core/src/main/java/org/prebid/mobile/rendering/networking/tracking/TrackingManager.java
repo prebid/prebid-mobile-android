@@ -45,7 +45,7 @@ public class TrackingManager {
 
     public void fireEventTrackingURLs(@Nullable List<String> urls) {
         if (urls == null) {
-            LogUtil.d(TAG, "fireEventTrackingURLs(): Unable to execute event tracking requests. Provided list is null");
+            LogUtil.debug(TAG, "fireEventTrackingURLs(): Unable to execute event tracking requests. Provided list is null");
             return;
         }
         for (String url : urls) {

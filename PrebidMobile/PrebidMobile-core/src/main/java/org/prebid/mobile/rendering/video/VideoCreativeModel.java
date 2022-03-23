@@ -57,13 +57,13 @@ public class VideoCreativeModel extends CreativeModel {
         mOmEventTracker.trackOmVideoAdEvent(videoEvent);
         ArrayList<String> urls = mVideoEventUrls.get(videoEvent);
         if (urls == null) {
-            LogUtil.d(TAG, "Event" + videoEvent + " not found");
+            LogUtil.debug(TAG, "Event" + videoEvent + " not found");
             return;
         }
 
         mTrackingManager.fireEventTrackingURLs(urls);
 
-        LogUtil.i(TAG, "Video event '" + videoEvent.name() + "' was fired with urls: " + urls.toString());
+        LogUtil.info(TAG, "Video event '" + videoEvent.name() + "' was fired with urls: " + urls.toString());
     }
 
     public void trackPlayerStateChange(InternalPlayerState changedPlayerState) {

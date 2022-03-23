@@ -74,7 +74,7 @@ public abstract class BaseAdView extends FrameLayout {
 
     public void setAppContent(ContentObject contentObject) {
         if (mAdViewManager == null) {
-            LogUtil.e(TAG, "setContentUrl: Failed. AdViewManager is null. Can't set content object. ");
+            LogUtil.error(TAG, "setContentUrl: Failed. AdViewManager is null. Can't set content object. ");
             return;
         }
         mAdViewManager.getAdConfiguration().setAppContent(contentObject);
@@ -105,7 +105,7 @@ public abstract class BaseAdView extends FrameLayout {
     }
 
     protected void handleBroadcastAction(String action) {
-        LogUtil.d(TAG, "handleBroadcastAction: parent method executed. No default action handling. " + action);
+        LogUtil.debug(TAG, "handleBroadcastAction: parent method executed. No default action handling. " + action);
     }
 
     protected void handleWindowFocusChange(boolean hasWindowFocus) {

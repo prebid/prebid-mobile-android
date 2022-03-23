@@ -74,16 +74,16 @@ public class BaseNetworkTask
     @Override
     protected void onPostExecute(GetUrlResult urlResult) {
         if (urlResult == null) {
-            LogUtil.d(TAG, "URL result is null");
+            LogUtil.debug(TAG, "URL result is null");
             return;
         }
         if (mResponseHandler == null) {
-            LogUtil.d(TAG, "No ResponseHandler on: may be a tracking event");
+            LogUtil.debug(TAG, "No ResponseHandler on: may be a tracking event");
             return;
         }
 
         //For debugging purposes. Helps in client issues, if any.
-        LogUtil.d(TAG, "Result: " + urlResult.responseString);
+        LogUtil.debug(TAG, "Result: " + urlResult.responseString);
 
         long stop = System.currentTimeMillis();
         long delta = stop - mStart;
@@ -106,7 +106,7 @@ public class BaseNetworkTask
     @Override
     protected void onCancelled() {
         super.onCancelled();
-        LogUtil.d(TAG, "Request cancelled. Disconnecting connection");
+        LogUtil.debug(TAG, "Request cancelled. Disconnecting connection");
         if (mConnection instanceof HttpURLConnection) {
             ((HttpURLConnection) mConnection).disconnect();
         }
@@ -124,10 +124,10 @@ public class BaseNetworkTask
 
     public GetUrlResult sendRequest(GetUrlParams param) throws Exception {
         if (param.url.isEmpty()) {
-            LogUtil.e(TAG, "url is empty. Set url in PrebidMobile (PrebidRenderingSettings).");
+            LogUtil.error(TAG, "url is empty. Set url in PrebidMobile (PrebidRenderingSettings).");
         }
-        LogUtil.d(TAG, "url: " + param.url);
-        LogUtil.d(TAG, "queryParams: " + param.queryParams);
+        LogUtil.debug(TAG, "url: " + param.url);
+        LogUtil.debug(TAG, "queryParams: " + param.queryParams);
 
         int responseCode = 0;
         mConnection = setHttpURLConnectionProperty(param);
@@ -180,9 +180,9 @@ public class BaseNetworkTask
             }
         } catch (Exception exception) {
             if (runAtLeastOnce) {
-                LogUtil.e(TAG, "Exception in readResponse(): " + exception.getMessage());
+                LogUtil.error(TAG, "Exception in readResponse(): " + exception.getMessage());
             } else {
-                LogUtil.e(TAG, "Empty response: " + exception.getMessage());
+                LogUtil.error(TAG, "Empty response: " + exception.getMessage());
             }
         }
 
@@ -202,24 +202,24 @@ public class BaseNetworkTask
                 mResult = sendRequest(param);
             }
             catch (MalformedURLException e) {
-                LogUtil.w(TAG, "Network Error: MalformedURLException" + e.getMessage());
+                LogUtil.warning(TAG, "Network Error: MalformedURLException" + e.getMessage());
                 // This error will be handled in onPostExecute()- so no need to handle here - Nice
                 mResult.setException(e);
             }
             catch (SocketTimeoutException e) {
-                LogUtil.w(TAG, "Network Error: SocketTimeoutException" + e.getMessage());
+                LogUtil.warning(TAG, "Network Error: SocketTimeoutException" + e.getMessage());
                 mResult.setException(e);
             }
             catch (ConnectTimeoutException e) {
-                LogUtil.w(TAG, "Network Error: ConnectTimeoutException" + e.getMessage());
+                LogUtil.warning(TAG, "Network Error: ConnectTimeoutException" + e.getMessage());
                 mResult.setException(e);
             }
             catch (IOException e) {
-                LogUtil.w(TAG, "Network Error: IOException" + e.getMessage());
+                LogUtil.warning(TAG, "Network Error: IOException" + e.getMessage());
                 mResult.setException(e);
             }
             catch (Exception e) {
-                LogUtil.w(TAG, "Network Error: Exception" + e.getMessage());
+                LogUtil.warning(TAG, "Network Error: Exception" + e.getMessage());
                 mResult.setException(e);
             }
             finally {
@@ -288,7 +288,7 @@ public class BaseNetworkTask
                 URL base = connection.getURL();
                 String location = connection.getHeaderField("Location");
 
-                LogUtil.d(TAG, (location == null)
+                LogUtil.debug(TAG, (location == null)
                         ? "not found location"
                         : "location = " + location);
                 URL target = null;
@@ -304,7 +304,7 @@ public class BaseNetworkTask
                                         || target.getProtocol().equals("https"))
                     || redirects >= MAX_REDIRECTS_COUNT) {
                     String error = String.format("Bad server response - [HTTP Response code of %s]", status);
-                    LogUtil.e(TAG, error);
+                    LogUtil.error(TAG, error);
                     throw new Exception(error);
                 }
                 redirected = true;
@@ -326,13 +326,13 @@ public class BaseNetworkTask
         }
         else if (httpURLResponseCode >= 400 && httpURLResponseCode < 600) {
             String status = String.format(Locale.getDefault(), "Code %d. %s", httpURLResponseCode, readResponse(((HttpURLConnection) mConnection).getErrorStream()));
-            LogUtil.e(TAG, status);
+            LogUtil.error(TAG, status);
             throw new Exception(status);
         }
         else {
             String error = String.format("Bad server response - [HTTP Response code of %s]", httpURLResponseCode);
             if (httpURLResponseCode == 204) error = "Response code 204. No bids.";
-            LogUtil.e(TAG, error);
+            LogUtil.error(TAG, error);
             throw new Exception(error);
         }
         mResult.responseString = response;

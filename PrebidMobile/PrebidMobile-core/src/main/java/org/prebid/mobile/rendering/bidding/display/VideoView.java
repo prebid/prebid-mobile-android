@@ -183,7 +183,7 @@ public class VideoView extends BaseAdView {
 
     public void pause() {
         if (!canPause()) {
-            LogUtil.d(TAG, "pause() can't pause " + mVideoViewState);
+            LogUtil.debug(TAG, "pause() can't pause " + mVideoViewState);
             return;
         }
 
@@ -193,7 +193,7 @@ public class VideoView extends BaseAdView {
 
     public void resume() {
         if (!canResume()) {
-            LogUtil.d(TAG, "resume() can't resume " + mVideoViewState);
+            LogUtil.debug(TAG, "resume() can't resume " + mVideoViewState);
             return;
         }
 
@@ -203,7 +203,7 @@ public class VideoView extends BaseAdView {
 
     public void play() {
         if (!canPlay()) {
-            LogUtil.d(TAG, "play() can't play " + mVideoViewState);
+            LogUtil.debug(TAG, "play() can't play " + mVideoViewState);
             return;
         }
 
@@ -239,7 +239,7 @@ public class VideoView extends BaseAdView {
 
     @Override
     protected void handleWindowFocusChange(boolean hasWindowFocus) {
-        LogUtil.d(TAG, "handleWindowFocusChange() called with: hasWindowFocus = [" + hasWindowFocus + "]");
+        LogUtil.debug(TAG, "handleWindowFocusChange() called with: hasWindowFocus = [" + hasWindowFocus + "]");
         // visibility checker will handle resume
         if (mEnableAutoPlay) {
             return;
@@ -287,7 +287,7 @@ public class VideoView extends BaseAdView {
     private void showWatchAgain() {
         View watchAgainButton = Utils.createWatchAgainView(getContext());
         if (watchAgainButton == null) {
-            LogUtil.d(TAG, "showWatchAgain: Failed. WatchAgainView is null");
+            LogUtil.debug(TAG, "showWatchAgain: Failed. WatchAgainView is null");
             return;
         }
 
@@ -337,7 +337,7 @@ public class VideoView extends BaseAdView {
 
         if (isVisible && canPlay()) {
             play();
-            LogUtil.d(TAG, "handleVisibilityChange: auto show " + mVideoViewState);
+            LogUtil.debug(TAG, "handleVisibilityChange: auto show " + mVideoViewState);
             return;
         }
 
@@ -348,12 +348,12 @@ public class VideoView extends BaseAdView {
         if (!isVisible && canPause()) {
             mAdViewManager.pause();
             changeState(State.PAUSED_AUTO);
-            LogUtil.d(TAG, "handleVisibilityChange: auto pause " + mVideoViewState);
+            LogUtil.debug(TAG, "handleVisibilityChange: auto pause " + mVideoViewState);
         }
         else if (isVisible && isInState(State.PAUSED_AUTO)) {
             mAdViewManager.resume();
             changeState(State.PLAYING);
-            LogUtil.d(TAG, "handleVisibilityChange: auto resume " + mVideoViewState);
+            LogUtil.debug(TAG, "handleVisibilityChange: auto resume " + mVideoViewState);
         }
     }
 

@@ -74,7 +74,7 @@ class AdBrowserActivityWebViewClient extends WebViewClient {
 
                 @Override
                 public void onFailure(String url) {
-                    LogUtil.d(TAG, "Failed to handleUrl: " + url);
+                    LogUtil.debug(TAG, "Failed to handleUrl: " + url);
                     mUrlHandleInProgress = false;
                 }
             })

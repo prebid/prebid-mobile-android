@@ -210,7 +210,7 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
             mListener.onCreativeModelReady(result);
         }
         catch (Exception e) {
-            LogUtil.e(TAG, "Video failed with: " + e.getMessage());
+            LogUtil.error(TAG, "Video failed with: " + e.getMessage());
             notifyErrorListener("Video failed: " + e.getMessage());
         }
     }

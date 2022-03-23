@@ -37,7 +37,7 @@ public class BidUrlComponents extends URLComponents {
             }
         }
         catch (Exception e) {
-            LogUtil.e(TAG, "Failed to add OpenRTB query arg");
+            LogUtil.error(TAG, "Failed to add OpenRTB query arg");
         }
 
         return openrtb;

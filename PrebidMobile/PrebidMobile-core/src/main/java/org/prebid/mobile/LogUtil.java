@@ -47,70 +47,70 @@ public class LogUtil {
     /**
      * Prints a message with VERBOSE priority and default BASE_TAG
      */
-    public static void v(String message) {
-        v(BASE_TAG, message);
+    public static void verbose(String message) {
+        verbose(BASE_TAG, message);
     }
 
     /**
      * Prints a message with DEBUG priority and default BASE_TAG
      */
-    public static void d(String message) {
-        d(BASE_TAG, message);
+    public static void debug(String message) {
+        debug(BASE_TAG, message);
     }
 
     /**
      * Prints a message with INFO priority and default BASE_TAG
      */
-    public static void i(String message) {
-        i(BASE_TAG, message);
+    public static void info(String message) {
+        info(BASE_TAG, message);
     }
 
     /**
      * Prints a message with WARNING priority and default BASE_TAG
      */
-    public static void w(String message) {
-        w(BASE_TAG, message);
+    public static void warning(String message) {
+        warning(BASE_TAG, message);
     }
 
     /**
      * Prints a message with ERROR priority and default BASE_TAG
      */
-    public static void e(String message) {
-        e(BASE_TAG, message);
+    public static void error(String message) {
+        error(BASE_TAG, message);
     }
 
     /**
      * Prints a message with VERBOSE priority.
      */
-    public static void v(@Size(max = 23) String tag, String msg) {
+    public static void verbose(@Size(max = 23) String tag, String msg) {
         print(VERBOSE, tag, msg);
     }
 
     /**
      * Prints a message with DEBUG priority.
      */
-    public static void d(@Size(max = 23) String tag, String msg) {
+    public static void debug(@Size(max = 23) String tag, String msg) {
         print(DEBUG, tag, msg);
     }
 
     /**
      * Prints a message with INFO priority.
      */
-    public static void i(@Size(max = 23) String tag, String msg) {
+    public static void info(@Size(max = 23) String tag, String msg) {
         print(INFO, tag, msg);
     }
 
     /**
      * Prints a message with WARN priority.
      */
-    public static void w(@Size(max = 23) String tag, String msg) {
+    public static void warning(@Size(max = 23) String tag, String msg) {
         print(WARN, tag, msg);
     }
 
     /**
      * Prints a message with ERROR priority.
      */
-    public static void e(@Size(max = 23) String tag, String msg) {
+    public static void error(@Size(max = 23) String tag, String msg) {
         print(ERROR, tag, msg);
     }
 
@@ -124,7 +124,7 @@ public class LogUtil {
     /**
      * Prints a message with ERROR priority and exception.
      */
-    public static void e(final String tag, String message, Throwable throwable) {
+    public static void error(final String tag, String message, Throwable throwable) {
         if (tag == null || message == null) {
             return;
         }

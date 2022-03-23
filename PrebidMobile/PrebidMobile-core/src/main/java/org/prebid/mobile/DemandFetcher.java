@@ -134,7 +134,7 @@ class DemandFetcher {
 
     @MainThread
     private void notifyListener(final ResultCode resultCode) {
-        LogUtil.d("notifyListener:" + resultCode);
+        LogUtil.debug("notifyListener:" + resultCode);
 
         if (listener != null) {
             TasksManager.getInstance().executeOnMainThread(new Runnable() {
@@ -201,7 +201,7 @@ class DemandFetcher {
                                         Util.saveCacheId(cacheId, DemandFetcher.this.adObject);
                                     }
                                 }
-                                LogUtil.i("Successfully set the following keywords: " + demand.toString());
+                                LogUtil.info("Successfully set the following keywords: " + demand.toString());
                                 notifyListener(ResultCode.SUCCESS);
                             }
                         }
@@ -211,7 +211,7 @@ class DemandFetcher {
                         public void onDemandFailed(ResultCode resultCode, String auctionId) {
                             if (RequestRunnable.this.auctionId.equals(auctionId)) {
                                 Util.apply(null, DemandFetcher.this.adObject);
-                                LogUtil.i("Removed all used keywords from the ad object");
+                                LogUtil.info("Removed all used keywords from the ad object");
                                 notifyListener(resultCode);
                             }
                         }

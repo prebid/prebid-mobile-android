@@ -61,7 +61,7 @@ public class VideoCreativeView extends RelativeLayout {
 
     public void setVideoUri(Uri videoUri) {
         if (videoUri == null) {
-            LogUtil.e(TAG, "setVideoUri: Failed. Provided uri is null.");
+            LogUtil.error(TAG, "setVideoUri: Failed. Provided uri is null.");
             return;
         }
 
@@ -214,7 +214,7 @@ public class VideoCreativeView extends RelativeLayout {
 
     private void handleCallToActionClick() {
         if (mUrlHandleInProgress) {
-            LogUtil.d(TAG, "handleCallToActionClick: Skipping. Url handle in progress");
+            LogUtil.debug(TAG, "handleCallToActionClick: Skipping. Url handle in progress");
             return;
         }
         mUrlHandleInProgress = true;
@@ -244,7 +244,7 @@ public class VideoCreativeView extends RelativeLayout {
                 @Override
                 public void onFailure(String url) {
                     mUrlHandleInProgress = false;
-                    LogUtil.d(TAG, "Failed to handleUrl: " + url + ". Handling fallback");
+                    LogUtil.debug(TAG, "Failed to handleUrl: " + url + ". Handling fallback");
                 }
             })
             .build();

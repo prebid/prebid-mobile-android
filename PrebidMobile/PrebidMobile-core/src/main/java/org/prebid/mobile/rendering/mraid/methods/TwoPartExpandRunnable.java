@@ -47,7 +47,7 @@ public class TwoPartExpandRunnable implements Runnable {
     public void run() {
         HTMLCreative htmlCreative = mWeakHtmlCreative.get();
         if (htmlCreative == null) {
-            LogUtil.e(TAG, "HTMLCreative object is null");
+            LogUtil.error(TAG, "HTMLCreative object is null");
             return;
         }
 

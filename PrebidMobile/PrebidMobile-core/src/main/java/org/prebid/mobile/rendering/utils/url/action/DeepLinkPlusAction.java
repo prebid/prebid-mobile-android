@@ -82,7 +82,7 @@ public class DeepLinkPlusAction implements UrlAction {
             return;
         }
         catch (ActionNotResolvedException e) {
-            LogUtil.d(TAG, "performAction(): Primary URL failed. Attempting to process fallback URL");
+            LogUtil.debug(TAG, "performAction(): Primary URL failed. Attempting to process fallback URL");
         }
 
         // 3. Attempt to handle the fallback URL

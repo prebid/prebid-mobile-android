@@ -132,7 +132,7 @@ public class MraidVariableContainer {
         }
 
         disabledFlags.append("};");
-        LogUtil.d(TAG, "Supported features: " + disabledFlags.toString());
+        LogUtil.debug(TAG, "Supported features: " + disabledFlags.toString());
 
         setDisabledFlags(disabledFlags.toString());
     }

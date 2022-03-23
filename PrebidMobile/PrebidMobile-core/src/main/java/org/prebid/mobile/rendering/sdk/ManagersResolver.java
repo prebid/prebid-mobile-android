@@ -179,7 +179,7 @@ public class ManagersResolver {
             }
         }
         catch (Exception e) {
-            LogUtil.e(TAG, "Failed to register managers: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Failed to register managers: " + Log.getStackTraceString(e));
         }
         finally {
             PrebidMobile.increaseTaskCount();

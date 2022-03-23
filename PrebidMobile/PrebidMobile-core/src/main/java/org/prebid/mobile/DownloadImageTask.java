@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Looper;
 import android.widget.ImageView;
-
 import org.prebid.mobile.tasksmanager.TasksManager;
 
 import java.io.InputStream;
@@ -37,7 +36,7 @@ public class DownloadImageTask {
             InputStream in = new java.net.URL(url).openStream();
             bitmap = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
-            LogUtil.e("Error", e.getMessage());
+            LogUtil.error("Error", e.getMessage());
         }
         processImage(bitmap);
     }

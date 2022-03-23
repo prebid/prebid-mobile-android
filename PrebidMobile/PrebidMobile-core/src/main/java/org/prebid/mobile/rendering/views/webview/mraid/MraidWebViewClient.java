@@ -67,7 +67,7 @@ public class MraidWebViewClient extends AdWebViewClient {
             return new WebResourceResponse("text/javascript", "UTF-8", data);
         }
         else {
-            LogUtil.e(TAG, "Failed to inject mraid.js into twoPart mraid webview");
+            LogUtil.error(TAG, "Failed to inject mraid.js into twoPart mraid webview");
         }
         return null;
     }

@@ -73,7 +73,7 @@ public class MraidUrlHandler {
                 @Override
                 public void onFailure(String url) {
                     mUrlHandleInProgress = false;
-                    LogUtil.d(TAG, "Failed to handleUrl: " + url);
+                    LogUtil.debug(TAG, "Failed to handleUrl: " + url);
                 }
             })
             .build();

@@ -128,7 +128,7 @@ public class BidResponse {
             if (getWinningBid() == null) {
                 mHasParseError = true;
                 mParseError = "Failed to parse bids. No winning bids were found.";
-                LogUtil.i(TAG, mParseError);
+                LogUtil.info(TAG, mParseError);
             }
 
             mCreationTime = System.currentTimeMillis();
@@ -136,7 +136,7 @@ public class BidResponse {
         catch (JSONException e) {
             mHasParseError = true;
             mParseError = "Failed to parse JSON String: " + e.getMessage();
-            LogUtil.e(TAG, mParseError);
+            LogUtil.error(TAG, mParseError);
         }
     }
 

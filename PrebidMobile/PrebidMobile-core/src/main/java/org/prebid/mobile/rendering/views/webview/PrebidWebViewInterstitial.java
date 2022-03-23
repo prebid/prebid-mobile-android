@@ -50,7 +50,7 @@ public class PrebidWebViewInterstitial extends PrebidWebViewBase
     public void preloaded(WebViewBase adBaseView) {
         if (adBaseView == null) {
             //This should never happen.
-            LogUtil.e(TAG, "Failed to preload an interstitial. Webview is null.");
+            LogUtil.error(TAG, "Failed to preload an interstitial. Webview is null.");
 
             if (mWebViewDelegate != null) {
                 mWebViewDelegate.webViewFailedToLoad(new AdException(AdException.INTERNAL_ERROR, "Preloaded adview is null!"));

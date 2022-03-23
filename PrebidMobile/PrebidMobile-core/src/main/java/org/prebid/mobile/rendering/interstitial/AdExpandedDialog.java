@@ -60,14 +60,14 @@ public class AdExpandedDialog extends AdBaseDialog {
                         ((Activity) context).setRequestedOrientation(mInitialOrientation);
                     }
                     else {
-                        LogUtil.e(TAG, "Context is not Activity, can not set orientation");
+                        LogUtil.error(TAG, "Context is not Activity, can not set orientation");
                     }
 
                     mWebViewBase.getMRAIDInterface().onStateChange(JSInterface.STATE_DEFAULT);
                 }
             }
             catch (Exception e) {
-                LogUtil.e(TAG, "Expanded ad closed but post-close events failed: " + Log.getStackTraceString(e));
+                LogUtil.error(TAG, "Expanded ad closed but post-close events failed: " + Log.getStackTraceString(e));
             }
         });
 

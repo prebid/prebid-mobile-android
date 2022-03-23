@@ -51,7 +51,7 @@ public class ScreenStateReceiver extends BroadcastReceiver {
 
     public void register(final Context context) {
         if (context == null) {
-            LogUtil.d(TAG, "register: Failed. Context is null");
+            LogUtil.debug(TAG, "register: Failed. Context is null");
             return;
         }
 
@@ -64,7 +64,7 @@ public class ScreenStateReceiver extends BroadcastReceiver {
 
     public void unregister() {
         if (mApplicationContext == null) {
-            LogUtil.d(TAG, "unregister: Failed. Context is null");
+            LogUtil.debug(TAG, "unregister: Failed. Context is null");
             return;
         }
 

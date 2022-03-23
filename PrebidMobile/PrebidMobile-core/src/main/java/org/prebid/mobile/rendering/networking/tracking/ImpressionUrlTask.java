@@ -42,7 +42,7 @@ class ImpressionUrlTask extends BaseNetworkTask {
             result = openConnectionCheckRedirects(urlConnection);
         }
         catch (Exception e) {
-            LogUtil.e(TAG, "Redirection failed");
+            LogUtil.error(TAG, "Redirection failed");
             result = new GetUrlResult();
         }
         return result;
@@ -58,7 +58,7 @@ class ImpressionUrlTask extends BaseNetworkTask {
         while (redir) {
 
             if (!(urlConnection instanceof HttpURLConnection)) {
-                LogUtil.e(TAG, "Redirect fail for impression event");
+                LogUtil.error(TAG, "Redirect fail for impression event");
                 return null;
             }
 
@@ -95,7 +95,7 @@ class ImpressionUrlTask extends BaseNetworkTask {
             }
             else {
                 String error = String.format("Redirect error - Bad server response - [HTTP Response code of %s]", httpResponseCode);
-                LogUtil.e(TAG, error);
+                LogUtil.error(TAG, error);
                 //Don't set exception on result. But instead just bail out with an error log
                 throw new AdException(AdException.SERVER_ERROR, error);
             }

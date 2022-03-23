@@ -81,25 +81,25 @@ public class BidResponseCache {
         trimCache();
         // Ignore request when max size is reached.
         if (sCachedBidResponses.size() >= MAX_SIZE) {
-            LogUtil.e(TAG,
+            LogUtil.error(TAG,
                     "Unable to cache BidResponse. Please destroy some via #destroy() and try again.");
             return;
         }
         if (TextUtils.isEmpty(key)) {
-            LogUtil.e(TAG,
+            LogUtil.error(TAG,
                     "Unable to cache BidResponse. Key is empty or null.");
             return;
         }
 
         sCachedBidResponses.put(key, response);
-        LogUtil.d(TAG, "Cached ad count after storing: " + getCachedResponsesCount());
+        LogUtil.debug(TAG, "Cached ad count after storing: " + getCachedResponsesCount());
     }
 
     @Nullable
     public BidResponse popBidResponse(
         @Nullable
         final String responseId) {
-        LogUtil.d(TAG, "POPPING the response");
+        LogUtil.debug(TAG, "POPPING the response");
 
         BidResponse bidResponse = null;
 
@@ -108,9 +108,9 @@ public class BidResponseCache {
 
             bidResponse = sCachedBidResponses.remove(responseId);
         } else {
-            LogUtil.w(TAG, "No cached ad to retrieve in the final map");
+            LogUtil.warning(TAG, "No cached ad to retrieve in the final map");
         }
-        LogUtil.d(TAG, "Cached ad count after popping: " + getCachedResponsesCount());
+        LogUtil.debug(TAG, "Cached ad count after popping: " + getCachedResponsesCount());
         return bidResponse;
     }
 

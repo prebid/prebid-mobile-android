@@ -574,7 +574,7 @@ public class AdResponseParserVast extends AdResponseParserBase {
                     }
                 }
                 catch (IllegalArgumentException e) {
-                    LogUtil.e(TAG, e.getMessage());
+                    LogUtil.error(TAG, e.getMessage());
                 }
             }
         }

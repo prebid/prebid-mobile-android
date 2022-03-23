@@ -97,7 +97,7 @@ public class CreativeFactory {
                 default:
                     String msg = "Unable to start creativeFactory. adConfig.adUnitIdentifierType doesn't match supported types"
                                  + "adConfig.adUnitIdentifierType: " + adUnitIdentifierType;
-                    LogUtil.e(TAG, msg);
+                    LogUtil.error(TAG, msg);
                     AdException adException = new AdException(AdException.INTERNAL_ERROR, msg);
                     mListener.onFailure(adException);
                     break;
@@ -105,7 +105,7 @@ public class CreativeFactory {
         }
         catch (Exception exception) {
             String message = "Creative Factory failed: " + exception.getMessage();
-            LogUtil.e(TAG, message + Log.getStackTraceString(exception));
+            LogUtil.error(TAG, message + Log.getStackTraceString(exception));
             AdException adException = new AdException(AdException.INTERNAL_ERROR, message);
             mListener.onFailure(adException);
         }
@@ -178,7 +178,7 @@ public class CreativeFactory {
             newCreative.load();
         }
         catch (Exception exception) {
-            LogUtil.e(TAG, "VideoCreative creation failed: " + Log.getStackTraceString(exception));
+            LogUtil.error(TAG, "VideoCreative creation failed: " + Log.getStackTraceString(exception));
             mListener.onFailure(new AdException(AdException.INTERNAL_ERROR, "VideoCreative creation failed: " + exception.getMessage()));
         }
     }
@@ -223,12 +223,12 @@ public class CreativeFactory {
         public void creativeReady(AbstractCreative creative) {
             CreativeFactory creativeFactory = mWeakCreativeFactory.get();
             if (creativeFactory == null) {
-                LogUtil.w(TAG, "CreativeFactory is null");
+                LogUtil.warning(TAG, "CreativeFactory is null");
                 return;
             }
             if (creativeFactory.mTimeoutState == TimeoutState.EXPIRED) {
                 creativeFactory.mListener.onFailure(new AdException(AdException.INTERNAL_ERROR, "Creative Timeout"));
-                LogUtil.w(TAG, "Creative timed out, backing out");
+                LogUtil.warning(TAG, "Creative timed out, backing out");
                 return;
             }
             creativeFactory.mTimeoutState = TimeoutState.FINISHED;
@@ -240,7 +240,7 @@ public class CreativeFactory {
         public void creativeFailed(AdException error) {
             CreativeFactory creativeFactory = mWeakCreativeFactory.get();
             if (creativeFactory == null) {
-                LogUtil.w(TAG, "CreativeFactory is null");
+                LogUtil.warning(TAG, "CreativeFactory is null");
                 return;
             }
 

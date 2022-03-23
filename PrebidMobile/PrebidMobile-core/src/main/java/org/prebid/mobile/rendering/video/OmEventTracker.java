@@ -34,7 +34,7 @@ public class OmEventTracker {
 
     public void trackOmVideoAdEvent(VideoAdEvent.Event event) {
         if (mWeakReferenceOmAdSessionManager == null || mWeakReferenceOmAdSessionManager.get() == null) {
-            LogUtil.w(TAG, "Unable to trackOmVideoAdEvent: AdSessionManager is null");
+            LogUtil.warning(TAG, "Unable to trackOmVideoAdEvent: AdSessionManager is null");
             return;
         }
 
@@ -44,7 +44,7 @@ public class OmEventTracker {
 
     public void trackOmHtmlAdEvent(TrackingEvent.Events event) {
         if (mWeakReferenceOmAdSessionManager == null || mWeakReferenceOmAdSessionManager.get() == null) {
-            LogUtil.w(TAG, "Unable to trackOmHtmlAdEvent: AdSessionManager is null");
+            LogUtil.warning(TAG, "Unable to trackOmHtmlAdEvent: AdSessionManager is null");
             return;
         }
         OmAdSessionManager omAdSessionManager = mWeakReferenceOmAdSessionManager.get();
@@ -53,7 +53,7 @@ public class OmEventTracker {
 
     public void trackOmPlayerStateChange(InternalPlayerState playerState) {
         if (mWeakReferenceOmAdSessionManager == null || mWeakReferenceOmAdSessionManager.get() == null) {
-            LogUtil.w(TAG, "Unable to trackOmPlayerStateChange: AdSessionManager is null");
+            LogUtil.warning(TAG, "Unable to trackOmPlayerStateChange: AdSessionManager is null");
             return;
         }
 
@@ -63,7 +63,7 @@ public class OmEventTracker {
 
     public void trackVideoAdStarted(float duration, float volume) {
         if (mWeakReferenceOmAdSessionManager == null || mWeakReferenceOmAdSessionManager.get() == null) {
-            LogUtil.w(TAG, "Unable to trackVideoAdStarted: AdSessionManager is null");
+            LogUtil.warning(TAG, "Unable to trackVideoAdStarted: AdSessionManager is null");
             return;
         }
 
@@ -73,7 +73,7 @@ public class OmEventTracker {
 
     public void trackNonSkippableStandaloneVideoLoaded(boolean isAutoPlay) {
         if (mWeakReferenceOmAdSessionManager == null || mWeakReferenceOmAdSessionManager.get() == null) {
-            LogUtil.w(TAG, "Unable to trackVideoAdStarted: AdSessionManager is null");
+            LogUtil.warning(TAG, "Unable to trackVideoAdStarted: AdSessionManager is null");
             return;
         }
 

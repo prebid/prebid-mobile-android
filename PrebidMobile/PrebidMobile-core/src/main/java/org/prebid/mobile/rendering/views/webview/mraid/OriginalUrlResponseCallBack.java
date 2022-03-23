@@ -33,7 +33,7 @@ class OriginalUrlResponseCallBack implements ResponseHandler {
     @Override
     public void onResponse(BaseNetworkTask.GetUrlResult result) {
         if (result == null) {
-            LogUtil.e(TAG, "getOriginalURLCallback onResponse failed. Result is null");
+            LogUtil.error(TAG, "getOriginalURLCallback onResponse failed. Result is null");
             notifyFailureListener();
             return;
         }
@@ -45,13 +45,13 @@ class OriginalUrlResponseCallBack implements ResponseHandler {
 
     @Override
     public void onError(String msg, long responseTime) {
-        LogUtil.e(TAG, "Failed with " + msg);
+        LogUtil.error(TAG, "Failed with " + msg);
         notifyFailureListener();
     }
 
     @Override
     public void onErrorWithException(Exception e, long responseTime) {
-        LogUtil.e(TAG, "Failed with " + e.getMessage());
+        LogUtil.error(TAG, "Failed with " + e.getMessage());
         notifyFailureListener();
     }
 

@@ -233,12 +233,12 @@ public class BannerView extends FrameLayout {
      */
     public void loadAd() {
         if (mBidLoader == null) {
-            LogUtil.e(TAG, "loadAd: Failed. BidLoader is not initialized.");
+            LogUtil.error(TAG, "loadAd: Failed. BidLoader is not initialized.");
             return;
         }
 
         if (mIsPrimaryAdServerRequestInProgress) {
-            LogUtil.d(TAG, "loadAd: Skipped. Loading is in progress.");
+            LogUtil.debug(TAG, "loadAd: Skipped. Loading is in progress.");
             return;
         }
 
@@ -274,11 +274,11 @@ public class BannerView extends FrameLayout {
     //region ==================== getters and setters
     public void setAutoRefreshDelay(int seconds) {
         if (!mAdUnitConfig.isAdType(AdUnitConfiguration.AdUnitIdentifierType.BANNER)) {
-            LogUtil.i(TAG, "Autorefresh is available only for Banner ad type");
+            LogUtil.info(TAG, "Autorefresh is available only for Banner ad type");
             return;
         }
         if (seconds < 0) {
-            LogUtil.e(TAG, "setRefreshIntervalInSec: Failed. Refresh interval must be >= 0");
+            LogUtil.error(TAG, "setRefreshIntervalInSec: Failed. Refresh interval must be >= 0");
             return;
         }
         mAdUnitConfig.setAutoRefreshDelay(seconds);
@@ -386,7 +386,7 @@ public class BannerView extends FrameLayout {
 
     private void reflectAttrs(AttributeSet attrs) {
         if (attrs == null) {
-            LogUtil.d(TAG, "reflectAttrs. No attributes provided.");
+            LogUtil.debug(TAG, "reflectAttrs. No attributes provided.");
             return;
         }
         TypedArray typedArray = getContext()

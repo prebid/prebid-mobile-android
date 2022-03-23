@@ -109,7 +109,7 @@ public final class CalendarEventWrapper
 		}
 		catch (ParseException e)
 		{
-            LogUtil.e(TAG, "Failed to parse start date:" + e.getMessage());
+            LogUtil.error(TAG, "Failed to parse start date:" + e.getMessage());
 		}
 	}
 
@@ -126,7 +126,7 @@ public final class CalendarEventWrapper
 		}
 		catch (ParseException e)
 		{
-            LogUtil.e(TAG, "Failed to parse end date:" + e.getMessage());
+			LogUtil.error(TAG, "Failed to parse end date:" + e.getMessage());
 		}
 	}
 
@@ -173,7 +173,7 @@ public final class CalendarEventWrapper
 		}
 		catch (ParseException e)
 		{
-            LogUtil.e(TAG, "Failed to parse reminder date:" + e.getMessage());
+			LogUtil.error(TAG, "Failed to parse reminder date:" + e.getMessage());
 		}
 	}
 
@@ -209,7 +209,7 @@ public final class CalendarEventWrapper
 			}
 			catch (Exception e)
 			{
-                LogUtil.e(TAG, "Failed to set calendar recurrence:" + e.getMessage());
+				LogUtil.error(TAG, "Failed to set calendar recurrence:" + e.getMessage());
 			}
 		}
 	}

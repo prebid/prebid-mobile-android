@@ -94,7 +94,7 @@ public class InterstitialManager implements InterstitialManagerInterface {
     // Note: The context should be the Activity this view will display on top of
     public void displayAdViewInInterstitial(Context context, View view) {
         if (!(context instanceof Activity)) {
-            LogUtil.e(TAG, "displayAdViewInInterstitial(): Can not display interstitial without activity context");
+            LogUtil.error(TAG, "displayAdViewInInterstitial(): Can not display interstitial without activity context");
             return;
         }
 
@@ -108,7 +108,7 @@ public class InterstitialManager implements InterstitialManagerInterface {
 
     public void displayVideoAdViewInInterstitial(Context context, View adView) {
         if (!(context instanceof Activity && adView instanceof VideoView)) {
-            LogUtil.e(TAG, "displayAdViewInInterstitial(): Can not display interstitial. "
+            LogUtil.error(TAG, "displayAdViewInInterstitial(): Can not display interstitial. "
                     + "Context is not activity or adView is not an instance of VideoAdView");
             return;
         }
@@ -143,7 +143,7 @@ public class InterstitialManager implements InterstitialManagerInterface {
 
     @Override
     public void interstitialClosed(View viewToClose) {
-        LogUtil.d(TAG, "interstitialClosed");
+        LogUtil.debug(TAG, "interstitialClosed");
 
         try {
             if (!mViewStack.isEmpty() && mMraidDelegate != null) {
@@ -173,14 +173,14 @@ public class InterstitialManager implements InterstitialManagerInterface {
             }
         }
         catch (Exception e) {
-            LogUtil.e(TAG, "InterstitialClosed failed: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "InterstitialClosed failed: " + Log.getStackTraceString(e));
         }
     }
 
     @Override
     public void interstitialDialogShown(ViewGroup rootViewGroup) {
         if (mInterstitialDisplayDelegate == null) {
-            LogUtil.d(TAG, "interstitialDialogShown(): Failed. mInterstitialDelegate == null");
+            LogUtil.debug(TAG, "interstitialDialogShown(): Failed. mInterstitialDelegate == null");
             return;
         }
         mInterstitialDisplayDelegate.interstitialDialogShown(rootViewGroup);

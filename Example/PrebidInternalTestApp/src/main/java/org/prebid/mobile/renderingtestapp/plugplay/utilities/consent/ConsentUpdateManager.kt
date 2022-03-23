@@ -67,7 +67,7 @@ class ConsentUpdateManager(private val defaultSharedPreferences: SharedPreferenc
 
     private fun startTimer(updateIntervalSec: Long?, updateOptionsList: List<Map<String, Any?>>?) {
         if (updateIntervalSec == null || updateOptionsList == null) {
-            LogUtil.e(TAG, "startTimer(): Failed. Provided update internal or updateOptionsList is null.")
+            LogUtil.error(TAG, "startTimer(): Failed. Provided update internal or updateOptionsList is null.")
             return
         }
 
@@ -105,7 +105,7 @@ class ConsentUpdateManager(private val defaultSharedPreferences: SharedPreferenc
 
     private fun updateConsentPreferences(updateOptionsMap: Map<String, Any?>?) {
         if (updateOptionsMap == null) {
-            LogUtil.e(TAG, "updateConsentPreferences(): Failed. Provided options map is null")
+            LogUtil.error(TAG, "updateConsentPreferences(): Failed. Provided options map is null")
             return
         }
 

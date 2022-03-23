@@ -71,7 +71,7 @@ public final class CalendarRepeatRule {
             mExpires = new DateWrapper(expires);
         }
         catch (ParseException e) {
-            LogUtil.e(TAG, "Failed to parse expires date:" + e.getMessage());
+            LogUtil.error(TAG, "Failed to parse expires date:" + e.getMessage());
         }
     }
 
@@ -91,7 +91,7 @@ public final class CalendarRepeatRule {
                     // Date can't be parsed
                     mExceptionDates[ind] = null;
 
-                    LogUtil.e(TAG, "Failed to parse exception date:" + e.getMessage());
+                    LogUtil.error(TAG, "Failed to parse exception date:" + e.getMessage());
                 }
                 ++ind;
             }
@@ -184,7 +184,7 @@ public final class CalendarRepeatRule {
                 setMonthsInYear(months);
             }
             catch (Exception e) {
-                LogUtil.e(TAG, "Failed to set months in year:" + e.getMessage());
+                LogUtil.error(TAG, "Failed to set months in year:" + e.getMessage());
             }
         }
     }
@@ -203,7 +203,7 @@ public final class CalendarRepeatRule {
                 setWeeksInMonth(weeks);
             }
             catch (Exception e) {
-                LogUtil.e(TAG, "Failed to set weeks in month:" + e.getMessage());
+                LogUtil.error(TAG, "Failed to set weeks in month:" + e.getMessage());
             }
         }
     }
@@ -222,7 +222,7 @@ public final class CalendarRepeatRule {
                 setDaysInYear(days);
             }
             catch (Exception e) {
-                LogUtil.e(TAG, "Failed to set days in year:" + e.getMessage());
+                LogUtil.error(TAG, "Failed to set days in year:" + e.getMessage());
             }
         }
     }
@@ -241,7 +241,7 @@ public final class CalendarRepeatRule {
                 setDaysInMonth(days);
             }
             catch (Exception e) {
-                LogUtil.e(TAG, "Failed to set days in month:" + e.getMessage());
+                LogUtil.error(TAG, "Failed to set days in month:" + e.getMessage());
             }
         }
     }
@@ -260,7 +260,7 @@ public final class CalendarRepeatRule {
                 setDaysInWeek(days);
             }
             catch (Exception e) {
-                LogUtil.e(TAG, "Failed to set days in week:" + e.getMessage());
+                LogUtil.error(TAG, "Failed to set days in week:" + e.getMessage());
             }
         }
     }
@@ -277,7 +277,7 @@ public final class CalendarRepeatRule {
                 setExceptionDates(dates);
             }
             catch (Exception e) {
-                LogUtil.e(TAG, "Failed to set exception days:" + e.getMessage());
+                LogUtil.error(TAG, "Failed to set exception days:" + e.getMessage());
             }
         }
     }
@@ -288,7 +288,7 @@ public final class CalendarRepeatRule {
                 setInterval(Integer.parseInt(interval));
             }
             catch (Exception e) {
-                LogUtil.e(TAG, "Failed to set interval:" + e.getMessage());
+                LogUtil.error(TAG, "Failed to set interval:" + e.getMessage());
             }
         }
     }

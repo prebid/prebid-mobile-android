@@ -64,13 +64,13 @@ public class WinNotifier {
 
         @Override
         public void onError(String msg, long responseTime) {
-            LogUtil.e(TAG, "Failed to send win event: " + msg);
+            LogUtil.error(TAG, "Failed to send win event: " + msg);
             sendNextWinRequest();
         }
 
         @Override
         public void onErrorWithException(Exception e, long responseTime) {
-            LogUtil.e(TAG, "Failed to send win event: " + e.getMessage());
+            LogUtil.error(TAG, "Failed to send win event: " + e.getMessage());
             sendNextWinRequest();
         }
     };
@@ -123,7 +123,7 @@ public class WinNotifier {
         }
         else {
             // Fire async event and wait for its result
-            LogUtil.d(TAG, "Bid.adm is null or empty. Getting the ad from prebid cache");
+            LogUtil.debug(TAG, "Bid.adm is null or empty. Getting the ad from prebid cache");
             ServerConnection.fireWithResult(winUrl, mWinResponseHandler);
         }
     }

@@ -89,7 +89,7 @@ public class FileDownloadTask extends BaseNetworkTask {
             processData(urlConnection, result);
         }
         catch (IOException e) {
-            LogUtil.e(TAG, "download of media failed: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "download of media failed: " + Log.getStackTraceString(e));
             result.setException(new Exception("download of media failed " + e.getMessage()));
         }
         finally {
@@ -128,7 +128,7 @@ public class FileDownloadTask extends BaseNetworkTask {
     @Override
     protected void onPostExecute(GetUrlResult urlResult) {
         if (urlResult.getException() != null) {
-            LogUtil.d(TAG, "download of media failed" + urlResult.getException());
+            LogUtil.debug(TAG, "download of media failed" + urlResult.getException());
             if (mListener != null) {
                 mListener.onFileDownloadError((urlResult.getException().getMessage()));
             }

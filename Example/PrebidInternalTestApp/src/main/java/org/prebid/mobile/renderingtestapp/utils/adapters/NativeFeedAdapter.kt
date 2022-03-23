@@ -54,7 +54,7 @@ class NativeFeedAdapter(
 
             val nativeAd = NativeAdProvider.getNativeAd(extras)
             if (nativeAd == null) {
-                LogUtil.e(TAG, "Native ad is null")
+                LogUtil.error(TAG, "Native ad is null")
                 return@fetchDemand
             }
 

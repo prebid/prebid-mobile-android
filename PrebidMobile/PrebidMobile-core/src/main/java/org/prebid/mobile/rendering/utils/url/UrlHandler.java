@@ -128,7 +128,7 @@ public class UrlHandler {
     public void handleUrl(Context context, String url, List<String> trackingUrls, boolean isFromUserAction) {
         if (url == null || TextUtils.isEmpty(url.trim())) {
             mUrlHandlerResultListener.onFailure(url);
-            LogUtil.e(TAG, "handleUrl(): Attempted to handle empty url.");
+            LogUtil.error(TAG, "handleUrl(): Attempted to handle empty url.");
             return;
         }
 
@@ -143,7 +143,7 @@ public class UrlHandler {
             public void onFailure(@NonNull String message, @Nullable Throwable throwable) {
                 mTaskPending = false;
                 mUrlHandlerResultListener.onFailure(url);
-                LogUtil.e(TAG, message);
+                LogUtil.error(TAG, message);
             }
         };
 
@@ -166,7 +166,7 @@ public class UrlHandler {
                                      final boolean isFromUserAction) {
         if (TextUtils.isEmpty(url)) {
             mUrlHandlerResultListener.onFailure(url);
-            LogUtil.e(TAG, "handleResolvedUrl(): Attempted to handle empty url.");
+            LogUtil.error(TAG, "handleResolvedUrl(): Attempted to handle empty url.");
             return false;
         }
 
@@ -180,7 +180,7 @@ public class UrlHandler {
                     return true;
                 }
                 catch (ActionNotResolvedException e) {
-                    LogUtil.e(TAG, "handleResolvedUrl(): Unable to handle action: " + urlAction + " for given uri: " + destinationUri);
+                    LogUtil.error(TAG, "handleResolvedUrl(): Unable to handle action: " + urlAction + " for given uri: " + destinationUri);
                 }
             }
         }
@@ -211,7 +211,7 @@ public class UrlHandler {
                                @Nullable List<String> trackingUrlList,
                                UrlAction urlAction) {
         if (mAlreadySucceeded || mTaskPending) {
-            LogUtil.w(TAG, "notifySuccess(): Action is finished or action is still pending.");
+            LogUtil.warning(TAG, "notifySuccess(): Action is finished or action is still pending.");
             return;
         }
 

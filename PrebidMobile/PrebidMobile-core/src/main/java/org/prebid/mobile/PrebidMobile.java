@@ -134,7 +134,7 @@ public class PrebidMobile {
 
     public static void setPrebidServerHost(Host host) {
         if (host == null) {
-            LogUtil.e(TAG, "setPrebidServerHost: Can't set null.");
+            LogUtil.error(TAG, "setPrebidServerHost: Can't set null.");
             return;
         }
         PrebidMobile.host = host;
@@ -190,14 +190,14 @@ public class PrebidMobile {
 
     public static void setApplicationContext(@Nullable Context context, @Nullable SdkInitListener listener) {
         if (context == null) {
-            LogUtil.e("Context must be not null!");
+            LogUtil.error("Context must be not null!");
             return;
         }
 
         if (isSdkInitialized) {
             return;
         }
-        LogUtil.d(TAG, "Initializing Prebid Rendering SDK");
+        LogUtil.debug(TAG, "Initializing Prebid Rendering SDK");
 
         sdkInitListener = listener;
         INIT_SDK_TASK_COUNT.set(0);
@@ -283,7 +283,7 @@ public class PrebidMobile {
     public static void increaseTaskCount() {
         if (INIT_SDK_TASK_COUNT.incrementAndGet() >= MANDATORY_TASK_COUNT) {
             isSdkInitialized = true;
-            LogUtil.d(TAG, "Prebid Rendering SDK " + SDK_VERSION + " Initialized");
+            LogUtil.debug(TAG, "Prebid Rendering SDK " + SDK_VERSION + " Initialized");
 
             if (sdkInitListener != null) {
                 sdkInitListener.onSDKInit();

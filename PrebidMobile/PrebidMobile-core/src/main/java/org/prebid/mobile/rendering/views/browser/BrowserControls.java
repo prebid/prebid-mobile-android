@@ -63,7 +63,7 @@ final class BrowserControls extends TableLayout {
     public void updateNavigationButtonsState() {
         mUIHandler.post(() -> {
             if (mBrowserControlsEventsListener == null) {
-                LogUtil.e(TAG, "updateNavigationButtonsState: Unable to update state. mBrowserControlsEventsListener is null");
+                LogUtil.error(TAG, "updateNavigationButtonsState: Unable to update state. mBrowserControlsEventsListener is null");
                 return;
             }
 
@@ -86,7 +86,7 @@ final class BrowserControls extends TableLayout {
     private void bindEventListeners() {
         mCloseBtn.setOnClickListener(v -> {
             if (mBrowserControlsEventsListener == null) {
-                LogUtil.e(TAG, "Close button click failed: mBrowserControlsEventsListener is null");
+                LogUtil.error(TAG, "Close button click failed: mBrowserControlsEventsListener is null");
                 return;
             }
             mBrowserControlsEventsListener.closeBrowser();
@@ -94,7 +94,7 @@ final class BrowserControls extends TableLayout {
 
         mBackBtn.setOnClickListener(v -> {
             if (mBrowserControlsEventsListener == null) {
-                LogUtil.e(TAG, "Back button click failed: mBrowserControlsEventsListener is null");
+                LogUtil.error(TAG, "Back button click failed: mBrowserControlsEventsListener is null");
                 return;
             }
             mBrowserControlsEventsListener.onGoBack();
@@ -102,7 +102,7 @@ final class BrowserControls extends TableLayout {
 
         mForthBtn.setOnClickListener(v -> {
             if (mBrowserControlsEventsListener == null) {
-                LogUtil.e(TAG, "Forward button click failed: mBrowserControlsEventsListener is null");
+                LogUtil.error(TAG, "Forward button click failed: mBrowserControlsEventsListener is null");
                 return;
             }
             mBrowserControlsEventsListener.onGoForward();
@@ -110,7 +110,7 @@ final class BrowserControls extends TableLayout {
 
         mRefreshBtn.setOnClickListener(v -> {
             if (mBrowserControlsEventsListener == null) {
-                LogUtil.e(TAG, "Refresh button click failed: mBrowserControlsEventsListener is null");
+                LogUtil.error(TAG, "Refresh button click failed: mBrowserControlsEventsListener is null");
                 return;
             }
             mBrowserControlsEventsListener.onRelaod();
@@ -124,7 +124,7 @@ final class BrowserControls extends TableLayout {
             }
 
             if (url == null) {
-                LogUtil.e(TAG, "Open external link failed. url is null");
+                LogUtil.error(TAG, "Open external link failed. url is null");
                 return;
             }
 
@@ -141,7 +141,7 @@ final class BrowserControls extends TableLayout {
             getContext().startActivity(intent);
         }
         catch (Exception e) {
-            LogUtil.e(TAG, "Could not handle intent: " + url + " : " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "Could not handle intent: " + url + " : " + Log.getStackTraceString(e));
         }
     }
 

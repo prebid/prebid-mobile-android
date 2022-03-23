@@ -96,7 +96,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
             return new RewardedAdWrapper(context, gamAdUnitId, eventListener);
         }
         catch (Throwable throwable) {
-            LogUtil.e(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
         return null;
     }
@@ -142,7 +142,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
             RewardedAd.load(mContextWeakReference.get(), mAdUnitId, adRequest, mRewardedAdLoadCallback);
         }
         catch (Throwable throwable) {
-            LogUtil.e(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
     }
 
@@ -151,7 +151,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
             return mRewardedAd != null;
         }
         catch (Throwable throwable) {
-            LogUtil.e(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
 
         return false;
@@ -159,7 +159,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
 
     public void show(Activity activity) {
         if (mRewardedAd == null) {
-            LogUtil.e(TAG, "show: Failed! Rewarded ad is null.");
+            LogUtil.error(TAG, "show: Failed! Rewarded ad is null.");
             return;
         }
 
@@ -167,7 +167,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
             mRewardedAd.show(activity, this);
         }
         catch (Throwable throwable) {
-            LogUtil.e(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
     }
 
@@ -185,7 +185,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
     private boolean metadataContainsAdEvent() {
         try {
             if (mRewardedAd == null) {
-                LogUtil.d(TAG, "metadataContainsAdEvent: Failed to process. RewardedAd is null.");
+                LogUtil.debug(TAG, "metadataContainsAdEvent: Failed to process. RewardedAd is null.");
                 return false;
             }
 
@@ -193,7 +193,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
             return APP_EVENT.equals(adMetadata.getString(KEY_METADATA));
         }
         catch (Throwable throwable) {
-            LogUtil.e(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
         return false;
     }

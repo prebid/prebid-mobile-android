@@ -69,7 +69,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
                                               adSizes);
         }
         catch (Throwable throwable) {
-            LogUtil.e(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
         return null;
     }
@@ -126,7 +126,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
             mAdView.loadAd(adRequest);
         }
         catch (Throwable throwable) {
-            LogUtil.e(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
     }
 
@@ -135,7 +135,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
             mAdView.setManualImpressionsEnabled(enabled);
         }
         catch (Throwable throwable) {
-            LogUtil.e(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
     }
 
@@ -144,7 +144,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
             mAdView.recordManualImpression();
         }
         catch (Throwable throwable) {
-            LogUtil.e(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
     }
 
@@ -153,7 +153,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
             mAdView.destroy();
         }
         catch (Throwable throwable) {
-            LogUtil.e(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
     }
 

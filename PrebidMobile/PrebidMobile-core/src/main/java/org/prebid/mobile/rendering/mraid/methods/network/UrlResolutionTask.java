@@ -98,7 +98,7 @@ public class UrlResolutionTask extends AsyncTask<String, Void, String> {
                     }
                 }
                 catch (IOException e) {
-                    LogUtil.e(TAG, "IOException when closing httpUrlConnection. Ignoring.");
+                    LogUtil.error(TAG, "IOException when closing httpUrlConnection. Ignoring.");
                 }
                 httpUrlConnection.disconnect();
             }
@@ -123,11 +123,11 @@ public class UrlResolutionTask extends AsyncTask<String, Void, String> {
             }
             catch (IllegalArgumentException e) {
                 // Ensure the request is cancelled instead of resolving an intermediary URL
-                LogUtil.e(TAG, "Invalid URL redirection. baseUrl=" + baseUrl + "\n redirectUrl=" + redirectUrl);
+                LogUtil.error(TAG, "Invalid URL redirection. baseUrl=" + baseUrl + "\n redirectUrl=" + redirectUrl);
                 throw new URISyntaxException(redirectUrl, "Unable to parse invalid URL");
             }
             catch (NullPointerException e) {
-                LogUtil.e(TAG, "Invalid URL redirection. baseUrl=" + baseUrl + "\n redirectUrl=" + redirectUrl);
+                LogUtil.error(TAG, "Invalid URL redirection. baseUrl=" + baseUrl + "\n redirectUrl=" + redirectUrl);
                 throw e;
             }
         }

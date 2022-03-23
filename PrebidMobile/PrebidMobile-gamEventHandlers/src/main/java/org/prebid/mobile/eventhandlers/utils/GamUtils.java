@@ -55,7 +55,7 @@ public class GamUtils {
         removeUsedCustomTargetingForGam(adRequest);
 
         if (keywords == null || keywords.isEmpty()) {
-            LogUtil.e(TAG, "prepare: Failed. Result contains invalid keywords");
+            LogUtil.error(TAG, "prepare: Failed. Result contains invalid keywords");
             return;
         }
 

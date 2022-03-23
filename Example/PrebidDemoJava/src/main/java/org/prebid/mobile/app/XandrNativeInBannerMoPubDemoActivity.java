@@ -2,24 +2,11 @@ package org.prebid.mobile.app;
 
 import android.os.Bundle;
 import android.widget.FrameLayout;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubView;
-
-import org.prebid.mobile.AdUnit;
-import org.prebid.mobile.Host;
-import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.NativeAdUnit;
-import org.prebid.mobile.NativeDataAsset;
-import org.prebid.mobile.NativeEventTracker;
-import org.prebid.mobile.NativeImageAsset;
-import org.prebid.mobile.NativeTitleAsset;
-import org.prebid.mobile.OnCompleteListener;
-import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.*;
 
 import java.util.ArrayList;
 
@@ -54,7 +41,7 @@ public class XandrNativeInBannerMoPubDemoActivity extends AppCompatActivity {
 
             @Override
             public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
-                LogUtil.d("Banner failed " + errorCode);
+                LogUtil.debug("Banner failed " + errorCode);
             }
 
             @Override

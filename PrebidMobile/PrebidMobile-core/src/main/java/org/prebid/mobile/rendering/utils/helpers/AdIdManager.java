@@ -58,7 +58,7 @@ public class AdIdManager {
                 Handler handler = new Handler();
                 handler.postDelayed(() -> {
                     if (getAdIdInfoTask.getStatus() == AsyncTask.Status.RUNNING) {
-                        LogUtil.d(TAG, "Cancelling FetchAdIdInfoTask");
+                        LogUtil.debug(TAG, "Cancelling FetchAdIdInfoTask");
                         getAdIdInfoTask.cancel(true);
                         listener.adIdFetchFailure();
                     }
@@ -69,7 +69,7 @@ public class AdIdManager {
             }
         }
         catch (Throwable throwable) {
-            LogUtil.e(TAG, "Failed to initAdId: " + Log.getStackTraceString(throwable) + "\nDid you add necessary dependencies?");
+            LogUtil.error(TAG, "Failed to initAdId: " + Log.getStackTraceString(throwable) + "\nDid you add necessary dependencies?");
         }
     }
 
@@ -123,7 +123,7 @@ public class AdIdManager {
                 sLimitAdTrackingEnabled = adInfo.isLimitAdTrackingEnabled();
             }
             catch (Throwable e) {
-                LogUtil.e(TAG, "Failed to get advertising id and LMT: " + Log.getStackTraceString(e));
+                LogUtil.error(TAG, "Failed to get advertising id and LMT: " + Log.getStackTraceString(e));
             }
             return null;
         }

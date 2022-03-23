@@ -157,7 +157,7 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
     @Override
     void notifyAdEventListener(AdListenerEvent adListenerEvent) {
         if (mRewardedAdUnitListener == null) {
-            LogUtil.d(TAG, "notifyAdEventListener: Failed. AdUnitListener is null. Passed listener event: " + adListenerEvent);
+            LogUtil.debug(TAG, "notifyAdEventListener: Failed. AdUnitListener is null. Passed listener event: " + adListenerEvent);
             return;
         }
 

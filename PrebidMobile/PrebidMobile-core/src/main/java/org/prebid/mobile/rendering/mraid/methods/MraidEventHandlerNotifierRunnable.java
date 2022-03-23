@@ -48,14 +48,14 @@ public class MraidEventHandlerNotifierRunnable implements Runnable {
         HTMLCreative htmlCreative = mWeakHtmlCreative.get();
         WebViewBase webViewBase = mWeakWebViewBase.get();
         if (htmlCreative == null || webViewBase == null) {
-            LogUtil.d(TAG, "Unable to pass event to handler. HtmlCreative or webviewBase is null");
+            LogUtil.debug(TAG, "Unable to pass event to handler. HtmlCreative or webviewBase is null");
             return;
         }
         htmlCreative.handleMRAIDEventsInCreative(mMraidEvent, webViewBase);
 
         final JsExecutor jsExecutor = mWeakJsExecutor.get();
         if (jsExecutor == null) {
-            LogUtil.d(TAG, "Unable to executeNativeCallComplete(). JsExecutor is null.");
+            LogUtil.debug(TAG, "Unable to executeNativeCallComplete(). JsExecutor is null.");
             return;
         }
 

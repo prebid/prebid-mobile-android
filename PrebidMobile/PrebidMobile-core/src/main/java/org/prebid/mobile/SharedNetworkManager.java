@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-
 import org.prebid.mobile.http.HTTPGet;
 import org.prebid.mobile.http.HTTPResponse;
 import org.prebid.mobile.http.HttpErrorCode;
@@ -73,7 +72,7 @@ public class SharedNetworkManager {
     }
 
     synchronized void addURL(String url, Context context, ImpressionTrackerListener impressionTrackerListener) {
-        LogUtil.d("SharedNetworkManager adding URL for Network Retry");
+        LogUtil.debug("SharedNetworkManager adding URL for Network Retry");
         this.impressionTrackerListener = impressionTrackerListener;
         urls.add(new UrlObject(url));
         startTimer(context);

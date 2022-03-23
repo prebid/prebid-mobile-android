@@ -197,35 +197,35 @@ public class DisplayView extends FrameLayout {
     }
 
     private void notifyListenerError(AdException e) {
-        LogUtil.d(TAG, "onAdFailed");
+        LogUtil.debug(TAG, "onAdFailed");
         if (mDisplayViewListener != null) {
             mDisplayViewListener.onAdFailed(e);
         }
     }
 
     private void notifyListenerClicked() {
-        LogUtil.d(TAG, "onAdClicked");
+        LogUtil.debug(TAG, "onAdClicked");
         if (mDisplayViewListener != null) {
             mDisplayViewListener.onAdClicked();
         }
     }
 
     private void notifyListenerClose() {
-        LogUtil.d(TAG, "onAdClosed");
+        LogUtil.debug(TAG, "onAdClosed");
         if (mDisplayViewListener != null) {
             mDisplayViewListener.onAdClosed();
         }
     }
 
     private void notifyListenerDisplayed() {
-        LogUtil.d(TAG, "onAdDisplayed");
+        LogUtil.debug(TAG, "onAdDisplayed");
         if (mDisplayViewListener != null) {
             mDisplayViewListener.onAdDisplayed();
         }
     }
 
     private void notifyListenerLoaded() {
-        LogUtil.d(TAG, "onAdLoaded");
+        LogUtil.debug(TAG, "onAdLoaded");
         if (mDisplayViewListener != null) {
             mDisplayViewListener.onAdLoaded();
         }

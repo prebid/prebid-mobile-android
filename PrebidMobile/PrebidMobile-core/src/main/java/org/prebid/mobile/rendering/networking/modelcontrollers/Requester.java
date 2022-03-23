@@ -123,7 +123,7 @@ public abstract class Requester {
     protected abstract PathBuilderBase getPathBuilder();
 
     private void sendAdException(String logMsg, String exceptionMsg) {
-        LogUtil.w(TAG, logMsg);
+        LogUtil.warning(TAG, logMsg);
         AdException adException = new AdException(AdException.INIT_ERROR, exceptionMsg);
         mAdResponseCallBack.onErrorWithException(adException, 0);
     }
@@ -180,20 +180,20 @@ public abstract class Requester {
 
         @Override
         public void adIdFetchCompletion() {
-            LogUtil.i(TAG, "adIdFetchCompletion");
+            LogUtil.info(TAG, "adIdFetchCompletion");
             makeAdRequest();
         }
 
         @Override
         public void adIdFetchFailure() {
-            LogUtil.w(TAG, "adIdFetchFailure");
+            LogUtil.warning(TAG, "adIdFetchFailure");
             makeAdRequest();
         }
 
         private void makeAdRequest() {
             Requester requester = mWeakRequester.get();
             if (requester == null) {
-                LogUtil.w(TAG, "Requester is null");
+                LogUtil.warning(TAG, "Requester is null");
                 return;
             }
 

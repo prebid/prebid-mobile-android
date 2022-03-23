@@ -327,7 +327,7 @@ public class WebViewBase extends AdWebView implements AdAssetsLoadedListener {
         if (!TextUtils.isEmpty(scale)) {
 
             if (Utils.atLeastKitKat()) {
-                LogUtil.d(TAG, "Metatag is set correctly");
+                LogUtil.debug(TAG, "Metatag is set correctly");
                 metaTag = new StringBuilder("<meta name='viewport' content='width=device-width' />");
 
                 meta = metaTag.toString();
@@ -339,7 +339,7 @@ public class WebViewBase extends AdWebView implements AdAssetsLoadedListener {
             }
         }
         else {
-            LogUtil.d(TAG, "Scale is null. Please check");
+            LogUtil.debug(TAG, "Scale is null. Please check");
             metaTag = new StringBuilder("<meta name='viewport' content='width=device-width' />");
 
             meta = metaTag.toString();

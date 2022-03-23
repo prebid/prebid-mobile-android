@@ -63,7 +63,7 @@ public class WebViewBanner extends WebViewBase {
                                                                                          new HandlerQueueManager()));
 
         addJavascriptInterface(mraid, "jsBridge");
-        LogUtil.d(TAG, "JS bridge initialized");
+        LogUtil.debug(TAG, "JS bridge initialized");
         setBaseJSInterface(mraid);
     }
 }

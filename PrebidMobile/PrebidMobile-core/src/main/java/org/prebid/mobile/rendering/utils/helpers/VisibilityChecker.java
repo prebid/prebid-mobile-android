@@ -133,7 +133,7 @@ public class VisibilityChecker {
         }
 
         ViewExposure exposure = mViewExposureChecker.exposure(view);
-        LogUtil.d(TAG, exposure != null ? exposure.toString() : "null exposure");
+        LogUtil.debug(TAG, exposure != null ? exposure.toString() : "null exposure");
         return exposure;
     }
 

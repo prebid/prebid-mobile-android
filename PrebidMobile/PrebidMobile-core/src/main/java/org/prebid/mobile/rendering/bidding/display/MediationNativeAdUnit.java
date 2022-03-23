@@ -123,10 +123,10 @@ public class MediationNativeAdUnit {
             case NETWORK_ERROR:
                 return FetchDemandResult.NETWORK_ERROR;
             case INVALID_NATIVE_REQUEST:
-                LogUtil.e(TAG, "Invalid native request!");
+                LogUtil.error(TAG, "Invalid native request!");
                 return FetchDemandResult.NETWORK_ERROR;
             default:
-                LogUtil.e(TAG, "Something went wrong!");
+                LogUtil.error(TAG, "Something went wrong!");
                 return FetchDemandResult.NETWORK_ERROR;
         }
     }

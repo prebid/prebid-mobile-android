@@ -112,7 +112,7 @@ public class Transaction {
             }
         }
         catch (Exception e) {
-            LogUtil.e(TAG, "Failed to check for built in video override");
+            LogUtil.error(TAG, "Failed to check for built in video override");
         }
     }
 
@@ -163,7 +163,7 @@ public class Transaction {
 
     private void stopOmAdSession() {
         if (mOmAdSessionManager == null) {
-            LogUtil.e(TAG, "Failed to stopOmAdSession. OmAdSessionManager is null");
+            LogUtil.error(TAG, "Failed to stopOmAdSession. OmAdSessionManager is null");
             return;
         }
 
@@ -207,7 +207,7 @@ public class Transaction {
         public void onSuccess() {
             Transaction transaction = mWeakTransaction.get();
             if (transaction == null) {
-                LogUtil.w(TAG, "CreativeMaker is null");
+                LogUtil.warning(TAG, "CreativeMaker is null");
                 return;
             }
 
@@ -224,7 +224,7 @@ public class Transaction {
         public void onFailure(AdException e) {
             Transaction transaction = mWeakTransaction.get();
             if (transaction == null) {
-                LogUtil.w(TAG, "CreativeMaker is null");
+                LogUtil.warning(TAG, "CreativeMaker is null");
                 return;
             }
 

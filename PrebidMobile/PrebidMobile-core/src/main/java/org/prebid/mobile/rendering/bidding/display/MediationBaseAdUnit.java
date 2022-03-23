@@ -66,24 +66,24 @@ public abstract class MediationBaseAdUnit {
 
     protected void fetchDemand(@NonNull OnFetchCompleteListener listener) {
         if (mMediationDelegate == null) {
-            LogUtil.e(TAG, "Demand fetch failed. Mediation delegate object must be not null");
+            LogUtil.error(TAG, "Demand fetch failed. Mediation delegate object must be not null");
             listener.onComplete(FetchDemandResult.INVALID_AD_OBJECT);
             return;
         }
         if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
-            LogUtil.e(TAG, "Empty account id");
+            LogUtil.error(TAG, "Empty account id");
             listener.onComplete(FetchDemandResult.INVALID_ACCOUNT_ID);
             return;
         }
         if (TextUtils.isEmpty(mAdUnitConfig.getConfigId())) {
-            LogUtil.e(TAG, "Empty config id");
+            LogUtil.error(TAG, "Empty config id");
             listener.onComplete(FetchDemandResult.INVALID_CONFIG_ID);
             return;
         }
 
         final Host bidServerHost = PrebidMobile.getPrebidServerHost();
         if (bidServerHost.equals(Host.CUSTOM) && bidServerHost.getHostUrl().isEmpty()) {
-            LogUtil.e(TAG, "Empty host url for custom Prebid Server host.");
+            LogUtil.error(TAG, "Empty host url for custom Prebid Server host.");
             listener.onComplete(FetchDemandResult.INVALID_HOST_URL);
             return;
         }
@@ -170,7 +170,7 @@ public abstract class MediationBaseAdUnit {
     protected abstract void initAdConfig(String configId, AdSize adSize);
 
     protected void onResponseReceived(BidResponse response) {
-        LogUtil.d(TAG, "On response received");
+        LogUtil.debug(TAG, "On response received");
         if (mOnFetchCompleteListener == null) {
             cancelRefresh();
             return;
@@ -182,7 +182,7 @@ public abstract class MediationBaseAdUnit {
     }
 
     protected void onErrorReceived(AdException exception) {
-        LogUtil.w(TAG, "On error received");
+        LogUtil.warning(TAG, "On error received");
         if (mOnFetchCompleteListener == null) {
             cancelRefresh();
             return;
@@ -201,9 +201,9 @@ public abstract class MediationBaseAdUnit {
 
     private void cancelRefresh() {
         mBidLoader.cancelRefresh();
-        LogUtil.e(TAG, "Failed to pass callback");
+        LogUtil.error(TAG, "Failed to pass callback");
         if (mOnFetchCompleteListener == null) {
-            LogUtil.e(TAG, "OnFetchCompleteListener is null");
+            LogUtil.error(TAG, "OnFetchCompleteListener is null");
         }
     }
 

@@ -58,7 +58,7 @@ public class AdWebViewClient extends WebViewClient {
     @Override
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         if (view == null) {
-            LogUtil.e(TAG, "onPageStarted failed, WebView is null");
+            LogUtil.error(TAG, "onPageStarted failed, WebView is null");
             return;
         }
 
@@ -72,17 +72,17 @@ public class AdWebViewClient extends WebViewClient {
             mAdAssetsLoadedListener.startLoadingAssets();
         }
         catch (Exception e) {
-            LogUtil.e(TAG, "onPageStarted failed for url: " + url + " : " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "onPageStarted failed for url: " + url + " : " + Log.getStackTraceString(e));
         }
     }
 
     @Override
     public void onPageFinished(WebView view, String url) {
         if (view == null) {
-            LogUtil.e(TAG, "onPageFinished failed, WebView is null");
+            LogUtil.error(TAG, "onPageFinished failed, WebView is null");
             return;
         }
-        LogUtil.d(TAG, "onPageFinished: " + view);
+        LogUtil.debug(TAG, "onPageFinished: " + view);
         try {
 
             mAdAssetsLoadedListener.adAssetsLoaded();
@@ -90,14 +90,14 @@ public class AdWebViewClient extends WebViewClient {
             view.setBackgroundColor(Color.TRANSPARENT);
         }
         catch (Exception e) {
-            LogUtil.e(TAG, "onPageFinished failed for url: " + url + " : " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "onPageFinished failed for url: " + url + " : " + Log.getStackTraceString(e));
         }
     }
 
     @Override
     public void onLoadResource(WebView view, String url) {
         if (view == null) {
-            LogUtil.e(TAG, "onPageStarted failed, WebView is null");
+            LogUtil.error(TAG, "onPageStarted failed, WebView is null");
             return;
         }
 
@@ -127,16 +127,16 @@ public class AdWebViewClient extends WebViewClient {
             super.onLoadResource(view, url);
         }
         catch (Exception e) {
-            LogUtil.e(TAG, "onLoadResource failed for url: " + url + " : " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "onLoadResource failed for url: " + url + " : " + Log.getStackTraceString(e));
         }
     }
 
     //gets called when an ad is clicked by user. Takes user to the browser or such
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        LogUtil.d(TAG, "shouldOverrideUrlLoading, url: " + url);
+        LogUtil.debug(TAG, "shouldOverrideUrlLoading, url: " + url);
         if (view == null) {
-            LogUtil.e(TAG, "onPageStarted failed, WebView is null");
+            LogUtil.error(TAG, "onPageStarted failed, WebView is null");
             return false;
         }
 
@@ -152,7 +152,7 @@ public class AdWebViewClient extends WebViewClient {
             handleWebViewClick(url, webViewBase);
         }
         catch (Exception e) {
-            LogUtil.e(TAG, "shouldOverrideUrlLoading failed for url: " + url + " : " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "shouldOverrideUrlLoading failed for url: " + url + " : " + Log.getStackTraceString(e));
         }
         return true;
     }

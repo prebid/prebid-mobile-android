@@ -111,7 +111,7 @@ public class CreativeModelMakerBids {
         String html = "";
 
         if (bid == null) {
-            LogUtil.e(TAG, "getAdHtml: Failed. Bid is null. Returning empty string.");
+            LogUtil.error(TAG, "getAdHtml: Failed. Bid is null. Returning empty string.");
             return html;
         }
 

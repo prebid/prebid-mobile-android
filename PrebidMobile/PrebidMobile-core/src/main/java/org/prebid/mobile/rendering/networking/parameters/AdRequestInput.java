@@ -46,7 +46,7 @@ public class AdRequestInput {
             newAdRequestInput.mBidRequest = (BidRequest) ois.readObject();
         }
         catch (Exception e) {
-            LogUtil.e(TAG, "Failed to make deep copy of bid request");
+            LogUtil.error(TAG, "Failed to make deep copy of bid request");
             return null;
         }
 

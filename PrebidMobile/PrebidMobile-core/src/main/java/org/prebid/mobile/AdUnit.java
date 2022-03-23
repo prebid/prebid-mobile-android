@@ -44,7 +44,7 @@ public abstract class AdUnit {
 
     public void setAutoRefreshPeriodMillis(@IntRange(from = MIN_AUTO_REFRESH_PERIOD_MILLIS) int periodMillis) {
         if (periodMillis < MIN_AUTO_REFRESH_PERIOD_MILLIS) {
-            LogUtil.w("periodMillis less then:" + MIN_AUTO_REFRESH_PERIOD_MILLIS);
+            LogUtil.warning("periodMillis less then:" + MIN_AUTO_REFRESH_PERIOD_MILLIS);
             return;
         }
         this.periodMillis = periodMillis;
@@ -54,14 +54,14 @@ public abstract class AdUnit {
     }
 
     public void resumeAutoRefresh() {
-        LogUtil.v("Resuming auto refresh...");
+        LogUtil.verbose("Resuming auto refresh...");
         if (fetcher != null) {
             fetcher.start();
         }
     }
 
     public void stopAutoRefresh() {
-        LogUtil.v("Stopping auto refresh...");
+        LogUtil.verbose("Stopping auto refresh...");
         if (fetcher != null) {
             fetcher.stop();
         }
@@ -86,18 +86,18 @@ public abstract class AdUnit {
 
     public void fetchDemand(@NonNull Object adObj, @NonNull OnCompleteListener listener) {
         if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
-            LogUtil.e("Empty account id.");
+            LogUtil.error("Empty account id.");
             listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);
             return;
         }
         if (TextUtils.isEmpty(configuration.getConfigId())) {
-            LogUtil.e("Empty config id.");
+            LogUtil.error("Empty config id.");
             listener.onComplete(ResultCode.INVALID_CONFIG_ID);
             return;
         }
         if (PrebidMobile.getPrebidServerHost().equals(Host.CUSTOM)) {
             if (TextUtils.isEmpty(PrebidMobile.getPrebidServerHost().getHostUrl())) {
-                LogUtil.e("Empty host url for custom Prebid Server host.");
+                LogUtil.error("Empty host url for custom Prebid Server host.");
                 listener.onComplete(ResultCode.INVALID_HOST_URL);
                 return;
             }
@@ -124,7 +124,7 @@ public abstract class AdUnit {
                 }
             }
         } else {
-            LogUtil.e("Invalid context");
+            LogUtil.error("Invalid context");
             listener.onComplete(ResultCode.INVALID_CONTEXT);
             return;
         }
@@ -135,9 +135,9 @@ public abstract class AdUnit {
             fetcher.setConfiguration(configuration);
             fetcher.setListener(listener);
             if (periodMillis >= 30000) {
-                LogUtil.v("Start fetching bids with auto refresh millis: " + periodMillis);
+                LogUtil.verbose("Start fetching bids with auto refresh millis: " + periodMillis);
             } else {
-                LogUtil.v("Start a single fetching.");
+                LogUtil.verbose("Start a single fetching.");
             }
             fetcher.start();
         } else {

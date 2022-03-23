@@ -16,13 +16,13 @@ public class NativeAdProvider {
         String cacheId = extras.getString(NativeAdUnit.BUNDLE_KEY_CACHE_ID);
 
         if (cacheId == null || cacheId.isEmpty()) {
-            LogUtil.e(TAG, "Cache id is null, can't get native ad.");
+            LogUtil.error(TAG, "Cache id is null, can't get native ad.");
             return null;
         }
 
         PrebidNativeAd nativeAd = PrebidNativeAd.create(cacheId);
         if (nativeAd == null) {
-            LogUtil.e(TAG, "PrebidNativeAd is null");
+            LogUtil.error(TAG, "PrebidNativeAd is null");
             return null;
         }
 

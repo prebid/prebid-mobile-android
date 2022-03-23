@@ -62,12 +62,12 @@ public class LruController {
                 os.write(data);
                 os.close();
                 mLruCache.remove(videoPath);
-                LogUtil.d(TAG, "Cache saved to file");
+                LogUtil.debug(TAG, "Cache saved to file");
                 return true;
             }
 
             catch (Exception e) {
-                LogUtil.e(TAG, "Failed to save cache to file: " + e.getMessage());
+                LogUtil.error(TAG, "Failed to save cache to file: " + e.getMessage());
             }
         }
         return false;

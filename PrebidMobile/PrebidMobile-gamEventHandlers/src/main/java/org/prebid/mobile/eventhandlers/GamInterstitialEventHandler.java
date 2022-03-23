@@ -134,7 +134,7 @@ public class GamInterstitialEventHandler implements InterstitialEventHandler, Ga
     private void primaryAdReceived() {
         if (mIsExpectingAppEvent) {
             if (mAppEventHandler != null) {
-                LogUtil.d(TAG, "primaryAdReceived: AppEventTimer is not null. Skipping timer scheduling.");
+                LogUtil.debug(TAG, "primaryAdReceived: AppEventTimer is not null. Skipping timer scheduling.");
                 return;
             }
 
@@ -147,7 +147,7 @@ public class GamInterstitialEventHandler implements InterstitialEventHandler, Ga
 
     private void handleAppEvent() {
         if (!mIsExpectingAppEvent) {
-            LogUtil.d(TAG, "appEventDetected: Skipping event handling. App event is not expected");
+            LogUtil.debug(TAG, "appEventDetected: Skipping event handling. App event is not expected");
             return;
         }
 

@@ -69,7 +69,7 @@ public class MraidStorePicture {
                         dialog.show();
                     }
                     else {
-                        LogUtil.e(TAG, "Context is not activity or activity is finishing, can not show expand dialog");
+                        LogUtil.error(TAG, "Context is not activity or activity is finishing, can not show expand dialog");
                     }
                 });
             }
@@ -90,7 +90,7 @@ public class MraidStorePicture {
             catch (Exception e) {
                 //send a mraid error back to the ad
                 mJsi.onError("Failed to store picture", JSInterface.ACTION_STORE_PICTURE);
-                LogUtil.e(TAG, "Failed to store picture: " + Log.getStackTraceString(e));
+                LogUtil.error(TAG, "Failed to store picture: " + Log.getStackTraceString(e));
             }
         }).start();
     }

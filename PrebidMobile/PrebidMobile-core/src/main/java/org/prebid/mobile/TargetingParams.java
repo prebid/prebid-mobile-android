@@ -72,7 +72,7 @@ public class TargetingParams {
         }
 
         if (age <= 0 || age > 120) {
-            LogUtil.e(TAG, "Can't set age, it must be in range from 0 to 120");
+            LogUtil.error(TAG, "Can't set age, it must be in range from 0 to 120");
             return;
         }
 
@@ -319,7 +319,7 @@ public class TargetingParams {
         if (externalUserId != null) {
             StorageUtils.storeExternalUserId(externalUserId);
         } else {
-            LogUtil.e("Targeting", "External User ID can't be set as null");
+            LogUtil.error("Targeting", "External User ID can't be set as null");
 
         }
     }
@@ -557,7 +557,7 @@ public class TargetingParams {
         try {
             StorageUtils.setPbCoppa(isCoppa);
         } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "Coppa was not updated", ex);
+            LogUtil.error("Targeting", "Coppa was not updated", ex);
         }
     }
 
@@ -565,7 +565,7 @@ public class TargetingParams {
         try {
             return StorageUtils.getPbCoppa();
         } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "Can't get COPPA", ex);
+            LogUtil.error("Targeting", "Can't get COPPA", ex);
             return false;
         }
     }
@@ -574,7 +574,7 @@ public class TargetingParams {
         try {
             StorageUtils.setPbGdprSubject(consent);
         } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "GDPR Subject was not updated", ex);
+            LogUtil.error("Targeting", "GDPR Subject was not updated", ex);
         }
     }
 
@@ -593,7 +593,7 @@ public class TargetingParams {
                 }
             }
         } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "Can't get GDPR subject", ex);
+            LogUtil.error("Targeting", "Can't get GDPR subject", ex);
         }
 
         return gdprSubject;
@@ -603,7 +603,7 @@ public class TargetingParams {
         try {
             StorageUtils.setPbGdprConsent(string);
         } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "GDPR Consent was not updated", ex);
+            LogUtil.error("Targeting", "GDPR Consent was not updated", ex);
         }
     }
 
@@ -623,7 +623,7 @@ public class TargetingParams {
                 }
             }
         } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "can not get GDPR Consent", ex);
+            LogUtil.error("Targeting", "can not get GDPR Consent", ex);
         }
 
         return gdprConsent;
@@ -636,7 +636,7 @@ public class TargetingParams {
         try {
             StorageUtils.setPbPurposeConsents(purposeConsents);
         } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "GDPR Device access Consent was not updated", ex);
+            LogUtil.error("Targeting", "GDPR Device access Consent was not updated", ex);
         }
     }
 
@@ -651,7 +651,7 @@ public class TargetingParams {
             } else if (purposeConsentChar == '0') {
                 purposeConsent = false;
             } else {
-                LogUtil.w("invalid char:" + purposeConsent);
+                LogUtil.warning("invalid char:" + purposeConsent);
             }
         }
         return purposeConsent;
@@ -672,7 +672,7 @@ public class TargetingParams {
                 }
             }
         } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "GDPR Device access Consent was not updated", ex);
+            LogUtil.error("Targeting", "GDPR Device access Consent was not updated", ex);
         }
         return savedPurposeConsents;
     }
@@ -691,7 +691,7 @@ public class TargetingParams {
             int deviceAccessConsentIndex = 0;
             deviceAccessConsent = getPurposeConsent(deviceAccessConsentIndex);
         } catch (PbContextNullException ex) {
-            LogUtil.e("Targeting", "cannot get Device access Consent", ex);
+            LogUtil.error("Targeting", "cannot get Device access Consent", ex);
         }
         return deviceAccessConsent;
     }

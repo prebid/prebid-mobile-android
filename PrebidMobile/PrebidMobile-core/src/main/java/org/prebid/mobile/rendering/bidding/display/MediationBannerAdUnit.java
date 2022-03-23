@@ -58,13 +58,13 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
         mBidLoader.setBidRefreshListener(() -> {
             if (mAdFailed) {
                 mAdFailed = false;
-                LogUtil.d(TAG, "Ad failed, can perform refresh.");
+                LogUtil.debug(TAG, "Ad failed, can perform refresh.");
                 return true;
             }
 
             boolean isViewVisible = mMediationDelegate.canPerformRefresh();
             boolean canRefresh = mScreenStateReceiver.isScreenOn() && isViewVisible;
-            LogUtil.d(TAG, "Can perform refresh: " + canRefresh);
+            LogUtil.debug(TAG, "Can perform refresh: " + canRefresh);
             return canRefresh;
         });
     }

@@ -35,7 +35,7 @@ public class OrientationBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        LogUtil.d(TAG, "onReceive");
+        LogUtil.debug(TAG, "onReceive");
         if (Intent.ACTION_CONFIGURATION_CHANGED.equals(intent.getAction())) {
             int orientation = getDisplayRotation();
             if (orientation != mLastRotation) {
@@ -49,17 +49,17 @@ public class OrientationBroadcastReceiver extends BroadcastReceiver {
     }
 
     public boolean isOrientationChanged() {
-        LogUtil.d(TAG, "isOrientationChanged: " + orientationChanged);
+        LogUtil.debug(TAG, "isOrientationChanged: " + orientationChanged);
         return orientationChanged;
     }
 
     public void setOrientationChanged(boolean orientationChanged) {
-        LogUtil.d(TAG, "setOrientationChanged: " + orientationChanged);
+        LogUtil.debug(TAG, "setOrientationChanged: " + orientationChanged);
         this.orientationChanged = orientationChanged;
     }
 
     public void handleOrientationChange(int currentRotation){
-        LogUtil.d(TAG, "handleOrientationChange currentRotation = " + currentRotation);
+        LogUtil.debug(TAG, "handleOrientationChange currentRotation = " + currentRotation);
     }
 
     private int getDisplayRotation() {
@@ -69,7 +69,7 @@ public class OrientationBroadcastReceiver extends BroadcastReceiver {
 
     public void register(final Context context) {
         if (context != null) {
-            LogUtil.d(TAG, "register");
+            LogUtil.debug(TAG, "register");
             mApplicationContext = context.getApplicationContext();
             if (mApplicationContext != null) {
                 mApplicationContext.registerReceiver(this,
@@ -80,7 +80,7 @@ public class OrientationBroadcastReceiver extends BroadcastReceiver {
 
     public void unregister() {
         if (mApplicationContext != null) {
-            LogUtil.d(TAG, "unregister");
+            LogUtil.debug(TAG, "unregister");
             mApplicationContext.unregisterReceiver(this);
             mApplicationContext = null;
         }

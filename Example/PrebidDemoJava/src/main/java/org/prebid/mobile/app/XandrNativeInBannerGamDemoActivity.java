@@ -2,26 +2,13 @@ package org.prebid.mobile.app;
 
 import android.os.Bundle;
 import android.widget.FrameLayout;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
-
-import org.prebid.mobile.AdUnit;
-import org.prebid.mobile.Host;
-import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.NativeAdUnit;
-import org.prebid.mobile.NativeDataAsset;
-import org.prebid.mobile.NativeEventTracker;
-import org.prebid.mobile.NativeImageAsset;
-import org.prebid.mobile.NativeTitleAsset;
-import org.prebid.mobile.OnCompleteListener;
-import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.*;
 
 import java.util.ArrayList;
 
@@ -51,7 +38,7 @@ public class XandrNativeInBannerGamDemoActivity extends AppCompatActivity {
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
-                LogUtil.d("ad loaded");
+                LogUtil.debug("ad loaded");
             }
         });
         nativeAdView.setAdUnitId(Constants.DFP_IN_BANNER_NATIVE_ADUNIT_ID_APPNEXUS);

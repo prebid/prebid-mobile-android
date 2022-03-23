@@ -44,7 +44,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
 
         @Override
         public void onError(Throwable throwable) {
-            LogUtil.e(TAG, "executeGetExpandProperties failed: " + Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, "executeGetExpandProperties failed: " + Log.getStackTraceString(throwable));
         }
     };
 
@@ -57,7 +57,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
     public void loadMraidExpandProperties() {
         Context context = getContext();
         if (!(context instanceof Activity)) {
-            LogUtil.w(TAG, "Context is null or is not activity context");
+            LogUtil.warning(TAG, "Context is null or is not activity context");
             return;
         }
 
@@ -76,7 +76,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
                           .executeGetExpandProperties(new FetchPropertiesHandler(mExpandPropertiesCallback));
         }
         else {
-            LogUtil.w(TAG, "Error getting expand properties");
+            LogUtil.warning(TAG, "Error getting expand properties");
         }
     }
 
@@ -120,7 +120,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
         if (adBaseView == null) {
 
             //This should never happen.
-            LogUtil.e(TAG, "Failed to preload a banner ad. Webview is null.");
+            LogUtil.error(TAG, "Failed to preload a banner ad. Webview is null.");
 
             if (mWebViewDelegate != null) {
                 mWebViewDelegate.webViewFailedToLoad(new AdException(AdException.INTERNAL_ERROR, "Preloaded adview is null!"));
@@ -138,7 +138,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
 
                 if (getChildCount() >= 1) {
 
-                    LogUtil.d(TAG, "Adding second view");
+                    LogUtil.debug(TAG, "Adding second view");
                     //safe removal from parent before adding
                     Views.removeFromParent(adBaseView);
 
@@ -147,7 +147,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
                     swapWebViews();
                 }
                 else {
-                    LogUtil.d(TAG, "Adding first view");
+                    LogUtil.debug(TAG, "Adding first view");
                     //safe removal from parent before adding
                     Views.removeFromParent(adBaseView);
 
@@ -156,7 +156,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
                 }
             }
             else {
-                LogUtil.d(TAG, "Adding the only view");
+                LogUtil.debug(TAG, "Adding the only view");
 
                 adBaseView.bringToFront();
                 swapWebViews();
@@ -215,7 +215,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
             }
         }
         catch (Exception e) {
-            LogUtil.e(TAG, "handleExpandPropertiesResult: Failed. Reason: " + Log.getStackTraceString(e));
+            LogUtil.error(TAG, "handleExpandPropertiesResult: Failed. Reason: " + Log.getStackTraceString(e));
         }
     }
 }

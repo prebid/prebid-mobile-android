@@ -58,7 +58,7 @@ public class PrebidBannerAdapter extends PrebidBaseAdapter implements CustomEven
             adMobListener.onAdFailedToLoad(new AdError(1003, error, "prebid"));
             return;
         }
-        LogUtil.v(TAG, "Parameters are matched! (" + serverParameter + ")");
+        LogUtil.verbose(TAG, "Parameters are matched! (" + serverParameter + ")");
 
         BidResponse response = BidResponseCache.getInstance().popBidResponse(responseId);
         if (response == null) {

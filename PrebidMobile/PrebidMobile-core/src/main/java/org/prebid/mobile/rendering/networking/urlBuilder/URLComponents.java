@@ -60,7 +60,7 @@ public class URLComponents {
             }
         }
         catch (JSONException e) {
-            LogUtil.e(TAG, "Failed to add OpenRTB query arg");
+            LogUtil.error(TAG, "Failed to add OpenRTB query arg");
         }
 
         StringBuilder queryArgString = new StringBuilder();
@@ -71,7 +71,7 @@ public class URLComponents {
                 value = URLEncoder.encode(value, "UTF-8");
             }
             catch (UnsupportedEncodingException e) {
-                LogUtil.e(TAG, "Failed to encode value: " + value + " from key: " + key);
+                LogUtil.error(TAG, "Failed to encode value: " + value + " from key: " + key);
                 continue;
             }
             //URL encoder turns spaces to +. SDK to convert + to %20

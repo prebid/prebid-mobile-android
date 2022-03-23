@@ -103,7 +103,7 @@ public class PrebidWebViewBase extends FrameLayout
                 readyForMraidExpanded();
             }
             catch (Exception e) {
-                LogUtil.e(TAG, "initMraidExpanded failed: " + Log.getStackTraceString(e));
+                LogUtil.error(TAG, "initMraidExpanded failed: " + Log.getStackTraceString(e));
             }
         });
     }
@@ -201,7 +201,7 @@ public class PrebidWebViewBase extends FrameLayout
 
     protected void renderAdView(WebViewBase webViewBase) {
         if (webViewBase == null) {
-            LogUtil.w(TAG, "WebviewBase is null");
+            LogUtil.warning(TAG, "WebviewBase is null");
             return;
         }
         if (getContext() != null) {
@@ -233,12 +233,12 @@ public class PrebidWebViewBase extends FrameLayout
 
     private void renderPlacement(WebViewBase webViewBase, int width, int height) {
         if (mContext == null) {
-            LogUtil.w(TAG, "Context is null");
+            LogUtil.warning(TAG, "Context is null");
             return;
         }
 
         if (webViewBase == null) {
-            LogUtil.w(TAG, "WebviewBase is null");
+            LogUtil.warning(TAG, "WebviewBase is null");
             return;
         }
 
@@ -307,7 +307,7 @@ public class PrebidWebViewBase extends FrameLayout
         public void run() {
             WebView webViewBase = mWeakWebView.get();
             if (webViewBase == null) {
-                LogUtil.d(TAG, "Unable to execute destroy on WebView. WebView is null.");
+                LogUtil.debug(TAG, "Unable to execute destroy on WebView. WebView is null.");
                 return;
             }
             //MOBILE-2950 ARKAI3 - Inline Video of the webview is not stopped on back key press

@@ -91,7 +91,7 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
             return new PublisherInterstitialAdWrapper(activity, gamAdUnitId, eventListener);
         }
         catch (Throwable throwable) {
-            LogUtil.e(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
         return null;
     }
@@ -137,7 +137,7 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
             return mInterstitialAd != null;
         }
         catch (Throwable throwable) {
-            LogUtil.e(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
         return false;
     }
@@ -146,12 +146,12 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
         final Activity activity = mActivityWeakReference.get();
 
         if (activity == null) {
-            LogUtil.e(TAG, "show: Failed. Activity is null.");
+            LogUtil.error(TAG, "show: Failed. Activity is null.");
             return;
         }
 
         if (mInterstitialAd == null) {
-            LogUtil.e(TAG, "show: Failure. Interstitial ad is null.");
+            LogUtil.error(TAG, "show: Failure. Interstitial ad is null.");
             return;
         }
 
@@ -159,7 +159,7 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
             mInterstitialAd.show(activity);
         }
         catch (Throwable throwable) {
-            LogUtil.e(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
     }
 
@@ -175,7 +175,7 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
             AdManagerInterstitialAd.load(mActivityWeakReference.get(), mAdUnitId, adRequest, mAdLoadCallback);
         }
         catch (Throwable throwable) {
-            LogUtil.e(TAG, Log.getStackTraceString(throwable));
+            LogUtil.error(TAG, Log.getStackTraceString(throwable));
         }
     }
 

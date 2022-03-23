@@ -78,7 +78,7 @@ public class Views {
         }
 
         if (!ViewCompat.isAttachedToWindow(view)) {
-            LogUtil.d(TAG, "Attempting to call View.getRootView() on an unattached View.");
+            LogUtil.debug(TAG, "Attempting to call View.getRootView() on an unattached View.");
         }
 
         final View rootView = view.getRootView();

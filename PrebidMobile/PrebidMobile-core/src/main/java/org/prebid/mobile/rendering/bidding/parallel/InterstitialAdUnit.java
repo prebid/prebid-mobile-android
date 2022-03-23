@@ -168,7 +168,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
     @Override
     void notifyAdEventListener(AdListenerEvent adListenerEvent) {
         if (mInterstitialAdUnitListener == null) {
-            LogUtil.d(TAG, "notifyAdEventListener: Failed. AdUnitListener is null. Passed listener event: " + adListenerEvent);
+            LogUtil.debug(TAG, "notifyAdEventListener: Failed. AdUnitListener is null. Passed listener event: " + adListenerEvent);
             return;
         }
 
@@ -202,7 +202,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
             case VIDEO:
                 return AdUnitConfiguration.AdUnitIdentifierType.VAST;
             default:
-                LogUtil.d(TAG, "setAdUnitIdentifierType: Provided AdUnitType [" + adUnitFormat + "] doesn't match any expected adUnitType.");
+                LogUtil.debug(TAG, "setAdUnitIdentifierType: Provided AdUnitType [" + adUnitFormat + "] doesn't match any expected adUnitType.");
                 return null;
         }
     }

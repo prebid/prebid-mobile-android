@@ -122,7 +122,7 @@ public class MraidController {
         switch (event.mraidAction) {
             case ACTION_EXPAND:
                 if (Utils.isBlank(event.mraidActionHelper)) {
-                    LogUtil.d(TAG, "One part expand");
+                    LogUtil.debug(TAG, "One part expand");
                     expand(oldWebViewBase, twoPartNewWebViewBase, event);
                 }
                 else {
@@ -172,7 +172,7 @@ public class MraidController {
                 mMraidExpand.getInterstitialViewController().handleSetOrientationProperties();
             }
             catch (AdException e) {
-                LogUtil.e(TAG, Log.getStackTraceString(e));
+                LogUtil.error(TAG, Log.getStackTraceString(e));
             }
         }
     }
@@ -289,7 +289,7 @@ public class MraidController {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> {
             try {
-                LogUtil.d(TAG, "mraidExpand");
+                LogUtil.debug(TAG, "mraidExpand");
                 //send click event on expand
                 ((WebViewBase) adBaseView).sendClickCallBack(mraidEvent.mraidActionHelper);
                 mMraidExpand.expand(mraidEvent.mraidActionHelper, () -> {
@@ -302,7 +302,7 @@ public class MraidController {
                 });
             }
             catch (Exception e) {
-                LogUtil.e(TAG, "mraidExpand failed at displayViewInInterstitial: " + Log.getStackTraceString(e));
+                LogUtil.error(TAG, "mraidExpand failed at displayViewInInterstitial: " + Log.getStackTraceString(e));
             }
         });
     }

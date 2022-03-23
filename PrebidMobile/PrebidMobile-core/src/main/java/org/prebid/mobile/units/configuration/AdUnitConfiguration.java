@@ -204,11 +204,11 @@ public class AdUnitConfiguration {
 
     public void setAutoRefreshDelay(int autoRefreshDelay) {
         if (autoRefreshDelay < 0) {
-            LogUtil.e(TAG, "Auto refresh delay can't be less then 0.");
+            LogUtil.error(TAG, "Auto refresh delay can't be less then 0.");
             return;
         }
         if (autoRefreshDelay == 0) {
-            LogUtil.d(TAG, "Only one request, without auto refresh.");
+            LogUtil.debug(TAG, "Only one request, without auto refresh.");
             autoRefreshDelayInMillis = 0;
             return;
         }

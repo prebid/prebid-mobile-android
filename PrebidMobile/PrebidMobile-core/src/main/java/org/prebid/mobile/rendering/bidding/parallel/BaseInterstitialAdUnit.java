@@ -117,12 +117,12 @@ public abstract class BaseInterstitialAdUnit {
      */
     public void loadAd() {
         if (mBidLoader == null) {
-            LogUtil.e(TAG, "loadAd: Failed. BidLoader is not initialized.");
+            LogUtil.error(TAG, "loadAd: Failed. BidLoader is not initialized.");
             return;
         }
 
         if (!isAdLoadAllowed()) {
-            LogUtil.d(TAG, "loadAd: Skipped. InterstitialAdUnitState is: " + mInterstitialAdUnitState);
+            LogUtil.debug(TAG, "loadAd: Skipped. InterstitialAdUnitState is: " + mInterstitialAdUnitState);
             return;
         }
 
@@ -141,7 +141,7 @@ public abstract class BaseInterstitialAdUnit {
      */
     public void show() {
         if (!isAuctionWinnerReadyToDisplay()) {
-            LogUtil.d(TAG, "show(): Ad is not yet ready for display!");
+            LogUtil.debug(TAG, "show(): Ad is not yet ready for display!");
             return;
         }
 

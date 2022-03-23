@@ -63,7 +63,7 @@ public class PrebidNativeAdapter extends PrebidBaseAdapter implements CustomEven
             adMobListener.onAdFailedToLoad(new AdError(1003, error, "prebid"));
             return;
         }
-        LogUtil.v(TAG, "Parameters are matched! (" + serverParameter + ")");
+        LogUtil.verbose(TAG, "Parameters are matched! (" + serverParameter + ")");
 
         PrebidNativeAd nativeAd = PrebidNativeAd.create(cacheId);
         if (nativeAd == null) {

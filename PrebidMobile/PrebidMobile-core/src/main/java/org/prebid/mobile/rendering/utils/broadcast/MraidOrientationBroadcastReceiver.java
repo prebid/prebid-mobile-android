@@ -40,12 +40,12 @@ public class MraidOrientationBroadcastReceiver extends OrientationBroadcastRecei
         super.handleOrientationChange(currentRotation);
         BaseJSInterface baseJSInterface = mBaseJSInterfaceWeakReference.get();
         if (baseJSInterface == null) {
-            LogUtil.d(TAG, "handleOrientationChange failure. BaseJsInterface is null");
+            LogUtil.debug(TAG, "handleOrientationChange failure. BaseJsInterface is null");
             return;
         }
 
         if (shouldHandleClose()) {
-            LogUtil.d(TAG, "Call 'close' action for MRAID Resize after changing rotation for API 19.");
+            LogUtil.debug(TAG, "Call 'close' action for MRAID Resize after changing rotation for API 19.");
             baseJSInterface.close();
         }
     }
