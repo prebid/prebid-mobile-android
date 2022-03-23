@@ -62,7 +62,7 @@ public class PrebidMobile {
      * Default refresh interval. 60 seconds
      * Used when the refresh interval is not in the AUTO_REFRESH_DELAY_MIN & AUTO_REFRESH_DELAY_MAX range.
      */
-    public static final int AUTO_REFRESH_DELAY_DEFAULT = 60_000;
+    public static final int AUTO_REFRESH_DELAY_DEFAULT = 0;
 
     /**
      * Minimum refresh interval allowed. 30 seconds

@@ -27,7 +27,7 @@ public class JsonUserDataTest {
 
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setConfigId("configId");
-        configuration.setAdType(AdType.BANNER);
+        configuration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
         for (DataObject data : userDataObjects) {
             configuration.addUserData(data);
         }

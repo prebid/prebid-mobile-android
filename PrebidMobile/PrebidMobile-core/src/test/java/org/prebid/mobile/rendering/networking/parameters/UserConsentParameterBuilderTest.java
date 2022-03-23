@@ -23,6 +23,7 @@ import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -40,8 +41,12 @@ public class UserConsentParameterBuilderTest {
         Activity robolectricActivity = Robolectric.buildActivity(Activity.class).create().get();
         ManagersResolver.getInstance().prepare(robolectricActivity);
 
+        PrebidMobile.setPbsDebug(false);
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(robolectricActivity);
-        mSharedPreferences.edit().putString("IABConsent_ConsentString", "foobar_consent_string").commit();
+        mSharedPreferences
+                .edit()
+                .putString("IABConsent_ConsentString", "foobar_consent_string")
+                .commit();
 
         mBuilder = new UserConsentParameterBuilder(ManagersResolver.getInstance().getUserConsentManager());
     }
@@ -55,7 +60,7 @@ public class UserConsentParameterBuilderTest {
 
         String expectedJSON = "{\"regs\":{\"ext\":{\"gdpr\":1}},\"user\":{\"ext\":{\"consent\":\"foobar_consent_string\"}}}";
         assertEquals("Wrong values are set on pub Imp for the given adType", expectedJSON,
-                     adRequestInput.getBidRequest().getJsonObject().toString());
+                adRequestInput.getBidRequest().getJsonObject().toString());
     }
 
     @Test
@@ -67,7 +72,7 @@ public class UserConsentParameterBuilderTest {
 
         String expectedJSON = "{\"regs\":{\"ext\":{\"gdpr\":0}},\"user\":{\"ext\":{\"consent\":\"foobar_consent_string\"}}}";
         assertEquals("Wrong values are set on pub Imp for the given adType", expectedJSON,
-                     adRequestInput.getBidRequest().getJsonObject().toString());
+                adRequestInput.getBidRequest().getJsonObject().toString());
     }
 
     @Test
@@ -79,7 +84,7 @@ public class UserConsentParameterBuilderTest {
 
         String expectedJSON = "{}";
         assertEquals("Wrong values are set on pub Imp for the given adType", expectedJSON,
-                     adRequestInput.getBidRequest().getJsonObject().toString());
+                adRequestInput.getBidRequest().getJsonObject().toString());
     }
 
     @Test
@@ -126,6 +131,6 @@ public class UserConsentParameterBuilderTest {
 
         String expectedJSON = "{\"regs\":{\"ext\":{\"us_privacy\":\"1YY\",\"gdpr\":0}},\"user\":{\"ext\":{\"consent\":\"foobar_consent_string\"}}}";
         assertEquals("Wrong values are set on pub Imp for the given adType", expectedJSON,
-                     adRequestInput.getBidRequest().getJsonObject().toString());
+                adRequestInput.getBidRequest().getJsonObject().toString());
     }
 }

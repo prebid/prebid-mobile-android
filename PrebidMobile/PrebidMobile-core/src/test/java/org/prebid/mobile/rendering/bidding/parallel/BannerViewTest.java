@@ -155,7 +155,7 @@ public class BannerViewTest {
 
     @Test
     public void setAutoRefreshDelayInSec_EqualsGetAutoRefreshDelayInMs() {
-        final int interval = 15;
+        final int interval = 30;
         mBannerView.setAutoRefreshDelay(interval);
 
         assertEquals(interval * 1000, mBannerView.getAutoRefreshDelayInMs());
@@ -166,7 +166,7 @@ public class BannerViewTest {
         final int interval = -1;
         mBannerView.setAutoRefreshDelay(interval);
 
-        assertEquals(60000, mBannerView.getAutoRefreshDelayInMs());
+        assertEquals(0, mBannerView.getAutoRefreshDelayInMs());
     }
 
     @Test

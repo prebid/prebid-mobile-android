@@ -2,7 +2,6 @@ package org.prebid.mobile;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 public class NativeTitleAsset extends NativeAsset {
 
