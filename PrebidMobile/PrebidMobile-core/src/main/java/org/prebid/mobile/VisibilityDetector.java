@@ -37,7 +37,7 @@ class VisibilityDetector {
 
     static VisibilityDetector create(View view) {
         if (view == null) {
-            LogUtil.d(TAG, "Unable to check visibility");
+            LogUtil.debug(TAG, "Unable to check visibility");
             return null;
         }
 

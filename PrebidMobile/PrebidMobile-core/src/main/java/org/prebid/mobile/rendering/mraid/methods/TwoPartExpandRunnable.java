@@ -16,9 +16,9 @@
 
 package org.prebid.mobile.rendering.mraid.methods;
 
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.MraidEvent;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;

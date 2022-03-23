@@ -24,6 +24,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.interstitial.InterstitialManagerVideoDelegate;
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
@@ -37,7 +38,6 @@ import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
@@ -434,7 +434,7 @@ public class VideoCreative extends VideoCreativeProtocol
         public void onFileDownloaded(String shortenedPath) {
             VideoCreative videoCreative = mWeakVideoCreative.get();
             if (videoCreative == null) {
-                LogUtil.warn(TAG, "VideoCreative is null");
+                LogUtil.warning(TAG, "VideoCreative is null");
                 return;
             }
 
@@ -447,7 +447,7 @@ public class VideoCreative extends VideoCreativeProtocol
         public void onFileDownloadError(String error) {
             VideoCreative videoCreative = mWeakVideoCreative.get();
             if (videoCreative == null) {
-                LogUtil.warn(TAG, "VideoCreative is null");
+                LogUtil.warning(TAG, "VideoCreative is null");
                 return;
             }
 

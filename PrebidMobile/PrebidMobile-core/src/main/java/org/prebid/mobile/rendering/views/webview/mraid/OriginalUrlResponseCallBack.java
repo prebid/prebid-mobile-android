@@ -16,10 +16,10 @@
 
 package org.prebid.mobile.rendering.views.webview.mraid;
 
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.mraid.methods.network.RedirectUrlListener;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 class OriginalUrlResponseCallBack implements ResponseHandler {
     private static final String TAG = OriginalUrlResponseCallBack.class.getSimpleName();

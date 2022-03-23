@@ -17,9 +17,9 @@
 package org.prebid.mobile.rendering.loading;
 
 import android.util.Log;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.ServerWrongStatusCode;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;

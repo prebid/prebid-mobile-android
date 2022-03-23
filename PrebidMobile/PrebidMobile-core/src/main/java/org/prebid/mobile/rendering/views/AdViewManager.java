@@ -20,6 +20,7 @@ import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.InterstitialView;
@@ -35,7 +36,6 @@ import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreative;
 import org.prebid.mobile.rendering.video.VideoCreativeView;
@@ -179,7 +179,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     public void hide() {
         if (mCurrentCreative == null) {
-            LogUtil.warn(TAG, "Can not hide a null creative");
+            LogUtil.warning(TAG, "Can not hide a null creative");
             return;
         }
 

@@ -17,7 +17,7 @@
 package org.prebid.mobile.rendering.sdk.calendar;
 
 import org.json.JSONObject;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 
 import java.text.ParseException;
 
@@ -126,7 +126,7 @@ public final class CalendarEventWrapper
 		}
 		catch (ParseException e)
 		{
-            LogUtil.error(TAG, "Failed to parse end date:" + e.getMessage());
+			LogUtil.error(TAG, "Failed to parse end date:" + e.getMessage());
 		}
 	}
 
@@ -173,7 +173,7 @@ public final class CalendarEventWrapper
 		}
 		catch (ParseException e)
 		{
-            LogUtil.error(TAG, "Failed to parse reminder date:" + e.getMessage());
+			LogUtil.error(TAG, "Failed to parse reminder date:" + e.getMessage());
 		}
 	}
 
@@ -209,7 +209,7 @@ public final class CalendarEventWrapper
 			}
 			catch (Exception e)
 			{
-                LogUtil.error(TAG, "Failed to set calendar recurrence:" + e.getMessage());
+				LogUtil.error(TAG, "Failed to set calendar recurrence:" + e.getMessage());
 			}
 		}
 	}

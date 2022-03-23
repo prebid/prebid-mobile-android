@@ -17,7 +17,7 @@
 package org.prebid.mobile.rendering.utils.broadcast;
 
 import android.os.Build;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 

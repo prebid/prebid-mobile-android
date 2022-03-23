@@ -17,12 +17,12 @@
 package org.prebid.mobile.rendering.loading;
 
 import android.content.Context;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AbstractCreative;
 import org.prebid.mobile.rendering.models.CreativeModelMakerBids;
 import org.prebid.mobile.rendering.models.CreativeModelsMaker;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
@@ -74,7 +74,7 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
     public void onTransactionSuccess(Transaction transaction) {
         mLatestTransaction = null;
         if (mListener == null) {
-            LogUtil.warn(TAG, "Unable to notify listener. Listener is null");
+            LogUtil.warning(TAG, "Unable to notify listener. Listener is null");
             return;
         }
         mTransactions.add(transaction);
@@ -181,7 +181,7 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
 
     private void notifyListenerError(AdException e) {
         if (mListener == null) {
-            LogUtil.warn(TAG, "Unable to notify listener. Listener is null");
+            LogUtil.warning(TAG, "Unable to notify listener. Listener is null");
             return;
         }
         mListener.onFetchingFailed(e);

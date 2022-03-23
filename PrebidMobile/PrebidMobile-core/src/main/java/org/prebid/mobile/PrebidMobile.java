@@ -17,7 +17,6 @@
 package org.prebid.mobile;
 
 import android.content.Context;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.core.BuildConfig;
@@ -135,7 +134,7 @@ public class PrebidMobile {
 
     public static void setPrebidServerHost(Host host) {
         if (host == null) {
-            LogUtil.e(TAG, "setPrebidServerHost: Can't set null.");
+            LogUtil.error(TAG, "setPrebidServerHost: Can't set null.");
             return;
         }
         PrebidMobile.host = host;
@@ -191,14 +190,14 @@ public class PrebidMobile {
 
     public static void setApplicationContext(@Nullable Context context, @Nullable SdkInitListener listener) {
         if (context == null) {
-            LogUtil.e("Context must be not null!");
+            LogUtil.error("Context must be not null!");
             return;
         }
 
         if (isSdkInitialized) {
             return;
         }
-        Log.d(TAG, "Initializing Prebid Rendering SDK");
+        LogUtil.debug(TAG, "Initializing Prebid Rendering SDK");
 
         sdkInitListener = listener;
         INIT_SDK_TASK_COUNT.set(0);

@@ -7,7 +7,6 @@ import org.prebid.mobile.rendering.interstitial.InterstitialSizes;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.ExoPlayerView;
 
 import java.util.*;

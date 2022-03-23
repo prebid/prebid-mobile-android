@@ -149,7 +149,7 @@ class PrebidServerAdapter implements DemandAdapter {
             HashMap<String, String> keywords = new HashMap<>();
             boolean containTopBid = false;
             if (jsonObject != null) {
-                LogUtil.d("Getting response for auction " + getAuctionId() + ": " + jsonObject.toString());
+                LogUtil.debug("Getting response for auction " + getAuctionId() + ": " + jsonObject.toString());
                 try {
                     JSONArray seatbid = jsonObject.getJSONArray("seatbid");
                     if (seatbid != null) {
@@ -202,7 +202,7 @@ class PrebidServerAdapter implements DemandAdapter {
                         }
                     }
                 } catch (JSONException e) {
-                    LogUtil.e("Error processing JSON response.");
+                    LogUtil.error("Error processing JSON response.");
                 }
             }
 
@@ -292,7 +292,7 @@ class PrebidServerAdapter implements DemandAdapter {
             if (headers == null || headers.isEmpty()) return;
             CookieManager cm = CookieManager.getInstance();
             if (cm == null) {
-                LogUtil.i("PrebidNewAPI", "Unable to find a CookieManager");
+                LogUtil.info("PrebidNewAPI", "Unable to find a CookieManager");
                 return;
             }
             try {
@@ -313,7 +313,7 @@ class PrebidServerAdapter implements DemandAdapter {
                                         CookieSyncManager.createInstance(PrebidMobile.getApplicationContext());
                                         CookieSyncManager csm = CookieSyncManager.getInstance();
                                         if (csm == null) {
-                                            LogUtil.i("Unable to find a CookieSyncManager");
+                                            LogUtil.info("Unable to find a CookieSyncManager");
                                             return;
                                         }
                                         csm.sync();
@@ -875,12 +875,12 @@ class PrebidServerAdapter implements DemandAdapter {
                                 device.put(PrebidServerSettings.REQUEST_GEO, geo);
                             }
                         } else {
-                            LogUtil.w("Location permissions ACCESS_COARSE_LOCATION and/or ACCESS_FINE_LOCATION aren\\'t set in the host app. This may affect demand.");
+                            LogUtil.warning("Location permissions ACCESS_COARSE_LOCATION and/or ACCESS_FINE_LOCATION aren\\'t set in the host app. This may affect demand.");
                         }
                     }
                 }
             } catch (JSONException e) {
-                LogUtil.d("PrebidServerAdapter getDeviceObject() " + e.getMessage());
+                LogUtil.debug("PrebidServerAdapter getDeviceObject() " + e.getMessage());
             }
             return device;
         }
@@ -918,7 +918,7 @@ class PrebidServerAdapter implements DemandAdapter {
                 app.put("ext", ext);
                 app.put("keywords", TextUtils.join(",", TargetingParams.getContextKeywordsSet()));
             } catch (JSONException e) {
-                LogUtil.d("PrebidServerAdapter getAppObject() " + e.getMessage());
+                LogUtil.debug("PrebidServerAdapter getAppObject() " + e.getMessage());
             }
             return app;
 
@@ -934,7 +934,7 @@ class PrebidServerAdapter implements DemandAdapter {
             try {
                 appJsonObject.put("content", jsonContentObject);
             } catch (Exception any) {
-                LogUtil.e("PrebidServerAdapter", "Can't create content json object!");
+                LogUtil.error("PrebidServerAdapter", "Can't create content json object!");
             }
         }
 
@@ -984,7 +984,7 @@ class PrebidServerAdapter implements DemandAdapter {
                 user.put("ext", ext);
 
             } catch (JSONException e) {
-                LogUtil.d("PrebidServerAdapter getUserObject() " + e.getMessage());
+                LogUtil.debug("PrebidServerAdapter getUserObject() " + e.getMessage());
             }
             return user;
         }
@@ -1019,7 +1019,7 @@ class PrebidServerAdapter implements DemandAdapter {
                     }
                 }
             } catch (JSONException e) {
-                LogUtil.d("PrebidServerAdapter getExternalUserIdArray() " + e.getMessage());
+                LogUtil.debug("PrebidServerAdapter getExternalUserIdArray() " + e.getMessage());
             }
 
             return transformedUserIdArray;
@@ -1045,7 +1045,7 @@ class PrebidServerAdapter implements DemandAdapter {
                 regs.put("ext", ext);
 
             } catch (JSONException e) {
-                LogUtil.d("PrebidServerAdapter getRegsObject() " + e.getMessage());
+                LogUtil.debug("PrebidServerAdapter getRegsObject() " + e.getMessage());
             }
             return regs;
         }

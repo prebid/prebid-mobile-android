@@ -19,7 +19,7 @@ package org.prebid.mobile.rendering.video;
 import android.content.Context;
 import android.util.LruCache;
 import androidx.annotation.NonNull;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;

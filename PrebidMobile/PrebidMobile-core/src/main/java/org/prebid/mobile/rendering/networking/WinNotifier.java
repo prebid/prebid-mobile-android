@@ -21,10 +21,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.networking.tracking.ServerConnection;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.Collections;
 import java.util.HashMap;

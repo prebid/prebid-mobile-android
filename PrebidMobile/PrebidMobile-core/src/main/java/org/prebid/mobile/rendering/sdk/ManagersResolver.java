@@ -18,10 +18,10 @@ package org.prebid.mobile.rendering.sdk;
 
 import android.content.Context;
 import android.util.Log;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.*;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.Hashtable;

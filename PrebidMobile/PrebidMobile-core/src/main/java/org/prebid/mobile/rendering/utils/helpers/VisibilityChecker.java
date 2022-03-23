@@ -21,10 +21,10 @@ import android.os.SystemClock;
 import android.view.View;
 import android.view.ViewParent;
 import androidx.annotation.Nullable;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposure;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposureChecker;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import static org.prebid.mobile.rendering.models.ntv.NativeEventTracker.EventType.IMPRESSION;
 import static org.prebid.mobile.rendering.models.ntv.NativeEventTracker.EventType.OMID;

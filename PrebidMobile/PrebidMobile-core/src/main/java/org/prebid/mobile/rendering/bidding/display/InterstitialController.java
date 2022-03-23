@@ -17,13 +17,13 @@
 package org.prebid.mobile.rendering.bidding.display;
 
 import android.content.Context;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.networking.WinNotifier;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class InterstitialController {
@@ -131,8 +131,8 @@ public class InterstitialController {
                 break;
             default:
                 LogUtil.error(TAG, "show: Failed. Did you specify correct AdUnitConfigurationType? "
-                                   + "Supported types: VAST, INTERSTITIAL. "
-                                   + "Provided type: " + mAdUnitIdentifierType);
+                        + "Supported types: VAST, INTERSTITIAL. "
+                        + "Provided type: " + mAdUnitIdentifierType);
         }
     }
 

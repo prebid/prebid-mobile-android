@@ -27,10 +27,10 @@ import android.webkit.URLUtil;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.listeners.OnBrowserActionResultListener;
 import org.prebid.mobile.rendering.listeners.OnBrowserActionResultListener.BrowserActionResult;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.utils.url.ActionNotResolvedException;
 import org.prebid.mobile.rendering.views.browser.AdBrowserActivity;
 

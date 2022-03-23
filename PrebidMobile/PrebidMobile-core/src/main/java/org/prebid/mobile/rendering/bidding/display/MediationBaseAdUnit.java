@@ -27,7 +27,6 @@ import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
@@ -183,7 +182,7 @@ public abstract class MediationBaseAdUnit {
     }
 
     protected void onErrorReceived(AdException exception) {
-        LogUtil.warn(TAG, "On error received");
+        LogUtil.warning(TAG, "On error received");
         if (mOnFetchCompleteListener == null) {
             cancelRefresh();
             return;

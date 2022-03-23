@@ -18,13 +18,13 @@ package org.prebid.mobile.rendering.bidding.parallel;
 
 import android.content.Context;
 import androidx.annotation.Nullable;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.RewardedEventHandler;
 import org.prebid.mobile.rendering.bidding.interfaces.StandaloneRewardedVideoEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.RewardedAdUnitListener;
 import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;

@@ -18,9 +18,9 @@ package org.prebid.mobile.rendering.networking.urlBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

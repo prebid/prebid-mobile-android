@@ -20,8 +20,8 @@ import android.os.AsyncTask;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

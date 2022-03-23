@@ -23,7 +23,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.views.browser.AdBrowserActivity;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBanner;

@@ -33,6 +33,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.MraidEvent;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
@@ -51,7 +52,6 @@ import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.HandlerQueueManager;
 import org.prebid.mobile.rendering.utils.helpers.MraidUtils;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 

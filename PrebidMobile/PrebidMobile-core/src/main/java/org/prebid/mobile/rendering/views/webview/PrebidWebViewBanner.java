@@ -22,12 +22,12 @@ import android.util.Log;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import org.json.JSONObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.mraid.handler.FetchPropertiesHandler;
 import org.prebid.mobile.rendering.sdk.JSLibraryManager;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
@@ -57,7 +57,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
     public void loadMraidExpandProperties() {
         Context context = getContext();
         if (!(context instanceof Activity)) {
-            LogUtil.warn(TAG, "Context is null or is not activity context");
+            LogUtil.warning(TAG, "Context is null or is not activity context");
             return;
         }
 
@@ -76,7 +76,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
                           .executeGetExpandProperties(new FetchPropertiesHandler(mExpandPropertiesCallback));
         }
         else {
-            LogUtil.warn(TAG, "Error getting expand properties");
+            LogUtil.warning(TAG, "Error getting expand properties");
         }
     }
 

@@ -24,12 +24,12 @@ import android.view.ViewTreeObserver;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
 import org.prebid.mobile.rendering.models.internal.VisibilityTrackerResult;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposure;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposureChecker;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
 import java.lang.ref.WeakReference;
@@ -131,7 +131,7 @@ public class CreativeVisibilityTracker {
         final ViewTreeObserver viewTreeObserver = rootView.getViewTreeObserver();
         if (!viewTreeObserver.isAlive()) {
             LogUtil.debug(TAG, "Visibility Tracker was unable to track views because the"
-                               + " root view tree observer was not alive");
+                    + " root view tree observer was not alive");
             return;
         }
 

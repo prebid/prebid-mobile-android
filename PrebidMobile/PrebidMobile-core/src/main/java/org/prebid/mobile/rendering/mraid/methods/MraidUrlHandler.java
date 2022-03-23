@@ -18,7 +18,7 @@ package org.prebid.mobile.rendering.mraid.methods;
 
 import android.content.Context;
 import androidx.annotation.VisibleForTesting;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.utils.url.UrlHandler;
 import org.prebid.mobile.rendering.utils.url.action.DeepLinkAction;
 import org.prebid.mobile.rendering.utils.url.action.DeepLinkPlusAction;

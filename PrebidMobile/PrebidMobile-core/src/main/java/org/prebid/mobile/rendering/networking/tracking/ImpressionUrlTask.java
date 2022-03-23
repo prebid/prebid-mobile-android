@@ -16,10 +16,10 @@
 
 package org.prebid.mobile.rendering.networking.tracking;
 
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.BaseResponseHandler;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

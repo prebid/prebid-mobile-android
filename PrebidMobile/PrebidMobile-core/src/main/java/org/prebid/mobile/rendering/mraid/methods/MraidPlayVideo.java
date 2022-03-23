@@ -17,8 +17,8 @@
 package org.prebid.mobile.rendering.mraid.methods;
 
 import android.text.TextUtils;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 public class MraidPlayVideo {
 

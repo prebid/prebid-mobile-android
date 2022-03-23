@@ -19,10 +19,10 @@ package org.prebid.mobile.rendering.networking;
 import android.os.AsyncTask;
 import androidx.annotation.Nullable;
 import org.apache.http.conn.ConnectTimeoutException;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.networking.exception.BaseExceptionHolder;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.io.*;
 import java.net.*;
@@ -137,7 +137,7 @@ public class BaseNetworkTask
         }
 
         if (Utils.isNotBlank(param.name)
-            && !DOWNLOAD_TASK.equals(param.name)
+                && !DOWNLOAD_TASK.equals(param.name)
             && !REDIRECT_TASK.equals(param.name)) {
             mResult = parseHttpURLResponse(responseCode);
         }
@@ -202,24 +202,24 @@ public class BaseNetworkTask
                 mResult = sendRequest(param);
             }
             catch (MalformedURLException e) {
-                LogUtil.warn(TAG, "Network Error: MalformedURLException" + e.getMessage());
+                LogUtil.warning(TAG, "Network Error: MalformedURLException" + e.getMessage());
                 // This error will be handled in onPostExecute()- so no need to handle here - Nice
                 mResult.setException(e);
             }
             catch (SocketTimeoutException e) {
-                LogUtil.warn(TAG, "Network Error: SocketTimeoutException" + e.getMessage());
+                LogUtil.warning(TAG, "Network Error: SocketTimeoutException" + e.getMessage());
                 mResult.setException(e);
             }
             catch (ConnectTimeoutException e) {
-                LogUtil.warn(TAG, "Network Error: ConnectTimeoutException" + e.getMessage());
+                LogUtil.warning(TAG, "Network Error: ConnectTimeoutException" + e.getMessage());
                 mResult.setException(e);
             }
             catch (IOException e) {
-                LogUtil.warn(TAG, "Network Error: IOException" + e.getMessage());
+                LogUtil.warning(TAG, "Network Error: IOException" + e.getMessage());
                 mResult.setException(e);
             }
             catch (Exception e) {
-                LogUtil.warn(TAG, "Network Error: Exception" + e.getMessage());
+                LogUtil.warning(TAG, "Network Error: Exception" + e.getMessage());
                 mResult.setException(e);
             }
             finally {
@@ -289,8 +289,8 @@ public class BaseNetworkTask
                 String location = connection.getHeaderField("Location");
 
                 LogUtil.debug(TAG, (location == null)
-                                 ? "not found location"
-                                 : "location = " + location);
+                        ? "not found location"
+                        : "location = " + location);
                 URL target = null;
                 if (location != null) {
                     target = new URL(base, location);

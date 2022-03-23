@@ -19,7 +19,7 @@ package org.prebid.mobile.rendering.utils.helpers;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.VisibleForTesting;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 
 public class RefreshTimerTask {
     private static final String TAG = RefreshTimerTask.class.getSimpleName();

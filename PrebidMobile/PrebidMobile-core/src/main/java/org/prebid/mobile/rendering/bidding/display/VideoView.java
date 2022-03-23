@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import androidx.core.content.ContextCompat;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdDetails;
@@ -31,7 +32,6 @@ import org.prebid.mobile.rendering.models.internal.VisibilityTrackerResult;
 import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.utils.constants.IntentActions;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.VideoCreativeView;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
@@ -239,7 +239,7 @@ public class VideoView extends BaseAdView {
 
     @Override
     protected void handleWindowFocusChange(boolean hasWindowFocus) {
-        Log.d(TAG, "handleWindowFocusChange() called with: hasWindowFocus = [" + hasWindowFocus + "]");
+        LogUtil.debug(TAG, "handleWindowFocusChange() called with: hasWindowFocus = [" + hasWindowFocus + "]");
         // visibility checker will handle resume
         if (mEnableAutoPlay) {
             return;

@@ -29,9 +29,9 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.vast.VASTErrorCodes;
 
 public class ExoPlayerView extends PlayerView implements VideoPlayerView {

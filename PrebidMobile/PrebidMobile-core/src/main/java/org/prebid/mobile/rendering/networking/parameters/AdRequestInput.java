@@ -16,8 +16,8 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

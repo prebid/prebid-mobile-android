@@ -16,10 +16,10 @@
 
 package org.prebid.mobile.rendering.video;
 
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.CreativeModel;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.vast.AdVerifications;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 

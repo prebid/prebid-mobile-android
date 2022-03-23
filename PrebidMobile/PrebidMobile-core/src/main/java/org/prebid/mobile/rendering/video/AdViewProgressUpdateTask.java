@@ -21,10 +21,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
 import org.prebid.mobile.rendering.models.AbstractCreative;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
 

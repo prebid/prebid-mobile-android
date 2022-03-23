@@ -21,7 +21,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;

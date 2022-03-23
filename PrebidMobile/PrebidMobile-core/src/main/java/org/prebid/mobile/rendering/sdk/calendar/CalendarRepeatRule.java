@@ -18,7 +18,7 @@ package org.prebid.mobile.rendering.sdk.calendar;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 
 import java.text.ParseException;
 

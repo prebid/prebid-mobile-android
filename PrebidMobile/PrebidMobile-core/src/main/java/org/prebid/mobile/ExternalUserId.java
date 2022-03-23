@@ -102,7 +102,7 @@ public class ExternalUserId {
             result.put("source", getSource());
             result.put("uids", new JSONArray().put(uidObject));
         } catch (JSONException e) {
-            LogUtil.w("ExternalUserId", "Can't create json object.");
+            LogUtil.warning("ExternalUserId", "Can't create json object.");
             return null;
         }
 

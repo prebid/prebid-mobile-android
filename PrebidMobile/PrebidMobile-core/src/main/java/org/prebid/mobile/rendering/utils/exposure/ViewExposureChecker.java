@@ -23,8 +23,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.core.R;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

@@ -20,8 +20,8 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -82,12 +82,12 @@ public class BidResponseCache {
         // Ignore request when max size is reached.
         if (sCachedBidResponses.size() >= MAX_SIZE) {
             LogUtil.error(TAG,
-                          "Unable to cache BidResponse. Please destroy some via #destroy() and try again.");
+                    "Unable to cache BidResponse. Please destroy some via #destroy() and try again.");
             return;
         }
         if (TextUtils.isEmpty(key)) {
             LogUtil.error(TAG,
-                          "Unable to cache BidResponse. Key is empty or null.");
+                    "Unable to cache BidResponse. Key is empty or null.");
             return;
         }
 
@@ -108,7 +108,7 @@ public class BidResponseCache {
 
             bidResponse = sCachedBidResponses.remove(responseId);
         } else {
-            LogUtil.warn(TAG, "No cached ad to retrieve in the final map");
+            LogUtil.warning(TAG, "No cached ad to retrieve in the final map");
         }
         LogUtil.debug(TAG, "Cached ad count after popping: " + getCachedResponsesCount());
         return bidResponse;

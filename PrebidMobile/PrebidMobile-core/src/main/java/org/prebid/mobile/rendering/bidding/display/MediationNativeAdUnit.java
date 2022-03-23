@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import org.prebid.mobile.*;
 import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.ArrayList;
 

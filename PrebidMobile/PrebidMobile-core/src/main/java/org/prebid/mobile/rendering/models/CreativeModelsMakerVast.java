@@ -17,13 +17,13 @@
 package org.prebid.mobile.rendering.models;
 
 import androidx.annotation.NonNull;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.loading.AdLoadListener;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.parser.AdResponseParserBase;
 import org.prebid.mobile.rendering.parser.AdResponseParserVast;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.OmEventTracker;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;

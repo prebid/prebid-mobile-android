@@ -18,7 +18,7 @@ package org.prebid.mobile.rendering.views.browser;
 
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.utils.url.UrlHandler;
 import org.prebid.mobile.rendering.utils.url.action.DeepLinkAction;
 import org.prebid.mobile.rendering.utils.url.action.DeepLinkPlusAction;

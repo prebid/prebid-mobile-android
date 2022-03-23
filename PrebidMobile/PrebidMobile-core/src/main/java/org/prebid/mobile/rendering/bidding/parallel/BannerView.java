@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -48,7 +49,6 @@ import org.prebid.mobile.rendering.models.internal.VisibilityTrackerOption;
 import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 

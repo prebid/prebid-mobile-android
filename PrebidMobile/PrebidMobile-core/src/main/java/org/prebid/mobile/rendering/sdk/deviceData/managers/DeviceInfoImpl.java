@@ -32,12 +32,12 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.view.WindowManager;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.sdk.BaseManager;
 import org.prebid.mobile.rendering.sdk.calendar.CalendarEventWrapper;
 import org.prebid.mobile.rendering.sdk.calendar.CalendarFactory;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.browser.AdBrowserActivity;
 
 import java.io.*;

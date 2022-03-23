@@ -27,10 +27,10 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.admanager.AppEventListener;
 import org.prebid.mobile.AdSize;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.eventhandlers.global.Constants;
 import org.prebid.mobile.eventhandlers.utils.GamUtils;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.HashMap;
 import java.util.Map;

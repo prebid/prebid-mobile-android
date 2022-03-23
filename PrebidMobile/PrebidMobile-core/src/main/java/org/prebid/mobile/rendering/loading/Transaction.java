@@ -17,12 +17,12 @@
 package org.prebid.mobile.rendering.loading;
 
 import android.content.Context;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.CreativeModel;
 import org.prebid.mobile.rendering.models.CreativeModelsMaker;
 import org.prebid.mobile.rendering.sdk.JSLibraryManager;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 
 import java.lang.ref.WeakReference;
@@ -207,7 +207,7 @@ public class Transaction {
         public void onSuccess() {
             Transaction transaction = mWeakTransaction.get();
             if (transaction == null) {
-                LogUtil.warn(TAG, "CreativeMaker is null");
+                LogUtil.warning(TAG, "CreativeMaker is null");
                 return;
             }
 
@@ -224,7 +224,7 @@ public class Transaction {
         public void onFailure(AdException e) {
             Transaction transaction = mWeakTransaction.get();
             if (transaction == null) {
-                LogUtil.warn(TAG, "CreativeMaker is null");
+                LogUtil.warning(TAG, "CreativeMaker is null");
                 return;
             }
 

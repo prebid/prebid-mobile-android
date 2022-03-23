@@ -43,7 +43,7 @@ public class DataObject {
                 result.put("segment", segmentsJson);
             }
         } catch (JSONException exception) {
-            LogUtil.e("DataObject", "Can't create json data content object.");
+            LogUtil.error("DataObject", "Can't create json data content object.");
         }
 
         return result;
@@ -129,7 +129,7 @@ public class DataObject {
                 result.putOpt("name", name);
                 result.putOpt("value", value);
             } catch (JSONException exception) {
-                LogUtil.e("SegmentObject", "Can't create json segment object.");
+                LogUtil.error("SegmentObject", "Can't create json segment object.");
             }
 
             return result;

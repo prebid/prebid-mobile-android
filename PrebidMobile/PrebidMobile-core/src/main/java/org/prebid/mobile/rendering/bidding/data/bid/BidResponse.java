@@ -23,10 +23,10 @@ import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.utils.helpers.Dips;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;

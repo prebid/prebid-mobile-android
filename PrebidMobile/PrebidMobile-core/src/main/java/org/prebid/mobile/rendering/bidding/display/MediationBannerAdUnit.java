@@ -19,11 +19,11 @@ package org.prebid.mobile.rendering.bidding.display;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import org.prebid.mobile.AdSize;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.enums.BannerAdPosition;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class MediationBannerAdUnit extends MediationBaseAdUnit {

@@ -17,8 +17,8 @@
 package org.prebid.mobile.rendering.views.webview;
 
 import android.content.Context;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 
 public class PrebidWebViewInterstitial extends PrebidWebViewBase

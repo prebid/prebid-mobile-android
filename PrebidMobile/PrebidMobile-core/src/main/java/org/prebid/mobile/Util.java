@@ -142,7 +142,7 @@ public class Util {
             }
 
         } catch (JSONException e) {
-            LogUtil.e("message:" + e.getMessage());
+            LogUtil.error("message:" + e.getMessage());
         }
 
         return result;

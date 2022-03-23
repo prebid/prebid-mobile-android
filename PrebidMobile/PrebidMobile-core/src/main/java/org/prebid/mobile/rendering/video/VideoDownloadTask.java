@@ -20,9 +20,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.loading.FileDownloadListener;
 import org.prebid.mobile.rendering.loading.FileDownloadTask;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.io.*;

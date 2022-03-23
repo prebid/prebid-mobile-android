@@ -33,10 +33,10 @@ import androidx.core.content.ContextCompat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.parser.AdResponseParserVast;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.vast.VAST;
 
 import java.io.InputStream;
@@ -550,7 +550,7 @@ public final class Utils {
 
         if (userRefreshValue < AUTO_REFRESH_DELAY_MIN || userRefreshValue > AUTO_REFRESH_DELAY_MAX) {
             LogUtil.error(TAG, "Refresh interval is out of range. Value which will be used for refresh: " + clampedRefreshInterval + ". "
-                              + "Make sure that the refresh interval is in the following range: [" + AUTO_REFRESH_DELAY_MIN + ", " + AUTO_REFRESH_DELAY_MAX + "]");
+                    + "Make sure that the refresh interval is in the following range: [" + AUTO_REFRESH_DELAY_MIN + ", " + AUTO_REFRESH_DELAY_MAX + "]");
         }
 
         return clampedRefreshInterval;

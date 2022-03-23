@@ -17,8 +17,8 @@
 package org.prebid.mobile.rendering.utils.helpers;
 
 import org.json.JSONObject;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.internal.MacrosModel;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.Map;
 

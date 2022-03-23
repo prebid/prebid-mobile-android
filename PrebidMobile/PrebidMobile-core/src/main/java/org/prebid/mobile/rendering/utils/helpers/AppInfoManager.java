@@ -27,7 +27,7 @@ import android.util.Log;
 import android.webkit.WebView;
 import androidx.annotation.VisibleForTesting;
 import com.google.android.gms.security.ProviderInstaller;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 
 public class AppInfoManager {
     private static final String TAG = AppInfoManager.class.getSimpleName();

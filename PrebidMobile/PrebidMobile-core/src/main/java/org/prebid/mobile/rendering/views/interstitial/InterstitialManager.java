@@ -22,13 +22,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.display.InterstitialView;
 import org.prebid.mobile.rendering.bidding.display.VideoView;
 import org.prebid.mobile.rendering.interstitial.*;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.mraid.methods.InterstitialManagerMraidDelegate;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.rendering.views.webview.WebViewBanner;
@@ -109,7 +109,7 @@ public class InterstitialManager implements InterstitialManagerInterface {
     public void displayVideoAdViewInInterstitial(Context context, View adView) {
         if (!(context instanceof Activity && adView instanceof VideoView)) {
             LogUtil.error(TAG, "displayAdViewInInterstitial(): Can not display interstitial. "
-                               + "Context is not activity or adView is not an instance of VideoAdView");
+                    + "Context is not activity or adView is not an instance of VideoAdView");
             return;
         }
         show();

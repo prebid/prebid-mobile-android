@@ -22,7 +22,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 
 import java.util.LinkedList;

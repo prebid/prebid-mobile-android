@@ -21,6 +21,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.listeners.CreativeResolutionListener;
 import org.prebid.mobile.rendering.models.AbstractCreative;
@@ -29,7 +30,6 @@ import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.TrackingEvent;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.RewardedVideoCreative;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreative;
@@ -223,12 +223,12 @@ public class CreativeFactory {
         public void creativeReady(AbstractCreative creative) {
             CreativeFactory creativeFactory = mWeakCreativeFactory.get();
             if (creativeFactory == null) {
-                LogUtil.warn(TAG, "CreativeFactory is null");
+                LogUtil.warning(TAG, "CreativeFactory is null");
                 return;
             }
             if (creativeFactory.mTimeoutState == TimeoutState.EXPIRED) {
                 creativeFactory.mListener.onFailure(new AdException(AdException.INTERNAL_ERROR, "Creative Timeout"));
-                LogUtil.warn(TAG, "Creative timed out, backing out");
+                LogUtil.warning(TAG, "Creative timed out, backing out");
                 return;
             }
             creativeFactory.mTimeoutState = TimeoutState.FINISHED;
@@ -240,7 +240,7 @@ public class CreativeFactory {
         public void creativeFailed(AdException error) {
             CreativeFactory creativeFactory = mWeakCreativeFactory.get();
             if (creativeFactory == null) {
-                LogUtil.warn(TAG, "CreativeFactory is null");
+                LogUtil.warning(TAG, "CreativeFactory is null");
                 return;
             }
 

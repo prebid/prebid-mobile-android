@@ -24,8 +24,8 @@ import androidx.annotation.VisibleForTesting;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.listeners.AdIdFetchListener;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
 

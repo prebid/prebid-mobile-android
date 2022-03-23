@@ -25,10 +25,10 @@ import android.util.Log;
 import android.webkit.WebView;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposure;
 import org.prebid.mobile.rendering.utils.helpers.HandlerQueueManager;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 
 import java.lang.ref.WeakReference;

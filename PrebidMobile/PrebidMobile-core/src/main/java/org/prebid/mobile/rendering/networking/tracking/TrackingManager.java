@@ -17,7 +17,7 @@
 package org.prebid.mobile.rendering.networking.tracking;
 
 import androidx.annotation.Nullable;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;

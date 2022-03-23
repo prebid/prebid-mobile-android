@@ -21,7 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.view.WindowManager;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
+import org.prebid.mobile.LogUtil;
 
 public class OrientationBroadcastReceiver extends BroadcastReceiver {
 

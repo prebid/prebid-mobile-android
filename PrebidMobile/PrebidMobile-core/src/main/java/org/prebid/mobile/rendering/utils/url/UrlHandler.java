@@ -23,9 +23,9 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.mraid.methods.network.UrlResolutionTask;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.utils.url.action.*;
 
 import java.util.HashSet;
@@ -211,7 +211,7 @@ public class UrlHandler {
                                @Nullable List<String> trackingUrlList,
                                UrlAction urlAction) {
         if (mAlreadySucceeded || mTaskPending) {
-            LogUtil.warn(TAG, "notifySuccess(): Action is finished or action is still pending.");
+            LogUtil.warning(TAG, "notifySuccess(): Action is finished or action is still pending.");
             return;
         }
 

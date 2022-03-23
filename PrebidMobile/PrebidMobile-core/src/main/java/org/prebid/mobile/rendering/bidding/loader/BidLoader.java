@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.bidding.loader;
 
 import android.content.Context;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
@@ -26,7 +27,6 @@ import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
 import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
 import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
@@ -113,22 +113,22 @@ public class BidLoader {
 
     public void load() {
         if (mRequestListener == null) {
-            LogUtil.warn(TAG, "Listener is null");
+            LogUtil.warning(TAG, "Listener is null");
             return;
         }
         if (mAdConfiguration == null) {
-            LogUtil.warn(TAG, "No ad request configuration to load");
+            LogUtil.warning(TAG, "No ad request configuration to load");
             return;
         }
         if (mContextReference.get() == null) {
-            LogUtil.warn(TAG, "Context is null");
+            LogUtil.warning(TAG, "Context is null");
             return;
         }
 
         // If mCurrentlyLoading == false, set it to true and return true; else return false
         // If compareAndSet returns false, it means mCurrentlyLoading was already true and therefore we should skip loading
         if (!mCurrentlyLoading.compareAndSet(false, true)) {
-            LogUtil.warn(TAG, "Previous load is in progress. Load() ignored.");
+            LogUtil.warning(TAG, "Previous load is in progress. Load() ignored.");
             return;
         }
 
@@ -152,7 +152,7 @@ public class BidLoader {
 
         if (refreshTimeMillis == Integer.MAX_VALUE || refreshTimeMillis <= 0) {
             LogUtil.debug(TAG, "setupRefreshTimer(): refreshTimeMillis is: "
-                               + refreshTimeMillis + ". Skipping refresh timer initialization");
+                    + refreshTimeMillis + ". Skipping refresh timer initialization");
             return;
         }
 
@@ -190,7 +190,7 @@ public class BidLoader {
         mCurrentlyLoading.set(false);
 
         if (mRequestListener == null) {
-            LogUtil.warn(TAG, "onFailedToLoad: Listener is null.");
+            LogUtil.warning(TAG, "onFailedToLoad: Listener is null.");
             cancelRefresh();
             return;
         }

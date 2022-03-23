@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.errors.VastParseError;
 import org.prebid.mobile.rendering.models.internal.VastExtractorResult;
@@ -28,7 +29,6 @@ import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.modelcontrollers.AsyncVastLoader;
 import org.prebid.mobile.rendering.parser.AdResponseParserBase;
 import org.prebid.mobile.rendering.parser.AdResponseParserVast;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.vast.VASTErrorCodes;
 
 public class VastParserExtractor {

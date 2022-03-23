@@ -17,9 +17,9 @@
 package org.prebid.mobile.rendering.models;
 
 import androidx.annotation.Nullable;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 import org.prebid.mobile.rendering.video.OmEventTracker;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
