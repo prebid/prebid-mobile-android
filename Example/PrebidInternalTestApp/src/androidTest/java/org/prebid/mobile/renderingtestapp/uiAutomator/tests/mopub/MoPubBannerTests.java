@@ -37,8 +37,7 @@ public class MoPubBannerTests extends BaseUiAutomatorTest {
 
     @Test
     public void testMoPubBanner320x50NoBids() {
-        homePage.setUseMockServer(false)
-                .getBannerPageFactory()
+        homePage.getBannerPageFactory()
                 .goToBiddingMoPubBannerExample(getStringResource(R.string.demo_bidding_mopub_banner_320_50_no_bids))
                 .bannerShouldLoad()
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.adDidLoad)
@@ -95,8 +94,7 @@ public class MoPubBannerTests extends BaseUiAutomatorTest {
 
     @Test
     public void testPrebidMoPubBanner320x50Adapter() {
-        homePage.setUseMockServer(false)
-                .getBannerPageFactory()
+        homePage.getBannerPageFactory()
                 .goToBiddingMoPubBannerExample(getStringResource(R.string.demo_bidding_mopub_banner_320_50_adapter))
                 .bannerShouldLoad()
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.adDidLoad)

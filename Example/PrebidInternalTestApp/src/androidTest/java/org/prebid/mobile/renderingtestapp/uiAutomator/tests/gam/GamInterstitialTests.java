@@ -29,7 +29,6 @@ public class GamInterstitialTests extends BaseUiAutomatorTest {
 
     @Test
     public void testGamInterstitial320x480NoBids() {
-        homePage.setUseMockServer(false);
         verifyGamHtmlInterstitialExample(R.string.demo_bidding_gam_interstitial_320_480_no_bids);
     }
 
@@ -47,8 +46,7 @@ public class GamInterstitialTests extends BaseUiAutomatorTest {
     @Test
     public void testPrebidGamInterstitial320x480AppEvent() {
         String exampleName = getStringResource(R.string.demo_bidding_gam_interstitial_320_480_app_event);
-        homePage.setUseMockServer(false)
-                .getInterstitialPageFactory()
+        homePage.getInterstitialPageFactory()
                 .goToGamInterstitialExample(exampleName)
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdLoaded)
                 .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.onAdFailed);

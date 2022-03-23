@@ -31,8 +31,7 @@ public class PpmInterstitialTests extends BaseUiAutomatorTest {
     @Test
     public void testPpmInterstitial320x480NoBids() {
         final String exampleName = getStringResource(R.string.demo_bidding_in_app_interstitial_320_480_no_bids);
-        homePage.setUseMockServer(false)
-                .getInterstitialPageFactory()
+        homePage.getInterstitialPageFactory()
                 .goToPpmInterstitialExample(exampleName)
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdFailed)
                 .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.onAdDisplayed)
@@ -53,8 +52,7 @@ public class PpmInterstitialTests extends BaseUiAutomatorTest {
     @Test
     public void testPrebidPpmInterstitial320x480() {
         final String exampleName = getStringResource(R.string.demo_bidding_in_app_interstitial_320_480);
-        homePage.setUseMockServer(false)
-                .getInterstitialPageFactory()
+        homePage.getInterstitialPageFactory()
                 .goToPpmInterstitialExample(exampleName)
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdLoaded)
                 .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.onAdFailed);

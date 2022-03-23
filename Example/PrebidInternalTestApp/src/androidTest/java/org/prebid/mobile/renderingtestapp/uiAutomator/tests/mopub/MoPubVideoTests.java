@@ -23,8 +23,7 @@ import org.prebid.mobile.renderingtestapp.uiAutomator.utils.BaseUiAutomatorTest;
 public class MoPubVideoTests extends BaseUiAutomatorTest {
     @Test
     public void testMoPubVideoInterstitialNoBids() {
-        homePage.setUseMockServer(false)
-                .getInterstitialPageFactory()
+        homePage.getInterstitialPageFactory()
                 .goToBiddingMoPubInterstitialExample(getStringResource(R.string.demo_bidding_mopub_video_interstitial_320_480_no_bids))
                 .showPrebidInterstitial()
                 .checkFullScreenHint()
@@ -55,8 +54,7 @@ public class MoPubVideoTests extends BaseUiAutomatorTest {
 
     @Test
     public void testMoPubRewardedVideoEndCardNoBids() {
-        homePage.setUseMockServer(false)
-                .getInterstitialPageFactory()
+        homePage.getInterstitialPageFactory()
                 .goToBiddingMoPubInterstitialExample(getStringResource(R.string.demo_bidding_mopub_rewarded_video_end_card_320_480_no_bids))
                 .showPrebidInterstitial()
                 .checkFullScreenHint()
@@ -100,8 +98,7 @@ public class MoPubVideoTests extends BaseUiAutomatorTest {
 
     @Test
     public void testPrebidMoPubRewardedVideoEndCardAdapter() {
-        homePage.setUseMockServer(false)
-                .getInterstitialPageFactory()
+        homePage.getInterstitialPageFactory()
                 .goToBiddingMoPubInterstitialExample(getStringResource(R.string.demo_bidding_mopub_rewarded_video_end_card_320_480_adapter))
                 .showPrebidInterstitial()
                 .waitTillVideoEnds()

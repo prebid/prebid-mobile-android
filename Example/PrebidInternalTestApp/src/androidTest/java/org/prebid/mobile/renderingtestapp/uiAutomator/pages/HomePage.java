@@ -36,13 +36,11 @@ public class HomePage extends BasePage {
 
         static BySelector dismissDialog = By.res(TAG, "dismiss_button");
         static BySelector allowButton = By.res("com.android.packageinstaller", "permission_allow_button");
-        static BySelector mockServerSwitch = By.res(TAG, "switchUseMock");
         static BySelector gdprSwitch = By.res(TAG, "switchEnableGdpr");
     }
 
     public HomePage(UiDevice device) {
         super(device);
-        setUseMockServer(BuildConfig.FLAVOR == "mock");
         setUseGdpr(false);
     }
 
@@ -87,11 +85,6 @@ public class HomePage extends BasePage {
 
     public NativePageFactory getNativePageFactory() {
         return new NativePageFactory(device);
-    }
-
-    public HomePage setUseMockServer(boolean state) {
-        changeSwitchState(state, Locators.mockServerSwitch);
-        return this;
     }
 
     public HomePage setUseGdpr(boolean state) {

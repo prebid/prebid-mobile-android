@@ -51,8 +51,7 @@ public class PpmNativeTests extends BaseUiAutomatorTest {
 
     @Test
     public void testPrebidPpmNativeStylesMap() {
-        homePage.setUseMockServer(false)
-                .getNativePageFactory()
+        homePage.getNativePageFactory()
                 .goToPpmNativeStyles(getStringResource(R.string.demo_bidding_in_app_native_styles_map))
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdFailed);
     }
