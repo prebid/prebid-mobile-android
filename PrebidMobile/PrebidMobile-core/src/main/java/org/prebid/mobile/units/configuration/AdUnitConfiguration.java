@@ -30,7 +30,6 @@ public class AdUnitConfiguration {
     private String pbAdSlot;
     private String interstitialSize;
 
-    private AdType adType;
     private AdUnitIdentifierType adUnitIdentifierType;
     private AdSize minSizePercentage;
     private PlacementType placementType;
@@ -45,14 +44,6 @@ public class AdUnitConfiguration {
     private final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
     private final Set<String> contextKeywordsSet = new HashSet<>();
 
-
-    public void setAdType(AdType adType) {
-        this.adType = adType;
-    }
-
-    public AdType getAdType() {
-        return adType;
-    }
 
     public void setConfigId(String configId) {
         this.configId = configId;
