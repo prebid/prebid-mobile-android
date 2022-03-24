@@ -80,7 +80,7 @@ public class MediationBannerAdUnitTest {
 
     @Test
     public void whenSetRefreshInterval_ChangeRefreshIntervalInAdConfig() {
-        assertEquals(0, mMediationBannerAdUnit.mAdUnitConfig.getAutoRefreshDelay());
+        assertEquals(30_000, mMediationBannerAdUnit.mAdUnitConfig.getAutoRefreshDelay());
         mMediationBannerAdUnit.setRefreshInterval(15);
         assertEquals(30_000, mMediationBannerAdUnit.mAdUnitConfig.getAutoRefreshDelay());
     }
