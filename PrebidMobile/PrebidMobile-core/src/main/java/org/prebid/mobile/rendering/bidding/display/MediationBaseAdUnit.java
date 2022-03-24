@@ -59,6 +59,7 @@ public abstract class MediationBaseAdUnit {
     protected MediationBaseAdUnit(Context context, String configId, AdSize adSize, PrebidMediationDelegate mediationDelegate) {
         mContextWeakReference = new WeakReference<>(context);
         mMediationDelegate = mediationDelegate;
+        mAdUnitConfig.setAutoRefreshDelay(PrebidMobile.AUTO_REFRESH_DELAY_MIN / 1000);
         initSdk(context);
         initAdConfig(configId, adSize);
         initBidLoader();

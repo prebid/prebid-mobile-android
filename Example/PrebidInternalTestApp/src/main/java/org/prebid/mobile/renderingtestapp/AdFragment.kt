@@ -50,7 +50,7 @@ abstract class AdFragment : BaseFragment() {
     protected var adUnitId: String = ""
     protected var width = 0
     protected var height = 0
-    protected var refreshDelay = PrebidMobile.AUTO_REFRESH_DELAY_DEFAULT / 1000
+    protected var refreshDelay = PrebidMobile.AUTO_REFRESH_DELAY_MIN / 1000
 
     private var adView: Any? = null
 

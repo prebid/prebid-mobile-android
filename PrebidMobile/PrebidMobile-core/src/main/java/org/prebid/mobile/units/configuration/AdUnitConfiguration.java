@@ -11,7 +11,6 @@ import org.prebid.mobile.rendering.video.ExoPlayerView;
 
 import java.util.*;
 
-import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_DEFAULT;
 
 public class AdUnitConfiguration {
 
@@ -22,7 +21,7 @@ public class AdUnitConfiguration {
     private boolean isBuiltInVideo = false;
 
     private int videoSkipOffset = SKIP_OFFSET_NOT_ASSIGNED;
-    private int autoRefreshDelayInMillis = AUTO_REFRESH_DELAY_DEFAULT;
+    private int autoRefreshDelayInMillis = 0;
     private final int broadcastId = Utils.generateRandomInt();
     private float videoInitialVolume = ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME;
 

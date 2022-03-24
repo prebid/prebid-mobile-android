@@ -98,7 +98,7 @@ class AdConfiguratorDialogFragment : DialogFragment() {
         heightField?.setText(argHeight.toString())
         if (mode == AdConfiguratorMode.BANNER) {
             refreshDelayField = dialogView.findViewById(R.id.etRefreshDelay)
-            refreshDelayField?.setText((PrebidMobile.AUTO_REFRESH_DELAY_DEFAULT / 1000).toString())
+            refreshDelayField?.setText((PrebidMobile.AUTO_REFRESH_DELAY_MIN / 1000).toString())
         }
 
         dialogView.findViewById<Button>(R.id.btnLoad).setOnClickListener {
