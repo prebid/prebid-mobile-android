@@ -83,7 +83,6 @@ open class MopubNativeFragment : AdFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        SourcePicker.enableQaEndpoint(true)
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -147,7 +146,6 @@ open class MopubNativeFragment : AdFragment() {
         mopubNative?.destroy()
 //        mopubNativeAdUnit?.destroy()
         nativeAd?.destroy()
-        SourcePicker.enableQaEndpoint(false)
     }
 
     private fun convertMapToMoPubKeywords(keywordMap: Map<String, String>): String? {

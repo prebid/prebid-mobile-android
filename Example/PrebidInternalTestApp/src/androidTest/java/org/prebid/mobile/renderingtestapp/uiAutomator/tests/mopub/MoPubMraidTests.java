@@ -51,8 +51,7 @@ public class MoPubMraidTests extends BaseUiAutomatorTest {
 
     @Test
     public void testPrebidMraidResize() {
-        homePage.setUseMockServer(false)
-                .getMraidPageFactory()
+        homePage.getMraidPageFactory()
                 .goToMraidResize(getStringResource(R.string.demo_bidding_mopub_mraid_resize))
                 .bannerShouldLoad()
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.adDidLoad)

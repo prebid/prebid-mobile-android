@@ -61,7 +61,6 @@ class GamNativeFragment(
 
     override fun onDestroyView() {
         super.onDestroyView()
-        SourcePicker.enableQaEndpoint(false)
     }
 
     override fun loadAd() {

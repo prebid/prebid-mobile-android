@@ -404,4 +404,9 @@
     <string name="response_prebid_mraid_ox_test_properties">response-prebid-mraid-test-properties-3</string>
     <string name="response_prebid_mraid_ox_test_methods">response-prebid-mraid-test-methods-3</string>
     <string name="response_prebid_mraid_ox_resize_expandable">response-prebid-mraid-resize-expandable</string>
+
+    <!--  Native  -->
+    <string name="response_prebid_native_styles">response-prebid-banner-native-styles</string>
+    <string name="response_prebid_native_links">response-prebid-native-links</string>
+    <string name="response_prebid_native_video">response-prebid-native-video-with-end-card</string>
 </resources>

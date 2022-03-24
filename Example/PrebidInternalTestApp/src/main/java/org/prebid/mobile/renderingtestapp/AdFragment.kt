@@ -61,6 +61,7 @@ abstract class AdFragment : BaseFragment() {
             width = it.getInt(getString(R.string.key_width))
             val storedAuctionResponse = it.getString(getString(R.string.stored_auction_response), "")
             PrebidRenderingSettings.setStoredAuctionResponse(storedAuctionResponse)
+            PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
             height = it.getInt(getString(R.string.key_height))
             val title = it.getString(getString(R.string.key_title), getString(R.string.segment_title_in_app))
             setTitle(title)

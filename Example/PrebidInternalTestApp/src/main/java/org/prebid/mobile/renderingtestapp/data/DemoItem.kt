@@ -22,7 +22,6 @@ data class DemoItem(val label: String, val action: Int = -1, val tag: List<Tag> 
 
 enum class Tag(val tagName: String) {
     REMOTE("Remote"),
-    MOCK("Mock"),
 
     BANNER("Banner"),
     MRAID("MRAID"),

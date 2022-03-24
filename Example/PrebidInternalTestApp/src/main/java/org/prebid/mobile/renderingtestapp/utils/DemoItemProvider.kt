@@ -65,7 +65,6 @@ class DemoItemProvider private constructor() {
             Companion.context = context
 
             formPbsDemoList()
-            formProdDemoList()
 
             Companion.context = null
         }
@@ -83,19 +82,13 @@ class DemoItemProvider private constructor() {
             addAdMobPbsExamples()
         }
 
-        private fun formProdDemoList() {
-            addGamProdExamples()
-            addMoPubProdExamples()
-            addAdMobProdExamples()
-        }
-
         private fun addInAppPbsExamples() {
             val ppmBannerTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.BANNER, Tag.REMOTE)
             val ppmInterstitialTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.INTERSTITIAL, Tag.REMOTE)
             val ppmMraidTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.MRAID, Tag.REMOTE)
             val ppmVideoTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.VIDEO, Tag.REMOTE)
 
-            val ppmNativeTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.NATIVE, Tag.MOCK)
+            val ppmNativeTagList = listOf(Tag.ALL, Tag.IN_APP, Tag.NATIVE, Tag.REMOTE)
 
             // In-App Banner
             demoList.add(
@@ -527,7 +520,7 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_native),
                     R.id.action_header_bidding_to_in_app_native,
                     ppmNativeTagList,
-                    createBannerBundle(R.string.imp_prebid_id_native_styles)
+                    createBannerBundle(R.string.imp_prebid_id_native_styles,storedResponse = R.string.response_prebid_native_styles)
                 )
             )
             demoList.add(
@@ -535,7 +528,7 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_native_feed),
                     R.id.action_header_bidding_to_in_app_native_feed,
                     ppmNativeTagList,
-                    createBannerBundle(R.string.imp_prebid_id_native_styles)
+                    createBannerBundle(R.string.imp_prebid_id_native_styles,storedResponse = R.string.response_prebid_native_styles)
                 )
             )
             demoList.add(
@@ -543,7 +536,7 @@ class DemoItemProvider private constructor() {
                     getString(R.string.demo_bidding_in_app_native_links),
                     R.id.action_header_bidding_to_in_app_native_links,
                     ppmNativeTagList,
-                    createBannerBundle(R.string.imp_prebid_id_native_links)
+                    createBannerBundle(R.string.imp_prebid_id_native_links,storedResponse = R.string.response_prebid_native_links)
                 )
             )
         }
@@ -553,7 +546,7 @@ class DemoItemProvider private constructor() {
             val gamInterstitialTagList = listOf(Tag.ALL, Tag.GAM, Tag.INTERSTITIAL, Tag.REMOTE)
             val gamMraidTagList = listOf(Tag.ALL, Tag.GAM, Tag.MRAID, Tag.REMOTE)
             val gamVideoTagList = listOf(Tag.ALL, Tag.GAM, Tag.VIDEO, Tag.REMOTE)
-            val gamNativeTagList = listOf(Tag.ALL, Tag.GAM, Tag.NATIVE, Tag.MOCK)
+            val gamNativeTagList = listOf(Tag.ALL, Tag.GAM, Tag.NATIVE, Tag.REMOTE)
 
             /// GAM Banner
             demoList.add(
@@ -883,7 +876,7 @@ class DemoItemProvider private constructor() {
             // Native
             var gamNativeBundle = createBannerBundle(
                 R.string.imp_prebid_id_native_styles,
-                R.string.adunit_gam_native_custom_template
+                R.string.adunit_gam_native_custom_template,storedResponse = R.string.response_prebid_native_styles
             )
             gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11934135")
             demoList.add(
@@ -897,7 +890,7 @@ class DemoItemProvider private constructor() {
 
             gamNativeBundle = createBannerBundle(
                 R.string.imp_prebid_id_native_styles,
-                R.string.adunit_gam_native_custom_template
+                R.string.adunit_gam_native_custom_template,storedResponse = R.string.response_prebid_native_styles
             )
             gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11982639")
             demoList.add(
@@ -911,7 +904,7 @@ class DemoItemProvider private constructor() {
 
             gamNativeBundle = createBannerBundle(
                 R.string.imp_prebid_id_no_bids,
-                R.string.adunit_gam_native_custom_template
+                R.string.adunit_gam_native_custom_template,storedResponse = R.string.response_prebid_no_bids
             )
             gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11982639")
             demoList.add(
@@ -930,7 +923,7 @@ class DemoItemProvider private constructor() {
                     gamNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_native_styles,
-                        R.string.adunit_gam_native_unified
+                        R.string.adunit_gam_native_unified,storedResponse = R.string.response_prebid_native_styles
                     )
                 )
             )
@@ -941,7 +934,7 @@ class DemoItemProvider private constructor() {
                     gamNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_native_styles,
-                        R.string.adunit_gam_native_unified_static
+                        R.string.adunit_gam_native_unified_static,storedResponse = R.string.response_prebid_native_styles
                     )
                 )
             )
@@ -952,14 +945,14 @@ class DemoItemProvider private constructor() {
                     gamNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_no_bids,
-                        R.string.adunit_gam_native_unified_static
+                        R.string.adunit_gam_native_unified_static,storedResponse = R.string.response_prebid_no_bids
                     )
                 )
             )
 
             gamNativeBundle = createBannerBundle(
                 R.string.imp_prebid_id_native_styles,
-                R.string.adunit_gam_native_custom_template
+                R.string.adunit_gam_native_custom_template,storedResponse = R.string.response_prebid_native_styles
             )
             gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11934135")
             demoList.add(
@@ -976,7 +969,7 @@ class DemoItemProvider private constructor() {
             val mopubInterstitialTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.INTERSTITIAL, Tag.REMOTE)
             val mopubMraidTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.MRAID, Tag.REMOTE)
             val mopubVideoTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.VIDEO, Tag.REMOTE)
-            val mopubNativeTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.NATIVE, Tag.MOCK)
+            val mopubNativeTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.NATIVE, Tag.REMOTE)
 
             /// Mopub Banner
             demoList.add(
@@ -1220,7 +1213,7 @@ class DemoItemProvider private constructor() {
                     mopubNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_native_styles,
-                        R.string.mopub_native_adapter
+                        R.string.mopub_native_adapter,storedResponse = R.string.response_prebid_native_styles
                     )
                 )
             )
@@ -1231,7 +1224,7 @@ class DemoItemProvider private constructor() {
                     mopubNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_no_bids,
-                        R.string.mopub_native_no_bids
+                        R.string.mopub_native_no_bids,storedResponse = R.string.response_prebid_no_bids
                     )
                 )
             )
@@ -1241,7 +1234,7 @@ class DemoItemProvider private constructor() {
             val adMobBannerTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.BANNER, Tag.REMOTE)
             val adMobInterstitialTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.INTERSTITIAL, Tag.REMOTE)
             val adMobVideoTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.VIDEO, Tag.REMOTE)
-            val adMobNativeTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.NATIVE, Tag.MOCK)
+            val adMobNativeTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.NATIVE, Tag.REMOTE)
 
             demoList.add(
                 DemoItem(
@@ -1469,7 +1462,7 @@ class DemoItemProvider private constructor() {
                     adMobNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_native_styles,
-                        R.string.admob_native_bidding_ad_unit_id_adapter
+                        R.string.admob_native_bidding_ad_unit_id_adapter,storedResponse = R.string.response_prebid_native_styles
                     )
                 )
             )
@@ -1479,100 +1472,8 @@ class DemoItemProvider private constructor() {
                     adMobNativeAction,
                     adMobNativeTagList,
                     createBannerBundle(
-                        R.string.prebid_config_id_no_bids,
-                        R.string.admob_native_bidding_ad_unit_id_adapter
-                    )
-                )
-            )
-        }
-
-        private fun addGamProdExamples() {
-            val gamNativeTagList = listOf(Tag.ALL, Tag.GAM, Tag.NATIVE, Tag.REMOTE)
-
-
-            val gamNativeBundle = createBannerBundle(
-                R.string.prebid_config_id_qa_native_styles,
-                R.string.adunit_gam_native_custom_template,
-                300,
-                250
-            )
-            gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11934135")
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_gam_native_custom_templates),
-                    R.id.action_header_bidding_to_gam_native,
-                    gamNativeTagList,
-                    gamNativeBundle
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_gam_native_unified_ads),
-                    R.id.action_header_bidding_to_gam_native,
-                    gamNativeTagList,
-                    createBannerBundle(
-                        R.string.prebid_config_id_qa_native_styles,
-                        R.string.adunit_gam_native_unified,
-                        300,
-                        250
-                    )
-                )
-            )
-
-        }
-
-        private fun addMoPubProdExamples() {
-
-            val mopubNativeTagList = listOf(Tag.ALL, Tag.MOPUB, Tag.NATIVE, Tag.REMOTE)
-
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_mopub_native_adapter),
-                    R.id.action_header_bidding_to_mopub_native,
-                    mopubNativeTagList,
-                    createBannerBundle(
-                        R.string.prebid_config_id_qa_native_styles,
-                        R.string.mopub_native_adapter
-                    )
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_mopub_native_no_bids),
-                    R.id.action_header_bidding_to_mopub_native,
-                    mopubNativeTagList,
-                    createBannerBundle(
-                        R.string.prebid_config_id_no_bids,
-                        R.string.mopub_native_no_bids
-                    )
-                )
-            )
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_mopub_native_feed_no_bids),
-                    R.id.action_header_bidding_to_mopub_native_feed,
-                    mopubNativeTagList,
-                    createBannerBundle(
-                        R.string.prebid_config_id_no_bids,
-                        R.string.mopub_native_no_bids
-                    )
-                )
-            )
-
-        }
-
-        private fun addAdMobProdExamples() {
-
-            val adMobNativeTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.NATIVE, Tag.REMOTE)
-
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_admob_native_no_bids),
-                    adMobNativeAction,
-                    adMobNativeTagList,
-                    createBannerBundle(
-                        R.string.prebid_config_id_no_bids,
-                        R.string.admob_native_bidding_ad_unit_id_adapter
+                        R.string.imp_prebid_id_no_bids,
+                        R.string.admob_native_bidding_ad_unit_id_adapter,storedResponse = R.string.response_prebid_no_bids
                     )
                 )
             )

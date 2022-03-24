@@ -90,8 +90,7 @@ public class PpmBannerTests extends BaseUiAutomatorTest {
 
     @Test
     public void testPpmBannerNoBids() {
-        homePage.setUseMockServer(false)
-                .getBannerPageFactory()
+        homePage.getBannerPageFactory()
                 .goToPpmBannerExample(getStringResource(R.string.demo_bidding_in_app_banner_320_50_no_bids))
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdFailed)
                 .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.onAdLoaded)
@@ -111,8 +110,7 @@ public class PpmBannerTests extends BaseUiAutomatorTest {
 
     @Test
     public void testPrebidPpmBanner320x50() {
-        homePage.setUseMockServer(false)
-                .getBannerPageFactory()
+        homePage.getBannerPageFactory()
                 .goToPpmBannerExample(getStringResource(R.string.demo_bidding_in_app_banner_320_50))
                 .bannerShouldLoad()
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdLoaded)

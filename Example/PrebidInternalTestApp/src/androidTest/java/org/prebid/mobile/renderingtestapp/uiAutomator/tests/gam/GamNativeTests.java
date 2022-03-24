@@ -64,8 +64,7 @@ public class GamNativeTests extends BaseUiAutomatorTest {
 
     @Test
     public void testPrebidGamNativeStylesMrect() throws InterruptedException {
-        homePage.setUseMockServer(false)
-                .getNativePageFactory()
+        homePage.getNativePageFactory()
                 .goToGamNativeStyles(getStringResource(R.string.demo_bidding_gam_native_styles_mrect))
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdFailed);
     }
