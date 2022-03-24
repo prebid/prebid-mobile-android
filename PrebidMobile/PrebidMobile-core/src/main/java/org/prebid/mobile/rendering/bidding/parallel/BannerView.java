@@ -72,7 +72,7 @@ public class BannerView extends FrameLayout {
     @Nullable
     private BannerViewListener mBannerViewListener;
 
-    private int mRefreshIntervalSec = -1;
+    private int mRefreshIntervalSec = 0;
 
     private boolean mIsPrimaryAdServerRequestInProgress;
     private boolean mAdFailed;

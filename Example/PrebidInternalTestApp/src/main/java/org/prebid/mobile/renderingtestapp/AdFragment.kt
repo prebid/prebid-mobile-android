@@ -50,7 +50,7 @@ abstract class AdFragment : BaseFragment() {
     protected var adUnitId: String = ""
     protected var width = 0
     protected var height = 0
-    protected var refreshDelay = PrebidMobile.AUTO_REFRESH_DELAY_DEFAULT / 1000
+    protected var refreshDelay = PrebidMobile.AUTO_REFRESH_DELAY_MIN / 1000
 
     private var adView: Any? = null
 
@@ -127,17 +127,13 @@ abstract class AdFragment : BaseFragment() {
         title.isRequired = true
         nativeAdUnit.addAsset(title)
 
-        val icon = NativeImageAsset()
+        val icon = NativeImageAsset(20, 20, 20, 20)
         icon.imageType = NativeImageAsset.IMAGE_TYPE.ICON
-        icon.wMin = 20
-        icon.hMin = 20
         icon.isRequired = true
         nativeAdUnit.addAsset(icon)
 
-        val image = NativeImageAsset()
+        val image = NativeImageAsset(200, 200, 200, 200)
         image.imageType = NativeImageAsset.IMAGE_TYPE.MAIN
-        image.hMin = 200
-        image.wMin = 200
         image.isRequired = true
         nativeAdUnit.addAsset(image)
 

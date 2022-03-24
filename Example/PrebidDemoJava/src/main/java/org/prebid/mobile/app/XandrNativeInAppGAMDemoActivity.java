@@ -116,16 +116,12 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
         title.setLength(90);
         title.setRequired(true);
         nativeAdUnit.addAsset(title);
-        NativeImageAsset icon = new NativeImageAsset();
+        NativeImageAsset icon = new NativeImageAsset(20, 20, 20, 20);
         icon.setImageType(NativeImageAsset.IMAGE_TYPE.ICON);
-        icon.setWMin(20);
-        icon.setHMin(20);
         icon.setRequired(true);
         nativeAdUnit.addAsset(icon);
-        NativeImageAsset image = new NativeImageAsset();
+        NativeImageAsset image = new NativeImageAsset(200, 200, 200, 200);
         image.setImageType(NativeImageAsset.IMAGE_TYPE.MAIN);
-        image.setHMin(200);
-        image.setWMin(200);
         image.setRequired(true);
         nativeAdUnit.addAsset(image);
         NativeDataAsset data = new NativeDataAsset();

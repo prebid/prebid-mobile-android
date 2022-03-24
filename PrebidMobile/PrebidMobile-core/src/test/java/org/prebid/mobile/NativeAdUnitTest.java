@@ -31,7 +31,8 @@ public class NativeAdUnitTest {
 
         assertNotNull(nativeUnit);
         assertEquals(PBS_CONFIG_ID_NATIVE_APPNEXUS, configuration.getConfigId());
-        assertEquals(AdType.NATIVE, configuration.getAdType());
+        assertEquals(AdUnitConfiguration.AdUnitIdentifierType.NATIVE, configuration.getAdUnitIdentifierType());
+        assertNotNull(configuration.getNativeConfiguration());
     }
 
     @Test

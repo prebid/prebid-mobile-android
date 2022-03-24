@@ -18,7 +18,6 @@ package org.prebid.mobile.rendering.models;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
@@ -39,6 +38,6 @@ public class AdUnitConfigurationTest {
         adConfig = new AdUnitConfiguration();
         assertNotNull(adConfig);
         assertNull(err);
-        assertEquals(PrebidMobile.AUTO_REFRESH_DELAY_DEFAULT, adConfig.getAutoRefreshDelay());
+        assertEquals(0, adConfig.getAutoRefreshDelay());
     }
 }

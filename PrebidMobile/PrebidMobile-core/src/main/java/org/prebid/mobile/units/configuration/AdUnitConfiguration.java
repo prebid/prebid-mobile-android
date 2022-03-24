@@ -11,7 +11,6 @@ import org.prebid.mobile.rendering.video.ExoPlayerView;
 
 import java.util.*;
 
-import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_DEFAULT;
 
 public class AdUnitConfiguration {
 
@@ -22,7 +21,7 @@ public class AdUnitConfiguration {
     private boolean isBuiltInVideo = false;
 
     private int videoSkipOffset = SKIP_OFFSET_NOT_ASSIGNED;
-    private int autoRefreshDelayInMillis = AUTO_REFRESH_DELAY_DEFAULT;
+    private int autoRefreshDelayInMillis = 0;
     private final int broadcastId = Utils.generateRandomInt();
     private float videoInitialVolume = ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME;
 
@@ -30,7 +29,6 @@ public class AdUnitConfiguration {
     private String pbAdSlot;
     private String interstitialSize;
 
-    private AdType adType;
     private AdUnitIdentifierType adUnitIdentifierType;
     private AdSize minSizePercentage;
     private PlacementType placementType;
@@ -45,14 +43,6 @@ public class AdUnitConfiguration {
     private final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
     private final Set<String> contextKeywordsSet = new HashSet<>();
 
-
-    public void setAdType(AdType adType) {
-        this.adType = adType;
-    }
-
-    public AdType getAdType() {
-        return adType;
-    }
 
     public void setConfigId(String configId) {
         this.configId = configId;

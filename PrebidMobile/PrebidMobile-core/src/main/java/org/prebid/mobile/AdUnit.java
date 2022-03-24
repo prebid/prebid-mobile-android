@@ -111,13 +111,11 @@ public abstract class AdUnit {
             }
         }
 
-        if (configuration.getAdType() == AdType.BANNER || configuration.getAdType() == AdType.VIDEO) {
-            HashSet<AdSize> sizes = configuration.getSizes();
-            for (AdSize size : sizes) {
-                if (size.getWidth() < 0 || size.getHeight() < 0) {
-                    listener.onComplete(ResultCode.INVALID_SIZE);
-                    return;
-                }
+        HashSet<AdSize> sizes = configuration.getSizes();
+        for (AdSize size : sizes) {
+            if (size.getWidth() < 0 || size.getHeight() < 0) {
+                listener.onComplete(ResultCode.INVALID_SIZE);
+                return;
             }
         }
 
