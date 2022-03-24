@@ -82,7 +82,7 @@ public class PrebidNativeAd {
                                 ad.addTitle(new NativeTitle(titleText));
                             }
                         } else {
-                            LogUtil.w(TAG, "Json title object doesn't have text field");
+                            LogUtil.warning(TAG, "Json title object doesn't have text field");
                         }
                     }
                     if (adObject.has("data")) {
@@ -96,7 +96,7 @@ public class PrebidNativeAd {
                             String value = data.getString("value");
                             ad.addData(new NativeData(type, value));
                         } else {
-                            LogUtil.w(TAG, "Json data object doesn't have type or value field");
+                            LogUtil.warning(TAG, "Json data object doesn't have type or value field");
                         }
                     }
 
@@ -110,7 +110,7 @@ public class PrebidNativeAd {
                             String url = img.getString("url");
                             ad.addImage(new NativeImage(type, url));
                         } else {
-                            LogUtil.w(TAG, "Json image object doesn't have url or type field");
+                            LogUtil.warning(TAG, "Json image object doesn't have url or type field");
                         }
                     }
                 }

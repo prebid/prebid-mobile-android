@@ -2,24 +2,11 @@ package org.prebid.mobile.app;
 
 import android.os.Bundle;
 import android.widget.FrameLayout;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubView;
-
-import org.prebid.mobile.AdUnit;
-import org.prebid.mobile.Host;
-import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.NativeAdUnit;
-import org.prebid.mobile.NativeDataAsset;
-import org.prebid.mobile.NativeEventTracker;
-import org.prebid.mobile.NativeImageAsset;
-import org.prebid.mobile.NativeTitleAsset;
-import org.prebid.mobile.OnCompleteListener;
-import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.*;
 
 import java.util.ArrayList;
 
@@ -54,7 +41,7 @@ public class XandrNativeInBannerMoPubDemoActivity extends AppCompatActivity {
 
             @Override
             public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
-                LogUtil.d("Banner failed " + errorCode);
+                LogUtil.debug("Banner failed " + errorCode);
             }
 
             @Override
@@ -90,16 +77,12 @@ public class XandrNativeInBannerMoPubDemoActivity extends AppCompatActivity {
         title.setLength(90);
         title.setRequired(true);
         nativeAdUnit.addAsset(title);
-        NativeImageAsset icon = new NativeImageAsset();
+        NativeImageAsset icon = new NativeImageAsset(20, 20, 20, 20);
         icon.setImageType(NativeImageAsset.IMAGE_TYPE.ICON);
-        icon.setWMin(20);
-        icon.setHMin(20);
         icon.setRequired(true);
         nativeAdUnit.addAsset(icon);
-        NativeImageAsset image = new NativeImageAsset();
+        NativeImageAsset image = new NativeImageAsset(200, 200, 200, 200);
         image.setImageType(NativeImageAsset.IMAGE_TYPE.MAIN);
-        image.setHMin(200);
-        image.setWMin(200);
         image.setRequired(true);
         nativeAdUnit.addAsset(image);
         NativeDataAsset data = new NativeDataAsset();

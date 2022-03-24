@@ -20,45 +20,33 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
-
 import androidx.annotation.NonNull;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
-
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
-
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.AdUnit;
-import org.prebid.mobile.BannerAdUnit;
-import org.prebid.mobile.Host;
-import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.OnCompleteListener;
-import org.prebid.mobile.OnCompleteListener2;
-import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.*;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.addendum.PbFindSizeError;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-
-import javax.annotation.Nullable;
-
-import okhttp3.HttpUrl;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -606,7 +594,7 @@ public class AdManagerComplexTest {
 
                     @Override
                     public void failure(PbFindSizeError error) {
-                        LogUtil.w("failure:" + error.getDescription());
+                        LogUtil.warning("failure:" + error.getDescription());
                         update(false);
                     }
                 });
@@ -624,7 +612,7 @@ public class AdManagerComplexTest {
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                LogUtil.w("onAdFailedToLoad:" + loadAdError);
+                LogUtil.warning("onAdFailedToLoad:" + loadAdError);
 
                 update(false);
             }

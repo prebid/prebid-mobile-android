@@ -16,8 +16,8 @@
 
 package org.prebid.mobile.renderingtestapp.utils
 
-import org.prebid.mobile.rendering.bidding.enums.Host
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
+import org.prebid.mobile.Host
+import org.prebid.mobile.PrebidMobile
 
 object SourcePicker {
 
@@ -52,13 +52,13 @@ object SourcePicker {
                 accountId = PROD_ACCOUNT_ID
             }
             setBidServerHost(host)
-            PrebidRenderingSettings.setAccountId(accountId)
+            PrebidMobile.setPrebidServerAccountId(accountId)
         }
     }
 
     private fun setBidServerHost(hostUrl: String) {
         val host = Host.CUSTOM
         host.hostUrl = hostUrl
-        PrebidRenderingSettings.setBidServerHost(host)
+        PrebidMobile.setPrebidServerHost(host)
     }
 }

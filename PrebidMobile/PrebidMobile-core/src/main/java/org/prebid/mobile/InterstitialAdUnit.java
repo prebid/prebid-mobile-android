@@ -18,24 +18,24 @@ package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import org.prebid.mobile.rendering.models.AdPosition;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class InterstitialAdUnit extends BannerBaseAdUnit {
 
-    @Nullable
-    private AdSize minSizePerc = null;
-
     public InterstitialAdUnit(@NonNull String configId) {
-        super(configId, AdType.INTERSTITIAL);
+        super(configId, AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL);
+        configuration.setAdPosition(AdPosition.FULLSCREEN);
     }
 
     public InterstitialAdUnit(@NonNull String configId, int minWidthPerc, int minHeightPerc) {
-
         this(configId);
-        minSizePerc = new AdSize(minWidthPerc, minHeightPerc);
+        configuration.setMinSizePercentage(new AdSize(minWidthPerc, minHeightPerc));
     }
 
     @Nullable
     AdSize getMinSizePerc() {
-        return minSizePerc;
+        return configuration.getMinSizePercentage();
     }
+
 }

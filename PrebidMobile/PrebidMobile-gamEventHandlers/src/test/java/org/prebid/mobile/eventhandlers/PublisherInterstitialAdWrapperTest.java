@@ -17,30 +17,23 @@
 package org.prebid.mobile.eventhandlers;
 
 import android.app.Activity;
-
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.prebid.mobile.eventhandlers.global.Constants;
+import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -128,6 +121,6 @@ public class PublisherInterstitialAdWrapperTest {
     }
 
     private AdManagerInterstitialAdLoadCallback getAdLoadCallback() {
-        return (AdManagerInterstitialAdLoadCallback) Whitebox.getInternalState(mPublisherInterstitialAdWrapper, "mAdLoadCallback");
+        return WhiteBox.getInternalState(mPublisherInterstitialAdWrapper, "mAdLoadCallback");
     }
 }

@@ -19,7 +19,7 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 import android.util.Log
 import android.widget.Button
 import kotlinx.android.synthetic.main.fragment_interstitial_html_with_banners.*
-import org.prebid.mobile.rendering.bidding.data.AdSize
+import org.prebid.mobile.AdSize
 import org.prebid.mobile.rendering.bidding.listeners.BannerViewListener
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.rendering.bidding.parallel.BannerView

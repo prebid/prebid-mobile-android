@@ -1,11 +1,9 @@
 package org.prebid.mobile.app;
 
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.mopub.common.MediationSettings;
 import com.mopub.common.MoPub;
 import com.mopub.common.MoPubReward;
@@ -14,17 +12,8 @@ import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubRewardedVideoListener;
 import com.mopub.mobileads.MoPubRewardedVideoManager;
 import com.mopub.mobileads.MoPubRewardedVideos;
-
-import org.prebid.mobile.AdUnit;
-import org.prebid.mobile.Host;
-import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.OnCompleteListener;
-import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.ResultCode;
-import org.prebid.mobile.RewardedVideoAdUnit;
-import org.prebid.mobile.Signals;
 import org.prebid.mobile.Util;
-import org.prebid.mobile.VideoBaseAdUnit;
+import org.prebid.mobile.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -89,7 +78,7 @@ public class RubiconRewardedVideoMoPubDemoActivity extends AppCompatActivity imp
 
     @Override
     public void onRewardedVideoLoadFailure(@NonNull String adUnitId, @NonNull MoPubErrorCode errorCode) {
-        LogUtil.d("onRewardedVideoLoadFailure:" + errorCode);
+        LogUtil.debug("onRewardedVideoLoadFailure:" + errorCode);
     }
 
     @Override

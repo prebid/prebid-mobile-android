@@ -17,16 +17,12 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
-
+import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Defines the User Id Object from an External Third Party Source
@@ -85,6 +81,32 @@ public class ExternalUserId {
         this.identifier = identifier;
         this.atype = atype;
         this.ext = ext;
+    }
+
+    @Nullable
+    public JSONObject getJson() {
+        JSONObject result = new JSONObject();
+
+        if (getSource() == null || getSource().isEmpty() || getIdentifier() == null || getIdentifier().isEmpty()) {
+            return null;
+        }
+
+        try {
+            JSONObject uidObject = new JSONObject();
+            uidObject.putOpt("id", getIdentifier());
+            uidObject.putOpt("adtype", getAtype());
+            if (getExt() != null) {
+                uidObject.putOpt("ext", new JSONObject(getExt()));
+            }
+
+            result.put("source", getSource());
+            result.put("uids", new JSONArray().put(uidObject));
+        } catch (JSONException e) {
+            LogUtil.warning("ExternalUserId", "Can't create json object.");
+            return null;
+        }
+
+        return result;
     }
 
     @Override

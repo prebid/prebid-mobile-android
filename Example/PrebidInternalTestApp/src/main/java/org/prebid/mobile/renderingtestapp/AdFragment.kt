@@ -30,7 +30,6 @@ import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.android.synthetic.main.events_bids.*
 import org.prebid.mobile.*
 import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 import org.prebid.mobile.renderingtestapp.plugplay.config.*
 import org.prebid.mobile.renderingtestapp.utils.BaseFragment
 import org.prebid.mobile.renderingtestapp.utils.ConfigurationViewSettings
@@ -51,7 +50,7 @@ abstract class AdFragment : BaseFragment() {
     protected var adUnitId: String = ""
     protected var width = 0
     protected var height = 0
-    protected var refreshDelay = PrebidRenderingSettings.AUTO_REFRESH_DELAY_DEFAULT / 1000
+    protected var refreshDelay = PrebidMobile.AUTO_REFRESH_DELAY_MIN / 1000
 
     private var adView: Any? = null
 
@@ -128,17 +127,13 @@ abstract class AdFragment : BaseFragment() {
         title.isRequired = true
         nativeAdUnit.addAsset(title)
 
-        val icon = NativeImageAsset()
+        val icon = NativeImageAsset(20, 20, 20, 20)
         icon.imageType = NativeImageAsset.IMAGE_TYPE.ICON
-        icon.wMin = 20
-        icon.hMin = 20
         icon.isRequired = true
         nativeAdUnit.addAsset(icon)
 
-        val image = NativeImageAsset()
+        val image = NativeImageAsset(200, 200, 200, 200)
         image.imageType = NativeImageAsset.IMAGE_TYPE.MAIN
-        image.hMin = 200
-        image.wMin = 200
         image.isRequired = true
         nativeAdUnit.addAsset(image)
 
@@ -208,10 +203,10 @@ abstract class AdFragment : BaseFragment() {
 
     private fun setNoBidsAccountId(enable: Boolean) {
         if (enable) {
-            PrebidRenderingSettings.setAccountId(getString(R.string.prebid_account_id_prod_no_bids))
+            PrebidMobile.setPrebidServerAccountId(getString(R.string.prebid_account_id_prod_no_bids))
         }
         else {
-            PrebidRenderingSettings.setAccountId(getString(R.string.prebid_account_id_prod))
+            PrebidMobile.setPrebidServerAccountId(getString(R.string.prebid_account_id_prod))
         }
     }
 
@@ -226,12 +221,12 @@ abstract class AdFragment : BaseFragment() {
     }
 
     protected fun configureOriginalPrebid() {
-        val hostUrl = PrebidRenderingSettings.getBidServerHost().hostUrl
+        val hostUrl = PrebidMobile.getPrebidServerHost().hostUrl
         val host = Host.CUSTOM
         host.hostUrl = hostUrl
         PrebidMobile.setApplicationContext(requireContext())
         PrebidMobile.setPrebidServerHost(host)
-        PrebidMobile.setPrebidServerAccountId(PrebidRenderingSettings.getAccountId())
+        PrebidMobile.setPrebidServerAccountId(PrebidMobile.getPrebidServerAccountId())
     }
 
 }

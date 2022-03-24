@@ -142,7 +142,7 @@ public class Util {
             }
 
         } catch (JSONException e) {
-            LogUtil.e("message:" + e.getMessage());
+            LogUtil.error("message:" + e.getMessage());
         }
 
         return result;
@@ -421,7 +421,8 @@ public class Util {
         }
     }
 
-    static void saveCacheId(@NonNull String cacheId, Object adObject) {
+    static void saveCacheId(@Nullable String cacheId, Object adObject) {
+        if (adObject == null) return;
         if (adObject.getClass() == getClassFromString(ANDROID_OS_BUNDLE)) {
             Bundle adBundle = (Bundle) adObject;
             adBundle.putString(NativeAdUnit.BUNDLE_KEY_CACHE_ID, cacheId);

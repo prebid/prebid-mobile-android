@@ -5,9 +5,8 @@ import android.view.ViewGroup
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
 import com.mopub.mediation.MoPubBannerMediationUtils
-import com.mopub.mediation.MoPubBaseMediationUtils
 import com.mopub.mobileads.MoPubView
-import org.prebid.mobile.rendering.bidding.data.AdSize
+import org.prebid.mobile.AdSize
 import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
 
 object InAppMoPubBanner {

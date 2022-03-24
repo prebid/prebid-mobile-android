@@ -20,13 +20,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.view.View;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener;
@@ -38,16 +37,10 @@ import org.robolectric.annotation.Config;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 21)
@@ -134,7 +127,7 @@ public class GamBannerEventHandlerTest {
     public void onAppEventTimeout_NotifyBannerEventOnAdServerWin() throws Exception {
         WhiteBox.method(GamBannerEventHandler.class, "handleAppEventTimeout").invoke(mBannerEventHandler);
 
-        verify(mMockBannerEventListener, times(1)).onAdServerWin(any(View.class));
+        verify(mMockBannerEventListener, times(1)).onAdServerWin(any());
     }
 
     @Test
@@ -169,11 +162,11 @@ public class GamBannerEventHandlerTest {
     @Test
     public void convertGamAdSize_ReturnPrebidSizesArray() {
         AdSize[] prebidSizes = GamBannerEventHandler.convertGamAdSize(com.google.android.gms.ads.AdSize.FLUID,
-                                                                      com.google.android.gms.ads.AdSize.BANNER);
-        assertEquals(com.google.android.gms.ads.AdSize.FLUID.getWidth(), prebidSizes[0].width);
-        assertEquals(com.google.android.gms.ads.AdSize.FLUID.getHeight(), prebidSizes[0].height);
-        assertEquals(com.google.android.gms.ads.AdSize.BANNER.getWidth(), prebidSizes[1].width);
-        assertEquals(com.google.android.gms.ads.AdSize.BANNER.getHeight(), prebidSizes[1].height);
+                com.google.android.gms.ads.AdSize.BANNER);
+        assertEquals(com.google.android.gms.ads.AdSize.FLUID.getWidth(), prebidSizes[0].getWidth());
+        assertEquals(com.google.android.gms.ads.AdSize.FLUID.getHeight(), prebidSizes[0].getHeight());
+        assertEquals(com.google.android.gms.ads.AdSize.BANNER.getWidth(), prebidSizes[1].getWidth());
+        assertEquals(com.google.android.gms.ads.AdSize.BANNER.getHeight(), prebidSizes[1].getHeight());
     }
 
     @Test

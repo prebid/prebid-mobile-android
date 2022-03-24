@@ -28,7 +28,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.renderingtestapp.R
 
 private const val ARG_CONFIGURATOR_MODE = "ARG_CONFIGURATOR_MODE"
@@ -98,7 +98,7 @@ class AdConfiguratorDialogFragment : DialogFragment() {
         heightField?.setText(argHeight.toString())
         if (mode == AdConfiguratorMode.BANNER) {
             refreshDelayField = dialogView.findViewById(R.id.etRefreshDelay)
-            refreshDelayField?.setText((PrebidRenderingSettings.AUTO_REFRESH_DELAY_DEFAULT / 1000).toString())
+            refreshDelayField?.setText((PrebidMobile.AUTO_REFRESH_DELAY_MIN / 1000).toString())
         }
 
         dialogView.findViewById<Button>(R.id.btnLoad).setOnClickListener {

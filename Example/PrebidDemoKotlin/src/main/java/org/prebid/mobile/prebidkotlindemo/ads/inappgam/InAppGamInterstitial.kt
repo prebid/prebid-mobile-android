@@ -1,8 +1,8 @@
 package org.prebid.mobile.prebidkotlindemo.ads.inappgam
 
 import android.app.Activity
+import org.prebid.mobile.AdSize
 import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
-import org.prebid.mobile.rendering.bidding.data.AdSize
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.rendering.bidding.parallel.InterstitialAdUnit
 import org.prebid.mobile.rendering.errors.AdException

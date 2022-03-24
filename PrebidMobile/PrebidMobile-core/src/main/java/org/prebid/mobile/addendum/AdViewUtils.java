@@ -18,15 +18,14 @@ package org.prebid.mobile.addendum;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.Size;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.Size;
 import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidNativeAd;
@@ -34,11 +33,7 @@ import org.prebid.mobile.PrebidNativeAdListener;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -111,7 +106,7 @@ public final class AdViewUtils {
                     //case: wait when webView.getContentHeight() >= expected height from HTML
                     //webView does not contain getContentWidth()
                     if (webViewContentHeight < expectedHeight) {
-                        LogUtil.d("fixZoomIn" + " webViewContentHeight:" + webViewContentHeight);
+                        LogUtil.debug("fixZoomIn" + " webViewContentHeight:" + webViewContentHeight);
                         contentHeightQueue.add(webViewContentHeight);
                         if (contentHeightQueue.isFull()) {
 
@@ -139,7 +134,7 @@ public final class AdViewUtils {
         //case: regulate scale because WebView.getSettings().setLoadWithOverviewMode() does not work
         int scale = (int) (webViewHeight / webViewContentHeight * 100 + 1);
 
-        LogUtil.d("fixZoomIn WB Height:" + webViewHeight + " getContentHeight:" + webViewContentHeight + " scale:" + scale );
+        LogUtil.debug("fixZoomIn WB Height:" + webViewHeight + " getContentHeight:" + webViewContentHeight + " scale:" + scale);
         webView.setInitialScale(scale);
     }
 
@@ -151,7 +146,7 @@ public final class AdViewUtils {
     static void warnAndTriggerFailure(PbFindSizeError error, PbFindSizeListener handler) {
 
         String description = error.getDescription();
-        LogUtil.w(description);
+        LogUtil.warning(description);
 
         handler.failure(error);
     }
@@ -180,7 +175,7 @@ public final class AdViewUtils {
         int necessaryAndroidApi = Build.VERSION_CODES.KITKAT;
 
         if (currentAndroidApi >= necessaryAndroidApi) {
-            LogUtil.d("webViewList size:" + webViewList.size());
+            LogUtil.debug("webViewList size:" + webViewList.size());
 
             int lastIndex = webViewList.size() - 1;
             iterateWebViewListAsync(webViewList, lastIndex, handler);
@@ -372,7 +367,7 @@ public final class AdViewUtils {
         String[] sizeArr = size.split("x");
 
         if (sizeArr.length != 2) {
-            LogUtil.w(size + " has a wrong format");
+            LogUtil.warning(size + " has a wrong format");
             return null;
         }
 
@@ -384,14 +379,14 @@ public final class AdViewUtils {
         try {
             width = Integer.parseInt(widthString);
         } catch (NumberFormatException e) {
-            LogUtil.w(size + "can not be converted to Size");
+            LogUtil.warning(size + "can not be converted to Size");
             return null;
         }
 
         try {
             height = Integer.parseInt(heightString);
         } catch (NumberFormatException e) {
-            LogUtil.w(size + "can not be converted to Size");
+            LogUtil.warning(size + "can not be converted to Size");
             return null;
         }
 
@@ -426,7 +421,7 @@ public final class AdViewUtils {
 
     private static boolean implementsInterface(@NonNull Object object, @NonNull String interfaceName) {
         for (Class c : object.getClass().getInterfaces()) {
-            LogUtil.d("Prebid", c.getCanonicalName());
+            LogUtil.debug("Prebid", c.getCanonicalName());
             if (c.getCanonicalName().equals(interfaceName)) {
                 return true;
             }
@@ -451,7 +446,7 @@ public final class AdViewUtils {
 
     private static void findNativeInMoPubNativeAd(@NonNull Object object, @NonNull PrebidNativeAdListener listener) {
         Object baseNativeAd = callMethodOnObject(object, "getBaseNativeAd");
-        LogUtil.d("Prebid", "" + baseNativeAd);
+        LogUtil.debug("Prebid", "" + baseNativeAd);
         Boolean isPrebid = (Boolean) callMethodOnObject(baseNativeAd, "getExtra", "isPrebid");
         if (isPrebid != null && isPrebid) {
             String cacheId = (String) callMethodOnObject(baseNativeAd, "getExtra", "hb_cache_id_local");

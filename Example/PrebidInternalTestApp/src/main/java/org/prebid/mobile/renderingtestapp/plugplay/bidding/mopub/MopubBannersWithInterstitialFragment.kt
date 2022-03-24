@@ -28,7 +28,7 @@ import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubInterstitial
 import com.mopub.mobileads.MoPubView
 import kotlinx.android.synthetic.main.fragment_interstitial_html_with_banners.*
-import org.prebid.mobile.rendering.bidding.data.AdSize
+import org.prebid.mobile.AdSize
 import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
 import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat

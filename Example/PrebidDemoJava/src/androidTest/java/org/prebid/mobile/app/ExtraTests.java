@@ -19,18 +19,19 @@ package org.prebid.mobile.app;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.FrameLayout;
-
 import androidx.test.espresso.Espresso;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
-
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.mopub.mobileads.MoPubInterstitial;
 import com.mopub.mobileads.MoPubView;
-
+import okhttp3.mockwebserver.Dispatcher;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
@@ -39,47 +40,24 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.prebid.mobile.AdUnit;
-import org.prebid.mobile.BannerAdUnit;
-import org.prebid.mobile.Host;
-import org.prebid.mobile.InterstitialAdUnit;
-import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.OnCompleteListener;
-import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.ResultCode;
-import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import okhttp3.mockwebserver.Dispatcher;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.RecordedRequest;
-
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withParent;
+import static androidx.test.espresso.matcher.ViewMatchers.*;
 import static androidx.test.espresso.web.assertion.WebViewAssertions.webContent;
 import static androidx.test.espresso.web.assertion.WebViewAssertions.webMatches;
 import static androidx.test.espresso.web.matcher.DomMatchers.containingTextInBody;
 import static androidx.test.espresso.web.model.Atoms.getCurrentUrl;
 import static androidx.test.espresso.web.sugar.Web.onWebView;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(AndroidJUnit4.class)
 public class ExtraTests {
@@ -419,35 +397,35 @@ public class ExtraTests {
         if (ResultCode.SUCCESS.equals(resultCode.getValue())) {
             onWebView(withParent(withId(1))).check(webContent(containingTextInBody("143135824")));
         } else {
-            LogUtil.e("MultipleAdUnits", "For test 0, actual result code is " + resultCode.getValue());
+            LogUtil.error("MultipleAdUnits", "For test 0, actual result code is " + resultCode.getValue());
         }
         ArgumentCaptor<ResultCode> resultCode1 = ArgumentCaptor.forClass(ResultCode.class);
         verify(spies.get(1), times(1)).onComplete(resultCode1.capture());
         if (ResultCode.SUCCESS.equals(resultCode1.getValue())) {
             onWebView(withParent(withId(2))).check(webContent(containingTextInBody("143208584")));
         } else {
-            LogUtil.e("MultipleAdUnits", "For test 1, actual result code is " + resultCode1.getValue());
+            LogUtil.error("MultipleAdUnits", "For test 1, actual result code is " + resultCode1.getValue());
         }
         ArgumentCaptor<ResultCode> resultCode2 = ArgumentCaptor.forClass(ResultCode.class);
         verify(spies.get(2), times(1)).onComplete(resultCode2.capture());
         if (ResultCode.SUCCESS.equals(resultCode2.getValue())) {
             onWebView(withParent(withId(3))).check(webContent(containingTextInBody("143208598")));
         } else {
-            LogUtil.e("MultipleAdUnits", "For test 2, actual result code is " + resultCode2.getValue());
+            LogUtil.error("MultipleAdUnits", "For test 2, actual result code is " + resultCode2.getValue());
         }
         ArgumentCaptor<ResultCode> resultCode3 = ArgumentCaptor.forClass(ResultCode.class);
         verify(spies.get(3), times(1)).onComplete(resultCode3.capture());
         if (ResultCode.SUCCESS.equals(resultCode3.getValue())) {
             onWebView(withParent(withId(4))).check(webContent(containingTextInBody("143208640")));
         } else {
-            LogUtil.e("MultipleAdUnits", "For test 3, actual result code is " + resultCode3.getValue());
+            LogUtil.error("MultipleAdUnits", "For test 3, actual result code is " + resultCode3.getValue());
         }
         ArgumentCaptor<ResultCode> resultCode4 = ArgumentCaptor.forClass(ResultCode.class);
         verify(spies.get(4), times(1)).onComplete(resultCode4.capture());
         if (ResultCode.SUCCESS.equals(resultCode4.getValue())) {
             onWebView(withParent(withId(5))).check(webContent(containingTextInBody("ucTag.renderAd")));
         } else {
-            LogUtil.e("MultipleAdUnits", "For test 4, actual result code is " + resultCode4.getValue());
+            LogUtil.error("MultipleAdUnits", "For test 4, actual result code is " + resultCode4.getValue());
         }
         ArgumentCaptor<ResultCode> resultCode5 = ArgumentCaptor.forClass(ResultCode.class);
         verify(spies.get(5), times(1)).onComplete(resultCode5.capture());
@@ -458,7 +436,7 @@ public class ExtraTests {
             onWebView().check(webContent(containingTextInBody("ucTag.renderAd")));
             Espresso.pressBack();
         } else {
-            LogUtil.e("MultipleAdUnits", "For test 5, actual result code is " + resultCode5.getValue());
+            LogUtil.error("MultipleAdUnits", "For test 5, actual result code is " + resultCode5.getValue());
         }
         ArgumentCaptor<ResultCode> resultCode6 = ArgumentCaptor.forClass(ResultCode.class);
         verify(spies.get(6), times(1)).onComplete(resultCode6.capture());
@@ -469,7 +447,7 @@ public class ExtraTests {
             onWebView().check(webContent(containingTextInBody("143393807")));
             Espresso.pressBack();
         } else {
-            LogUtil.e("MultipleAdUnits", "For test 6, actual result code is " + resultCode6.getValue());
+            LogUtil.error("MultipleAdUnits", "For test 6, actual result code is " + resultCode6.getValue());
         }
         ArgumentCaptor<ResultCode> resultCode7 = ArgumentCaptor.forClass(ResultCode.class);
         verify(spies.get(7), times(1)).onComplete(resultCode7.capture());
@@ -480,7 +458,7 @@ public class ExtraTests {
             onWebView().check(webContent(containingTextInBody("143393864")));
             Espresso.pressBack();
         } else {
-            LogUtil.e("MultipleAdUnits", "For test 7, actual result code is " + resultCode7.getValue());
+            LogUtil.error("MultipleAdUnits", "For test 7, actual result code is " + resultCode7.getValue());
         }
     }
 

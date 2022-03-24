@@ -17,11 +17,14 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
+import org.prebid.mobile.rendering.models.AdPosition;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class VideoInterstitialAdUnit extends VideoBaseAdUnit {
 
     public VideoInterstitialAdUnit(@NonNull String configId) {
-        super(configId, AdType.VIDEO_INTERSTITIAL);
+        super(configId, AdUnitConfiguration.AdUnitIdentifierType.VAST);
+        configuration.setAdPosition(AdPosition.FULLSCREEN);
     }
 
 }

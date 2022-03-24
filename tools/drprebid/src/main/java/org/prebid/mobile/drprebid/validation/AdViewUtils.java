@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
-
 import org.prebid.mobile.LogUtil;
 
 import java.util.ArrayList;
@@ -79,7 +78,7 @@ final class AdViewUtils {
         int necessaryAndroidApi = Build.VERSION_CODES.KITKAT;
 
         if (currentAndroidApi >= necessaryAndroidApi) {
-            LogUtil.d("webViewList size:" + webViewList.size());
+            LogUtil.debug("webViewList size:" + webViewList.size());
 
             int lastIndex = webViewList.size() - 1;
             iterateWebViewListAsync(webViewList, lastIndex, handler);

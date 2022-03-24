@@ -19,7 +19,7 @@ package org.prebid.mobile.renderingtestapp.plugplay.utilities.consent
 import android.content.SharedPreferences
 import android.util.Log
 import com.google.gson.Gson
-import org.prebid.mobile.rendering.utils.logger.LogUtil
+import org.prebid.mobile.LogUtil
 import org.prebid.mobile.renderingtestapp.data.ConsentConfiguration
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture

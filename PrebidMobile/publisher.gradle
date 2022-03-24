@@ -1,10 +1,10 @@
-apply plugin: 'com.android.library'
-
-task javadoc(type: Javadoc) {
+task javadoc(type: Javadoc, dependsOn: assemble) {
     source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator)) + configurations.compile
-    classpath += configurations.javadocDeps
+    source += file('build/generated/source/buildConfig/release/org/prebid/mobile/core/BuildConfig.java').path
 
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator)) + configurations.compile
+
+    options.addBooleanOption('-ignore-source-errors', true)
     options.addStringOption('Xdoclint:none', '-quiet')
     options.addStringOption('encoding', 'UTF-8')
     options.addStringOption('charSet', 'UTF-8')
