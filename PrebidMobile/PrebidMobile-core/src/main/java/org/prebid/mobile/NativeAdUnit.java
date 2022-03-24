@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.NativeAdUnitConfiguration;
 
 import java.util.HashMap;
@@ -22,7 +22,7 @@ public class NativeAdUnit extends AdUnit {
     private final NativeAdUnitConfiguration nativeConfiguration;
 
     public NativeAdUnit(@NonNull String configId) {
-        super(configId, AdUnitConfiguration.AdUnitIdentifierType.NATIVE);
+        super(configId, AdFormat.NATIVE);
         nativeConfiguration = configuration.getNativeConfiguration();
     }
 

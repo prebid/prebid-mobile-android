@@ -27,6 +27,7 @@ import org.prebid.mobile.rendering.loading.VastParserExtractor;
 import org.prebid.mobile.rendering.models.internal.VastExtractorResult;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.video.OmEventTracker;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class CreativeModelMakerBids {
 
     public void makeVideoModels(AdUnitConfiguration adConfiguration, String vast) {
         mAdConfiguration = adConfiguration;
-        mAdConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.VAST);
+        mAdConfiguration.setAdUnitIdentifierType(AdFormat.VAST);
         mParserExtractor.extract(vast);
     }
 

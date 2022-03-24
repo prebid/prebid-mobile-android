@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.testutils.BaseSetup;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -31,7 +32,7 @@ public class NativeAdUnitTest {
 
         assertNotNull(nativeUnit);
         assertEquals(PBS_CONFIG_ID_NATIVE_APPNEXUS, configuration.getConfigId());
-        assertEquals(AdUnitConfiguration.AdUnitIdentifierType.NATIVE, configuration.getAdUnitIdentifierType());
+        assertEquals(AdFormat.NATIVE, configuration.getAdUnitIdentifierType());
         assertNotNull(configuration.getNativeConfiguration());
     }
 

@@ -42,6 +42,7 @@ import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -191,7 +192,7 @@ public class BannerViewTest {
         mBannerView.setVideoPlacementType(videoPlacement);
 
         verify(mockAdConfiguration, times(1)).setPlacementType(eq(VideoPlacementType.mapToPlacementType(videoPlacement)));
-        verify(mockAdConfiguration, times(1)).setAdUnitIdentifierType(eq(AdUnitConfiguration.AdUnitIdentifierType.VAST));
+        verify(mockAdConfiguration, times(1)).setAdUnitIdentifierType(eq(AdFormat.VAST));
     }
 
     @Test

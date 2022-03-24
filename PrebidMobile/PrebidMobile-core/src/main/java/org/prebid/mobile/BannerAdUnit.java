@@ -17,14 +17,14 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.units.configuration.AdFormat;
 
 import java.util.HashSet;
 
 public class BannerAdUnit extends BannerBaseAdUnit {
 
     public BannerAdUnit(@NonNull String configId, int width, int height) {
-        super(configId, AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        super(configId, AdFormat.BANNER);
         configuration.addSize(new AdSize(width, height));
     }
 

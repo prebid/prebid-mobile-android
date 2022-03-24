@@ -18,13 +18,13 @@ package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.units.configuration.AdFormat;
 
 import java.util.List;
 
 public abstract class VideoBaseAdUnit extends AdUnit {
 
-    VideoBaseAdUnit(@NonNull String configId, @NonNull AdUnitConfiguration.AdUnitIdentifierType adType) {
+    VideoBaseAdUnit(@NonNull String configId, @NonNull AdFormat adType) {
         super(configId, adType);
     }
 

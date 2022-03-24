@@ -24,6 +24,7 @@ import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.networking.WinNotifier;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class InterstitialController {
@@ -31,7 +32,7 @@ public class InterstitialController {
 
     private final InterstitialView mBidInterstitialView;
     private final InterstitialControllerListener mListener;
-    private AdUnitConfiguration.AdUnitIdentifierType mAdUnitIdentifierType;
+    private AdFormat mAdUnitIdentifierType;
 
     private final InterstitialViewListener mInterstitialViewListener = new InterstitialViewListener() {
         @Override
@@ -96,8 +97,8 @@ public class InterstitialController {
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(bidResponse, () -> {
             mAdUnitIdentifierType = bidResponse.isVideo()
-                    ? AdUnitConfiguration.AdUnitIdentifierType.VAST
-                    : AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL;
+                    ? AdFormat.VAST
+                    : AdFormat.INTERSTITIAL;
             adUnitConfiguration.setAdUnitIdentifierType(mAdUnitIdentifierType);
             mBidInterstitialView.loadAd(adUnitConfiguration, bidResponse);
         });

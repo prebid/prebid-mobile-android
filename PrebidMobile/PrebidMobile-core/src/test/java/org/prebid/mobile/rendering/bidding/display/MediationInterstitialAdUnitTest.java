@@ -26,6 +26,7 @@ import org.prebid.mobile.AdSize;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -58,13 +59,13 @@ public class MediationInterstitialAdUnitTest {
         mMediationInterstitialAdUnit.initAdConfig("config", adSize);
         AdUnitConfiguration adConfiguration = mMediationInterstitialAdUnit.mAdUnitConfig;
         assertEquals("config", adConfiguration.getConfigId());
-        assertEquals(AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL, adConfiguration.getAdUnitIdentifierType());
+        assertEquals(AdFormat.INTERSTITIAL, adConfiguration.getAdUnitIdentifierType());
         assertEquals(adSize, adConfiguration.getMinSizePercentage());
     }
 
     @Test
     public void whenConstructorAndAdUnitFormatVideo_AdUnitIdentifierTypeVideo() {
         mMediationInterstitialAdUnit = new MediationInterstitialAdUnit(mContext, "config", AdUnitFormat.VIDEO, new MockMediationUtils());
-        assertEquals(AdUnitConfiguration.AdUnitIdentifierType.VAST, mMediationInterstitialAdUnit.mAdUnitConfig.getAdUnitIdentifierType());
+        assertEquals(AdFormat.VAST, mMediationInterstitialAdUnit.mAdUnitConfig.getAdUnitIdentifierType());
     }
 }

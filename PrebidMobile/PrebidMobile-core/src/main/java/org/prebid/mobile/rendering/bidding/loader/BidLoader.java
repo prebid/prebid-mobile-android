@@ -27,6 +27,7 @@ import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
 import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
 import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
@@ -139,7 +140,7 @@ public class BidLoader {
         LogUtil.debug(TAG, "Schedule refresh timer");
 
         boolean isRefreshAvailable = mAdConfiguration != null
-                && mAdConfiguration.isAdType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+                && mAdConfiguration.isAdType(AdFormat.BANNER);
         if (!isRefreshAvailable) {
             LogUtil.debug(TAG, "setupRefreshTimer: Canceled. AdConfiguration is null or AdType is not Banner");
             return;

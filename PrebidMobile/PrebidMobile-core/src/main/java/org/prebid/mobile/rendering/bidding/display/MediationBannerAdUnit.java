@@ -24,7 +24,7 @@ import org.prebid.mobile.rendering.bidding.enums.BannerAdPosition;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.units.configuration.AdFormat;
 
 public class MediationBannerAdUnit extends MediationBaseAdUnit {
     private static final String TAG = MediationBannerAdUnit.class.getSimpleName();
@@ -42,7 +42,7 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
     protected final void initAdConfig(String configId, AdSize adSize) {
         mAdUnitConfig.addSize(adSize);
         mAdUnitConfig.setConfigId(configId);
-        mAdUnitConfig.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        mAdUnitConfig.setAdUnitIdentifierType(AdFormat.BANNER);
     }
 
     @Override

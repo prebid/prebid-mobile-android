@@ -42,6 +42,7 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -101,7 +102,7 @@ public class BasicParameterBuilderTest {
     @Test
     public void whenAppendParametersAndBannerType_ImpWithValidBannerObject() throws JSONException {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        adConfiguration.setAdUnitIdentifierType(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
         adConfiguration.setPbAdSlot("12345");
         PrebidMobile.addStoredBidResponse("bidderTest", "123456");
@@ -127,7 +128,7 @@ public class BasicParameterBuilderTest {
     public void whenAppendParametersAndBInterstitialType_ImpWithValidBannerObject()
     throws JSONException {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL);
+        adConfiguration.setAdUnitIdentifierType(AdFormat.INTERSTITIAL);
         adConfiguration.setAdPosition(AdPosition.FULLSCREEN);
 
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
@@ -151,7 +152,7 @@ public class BasicParameterBuilderTest {
     public void whenAppendParametersAndVastWithoutPlacementType_ImpWithValidVideoObject()
     throws JSONException {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.VAST);
+        adConfiguration.setAdUnitIdentifierType(AdFormat.VAST);
         adConfiguration.setAdPosition(AdPosition.FULLSCREEN);
 
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
@@ -176,7 +177,7 @@ public class BasicParameterBuilderTest {
     public void whenAppendParametersAndVastWithPlacementType_ImpWithValidVideoObject()
     throws JSONException {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.VAST);
+        adConfiguration.setAdUnitIdentifierType(AdFormat.VAST);
         adConfiguration.setPlacementType(PlacementType.IN_BANNER);
         adConfiguration.setAdPosition(AdPosition.FULLSCREEN);
         adConfiguration.addSize(new AdSize(300, 250));
@@ -202,7 +203,7 @@ public class BasicParameterBuilderTest {
     @Test
     public void whenAppendParametersAndCoppaTrue_CoppaEqualsOne() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        adConfiguration.setAdUnitIdentifierType(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
 
         PrebidMobile.isCoppaEnabled = true;
@@ -218,7 +219,7 @@ public class BasicParameterBuilderTest {
     @Test
     public void whenAppendParametersAndCoppaFalse_CoppaNull() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        adConfiguration.setAdUnitIdentifierType(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
 
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
@@ -233,7 +234,7 @@ public class BasicParameterBuilderTest {
     public void whenAppendParametersAndTargetingParamsWereSet_TargetingParamsWereAppend()
     throws JSONException {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        adConfiguration.setAdUnitIdentifierType(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
 
         TargetingParams.setUserId(USER_ID);
@@ -257,7 +258,7 @@ public class BasicParameterBuilderTest {
     @Test
     public void whenAppendParametersAndSendMraidSupportParamsFalse_NoMraidApi() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        adConfiguration.setAdUnitIdentifierType(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
 
         PrebidMobile.sendMraidSupportParams = false;
@@ -273,7 +274,7 @@ public class BasicParameterBuilderTest {
     @Test
     public void whenAppendParametersAndUseExternalBrowserFalseAndBrowserActivityAvailable_ClickBrowserEqualsZero() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        adConfiguration.setAdUnitIdentifierType(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
 
         PrebidMobile.useExternalBrowser = false;
@@ -289,7 +290,7 @@ public class BasicParameterBuilderTest {
     @Test
     public void whenAppendParametersAndUseExternalBrowserTrueAndBrowserActivityAvailable_ClickBrowserEqualsOne() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        adConfiguration.setAdUnitIdentifierType(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
 
         PrebidMobile.useExternalBrowser = true;
@@ -305,7 +306,7 @@ public class BasicParameterBuilderTest {
     @Test
     public void whenAppendParametersAndUseExternalBrowserFalseAndBrowserActivityNotAvailable_ClickBrowserEqualsOne() {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        adConfiguration.setAdUnitIdentifierType(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
 
         PrebidMobile.useExternalBrowser = false;
@@ -397,7 +398,7 @@ public class BasicParameterBuilderTest {
     private BidRequest getExpectedBidRequest(AdUnitConfiguration adConfiguration, String uuid) {
         BidRequest bidRequest = new BidRequest();
         bidRequest.setId(uuid);
-        boolean isVideo = adConfiguration.isAdType(AdUnitConfiguration.AdUnitIdentifierType.VAST);
+        boolean isVideo = adConfiguration.isAdType(AdFormat.VAST);
         bidRequest.getExt().put("prebid", Prebid.getJsonObjectForBidRequest(PrebidMobile.getPrebidServerAccountId(), isVideo));
         //if coppaEnabled - set 1, else No coppa is sent
         if (PrebidMobile.isCoppaEnabled) {
@@ -423,12 +424,12 @@ public class BasicParameterBuilderTest {
         imp.displaymanager = BasicParameterBuilder.DISPLAY_MANAGER_VALUE;
         imp.displaymanagerver = PrebidMobile.SDK_VERSION;
 
-        if (!adConfiguration.isAdType(AdUnitConfiguration.AdUnitIdentifierType.VAST)) {
+        if (!adConfiguration.isAdType(AdFormat.VAST)) {
             imp.secure = 1;
         }
         //Send 1 for interstitial/interstitial video and 0 for banners
-        boolean isInterstitial = adConfiguration.isAdType(AdUnitConfiguration.AdUnitIdentifierType.VAST) ||
-                adConfiguration.isAdType(AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL);
+        boolean isInterstitial = adConfiguration.isAdType(AdFormat.VAST) ||
+                adConfiguration.isAdType(AdFormat.INTERSTITIAL);
         imp.instl = isInterstitial ? 1 : 0;
 
         // 0 == embedded, 1 == native
@@ -436,7 +437,7 @@ public class BasicParameterBuilderTest {
         imp.id = uuid;
         imp.getExt().put("prebid", Prebid.getJsonObjectForImp(adConfiguration));
 
-        if (adConfiguration.isAdType(AdUnitConfiguration.AdUnitIdentifierType.VAST)) {
+        if (adConfiguration.isAdType(AdFormat.VAST)) {
             imp.video = getExpectedVideoImpValues(imp, adConfiguration);
         } else {
             imp.banner = getExpectedBannerImpValues(imp, adConfiguration);
@@ -459,11 +460,11 @@ public class BasicParameterBuilderTest {
         Banner banner = new Banner();
         banner.api = new int[]{3, 5, 6, 7};
 
-        if (adConfiguration.isAdType(AdUnitConfiguration.AdUnitIdentifierType.BANNER)) {
+        if (adConfiguration.isAdType(AdFormat.BANNER)) {
             for (AdSize size : adConfiguration.getSizes()) {
                 banner.addFormat(size.getWidth(), size.getHeight());
             }
-        } else if (adConfiguration.isAdType(AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL)) {
+        } else if (adConfiguration.isAdType(AdFormat.INTERSTITIAL)) {
             Configuration deviceConfiguration = mContext.getResources().getConfiguration();
             banner.addFormat(deviceConfiguration.screenWidthDp,
                     deviceConfiguration.screenHeightDp);

@@ -36,7 +36,7 @@ import org.prebid.mobile.rendering.video.VideoCreative;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;
 import org.prebid.mobile.rendering.video.vast.VASTErrorCodes;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.units.configuration.AdFormat;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -85,7 +85,7 @@ public class CreativeFactory {
 
     public void start() {
         try {
-            AdUnitConfiguration.AdUnitIdentifierType adUnitIdentifierType = mCreativeModel.getAdConfiguration().getAdUnitIdentifierType();
+            AdFormat adUnitIdentifierType = mCreativeModel.getAdConfiguration().getAdUnitIdentifierType();
             switch (adUnitIdentifierType) {
                 case BANNER:
                 case INTERSTITIAL:

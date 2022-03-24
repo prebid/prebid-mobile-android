@@ -28,6 +28,7 @@ import org.prebid.mobile.rendering.bidding.interfaces.StandaloneInterstitialEven
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialAdUnitListener;
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
@@ -195,12 +196,12 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         }
     }
 
-    private AdUnitConfiguration.AdUnitIdentifierType mapPrebidAdUnitTypeToAdConfigAdUnitType(AdUnitFormat adUnitFormat) {
+    private AdFormat mapPrebidAdUnitTypeToAdConfigAdUnitType(AdUnitFormat adUnitFormat) {
         switch (adUnitFormat) {
             case DISPLAY:
-                return AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL;
+                return AdFormat.INTERSTITIAL;
             case VIDEO:
-                return AdUnitConfiguration.AdUnitIdentifierType.VAST;
+                return AdFormat.VAST;
             default:
                 LogUtil.debug(TAG, "setAdUnitIdentifierType: Provided AdUnitType [" + adUnitFormat + "] doesn't match any expected adUnitType.");
                 return null;

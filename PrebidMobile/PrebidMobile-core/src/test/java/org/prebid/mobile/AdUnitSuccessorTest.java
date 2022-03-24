@@ -25,6 +25,7 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.reflection.AdUnitReflection;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.testutils.BaseSetup;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -71,7 +72,7 @@ public class AdUnitSuccessorTest {
 
         assertEquals(1, configuration.getSizes().size());
         assertEquals(testConfigId, configuration.getConfigId());
-        assertEquals(AdUnitConfiguration.AdUnitIdentifierType.BANNER, configuration.getAdUnitIdentifierType());
+        assertEquals(AdFormat.BANNER, configuration.getAdUnitIdentifierType());
 
         assertEquals(0, adUnit.configuration.getAutoRefreshDelay());
         adUnit.setAutoRefreshInterval(30);
@@ -111,7 +112,7 @@ public class AdUnitSuccessorTest {
         InterstitialAdUnit adUnit = new InterstitialAdUnit(testConfigId);
         AdUnitConfiguration configuration = adUnit.getConfiguration();
         assertEquals(testConfigId, configuration.getConfigId());
-        assertEquals(AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL, configuration.getAdUnitIdentifierType());
+        assertEquals(AdFormat.INTERSTITIAL, configuration.getAdUnitIdentifierType());
     }
 
 
@@ -120,7 +121,7 @@ public class AdUnitSuccessorTest {
         InterstitialAdUnit adUnit = new InterstitialAdUnit(testConfigId, height, 70);
         AdUnitConfiguration configuration = (AdUnitConfiguration) adUnit.getConfiguration();
 
-        assertEquals(AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL, configuration.getAdUnitIdentifierType());
+        assertEquals(AdFormat.INTERSTITIAL, configuration.getAdUnitIdentifierType());
         assertEquals(testConfigId, configuration.getConfigId());
         assertEquals(height, configuration.getMinSizePercentage().getWidth());
         assertEquals(70, configuration.getMinSizePercentage().getHeight());
@@ -135,7 +136,7 @@ public class AdUnitSuccessorTest {
         assertEquals(width, size.getWidth());
         assertEquals(height, size.getHeight());
         assertEquals(testConfigId, configuration.getConfigId());
-        assertEquals(AdUnitConfiguration.AdUnitIdentifierType.VAST, configuration.getAdUnitIdentifierType());
+        assertEquals(AdFormat.VAST, configuration.getAdUnitIdentifierType());
     }
 
     @Test
@@ -144,7 +145,7 @@ public class AdUnitSuccessorTest {
         AdUnitConfiguration configuration = (AdUnitConfiguration) adUnit.getConfiguration();
 
         assertEquals(testConfigId, configuration.getConfigId());
-        assertEquals(AdUnitConfiguration.AdUnitIdentifierType.VAST, configuration.getAdUnitIdentifierType());
+        assertEquals(AdFormat.VAST, configuration.getAdUnitIdentifierType());
     }
 
     @Test
@@ -152,7 +153,7 @@ public class AdUnitSuccessorTest {
         RewardedVideoAdUnit adUnit = new RewardedVideoAdUnit(testConfigId);
         AdUnitConfiguration configuration = adUnit.getConfiguration();
         assertEquals(testConfigId, configuration.getConfigId());
-        assertEquals(AdUnitConfiguration.AdUnitIdentifierType.VAST, configuration.getAdUnitIdentifierType());
+        assertEquals(AdFormat.VAST, configuration.getAdUnitIdentifierType());
     }
 
     @Test

@@ -32,6 +32,7 @@ import org.prebid.mobile.rendering.video.VideoCreative;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -106,7 +107,7 @@ public class CreativeFactoryTest {
     @Test
     public void testAttemptAuidCreative() throws Exception {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        adConfiguration.setAdUnitIdentifierType(AdFormat.BANNER);
         Handler mockHandler = mock(Handler.class);
         when(mMockModel.getAdConfiguration()).thenReturn(adConfiguration);
         when(mMockModel.getName()).thenReturn(HTML_CREATIVE_TAG);
@@ -129,7 +130,7 @@ public class CreativeFactoryTest {
         VideoCreativeModel mockVideoModel = mock(VideoCreativeModel.class);
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         Handler mockHandler = mock(Handler.class);
-        adConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.VAST);
+        adConfiguration.setAdUnitIdentifierType(AdFormat.VAST);
         HashMap<VideoAdEvent.Event, ArrayList<String>> videoEventsUrls = new HashMap<>();
         videoEventsUrls.put(VideoAdEvent.Event.AD_EXPAND,
                             new ArrayList<>(Arrays.asList("AD_EXPAND")));

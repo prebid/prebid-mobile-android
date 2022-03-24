@@ -19,12 +19,12 @@ package org.prebid.mobile;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.rendering.models.AdPosition;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.units.configuration.AdFormat;
 
 public class InterstitialAdUnit extends BannerBaseAdUnit {
 
     public InterstitialAdUnit(@NonNull String configId) {
-        super(configId, AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL);
+        super(configId, AdFormat.INTERSTITIAL);
         configuration.setAdPosition(AdPosition.FULLSCREEN);
     }
 

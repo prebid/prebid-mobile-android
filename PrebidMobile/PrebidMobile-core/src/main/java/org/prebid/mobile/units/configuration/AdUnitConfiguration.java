@@ -29,7 +29,7 @@ public class AdUnitConfiguration {
     private String pbAdSlot;
     private String interstitialSize;
 
-    private AdUnitIdentifierType adUnitIdentifierType;
+    private AdFormat adFormat;
     private AdSize minSizePercentage;
     private PlacementType placementType;
     private AdPosition adPosition;
@@ -217,20 +217,20 @@ public class AdUnitConfiguration {
         return videoSkipOffset;
     }
 
-    public void setAdUnitIdentifierType(@Nullable AdUnitIdentifierType adUnitIdentifierType) {
-        if (adUnitIdentifierType == AdUnitIdentifierType.NATIVE) {
+    public void setAdUnitIdentifierType(@Nullable AdFormat adFormat) {
+        if (adFormat == AdFormat.NATIVE) {
             nativeConfiguration = new NativeAdUnitConfiguration();
         }
-        this.adUnitIdentifierType = adUnitIdentifierType;
+        this.adFormat = adFormat;
     }
 
     @Nullable
-    public AdUnitIdentifierType getAdUnitIdentifierType() {
-        return adUnitIdentifierType;
+    public AdFormat getAdUnitIdentifierType() {
+        return adFormat;
     }
 
-    public boolean isAdType(AdUnitIdentifierType type) {
-        return adUnitIdentifierType == type;
+    public boolean isAdType(AdFormat type) {
+        return adFormat == type;
     }
 
     public void setRewarded(boolean rewarded) {
@@ -322,14 +322,6 @@ public class AdUnitConfiguration {
     @Override
     public int hashCode() {
         return configId != null ? configId.hashCode() : 0;
-    }
-
-
-    public enum AdUnitIdentifierType {
-        BANNER,
-        INTERSTITIAL,
-        NATIVE,
-        VAST
     }
 
 }

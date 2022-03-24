@@ -43,6 +43,7 @@ import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -120,7 +121,7 @@ public class HTMLCreativeTest {
         ViewPool mockViewPool = mock(ViewPool.class);
         when(mockViewPool.getUnoccupiedView(any(Context.class),
                 any(),
-                any(AdUnitConfiguration.AdUnitIdentifierType.class),
+                any(AdFormat.class),
                 any(InterstitialManager.class)))
             .thenReturn(mockPrebidWebViewBanner);
         WhiteBox.field(ViewPool.class, "sInstance").set(null, mockViewPool);
@@ -145,7 +146,7 @@ public class HTMLCreativeTest {
 
         // Test empty html
         try {
-            when(mMockConfig.getAdUnitIdentifierType()).thenReturn(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+            when(mMockConfig.getAdUnitIdentifierType()).thenReturn(AdFormat.BANNER);
             mHtmlCreative = new HTMLCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
             mHtmlCreative.load();
             fail("AdException was NOT thrown");
@@ -154,7 +155,7 @@ public class HTMLCreativeTest {
         }
 
         // Test non-empty html
-        when(mMockConfig.getAdUnitIdentifierType()).thenReturn(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        when(mMockConfig.getAdUnitIdentifierType()).thenReturn(AdFormat.BANNER);
         when(mMockModel.getHtml()).thenReturn("foo");
 
         mHtmlCreative = new HTMLCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
@@ -170,7 +171,7 @@ public class HTMLCreativeTest {
         WhiteBox.setInternalState(prebidWebViewBase, "mWebView", mock(WebViewBase.class));
         when(mMockPrebidWebView.getWebView()).thenReturn(mock(WebViewBase.class));
 
-        when(mMockConfig.getAdUnitIdentifierType()).thenReturn(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        when(mMockConfig.getAdUnitIdentifierType()).thenReturn(AdFormat.BANNER);
 
         mHtmlCreative.display();
         verify(mMockModel, never()).trackDisplayAdEvent(TrackingEvent.Events.IMPRESSION);

@@ -121,7 +121,7 @@ public class PrebidBannerAdapter extends BaseAd {
     private void initDisplayView(Context context, String responseId) {
         try {
             AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
-            adUnitConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+            adUnitConfiguration.setAdUnitIdentifierType(AdFormat.BANNER);
             mDisplayView = new DisplayView(context, mDisplayViewListener, adUnitConfiguration, responseId);
         }
         catch (AdException e) {

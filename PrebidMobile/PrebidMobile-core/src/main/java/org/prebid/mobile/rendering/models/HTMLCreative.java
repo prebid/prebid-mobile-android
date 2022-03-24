@@ -39,6 +39,7 @@ import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class HTMLCreative extends AbstractCreative
@@ -76,9 +77,9 @@ public class HTMLCreative extends AbstractCreative
             throw new AdException(AdException.INTERNAL_ERROR, "Context is null. Could not load adHtml");
         }
         CreativeModel model = getCreativeModel();
-        AdUnitConfiguration.AdUnitIdentifierType adType = model.getAdConfiguration().getAdUnitIdentifierType();
+        AdFormat adType = model.getAdConfiguration().getAdUnitIdentifierType();
         if (model.getAdConfiguration().isBuiltInVideo()) {
-            adType = AdUnitConfiguration.AdUnitIdentifierType.BANNER;
+            adType = AdFormat.BANNER;
         }
 
         if (adType == null) {
@@ -86,11 +87,11 @@ public class HTMLCreative extends AbstractCreative
         }
         //create a webview here
         PrebidWebViewBase prebidWebView = null;
-        if (adType == AdUnitConfiguration.AdUnitIdentifierType.BANNER) {
+        if (adType == AdFormat.BANNER) {
             //do all banner
             prebidWebView = (PrebidWebViewBanner) ViewPool.getInstance()
                     .getUnoccupiedView(mContextReference.get(), null, adType, mInterstitialManager);
-        } else if (adType == AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL) {
+        } else if (adType == AdFormat.INTERSTITIAL) {
             //do all interstitials
             prebidWebView = (PrebidWebViewInterstitial) ViewPool.getInstance()
                     .getUnoccupiedView(mContextReference.get(), null, adType, mInterstitialManager);

@@ -27,6 +27,7 @@ import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
 import org.prebid.mobile.rendering.utils.helpers.RefreshTimerTask;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -56,7 +57,7 @@ public class BidLoaderTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         mContext = Robolectric.buildActivity(Activity.class).create().get();
-        when(mMockAdConfiguration.isAdType(any(AdUnitConfiguration.AdUnitIdentifierType.class))).thenReturn(true);
+        when(mMockAdConfiguration.isAdType(any(AdFormat.class))).thenReturn(true);
         when(mMockAdConfiguration.getAutoRefreshDelay()).thenReturn(60000);
         mBidLoader = createBidLoader(mContext, mMockAdConfiguration, mBidRequesterListener);
     }

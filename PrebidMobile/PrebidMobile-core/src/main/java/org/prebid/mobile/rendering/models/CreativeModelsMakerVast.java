@@ -29,6 +29,7 @@ import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;
 import org.prebid.mobile.rendering.video.vast.Tracking;
 import org.prebid.mobile.rendering.video.vast.*;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.ArrayList;
@@ -199,7 +200,7 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
                 endCardModel.setWidth(Integer.parseInt(companionAd.getWidth()));
                 endCardModel.setHeight(Integer.parseInt(companionAd.getHeight()));
                 endCardModel.setAdConfiguration(new AdUnitConfiguration());
-                endCardModel.getAdConfiguration().setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL);
+                endCardModel.getAdConfiguration().setAdUnitIdentifierType(AdFormat.INTERSTITIAL);
                 endCardModel.setRequireImpressionUrl(false);
                 result.creativeModels.add(endCardModel);
 
