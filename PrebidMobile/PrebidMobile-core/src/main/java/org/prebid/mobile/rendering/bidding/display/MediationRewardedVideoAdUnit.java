@@ -41,7 +41,7 @@ public class MediationRewardedVideoAdUnit extends MediationBaseAdUnit {
     @Override
     protected final void initAdConfig(String configId, AdSize adSize) {
         mAdUnitConfig.setConfigId(configId);
-        mAdUnitConfig.setAdUnitIdentifierType(AdFormat.VAST);
+        mAdUnitConfig.setAdFormat(AdFormat.VAST);
         mAdUnitConfig.setRewarded(true);
         mAdUnitConfig.setAdPosition(AdPosition.FULLSCREEN);
     }

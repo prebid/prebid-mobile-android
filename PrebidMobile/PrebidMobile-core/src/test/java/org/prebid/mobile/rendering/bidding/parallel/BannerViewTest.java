@@ -192,7 +192,7 @@ public class BannerViewTest {
         mBannerView.setVideoPlacementType(videoPlacement);
 
         verify(mockAdConfiguration, times(1)).setPlacementType(eq(VideoPlacementType.mapToPlacementType(videoPlacement)));
-        verify(mockAdConfiguration, times(1)).setAdUnitIdentifierType(eq(AdFormat.VAST));
+        verify(mockAdConfiguration, times(1)).setAdFormat(eq(AdFormat.VAST));
     }
 
     @Test

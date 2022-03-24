@@ -99,7 +99,7 @@ public class InterstitialController {
             mAdUnitIdentifierType = bidResponse.isVideo()
                     ? AdFormat.VAST
                     : AdFormat.INTERSTITIAL;
-            adUnitConfiguration.setAdUnitIdentifierType(mAdUnitIdentifierType);
+            adUnitConfiguration.setAdFormat(mAdUnitIdentifierType);
             mBidInterstitialView.loadAd(adUnitConfiguration, bidResponse);
         });
     }

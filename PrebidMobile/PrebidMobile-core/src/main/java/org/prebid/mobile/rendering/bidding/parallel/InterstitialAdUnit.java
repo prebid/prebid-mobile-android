@@ -134,7 +134,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         adUnitConfiguration.setConfigId(configId);
         adUnitConfiguration.setMinSizePercentage(minSizePercentage);
-        adUnitConfiguration.setAdUnitIdentifierType(mapPrebidAdUnitTypeToAdConfigAdUnitType(adUnitFormat));
+        adUnitConfiguration.setAdFormat(mapPrebidAdUnitTypeToAdConfigAdUnitType(adUnitFormat));
 
         init(adUnitConfiguration);
     }

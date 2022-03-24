@@ -211,7 +211,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
     }
 
     public boolean isAutoDisplayOnLoad() {
-        return mAdConfiguration.getAdUnitIdentifierType() == AdFormat.BANNER;
+        return mAdConfiguration.isAdType(AdFormat.BANNER);
     }
 
     public void destroy() {
@@ -388,7 +388,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
             return;
         }
 
-        if (mAdConfiguration.getAdUnitIdentifierType() == AdFormat.BANNER) {
+        if (mAdConfiguration.isAdType(AdFormat.BANNER)) {
             if (!mCurrentCreative.equals(mLastCreativeShown)) {
                 displayCreative(creativeView);
             }

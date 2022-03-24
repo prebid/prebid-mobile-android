@@ -42,7 +42,7 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
     protected final void initAdConfig(String configId, AdSize adSize) {
         mAdUnitConfig.addSize(adSize);
         mAdUnitConfig.setConfigId(configId);
-        mAdUnitConfig.setAdUnitIdentifierType(AdFormat.BANNER);
+        mAdUnitConfig.setAdFormat(AdFormat.BANNER);
     }
 
     @Override

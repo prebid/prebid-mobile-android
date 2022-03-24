@@ -32,6 +32,8 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
@@ -59,13 +61,13 @@ public class MediationInterstitialAdUnitTest {
         mMediationInterstitialAdUnit.initAdConfig("config", adSize);
         AdUnitConfiguration adConfiguration = mMediationInterstitialAdUnit.mAdUnitConfig;
         assertEquals("config", adConfiguration.getConfigId());
-        assertEquals(AdFormat.INTERSTITIAL, adConfiguration.getAdUnitIdentifierType());
+        assertEquals(Collections.singletonList(AdFormat.INTERSTITIAL), adConfiguration.getAdFormats());
         assertEquals(adSize, adConfiguration.getMinSizePercentage());
     }
 
     @Test
     public void whenConstructorAndAdUnitFormatVideo_AdUnitIdentifierTypeVideo() {
         mMediationInterstitialAdUnit = new MediationInterstitialAdUnit(mContext, "config", AdUnitFormat.VIDEO, new MockMediationUtils());
-        assertEquals(AdFormat.VAST, mMediationInterstitialAdUnit.mAdUnitConfig.getAdUnitIdentifierType());
+        assertEquals(Collections.singletonList(AdFormat.VAST), mMediationInterstitialAdUnit.mAdUnitConfig.getAdFormats());
     }
 }

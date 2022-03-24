@@ -106,7 +106,7 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
 
         AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         adUnitConfiguration.setConfigId(configId);
-        adUnitConfiguration.setAdUnitIdentifierType(AdFormat.VAST);
+        adUnitConfiguration.setAdFormat(AdFormat.VAST);
         adUnitConfiguration.setRewarded(true);
 
         init(adUnitConfiguration);

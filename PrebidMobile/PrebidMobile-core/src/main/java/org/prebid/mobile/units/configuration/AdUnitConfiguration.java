@@ -29,7 +29,7 @@ public class AdUnitConfiguration {
     private String pbAdSlot;
     private String interstitialSize;
 
-    private AdFormat adFormat;
+    private ArrayList<AdFormat> adFormats = new ArrayList<>();
     private AdSize minSizePercentage;
     private PlacementType placementType;
     private AdPosition adPosition;
@@ -217,20 +217,21 @@ public class AdUnitConfiguration {
         return videoSkipOffset;
     }
 
-    public void setAdUnitIdentifierType(@Nullable AdFormat adFormat) {
+    public void setAdFormat(@Nullable AdFormat adFormat) {
         if (adFormat == AdFormat.NATIVE) {
             nativeConfiguration = new NativeAdUnitConfiguration();
         }
-        this.adFormat = adFormat;
+        adFormats.clear();
+        adFormats.add(adFormat);
     }
 
-    @Nullable
-    public AdFormat getAdUnitIdentifierType() {
-        return adFormat;
+    @NonNull
+    public ArrayList<AdFormat> getAdFormats() {
+        return adFormats;
     }
 
     public boolean isAdType(AdFormat type) {
-        return adFormat == type;
+        return adFormats.contains(type);
     }
 
     public void setRewarded(boolean rewarded) {

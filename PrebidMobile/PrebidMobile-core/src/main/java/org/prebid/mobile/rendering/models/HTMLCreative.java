@@ -42,6 +42,8 @@ import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
+import java.util.ArrayList;
+
 public class HTMLCreative extends AbstractCreative
     implements WebViewDelegate, InterstitialManagerDisplayDelegate, Comparable {
 
@@ -77,15 +79,18 @@ public class HTMLCreative extends AbstractCreative
             throw new AdException(AdException.INTERNAL_ERROR, "Context is null. Could not load adHtml");
         }
         CreativeModel model = getCreativeModel();
-        AdFormat adType = model.getAdConfiguration().getAdUnitIdentifierType();
+
+        ArrayList<AdFormat> adFormats = model.getAdConfiguration().getAdFormats();
+        if (adFormats.isEmpty()) {
+            throw new AdException(AdException.INTERNAL_ERROR, "Can't create a WebView for a null adtype");
+        }
+
+        AdFormat adType = adFormats.get(0);
+
         if (model.getAdConfiguration().isBuiltInVideo()) {
             adType = AdFormat.BANNER;
         }
 
-        if (adType == null) {
-            throw new AdException(AdException.INTERNAL_ERROR, "Can't create a WebView for a null adtype");
-        }
-        //create a webview here
         PrebidWebViewBase prebidWebView = null;
         if (adType == AdFormat.BANNER) {
             //do all banner

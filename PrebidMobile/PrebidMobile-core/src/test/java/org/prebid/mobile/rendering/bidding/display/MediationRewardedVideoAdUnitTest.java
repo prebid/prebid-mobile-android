@@ -32,6 +32,8 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -61,7 +63,7 @@ public class MediationRewardedVideoAdUnitTest {
         mMopubRewardedAdUnit.initAdConfig("config", null);
         AdUnitConfiguration adConfiguration = mMopubRewardedAdUnit.mAdUnitConfig;
         assertEquals("config", adConfiguration.getConfigId());
-        assertEquals(AdFormat.VAST, adConfiguration.getAdUnitIdentifierType());
+        assertEquals(Collections.singletonList(AdFormat.VAST), adConfiguration.getAdFormats());
         assertTrue(adConfiguration.isRewarded());
     }
 

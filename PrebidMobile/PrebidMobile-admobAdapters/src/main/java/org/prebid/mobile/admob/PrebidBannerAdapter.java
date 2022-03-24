@@ -68,7 +68,7 @@ public class PrebidBannerAdapter extends PrebidBaseAdapter implements CustomEven
         }
 
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdUnitIdentifierType(AdFormat.BANNER);
+        adConfiguration.setAdFormat(AdFormat.BANNER);
         DisplayViewListener listener = getListener(adMobListener);
         adView = new DisplayView(
                 context,

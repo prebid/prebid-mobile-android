@@ -37,6 +37,8 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -75,7 +77,7 @@ public class MediationBannerAdUnitTest {
         mMediationBannerAdUnit.initAdConfig("config", adSize);
         AdUnitConfiguration adConfiguration = mMediationBannerAdUnit.mAdUnitConfig;
         assertEquals("config", adConfiguration.getConfigId());
-        assertEquals(AdFormat.BANNER, adConfiguration.getAdUnitIdentifierType());
+        assertEquals(Collections.singletonList(AdFormat.BANNER), adConfiguration.getAdFormats());
         assertTrue(adConfiguration.getSizes().contains(adSize));
     }
 

@@ -83,7 +83,7 @@ public class CreativeModelMakerBidsTest {
     @Test
     public void whenMakeModelsAndBidRequestContainsAcjAd_CreateAcjModel() throws IOException {
         AdUnitConfiguration configuration = new AdUnitConfiguration();
-        configuration.setAdUnitIdentifierType(AdFormat.BANNER);
+        configuration.setAdFormat(AdFormat.BANNER);
 
         String responseString = ResourceUtils.convertResourceToString("bidding_response_obj.json");
         BidResponse bidResponse = new BidResponse(responseString);
@@ -108,7 +108,7 @@ public class CreativeModelMakerBidsTest {
 
         mModelMakerBids.makeVideoModels(mockConfig, vast);
 
-        verify(mockConfig).setAdUnitIdentifierType(eq(AdFormat.VAST));
+        verify(mockConfig).setAdFormat(eq(AdFormat.VAST));
         verify(mMockExtractor).extract(eq(vast));
     }
 

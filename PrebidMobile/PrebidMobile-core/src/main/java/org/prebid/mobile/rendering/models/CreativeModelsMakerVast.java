@@ -200,7 +200,7 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
                 endCardModel.setWidth(Integer.parseInt(companionAd.getWidth()));
                 endCardModel.setHeight(Integer.parseInt(companionAd.getHeight()));
                 endCardModel.setAdConfiguration(new AdUnitConfiguration());
-                endCardModel.getAdConfiguration().setAdUnitIdentifierType(AdFormat.INTERSTITIAL);
+                endCardModel.getAdConfiguration().setAdFormat(AdFormat.INTERSTITIAL);
                 endCardModel.setRequireImpressionUrl(false);
                 result.creativeModels.add(endCardModel);
 

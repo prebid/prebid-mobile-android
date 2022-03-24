@@ -302,7 +302,7 @@ public class BannerView extends FrameLayout {
     }
 
     public void setVideoPlacementType(VideoPlacementType videoPlacement) {
-        mAdUnitConfig.setAdUnitIdentifierType(AdFormat.VAST);
+        mAdUnitConfig.setAdFormat(AdFormat.VAST);
 
         final PlacementType placementType = VideoPlacementType.mapToPlacementType(videoPlacement);
         mAdUnitConfig.setPlacementType(placementType);
@@ -438,7 +438,7 @@ public class BannerView extends FrameLayout {
         mAdUnitConfig.setConfigId(mConfigId);
         mAdUnitConfig.setAutoRefreshDelay(mRefreshIntervalSec);
         mEventHandler.setBannerEventListener(mBannerEventListener);
-        mAdUnitConfig.setAdUnitIdentifierType(AdFormat.BANNER);
+        mAdUnitConfig.setAdFormat(AdFormat.BANNER);
         mAdUnitConfig.addSizes(mEventHandler.getAdSizeArray());
     }
 

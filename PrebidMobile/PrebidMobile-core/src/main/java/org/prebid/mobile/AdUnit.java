@@ -50,7 +50,7 @@ public abstract class AdUnit {
 
     AdUnit(@NonNull String configId, @NonNull AdFormat adType) {
         configuration.setConfigId(configId);
-        configuration.setAdUnitIdentifierType(adType);
+        configuration.setAdFormat(adType);
     }
 
     /**

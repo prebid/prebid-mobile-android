@@ -107,7 +107,7 @@ public class CreativeFactoryTest {
     @Test
     public void testAttemptAuidCreative() throws Exception {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdUnitIdentifierType(AdFormat.BANNER);
+        adConfiguration.setAdFormat(AdFormat.BANNER);
         Handler mockHandler = mock(Handler.class);
         when(mMockModel.getAdConfiguration()).thenReturn(adConfiguration);
         when(mMockModel.getName()).thenReturn(HTML_CREATIVE_TAG);
@@ -130,7 +130,7 @@ public class CreativeFactoryTest {
         VideoCreativeModel mockVideoModel = mock(VideoCreativeModel.class);
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         Handler mockHandler = mock(Handler.class);
-        adConfiguration.setAdUnitIdentifierType(AdFormat.VAST);
+        adConfiguration.setAdFormat(AdFormat.VAST);
         HashMap<VideoAdEvent.Event, ArrayList<String>> videoEventsUrls = new HashMap<>();
         videoEventsUrls.put(VideoAdEvent.Event.AD_EXPAND,
                             new ArrayList<>(Arrays.asList("AD_EXPAND")));

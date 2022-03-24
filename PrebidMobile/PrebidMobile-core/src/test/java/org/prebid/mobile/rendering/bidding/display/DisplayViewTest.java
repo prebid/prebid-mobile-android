@@ -63,7 +63,7 @@ public class DisplayViewTest {
         mContext = Robolectric.buildActivity(Activity.class).create().get();
 
         mAdUnitConfiguration = new AdUnitConfiguration();
-        mAdUnitConfiguration.setAdUnitIdentifierType(AdFormat.BANNER);
+        mAdUnitConfiguration.setAdFormat(AdFormat.BANNER);
 
         BidResponse mockResponse = mock(BidResponse.class);
         Bid mockBid = mock(Bid.class);

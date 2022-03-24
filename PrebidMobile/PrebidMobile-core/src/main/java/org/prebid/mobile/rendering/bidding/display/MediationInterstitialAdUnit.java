@@ -56,17 +56,17 @@ public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
     protected final void initAdConfig(String configId, AdSize minSizePercentage) {
         mAdUnitConfig.setMinSizePercentage(minSizePercentage);
         mAdUnitConfig.setConfigId(configId);
-        mAdUnitConfig.setAdUnitIdentifierType(AdFormat.INTERSTITIAL);
+        mAdUnitConfig.setAdFormat(AdFormat.INTERSTITIAL);
         mAdUnitConfig.setAdPosition(AdPosition.FULLSCREEN);
     }
 
     private void setAdUnitType(AdUnitFormat adUnitFormat) {
         switch (adUnitFormat) {
             case DISPLAY:
-                mAdUnitConfig.setAdUnitIdentifierType(AdFormat.INTERSTITIAL);
+                mAdUnitConfig.setAdFormat(AdFormat.INTERSTITIAL);
                 break;
             case VIDEO:
-                mAdUnitConfig.setAdUnitIdentifierType(AdFormat.VAST);
+                mAdUnitConfig.setAdFormat(AdFormat.VAST);
                 break;
         }
     }

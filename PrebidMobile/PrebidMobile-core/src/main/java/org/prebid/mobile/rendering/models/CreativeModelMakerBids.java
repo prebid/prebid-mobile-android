@@ -73,7 +73,7 @@ public class CreativeModelMakerBids {
 
     public void makeVideoModels(AdUnitConfiguration adConfiguration, String vast) {
         mAdConfiguration = adConfiguration;
-        mAdConfiguration.setAdUnitIdentifierType(AdFormat.VAST);
+        mAdConfiguration.setAdFormat(AdFormat.VAST);
         mParserExtractor.extract(vast);
     }
 

@@ -50,6 +50,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -140,22 +141,22 @@ public class HTMLCreativeTest {
         try {
             mHtmlCreative.load();
             fail("AdException was NOT thrown");
-        }
-        catch (AdException e) {
+        } catch (AdException e) {
         }
 
+        ArrayList<AdFormat> result = new ArrayList<>();
+        result.add(AdFormat.BANNER);
         // Test empty html
         try {
-            when(mMockConfig.getAdUnitIdentifierType()).thenReturn(AdFormat.BANNER);
+            when(mMockConfig.getAdFormats()).thenReturn(result);
             mHtmlCreative = new HTMLCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
             mHtmlCreative.load();
             fail("AdException was NOT thrown");
-        }
-        catch (AdException e) {
+        } catch (AdException e) {
         }
 
         // Test non-empty html
-        when(mMockConfig.getAdUnitIdentifierType()).thenReturn(AdFormat.BANNER);
+        when(mMockConfig.getAdFormats()).thenReturn(result);
         when(mMockModel.getHtml()).thenReturn("foo");
 
         mHtmlCreative = new HTMLCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
@@ -171,7 +172,9 @@ public class HTMLCreativeTest {
         WhiteBox.setInternalState(prebidWebViewBase, "mWebView", mock(WebViewBase.class));
         when(mMockPrebidWebView.getWebView()).thenReturn(mock(WebViewBase.class));
 
-        when(mMockConfig.getAdUnitIdentifierType()).thenReturn(AdFormat.BANNER);
+        ArrayList<AdFormat> result = new ArrayList<>();
+        result.add(AdFormat.BANNER);
+        when(mMockConfig.getAdFormats()).thenReturn(result);
 
         mHtmlCreative.display();
         verify(mMockModel, never()).trackDisplayAdEvent(TrackingEvent.Events.IMPRESSION);
