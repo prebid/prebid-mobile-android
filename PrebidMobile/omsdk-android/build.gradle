@@ -1,6 +1,3 @@
 // In case of updating version don't forget to update buildPrebidMobile.sh script
 configurations.maybeCreate("default")
 artifacts.add("default", file("${omSdkModuleName}-${omSdkVersion}.aar"))
-
-setGroup("${artifactGroupId}")
-setVersion("${omSdkVersion}")

@@ -7,8 +7,17 @@ import java.util.ArrayList;
 
 public class NativeImageAsset extends NativeAsset {
 
+    @Deprecated
     public NativeImageAsset() {
         super(REQUEST_ASSET.IMAGE);
+    }
+
+    public NativeImageAsset(int w, int h, int minWidth, int minHeight) {
+        super(REQUEST_ASSET.IMAGE);
+        this.w = w;
+        this.h = h;
+        wmin = minWidth;
+        hmin = minHeight;
     }
 
     public enum IMAGE_TYPE {
@@ -134,5 +143,39 @@ public class NativeImageAsset extends NativeAsset {
 
     public Object getImageExt() {
         return imageExt;
+    }
+
+
+    @Override
+    public JSONObject getJsonObject() {
+        JSONObject result = new JSONObject();
+
+        try {
+            result.putOpt("required", required ? 1 : 0);
+            result.putOpt("ext", assetExt);
+
+            JSONObject imageObject = new JSONObject();
+            imageObject.putOpt("type", type != null ? type.getID() : null);
+
+            imageObject.put("w", w);
+            imageObject.put("wmin", wmin);
+            imageObject.put("h", h);
+            imageObject.put("hmin", hmin);
+            imageObject.putOpt("ext", imageExt);
+
+            if (!mimes.isEmpty()) {
+                JSONArray mimesArray = new JSONArray();
+                for (String mime : mimes) {
+                    mimesArray.put(mime);
+                }
+                imageObject.putOpt("mimes", mimesArray);
+            }
+
+            result.put("img", imageObject);
+        } catch (Exception exception) {
+            LogUtil.error("NativeImageAsset", "Can't create json object: " + exception.getMessage());
+        }
+
+        return result;
     }
 }

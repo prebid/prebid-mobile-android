@@ -17,7 +17,7 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
-import org.prebid.mobile.rendering.bidding.data.AdSize
+import org.prebid.mobile.AdSize
 import org.prebid.mobile.rendering.bidding.enums.VideoPlacementType
 import org.prebid.mobile.rendering.bidding.listeners.BannerViewListener
 import org.prebid.mobile.rendering.bidding.parallel.BannerView

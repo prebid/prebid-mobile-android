@@ -16,147 +16,155 @@
 
 package org.prebid.mobile;
 
-import android.text.TextUtils;
 import android.util.Log;
+import androidx.annotation.Size;
 
 public class LogUtil {
-    //region Private Constructor
-    private LogUtil() {
-    }
-    //endregion
-
-    //region Log Tag
     private static final String BASE_TAG = "PrebidMobile";
 
+    public static final int NONE = -1;
+    public static final int VERBOSE = android.util.Log.VERBOSE; // 2
+    public static final int DEBUG = android.util.Log.DEBUG; // 3
+    public static final int INFO = android.util.Log.INFO; // 4
+    public static final int WARN = android.util.Log.WARN; // 5
+    public static final int ERROR = android.util.Log.ERROR; // 6
+    public static final int ASSERT = android.util.Log.ASSERT; // 7
+
+    private static int logLevel;
+
+    private LogUtil() {
+    }
+
+
+    public static void setLogLevel(int level) {
+        logLevel = level;
+    }
+
+    public static int getLogLevel() {
+        return logLevel;
+    }
+
     /**
-     * Helper method to get Prebid log tag that is shorter than 23 characters
-     *
-     * @param tagSuffix specific tag description
-     * @return log tag with "Prebid" prefix
+     * Prints a message with VERBOSE priority and default BASE_TAG
      */
-    public static String getTagWithBase(String tagSuffix) {
-        StringBuilder sb = new StringBuilder().append(BASE_TAG);
-        if (!TextUtils.isEmpty(tagSuffix)) {
-            sb.append("-").append(tagSuffix);
+    public static void verbose(String message) {
+        verbose(BASE_TAG, message);
+    }
+
+    /**
+     * Prints a message with DEBUG priority and default BASE_TAG
+     */
+    public static void debug(String message) {
+        debug(BASE_TAG, message);
+    }
+
+    /**
+     * Prints a message with INFO priority and default BASE_TAG
+     */
+    public static void info(String message) {
+        info(BASE_TAG, message);
+    }
+
+    /**
+     * Prints a message with WARNING priority and default BASE_TAG
+     */
+    public static void warning(String message) {
+        warning(BASE_TAG, message);
+    }
+
+    /**
+     * Prints a message with ERROR priority and default BASE_TAG
+     */
+    public static void error(String message) {
+        error(BASE_TAG, message);
+    }
+
+    /**
+     * Prints a message with VERBOSE priority.
+     */
+    public static void verbose(@Size(max = 23) String tag, String msg) {
+        print(VERBOSE, tag, msg);
+    }
+
+    /**
+     * Prints a message with DEBUG priority.
+     */
+    public static void debug(@Size(max = 23) String tag, String msg) {
+        print(DEBUG, tag, msg);
+    }
+
+    /**
+     * Prints a message with INFO priority.
+     */
+    public static void info(@Size(max = 23) String tag, String msg) {
+        print(INFO, tag, msg);
+    }
+
+    /**
+     * Prints a message with WARN priority.
+     */
+    public static void warning(@Size(max = 23) String tag, String msg) {
+        print(WARN, tag, msg);
+    }
+
+    /**
+     * Prints a message with ERROR priority.
+     */
+    public static void error(@Size(max = 23) String tag, String msg) {
+        print(ERROR, tag, msg);
+    }
+
+    /**
+     * Prints a message with ASSERT priority.
+     */
+    public static void wtf(@Size(max = 23) String tag, String msg) {
+        print(ASSERT, tag, msg);
+    }
+
+    /**
+     * Prints a message with ERROR priority and exception.
+     */
+    public static void error(final String tag, String message, Throwable throwable) {
+        if (tag == null || message == null) {
+            return;
         }
-        if (sb.length() > 23) {
-            return sb.substring(0, 22); // guarantee that tag length <=23
+
+        if (ERROR >= getLogLevel()) {
+            Log.e(getTagWithBase(tag), message, throwable);
+        }
+    }
+
+    /**
+     * Prints information with set priority. Every tag
+     */
+    private static void print(int messagePriority, String tag, String message) {
+        if (tag == null || message == null) {
+            return;
+        }
+
+        if (messagePriority >= getLogLevel()) {
+            Log.println(messagePriority, getTagWithBase(tag), message);
+        }
+    }
+
+    /**
+     * Helper method to add Prebid tag to logging messages.
+     */
+    private static String getTagWithBase(String tag) {
+        StringBuilder result = new StringBuilder();
+
+        String prefix = "Prebid";
+        if (tag.startsWith(prefix)) {
+            result.append(tag);
         } else {
-            return sb.toString();
+            result.append(prefix).append(tag);
         }
-    }
-    //endregion
 
-    //region Verbose Log
-    public static void v(String message) {
-        v(BASE_TAG, message);
-    }
-
-    public static void v(final String tag, String message) {
-        v(tag, message, null);
-    }
-
-    public static void v(final String tag, String message, Throwable cause) {
-        if (TextUtils.isEmpty(tag)) {
-            if (Log.isLoggable(BASE_TAG, Log.VERBOSE)) {
-                Log.v(BASE_TAG, message, cause);
-            }
+        if (result.length() > 23) {
+            return result.substring(0, 22);
         } else {
-            if (Log.isLoggable(tag, Log.VERBOSE)) {
-                Log.v(tag, message, cause);
-            }
+            return result.toString();
         }
     }
-    //endregion
 
-    //region Debug Log
-    public static void d(String message) {
-        d(BASE_TAG, message);
-    }
-
-    public static void d(final String tag, String message) {
-        d(tag, message, null);
-    }
-
-    public static void d(final String tag, String message, Throwable cause) {
-        try {
-            if (Log.isLoggable(tag, Log.DEBUG)) {
-                Log.d(tag, message, cause);
-                return;
-            }
-        } catch (IllegalArgumentException e) {
-            Log.e(BASE_TAG, "Tried to log a message with tag length >23: " + tag);
-        }
-        Log.d(BASE_TAG, message, cause);
-    }
-    //endregion
-
-    //region Info Log
-
-    public static void i(String message) {
-        i(BASE_TAG, message);
-    }
-
-    public static void i(final String tag, String message) {
-        i(tag, message, null);
-    }
-
-    public static void i(final String tag, String message, Throwable cause) {
-        try {
-            if (Log.isLoggable(tag, Log.INFO)) {
-                Log.i(tag, message, cause);
-                return;
-            }
-        } catch (IllegalArgumentException e) {
-            Log.e(BASE_TAG, "Tried to log a message with tag length >23: " + tag);
-        }
-        Log.i(BASE_TAG, message, cause);
-    }
-    //endregion
-
-    //region Warning Log
-
-    public static void w(String message) {
-        w(BASE_TAG, message);
-    }
-
-    public static void w(final String tag, String message) {
-        w(tag, message, null);
-    }
-
-    public static void w(final String tag, String message, Throwable cause) {
-        try {
-            if (Log.isLoggable(tag, Log.WARN)) {
-                Log.w(tag, message, cause);
-                return;
-            }
-        } catch (IllegalArgumentException e) {
-            Log.e(BASE_TAG, "Tried to log a message with tag length >23: " + tag);
-        }
-        Log.w(BASE_TAG, message, cause);
-    }
-    //endregion
-
-    //region Error Log
-
-    public static void e(String message) {
-        e(BASE_TAG, message);
-    }
-
-    public static void e(final String tag, String message) {
-        e(tag, message, null);
-    }
-
-    public static void e(final String tag, String message, Throwable cause) {
-        try {
-            if (Log.isLoggable(tag, Log.ERROR)) {
-                Log.e(tag, message, cause);
-                return;
-            }
-        } catch (IllegalArgumentException e) {
-            Log.e(BASE_TAG, "Tried to log a message with tag length >23: " + tag);
-        }
-        Log.e(BASE_TAG, message, cause);
-    }
-    //endregion
 }

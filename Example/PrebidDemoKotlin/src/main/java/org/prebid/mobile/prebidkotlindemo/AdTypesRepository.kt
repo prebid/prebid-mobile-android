@@ -1,6 +1,8 @@
 package org.prebid.mobile.prebidkotlindemo
 
 import com.mopub.mobileads.MoPubView
+import org.prebid.mobile.Host
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.prebidkotlindemo.ads.GamBanner
 import org.prebid.mobile.prebidkotlindemo.ads.GamInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.MoPubBanner
@@ -24,12 +26,14 @@ object AdTypesRepository {
             AdType(
                 "Banner 320x50",
                 onCreate = { _, wrapper, autoRefreshTime ->
+                    useTestServer()
+                    PrebidMobile.setStoredAuctionResponse("response-prebid-banner-320-50")
                     GamBanner.create(
                         wrapper, autoRefreshTime,
                         320, 50,
                         // TODO: Problem with ids
                         "/5300653/pavliuchyk_test_adunit_1x1_puc",
-                        "625c6125-f19e-4d5b-95c5-55501526b2a4"
+                        "imp-prebid-banner-320-50"
                     )
                 },
                 onDestroy = { GamBanner.destroy() }
@@ -37,6 +41,7 @@ object AdTypesRepository {
             AdType(
                 "Banner 300x250",
                 onCreate = { _, wrapper, autoRefreshTime ->
+                    useAppNexusServer()
                     GamBanner.create(
                         wrapper, autoRefreshTime,
                         300, 250,
@@ -49,6 +54,7 @@ object AdTypesRepository {
             AdType(
                 "Interstitial",
                 onCreate = { activity, _, autoRefreshTime ->
+                    useAppNexusServer()
                     GamInterstitial.create(
                         activity, autoRefreshTime,
                         // TODO: Problem with ids
@@ -64,11 +70,13 @@ object AdTypesRepository {
             AdType(
                 "Banner 320x50",
                 onCreate = { _, wrapper, autoRefreshTime ->
+                    useTestServer()
+                    PrebidMobile.setStoredAuctionResponse("response-prebid-banner-320-50")
                     MoPubBanner.create(
                         wrapper, autoRefreshTime,
                         320, 50, MoPubView.MoPubAdSize.HEIGHT_50,
                         "42b99af979cd474ea32f497c044b5d71",
-                        "625c6125-f19e-4d5b-95c5-55501526b2a4"
+                        "imp-prebid-banner-320-50"
                     )
                 },
                 onDestroy = { MoPubBanner.destroy() }
@@ -76,6 +84,7 @@ object AdTypesRepository {
             AdType(
                 "Banner 300x250",
                 onCreate = { _, wrapper, autoRefreshTime ->
+                    useAppNexusServer()
                     MoPubBanner.create(
                         wrapper, autoRefreshTime,
                         300, 250, MoPubView.MoPubAdSize.HEIGHT_250,
@@ -89,6 +98,7 @@ object AdTypesRepository {
             AdType(
                 "Interstitial",
                 onCreate = { activity, _, autoRefreshTime ->
+                    useAppNexusServer()
                     MoPubInterstitial.create(
                         activity, autoRefreshTime,
                         // TODO: Problem with ids
@@ -331,7 +341,21 @@ object AdTypesRepository {
                 }
             )
         )
-
     )
+
+    fun useOpenXServer() {
+        PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid.openx.net/openrtb2/auction"))
+    }
+
+    private fun useTestServer() {
+        PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
+    }
+
+    private fun useAppNexusServer() {
+        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0")
+        PrebidMobile.setPrebidServerHost(Host.APPNEXUS)
+    }
 
 }

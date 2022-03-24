@@ -18,28 +18,24 @@ package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.List;
 
 public abstract class VideoBaseAdUnit extends AdUnit {
 
-    @Nullable
-    Parameters parameters;
-
-    VideoBaseAdUnit(@NonNull String configId, @NonNull AdType adType) {
+    VideoBaseAdUnit(@NonNull String configId, @NonNull AdUnitConfiguration.AdUnitIdentifierType adType) {
         super(configId, adType);
     }
 
     @Nullable
     public Parameters getParameters() {
-        return parameters;
+        return configuration.getVideoParameters();
     }
 
     public void setParameters(@Nullable Parameters parameters) {
-        this.parameters = parameters;
+        configuration.setVideoParameters(parameters);
     }
-
-    //Parameters class
 
     /**
      * Describes an <a href="https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf">OpenRTB</a> video object
@@ -201,4 +197,5 @@ public abstract class VideoBaseAdUnit extends AdUnit {
             this.placement = placement;
         }
     }
+
 }

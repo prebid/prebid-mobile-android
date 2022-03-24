@@ -16,8 +16,8 @@
 
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam
 
+import org.prebid.mobile.AdSize
 import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
-import org.prebid.mobile.rendering.bidding.data.AdSize
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 import org.prebid.mobile.rendering.bidding.parallel.InterstitialAdUnit
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment

@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class NativeTitleAsset extends NativeAsset {
+
     private int len;
     private boolean required;
     private Object titleExt;
@@ -48,4 +49,25 @@ public class NativeTitleAsset extends NativeAsset {
             this.assetExt = assetExt;
         }
     }
+
+    @Override
+    public JSONObject getJsonObject() {
+        JSONObject result = new JSONObject();
+
+        try {
+            result.putOpt("required", required ? 1 : 0);
+            result.putOpt("ext", assetExt);
+
+            JSONObject titleObject = new JSONObject();
+            titleObject.putOpt("len", len);
+            titleObject.putOpt("ext", titleExt);
+
+            result.put("title", titleObject);
+        } catch (Exception exception) {
+            LogUtil.error("NativeTitleAsset", "Can't create json object: " + exception.getMessage());
+        }
+
+        return result;
+    }
+
 }

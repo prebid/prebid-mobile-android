@@ -20,17 +20,15 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
-
+import androidx.annotation.NonNull;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.eventhandlers.global.Constants;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
-
-import androidx.annotation.NonNull;
 
 public class GamInterstitialEventHandler implements InterstitialEventHandler, GamAdEventListener {
     private static final String TAG = GamInterstitialEventHandler.class.getSimpleName();

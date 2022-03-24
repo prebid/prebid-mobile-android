@@ -39,9 +39,9 @@ public class ParametersMatcher {
             }
             return true;
         } catch (JSONException e) {
-            LogUtil.e(TAG, "Can't parse AdMob parameters");
+            LogUtil.error(TAG, "Can't parse AdMob parameters");
         } catch (NullPointerException e) {
-            LogUtil.e(TAG, "Null pointer exception");
+            LogUtil.error(TAG, "Null pointer exception");
         }
 
         return false;

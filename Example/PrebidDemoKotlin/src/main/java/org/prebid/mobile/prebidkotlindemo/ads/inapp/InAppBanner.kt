@@ -1,7 +1,7 @@
 package org.prebid.mobile.prebidkotlindemo.ads.inapp
 
 import android.view.ViewGroup
-import org.prebid.mobile.rendering.bidding.data.AdSize
+import org.prebid.mobile.AdSize
 import org.prebid.mobile.rendering.bidding.parallel.BannerView
 
 object InAppBanner {

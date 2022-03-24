@@ -193,17 +193,13 @@ open class MopubNativeFragment : AdFragment() {
             assetTitle.isRequired = true
             addAsset(assetTitle)
 
-            val assetIcon = NativeImageAsset()
+            val assetIcon = NativeImageAsset(20, 20, 20, 20)
             assetIcon.imageType = NativeImageAsset.IMAGE_TYPE.ICON
-            assetIcon.wMin = 20
-            assetIcon.hMin = 20
             assetIcon.isRequired = true
             addAsset(assetIcon)
 
-            val image = NativeImageAsset()
+            val image = NativeImageAsset(200, 200, 200, 200)
             image.imageType = NativeImageAsset.IMAGE_TYPE.MAIN
-            image.hMin = 200
-            image.wMin = 200
             image.isRequired = true
             addAsset(image)
 

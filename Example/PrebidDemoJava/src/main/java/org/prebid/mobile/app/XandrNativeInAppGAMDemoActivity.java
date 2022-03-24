@@ -2,15 +2,9 @@ package org.prebid.mobile.app;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdSize;
@@ -20,22 +14,8 @@ import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
 import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
-
-import org.prebid.mobile.AdUnit;
-import org.prebid.mobile.Host;
-import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.NativeAdUnit;
-import org.prebid.mobile.NativeDataAsset;
-import org.prebid.mobile.NativeEventTracker;
-import org.prebid.mobile.NativeImageAsset;
-import org.prebid.mobile.NativeTitleAsset;
-import org.prebid.mobile.OnCompleteListener;
-import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.PrebidNativeAd;
-import org.prebid.mobile.PrebidNativeAdEventListener;
-import org.prebid.mobile.PrebidNativeAdListener;
-import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.Util;
+import org.prebid.mobile.*;
 import org.prebid.mobile.addendum.AdViewUtils;
 
 import java.util.ArrayList;
@@ -136,16 +116,12 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
         title.setLength(90);
         title.setRequired(true);
         nativeAdUnit.addAsset(title);
-        NativeImageAsset icon = new NativeImageAsset();
+        NativeImageAsset icon = new NativeImageAsset(20, 20, 20, 20);
         icon.setImageType(NativeImageAsset.IMAGE_TYPE.ICON);
-        icon.setWMin(20);
-        icon.setHMin(20);
         icon.setRequired(true);
         nativeAdUnit.addAsset(icon);
-        NativeImageAsset image = new NativeImageAsset();
+        NativeImageAsset image = new NativeImageAsset(200, 200, 200, 200);
         image.setImageType(NativeImageAsset.IMAGE_TYPE.MAIN);
-        image.setHMin(200);
-        image.setWMin(200);
         image.setRequired(true);
         nativeAdUnit.addAsset(image);
         NativeDataAsset data = new NativeDataAsset();
@@ -219,7 +195,7 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
                 .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
                     @Override
                     public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
-                        LogUtil.d("Prebid", "native loaded");
+                        LogUtil.debug("Prebid", "native loaded");
                         XandrNativeInAppGAMDemoActivity.this.unifiedNativeAd = unifiedNativeAd;
                     }
                 })
@@ -227,7 +203,7 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
 
                     @Override
                     public void onCustomTemplateAdLoaded(NativeCustomTemplateAd nativeCustomTemplateAd) {
-                        LogUtil.d("Prebid", "custom ad loaded");
+                        LogUtil.debug("Prebid", "custom ad loaded");
                         AdViewUtils.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
                             @Override
                             public void onPrebidNativeLoaded(PrebidNativeAd ad) {
@@ -236,13 +212,13 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
 
                             @Override
                             public void onPrebidNativeNotFound() {
-                                LogUtil.d("Prebid", "onPrebidNativeNotFound");
+                                LogUtil.debug("Prebid", "onPrebidNativeNotFound");
                                 // inflate nativeCustomTemplateAd
                             }
 
                             @Override
                             public void onPrebidNativeNotValid() {
-                                LogUtil.d("Prebid", "onPrebidNativeNotFound");
+                                LogUtil.debug("Prebid", "onPrebidNativeNotFound");
                                 // show your own content
                             }
                         });

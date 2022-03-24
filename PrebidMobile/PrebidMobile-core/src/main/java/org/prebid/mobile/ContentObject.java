@@ -208,7 +208,7 @@ public class ContentObject {
                 return null;
             }
         } catch (JSONException exception) {
-            LogUtil.e("ContentObject", "Can't create json result object.");
+            LogUtil.error("ContentObject", "Can't create json result object.");
         }
 
         return result;
@@ -485,7 +485,7 @@ public class ContentObject {
                     result.put("cat", categoriesJson);
                 }
             } catch (JSONException exception) {
-                LogUtil.e("ContentObject", "Can't create json producer content object.");
+                LogUtil.error("ContentObject", "Can't create json producer content object.");
             }
 
             return result;

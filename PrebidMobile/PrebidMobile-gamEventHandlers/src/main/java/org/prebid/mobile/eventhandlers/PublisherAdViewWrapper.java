@@ -19,24 +19,21 @@ package org.prebid.mobile.eventhandlers;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.admanager.AppEventListener;
-
+import org.prebid.mobile.AdSize;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.eventhandlers.global.Constants;
 import org.prebid.mobile.eventhandlers.utils.GamUtils;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 /**
  * This class is responsible for wrapping usage of PublisherAdView from GAM SDK.
@@ -172,7 +169,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
         final com.google.android.gms.ads.AdSize[] gamAdSizeArray = new com.google.android.gms.ads.AdSize[adSizes.length];
         for (int i = 0; i < adSizes.length; i++) {
             final AdSize prebidAdSize = adSizes[i];
-            gamAdSizeArray[i] = new com.google.android.gms.ads.AdSize(prebidAdSize.width, prebidAdSize.height);
+            gamAdSizeArray[i] = new com.google.android.gms.ads.AdSize(prebidAdSize.getWidth(), prebidAdSize.getHeight());
         }
 
         return gamAdSizeArray;

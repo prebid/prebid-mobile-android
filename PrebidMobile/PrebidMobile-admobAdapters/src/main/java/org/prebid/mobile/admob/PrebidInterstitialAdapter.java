@@ -52,7 +52,7 @@ public class PrebidInterstitialAdapter extends PrebidBaseAdapter implements Cust
             adMobListener.onAdFailedToLoad(new AdError(1003, error, "prebid"));
             return;
         }
-        LogUtil.v(TAG, "Parameters are matched! (" + serverParameter + ")");
+        LogUtil.verbose(TAG, "Parameters are matched! (" + serverParameter + ")");
 
         try {
             InterstitialControllerListener listener = getListener(adMobListener);

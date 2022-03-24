@@ -17,9 +17,9 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam
 
 import android.widget.Button
+import org.prebid.mobile.AdSize
 import org.prebid.mobile.eventhandlers.GamBannerEventHandler
 import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
-import org.prebid.mobile.rendering.bidding.data.AdSize
 import org.prebid.mobile.rendering.bidding.parallel.BannerView
 import org.prebid.mobile.rendering.bidding.parallel.InterstitialAdUnit
 import org.prebid.mobile.renderingtestapp.R

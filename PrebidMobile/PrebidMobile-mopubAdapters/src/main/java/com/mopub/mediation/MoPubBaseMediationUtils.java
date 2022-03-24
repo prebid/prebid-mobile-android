@@ -90,7 +90,7 @@ public abstract class MoPubBaseMediationUtils implements PrebidMediationDelegate
 
     protected boolean isAdViewNull(Object adView) {
         if (adView == null) {
-            LogUtil.e(TAG, "AdView is null, it can be destroyed as WeakReference");
+            LogUtil.error(TAG, "AdView is null, it can be destroyed as WeakReference");
             return true;
         }
         return false;

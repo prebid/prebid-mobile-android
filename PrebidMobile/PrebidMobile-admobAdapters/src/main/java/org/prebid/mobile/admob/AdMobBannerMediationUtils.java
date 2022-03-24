@@ -37,7 +37,7 @@ public class AdMobBannerMediationUtils implements PrebidMediationDelegate {
     public boolean canPerformRefresh() {
         AdView view = adView.get();
         if (view == null) {
-            LogUtil.e(TAG, "AdView is null, it can be destroyed as WeakReference");
+            LogUtil.error(TAG, "AdView is null, it can be destroyed as WeakReference");
             return false;
         }
 

@@ -29,9 +29,7 @@ import com.google.android.gms.ads.RequestConfiguration
 import com.mopub.common.MoPub
 import com.mopub.common.SdkConfiguration
 import com.mopub.common.logging.MoPubLog
-import org.prebid.mobile.Host
 import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 
 class CustomApplication : Application() {
 
@@ -50,22 +48,16 @@ class CustomApplication : Application() {
 
     private fun initMopubSDK() {
         val sdkConfiguration = SdkConfiguration.Builder("42b99af979cd474ea32f497c044b5d71")
-        sdkConfiguration.withLogLevel(MoPubLog.LogLevel.DEBUG)
+        sdkConfiguration.withLogLevel(MoPubLog.LogLevel.NONE)
         MoPub.initializeSdk(this, sdkConfiguration.build()) {
             Log.d("MoPub", "Initialized successfully!")
         }
     }
 
     private fun initPrebidSDK() {
-        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0")
-        PrebidMobile.setPrebidServerHost(Host.APPNEXUS)
-        PrebidMobile.setShareGeoLocation(true)
+//        PrebidMobile.setPbsDebug(true)
         PrebidMobile.setApplicationContext(applicationContext)
-
-        val host = org.prebid.mobile.rendering.bidding.enums.Host.CUSTOM
-        host.hostUrl = "https://prebid.openx.net/openrtb2/auction"
-        PrebidRenderingSettings.setBidServerHost(host)
-        PrebidRenderingSettings.setAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
+        PrebidMobile.setShareGeoLocation(true)
     }
 
     private fun initAdMob() {

@@ -78,7 +78,6 @@ cd $LIBDIR
 modules=(
   "PrebidMobile"
   "PrebidMobile-core"
-  "PrebidMobile-rendering"
   "PrebidMobile-gamEventHandlers"
   "PrebidMobile-mopubAdapters"
   "PrebidMobile-admobAdapters"
@@ -87,7 +86,6 @@ modules=(
 projectPaths=(
   "$BASEDIR/PrebidMobile"
   "$BASEDIR/PrebidMobile/PrebidMobile-core"
-  "$BASEDIR/PrebidMobile/PrebidMobile-rendering"
   "$BASEDIR/PrebidMobile/PrebidMobile-gamEventHandlers"
   "$BASEDIR/PrebidMobile/PrebidMobile-mopubAdapters"
   "$BASEDIR/PrebidMobile/PrebidMobile-admobAdapters"
@@ -189,7 +187,6 @@ cd $TEMPDIR;
 unzip -qq -uo $OUTDIR/omsdk.jar
 unzip -qq -uo $OUTDIR/PrebidMobile.jar
 unzip -qq -uo $OUTDIR/PrebidMobile-core.jar
-unzip -qq -uo $OUTDIR/PrebidMobile-rendering.jar
 
 # unzip second proguard
 unzip -qq -B $OUTDIR/PrebidMobile.jar "META-INF/proguard/proguard.pro"

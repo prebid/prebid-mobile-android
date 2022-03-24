@@ -12,9 +12,9 @@ import kotlinx.android.synthetic.main.events_mopub_banner.*
 import kotlinx.android.synthetic.main.events_mopub_banner.btnAdClicked
 import kotlinx.android.synthetic.main.events_mopub_banner.btnAdFailed
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
+import org.prebid.mobile.AdSize
 import org.prebid.mobile.admob.AdMobBannerMediationUtils
 import org.prebid.mobile.admob.PrebidBannerAdapter
-import org.prebid.mobile.rendering.bidding.data.AdSize
 import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R

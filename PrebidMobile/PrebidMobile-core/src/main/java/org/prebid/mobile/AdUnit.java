@@ -23,125 +23,100 @@ import android.net.NetworkInfo;
 import android.text.TextUtils;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
+import org.prebid.mobile.rendering.bidding.loader.BidLoader;
+import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.tasksmanager.TasksManager;
+import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.*;
 
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
+
 public abstract class AdUnit {
-    private static final int MIN_AUTO_REFRESH_PERIOD_MILLIS = 30_000;
 
-    private String configId;
-    private AdType adType;
+    protected AdUnitConfiguration configuration = new AdUnitConfiguration();
 
-    private DemandFetcher fetcher;
-    private int periodMillis;
+    @Nullable
+    protected BidLoader bidLoader;
+    @Nullable
+    protected Object adObject;
 
-    private final Map<String, Set<String>> contextDataDictionary;
-    private final Set<String> contextKeywordsSet;
-    private ContentObject content;
-    private final ArrayList<DataObject> userDataObjects = new ArrayList<>();
-
-    private String pbAdSlot;
-
-    AdUnit(@NonNull String configId, @NonNull AdType adType) {
-        this.configId = configId;
-        this.adType = adType;
-        this.periodMillis = 0; // by default no auto refresh
-
-        this.contextDataDictionary = new HashMap<>();
-        this.contextKeywordsSet = new HashSet<>();
-
+    AdUnit(@NonNull String configId, @NonNull AdUnitConfiguration.AdUnitIdentifierType adType) {
+        configuration.setConfigId(configId);
+        configuration.setAdUnitIdentifierType(adType);
     }
 
-    public void setAutoRefreshPeriodMillis(@IntRange(from = MIN_AUTO_REFRESH_PERIOD_MILLIS) int periodMillis) {
-        if (periodMillis < MIN_AUTO_REFRESH_PERIOD_MILLIS) {
-            LogUtil.w("periodMillis less then:" + MIN_AUTO_REFRESH_PERIOD_MILLIS);
-            return;
-        }
-        this.periodMillis = periodMillis;
-        if (fetcher != null) {
-            fetcher.setPeriodMillis(periodMillis);
-        }
+    /**
+     * @deprecated Please use setAutoRefreshInterval() in seconds!
+     */
+    @Deprecated
+    public void setAutoRefreshPeriodMillis(
+            @IntRange(from = AUTO_REFRESH_DELAY_MIN, to = AUTO_REFRESH_DELAY_MAX) int periodMillis
+    ) {
+        configuration.setAutoRefreshDelay(periodMillis / 1000);
+    }
+
+    public void setAutoRefreshInterval(
+            @IntRange(from = AUTO_REFRESH_DELAY_MIN / 1000, to = AUTO_REFRESH_DELAY_MAX / 1000) int seconds
+    ) {
+        configuration.setAutoRefreshDelay(seconds);
     }
 
     public void resumeAutoRefresh() {
-        LogUtil.v("Resuming auto refresh...");
-        if (fetcher != null) {
-            fetcher.start();
+        LogUtil.verbose("Resuming auto refresh...");
+        if (bidLoader != null) {
+            bidLoader.setupRefreshTimer();
         }
     }
 
     public void stopAutoRefresh() {
-        LogUtil.v("Stopping auto refresh...");
-        if (fetcher != null) {
-            fetcher.stop();
+        LogUtil.verbose("Stopping auto refresh...");
+        if (bidLoader != null) {
+            bidLoader.cancelRefresh();
         }
     }
 
     public void fetchDemand(@NonNull final OnCompleteListener2 listener) {
-
         final Map<String, String> keywordsMap = new HashMap<>();
 
-        fetchDemand(keywordsMap, new OnCompleteListener() {
-            @Override
-            public void onComplete(final ResultCode resultCode) {
-                TasksManager.getInstance().executeOnMainThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        listener.onComplete(resultCode, keywordsMap.size() != 0 ? Collections.unmodifiableMap(keywordsMap) : null);
-                    }
-                });
-            }
+        fetchDemand(keywordsMap, resultCode -> {
+            TasksManager.getInstance().executeOnMainThread(() ->
+                    listener.onComplete(resultCode, keywordsMap.size() != 0 ? Collections.unmodifiableMap(keywordsMap) : null)
+            );
         });
     }
 
     public void fetchDemand(@NonNull Object adObj, @NonNull OnCompleteListener listener) {
         if (TextUtils.isEmpty(PrebidMobile.getPrebidServerAccountId())) {
-            LogUtil.e("Empty account id.");
+            LogUtil.error("Empty account id.");
             listener.onComplete(ResultCode.INVALID_ACCOUNT_ID);
             return;
         }
-        if (TextUtils.isEmpty(configId)) {
-            LogUtil.e("Empty config id.");
+        if (TextUtils.isEmpty(configuration.getConfigId())) {
+            LogUtil.error("Empty config id.");
             listener.onComplete(ResultCode.INVALID_CONFIG_ID);
             return;
         }
         if (PrebidMobile.getPrebidServerHost().equals(Host.CUSTOM)) {
             if (TextUtils.isEmpty(PrebidMobile.getPrebidServerHost().getHostUrl())) {
-                LogUtil.e("Empty host url for custom Prebid Server host.");
+                LogUtil.error("Empty host url for custom Prebid Server host.");
                 listener.onComplete(ResultCode.INVALID_HOST_URL);
                 return;
             }
         }
 
-        HashSet<AdSize> sizes = null;
-        if (adType == AdType.BANNER) {
-            sizes = ((BannerAdUnit) this).getSizes();
-            for (AdSize size : sizes) {
-                if (size.getWidth() < 0 || size.getHeight() < 0) {
-                    listener.onComplete(ResultCode.INVALID_SIZE);
-                    return;
-                }
+        HashSet<AdSize> sizes = configuration.getSizes();
+        for (AdSize size : sizes) {
+            if (size.getWidth() < 0 || size.getHeight() < 0) {
+                listener.onComplete(ResultCode.INVALID_SIZE);
+                return;
             }
-        } else if (adType == AdType.VIDEO) {
-
-            VideoAdUnit videoAdUnit = (VideoAdUnit) this;
-
-            sizes = new HashSet<>(1);
-            sizes.add(videoAdUnit.getAdSize());
-            for (AdSize size : sizes) {
-                if (size.getWidth() < 0 || size.getHeight() < 0) {
-                    listener.onComplete(ResultCode.INVALID_SIZE);
-                    return;
-                }
-            }
-
-        }
-        AdSize minSizePerc = null;
-        if (this instanceof InterstitialAdUnit) {
-            InterstitialAdUnit interstitialAdUnit = (InterstitialAdUnit) this;
-
-            minSizePerc = interstitialAdUnit.getMinSizePerc();
         }
 
         Context context = PrebidMobile.getApplicationContext();
@@ -155,39 +130,31 @@ public abstract class AdUnit {
                 }
             }
         } else {
-            LogUtil.e("Invalid context");
+            LogUtil.error("Invalid context");
             listener.onComplete(ResultCode.INVALID_CONTEXT);
             return;
         }
 
-        BannerBaseAdUnit.Parameters bannerParameters = null;
-        if (this instanceof BannerBaseAdUnit) {
-            BannerBaseAdUnit bannerBaseAdUnit = (BannerBaseAdUnit) this;
-            bannerParameters = bannerBaseAdUnit.parameters;
-        }
-
-        VideoBaseAdUnit.Parameters videoParameters = null;
-        if (this instanceof VideoBaseAdUnit) {
-            VideoBaseAdUnit videoBaseAdUnit = (VideoBaseAdUnit) this;
-            videoParameters = videoBaseAdUnit.parameters;
-        }
-
         if (Util.supportedAdObject(adObj)) {
-            fetcher = new DemandFetcher(adObj);
-            RequestParams requestParams = new RequestParams(configId, adType, sizes, contextDataDictionary, contextKeywordsSet, minSizePerc, pbAdSlot, bannerParameters, videoParameters, content, userDataObjects);
-            if (this.adType.equals(AdType.NATIVE)) {
-                requestParams.setNativeRequestParams(((NativeAdUnit) this).params);
-            }
-            fetcher.setPeriodMillis(periodMillis);
-            fetcher.setRequestParams(requestParams);
-            fetcher.setListener(listener);
-            if (periodMillis >= 30000) {
-                LogUtil.v("Start fetching bids with auto refresh millis: " + periodMillis);
+            adObject = adObj;
+            bidLoader = new BidLoader(
+                    context,
+                    configuration,
+                    createBidListener(listener)
+            );
+
+            if (configuration.getAutoRefreshDelay() > 0) {
+                BidLoader.BidRefreshListener bidRefreshListener = () -> true;
+                bidLoader.setBidRefreshListener(bidRefreshListener);
+                LogUtil.verbose("Start fetching bids with auto refresh millis: " + configuration.getAutoRefreshDelay());
             } else {
-                LogUtil.v("Start a single fetching.");
+                bidLoader.setBidRefreshListener(null);
+                LogUtil.verbose("Start a single fetching.");
             }
-            fetcher.start();
+
+            bidLoader.load();
         } else {
+            adObject = null;
             listener.onComplete(ResultCode.INVALID_AD_OBJECT);
         }
 
@@ -200,7 +167,7 @@ public abstract class AdUnit {
      * if the key already exists the value will be appended to the list. No duplicates will be added
      */
     public void addContextData(String key, String value) {
-        Util.addValue(contextDataDictionary, key, value);
+        configuration.addContextData(key, value);
     }
 
     /**
@@ -208,25 +175,25 @@ public abstract class AdUnit {
      * the values if the key already exist will be replaced with the new set of values
      */
     public void updateContextData(String key, Set<String> value) {
-        contextDataDictionary.put(key, value);
+        configuration.addContextData(key, value);
     }
 
     /**
      * This method allows to remove specific context data keyword & values set from adunit context targeting
      */
     public void removeContextData(String key) {
-        contextDataDictionary.remove(key);
+        configuration.removeContextData(key);
     }
 
     /**
      * This method allows to remove all context data set from adunit context targeting
      */
     public void clearContextData() {
-        contextDataDictionary.clear();
+        configuration.clearContextData();
     }
 
     Map<String, Set<String>> getContextDataDictionary() {
-        return contextDataDictionary;
+        return configuration.getContextDataDictionary();
     }
 
     // MARK: - adunit context keywords (imp[].ext.context.keywords)
@@ -236,7 +203,7 @@ public abstract class AdUnit {
      * Inserts the given element in the set if it is not already present.
      */
     public void addContextKeyword(String keyword) {
-        contextKeywordsSet.add(keyword);
+        configuration.addContextKeyword(keyword);
     }
 
     /**
@@ -244,56 +211,108 @@ public abstract class AdUnit {
      * Adds the elements of the given set to the set.
      */
     public void addContextKeywords(Set<String> keywords) {
-        contextKeywordsSet.addAll(keywords);
-    }
-
-    /**
-     * This method obtains the content for adunit, content, in which impression will appear
-     */
-    public void setAppContent(ContentObject content) {
-        this.content = content;
-    }
-
-    public ContentObject getAppContent() {
-        return content;
-    }
-
-    public void addUserData(DataObject dataObject) {
-        userDataObjects.add(dataObject);
-    }
-
-    public ArrayList<DataObject> getUserData() {
-        return userDataObjects;
-    }
-
-    public void clearUserData() {
-        userDataObjects.clear();
+        configuration.addContextKeywords(keywords);
     }
 
     /**
      * This method allows to remove specific context keyword from adunit context targeting
      */
     public void removeContextKeyword(String keyword) {
-        contextKeywordsSet.remove(keyword);
+        configuration.removeContextKeyword(keyword);
     }
 
     /**
      * This method allows to remove all keywords from the set of adunit context targeting
      */
     public void clearContextKeywords() {
-        contextKeywordsSet.clear();
+        configuration.clearContextKeywords();
     }
 
     Set<String> getContextKeywordsSet() {
-        return contextKeywordsSet;
+        return configuration.getContextKeywordsSet();
+    }
+
+    /**
+     * This method obtains the content for adunit, content, in which impression will appear
+     */
+    public void setAppContent(ContentObject content) {
+        configuration.setAppContent(content);
+    }
+
+    public ContentObject getAppContent() {
+        return configuration.getAppContent();
+    }
+
+    public void addUserData(DataObject dataObject) {
+        configuration.addUserData(dataObject);
+    }
+
+    public ArrayList<DataObject> getUserData() {
+        return configuration.getUserData();
+    }
+
+    public void clearUserData() {
+        configuration.clearUserData();
     }
 
     public String getPbAdSlot() {
-        return pbAdSlot;
+        return configuration.getPbAdSlot();
     }
 
     public void setPbAdSlot(String pbAdSlot) {
-        this.pbAdSlot = pbAdSlot;
+        configuration.setPbAdSlot(pbAdSlot);
     }
+
+
+    protected BidRequesterListener createBidListener(OnCompleteListener originalListener) {
+        return new BidRequesterListener() {
+            @Override
+            public void onFetchCompleted(BidResponse response) {
+                HashMap<String, String> keywords = response.getTargeting();
+                Util.apply(keywords, adObject);
+                originalListener.onComplete(ResultCode.SUCCESS);
+            }
+
+            @Override
+            public void onError(AdException exception) {
+                Util.apply(null, adObject);
+                originalListener.onComplete(convertToResultCode(exception));
+            }
+        };
+    }
+
+    protected ResultCode convertToResultCode(AdException renderingException) {
+        FetchDemandResult fetchDemandResult = FetchDemandResult.parseErrorMessage(renderingException.getMessage());
+        LogUtil.error("Prebid", "Can't download bids: " + fetchDemandResult);
+        switch (fetchDemandResult) {
+            case INVALID_ACCOUNT_ID:
+                return ResultCode.INVALID_ACCOUNT_ID;
+            case INVALID_CONFIG_ID:
+                return ResultCode.INVALID_CONFIG_ID;
+            case INVALID_SIZE:
+                return ResultCode.INVALID_SIZE;
+            case INVALID_CONTEXT:
+                return ResultCode.INVALID_CONTEXT;
+            case INVALID_AD_OBJECT:
+                return ResultCode.INVALID_AD_OBJECT;
+            case INVALID_HOST_URL:
+                return ResultCode.INVALID_HOST_URL;
+            case NETWORK_ERROR:
+                return ResultCode.NETWORK_ERROR;
+            case TIMEOUT:
+                return ResultCode.TIMEOUT;
+            case NO_BIDS:
+                return ResultCode.NO_BIDS;
+            default:
+                return ResultCode.PREBID_SERVER_ERROR;
+        }
+    }
+
+
+    @VisibleForTesting
+    public AdUnitConfiguration getConfiguration() {
+        return configuration;
+    }
+
 }
 

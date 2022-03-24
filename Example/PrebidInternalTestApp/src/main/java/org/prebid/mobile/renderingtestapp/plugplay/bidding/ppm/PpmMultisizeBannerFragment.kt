@@ -16,7 +16,7 @@
 
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 
-import org.prebid.mobile.rendering.bidding.data.AdSize
+import org.prebid.mobile.AdSize
 
 class PpmMultisizeBannerFragment : PpmBannerFragment() {
     override fun initAd(): Any? {

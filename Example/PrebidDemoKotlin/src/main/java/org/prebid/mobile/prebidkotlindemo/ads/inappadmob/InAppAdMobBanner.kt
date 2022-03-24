@@ -56,7 +56,7 @@ object InAppAdMobBanner {
         adUnit = MediationBannerAdUnit(
             wrapper.context,
             configId,
-            org.prebid.mobile.rendering.bidding.data.AdSize(width, height),
+            org.prebid.mobile.AdSize(width, height),
             mediationUtils
         )
         adUnit?.setRefreshInterval(autoRefreshTime / 1000)

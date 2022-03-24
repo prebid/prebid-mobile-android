@@ -110,17 +110,13 @@ object InAppAdMobNative {
         title.isRequired = true
         nativeAdUnit.addAsset(title)
 
-        val icon = NativeImageAsset()
+        val icon = NativeImageAsset(20, 20, 20, 20)
         icon.imageType = NativeImageAsset.IMAGE_TYPE.ICON
-        icon.wMin = 20
-        icon.hMin = 20
         icon.isRequired = true
         nativeAdUnit.addAsset(icon)
 
-        val image = NativeImageAsset()
+        val image = NativeImageAsset(200, 200, 200, 200)
         image.imageType = NativeImageAsset.IMAGE_TYPE.MAIN
-        image.hMin = 200
-        image.wMin = 200
         image.isRequired = true
         nativeAdUnit.addAsset(image)
 
