@@ -78,9 +78,6 @@ class HeaderBiddingViewModel(
         updateDemoList()
     }
 
-    fun isMockServer(): Boolean {
-        return SourcePicker.useMockServer
-    }
 
     fun isSubjectToGdpr(): Boolean {
         return gdprHelper.isGdprEnabled()
@@ -88,11 +85,6 @@ class HeaderBiddingViewModel(
 
     fun onGdprSwitchStateChanged(isChecked: Boolean) {
         gdprHelper.changeGdprState(isChecked)
-    }
-
-    fun onMockSwitchStateChanged(isChecked: Boolean) {
-        SourcePicker.useMockServer = isChecked
-        updateDemoList()
     }
 
     fun onDemoItemClicked(item: DemoItem) {
@@ -120,8 +112,7 @@ class HeaderBiddingViewModel(
     }
 
     private fun containsProperRemoteTag(tags: List<Tag>): Boolean {
-        val requiredTag = if (isMockServer()) Tag.MOCK else Tag.REMOTE
-        return tags.contains(requiredTag)
+        return tags.contains(Tag.REMOTE)
     }
 
     private fun containsProperIntegrationTag(tags: List<Tag>): Boolean {

@@ -33,8 +33,7 @@ public class MoPubInterstitialTests extends BaseUiAutomatorTest {
 
     @Test
     public void testMoPubInterstitialNoBids() {
-        homePage.setUseMockServer(false)
-                .getInterstitialPageFactory()
+        homePage.getInterstitialPageFactory()
                 .goToBiddingMoPubInterstitialExample(getStringResource(R.string.demo_bidding_mopub_interstitial_320_480_no_bids))
                 .showPrebidInterstitial()
                 .checkFullScreenHint()
@@ -65,8 +64,7 @@ public class MoPubInterstitialTests extends BaseUiAutomatorTest {
 
     @Test
     public void testPrebidMoPubInterstitialAdapter() {
-        homePage.setUseMockServer(false)
-                .getInterstitialPageFactory()
+        homePage.getInterstitialPageFactory()
                 .goToBiddingMoPubInterstitialExample(getStringResource(R.string.demo_bidding_mopub_interstitial_320_480_adapter))
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.adDidLoad)
                 .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.adDidFailToLoad);

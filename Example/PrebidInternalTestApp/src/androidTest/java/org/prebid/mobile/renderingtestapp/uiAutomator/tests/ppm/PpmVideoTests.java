@@ -63,8 +63,7 @@ public class PpmVideoTests extends BaseUiAutomatorTest {
 
     @Test
     public void testOutstreamVideoNoBids() {
-        homePage.setUseMockServer(false)
-                .getBannerPageFactory()
+        homePage.getBannerPageFactory()
                 .goToPpmBannerVideoExample(getStringResource(R.string.demo_bidding_in_app_banner_video_outstream_no_bids))
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdFailed)
                 .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.onAdLoaded)
@@ -136,8 +135,7 @@ public class PpmVideoTests extends BaseUiAutomatorTest {
 
     @Test
     public void testPrebidOutstreamVideoAdEvents() throws InterruptedException {
-        homePage.setUseMockServer(false)
-                .getBannerPageFactory()
+        homePage.getBannerPageFactory()
                 .goToPpmBannerVideoExample(getStringResource(R.string.demo_bidding_in_app_banner_video_outstream))
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdLoaded)
                 .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.onAdFailed);
@@ -146,8 +144,7 @@ public class PpmVideoTests extends BaseUiAutomatorTest {
     @Test
     public void testPrebidPpmVideoRewardedEndCard320x480() {
         final String exampleName = getStringResource(R.string.demo_bidding_in_app_video_rewarded_end_card_320_480);
-        homePage.setUseMockServer(false)
-                .getInterstitialPageFactory()
+        homePage.getInterstitialPageFactory()
                 .goToPpmInterstitialExample(exampleName)
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdLoaded)
                 .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.onAdFailed);
@@ -156,8 +153,7 @@ public class PpmVideoTests extends BaseUiAutomatorTest {
     private void verifyPpmVideoInterstitialNoBids(int stringResId) {
         final String exampleName = getStringResource(stringResId);
 
-        homePage.setUseMockServer(false)
-                .getInterstitialPageFactory()
+        homePage.getInterstitialPageFactory()
                 .goToPpmInterstitialExample(exampleName)
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdFailed)
                 .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.onAdDisplayed)

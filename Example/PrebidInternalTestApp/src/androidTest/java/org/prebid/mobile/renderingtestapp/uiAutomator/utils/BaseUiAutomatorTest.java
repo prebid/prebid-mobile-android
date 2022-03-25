@@ -31,7 +31,6 @@ import androidx.test.uiautomator.Until;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.renderingtestapp.mock.MockServerManager;
 import org.prebid.mobile.renderingtestapp.uiAutomator.pages.HomePage;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -42,7 +41,6 @@ public class BaseUiAutomatorTest {
 
     public static final String INTERNAL_APP_PACKAGE = "org.prebid.mobile.renderingtestapp";
     public static final int TIMEOUT = 5000;
-    protected MockServerManager mMockServerManager = new MockServerManager();
     protected UiDevice device;
     protected HomePage homePage;
     protected Resources resources;
@@ -52,7 +50,6 @@ public class BaseUiAutomatorTest {
 
     @Before
     public void setup() throws RemoteException, InterruptedException {
-        mMockServerManager.clearLogs();
 
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         resources = instrumentation.getContext().getResources();

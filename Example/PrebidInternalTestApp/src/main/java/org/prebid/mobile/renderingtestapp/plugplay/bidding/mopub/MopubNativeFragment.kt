@@ -78,10 +78,11 @@ open class MopubNativeFragment : AdFragment() {
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (!SourcePicker.useMockServer) {
-            SourcePicker.enableQaEndpoint(true)
-        }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
@@ -145,9 +146,6 @@ open class MopubNativeFragment : AdFragment() {
         mopubNative?.destroy()
 //        mopubNativeAdUnit?.destroy()
         nativeAd?.destroy()
-        if (!SourcePicker.useMockServer) {
-            SourcePicker.enableQaEndpoint(false)
-        }
     }
 
     private fun convertMapToMoPubKeywords(keywordMap: Map<String, String>): String? {

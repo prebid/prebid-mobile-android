@@ -61,9 +61,6 @@ class GamNativeFragment(
 
     override fun onDestroyView() {
         super.onDestroyView()
-        if (!SourcePicker.useMockServer) {
-            SourcePicker.enableQaEndpoint(false)
-        }
     }
 
     override fun loadAd() {
@@ -177,7 +174,8 @@ class GamNativeFragment(
     private fun inflateNativeAd(nativeAd: NativeAd?) {
         nativeAd ?: return
 
-        val adView = LayoutInflater.from(requireContext()).inflate(R.layout.lyt_unified_native_ad, null) as NativeAdView
+        val adView = LayoutInflater.from(requireContext())
+            .inflate(R.layout.lyt_unified_native_ad, null) as NativeAdView
 
         adView.mediaView = adView.findViewById(R.id.ad_media)
 

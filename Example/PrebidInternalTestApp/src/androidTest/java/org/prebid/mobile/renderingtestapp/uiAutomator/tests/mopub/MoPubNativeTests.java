@@ -42,8 +42,7 @@ public class MoPubNativeTests extends BaseUiAutomatorTest {
 
     @Test
     public void testPrebidMoPubNativeStyles() throws InterruptedException {
-        homePage.setUseMockServer(false)
-                .getNativePageFactory()
+        homePage.getNativePageFactory()
                 .goToMoPubNativeStyles(getStringResource(R.string.demo_bidding_mopub_native_styles))
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.adDidFailToLoad);
     }

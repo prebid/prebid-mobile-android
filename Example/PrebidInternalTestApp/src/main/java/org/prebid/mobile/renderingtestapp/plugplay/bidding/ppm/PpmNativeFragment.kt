@@ -51,9 +51,6 @@ open class PpmNativeFragment : AdFragment() {
     }
 
     override fun initAd(): Any? {
-        if (!SourcePicker.useMockServer) {
-            SourcePicker.enableQaEndpoint(true)
-        }
         configureOriginalPrebid()
 
         nativeAdUnit = MediationNativeAdUnit(configId, extras)
@@ -85,9 +82,6 @@ open class PpmNativeFragment : AdFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         nativeAdUnit?.destroy()
-        if (!SourcePicker.useMockServer) {
-            SourcePicker.enableQaEndpoint(false)
-        }
     }
 
     protected open fun getEventButtonViewId(): Int = R.layout.lyt_native_in_app_events

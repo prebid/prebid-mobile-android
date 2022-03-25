@@ -25,7 +25,6 @@ import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.renderingtestapp.utils.DemoItemProvider
-import org.prebid.mobile.renderingtestapp.utils.MockServerUtils
 import org.prebid.mobile.renderingtestapp.utils.SourcePicker
 
 
@@ -44,14 +43,10 @@ class InternalTestApplication : MultiDexApplication() {
         PrebidMobile.setApplicationContext(this)
         PrebidMobile.setPrebidServerAccountId(getString(R.string.prebid_account_id_prod))
         PrebidMobile.logLevel = PrebidMobile.LogLevel.DEBUG
+        SourcePicker.setBidServerHost(SourcePicker.PBS_SERVER_DOMAIN)
 
         // Setup mock responses only in mock build
-        val isMock = BuildConfig.FLAVOR == "mock"
-        if (isMock) {
-            setupMockResponses()
-        }
 
-        SourcePicker.useMockServer = isMock
         DemoItemProvider.init(this)
 
         // Only uncomment while testing memory leaks
@@ -59,9 +54,6 @@ class InternalTestApplication : MultiDexApplication() {
         WebView.setWebContentsDebuggingEnabled(true)
     }
 
-    private fun setupMockResponses() {
-        MockServerUtils.clearLogs()
-    }
 
     private fun enableStrictMode() {
         StrictMode.setThreadPolicy(

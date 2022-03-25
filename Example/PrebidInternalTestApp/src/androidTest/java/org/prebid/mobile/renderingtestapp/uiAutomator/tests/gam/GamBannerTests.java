@@ -39,8 +39,7 @@ public class GamBannerTests extends BaseUiAutomatorTest {
 
     @Test
     public void testGamBanner320x50NoBids() {
-        homePage.setUseMockServer(false)
-                .getBannerPageFactory()
+        homePage.getBannerPageFactory()
                 .goToGamBannerExample(getStringResource(R.string.demo_bidding_gam_banner_320_50_no_bids))
                 .gamViewShouldBePresent()
                 .checkCommonEvents();
@@ -79,8 +78,7 @@ public class GamBannerTests extends BaseUiAutomatorTest {
 
     @Test
     public void testPrebidGamBanner320x50AppEvent() {
-        homePage.setUseMockServer(false)
-                .getBannerPageFactory()
+        homePage.getBannerPageFactory()
                 .goToGamBannerExample(getStringResource(R.string.demo_bidding_gam_banner_320_50_app_event))
                 .prebidViewShouldBePresent()
                 .checkCommonEvents();

@@ -33,7 +33,6 @@ import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
 import org.prebid.mobile.renderingtestapp.plugplay.config.*
 import org.prebid.mobile.renderingtestapp.utils.BaseFragment
 import org.prebid.mobile.renderingtestapp.utils.ConfigurationViewSettings
-import org.prebid.mobile.renderingtestapp.utils.MockServerUtils
 import org.prebid.mobile.renderingtestapp.utils.OpenRtbConfigs
 
 abstract class AdFragment : BaseFragment() {
@@ -59,6 +58,8 @@ abstract class AdFragment : BaseFragment() {
             configId = it.getString(getString(R.string.key_bid_config_id), "")
             adUnitId = it.getString(getString(R.string.key_ad_unit), "")
             width = it.getInt(getString(R.string.key_width))
+            val storedAuctionResponse = it.getString(getString(R.string.stored_auction_response), "")
+            PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
             height = it.getInt(getString(R.string.key_height))
             val title = it.getString(getString(R.string.key_title), getString(R.string.segment_title_in_app))
             setTitle(title)
@@ -212,9 +213,6 @@ abstract class AdFragment : BaseFragment() {
 
     private fun isNoBids(): Boolean = configId == getString(R.string.prebid_config_id_no_bids)
 
-    private fun disableNoBids() {
-        MockServerUtils.cancelRandomNoBids()
-    }
 
     private fun setImpContextData() {
         OpenRtbConfigs.setImpContextDataTo(adView)
