@@ -38,7 +38,7 @@ object InAppMoPubInterstitial {
         adUnit = MediationInterstitialAdUnit(
             activity,
             configId,
-            AdUnitFormat.DISPLAY,
+            listOf(AdUnitFormat.DISPLAY),
             mediationUtils
         )
         adUnit?.setMinSizePercentage(minPercentageWidth, minPercentageHeight)

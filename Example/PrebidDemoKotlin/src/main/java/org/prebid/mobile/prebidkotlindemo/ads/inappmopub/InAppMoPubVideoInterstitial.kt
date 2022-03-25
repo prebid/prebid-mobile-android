@@ -38,7 +38,7 @@ object InAppMoPubVideoInterstitial {
         adUnit = MediationInterstitialAdUnit(
             activity,
             configId,
-            AdUnitFormat.VIDEO,
+            listOf(AdUnitFormat.VIDEO),
             mediationUtils
         )
         adUnit?.setMinSizePercentage(minPercentageWidth, minPercentageHeight)

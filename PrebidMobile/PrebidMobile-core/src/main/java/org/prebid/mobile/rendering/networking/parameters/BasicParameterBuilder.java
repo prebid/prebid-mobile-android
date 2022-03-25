@@ -106,10 +106,13 @@ public class BasicParameterBuilder extends ParameterBuilder {
             setCommonImpValues(imp, uuid);
             if (mAdConfiguration.getNativeConfiguration() != null) {
                 setNativeImpValues(imp);
-            } else if (mAdConfiguration.isAdType(AdFormat.VAST)) {
-                setVideoImpValues(imp);
             } else {
-                setBannerImpValues(imp);
+                if (mAdConfiguration.isAdType(AdFormat.BANNER) || mAdConfiguration.isAdType(AdFormat.INTERSTITIAL)) {
+                    setBannerImpValues(imp);
+                }
+                if (mAdConfiguration.isAdType(AdFormat.VAST)) {
+                    setVideoImpValues(imp);
+                }
             }
         }
     }

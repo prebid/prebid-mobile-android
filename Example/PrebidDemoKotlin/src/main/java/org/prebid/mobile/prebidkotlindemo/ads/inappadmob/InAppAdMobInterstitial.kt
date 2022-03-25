@@ -33,7 +33,7 @@ object InAppAdMobInterstitial {
         adUnit = MediationInterstitialAdUnit(
             activity,
             configId,
-            adUnitFormat,
+            listOf(adUnitFormat),
             mediationUtils
         )
         adUnit?.fetchDemand { result ->

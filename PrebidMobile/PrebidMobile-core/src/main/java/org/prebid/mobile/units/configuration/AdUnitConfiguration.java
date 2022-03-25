@@ -29,7 +29,7 @@ public class AdUnitConfiguration {
     private String pbAdSlot;
     private String interstitialSize;
 
-    private ArrayList<AdFormat> adFormats = new ArrayList<>();
+    private final ArrayList<AdFormat> adFormats = new ArrayList<>();
     private AdSize minSizePercentage;
     private PlacementType placementType;
     private AdPosition adPosition;
@@ -215,6 +215,10 @@ public class AdUnitConfiguration {
 
     public int getVideoSkipOffset() {
         return videoSkipOffset;
+    }
+
+    public void addAdFormat(@Nullable AdFormat adFormat) {
+        adFormats.add(adFormat);
     }
 
     public void setAdFormat(@Nullable AdFormat adFormat) {

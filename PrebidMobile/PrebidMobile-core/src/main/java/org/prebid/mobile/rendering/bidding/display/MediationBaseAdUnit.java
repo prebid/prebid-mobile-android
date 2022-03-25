@@ -38,12 +38,11 @@ public abstract class MediationBaseAdUnit {
     private static final String TAG = MediationBaseAdUnit.class.getSimpleName();
 
     protected OnFetchCompleteListener mOnFetchCompleteListener;
-
     protected WeakReference<Context> mContextWeakReference;
     protected AdUnitConfiguration mAdUnitConfig = new AdUnitConfiguration();
     protected PrebidMediationDelegate mMediationDelegate;
-
     protected BidLoader mBidLoader;
+
     private final BidRequesterListener mBidRequesterListener = new BidRequesterListener() {
         @Override
         public void onFetchCompleted(BidResponse response) {
