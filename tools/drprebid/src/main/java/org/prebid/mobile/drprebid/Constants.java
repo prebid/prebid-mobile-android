@@ -60,7 +60,7 @@ public final class Constants {
     }
 
     public static final class EndpointUrls {
-        public static final String APPNEXUS_PREBID_SERVER = "https://prebid.adnxs.com/pbs/v1/openrtb2/auction";
+        public static final String APPNEXUS_PREBID_SERVER = "https://ib.adnxs.com/openrtb2/prebid";
         public static final String RUBICON_PREBID_SERVER = "https://prebid-server.rubiconproject.com/openrtb2/auction";
     }
 
