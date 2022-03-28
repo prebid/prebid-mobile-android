@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.*;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
+import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
@@ -50,6 +51,7 @@ import org.robolectric.annotation.Config;
 
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.EnumSet;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -395,11 +397,55 @@ public class BasicParameterBuilderTest {
         assertEquals("contextData", contextDataJson.getJSONArray("context").get(0));
     }
 
-    private BidRequest getExpectedBidRequest(AdUnitConfiguration adConfiguration, String uuid) {
+    @Test
+    public void testMultiFormatAdUnit_bannerAndVideoObjectsAreNotNull() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setAdFormats(EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO));
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(configuration, null, false);
+
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        BidRequest bidRequest = adRequestInput.getBidRequest();
+        Imp firstImp = bidRequest.getImp().iterator().next();
+
+        assertNotNull(firstImp);
+
+        assertNull(firstImp.nativeObj);
+        assertNotNull(firstImp.banner);
+        assertNotNull(firstImp.video);
+    }
+
+    @Test
+    public void testNativeAdUnit_nativeObjectIsNotNull() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.addAdFormat(AdFormat.NATIVE);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(configuration, null, false);
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        BidRequest bidRequest = adRequestInput.getBidRequest();
+        Imp firstImp = bidRequest.getImp().iterator().next();
+
+        assertNotNull(firstImp);
+
+        assertNotNull(firstImp.nativeObj);
+        assertNull(firstImp.banner);
+        assertNull(firstImp.video);
+    }
+
+
+    private BidRequest getExpectedBidRequest(
+            AdUnitConfiguration adConfiguration,
+            String uuid
+    ) {
         BidRequest bidRequest = new BidRequest();
         bidRequest.setId(uuid);
         boolean isVideo = adConfiguration.isAdType(AdFormat.VAST);
-        bidRequest.getExt().put("prebid", Prebid.getJsonObjectForBidRequest(PrebidMobile.getPrebidServerAccountId(), isVideo));
+        bidRequest.getExt()
+                  .put("prebid", Prebid.getJsonObjectForBidRequest(PrebidMobile.getPrebidServerAccountId(), isVideo));
         //if coppaEnabled - set 1, else No coppa is sent
         if (PrebidMobile.isCoppaEnabled) {
             bidRequest.getRegs().coppa = 1;
