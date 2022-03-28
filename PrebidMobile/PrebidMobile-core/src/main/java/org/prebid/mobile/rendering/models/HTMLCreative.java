@@ -42,7 +42,7 @@ import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
-import java.util.ArrayList;
+import java.util.EnumSet;
 
 public class HTMLCreative extends AbstractCreative
     implements WebViewDelegate, InterstitialManagerDisplayDelegate, Comparable {
@@ -80,12 +80,12 @@ public class HTMLCreative extends AbstractCreative
         }
         CreativeModel model = getCreativeModel();
 
-        ArrayList<AdFormat> adFormats = model.getAdConfiguration().getAdFormats();
+        EnumSet<AdFormat> adFormats = model.getAdConfiguration().getAdFormats();
         if (adFormats.isEmpty()) {
             throw new AdException(AdException.INTERNAL_ERROR, "Can't create a WebView for a null adtype");
         }
 
-        AdFormat adType = adFormats.get(0);
+        AdFormat adType = adFormats.iterator().next();
 
         if (model.getAdConfiguration().isBuiltInVideo()) {
             adType = AdFormat.BANNER;

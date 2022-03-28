@@ -11,6 +11,7 @@ import org.prebid.mobile.admob.AdMobInterstitialMediationUtils
 import org.prebid.mobile.admob.PrebidInterstitialAdapter
 import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
+import java.util.*
 
 object InAppAdMobInterstitial {
 
@@ -21,7 +22,7 @@ object InAppAdMobInterstitial {
         activity: Activity,
         adUnitId: String,
         configId: String,
-        adUnitFormat: AdUnitFormat
+        adUnitFormats: EnumSet<AdUnitFormat>
     ) {
         val extras = Bundle()
         val request = AdRequest
@@ -33,7 +34,7 @@ object InAppAdMobInterstitial {
         adUnit = MediationInterstitialAdUnit(
             activity,
             configId,
-            listOf(adUnitFormat),
+            adUnitFormats,
             mediationUtils
         )
         adUnit?.fetchDemand { result ->

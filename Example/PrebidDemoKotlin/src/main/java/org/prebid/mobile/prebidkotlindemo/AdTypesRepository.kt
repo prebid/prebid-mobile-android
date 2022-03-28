@@ -18,6 +18,7 @@ import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubRewardedInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubVideoInterstitial
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
+import java.util.*
 
 object AdTypesRepository {
 
@@ -298,7 +299,7 @@ object AdTypesRepository {
                         activity,
                         "ca-app-pub-1875909575462531/6393291067",
                         "5a4b8dcf-f984-4b04-9448-6529908d6cb6",
-                        AdUnitFormat.DISPLAY
+                        EnumSet.of(AdUnitFormat.DISPLAY)
                     )
                 },
                 onDestroy = { InAppAdMobInterstitial.destroy() }
@@ -310,7 +311,7 @@ object AdTypesRepository {
                         activity,
                         "ca-app-pub-1875909575462531/6393291067",
                         "12f58bc2-b664-4672-8d19-638bcc96fd5c",
-                        AdUnitFormat.VIDEO
+                        EnumSet.of(AdUnitFormat.VIDEO)
                     )
                 },
                 onDestroy = { InAppAdMobInterstitial.destroy() }

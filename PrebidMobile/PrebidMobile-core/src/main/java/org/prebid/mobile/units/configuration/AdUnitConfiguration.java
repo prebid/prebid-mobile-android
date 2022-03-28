@@ -3,6 +3,7 @@ package org.prebid.mobile.units.configuration;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.*;
+import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat;
 import org.prebid.mobile.rendering.interstitial.InterstitialSizes;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
@@ -29,7 +30,7 @@ public class AdUnitConfiguration {
     private String pbAdSlot;
     private String interstitialSize;
 
-    private final ArrayList<AdFormat> adFormats = new ArrayList<>();
+    private final EnumSet<AdFormat> adFormats = EnumSet.noneOf(AdFormat.class);
     private AdSize minSizePercentage;
     private PlacementType placementType;
     private AdPosition adPosition;
@@ -229,8 +230,24 @@ public class AdUnitConfiguration {
         adFormats.add(adFormat);
     }
 
+    /**
+     * Adds AdFormats corresponding to AdUnitFormat types.
+     */
+    public void setAdFormats(@Nullable EnumSet<AdUnitFormat> adUnitFormats) {
+        if (adUnitFormats == null) return;
+
+        adFormats.clear();
+
+        if (adUnitFormats.contains(AdUnitFormat.DISPLAY)) {
+            adFormats.add(AdFormat.INTERSTITIAL);
+        }
+        if (adUnitFormats.contains(AdUnitFormat.VIDEO)) {
+            adFormats.add(AdFormat.VAST);
+        }
+    }
+
     @NonNull
-    public ArrayList<AdFormat> getAdFormats() {
+    public EnumSet<AdFormat> getAdFormats() {
         return adFormats;
     }
 

@@ -25,7 +25,7 @@ import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.units.configuration.AdFormat;
 
-import java.util.List;
+import java.util.EnumSet;
 
 public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
 
@@ -50,11 +50,11 @@ public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
     public MediationInterstitialAdUnit(
             Context context,
             String configId,
-            @NonNull List<AdUnitFormat> adUnitFormats,
+            @NonNull EnumSet<AdUnitFormat> adUnitFormats,
             PrebidMediationDelegate mediationDelegate
     ) {
         super(context, configId, null, mediationDelegate);
-        setAdUnitType(adUnitFormats);
+        mAdUnitConfig.setAdFormats(adUnitFormats);
     }
 
     @Override
@@ -77,16 +77,6 @@ public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
             @IntRange(from = 0, to = 100) int height
     ) {
         mAdUnitConfig.setMinSizePercentage(new AdSize(width, height));
-    }
-
-    private void setAdUnitType(List<AdUnitFormat> adUnitFormat) {
-        if (adUnitFormat.contains(AdUnitFormat.DISPLAY)) {
-            mAdUnitConfig.addAdFormat(AdFormat.INTERSTITIAL);
-        }
-
-        if (adUnitFormat.contains(AdUnitFormat.VIDEO)) {
-            mAdUnitConfig.addAdFormat(AdFormat.VAST);
-        }
     }
 
 }

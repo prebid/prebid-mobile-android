@@ -11,7 +11,8 @@ object InAppInterstitial {
     private var adUnit: InterstitialAdUnit? = null
 
     fun create(context: Context, minPercentageWidth: Int, minPercentageHeight: Int, configId: String) {
-        adUnit = InterstitialAdUnit(context, configId, AdSize(minPercentageWidth, minPercentageHeight))
+        adUnit = InterstitialAdUnit(context, configId)
+        adUnit?.setMinSizePercentage(AdSize(minPercentageWidth, minPercentageHeight))
         adUnit?.setInterstitialAdUnitListener(object : InterstitialAdUnitListener {
             override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
                 adUnit?.show()

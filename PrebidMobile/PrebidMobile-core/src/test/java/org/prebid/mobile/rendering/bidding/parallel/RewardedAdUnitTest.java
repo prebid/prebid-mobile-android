@@ -74,7 +74,7 @@ public class RewardedAdUnitTest {
         WhiteBox.setInternalState(mRewardedAdUnit, "mBidLoader", mMockBidLoader);
         WhiteBox.setInternalState(mRewardedAdUnit, "mInterstitialController", mMockInterstitialController);
 
-        final AdUnitConfiguration adUnitConfig = mRewardedAdUnit.mAdUnitConfig;
+        final AdUnitConfiguration adUnitConfig = mRewardedAdUnit.configuration;
         assertEquals(AdPosition.FULLSCREEN.getValue(), adUnitConfig.getAdPositionValue());
     }
 
