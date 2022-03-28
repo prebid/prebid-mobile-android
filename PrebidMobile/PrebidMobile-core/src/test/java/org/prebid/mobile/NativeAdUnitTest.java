@@ -12,7 +12,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.EnumSet;
 
 import static junit.framework.Assert.*;
 
@@ -33,7 +33,7 @@ public class NativeAdUnitTest {
 
         assertNotNull(nativeUnit);
         assertEquals(PBS_CONFIG_ID_NATIVE_APPNEXUS, configuration.getConfigId());
-        assertEquals(Collections.singletonList(AdFormat.NATIVE), configuration.getAdFormats());
+        assertEquals(EnumSet.of(AdFormat.NATIVE), configuration.getAdFormats());
         assertNotNull(configuration.getNativeConfiguration());
     }
 

@@ -50,7 +50,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
+import java.util.EnumSet;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -137,14 +137,7 @@ public class HTMLCreativeTest {
         }
         mHtmlCreative = new HTMLCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
 
-        // Test null adType
-        try {
-            mHtmlCreative.load();
-            fail("AdException was NOT thrown");
-        } catch (AdException e) {
-        }
-
-        ArrayList<AdFormat> result = new ArrayList<>();
+        EnumSet<AdFormat> result = EnumSet.noneOf(AdFormat.class);
         result.add(AdFormat.BANNER);
         // Test empty html
         try {
@@ -172,7 +165,7 @@ public class HTMLCreativeTest {
         WhiteBox.setInternalState(prebidWebViewBase, "mWebView", mock(WebViewBase.class));
         when(mMockPrebidWebView.getWebView()).thenReturn(mock(WebViewBase.class));
 
-        ArrayList<AdFormat> result = new ArrayList<>();
+        EnumSet<AdFormat> result = EnumSet.noneOf(AdFormat.class);
         result.add(AdFormat.BANNER);
         when(mMockConfig.getAdFormats()).thenReturn(result);
 

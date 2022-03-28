@@ -71,8 +71,8 @@ public class RewardedAdUnitTest {
 
         mRewardedAdUnit.setRewardedAdUnitListener(mMockRewardedAdUnitListener);
 
-        WhiteBox.setInternalState(mRewardedAdUnit, "mBidLoader", mMockBidLoader);
-        WhiteBox.setInternalState(mRewardedAdUnit, "mInterstitialController", mMockInterstitialController);
+        WhiteBox.setInternalState(mRewardedAdUnit, "bidLoader", mMockBidLoader);
+        WhiteBox.setInternalState(mRewardedAdUnit, "interstitialController", mMockInterstitialController);
 
         final AdUnitConfiguration adUnitConfig = mRewardedAdUnit.configuration;
         assertEquals(AdPosition.FULLSCREEN.getValue(), adUnitConfig.getAdPositionValue());
@@ -82,8 +82,8 @@ public class RewardedAdUnitTest {
     public void createRewardedAdUnitNoEventHandler_InstanceCreatedStandaloneEventHandlerProvidedBidLoaderIsNotNull() {
         RewardedAdUnit rewardedAdUnit = new RewardedAdUnit(mContext, CONFIGURATION_ID);
 
-        Object eventHandler = WhiteBox.getInternalState(rewardedAdUnit, "mEventHandler");
-        BidLoader bidLoader = ((BidLoader) WhiteBox.getInternalState(rewardedAdUnit, "mBidLoader"));
+        Object eventHandler = WhiteBox.getInternalState(rewardedAdUnit, "eventHandler");
+        BidLoader bidLoader = ((BidLoader) WhiteBox.getInternalState(rewardedAdUnit, "bidLoader"));
 
         assertNotNull(rewardedAdUnit);
         assertTrue(eventHandler instanceof StandaloneRewardedVideoEventHandler);
@@ -92,7 +92,7 @@ public class RewardedAdUnitTest {
 
     @Test
     public void loadAdWithNullBidLoader_NoExceptionIsThrown() {
-        WhiteBox.setInternalState(mRewardedAdUnit, "mBidLoader", null);
+        WhiteBox.setInternalState(mRewardedAdUnit, "bidLoader", null);
 
         mRewardedAdUnit.loadAd();
     }
@@ -145,7 +145,7 @@ public class RewardedAdUnitTest {
 
         changeInterstitialState(READY_TO_DISPLAY_PREBID);
 
-        WhiteBox.setInternalState(mRewardedAdUnit, "mInterstitialController", mockInterstitialController);
+        WhiteBox.setInternalState(mRewardedAdUnit, "interstitialController", mockInterstitialController);
         mRewardedAdUnit.show();
 
         verify(mockInterstitialController, times(1)).show();
@@ -246,8 +246,8 @@ public class RewardedAdUnitTest {
         final RewardedVideoEventListener spyEventListener = spy(getEventListener());
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
 
-        WhiteBox.setInternalState(mRewardedAdUnit, "mBidResponse", mockBidResponse);
-        WhiteBox.setInternalState(mRewardedAdUnit, "mInterstitialController", mockInterstitialController);
+        WhiteBox.setInternalState(mRewardedAdUnit, "bidResponse", mockBidResponse);
+        WhiteBox.setInternalState(mRewardedAdUnit, "interstitialController", mockInterstitialController);
 
         spyEventListener.onAdFailed(new AdException(AdException.INTERNAL_ERROR, "Test"));
 
@@ -273,14 +273,14 @@ public class RewardedAdUnitTest {
     //endregion ================= EventListener tests
 
     private BidRequesterListener getBidRequesterListener() {
-        return (BidRequesterListener) WhiteBox.getInternalState(mRewardedAdUnit, "mBidRequesterListener");
+        return (BidRequesterListener) WhiteBox.getInternalState(mRewardedAdUnit, "bidRequesterListener");
     }
 
     private RewardedVideoEventListener getEventListener() {
-        return (RewardedVideoEventListener) WhiteBox.getInternalState(mRewardedAdUnit, "mEventListener");
+        return (RewardedVideoEventListener) WhiteBox.getInternalState(mRewardedAdUnit, "eventListener");
     }
 
     private void changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState adUnitState) {
-        WhiteBox.setInternalState(mRewardedAdUnit, "mInterstitialAdUnitState", adUnitState);
+        WhiteBox.setInternalState(mRewardedAdUnit, "interstitialAdUnitState", adUnitState);
     }
 }

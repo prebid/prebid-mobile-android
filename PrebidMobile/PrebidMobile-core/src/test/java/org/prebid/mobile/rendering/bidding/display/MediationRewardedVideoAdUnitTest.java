@@ -32,7 +32,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.util.Collections;
+import java.util.EnumSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -63,7 +63,7 @@ public class MediationRewardedVideoAdUnitTest {
         mMopubRewardedAdUnit.initAdConfig("config", null);
         AdUnitConfiguration adConfiguration = mMopubRewardedAdUnit.mAdUnitConfig;
         assertEquals("config", adConfiguration.getConfigId());
-        assertEquals(Collections.singletonList(AdFormat.VAST), adConfiguration.getAdFormats());
+        assertEquals(EnumSet.of(AdFormat.VAST), adConfiguration.getAdFormats());
         assertTrue(adConfiguration.isRewarded());
     }
 

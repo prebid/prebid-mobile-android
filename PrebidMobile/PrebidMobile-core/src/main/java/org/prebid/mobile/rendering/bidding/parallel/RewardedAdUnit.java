@@ -34,22 +34,23 @@ import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUni
 public class RewardedAdUnit extends BaseInterstitialAdUnit {
     private static final String TAG = RewardedAdUnit.class.getSimpleName();
 
-    private final RewardedEventHandler mEventHandler;
+    private final RewardedEventHandler eventHandler;
 
-    @Nullable
-    private RewardedAdUnitListener mRewardedAdUnitListener;
+    @Nullable private RewardedAdUnitListener rewardedAdUnitListener;
 
-    @Nullable
-    private Object mUserReward;
+    @Nullable private Object userReward;
 
     //region ==================== Listener implementation
 
-    private final RewardedVideoEventListener mEventListener = new RewardedVideoEventListener() {
+    private final RewardedVideoEventListener eventListener = new RewardedVideoEventListener() {
         @Override
         public void onPrebidSdkWin() {
             if (isBidInvalid()) {
                 changeInterstitialAdUnitState(READY_FOR_LOAD);
-                notifyErrorListener(new AdException(AdException.INTERNAL_ERROR, "WinnerBid is null when executing onPrebidSdkWin."));
+                notifyErrorListener(new AdException(
+                        AdException.INTERNAL_ERROR,
+                        "WinnerBid is null when executing onPrebidSdkWin."
+                ));
                 return;
             }
 
@@ -58,7 +59,7 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
 
         @Override
         public void onAdServerWin(Object userReward) {
-            mUserReward = userReward;
+            RewardedAdUnit.this.userReward = userReward;
             changeInterstitialAdUnitState(READY_TO_DISPLAY_GAM);
             notifyAdEventListener(AdListenerEvent.AD_LOADED);
         }
@@ -92,8 +93,8 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
 
         @Override
         public void onUserEarnedReward() {
-            if (mRewardedAdUnitListener != null) {
-                mRewardedAdUnitListener.onUserEarnedReward(RewardedAdUnit.this);
+            if (rewardedAdUnitListener != null) {
+                rewardedAdUnitListener.onUserEarnedReward(RewardedAdUnit.this);
             }
         }
     };
@@ -101,8 +102,8 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
 
     public RewardedAdUnit(Context context, String configId, RewardedEventHandler eventHandler) {
         super(context);
-        mEventHandler = eventHandler;
-        mEventHandler.setRewardedEventListener(mEventListener);
+        this.eventHandler = eventHandler;
+        this.eventHandler.setRewardedEventListener(eventListener);
 
         AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         adUnitConfiguration.setConfigId(configId);
@@ -119,14 +120,14 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
     @Override
     public void loadAd() {
         super.loadAd();
-        mUserReward = null;
+        userReward = null;
     }
 
     @Override
     public void destroy() {
         super.destroy();
-        if (mEventHandler != null) {
-            mEventHandler.destroy();
+        if (eventHandler != null) {
+            eventHandler.destroy();
         }
     }
 
@@ -134,12 +135,12 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
     public void setRewardedAdUnitListener(
         @Nullable
             RewardedAdUnitListener rewardedAdUnitListener) {
-        mRewardedAdUnitListener = rewardedAdUnitListener;
+        this.rewardedAdUnitListener = rewardedAdUnitListener;
     }
 
     @Nullable
     public Object getUserReward() {
-        return mUserReward;
+        return userReward;
     }
     //endregion ==================== getters and setters
 
@@ -147,44 +148,47 @@ public class RewardedAdUnit extends BaseInterstitialAdUnit {
     void requestAdWithBid(
         @Nullable
             Bid bid) {
-        mEventHandler.requestAdWithBid(bid);
+        eventHandler.requestAdWithBid(bid);
     }
 
     @Override
     void showGamAd() {
-        mEventHandler.show();
+        eventHandler.show();
     }
 
     @Override
     void notifyAdEventListener(AdListenerEvent adListenerEvent) {
-        if (mRewardedAdUnitListener == null) {
-            LogUtil.debug(TAG, "notifyAdEventListener: Failed. AdUnitListener is null. Passed listener event: " + adListenerEvent);
+        if (rewardedAdUnitListener == null) {
+            LogUtil.debug(
+                    TAG,
+                    "notifyAdEventListener: Failed. AdUnitListener is null. Passed listener event: " + adListenerEvent
+            );
             return;
         }
 
         switch (adListenerEvent) {
             case AD_CLOSE:
-                mRewardedAdUnitListener.onAdClosed(RewardedAdUnit.this);
+                rewardedAdUnitListener.onAdClosed(RewardedAdUnit.this);
                 break;
             case AD_LOADED:
-                mRewardedAdUnitListener.onAdLoaded(RewardedAdUnit.this);
+                rewardedAdUnitListener.onAdLoaded(RewardedAdUnit.this);
                 break;
             case AD_DISPLAYED:
-                mRewardedAdUnitListener.onAdDisplayed(RewardedAdUnit.this);
+                rewardedAdUnitListener.onAdDisplayed(RewardedAdUnit.this);
                 break;
             case AD_CLICKED:
-                mRewardedAdUnitListener.onAdClicked(RewardedAdUnit.this);
+                rewardedAdUnitListener.onAdClicked(RewardedAdUnit.this);
                 break;
             case USER_RECEIVED_PREBID_REWARD:
-                mRewardedAdUnitListener.onUserEarnedReward(RewardedAdUnit.this);
+                rewardedAdUnitListener.onUserEarnedReward(RewardedAdUnit.this);
                 break;
         }
     }
 
     @Override
     void notifyErrorListener(AdException exception) {
-        if (mRewardedAdUnitListener != null) {
-            mRewardedAdUnitListener.onAdFailed(RewardedAdUnit.this, exception);
+        if (rewardedAdUnitListener != null) {
+            rewardedAdUnitListener.onAdFailed(RewardedAdUnit.this, exception);
         }
     }
 }

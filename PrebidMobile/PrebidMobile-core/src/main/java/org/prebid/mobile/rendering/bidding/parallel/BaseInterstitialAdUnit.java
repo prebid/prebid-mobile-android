@@ -44,17 +44,17 @@ public abstract class BaseInterstitialAdUnit {
 
     protected AdUnitConfiguration configuration;
 
-    private BidLoader mBidLoader;
-    private BidResponse mBidResponse;
-    private InterstitialController mInterstitialController;
-    private InterstitialAdUnitState mInterstitialAdUnitState = READY_FOR_LOAD;
+    private BidLoader bidLoader;
+    private BidResponse bidResponse;
+    private InterstitialController interstitialController;
+    private InterstitialAdUnitState interstitialAdUnitState = READY_FOR_LOAD;
 
-    private final WeakReference<Context> mWeakContext;
-    private final BidRequesterListener mBidRequesterListener = createBidRequesterListener();
-    private final InterstitialControllerListener mControllerListener = createInterstitialControllerListener();
+    private final WeakReference<Context> weakContext;
+    private final BidRequesterListener bidRequesterListener = createBidRequesterListener();
+    private final InterstitialControllerListener controllerListener = createInterstitialControllerListener();
 
     protected BaseInterstitialAdUnit(Context context) {
-        mWeakContext = new WeakReference<>(context);
+        weakContext = new WeakReference<>(context);
     }
 
 
@@ -71,17 +71,17 @@ public abstract class BaseInterstitialAdUnit {
      * Executes ad loading if no request is running.
      */
     public void loadAd() {
-        if (mBidLoader == null) {
+        if (bidLoader == null) {
             LogUtil.error(TAG, "loadAd: Failed. BidLoader is not initialized.");
             return;
         }
 
         if (!isAdLoadAllowed()) {
-            LogUtil.debug(TAG, "loadAd: Skipped. InterstitialAdUnitState is: " + mInterstitialAdUnitState);
+            LogUtil.debug(TAG, "loadAd: Skipped. InterstitialAdUnitState is: " + interstitialAdUnitState);
             return;
         }
 
-        mBidLoader.load();
+        bidLoader.load();
     }
 
     /**
@@ -100,16 +100,16 @@ public abstract class BaseInterstitialAdUnit {
             return;
         }
 
-        switch (mInterstitialAdUnitState) {
+        switch (interstitialAdUnitState) {
             case READY_TO_DISPLAY_GAM:
                 showGamAd();
                 break;
             case READY_TO_DISPLAY_PREBID:
-                mInterstitialController.show();
+                interstitialController.show();
                 break;
             default:
                 notifyErrorListener(new AdException(AdException.INTERNAL_ERROR,
-                        "show(): Encountered an invalid mInterstitialAdUnitState - " + mInterstitialAdUnitState
+                        "show(): Encountered an invalid mInterstitialAdUnitState - " + interstitialAdUnitState
                 ));
         }
     }
@@ -174,11 +174,11 @@ public abstract class BaseInterstitialAdUnit {
      * Cleans up resources when destroyed.
      */
     public void destroy() {
-        if (mBidLoader != null) {
-            mBidLoader.destroy();
+        if (bidLoader != null) {
+            bidLoader.destroy();
         }
-        if (mInterstitialController != null) {
-            mInterstitialController.destroy();
+        if (interstitialController != null) {
+            interstitialController.destroy();
         }
     }
 
@@ -192,27 +192,27 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     protected void loadPrebidAd() {
-        if (mInterstitialController == null) {
+        if (interstitialController == null) {
             notifyErrorListener(new AdException(AdException.INTERNAL_ERROR,
                     "InterstitialController is not defined. Unable to process bid."
             ));
             return;
         }
 
-        mInterstitialController.loadAd(configuration, mBidResponse);
+        interstitialController.loadAd(configuration, bidResponse);
     }
 
     @Nullable
     protected Context getContext() {
-        return mWeakContext.get();
+        return weakContext.get();
     }
 
     protected boolean isBidInvalid() {
-        return mBidResponse == null || mBidResponse.getWinningBid() == null;
+        return bidResponse == null || bidResponse.getWinningBid() == null;
     }
 
     protected void changeInterstitialAdUnitState(InterstitialAdUnitState state) {
-        mInterstitialAdUnitState = state;
+        interstitialAdUnitState = state;
     }
 
     private void initPrebidRenderingSdk() {
@@ -220,36 +220,36 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     private void initBidLoader() {
-        mBidLoader = new BidLoader(getContext(), configuration, mBidRequesterListener);
+        bidLoader = new BidLoader(getContext(), configuration, bidRequesterListener);
     }
 
     private void initInterstitialController() {
         try {
-            mInterstitialController = new InterstitialController(getContext(), mControllerListener);
+            interstitialController = new InterstitialController(getContext(), controllerListener);
         } catch (AdException e) {
             notifyErrorListener(e);
         }
     }
 
     private Bid getWinnerBid() {
-        return mBidResponse != null ? mBidResponse.getWinningBid() : null;
+        return bidResponse != null ? bidResponse.getWinningBid() : null;
     }
 
     public BidResponse getBidResponse() {
-        return mBidResponse;
+        return bidResponse;
     }
 
     private boolean isAuctionWinnerReadyToDisplay() {
-        return mInterstitialAdUnitState == READY_TO_DISPLAY_PREBID || mInterstitialAdUnitState == READY_TO_DISPLAY_GAM;
+        return interstitialAdUnitState == READY_TO_DISPLAY_PREBID || interstitialAdUnitState == READY_TO_DISPLAY_GAM;
     }
 
     private boolean isAdLoadAllowed() {
-        return mInterstitialAdUnitState == READY_FOR_LOAD;
+        return interstitialAdUnitState == READY_FOR_LOAD;
     }
 
     @VisibleForTesting
     final InterstitialAdUnitState getAdUnitState() {
-        return mInterstitialAdUnitState;
+        return interstitialAdUnitState;
     }
 
     public void addContent(ContentObject content) {
@@ -261,7 +261,7 @@ public abstract class BaseInterstitialAdUnit {
         return new BidRequesterListener() {
             @Override
             public void onFetchCompleted(BidResponse response) {
-                mBidResponse = response;
+                bidResponse = response;
 
                 changeInterstitialAdUnitState(LOADING);
                 requestAdWithBid(getWinnerBid());
@@ -269,7 +269,7 @@ public abstract class BaseInterstitialAdUnit {
 
             @Override
             public void onError(AdException exception) {
-                mBidResponse = null;
+                bidResponse = null;
                 requestAdWithBid(null);
             }
         };
