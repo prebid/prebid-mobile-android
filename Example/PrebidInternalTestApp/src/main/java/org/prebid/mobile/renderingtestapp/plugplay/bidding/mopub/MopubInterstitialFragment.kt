@@ -30,6 +30,7 @@ import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import java.util.*
 
 class MopubInterstitialFragment : AdFragment() {
 
@@ -105,14 +106,14 @@ class MopubInterstitialFragment : AdFragment() {
             MediationInterstitialAdUnit(
                 requireContext(),
                 configId,
-                AdUnitFormat.VIDEO,
+                EnumSet.of(AdUnitFormat.VIDEO),
                 mediationUtils
             )
         } else {
             MediationInterstitialAdUnit(
                 requireContext(),
                 configId,
-                AdUnitFormat.DISPLAY,
+                EnumSet.of(AdUnitFormat.DISPLAY),
                 mediationUtils
             )
         }

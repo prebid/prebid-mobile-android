@@ -219,19 +219,31 @@ public class AdUnitConfiguration {
     }
 
     public void addAdFormat(@Nullable AdFormat adFormat) {
-        adFormats.add(adFormat);
-    }
+        if (adFormat == null) return;
 
-    public void setAdFormat(@Nullable AdFormat adFormat) {
         if (adFormat == AdFormat.NATIVE) {
             nativeConfiguration = new NativeAdUnitConfiguration();
         }
+
+        adFormats.add(adFormat);
+    }
+
+    /**
+     * Clears ad formats list and adds only one ad format.
+     */
+    public void setAdFormat(@Nullable AdFormat adFormat) {
+        if (adFormat == null) return;
+
+        if (adFormat == AdFormat.NATIVE) {
+            nativeConfiguration = new NativeAdUnitConfiguration();
+        }
+
         adFormats.clear();
         adFormats.add(adFormat);
     }
 
     /**
-     * Adds AdFormats corresponding to AdUnitFormat types.
+     * Clears previous ad formats and adds AdFormats corresponding to AdUnitFormat types.
      */
     public void setAdFormats(@Nullable EnumSet<AdUnitFormat> adUnitFormats) {
         if (adUnitFormats == null) return;

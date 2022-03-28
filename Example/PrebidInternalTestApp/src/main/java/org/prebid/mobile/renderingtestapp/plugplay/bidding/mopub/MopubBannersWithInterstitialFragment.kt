@@ -35,6 +35,7 @@ import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBannersWithInterstitialFragment
 import org.prebid.mobile.renderingtestapp.utils.getAdDescription
+import java.util.*
 
 class MopubBannersWithInterstitialFragment : BaseBannersWithInterstitialFragment() {
 
@@ -64,7 +65,7 @@ class MopubBannersWithInterstitialFragment : BaseBannersWithInterstitialFragment
             MediationInterstitialAdUnit(
                 requireContext(),
                 interstitialConfigId,
-                AdUnitFormat.DISPLAY,
+                EnumSet.of(AdUnitFormat.DISPLAY),
                 mediationUtils
             )
         mediationInterstitialAdUnit?.setMinSizePercentage(30, 30)

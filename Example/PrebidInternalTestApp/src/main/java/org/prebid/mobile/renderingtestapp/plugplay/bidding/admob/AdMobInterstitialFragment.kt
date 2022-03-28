@@ -18,6 +18,7 @@ import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import java.util.*
 
 open class AdMobInterstitialFragment : AdFragment() {
 
@@ -47,8 +48,8 @@ open class AdMobInterstitialFragment : AdFragment() {
         val mediationUtils = AdMobInterstitialMediationUtils(extras)
 
         isVideo = arguments?.getBoolean(ARG_IS_VIDEO) ?: false
-        var adUnitFormat = AdUnitFormat.DISPLAY
-        if (isVideo) adUnitFormat = AdUnitFormat.VIDEO
+        var adUnitFormat = EnumSet.of(AdUnitFormat.DISPLAY)
+        if (isVideo) adUnitFormat = EnumSet.of(AdUnitFormat.VIDEO)
         adUnit = MediationInterstitialAdUnit(activity, configId, adUnitFormat, mediationUtils)
         if (!isVideo) {
             adUnit?.setMinSizePercentage(30, 30)
