@@ -39,23 +39,25 @@ import static android.widget.RelativeLayout.LayoutParams.MATCH_PARENT;
 import static android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT;
 
 public class VideoCreativeView extends RelativeLayout {
+
     private static final String TAG = VideoCreativeView.class.getSimpleName();
 
-    private final VideoCreativeViewListener mVideoCreativeViewListener;
+    private final VideoCreativeViewListener videoCreativeViewListener;
 
-    @Nullable
-    private View mCallToActionView;
-    private ExoPlayerView mExoPlayerView;
-    private VolumeControlView mVolumeControlView;
+    @Nullable private View callToActionView;
+    private ExoPlayerView exoPlayerView;
+    private VolumeControlView volumeControlView;
 
-    private String mCallToActionUrl;
-    private boolean mUrlHandleInProgress;
-    private int mBroadcastId;
+    private String callToActionUrl;
+    private boolean urlHandleInProgress;
+    private int broadcastId;
 
-    public VideoCreativeView(Context context, VideoCreativeViewListener videoCreativeViewListener)
-    throws AdException {
+    public VideoCreativeView(
+            Context context,
+            VideoCreativeViewListener videoCreativeViewListener
+    ) throws AdException {
         super(context);
-        mVideoCreativeViewListener = videoCreativeViewListener;
+        this.videoCreativeViewListener = videoCreativeViewListener;
         init();
     }
 
@@ -65,49 +67,49 @@ public class VideoCreativeView extends RelativeLayout {
             return;
         }
 
-        mExoPlayerView.setVideoUri(videoUri);
+        exoPlayerView.setVideoUri(videoUri);
     }
 
     public void setVastVideoDuration(long duration) {
-        mExoPlayerView.setVastVideoDuration(duration);
+        exoPlayerView.setVastVideoDuration(duration);
     }
 
     public void setBroadcastId(int broadcastId) {
-        mBroadcastId = broadcastId;
+        this.broadcastId = broadcastId;
     }
 
     public void setCallToActionUrl(String callToActionUrl) {
-        mCallToActionUrl = callToActionUrl;
+        this.callToActionUrl = callToActionUrl;
     }
 
     public String getCallToActionUrl() {
-        return mCallToActionUrl;
+        return callToActionUrl;
     }
 
     public void start(float initialVolume) {
-        mExoPlayerView.start(initialVolume);
+        exoPlayerView.start(initialVolume);
     }
 
     public void stop() {
-        mExoPlayerView.stop();
+        exoPlayerView.stop();
     }
 
     public void pause() {
-        mExoPlayerView.pause();
+        exoPlayerView.pause();
     }
 
     public void resume() {
-        mExoPlayerView.resume();
+        exoPlayerView.resume();
     }
 
     public void mute() {
-        mExoPlayerView.mute();
+        exoPlayerView.mute();
 
         updateVolumeControlView(VolumeControlView.VolumeState.MUTED);
     }
 
     public void unMute() {
-        mExoPlayerView.unMute();
+        exoPlayerView.unMute();
 
         updateVolumeControlView(VolumeControlView.VolumeState.UN_MUTED);
     }
@@ -117,9 +119,9 @@ public class VideoCreativeView extends RelativeLayout {
     }
 
     public void hideCallToAction() {
-        if (mCallToActionView != null) {
-            removeView(mCallToActionView);
-            mCallToActionView = null;
+        if (callToActionView != null) {
+            removeView(callToActionView);
+            callToActionView = null;
         }
     }
 
@@ -128,13 +130,13 @@ public class VideoCreativeView extends RelativeLayout {
     }
 
     public VolumeControlView getVolumeControlView() {
-        return mVolumeControlView;
+        return volumeControlView;
     }
 
     public void hideVolumeControls() {
-        if (mVolumeControlView != null) {
-            removeView(mVolumeControlView);
-            mVolumeControlView = null;
+        if (volumeControlView != null) {
+            removeView(volumeControlView);
+            volumeControlView = null;
         }
     }
 
@@ -143,23 +145,23 @@ public class VideoCreativeView extends RelativeLayout {
     }
 
     public boolean isPlaying() {
-        return mExoPlayerView.isPlaying();
+        return exoPlayerView.isPlaying();
     }
 
     public boolean hasVideoStarted() {
-        return mExoPlayerView.getCurrentPosition() != -1;
+        return exoPlayerView.getCurrentPosition() != -1;
     }
 
     public VideoPlayerView getVideoPlayerView() {
-        return mExoPlayerView;
+        return exoPlayerView;
     }
 
     public float getVolume() {
-        return mExoPlayerView.getVolume();
+        return exoPlayerView.getVolume();
     }
 
     public void destroy() {
-        mExoPlayerView.destroy();
+        exoPlayerView.destroy();
         ViewPool.getInstance().clear();
     }
 
@@ -167,16 +169,19 @@ public class VideoCreativeView extends RelativeLayout {
         LayoutParams layoutParams = new LayoutParams(MATCH_PARENT, MATCH_PARENT);
         setLayoutParams(layoutParams);
 
-        mExoPlayerView = (ExoPlayerView) ViewPool
-                .getInstance()
-                .getUnoccupiedView(getContext(), mVideoCreativeViewListener, AdFormat.VAST, null);
+        exoPlayerView = (ExoPlayerView) ViewPool.getInstance()
+                                                .getUnoccupiedView(getContext(),
+                                                        videoCreativeViewListener,
+                                                        AdFormat.VAST,
+                                                        null
+                                                );
 
-        addView(mExoPlayerView);
+        addView(exoPlayerView);
     }
 
     private void addCallToActionView() {
-        mCallToActionView = inflate(getContext(), R.layout.lyt_call_to_action, null);
-        mCallToActionView.setOnClickListener(v -> handleCallToActionClick());
+        callToActionView = inflate(getContext(), R.layout.lyt_call_to_action, null);
+        callToActionView.setOnClickListener(v -> handleCallToActionClick());
 
         final int width = Dips.dipsToIntPixels(128, getContext());
         final int height = Dips.dipsToIntPixels(36, getContext());
@@ -188,17 +193,16 @@ public class VideoCreativeView extends RelativeLayout {
         layoutParams.addRule(ALIGN_PARENT_RIGHT);
         layoutParams.setMargins(margin, margin, margin, margin);
 
-        addView(mCallToActionView, layoutParams);
+        addView(callToActionView, layoutParams);
     }
 
     private void addVolumeControlView() {
         LayoutParams layoutParams = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
-        mVolumeControlView = new VolumeControlView(getContext(), VolumeControlView.VolumeState.MUTED);
-        mVolumeControlView.setVolumeControlListener(state -> {
+        volumeControlView = new VolumeControlView(getContext(), VolumeControlView.VolumeState.MUTED);
+        volumeControlView.setVolumeControlListener(state -> {
             if (state == VolumeControlView.VolumeState.MUTED) {
                 mute();
-            }
-            else {
+            } else {
                 unMute();
             }
         });
@@ -209,41 +213,40 @@ public class VideoCreativeView extends RelativeLayout {
         layoutParams.addRule(ALIGN_PARENT_LEFT);
         layoutParams.setMargins(margin, margin, margin, margin);
 
-        addView(mVolumeControlView, layoutParams);
+        addView(volumeControlView, layoutParams);
     }
 
     private void handleCallToActionClick() {
-        if (mUrlHandleInProgress) {
+        if (urlHandleInProgress) {
             LogUtil.debug(TAG, "handleCallToActionClick: Skipping. Url handle in progress");
             return;
         }
-        mUrlHandleInProgress = true;
+        urlHandleInProgress = true;
 
-        createUrlHandler().handleUrl(getContext(), mCallToActionUrl, null, true);
+        createUrlHandler().handleUrl(getContext(), callToActionUrl, null, true);
 
-        mVideoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_CLICK);
+        videoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_CLICK);
     }
 
     private void updateVolumeControlView(VolumeControlView.VolumeState unMuted) {
-        if (mVolumeControlView != null) {
-            mVolumeControlView.updateIcon(unMuted);
+        if (volumeControlView != null) {
+            volumeControlView.updateIcon(unMuted);
         }
     }
 
     UrlHandler createUrlHandler() {
-        return new UrlHandler.Builder()
-            .withDeepLinkPlusAction(new DeepLinkPlusAction())
-            .withDeepLinkAction(new DeepLinkAction())
-            .withBrowserAction(new BrowserAction(mBroadcastId, null))
+        return new UrlHandler.Builder().withDeepLinkPlusAction(new DeepLinkPlusAction())
+                                       .withDeepLinkAction(new DeepLinkAction())
+                                       .withBrowserAction(new BrowserAction(broadcastId, null))
             .withResultListener(new UrlHandler.UrlHandlerResultListener() {
                 @Override
                 public void onSuccess(String url, UrlAction urlAction) {
-                    mUrlHandleInProgress = false;
+                    urlHandleInProgress = false;
                 }
 
                 @Override
                 public void onFailure(String url) {
-                    mUrlHandleInProgress = false;
+                    urlHandleInProgress = false;
                     LogUtil.debug(TAG, "Failed to handleUrl: " + url + ". Handling fallback");
                 }
             })

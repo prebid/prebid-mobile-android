@@ -34,49 +34,48 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class MraidEventHandlerNotifierRunnableTest {
-    private MraidEventHandlerNotifierRunnable mMraidEventHandlerNotifierRunnable;
+    private MraidEventHandlerNotifierRunnable mraidEventHandlerNotifierRunnable;
 
     @Mock
-    HTMLCreative mMockHTMLCreative;
+    HTMLCreative mockHTMLCreative;
     @Mock
-    WebViewBase mMockWebViewBase;
+    WebViewBase mockWebViewBase;
     @Mock
-    JsExecutor mMockJsExecutor;
+    JsExecutor mockJsExecutor;
     @Mock
-    MraidEvent mMockMraidEvent;
+    MraidEvent mockMraidEvent;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        mMraidEventHandlerNotifierRunnable = new MraidEventHandlerNotifierRunnable(mMockHTMLCreative,
-                                                                                   mMockWebViewBase,
-                                                                                   mMockMraidEvent,
-                                                                                   mMockJsExecutor);
+        mraidEventHandlerNotifierRunnable = new MraidEventHandlerNotifierRunnable(
+                mockHTMLCreative, mockWebViewBase, mockMraidEvent, mockJsExecutor
+        );
     }
 
     @Test
     public void runWithValidHtmlCreativeAndWebViewBase_HandleMraidEventsInCreative() {
-        mMraidEventHandlerNotifierRunnable.run();
+        mraidEventHandlerNotifierRunnable.run();
 
-        verify(mMockHTMLCreative).handleMRAIDEventsInCreative(mMockMraidEvent, mMockWebViewBase);
+        verify(mockHTMLCreative).handleMRAIDEventsInCreative(mockMraidEvent, mockWebViewBase);
     }
 
     @Test
     public void runWithInValidHtmlCreativeOrWebViewBase_NoInteractions() {
         MraidEventHandlerNotifierRunnable mraidEventHandlerNotifierRunnable =
-            new MraidEventHandlerNotifierRunnable(null, mMockWebViewBase,
-                                                  mMockMraidEvent, mMockJsExecutor);
+            new MraidEventHandlerNotifierRunnable(null, mockWebViewBase, mockMraidEvent, mockJsExecutor
+            );
         mraidEventHandlerNotifierRunnable.run();
 
-        verifyZeroInteractions(mMockHTMLCreative);
-        verifyZeroInteractions(mMockJsExecutor);
+        verifyZeroInteractions(mockHTMLCreative);
+        verifyZeroInteractions(mockJsExecutor);
     }
 
     @Test
     public void runWithValidHtmlCreativeAndWebViewBase_ExecuteNativeCallComplete() {
-        mMraidEventHandlerNotifierRunnable.run();
+        mraidEventHandlerNotifierRunnable.run();
 
-        verify(mMockJsExecutor).executeNativeCallComplete();
+        verify(mockJsExecutor).executeNativeCallComplete();
     }
 }

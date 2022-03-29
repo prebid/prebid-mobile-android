@@ -35,45 +35,52 @@ import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
 import org.prebid.mobile.rendering.video.vast.VASTErrorCodes;
 
 public class ExoPlayerView extends PlayerView implements VideoPlayerView {
+
     private static final String TAG = "ExoPlayerView";
     public static final float DEFAULT_INITIAL_VIDEO_VOLUME = 1.0f;
 
-    @NonNull
-    private final VideoCreativeViewListener mVideoCreativeViewListener;
-    private AdViewProgressUpdateTask mAdViewProgressUpdateTask;
-    private SimpleExoPlayer mPlayer;
+    @NonNull private final VideoCreativeViewListener videoCreativeViewListener;
+    private AdViewProgressUpdateTask adViewProgressUpdateTask;
+    private SimpleExoPlayer player;
 
-    private Uri mVideoUri;
+    private Uri videoUri;
 
-    private long mVastVideoDuration = -1;
+    private long vastVideoDuration = -1;
 
-    public ExoPlayerView(Context context,
-                         @NonNull
-                             VideoCreativeViewListener videoCreativeViewListener) {
+    public ExoPlayerView(
+            Context context,
+            @NonNull VideoCreativeViewListener videoCreativeViewListener
+    ) {
         super(context);
-        mVideoCreativeViewListener = videoCreativeViewListener;
+        this.videoCreativeViewListener = videoCreativeViewListener;
     }
 
-    private final Player.EventListener mEventListener = new Player.EventListener() {
+    private final Player.EventListener eventListener = new Player.EventListener() {
 
         @Override
         public void onPlayerError(ExoPlaybackException error) {
-            mVideoCreativeViewListener.onFailure(new AdException(AdException.INTERNAL_ERROR, VASTErrorCodes.MEDIA_DISPLAY_ERROR.toString()));
+            videoCreativeViewListener.onFailure(new AdException(
+                    AdException.INTERNAL_ERROR,
+                    VASTErrorCodes.MEDIA_DISPLAY_ERROR.toString()
+            ));
         }
 
         @Override
-        public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-            if (mPlayer == null) {
+        public void onPlayerStateChanged(
+                boolean playWhenReady,
+                int playbackState
+        ) {
+            if (player == null) {
                 LogUtil.debug(TAG, "onPlayerStateChanged(): Skipping state handling. Player is null");
                 return;
             }
             switch (playbackState) {
                 case Player.STATE_READY:
-                    mPlayer.setPlayWhenReady(true);
+                    player.setPlayWhenReady(true);
                     initUpdateTask();
                     break;
                 case Player.STATE_ENDED:
-                    mVideoCreativeViewListener.onDisplayCompleted();
+                    videoCreativeViewListener.onDisplayCompleted();
                     break;
             }
         }
@@ -86,7 +93,7 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
 
     @Override
     public boolean isPlaying() {
-        return mPlayer != null && mPlayer.getPlayWhenReady();
+        return player != null && player.getPlayWhenReady();
     }
 
     @Override
@@ -105,79 +112,79 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
 
     @Override
     public void setVastVideoDuration(long duration) {
-        mVastVideoDuration = duration;
+        vastVideoDuration = duration;
     }
 
     @Override
     public long getCurrentPosition() {
-        if (mPlayer == null) {
+        if (player == null) {
             return -1;
         }
-        return mPlayer.getContentPosition();
+        return player.getContentPosition();
     }
 
     @Override
     public void setVideoUri(Uri uri) {
-        mVideoUri = uri;
+        videoUri = uri;
     }
 
     @Override
     public int getDuration() {
-        return (int) mPlayer.getDuration();
+        return (int) player.getDuration();
     }
 
     @Override
     public float getVolume() {
-        return mPlayer.getVolume();
+        return player.getVolume();
     }
 
     @Override
     public void resume() {
         LogUtil.debug(TAG, "resume() called");
         preparePlayer(false);
-        mVideoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_RESUME);
+        videoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_RESUME);
     }
 
     @Override
     public void pause() {
         LogUtil.debug(TAG, "pause() called");
-        if (mPlayer != null) {
-            mPlayer.stop();
-            mVideoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_PAUSE);
+        if (player != null) {
+            player.stop();
+            videoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_PAUSE);
         }
     }
 
     @Override
     public void forceStop() {
         destroy();
-        mVideoCreativeViewListener.onDisplayCompleted();
+        videoCreativeViewListener.onDisplayCompleted();
     }
 
     @Override
     public void destroy() {
         LogUtil.debug(TAG, "destroy() called");
         killUpdateTask();
-        if (mPlayer != null) {
-            mPlayer.stop();
-            mPlayer.removeListener(mEventListener);
+        if (player != null) {
+            player.stop();
+            player.removeListener(eventListener);
             setPlayer(null);
-            mPlayer.release();
-            mPlayer = null;
+            player.release();
+            player = null;
         }
     }
 
     @VisibleForTesting
     void setVolume(float volume) {
-        if (mPlayer != null && volume >= 0.0f) {
-            mVideoCreativeViewListener.onVolumeChanged(volume);
-            mPlayer.setVolume(volume);
+        if (player != null && volume >= 0.0f) {
+            videoCreativeViewListener.onVolumeChanged(volume);
+            player.setVolume(volume);
         }
     }
 
     @Override
     public void stop() {
-        if (mPlayer != null) {
-            mPlayer.stop(true);
+        if (player != null) {
+            player.stop(true);
         }
     }
 
@@ -189,27 +196,30 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
     }
 
     private void initPlayer(float initialVolume) {
-        if (mPlayer != null) {
+        if (player != null) {
             LogUtil.debug(TAG, "Skipping initPlayer(): Player is already initialized.");
             return;
         }
-        mPlayer = ExoPlayerFactory.newSimpleInstance(getContext());
-        mPlayer.addListener(mEventListener);
-        setPlayer(mPlayer);
+        player = ExoPlayerFactory.newSimpleInstance(getContext());
+        player.addListener(eventListener);
+        setPlayer(player);
         setUseController(false);
-        mPlayer.setVolume(initialVolume);
+        player.setVolume(initialVolume);
     }
 
     private void initUpdateTask() {
-        if (mAdViewProgressUpdateTask != null) {
+        if (adViewProgressUpdateTask != null) {
             LogUtil.debug(TAG, "initUpdateTask: AdViewProgressUpdateTask is already initialized. Skipping.");
             return;
         }
 
         try {
-            mAdViewProgressUpdateTask = new AdViewProgressUpdateTask(mVideoCreativeViewListener, (int) mPlayer.getDuration());
-            mAdViewProgressUpdateTask.setVastVideoDuration(mVastVideoDuration);
-            mAdViewProgressUpdateTask.execute();
+            adViewProgressUpdateTask = new AdViewProgressUpdateTask(
+                    videoCreativeViewListener,
+                    (int) player.getDuration()
+            );
+            adViewProgressUpdateTask.setVastVideoDuration(vastVideoDuration);
+            adViewProgressUpdateTask.execute();
         }
         catch (AdException e) {
             e.printStackTrace();
@@ -218,12 +228,12 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
 
     @VisibleForTesting
     void preparePlayer(boolean resetPosition) {
-        ExtractorMediaSource extractorMediaSource = buildMediaSource(mVideoUri);
-        if (extractorMediaSource == null || mPlayer == null) {
+        ExtractorMediaSource extractorMediaSource = buildMediaSource(videoUri);
+        if (extractorMediaSource == null || player == null) {
             LogUtil.debug(TAG, "preparePlayer(): ExtractorMediaSource or SimpleExoPlayer is null. Skipping prepare.");
             return;
         }
-        mPlayer.prepare(extractorMediaSource, resetPosition, true);
+        player.prepare(extractorMediaSource, resetPosition, true);
     }
 
     private ExtractorMediaSource buildMediaSource(Uri uri) {
@@ -237,16 +247,16 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
 
     private void killUpdateTask() {
         LogUtil.debug(TAG, "killUpdateTask() called");
-        if (mAdViewProgressUpdateTask != null) {
-            mAdViewProgressUpdateTask.cancel(true);
-            mAdViewProgressUpdateTask = null;
+        if (adViewProgressUpdateTask != null) {
+            adViewProgressUpdateTask.cancel(true);
+            adViewProgressUpdateTask = null;
         }
     }
 
     private void trackInitialStartEvent() {
-        if (mVideoUri != null && mPlayer != null && mPlayer.getCurrentPosition() == 0) {
-            mVideoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_CREATIVEVIEW);
-            mVideoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_START);
+        if (videoUri != null && player != null && player.getCurrentPosition() == 0) {
+            videoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_CREATIVEVIEW);
+            videoCreativeViewListener.onEvent(VideoAdEvent.Event.AD_START);
         }
     }
 }

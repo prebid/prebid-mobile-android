@@ -25,35 +25,38 @@ import org.prebid.mobile.rendering.views.webview.mraid.JsExecutor;
 import java.lang.ref.WeakReference;
 
 public class MraidEventHandlerNotifierRunnable implements Runnable {
+
     private static final String TAG = MraidEventHandlerNotifierRunnable.class.getSimpleName();
 
-    private final WeakReference<HTMLCreative> mWeakHtmlCreative;
-    private final WeakReference<WebViewBase> mWeakWebViewBase;
-    private final WeakReference<JsExecutor> mWeakJsExecutor;
+    private final WeakReference<HTMLCreative> weakHtmlCreative;
+    private final WeakReference<WebViewBase> weakWebViewBase;
+    private final WeakReference<JsExecutor> weakJsExecutor;
 
-    private MraidEvent mMraidEvent;
+    private MraidEvent mraidEvent;
 
-    public MraidEventHandlerNotifierRunnable(HTMLCreative htmlCreative,
-                                             WebViewBase webViewBase,
-                                             MraidEvent mraidEvent,
-                                             JsExecutor jsExecutor) {
-        mWeakHtmlCreative = new WeakReference<>(htmlCreative);
-        mWeakWebViewBase = new WeakReference<>(webViewBase);
-        mWeakJsExecutor = new WeakReference<>(jsExecutor);
-        mMraidEvent = mraidEvent;
+    public MraidEventHandlerNotifierRunnable(
+            HTMLCreative htmlCreative,
+            WebViewBase webViewBase,
+            MraidEvent mraidEvent,
+            JsExecutor jsExecutor
+    ) {
+        weakHtmlCreative = new WeakReference<>(htmlCreative);
+        weakWebViewBase = new WeakReference<>(webViewBase);
+        weakJsExecutor = new WeakReference<>(jsExecutor);
+        this.mraidEvent = mraidEvent;
     }
 
     @Override
     public void run() {
-        HTMLCreative htmlCreative = mWeakHtmlCreative.get();
-        WebViewBase webViewBase = mWeakWebViewBase.get();
+        HTMLCreative htmlCreative = weakHtmlCreative.get();
+        WebViewBase webViewBase = weakWebViewBase.get();
         if (htmlCreative == null || webViewBase == null) {
             LogUtil.debug(TAG, "Unable to pass event to handler. HtmlCreative or webviewBase is null");
             return;
         }
-        htmlCreative.handleMRAIDEventsInCreative(mMraidEvent, webViewBase);
+        htmlCreative.handleMRAIDEventsInCreative(mraidEvent, webViewBase);
 
-        final JsExecutor jsExecutor = mWeakJsExecutor.get();
+        final JsExecutor jsExecutor = weakJsExecutor.get();
         if (jsExecutor == null) {
             LogUtil.debug(TAG, "Unable to executeNativeCallComplete(). JsExecutor is null.");
             return;

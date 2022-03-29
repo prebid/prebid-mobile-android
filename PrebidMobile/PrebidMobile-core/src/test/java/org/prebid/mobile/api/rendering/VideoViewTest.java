@@ -65,38 +65,35 @@ public class VideoViewTest {
         true
     );
 
-    private Context mContext;
+    private Context context;
 
-    private VideoView mVideoView;
-    private AdViewManagerListener mAdViewManagerListener;
+    private VideoView videoView;
+    private AdViewManagerListener adViewManagerListener;
 
-    @Mock
-    public AdViewManager mMockAdViewManager;
-    @Mock
-    public VideoViewListener mMockVideoViewListener;
-    @Mock
-    private CreativeVisibilityTracker mMockVisibilityTracker;
-    private CreativeVisibilityTracker.VisibilityTrackerListener mVisibilityTrackerListener;
+    @Mock public AdViewManager mockAdViewManager;
+    @Mock public VideoViewListener mockVideoViewListener;
+    @Mock private CreativeVisibilityTracker mockVisibilityTracker;
+    private CreativeVisibilityTracker.VisibilityTrackerListener visibilityTrackerListener;
 
     @Before
     public void setup() throws AdException {
         MockitoAnnotations.initMocks(this);
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
+        context = Robolectric.buildActivity(Activity.class).create().get();
 
-        mVideoView = new VideoView(mContext);
+        videoView = new VideoView(context);
 
-        WhiteBox.setInternalState(mVideoView, "mVisibilityTracker", mMockVisibilityTracker);
-        WhiteBox.setInternalState(mVideoView, "mAdViewManager", mMockAdViewManager);
-        mVisibilityTrackerListener = WhiteBox.getInternalState(mVideoView, "mVisibilityTrackerListener");
-        mAdViewManagerListener = WhiteBox.getInternalState(mVideoView, "mOnAdViewManagerListener");
+        WhiteBox.setInternalState(videoView, "visibilityTracker", mockVisibilityTracker);
+        WhiteBox.setInternalState(videoView, "adViewManager", mockAdViewManager);
+        visibilityTrackerListener = WhiteBox.getInternalState(videoView, "visibilityTrackerListener");
+        adViewManagerListener = WhiteBox.getInternalState(videoView, "onAdViewManagerListener");
 
-        mVideoView.setVideoViewListener(mMockVideoViewListener);
+        videoView.setVideoViewListener(mockVideoViewListener);
     }
 
     @Test
     public void videoViewConstructor_InstanceNotNull() throws Exception {
-        VideoView videoView = new VideoView(mContext);
-        VideoView secondVideoView = new VideoView(mContext, mock(AdUnitConfiguration.class));
+        VideoView videoView = new VideoView(context);
+        VideoView secondVideoView = new VideoView(context, mock(AdUnitConfiguration.class));
 
         assertNotNull(videoView);
         assertNotNull(secondVideoView);
@@ -105,44 +102,44 @@ public class VideoViewTest {
     @Test
     public void notifyErrorListeners_InvokeOnLoadFailed() {
         AdException adException = new AdException(AdException.INTERNAL_ERROR, AdException.INIT_ERROR);
-        mVideoView.notifyErrorListeners(adException);
+        videoView.notifyErrorListeners(adException);
 
-        verify(mMockVideoViewListener).onLoadFailed(mVideoView, adException);
+        verify(mockVideoViewListener).onLoadFailed(videoView, adException);
     }
 
     @Test
     public void destroy() {
-        mVideoView.destroy();
+        videoView.destroy();
     }
 
     @Test
     public void play_StateNotStarted_AdViewManagerShow() {
         changeVideoViewState(PLAYBACK_NOT_STARTED);
 
-        mVideoView.play();
+        videoView.play();
 
-        verify(mMockAdViewManager).show();
+        verify(mockAdViewManager).show();
         assertEquals(PLAYING, getVideoViewState());
     }
 
     @Test
     public void play_StateInvalid_DoNothing() {
         // initial state
-        mVideoView.play();
+        videoView.play();
 
         changeVideoViewState(PLAYING);
-        mVideoView.play();
+        videoView.play();
 
         changeVideoViewState(PAUSED_BY_USER);
-        mVideoView.play();
+        videoView.play();
 
         changeVideoViewState(PAUSED_AUTO);
-        mVideoView.play();
+        videoView.play();
 
         changeVideoViewState(PLAYBACK_FINISHED);
-        mVideoView.play();
+        videoView.play();
 
-        verifyZeroInteractions(mMockAdViewManager);
+        verifyZeroInteractions(mockAdViewManager);
     }
 
     @Test
@@ -150,101 +147,101 @@ public class VideoViewTest {
         final AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         final BidResponse bidResponse = new BidResponse("");
 
-        mVideoView.loadAd(adUnitConfiguration, bidResponse);
+        videoView.loadAd(adUnitConfiguration, bidResponse);
 
-        verify(mMockAdViewManager).loadBidTransaction(adUnitConfiguration, bidResponse);
+        verify(mockAdViewManager).loadBidTransaction(adUnitConfiguration, bidResponse);
     }
 
     @Test
     public void loadAd_vastXml_StopVisibilityTrackingChangeStateToUndefined() {
         changeVideoViewState(PAUSED_AUTO);
 
-        mVideoView.loadAd(new AdUnitConfiguration(), "somexml");
-        VideoView.State stateAfterLoad = WhiteBox.getInternalState(mVideoView, "mVideoViewState");
+        videoView.loadAd(new AdUnitConfiguration(), "somexml");
+        VideoView.State stateAfterLoad = WhiteBox.getInternalState(videoView, "videoViewState");
 
         assertEquals(UNDEFINED, stateAfterLoad);
-        verify(mMockVisibilityTracker).stopVisibilityCheck();
+        verify(mockVisibilityTracker).stopVisibilityCheck();
     }
 
     @Test
     public void mute_InvokeAdViewManager() {
-        mVideoView.mute(true);
-        verify(mMockAdViewManager).mute();
+        videoView.mute(true);
+        verify(mockAdViewManager).mute();
 
-        mVideoView.mute(false);
-        verify(mMockAdViewManager).unmute();
+        videoView.mute(false);
+        verify(mockAdViewManager).unmute();
     }
 
     @Test
     public void setAutoPlayDisabled_StopVisibilityTracker() {
-        mVideoView.setAutoPlay(false);
+        videoView.setAutoPlay(false);
 
-        verify(mMockVisibilityTracker).stopVisibilityCheck();
+        verify(mockVisibilityTracker).stopVisibilityCheck();
     }
 
     @Test
     public void setAutoPlayEnabled_DoNothing() {
-        mVideoView.setAutoPlay(true);
+        videoView.setAutoPlay(true);
 
-        verifyZeroInteractions(mMockVisibilityTracker);
+        verifyZeroInteractions(mockVisibilityTracker);
     }
 
     @Test
     public void pause_StatePlaying_InvokeAdViewManagerAndChangeState() {
         changeVideoViewState(PLAYING);
-        mVideoView.pause();
+        videoView.pause();
 
-        verify(mMockAdViewManager).pause();
+        verify(mockAdViewManager).pause();
         assertEquals(PAUSED_BY_USER, getVideoViewState());
     }
 
     @Test
     public void pause_StateInvalid_DoNothing() {
         changeVideoViewState(PLAYBACK_FINISHED);
-        mVideoView.pause();
+        videoView.pause();
 
         changeVideoViewState(UNDEFINED);
-        mVideoView.pause();
+        videoView.pause();
 
         changeVideoViewState(PAUSED_AUTO);
-        mVideoView.pause();
+        videoView.pause();
 
         changeVideoViewState(PAUSED_BY_USER);
-        mVideoView.pause();
+        videoView.pause();
 
         changeVideoViewState(PLAYBACK_NOT_STARTED);
-        mVideoView.pause();
+        videoView.pause();
 
-        verifyZeroInteractions(mMockAdViewManager);
+        verifyZeroInteractions(mockAdViewManager);
     }
 
     @Test
     public void resume_StatePausedAutoOrManual_InvokeAdViewManagerAndChangeState() {
         changeVideoViewState(PAUSED_AUTO);
-        mVideoView.resume();
+        videoView.resume();
 
         changeVideoViewState(PAUSED_BY_USER);
-        mVideoView.resume();
+        videoView.resume();
 
-        verify(mMockAdViewManager, times(2)).resume();
+        verify(mockAdViewManager, times(2)).resume();
         assertEquals(PLAYING, getVideoViewState());
     }
 
     @Test
     public void resume_StateInvalid_DoNothing() {
         changeVideoViewState(PLAYBACK_NOT_STARTED);
-        mVideoView.resume();
+        videoView.resume();
 
         changeVideoViewState(UNDEFINED);
-        mVideoView.resume();
+        videoView.resume();
 
         changeVideoViewState(PLAYING);
-        mVideoView.resume();
+        videoView.resume();
 
         changeVideoViewState(PLAYBACK_FINISHED);
-        mVideoView.resume();
+        videoView.resume();
 
-        verifyZeroInteractions(mMockAdViewManager);
+        verifyZeroInteractions(mockAdViewManager);
     }
 
     @Test
@@ -258,9 +255,9 @@ public class VideoViewTest {
             true
         );
 
-        mVisibilityTrackerListener.onVisibilityChanged(result);
+        visibilityTrackerListener.onVisibilityChanged(result);
 
-        verify(mMockAdViewManager).show();
+        verify(mockAdViewManager).show();
         assertEquals(PLAYING, getVideoViewState());
     }
 
@@ -268,9 +265,9 @@ public class VideoViewTest {
     public void handleVisibilityChange_visible_validAutoResumeState_ExecuteResume() {
         changeVideoViewState(PAUSED_AUTO);
 
-        mVisibilityTrackerListener.onVisibilityChanged(VISIBLE_RESULT);
+        visibilityTrackerListener.onVisibilityChanged(VISIBLE_RESULT);
 
-        verify(mMockAdViewManager).resume();
+        verify(mockAdViewManager).resume();
         assertEquals(PLAYING, getVideoViewState());
     }
 
@@ -278,112 +275,112 @@ public class VideoViewTest {
     public void handleVisibilityChange_visible_validAutoPauseState_ExecutePause() {
         changeVideoViewState(PLAYING);
 
-        mVisibilityTrackerListener.onVisibilityChanged(INVISIBLE_RESULT);
+        visibilityTrackerListener.onVisibilityChanged(INVISIBLE_RESULT);
 
-        verify(mMockAdViewManager).pause();
+        verify(mockAdViewManager).pause();
         assertEquals(PAUSED_AUTO, getVideoViewState());
     }
 
     @Test
     public void handleVisibilityChange_visible_invalidState_DoNothing() {
         changeVideoViewState(PAUSED_BY_USER);
-        mVisibilityTrackerListener.onVisibilityChanged(INVISIBLE_RESULT);
-        mVisibilityTrackerListener.onVisibilityChanged(VISIBLE_RESULT);
+        visibilityTrackerListener.onVisibilityChanged(INVISIBLE_RESULT);
+        visibilityTrackerListener.onVisibilityChanged(VISIBLE_RESULT);
 
         changeVideoViewState(UNDEFINED);
-        mVisibilityTrackerListener.onVisibilityChanged(INVISIBLE_RESULT);
-        mVisibilityTrackerListener.onVisibilityChanged(VISIBLE_RESULT);
+        visibilityTrackerListener.onVisibilityChanged(INVISIBLE_RESULT);
+        visibilityTrackerListener.onVisibilityChanged(VISIBLE_RESULT);
 
         changeVideoViewState(PLAYBACK_FINISHED);
-        mVisibilityTrackerListener.onVisibilityChanged(INVISIBLE_RESULT);
-        mVisibilityTrackerListener.onVisibilityChanged(VISIBLE_RESULT);
+        visibilityTrackerListener.onVisibilityChanged(INVISIBLE_RESULT);
+        visibilityTrackerListener.onVisibilityChanged(VISIBLE_RESULT);
 
-        verifyZeroInteractions(mMockAdViewManager);
+        verifyZeroInteractions(mockAdViewManager);
     }
 
     @Test
     public void handleWindowFocusChange_autoPlayEnabled_DoNothing() {
         changeVideoViewState(PLAYING);
-        mVideoView.setAutoPlay(true);
-        mVideoView.handleWindowFocusChange(false);
+        videoView.setAutoPlay(true);
+        videoView.handleWindowFocusChange(false);
 
         changeVideoViewState(PAUSED_AUTO);
-        mVideoView.handleWindowFocusChange(true);
+        videoView.handleWindowFocusChange(true);
 
-        verifyZeroInteractions(mMockAdViewManager);
+        verifyZeroInteractions(mockAdViewManager);
     }
 
     @Test
     public void handleWindowFocusChange_invisible_autoPlayDisabled_stateValid_ExecutePause() {
-        mVideoView.setAutoPlay(false);
+        videoView.setAutoPlay(false);
         changeVideoViewState(PLAYING);
 
-        mVideoView.handleWindowFocusChange(false);
+        videoView.handleWindowFocusChange(false);
 
-        verify(mMockAdViewManager).pause();
+        verify(mockAdViewManager).pause();
         assertEquals(PAUSED_AUTO, getVideoViewState());
     }
 
     @Test
     public void handleWindowFocusChange_visible_autoPlayDisabled_stateValid_ExecuteResume() {
-        mVideoView.setAutoPlay(false);
+        videoView.setAutoPlay(false);
         changeVideoViewState(PAUSED_AUTO);
 
-        mVideoView.handleWindowFocusChange(true);
+        videoView.handleWindowFocusChange(true);
 
-        verify(mMockAdViewManager).resume();
+        verify(mockAdViewManager).resume();
         assertEquals(PLAYING, getVideoViewState());
     }
 
     @Test
     public void handleWindowFocusChange_autoPlayDisabled_stateInValid_DoNothing() {
         changeVideoViewState(PAUSED_BY_USER);
-        mVideoView.handleWindowFocusChange(true);
-        mVideoView.handleWindowFocusChange(false);
+        videoView.handleWindowFocusChange(true);
+        videoView.handleWindowFocusChange(false);
 
         changeVideoViewState(UNDEFINED);
-        mVideoView.handleWindowFocusChange(true);
-        mVideoView.handleWindowFocusChange(false);
+        videoView.handleWindowFocusChange(true);
+        videoView.handleWindowFocusChange(false);
 
         changeVideoViewState(PLAYBACK_FINISHED);
-        mVideoView.handleWindowFocusChange(true);
-        mVideoView.handleWindowFocusChange(false);
+        videoView.handleWindowFocusChange(true);
+        videoView.handleWindowFocusChange(false);
 
-        verifyZeroInteractions(mMockAdViewManager);
+        verifyZeroInteractions(mockAdViewManager);
     }
 
     // region =============== AdViewManagerListener
     @Test
     public void adLoaded_autoPlayEnabled_NotifyListener_changeState() {
 
-        mAdViewManagerListener.adLoaded(null);
+        adViewManagerListener.adLoaded(null);
 
-        verify(mMockVideoViewListener).onLoaded(mVideoView, null);
+        verify(mockVideoViewListener).onLoaded(videoView, null);
         assertEquals(PLAYBACK_NOT_STARTED, getVideoViewState());
     }
 
     @Test
     public void adLoaded_autoPlayDisabled_NotifyListener_changeState() {
-        mVideoView.setAutoPlay(false);
-        reset(mMockVisibilityTracker);
+        videoView.setAutoPlay(false);
+        reset(mockVisibilityTracker);
 
-        mAdViewManagerListener.adLoaded(null);
+        adViewManagerListener.adLoaded(null);
 
-        verify(mMockVideoViewListener).onLoaded(mVideoView, null);
+        verify(mockVideoViewListener).onLoaded(videoView, null);
         assertEquals(PLAYBACK_NOT_STARTED, getVideoViewState());
-        verifyZeroInteractions(mMockVisibilityTracker);
+        verifyZeroInteractions(mockVisibilityTracker);
     }
 
     @Test
     public void viewReadyForImmediateDisplay_notShowingEndCard_ShowVideoCreative() {
         final VideoCreativeView mockVideoCreativeView = mock(VideoCreativeView.class);
-        when(mMockAdViewManager.isNotShowingEndCard()).thenReturn(true);
+        when(mockAdViewManager.isNotShowingEndCard()).thenReturn(true);
 
-        mVideoView.setVideoPlayerClick(true);
+        videoView.setVideoPlayerClick(true);
 
-        mAdViewManagerListener.viewReadyForImmediateDisplay(mockVideoCreativeView);
+        adViewManagerListener.viewReadyForImmediateDisplay(mockVideoCreativeView);
 
-        verify(mMockVideoViewListener).onDisplayed(eq(mVideoView));
+        verify(mockVideoViewListener).onDisplayed(eq(videoView));
         verify(mockVideoCreativeView).enableVideoPlayerClick();
         verify(mockVideoCreativeView).showVolumeControls();
     }
@@ -392,85 +389,85 @@ public class VideoViewTest {
     public void viewReadyForImmediateDisplay_hasEndCard_ShowEndCard_noListenerInvocation() {
         final View mockView = mock(View.class);
         reset(mockView);
-        when(mMockAdViewManager.isNotShowingEndCard()).thenReturn(false);
-        when(mMockAdViewManager.hasEndCard()).thenReturn(true);
+        when(mockAdViewManager.isNotShowingEndCard()).thenReturn(false);
+        when(mockAdViewManager.hasEndCard()).thenReturn(true);
 
-        mAdViewManagerListener.viewReadyForImmediateDisplay(mockView);
+        adViewManagerListener.viewReadyForImmediateDisplay(mockView);
 
         verify(mockView, times(2)).setLayoutParams(any(FrameLayout.LayoutParams.class));
-        verifyZeroInteractions(mMockVideoViewListener);
+        verifyZeroInteractions(mockVideoViewListener);
     }
 
     @Test
     public void failedToLoad_NotifyListener() {
         final AdException expectedException = new AdException(AdException.INTERNAL_ERROR, "message");
 
-        mAdViewManagerListener.failedToLoad(expectedException);
+        adViewManagerListener.failedToLoad(expectedException);
 
-        verify(mMockVideoViewListener).onLoadFailed(mVideoView, expectedException);
+        verify(mockVideoViewListener).onLoadFailed(videoView, expectedException);
     }
 
     @Test
     public void videoCreativePlaybackFinished_noEndCard__StopVisibilityTracking_changeState_notifyListener_addWatchAgain() {
-        when(mMockAdViewManager.isNotShowingEndCard()).thenReturn(true);
+        when(mockAdViewManager.isNotShowingEndCard()).thenReturn(true);
 
-        mAdViewManagerListener.videoCreativePlaybackFinished();
+        adViewManagerListener.videoCreativePlaybackFinished();
 
-        verify(mMockVisibilityTracker).stopVisibilityCheck();
+        verify(mockVisibilityTracker).stopVisibilityCheck();
         assertEquals(PLAYBACK_FINISHED, getVideoViewState());
-        verify(mMockVideoViewListener).onPlayBackCompleted(mVideoView);
-        verify(mMockAdViewManager).addObstructions(any());
+        verify(mockVideoViewListener).onPlayBackCompleted(videoView);
+        verify(mockAdViewManager).addObstructions(any());
     }
 
     @Test
     public void videoCreativePlaybackFinished_hasEndCard__StopVisibilityTracking_changeState_notifyListener() {
-        when(mMockAdViewManager.isNotShowingEndCard()).thenReturn(false);
+        when(mockAdViewManager.isNotShowingEndCard()).thenReturn(false);
 
-        mAdViewManagerListener.videoCreativePlaybackFinished();
+        adViewManagerListener.videoCreativePlaybackFinished();
 
-        verify(mMockVisibilityTracker).stopVisibilityCheck();
+        verify(mockVisibilityTracker).stopVisibilityCheck();
         assertEquals(PLAYBACK_FINISHED, getVideoViewState());
-        verify(mMockVideoViewListener).onPlayBackCompleted(mVideoView);
-        verify(mMockAdViewManager, times(0)).addObstructions(any());
+        verify(mockVideoViewListener).onPlayBackCompleted(videoView);
+        verify(mockAdViewManager, times(0)).addObstructions(any());
     }
 
     @Test
     public void creativeClicked_NotifyListener() {
-        mAdViewManagerListener.creativeClicked("test");
-        verify(mMockVideoViewListener).onClickThroughOpened(mVideoView);
+        adViewManagerListener.creativeClicked("test");
+        verify(mockVideoViewListener).onClickThroughOpened(videoView);
     }
 
     @Test
     public void creativeMuted_NotifyListener() {
-        mAdViewManagerListener.creativeMuted();
-        verify(mMockVideoViewListener).onVideoMuted();
+        adViewManagerListener.creativeMuted();
+        verify(mockVideoViewListener).onVideoMuted();
     }
 
     @Test
     public void creativeUnMuted_NotifyListener() {
-        mAdViewManagerListener.creativeUnMuted();
-        verify(mMockVideoViewListener).onVideoUnMuted();
+        adViewManagerListener.creativeUnMuted();
+        verify(mockVideoViewListener).onVideoUnMuted();
     }
 
     @Test
     public void creativePaused_NotifyListener() {
-        mAdViewManagerListener.creativePaused();
-        verify(mMockVideoViewListener).onPlaybackPaused();
+        adViewManagerListener.creativePaused();
+        verify(mockVideoViewListener).onPlaybackPaused();
     }
 
     @Test
     public void creativeResumed_NotifyListener() {
-        mAdViewManagerListener.creativeResumed();
-        verify(mMockVideoViewListener).onPlaybackResumed();
+        adViewManagerListener.creativeResumed();
+        verify(mockVideoViewListener).onPlaybackResumed();
     }
     // endregion =============== AdViewManagerListener
 
     private void changeVideoViewState(VideoView.State state) {
-        WhiteBox.setInternalState(mVideoView, "mVideoViewState", state);
+        WhiteBox.setInternalState(videoView, "videoViewState", state);
     }
 
     private VideoView.State getVideoViewState() {
-        return WhiteBox.getInternalState(mVideoView, "mVideoViewState");
+        return WhiteBox.getInternalState(videoView, "videoViewState");
     }
 
     // TODO: 2/8/21 Remove or refactor in scope of expand-on-click task
@@ -479,65 +476,65 @@ public class VideoViewTest {
     //     AdViewManager mockAdViewManager = getMockAdViewManager();
     //     when(mockAdViewManager.canShowFullScreen()).thenReturn(true);
     //
-    //     VideoView spyVideoAdView = spy(mVideoAdView);
+    //     VideoView spyVideoAdView = spy(videoAdView);
     //
-    //     when(spyVideoAdView.getChildAt(anyInt())).thenReturn(mMockVideoCreativeView);
+    //     when(spyVideoAdView.getChildAt(anyInt())).thenReturn(mockVideoCreativeView);
     //
     //     WhiteBox.method(VideoView.class, "showFullScreen").invoke(spyVideoAdView);
-    //     verify(spyVideoAdView).createDialog(mMockContext, mMockVideoCreativeView);
+    //     verify(spyVideoAdView).createDialog(mockContext, mockVideoCreativeView);
     // }
 
     // @Test
     // public void isFullScreen() throws IllegalAccessException, InvocationTargetException {
-    //     boolean fullScreen = ((boolean) WhiteBox.method(VideoView.class, "isFullScreen").invoke(mVideoAdView));
+    //     boolean fullScreen = ((boolean) WhiteBox.method(VideoView.class, "isFullScreen").invoke(videoAdView));
     //     assertFalse(fullScreen);
     //
     //     VideoDialog mock = mock(VideoDialog.class);
     //     when(mock.isShowing()).thenReturn(true);
-    //     WhiteBox.field(VideoView.class, "mVideoDialog").set(mVideoAdView, mock);
-    //     fullScreen = ((boolean) WhiteBox.method(VideoView.class, "isFullScreen").invoke(mVideoAdView));
+    //     WhiteBox.field(VideoView.class, "videoDialog").set(videoAdView, mock);
+    //     fullScreen = ((boolean) WhiteBox.method(VideoView.class, "isFullScreen").invoke(videoAdView));
     //     assertTrue(fullScreen);
     // }
 
     // @Test
     // public void whenClickthroughBrowserClosed_CallCallback() {
     //
-    //     mManagerDelegate.onClickThroughClosed();
-    //     verify(mMockVideoViewListener).onClickThroughClosed(any(VideoView.class));
+    //     managerDelegate.onClickThroughClosed();
+    //     verify(mockVideoViewListener).onClickThroughClosed(any(VideoView.class));
     // }
     //
     // @Test
     // public void whenInterstitialAdClosed_CallCallback() throws IllegalAccessException {
     //     getMockAdViewManager();
     //
-    //     mManagerDelegate.onInterstitialAdClosed();
-    //     verify(mMockAdViewManager).resetTransactionState();
-    //     verify(mMockVideoViewListener).onInterstitialClosed(any(VideoView.class));
+    //     managerDelegate.onInterstitialAdClosed();
+    //     verify(mockAdViewManager).resetTransactionState();
+    //     verify(mockVideoViewListener).onInterstitialClosed(any(VideoView.class));
     // }
     //
     // @Test
     // public void whenShowFullScreen_CallCallback() throws Exception {
     //     getMockAdViewManager();
     //
-    //     mManagerDelegate.onAdClicked();
-    //     verify(mMockAdViewManager).canShowFullScreen();
-    //     verify(mMockVideoViewListener).onInterstitialOpened(any(VideoView.class));
+    //     managerDelegate.onAdClicked();
+    //     verify(mockAdViewManager).canShowFullScreen();
+    //     verify(mockVideoViewListener).onInterstitialOpened(any(VideoView.class));
     // }
     //
     // @Test
     // public void whenShowWatchAgain_WatchAgainButtonSetup() throws IllegalAccessException {
     //     getMockAdViewManager();
     //
-    //     mManagerDelegate.onVideoCompleted();
+    //     managerDelegate.onVideoCompleted();
     //
-    //     verify(mMockAdViewManager).addObstructions(any(InternalFriendlyObstruction.class));
-    //     assertNotNull(mVideoAdView.getChildAt(0));
+    //     verify(mockAdViewManager).addObstructions(any(InternalFriendlyObstruction.class));
+    //     assertNotNull(videoAdView.getChildAt(0));
     // }
     //
     // @Test
     // public void whenCollapse_CallCallback() {
-    //     mManagerDelegate.onVideoDialogClosed();
-    //     verify(mMockVideoViewListener).onInterstitialClosed(any(VideoView.class));
+    //     managerDelegate.onVideoDialogClosed();
+    //     verify(mockVideoViewListener).onInterstitialClosed(any(VideoView.class));
     // }
 
     // private VideoCreative getSimpleVideoCreative() throws IllegalAccessException {
@@ -547,7 +544,7 @@ public class VideoViewTest {
     //
     //     when(simpleVideoCreative.getCreativeModel())
     //         .thenReturn(new VideoCreativeModel(mock(TrackingManager.class), mock(OmEventTracker.class), adConfiguration));
-    //     WhiteBox.field(VideoView.class, "mCurrentCreativeShown").set(mVideoView, simpleVideoCreative);
+    //     WhiteBox.field(VideoView.class, "currentCreativeShown").set(videoView, simpleVideoCreative);
     //     return simpleVideoCreative;
     // }
 }

@@ -33,10 +33,10 @@ public class DeviceInfoParameterBuilder extends ParameterBuilder {
 
     static final String PLATFORM_VALUE = "Android";
 
-    private AdUnitConfiguration mAdConfiguration;
+    private AdUnitConfiguration adConfiguration;
 
     public DeviceInfoParameterBuilder(AdUnitConfiguration configuration) {
-        mAdConfiguration = configuration;
+        adConfiguration = configuration;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class DeviceInfoParameterBuilder extends ParameterBuilder {
             boolean lmt = AdIdManager.isLimitAdTrackingEnabled();
             device.lmt = lmt ? 1 : 0;
 
-            final AdSize minSizePercentage = mAdConfiguration.getMinSizePercentage();
+            final AdSize minSizePercentage = adConfiguration.getMinSizePercentage();
             if (minSizePercentage != null) {
                 device.getExt().put("prebid", Prebid.getJsonObjectForDeviceMinSizePerc(minSizePercentage));
             }

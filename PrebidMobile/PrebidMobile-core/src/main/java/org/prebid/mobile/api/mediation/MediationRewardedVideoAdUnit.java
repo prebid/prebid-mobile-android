@@ -49,20 +49,20 @@ public class MediationRewardedVideoAdUnit extends MediationBaseFullScreenAdUnit 
         String configId,
         AdSize adSize
     ) {
-        mAdUnitConfig.setConfigId(configId);
-        mAdUnitConfig.setAdFormat(AdFormat.VAST);
-        mAdUnitConfig.setRewarded(true);
-        mAdUnitConfig.setAdPosition(AdPosition.FULLSCREEN);
+        adUnitConfig.setConfigId(configId);
+        adUnitConfig.setAdFormat(AdFormat.VAST);
+        adUnitConfig.setRewarded(true);
+        adUnitConfig.setAdPosition(AdPosition.FULLSCREEN);
     }
 
     @Override
     protected final void onResponseReceived(BidResponse response) {
-        if (mOnFetchCompleteListener != null) {
+        if (onFetchCompleteListener != null) {
             LogUtil.debug(TAG, "On response received");
             BidResponseCache.getInstance().putBidResponse(response.getId(), response);
-            mMediationDelegate.setResponseToLocalExtras(response);
-            mMediationDelegate.handleKeywordsUpdate(response.getTargeting());
-            mOnFetchCompleteListener.onComplete(FetchDemandResult.SUCCESS);
+            mediationDelegate.setResponseToLocalExtras(response);
+            mediationDelegate.handleKeywordsUpdate(response.getTargeting());
+            onFetchCompleteListener.onComplete(FetchDemandResult.SUCCESS);
         }
     }
 

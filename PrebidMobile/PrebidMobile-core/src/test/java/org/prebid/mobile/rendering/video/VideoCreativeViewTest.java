@@ -38,23 +38,23 @@ import static org.mockito.Mockito.verify;
 @Config(sdk = 19)
 public class VideoCreativeViewTest {
 
-    private VideoCreativeView mVideoCreativeView;
-    private VideoCreative mMockCreative;
+    private VideoCreativeView videoCreativeView;
+    private VideoCreative mockCreative;
 
     @Before
     public void setUp() throws AdException {
         Context context = Robolectric.buildActivity(Activity.class).create().get();
-        mMockCreative = Mockito.mock(VideoCreative.class);
+        mockCreative = Mockito.mock(VideoCreative.class);
 
-        mVideoCreativeView = new VideoCreativeView(context, mMockCreative);
+        videoCreativeView = new VideoCreativeView(context, mockCreative);
     }
 
     @Test
     public void startTest() throws IllegalAccessException {
         VideoPlayerView mockPlugPlayView = mock(ExoPlayerView.class);
-        WhiteBox.field(VideoCreativeView.class, "mExoPlayerView").set(mVideoCreativeView, mockPlugPlayView);
+        WhiteBox.field(VideoCreativeView.class, "exoPlayerView").set(videoCreativeView, mockPlugPlayView);
 
-        mVideoCreativeView.start(anyInt());
+        videoCreativeView.start(anyInt());
         verify(mockPlugPlayView).start(anyFloat());
     }
 
@@ -62,10 +62,10 @@ public class VideoCreativeViewTest {
     public void destroyTest() throws IllegalAccessException {
         VideoPlayerView mockPlugPlayView = mock(ExoPlayerView.class);
         View mockLytCallToActionOverlay = mock(View.class);
-        WhiteBox.field(VideoCreativeView.class, "mExoPlayerView").set(mVideoCreativeView, mockPlugPlayView);
-        mVideoCreativeView.addView(mockLytCallToActionOverlay);
+        WhiteBox.field(VideoCreativeView.class, "exoPlayerView").set(videoCreativeView, mockPlugPlayView);
+        videoCreativeView.addView(mockLytCallToActionOverlay);
 
-        mVideoCreativeView.destroy();
+        videoCreativeView.destroy();
         verify(mockPlugPlayView).destroy();
     }
 

@@ -25,14 +25,14 @@ public class OrientationManager
 		landscape(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE),
 		none(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
-		private final int mActivityInfoOrientation;
+		private final int activityInfoOrientation;
 
 		ForcedOrientation(final int activityInfoOrientation) {
-			mActivityInfoOrientation = activityInfoOrientation;
+			this.activityInfoOrientation = activityInfoOrientation;
 		}
 
 		public int getActivityInfoOrientation() {
-			return mActivityInfoOrientation;
+			return activityInfoOrientation;
 		}
 	}
 }

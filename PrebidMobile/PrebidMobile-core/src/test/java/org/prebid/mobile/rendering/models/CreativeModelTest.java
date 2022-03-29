@@ -44,7 +44,7 @@ public class CreativeModelTest {
         ArrayList<String> urls = new ArrayList<String>();
         urls.add("www.impression.url");
         creativeModel.registerTrackingEvent(TrackingEvent.Events.IMPRESSION, urls);
-        assertTrue(creativeModel.mTrackingURLs.size() == 1);
+        assertTrue(creativeModel.trackingURLs.size() == 1);
     }
 
     @Test

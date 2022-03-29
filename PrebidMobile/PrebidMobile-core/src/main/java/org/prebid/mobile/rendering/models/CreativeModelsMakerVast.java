@@ -44,21 +44,21 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
 
     static final String VIDEO_CREATIVE_TAG = "Video";
 
-    @NonNull
-    private final AdLoadListener mListener;
+    @NonNull private final AdLoadListener listener;
 
-    private AdUnitConfiguration mAdConfiguration;
+    private AdUnitConfiguration adConfiguration;
 
-    private AdResponseParserVast mRootVastParser;
-    private AdResponseParserVast mLatestVastWrapperParser;
+    private AdResponseParserVast rootVastParser;
+    private AdResponseParserVast latestVastWrapperParser;
 
-    private String mAdLoaderIdentifier;
+    private String adLoaderIdentifier;
 
-    public CreativeModelsMakerVast(String adLoaderIdentifier,
-                                   @NonNull
-                                       AdLoadListener listener) {
-        mListener = listener;
-        mAdLoaderIdentifier = adLoaderIdentifier;
+    public CreativeModelsMakerVast(
+            String adLoaderIdentifier,
+            @NonNull AdLoadListener listener
+    ) {
+        this.listener = listener;
+        this.adLoaderIdentifier = adLoaderIdentifier;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
             return;
         }
 
-        mAdConfiguration = adConfiguration;
+        this.adConfiguration = adConfiguration;
 
         if (parsers == null) {
             notifyErrorListener("Parsers results are null.");
@@ -80,10 +80,10 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
             return;
         }
 
-        mRootVastParser = (AdResponseParserVast) parsers[0];
-        mLatestVastWrapperParser = (AdResponseParserVast) parsers[1];
+        rootVastParser = (AdResponseParserVast) parsers[0];
+        latestVastWrapperParser = (AdResponseParserVast) parsers[1];
 
-        if (mRootVastParser == null || mLatestVastWrapperParser == null) {
+        if (rootVastParser == null || latestVastWrapperParser == null) {
             notifyErrorListener("One of parsers is null.");
             return;
         }
@@ -101,49 +101,49 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
              * We pre parse the impressions and trackings for faster reading at
              * video time. DO NOT REMOVE THESE LINES
              */
-            mRootVastParser.getAllTrackings(mRootVastParser, 0);
-            mRootVastParser.getImpressions(mRootVastParser, 0);
-            mRootVastParser.getClickTrackings(mRootVastParser, 0);
-            final String videoErrorUrl = mRootVastParser.getError(mRootVastParser, 0);
-            final String vastClickThroughUrl = mRootVastParser.getClickThroughUrl(mRootVastParser, 0);
-            final String videoDuration = mLatestVastWrapperParser.getVideoDuration(mLatestVastWrapperParser, 0);
-            final String skipOffset = mLatestVastWrapperParser.getSkipOffset(mLatestVastWrapperParser, 0);
-            final AdVerifications adVerifications = mRootVastParser.getAdVerification(mLatestVastWrapperParser, 0);
+            rootVastParser.getAllTrackings(rootVastParser, 0);
+            rootVastParser.getImpressions(rootVastParser, 0);
+            rootVastParser.getClickTrackings(rootVastParser, 0);
+            final String videoErrorUrl = rootVastParser.getError(rootVastParser, 0);
+            final String vastClickThroughUrl = rootVastParser.getClickThroughUrl(rootVastParser, 0);
+            final String videoDuration = latestVastWrapperParser.getVideoDuration(latestVastWrapperParser, 0);
+            final String skipOffset = latestVastWrapperParser.getSkipOffset(latestVastWrapperParser, 0);
+            final AdVerifications adVerifications = rootVastParser.getAdVerification(latestVastWrapperParser, 0);
 
             checkVideoDuration(Utils.getMsFrom(videoDuration));
 
             Result result = new Result();
-            result.loaderIdentifier = mAdLoaderIdentifier;
+            result.loaderIdentifier = adLoaderIdentifier;
 
             TrackingManager trackingManager = TrackingManager.getInstance();
             OmEventTracker omEventTracker = new OmEventTracker();
 
-            VideoCreativeModel videoModel = new VideoCreativeModel(trackingManager, omEventTracker, mAdConfiguration);
+            VideoCreativeModel videoModel = new VideoCreativeModel(trackingManager, omEventTracker, adConfiguration);
 
             videoModel.setName(VIDEO_CREATIVE_TAG);
 
-            videoModel.setMediaUrl(mLatestVastWrapperParser.getMediaFileUrl(mLatestVastWrapperParser, 0));
+            videoModel.setMediaUrl(latestVastWrapperParser.getMediaFileUrl(latestVastWrapperParser, 0));
             videoModel.setMediaDuration(Utils.getMsFrom(videoDuration));
             videoModel.setSkipOffset(Utils.getMsFrom(skipOffset));
             videoModel.setAdVerifications(adVerifications);
-            videoModel.setAuid(mRootVastParser.getVast().getAds().get(0).getId());
-            videoModel.setWidth(mLatestVastWrapperParser.getWidth());
-            videoModel.setHeight(mLatestVastWrapperParser.getHeight());
+            videoModel.setAuid(rootVastParser.getVast().getAds().get(0).getId());
+            videoModel.setWidth(latestVastWrapperParser.getWidth());
+            videoModel.setHeight(latestVastWrapperParser.getHeight());
             //put tracking urls into element.
             for (VideoAdEvent.Event videoEvent : VideoAdEvent.Event.values()) {
-                videoModel.getVideoEventUrls().put(videoEvent, mRootVastParser.getTrackingByType(videoEvent));
+                videoModel.getVideoEventUrls().put(videoEvent, rootVastParser.getTrackingByType(videoEvent));
             }
 
             //put impression urls into element
             ArrayList<String> impUrls = new ArrayList<>();
-            for (Impression impression : mRootVastParser.getImpressions()) {
+            for (Impression impression : rootVastParser.getImpressions()) {
                 impUrls.add(impression.getValue());
             }
             videoModel.getVideoEventUrls().put(VideoAdEvent.Event.AD_IMPRESSION, impUrls);
 
             //put click urls into element
             ArrayList<String> clickTrackingUrls = new ArrayList<>();
-            for (ClickTracking clickTracking : mRootVastParser.getClickTrackings()) {
+            for (ClickTracking clickTracking : rootVastParser.getClickTrackings()) {
                 clickTrackingUrls.add(clickTracking.getValue());
             }
             videoModel.getVideoEventUrls().put(VideoAdEvent.Event.AD_CLICK, clickTrackingUrls);
@@ -159,12 +159,15 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
             result.creativeModels = new ArrayList<>();
             result.creativeModels.add(videoModel);
 
-            CreativeModel endCardModel = new CreativeModel(trackingManager, omEventTracker, mAdConfiguration);
+            CreativeModel endCardModel = new CreativeModel(trackingManager, omEventTracker, adConfiguration);
             endCardModel.setName(HTML_CREATIVE_TAG);
             endCardModel.setHasEndCard(true);
 
             // Create CompanionAd object
-            Companion companionAd = AdResponseParserVast.getCompanionAd(mLatestVastWrapperParser.getVast().getAds().get(0).getInline());
+            Companion companionAd = AdResponseParserVast.getCompanionAd(latestVastWrapperParser.getVast()
+                                                                                               .getAds()
+                                                                                               .get(0)
+                                                                                               .getInline());
             if (companionAd != null) {
                 switch (AdResponseParserVast.getCompanionResourceFormat(companionAd)) {
                     case RESOURCE_FORMAT_HTML:
@@ -210,8 +213,8 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
                 // Flag that video creative has a corresponding end card
                 videoModel.setHasEndCard(true);
             }
-            mAdConfiguration.setInterstitialSize(videoModel.getWidth() + "x" + videoModel.getHeight());
-            mListener.onCreativeModelReady(result);
+            adConfiguration.setInterstitialSize(videoModel.getWidth() + "x" + videoModel.getHeight());
+            listener.onCreativeModelReady(result);
         } catch (Exception e) {
             LogUtil.error(TAG, "Video failed with: " + e.getMessage());
             notifyErrorListener("Video failed: " + e.getMessage());
@@ -219,12 +222,12 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
     }
 
     private void notifyErrorListener(String msg) {
-        mListener.onFailedToLoadAd(new AdException(AdException.INTERNAL_ERROR, msg), mAdLoaderIdentifier);
+        listener.onFailedToLoadAd(new AdException(AdException.INTERNAL_ERROR, msg), adLoaderIdentifier);
     }
 
     private void checkVideoDuration(long currentDuration) throws VastParseError {
-        if (mAdConfiguration != null && mAdConfiguration.getMaxVideoDuration() != null) {
-            long maxDuration = mAdConfiguration.getMaxVideoDuration() * 1000;
+        if (adConfiguration != null && adConfiguration.getMaxVideoDuration() != null) {
+            long maxDuration = adConfiguration.getMaxVideoDuration() * 1000;
             if (currentDuration > maxDuration) {
                 throw new VastParseError("Video duration can't be more then ad unit max video duration: " + maxDuration + " (current duration: " + currentDuration + ")");
             }

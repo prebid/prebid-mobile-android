@@ -34,26 +34,26 @@ import static junit.framework.Assert.assertTrue;
 @Config(sdk = 19)
 public class RefreshTimerTaskTest {
 
-    private RefreshTimerTask mRefreshTimerTask;
+    private RefreshTimerTask refreshTimerTask;
 
-    private boolean mRefreshTriggered;
+    private boolean refreshTriggered;
 
     @Before
     public void setup() {
         Activity testActivity = Robolectric.buildActivity(Activity.class).create().get();
         ManagersResolver.getInstance().prepare(testActivity);
 
-        mRefreshTimerTask = new RefreshTimerTask(null);
+        refreshTimerTask = new RefreshTimerTask(null);
     }
 
     @Test
     public void testIfRefreshTimerTriggeredAfterIntervalNoCallback() throws Exception {
-        mRefreshTimerTask.scheduleRefreshTask(2000);
+        refreshTimerTask.scheduleRefreshTask(2000);
         //inject a delay to finish up post of message to the timertask.
         Thread.sleep(4000);
 
         //Because of NPE, this should return false
-        assertFalse(mRefreshTimerTask.isRefreshExecuted());
+        assertFalse(refreshTimerTask.isRefreshExecuted());
     }
 
     @Test
@@ -62,7 +62,7 @@ public class RefreshTimerTaskTest {
         RefreshTimerTask refreshParams = new RefreshTimerTask(new RefreshTriggered() {
             @Override
             public void handleRefresh() {
-                mRefreshTriggered = true;
+                refreshTriggered = true;
             }
         });
         refreshParams.scheduleRefreshTask(2000);
@@ -71,35 +71,35 @@ public class RefreshTimerTaskTest {
         ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
 
         assertTrue(refreshParams.isRefreshExecuted());
-        assertTrue(mRefreshTriggered);
+        assertTrue(refreshTriggered);
     }
 
     @Ignore
     public void testIfRefreshTimerWorkedWhenIntervalNotExpired() {
-        mRefreshTimerTask.scheduleRefreshTask(2000);
+        refreshTimerTask.scheduleRefreshTask(2000);
         //do not inject a delay to finish up post of message to the timertask.
 
-        assertFalse(mRefreshTimerTask.isRefreshExecuted());
+        assertFalse(refreshTimerTask.isRefreshExecuted());
     }
 
     @Test
     public void testDestroyWhenNoTimerWasScheduled() {
         //refresh is not called as it was not scheduled at all.
-        assertFalse(mRefreshTimerTask.isRefreshExecuted());
+        assertFalse(refreshTimerTask.isRefreshExecuted());
 
-        mRefreshTimerTask.destroy();
+        refreshTimerTask.destroy();
 
         //refresh is set to false on destroy.
-        assertFalse(mRefreshTimerTask.isRefreshExecuted());
+        assertFalse(refreshTimerTask.isRefreshExecuted());
     }
 
     @Test
     public void testDestroyWhenTimerWasScheduled() {
-        mRefreshTimerTask.scheduleRefreshTask(1000);
+        refreshTimerTask.scheduleRefreshTask(1000);
 
-        mRefreshTimerTask.destroy();
+        refreshTimerTask.destroy();
 
         //refresh is set to false on destroy.
-        assertFalse(mRefreshTimerTask.isRefreshExecuted());
+        assertFalse(refreshTimerTask.isRefreshExecuted());
     }
 }

@@ -32,17 +32,18 @@ import java.util.Map;
  * respectively.
  */
 public class ManagersResolver {
+
     private static final String TAG = ManagersResolver.class.getSimpleName();
-    private final Hashtable<ManagerType, Manager> mRegisteredManagers = new Hashtable<>();
-    private WeakReference<Context> mContextReference;
+    private final Hashtable<ManagerType, Manager> registeredManagers = new Hashtable<>();
+    private WeakReference<Context> contextReference;
 
     private void setContext(Context context) {
-        mContextReference = new WeakReference<>(context);
+        contextReference = new WeakReference<>(context);
     }
 
     public Context getContext() {
-        if (mContextReference != null) {
-            return mContextReference.get();
+        if (contextReference != null) {
+            return contextReference.get();
         }
 
         return null;
@@ -98,8 +99,8 @@ public class ManagersResolver {
      * @return Manager
      */
     public Manager getManager(ManagerType type) {
-        if (mRegisteredManagers.containsKey(type)) {
-            return mRegisteredManagers.get(type);
+        if (registeredManagers.containsKey(type)) {
+            return registeredManagers.get(type);
         }
         return null;
     }
@@ -153,19 +154,19 @@ public class ManagersResolver {
 
         manager = new DeviceInfoImpl();
         manager.init(context);
-        mRegisteredManagers.put(ManagerType.DEVICE_MANAGER, manager);
+        registeredManagers.put(ManagerType.DEVICE_MANAGER, manager);
 
         manager = new LastKnownLocationInfoManager();
         manager.init(context);
-        mRegisteredManagers.put(ManagerType.LOCATION_MANAGER, manager);
+        registeredManagers.put(ManagerType.LOCATION_MANAGER, manager);
 
         manager = new NetworkConnectionInfoManager();
         manager.init(context);
-        mRegisteredManagers.put(ManagerType.NETWORK_MANAGER, manager);
+        registeredManagers.put(ManagerType.NETWORK_MANAGER, manager);
 
         manager = new UserConsentManager();
         manager.init(context);
-        mRegisteredManagers.put(ManagerType.USER_CONSENT_MANAGER, manager);
+        registeredManagers.put(ManagerType.USER_CONSENT_MANAGER, manager);
     }
 
     /**
@@ -187,7 +188,7 @@ public class ManagersResolver {
     }
 
     public void dispose() {
-        for (Map.Entry<ManagerType, Manager> entry : mRegisteredManagers.entrySet()) {
+        for (Map.Entry<ManagerType, Manager> entry : registeredManagers.entrySet()) {
             final Manager manager = entry.getValue();
             if (manager != null) {
                 manager.dispose();

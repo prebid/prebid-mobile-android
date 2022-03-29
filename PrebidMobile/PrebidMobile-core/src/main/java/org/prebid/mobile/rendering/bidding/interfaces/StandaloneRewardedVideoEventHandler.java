@@ -22,20 +22,20 @@ import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
 
 public class StandaloneRewardedVideoEventHandler implements RewardedEventHandler {
-    private RewardedVideoEventListener mListener;
+    private RewardedVideoEventListener listener;
 
     @Override
     public void setRewardedEventListener(
         @NonNull
             RewardedVideoEventListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     @Override
     public void requestAdWithBid(
         @Nullable
             Bid bid) {
-        mListener.onPrebidSdkWin();
+        listener.onPrebidSdkWin();
     }
 
     @Override

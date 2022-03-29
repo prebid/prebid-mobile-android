@@ -59,25 +59,25 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class InterstitialManagerTest {
 
-    private Context mContext;
-    private InterstitialManager mSpyInterstitialManager;
+    private Context context;
+    private InterstitialManager spyInterstitialManager;
 
     @Mock
-    InterstitialManagerDisplayDelegate mMockInterstitialManagerDisplayDelegate;
+    InterstitialManagerDisplayDelegate mockInterstitialManagerDisplayDelegate;
     @Mock
-    private AdViewManager.AdViewManagerInterstitialDelegate mMockAdViewDelegate;
+    private AdViewManager.AdViewManagerInterstitialDelegate mockAdViewDelegate;
     @Mock
-    private InterstitialManagerMraidDelegate mMockMraidDelegate;
+    private InterstitialManagerMraidDelegate mockMraidDelegate;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
-        mSpyInterstitialManager = spy(InterstitialManager.class);
-        mSpyInterstitialManager.setInterstitialDisplayDelegate(mMockInterstitialManagerDisplayDelegate);
-        mSpyInterstitialManager.setAdViewManagerInterstitialDelegate(mMockAdViewDelegate);
-        mSpyInterstitialManager.setMraidDelegate(mMockMraidDelegate);
+        context = Robolectric.buildActivity(Activity.class).create().get();
+        spyInterstitialManager = spy(InterstitialManager.class);
+        spyInterstitialManager.setInterstitialDisplayDelegate(mockInterstitialManagerDisplayDelegate);
+        spyInterstitialManager.setAdViewManagerInterstitialDelegate(mockAdViewDelegate);
+        spyInterstitialManager.setMraidDelegate(mockMraidDelegate);
     }
 
     @Test
@@ -87,9 +87,9 @@ public class InterstitialManagerTest {
 
         when(mockWebView.getMRAIDInterface()).thenReturn(mockInterface);
 
-        mSpyInterstitialManager.interstitialClosed(mockWebView);
+        spyInterstitialManager.interstitialClosed(mockWebView);
 
-        verify(mMockInterstitialManagerDisplayDelegate, times(1)).interstitialAdClosed();
+        verify(mockInterstitialManagerDisplayDelegate, times(1)).interstitialAdClosed();
     }
 
     @Test
@@ -98,14 +98,14 @@ public class InterstitialManagerTest {
         HTMLCreative mockHtmlCreative = mock(HTMLCreative.class);
         AdInterstitialDialog mockAdInterstitialDialog = mock(AdInterstitialDialog.class);
 
-        WhiteBox.field(InterstitialManager.class, "mInterstitialDialog")
-                .set(mSpyInterstitialManager, mockAdInterstitialDialog);
+        WhiteBox.field(InterstitialManager.class, "interstitialDialog")
+                .set(spyInterstitialManager, mockAdInterstitialDialog);
 
-        mSpyInterstitialManager.setInterstitialDisplayDelegate(mockHtmlCreative);
+        spyInterstitialManager.setInterstitialDisplayDelegate(mockHtmlCreative);
 
-        when(mMockMraidDelegate.collapseMraid()).thenReturn(true);
+        when(mockMraidDelegate.collapseMraid()).thenReturn(true);
 
-        mSpyInterstitialManager.interstitialClosed(null);
+        spyInterstitialManager.interstitialClosed(null);
 
         verify(mockAdInterstitialDialog, never()).nullifyDialog();
     }
@@ -114,24 +114,24 @@ public class InterstitialManagerTest {
     public void interstitialClosedNullMraidExpand_NullifyDialog() throws IllegalAccessException {
         AdInterstitialDialog mockAdInterstitialDialog = mock(AdInterstitialDialog.class);
 
-        WhiteBox.field(InterstitialManager.class, "mInterstitialDialog")
-                .set(mSpyInterstitialManager, mockAdInterstitialDialog);
-        when(mMockMraidDelegate.collapseMraid()).thenReturn(false);
-        mSpyInterstitialManager.interstitialClosed(null);
+        WhiteBox.field(InterstitialManager.class, "interstitialDialog")
+                .set(spyInterstitialManager, mockAdInterstitialDialog);
+        when(mockMraidDelegate.collapseMraid()).thenReturn(false);
+        spyInterstitialManager.interstitialClosed(null);
 
         verify(mockAdInterstitialDialog, times(1)).nullifyDialog();
     }
 
     @Test
     public void whenDestroy_ResetInterstitialPropertiesAndDestroyExpand() {
-        mSpyInterstitialManager.destroy();
+        spyInterstitialManager.destroy();
 
-        InterstitialDisplayPropertiesInternal interstitialDisplayProperties = mSpyInterstitialManager.getInterstitialDisplayProperties();
+        InterstitialDisplayPropertiesInternal interstitialDisplayProperties = spyInterstitialManager.getInterstitialDisplayProperties();
 
         assertEquals(0, interstitialDisplayProperties.expandHeight);
         assertEquals(0, interstitialDisplayProperties.expandWidth);
 
-        verify(mMockMraidDelegate).destroyMraidExpand();
+        verify(mockMraidDelegate).destroyMraidExpand();
     }
 
     @Test
@@ -152,9 +152,9 @@ public class InterstitialManagerTest {
         InterstitialView mockInterstitialView = mock(InterstitialView.class);
         when(mockInterstitialView.getCreativeView()).thenReturn(mockPrebidWebViewInterstitial);
 
-        mSpyInterstitialManager.displayAdViewInInterstitial(mContext, mockInterstitialView);
+        spyInterstitialManager.displayAdViewInInterstitial(context, mockInterstitialView);
 
-        verify(mMockAdViewDelegate).showInterstitial();
+        verify(mockAdViewDelegate).showInterstitial();
     }
 
     @Test
@@ -167,19 +167,19 @@ public class InterstitialManagerTest {
         mockEvent.mraidActionHelper = "test";
         when(mockWebView.getMraidEvent()).thenReturn(mockEvent);
 
-        mSpyInterstitialManager.displayPrebidWebViewForMraid(mockWebView, true);
+        spyInterstitialManager.displayPrebidWebViewForMraid(mockWebView, true);
 
-        verify(mMockMraidDelegate).displayPrebidWebViewForMraid(mockWebView, true, mockEvent);
+        verify(mockMraidDelegate).displayPrebidWebViewForMraid(mockWebView, true, mockEvent);
     }
 
     @Test
     public void addOldViewToBackStackIntControllerNull_ZeroViewStackInteractions() throws IllegalAccessException {
         WebViewBase mockWebViewBase = mock(WebViewBase.class);
         Stack<View> mockViewStack = spy(new Stack<>());
-        WhiteBox.field(InterstitialManager.class, "mViewStack")
-                .set(mSpyInterstitialManager, mockViewStack);
+        WhiteBox.field(InterstitialManager.class, "viewStack")
+                .set(spyInterstitialManager, mockViewStack);
 
-        mSpyInterstitialManager.addOldViewToBackStack(mockWebViewBase, null, null);
+        spyInterstitialManager.addOldViewToBackStack(mockWebViewBase, null, null);
 
         verifyZeroInteractions(mockViewStack);
     }
@@ -190,12 +190,12 @@ public class InterstitialManagerTest {
         Stack<View> mockViewStack = spy(new Stack<>());
         AdBaseDialog mockInterstitialViewController = mock(AdBaseDialog.class);
         View mockDisplayView = mock(View.class);
-        WhiteBox.field(InterstitialManager.class, "mViewStack")
-                .set(mSpyInterstitialManager, mockViewStack);
+        WhiteBox.field(InterstitialManager.class, "viewStack")
+                .set(spyInterstitialManager, mockViewStack);
 
         when(mockInterstitialViewController.getDisplayView()).thenReturn(mockDisplayView);
 
-        mSpyInterstitialManager.addOldViewToBackStack(mockWebViewBase, "test", mockInterstitialViewController);
+        spyInterstitialManager.addOldViewToBackStack(mockWebViewBase, "test", mockInterstitialViewController);
 
         verify(mockViewStack).push(mockDisplayView);
     }
@@ -204,31 +204,31 @@ public class InterstitialManagerTest {
     public void displayVideoAdViewInInterstitial_ExecuteVideoAdViewShow() {
         VideoView mockVideoAdView = mock(VideoView.class);
 
-        mSpyInterstitialManager.displayVideoAdViewInInterstitial(mContext, mockVideoAdView);
+        spyInterstitialManager.displayVideoAdViewInInterstitial(context, mockVideoAdView);
 
-        verify(mMockAdViewDelegate).showInterstitial();
+        verify(mockAdViewDelegate).showInterstitial();
     }
 
     @Test
     public void interstitialAdClosed_NotifyInterstitialDelegate() {
-        mSpyInterstitialManager.interstitialAdClosed();
+        spyInterstitialManager.interstitialAdClosed();
 
-        verify(mMockInterstitialManagerDisplayDelegate).interstitialAdClosed();
+        verify(mockInterstitialManagerDisplayDelegate).interstitialAdClosed();
     }
 
     @Test
     public void interstitialAdClosed_NotifyVideoDelegate() {
         InterstitialManagerVideoDelegate mockDelegate = mock(InterstitialManagerVideoDelegate.class);
-        mSpyInterstitialManager.setInterstitialVideoDelegate(mockDelegate);
-        mSpyInterstitialManager.interstitialAdClosed();
+        spyInterstitialManager.setInterstitialVideoDelegate(mockDelegate);
+        spyInterstitialManager.interstitialAdClosed();
 
         verify(mockDelegate).onVideoInterstitialClosed();
     }
 
     @Test
     public void interstitialDialogShown_NotifyInterstitialDelegate() {
-        mSpyInterstitialManager.interstitialDialogShown(mock(ViewGroup.class));
+        spyInterstitialManager.interstitialDialogShown(mock(ViewGroup.class));
 
-        verify(mMockInterstitialManagerDisplayDelegate).interstitialDialogShown(any(ViewGroup.class));
+        verify(mockInterstitialManagerDisplayDelegate).interstitialDialogShown(any(ViewGroup.class));
     }
 }

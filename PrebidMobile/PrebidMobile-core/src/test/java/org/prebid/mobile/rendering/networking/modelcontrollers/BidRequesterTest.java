@@ -41,42 +41,41 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class BidRequesterTest {
 
-    private Context mContext;
-    private AdUnitConfiguration mAdConfiguration;
-    private AdRequestInput mAdRequestInput;
+    private Context context;
+    private AdUnitConfiguration adConfiguration;
+    private AdRequestInput adRequestInput;
 
-    @Mock
-    private ResponseHandler mMockResponseHandler;
+    @Mock private ResponseHandler mockResponseHandler;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
-        mAdConfiguration = new AdUnitConfiguration();
-        mAdRequestInput = new AdRequestInput();
-        ManagersResolver.getInstance().prepare(mContext);
+        context = Robolectric.buildActivity(Activity.class).create().get();
+        adConfiguration = new AdUnitConfiguration();
+        adRequestInput = new AdRequestInput();
+        ManagersResolver.getInstance().prepare(context);
     }
 
     @Test
     public void whenStartAdRequestAndContextNull_OnErrorWithExceptionCalled() {
-        mAdConfiguration.setConfigId("test");
-        BidRequester requester = new BidRequester(null, mAdConfiguration, mAdRequestInput, mMockResponseHandler);
+        adConfiguration.setConfigId("test");
+        BidRequester requester = new BidRequester(null, adConfiguration, adRequestInput, mockResponseHandler);
         requester.startAdRequest();
-        verify(mMockResponseHandler).onErrorWithException(any(AdException.class), anyLong());
+        verify(mockResponseHandler).onErrorWithException(any(AdException.class), anyLong());
     }
 
     @Test
     public void whenStartAdRequestAndNoConfigId_OnErrorCalled() {
-        mAdConfiguration.setConfigId(null);
-        BidRequester requester = new BidRequester(mContext, mAdConfiguration, mAdRequestInput, mMockResponseHandler);
+        adConfiguration.setConfigId(null);
+        BidRequester requester = new BidRequester(context, adConfiguration, adRequestInput, mockResponseHandler);
         requester.startAdRequest();
-        verify(mMockResponseHandler).onError(anyString(), anyLong());
+        verify(mockResponseHandler).onError(anyString(), anyLong());
     }
 
     @Test
     public void whenStartAdRequestAndInitValid_InitAdId() {
-        mAdConfiguration.setConfigId("test");
-        BidRequester requester = spy(new BidRequester(mContext, mAdConfiguration, mAdRequestInput, mMockResponseHandler));
+        adConfiguration.setConfigId("test");
+        BidRequester requester = spy(new BidRequester(context, adConfiguration, adRequestInput, mockResponseHandler));
         requester.startAdRequest();
         verify(requester).makeAdRequest();
     }

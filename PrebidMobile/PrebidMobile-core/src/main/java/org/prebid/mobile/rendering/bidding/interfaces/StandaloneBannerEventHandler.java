@@ -21,7 +21,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener;
 
 public class StandaloneBannerEventHandler implements BannerEventHandler {
-    private BannerEventListener mBannerViewListener;
+    private BannerEventListener bannerViewListener;
 
     @Override
     public AdSize[] getAdSizeArray() {
@@ -30,12 +30,12 @@ public class StandaloneBannerEventHandler implements BannerEventHandler {
 
     @Override
     public void setBannerEventListener(BannerEventListener bannerViewListener) {
-        mBannerViewListener = bannerViewListener;
+        this.bannerViewListener = bannerViewListener;
     }
 
     @Override
     public void requestAdWithBid(Bid bid) {
-        mBannerViewListener.onPrebidSdkWin();
+        bannerViewListener.onPrebidSdkWin();
     }
 
     @Override

@@ -30,11 +30,12 @@ import org.prebid.mobile.rendering.views.webview.AdWebViewClient.AdAssetsLoadedL
 import org.prebid.mobile.rendering.views.webview.mraid.MraidWebViewClient;
 
 public class AdWebView extends WebView {
+
     private static final String TAG = AdWebView.class.getSimpleName();
-    private Integer mScale;
-    private AdWebViewClient mAdWebViewClient;
-    protected int mWidth, mHeight;
-    protected String mDomain;
+    private Integer scale;
+    private AdWebViewClient adWebViewClient;
+    protected int width, height;
+    protected String domain;
 
     public AdWebView(Context context) {
         super(context);
@@ -45,12 +46,12 @@ public class AdWebView extends WebView {
 
     @Override
     public void setInitialScale(int scaleInPercent) {
-        mScale = scaleInPercent;
+        scale = scaleInPercent;
     }
 
     public String getInitialScaleValue() {
-        if (mScale != null) {
-            return String.valueOf((float) mScale / 100f);
+        if (scale != null) {
+            return String.valueOf((float) scale / 100f);
         }
 
         return null;
@@ -58,10 +59,10 @@ public class AdWebView extends WebView {
 
     public void setMraidAdAssetsLoadListener(AdAssetsLoadedListener adAssetsLoadedListener,
                                              String mraidScript) {
-        if (mAdWebViewClient == null) {
-            mAdWebViewClient = new MraidWebViewClient(adAssetsLoadedListener, mraidScript);
+        if (adWebViewClient == null) {
+            adWebViewClient = new MraidWebViewClient(adAssetsLoadedListener, mraidScript);
         }
-        setWebViewClient(mAdWebViewClient);
+        setWebViewClient(adWebViewClient);
     }
 
     protected void init() {
@@ -91,7 +92,7 @@ public class AdWebView extends WebView {
         int deviceWidth = Math.min(screenWidth, screenHeight);
         int deviceHeight = Math.max(screenWidth, screenHeight);
 
-        float factor = calculateFactor(deviceWidth, deviceHeight, mWidth);
+        float factor = calculateFactor(deviceWidth, deviceHeight, width);
         setInitialScale(Math.round(factor));
 
         initBaseWebSettings(webSettings);
@@ -154,6 +155,6 @@ public class AdWebView extends WebView {
     }
 
     public void setDomain(String domain) {
-        mDomain = domain;
+        this.domain = domain;
     }
 }

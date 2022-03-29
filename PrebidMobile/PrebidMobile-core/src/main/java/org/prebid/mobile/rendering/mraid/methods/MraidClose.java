@@ -33,19 +33,24 @@ import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
 public class MraidClose {
-    private static final String TAG = MraidClose.class.getSimpleName();
-    private WebViewBase mWebViewBase;
-    private BaseJSInterface mJsi;
-    private Context mContext;
 
-    public MraidClose(Context context, BaseJSInterface jsInterface, WebViewBase adBaseView) {
-        mContext = context;
-        mWebViewBase = adBaseView;
-        mJsi = jsInterface;
+    private static final String TAG = MraidClose.class.getSimpleName();
+    private WebViewBase webViewBase;
+    private BaseJSInterface jsi;
+    private Context context;
+
+    public MraidClose(
+            Context context,
+            BaseJSInterface jsInterface,
+            WebViewBase adBaseView
+    ) {
+        this.context = context;
+        webViewBase = adBaseView;
+        jsi = jsInterface;
     }
 
     public void closeThroughJS() {
-        final Context context = mContext;
+        final Context context = this.context;
         if (context == null) {
             LogUtil.error(TAG, "Context is null");
             return;
@@ -54,8 +59,8 @@ public class MraidClose {
         Handler uiHandler = new Handler(Looper.getMainLooper());
         uiHandler.post(() -> {
             try {
-                String state = mJsi.getMraidVariableContainer().getCurrentState();
-                WebViewBase webViewBase = mWebViewBase;
+                String state = jsi.getMraidVariableContainer().getCurrentState();
+                WebViewBase webViewBase = this.webViewBase;
 
                 if (isContainerStateInvalid(state)) {
                     LogUtil.debug(TAG, "closeThroughJS: Skipping. Wrong container state: " + state);
@@ -64,7 +69,8 @@ public class MraidClose {
 
                 changeState(state);
 
-                if (webViewBase instanceof WebViewBanner && webViewBase.getMRAIDInterface().getDefaultLayoutParams() != null) {
+                if (webViewBase instanceof WebViewBanner && webViewBase.getMRAIDInterface()
+                                                                       .getDefaultLayoutParams() != null) {
                     webViewBase.setLayoutParams(webViewBase.getMRAIDInterface().getDefaultLayoutParams());
                 }
             }
@@ -79,31 +85,29 @@ public class MraidClose {
             case JSInterface.STATE_EXPANDED:
             case JSInterface.STATE_RESIZED:
 
-                if (mContext instanceof AdBrowserActivity) {
-                    ((AdBrowserActivity) mContext).finish();
-                }
-                else if (mWebViewBase.getDialog() != null) {
+                if (context instanceof AdBrowserActivity) {
+                    ((AdBrowserActivity) context).finish();
+                } else if (webViewBase.getDialog() != null) {
                     //Unregister orientation change listener & cancel the dialog on close of an expanded ad.
-                    mWebViewBase.getDialog().cleanup();
-                    mWebViewBase.setDialog(null);
-                }
-                else {
-                    FrameLayout frameLayout = (FrameLayout) mWebViewBase.getParent();
+                    webViewBase.getDialog().cleanup();
+                    webViewBase.setDialog(null);
+                } else {
+                    FrameLayout frameLayout = (FrameLayout) webViewBase.getParent();
                     removeParent(frameLayout);
 
-                    addWebViewToContainer(mWebViewBase);
+                    addWebViewToContainer(webViewBase);
 
                     //Add expanded view into rootView as well  & remove this null chk once done. Shud work for both expand & resize
 
-                    if (mJsi.getRootView() != null) {
-                        mJsi.getRootView().removeView(frameLayout);
+                    if (jsi.getRootView() != null) {
+                        jsi.getRootView().removeView(frameLayout);
                     }
                 }
-                mJsi.onStateChange(JSInterface.STATE_DEFAULT);
+                jsi.onStateChange(JSInterface.STATE_DEFAULT);
                 break;
             case JSInterface.STATE_DEFAULT:
                 makeViewInvisible();
-                mJsi.onStateChange(JSInterface.STATE_HIDDEN);
+                jsi.onStateChange(JSInterface.STATE_HIDDEN);
                 break;
         }
     }
@@ -119,25 +123,25 @@ public class MraidClose {
     private void removeParent(FrameLayout frameLayout) {
 
         if (frameLayout != null) {
-            frameLayout.removeView(mWebViewBase);
+            frameLayout.removeView(webViewBase);
         }
         else {
             //This should never happen though!
             //Because, if close is called, that would mean, it's parent is always a CloseableLayout(for expanded/resized banners & interstitials )
             //Hence, the previous if block should suffice.
             //But adding it to fix any crash, if above is not the case.
-            Views.removeFromParent(mWebViewBase);
+            Views.removeFromParent(webViewBase);
         }
     }
 
     private void makeViewInvisible() {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(() -> {
-            if (mWebViewBase == null) {
+            if (webViewBase == null) {
                 LogUtil.error(TAG, "makeViewInvisible failed: webViewBase is null");
                 return;
             }
-            mWebViewBase.setVisibility(View.INVISIBLE);
+            webViewBase.setVisibility(View.INVISIBLE);
         });
     }
 

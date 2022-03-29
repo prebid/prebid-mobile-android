@@ -26,29 +26,32 @@ import java.util.ArrayList;
  */
 public class NativeEventTracker {
 
-    private final EventType mEventType;
-    private final ArrayList<EventTrackingMethod> mEventTrackingMethods;
-    private Ext mExt;
+    private final EventType eventType;
+    private final ArrayList<EventTrackingMethod> eventTrackingMethods;
+    private Ext ext;
 
-    public NativeEventTracker(EventType eventType, ArrayList<EventTrackingMethod> eventTrackingMethods) {
-        mEventType = eventType;
-        mEventTrackingMethods = eventTrackingMethods;
+    public NativeEventTracker(
+            EventType eventType,
+            ArrayList<EventTrackingMethod> eventTrackingMethods
+    ) {
+        this.eventType = eventType;
+        this.eventTrackingMethods = eventTrackingMethods;
     }
 
     public EventType getEventType() {
-        return mEventType;
+        return eventType;
     }
 
     public ArrayList<EventTrackingMethod> getEventTrackingMethods() {
-        return mEventTrackingMethods;
+        return eventTrackingMethods;
     }
 
     public Ext getExt() {
-        return mExt;
+        return ext;
     }
 
     public void setExt(Ext ext) {
-        mExt = ext;
+        this.ext = ext;
     }
 
     public enum EventType {
@@ -59,10 +62,10 @@ public class NativeEventTracker {
         CUSTOM(500),
         OMID(555);
 
-        private int mId;
+        private int id;
 
         EventType(final int id) {
-            mId = id;
+            this.id = id;
         }
 
         @Nullable
@@ -84,12 +87,12 @@ public class NativeEventTracker {
         }
 
         public int getId() {
-            return mId;
+            return id;
         }
 
         public void setId(int id) {
             if (equals(CUSTOM) && !inExistingValue(id)) {
-                mId = id;
+                this.id = id;
             }
         }
 
@@ -109,10 +112,10 @@ public class NativeEventTracker {
         JS(2),
         CUSTOM(500);
 
-        private int mId;
+        private int id;
 
         EventTrackingMethod(final int id) {
-            mId = id;
+            this.id = id;
         }
 
         @Nullable
@@ -134,12 +137,12 @@ public class NativeEventTracker {
         }
 
         public int getId() {
-            return mId;
+            return id;
         }
 
         public void setId(int id) {
             if (equals(CUSTOM) && !inExistingValue(id)) {
-                mId = id;
+                this.id = id;
             }
         }
 

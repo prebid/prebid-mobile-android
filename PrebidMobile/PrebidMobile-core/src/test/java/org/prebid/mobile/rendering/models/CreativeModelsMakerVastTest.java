@@ -60,14 +60,14 @@ import static org.prebid.mobile.rendering.video.VideoAdEvent.Event.AD_IMPRESSION
 @SuppressWarnings("unchecked")
 public class CreativeModelsMakerVastTest {
 
-    private AdUnitConfiguration mAdConfiguration;
-    private AdLoadListener mMockListener;
+    private AdUnitConfiguration adConfiguration;
+    private AdLoadListener mockListener;
 
     @Before
     public void setUp() throws Exception {
-        mAdConfiguration = new AdUnitConfiguration();
-        mAdConfiguration.setRewarded(true);
-        mMockListener = mock(AdLoadListener.class);
+        adConfiguration = new AdUnitConfiguration();
+        adConfiguration.setRewarded(true);
+        mockListener = mock(AdLoadListener.class);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class CreativeModelsMakerVastTest {
         BaseNetworkTask.GetUrlResult adResponse = new BaseNetworkTask.GetUrlResult();
         adResponse.responseString = ResourceUtils.convertResourceToString(testFileName);
 
-        CreativeModelsMakerVast creativeModelsMakerVast = new CreativeModelsMakerVast(null, mMockListener);
+        CreativeModelsMakerVast creativeModelsMakerVast = new CreativeModelsMakerVast(null, mockListener);
 
         List<AdResponseParserBase> parsers = getVastParsers(adResponse);
 
@@ -86,13 +86,13 @@ public class CreativeModelsMakerVastTest {
 
         // Null ad configuration
         creativeModelsMakerVast.makeModels(null, rootParser, latestParser);
-        verify(mMockListener).onFailedToLoadAd(any(AdException.class), any());
+        verify(mockListener).onFailedToLoadAd(any(AdException.class), any());
 
         // Valid - Inline
-        creativeModelsMakerVast.makeModels(mAdConfiguration, rootParser, latestParser);
+        creativeModelsMakerVast.makeModels(adConfiguration, rootParser, latestParser);
 
         ArgumentCaptor<CreativeModelsMaker.Result> argumentCaptor = ArgumentCaptor.forClass(CreativeModelsMaker.Result.class);
-        verify(mMockListener).onCreativeModelReady(argumentCaptor.capture());
+        verify(mockListener).onCreativeModelReady(argumentCaptor.capture());
 
         CreativeModelsMaker.Result result = argumentCaptor.getValue();
         assertVastInline(result.creativeModels, false);
@@ -128,12 +128,12 @@ public class CreativeModelsMakerVastTest {
         AdResponseParserVast latestParser = (AdResponseParserVast) parsers.get(1);
 
         // Execute makeModels()
-        CreativeModelsMakerVast creativeModelsMakerVast = new CreativeModelsMakerVast(null, mMockListener);
-        creativeModelsMakerVast.makeModels(mAdConfiguration, rootParser, latestParser);
+        CreativeModelsMakerVast creativeModelsMakerVast = new CreativeModelsMakerVast(null, mockListener);
+        creativeModelsMakerVast.makeModels(adConfiguration, rootParser, latestParser);
 
         // Get result
         ArgumentCaptor<CreativeModelsMaker.Result> argumentCaptor = ArgumentCaptor.forClass(CreativeModelsMaker.Result.class);
-        verify(mMockListener).onCreativeModelReady(argumentCaptor.capture());
+        verify(mockListener).onCreativeModelReady(argumentCaptor.capture());
 
         CreativeModelsMaker.Result result = argumentCaptor.getValue();
         VideoCreativeModel model = (VideoCreativeModel) result.creativeModels.get(0);
@@ -163,7 +163,7 @@ public class CreativeModelsMakerVastTest {
         BaseNetworkTask.GetUrlResult adResponse = new BaseNetworkTask.GetUrlResult();
         adResponse.responseString = ResourceUtils.convertResourceToString(testFileName);
 
-        CreativeModelsMakerVast creativeModelsMakerVast = new CreativeModelsMakerVast(null, mMockListener);
+        CreativeModelsMakerVast creativeModelsMakerVast = new CreativeModelsMakerVast(null, mockListener);
 
         List<AdResponseParserBase> parsers = getVastParsers(adResponse);
 
@@ -171,11 +171,11 @@ public class CreativeModelsMakerVastTest {
         AdResponseParserVast latestParser = (AdResponseParserVast) parsers.get(1);
 
         // Valid - Inline, non-opt-in
-        mAdConfiguration.setRewarded(false);
-        creativeModelsMakerVast.makeModels(mAdConfiguration, rootParser, latestParser);
+        adConfiguration.setRewarded(false);
+        creativeModelsMakerVast.makeModels(adConfiguration, rootParser, latestParser);
 
         ArgumentCaptor<CreativeModelsMaker.Result> argumentCaptor = ArgumentCaptor.forClass(CreativeModelsMaker.Result.class);
-        verify(mMockListener).onCreativeModelReady(argumentCaptor.capture());
+        verify(mockListener).onCreativeModelReady(argumentCaptor.capture());
 
         CreativeModelsMaker.Result result = argumentCaptor.getValue();
 
@@ -192,7 +192,7 @@ public class CreativeModelsMakerVastTest {
         BaseNetworkTask.GetUrlResult adResponse = new BaseNetworkTask.GetUrlResult();
         adResponse.responseString = ResourceUtils.convertResourceToString(testFileName);
 
-        CreativeModelsMakerVast creativeModelsMakerVast = new CreativeModelsMakerVast(null, mMockListener);
+        CreativeModelsMakerVast creativeModelsMakerVast = new CreativeModelsMakerVast(null, mockListener);
 
         List<AdResponseParserBase> parsers = getVastParsers(adResponse);
 
@@ -200,13 +200,13 @@ public class CreativeModelsMakerVastTest {
         AdResponseParserVast latestParser = (AdResponseParserVast) parsers.get(1);
 
         // Current video duration 96 sec
-        mAdConfiguration.setMaxVideoDuration(100);
+        adConfiguration.setMaxVideoDuration(100);
 
         // Run
-        creativeModelsMakerVast.makeModels(mAdConfiguration, rootParser, latestParser);
+        creativeModelsMakerVast.makeModels(adConfiguration, rootParser, latestParser);
 
         // Check
-        verify(mMockListener).onCreativeModelReady(any());
+        verify(mockListener).onCreativeModelReady(any());
     }
 
     @Test
@@ -217,7 +217,7 @@ public class CreativeModelsMakerVastTest {
         BaseNetworkTask.GetUrlResult adResponse = new BaseNetworkTask.GetUrlResult();
         adResponse.responseString = ResourceUtils.convertResourceToString(testFileName);
 
-        CreativeModelsMakerVast creativeModelsMakerVast = new CreativeModelsMakerVast(null, mMockListener);
+        CreativeModelsMakerVast creativeModelsMakerVast = new CreativeModelsMakerVast(null, mockListener);
 
         List<AdResponseParserBase> parsers = getVastParsers(adResponse);
 
@@ -225,14 +225,14 @@ public class CreativeModelsMakerVastTest {
         AdResponseParserVast latestParser = (AdResponseParserVast) parsers.get(1);
 
         // Current video duration 96 sec
-        mAdConfiguration.setMaxVideoDuration(90);
+        adConfiguration.setMaxVideoDuration(90);
 
         // Run
-        creativeModelsMakerVast.makeModels(mAdConfiguration, rootParser, latestParser);
+        creativeModelsMakerVast.makeModels(adConfiguration, rootParser, latestParser);
 
         // Check
         ArgumentCaptor<AdException> errorMessage = ArgumentCaptor.forClass(AdException.class);
-        verify(mMockListener).onFailedToLoadAd(errorMessage.capture(), any());
+        verify(mockListener).onFailedToLoadAd(errorMessage.capture(), any());
 
         MatcherAssert.assertThat(
                 errorMessage.getValue().getMessage(),
@@ -247,7 +247,7 @@ public class CreativeModelsMakerVastTest {
 
         AsyncVastLoader asyncVastLoader = spy(new AsyncVastLoader());
 
-        Field requesterVastField = VastParserExtractor.class.getDeclaredField("mAsyncVastLoader");
+        Field requesterVastField = VastParserExtractor.class.getDeclaredField("asyncVastLoader");
         requesterVastField.setAccessible(true);
         requesterVastField.set(parserExtractor, asyncVastLoader);
 
@@ -266,9 +266,11 @@ public class CreativeModelsMakerVastTest {
         assertEquals("http://i-cdn.prebid.com/5a7/5a731840-5ae7-4dca-ba66-6e959bb763e2/be2/be2cf3b2cf0648e0aa46c7c09afaf3f4.mp4",
                      videoModel.getMediaUrl());
         assertEquals(Utils.getMsFrom("00:01:36"), videoModel.getMediaDuration());
-        assertEquals("http://oxv4support-d3.prebidenterprise.com/v/1.0/rc?did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51",
-                     videoModel.getVastClickthroughUrl());
-        assertEquals(mAdConfiguration, videoModel.getAdConfiguration());
+        assertEquals(
+                "http://oxv4support-d3.prebidenterprise.com/v/1.0/rc?did.adid=2c544905-f613-46ac-95f4-7d81e8fc3505&ts=1fHU9MXxyaWQ9MmVkNDBjOGYtNjA4YS00ZDY5LWIyNzMtMDBjYWZiNjEyMWQ0fHJ0PTE0MzM4MDQ5Mjd8YXVpZD01MzcwNzQzNzN8YXVtPURNSUQuTElORUFSVklERU98c2lkPTUzNzA2NDIxMXxwdWI9NTM3MDcxNzg3fHBjPVVTRHxyYWlkPTVlOTk0N2E1LWM5YzItNDNjZi1hZTY3LTMzMjZjNWU2N2IwYnxhaWQ9NTM3MTI5MDI1fHQ9M3xhcz02NDB4MzYwfGxpZD01MzcxMDYzNzR8b2lkPTUzNzA4ODg4NnxwPTEwMDB8cHI9MTAwMHxhZHY9NTM3MDcxNzgyfGFjPVVTRHxwbT1QUklDSU5HLkNQTXxibT1CVVlJTkcuTk9OR1VBUkFOVEVFRHx1cj1XUTVDVHpydG51",
+                videoModel.getVastClickthroughUrl()
+        );
+        assertEquals(adConfiguration, videoModel.getAdConfiguration());
         assertEquals(CreativeModelsMakerVast.VIDEO_CREATIVE_TAG, videoModel.getName());
 
         HashMap<VideoAdEvent.Event, ArrayList<String>> videoEventUrls = videoModel.getVideoEventUrls();
@@ -322,7 +324,7 @@ public class CreativeModelsMakerVastTest {
 
         assertEquals("http://www.tremormedia.com", endCardModel.getClickUrl());
 
-        HashMap<TrackingEvent.Events, ArrayList<String>> trackingURLs = endCardModel.mTrackingURLs;
+        HashMap<TrackingEvent.Events, ArrayList<String>> trackingURLs = endCardModel.trackingURLs;
         assertEquals("http://www.CompanionClickTracking.com",
                      trackingURLs.get(TrackingEvent.Events.CLICK).get(0));
         assertEquals("http://myTrackingURL/firstCompanionCreativeView",

@@ -1,17 +1,13 @@
 package org.prebid.mobile.drprebid.validation;
 
-import static org.prebid.mobile.ResultCode.SUCCESS;
-
 import android.app.Activity;
 import android.net.Uri;
 import android.text.TextUtils;
-
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
-
 import org.prebid.mobile.*;
 import org.prebid.mobile.drprebid.managers.SettingsManager;
 import org.prebid.mobile.drprebid.model.AdSize;
@@ -20,7 +16,6 @@ import org.prebid.mobile.drprebid.model.*;
 import javax.net.ssl.HttpsURLConnection;
 import java.util.HashMap;
 import java.util.Map;
-
 
 import static org.prebid.mobile.ResultCode.SUCCESS;
 
@@ -36,43 +31,50 @@ public class SdkTest {
 
         void bidReceivedAndCached(boolean received);
 
-        void requestSentToAdServer(String request, String postBody);
+        void requestSentToAdServer(
+                String request,
+                String postBody
+        );
 
         void adServerResponseContainsPrebidCreative(@Nullable Boolean contains);
 
         void onTestFinished();
+
     }
 
-    private Listener mListener;
-    private Activity mContext;
+    private Listener listener;
+    private Activity context;
 
-    private AdUnit mAdUnit;
-    private boolean mInitialPrebidServerResponseReceived;
-    private String mAdServerResponse = "";
+    private AdUnit adUnit;
+    private boolean initialPrebidServerResponseReceived;
+    private String adServerResponse = "";
 
-    private PublisherAdView mGoogleBanner;
-    private PublisherInterstitialAd mGoogleInterstitial;
-    private PublisherAdRequest mGoogleAdRequest;
+    private PublisherAdView googleBanner;
+    private PublisherInterstitialAd googleInterstitial;
+    private PublisherAdRequest googleAdRequest;
 
 
-    public SdkTest(Activity context, Listener listener) {
-        mContext = context;
-        mListener = listener;
+    public SdkTest(
+            Activity context,
+            Listener listener
+    ) {
+        this.context = context;
+        this.listener = listener;
 
         setupPrebid();
     }
 
     private void setupPrebid() {
-        GeneralSettings generalSettings = SettingsManager.getInstance(mContext).getGeneralSettings();
-        PrebidServerSettings prebidServerSettings = SettingsManager.getInstance(mContext).getPrebidServerSettings();
+        GeneralSettings generalSettings = SettingsManager.getInstance(context).getGeneralSettings();
+        PrebidServerSettings prebidServerSettings = SettingsManager.getInstance(context).getPrebidServerSettings();
 
         setPrebidTargetingParams();
 
         if (generalSettings.getAdFormat() == AdFormat.BANNER) {
             AdSize adSize = generalSettings.getAdSize();
-            mAdUnit = new BannerAdUnit(prebidServerSettings.getConfigId(), adSize.getWidth(), adSize.getHeight());
+            adUnit = new BannerAdUnit(prebidServerSettings.getConfigId(), adSize.getWidth(), adSize.getHeight());
         } else if (generalSettings.getAdFormat() == AdFormat.INTERSTITIAL) {
-            mAdUnit = new InterstitialAdUnit(prebidServerSettings.getConfigId());
+            adUnit = new InterstitialAdUnit(prebidServerSettings.getConfigId());
         }
 
         PrebidMobile.setPrebidServerAccountId(prebidServerSettings.getAccountId());
@@ -90,8 +92,8 @@ public class SdkTest {
                 break;
         }
 
-        if (mListener != null) {
-            mListener.onAdUnitRegistered();
+        if (listener != null) {
+            listener.onAdUnitRegistered();
         }
     }
 
@@ -114,8 +116,8 @@ public class SdkTest {
 
 
     public void startTest() {
-        GeneralSettings generalSettings = SettingsManager.getInstance(mContext).getGeneralSettings();
-        AdServerSettings adServerSettings = SettingsManager.getInstance(mContext).getAdServerSettings();
+        GeneralSettings generalSettings = SettingsManager.getInstance(context).getGeneralSettings();
+        AdServerSettings adServerSettings = SettingsManager.getInstance(context).getAdServerSettings();
 
 
         if (generalSettings.getAdFormat() == AdFormat.BANNER) {
@@ -131,10 +133,10 @@ public class SdkTest {
             mGoogleInterstitial.setAdListener(mGoogleInterstitialListener);
         }
 
-        if (mAdUnit != null) {
+        if (adUnit != null) {
             final Map<String, String> keywordsMap = new HashMap<>();
 
-            mAdUnit.fetchDemand(keywordsMap, resultCode -> {
+            adUnit.fetchDemand(keywordsMap, resultCode -> {
 
                 boolean responseSuccess = false;
                 if (resultCode == SUCCESS) {
@@ -153,53 +155,52 @@ public class SdkTest {
                 }
 
                 if (generalSettings.getAdFormat() == AdFormat.BANNER) {
-                    mGoogleBanner.loadAd(adRequestBuilder.build());
+                    googleBanner.loadAd(adRequestBuilder.build());
                 } else if (generalSettings.getAdFormat() == AdFormat.INTERSTITIAL) {
-                    mGoogleInterstitial.loadAd(adRequestBuilder.build());
+                    googleInterstitial.loadAd(adRequestBuilder.build());
                 }
 
-                if (mListener != null) {
-                    mListener.responseFromPrebidServerReceived(responseSuccess);
-                    mListener.bidReceivedAndCached(topBid);
-                    mListener.requestSentToAdServer("", "");
+                if (listener != null) {
+                    listener.responseFromPrebidServerReceived(responseSuccess);
+                    listener.bidReceivedAndCached(topBid);
+                    listener.requestSentToAdServer("", "");
                 }
 
             });
 
-            if (mListener != null) {
-                mListener.requestToPrebidServerSent(true);
+            if (listener != null) {
+                listener.requestToPrebidServerSent(true);
             }
-
         }
 
     }
 
     private void checkPrebidLog() {
-        if (!mInitialPrebidServerResponseReceived) {
+        if (!initialPrebidServerResponseReceived) {
             BidLog.BidLogEntry entry = BidLog.getInstance().getLastBid();
 
-            if (mListener != null) {
+            if (listener != null) {
                 if (entry != null) {
                     if (entry.getResponseCode() == HttpsURLConnection.HTTP_OK) {
-                        mListener.responseFromPrebidServerReceived(true);
+                        listener.responseFromPrebidServerReceived(true);
                         if (entry.containsTopBid()) {
-                            mListener.bidReceivedAndCached(true);
+                            listener.bidReceivedAndCached(true);
                         } else {
-                            mListener.bidReceivedAndCached(false);
+                            listener.bidReceivedAndCached(false);
                         }
                     } else {
-                        mListener.responseFromPrebidServerReceived(false);
-                        mListener.bidReceivedAndCached(false);
+                        listener.responseFromPrebidServerReceived(false);
+                        listener.bidReceivedAndCached(false);
                     }
                 } else {
-                    mListener.responseFromPrebidServerReceived(false);
-                    mListener.bidReceivedAndCached(false);
+                    listener.responseFromPrebidServerReceived(false);
+                    listener.bidReceivedAndCached(false);
                 }
             }
 
             BidLog.getInstance().cleanLog();
 
-            mInitialPrebidServerResponseReceived = true;
+            initialPrebidServerResponseReceived = true;
         }
     }
 
@@ -207,15 +208,15 @@ public class SdkTest {
 
     //--------------------------------- Google Banner Listener -------------------------------------
 
-    private AdListener mGoogleBannerListener = new AdListener() {
+    private AdListener googleBannerListener = new AdListener() {
         @Override
         public void onAdLoaded() {
             super.onAdLoaded();
 
-            AdViewUtils.findHtml(mGoogleBanner, new OnWebViewListener() {
+            AdViewUtils.findHtml(googleBanner, new OnWebViewListener() {
                 @Override
                 public void success(String html) {
-                    mAdServerResponse = html;
+                    adServerResponse = html;
                     checkResponseForPrebidCreative();
                 }
 
@@ -236,7 +237,7 @@ public class SdkTest {
 
     //------------------------------- Google Interstitial Listener ---------------------------------
 
-    private AdListener mGoogleInterstitialListener = new AdListener() {
+    private AdListener googleInterstitialListener = new AdListener() {
         @Override
         public void onAdLoaded() {
             super.onAdLoaded();
@@ -255,7 +256,8 @@ public class SdkTest {
 
 
     private void checkResponseForPrebidCreative() {
-        if (!TextUtils.isEmpty(mAdServerResponse) && (mAdServerResponse.contains("pbm.js") || mAdServerResponse.contains("creative.js"))) {
+        if (!TextUtils.isEmpty(adServerResponse) && (adServerResponse.contains("pbm.js") || adServerResponse.contains(
+                "creative.js"))) {
             invokeContainsPrebidCreative(true);
         } else {
             invokeContainsPrebidCreative(false);
@@ -263,11 +265,11 @@ public class SdkTest {
     }
 
     private void invokeContainsPrebidCreative(@Nullable Boolean contains) {
-        mContext.runOnUiThread(() -> {
-            if (mListener != null) {
-                mListener.adServerResponseContainsPrebidCreative(contains);
+        context.runOnUiThread(() -> {
+            if (listener != null) {
+                listener.adServerResponseContainsPrebidCreative(contains);
 
-                mListener.onTestFinished();
+                listener.onTestFinished();
             }
         });
     }

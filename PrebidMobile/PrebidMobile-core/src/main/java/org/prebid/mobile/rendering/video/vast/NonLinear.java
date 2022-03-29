@@ -21,90 +21,86 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
-public class NonLinear extends VASTParserBase
-{
-	private final static String VAST_NONLINEAR = "NonLinear";
-	private final static String VAST_STATICRESOURCE = "StaticResource";
-	private final static String VAST_IFRAMERESOUCE = "IFrameResource";
-	private final static String VAST_HTMLRESOURCE = "HTMLResource";
-	private final static String VAST_ADPARAMETERS = "AdParameters";
-	private final static String VAST_NONLINEARCLICKTHROUGH = "NonLinearClickThrough";
-	private final static String VAST_NONLINEARCLICKTRACKING = "NonLinearClickTracking";
+public class NonLinear extends VASTParserBase {
 
-    private String mId;
-    private String mWidth;
-    private String mHeight;
-    private String mExpandedWidth;
-    private String mExpandedHeight;
-    private String mScalable;
-    private String mMaintainAspectRatio;
-    private String mMinSuggestedDuration;
-    private String mApiFramework;
+    private final static String VAST_NONLINEAR = "NonLinear";
+    private final static String VAST_STATICRESOURCE = "StaticResource";
+    private final static String VAST_IFRAMERESOUCE = "IFrameResource";
+    private final static String VAST_HTMLRESOURCE = "HTMLResource";
+    private final static String VAST_ADPARAMETERS = "AdParameters";
+    private final static String VAST_NONLINEARCLICKTHROUGH = "NonLinearClickThrough";
+    private final static String VAST_NONLINEARCLICKTRACKING = "NonLinearClickTracking";
 
-    private StaticResource mStaticResource;
-    private IFrameResource mIFrameResource;
-    private HTMLResource mHTMLResource;
-    private AdParameters mAdParameters;
-    private NonLinearClickThrough mNonLinearClickThrough;
-    private NonLinearClickTracking mNonLinearClickTracking;
+    private String id;
+    private String width;
+    private String height;
+    private String expandedWidth;
+    private String expandedHeight;
+    private String scalable;
+    private String maintainAspectRatio;
+    private String minSuggestedDuration;
+    private String apiFramework;
 
-	public NonLinear(XmlPullParser p) throws XmlPullParserException, IOException
-	{
+    private StaticResource staticResource;
+    private IFrameResource iFrameResource;
+    private HTMLResource HTMLResource;
+    private AdParameters adParameters;
+    private NonLinearClickThrough nonLinearClickThrough;
+    private NonLinearClickTracking nonLinearClickTracking;
 
-		p.require(XmlPullParser.START_TAG, null, VAST_NONLINEAR);
+    public NonLinear(XmlPullParser p) throws XmlPullParserException, IOException {
 
-        mId = p.getAttributeValue(null, "id");
-        mWidth = p.getAttributeValue(null, "width");
-        mHeight = p.getAttributeValue(null, "height");
-        mExpandedWidth = p.getAttributeValue(null, "expandedWidth");
-        mExpandedHeight = p.getAttributeValue(null, "expandedHeight");
-        mScalable = p.getAttributeValue(null, "scalable");
-        mMaintainAspectRatio = p.getAttributeValue(null, "maintainAspectRatio");
-        mMinSuggestedDuration = p.getAttributeValue(null, "minSuggestedDuration");
-        mApiFramework = p.getAttributeValue(null, "apiFramework");
+        p.require(XmlPullParser.START_TAG, null, VAST_NONLINEAR);
 
-		while (p.next() != XmlPullParser.END_TAG)
-		{
-			if (p.getEventType() != XmlPullParser.START_TAG)
-			{
-				continue;
-			}
-			String name = p.getName();
-			if (name != null && name.equals(VAST_STATICRESOURCE))
-			{
-				p.require(XmlPullParser.START_TAG, null, VAST_STATICRESOURCE);
-                mStaticResource = new StaticResource(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_STATICRESOURCE);
+        id = p.getAttributeValue(null, "id");
+        width = p.getAttributeValue(null, "width");
+        height = p.getAttributeValue(null, "height");
+        expandedWidth = p.getAttributeValue(null, "expandedWidth");
+        expandedHeight = p.getAttributeValue(null, "expandedHeight");
+        scalable = p.getAttributeValue(null, "scalable");
+        maintainAspectRatio = p.getAttributeValue(null, "maintainAspectRatio");
+        minSuggestedDuration = p.getAttributeValue(null, "minSuggestedDuration");
+        apiFramework = p.getAttributeValue(null, "apiFramework");
+
+        while (p.next() != XmlPullParser.END_TAG) {
+            if (p.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = p.getName();
+            if (name != null && name.equals(VAST_STATICRESOURCE)) {
+                p.require(XmlPullParser.START_TAG, null, VAST_STATICRESOURCE);
+                staticResource = new StaticResource(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_STATICRESOURCE);
 			}
 			else if (name != null && name.equals(VAST_IFRAMERESOUCE))
 			{
-				p.require(XmlPullParser.START_TAG, null, VAST_IFRAMERESOUCE);
-                mIFrameResource = new IFrameResource(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_IFRAMERESOUCE);
+                p.require(XmlPullParser.START_TAG, null, VAST_IFRAMERESOUCE);
+                iFrameResource = new IFrameResource(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_IFRAMERESOUCE);
 			}
 			else if (name != null && name.equals(VAST_HTMLRESOURCE))
 			{
-				p.require(XmlPullParser.START_TAG, null, VAST_HTMLRESOURCE);
-                mHTMLResource = new HTMLResource(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_HTMLRESOURCE);
+                p.require(XmlPullParser.START_TAG, null, VAST_HTMLRESOURCE);
+                HTMLResource = new HTMLResource(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_HTMLRESOURCE);
 			}
 			else if (name != null && name.equals(VAST_ADPARAMETERS))
 			{
-				p.require(XmlPullParser.START_TAG, null, VAST_ADPARAMETERS);
-                mAdParameters = new AdParameters(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_ADPARAMETERS);
+                p.require(XmlPullParser.START_TAG, null, VAST_ADPARAMETERS);
+                adParameters = new AdParameters(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_ADPARAMETERS);
 			}
 			else if (name != null && name.equals(VAST_NONLINEARCLICKTHROUGH))
 			{
-				p.require(XmlPullParser.START_TAG, null, VAST_NONLINEARCLICKTHROUGH);
-                mNonLinearClickThrough = new NonLinearClickThrough(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_NONLINEARCLICKTHROUGH);
+                p.require(XmlPullParser.START_TAG, null, VAST_NONLINEARCLICKTHROUGH);
+                nonLinearClickThrough = new NonLinearClickThrough(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_NONLINEARCLICKTHROUGH);
 			}
 			else if (name != null && name.equals(VAST_NONLINEARCLICKTRACKING))
 			{
-				p.require(XmlPullParser.START_TAG, null, VAST_NONLINEARCLICKTRACKING);
-                mNonLinearClickTracking = new NonLinearClickTracking(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_NONLINEARCLICKTRACKING);
+                p.require(XmlPullParser.START_TAG, null, VAST_NONLINEARCLICKTRACKING);
+                nonLinearClickTracking = new NonLinearClickTracking(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_NONLINEARCLICKTRACKING);
 			}
 			else
 			{
@@ -115,62 +111,62 @@ public class NonLinear extends VASTParserBase
 	}
 
     public String getId() {
-        return mId;
+        return id;
     }
 
     public String getWidth() {
-        return mWidth;
+        return width;
     }
 
     public String getHeight() {
-        return mHeight;
+        return height;
     }
 
     public String getExpandedWidth() {
-        return mExpandedWidth;
+        return expandedWidth;
     }
 
     public String getExpandedHeight() {
-        return mExpandedHeight;
+        return expandedHeight;
     }
 
     public String getScalable() {
-        return mScalable;
+        return scalable;
     }
 
     public String getMaintainAspectRatio() {
-        return mMaintainAspectRatio;
+        return maintainAspectRatio;
     }
 
     public String getMinSuggestedDuration() {
-        return mMinSuggestedDuration;
+        return minSuggestedDuration;
     }
 
     public String getApiFramework() {
-        return mApiFramework;
+        return apiFramework;
     }
 
     public StaticResource getStaticResource() {
-        return mStaticResource;
+        return staticResource;
     }
 
     public IFrameResource getIFrameResource() {
-        return mIFrameResource;
+        return iFrameResource;
     }
 
     public HTMLResource getHTMLResource() {
-        return mHTMLResource;
+        return HTMLResource;
     }
 
     public AdParameters getAdParameters() {
-        return mAdParameters;
+        return adParameters;
     }
 
     public NonLinearClickThrough getNonLinearClickThrough() {
-        return mNonLinearClickThrough;
+        return nonLinearClickThrough;
     }
 
     public NonLinearClickTracking getNonLinearClickTracking() {
-        return mNonLinearClickTracking;
+        return nonLinearClickTracking;
     }
 }

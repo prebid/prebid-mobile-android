@@ -71,15 +71,15 @@ public class BasicParameterBuilderTest {
     private static final String USER_GENDER = "M";
     private static final String USER_BUYER_ID = "bid";
 
-    private Context mContext;
+    private Context context;
 
-    private final boolean mBrowserActivityAvailable = true;
+    private final boolean browserActivityAvailable = true;
 
     @Before
     public void setUp() throws Exception {
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
-        org.prebid.mobile.PrebidMobile.setApplicationContext(mContext);
-        ManagersResolver.getInstance().prepare(mContext);
+        context = Robolectric.buildActivity(Activity.class).create().get();
+        org.prebid.mobile.PrebidMobile.setApplicationContext(context);
+        ManagersResolver.getInstance().prepare(context);
     }
 
     @After
@@ -110,7 +110,10 @@ public class BasicParameterBuilderTest {
         PrebidMobile.addStoredBidResponse("bidderTest", "123456");
         PrebidMobile.setStoredAuctionResponse("storedResponse");
 
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
@@ -133,7 +136,10 @@ public class BasicParameterBuilderTest {
         adConfiguration.setAdFormat(AdFormat.INTERSTITIAL);
         adConfiguration.setAdPosition(AdPosition.FULLSCREEN);
 
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
@@ -157,7 +163,10 @@ public class BasicParameterBuilderTest {
         adConfiguration.setAdFormat(AdFormat.VAST);
         adConfiguration.setAdPosition(AdPosition.FULLSCREEN);
 
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
@@ -184,7 +193,10 @@ public class BasicParameterBuilderTest {
         adConfiguration.setAdPosition(AdPosition.FULLSCREEN);
         adConfiguration.addSize(new AdSize(300, 250));
 
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
@@ -210,7 +222,10 @@ public class BasicParameterBuilderTest {
 
         PrebidMobile.isCoppaEnabled = true;
 
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
@@ -224,7 +239,10 @@ public class BasicParameterBuilderTest {
         adConfiguration.setAdFormat(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
 
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
@@ -248,7 +266,10 @@ public class BasicParameterBuilderTest {
         TargetingParams.setUserExt(new Ext());
         TargetingParams.setUserLatLng(USER_LAT, USER_LON);
 
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
@@ -265,7 +286,10 @@ public class BasicParameterBuilderTest {
 
         PrebidMobile.sendMraidSupportParams = false;
 
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
@@ -281,7 +305,10 @@ public class BasicParameterBuilderTest {
 
         PrebidMobile.useExternalBrowser = false;
 
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
@@ -297,7 +324,10 @@ public class BasicParameterBuilderTest {
 
         PrebidMobile.useExternalBrowser = true;
 
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
+                context.getResources(),
+                browserActivityAvailable
+        );
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
@@ -313,7 +343,7 @@ public class BasicParameterBuilderTest {
 
         PrebidMobile.useExternalBrowser = false;
 
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), false);
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, context.getResources(), false);
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
@@ -328,7 +358,7 @@ public class BasicParameterBuilderTest {
 
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         adConfiguration.setConfigId("config");
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), false);
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, context.getResources(), false);
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
@@ -346,7 +376,7 @@ public class BasicParameterBuilderTest {
 
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         adConfiguration.setConfigId("config");
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), false);
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, context.getResources(), false);
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
@@ -366,7 +396,7 @@ public class BasicParameterBuilderTest {
         String testName = "testDataObject";
         dataObject.setName(testName);
         adConfiguration.addUserData(dataObject);
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), false);
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, context.getResources(), false);
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
@@ -386,7 +416,7 @@ public class BasicParameterBuilderTest {
     throws JSONException {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         adConfiguration.addContextData("context", "contextData");
-        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), false);
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, context.getResources(), false);
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
@@ -479,7 +509,7 @@ public class BasicParameterBuilderTest {
         imp.instl = isInterstitial ? 1 : 0;
 
         // 0 == embedded, 1 == native
-        imp.clickBrowser = !PrebidMobile.useExternalBrowser && mBrowserActivityAvailable ? 0 : 1;
+        imp.clickBrowser = !PrebidMobile.useExternalBrowser && browserActivityAvailable ? 0 : 1;
         imp.id = uuid;
         imp.getExt().put("prebid", Prebid.getJsonObjectForImp(adConfiguration));
 
@@ -511,7 +541,7 @@ public class BasicParameterBuilderTest {
                 banner.addFormat(size.getWidth(), size.getHeight());
             }
         } else if (adConfiguration.isAdType(AdFormat.INTERSTITIAL)) {
-            Configuration deviceConfiguration = mContext.getResources().getConfiguration();
+            Configuration deviceConfiguration = context.getResources().getConfiguration();
             banner.addFormat(deviceConfiguration.screenWidthDp,
                     deviceConfiguration.screenHeightDp);
         }
@@ -536,7 +566,7 @@ public class BasicParameterBuilderTest {
 
         if (!adConfiguration.isPlacementTypeValid()) {
             video.placement = VIDEO_INTERSTITIAL_PLACEMENT;
-            Configuration deviceConfiguration = mContext.getResources().getConfiguration();
+            Configuration deviceConfiguration = context.getResources().getConfiguration();
             video.w = deviceConfiguration.screenWidthDp;
             video.h = deviceConfiguration.screenHeightDp;
         }

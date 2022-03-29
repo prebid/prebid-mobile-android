@@ -29,31 +29,35 @@ import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 
 public class VideoDialog extends AdBaseDialog {
+
     private static final String TAG = "VideoDialog";
 
-    private final AdViewManager mAdViewManager;
+    private final AdViewManager adViewManager;
 
-    private VideoCreativeView mAdView;
-    private VideoDialogListener mVideoDialogListener;
+    private VideoCreativeView adView;
+    private VideoDialogListener videoDialogListener;
 
-    public VideoDialog(Context context,
-                       VideoCreativeView videoCreativeView,
-                       AdViewManager adViewManager,
-                       InterstitialManager interstitialManager,
-                       FrameLayout adViewContainer) {
+    public VideoDialog(
+            Context context,
+            VideoCreativeView videoCreativeView,
+            AdViewManager adViewManager,
+            InterstitialManager interstitialManager,
+            FrameLayout adViewContainer
+    ) {
         super(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen, interstitialManager);
-        mAdViewContainer = adViewContainer;
-        mAdViewManager = adViewManager;
-        mAdViewContainer.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                                                      ViewGroup.LayoutParams.MATCH_PARENT));
-        mAdView = videoCreativeView;
-        setContentView(mAdViewContainer);
+        this.adViewContainer = adViewContainer;
+        this.adViewManager = adViewManager;
+        this.adViewContainer.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
+        adView = videoCreativeView;
+        setContentView(this.adViewContainer);
 
         initListeners();
     }
 
     public void setVideoDialogListener(VideoDialogListener videoDialogListener) {
-        mVideoDialogListener = videoDialogListener;
+        this.videoDialogListener = videoDialogListener;
     }
 
     @Override
@@ -61,8 +65,8 @@ public class VideoDialog extends AdBaseDialog {
         dismiss();
         unApplyOrientation();
 
-        if (mVideoDialogListener != null) {
-            mVideoDialogListener.onVideoDialogClosed();
+        if (videoDialogListener != null) {
+            videoDialogListener.onVideoDialogClosed();
         }
     }
 
@@ -72,14 +76,15 @@ public class VideoDialog extends AdBaseDialog {
     }
 
     public void showBannerCreative(View creativeView) {
-        mAdViewContainer.removeAllViews();
+        adViewContainer.removeAllViews();
         creativeView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                                                  ViewGroup.LayoutParams.MATCH_PARENT));
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
         lockOrientation();
-        mAdViewContainer.addView(creativeView);
-        mDisplayView = creativeView;
+        adViewContainer.addView(creativeView);
+        displayView = creativeView;
         addCloseView();
-        mAdView = null;
+        adView = null;
     }
 
     private void initListeners() {
@@ -87,12 +92,12 @@ public class VideoDialog extends AdBaseDialog {
     }
 
     private void handleShowAction() {
-        mAdViewManager.trackVideoStateChange(InternalPlayerState.EXPANDED);
-        mAdView.unMute();
+        adViewManager.trackVideoStateChange(InternalPlayerState.EXPANDED);
+        adView.unMute();
 
         changeCloseViewVisibility(View.VISIBLE);
-        mAdView.showCallToAction();
+        adView.showCallToAction();
 
-        mAdViewManager.updateAdView(mAdViewContainer);
+        adViewManager.updateAdView(adViewContainer);
     }
 }

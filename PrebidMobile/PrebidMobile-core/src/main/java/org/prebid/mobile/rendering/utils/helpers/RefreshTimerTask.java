@@ -23,29 +23,29 @@ import org.prebid.mobile.LogUtil;
 
 public class RefreshTimerTask {
     private static final String TAG = RefreshTimerTask.class.getSimpleName();
-    private Handler mRefreshHandler;
+    private Handler refreshHandler;
 
     //for unit testing only
-    private boolean mRefreshExecuted;
+    private boolean refreshExecuted;
 
-    private RefreshTriggered mRefreshTriggerListener;
+    private RefreshTriggered refreshTriggerListener;
 
-    private final Runnable mRefreshRunnable = new Runnable() {
+    private final Runnable refreshRunnable = new Runnable() {
         @Override
         public void run() {
-            if (mRefreshTriggerListener == null) {
-                LogUtil.error(TAG, "Failed to notify mRefreshTriggerListener. mRefreshTriggerListener instance is null");
+            if (refreshTriggerListener == null) {
+                LogUtil.error(TAG, "Failed to notify refreshTriggerListener. refreshTriggerListener instance is null");
                 return;
             }
 
-            mRefreshTriggerListener.handleRefresh();
-            mRefreshExecuted = true;
+            refreshTriggerListener.handleRefresh();
+            refreshExecuted = true;
         }
     };
 
     public RefreshTimerTask(RefreshTriggered refreshTriggered) {
-        mRefreshHandler = new Handler(Looper.getMainLooper());
-        mRefreshTriggerListener = refreshTriggered;
+        refreshHandler = new Handler(Looper.getMainLooper());
+        refreshTriggerListener = refreshTriggered;
     }
 
     /**
@@ -62,28 +62,28 @@ public class RefreshTimerTask {
     }
 
     public void cancelRefreshTimer() {
-        if (mRefreshHandler != null) {
-            mRefreshHandler.removeCallbacksAndMessages(null);
+        if (refreshHandler != null) {
+            refreshHandler.removeCallbacksAndMessages(null);
         }
     }
 
     public void destroy() {
         cancelRefreshTimer();
-        mRefreshHandler = null;
-        mRefreshExecuted = false;
+        refreshHandler = null;
+        refreshExecuted = false;
     }
 
     /**
      * Queue new task that should be performed in UI thread.
      */
     private void queueUIThreadTask(long interval) {
-        if (mRefreshHandler != null) {
-            mRefreshHandler.postDelayed(mRefreshRunnable, interval);
+        if (refreshHandler != null) {
+            refreshHandler.postDelayed(refreshRunnable, interval);
         }
     }
 
     @VisibleForTesting
     boolean isRefreshExecuted() {
-        return mRefreshExecuted;
+        return refreshExecuted;
     }
 }

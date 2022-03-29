@@ -34,23 +34,29 @@ import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import java.lang.ref.WeakReference;
 
 public abstract class AbstractCreative {
+
     private static final String TAG = AbstractCreative.class.getSimpleName();
 
-    protected WeakReference<Context> mContextReference;
+    protected WeakReference<Context> contextReference;
 
-    private CreativeModel mModel;
-    private CreativeViewListener mCreativeViewListener;
-    private CreativeResolutionListener mResolutionListener;
+    private CreativeModel model;
+    private CreativeViewListener creativeViewListener;
+    private CreativeResolutionListener resolutionListener;
 
-    protected WeakReference<OmAdSessionManager> mWeakOmAdSessionManager;
+    protected WeakReference<OmAdSessionManager> weakOmAdSessionManager;
 
-    protected InterstitialManager mInterstitialManager;
+    protected InterstitialManager interstitialManager;
 
-    private View mCreativeView;
+    private View creativeView;
 
-    protected CreativeVisibilityTracker mCreativeVisibilityTracker;
+    protected CreativeVisibilityTracker creativeVisibilityTracker;
 
-    public AbstractCreative(Context context, CreativeModel model, OmAdSessionManager omAdSessionManager, InterstitialManager interstitialManager)
+    public AbstractCreative(
+            Context context,
+            CreativeModel model,
+            OmAdSessionManager omAdSessionManager,
+            InterstitialManager interstitialManager
+    )
     throws AdException {
         if (context == null) {
             throw new AdException(AdException.INTERNAL_ERROR, "Context is null");
@@ -60,14 +66,14 @@ public abstract class AbstractCreative {
             throw new AdException(AdException.INTERNAL_ERROR, "CreativeModel is null");
         }
 
-        mContextReference = new WeakReference<>(context);
+        contextReference = new WeakReference<>(context);
 
-        mModel = model;
+        this.model = model;
 
-        mWeakOmAdSessionManager = new WeakReference<>(omAdSessionManager);
-        mInterstitialManager = interstitialManager;
+        weakOmAdSessionManager = new WeakReference<>(omAdSessionManager);
+        this.interstitialManager = interstitialManager;
 
-        mModel.registerActiveOmAdSession(omAdSessionManager);
+        this.model.registerActiveOmAdSession(omAdSessionManager);
     }
 
     public abstract boolean isDisplay();
@@ -162,7 +168,7 @@ public abstract class AbstractCreative {
      * @return if the current ad config suggests that this is a video
      */
     public boolean isBuiltInVideo() {
-        return mModel.getAdConfiguration().isBuiltInVideo();
+        return model.getAdConfiguration().isBuiltInVideo();
     }
 
     /**
@@ -191,9 +197,9 @@ public abstract class AbstractCreative {
      * Specific creative cleanup. Creative must cleanup it's internal state.
      */
     public void destroy() {
-        if (mCreativeVisibilityTracker != null) {
-            mCreativeVisibilityTracker.stopVisibilityCheck();
-            mCreativeVisibilityTracker = null;
+        if (creativeVisibilityTracker != null) {
+            creativeVisibilityTracker.stopVisibilityCheck();
+            creativeVisibilityTracker = null;
         }
     }
 
@@ -210,37 +216,37 @@ public abstract class AbstractCreative {
     public abstract void handleAdWindowNoFocus();
 
     /**
-     * Changes the {@link #mCreativeVisibilityTracker} state based on ad webView window focus.
-     * If ad webView has no window focus - {@link #mCreativeVisibilityTracker} execution will be stopped.
-     * If ad webView has window focus - {@link #mCreativeVisibilityTracker} execution will be restarted.
+     * Changes the {@link #creativeVisibilityTracker} state based on ad webView window focus.
+     * If ad webView has no window focus - {@link #creativeVisibilityTracker} execution will be stopped.
+     * If ad webView has window focus - {@link #creativeVisibilityTracker} execution will be restarted.
      *
      * @param adWebViewWindowFocus adWebView focus state
      */
     public void changeVisibilityTrackerState(boolean adWebViewWindowFocus) {
-        if (mCreativeVisibilityTracker == null) {
+        if (creativeVisibilityTracker == null) {
             LogUtil.debug(TAG, "handleAdWebViewWindowFocusChange(): Failed. CreativeVisibilityTracker is null.");
             return;
         }
 
         if (!adWebViewWindowFocus) {
-            mCreativeVisibilityTracker.stopVisibilityCheck();
+            creativeVisibilityTracker.stopVisibilityCheck();
         }
         else {
-            mCreativeVisibilityTracker.stopVisibilityCheck();
-            mCreativeVisibilityTracker.startVisibilityCheck(mContextReference.get());
+            creativeVisibilityTracker.stopVisibilityCheck();
+            creativeVisibilityTracker.startVisibilityCheck(contextReference.get());
         }
     }
 
     public void setResolutionListener(CreativeResolutionListener resolutionListener) {
-        mResolutionListener = resolutionListener;
+        this.resolutionListener = resolutionListener;
     }
 
     public CreativeResolutionListener getResolutionListener() {
-        return mResolutionListener;
+        return resolutionListener;
     }
 
     public void setCreativeViewListener(CreativeViewListener creativeViewListener) {
-        mCreativeViewListener = creativeViewListener;
+        this.creativeViewListener = creativeViewListener;
     }
 
     /**
@@ -249,14 +255,14 @@ public abstract class AbstractCreative {
      * @param creativeView individual creative view. E.g. webView for HTMLCreative.
      */
     public void setCreativeView(View creativeView) {
-        mCreativeView = creativeView;
+        this.creativeView = creativeView;
     }
 
     /**
      * @return individual creative view. E.g. webView for HTMLCreative.
      */
     public View getCreativeView() {
-        return mCreativeView;
+        return creativeView;
     }
 
     /**
@@ -264,11 +270,11 @@ public abstract class AbstractCreative {
      */
     @NonNull
     public CreativeModel getCreativeModel() {
-        return mModel;
+        return model;
     }
 
     public void updateAdView(View view) {
-        OmAdSessionManager omAdSessionManager = mWeakOmAdSessionManager.get();
+        OmAdSessionManager omAdSessionManager = weakOmAdSessionManager.get();
         if (omAdSessionManager == null) {
             LogUtil.error(TAG, "Unable to updateAdView. OmAdSessionManager is null");
             return;
@@ -277,7 +283,7 @@ public abstract class AbstractCreative {
     }
 
     public CreativeViewListener getCreativeViewListener() {
-        return mCreativeViewListener;
+        return creativeViewListener;
     }
 
     public void addOmFriendlyObstruction(InternalFriendlyObstruction friendlyObstruction) {
@@ -286,7 +292,7 @@ public abstract class AbstractCreative {
             return;
         }
 
-        OmAdSessionManager omAdSessionManager = mWeakOmAdSessionManager.get();
+        OmAdSessionManager omAdSessionManager = weakOmAdSessionManager.get();
         if (omAdSessionManager == null) {
             LogUtil.error(TAG, "Unable to addOmFriendlyObstruction. OmAdSessionManager is null");
             return;

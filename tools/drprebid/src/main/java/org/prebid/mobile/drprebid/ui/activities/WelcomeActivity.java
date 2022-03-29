@@ -1,17 +1,16 @@
 package org.prebid.mobile.drprebid.ui.activities;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
-
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.ui.fragments.ImageFragment;
 import org.prebid.mobile.drprebid.ui.views.SlideIndicatorsView;
@@ -21,10 +20,10 @@ import java.util.List;
 
 public class WelcomeActivity extends AppCompatActivity {
 
-    private ViewPager mPager;
-    private PagerAdapter mPagerAdapter;
-    private SlideIndicatorsView mIndicatorsView;
-    private Button mSkipButton;
+    private ViewPager pager;
+    private PagerAdapter pagerAdapter;
+    private SlideIndicatorsView indicatorsView;
+    private Button skipButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,16 +36,16 @@ public class WelcomeActivity extends AppCompatActivity {
             actionBar.hide();
         }
 
-        mPager = findViewById(R.id.pager_images);
-        mPagerAdapter = new SlideImageAdapter(getSupportFragmentManager());
-        mPager.addOnPageChangeListener(onPageChangeListener);
-        mPager.setAdapter(mPagerAdapter);
+        pager = findViewById(R.id.pager_images);
+        pagerAdapter = new SlideImageAdapter(getSupportFragmentManager());
+        pager.addOnPageChangeListener(onPageChangeListener);
+        pager.setAdapter(pagerAdapter);
 
-        mIndicatorsView = findViewById(R.id.view_indicators);
-        mIndicatorsView.setSelectedPosition(0);
+        indicatorsView = findViewById(R.id.view_indicators);
+        indicatorsView.setSelectedPosition(0);
 
-        mSkipButton = findViewById(R.id.button_skip);
-        mSkipButton.setOnClickListener(new View.OnClickListener() {
+        skipButton = findViewById(R.id.button_skip);
+        skipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -56,10 +55,10 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mPager.getCurrentItem() == 0) {
+        if (pager.getCurrentItem() == 0) {
             super.onBackPressed();
         } else {
-            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+            pager.setCurrentItem(pager.getCurrentItem() - 1);
         }
     }
 
@@ -67,36 +66,37 @@ public class WelcomeActivity extends AppCompatActivity {
         @Override
         public void onPageSelected(int position) {
             super.onPageSelected(position);
-            if (position == mPagerAdapter.getCount() - 1) {
-                mSkipButton.setText(R.string.action_continue);
+            if (position == pagerAdapter.getCount() - 1) {
+                skipButton.setText(R.string.action_continue);
             } else {
-                mSkipButton.setText(R.string.action_skip);
+                skipButton.setText(R.string.action_skip);
             }
 
-            mIndicatorsView.setSelectedPosition(position);
+            indicatorsView.setSelectedPosition(position);
         }
     };
 
     private class SlideImageAdapter extends FragmentStatePagerAdapter {
-        private final List<ImageFragment> mFragments;
+
+        private final List<ImageFragment> fragments;
 
         SlideImageAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
 
-            mFragments = new ArrayList<>();
-            mFragments.add(ImageFragment.newInstance(R.drawable.welcome_1));
-            mFragments.add(ImageFragment.newInstance(R.drawable.welcome_2));
-            mFragments.add(ImageFragment.newInstance(R.drawable.welcome_3));
+            fragments = new ArrayList<>();
+            fragments.add(ImageFragment.newInstance(R.drawable.welcome_1));
+            fragments.add(ImageFragment.newInstance(R.drawable.welcome_2));
+            fragments.add(ImageFragment.newInstance(R.drawable.welcome_3));
         }
 
         @Override
         public Fragment getItem(int position) {
-            return mFragments.get(position);
+            return fragments.get(position);
         }
 
         @Override
         public int getCount() {
-            return mFragments.size();
+            return fragments.size();
         }
     }
 }

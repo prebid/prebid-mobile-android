@@ -28,37 +28,38 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 import java.util.ArrayList;
 
 public class BidRequest extends BaseBid {
-    private String mId;
-    private App mApp = null;
-    private Device mDevice = null;
-    private ArrayList<Imp> mImps = new ArrayList<>();
-    private Regs mRegs = null;
-    private User mUser = null;
-    private Source mSource = null;
 
-    private Ext mExt = null;
+    private String id;
+    private App app = null;
+    private Device device = null;
+    private ArrayList<Imp> imps = new ArrayList<>();
+    private Regs regs = null;
+    private User user = null;
+    private Source source = null;
+
+    private Ext ext = null;
 
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
 
-        if (mImps != null && mImps.size() > 0) {
+        if (imps != null && imps.size() > 0) {
 
             JSONArray jsonArray = new JSONArray();
 
-            for (Imp i : mImps) {
+            for (Imp i : imps) {
                 jsonArray.put(i.getJsonObject());
             }
 
             toJSON(jsonObject, "imp", jsonArray);
         }
 
-        toJSON(jsonObject, "id", !TextUtils.isEmpty(mId) ? mId : null);
-        toJSON(jsonObject, "app", (mApp != null) ? mApp.getJsonObject() : null);
-        toJSON(jsonObject, "device", (mDevice != null) ? mDevice.getJsonObject() : null);
-        toJSON(jsonObject, "regs", (mRegs != null) ? mRegs.getJsonObject() : null);
-        toJSON(jsonObject, "user", (mUser != null) ? mUser.getJsonObject() : null);
-        toJSON(jsonObject, "source", mSource != null ? mSource.getJsonObject() : null);
-        toJSON(jsonObject, "ext", mExt != null ? mExt.getJsonObject() : null);
+        toJSON(jsonObject, "id", !TextUtils.isEmpty(id) ? id : null);
+        toJSON(jsonObject, "app", (app != null) ? app.getJsonObject() : null);
+        toJSON(jsonObject, "device", (device != null) ? device.getJsonObject() : null);
+        toJSON(jsonObject, "regs", (regs != null) ? regs.getJsonObject() : null);
+        toJSON(jsonObject, "user", (user != null) ? user.getJsonObject() : null);
+        toJSON(jsonObject, "source", source != null ? source.getJsonObject() : null);
+        toJSON(jsonObject, "ext", ext != null ? ext.getJsonObject() : null);
         toJSON(jsonObject, "test", PrebidMobile.getPbsDebug() ? 1 : null);
 
         return jsonObject;
@@ -68,90 +69,90 @@ public class BidRequest extends BaseBid {
 
     // App
     public App getApp() {
-        if (mApp == null) {
-            mApp = new App();
+        if (app == null) {
+            app = new App();
         }
 
-        return mApp;
+        return app;
     }
 
     public void setApp(App app) {
-        mApp = app;
+        this.app = app;
     }
 
     // Device
     public Device getDevice() {
-        if (mDevice == null) {
-            mDevice = new Device();
+        if (device == null) {
+            device = new Device();
         }
 
-        return mDevice;
+        return device;
     }
 
     public void setDevice(Device device) {
-        mDevice = device;
+        this.device = device;
     }
 
     // Imp
     public ArrayList<Imp> getImp() {
-        return mImps;
+        return imps;
     }
 
     public void setImp(ArrayList<Imp> imp) {
-        mImps = imp;
+        imps = imp;
     }
 
     // Regs
     public Regs getRegs() {
-        if (mRegs == null) {
-            mRegs = new Regs();
+        if (regs == null) {
+            regs = new Regs();
         }
 
-        return mRegs;
+        return regs;
     }
 
     public void setRegs(Regs regs) {
-        mRegs = regs;
+        this.regs = regs;
     }
 
     // User
     public User getUser() {
-        if (mUser == null) {
-            mUser = new User();
+        if (user == null) {
+            user = new User();
         }
 
-        return mUser;
+        return user;
     }
 
     public void setUser(User user) {
-        mUser = user;
+        this.user = user;
     }
 
     public void setSource(Source source) {
-        mSource = source;
+        this.source = source;
     }
 
     public Source getSource() {
-        if (mSource == null) {
-            mSource = new Source();
+        if (source == null) {
+            source = new Source();
         }
 
-        return mSource;
+        return source;
     }
 
     public void setId(String id) {
-        mId = id;
+        this.id = id;
     }
 
     @VisibleForTesting
     public String getId() {
-        return mId;
+        return id;
     }
 
     public Ext getExt() {
-        if (mExt == null) {
-            mExt = new Ext();
+        if (ext == null) {
+            ext = new Ext();
         }
-        return mExt;
+        return ext;
     }
 }

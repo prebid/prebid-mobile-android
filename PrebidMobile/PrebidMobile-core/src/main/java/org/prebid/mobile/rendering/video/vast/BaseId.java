@@ -21,23 +21,22 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
-public class BaseId extends VASTParserBase
-{
-    private String mId;
-    private String mValue;
+public class BaseId extends VASTParserBase {
 
-	public BaseId(XmlPullParser p) throws XmlPullParserException, IOException
-	{
+    private String id;
+    private String value;
 
-        mId = p.getAttributeValue(null, "id");
-        mValue = readText(p);
+    public BaseId(XmlPullParser p) throws XmlPullParserException, IOException {
+
+        id = p.getAttributeValue(null, "id");
+        value = readText(p);
     }
 
     public String getId() {
-        return mId;
+        return id;
     }
 
     public String getValue() {
-        return mValue;
+        return value;
     }
 }

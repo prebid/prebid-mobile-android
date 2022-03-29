@@ -54,31 +54,27 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class MraidResizeTest {
 
-    private MraidResize mMraidResize;
+    private MraidResize mraidResize;
 
-    private Context mMockContext;
+    private Context mockContext;
 
-    private BaseJSInterface mSpyBaseJsInterface;
+    private BaseJSInterface spyBaseJsInterface;
 
-    @Mock
-    private WebViewBase mMockWebViewBase;
-    @Mock
-    private InterstitialManager mMockManager;
-    @Mock
-    private MraidVariableContainer mMockMraidVariableContainer;
-    @Mock
-    private JsExecutor mMockJsExecutor;
+    @Mock private WebViewBase mockWebViewBase;
+    @Mock private InterstitialManager mockManager;
+    @Mock private MraidVariableContainer mockMraidVariableContainer;
+    @Mock private JsExecutor mockJsExecutor;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         PrebidWebViewBase prebidWebViewBase = mock(PrebidWebViewBase.class);
-        mMockContext = Robolectric.buildActivity(Activity.class).create().get().getApplicationContext();
+        mockContext = Robolectric.buildActivity(Activity.class).create().get().getApplicationContext();
 
-        mSpyBaseJsInterface = spy(new BaseJSInterface(mMockContext, mMockWebViewBase, mMockJsExecutor));
-        when(mSpyBaseJsInterface.getMraidVariableContainer()).thenReturn(mMockMraidVariableContainer);
+        spyBaseJsInterface = spy(new BaseJSInterface(mockContext, mockWebViewBase, mockJsExecutor));
+        when(spyBaseJsInterface.getMraidVariableContainer()).thenReturn(mockMraidVariableContainer);
 
-        when(mMockWebViewBase.post(any(Runnable.class))).thenAnswer(invocation -> {
+        when(mockWebViewBase.post(any(Runnable.class))).thenAnswer(invocation -> {
             Runnable runnable = invocation.getArgument(0);
             runnable.run();
             return null;
@@ -87,92 +83,106 @@ public class MraidResizeTest {
             Handler handler = invocation.getArgument(0);
             Message message = new Message();
             Bundle data = new Bundle();
-            data.putString(JSInterface.JSON_VALUE, "{\"width\":320,\"height\":250,\"customClosePosition\":\"top-right\",\"offsetX\":0,\"offsetY\":0,\"allowOffscreen\":true}");
+            data.putString(
+                    JSInterface.JSON_VALUE,
+                    "{\"width\":320,\"height\":250,\"customClosePosition\":\"top-right\",\"offsetX\":0,\"offsetY\":0,\"allowOffscreen\":true}"
+            );
             message.setData(data);
             handler.handleMessage(message);
             return null;
-        }).when(mMockJsExecutor).executeGetResizeProperties(any(Handler.class));
+        }).when(mockJsExecutor).executeGetResizeProperties(any(Handler.class));
 
-        when(mMockWebViewBase.getParent()).thenReturn(prebidWebViewBase);
-        when(mSpyBaseJsInterface.getDefaultAdContainer()).thenReturn(prebidWebViewBase);
+        when(mockWebViewBase.getParent()).thenReturn(prebidWebViewBase);
+        when(spyBaseJsInterface.getDefaultAdContainer()).thenReturn(prebidWebViewBase);
 
-        mMraidResize = new MraidResize(mMockContext, mSpyBaseJsInterface, mMockWebViewBase, mMockManager);
+        mraidResize = new MraidResize(mockContext, spyBaseJsInterface, mockWebViewBase, mockManager);
     }
 
     @Test
     public void resizeWithDefaultState_executeGetResizeProperties() throws Exception {
-        when(mMockMraidVariableContainer.getCurrentState()).thenReturn(JSInterface.STATE_DEFAULT);
+        when(mockMraidVariableContainer.getCurrentState()).thenReturn(JSInterface.STATE_DEFAULT);
 
-        mMraidResize.resize();
+        mraidResize.resize();
 
-        verify(mMockJsExecutor).executeGetResizeProperties(Mockito.any(Handler.class));
+        verify(mockJsExecutor).executeGetResizeProperties(Mockito.any(Handler.class));
     }
 
     @Test
     public void resizeWithExpandedState_executeOnError() throws Exception {
-        when(mMockMraidVariableContainer.getCurrentState()).thenReturn(JSInterface.STATE_EXPANDED);
+        when(mockMraidVariableContainer.getCurrentState()).thenReturn(JSInterface.STATE_EXPANDED);
 
-        mMraidResize.resize();
+        mraidResize.resize();
 
-        verify(mSpyBaseJsInterface).onError("resize_when_expanded_error", JSInterface.ACTION_RESIZE);
+        verify(spyBaseJsInterface).onError("resize_when_expanded_error", JSInterface.ACTION_RESIZE);
     }
 
     @Test
     public void resizeWithInvalidState_DoNothing() throws Exception {
-        when(mMockMraidVariableContainer.getCurrentState()).thenReturn(JSInterface.STATE_LOADING);
+        when(mockMraidVariableContainer.getCurrentState()).thenReturn(JSInterface.STATE_LOADING);
 
-        mMraidResize.resize();
+        mraidResize.resize();
 
-        verify(mSpyBaseJsInterface, times(1)).getMraidVariableContainer();
-        verifyNoMoreInteractions(mSpyBaseJsInterface);
+        verify(spyBaseJsInterface, times(1)).getMraidVariableContainer();
+        verifyNoMoreInteractions(spyBaseJsInterface);
     }
 
     @Test
     public void showExpandDialogTest() throws InvocationTargetException, IllegalAccessException {
 
-        Method showExpandDialogMethod = WhiteBox.method(MraidResize.class, "showExpandDialog",
-                                                        int.class, int.class, int.class,
-                                                        int.class, boolean.class);
+        Method showExpandDialogMethod = WhiteBox.method(MraidResize.class,
+                "showExpandDialog",
+                int.class,
+                int.class,
+                int.class,
+                int.class,
+                boolean.class
+        );
 
-        Field secondaryAdContainerField = WhiteBox.field(MraidResize.class, "mSecondaryAdContainer");
-        secondaryAdContainerField.set(mMraidResize, mock(FrameLayout.class));
+        Field secondaryAdContainerField = WhiteBox.field(MraidResize.class, "secondaryAdContainer");
+        secondaryAdContainerField.set(mraidResize, mock(FrameLayout.class));
 
-        Field closeViewField = WhiteBox.field(MraidResize.class, "mCloseView");
+        Field closeViewField = WhiteBox.field(MraidResize.class, "closeView");
         View mockView = mock(View.class);
-        when(mockView.getLayoutParams()).thenReturn(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        closeViewField.set(mMraidResize, mockView);
+        when(mockView.getLayoutParams()).thenReturn(new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
+        closeViewField.set(mraidResize, mockView);
 
         MraidScreenMetrics mockMetrics = mock(MraidScreenMetrics.class);
         when(mockMetrics.getRootViewRect()).thenReturn(new Rect(0, 0, 100, 100));
         when(mockMetrics.getDefaultAdRect()).thenReturn(new Rect(0, 0, 0, 0));
         when(mockMetrics.getRootViewRectDips()).thenReturn(new Rect(0, 0, 0, 0));
-        when(mSpyBaseJsInterface.getScreenMetrics()).thenReturn(mockMetrics);
+        when(spyBaseJsInterface.getScreenMetrics()).thenReturn(mockMetrics);
 
         PrebidWebViewBase mockPrebidWebViewBase = mock(PrebidWebViewBase.class);
-        when(mMockWebViewBase.getParent()).thenReturn(mockPrebidWebViewBase);
-        when(mSpyBaseJsInterface.getDefaultAdContainer()).thenReturn(mockPrebidWebViewBase);
-        when(mSpyBaseJsInterface.getRootView()).thenReturn(mock(FrameLayout.class));
+        when(mockWebViewBase.getParent()).thenReturn(mockPrebidWebViewBase);
+        when(spyBaseJsInterface.getDefaultAdContainer()).thenReturn(mockPrebidWebViewBase);
+        when(spyBaseJsInterface.getRootView()).thenReturn(mock(FrameLayout.class));
 
-        showExpandDialogMethod.invoke(mMraidResize, 100, 100, 0, 0, true);
-        verify(mSpyBaseJsInterface).onStateChange(eq(JSInterface.STATE_RESIZED));
+        showExpandDialogMethod.invoke(mraidResize, 100, 100, 0, 0, true);
+        verify(spyBaseJsInterface).onStateChange(eq(JSInterface.STATE_RESIZED));
 
-        showExpandDialogMethod.invoke(mMraidResize, 1000, 1000, 0, 0, false);
-        verify(mSpyBaseJsInterface).onError("Resize properties specified a size & offset that does not allow the ad to appear within the max allowed size", JSInterface.ACTION_RESIZE);
+        showExpandDialogMethod.invoke(mraidResize, 1000, 1000, 0, 0, false);
+        verify(spyBaseJsInterface).onError(
+                "Resize properties specified a size & offset that does not allow the ad to appear within the max allowed size",
+                JSInterface.ACTION_RESIZE
+        );
 
-        showExpandDialogMethod.invoke(mMraidResize, 100, 100, 0, 0, false);
-        verify(mSpyBaseJsInterface, times(2)).onStateChange(eq(JSInterface.STATE_RESIZED));
+        showExpandDialogMethod.invoke(mraidResize, 100, 100, 0, 0, false);
+        verify(spyBaseJsInterface, times(2)).onStateChange(eq(JSInterface.STATE_RESIZED));
 
         WeakReference<Context> weakReference = new WeakReference<>(null);
-        WhiteBox.field(MraidResize.class, "mContextReference").set(mMraidResize, weakReference);
-        showExpandDialogMethod.invoke(mMraidResize, 100, 100, 0, 0, false);
-        verify(mSpyBaseJsInterface).onError("Unable to resize when mContext is null", JSInterface.ACTION_RESIZE);
+        WhiteBox.field(MraidResize.class, "contextReference").set(mraidResize, weakReference);
+        showExpandDialogMethod.invoke(mraidResize, 100, 100, 0, 0, false);
+        verify(spyBaseJsInterface).onError("Unable to resize when context is null", JSInterface.ACTION_RESIZE);
     }
 
     @Test
     public void closeViewTest() throws Exception {
         Method closeViewMethod = WhiteBox.method(MraidResize.class, "closeView");
 
-        closeViewMethod.invoke(mMraidResize);
-        verify(mMockManager).interstitialClosed(any(View.class));
+        closeViewMethod.invoke(mraidResize);
+        verify(mockManager).interstitialClosed(any(View.class));
     }
 }

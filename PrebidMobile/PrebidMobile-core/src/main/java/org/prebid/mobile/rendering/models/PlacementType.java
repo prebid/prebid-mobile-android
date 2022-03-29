@@ -23,13 +23,13 @@ public enum PlacementType {
     IN_FEED(4),
     INTERSTITIAL(5);
 
-    private final int mValue;
+    private final int value;
 
     PlacementType(int value) {
-        mValue = value;
+        this.value = value;
     }
 
     public int getValue() {
-        return mValue;
+        return value;
     }
 }

@@ -36,75 +36,83 @@ import java.util.regex.Pattern;
 import static org.prebid.mobile.rendering.views.webview.AdWebViewClient.AdAssetsLoadedListener;
 
 public class WebViewBase extends AdWebView implements AdAssetsLoadedListener {
+
     private static final String TAG = WebViewBase.class.getSimpleName();
 
     private static final String REGEX_IFRAME = "(<iframe[^>]*)>";
 
-    protected MraidEventsManager.MraidListener mMraidListener;
-    protected String mMRAIDBridgeName;
+    protected MraidEventsManager.MraidListener mraidListener;
+    protected String MRAIDBridgeName;
 
-    private PreloadManager.PreloadedListener mPreloadedListener;
+    private PreloadManager.PreloadedListener preloadedListener;
 
-    private BaseJSInterface mMraidInterface;
-    private String mAdHTML;
-    private AdBaseDialog mDialog;
+    private BaseJSInterface mraidInterface;
+    private String adHTML;
+    private AdBaseDialog dialog;
 
-    private boolean mContainsIFrame;
-    private boolean mIsClicked = false;
-    protected boolean mIsMRAID;
+    private boolean containsIFrame;
+    private boolean isClicked = false;
+    protected boolean isMRAID;
 
-    private String mTargetUrl;
+    private String targetUrl;
 
-    public WebViewBase(Context context, String html, int width, int height, PreloadManager.PreloadedListener preloadedListener, MraidEventsManager.MraidListener mraidInterface) {
+    public WebViewBase(
+            Context context,
+            String html,
+            int width,
+            int height,
+            PreloadManager.PreloadedListener preloadedListener,
+            MraidEventsManager.MraidListener mraidInterface
+    ) {
         super(context);
 
-        mWidth = width;
-        mHeight = height;
-        mAdHTML = html;
-        mPreloadedListener = preloadedListener;
-        mMraidListener = mraidInterface;
+        this.width = width;
+        this.height = height;
+        adHTML = html;
+        this.preloadedListener = preloadedListener;
+        mraidListener = mraidInterface;
         initWebView();
     }
 
     public WebViewBase(Context context, PreloadManager.PreloadedListener preloadedListener, MraidEventsManager.MraidListener mraidHelper) {
         super(context);
-        mPreloadedListener = preloadedListener;
-        mMraidListener = mraidHelper;
+        this.preloadedListener = preloadedListener;
+        mraidListener = mraidHelper;
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
-        mMraidListener.onAdWebViewWindowFocusChanged(hasWindowFocus);
+        mraidListener.onAdWebViewWindowFocusChanged(hasWindowFocus);
     }
 
     @Override
     public void startLoadingAssets() {
-        mMraidInterface.loading();
+        mraidInterface.loading();
     }
 
     @Override
     public void adAssetsLoaded() {
 
-        if (mIsMRAID) {
+        if (isMRAID) {
             getMRAIDInterface().prepareAndSendReady();
         }
 
-        if (mPreloadedListener != null) {
+        if (preloadedListener != null) {
 
-            mPreloadedListener.preloaded(this);
+            preloadedListener.preloaded(this);
         }
     }
 
     @Override
     public void notifyMraidScriptInjected() {
-        mIsMRAID = true;
+        isMRAID = true;
     }
 
     @Override
     public void destroy() {
         super.destroy();
-        mMraidInterface.destroy();
+        mraidInterface.destroy();
     }
 
     @Override
@@ -137,44 +145,43 @@ public class WebViewBase extends AdWebView implements AdAssetsLoadedListener {
          * ://stackoverflow.com/questions/2969949/cant-loadAdConfiguration-image-in-webview-
          * via-javascript
          * ***/
-        loadDataWithBaseURL(PrebidMobile.SCHEME_HTTPS + "://" + mDomain + "/", mAdHTML,
-                "text/html", "utf-8", null);
+        loadDataWithBaseURL(PrebidMobile.SCHEME_HTTPS + "://" + domain + "/", adHTML, "text/html", "utf-8", null);
     }
 
     public void setJSName(String name) {
-        mMRAIDBridgeName = name;
+        MRAIDBridgeName = name;
     }
 
     public String getJSName() {
-        return mMRAIDBridgeName;
+        return MRAIDBridgeName;
     }
 
     public MraidEventsManager.MraidListener getMraidListener() {
-        return mMraidListener;
+        return mraidListener;
     }
 
     public void setDialog(AdBaseDialog dialog) {
-        mDialog = dialog;
+        this.dialog = dialog;
     }
 
     public AdBaseDialog getDialog() {
-        return mDialog;
+        return dialog;
     }
 
     public boolean isClicked() {
-        return mIsClicked;
+        return isClicked;
     }
 
     public void setIsClicked(boolean isClicked) {
-        mIsClicked = isClicked;
+        this.isClicked = isClicked;
     }
 
     public PreloadManager.PreloadedListener getPreloadedListener() {
-        return mPreloadedListener;
+        return preloadedListener;
     }
 
     /**
-     * Initializes {@link #mContainsIFrame}. Sets true if <iframe> tag was found in html
+     * Initializes {@link #containsIFrame}. Sets true if <iframe> tag was found in html
      *
      * @param html html without injected {@link R.raw#omsdk_v1} NOTE: Without injected {@link R.raw#omsdk_v1}
      *             because {@link R.raw#omsdk_v1} contains <iframe>
@@ -182,14 +189,14 @@ public class WebViewBase extends AdWebView implements AdAssetsLoadedListener {
     public void initContainsIFrame(String html) {
         Pattern iframePattern = Pattern.compile(REGEX_IFRAME, Pattern.CASE_INSENSITIVE);
         Matcher matcher = iframePattern.matcher(html);
-        mContainsIFrame = matcher.find();
+        containsIFrame = matcher.find();
     }
 
     /**
      * @return true if html in {@link #initContainsIFrame(String)} contained <iframe>
      */
     public boolean containsIFrame() {
-        return mContainsIFrame;
+        return containsIFrame;
     }
 
     public ViewGroup getParentContainer() {
@@ -209,39 +216,39 @@ public class WebViewBase extends AdWebView implements AdAssetsLoadedListener {
     }
 
     public BaseJSInterface getMRAIDInterface() {
-        return mMraidInterface;
+        return mraidInterface;
     }
 
     public void setBaseJSInterface(BaseJSInterface mraid) {
-        mMraidInterface = mraid;
+        mraidInterface = mraid;
     }
 
     public void setAdWidth(int width) {
-        mWidth = width;
+        this.width = width;
     }
 
     public int getAdWidth() {
-        return mWidth;
+        return width;
     }
 
     public void setAdHeight(int height) {
-        mHeight = height;
+        this.height = height;
     }
 
     public int getAdHeight() {
-        return mHeight;
+        return height;
     }
 
     public boolean isMRAID() {
-        return mIsMRAID;
+        return isMRAID;
     }
 
     public void setTargetUrl(String targetUrl) {
-        mTargetUrl = targetUrl;
+        this.targetUrl = targetUrl;
     }
 
     public String getTargetUrl() {
-        return mTargetUrl;
+        return targetUrl;
     }
 
     public void initLoad() {
@@ -262,11 +269,11 @@ public class WebViewBase extends AdWebView implements AdAssetsLoadedListener {
         //adHTML = Utils.loadStringFromFile(getResources(), R.raw.testmraidfullad);
         // adHTML = Utils.loadStringFromFile(getResources(), R.raw.html);
 
-        mAdHTML = createAdHTML(mAdHTML);
+        adHTML = createAdHTML(adHTML);
     }
 
     public void sendClickCallBack(String url) {
-        post(() -> mMraidListener.openMraidExternalLink(url));
+        post(() -> mraidListener.openMraidExternalLink(url));
     }
 
     public boolean canHandleClick() {

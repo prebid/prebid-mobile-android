@@ -59,58 +59,58 @@ import java.lang.ref.WeakReference;
 
 @SuppressLint("NewApi")
 public class BaseJSInterface implements JSInterface {
+
     private static final String TAG = BaseJSInterface.class.getSimpleName();
 
-    @NonNull
-    private final WeakReference<Activity> mWeakActivity;
-    protected Context mContext;
-    protected WebViewBase mAdBaseView;
+    @NonNull private final WeakReference<Activity> weakActivity;
+    protected Context context;
+    protected WebViewBase adBaseView;
 
-    private final JsExecutor mJsExecutor;
-    private final DeviceVolumeObserver mDeviceVolumeObserver;
+    private final JsExecutor jsExecutor;
+    private final DeviceVolumeObserver deviceVolumeObserver;
 
-    private final MraidEvent mMraidEvent = new MraidEvent();
-    private final MraidVariableContainer mMraidVariableContainer = new MraidVariableContainer();
+    private final MraidEvent mraidEvent = new MraidEvent();
+    private final MraidVariableContainer mraidVariableContainer = new MraidVariableContainer();
 
     // An ad container, which contains the ad web view in default state, but is empty when expanded.
-    protected PrebidWebViewBase mDefaultAdContainer;
+    protected PrebidWebViewBase defaultAdContainer;
 
-    @NonNull
-    @VisibleForTesting
-    final MraidScreenMetrics mScreenMetrics;
-    @NonNull
-    final ScreenMetricsWaiter mScreenMetricsWaiter;
+    @NonNull @VisibleForTesting final MraidScreenMetrics screenMetrics;
+    @NonNull final ScreenMetricsWaiter screenMetricsWaiter;
 
-    private AsyncTask mRedirectedUrlAsyncTask;
-    private LayoutParams mDefaultLayoutParams;
+    private AsyncTask redirectedUrlAsyncTask;
+    private LayoutParams defaultLayoutParams;
 
-    private MraidOrientationBroadcastReceiver mOrientationBroadcastReceiver =
-        new MraidOrientationBroadcastReceiver(this);
+    private MraidOrientationBroadcastReceiver orientationBroadcastReceiver = new MraidOrientationBroadcastReceiver(this);
 
 
-    public BaseJSInterface(Context context, final WebViewBase adBaseView, JsExecutor jsExecutor) {
-        mContext = context;
-        mAdBaseView = adBaseView;
-        mJsExecutor = jsExecutor;
+    public BaseJSInterface(
+            Context context,
+            final WebViewBase adBaseView,
+            JsExecutor jsExecutor
+    ) {
+        this.context = context;
+        this.adBaseView = adBaseView;
+        this.jsExecutor = jsExecutor;
 
-        mJsExecutor.setMraidVariableContainer(mMraidVariableContainer);
+        this.jsExecutor.setMraidVariableContainer(mraidVariableContainer);
 
         if (context instanceof Activity) {
-            mWeakActivity = new WeakReference<>((Activity) context);
-        }
-        else {
-            mWeakActivity = new WeakReference<>(null);
+            weakActivity = new WeakReference<>((Activity) context);
+        } else {
+            weakActivity = new WeakReference<>(null);
         }
 
         //need this for all metric updates - DONOT do this here cos metric update happens in a thread & this js class may not
         //have been initiated by then.
-        mDefaultAdContainer = (PrebidWebViewBase) adBaseView.getPreloadedListener();
+        defaultAdContainer = (PrebidWebViewBase) adBaseView.getPreloadedListener();
 
-        mScreenMetrics = new MraidScreenMetrics(mContext, mContext.getResources().getDisplayMetrics().density);
-        mScreenMetricsWaiter = new ScreenMetricsWaiter();
-        mDeviceVolumeObserver = new DeviceVolumeObserver(mContext.getApplicationContext(),
-                                                         new Handler(Looper.getMainLooper()),
-                                                         mJsExecutor::executeAudioVolumeChange);
+        screenMetrics = new MraidScreenMetrics(this.context, this.context.getResources().getDisplayMetrics().density);
+        screenMetricsWaiter = new ScreenMetricsWaiter();
+        deviceVolumeObserver = new DeviceVolumeObserver(this.context.getApplicationContext(),
+                new Handler(Looper.getMainLooper()),
+                this.jsExecutor::executeAudioVolumeChange
+        );
     }
 
     @Override
@@ -118,7 +118,7 @@ public class BaseJSInterface implements JSInterface {
     public String getMaxSize() {
         JSONObject maxSize = new JSONObject();
         try {
-            final Rect currentMaxSizeRect = mScreenMetrics.getCurrentMaxSizeRect();
+            final Rect currentMaxSizeRect = screenMetrics.getCurrentMaxSizeRect();
             maxSize.put(JSON_WIDTH, currentMaxSizeRect.width());
             maxSize.put(JSON_HEIGHT, currentMaxSizeRect.height());
             return maxSize.toString();
@@ -152,7 +152,7 @@ public class BaseJSInterface implements JSInterface {
     public String getDefaultPosition() {
         JSONObject position = new JSONObject();
         try {
-            Rect rect = mScreenMetrics.getDefaultPosition();
+            Rect rect = screenMetrics.getDefaultPosition();
             position.put(JSON_X, (int) (rect.left / Utils.DENSITY));
             position.put(JSON_Y, (int) (rect.top / Utils.DENSITY));
             position.put(JSON_WIDTH, (int) (rect.right / Utils.DENSITY - rect.left / Utils.DENSITY));
@@ -172,7 +172,7 @@ public class BaseJSInterface implements JSInterface {
         JSONObject position = new JSONObject();
         Rect rect = new Rect();
 
-        mAdBaseView.getGlobalVisibleRect(rect);
+        adBaseView.getGlobalVisibleRect(rect);
 
         try {
             position.put(JSON_X, (int) (rect.left / Utils.DENSITY));
@@ -190,9 +190,9 @@ public class BaseJSInterface implements JSInterface {
     @Override
     @JavascriptInterface
     public void onOrientationPropertiesChanged(String properties) {
-        mMraidVariableContainer.setOrientationProperties(properties);
-        mMraidEvent.mraidAction = ACTION_ORIENTATION_CHANGE;
-        mMraidEvent.mraidActionHelper = properties;
+        mraidVariableContainer.setOrientationProperties(properties);
+        mraidEvent.mraidAction = ACTION_ORIENTATION_CHANGE;
+        mraidEvent.mraidActionHelper = properties;
 
         notifyMraidEventHandler();
     }
@@ -207,7 +207,7 @@ public class BaseJSInterface implements JSInterface {
     @Override
     @JavascriptInterface
     public void close() {
-        mMraidEvent.mraidAction = ACTION_CLOSE;
+        mraidEvent.mraidAction = ACTION_CLOSE;
         notifyMraidEventHandler();
     }
 
@@ -218,17 +218,16 @@ public class BaseJSInterface implements JSInterface {
         // passing this off to the MRAIDResize facade
         // trying to thin out this to make this
         // refactorable for the future
-        mMraidEvent.mraidAction = ACTION_RESIZE;
+        mraidEvent.mraidAction = ACTION_RESIZE;
 
-        if (mAdBaseView.isMRAID() && mOrientationBroadcastReceiver != null && mOrientationBroadcastReceiver.isOrientationChanged()) {
+        if (adBaseView.isMRAID() && orientationBroadcastReceiver != null && orientationBroadcastReceiver.isOrientationChanged()) {
             updateScreenMetricsAsync(this::notifyMraidEventHandler);
-        }
-        else {
+        } else {
             notifyMraidEventHandler();
         }
 
-        if (mAdBaseView.isMRAID() && mOrientationBroadcastReceiver != null) {
-            mOrientationBroadcastReceiver.setOrientationChanged(false);
+        if (adBaseView.isMRAID() && orientationBroadcastReceiver != null) {
+            orientationBroadcastReceiver.setOrientationChanged(false);
         }
     }
 
@@ -244,8 +243,8 @@ public class BaseJSInterface implements JSInterface {
     public void expand(final String url) {
         LogUtil.debug(TAG, "Expand with url: " + url);
 
-        mMraidEvent.mraidAction = ACTION_EXPAND;
-        mMraidEvent.mraidActionHelper = url;
+        mraidEvent.mraidAction = ACTION_EXPAND;
+        mraidEvent.mraidActionHelper = url;
 
         //call creative's api that handles all mraid events
         notifyMraidEventHandler();
@@ -254,10 +253,10 @@ public class BaseJSInterface implements JSInterface {
     @Override
     @JavascriptInterface
     public void open(String url) {
-        mAdBaseView.sendClickCallBack(url);
+        adBaseView.sendClickCallBack(url);
 
-        mMraidEvent.mraidAction = ACTION_OPEN;
-        mMraidEvent.mraidActionHelper = url;
+        mraidEvent.mraidAction = ACTION_OPEN;
+        mraidEvent.mraidActionHelper = url;
 
         notifyMraidEventHandler();
     }
@@ -265,7 +264,7 @@ public class BaseJSInterface implements JSInterface {
     @Override
     @JavascriptInterface
     public void javaScriptCallback(String handlerHash, String method, String value) {
-        HandlerQueueManager handlerQueueManager = mJsExecutor.getHandlerQueueManager();
+        HandlerQueueManager handlerQueueManager = jsExecutor.getHandlerQueueManager();
         Handler handler = handlerQueueManager.findHandler(handlerHash);
         if (handler != null) {
 
@@ -282,10 +281,10 @@ public class BaseJSInterface implements JSInterface {
     @Override
     @JavascriptInterface
     public void createCalendarEvent(String parameters) {
-        mAdBaseView.sendClickCallBack(parameters);
+        adBaseView.sendClickCallBack(parameters);
 
-        mMraidEvent.mraidAction = ACTION_CREATE_CALENDAR_EVENT;
-        mMraidEvent.mraidActionHelper = parameters;
+        mraidEvent.mraidAction = ACTION_CREATE_CALENDAR_EVENT;
+        mraidEvent.mraidActionHelper = parameters;
 
         notifyMraidEventHandler();
     }
@@ -293,10 +292,10 @@ public class BaseJSInterface implements JSInterface {
     @Override
     @JavascriptInterface
     public void storePicture(String url) {
-        mAdBaseView.sendClickCallBack(url);
+        adBaseView.sendClickCallBack(url);
 
-        mMraidEvent.mraidAction = ACTION_STORE_PICTURE;
-        mMraidEvent.mraidActionHelper = url;
+        mraidEvent.mraidAction = ACTION_STORE_PICTURE;
+        mraidEvent.mraidActionHelper = url;
 
         notifyMraidEventHandler();
     }
@@ -310,8 +309,8 @@ public class BaseJSInterface implements JSInterface {
     @Override
     @JavascriptInterface
     public void playVideo(String url) {
-        mMraidEvent.mraidAction = ACTION_PLAY_VIDEO;
-        mMraidEvent.mraidActionHelper = url;
+        mraidEvent.mraidAction = ACTION_PLAY_VIDEO;
+        mraidEvent.mraidActionHelper = url;
 
         notifyMraidEventHandler();
     }
@@ -320,7 +319,7 @@ public class BaseJSInterface implements JSInterface {
     @Deprecated
     @JavascriptInterface
     public void shouldUseCustomClose(String useCustomClose) {
-        mJsExecutor.executeNativeCallComplete();
+        jsExecutor.executeNativeCallComplete();
         LogUtil.debug(TAG, "Deprecated: useCustomClose was deprecated in MRAID 3");
     }
 
@@ -360,7 +359,7 @@ public class BaseJSInterface implements JSInterface {
         JSONObject deviceOrientationJson = new JSONObject();
         try {
             deviceOrientationJson.put(DEVICE_ORIENTATION, orientation);
-            deviceOrientationJson.put(DEVICE_ORIENTATION_LOCKED, deviceManager.isActivityOrientationLocked(mContext));
+            deviceOrientationJson.put(DEVICE_ORIENTATION_LOCKED, deviceManager.isActivityOrientationLocked(context));
             return deviceOrientationJson.toString();
         }
         catch (JSONException e) {
@@ -374,7 +373,7 @@ public class BaseJSInterface implements JSInterface {
     @JavascriptInterface
     public void unload() {
         LogUtil.debug(TAG, "unload called");
-        mMraidEvent.mraidAction = ACTION_UNLOAD;
+        mraidEvent.mraidAction = ACTION_UNLOAD;
         notifyMraidEventHandler();
     }
 
@@ -383,36 +382,36 @@ public class BaseJSInterface implements JSInterface {
             LogUtil.debug(TAG, "onStateChange failure. State is null");
             return;
         }
-        mOrientationBroadcastReceiver.setState(state);
-        updateScreenMetricsAsync(() -> mJsExecutor.executeStateChange(state));
+        orientationBroadcastReceiver.setState(state);
+        updateScreenMetricsAsync(() -> jsExecutor.executeStateChange(state));
     }
 
     public void handleScreenViewabilityChange(boolean isViewable) {
-        mJsExecutor.executeOnViewableChange(isViewable);
+        jsExecutor.executeOnViewableChange(isViewable);
 
         if (isViewable) {
-            mDeviceVolumeObserver.start();
+            deviceVolumeObserver.start();
         }
         else {
-            mDeviceVolumeObserver.stop();
-            mJsExecutor.executeAudioVolumeChange(null);
+            deviceVolumeObserver.stop();
+            jsExecutor.executeAudioVolumeChange(null);
         }
     }
 
     public MraidVariableContainer getMraidVariableContainer() {
-        return mMraidVariableContainer;
+        return mraidVariableContainer;
     }
 
     public MraidScreenMetrics getScreenMetrics() {
-        return mScreenMetrics;
+        return screenMetrics;
     }
 
     public PrebidWebViewBase getDefaultAdContainer() {
-        return mDefaultAdContainer;
+        return defaultAdContainer;
     }
 
     public void onError(String message, String action) {
-        mJsExecutor.executeOnError(message, action);
+        jsExecutor.executeOnError(message, action);
     }
 
     public void followToOriginalUrl(String url, final RedirectUrlListener listener) {
@@ -424,44 +423,41 @@ public class BaseJSInterface implements JSInterface {
         params.userAgent = AppInfoManager.getUserAgent();
 
         GetOriginalUrlTask redirectTask = new GetOriginalUrlTask(new OriginalUrlResponseCallBack(listener));
-        mRedirectedUrlAsyncTask = redirectTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+        redirectedUrlAsyncTask = redirectTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
     }
 
     public void setDefaultLayoutParams(LayoutParams originalParentLayoutParams) {
-        mDefaultLayoutParams = originalParentLayoutParams;
+        defaultLayoutParams = originalParentLayoutParams;
     }
 
     public LayoutParams getDefaultLayoutParams() {
-        return mDefaultLayoutParams;
+        return defaultLayoutParams;
     }
 
     public ViewGroup getRootView() {
-        final View bestRootView = Views.getTopmostView(mWeakActivity.get(),
-                                                       mDefaultAdContainer);
-        return bestRootView instanceof ViewGroup
-               ? (ViewGroup) bestRootView
-               : mDefaultAdContainer;
+        final View bestRootView = Views.getTopmostView(weakActivity.get(), defaultAdContainer);
+        return bestRootView instanceof ViewGroup ? (ViewGroup) bestRootView : defaultAdContainer;
     }
 
     public JsExecutor getJsExecutor() {
-        return mJsExecutor;
+        return jsExecutor;
     }
 
     public void loading() {
-        mJsExecutor.loading();
+        jsExecutor.loading();
     }
 
     public void onReadyExpanded() {
-        if (mAdBaseView != null) {
+        if (adBaseView != null) {
             Rect defaultPosition = new Rect();
-            mAdBaseView.getGlobalVisibleRect(defaultPosition);
-            mScreenMetrics.setDefaultPosition(defaultPosition);
+            adBaseView.getGlobalVisibleRect(defaultPosition);
+            screenMetrics.setDefaultPosition(defaultPosition);
             supports(MraidVariableContainer.getDisabledFlags());
 
             updateScreenMetricsAsync(() -> {
                 LogUtil.debug(TAG, "MRAID OnReadyExpanded Fired");
-                mJsExecutor.executeStateChange(STATE_EXPANDED);
-                mJsExecutor.executeOnReadyExpanded();
+                jsExecutor.executeStateChange(STATE_EXPANDED);
+                jsExecutor.executeOnReadyExpanded();
             });
         }
     }
@@ -475,16 +471,16 @@ public class BaseJSInterface implements JSInterface {
          * This means we should set the expandProperties with the screen width
          * and height immediately upon prepareAndSendReady.
          */
-        if (mAdBaseView != null && mScreenMetrics.getDefaultPosition() == null) {
+        if (adBaseView != null && screenMetrics.getDefaultPosition() == null) {
             Rect defaultPosition = new Rect();
 
-            mAdBaseView.getGlobalVisibleRect(defaultPosition);
-            mScreenMetrics.setDefaultPosition(defaultPosition);
+            adBaseView.getGlobalVisibleRect(defaultPosition);
+            screenMetrics.setDefaultPosition(defaultPosition);
             registerReceiver();
 
-            mJsExecutor.executeDisabledFlags(MraidVariableContainer.getDisabledFlags());
-            mJsExecutor.executeStateChange(STATE_DEFAULT);
-            mJsExecutor.executeOnReady();
+            jsExecutor.executeDisabledFlags(MraidVariableContainer.getDisabledFlags());
+            jsExecutor.executeStateChange(STATE_DEFAULT);
+            jsExecutor.executeOnReady();
         }
     }
 
@@ -495,93 +491,86 @@ public class BaseJSInterface implements JSInterface {
     public void updateScreenMetricsAsync(
         @Nullable
         final Runnable successRunnable) {
-        if (mAdBaseView == null) {
+        if (adBaseView == null) {
             return;
         }
-        mDefaultAdContainer = (PrebidWebViewBase) mAdBaseView.getPreloadedListener();
+        defaultAdContainer = (PrebidWebViewBase) adBaseView.getPreloadedListener();
         // Determine which web view should be used for the current ad position
 
-        LogUtil.debug(TAG, "updateMetrics()  Width: " + mAdBaseView.getWidth() + " Height: " + mAdBaseView.getHeight());
+        LogUtil.debug(TAG, "updateMetrics()  Width: " + adBaseView.getWidth() + " Height: " + adBaseView.getHeight());
         // Wait for the next draw pass on the default ad container and current web view
 
-        mScreenMetricsWaiter.queueMetricsRequest(() -> {
+        screenMetricsWaiter.queueMetricsRequest(() -> {
 
-            if (mContext != null) {
-                DisplayMetrics displayMetrics = mContext.getResources().getDisplayMetrics();
-                mScreenMetrics.setScreenSize(
-                    displayMetrics.widthPixels, displayMetrics.heightPixels);
+            if (context != null) {
+                DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+                screenMetrics.setScreenSize(displayMetrics.widthPixels, displayMetrics.heightPixels);
             }
 
             int[] location = new int[2];
             View rootView = getRootView();
             if (rootView != null) {
                 rootView.getLocationOnScreen(location);
-                mScreenMetrics.setRootViewPosition(location[0], location[1],
-                                                   rootView.getWidth(),
-                                                   rootView.getHeight());
+                screenMetrics.setRootViewPosition(location[0], location[1], rootView.getWidth(), rootView.getHeight());
             }
 
-            mAdBaseView.getLocationOnScreen(location);
-            mScreenMetrics.setCurrentAdPosition(location[0], location[1],
-                                                mAdBaseView.getWidth(),
-                                                mAdBaseView.getHeight());
+            adBaseView.getLocationOnScreen(location);
+            screenMetrics.setCurrentAdPosition(location[0], location[1], adBaseView.getWidth(), adBaseView.getHeight());
 
-            mDefaultAdContainer.getLocationOnScreen(location);
+            defaultAdContainer.getLocationOnScreen(location);
 
-            mScreenMetrics.setDefaultAdPosition(location[0], location[1],
-                                                mDefaultAdContainer.getWidth(),
-                                                mDefaultAdContainer.getHeight());
+            screenMetrics.setDefaultAdPosition(location[0],
+                    location[1],
+                    defaultAdContainer.getWidth(),
+                    defaultAdContainer.getHeight()
+            );
 
             notifyScreenMetricsChanged();
 
             if (successRunnable != null) {
                 successRunnable.run();
             }
-            mScreenMetricsWaiter.finishAndStartNextRequest();
-        }, successRunnable != null, mDefaultAdContainer, mAdBaseView);
+            screenMetricsWaiter.finishAndStartNextRequest();
+        }, successRunnable != null, defaultAdContainer, adBaseView);
     }
 
     public void destroy() {
-        mScreenMetricsWaiter.cancelPendingRequests();
-        mOrientationBroadcastReceiver.unregister();
-        mDeviceVolumeObserver.stop();
+        screenMetricsWaiter.cancelPendingRequests();
+        orientationBroadcastReceiver.unregister();
+        deviceVolumeObserver.stop();
 
-        if (mRedirectedUrlAsyncTask != null) {
-            mRedirectedUrlAsyncTask.cancel(true);
+        if (redirectedUrlAsyncTask != null) {
+            redirectedUrlAsyncTask.cancel(true);
         }
 
         // Remove all ad containers from view hierarchy
-        Views.removeFromParent(mDefaultAdContainer);
+        Views.removeFromParent(defaultAdContainer);
 
-        mContext = null;
+        context = null;
     }
 
     protected void notifyScreenMetricsChanged() {
-        final Rect rootViewRectDips = mScreenMetrics.getRootViewRectDips();
+        final Rect rootViewRectDips = screenMetrics.getRootViewRectDips();
 
-        mScreenMetrics.setCurrentMaxSizeRect(rootViewRectDips);
+        screenMetrics.setCurrentMaxSizeRect(rootViewRectDips);
 
-        mJsExecutor.executeSetScreenSize(mScreenMetrics.getScreenRectDips());
-        mJsExecutor.executeSetMaxSize(rootViewRectDips);
-        mJsExecutor.executeSetCurrentPosition(mScreenMetrics.getCurrentAdRectDips());
-        mJsExecutor.executeSetDefaultPosition(mScreenMetrics.getDefaultAdRectDips());
+        jsExecutor.executeSetScreenSize(screenMetrics.getScreenRectDips());
+        jsExecutor.executeSetMaxSize(rootViewRectDips);
+        jsExecutor.executeSetCurrentPosition(screenMetrics.getCurrentAdRectDips());
+        jsExecutor.executeSetDefaultPosition(screenMetrics.getDefaultAdRectDips());
 
-        mJsExecutor.executeOnSizeChange(mScreenMetrics.getCurrentAdRect());
+        jsExecutor.executeOnSizeChange(screenMetrics.getCurrentAdRect());
     }
 
     private void notifyMraidEventHandler() {
-        mOrientationBroadcastReceiver.setMraidAction(mMraidEvent.mraidAction);
-        HTMLCreative htmlCreative = ((PrebidWebViewBase) mAdBaseView.getPreloadedListener())
-            .getCreative();
-        mAdBaseView.post(new MraidEventHandlerNotifierRunnable(htmlCreative,
-                                                               mAdBaseView,
-                                                               mMraidEvent,
-                                                               mJsExecutor));
+        orientationBroadcastReceiver.setMraidAction(mraidEvent.mraidAction);
+        HTMLCreative htmlCreative = ((PrebidWebViewBase) adBaseView.getPreloadedListener()).getCreative();
+        adBaseView.post(new MraidEventHandlerNotifierRunnable(htmlCreative, adBaseView, mraidEvent, jsExecutor));
     }
 
     private void registerReceiver() {
-        if (mAdBaseView.isMRAID()) {
-            mOrientationBroadcastReceiver.register(mContext);
+        if (adBaseView.isMRAID()) {
+            orientationBroadcastReceiver.register(context);
         }
     }
 }

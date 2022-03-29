@@ -21,22 +21,22 @@ package org.prebid.mobile.rendering.networking.exception;
  */
 public class BaseExceptionHolder extends BaseExceptionProvider {
 
-    private Exception mException;
+    private Exception exception;
 
     public BaseExceptionHolder() {
         // Create without exception
     }
 
     public BaseExceptionHolder(Exception exception) {
-        mException = exception;
+        this.exception = exception;
     }
 
     public void setException(Exception exception) {
-        mException = exception;
+        this.exception = exception;
     }
 
     @Override
     public Exception getException() {
-        return mException;
+        return exception;
     }
 }

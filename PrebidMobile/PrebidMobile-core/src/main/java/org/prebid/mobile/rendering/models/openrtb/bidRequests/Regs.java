@@ -22,20 +22,20 @@ import org.json.JSONObject;
 public class Regs extends BaseBid {
 
     public Integer coppa = null;
-    private Ext mExt = null;
+    private Ext ext = null;
 
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
 
         toJSON(jsonObject, "coppa", this.coppa);
-        toJSON(jsonObject, "ext", (mExt != null) ? mExt.getJsonObject() : null);
+        toJSON(jsonObject, "ext", (ext != null) ? ext.getJsonObject() : null);
         return jsonObject;
     }
 
     public Ext getExt() {
-        if (mExt == null) {
-            mExt = new Ext();
+        if (ext == null) {
+            ext = new Ext();
         }
-        return mExt;
+        return ext;
     }
 }

@@ -24,14 +24,13 @@ import org.prebid.mobile.rendering.utils.constants.IntentActions;
 
 public class EventForwardingLocalBroadcastReceiver extends BaseLocalBroadcastReceiver {
 
-    @NonNull
-    private final EventForwardingBroadcastListener mListener;
+    @NonNull private final EventForwardingBroadcastListener listener;
 
     public EventForwardingLocalBroadcastReceiver(long broadcastId,
                                                  @NonNull
                                                      EventForwardingBroadcastListener listener) {
         super(broadcastId);
-        mListener = listener;
+        this.listener = listener;
     }
 
     @Override
@@ -41,7 +40,7 @@ public class EventForwardingLocalBroadcastReceiver extends BaseLocalBroadcastRec
         }
 
         final String action = intent.getAction();
-        mListener.onEvent(action);
+        listener.onEvent(action);
     }
 
     @NonNull

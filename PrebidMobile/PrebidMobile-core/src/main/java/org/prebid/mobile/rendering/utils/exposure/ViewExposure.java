@@ -22,24 +22,28 @@ import java.util.List;
 
 public class ViewExposure {
 
-    private float mExposurePercentage;
-    private Rect mVisibleRectangle;
-    private List<Rect> mOcclusionRectangleList;
+    private float exposurePercentage;
+    private Rect visibleRectangle;
+    private List<Rect> occlusionRectangleList;
 
-    public ViewExposure(float exposurePercentage, Rect visibleRectangle, List<Rect> occlusionRectangleList) {
-        mExposurePercentage = exposurePercentage;
-        mVisibleRectangle = visibleRectangle;
-        mOcclusionRectangleList = occlusionRectangleList;
+    public ViewExposure(
+            float exposurePercentage,
+            Rect visibleRectangle,
+            List<Rect> occlusionRectangleList
+    ) {
+        this.exposurePercentage = exposurePercentage;
+        this.visibleRectangle = visibleRectangle;
+        this.occlusionRectangleList = occlusionRectangleList;
     }
 
     public ViewExposure() {
-        mExposurePercentage = 0.0f;
-        mVisibleRectangle = new Rect();
-        mOcclusionRectangleList = null;
+        exposurePercentage = 0.0f;
+        visibleRectangle = new Rect();
+        occlusionRectangleList = null;
     }
 
     public float getExposurePercentage() {
-        return mExposurePercentage;
+        return exposurePercentage;
     }
 
     @Override
@@ -53,49 +57,58 @@ public class ViewExposure {
 
         ViewExposure that = (ViewExposure) o;
 
-        if (Float.compare(that.mExposurePercentage, mExposurePercentage) != 0) {
+        if (Float.compare(that.exposurePercentage, exposurePercentage) != 0) {
             return false;
         }
-        if (mVisibleRectangle != null
-            ? !mVisibleRectangle.equals(that.mVisibleRectangle)
-            : that.mVisibleRectangle != null) {
+        if (visibleRectangle != null ? !visibleRectangle.equals(that.visibleRectangle) : that.visibleRectangle != null) {
             return false;
         }
-        return mOcclusionRectangleList != null
-               ? mOcclusionRectangleList.equals(that.mOcclusionRectangleList)
-               : that.mOcclusionRectangleList == null;
+        return occlusionRectangleList != null ? occlusionRectangleList.equals(that.occlusionRectangleList) : that.occlusionRectangleList == null;
     }
 
     @Override
     public int hashCode() {
-        int result = (mExposurePercentage != +0.0f ? Float.floatToIntBits(mExposurePercentage) : 0);
-        result = 31 * result + (mVisibleRectangle != null ? mVisibleRectangle.hashCode() : 0);
-        result = 31 * result + (mOcclusionRectangleList != null
-                                ? mOcclusionRectangleList.hashCode()
-                                : 0);
+        int result = (exposurePercentage != +0.0f ? Float.floatToIntBits(exposurePercentage) : 0);
+        result = 31 * result + (visibleRectangle != null ? visibleRectangle.hashCode() : 0);
+        result = 31 * result + (occlusionRectangleList != null ? occlusionRectangleList.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("{")
-               .append("\"exposedPercentage\":").append(mExposurePercentage * 100).append(",");
+        builder.append("{").append("\"exposedPercentage\":").append(exposurePercentage * 100).append(",");
         builder.append("\"visibleRectangle\":{")
-               .append("\"x\":").append(mVisibleRectangle.left).append(",")
-               .append("\"y\":").append(mVisibleRectangle.top).append(",")
-               .append("\"width\":").append(mVisibleRectangle.width()).append(",")
-               .append("\"height\":").append(mVisibleRectangle.height()).append("}");
-        if (mOcclusionRectangleList != null && !mOcclusionRectangleList.isEmpty()) {
+               .append("\"x\":")
+               .append(visibleRectangle.left)
+               .append(",")
+               .append("\"y\":")
+               .append(visibleRectangle.top)
+               .append(",")
+               .append("\"width\":")
+               .append(visibleRectangle.width())
+               .append(",")
+               .append("\"height\":")
+               .append(visibleRectangle.height())
+               .append("}");
+        if (occlusionRectangleList != null && !occlusionRectangleList.isEmpty()) {
             builder.append(", \"occlusionRectangles\":[");
-            for (int i = 0; i < mOcclusionRectangleList.size(); i++) {
-                Rect currentRect = mOcclusionRectangleList.get(i);
+            for (int i = 0; i < occlusionRectangleList.size(); i++) {
+                Rect currentRect = occlusionRectangleList.get(i);
                 builder.append("{")
-                       .append("\"x\":").append(currentRect.left).append(",")
-                       .append("\"y\":").append(currentRect.top).append(",")
-                       .append("\"width\":").append(currentRect.width()).append(",")
-                       .append("\"height\":").append(currentRect.height()).append("}");
-                if (i < mOcclusionRectangleList.size() - 1) {
+                       .append("\"x\":")
+                       .append(currentRect.left)
+                       .append(",")
+                       .append("\"y\":")
+                       .append(currentRect.top)
+                       .append(",")
+                       .append("\"width\":")
+                       .append(currentRect.width())
+                       .append(",")
+                       .append("\"height\":")
+                       .append(currentRect.height())
+                       .append("}");
+                if (i < occlusionRectangleList.size() - 1) {
                     builder.append(",");
                 }
             }

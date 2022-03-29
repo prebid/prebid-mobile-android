@@ -21,23 +21,22 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
-public class AdParameters extends VASTParserBase
-{
-    private final String mXmlEncoded;
-    private String mValue;
+public class AdParameters extends VASTParserBase {
 
-	public AdParameters(XmlPullParser p) throws XmlPullParserException, IOException
-	{
+    private final String xmlEncoded;
+    private String value;
 
-        mXmlEncoded = p.getAttributeValue(null, "xmlEncoded");
-        mValue = readText(p);
+    public AdParameters(XmlPullParser p) throws XmlPullParserException, IOException {
+
+        xmlEncoded = p.getAttributeValue(null, "xmlEncoded");
+        value = readText(p);
     }
 
     public String getXmlEncoded() {
-        return mXmlEncoded;
+        return xmlEncoded;
     }
 
     public String getValue() {
-        return mValue;
+        return value;
 	}
 }

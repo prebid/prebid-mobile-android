@@ -20,16 +20,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class StoredRequest {
-    private String mId;
+    private String id;
 
     public StoredRequest(String id) {
-        mId = id;
+        this.id = id;
     }
 
     public JSONObject toJSONObject() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("id", mId);
+            jsonObject.put("id", id);
         }
         catch (JSONException e) {
             e.printStackTrace();

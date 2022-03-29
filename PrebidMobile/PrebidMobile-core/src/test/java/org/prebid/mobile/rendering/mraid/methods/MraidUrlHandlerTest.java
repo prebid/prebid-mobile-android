@@ -41,23 +41,23 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class MraidUrlHandlerTest {
 
-    private MraidUrlHandler mMraidUrlHandler;
+    private MraidUrlHandler mraidUrlHandler;
 
-    private BaseJSInterface mMockBaseJsInterface;
-    private Context mMockContext;
-    private WebViewBase mMockWebViewBase;
-    private UrlHandler mMockUrlHandler;
+    private BaseJSInterface mockBaseJsInterface;
+    private Context mockContext;
+    private WebViewBase mockWebViewBase;
+    private UrlHandler mockUrlHandler;
 
     @Before
     public void setup() {
-        mMockContext = mock(Context.class);
-        mMockBaseJsInterface = mock(BaseJSInterface.class);
-        mMockWebViewBase = mock(WebViewBase.class);
-        mMockUrlHandler = mock(UrlHandler.class);
+        mockContext = mock(Context.class);
+        mockBaseJsInterface = mock(BaseJSInterface.class);
+        mockWebViewBase = mock(WebViewBase.class);
+        mockUrlHandler = mock(UrlHandler.class);
 
-        mMraidUrlHandler = spy(new MraidUrlHandler(mMockContext, mMockBaseJsInterface));
+        mraidUrlHandler = spy(new MraidUrlHandler(mockContext, mockBaseJsInterface));
 
-        when(mMraidUrlHandler.createUrlHandler(anyInt())).thenReturn(mMockUrlHandler);
+        when(mraidUrlHandler.createUrlHandler(anyInt())).thenReturn(mockUrlHandler);
     }
 
     @Test
@@ -68,19 +68,22 @@ public class MraidUrlHandlerTest {
             listener.onSuccess(invocation.getArgument(0), "html");
 
             return null;
-        }).when(mMockBaseJsInterface).followToOriginalUrl(anyString(), any(RedirectUrlListener.class));
+        }).when(mockBaseJsInterface).followToOriginalUrl(anyString(), any(RedirectUrlListener.class));
         PackageManager mockPackageManager = mock(PackageManager.class);
-        when(mMockContext.getApplicationContext()).thenReturn(mMockContext);
-        when(mMockContext.getPackageManager()).thenReturn(mockPackageManager);
-        when(mockPackageManager.queryIntentActivities(any(Intent.class), eq(PackageManager.MATCH_DEFAULT_ONLY))).thenReturn(new ArrayList<>());
+        when(mockContext.getApplicationContext()).thenReturn(mockContext);
+        when(mockContext.getPackageManager()).thenReturn(mockPackageManager);
+        when(mockPackageManager.queryIntentActivities(
+                any(Intent.class),
+                eq(PackageManager.MATCH_DEFAULT_ONLY)
+        )).thenReturn(new ArrayList<>());
 
-        mMraidUrlHandler.open("http:", -1);
-        verify(mMockUrlHandler).handleUrl(mMockContext, "http:", null, true);
+        mraidUrlHandler.open("http:", -1);
+        verify(mockUrlHandler).handleUrl(mockContext, "http:", null, true);
     }
 
     @Test
     public void destroyTest() {
-        mMraidUrlHandler.destroy();
-        verify(mMockBaseJsInterface).destroy();
+        mraidUrlHandler.destroy();
+        verify(mockBaseJsInterface).destroy();
     }
 }

@@ -42,21 +42,22 @@ import org.prebid.mobile.rendering.views.webview.mraid.Views;
 import java.lang.ref.WeakReference;
 
 public class MraidResize {
+
     private static final String TAG = "Resize";
     private static final int GRAVITY_TOP_RIGHT = Gravity.TOP | Gravity.RIGHT;
 
-    private final FrameLayout mSecondaryAdContainer;
+    private final FrameLayout secondaryAdContainer;
 
-    private WeakReference<Context> mContextReference;
-    private WebViewBase mAdBaseView;
-    private BaseJSInterface mJsInterface;
-    private InterstitialManager mInterstitialManager;
+    private WeakReference<Context> contextReference;
+    private WebViewBase adBaseView;
+    private BaseJSInterface jsInterface;
+    private InterstitialManager interstitialManager;
 
-    private View mCloseView;
+    private View closeView;
 
-    private MraidScreenMetrics mScreenMetrics;
+    private MraidScreenMetrics screenMetrics;
 
-    private final FetchPropertiesHandler.FetchPropertyCallback mFetchPropertyCallback = new FetchPropertiesHandler.FetchPropertyCallback() {
+    private final FetchPropertiesHandler.FetchPropertyCallback fetchPropertyCallback = new FetchPropertiesHandler.FetchPropertyCallback() {
         @Override
         public void onResult(String propertyJson) {
             handleResizePropertiesResult(propertyJson);
@@ -72,93 +73,95 @@ public class MraidResize {
                        BaseJSInterface jsInterface,
                        WebViewBase adBaseView,
                        InterstitialManager interstitialManager) {
-        mContextReference = new WeakReference<>(context);
-        mAdBaseView = adBaseView;
-        mJsInterface = jsInterface;
-        mInterstitialManager = interstitialManager;
-        mSecondaryAdContainer = new FrameLayout(mContextReference.get());
-        mSecondaryAdContainer.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                                                           ViewGroup.LayoutParams.MATCH_PARENT));
+        contextReference = new WeakReference<>(context);
+        this.adBaseView = adBaseView;
+        this.jsInterface = jsInterface;
+        this.interstitialManager = interstitialManager;
+        secondaryAdContainer = new FrameLayout(contextReference.get());
+        secondaryAdContainer.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
         initCloseView();
     }
 
     public void resize() {
-        final String state = mJsInterface.getMraidVariableContainer().getCurrentState();
+        final String state = jsInterface.getMraidVariableContainer().getCurrentState();
         if (isContainerStateInvalid(state)) {
             LogUtil.debug(TAG, "resize: Skipping. Wrong container state: " + state);
             return;
-        }
-        else if (state.equals(JSInterface.STATE_EXPANDED)) {
-            mJsInterface.onError("resize_when_expanded_error", JSInterface.ACTION_RESIZE);
+        } else if (state.equals(JSInterface.STATE_EXPANDED)) {
+            jsInterface.onError("resize_when_expanded_error", JSInterface.ACTION_RESIZE);
             return;
         }
 
-        mJsInterface.setDefaultLayoutParams(mAdBaseView.getLayoutParams());
-        mJsInterface.getJsExecutor().executeGetResizeProperties(new FetchPropertiesHandler(mFetchPropertyCallback));
+        jsInterface.setDefaultLayoutParams(adBaseView.getLayoutParams());
+        jsInterface.getJsExecutor().executeGetResizeProperties(new FetchPropertiesHandler(fetchPropertyCallback));
     }
 
     public void destroy() {
-        if (mJsInterface != null) {
-            Views.removeFromParent(mSecondaryAdContainer);
-            Views.removeFromParent(mJsInterface.getDefaultAdContainer());
+        if (jsInterface != null) {
+            Views.removeFromParent(secondaryAdContainer);
+            Views.removeFromParent(jsInterface.getDefaultAdContainer());
         }
     }
 
     private void initCloseView() {
-        mCloseView = Utils.createCloseView(mContextReference.get());
+        closeView = Utils.createCloseView(contextReference.get());
 
-        if (mCloseView == null) {
+        if (closeView == null) {
             LogUtil.error(TAG, "Error initializing close view. Close view is null");
             return;
         }
-        mAdBaseView.post(() -> {
-            if (mCloseView instanceof ImageView) {
-                ((ImageView) mCloseView).setImageResource(android.R.color.transparent);
+        adBaseView.post(() -> {
+            if (closeView instanceof ImageView) {
+                ((ImageView) closeView).setImageResource(android.R.color.transparent);
             }
         });
 
-        mCloseView.setOnClickListener(v -> closeView());
+        closeView.setOnClickListener(v -> closeView());
     }
 
     private void showExpandDialog(final int widthDips, final int heightDips, final int offsetXDips,
                                   final int offsetYDips,
                                   final boolean allowOffscreen) {
-        mScreenMetrics = mJsInterface.getScreenMetrics();
-        mAdBaseView.post((() -> {
-                             try {
-                                 if (mAdBaseView == null) {
-                                     LogUtil.error(TAG, "Resize failed. Webview is null");
-                                     mJsInterface.onError("Unable to resize after webview is destroyed", JSInterface.ACTION_RESIZE);
-                                     return;
-                                 }
-                                 Context context = mContextReference.get();
-                                 if (context == null) {
-                                     LogUtil.error(TAG, "Resize failed. Context is null");
-                                     mJsInterface.onError("Unable to resize when mContext is null", JSInterface.ACTION_RESIZE);
-                                     return;
-                                 }
-                                 // Translate coordinates to px and get the resize rect
-                                 Rect resizeRect = getResizeRect(widthDips, heightDips, offsetXDips, offsetYDips, allowOffscreen);
-                                 if (resizeRect == null) {
-                                     return;
-                                 }
+        screenMetrics = jsInterface.getScreenMetrics();
+        adBaseView.post((() -> {
+            try {
+                if (adBaseView == null) {
+                    LogUtil.error(TAG, "Resize failed. Webview is null");
+                    jsInterface.onError("Unable to resize after webview is destroyed", JSInterface.ACTION_RESIZE);
+                    return;
+                }
+                Context context = contextReference.get();
+                if (context == null) {
+                    LogUtil.error(TAG, "Resize failed. Context is null");
+                    jsInterface.onError("Unable to resize when context is null", JSInterface.ACTION_RESIZE);
+                    return;
+                }
+                // Translate coordinates to px and get the resize rect
+                Rect resizeRect = getResizeRect(widthDips, heightDips, offsetXDips, offsetYDips, allowOffscreen);
+                if (resizeRect == null) {
+                    return;
+                }
 
-                                 // Put the ad in the closeable container and resize it
-                                 FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(resizeRect.width(), resizeRect.height());
-                                 layoutParams.leftMargin = resizeRect.left - mScreenMetrics.getRootViewRect().left;
-                                 layoutParams.topMargin = resizeRect.top - mScreenMetrics.getRootViewRect().top;
+                // Put the ad in the closeable container and resize it
+                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                        resizeRect.width(),
+                        resizeRect.height()
+                );
+                layoutParams.leftMargin = resizeRect.left - screenMetrics.getRootViewRect().left;
+                layoutParams.topMargin = resizeRect.top - screenMetrics.getRootViewRect().top;
 
-                                 final String state = mJsInterface.getMraidVariableContainer().getCurrentState();
-                                 if (JSInterface.STATE_DEFAULT.equals(state)) {
-                                     handleDefaultStateResize(layoutParams);
-                                 }
-                                 else if (JSInterface.STATE_RESIZED.equals(state)) {
-                                     mSecondaryAdContainer.setLayoutParams(layoutParams);
-                                 }
+                final String state = jsInterface.getMraidVariableContainer().getCurrentState();
+                if (JSInterface.STATE_DEFAULT.equals(state)) {
+                    handleDefaultStateResize(layoutParams);
+                } else if (JSInterface.STATE_RESIZED.equals(state)) {
+                    secondaryAdContainer.setLayoutParams(layoutParams);
+                }
 
-                                 mJsInterface.onStateChange(JSInterface.STATE_RESIZED);
-                                 mInterstitialManager.interstitialDialogShown(mSecondaryAdContainer);
-                             }
+                jsInterface.onStateChange(JSInterface.STATE_RESIZED);
+                interstitialManager.interstitialDialogShown(secondaryAdContainer);
+            }
                              catch (Exception e) {
                                  LogUtil.error(TAG, "Resize failed: " + Log.getStackTraceString(e));
                              }
@@ -170,45 +173,48 @@ public class MraidResize {
         ViewGroup adBaseViewParent = null;
 
         //remove from default container and add it to webAdContainer
-        if (mAdBaseView.getParent().equals(mJsInterface.getDefaultAdContainer())) {
-            mJsInterface.getDefaultAdContainer().removeView(mAdBaseView);
-        }
-        else {
+        if (adBaseView.getParent().equals(jsInterface.getDefaultAdContainer())) {
+            jsInterface.getDefaultAdContainer().removeView(adBaseView);
+        } else {
             //This should never happen though!
             //Because, if resize is called, that would mean, it's parent is always a defaultAdContainer(for banner state of the ad)
             //Hence, the previous if block should suffice.
             //But adding it to fix any crash, if above is not the case.
-            adBaseViewParent = mAdBaseView.getParentContainer();
-            Views.removeFromParent(mAdBaseView);
+            adBaseViewParent = adBaseView.getParentContainer();
+            Views.removeFromParent(adBaseView);
         }
-        mJsInterface.getDefaultAdContainer().setVisibility(View.INVISIBLE);
+        jsInterface.getDefaultAdContainer().setVisibility(View.INVISIBLE);
 
         initSecondaryAdContainer();
 
         //Add webAdContainer to the viewgroup for later use.
         if (adBaseViewParent != null) {
-            adBaseViewParent.addView(mSecondaryAdContainer, layoutParams);
+            adBaseViewParent.addView(secondaryAdContainer, layoutParams);
         }
         else {
-            ViewGroup view = mJsInterface.getRootView();
-            view.addView(mSecondaryAdContainer, layoutParams);
+            ViewGroup view = jsInterface.getRootView();
+            view.addView(secondaryAdContainer, layoutParams);
         }
     }
 
     private void initSecondaryAdContainer() {
-        if (mSecondaryAdContainer.getParent() != null) {
-            Views.removeFromParent(mSecondaryAdContainer);
+        if (secondaryAdContainer.getParent() != null) {
+            Views.removeFromParent(secondaryAdContainer);
         }
 
-        mSecondaryAdContainer.removeAllViews();
-        mSecondaryAdContainer.addView(mAdBaseView,
-                                      new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        secondaryAdContainer.removeAllViews();
+        secondaryAdContainer.addView(adBaseView,
+                new FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT
+                )
+        );
 
-        mSecondaryAdContainer.addView(mCloseView);
+        secondaryAdContainer.addView(closeView);
 
-        mSecondaryAdContainer.setFocusableInTouchMode(true);
-        mSecondaryAdContainer.requestFocus();
-        mSecondaryAdContainer.setOnKeyListener((view, keyCode, keyEvent) -> {
+        secondaryAdContainer.setFocusableInTouchMode(true);
+        secondaryAdContainer.requestFocus();
+        secondaryAdContainer.setOnKeyListener((view, keyCode, keyEvent) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
                 closeView();
                 return true;
@@ -218,33 +224,36 @@ public class MraidResize {
     }
 
     private void closeView() {
-        MraidClose mraidClose = new MraidClose(mAdBaseView.getContext(), mJsInterface, mAdBaseView);
+        MraidClose mraidClose = new MraidClose(adBaseView.getContext(), jsInterface, adBaseView);
         mraidClose.closeThroughJS();
-        mInterstitialManager.interstitialClosed(mAdBaseView);
+        interstitialManager.interstitialClosed(adBaseView);
     }
 
     private Rect getResizeRect(int widthDips, int heightDips, int offsetXDips, int offsetYDips, boolean allowOffscreen) {
-        Context context = mContextReference.get();
+        Context context = contextReference.get();
         if (context == null) {
-            mJsInterface.onError("Context is null", JSInterface.ACTION_RESIZE);
+            jsInterface.onError("Context is null", JSInterface.ACTION_RESIZE);
             return null;
         }
         int width = Dips.dipsToIntPixels(widthDips, context);
         int height = Dips.dipsToIntPixels(heightDips, context);
         int offsetX = Dips.dipsToIntPixels(offsetXDips, context);
         int offsetY = Dips.dipsToIntPixels(offsetYDips, context);
-        int left = mScreenMetrics.getDefaultAdRect().left + offsetX;
-        int top = mScreenMetrics.getDefaultAdRect().top + offsetY;
+        int left = screenMetrics.getDefaultAdRect().left + offsetX;
+        int top = screenMetrics.getDefaultAdRect().top + offsetY;
         Rect resizeRect = new Rect(left, top, left + width, top + height);//new requested size
         if (!allowOffscreen) {
             // Require the entire ad to be on-screen.
-            Rect bounds = mScreenMetrics.getRootViewRect();
+            Rect bounds = screenMetrics.getRootViewRect();
             int rectWid = bounds.width();//max allowed size
             int rectHei = bounds.height();
 
             if (resizeRect.width() > rectWid || resizeRect.height() > rectHei) {
                 sendError(widthDips, heightDips, offsetXDips, offsetYDips);
-                mJsInterface.onError("Resize properties specified a size & offset that does not allow the ad to appear within the max allowed size", JSInterface.ACTION_RESIZE);
+                jsInterface.onError(
+                        "Resize properties specified a size & offset that does not allow the ad to appear within the max allowed size",
+                        JSInterface.ACTION_RESIZE
+                );
                 return null;
             }
 
@@ -259,9 +268,12 @@ public class MraidResize {
 
         Pair<Integer, Integer> closeViewWidthHeightPair = getCloseViewWidthHeight();
         Gravity.apply(GRAVITY_TOP_RIGHT, closeViewWidthHeightPair.first, closeViewWidthHeightPair.second, resizeRect, closeRect);
-        if (!mScreenMetrics.getRootViewRect().contains(closeRect)) {
+        if (!screenMetrics.getRootViewRect().contains(closeRect)) {
             sendError(widthDips, heightDips, offsetXDips, offsetYDips);
-            mJsInterface.onError("Resize properties specified a size & offset that does not allow the close region to appear within the max allowed size", JSInterface.ACTION_RESIZE);
+            jsInterface.onError(
+                    "Resize properties specified a size & offset that does not allow the close region to appear within the max allowed size",
+                    JSInterface.ACTION_RESIZE
+            );
             return null;
         }
 
@@ -271,7 +283,10 @@ public class MraidResize {
                          + offsetXDips + ", " + offsetYDips + ") that don't allow the close region to appear "
                          + "within the resized ad.";
             LogUtil.error(TAG, err);
-            mJsInterface.onError("Resize properties specified a size & offset that does not allow the close region to appear within the resized ad", JSInterface.ACTION_RESIZE);
+            jsInterface.onError(
+                    "Resize properties specified a size & offset that does not allow the close region to appear within the resized ad",
+                    JSInterface.ACTION_RESIZE
+            );
             return null;
         }
 
@@ -279,12 +294,12 @@ public class MraidResize {
     }
 
     private Pair<Integer, Integer> getCloseViewWidthHeight() {
-        if (mCloseView == null) {
+        if (closeView == null) {
             LogUtil.error(TAG, "Unable to retrieve width height from close view. Close view is null.");
             return new Pair<>(0, 0);
         }
 
-        return new Pair<>(mCloseView.getWidth(), mCloseView.getHeight());
+        return new Pair<>(closeView.getWidth(), closeView.getHeight());
     }
 
     private void handleResizePropertiesResult(String propertyJson) {
@@ -315,12 +330,9 @@ public class MraidResize {
     }
 
     private void sendError(int widthDips, int heightDips, int offsetXDips, int offsetYDips) {
-        String err = "Resize properties specified a size: " + widthDips
-                     + " , " + heightDips + ") and offset ("
-                     + offsetXDips + ", " + offsetYDips + ") that doesn't allow the close"
-                     + " region to appear within the max allowed size ("
-                     + mScreenMetrics.getRootViewRectDips().width() + ", "
-                     + mScreenMetrics.getRootViewRectDips().height() + ")";
+        String err = "Resize properties specified a size: " + widthDips + " , " + heightDips + ") and offset (" + offsetXDips + ", " + offsetYDips + ") that doesn't allow the close" + " region to appear within the max allowed size (" + screenMetrics.getRootViewRectDips()
+                                                                                                                                                                                                                                                         .width() + ", " + screenMetrics.getRootViewRectDips()
+                                                                                                                                                                                                                                                                                        .height() + ")";
         LogUtil.error(TAG, err);
     }
 

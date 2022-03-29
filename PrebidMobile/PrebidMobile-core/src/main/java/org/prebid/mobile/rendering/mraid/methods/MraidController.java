@@ -38,27 +38,28 @@ import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.*;
 
 public class MraidController {
+
     private static final String TAG = MraidController.class.getSimpleName();
 
-    protected InterstitialManager mInterstitialManager;
-    private MraidUrlHandler mMraidUrlHandler;
-    private MraidResize mMraidResize;
-    private MraidStorePicture mMraidStorePicture;
-    private MraidCalendarEvent mMraidCalendarEvent;
-    private MraidExpand mMraidExpand;
+    protected InterstitialManager interstitialManager;
+    private MraidUrlHandler mraidUrlHandler;
+    private MraidResize mraidResize;
+    private MraidStorePicture mraidStorePicture;
+    private MraidCalendarEvent mraidCalendarEvent;
+    private MraidExpand mraidExpand;
 
-    private InterstitialManagerMraidDelegate mInterstitialManagerMraidDelegate = new InterstitialManagerMraidDelegate() {
+    private InterstitialManagerMraidDelegate interstitialManagerMraidDelegate = new InterstitialManagerMraidDelegate() {
         @Override
         public boolean collapseMraid() {
-            if (mMraidExpand == null) {
+            if (mraidExpand == null) {
                 return false;
             }
-            if (mMraidExpand.isMraidExpanded()) {
-                mInterstitialManager.getHtmlCreative().mraidAdCollapsed();
+            if (mraidExpand.isMraidExpanded()) {
+                interstitialManager.getHtmlCreative().mraidAdCollapsed();
             }
-            mMraidExpand.nullifyDialog();
+            mraidExpand.nullifyDialog();
             //make MraidExpand null, so a new MraidExpand is created for a new expansion
-            mMraidExpand = null;
+            mraidExpand = null;
             return true;
         }
 
@@ -79,9 +80,9 @@ public class MraidController {
 
         @Override
         public void destroyMraidExpand() {
-            if (mMraidExpand != null) {
-                mMraidExpand.destroy();
-                mMraidExpand = null;
+            if (mraidExpand != null) {
+                mraidExpand.destroy();
+                mraidExpand = null;
             }
         }
     };
@@ -89,19 +90,19 @@ public class MraidController {
     public MraidController(
         @NonNull
             InterstitialManager interstitialManager) {
-        mInterstitialManager = interstitialManager;
-        mInterstitialManager.setMraidDelegate(mInterstitialManagerMraidDelegate);
+        this.interstitialManager = interstitialManager;
+        this.interstitialManager.setMraidDelegate(interstitialManagerMraidDelegate);
     }
 
     public void close(WebViewBase oldWebViewBase) {
-        mInterstitialManager.interstitialClosed(oldWebViewBase);
+        interstitialManager.interstitialClosed(oldWebViewBase);
     }
 
     public void createCalendarEvent(BaseJSInterface jsInterface, String parameters) {
-        if (mMraidCalendarEvent == null) {
-            mMraidCalendarEvent = new MraidCalendarEvent(jsInterface);
+        if (mraidCalendarEvent == null) {
+            mraidCalendarEvent = new MraidCalendarEvent(jsInterface);
         }
-        mMraidCalendarEvent.createCalendarEvent(parameters);
+        mraidCalendarEvent.createCalendarEvent(parameters);
     }
 
     public void expand(WebViewBase oldWebViewBase, PrebidWebViewBase twoPartNewWebViewBase,
@@ -167,22 +168,20 @@ public class MraidController {
     }
 
     public void changeOrientation() {
-        if (mMraidExpand != null && mMraidExpand.getInterstitialViewController() != null) {
+        if (mraidExpand != null && mraidExpand.getInterstitialViewController() != null) {
             try {
-                mMraidExpand.getInterstitialViewController().handleSetOrientationProperties();
-            }
-            catch (AdException e) {
+                mraidExpand.getInterstitialViewController().handleSetOrientationProperties();
+            } catch (AdException e) {
                 LogUtil.error(TAG, Log.getStackTraceString(e));
             }
         }
     }
 
     public void open(WebViewBase oldWebViewBase, String uri, int broadcastId) {
-        if (mMraidUrlHandler == null) {
-            mMraidUrlHandler = new MraidUrlHandler(oldWebViewBase.getContext(),
-                                                   oldWebViewBase.getMRAIDInterface());
+        if (mraidUrlHandler == null) {
+            mraidUrlHandler = new MraidUrlHandler(oldWebViewBase.getContext(), oldWebViewBase.getMRAIDInterface());
         }
-        mMraidUrlHandler.open(uri, broadcastId);
+        mraidUrlHandler.open(uri, broadcastId);
     }
 
     public void playVideo(WebViewBase oldWebViewBase, MraidEvent event) {
@@ -190,37 +189,39 @@ public class MraidController {
     }
 
     public void resize(WebViewBase oldWebViewBase) {
-        if (mMraidResize == null) {
-            mMraidResize = new MraidResize(oldWebViewBase.getContext(),
-                                           oldWebViewBase.getMRAIDInterface(),
-                                           oldWebViewBase,
-                                           mInterstitialManager);
+        if (mraidResize == null) {
+            mraidResize = new MraidResize(oldWebViewBase.getContext(),
+                    oldWebViewBase.getMRAIDInterface(),
+                    oldWebViewBase,
+                    interstitialManager
+            );
         }
-        mMraidResize.resize();
+        mraidResize.resize();
     }
 
     public void storePicture(WebViewBase oldWebViewBase, String uri) {
-        if (mMraidStorePicture == null) {
-            mMraidStorePicture = new MraidStorePicture(oldWebViewBase.getContext(),
-                                                       oldWebViewBase.getMRAIDInterface(),
-                                                       oldWebViewBase);
+        if (mraidStorePicture == null) {
+            mraidStorePicture = new MraidStorePicture(oldWebViewBase.getContext(),
+                    oldWebViewBase.getMRAIDInterface(),
+                    oldWebViewBase
+            );
         }
-        mMraidStorePicture.storePicture(uri);
+        mraidStorePicture.storePicture(uri);
     }
 
     public void destroy() {
-        if (mMraidResize != null) {
-            mMraidResize.destroy();
-            mMraidResize = null;
+        if (mraidResize != null) {
+            mraidResize.destroy();
+            mraidResize = null;
         }
-        if (mMraidUrlHandler != null) {
-            mMraidUrlHandler.destroy();
-            mMraidUrlHandler = null;
+        if (mraidUrlHandler != null) {
+            mraidUrlHandler.destroy();
+            mraidUrlHandler = null;
         }
 
-        if (mMraidExpand != null) {
-            mMraidExpand.destroy();
-            mMraidExpand = null;
+        if (mraidExpand != null) {
+            mraidExpand.destroy();
+            mraidExpand = null;
         }
     }
 
@@ -228,18 +229,19 @@ public class MraidController {
                                             boolean addOldViewToBackStack,
                                             final MraidEvent mraidEvent,
                                             final DisplayCompletionListener displayCompletionListener) {
-        if (mMraidExpand == null) {
+        if (mraidExpand == null) {
             initMraidExpand(adBaseView, displayCompletionListener, mraidEvent);
             return;
         }
         //2 part may be?? OR click of video.close from an expanded ad
         if (addOldViewToBackStack) {
-            mInterstitialManager.addOldViewToBackStack((WebViewBase) adBaseView,
-                                                       mraidEvent.mraidActionHelper,
-                                                       mMraidExpand.getInterstitialViewController());
+            interstitialManager.addOldViewToBackStack((WebViewBase) adBaseView,
+                    mraidEvent.mraidActionHelper,
+                    mraidExpand.getInterstitialViewController()
+            );
         }
 
-        mMraidExpand.setDisplayView(adBaseView);
+        mraidExpand.setDisplayView(adBaseView);
 
         if (displayCompletionListener != null) {
             displayCompletionListener.onDisplayCompleted();
@@ -280,10 +282,10 @@ public class MraidController {
     protected void initMraidExpand(final View adBaseView,
                                    final DisplayCompletionListener displayCompletionListener,
                                    final MraidEvent mraidEvent) {
-        mMraidExpand = new MraidExpand(adBaseView.getContext(), ((WebViewBase) adBaseView), mInterstitialManager);
+        mraidExpand = new MraidExpand(adBaseView.getContext(), ((WebViewBase) adBaseView), interstitialManager);
 
         if (mraidEvent.mraidAction.equals(JSInterface.ACTION_EXPAND)) {
-            mMraidExpand.setMraidExpanded(true);
+            mraidExpand.setMraidExpanded(true);
         }
 
         Handler handler = new Handler(Looper.getMainLooper());
@@ -292,12 +294,12 @@ public class MraidController {
                 LogUtil.debug(TAG, "mraidExpand");
                 //send click event on expand
                 ((WebViewBase) adBaseView).sendClickCallBack(mraidEvent.mraidActionHelper);
-                mMraidExpand.expand(mraidEvent.mraidActionHelper, () -> {
+                mraidExpand.expand(mraidEvent.mraidActionHelper, () -> {
                     if (displayCompletionListener != null) {
                         displayCompletionListener.onDisplayCompleted();
 
                         //send expandedCallback to pubs
-                        mInterstitialManager.getHtmlCreative().mraidAdExpanded();
+                        interstitialManager.getHtmlCreative().mraidAdExpanded();
                     }
                 });
             }

@@ -38,30 +38,30 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricTestRunner.class)
 public class JsExecutorTest {
     private static final String TEST_SCRIPT = "test";
-    private JsExecutor mSpyJsExecutor;
+    private JsExecutor spyJsExecutor;
 
-    @Mock WebView mMockWebView;
-    @Mock Handler mMockHandler;
-    @Mock HandlerQueueManager mMockHandlerQueueManager;
+    @Mock WebView mockWebView;
+    @Mock Handler mockHandler;
+    @Mock HandlerQueueManager mockHandlerQueueManager;
 
-    private final MraidVariableContainer mMraidVariableContainer = new MraidVariableContainer();
+    private final MraidVariableContainer mraidVariableContainer = new MraidVariableContainer();
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final JsExecutor jsExecutor = new JsExecutor(mMockWebView, mMockHandler, mMockHandlerQueueManager);
-        jsExecutor.setMraidVariableContainer(mMraidVariableContainer);
+        final JsExecutor jsExecutor = new JsExecutor(mockWebView, mockHandler, mockHandlerQueueManager);
+        jsExecutor.setMraidVariableContainer(mraidVariableContainer);
 
-        mSpyJsExecutor = spy(jsExecutor);
+        spyJsExecutor = spy(jsExecutor);
     }
 
     @Test
     public void whenExecuteGetResizeProperties_EvaluateJavaScriptMethodWithResult() {
         Handler handler = mock(Handler.class);
 
-        mSpyJsExecutor.executeGetResizeProperties(handler);
+        spyJsExecutor.executeGetResizeProperties(handler);
 
-        verify(mSpyJsExecutor).evaluateJavaScriptMethodWithResult(eq("getResizeProperties"),
+        verify(spyJsExecutor).evaluateJavaScriptMethodWithResult(eq("getResizeProperties"),
                                                                   eq(handler));
     }
 
@@ -69,9 +69,9 @@ public class JsExecutorTest {
     public void whenExecuteGetExpandProperties_EvaluateJavaScriptMethodWithResult() {
         Handler handler = mock(Handler.class);
 
-        mSpyJsExecutor.executeGetExpandProperties(handler);
+        spyJsExecutor.executeGetExpandProperties(handler);
 
-        verify(mSpyJsExecutor).evaluateJavaScriptMethodWithResult(eq("getExpandProperties"),
+        verify(spyJsExecutor).evaluateJavaScriptMethodWithResult(eq("getExpandProperties"),
                                                                   eq(handler));
     }
 
@@ -79,65 +79,65 @@ public class JsExecutorTest {
     public void whenExecuteSetScreenSize_EvaluateJavaScript() {
         Rect mockRect = getMockRect(101, 102);
 
-        mSpyJsExecutor.executeSetScreenSize(mockRect);
+        spyJsExecutor.executeSetScreenSize(mockRect);
 
-        verify(mSpyJsExecutor).evaluateJavaScript(eq("mraid.setScreenSize(101, 102);"));
+        verify(spyJsExecutor).evaluateJavaScript(eq("mraid.setScreenSize(101, 102);"));
     }
 
     @Test
     public void whenExecuteMaxSize_EvaluateJavaScript() {
         Rect mockRect = getMockRect(103, 106);
 
-        mSpyJsExecutor.executeSetMaxSize(mockRect);
+        spyJsExecutor.executeSetMaxSize(mockRect);
 
-        verify(mSpyJsExecutor).evaluateJavaScript(eq("mraid.setMaxSize(103, 106);"));
+        verify(spyJsExecutor).evaluateJavaScript(eq("mraid.setMaxSize(103, 106);"));
     }
 
     @Test
     public void whenExecuteSetCurrentPosition_EvaluateJavaScript() {
         Rect mockRect = getMockRect(105, 101);
 
-        mSpyJsExecutor.executeSetCurrentPosition(mockRect);
+        spyJsExecutor.executeSetCurrentPosition(mockRect);
 
-        verify(mSpyJsExecutor).evaluateJavaScript(eq("mraid.setCurrentPosition(0, 0, 105, 101);"));
+        verify(spyJsExecutor).evaluateJavaScript(eq("mraid.setCurrentPosition(0, 0, 105, 101);"));
     }
 
     @Test
     public void whenExecuteSetDefaultPosition_EvaluateJavaScript() {
         Rect mockRect = getMockRect(109, 101);
 
-        mSpyJsExecutor.executeSetDefaultPosition(mockRect);
+        spyJsExecutor.executeSetDefaultPosition(mockRect);
 
-        verify(mSpyJsExecutor).evaluateJavaScript(eq("mraid.setDefaultPosition(0, 0, 109, 101);"));
+        verify(spyJsExecutor).evaluateJavaScript(eq("mraid.setDefaultPosition(0, 0, 109, 101);"));
     }
 
     @Test
     public void whenExecuteOnSizeChange_EvaluateJavaScript() {
         Rect mockRect = getMockRect(109, 102);
 
-        mSpyJsExecutor.executeOnSizeChange(mockRect);
+        spyJsExecutor.executeOnSizeChange(mockRect);
 
-        mSpyJsExecutor.evaluateJavaScript(eq("mraid.onSizeChange(109, 102);"));
+        spyJsExecutor.evaluateJavaScript(eq("mraid.onSizeChange(109, 102);"));
     }
 
     @Test
     public void whenExecuteOnViewableChange_EvaluateJavaScript() {
-        mSpyJsExecutor.executeOnViewableChange(false);
-        assertFalse(mMraidVariableContainer.getCurrentViewable());
-        verify(mSpyJsExecutor).evaluateJavaScript("mraid.onViewableChange(false);");
+        spyJsExecutor.executeOnViewableChange(false);
+        assertFalse(mraidVariableContainer.getCurrentViewable());
+        verify(spyJsExecutor).evaluateJavaScript("mraid.onViewableChange(false);");
 
-        mSpyJsExecutor.executeOnViewableChange(true);
-        assertTrue(mMraidVariableContainer.getCurrentViewable());
-        verify(mSpyJsExecutor).evaluateJavaScript("mraid.onViewableChange(true);");
+        spyJsExecutor.executeOnViewableChange(true);
+        assertTrue(mraidVariableContainer.getCurrentViewable());
+        verify(spyJsExecutor).evaluateJavaScript("mraid.onViewableChange(true);");
     }
 
     @Test
     public void whenExecuteAudioVolumeChange_EvaluateMraidScript() {
-        mSpyJsExecutor.executeAudioVolumeChange(100f);
-        verify(mSpyJsExecutor).evaluateMraidScript(eq("mraid.onAudioVolumeChange(100.0);"));
+        spyJsExecutor.executeAudioVolumeChange(100f);
+        verify(spyJsExecutor).evaluateMraidScript(eq("mraid.onAudioVolumeChange(100.0);"));
 
-        mSpyJsExecutor.executeAudioVolumeChange(null);
-        verify(mSpyJsExecutor).evaluateMraidScript(eq("mraid.onAudioVolumeChange(null);"));
+        spyJsExecutor.executeAudioVolumeChange(null);
+        verify(spyJsExecutor).evaluateMraidScript(eq("mraid.onAudioVolumeChange(null);"));
     }
 
     @Test
@@ -145,121 +145,121 @@ public class JsExecutorTest {
         ViewExposure viewExposure = new ViewExposure();
         String expectedString = String.format("mraid.onExposureChange('%1$s');", viewExposure.toString());
 
-        mSpyJsExecutor.executeExposureChange(viewExposure);
+        spyJsExecutor.executeExposureChange(viewExposure);
 
-        assertEquals(viewExposure.toString(), mMraidVariableContainer.getCurrentExposure());
-        verify(mSpyJsExecutor).evaluateMraidScript(expectedString);
+        assertEquals(viewExposure.toString(), mraidVariableContainer.getCurrentExposure());
+        verify(spyJsExecutor).evaluateMraidScript(expectedString);
     }
 
     @Test
     public void whenExecuteOnError_EvaluateJavaScript() {
-        mSpyJsExecutor.executeOnError("message", "action");
-        verify(mSpyJsExecutor).evaluateJavaScript(eq("mraid.onError('message', 'action');"));
+        spyJsExecutor.executeOnError("message", "action");
+        verify(spyJsExecutor).evaluateJavaScript(eq("mraid.onError('message', 'action');"));
     }
 
     @Test
     public void whenExecuteDisabledFlags_EvaluateMraidScript() {
-        mSpyJsExecutor.executeDisabledFlags(TEST_SCRIPT);
-        verify(mSpyJsExecutor).evaluateMraidScript(TEST_SCRIPT);
+        spyJsExecutor.executeDisabledFlags(TEST_SCRIPT);
+        verify(spyJsExecutor).evaluateMraidScript(TEST_SCRIPT);
     }
 
     @Test
     public void whenExecuteOnReadyExpanded_EvaluateMraidScript() {
-        mSpyJsExecutor.executeOnReadyExpanded();
-        assertEquals(JSInterface.STATE_EXPANDED, mMraidVariableContainer.getCurrentState());
-        verify(mSpyJsExecutor).evaluateMraidScript("mraid.onReadyExpanded();");
+        spyJsExecutor.executeOnReadyExpanded();
+        assertEquals(JSInterface.STATE_EXPANDED, mraidVariableContainer.getCurrentState());
+        verify(spyJsExecutor).evaluateMraidScript("mraid.onReadyExpanded();");
     }
 
     @Test
     public void whenExecuteOnReady_EvaluateMraidScript() {
-        mSpyJsExecutor.executeOnReady();
-        assertEquals(JSInterface.STATE_DEFAULT, mMraidVariableContainer.getCurrentState());
-        verify(mSpyJsExecutor).evaluateMraidScript("mraid.onReady();");
+        spyJsExecutor.executeOnReady();
+        assertEquals(JSInterface.STATE_DEFAULT, mraidVariableContainer.getCurrentState());
+        verify(spyJsExecutor).evaluateMraidScript("mraid.onReady();");
     }
 
     @Test
     public void whenExecuteSingleOnStateChange_EvaluateJavaScriptOnce() {
-        mSpyJsExecutor.executeStateChange(JSInterface.STATE_EXPANDED);
+        spyJsExecutor.executeStateChange(JSInterface.STATE_EXPANDED);
 
-        assertEquals(JSInterface.STATE_EXPANDED, mMraidVariableContainer.getCurrentState());
-        verify(mSpyJsExecutor, times(1))
+        assertEquals(JSInterface.STATE_EXPANDED, mraidVariableContainer.getCurrentState());
+        verify(spyJsExecutor, times(1))
             .evaluateMraidScript("mraid.onStateChange('" + JSInterface.STATE_EXPANDED + "');");
     }
 
     @Test
     public void whenExecuteMultipleSameStateChange_EvaluateJavaScriptOnce() {
-        mSpyJsExecutor.executeStateChange(JSInterface.STATE_EXPANDED);
-        mSpyJsExecutor.executeStateChange(JSInterface.STATE_EXPANDED);
+        spyJsExecutor.executeStateChange(JSInterface.STATE_EXPANDED);
+        spyJsExecutor.executeStateChange(JSInterface.STATE_EXPANDED);
 
-        assertEquals(JSInterface.STATE_EXPANDED, mMraidVariableContainer.getCurrentState());
-        verify(mSpyJsExecutor, times(1))
+        assertEquals(JSInterface.STATE_EXPANDED, mraidVariableContainer.getCurrentState());
+        verify(spyJsExecutor, times(1))
             .evaluateMraidScript("mraid.onStateChange('" + JSInterface.STATE_EXPANDED + "');");
     }
 
     @Test
     public void whenExcuteMultipleSameOnViewableStateChange_EvaluateJavaScriptOnce() {
-        mSpyJsExecutor.executeOnViewableChange(true);
-        mSpyJsExecutor.executeOnViewableChange(true);
+        spyJsExecutor.executeOnViewableChange(true);
+        spyJsExecutor.executeOnViewableChange(true);
 
-        verify(mSpyJsExecutor, times(1)).evaluateJavaScript("mraid.onViewableChange(true);");
+        verify(spyJsExecutor, times(1)).evaluateJavaScript("mraid.onViewableChange(true);");
     }
 
     @Test
     public void whenExecuteNativeCallComplete_EvaluateMraidScript() {
-        mSpyJsExecutor.executeNativeCallComplete();
+        spyJsExecutor.executeNativeCallComplete();
 
-        verify(mSpyJsExecutor).evaluateMraidScript("mraid.nativeCallComplete();");
+        verify(spyJsExecutor).evaluateMraidScript("mraid.nativeCallComplete();");
     }
 
     @Test
     public void whenExecuteLoading_ChangeStateVariable() {
-        mSpyJsExecutor.loading();
-        assertEquals(mSpyJsExecutor.getCurrentState(), JSInterface.STATE_LOADING);
+        spyJsExecutor.loading();
+        assertEquals(spyJsExecutor.getCurrentState(), JSInterface.STATE_LOADING);
     }
 
     @Test
     public void whenEvaluateJavaScriptNullWebView_DoNothing() {
-        JsExecutor jsExecutor = spy(new JsExecutor(null, mMockHandler, null));
+        JsExecutor jsExecutor = spy(new JsExecutor(null, mockHandler, null));
 
         jsExecutor.evaluateJavaScript(TEST_SCRIPT);
 
-        verifyNoMoreInteractions(mMockHandler);
+        verifyNoMoreInteractions(mockHandler);
     }
 
     @Test
     public void whenEvaluateJavaScriptValidWebView_PostScriptLoadingRunnableOnHandler() {
-        mSpyJsExecutor.evaluateJavaScript(TEST_SCRIPT);
+        spyJsExecutor.evaluateJavaScript(TEST_SCRIPT);
 
-        verify(mMockHandler).post(any(JsExecutor.EvaluateScriptRunnable.class));
+        verify(mockHandler).post(any(JsExecutor.EvaluateScriptRunnable.class));
     }
 
     @Test
     public void whenSingleEvaluateJavaScriptMethodWithResult_DispatchHandlerMessage() {
-        mSpyJsExecutor.evaluateJavaScriptMethodWithResult(TEST_SCRIPT, mMockHandler);
+        spyJsExecutor.evaluateJavaScriptMethodWithResult(TEST_SCRIPT, mockHandler);
 
-        verify(mMockHandler).dispatchMessage(any(Message.class));
+        verify(mockHandler).dispatchMessage(any(Message.class));
     }
 
     @Test
     public void whenIsMraidEvaluateJavaScriptMethodWithResult_Evaluate() {
-        mSpyJsExecutor.evaluateJavaScriptMethodWithResult(TEST_SCRIPT, mMockHandler);
+        spyJsExecutor.evaluateJavaScriptMethodWithResult(TEST_SCRIPT, mockHandler);
 
-        verify(mMockHandler).dispatchMessage(any(Message.class));
+        verify(mockHandler).dispatchMessage(any(Message.class));
     }
 
     @Test
     public void whenEvaluateMraidScriptWithNullWebView_NoInteractions() {
-        JsExecutor jsExecutor = new JsExecutor(null, mMockHandler, null);
+        JsExecutor jsExecutor = new JsExecutor(null, mockHandler, null);
         jsExecutor.evaluateMraidScript(TEST_SCRIPT);
 
-        verify(mMockHandler, times(0)).post(any(JsExecutor.EvaluateScriptRunnable.class));
+        verify(mockHandler, times(0)).post(any(JsExecutor.EvaluateScriptRunnable.class));
     }
 
     @Test
     public void whenEvaluateMraidScript_postScriptRunnable() {
-        mSpyJsExecutor.evaluateMraidScript(TEST_SCRIPT);
+        spyJsExecutor.evaluateMraidScript(TEST_SCRIPT);
 
-        verify(mMockHandler, times(1)).post(any(JsExecutor.EvaluateScriptRunnable.class));
+        verify(mockHandler, times(1)).post(any(JsExecutor.EvaluateScriptRunnable.class));
     }
 
     private Rect getMockRect(int width, int height) {

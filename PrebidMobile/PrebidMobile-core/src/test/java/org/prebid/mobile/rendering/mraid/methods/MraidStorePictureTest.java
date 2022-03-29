@@ -43,21 +43,21 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class MraidStorePictureTest {
 
-    private MraidStorePicture mMraidStorePicture;
-    private Context mContext;
-    private WebViewBase mMockWebViewBase;
-    private BaseJSInterface mMockBaseJsInterface;
+    private MraidStorePicture mraidStorePicture;
+    private Context context;
+    private WebViewBase mockWebViewBase;
+    private BaseJSInterface mockBaseJsInterface;
 
-    private JsExecutor mMockJsExecutor;
+    private JsExecutor mockJsExecutor;
 
     @Before
     public void setup() {
-        mContext = spy(Robolectric.buildActivity(Activity.class).create().get());
-        ManagersResolver.getInstance().prepare(mContext);
-        mMockWebViewBase = Mockito.mock(WebViewBase.class);
-        mMockJsExecutor = mock(JsExecutor.class);
+        context = spy(Robolectric.buildActivity(Activity.class).create().get());
+        ManagersResolver.getInstance().prepare(context);
+        mockWebViewBase = Mockito.mock(WebViewBase.class);
+        mockJsExecutor = mock(JsExecutor.class);
 
-        when(mMockWebViewBase.post(any(Runnable.class))).thenAnswer(new Answer<Object>() {
+        when(mockWebViewBase.post(any(Runnable.class))).thenAnswer(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Runnable runnable = invocation.getArgument(0);
@@ -65,22 +65,22 @@ public class MraidStorePictureTest {
                 return null;
             }
         });
-        mMockBaseJsInterface = spy(new BaseJSInterface(mContext, mMockWebViewBase, mMockJsExecutor));
+        mockBaseJsInterface = spy(new BaseJSInterface(context, mockWebViewBase, mockJsExecutor));
 
-        mMraidStorePicture = new MraidStorePicture(mContext, mMockBaseJsInterface, mMockWebViewBase);
+        mraidStorePicture = new MraidStorePicture(context, mockBaseJsInterface, mockWebViewBase);
     }
 
     @Test
     public void storePictureTest() {
-        mMraidStorePicture.storePicture("test_url");
-        verify((Activity) mContext).isFinishing();
+        mraidStorePicture.storePicture("test_url");
+        verify((Activity) context).isFinishing();
     }
 
     @Test
     public void storePictureErrorPrivateTest() throws Exception {
         Method method = WhiteBox.method(MraidStorePicture.class, "storePicture");
 
-        method.invoke(mMraidStorePicture);
-        verify(mMockBaseJsInterface, timeout(5000)).onError("store_picture", JSInterface.ACTION_STORE_PICTURE);
+        method.invoke(mraidStorePicture);
+        verify(mockBaseJsInterface, timeout(5000)).onError("store_picture", JSInterface.ACTION_STORE_PICTURE);
     }
 }

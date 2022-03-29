@@ -5,59 +5,60 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class PrebidServerValidationViewModel extends ViewModel {
-    private final MutableLiveData<Boolean> mBidRequestsSent;
-    private final MutableLiveData<Integer> mBidRequestSentCount;
-    private final MutableLiveData<Boolean> mBidResponsesReceived;
-    private final MutableLiveData<Integer> mBidResponseReceivedCount;
-    private final MutableLiveData<Float> mAverageCpm;
-    private final MutableLiveData<Long> mAverageResponseTime;
+
+    private final MutableLiveData<Boolean> bidRequestsSent;
+    private final MutableLiveData<Integer> bidRequestSentCount;
+    private final MutableLiveData<Boolean> bidResponsesReceived;
+    private final MutableLiveData<Integer> bidResponseReceivedCount;
+    private final MutableLiveData<Float> averageCpm;
+    private final MutableLiveData<Long> averageResponseTime;
 
     public PrebidServerValidationViewModel() {
-        mBidRequestsSent = new MutableLiveData<>();
-        mBidRequestSentCount = new MutableLiveData<>();
-        mBidResponsesReceived = new MutableLiveData<>();
-        mBidResponseReceivedCount = new MutableLiveData<>();
-        mAverageCpm = new MutableLiveData<>();
-        mAverageResponseTime = new MutableLiveData<>();
+        bidRequestsSent = new MutableLiveData<>();
+        bidRequestSentCount = new MutableLiveData<>();
+        bidResponsesReceived = new MutableLiveData<>();
+        bidResponseReceivedCount = new MutableLiveData<>();
+        averageCpm = new MutableLiveData<>();
+        averageResponseTime = new MutableLiveData<>();
     }
 
     public LiveData<Boolean> getBidRequestsSent() {
-        return mBidRequestsSent;
+        return bidRequestsSent;
     }
 
     public void setBidRequestsSent(boolean requestsSent) {
-        mBidRequestsSent.setValue(requestsSent);
+        bidRequestsSent.setValue(requestsSent);
     }
 
     public LiveData<Integer> getBidRequestSentCount() {
-        return mBidRequestSentCount;
+        return bidRequestSentCount;
     }
 
     public void setBidRequestSentCount(int sentCount) {
-        mBidRequestSentCount.setValue(sentCount);
+        bidRequestSentCount.setValue(sentCount);
     }
 
     public LiveData<Integer> getBidResponsesReceived() {
-        return mBidResponseReceivedCount;
+        return bidResponseReceivedCount;
     }
 
     public void setBidResponseReceivedCount(int receivedCount) {
-        mBidResponseReceivedCount.setValue(receivedCount);
+        bidResponseReceivedCount.setValue(receivedCount);
     }
 
     public LiveData<Float> getAverageCpm() {
-        return mAverageCpm;
+        return averageCpm;
     }
 
     public void setAverageCpm(float averageCpm) {
-        mAverageCpm.setValue(averageCpm);
+        this.averageCpm.setValue(averageCpm);
     }
 
     public LiveData<Long> getAverageResponseTime() {
-        return mAverageResponseTime;
+        return averageResponseTime;
     }
 
     public void setAverageResponseTime(long responseTime) {
-        mAverageResponseTime.setValue(responseTime);
+        averageResponseTime.setValue(responseTime);
     }
 }

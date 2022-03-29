@@ -24,14 +24,14 @@ public abstract class MediationBaseFullScreenAdUnit extends MediationBaseAdUnit 
      * Sets max video duration. If the ad from server is bigger, it will be rejected.
      */
     public void setMaxVideoDuration(int seconds) {
-        mAdUnitConfig.setMaxVideoDuration(seconds);
+        adUnitConfig.setMaxVideoDuration(seconds);
     }
 
     /**
      * Sets delay in seconds to show skip or close button.
      */
     public void setSkipDelay(int secondsDelay) {
-        mAdUnitConfig.setSkipDelay(secondsDelay);
+        adUnitConfig.setSkipDelay(secondsDelay);
     }
 
     /**
@@ -39,7 +39,7 @@ public abstract class MediationBaseFullScreenAdUnit extends MediationBaseAdUnit 
      * If value less than 0.05, size will be default.
      */
     public void setSkipButtonArea(@FloatRange(from = 0, to = 1.0) double buttonArea) {
-        mAdUnitConfig.setSkipButtonArea(buttonArea);
+        adUnitConfig.setSkipButtonArea(buttonArea);
     }
 
     /**
@@ -47,7 +47,7 @@ public abstract class MediationBaseFullScreenAdUnit extends MediationBaseAdUnit 
      * Default value TOP_RIGHT.
      */
     public void setSkipButtonPosition(Position skipButtonPosition) {
-        mAdUnitConfig.setSkipButtonPosition(skipButtonPosition);
+        adUnitConfig.setSkipButtonPosition(skipButtonPosition);
     }
 
     /**
@@ -55,7 +55,7 @@ public abstract class MediationBaseFullScreenAdUnit extends MediationBaseAdUnit 
      * If value less than 0.05, size will be default.
      */
     public void setCloseButtonArea(@FloatRange(from = 0, to = 1.0) double closeButtonArea) {
-        mAdUnitConfig.setCloseButtonArea(closeButtonArea);
+        adUnitConfig.setCloseButtonArea(closeButtonArea);
     }
 
     /**
@@ -63,21 +63,21 @@ public abstract class MediationBaseFullScreenAdUnit extends MediationBaseAdUnit 
      * Default value TOP_RIGHT.
      */
     public void setCloseButtonPosition(@Nullable Position closeButtonPosition) {
-        mAdUnitConfig.setCloseButtonPosition(closeButtonPosition);
+        adUnitConfig.setCloseButtonPosition(closeButtonPosition);
     }
 
     /**
      * Sets desired is muted property.
      */
     public void setIsMuted(boolean isMuted) {
-        mAdUnitConfig.setIsMuted(isMuted);
+        adUnitConfig.setIsMuted(isMuted);
     }
 
     /**
      * Makes sound button visible.
      */
     public void setIsSoundButtonVisible(boolean isSoundButtonVisible) {
-        mAdUnitConfig.setIsSoundButtonVisible(isSoundButtonVisible);
+        adUnitConfig.setIsSoundButtonVisible(isSoundButtonVisible);
     }
 
 }

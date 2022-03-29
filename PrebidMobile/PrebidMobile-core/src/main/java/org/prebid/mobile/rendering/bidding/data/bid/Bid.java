@@ -30,101 +30,101 @@ import java.util.Map;
 public class Bid {
 
     // Bidder generated bid ID to assist with logging/tracking.
-    private String mId;
+    private String id;
 
     //  ID of the Imp object in the related bid request.
-    private String mImpId;
+    private String impId;
 
     // Bid price expressed as CPM although the actual transaction is
     // for a unit impression only.
-    private double mPrice;
+    private double price;
 
     // Optional means of conveying ad markup in case the bid wins;
     // supersedes the win notice if markup is included in both.
     // Substitution macros (Section 4.4) may be included.
-    private String mAdm;
+    private String adm;
 
     // Creative ID to assist with ad quality checking.
-    private String mCrid;
+    private String crid;
 
     // Width of the creative in device independent pixels (DIPS)
-    private int mWidth;
+    private int width;
 
     // Height of the creative in device independent pixels (DIPS).
-    private int mHeight;
+    private int height;
 
     // "prebid" object from "ext"
-    private Prebid mPrebid;
+    private Prebid prebid;
 
     // Win notice URL called by the exchange if the bid wins (not  necessarily indicative of a delivered, viewed, or billable ad);
     // optional means of serving ad markup
-    private String mNurl;
+    private String nurl;
 
     // Billing notice URL called by the exchange when a winning bid
     // becomes billable based on exchange-specific business policy
-    private String mBurl;
+    private String burl;
 
     // Loss notice URL called by the exchange when a bid is known to
     // have been lost
-    private String mLurl;
+    private String lurl;
 
     // ID of a preloaded ad to be served if the bid wins
-    private String mAdid;
+    private String adid;
 
     // Advertiser domain for block list checking
-    private String[] mAdomain;
+    private String[] adomain;
 
     // A platform-specific application identifier intended to be unique to the app and independent of the exchange.
-    private String mBundle;
+    private String bundle;
 
     // URL without cache-busting to an image that is representative
     // of the content of the campaign for ad quality/safety checking
-    private String mIurl;
+    private String iurl;
 
     // Campaign ID to assist with ad quality checking; the collection
     // of creatives for which iurl should be representative
-    private String mCid;
+    private String cid;
 
     // Bid json string. Used only for CacheManager.
     private String jsonString;
 
     // Tactic ID to enable buyers to label bids for reporting to the
     // exchange the tactic through which their bid was submitted
-    private String mTactic;
+    private String tactic;
 
     // IAB content categories of the creative
-    private String[] mCat;
+    private String[] cat;
 
     // Set of attributes describing the creative
-    private int[] mAttr;
+    private int[] attr;
 
     // API required by the markup if applicable
-    private int mApi;
+    private int api;
 
     // Video response protocol of the markup if applicable.
-    private int mProtocol;
+    private int protocol;
 
     // Creative media rating per IQG guidelines
-    private int mQagmediarating;
+    private int qagmediarating;
 
     // Language of the creative using ISO-639-1-alpha-2
-    private String mLanguage;
+    private String language;
 
     // Reference to the deal.id from the bid request if this bid
     // pertains to a private marketplace direct deal
-    private String mDealId;
+    private String dealId;
 
     // Relative width of the creative when expressing size as a ratio.
     // Required for Flex Ads
-    private int mWRatio;
+    private int WRatio;
 
     // Relative height of the creative when expressing size as a ratio.
     // Required for Flex Ads
-    private int mHRatio;
+    private int HRatio;
 
     // Advisory as to the number of seconds the bidder is willing to
     // wait between the auction and the actual impression
-    private int mExp;
+    private int exp;
 
     private MobileSdkPassThrough mobileSdkPassThrough;
 
@@ -132,114 +132,114 @@ public class Bid {
     }
 
     public String getId() {
-        return mId;
+        return id;
     }
 
     public String getImpId() {
-        return mImpId;
+        return impId;
     }
 
     public double getPrice() {
-        return mPrice;
+        return price;
     }
 
     public String getAdm() {
-        return mAdm;
+        return adm;
     }
 
     public String getCrid() {
-        return mCrid;
+        return crid;
     }
 
     public int getWidth() {
-        return mWidth;
+        return width;
     }
 
     public int getHeight() {
-        return mHeight;
+        return height;
     }
 
     public Prebid getPrebid() {
-        if (mPrebid == null) {
-            mPrebid = new Prebid();
+        if (prebid == null) {
+            prebid = new Prebid();
         }
-        return mPrebid;
+        return prebid;
     }
 
     public String getNurl() {
-        return mNurl;
+        return nurl;
     }
 
     public String getBurl() {
-        return mBurl;
+        return burl;
     }
 
     public String getLurl() {
-        return mLurl;
+        return lurl;
     }
 
     public String getAdid() {
-        return mAdid;
+        return adid;
     }
 
     public String[] getAdomain() {
-        return mAdomain;
+        return adomain;
     }
 
     public String getBundle() {
-        return mBundle;
+        return bundle;
     }
 
     public String getIurl() {
-        return mIurl;
+        return iurl;
     }
 
     public String getCid() {
-        return mCid;
+        return cid;
     }
 
     public String getTactic() {
-        return mTactic;
+        return tactic;
     }
 
     public String[] getCat() {
-        return mCat;
+        return cat;
     }
 
     public int[] getAttr() {
-        return mAttr;
+        return attr;
     }
 
     public int getApi() {
-        return mApi;
+        return api;
     }
 
     public int getProtocol() {
-        return mProtocol;
+        return protocol;
     }
 
     public int getQagmediarating() {
-        return mQagmediarating;
+        return qagmediarating;
     }
 
     public String getLanguage() {
-        return mLanguage;
+        return language;
     }
 
     public String getDealId() {
-        return mDealId;
+        return dealId;
     }
 
     public int getWRatio() {
-        return mWRatio;
+        return WRatio;
     }
 
     public int getHRatio() {
-        return mHRatio;
+        return HRatio;
     }
 
     public int getExp() {
-        return mExp;
+        return exp;
     }
 
     public String getJsonString() {
@@ -256,37 +256,37 @@ public class Bid {
             return bid;
         }
         bid.jsonString = jsonObject.toString();
-        bid.mId = jsonObject.optString("id", null);
-        bid.mImpId = jsonObject.optString("impid", null);
-        bid.mPrice = jsonObject.optDouble("price", 0);
-        bid.mAdm = jsonObject.optString("adm", null);
-        bid.mCrid = jsonObject.optString("crid", null);
-        bid.mWidth = jsonObject.optInt("w");
-        bid.mHeight = jsonObject.optInt("h");
+        bid.id = jsonObject.optString("id", null);
+        bid.impId = jsonObject.optString("impid", null);
+        bid.price = jsonObject.optDouble("price", 0);
+        bid.adm = jsonObject.optString("adm", null);
+        bid.crid = jsonObject.optString("crid", null);
+        bid.width = jsonObject.optInt("w");
+        bid.height = jsonObject.optInt("h");
 
-        bid.mNurl = jsonObject.optString("nurl", null);
-        bid.mBurl = jsonObject.optString("burl", null);
-        bid.mLurl = jsonObject.optString("lurl", null);
-        bid.mAdid = jsonObject.optString("adid", null);
-        bid.mAdomain = getStringArrayFromJson(jsonObject, "adomain");
-        bid.mBundle = jsonObject.optString("bundle", null);
-        bid.mIurl = jsonObject.optString("iurl", null);
-        bid.mCid = jsonObject.optString("cid", null);
-        bid.mTactic = jsonObject.optString("tactic", null);
-        bid.mCat = getStringArrayFromJson(jsonObject, "cat");
-        bid.mAttr = getIntArrayFromJson(jsonObject, "attr");
-        bid.mApi = jsonObject.optInt("api", -1);
-        bid.mProtocol = jsonObject.optInt("protocol", -1);
-        bid.mQagmediarating = jsonObject.optInt("qagmediarating", -1);
-        bid.mLanguage = jsonObject.optString("language", null);
-        bid.mDealId = jsonObject.optString("dealid", null);
-        bid.mWRatio = jsonObject.optInt("wratio");
-        bid.mHRatio = jsonObject.optInt("hratio");
-        bid.mExp = jsonObject.optInt("exp", -1);
+        bid.nurl = jsonObject.optString("nurl", null);
+        bid.burl = jsonObject.optString("burl", null);
+        bid.lurl = jsonObject.optString("lurl", null);
+        bid.adid = jsonObject.optString("adid", null);
+        bid.adomain = getStringArrayFromJson(jsonObject, "adomain");
+        bid.bundle = jsonObject.optString("bundle", null);
+        bid.iurl = jsonObject.optString("iurl", null);
+        bid.cid = jsonObject.optString("cid", null);
+        bid.tactic = jsonObject.optString("tactic", null);
+        bid.cat = getStringArrayFromJson(jsonObject, "cat");
+        bid.attr = getIntArrayFromJson(jsonObject, "attr");
+        bid.api = jsonObject.optInt("api", -1);
+        bid.protocol = jsonObject.optInt("protocol", -1);
+        bid.qagmediarating = jsonObject.optInt("qagmediarating", -1);
+        bid.language = jsonObject.optString("language", null);
+        bid.dealId = jsonObject.optString("dealid", null);
+        bid.WRatio = jsonObject.optInt("wratio");
+        bid.HRatio = jsonObject.optInt("hratio");
+        bid.exp = jsonObject.optInt("exp", -1);
 
         JSONObject ext = jsonObject.optJSONObject("ext");
         if (ext != null) {
-            bid.mPrebid = Prebid.fromJSONObject(ext.optJSONObject("prebid"));
+            bid.prebid = Prebid.fromJSONObject(ext.optJSONObject("prebid"));
             bid.mobileSdkPassThrough = MobileSdkPassThrough.create(ext);
         }
 
@@ -296,7 +296,7 @@ public class Bid {
     }
 
     public void setAdm(String adm) {
-        mAdm = adm;
+        this.adm = adm;
     }
 
     private static String[] getStringArrayFromJson(JSONObject jsonObject, String key) {
@@ -338,7 +338,7 @@ public class Bid {
         macrosModelMap.put(MacrosModel.MACROS_AUCTION_PRICE, new MacrosModel(priceText));
         macrosModelMap.put(MacrosModel.MACROS_AUCTION_PRICE_BASE_64, new MacrosModel(base64PriceText));
 
-        bid.mAdm = MacrosResolutionHelper.resolveAuctionMacros(bid.mAdm, macrosModelMap);
-        bid.mNurl = MacrosResolutionHelper.resolveAuctionMacros(bid.mNurl, macrosModelMap);
+        bid.adm = MacrosResolutionHelper.resolveAuctionMacros(bid.adm, macrosModelMap);
+        bid.nurl = MacrosResolutionHelper.resolveAuctionMacros(bid.nurl, macrosModelMap);
     }
 }

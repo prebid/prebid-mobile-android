@@ -40,41 +40,43 @@ import org.prebid.mobile.rendering.views.webview.mraid.Views;
 import java.lang.ref.WeakReference;
 
 //Equivalent of adBase
-public class PrebidWebViewBase extends FrameLayout
-    implements PreloadManager.PreloadedListener, MraidEventsManager.MraidListener {
+public class PrebidWebViewBase extends FrameLayout implements PreloadManager.PreloadedListener, MraidEventsManager.MraidListener {
 
     private final String TAG = PrebidWebViewBase.class.getSimpleName();
     public static final int WEBVIEW_DESTROY_DELAY_MS = 1000;
 
-    protected Context mContext;
-    private final Handler mHandler;
+    protected Context context;
+    private final Handler handler;
 
-    protected WebViewBase mOldWebViewBase;
+    protected WebViewBase oldWebViewBase;
 
-    protected WebViewDelegate mWebViewDelegate;
+    protected WebViewDelegate webViewDelegate;
 
-    protected HTMLCreative mCreative;
+    protected HTMLCreative creative;
 
-    protected WebViewBase mWebView;
-    protected WebViewBanner mMraidWebView;
-    protected int mWidth, mHeight, mDefinedWidthForExpand, mDefinedHeightForExpand;
-    protected InterstitialManager mInterstitialManager;
+    protected WebViewBase webView;
+    protected WebViewBanner mraidWebView;
+    protected int width, height, definedWidthForExpand, definedHeightForExpand;
+    protected InterstitialManager interstitialManager;
 
 
-    private int mScreenVisibility;
+    private int screenVisibility;
 
-    protected WebViewBase mCurrentWebViewBase;
+    protected WebViewBase currentWebViewBase;
 
-    protected Animation mFadeInAnimation;
-    protected Animation mFadeOutAnimation;
+    protected Animation fadeInAnimation;
+    protected Animation fadeOutAnimation;
 
-    public PrebidWebViewBase(Context context, InterstitialManager interstitialManager) {
+    public PrebidWebViewBase(
+            Context context,
+            InterstitialManager interstitialManager
+    ) {
         //a null context to super(), a framelayout, could crash. So, catch this exception
         super(context);
-        mContext = context;
-        mInterstitialManager = interstitialManager;
-        mScreenVisibility = getVisibility();
-        mHandler = new Handler(Looper.getMainLooper());
+        this.context = context;
+        this.interstitialManager = interstitialManager;
+        screenVisibility = getVisibility();
+        handler = new Handler(Looper.getMainLooper());
     }
 
     public void initTwoPartAndLoad(String url) {
@@ -89,12 +91,12 @@ public class PrebidWebViewBase extends FrameLayout
         Views.removeFromParent(this);
         removeAllViews();
 
-        WebView currentWebView = (mWebView != null) ? mWebView : mMraidWebView;
+        WebView currentWebView = (webView != null) ? webView : mraidWebView;
 
         // IMPORTANT: Delayed execution was implemented due to this issue: jira/browse/MOBILE-5380
         // We need to give OMID time to finish method execution inside the webview
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler.postDelayed(new WebViewCleanupRunnable(currentWebView), WEBVIEW_DESTROY_DELAY_MS);
+        handler.removeCallbacksAndMessages(null);
+        handler.postDelayed(new WebViewCleanupRunnable(currentWebView), WEBVIEW_DESTROY_DELAY_MS);
     }
 
     public void initMraidExpanded() {
@@ -109,8 +111,8 @@ public class PrebidWebViewBase extends FrameLayout
     }
 
     private void readyForMraidExpanded() {
-        if (mMraidWebView != null && mMraidWebView.getMRAIDInterface() != null) {
-            mMraidWebView.getMRAIDInterface().onReadyExpanded();
+        if (mraidWebView != null && mraidWebView.getMRAIDInterface() != null) {
+            mraidWebView.getMRAIDInterface().onReadyExpanded();
         }
     }
 
@@ -120,8 +122,8 @@ public class PrebidWebViewBase extends FrameLayout
     }
 
     public void handleOpen(String url) {
-        if (mCurrentWebViewBase != null && mCurrentWebViewBase.getMRAIDInterface() != null) {
-            mCurrentWebViewBase.getMRAIDInterface().open(url);
+        if (currentWebViewBase != null && currentWebViewBase.getMRAIDInterface() != null) {
+            currentWebViewBase.getMRAIDInterface().open(url);
         }
     }
 
@@ -129,11 +131,12 @@ public class PrebidWebViewBase extends FrameLayout
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
         int visibility = (!hasWindowFocus ? View.INVISIBLE : View.VISIBLE);
-        if (Utils.hasScreenVisibilityChanged(mScreenVisibility, visibility)) {
+        if (Utils.hasScreenVisibilityChanged(screenVisibility, visibility)) {
             //visibility has changed. Send the changed value for mraid update for banners
-            mScreenVisibility = visibility;
-            if (mCurrentWebViewBase != null && mCurrentWebViewBase.getMRAIDInterface() != null) {
-                mCurrentWebViewBase.getMRAIDInterface().handleScreenViewabilityChange(Utils.isScreenVisible(mScreenVisibility));
+            screenVisibility = visibility;
+            if (currentWebViewBase != null && currentWebViewBase.getMRAIDInterface() != null) {
+                currentWebViewBase.getMRAIDInterface()
+                                  .handleScreenViewabilityChange(Utils.isScreenVisible(screenVisibility));
             }
         }
     }
@@ -141,57 +144,57 @@ public class PrebidWebViewBase extends FrameLayout
     @Override
     public void openExternalLink(String url) {
         //No need to separate the apis for mraid & non-mraid as they all go to the same methods.
-        if (mWebViewDelegate != null) {
-            mWebViewDelegate.webViewShouldOpenExternalLink(url);
+        if (webViewDelegate != null) {
+            webViewDelegate.webViewShouldOpenExternalLink(url);
         }
     }
 
     @Override
     public void openMraidExternalLink(String url) {
-        if (mWebViewDelegate != null) {
-            mWebViewDelegate.webViewShouldOpenMRAIDLink(url);
+        if (webViewDelegate != null) {
+            webViewDelegate.webViewShouldOpenMRAIDLink(url);
         }
     }
 
     @Override
     public void onAdWebViewWindowFocusChanged(boolean hasFocus) {
-        if (mCreative != null) {
-            mCreative.changeVisibilityTrackerState(hasFocus);
+        if (creative != null) {
+            creative.changeVisibilityTrackerState(hasFocus);
         }
     }
 
     public void onViewExposureChange(ViewExposure viewExposure) {
-        if (mCurrentWebViewBase != null && mCurrentWebViewBase.getMRAIDInterface() != null) {
-            mCurrentWebViewBase.getMRAIDInterface().getJsExecutor().executeExposureChange(viewExposure);
+        if (currentWebViewBase != null && currentWebViewBase.getMRAIDInterface() != null) {
+            currentWebViewBase.getMRAIDInterface().getJsExecutor().executeExposureChange(viewExposure);
         }
     }
 
     public WebViewBase getOldWebView() {
-        return mOldWebViewBase;
+        return oldWebViewBase;
     }
 
     public void setOldWebView(WebViewBase oldWebView) {
-        mOldWebViewBase = oldWebView;
+        oldWebViewBase = oldWebView;
     }
 
     public void setWebViewDelegate(WebViewDelegate delegate) {
-        mWebViewDelegate = delegate;
+        webViewDelegate = delegate;
     }
 
     public HTMLCreative getCreative() {
-        return mCreative;
+        return creative;
     }
 
     public void setCreative(HTMLCreative creative) {
-        mCreative = creative;
+        this.creative = creative;
     }
 
     public WebViewBase getWebView() {
-        return mWebView;
+        return webView;
     }
 
     public WebViewBanner getMraidWebView() {
-        return mMraidWebView;
+        return mraidWebView;
     }
 
     //gets expand properties & also a close view(irrespective of usecustomclose is false)
@@ -205,21 +208,21 @@ public class PrebidWebViewBase extends FrameLayout
             return;
         }
         if (getContext() != null) {
-            mFadeInAnimation = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in);
+            fadeInAnimation = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in);
         }
 
         if (webViewBase.isMRAID() && webViewBase.getMRAIDInterface() != null) {
             webViewBase.getMRAIDInterface().getJsExecutor().executeOnViewableChange(true);
         }
 
-        webViewBase.startAnimation(mFadeInAnimation);
+        webViewBase.startAnimation(fadeInAnimation);
         webViewBase.setVisibility(View.VISIBLE);
 
         displayAdViewPlacement(webViewBase);
     }
 
     protected void displayAdViewPlacement(WebViewBase webViewBase) {
-        renderPlacement(webViewBase, mWidth, mHeight);
+        renderPlacement(webViewBase, width, height);
 
         if (webViewBase.getAdWidth() != 0) {
             getLayoutParams().width = webViewBase.getAdWidth();
@@ -232,7 +235,7 @@ public class PrebidWebViewBase extends FrameLayout
     }
 
     private void renderPlacement(WebViewBase webViewBase, int width, int height) {
-        if (mContext == null) {
+        if (context == null) {
             LogUtil.warning(TAG, "Context is null");
             return;
         }
@@ -266,19 +269,17 @@ public class PrebidWebViewBase extends FrameLayout
         float factor = 1.0f;
 
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (mWidth < deviceHeight) {
-                factor = factor * deviceWidth / mWidth;
-            }
-            else {
-                factor = factor * deviceHeight / mWidth;
+            if (width < deviceHeight) {
+                factor = factor * deviceWidth / width;
+            } else {
+                factor = factor * deviceHeight / width;
             }
         }
         else {
-            if (mWidth < deviceWidth) {
-                factor = factor * deviceWidth / mWidth;
-            }
-            else {
-                factor = factor * deviceWidth / mWidth;
+            if (width < deviceWidth) {
+                factor = factor * deviceWidth / width;
+            } else {
+                factor = factor * deviceWidth / width;
             }
         }
 
@@ -297,15 +298,15 @@ public class PrebidWebViewBase extends FrameLayout
     private static final class WebViewCleanupRunnable implements Runnable {
         private static final String TAG = WebViewCleanupRunnable.class.getSimpleName();
 
-        private final WeakReference<WebView> mWeakWebView;
+        private final WeakReference<WebView> weakWebView;
 
         WebViewCleanupRunnable(WebView webViewBase) {
-            mWeakWebView = new WeakReference<>(webViewBase);
+            weakWebView = new WeakReference<>(webViewBase);
         }
 
         @Override
         public void run() {
-            WebView webViewBase = mWeakWebView.get();
+            WebView webViewBase = weakWebView.get();
             if (webViewBase == null) {
                 LogUtil.debug(TAG, "Unable to execute destroy on WebView. WebView is null.");
                 return;

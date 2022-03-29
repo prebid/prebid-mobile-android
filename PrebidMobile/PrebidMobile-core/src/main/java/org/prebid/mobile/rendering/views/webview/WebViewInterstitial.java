@@ -35,7 +35,7 @@ public class WebViewInterstitial extends WebViewBase {
     }
 
     public void setJSName(String name) {
-        mMRAIDBridgeName = name;
+        MRAIDBridgeName = name;
     }
 
     @Override

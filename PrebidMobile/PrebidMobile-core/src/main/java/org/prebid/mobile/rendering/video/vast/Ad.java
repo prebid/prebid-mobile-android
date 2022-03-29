@@ -21,43 +21,39 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
-public class Ad extends VASTParserBase
-{
-    private final static String VAST_AD = "Ad";
+public class Ad extends VASTParserBase {
+
+	private final static String VAST_AD = "Ad";
 	private final static String VAST_INLINE = "InLine";
 	private final static String VAST_WRAPPER = "Wrapper";
 
-    private InLine mInline;
-    private Wrapper mWrapper;
+	private InLine inline;
+	private Wrapper wrapper;
 
-    private String mId;
-    private String mSequence;
+	private String id;
+	private String sequence;
 
-	public Ad(XmlPullParser p) throws XmlPullParserException, IOException
-	{
+	public Ad(XmlPullParser p) throws XmlPullParserException, IOException {
 
 		p.require(XmlPullParser.START_TAG, null, VAST_AD);
 
-        mId = p.getAttributeValue(null, "id");
-        mSequence = p.getAttributeValue(null, "sequence");
+		id = p.getAttributeValue(null, "id");
+		sequence = p.getAttributeValue(null, "sequence");
 
-		while (p.next() != XmlPullParser.END_TAG)
-		{
-			if (p.getEventType() != XmlPullParser.START_TAG)
-			{
+		while (p.next() != XmlPullParser.END_TAG) {
+			if (p.getEventType() != XmlPullParser.START_TAG) {
 				continue;
 			}
 			String name = p.getName();
-			if (name != null && name.equals(VAST_INLINE))
-			{
+			if (name != null && name.equals(VAST_INLINE)) {
 				p.require(XmlPullParser.START_TAG, null, VAST_INLINE);
-                mInline = new InLine(p);
+				inline = new InLine(p);
 				p.require(XmlPullParser.END_TAG, null, VAST_INLINE);
 			}
 			else if (name != null && name.equals(VAST_WRAPPER))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_WRAPPER);
-                mWrapper = new Wrapper(p);
+				wrapper = new Wrapper(p);
 				p.require(XmlPullParser.END_TAG, null, VAST_WRAPPER);
 			}
 			else
@@ -69,19 +65,19 @@ public class Ad extends VASTParserBase
 	}
 
     public InLine getInline() {
-        return mInline;
+		return inline;
     }
 
     public Wrapper getWrapper() {
-        return mWrapper;
+		return wrapper;
     }
 
     public String getId() {
-        return mId;
+		return id;
     }
 
     public String getSequence() {
-        return mSequence;
+		return sequence;
     }
 
 }

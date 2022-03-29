@@ -27,12 +27,12 @@ public class CompanionAds extends VASTParserBase
     private final static String VAST_COMPANIONADS = "CompanionAds";
     private final static String VAST_COMPANION = "Companion";
 
-    private ArrayList<Companion> mCompanionAds;
+    private ArrayList<Companion> companionAds;
 
 	public CompanionAds(XmlPullParser p) throws XmlPullParserException, IOException
 	{
 
-        mCompanionAds = new ArrayList<>();
+		companionAds = new ArrayList<>();
 
 		p.require(XmlPullParser.START_TAG, null, VAST_COMPANIONADS);
 
@@ -46,7 +46,7 @@ public class CompanionAds extends VASTParserBase
 			if (name != null && name.equals(VAST_COMPANION))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_COMPANION);
-                mCompanionAds.add(new Companion(p));
+				companionAds.add(new Companion(p));
 				p.require(XmlPullParser.END_TAG, null, VAST_COMPANION);
 			}
 			else
@@ -58,6 +58,6 @@ public class CompanionAds extends VASTParserBase
 	}
 
     public ArrayList<Companion> getCompanionAds() {
-        return mCompanionAds;
+		return companionAds;
     }
 }

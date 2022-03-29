@@ -19,26 +19,27 @@ package org.prebid.mobile.rendering.bidding.data.bid;
 import org.json.JSONObject;
 
 public class Cache {
-    private String mKey;
-    private String mUrl;
-    private Bids mBids;
+
+    private String key;
+    private String url;
+    private Bids bids;
 
     protected Cache() {
     }
 
     public String getKey() {
-        return mKey;
+        return key;
     }
 
     public String getUrl() {
-        return mUrl;
+        return url;
     }
 
     public Bids getBids() {
-        if (mBids == null) {
-            mBids = new Bids();
+        if (bids == null) {
+            bids = new Bids();
         }
-        return mBids;
+        return bids;
     }
 
     public static Cache fromJSONObject(JSONObject jsonObject) {
@@ -46,9 +47,9 @@ public class Cache {
         if (jsonObject == null) {
             return cache;
         }
-        cache.mKey = jsonObject.optString("key");
-        cache.mUrl = jsonObject.optString("url");
-        cache.mBids = Bids.fromJSONObject(jsonObject.optJSONObject("bids"));
+        cache.key = jsonObject.optString("key");
+        cache.url = jsonObject.optString("url");
+        cache.bids = Bids.fromJSONObject(jsonObject.optJSONObject("bids"));
 
         return cache;
     }

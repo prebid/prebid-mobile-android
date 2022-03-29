@@ -37,97 +37,93 @@ public class InLine extends VASTParserBase
 	private final static String VAST_EXTENSIONS = "Extensions";
 	private final static String VAST_AD_VERIFICATIONS = "AdVerifications";
 
-	private AdSystem mAdSystem;
-	private AdTitle mAdTitle;
-	private Description mDescription;
-	private Advertiser mAdvertiser;
-	private Pricing mPricing;
-	private Survey mSurvey;
-	private Error mError;
-	private ArrayList<Impression> mImpressions;
-	private ArrayList<Creative> mCreatives;
-	private Extensions mExtensions;
-	private AdVerifications mAdVerifications;
+	private AdSystem adSystem;
+	private AdTitle adTitle;
+	private Description description;
+	private Advertiser advertiser;
+	private Pricing pricing;
+	private Survey survey;
+	private Error error;
+	private ArrayList<Impression> impressions;
+	private ArrayList<Creative> creatives;
+	private Extensions extensions;
+	private AdVerifications adVerifications;
 
-	public InLine(XmlPullParser p) throws XmlPullParserException, IOException
-	{
+	public InLine(XmlPullParser p) throws XmlPullParserException, IOException {
 
 		p.require(XmlPullParser.START_TAG, null, VAST_INLINE);
 
-		while (p.next() != XmlPullParser.END_TAG)
-		{
-			if (p.getEventType() != XmlPullParser.START_TAG)
-			{
+		while (p.next() != XmlPullParser.END_TAG) {
+			if (p.getEventType() != XmlPullParser.START_TAG) {
 				continue;
 			}
 			String name = p.getName();
 			if (name != null && name.equals(VAST_ADSYSTEM))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_ADSYSTEM);
-				mAdSystem = new AdSystem(p);
+				adSystem = new AdSystem(p);
 				p.require(XmlPullParser.END_TAG, null, VAST_ADSYSTEM);
 			}
 			else if (name != null && name.equals(VAST_ADTITLE))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_ADTITLE);
-				mAdTitle = new AdTitle(p);
+				adTitle = new AdTitle(p);
 				p.require(XmlPullParser.END_TAG, null, VAST_ADTITLE);
 			}
 			else if (name != null && name.equals(VAST_DESCRIPTION))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_DESCRIPTION);
-				mDescription = new Description(p);
+				description = new Description(p);
 				p.require(XmlPullParser.END_TAG, null, VAST_DESCRIPTION);
 			}
 			else if (name != null && name.equals(VAST_ADVERTISER))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_ADVERTISER);
-				mAdvertiser = new Advertiser(p);
+				advertiser = new Advertiser(p);
 				p.require(XmlPullParser.END_TAG, null, VAST_ADVERTISER);
 			}
 			else if (name != null && name.equals(VAST_PRICING))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_PRICING);
-				mPricing = new Pricing(p);
+				pricing = new Pricing(p);
 				p.require(XmlPullParser.END_TAG, null, VAST_PRICING);
 			}
 			else if (name != null && name.equals(VAST_SURVEY))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_SURVEY);
-				mSurvey = new Survey(p);
+				survey = new Survey(p);
 				p.require(XmlPullParser.END_TAG, null, VAST_SURVEY);
 			}
 			else if (name != null && name.equals(VAST_ERROR))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_ERROR);
-				mError = new Error(p);
+				error = new Error(p);
 				p.require(XmlPullParser.END_TAG, null, VAST_ERROR);
 			}
 			else if (name != null && name.equals(VAST_IMPRESSION))
 			{
-				if (mImpressions == null)
-				{
-					mImpressions = new ArrayList<>();
+				if (impressions == null) {
+					impressions = new ArrayList<>();
 				}
 				p.require(XmlPullParser.START_TAG, null, VAST_IMPRESSION);
-				mImpressions.add(new Impression(p));
+				impressions.add(new Impression(p));
 				p.require(XmlPullParser.END_TAG, null, VAST_IMPRESSION);
 			}
 			else if (name != null && name.equals(VAST_CREATIVES))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_CREATIVES);
-				mCreatives = (new Creatives(p)).getCreatives();
+				creatives = (new Creatives(p)).getCreatives();
 				p.require(XmlPullParser.END_TAG, null, VAST_CREATIVES);
 			}
 			else if (name != null && name.equals(VAST_EXTENSIONS))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_EXTENSIONS);
-				mExtensions = new Extensions(p);
+				extensions = new Extensions(p);
 				p.require(XmlPullParser.END_TAG, null, VAST_EXTENSIONS);
 			}
 			else if (name != null && name.equals(VAST_AD_VERIFICATIONS)) {
 				p.require(XmlPullParser.START_TAG, null, VAST_AD_VERIFICATIONS);
-				mAdVerifications = new AdVerifications(p);
+				adVerifications = new AdVerifications(p);
 				p.require(XmlPullParser.END_TAG, null, VAST_AD_VERIFICATIONS);
 			}
 			else
@@ -139,50 +135,50 @@ public class InLine extends VASTParserBase
 	}
 
 	public AdSystem getAdSystem() {
-		return mAdSystem;
+		return adSystem;
 	}
 
 	public AdTitle getAdTitle() {
-		return mAdTitle;
+		return adTitle;
 	}
 
 	public Description getDescription() {
-		return mDescription;
+		return description;
 	}
 
 	public Advertiser getAdvertiser() {
-		return mAdvertiser;
+		return advertiser;
 	}
 
 	public Pricing getPricing() {
-		return mPricing;
+		return pricing;
 	}
 
 	public Survey getSurvey() {
-		return mSurvey;
+		return survey;
 	}
 
 	public Error getError() {
-		return mError;
+		return error;
 	}
 
 	public ArrayList<Impression> getImpressions() {
-		return mImpressions;
+		return impressions;
 	}
 
 	public ArrayList<Creative> getCreatives() {
-		return mCreatives;
+		return creatives;
 	}
 
 	public void setCreatives(ArrayList<Creative> creatives) {
-		mCreatives = creatives;
+		this.creatives = creatives;
 	}
 
 	public Extensions getExtensions() {
-		return mExtensions;
+		return extensions;
 	}
 
 	public AdVerifications getAdVerifications() {
-		return mAdVerifications;
+		return adVerifications;
 	}
 }

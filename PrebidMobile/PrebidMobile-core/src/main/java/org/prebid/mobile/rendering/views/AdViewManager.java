@@ -47,22 +47,27 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class AdViewManager implements CreativeViewListener, TransactionManagerListener {
+
     private static final String TAG = AdViewManager.class.getSimpleName();
 
-    private final InterstitialManager mInterstitialManager;
+    private final InterstitialManager interstitialManager;
 
-    private AdUnitConfiguration mAdConfiguration = new AdUnitConfiguration();
-    private TransactionManager mTransactionManager;
-    private WeakReference<Context> mContextReference;
-    private ViewGroup mAdView;
-    private AdViewManagerListener mAdViewListener;
-    private AbstractCreative mCurrentCreative;
-    private AbstractCreative mLastCreativeShown;
+    private AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+    private TransactionManager transactionManager;
+    private WeakReference<Context> contextReference;
+    private ViewGroup adView;
+    private AdViewManagerListener adViewListener;
+    private AbstractCreative currentCreative;
+    private AbstractCreative lastCreativeShown;
 
-    private AdViewManagerInterstitialDelegate mDelegate = this::show;
+    private AdViewManagerInterstitialDelegate delegate = this::show;
 
-    public AdViewManager(Context context, AdViewManagerListener adViewListener, ViewGroup adView, InterstitialManager interstitialManager)
-    throws AdException {
+    public AdViewManager(
+            Context context,
+            AdViewManagerListener adViewListener,
+            ViewGroup adView,
+            InterstitialManager interstitialManager
+    ) throws AdException {
 
         if (context == null) {
             throw new AdException(AdException.INTERNAL_ERROR, "Context is null");
@@ -72,12 +77,12 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
             throw new AdException(AdException.INTERNAL_ERROR, "AdViewManagerListener is null");
         }
 
-        mContextReference = new WeakReference<>(context);
-        mAdView = adView;
-        mAdViewListener = adViewListener;
-        mTransactionManager = new TransactionManager(context, this, interstitialManager);
-        mInterstitialManager = interstitialManager;
-        mInterstitialManager.setAdViewManagerInterstitialDelegate(mDelegate);
+        contextReference = new WeakReference<>(context);
+        this.adView = adView;
+        this.adViewListener = adViewListener;
+        transactionManager = new TransactionManager(context, this, interstitialManager);
+        this.interstitialManager = interstitialManager;
+        this.interstitialManager.setAdViewManagerInterstitialDelegate(delegate);
     }
 
     @Override
@@ -88,19 +93,19 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
     @Override
     public void onFetchingFailed(AdException exception) {
         LogUtil.error(TAG, "There was an error fetching an ad " + exception.toString());
-        mAdViewListener.failedToLoad(exception);
+        adViewListener.failedToLoad(exception);
     }
 
     @Override
     public void creativeWasClicked(AbstractCreative creative, String url) {
-        mAdViewListener.creativeClicked(url);
+        adViewListener.creativeClicked(url);
     }
 
     @Override
     public void creativeInterstitialDidClose(AbstractCreative creative) {
         LogUtil.debug(TAG, "creativeInterstitialDidClose");
 
-        Transaction currentTransaction = mTransactionManager.getCurrentTransaction();
+        Transaction currentTransaction = transactionManager.getCurrentTransaction();
         if (creative.isDisplay() && creative.isEndCard()) {
 
             // Call ad close event for video tracking event
@@ -111,17 +116,17 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
         // Transaction is complete
         resetTransactionState();
 
-        mAdViewListener.creativeInterstitialClosed();
+        adViewListener.creativeInterstitialClosed();
     }
 
     @Override
     public void creativeDidExpand(AbstractCreative creative) {
-        mAdViewListener.creativeExpanded();
+        adViewListener.creativeExpanded();
     }
 
     @Override
     public void creativeDidCollapse(AbstractCreative creative) {
-        mAdViewListener.creativeCollapsed();
+        adViewListener.creativeCollapsed();
     }
 
     @Override
@@ -131,22 +136,22 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     @Override
     public void creativeMuted(AbstractCreative creative) {
-        mAdViewListener.creativeMuted();
+        adViewListener.creativeMuted();
     }
 
     @Override
     public void creativeUnMuted(AbstractCreative creative) {
-        mAdViewListener.creativeUnMuted();
+        adViewListener.creativeUnMuted();
     }
 
     @Override
     public void creativePaused(AbstractCreative creative) {
-        mAdViewListener.creativePaused();
+        adViewListener.creativePaused();
     }
 
     @Override
     public void creativeResumed(AbstractCreative creative) {
-        mAdViewListener.creativeResumed();
+        adViewListener.creativeResumed();
     }
 
     @Override
@@ -165,121 +170,123 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
             resetTransactionState();
         }
 
-        mAdViewListener.adCompleted();
+        adViewListener.adCompleted();
 
         // If banner refresh enabled and another ad is available, show that ad
-        if (isAutoDisplayOnLoad() && mTransactionManager.hasTransaction()) {
+        if (isAutoDisplayOnLoad() && transactionManager.hasTransaction()) {
             show();
         }
     }
 
     public void resetTransactionState() {
         hide();
-        mTransactionManager.resetState();
+        transactionManager.resetState();
     }
 
     public void hide() {
-        if (mCurrentCreative == null) {
+        if (currentCreative == null) {
             LogUtil.warning(TAG, "Can not hide a null creative");
             return;
         }
 
-        if (mAdView != null && mAdView.indexOfChild(mCurrentCreative.getCreativeView()) != -1) {
-            mAdView.removeView(mCurrentCreative.getCreativeView());
-            mCurrentCreative = null;
+        if (adView != null && adView.indexOfChild(currentCreative.getCreativeView()) != -1) {
+            adView.removeView(currentCreative.getCreativeView());
+            currentCreative = null;
         }
     }
 
     public void setAdVisibility(int visibility) {
-        if (mCurrentCreative == null) {
-            LogUtil.debug(TAG, "setAdVisibility(): Skipping creative window focus notification. mCurrentCreative is null");
+        if (currentCreative == null) {
+            LogUtil.debug(
+                    TAG,
+                    "setAdVisibility(): Skipping creative window focus notification. currentCreative is null"
+            );
             return;
         }
 
         if (Utils.isScreenVisible(visibility)) {
             //handles resuming of show timer for auid ads & video resume for video ads
-            mCurrentCreative.handleAdWindowFocus();
-        }
-        else {
+            currentCreative.handleAdWindowFocus();
+        } else {
             //handles pausing of show timer for auid ads & video pause for video ads
-            mCurrentCreative.handleAdWindowNoFocus();
+            currentCreative.handleAdWindowNoFocus();
         }
     }
 
     public AdUnitConfiguration getAdConfiguration() {
-        return mAdConfiguration;
+        return adConfiguration;
     }
 
     public boolean isAutoDisplayOnLoad() {
-        return mAdConfiguration.isAdType(AdFormat.BANNER);
+        return adConfiguration.isAdType(AdFormat.BANNER);
     }
 
     public void destroy() {
-        if (mTransactionManager != null) {
-            mTransactionManager.destroy();
+        if (transactionManager != null) {
+            transactionManager.destroy();
         }
-        if (mInterstitialManager != null) {
-            mInterstitialManager.destroy();
+        if (interstitialManager != null) {
+            interstitialManager.destroy();
         }
-        if (mCurrentCreative != null) {
-            mCurrentCreative.destroy();
+        if (currentCreative != null) {
+            currentCreative.destroy();
         }
     }
 
     public void pause() {
-        if (mCurrentCreative != null) {
-            mCurrentCreative.pause();
+        if (currentCreative != null) {
+            currentCreative.pause();
         }
     }
 
     public void resume() {
-        if (mCurrentCreative != null) {
-            mCurrentCreative.resume();
+        if (currentCreative != null) {
+            currentCreative.resume();
         }
     }
 
     public void mute() {
-        if (mCurrentCreative != null) {
-            mCurrentCreative.mute();
+        if (currentCreative != null) {
+            currentCreative.mute();
         }
     }
 
     public void unmute() {
-        if (mCurrentCreative != null) {
-            mCurrentCreative.unmute();
+        if (currentCreative != null) {
+            currentCreative.unmute();
         }
     }
 
     public boolean isNotShowingEndCard() {
-        return mCurrentCreative != null && (!(mCurrentCreative.isDisplay()) || !mCurrentCreative.isEndCard());
+        return currentCreative != null && (!(currentCreative.isDisplay()) || !currentCreative.isEndCard());
     }
 
     public boolean hasEndCard() {
-        return mCurrentCreative != null && mCurrentCreative.isDisplay();
+        return currentCreative != null && currentCreative.isDisplay();
     }
 
     public boolean hasNextCreative() {
-        return mTransactionManager.hasNextCreative();
+        return transactionManager.hasNextCreative();
     }
 
     public void updateAdView(View view) {
-        mCurrentCreative.updateAdView(view);
+        currentCreative.updateAdView(view);
     }
 
     public void trackVideoStateChange(InternalPlayerState state) {
-        mCurrentCreative.trackVideoStateChange(state);
+        currentCreative.trackVideoStateChange(state);
     }
 
     public boolean canShowFullScreen() {
-        return mCurrentCreative != null && mCurrentCreative.isBuiltInVideo();
+        return currentCreative != null && currentCreative.isBuiltInVideo();
     }
 
     public void returnFromVideo(View callingView) {
-        if (mCurrentCreative != null && mCurrentCreative.isBuiltInVideo()) {
-            View creativeView = mCurrentCreative.getCreativeView();
-            if (creativeView instanceof VideoCreativeView && mCurrentCreative.isVideo()) {
+        if (currentCreative != null && currentCreative.isBuiltInVideo()) {
+            View creativeView = currentCreative.getCreativeView();
+            if (creativeView instanceof VideoCreativeView && currentCreative.isVideo()) {
                 VideoCreativeView videoCreativeView = (VideoCreativeView) creativeView;
-                VideoCreative videoCreative = (VideoCreative) mCurrentCreative;
+                VideoCreative videoCreative = (VideoCreative) currentCreative;
                 videoCreativeView.hideCallToAction();
                 videoCreativeView.mute();
                 videoCreative.updateAdView(callingView);
@@ -289,32 +296,30 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
     }
 
     public boolean isPlaying() {
-        return mCurrentCreative != null && mCurrentCreative.isPlaying();
+        return currentCreative != null && currentCreative.isPlaying();
     }
 
     public boolean isInterstitialClosed() {
-        return mCurrentCreative != null && mCurrentCreative.isInterstitialClosed();
+        return currentCreative != null && currentCreative.isInterstitialClosed();
     }
 
     public void trackCloseEvent() {
-        if (mCurrentCreative != null) {
-            mCurrentCreative.trackVideoEvent(VideoAdEvent.Event.AD_CLOSE);
+        if (currentCreative != null) {
+            currentCreative.trackVideoEvent(VideoAdEvent.Event.AD_CLOSE);
         }
     }
 
     public long getMediaDuration() {
-        return mCurrentCreative != null ? mCurrentCreative.getMediaDuration() : 0;
+        return currentCreative != null ? currentCreative.getMediaDuration() : 0;
     }
 
     public long getSkipOffset() {
-        int sscOffset = mAdConfiguration.getVideoSkipOffset();
+        int sscOffset = adConfiguration.getVideoSkipOffset();
         if (sscOffset >= 0) {
             return sscOffset;
         }
 
-        return mCurrentCreative != null
-                ? mCurrentCreative.getVideoSkipOffset()
-                : AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
+        return currentCreative != null ? currentCreative.getVideoSkipOffset() : AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
     }
 
     public void addObstructions(InternalFriendlyObstruction... friendlyObstructions) {
@@ -323,13 +328,13 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
             return;
         }
 
-        if (mCurrentCreative == null) {
+        if (currentCreative == null) {
             LogUtil.debug(TAG, "addObstructions(): Failed. Current creative is null.");
             return;
         }
 
         for (InternalFriendlyObstruction friendlyObstruction : friendlyObstructions) {
-            mCurrentCreative.addOmFriendlyObstruction(friendlyObstruction);
+            currentCreative.addOmFriendlyObstruction(friendlyObstruction);
         }
     }
 
@@ -338,77 +343,79 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
             LogUtil.debug(TAG, "Couldn't proceed show(): Video or HTML is not resolved.");
             return;
         }
-        AbstractCreative creative = mTransactionManager.getCurrentCreative();
+        AbstractCreative creative = transactionManager.getCurrentCreative();
         if (creative == null) {
             LogUtil.error(TAG, "Show called with no ad");
             return;
         }
         // Display current creative
-        mCurrentCreative = creative;
+        currentCreative = creative;
 
-        mCurrentCreative.setCreativeViewListener(this);
+        currentCreative.setCreativeViewListener(this);
         handleCreativeDisplay();
     }
 
     public void loadBidTransaction(AdUnitConfiguration adConfiguration, BidResponse bidResponse) {
-        mAdConfiguration = adConfiguration;
+        this.adConfiguration = adConfiguration;
         resetTransactionState();
-        mTransactionManager.fetchBidTransaction(adConfiguration, bidResponse);
+        transactionManager.fetchBidTransaction(adConfiguration, bidResponse);
     }
 
     public void loadVideoTransaction(AdUnitConfiguration adConfiguration, String vastXml) {
-        mAdConfiguration = adConfiguration;
+        this.adConfiguration = adConfiguration;
         resetTransactionState();
-        mTransactionManager.fetchVideoTransaction(adConfiguration, vastXml);
+        transactionManager.fetchVideoTransaction(adConfiguration, vastXml);
     }
 
     private void handleVideoCreativeComplete(AbstractCreative creative) {
-        Transaction transaction = mTransactionManager.getCurrentTransaction();
+        Transaction transaction = transactionManager.getCurrentTransaction();
         boolean isBuiltInVideo = creative.isBuiltInVideo();
         closeInterstitial();
 
-        if (mTransactionManager.hasNextCreative() && mAdView != null) {
+        if (transactionManager.hasNextCreative() && adView != null) {
 
-            mTransactionManager.incrementCreativesCounter();
+            transactionManager.incrementCreativesCounter();
 
             // Assuming the next creative is an HTMLCreative
             HTMLCreative endCardCreative = (HTMLCreative) transaction.getCreativeFactories().get(1).getCreative();
             if (isBuiltInVideo) {
-                mInterstitialManager.displayVideoAdViewInInterstitial(mContextReference.get(), mAdView);
-            }
-            else {
-                mInterstitialManager.setInterstitialDisplayDelegate(endCardCreative);
-                mInterstitialManager.displayAdViewInInterstitial(mContextReference.get(), mAdView);
+                interstitialManager.displayVideoAdViewInInterstitial(contextReference.get(), adView);
+            } else {
+                interstitialManager.setInterstitialDisplayDelegate(endCardCreative);
+                interstitialManager.displayAdViewInInterstitial(contextReference.get(), adView);
             }
         }
-        mAdViewListener.videoCreativePlaybackFinished();
+        adViewListener.videoCreativePlaybackFinished();
     }
 
     private void handleCreativeDisplay() {
-        View creativeView = mCurrentCreative.getCreativeView();
+        View creativeView = currentCreative.getCreativeView();
         if (creativeView == null) {
             LogUtil.error(TAG, "Creative has no view");
             return;
         }
 
-        if (mAdConfiguration.isAdType(AdFormat.BANNER)) {
-            if (!mCurrentCreative.equals(mLastCreativeShown)) {
+        if (adConfiguration.isAdType(AdFormat.BANNER)) {
+            if (!currentCreative.equals(lastCreativeShown)) {
                 displayCreative(creativeView);
             }
-            mLastCreativeShown = mCurrentCreative;
+            lastCreativeShown = currentCreative;
             return;
         }
         displayCreative(creativeView);
     }
 
     private void displayCreative(View creativeView) {
-        mCurrentCreative.display();
-        mAdViewListener.viewReadyForImmediateDisplay(creativeView);
+        currentCreative.display();
+        adViewListener.viewReadyForImmediateDisplay(creativeView);
     }
 
     private boolean isCreativeResolved() {
-        if (mCurrentCreative != null && !mCurrentCreative.isResolved()) {
-            mAdViewListener.failedToLoad(new AdException(AdException.INTERNAL_ERROR, "Creative has not been resolved yet"));
+        if (currentCreative != null && !currentCreative.isResolved()) {
+            adViewListener.failedToLoad(new AdException(
+                    AdException.INTERNAL_ERROR,
+                    "Creative has not been resolved yet"
+            ));
             return false;
         }
         return true;
@@ -416,18 +423,17 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     // TODO: 13.08.2020 Remove casts
     private void closeInterstitial() {
-        if (mAdView instanceof InterstitialView) {
-            ((InterstitialView) mAdView).closeInterstitialVideo();
+        if (adView instanceof InterstitialView) {
+            ((InterstitialView) adView).closeInterstitialVideo();
         }
     }
 
     private void handleAutoDisplay() {
         // This should cover all cases. If we don't have a delegate we're in a bad state.
         // If an ad is displaying or we are not to autodisplay, don't show. Otherwise do.
-        if (mAdViewListener != null && (mCurrentCreative != null && isAutoDisplayOnLoad())) {
+        if (adViewListener != null && (currentCreative != null && isAutoDisplayOnLoad())) {
             show();
-        }
-        else {
+        } else {
             LogUtil.info(TAG, "AdViewManager - Ad will be displayed when show is called");
         }
     }
@@ -444,13 +450,13 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
     private void processTransaction(Transaction transaction) {
         List<CreativeFactory> creativeFactories = transaction.getCreativeFactories();
         if (!creativeFactories.isEmpty()) {
-            mCurrentCreative = creativeFactories.get(0).getCreative();
-                mCurrentCreative.createOmAdSession();
+            currentCreative = creativeFactories.get(0).getCreative();
+            currentCreative.createOmAdSession();
         }
         try {
             final AdDetails adDetails = new AdDetails();
             adDetails.setTransactionId(transaction.getTransactionState());
-            mAdViewListener.adLoaded(adDetails);
+            adViewListener.adLoaded(adDetails);
             trackAdLoaded();
         }
         catch (Exception e) {
@@ -461,8 +467,8 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
     }
 
     private void trackAdLoaded() {
-        if (mCurrentCreative != null) {
-            mCurrentCreative.trackAdLoaded();
+        if (currentCreative != null) {
+            currentCreative.trackAdLoaded();
         }
     }
 

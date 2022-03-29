@@ -33,40 +33,40 @@ public class MraidVariableContainer {
 
     private static String sDisabledFlags = null;
 
-    private String mUrlForLaunching;
-    private String mExpandProperties;
-    private String mOrientationProperties;
+    private String urlForLaunching;
+    private String expandProperties;
+    private String orientationProperties;
 
-    private String mCurrentState;
-    private String mCurrentExposure;
-    private Boolean mCurrentViewable = null;
+    private String currentState;
+    private String currentExposure;
+    private Boolean currentViewable = null;
 
     public String getUrlForLaunching() {
-        return mUrlForLaunching == null ? "" : mUrlForLaunching;
+        return urlForLaunching == null ? "" : urlForLaunching;
     }
 
     public void setUrlForLaunching(String urlForLaunching) {
-        mUrlForLaunching = urlForLaunching;
+        this.urlForLaunching = urlForLaunching;
     }
 
     public String getExpandProperties() {
-        return mExpandProperties;
+        return expandProperties;
     }
 
     public void setExpandProperties(String expandProperties) {
-        mExpandProperties = expandProperties;
+        this.expandProperties = expandProperties;
     }
 
     public String getOrientationProperties() {
-        return mOrientationProperties;
+        return orientationProperties;
     }
 
     public void setOrientationProperties(String orientationProperties) {
-        mOrientationProperties = orientationProperties;
+        this.orientationProperties = orientationProperties;
     }
 
     public boolean isLaunchedWithUrl() {
-        return !TextUtils.isEmpty(mUrlForLaunching);
+        return !TextUtils.isEmpty(urlForLaunching);
     }
 
     public static void setDisabledFlags(String disabledFlags) {
@@ -78,27 +78,27 @@ public class MraidVariableContainer {
     }
 
     public String getCurrentState() {
-        return mCurrentState;
+        return currentState;
     }
 
     public void setCurrentState(String currentState) {
-        mCurrentState = currentState;
+        this.currentState = currentState;
     }
 
     public String getCurrentExposure() {
-        return mCurrentExposure;
+        return currentExposure;
     }
 
     public void setCurrentExposure(String currentExposure) {
-        mCurrentExposure = currentExposure;
+        this.currentExposure = currentExposure;
     }
 
     public Boolean getCurrentViewable() {
-        return mCurrentViewable;
+        return currentViewable;
     }
 
     public void setCurrentViewable(Boolean currentViewable) {
-        mCurrentViewable = currentViewable;
+        this.currentViewable = currentViewable;
     }
 
     /**

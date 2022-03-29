@@ -1,15 +1,15 @@
 package org.prebid.mobile;
 
 public class BidLog {
-    private BidLogEntry mLastEntry;
+    private BidLogEntry lastEntry;
 
-    private static BidLog sInstance;
+    private static BidLog instance;
 
     public static BidLog getInstance() {
-        if (sInstance == null) {
-            sInstance = new BidLog();
+        if (instance == null) {
+            instance = new BidLog();
         }
-        return sInstance;
+        return instance;
     }
 
     private BidLog() {
@@ -17,15 +17,15 @@ public class BidLog {
     }
 
     public BidLogEntry getLastBid() {
-        return mLastEntry;
+        return lastEntry;
     }
 
     public void setLastEntry(BidLogEntry entry) {
-        this.mLastEntry = entry;
+        this.lastEntry = entry;
     }
 
     public void cleanLog() {
-        this.mLastEntry = null;
+        this.lastEntry = null;
     }
 
     public static class BidLogEntry {

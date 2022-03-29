@@ -38,74 +38,71 @@ public final class CalendarEventWrapper
 		UNKNOWN
 	}
 
-	public enum Transparency
-	{
+	public enum Transparency {
 		TRANSPARENT,
 		OPAQUE,
 		UNKNOWN
 	}
 
-	private String mId;
-	private String mDescription;
-	private String mLocation;
-	private String mSummary;
-    private DateWrapper mStart;
-    private DateWrapper mEnd;
-	private Status mStatus;
-	private Transparency mTransparency;
-    private CalendarRepeatRule mRecurrence;
-    private DateWrapper mReminder;
+	private String id;
+	private String description;
+	private String location;
+	private String summary;
+	private DateWrapper start;
+	private DateWrapper end;
+	private Status status;
+	private Transparency transparency;
+	private CalendarRepeatRule recurrence;
+	private DateWrapper reminder;
 
-	public String getId()
-	{
-		return mId;
+	public String getId() {
+		return id;
 	}
 
-	public void setId(String id)
-	{
-        mId = id;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getDescription()
 	{
-		return mDescription;
+		return description;
 	}
 
 	public void setDescription(String description)
 	{
-        mDescription = description;
+		this.description = description;
 	}
 
 	public String getLocation()
 	{
-		return mLocation;
+		return location;
 	}
 
 	public void setLocation(String location)
 	{
-        mLocation = location;
+		this.location = location;
 	}
 
 	public String getSummary()
 	{
-		return mSummary;
+		return summary;
 	}
 
 	public void setSummary(String summary)
 	{
-        mSummary = summary;
+		this.summary = summary;
 	}
 
     public DateWrapper getStart()
 	{
-		return mStart;
+		return start;
 	}
 
 	public void setStart(String start)
 	{
 		try
 		{
-            mStart = new DateWrapper(start);
+			this.start = new DateWrapper(start);
 		}
 		catch (ParseException e)
 		{
@@ -115,14 +112,14 @@ public final class CalendarEventWrapper
 
     public DateWrapper getEnd()
 	{
-		return mEnd;
+		return end;
 	}
 
 	public void setEnd(String end)
 	{
 		try
 		{
-            mEnd = new DateWrapper(end);
+			this.end = new DateWrapper(end);
 		}
 		catch (ParseException e)
 		{
@@ -132,44 +129,44 @@ public final class CalendarEventWrapper
 
 	public Status getStatus()
 	{
-		return mStatus;
+		return status;
 	}
 
 	public void setStatus(Status status)
 	{
-        mStatus = status;
+		this.status = status;
 	}
 
 	public Transparency getTransparency()
 	{
-		return mTransparency;
+		return transparency;
 	}
 
 	public void setTransparency(Transparency transparency)
 	{
-        mTransparency = transparency;
+		this.transparency = transparency;
 	}
 
     public CalendarRepeatRule getRecurrence()
 	{
-		return mRecurrence;
+		return recurrence;
 	}
 
     public void setRecurrence(CalendarRepeatRule recurrence)
 	{
-        mRecurrence = recurrence;
+		this.recurrence = recurrence;
 	}
 
     public DateWrapper getReminder()
 	{
-		return mReminder;
+		return reminder;
 	}
 
 	public void setReminder(String reminder)
 	{
 		try
 		{
-            mReminder = new DateWrapper(reminder);
+			this.reminder = new DateWrapper(reminder);
 		}
 		catch (ParseException e)
 		{

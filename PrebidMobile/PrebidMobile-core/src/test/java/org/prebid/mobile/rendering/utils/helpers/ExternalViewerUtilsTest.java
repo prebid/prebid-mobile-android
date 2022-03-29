@@ -47,9 +47,9 @@ import static org.mockito.Mockito.*;
 public class ExternalViewerUtilsTest {
 
     @Mock
-    private Context mMockContext;
+    private Context mockContext;
     @Mock
-    private OnBrowserActionResultListener mMockResultListener;
+    private OnBrowserActionResultListener mockResultListener;
 
     @Before
     public void setUp() throws Exception {
@@ -64,7 +64,7 @@ public class ExternalViewerUtilsTest {
     @Test
     public void whenIsActivityCallableAndContextOrIntentNull_ReturnFalse() {
         assertFalse(ExternalViewerUtils.isActivityCallable(null, null));
-        assertFalse(ExternalViewerUtils.isActivityCallable(mMockContext, null));
+        assertFalse(ExternalViewerUtils.isActivityCallable(mockContext, null));
         assertFalse(ExternalViewerUtils.isActivityCallable(null, mock(Intent.class)));
     }
 
@@ -72,8 +72,8 @@ public class ExternalViewerUtilsTest {
     public void whenIsActivityCallableAndQueryIntentActivitiesEmpty_ReturnFalse() {
         PackageManager mockManager = mock(PackageManager.class);
         when(mockManager.queryIntentActivities(any(Intent.class), anyInt())).thenReturn(Collections.emptyList());
-        when(mMockContext.getPackageManager()).thenReturn(mockManager);
-        assertFalse(ExternalViewerUtils.isActivityCallable(mMockContext, mock(Intent.class)));
+        when(mockContext.getPackageManager()).thenReturn(mockManager);
+        assertFalse(ExternalViewerUtils.isActivityCallable(mockContext, mock(Intent.class)));
     }
 
     @Test
@@ -81,20 +81,20 @@ public class ExternalViewerUtilsTest {
         PackageManager mockManager = mock(PackageManager.class);
         List<ResolveInfo> mockList = Collections.singletonList(mock(ResolveInfo.class));
         when(mockManager.queryIntentActivities(any(Intent.class), anyInt())).thenReturn(mockList);
-        when(mMockContext.getPackageManager()).thenReturn(mockManager);
-        assertTrue(ExternalViewerUtils.isActivityCallable(mMockContext, mock(Intent.class)));
+        when(mockContext.getPackageManager()).thenReturn(mockManager);
+        assertTrue(ExternalViewerUtils.isActivityCallable(mockContext, mock(Intent.class)));
     }
 
     @Test
     public void whenStartExternalVideoPlayerAndUrlNull_DoNothing() {
-        ExternalViewerUtils.startExternalVideoPlayer(mMockContext, null);
-        verifyZeroInteractions(mMockContext);
+        ExternalViewerUtils.startExternalVideoPlayer(mockContext, null);
+        verifyZeroInteractions(mockContext);
     }
 
     @Test
     public void whenStartExternalVideoPlayerAndUrlNotNull_StartActivity() {
-        ExternalViewerUtils.startExternalVideoPlayer(mMockContext, "https://url");
-        verify(mMockContext).startActivity(any(Intent.class));
+        ExternalViewerUtils.startExternalVideoPlayer(mockContext, "https://url");
+        verify(mockContext).startActivity(any(Intent.class));
     }
 
     @Test
@@ -102,9 +102,9 @@ public class ExternalViewerUtilsTest {
         PackageManager mockManager = mock(PackageManager.class);
         List<ResolveInfo> mockList = Collections.singletonList(mock(ResolveInfo.class));
         when(mockManager.queryIntentActivities(any(Intent.class), anyInt())).thenReturn(mockList);
-        when(mMockContext.getPackageManager()).thenReturn(mockManager);
-        ExternalViewerUtils.launchApplicationUrl(mMockContext, Uri.parse("test"));
-        verify(mMockContext).startActivity(any(Intent.class));
+        when(mockContext.getPackageManager()).thenReturn(mockManager);
+        ExternalViewerUtils.launchApplicationUrl(mockContext, Uri.parse("test"));
+        verify(mockContext).startActivity(any(Intent.class));
     }
 
     @Test
@@ -113,11 +113,11 @@ public class ExternalViewerUtilsTest {
         PackageManager mockManager = mock(PackageManager.class);
         List<ResolveInfo> mockList = Collections.singletonList(mock(ResolveInfo.class));
         when(mockManager.queryIntentActivities(any(Intent.class), anyInt())).thenReturn(mockList);
-        when(mMockContext.getPackageManager()).thenReturn(mockManager);
+        when(mockContext.getPackageManager()).thenReturn(mockManager);
 
-        ExternalViewerUtils.startBrowser(mMockContext, "url", true, mMockResultListener);
-        verify(mMockContext).startActivity(any(Intent.class));
-        verify(mMockResultListener).onSuccess(OnBrowserActionResultListener.BrowserActionResult.INTERNAL_BROWSER);
+        ExternalViewerUtils.startBrowser(mockContext, "url", true, mockResultListener);
+        verify(mockContext).startActivity(any(Intent.class));
+        verify(mockResultListener).onSuccess(OnBrowserActionResultListener.BrowserActionResult.INTERNAL_BROWSER);
     }
 
     @Test
@@ -126,19 +126,19 @@ public class ExternalViewerUtilsTest {
         PackageManager mockManager = mock(PackageManager.class);
         List<ResolveInfo> mockList = Collections.singletonList(mock(ResolveInfo.class));
         when(mockManager.queryIntentActivities(any(Intent.class), anyInt())).thenReturn(mockList);
-        when(mMockContext.getPackageManager()).thenReturn(mockManager);
+        when(mockContext.getPackageManager()).thenReturn(mockManager);
 
-        ExternalViewerUtils.startBrowser(mMockContext, "url", true, mMockResultListener);
-        verify(mMockContext).startActivity(any(Intent.class));
-        verify(mMockResultListener).onSuccess(OnBrowserActionResultListener.BrowserActionResult.INTERNAL_BROWSER);
+        ExternalViewerUtils.startBrowser(mockContext, "url", true, mockResultListener);
+        verify(mockContext).startActivity(any(Intent.class));
+        verify(mockResultListener).onSuccess(OnBrowserActionResultListener.BrowserActionResult.INTERNAL_BROWSER);
     }
 
     @Test
     public void whenStartBrowserAndUseExternalBrowserTrue_NotifyExternalBrowserSuccess() {
         PrebidMobile.useExternalBrowser = true;
 
-        ExternalViewerUtils.startBrowser(mMockContext, "https://url.com", true, mMockResultListener);
-        verify(mMockContext).startActivity(any(Intent.class));
-        verify(mMockResultListener).onSuccess(OnBrowserActionResultListener.BrowserActionResult.EXTERNAL_BROWSER);
+        ExternalViewerUtils.startBrowser(mockContext, "https://url.com", true, mockResultListener);
+        verify(mockContext).startActivity(any(Intent.class));
+        verify(mockResultListener).onSuccess(OnBrowserActionResultListener.BrowserActionResult.EXTERNAL_BROWSER);
     }
 }

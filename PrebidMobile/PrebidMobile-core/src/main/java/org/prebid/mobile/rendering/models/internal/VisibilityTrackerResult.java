@@ -20,35 +20,38 @@ import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.utils.exposure.ViewExposure;
 
 public class VisibilityTrackerResult {
-    private final NativeEventTracker.EventType mEventType;
-    private final ViewExposure mViewExposure;
-    private final boolean mIsVisible;
-    private final boolean mShouldFireImpression;
 
-    public VisibilityTrackerResult(NativeEventTracker.EventType eventType,
-                                   ViewExposure viewExposure,
-                                   boolean isVisible,
-                                   boolean shouldFireImpression) {
-        mEventType = eventType;
-        mViewExposure = viewExposure;
-        mIsVisible = isVisible;
-        mShouldFireImpression = shouldFireImpression;
+    private final NativeEventTracker.EventType eventType;
+    private final ViewExposure viewExposure;
+    private final boolean isVisible;
+    private final boolean shouldFireImpression;
+
+    public VisibilityTrackerResult(
+            NativeEventTracker.EventType eventType,
+            ViewExposure viewExposure,
+            boolean isVisible,
+            boolean shouldFireImpression
+    ) {
+        this.eventType = eventType;
+        this.viewExposure = viewExposure;
+        this.isVisible = isVisible;
+        this.shouldFireImpression = shouldFireImpression;
     }
 
     public NativeEventTracker.EventType getEventType() {
-        return mEventType;
+        return eventType;
     }
 
     public ViewExposure getViewExposure() {
-        return mViewExposure;
+        return viewExposure;
     }
 
     public boolean isVisible() {
-        return mIsVisible;
+        return isVisible;
     }
 
     public boolean shouldFireImpression() {
-        return mShouldFireImpression;
+        return shouldFireImpression;
     }
 
     @Override
@@ -62,26 +65,24 @@ public class VisibilityTrackerResult {
 
         VisibilityTrackerResult result = (VisibilityTrackerResult) o;
 
-        if (mIsVisible != result.mIsVisible) {
+        if (isVisible != result.isVisible) {
             return false;
         }
-        if (mShouldFireImpression != result.mShouldFireImpression) {
+        if (shouldFireImpression != result.shouldFireImpression) {
             return false;
         }
-        if (mEventType != result.mEventType) {
+        if (eventType != result.eventType) {
             return false;
         }
-        return mViewExposure != null
-               ? mViewExposure.equals(result.mViewExposure)
-               : result.mViewExposure == null;
+        return viewExposure != null ? viewExposure.equals(result.viewExposure) : result.viewExposure == null;
     }
 
     @Override
     public int hashCode() {
-        int result = mEventType != null ? mEventType.hashCode() : 0;
-        result = 31 * result + (mViewExposure != null ? mViewExposure.hashCode() : 0);
-        result = 31 * result + (mIsVisible ? 1 : 0);
-        result = 31 * result + (mShouldFireImpression ? 1 : 0);
+        int result = eventType != null ? eventType.hashCode() : 0;
+        result = 31 * result + (viewExposure != null ? viewExposure.hashCode() : 0);
+        result = 31 * result + (isVisible ? 1 : 0);
+        result = 31 * result + (shouldFireImpression ? 1 : 0);
         return result;
     }
 }

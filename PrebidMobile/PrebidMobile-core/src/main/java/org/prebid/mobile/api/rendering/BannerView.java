@@ -59,89 +59,91 @@ public class BannerView extends FrameLayout {
 
     private final static String TAG = BannerView.class.getSimpleName();
 
-    private final AdUnitConfiguration mAdUnitConfig = new AdUnitConfiguration();
-    private BannerEventHandler mEventHandler;
+    private final AdUnitConfiguration adUnitConfig = new AdUnitConfiguration();
+    private BannerEventHandler eventHandler;
 
-    private String mConfigId;
+    private String configId;
 
-    private DisplayView mDisplayView;
-    private BidLoader mBidLoader;
-    private BidResponse mBidResponse;
+    private DisplayView displayView;
+    private BidLoader bidLoader;
+    private BidResponse bidResponse;
 
-    private final ScreenStateReceiver mScreenStateReceiver = new ScreenStateReceiver();
+    private final ScreenStateReceiver screenStateReceiver = new ScreenStateReceiver();
 
-    @Nullable
-    private BannerViewListener mBannerViewListener;
+    @Nullable private BannerViewListener bannerViewListener;
 
-    private int mRefreshIntervalSec = 0;
+    private int refreshIntervalSec = 0;
 
-    private boolean mIsPrimaryAdServerRequestInProgress;
-    private boolean mAdFailed;
+    private boolean isPrimaryAdServerRequestInProgress;
+    private boolean adFailed;
 
     private String nativeStylesCreative = null;
 
     //region ==================== Listener implementation
-    private final DisplayViewListener mDisplayViewListener = new DisplayViewListener() {
+    private final DisplayViewListener displayViewListener = new DisplayViewListener() {
         @Override
         public void onAdLoaded() {
-            if (mBannerViewListener != null) {
-                mBannerViewListener.onAdLoaded(BannerView.this);
+            if (bannerViewListener != null) {
+                bannerViewListener.onAdLoaded(BannerView.this);
             }
         }
 
         @Override
         public void onAdDisplayed() {
-            if (mBannerViewListener != null) {
-                mBannerViewListener.onAdDisplayed(BannerView.this);
-                mEventHandler.trackImpression();
+            if (bannerViewListener != null) {
+                bannerViewListener.onAdDisplayed(BannerView.this);
+                eventHandler.trackImpression();
             }
         }
 
         @Override
         public void onAdFailed(AdException exception) {
-            if (mBannerViewListener != null) {
-                mBannerViewListener.onAdFailed(BannerView.this, exception);
+            if (bannerViewListener != null) {
+                bannerViewListener.onAdFailed(BannerView.this, exception);
             }
         }
 
         @Override
         public void onAdClicked() {
-            if (mBannerViewListener != null) {
-                mBannerViewListener.onAdClicked(BannerView.this);
+            if (bannerViewListener != null) {
+                bannerViewListener.onAdClicked(BannerView.this);
             }
         }
 
         @Override
         public void onAdClosed() {
-            if (mBannerViewListener != null) {
-                mBannerViewListener.onAdClosed(BannerView.this);
+            if (bannerViewListener != null) {
+                bannerViewListener.onAdClosed(BannerView.this);
             }
         }
     };
 
-    private final BidRequesterListener mBidRequesterListener = new BidRequesterListener() {
+    private final BidRequesterListener bidRequesterListener = new BidRequesterListener() {
         @Override
         public void onFetchCompleted(BidResponse response) {
-            mBidResponse = response;
+            bidResponse = response;
 
-            mIsPrimaryAdServerRequestInProgress = true;
-            mEventHandler.requestAdWithBid(getWinnerBid());
+            isPrimaryAdServerRequestInProgress = true;
+            eventHandler.requestAdWithBid(getWinnerBid());
         }
 
         @Override
         public void onError(AdException exception) {
-            mBidResponse = null;
-            mEventHandler.requestAdWithBid(null);
+            bidResponse = null;
+            eventHandler.requestAdWithBid(null);
         }
     };
 
-    private final BannerEventListener mBannerEventListener = new BannerEventListener() {
+    private final BannerEventListener bannerEventListener = new BannerEventListener() {
         @Override
         public void onPrebidSdkWin() {
             markPrimaryAdRequestFinished();
 
             if (isBidInvalid()) {
-                notifyErrorListener(new AdException(AdException.INTERNAL_ERROR, "WinnerBid is null when executing onPrebidSdkWin."));
+                notifyErrorListener(new AdException(
+                        AdException.INTERNAL_ERROR,
+                        "WinnerBid is null when executing onPrebidSdkWin."
+                ));
                 return;
             }
 
@@ -170,15 +172,15 @@ public class BannerView extends FrameLayout {
 
         @Override
         public void onAdClicked() {
-            if (mBannerViewListener != null) {
-                mBannerViewListener.onAdClicked(BannerView.this);
+            if (bannerViewListener != null) {
+                bannerViewListener.onAdClicked(BannerView.this);
             }
         }
 
         @Override
         public void onAdClosed() {
-            if (mBannerViewListener != null) {
-                mBannerViewListener.onAdClosed(BannerView.this);
+            if (bannerViewListener != null) {
+                bannerViewListener.onAdClosed(BannerView.this);
             }
         }
     };
@@ -200,7 +202,7 @@ public class BannerView extends FrameLayout {
     ) {
         super(context, attrs);
 
-        mEventHandler = new StandaloneBannerEventHandler();
+        eventHandler = new StandaloneBannerEventHandler();
         reflectAttrs(attrs);
         init();
     }
@@ -214,9 +216,9 @@ public class BannerView extends FrameLayout {
         AdSize size
     ) {
         super(context);
-        mEventHandler = new StandaloneBannerEventHandler();
-        mConfigId = configId;
-        mAdUnitConfig.addSize(size);
+        eventHandler = new StandaloneBannerEventHandler();
+        this.configId = configId;
+        adUnitConfig.addSize(size);
 
         init();
     }
@@ -231,8 +233,8 @@ public class BannerView extends FrameLayout {
             BannerEventHandler eventHandler
     ) {
         super(context);
-        mEventHandler = eventHandler;
-        mConfigId = configId;
+        this.eventHandler = eventHandler;
+        this.configId = configId;
 
         init();
     }
@@ -241,25 +243,25 @@ public class BannerView extends FrameLayout {
      * Executes ad loading if no request is running.
      */
     public void loadAd() {
-        if (mBidLoader == null) {
+        if (bidLoader == null) {
             LogUtil.error(TAG, "loadAd: Failed. BidLoader is not initialized.");
             return;
         }
 
-        if (mIsPrimaryAdServerRequestInProgress) {
+        if (isPrimaryAdServerRequestInProgress) {
             LogUtil.debug(TAG, "loadAd: Skipped. Loading is in progress.");
             return;
         }
 
-        mBidLoader.load();
+        bidLoader.load();
     }
 
     /**
      * Cancels BidLoader refresh timer.
      */
     public void stopRefresh() {
-        if (mBidLoader != null) {
-            mBidLoader.cancelRefresh();
+        if (bidLoader != null) {
+            bidLoader.cancelRefresh();
         }
     }
 
@@ -267,22 +269,22 @@ public class BannerView extends FrameLayout {
      * Cleans up resources when destroyed.
      */
     public void destroy() {
-        if (mEventHandler != null) {
-            mEventHandler.destroy();
+        if (eventHandler != null) {
+            eventHandler.destroy();
         }
-        if (mBidLoader != null) {
-            mBidLoader.destroy();
+        if (bidLoader != null) {
+            bidLoader.destroy();
         }
-        if (mDisplayView != null) {
-            mDisplayView.destroy();
+        if (displayView != null) {
+            displayView.destroy();
         }
 
-        mScreenStateReceiver.unregister();
+        screenStateReceiver.unregister();
     }
 
     //region ==================== getters and setters
     public void setAutoRefreshDelay(int seconds) {
-        if (!mAdUnitConfig.isAdType(AdFormat.BANNER)) {
+        if (!adUnitConfig.isAdType(AdFormat.BANNER)) {
             LogUtil.info(TAG, "Autorefresh is available only for Banner ad type");
             return;
         }
@@ -290,35 +292,35 @@ public class BannerView extends FrameLayout {
             LogUtil.error(TAG, "setRefreshIntervalInSec: Failed. Refresh interval must be >= 0");
             return;
         }
-        mAdUnitConfig.setAutoRefreshDelay(seconds);
+        adUnitConfig.setAutoRefreshDelay(seconds);
     }
 
     public int getAutoRefreshDelayInMs() {
-        return mAdUnitConfig.getAutoRefreshDelay();
+        return adUnitConfig.getAutoRefreshDelay();
     }
 
     public void addAdditionalSizes(AdSize... sizes) {
-        mAdUnitConfig.addSizes(sizes);
+        adUnitConfig.addSizes(sizes);
     }
 
     public Set<AdSize> getAdditionalSizes() {
-        return mAdUnitConfig.getSizes();
+        return adUnitConfig.getSizes();
     }
 
     public void setBannerListener(BannerViewListener bannerListener) {
-        mBannerViewListener = bannerListener;
+        bannerViewListener = bannerListener;
     }
 
     public void setVideoPlacementType(VideoPlacementType videoPlacement) {
-        mAdUnitConfig.setAdFormat(AdFormat.VAST);
+        adUnitConfig.setAdFormat(AdFormat.VAST);
 
         final PlacementType placementType = VideoPlacementType.mapToPlacementType(videoPlacement);
-        mAdUnitConfig.setPlacementType(placementType);
+        adUnitConfig.setPlacementType(placementType);
     }
 
     @Nullable
     public VideoPlacementType getVideoPlacementType() {
-        return VideoPlacementType.mapToVideoPlacementType(mAdUnitConfig.getPlacementTypeValue());
+        return VideoPlacementType.mapToVideoPlacementType(adUnitConfig.getPlacementTypeValue());
     }
 
     /**
@@ -327,75 +329,75 @@ public class BannerView extends FrameLayout {
      * @param eventHandler instance of GamBannerEventHandler
      */
     public void setEventHandler(BannerEventHandler eventHandler) {
-        mEventHandler = eventHandler;
+        this.eventHandler = eventHandler;
     }
 
     public void addContextData(
         String key,
         String value
     ) {
-        mAdUnitConfig.addContextData(key, value);
+        adUnitConfig.addContextData(key, value);
     }
 
     public void updateContextData(
         String key,
         Set<String> value
     ) {
-        mAdUnitConfig.addContextData(key, value);
+        adUnitConfig.addContextData(key, value);
     }
 
     public void removeContextData(String key) {
-        mAdUnitConfig.removeContextData(key);
+        adUnitConfig.removeContextData(key);
     }
 
     public void clearContextData() {
-        mAdUnitConfig.clearContextData();
+        adUnitConfig.clearContextData();
     }
 
     public Map<String, Set<String>> getContextDataDictionary() {
-        return mAdUnitConfig.getContextDataDictionary();
+        return adUnitConfig.getContextDataDictionary();
     }
 
     public void addContextKeyword(String keyword) {
-        mAdUnitConfig.addContextKeyword(keyword);
+        adUnitConfig.addContextKeyword(keyword);
     }
 
     public void addContextKeywords(Set<String> keywords) {
-        mAdUnitConfig.addContextKeywords(keywords);
+        adUnitConfig.addContextKeywords(keywords);
     }
 
     public void removeContextKeyword(String keyword) {
-        mAdUnitConfig.removeContextKeyword(keyword);
+        adUnitConfig.removeContextKeyword(keyword);
     }
 
     public Set<String> getContextKeywordsSet() {
-        return mAdUnitConfig.getContextKeywordsSet();
+        return adUnitConfig.getContextKeywordsSet();
     }
 
     public void clearContextKeywords() {
-        mAdUnitConfig.clearContextKeywords();
+        adUnitConfig.clearContextKeywords();
     }
 
     public void setAdPosition(BannerAdPosition bannerAdPosition) {
         final AdPosition adPosition = BannerAdPosition.mapToAdPosition(bannerAdPosition);
-        mAdUnitConfig.setAdPosition(adPosition);
+        adUnitConfig.setAdPosition(adPosition);
     }
 
     public BannerAdPosition getAdPosition() {
-        return BannerAdPosition.mapToDisplayAdPosition(mAdUnitConfig.getAdPositionValue());
+        return BannerAdPosition.mapToDisplayAdPosition(adUnitConfig.getAdPositionValue());
     }
 
     public void setPbAdSlot(String adSlot) {
-        mAdUnitConfig.setPbAdSlot(adSlot);
+        adUnitConfig.setPbAdSlot(adSlot);
     }
 
     @Nullable
     public String getPbAdSlot() {
-        return mAdUnitConfig.getPbAdSlot();
+        return adUnitConfig.getPbAdSlot();
     }
 
     public void addContent(ContentObject content) {
-        mAdUnitConfig.setAppContent(content);
+        adUnitConfig.setAppContent(content);
     }
     //endregion ==================== getters and setters
 
@@ -408,12 +410,12 @@ public class BannerView extends FrameLayout {
             .getTheme()
             .obtainStyledAttributes(attrs, R.styleable.BannerView, 0, 0);
         try {
-            mConfigId = typedArray.getString(R.styleable.BannerView_configId);
-            mRefreshIntervalSec = typedArray.getInt(R.styleable.BannerView_refreshIntervalSec, 0);
+            configId = typedArray.getString(R.styleable.BannerView_configId);
+            refreshIntervalSec = typedArray.getInt(R.styleable.BannerView_refreshIntervalSec, 0);
             int width = typedArray.getInt(R.styleable.BannerView_adWidth, -1);
             int height = typedArray.getInt(R.styleable.BannerView_adHeight, -1);
             if (width >= 0 && height >= 0) {
-                mAdUnitConfig.addSize(new AdSize(width, height));
+                adUnitConfig.addSize(new AdSize(width, height));
             }
         } finally {
             typedArray.recycle();
@@ -424,7 +426,7 @@ public class BannerView extends FrameLayout {
         initPrebidRenderingSdk();
         initAdConfiguration();
         initBidLoader();
-        mScreenStateReceiver.register(getContext());
+        screenStateReceiver.register(getContext());
     }
 
     private void initPrebidRenderingSdk() {
@@ -433,97 +435,100 @@ public class BannerView extends FrameLayout {
     }
 
     private void initBidLoader() {
-        mBidLoader = new BidLoader(getContext(), mAdUnitConfig, mBidRequesterListener);
+        bidLoader = new BidLoader(getContext(), adUnitConfig, bidRequesterListener);
         final VisibilityTrackerOption visibilityTrackerOption = new VisibilityTrackerOption(NativeEventTracker.EventType.IMPRESSION);
         final VisibilityChecker visibilityChecker = new VisibilityChecker(visibilityTrackerOption);
 
-        mBidLoader.setBidRefreshListener(() -> {
-            if (mAdFailed) {
-                mAdFailed = false;
+        bidLoader.setBidRefreshListener(() -> {
+            if (adFailed) {
+                adFailed = false;
                 return true;
             }
 
-            final boolean isWindowVisibleToUser = mScreenStateReceiver.isScreenOn();
+            final boolean isWindowVisibleToUser = screenStateReceiver.isScreenOn();
             return visibilityChecker.isVisibleForRefresh(this) && isWindowVisibleToUser;
         });
     }
 
     private void initAdConfiguration() {
-        mAdUnitConfig.setConfigId(mConfigId);
-        mAdUnitConfig.setAutoRefreshDelay(mRefreshIntervalSec);
-        mEventHandler.setBannerEventListener(mBannerEventListener);
-        mAdUnitConfig.setAdFormat(AdFormat.BANNER);
-        mAdUnitConfig.addSizes(mEventHandler.getAdSizeArray());
+        adUnitConfig.setConfigId(configId);
+        adUnitConfig.setAutoRefreshDelay(refreshIntervalSec);
+        eventHandler.setBannerEventListener(bannerEventListener);
+        adUnitConfig.setAdFormat(AdFormat.BANNER);
+        adUnitConfig.addSizes(eventHandler.getAdSizeArray());
     }
 
     private void displayPrebidView() {
-        if (indexOfChild(mDisplayView) != -1) {
-            mDisplayView.destroy();
-            mDisplayView = null;
+        if (indexOfChild(displayView) != -1) {
+            displayView.destroy();
+            displayView = null;
         }
 
         removeAllViews();
 
-        final Pair<Integer, Integer> sizePair = mBidResponse.getWinningBidWidthHeightPairDips(getContext());
-        mDisplayView = new DisplayView(getContext(), mDisplayViewListener, mAdUnitConfig, mBidResponse);
-        addView(mDisplayView, sizePair.first, sizePair.second);
+        final Pair<Integer, Integer> sizePair = bidResponse.getWinningBidWidthHeightPairDips(getContext());
+        displayView = new DisplayView(getContext(), displayViewListener, adUnitConfig, bidResponse);
+        addView(displayView, sizePair.first, sizePair.second);
     }
 
     private void displayAdServerView(View view) {
         removeAllViews();
 
         if (view == null) {
-            notifyErrorListener(new AdException(AdException.INTERNAL_ERROR, "Failed to displayAdServerView. Provided view is null"));
+            notifyErrorListener(new AdException(
+                    AdException.INTERNAL_ERROR,
+                    "Failed to displayAdServerView. Provided view is null"
+            ));
             return;
         }
 
         Views.removeFromParent(view);
         addView(view);
 
-        if (mBannerViewListener != null) {
-            mBannerViewListener.onAdDisplayed(BannerView.this);
+        if (bannerViewListener != null) {
+            bannerViewListener.onAdDisplayed(BannerView.this);
         }
     }
 
     private void markPrimaryAdRequestFinished() {
-        mIsPrimaryAdServerRequestInProgress = false;
+        isPrimaryAdServerRequestInProgress = false;
     }
 
     private void notifyAdLoadedListener() {
-        if (mBannerViewListener != null) {
-            mBannerViewListener.onAdLoaded(BannerView.this);
+        if (bannerViewListener != null) {
+            bannerViewListener.onAdLoaded(BannerView.this);
         }
     }
 
     private void notifyErrorListener(AdException exception) {
-        mAdFailed = true;
-        if (mBannerViewListener != null) {
-            mBannerViewListener.onAdFailed(BannerView.this, exception);
+        adFailed = true;
+        if (bannerViewListener != null) {
+            bannerViewListener.onAdFailed(BannerView.this, exception);
         }
     }
 
     private boolean isBidInvalid() {
-        return mBidResponse == null || mBidResponse.getWinningBid() == null;
+        return bidResponse == null || bidResponse.getWinningBid() == null;
     }
 
     public BidResponse getBidResponse() {
-        return mBidResponse;
+        return bidResponse;
     }
 
     //region ==================== HelperMethods for Unit Tests. Should be used only in tests
     @VisibleForTesting
     final void setBidResponse(BidResponse response) {
-        mBidResponse = response;
+        bidResponse = response;
     }
 
     @VisibleForTesting
     final Bid getWinnerBid() {
-        return mBidResponse != null ? mBidResponse.getWinningBid() : null;
+        return bidResponse != null ? bidResponse.getWinningBid() : null;
     }
 
     @VisibleForTesting
     final boolean isPrimaryAdServerRequestInProgress() {
-        return mIsPrimaryAdServerRequestInProgress;
+        return isPrimaryAdServerRequestInProgress;
     }
     //endregion ==================== HelperMethods for Unit Tests
 }

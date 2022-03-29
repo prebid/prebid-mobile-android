@@ -19,22 +19,27 @@ package org.prebid.mobile.rendering.models.internal;
 import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 
 public class VisibilityTrackerOption {
-    private NativeEventTracker.EventType mEventType;
-    private int mMinimumVisibleMillis;
-    private int mMinVisibilityPercentage;
-    private boolean mIsImpressionTracked;
-    private long mStartTimeMillis = Long.MIN_VALUE;
 
-    public VisibilityTrackerOption(NativeEventTracker.EventType eventType, int minimumVisibleMillis, int minVisibilityPercentage) {
-        mEventType = eventType;
-        mMinimumVisibleMillis = minimumVisibleMillis;
-        mMinVisibilityPercentage = minVisibilityPercentage;
+    private NativeEventTracker.EventType eventType;
+    private int minimumVisibleMillis;
+    private int minVisibilityPercentage;
+    private boolean isImpressionTracked;
+    private long startTimeMillis = Long.MIN_VALUE;
+
+    public VisibilityTrackerOption(
+            NativeEventTracker.EventType eventType,
+            int minimumVisibleMillis,
+            int minVisibilityPercentage
+    ) {
+        this.eventType = eventType;
+        this.minimumVisibleMillis = minimumVisibleMillis;
+        this.minVisibilityPercentage = minVisibilityPercentage;
     }
 
     public VisibilityTrackerOption(NativeEventTracker.EventType eventType) {
-        mEventType = eventType;
-        mMinimumVisibleMillis = getMinimumVisibleMillis(eventType);
-        mMinVisibilityPercentage = getMinimumVisiblePercents(eventType);
+        this.eventType = eventType;
+        minimumVisibleMillis = getMinimumVisibleMillis(eventType);
+        minVisibilityPercentage = getMinimumVisiblePercents(eventType);
     }
 
     public static int getMinimumVisibleMillis(NativeEventTracker.EventType eventType) {
@@ -66,47 +71,47 @@ public class VisibilityTrackerOption {
     }
 
     public boolean isType(NativeEventTracker.EventType eventType) {
-        return mEventType.equals(eventType);
+        return this.eventType.equals(eventType);
     }
 
     public void setStartTimeMillis(long startTimeMillis) {
-        mStartTimeMillis = startTimeMillis;
+        this.startTimeMillis = startTimeMillis;
     }
 
     public long getStartTimeMillis() {
-        return mStartTimeMillis;
+        return startTimeMillis;
     }
 
     public int getMinimumVisibleMillis() {
-        return mMinimumVisibleMillis;
+        return minimumVisibleMillis;
     }
 
     public void setMinimumVisibleMillis(int minimumVisibleMillis) {
-        mMinimumVisibleMillis = minimumVisibleMillis;
+        this.minimumVisibleMillis = minimumVisibleMillis;
     }
 
     public int getMinVisibilityPercentage() {
-        return mMinVisibilityPercentage;
+        return minVisibilityPercentage;
     }
 
     public void setMinVisibilityPercentage(int minVisibilityPercentage) {
-        mMinVisibilityPercentage = minVisibilityPercentage;
+        this.minVisibilityPercentage = minVisibilityPercentage;
     }
 
     public boolean isImpressionTracked() {
-        return mIsImpressionTracked;
+        return isImpressionTracked;
     }
 
     public void setImpressionTracked(boolean impressionTracked) {
-        mIsImpressionTracked = impressionTracked;
+        isImpressionTracked = impressionTracked;
     }
 
     public NativeEventTracker.EventType getEventType() {
-        return mEventType;
+        return eventType;
     }
 
     public void setEventType(NativeEventTracker.EventType eventType) {
-        mEventType = eventType;
+        this.eventType = eventType;
     }
 
     @Override
@@ -120,28 +125,28 @@ public class VisibilityTrackerOption {
 
         VisibilityTrackerOption that = (VisibilityTrackerOption) o;
 
-        if (mMinimumVisibleMillis != that.mMinimumVisibleMillis) {
+        if (minimumVisibleMillis != that.minimumVisibleMillis) {
             return false;
         }
-        if (mMinVisibilityPercentage != that.mMinVisibilityPercentage) {
+        if (minVisibilityPercentage != that.minVisibilityPercentage) {
             return false;
         }
-        if (mIsImpressionTracked != that.mIsImpressionTracked) {
+        if (isImpressionTracked != that.isImpressionTracked) {
             return false;
         }
-        if (mStartTimeMillis != that.mStartTimeMillis) {
+        if (startTimeMillis != that.startTimeMillis) {
             return false;
         }
-        return mEventType == that.mEventType;
+        return eventType == that.eventType;
     }
 
     @Override
     public int hashCode() {
-        int result = mEventType != null ? mEventType.hashCode() : 0;
-        result = 31 * result + mMinimumVisibleMillis;
-        result = 31 * result + mMinVisibilityPercentage;
-        result = 31 * result + (mIsImpressionTracked ? 1 : 0);
-        result = 31 * result + (int) (mStartTimeMillis ^ (mStartTimeMillis >>> 32));
+        int result = eventType != null ? eventType.hashCode() : 0;
+        result = 31 * result + minimumVisibleMillis;
+        result = 31 * result + minVisibilityPercentage;
+        result = 31 * result + (isImpressionTracked ? 1 : 0);
+        result = 31 * result + (int) (startTimeMillis ^ (startTimeMillis >>> 32));
         return result;
     }
 }

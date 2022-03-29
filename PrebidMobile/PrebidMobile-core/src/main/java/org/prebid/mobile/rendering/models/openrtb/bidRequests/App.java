@@ -38,8 +38,8 @@ public class App extends BaseBid {
     public Integer paid = null;
     public String keywords = null;
     public ContentObject contentObject = null;
-    private Publisher mPublisher = null;
-    private Ext mExt = null;
+    private Publisher publisher = null;
+    private Ext ext = null;
 
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
@@ -91,27 +91,23 @@ public class App extends BaseBid {
         toJSON(jsonObject, "privacypolicy", privacypolicy);
         toJSON(jsonObject, "paid", paid);
         toJSON(jsonObject, "keywords", keywords);
-        toJSON(jsonObject, "publisher", (mPublisher != null)
-                ? this.mPublisher.getJsonObject()
-                : null);
-        toJSON(jsonObject, "ext", (mExt != null)
-                                  ? mExt.getJsonObject()
-                                  : null);
+        toJSON(jsonObject, "publisher", (publisher != null) ? this.publisher.getJsonObject() : null);
+        toJSON(jsonObject, "ext", (ext != null) ? ext.getJsonObject() : null);
 
         return jsonObject;
     }
 
-    public Publisher getPublisher(){
-        if(mPublisher == null){
-            mPublisher = new Publisher();
+    public Publisher getPublisher() {
+        if (publisher == null) {
+            publisher = new Publisher();
         }
-        return mPublisher;
+        return publisher;
     }
 
-    public Ext getExt(){
-        if(mExt == null){
-            mExt = new Ext();
+    public Ext getExt() {
+        if (ext == null) {
+            ext = new Ext();
         }
-        return mExt;
+        return ext;
     }
 }

@@ -32,31 +32,36 @@ import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 public class MraidStorePicture {
+
     private static final String TAG = MraidStorePicture.class.getSimpleName();
-    private WebViewBase mAdBaseView;
-    private BaseJSInterface mJsi;
+    private WebViewBase adBaseView;
+    private BaseJSInterface jsi;
 
-    private String mUrlToStore = null;
+    private String urlToStore = null;
 
-    private Context mContext;
+    private Context context;
 
-    public MraidStorePicture(Context context, BaseJSInterface jsInterface, WebViewBase adBaseView) {
-        mContext = context;
-        mAdBaseView = adBaseView;
-        mJsi = jsInterface;
+    public MraidStorePicture(
+            Context context,
+            BaseJSInterface jsInterface,
+            WebViewBase adBaseView
+    ) {
+        this.context = context;
+        this.adBaseView = adBaseView;
+        jsi = jsInterface;
     }
 
     public void storePicture(String url) {
         if (url != null && !url.equals("")) {
-            mUrlToStore = url;
+            urlToStore = url;
 
-            if (mAdBaseView != null && mContext != null) {
+            if (adBaseView != null && context != null) {
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(() -> {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle("Save image?");
 
-                    builder.setMessage("Would you like to save this image? " + mUrlToStore);
+                    builder.setMessage("Would you like to save this image? " + urlToStore);
 
                     builder.setPositiveButton(android.R.string.yes, (dialogInterface, i) -> storePicture());
 
@@ -64,12 +69,14 @@ public class MraidStorePicture {
 
                     AlertDialog dialog = builder.create();
                     //android.view.WindowManager$BadTokenException: Unable to add window -- token android.os.BinderProxy@4f935b0 is not valid; is your activity running?
-                    if (mContext instanceof Activity && !((Activity) mContext).isFinishing()) {
+                    if (context instanceof Activity && !((Activity) context).isFinishing()) {
                         //show dialog
                         dialog.show();
-                    }
-                    else {
-                        LogUtil.error(TAG, "Context is not activity or activity is finishing, can not show expand dialog");
+                    } else {
+                        LogUtil.error(
+                                TAG,
+                                "Context is not activity or activity is finishing, can not show expand dialog"
+                        );
                     }
                 });
             }
@@ -81,15 +88,15 @@ public class MraidStorePicture {
             try {
                 DeviceInfoManager devicePolicyManager = ManagersResolver.getInstance().getDeviceManager();
                 if (!devicePolicyManager.isPermissionGranted(WRITE_EXTERNAL_STORAGE)) {
-                    mJsi.onError("store_picture", JSInterface.ACTION_STORE_PICTURE);
+                    jsi.onError("store_picture", JSInterface.ACTION_STORE_PICTURE);
                 }
                 else {
-                    devicePolicyManager.storePicture(mUrlToStore);
+                    devicePolicyManager.storePicture(urlToStore);
                 }
             }
             catch (Exception e) {
                 //send a mraid error back to the ad
-                mJsi.onError("Failed to store picture", JSInterface.ACTION_STORE_PICTURE);
+                jsi.onError("Failed to store picture", JSInterface.ACTION_STORE_PICTURE);
                 LogUtil.error(TAG, "Failed to store picture: " + Log.getStackTraceString(e));
             }
         }).start();

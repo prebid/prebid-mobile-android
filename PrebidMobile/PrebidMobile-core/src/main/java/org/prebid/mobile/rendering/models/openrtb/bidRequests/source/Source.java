@@ -23,33 +23,34 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.BaseBid;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 
 public class Source extends BaseBid {
-    private String mTid;
-    private Ext mExt;
+
+    private String tid;
+    private Ext ext;
 
     public void setExt(Ext ext) {
-        mExt = ext;
+        this.ext = ext;
     }
 
     public void setTid(String tid) {
-        mTid = tid;
+        this.tid = tid;
     }
 
     public Ext getExt() {
-        if (mExt == null) {
-            mExt = new Ext();
+        if (ext == null) {
+            ext = new Ext();
         }
-        return mExt;
+        return ext;
     }
 
     public String getTid() {
-        return mTid;
+        return tid;
     }
 
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
 
-        toJSON(jsonObject, "tid", !TextUtils.isEmpty(mTid) ? mTid : null);
-        toJSON(jsonObject, "ext", (mExt != null) ? mExt.getJsonObject() : null);
+        toJSON(jsonObject, "tid", !TextUtils.isEmpty(tid) ? tid : null);
+        toJSON(jsonObject, "ext", (ext != null) ? ext.getJsonObject() : null);
 
         return jsonObject;
     }

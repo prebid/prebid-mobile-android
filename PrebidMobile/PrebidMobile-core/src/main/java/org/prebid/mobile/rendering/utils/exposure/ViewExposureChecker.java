@@ -33,15 +33,16 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ViewExposureChecker {
+
     private static final String TAG = ViewExposureChecker.class.getSimpleName();
 
-    private WeakReference<View> mTestedViewWeakReference;
-    private Rect mClippedRect;
-    private List<Rect> mObstructionList;
+    private WeakReference<View> testedViewWeakReference;
+    private Rect clippedRect;
+    private List<Rect> obstructionList;
 
     public ViewExposureChecker() {
-        mObstructionList = new ArrayList<>();
-        mClippedRect = new Rect();
+        obstructionList = new ArrayList<>();
+        clippedRect = new Rect();
     }
 
     public ViewExposure exposure(View view) {
@@ -50,10 +51,10 @@ public class ViewExposureChecker {
             return null;
         }
 
-        mTestedViewWeakReference = new WeakReference<>(view);
+        testedViewWeakReference = new WeakReference<>(view);
         ViewExposure zeroExposure = new ViewExposure();
-        view.getDrawingRect(mClippedRect);
-        mObstructionList.clear();
+        view.getDrawingRect(clippedRect);
+        obstructionList.clear();
 
         if (!view.isShown() || !view.hasWindowFocus() || isViewTransparent(view)) { // Also checks if view has parent (is attached)
             return zeroExposure;
@@ -70,7 +71,7 @@ public class ViewExposureChecker {
 
         final List<Rect> obstructionsList = buildObstructionsRectList();
         final float fullArea = view.getWidth() * view.getHeight();
-        final float clipArea = mClippedRect.width() * mClippedRect.height();
+        final float clipArea = clippedRect.width() * clippedRect.height();
         float obstructedArea = 0;
 
         for (Rect obstruction : obstructionsList) {
@@ -78,17 +79,15 @@ public class ViewExposureChecker {
         }
 
         float exposurePercentage = (clipArea - obstructedArea) / fullArea;
-        return new ViewExposure(exposurePercentage,
-                                mClippedRect,
-                                obstructionsList);
+        return new ViewExposure(exposurePercentage, clippedRect, obstructionsList);
     }
 
     private List<Rect> buildObstructionsRectList() {
-        if (mObstructionList.isEmpty()) {
+        if (obstructionList.isEmpty()) {
             return new ArrayList<>();
         }
 
-        List<Rect> currentObstructionList = new ArrayList<>(mObstructionList);
+        List<Rect> currentObstructionList = new ArrayList<>(obstructionList);
         List<Rect> remainingObstructionList = new ArrayList<>();
         List<Rect> pickedObstructionList = new ArrayList<>();
 
@@ -126,8 +125,8 @@ public class ViewExposureChecker {
         if (clip) {
             Rect bounds = new Rect();
             parentView.getDrawingRect(bounds);
-            Rect convertRect = convertRect(bounds, parentView, mTestedViewWeakReference.get());
-            boolean intersect = mClippedRect.intersect(convertRect);
+            Rect convertRect = convertRect(bounds, parentView, testedViewWeakReference.get());
+            boolean intersect = clippedRect.intersect(convertRect);
             if (!intersect) {
                 return false;
             }
@@ -177,7 +176,7 @@ public class ViewExposureChecker {
     }
 
     private boolean collapseBoundingBox() {
-        final Rect oldRect = new Rect(mClippedRect);
+        final Rect oldRect = new Rect(clippedRect);
         if (oldRect.isEmpty()) {
             return false;
         }
@@ -185,8 +184,8 @@ public class ViewExposureChecker {
         List<Rect> currentRectList = new ArrayList<>();
         List<Rect> nextRectList = new ArrayList<>();
 
-        currentRectList.add(mClippedRect);
-        for (Rect obstruction : mObstructionList) {
+        currentRectList.add(clippedRect);
+        for (Rect obstruction : obstructionList) {
             removeRect(obstruction, currentRectList, nextRectList, 0);
 
             List<Rect> temp = currentRectList;
@@ -195,7 +194,7 @@ public class ViewExposureChecker {
             nextRectList.clear();
 
             if (currentRectList.isEmpty()) {
-                mClippedRect = new Rect();
+                clippedRect = new Rect();
                 return false;
             }
         }
@@ -216,21 +215,21 @@ public class ViewExposureChecker {
             return true;
         }
 
-        mClippedRect = result;
+        clippedRect = result;
 
         int removedCount = 0;
-        final int fullCount = mObstructionList.size();
+        final int fullCount = obstructionList.size();
 
         for (int i = 0; i < fullCount; i++) {
-            Rect nextObstruction = mObstructionList.get(i);
+            Rect nextObstruction = obstructionList.get(i);
             Rect resultIntersectedRect = new Rect(result);
 
             if (resultIntersectedRect.intersect(nextObstruction)) {
                 if (!result.contains(nextObstruction)) {
-                    mObstructionList.set(i - removedCount, resultIntersectedRect);
+                    obstructionList.set(i - removedCount, resultIntersectedRect);
                 }
                 else if (removedCount > 0) {
-                    mObstructionList.set(i - removedCount, nextObstruction);
+                    obstructionList.set(i - removedCount, nextObstruction);
                 }
             }
             else {
@@ -239,7 +238,7 @@ public class ViewExposureChecker {
         }
         if (removedCount > 0) {
             int fromIndex = fullCount - removedCount;
-            mObstructionList.subList(fromIndex, fromIndex + removedCount).clear();
+            obstructionList.subList(fromIndex, fromIndex + removedCount).clear();
         }
 
         return true;
@@ -333,12 +332,12 @@ public class ViewExposureChecker {
         Rect viewBounds = new Rect();
         view.getDrawingRect(viewBounds);
 
-        Rect testRect = convertRect(viewBounds, view, mTestedViewWeakReference.get());
+        Rect testRect = convertRect(viewBounds, view, testedViewWeakReference.get());
 
-        Rect obstructionRect = new Rect(mClippedRect);
+        Rect obstructionRect = new Rect(clippedRect);
         boolean isObstruction = obstructionRect.intersect(testRect);
         if (isObstruction) {
-            mObstructionList.add(obstructionRect);
+            obstructionList.add(obstructionRect);
         }
     }
 

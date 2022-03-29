@@ -42,18 +42,18 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class InterstitialControllerTest {
-    private InterstitialController mInterstitialController;
+    private InterstitialController interstitialController;
 
-    @Mock
-    private InterstitialControllerListener mMockListener;
-    @Mock
-    private InterstitialView mMockInterstitialView;
+    @Mock private InterstitialControllerListener mockListener;
+    @Mock private InterstitialView mockInterstitialView;
 
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mInterstitialController = new InterstitialController(Robolectric.buildActivity(Activity.class).create().get(), mMockListener);
-        WhiteBox.setInternalState(mInterstitialController, "mBidInterstitialView", mMockInterstitialView);
+        interstitialController = new InterstitialController(Robolectric.buildActivity(Activity.class).create().get(),
+                mockListener
+        );
+        WhiteBox.setInternalState(interstitialController, "bidInterstitialView", mockInterstitialView);
     }
 
     @Test
@@ -61,41 +61,41 @@ public class InterstitialControllerTest {
         final AdUnitConfiguration mockAdUnitConfiguration = mock(AdUnitConfiguration.class);
         final BidResponse mockBidResponse = mock(BidResponse.class);
 
-        mInterstitialController.loadAd(mockAdUnitConfiguration, mockBidResponse);
+        interstitialController.loadAd(mockAdUnitConfiguration, mockBidResponse);
 
-        verify(mMockInterstitialView, times(1)).loadAd(eq(mockAdUnitConfiguration), eq(mockBidResponse));
+        verify(mockInterstitialView, times(1)).loadAd(eq(mockAdUnitConfiguration), eq(mockBidResponse));
     }
 
     @Test
     public void showInterstitialType_ExecuteInterstitialViewShowInterstitialFromRoot() {
-        WhiteBox.setInternalState(mInterstitialController, "mAdUnitIdentifierType", AdFormat.INTERSTITIAL);
-        mInterstitialController.show();
+        WhiteBox.setInternalState(interstitialController, "adUnitIdentifierType", AdFormat.INTERSTITIAL);
+        interstitialController.show();
 
-        verify(mMockInterstitialView, times(1)).showAsInterstitialFromRoot();
+        verify(mockInterstitialView, times(1)).showAsInterstitialFromRoot();
     }
 
     @Test
     public void showVastType_ExecuteInterstitialViewShowVideoAsInterstitial() {
-        WhiteBox.setInternalState(mInterstitialController, "mAdUnitIdentifierType", AdFormat.VAST);
-        mInterstitialController.show();
+        WhiteBox.setInternalState(interstitialController, "adUnitIdentifierType", AdFormat.VAST);
+        interstitialController.show();
 
-        verify(mMockInterstitialView, times(1)).showVideoAsInterstitial();
+        verify(mockInterstitialView, times(1)).showVideoAsInterstitial();
     }
 
     @Test
     public void showNullType_DoNothing() {
-        reset(mMockInterstitialView);
+        reset(mockInterstitialView);
 
-        mInterstitialController.show();
+        interstitialController.show();
 
-        verifyNoMoreInteractions(mMockInterstitialView);
+        verifyNoMoreInteractions(mockInterstitialView);
     }
 
     @Test
     public void destroy_ExecuteInterstitialViewDestroy() {
-        mInterstitialController.destroy();
+        interstitialController.destroy();
 
-        verify(mMockInterstitialView, times(1)).destroy();
+        verify(mockInterstitialView, times(1)).destroy();
     }
 
     //region ===================== InterstitialViewListener tests
@@ -103,39 +103,39 @@ public class InterstitialControllerTest {
     public void adDidLoad_NotifyInterstitialReadyForDisplay() {
         getInterstitialViewListener().onAdLoaded(mock(InterstitialView.class), mock(AdDetails.class));
 
-        verify(mMockListener, times(1)).onInterstitialReadyForDisplay();
+        verify(mockListener, times(1)).onInterstitialReadyForDisplay();
     }
 
     @Test
     public void adDidFailLoad_NotifyInterstitialFailedToLoad() {
         getInterstitialViewListener().onAdFailed(mock(InterstitialView.class), mock(AdException.class));
 
-        verify(mMockListener, times(1)).onInterstitialFailedToLoad(any());
+        verify(mockListener, times(1)).onInterstitialFailedToLoad(any());
     }
 
     @Test
     public void adDidDisplay_NotifyInterstitialDisplayed() {
         getInterstitialViewListener().onAdDisplayed(mock(InterstitialView.class));
 
-        verify(mMockListener, times(1)).onInterstitialDisplayed();
+        verify(mockListener, times(1)).onInterstitialDisplayed();
     }
 
     @Test
     public void adWasClicked_NotifyInterstitialClicked() {
         getInterstitialViewListener().onAdClicked(mock(InterstitialView.class));
 
-        verify(mMockListener, times(1)).onInterstitialClicked();
+        verify(mockListener, times(1)).onInterstitialClicked();
     }
 
     @Test
     public void adInterstitialDidClose_NotifyInterstitialDidClose() {
         getInterstitialViewListener().onAdClosed(mock(InterstitialView.class));
 
-        verify(mMockListener, times(1)).onInterstitialClosed();
+        verify(mockListener, times(1)).onInterstitialClosed();
     }
     //endregion ===================== InterstitialViewListener tests
 
     private InterstitialViewListener getInterstitialViewListener() {
-        return (InterstitialViewListener) WhiteBox.getInternalState(mInterstitialController, "mInterstitialViewListener");
+        return (InterstitialViewListener) WhiteBox.getInternalState(interstitialController, "interstitialViewListener");
     }
 }

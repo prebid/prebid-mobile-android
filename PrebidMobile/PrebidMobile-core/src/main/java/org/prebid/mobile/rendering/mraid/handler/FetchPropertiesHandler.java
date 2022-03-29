@@ -23,13 +23,12 @@ import androidx.annotation.NonNull;
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 
 public class FetchPropertiesHandler extends Handler {
-    @NonNull
-    private final FetchPropertyCallback mCallback;
+    @NonNull private final FetchPropertyCallback callback;
 
     public FetchPropertiesHandler(
         @NonNull
             FetchPropertyCallback callback) {
-        mCallback = callback;
+        this.callback = callback;
     }
 
     @Override
@@ -40,10 +39,10 @@ public class FetchPropertiesHandler extends Handler {
         handler.post(() -> {
             try {
                 final String expandProperties = message.getData().getString(JSInterface.JSON_VALUE);
-                mCallback.onResult(expandProperties);
+                callback.onResult(expandProperties);
             }
             catch (Exception e) {
-                mCallback.onError(e);
+                callback.onError(e);
             }
         });
     }

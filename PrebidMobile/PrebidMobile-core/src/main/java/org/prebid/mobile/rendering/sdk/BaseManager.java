@@ -20,20 +20,19 @@ import android.content.Context;
 
 import java.lang.ref.WeakReference;
 
-public class BaseManager implements Manager
-{
-	private WeakReference<Context> mContextReference;
-	private boolean mIsInit;
+public class BaseManager implements Manager {
+
+	private WeakReference<Context> contextReference;
+	private boolean isInit;
 
 	/**
 	 * Check initialization of manager.
-	 * 
+	 *
 	 * @return true, if manager was initialized
 	 */
 	@Override
-	public boolean isInit()
-	{
-		return mIsInit;
+	public boolean isInit() {
+		return isInit;
 	}
 
 	/**
@@ -45,10 +44,9 @@ public class BaseManager implements Manager
 	@Override
 	public void init(Context context)
 	{
-		if (context != null)
-		{
-			mContextReference = new WeakReference<>(context);
-			mIsInit = true;
+		if (context != null) {
+			contextReference = new WeakReference<>(context);
+			isInit = true;
 		}
 	}
 
@@ -58,10 +56,9 @@ public class BaseManager implements Manager
 	 * @return the context
 	 */
 	@Override
-	public Context getContext()
-	{
-		if (mContextReference != null) {
-			return mContextReference.get();
+	public Context getContext() {
+		if (contextReference != null) {
+			return contextReference.get();
 		}
 		return null;
 	}
@@ -71,9 +68,8 @@ public class BaseManager implements Manager
 	 * 
 	 */
 	@Override
-	public void dispose()
-	{
-		mIsInit = false;
-		mContextReference = null;
+	public void dispose() {
+		isInit = false;
+		contextReference = null;
 	}
 }

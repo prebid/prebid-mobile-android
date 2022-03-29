@@ -97,19 +97,28 @@ class WhiteBoxHelpers {
     }
 
     private static class ParameterTypesMatcher {
-        private final boolean mIsVarArgs;
-        private final Class<?>[] mExpectedParameterTypes;
-        private final Class<?>[] mActualParameterTypes;
 
-        public ParameterTypesMatcher(boolean isVarArgs, Class<?>[] expectedParameterTypes, Class<?>... actualParameterTypes) {
-            mIsVarArgs = isVarArgs;
-            mExpectedParameterTypes = expectedParameterTypes;
-            mActualParameterTypes = actualParameterTypes;
+        private final boolean isVarArgs;
+        private final Class<?>[] expectedParameterTypes;
+        private final Class<?>[] actualParameterTypes;
+
+        public ParameterTypesMatcher(
+                boolean isVarArgs,
+                Class<?>[] expectedParameterTypes,
+                Class<?>... actualParameterTypes
+        ) {
+            this.isVarArgs = isVarArgs;
+            this.expectedParameterTypes = expectedParameterTypes;
+            this.actualParameterTypes = actualParameterTypes;
         }
 
-        private boolean isRemainParamsVarArgs(int index, Class<?> actualParameterType) {
-            return mIsVarArgs && index == mExpectedParameterTypes.length - 1
-                   && actualParameterType.getComponentType().isAssignableFrom(mExpectedParameterTypes[index]);
+        private boolean isRemainParamsVarArgs(
+                int index,
+                Class<?> actualParameterType
+        ) {
+            return isVarArgs && index == expectedParameterTypes.length - 1 && actualParameterType.getComponentType()
+                                                                                                 .isAssignableFrom(
+                                                                                                         expectedParameterTypes[index]);
         }
 
         private boolean isParameterTypesNotMatch(Class<?> actualParameterType, Class<?> expectedParameterType) {
@@ -132,22 +141,21 @@ class WhiteBoxHelpers {
             }
         }
 
-        private boolean isParametersLengthMatch() {return mExpectedParameterTypes.length != mActualParameterTypes.length;}
+        private boolean isParametersLengthMatch() {return expectedParameterTypes.length != actualParameterTypes.length;}
 
         private void assertParametersTypesNotNull() {
-            if (mExpectedParameterTypes == null || mActualParameterTypes == null) {
+            if (expectedParameterTypes == null || actualParameterTypes == null) {
                 throw new IllegalArgumentException("parameter types cannot be null");
             }
         }
 
         private Boolean isParametersMatch() {
-            for (int index = 0; index < mExpectedParameterTypes.length; index++) {
-                final Class<?> actualParameterType = getType(mActualParameterTypes[index]);
+            for (int index = 0; index < expectedParameterTypes.length; index++) {
+                final Class<?> actualParameterType = getType(actualParameterTypes[index]);
                 if (isRemainParamsVarArgs(index, actualParameterType)) {
                     return true;
-                }
-                else {
-                    final Class<?> expectedParameterType = mExpectedParameterTypes[index];
+                } else {
+                    final Class<?> expectedParameterType = expectedParameterTypes[index];
                     if (isParameterTypesNotMatch(actualParameterType, expectedParameterType)) {
                         return false;
                     }

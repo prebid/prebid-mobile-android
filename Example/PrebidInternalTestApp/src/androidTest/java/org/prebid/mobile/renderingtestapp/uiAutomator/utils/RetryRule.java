@@ -21,10 +21,10 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
 public class RetryRule implements TestRule {
-    private int mMaxTries;
+    private int maxTries;
 
     public RetryRule(int maxTries) {
-        mMaxTries = maxTries;
+        this.maxTries = maxTries;
     }
 
     public Statement apply(Statement base, Description description) {
@@ -38,17 +38,16 @@ public class RetryRule implements TestRule {
                 Throwable caughtThrowable = null;
 
                 // implement retry logic here
-                for (int i = 0; i < mMaxTries; i++) {
+                for (int i = 0; i < maxTries; i++) {
                     try {
                         base.evaluate();
                         return;
-                    }
-                    catch (Throwable t) {
+                    } catch (Throwable t) {
                         caughtThrowable = t;
                         System.err.println(description.getDisplayName() + ": run " + (i + 1) + " failed");
                     }
                 }
-                System.err.println(description.getDisplayName() + ": giving up after " + mMaxTries + " failures");
+                System.err.println(description.getDisplayName() + ": giving up after " + maxTries + " failures");
                 throw caughtThrowable;
             }
         };

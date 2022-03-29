@@ -34,14 +34,18 @@ import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import java.lang.ref.WeakReference;
 
 public class MraidInternalBrowserAction implements UrlAction {
+
     private static final String TAG = MraidInternalBrowserAction.class.getSimpleName();
 
-    private final WeakReference<BaseJSInterface> mJSInterfaceWeakReference;
-    private final int mBroadcastId;
+    private final WeakReference<BaseJSInterface> JSInterfaceWeakReference;
+    private final int broadcastId;
 
-    public MraidInternalBrowserAction(BaseJSInterface jsInterface, int broadcastId) {
-        mJSInterfaceWeakReference = new WeakReference<>(jsInterface);
-        mBroadcastId = broadcastId;
+    public MraidInternalBrowserAction(
+            BaseJSInterface jsInterface,
+            int broadcastId
+    ) {
+        JSInterfaceWeakReference = new WeakReference<>(jsInterface);
+        this.broadcastId = broadcastId;
     }
 
     @Override
@@ -53,7 +57,7 @@ public class MraidInternalBrowserAction implements UrlAction {
     @Override
     public void performAction(Context context, UrlHandler urlHandler, Uri uri)
     throws ActionNotResolvedException {
-        BaseJSInterface baseJSInterface = mJSInterfaceWeakReference.get();
+        BaseJSInterface baseJSInterface = JSInterfaceWeakReference.get();
         if (baseJSInterface == null) {
             throw new ActionNotResolvedException("Action can't be handled. BaseJSInterface is null");
         }
@@ -107,7 +111,6 @@ public class MraidInternalBrowserAction implements UrlAction {
             mraidVariableContainer.setUrlForLaunching(url);
         }
 
-        ExternalViewerUtils.startBrowser(context, mraidVariableContainer.getUrlForLaunching(),  mBroadcastId,
-                                         true, null);
+        ExternalViewerUtils.startBrowser(context, mraidVariableContainer.getUrlForLaunching(), broadcastId, true, null);
     }
 }

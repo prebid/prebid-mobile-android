@@ -35,12 +35,12 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricTestRunner.class)
 public class UserConsentManagerTest {
 
-    protected Context mContext = mock(Context.class);
-    protected SharedPreferences mSharedPreferences = mock(SharedPreferences.class);
-    private UserConsentManager mUserConsentManager;
-    private String mIsSubjectToGdpr = "";
-    private String mConsentString;
-    private String mPurposeConsent;
+    protected Context context = mock(Context.class);
+    protected SharedPreferences sharedPreferences = mock(SharedPreferences.class);
+    private UserConsentManager userConsentManager;
+    private String isSubjectToGdpr = "";
+    private String consentString;
+    private String purposeConsent;
 
     private static final String SUBJECT_TO_GDPR = "IABConsent_SubjectToGDPR";
     private static final String CONSENT_STRING = "IABConsent_ConsentString";
@@ -50,131 +50,131 @@ public class UserConsentManagerTest {
     public void setUp() throws Exception {
         Activity robolectricActivity = Robolectric.buildActivity(Activity.class).create().get();
 
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(robolectricActivity);
-        mSharedPreferences.edit().putString(SUBJECT_TO_GDPR, "1").commit();
-        mSharedPreferences.edit().putString(CONSENT_STRING, "consent_string").commit();
-        mSharedPreferences.edit().putString(PURPOSE_CONSENT, "01").commit();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(robolectricActivity);
+        sharedPreferences.edit().putString(SUBJECT_TO_GDPR, "1").commit();
+        sharedPreferences.edit().putString(CONSENT_STRING, "consent_string").commit();
+        sharedPreferences.edit().putString(PURPOSE_CONSENT, "01").commit();
 
-        mUserConsentManager = new UserConsentManager();
-        mUserConsentManager.init(robolectricActivity);
+        userConsentManager = new UserConsentManager();
+        userConsentManager.init(robolectricActivity);
     }
 
     @Test
     public void initConsentValuesAtStartTest() throws Exception {
-        mIsSubjectToGdpr = WhiteBox.getInternalState(mUserConsentManager, "mIsSubjectToGdpr");
-        assertEquals("1", mIsSubjectToGdpr);
+        isSubjectToGdpr = WhiteBox.getInternalState(userConsentManager, "isSubjectToGdpr");
+        assertEquals("1", isSubjectToGdpr);
 
-        mConsentString = WhiteBox.getInternalState(mUserConsentManager, "mConsentString");
-        assertEquals("consent_string", mConsentString);
+        consentString = WhiteBox.getInternalState(userConsentManager, "consentString");
+        assertEquals("consent_string", consentString);
 
-        mPurposeConsent = WhiteBox.getInternalState(mUserConsentManager, "mPurposeConsent");
-        assertEquals("01", mPurposeConsent);
+        purposeConsent = WhiteBox.getInternalState(userConsentManager, "purposeConsent");
+        assertEquals("01", purposeConsent);
     }
 
     @Test
     public void getConsentValuesTest() throws Exception {
         Method methodGetConsent = WhiteBox.method(UserConsentManager.class, "getConsentValues", SharedPreferences.class, String.class);
 
-        mConsentString = (String) methodGetConsent.invoke(mUserConsentManager, mSharedPreferences, CONSENT_STRING);
-        assertEquals("consent_string", mConsentString);
+        consentString = (String) methodGetConsent.invoke(userConsentManager, sharedPreferences, CONSENT_STRING);
+        assertEquals("consent_string", consentString);
 
-        mIsSubjectToGdpr = (String) methodGetConsent.invoke(mUserConsentManager, mSharedPreferences, SUBJECT_TO_GDPR);
-        assertEquals("1", mIsSubjectToGdpr);
+        isSubjectToGdpr = (String) methodGetConsent.invoke(userConsentManager, sharedPreferences, SUBJECT_TO_GDPR);
+        assertEquals("1", isSubjectToGdpr);
 
-        mPurposeConsent = (String) methodGetConsent.invoke(mUserConsentManager, mSharedPreferences, PURPOSE_CONSENT);
-        assertEquals("01", mPurposeConsent);
+        purposeConsent = (String) methodGetConsent.invoke(userConsentManager, sharedPreferences, PURPOSE_CONSENT);
+        assertEquals("01", purposeConsent);
     }
 
     @Test
     public void getSubjectToGdprTest() {
 
-        WhiteBox.setInternalState(mUserConsentManager, "mIsSubjectToGdpr", "1");
-        assertEquals(mUserConsentManager.getSubjectToGdpr(), "1");
+        WhiteBox.setInternalState(userConsentManager, "isSubjectToGdpr", "1");
+        assertEquals(userConsentManager.getSubjectToGdpr(), "1");
 
-        WhiteBox.setInternalState(mUserConsentManager, "mIsSubjectToGdpr", "0");
-        assertEquals(mUserConsentManager.getSubjectToGdpr(), "0");
+        WhiteBox.setInternalState(userConsentManager, "isSubjectToGdpr", "0");
+        assertEquals(userConsentManager.getSubjectToGdpr(), "0");
 
-        WhiteBox.setInternalState(mUserConsentManager, "mIsSubjectToGdpr", "");
-        assertEquals(mUserConsentManager.getSubjectToGdpr(), "");
+        WhiteBox.setInternalState(userConsentManager, "isSubjectToGdpr", "");
+        assertEquals(userConsentManager.getSubjectToGdpr(), "");
     }
 
     @Test
     public void getUserConsentStringTest() {
-        WhiteBox.setInternalState(mUserConsentManager, "mConsentString", "some_consent_string");
-        assertEquals(mUserConsentManager.getUserConsentString(), "some_consent_string");
+        WhiteBox.setInternalState(userConsentManager, "consentString", "some_consent_string");
+        assertEquals(userConsentManager.getUserConsentString(), "some_consent_string");
 
-        WhiteBox.setInternalState(mUserConsentManager, "mConsentString", "");
-        assertEquals(mUserConsentManager.getUserConsentString(), "");
+        WhiteBox.setInternalState(userConsentManager, "consentString", "");
+        assertEquals(userConsentManager.getUserConsentString(), "");
     }
 
     @Test
     public void shouldUseTcfV2WithValidCmpId_ReturnTrue() {
-        WhiteBox.setInternalState(mUserConsentManager, "mCmpSdkId", 1);
+        WhiteBox.setInternalState(userConsentManager, "cmpSdkId", 1);
 
-        assertTrue(mUserConsentManager.shouldUseTcfV2());
+        assertTrue(userConsentManager.shouldUseTcfV2());
     }
 
     @Test
     public void shouldUseTcfV2WithInValidCmpId_ReturnFalse() {
-        WhiteBox.setInternalState(mUserConsentManager, "mCmpSdkId", -2);
+        WhiteBox.setInternalState(userConsentManager, "cmpSdkId", -2);
 
-        assertFalse(mUserConsentManager.shouldUseTcfV2());
+        assertFalse(userConsentManager.shouldUseTcfV2());
     }
 
     @Test
     public void getTcfV2GdprAppliesWhenGdprValueIsNotAssigned_ReturnNull() {
-        WhiteBox.setInternalState(mUserConsentManager, "mTcfV2GdprApplies", -1);
+        WhiteBox.setInternalState(userConsentManager, "tcfV2GdprApplies", -1);
 
-        assertNull(mUserConsentManager.getTcfV2GdprApplies());
+        assertNull(userConsentManager.getTcfV2GdprApplies());
     }
 
     @Test
     public void getTcfV2GdprAppliesWhenGdprValueIsAssigned_ReturnStringValue() {
-        WhiteBox.setInternalState(mUserConsentManager, "mTcfV2GdprApplies", 1);
+        WhiteBox.setInternalState(userConsentManager, "tcfV2GdprApplies", 1);
 
-        assertEquals("1", mUserConsentManager.getTcfV2GdprApplies());
+        assertEquals("1", userConsentManager.getTcfV2GdprApplies());
     }
 
     @Test
     public void getSubjectToGdprShouldUseTcfV2True_ReturnTcfV2GdprApplies() {
-        UserConsentManager spyConsentManager = spy(mUserConsentManager);
+        UserConsentManager spyConsentManager = spy(userConsentManager);
         when(spyConsentManager.shouldUseTcfV2()).thenReturn(true);
 
-        WhiteBox.setInternalState(spyConsentManager, "mTcfV2GdprApplies", 1);
-        WhiteBox.setInternalState(spyConsentManager, "mIsSubjectToGdpr", "0");
+        WhiteBox.setInternalState(spyConsentManager, "tcfV2GdprApplies", 1);
+        WhiteBox.setInternalState(spyConsentManager, "isSubjectToGdpr", "0");
 
         assertEquals("1", spyConsentManager.getSubjectToGdpr());
     }
 
     @Test
     public void getSubjectToGdprShouldUseTcfV2False_ReturnTcfV1IsSubjectToGdpr() {
-        UserConsentManager spyConsentManager = spy(mUserConsentManager);
+        UserConsentManager spyConsentManager = spy(userConsentManager);
         when(spyConsentManager.shouldUseTcfV2()).thenReturn(false);
 
-        WhiteBox.setInternalState(spyConsentManager, "mTcfV2GdprApplies", 1);
-        WhiteBox.setInternalState(spyConsentManager, "mIsSubjectToGdpr", "0");
+        WhiteBox.setInternalState(spyConsentManager, "tcfV2GdprApplies", 1);
+        WhiteBox.setInternalState(spyConsentManager, "isSubjectToGdpr", "0");
 
         assertEquals("0", spyConsentManager.getSubjectToGdpr());
     }
 
     @Test
     public void getUserConsentStringShouldUseTcfV2True_ReturnTcfV2ConsentString() {
-        UserConsentManager spyConsentManager = spy(mUserConsentManager);
+        UserConsentManager spyConsentManager = spy(userConsentManager);
         when(spyConsentManager.shouldUseTcfV2()).thenReturn(true);
 
-        WhiteBox.setInternalState(spyConsentManager, "mTcfV2ConsentString", "tcf_v2_consent");
-        WhiteBox.setInternalState(spyConsentManager, "mConsentString", "tcf_v1_consent");
+        WhiteBox.setInternalState(spyConsentManager, "tcfV2ConsentString", "tcf_v2_consent");
+        WhiteBox.setInternalState(spyConsentManager, "consentString", "tcf_v1_consent");
 
         assertEquals("tcf_v2_consent", spyConsentManager.getUserConsentString());
     }
 
     @Test
     public void getUserConsentStringShouldUseTcfV2False_ReturnTcfV1ConsentString() {
-        UserConsentManager spyConsentManager = spy(mUserConsentManager);
+        UserConsentManager spyConsentManager = spy(userConsentManager);
         when(spyConsentManager.shouldUseTcfV2()).thenReturn(false);
 
-        WhiteBox.setInternalState(spyConsentManager, "mTcfV2ConsentString", "tcf_v2_consent");
-        WhiteBox.setInternalState(spyConsentManager, "mConsentString", "tcf_v1_consent");
+        WhiteBox.setInternalState(spyConsentManager, "tcfV2ConsentString", "tcf_v2_consent");
+        WhiteBox.setInternalState(spyConsentManager, "consentString", "tcf_v1_consent");
 
         assertEquals("tcf_v1_consent", spyConsentManager.getUserConsentString());
     }
@@ -190,66 +190,66 @@ public class UserConsentManagerTest {
     */
     @Test
     public void canAccessDeviceData_SubjectToGdprFalse() {
-        UserConsentManager spyConsentManager = spy(mUserConsentManager);
+        UserConsentManager spyConsentManager = spy(userConsentManager);
         when(spyConsentManager.shouldUseTcfV2()).thenReturn(true);
         when(spyConsentManager.getSubjectToGdpr()).thenReturn("0"); // false
 
-        WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", "10"); // true
+        WhiteBox.setInternalState(spyConsentManager, "purposeConsent", "10"); // true
         assertTrue(spyConsentManager.canAccessDeviceData());
 
-        WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", "00"); // false
+        WhiteBox.setInternalState(spyConsentManager, "purposeConsent", "00"); // false
         assertFalse(spyConsentManager.canAccessDeviceData());
 
-        WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", null); // undefined
+        WhiteBox.setInternalState(spyConsentManager, "purposeConsent", null); // undefined
         assertTrue(spyConsentManager.canAccessDeviceData());
     }
 
     @Test
     public void canAccessDeviceData_SubjectToGdprTrue() {
-        UserConsentManager spyConsentManager = spy(mUserConsentManager);
+        UserConsentManager spyConsentManager = spy(userConsentManager);
         when(spyConsentManager.shouldUseTcfV2()).thenReturn(true);
         when(spyConsentManager.getSubjectToGdpr()).thenReturn("1"); // true
 
-        WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", "10"); // true
+        WhiteBox.setInternalState(spyConsentManager, "purposeConsent", "10"); // true
         assertTrue(spyConsentManager.canAccessDeviceData());
 
-        WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", "00"); // false
+        WhiteBox.setInternalState(spyConsentManager, "purposeConsent", "00"); // false
         assertFalse(spyConsentManager.canAccessDeviceData());
 
-        WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", null); // undefined
+        WhiteBox.setInternalState(spyConsentManager, "purposeConsent", null); // undefined
         assertFalse(spyConsentManager.canAccessDeviceData());
     }
 
     @Test
     public void canAccessDeviceData_SubjectToGdprUndefined() {
-        UserConsentManager spyConsentManager = spy(mUserConsentManager);
+        UserConsentManager spyConsentManager = spy(userConsentManager);
         when(spyConsentManager.shouldUseTcfV2()).thenReturn(true);
         when(spyConsentManager.getSubjectToGdpr()).thenReturn(""); // undefined
 
-        WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", "10"); // true
+        WhiteBox.setInternalState(spyConsentManager, "purposeConsent", "10"); // true
         assertTrue(spyConsentManager.canAccessDeviceData());
 
-        WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", "00"); // false
+        WhiteBox.setInternalState(spyConsentManager, "purposeConsent", "00"); // false
         assertFalse(spyConsentManager.canAccessDeviceData());
 
-        WhiteBox.setInternalState(spyConsentManager, "mPurposeConsent", null); // undefined
+        WhiteBox.setInternalState(spyConsentManager, "purposeConsent", null); // undefined
         assertTrue(spyConsentManager.canAccessDeviceData());
     }
 
     @Test
     public void getPurposeConsent_validString_ReturnValueAtIndexAsBoolean() {
-        WhiteBox.setInternalState(mUserConsentManager, "mPurposeConsent", "01019");
+        WhiteBox.setInternalState(userConsentManager, "purposeConsent", "01019");
 
-        assertTrue(mUserConsentManager.getPurposeConsent(1));
-        assertFalse(mUserConsentManager.getPurposeConsent(2));
-        assertFalse(mUserConsentManager.getPurposeConsent(4));
+        assertTrue(userConsentManager.getPurposeConsent(1));
+        assertFalse(userConsentManager.getPurposeConsent(2));
+        assertFalse(userConsentManager.getPurposeConsent(4));
     }
 
     @Test
     public void getPurposeConsent_nullString_ReturnNull() {
-        WhiteBox.setInternalState(mUserConsentManager, "mPurposeConsent", null);
+        WhiteBox.setInternalState(userConsentManager, "purposeConsent", null);
 
-        assertNull(mUserConsentManager.getPurposeConsent(1));
-        assertNull(mUserConsentManager.getPurposeConsent(0));
+        assertNull(userConsentManager.getPurposeConsent(1));
+        assertNull(userConsentManager.getPurposeConsent(0));
     }
 }

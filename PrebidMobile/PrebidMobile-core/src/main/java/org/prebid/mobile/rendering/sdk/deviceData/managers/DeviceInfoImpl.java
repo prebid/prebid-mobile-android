@@ -49,11 +49,11 @@ import static android.content.pm.ActivityInfo.*;
 public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
 
     private String TAG = DeviceInfoImpl.class.getSimpleName();
-    private TelephonyManager mTelephonyManager;
-    private WindowManager mWindowManager;
-    private PowerManager mPowerManager;
-    private KeyguardManager mKeyguardManager;
-    private PackageManager mPackageManager;
+    private TelephonyManager telephonyManager;
+    private WindowManager windowManager;
+    private PowerManager powerManager;
+    private KeyguardManager keyguardManager;
+    private PackageManager packageManager;
 
     /**
      * @see DeviceInfoManager
@@ -62,11 +62,11 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
     public void init(Context context) {
         super.init(context);
         if (super.isInit() && getContext() != null) {
-            mTelephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-            mWindowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-            mPowerManager = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
-            mKeyguardManager = (KeyguardManager) getContext().getSystemService(Context.KEYGUARD_SERVICE);
-            mPackageManager = getContext().getPackageManager();
+            telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
+            windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+            powerManager = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
+            keyguardManager = (KeyguardManager) getContext().getSystemService(Context.KEYGUARD_SERVICE);
+            packageManager = getContext().getPackageManager();
 
             hasTelephony();
         }
@@ -74,15 +74,15 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
 
     @Override
     public boolean hasTelephony() {
-        if (mTelephonyManager == null) {
+        if (telephonyManager == null) {
             return false;
         }
 
-        if (mPackageManager == null) {
+        if (packageManager == null) {
             return false;
         }
 
-        return mPackageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
+        return packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
     }
 
     /**
@@ -91,9 +91,9 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
     @Override
     public String getMccMnc() {
         String operatorISO;
-        if (isInit() && mTelephonyManager != null) {
+        if (isInit() && telephonyManager != null) {
             //This API does not need permission check for PHONE_STATE.
-            operatorISO = mTelephonyManager.getNetworkOperator();
+            operatorISO = telephonyManager.getNetworkOperator();
 
             String MCC;
             String MNC;
@@ -109,9 +109,9 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
     @Override
     public String getCarrier() {
         String networkOperatorName = null;
-        if (isInit() && mTelephonyManager != null) {
+        if (isInit() && telephonyManager != null) {
             //This API does not need permission check for PHONE_STATE.
-            networkOperatorName = mTelephonyManager.getNetworkOperatorName();
+            networkOperatorName = telephonyManager.getNetworkOperatorName();
         }
         return networkOperatorName;
     }
@@ -150,10 +150,10 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
     public void dispose() {
         super.dispose();
 
-        mTelephonyManager = null;
-        mKeyguardManager = null;
-        mPowerManager = null;
-        mWindowManager = null;
+        telephonyManager = null;
+        keyguardManager = null;
+        powerManager = null;
+        windowManager = null;
     }
 
     /**
@@ -161,7 +161,7 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
      */
     @Override
     public int getScreenWidth() {
-        return Utils.getScreenWidth(mWindowManager);
+        return Utils.getScreenWidth(windowManager);
     }
 
     /**
@@ -169,7 +169,7 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
      */
     @Override
     public int getScreenHeight() {
-        return Utils.getScreenHeight(mWindowManager);
+        return Utils.getScreenHeight(windowManager);
     }
 
     /**
@@ -177,8 +177,8 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
      */
     @Override
     public boolean isScreenOn() {
-        if (mPowerManager != null) {
-            return mPowerManager.isScreenOn();
+        if (powerManager != null) {
+            return powerManager.isScreenOn();
         }
         return false;
     }
@@ -188,8 +188,8 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
      */
     @Override
     public boolean isScreenLocked() {
-        if (mKeyguardManager != null) {
-            return mKeyguardManager.inKeyguardRestrictedInputMode();
+        if (keyguardManager != null) {
+            return keyguardManager.inKeyguardRestrictedInputMode();
         }
         return false;
     }
@@ -284,7 +284,7 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
 
     @Override
     public boolean hasGps() {
-        return mPackageManager.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
+        return packageManager.hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
     }
 
     @VisibleForTesting

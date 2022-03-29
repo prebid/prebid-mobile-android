@@ -31,48 +31,46 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 public class ScreenStateReceiverTest {
-    private ScreenStateReceiver mScreenStateReceiver;
+    private ScreenStateReceiver screenStateReceiver;
 
-    @Mock
-    private Context mMockContext;
-    @Mock
-    private Intent mMockIntent;
+    @Mock private Context mockContext;
+    @Mock private Intent mockIntent;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        mScreenStateReceiver = new ScreenStateReceiver();
+        screenStateReceiver = new ScreenStateReceiver();
     }
 
     @Test
     public void onReceiveActionUserPresent_ScreenOnIsTrue() {
-        when(mMockIntent.getAction()).thenReturn(Intent.ACTION_USER_PRESENT);
+        when(mockIntent.getAction()).thenReturn(Intent.ACTION_USER_PRESENT);
 
-        mScreenStateReceiver.onReceive(mMockContext, mMockIntent);
+        screenStateReceiver.onReceive(mockContext, mockIntent);
 
-        assertTrue(mScreenStateReceiver.isScreenOn());
+        assertTrue(screenStateReceiver.isScreenOn());
     }
 
     @Test
     public void onReceiveActionScreenOff_ScreenOnIsFalse() {
-        when(mMockIntent.getAction()).thenReturn(Intent.ACTION_SCREEN_OFF);
+        when(mockIntent.getAction()).thenReturn(Intent.ACTION_SCREEN_OFF);
 
-        mScreenStateReceiver.onReceive(mMockContext, mMockIntent);
+        screenStateReceiver.onReceive(mockContext, mockIntent);
 
-        assertFalse(mScreenStateReceiver.isScreenOn());
+        assertFalse(screenStateReceiver.isScreenOn());
     }
 
     @Test
     public void whenRegisterAndUnregisterReceiver_PerformActionOnContext() {
-        when(mMockContext.getApplicationContext()).thenReturn(mMockContext);
+        when(mockContext.getApplicationContext()).thenReturn(mockContext);
 
-        mScreenStateReceiver.register(mMockContext);
+        screenStateReceiver.register(mockContext);
 
-        verify(mMockContext, times(1)).getApplicationContext();
-        verify(mMockContext, times(1)).registerReceiver(eq(mScreenStateReceiver), any());
+        verify(mockContext, times(1)).getApplicationContext();
+        verify(mockContext, times(1)).registerReceiver(eq(screenStateReceiver), any());
 
-        mScreenStateReceiver.unregister();
-        verify(mMockContext, times(1)).unregisterReceiver(eq(mScreenStateReceiver));
+        screenStateReceiver.unregister();
+        verify(mockContext, times(1)).unregisterReceiver(eq(screenStateReceiver));
     }
 }

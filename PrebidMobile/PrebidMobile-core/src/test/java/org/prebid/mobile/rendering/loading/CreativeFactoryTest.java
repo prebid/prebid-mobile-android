@@ -51,19 +51,20 @@ import static org.prebid.mobile.rendering.models.CreativeModelsMakerVast.HTML_CR
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class CreativeFactoryTest {
-    private Context mMockContext;
-    private CreativeModel mMockModel;
-    private CreativeFactory.Listener mMockListener;
-    private OmAdSessionManager mMockOmAdSessionManager;
-    private InterstitialManager mMockInterstitialManager;
+
+    private Context mockContext;
+    private CreativeModel mockModel;
+    private CreativeFactory.Listener mockListener;
+    private OmAdSessionManager mockOmAdSessionManager;
+    private InterstitialManager mockInterstitialManager;
 
     @Before
     public void setUp() throws Exception {
-        mMockContext = Robolectric.buildActivity(Activity.class).create().get();
-        mMockModel = mock(CreativeModel.class);
-        mMockListener = mock(CreativeFactory.Listener.class);
-        mMockOmAdSessionManager = mock(OmAdSessionManager.class);
-        mMockInterstitialManager = mock(InterstitialManager.class);
+        mockContext = Robolectric.buildActivity(Activity.class).create().get();
+        mockModel = mock(CreativeModel.class);
+        mockListener = mock(CreativeFactory.Listener.class);
+        mockOmAdSessionManager = mock(OmAdSessionManager.class);
+        mockInterstitialManager = mock(InterstitialManager.class);
     }
 
     @Test
@@ -71,12 +72,12 @@ public class CreativeFactoryTest {
         boolean hasException;
 
         // Valid
-        new CreativeFactory(mMockContext, mMockModel, mMockListener, mMockOmAdSessionManager, mMockInterstitialManager);
+        new CreativeFactory(mockContext, mockModel, mockListener, mockOmAdSessionManager, mockInterstitialManager);
 
         // Null context
         hasException = false;
         try {
-            new CreativeFactory(null, mMockModel, mMockListener, mMockOmAdSessionManager, mMockInterstitialManager);
+            new CreativeFactory(null, mockModel, mockListener, mockOmAdSessionManager, mockInterstitialManager);
         }
         catch (AdException e) {
             hasException = true;
@@ -86,7 +87,7 @@ public class CreativeFactoryTest {
         // Null creative model
         hasException = false;
         try {
-            new CreativeFactory(mMockContext, null, mMockListener, mMockOmAdSessionManager, mMockInterstitialManager);
+            new CreativeFactory(mockContext, null, mockListener, mockOmAdSessionManager, mockInterstitialManager);
         }
         catch (AdException e) {
             hasException = true;
@@ -96,7 +97,7 @@ public class CreativeFactoryTest {
         // Null listener
         hasException = false;
         try {
-            new CreativeFactory(mMockContext, mMockModel, null, mMockOmAdSessionManager, mMockInterstitialManager);
+            new CreativeFactory(mockContext, mockModel, null, mockOmAdSessionManager, mockInterstitialManager);
         }
         catch (AdException e) {
             hasException = true;
@@ -109,14 +110,19 @@ public class CreativeFactoryTest {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         adConfiguration.setAdFormat(AdFormat.BANNER);
         Handler mockHandler = mock(Handler.class);
-        when(mMockModel.getAdConfiguration()).thenReturn(adConfiguration);
-        when(mMockModel.getName()).thenReturn(HTML_CREATIVE_TAG);
-        when(mMockModel.getImpressionUrl()).thenReturn("impressionUrl");
-        when(mMockModel.getClickUrl()).thenReturn("clickUrl");
+        when(mockModel.getAdConfiguration()).thenReturn(adConfiguration);
+        when(mockModel.getName()).thenReturn(HTML_CREATIVE_TAG);
+        when(mockModel.getImpressionUrl()).thenReturn("impressionUrl");
+        when(mockModel.getClickUrl()).thenReturn("clickUrl");
 
         //Run the creativeFactory
-        CreativeFactory creativeFactory = new CreativeFactory(mMockContext, mMockModel, mMockListener, mMockOmAdSessionManager, mMockInterstitialManager);
-        WhiteBox.field(CreativeFactory.class, "mTimeoutHandler").set(creativeFactory, mockHandler);
+        CreativeFactory creativeFactory = new CreativeFactory(mockContext,
+                mockModel,
+                mockListener,
+                mockOmAdSessionManager,
+                mockInterstitialManager
+        );
+        WhiteBox.field(CreativeFactory.class, "timeoutHandler").set(creativeFactory, mockHandler);
         creativeFactory.start();
 
         AbstractCreative creative = creativeFactory.getCreative();
@@ -132,22 +138,31 @@ public class CreativeFactoryTest {
         Handler mockHandler = mock(Handler.class);
         adConfiguration.setAdFormat(AdFormat.VAST);
         HashMap<VideoAdEvent.Event, ArrayList<String>> videoEventsUrls = new HashMap<>();
-        videoEventsUrls.put(VideoAdEvent.Event.AD_EXPAND,
-                            new ArrayList<>(Arrays.asList("AD_EXPAND")));
+        videoEventsUrls.put(VideoAdEvent.Event.AD_EXPAND, new ArrayList<>(Arrays.asList("AD_EXPAND")));
         when(mockVideoModel.getVideoEventUrls()).thenReturn(videoEventsUrls);
         when(mockVideoModel.getAdConfiguration()).thenReturn(adConfiguration);
         CreativeFactory creativeFactory;
 
         // Blank media URL
         when(mockVideoModel.getMediaUrl()).thenReturn("");
-        creativeFactory = new CreativeFactory(mMockContext, mockVideoModel, mMockListener, mMockOmAdSessionManager, mMockInterstitialManager);
+        creativeFactory = new CreativeFactory(mockContext,
+                mockVideoModel,
+                mockListener,
+                mockOmAdSessionManager,
+                mockInterstitialManager
+        );
         creativeFactory.start();
-        assertNull(WhiteBox.getInternalState(creativeFactory, "mCreative"));
+        assertNull(WhiteBox.getInternalState(creativeFactory, "creative"));
 
         // Valid
         when(mockVideoModel.getMediaUrl()).thenReturn("mediaUrl");
-        creativeFactory = new CreativeFactory(mMockContext, mockVideoModel, mMockListener, mMockOmAdSessionManager, mMockInterstitialManager);
-        WhiteBox.field(CreativeFactory.class, "mTimeoutHandler").set(creativeFactory, mockHandler);
+        creativeFactory = new CreativeFactory(mockContext,
+                mockVideoModel,
+                mockListener,
+                mockOmAdSessionManager,
+                mockInterstitialManager
+        );
+        WhiteBox.field(CreativeFactory.class, "timeoutHandler").set(creativeFactory, mockHandler);
         creativeFactory.start();
 
         AbstractCreative creative = creativeFactory.getCreative();
@@ -160,10 +175,11 @@ public class CreativeFactoryTest {
     public void testCreativeFactoryCreativeResolutionListener() throws Exception {
         CreativeFactory mockCreativeFactory = mock(CreativeFactory.class);
         CreativeFactory.Listener mockCreativeFactoryListener = mock(CreativeFactory.Listener.class);
-        CreativeFactory.CreativeFactoryCreativeResolutionListener creativeResolutionListener = new CreativeFactory.CreativeFactoryCreativeResolutionListener(mockCreativeFactory);
+        CreativeFactory.CreativeFactoryCreativeResolutionListener creativeResolutionListener = new CreativeFactory.CreativeFactoryCreativeResolutionListener(
+                mockCreativeFactory);
 
-        WhiteBox.field(CreativeFactory.class, "mListener").set(mockCreativeFactory, mockCreativeFactoryListener);
-        WhiteBox.field(CreativeFactory.class, "mTimeoutHandler").set(mockCreativeFactory, mock(Handler.class));
+        WhiteBox.field(CreativeFactory.class, "listener").set(mockCreativeFactory, mockCreativeFactoryListener);
+        WhiteBox.field(CreativeFactory.class, "timeoutHandler").set(mockCreativeFactory, mock(Handler.class));
 
         // Success
         creativeResolutionListener.creativeReady(mock(AbstractCreative.class));
@@ -182,10 +198,11 @@ public class CreativeFactoryTest {
         CreativeFactory mockCreativeFactory = mock(CreativeFactory.class);
         CreativeFactory.Listener mockCreativeFactoryListener = mock(CreativeFactory.Listener.class);
         CreativeFactory.TimeoutState expired = CreativeFactory.TimeoutState.EXPIRED;
-        CreativeFactory.CreativeFactoryCreativeResolutionListener creativeResolutionListener = new CreativeFactory.CreativeFactoryCreativeResolutionListener(mockCreativeFactory);
+        CreativeFactory.CreativeFactoryCreativeResolutionListener creativeResolutionListener = new CreativeFactory.CreativeFactoryCreativeResolutionListener(
+                mockCreativeFactory);
 
-        WhiteBox.field(CreativeFactory.class, "mListener").set(mockCreativeFactory, mockCreativeFactoryListener);
-        WhiteBox.field(CreativeFactory.class, "mTimeoutState").set(mockCreativeFactory, expired);
+        WhiteBox.field(CreativeFactory.class, "listener").set(mockCreativeFactory, mockCreativeFactoryListener);
+        WhiteBox.field(CreativeFactory.class, "timeoutState").set(mockCreativeFactory, expired);
 
         creativeResolutionListener.creativeReady(mock(AbstractCreative.class));
 
@@ -195,10 +212,15 @@ public class CreativeFactoryTest {
     @Test
     public void destroyCalled_removeCallbacksCalled()
     throws IllegalAccessException, AdException {
-        CreativeFactory creativeFactory = new CreativeFactory(mMockContext, mMockModel, mMockListener, mMockOmAdSessionManager, mMockInterstitialManager);
+        CreativeFactory creativeFactory = new CreativeFactory(mockContext,
+                mockModel,
+                mockListener,
+                mockOmAdSessionManager,
+                mockInterstitialManager
+        );
         Handler mockHandler = mock(Handler.class);
 
-        WhiteBox.field(CreativeFactory.class, "mTimeoutHandler").set(creativeFactory, mockHandler);
+        WhiteBox.field(CreativeFactory.class, "timeoutHandler").set(creativeFactory, mockHandler);
 
         creativeFactory.destroy();
 

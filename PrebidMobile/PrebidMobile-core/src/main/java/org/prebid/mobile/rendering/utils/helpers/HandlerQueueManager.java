@@ -21,7 +21,7 @@ import android.os.Handler;
 import java.util.Hashtable;
 
 public class HandlerQueueManager {
-    private Hashtable<String, Handler> mHandlersQueue = new Hashtable<>();
+    private Hashtable<String, Handler> handlersQueue = new Hashtable<>();
 
     /**
      * Calculates handler hash and puts handler in queue.
@@ -68,10 +68,10 @@ public class HandlerQueueManager {
     }
 
     public void clearQueue() {
-        mHandlersQueue.clear();
+        handlersQueue.clear();
     }
 
     private Hashtable<String, Handler> getHandlersQueue() {
-        return mHandlersQueue;
+        return handlersQueue;
     }
 }

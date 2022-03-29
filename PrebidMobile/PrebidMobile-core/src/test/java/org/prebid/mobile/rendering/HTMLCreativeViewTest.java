@@ -35,13 +35,13 @@ import static org.mockito.Mockito.mock;
 @Config(sdk = 19)
 public class HTMLCreativeViewTest {
 
-    private Activity mTestActivity;
-    private Context mMockContext;
+    private Activity testActivity;
+    private Context mockContext;
 
     @Before
     public void setUp() throws Exception {
-        mTestActivity = Robolectric.buildActivity(Activity.class).create().get();
-        mMockContext = mTestActivity.getApplicationContext();
+        testActivity = Robolectric.buildActivity(Activity.class).create().get();
+        mockContext = testActivity.getApplicationContext();
     }
 
     @After
@@ -52,7 +52,7 @@ public class HTMLCreativeViewTest {
     @Test
     public void testSetMediaUrl() throws Exception {
 
-        PrebidWebViewBase mockHTMLCreativeView = new PrebidWebViewBase(mMockContext, mock(InterstitialManager.class));
+        PrebidWebViewBase mockHTMLCreativeView = new PrebidWebViewBase(mockContext, mock(InterstitialManager.class));
         //mockHTMLCreativeView.start();
         assertNotNull(mockHTMLCreativeView);
     }

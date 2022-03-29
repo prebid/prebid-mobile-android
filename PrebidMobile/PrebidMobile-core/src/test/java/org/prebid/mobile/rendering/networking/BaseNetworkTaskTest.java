@@ -37,48 +37,48 @@ import static org.prebid.mobile.rendering.networking.BaseNetworkTask.REDIRECT_TA
 @RunWith(RobolectricTestRunner.class)
 public class BaseNetworkTaskTest {
 
-    private MockWebServer mServer;
-    private boolean sSuccess;
-    private BaseNetworkTask.GetUrlResult mResponse;
-    private String mMsg;
-    private BaseNetworkTask.GetUrlParams mParams;
-    private Exception mException;
+    private MockWebServer server;
+    private boolean success;
+    private BaseNetworkTask.GetUrlResult response;
+    private String msg;
+    private BaseNetworkTask.GetUrlParams params;
+    private Exception exception;
 
     ResponseHandler baseResponseHandler = new ResponseHandler() {
 
         @Override
         public void onResponse(BaseNetworkTask.GetUrlResult response) {
-            sSuccess = true;
-            mResponse = response;
+            success = true;
+            BaseNetworkTaskTest.this.response = response;
         }
 
         @Override
         public void onError(String msg, long responseTime) {
-            sSuccess = false;
-            mMsg = msg;
+            success = false;
+            BaseNetworkTaskTest.this.msg = msg;
         }
 
         @Override
         public void onErrorWithException(Exception e, long responseTime) {
-            sSuccess = false;
-            mException = e;
+            success = false;
+            exception = e;
         }
     };
 
     @Before
     public void setUp() throws Exception {
-        mServer = new MockWebServer();
-        mParams = new BaseNetworkTask.GetUrlParams();
-        mParams.name = "TESTFIRST";
-        mParams.userAgent = "user-agent";
-        HttpUrl baseUrl = mServer.url("/first");
-        mParams.url = baseUrl.url().toString();
-        mParams.requestType = "GET";
+        server = new MockWebServer();
+        params = new BaseNetworkTask.GetUrlParams();
+        params.name = "TESTFIRST";
+        params.userAgent = "user-agent";
+        HttpUrl baseUrl = server.url("/first");
+        params.url = baseUrl.url().toString();
+        params.requestType = "GET";
     }
 
     @After
     public void tearDown() throws Exception {
-        mServer.shutdown();
+        server.shutdown();
     }
 
     @Suppress
@@ -98,180 +98,180 @@ public class BaseNetworkTaskTest {
 
     @Test
     public void testSuccessDoInBackground() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(200).setBody("This is google!"));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("This is google!"));
 
         BaseNetworkTask baseNetworkTask = new BaseNetworkTask(baseResponseHandler);
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
-        Assert.assertEquals("This is google!", mResponse.responseString);
-        Assert.assertEquals(true, sSuccess);
+        Assert.assertEquals("This is google!", response.responseString);
+        Assert.assertEquals(true, success);
     }
 
     @Test
     public void test400ExceptionError() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(400).setBody("404 not found"));
+        server.enqueue(new MockResponse().setResponseCode(400).setBody("404 not found"));
 
         BaseNetworkTask baseNetworkTask = new BaseNetworkTask(baseResponseHandler);
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
-        Assert.assertTrue(mException.getLocalizedMessage().contains("Code 400"));
-        Assert.assertEquals(false, sSuccess);
+        Assert.assertTrue(exception.getLocalizedMessage().contains("Code 400"));
+        Assert.assertEquals(false, success);
     }
 
     @Test
     public void test401ExceptionError() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(401).setBody("404 not found"));
+        server.enqueue(new MockResponse().setResponseCode(401).setBody("404 not found"));
 
         BaseNetworkTask baseNetworkTask = new BaseNetworkTask(baseResponseHandler);
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
-        Assert.assertTrue(mException.getLocalizedMessage().contains("Code 401"));
-        Assert.assertEquals(false, sSuccess);
+        Assert.assertTrue(exception.getLocalizedMessage().contains("Code 401"));
+        Assert.assertEquals(false, success);
     }
 
     @Test
     public void test402ExceptionError() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(402).setBody("404 not found"));
+        server.enqueue(new MockResponse().setResponseCode(402).setBody("404 not found"));
 
         BaseNetworkTask baseNetworkTask = new BaseNetworkTask(baseResponseHandler);
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
-        Assert.assertTrue(mException.getLocalizedMessage().contains("Code 402"));
-        Assert.assertEquals(false, sSuccess);
+        Assert.assertTrue(exception.getLocalizedMessage().contains("Code 402"));
+        Assert.assertEquals(false, success);
     }
 
     @Test
     public void test403ExceptionError() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(403).setBody("404 not found"));
+        server.enqueue(new MockResponse().setResponseCode(403).setBody("404 not found"));
 
         BaseNetworkTask baseNetworkTask = new BaseNetworkTask(baseResponseHandler);
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
-        Assert.assertTrue(mException.getLocalizedMessage().contains("Code 403"));
-        Assert.assertEquals(false, sSuccess);
+        Assert.assertTrue(exception.getLocalizedMessage().contains("Code 403"));
+        Assert.assertEquals(false, success);
     }
 
     @Test
     public void test404ExceptionError() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(404).setBody("404 not found"));
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("404 not found"));
 
         BaseNetworkTask baseNetworkTask = new BaseNetworkTask(baseResponseHandler);
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
-        MatcherAssert.assertThat(mException.getLocalizedMessage(), containsString("404"));
-        Assert.assertFalse(sSuccess);
+        MatcherAssert.assertThat(exception.getLocalizedMessage(), containsString("404"));
+        Assert.assertFalse(success);
     }
 
     @Test
     public void test405ExceptionError() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(405).setBody("404 not found"));
+        server.enqueue(new MockResponse().setResponseCode(405).setBody("404 not found"));
 
         BaseNetworkTask baseNetworkTask = new BaseNetworkTask(baseResponseHandler);
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
-        Assert.assertTrue(mException.getLocalizedMessage().contains("Code 405"));
-        Assert.assertEquals(false, sSuccess);
+        Assert.assertTrue(exception.getLocalizedMessage().contains("Code 405"));
+        Assert.assertEquals(false, success);
     }
 
     @Test
     public void testEmptyVast() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(200).setBody("<VAST version=\"2.0\"></VAST>"));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("<VAST version=\"2.0\"></VAST>"));
 
         BaseNetworkTask baseNetworkTask = new BaseNetworkTask(baseResponseHandler);
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
-        Assert.assertEquals("Invalid VAST Response: less than 100 characters.", mMsg);
-        Assert.assertEquals(false, sSuccess);
+        Assert.assertEquals("Invalid VAST Response: less than 100 characters.", msg);
+        Assert.assertEquals(false, success);
     }
 
     @Test
     public void test301Redirect() throws IOException {
-        mServer.enqueue(new MockResponse()
+        server.enqueue(new MockResponse()
                             .setResponseCode(301)
-                            .addHeader("Location: " + mServer.url("/new-path"))
+                            .addHeader("Location: " + server.url("/new-path"))
                             .setBody("This page has moved!"));
-        mServer.enqueue(new MockResponse().setBody("This is the new location!"));
+        server.enqueue(new MockResponse().setBody("This is the new location!"));
 
         BaseNetworkTask baseNetworkTask = new BaseNetworkTask(baseResponseHandler);
 
-        mParams.name = REDIRECT_TASK;
+        params.name = REDIRECT_TASK;
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
-        Assert.assertEquals(true, sSuccess);
+        Assert.assertEquals(true, success);
     }
 
     @Test
     public void test302Redirect() {
-        mServer.enqueue(new MockResponse().setResponseCode(302)
-                                          .addHeader("Location: " + mServer.url("/new-path"))
-                                          .setBody("This page has moved"));
-        mServer.enqueue(new MockResponse().setResponseCode(200).setBody("This is the new location"));
+        server.enqueue(new MockResponse().setResponseCode(302)
+                                         .addHeader("Location: " + server.url("/new-path"))
+                                         .setBody("This page has moved"));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("This is the new location"));
 
         BaseNetworkTask baseNetworkTask = new BaseNetworkTask(baseResponseHandler);
 
-        mParams.name = REDIRECT_TASK;
+        params.name = REDIRECT_TASK;
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
-        Assert.assertEquals(true, sSuccess);
+        Assert.assertEquals(true, success);
     }
 }

@@ -33,7 +33,7 @@ public class Imp extends BaseBid {
     public Video video = null;
     public Pmp pmp = null;
     public Native nativeObj;
-    private Ext mExt = null;
+    private Ext ext = null;
 
     public Integer clickBrowser = null;
 
@@ -54,17 +54,17 @@ public class Imp extends BaseBid {
         toJSON(jsonObject, "video", (video != null) ? video.getJsonObject() : null);
         toJSON(jsonObject, "native", (nativeObj != null) ? nativeObj.getJsonObject() : null);
         toJSON(jsonObject, "pmp", (pmp != null) ? pmp.getJsonObject() : null);
-        toJSON(jsonObject, "ext", (mExt != null) ? mExt.getJsonObject() : null);
+        toJSON(jsonObject, "ext", (ext != null) ? ext.getJsonObject() : null);
 
         return jsonObject;
     }
 
     public Ext getExt() {
-        if (mExt == null) {
-            mExt = new Ext();
+        if (ext == null) {
+            ext = new Ext();
         }
 
-        return mExt;
+        return ext;
     }
 
     public Banner getBanner() {

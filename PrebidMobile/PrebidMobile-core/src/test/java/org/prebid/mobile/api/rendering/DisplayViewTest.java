@@ -46,37 +46,34 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class DisplayViewTest {
 
-    private DisplayView mDisplayView;
-    private Context mContext;
-    private AdUnitConfiguration mAdUnitConfiguration;
-    @Mock
-    private BidResponse mBidResponse;
-    @Mock
-    private DisplayViewListener mMockDisplayViewListener;
-    @Mock
-    private AdViewManager mMockAdViewManager;
+    private DisplayView displayView;
+    private Context context;
+    private AdUnitConfiguration adUnitConfiguration;
+    @Mock private BidResponse bidResponse;
+    @Mock private DisplayViewListener mockDisplayViewListener;
+    @Mock private AdViewManager mockAdViewManager;
 
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(DisplayViewTest.this);
 
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
+        context = Robolectric.buildActivity(Activity.class).create().get();
 
-        mAdUnitConfiguration = new AdUnitConfiguration();
-        mAdUnitConfiguration.setAdFormat(AdFormat.BANNER);
+        adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setAdFormat(AdFormat.BANNER);
 
         BidResponse mockResponse = mock(BidResponse.class);
         Bid mockBid = mock(Bid.class);
         when(mockBid.getAdm()).thenReturn("adm");
         when(mockResponse.getWinningBid()).thenReturn(mockBid);
 
-        mDisplayView = new DisplayView(mContext, mMockDisplayViewListener, mAdUnitConfiguration, mockResponse);
-        reset(mMockDisplayViewListener);
+        displayView = new DisplayView(context, mockDisplayViewListener, adUnitConfiguration, mockResponse);
+        reset(mockDisplayViewListener);
     }
 
     @Test
     public void whenDisplayAd_LoadBidTransaction() {
-        Assert.assertNotNull(WhiteBox.getInternalState(mDisplayView, "mAdViewManager"));
+        Assert.assertNotNull(WhiteBox.getInternalState(displayView, "adViewManager"));
     }
 
     @Test
@@ -84,7 +81,7 @@ public class DisplayViewTest {
         throws IllegalAccessException {
         AdViewManagerListener adViewManagerListener = getAdViewManagerListener();
         adViewManagerListener.adLoaded(mock(AdDetails.class));
-        verify(mMockDisplayViewListener).onAdLoaded();
+        verify(mockDisplayViewListener).onAdLoaded();
     }
 
     @Test
@@ -92,7 +89,7 @@ public class DisplayViewTest {
         throws IllegalAccessException {
         AdViewManagerListener adViewManagerListener = getAdViewManagerListener();
         adViewManagerListener.viewReadyForImmediateDisplay(mock(View.class));
-        verify(mMockDisplayViewListener).onAdDisplayed();
+        verify(mockDisplayViewListener).onAdDisplayed();
     }
 
     @Test
@@ -100,7 +97,7 @@ public class DisplayViewTest {
         throws IllegalAccessException {
         AdViewManagerListener adViewManagerListener = getAdViewManagerListener();
         adViewManagerListener.failedToLoad(new AdException(AdException.INTERNAL_ERROR, "Test"));
-        verify(mMockDisplayViewListener).onAdFailed(any(AdException.class));
+        verify(mockDisplayViewListener).onAdFailed(any(AdException.class));
     }
 
     @Test
@@ -108,7 +105,7 @@ public class DisplayViewTest {
         throws IllegalAccessException {
         AdViewManagerListener adViewManagerListener = getAdViewManagerListener();
         adViewManagerListener.creativeClicked("");
-        verify(mMockDisplayViewListener).onAdClicked();
+        verify(mockDisplayViewListener).onAdClicked();
     }
 
     @Test
@@ -116,7 +113,7 @@ public class DisplayViewTest {
         throws IllegalAccessException {
         AdViewManagerListener adViewManagerListener = getAdViewManagerListener();
         adViewManagerListener.creativeInterstitialClosed();
-        verify(mMockDisplayViewListener).onAdClosed();
+        verify(mockDisplayViewListener).onAdClosed();
     }
 
     @Test
@@ -124,11 +121,11 @@ public class DisplayViewTest {
         throws IllegalAccessException {
         AdViewManagerListener adViewManagerListener = getAdViewManagerListener();
         adViewManagerListener.creativeCollapsed();
-        verify(mMockDisplayViewListener).onAdClosed();
+        verify(mockDisplayViewListener).onAdClosed();
     }
 
     private AdViewManagerListener getAdViewManagerListener() throws IllegalAccessException {
-        return (AdViewManagerListener) WhiteBox.field(DisplayView.class, "mAdViewManagerListener").get(mDisplayView);
+        return (AdViewManagerListener) WhiteBox.field(DisplayView.class, "adViewManagerListener").get(displayView);
     }
 
 }
