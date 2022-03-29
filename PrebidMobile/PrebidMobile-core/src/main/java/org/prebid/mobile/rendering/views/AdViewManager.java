@@ -40,6 +40,7 @@ import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreative;
 import org.prebid.mobile.rendering.video.VideoCreativeView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
@@ -210,7 +211,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
     }
 
     public boolean isAutoDisplayOnLoad() {
-        return mAdConfiguration.getAdUnitIdentifierType() == AdUnitConfiguration.AdUnitIdentifierType.BANNER;
+        return mAdConfiguration.isAdType(AdFormat.BANNER);
     }
 
     public void destroy() {
@@ -387,7 +388,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
             return;
         }
 
-        if (mAdConfiguration.getAdUnitIdentifierType() == AdUnitConfiguration.AdUnitIdentifierType.BANNER) {
+        if (mAdConfiguration.isAdType(AdFormat.BANNER)) {
             if (!mCurrentCreative.equals(mLastCreativeShown)) {
                 displayCreative(creativeView);
             }

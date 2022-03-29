@@ -33,7 +33,7 @@ import org.prebid.mobile.rendering.utils.url.action.DeepLinkAction;
 import org.prebid.mobile.rendering.utils.url.action.DeepLinkPlusAction;
 import org.prebid.mobile.rendering.utils.url.action.UrlAction;
 import org.prebid.mobile.rendering.views.VolumeControlView;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.units.configuration.AdFormat;
 
 import static android.widget.RelativeLayout.LayoutParams.MATCH_PARENT;
 import static android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT;
@@ -169,7 +169,7 @@ public class VideoCreativeView extends RelativeLayout {
 
         mExoPlayerView = (ExoPlayerView) ViewPool
                 .getInstance()
-                .getUnoccupiedView(getContext(), mVideoCreativeViewListener, AdUnitConfiguration.AdUnitIdentifierType.VAST, null);
+                .getUnoccupiedView(getContext(), mVideoCreativeViewListener, AdFormat.VAST, null);
 
         addView(mExoPlayerView);
     }

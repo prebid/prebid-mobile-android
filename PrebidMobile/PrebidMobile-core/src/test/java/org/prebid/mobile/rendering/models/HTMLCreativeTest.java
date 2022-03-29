@@ -43,12 +43,14 @@ import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.lang.ref.WeakReference;
+import java.util.EnumSet;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -120,7 +122,7 @@ public class HTMLCreativeTest {
         ViewPool mockViewPool = mock(ViewPool.class);
         when(mockViewPool.getUnoccupiedView(any(Context.class),
                 any(),
-                any(AdUnitConfiguration.AdUnitIdentifierType.class),
+                any(AdFormat.class),
                 any(InterstitialManager.class)))
             .thenReturn(mockPrebidWebViewBanner);
         WhiteBox.field(ViewPool.class, "sInstance").set(null, mockViewPool);
@@ -135,26 +137,19 @@ public class HTMLCreativeTest {
         }
         mHtmlCreative = new HTMLCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
 
-        // Test null adType
-        try {
-            mHtmlCreative.load();
-            fail("AdException was NOT thrown");
-        }
-        catch (AdException e) {
-        }
-
+        EnumSet<AdFormat> result = EnumSet.noneOf(AdFormat.class);
+        result.add(AdFormat.BANNER);
         // Test empty html
         try {
-            when(mMockConfig.getAdUnitIdentifierType()).thenReturn(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+            when(mMockConfig.getAdFormats()).thenReturn(result);
             mHtmlCreative = new HTMLCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
             mHtmlCreative.load();
             fail("AdException was NOT thrown");
-        }
-        catch (AdException e) {
+        } catch (AdException e) {
         }
 
         // Test non-empty html
-        when(mMockConfig.getAdUnitIdentifierType()).thenReturn(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        when(mMockConfig.getAdFormats()).thenReturn(result);
         when(mMockModel.getHtml()).thenReturn("foo");
 
         mHtmlCreative = new HTMLCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
@@ -170,7 +165,9 @@ public class HTMLCreativeTest {
         WhiteBox.setInternalState(prebidWebViewBase, "mWebView", mock(WebViewBase.class));
         when(mMockPrebidWebView.getWebView()).thenReturn(mock(WebViewBase.class));
 
-        when(mMockConfig.getAdUnitIdentifierType()).thenReturn(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        EnumSet<AdFormat> result = EnumSet.noneOf(AdFormat.class);
+        result.add(AdFormat.BANNER);
+        when(mMockConfig.getAdFormats()).thenReturn(result);
 
         mHtmlCreative.display();
         verify(mMockModel, never()).trackDisplayAdEvent(TrackingEvent.Events.IMPRESSION);

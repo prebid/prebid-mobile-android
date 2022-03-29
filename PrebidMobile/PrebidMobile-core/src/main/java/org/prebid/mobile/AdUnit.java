@@ -31,6 +31,7 @@ import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.tasksmanager.TasksManager;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.*;
@@ -47,9 +48,9 @@ public abstract class AdUnit {
     @Nullable
     protected Object adObject;
 
-    AdUnit(@NonNull String configId, @NonNull AdUnitConfiguration.AdUnitIdentifierType adType) {
+    AdUnit(@NonNull String configId, @NonNull AdFormat adType) {
         configuration.setConfigId(configId);
-        configuration.setAdUnitIdentifierType(adType);
+        configuration.setAdFormat(adType);
     }
 
     /**

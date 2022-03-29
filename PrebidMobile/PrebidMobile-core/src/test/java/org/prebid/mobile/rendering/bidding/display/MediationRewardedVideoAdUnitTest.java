@@ -26,10 +26,13 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.util.EnumSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -60,7 +63,7 @@ public class MediationRewardedVideoAdUnitTest {
         mMopubRewardedAdUnit.initAdConfig("config", null);
         AdUnitConfiguration adConfiguration = mMopubRewardedAdUnit.mAdUnitConfig;
         assertEquals("config", adConfiguration.getConfigId());
-        assertEquals(AdUnitConfiguration.AdUnitIdentifierType.VAST, adConfiguration.getAdUnitIdentifierType());
+        assertEquals(EnumSet.of(AdFormat.VAST), adConfiguration.getAdFormats());
         assertTrue(adConfiguration.isRewarded());
     }
 

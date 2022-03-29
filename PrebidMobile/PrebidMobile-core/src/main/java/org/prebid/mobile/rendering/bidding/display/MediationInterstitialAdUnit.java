@@ -23,32 +23,42 @@ import org.prebid.mobile.AdSize;
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat;
 import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.models.AdPosition;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.units.configuration.AdFormat;
+
+import java.util.EnumSet;
 
 public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
+
     private static final String TAG = MediationInterstitialAdUnit.class.getSimpleName();
 
     /**
      * Constructor to fetch demand for a display interstitial ad with specified minHeightPercentage and minWidthPercentage
      */
-    public MediationInterstitialAdUnit(Context context, String configId, AdSize minSizePercentage, PrebidMediationDelegate mediationDelegate) {
+    public MediationInterstitialAdUnit(
+            Context context,
+            String configId,
+            AdSize minSizePercentage,
+            PrebidMediationDelegate mediationDelegate
+    ) {
         super(context, configId, minSizePercentage, mediationDelegate);
+        mAdUnitConfig.setAdFormat(AdFormat.INTERSTITIAL);
     }
 
     /**
      * Constructor to fetch demand for either display or video interstitial ads
      */
-    public MediationInterstitialAdUnit(Context context, String configId,
-                                       @NonNull
-                                           AdUnitFormat adUnitFormat, PrebidMediationDelegate mediationDelegate) {
+    public MediationInterstitialAdUnit(
+            Context context,
+            String configId,
+            @NonNull EnumSet<AdUnitFormat> adUnitFormats,
+            PrebidMediationDelegate mediationDelegate
+    ) {
         super(context, configId, null, mediationDelegate);
-        setAdUnitType(adUnitFormat);
+        mAdUnitConfig.setAdFormats(adUnitFormats);
     }
 
     @Override
-    public final void fetchDemand(
-        @NonNull
-            OnFetchCompleteListener listener) {
+    public final void fetchDemand(@NonNull OnFetchCompleteListener listener) {
         super.fetchDemand(listener);
     }
 
@@ -56,19 +66,7 @@ public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
     protected final void initAdConfig(String configId, AdSize minSizePercentage) {
         mAdUnitConfig.setMinSizePercentage(minSizePercentage);
         mAdUnitConfig.setConfigId(configId);
-        mAdUnitConfig.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL);
         mAdUnitConfig.setAdPosition(AdPosition.FULLSCREEN);
-    }
-
-    private void setAdUnitType(AdUnitFormat adUnitFormat) {
-        switch (adUnitFormat) {
-            case DISPLAY:
-                mAdUnitConfig.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL);
-                break;
-            case VIDEO:
-                mAdUnitConfig.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.VAST);
-                break;
-        }
     }
 
     /**

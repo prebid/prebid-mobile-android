@@ -41,6 +41,8 @@ import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
+import java.util.EnumSet;
+
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -70,22 +72,27 @@ public class InterstitialAdUnitTest {
 
         mContext = Robolectric.buildActivity(Activity.class).create().get();
 
-        mInterstitialAdUnit = new InterstitialAdUnit(mContext, CONFIGURATION_ID, AD_SIZE, mMockInterstitialEventHandler);
+        mInterstitialAdUnit = new InterstitialAdUnit(mContext, CONFIGURATION_ID, mMockInterstitialEventHandler);
+        mInterstitialAdUnit.setMinSizePercentage(AD_SIZE);
 
         mInterstitialAdUnit.setInterstitialAdUnitListener(mMockInterstitialAdUnitListener);
-        WhiteBox.setInternalState(mInterstitialAdUnit, "mBidLoader", mMockBidLoader);
-        WhiteBox.setInternalState(mInterstitialAdUnit, "mInterstitialController", mMockInterstitialController);
+        WhiteBox.setInternalState(mInterstitialAdUnit, "bidLoader", mMockBidLoader);
+        WhiteBox.setInternalState(mInterstitialAdUnit, "interstitialController", mMockInterstitialController);
 
-        final AdUnitConfiguration adUnitConfig = mInterstitialAdUnit.mAdUnitConfig;
+        final AdUnitConfiguration adUnitConfig = mInterstitialAdUnit.adUnitConfig;
         assertEquals(AdPosition.FULLSCREEN.getValue(), adUnitConfig.getAdPositionValue());
     }
 
     @Test
     public void createInterstitialAdUnitNoEventHandler_InstanceCreatedStandaloneEventHandlerProvidedBidLoaderIsNotNull() {
-        InterstitialAdUnit interstitialAdUnit = new InterstitialAdUnit(mContext, CONFIGURATION_ID, AdUnitFormat.VIDEO);
+        InterstitialAdUnit interstitialAdUnit = new InterstitialAdUnit(
+                mContext,
+                CONFIGURATION_ID,
+                EnumSet.of(AdUnitFormat.VIDEO)
+        );
 
-        Object eventHandler = WhiteBox.getInternalState(interstitialAdUnit, "mEventHandler");
-        BidLoader bidLoader = ((BidLoader) WhiteBox.getInternalState(interstitialAdUnit, "mBidLoader"));
+        Object eventHandler = WhiteBox.getInternalState(interstitialAdUnit, "eventHandler");
+        BidLoader bidLoader = ((BidLoader) WhiteBox.getInternalState(interstitialAdUnit, "bidLoader"));
 
         assertNotNull(interstitialAdUnit);
         assertTrue(eventHandler instanceof StandaloneInterstitialEventHandler);
@@ -94,7 +101,7 @@ public class InterstitialAdUnitTest {
 
     @Test
     public void loadAdWithNullBidLoader_NoExceptionIsThrown() {
-        WhiteBox.setInternalState(mInterstitialAdUnit, "mBidLoader", null);
+        WhiteBox.setInternalState(mInterstitialAdUnit, "bidLoader", null);
 
         mInterstitialAdUnit.loadAd();
     }
@@ -147,7 +154,7 @@ public class InterstitialAdUnitTest {
 
         changeInterstitialState(READY_TO_DISPLAY_PREBID);
 
-        WhiteBox.setInternalState(mInterstitialAdUnit, "mInterstitialController", mockInterstitialController);
+        WhiteBox.setInternalState(mInterstitialAdUnit, "interstitialController", mockInterstitialController);
         mInterstitialAdUnit.show();
 
         verify(mockInterstitialController, times(1)).show();
@@ -247,8 +254,8 @@ public class InterstitialAdUnitTest {
         final InterstitialEventListener spyEventListener = spy(getEventListener());
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
 
-        WhiteBox.setInternalState(mInterstitialAdUnit, "mBidResponse", mockBidResponse);
-        WhiteBox.setInternalState(mInterstitialAdUnit, "mInterstitialController", mockInterstitialController);
+        WhiteBox.setInternalState(mInterstitialAdUnit, "bidResponse", mockBidResponse);
+        WhiteBox.setInternalState(mInterstitialAdUnit, "interstitialController", mockInterstitialController);
 
         spyEventListener.onAdFailed(new AdException(AdException.INTERNAL_ERROR, "Test"));
 
@@ -266,14 +273,14 @@ public class InterstitialAdUnitTest {
     //endregion ================= EventListener tests
 
     private BidRequesterListener getBidRequesterListener() {
-        return (BidRequesterListener) WhiteBox.getInternalState(mInterstitialAdUnit, "mBidRequesterListener");
+        return (BidRequesterListener) WhiteBox.getInternalState(mInterstitialAdUnit, "bidRequesterListener");
     }
 
     private InterstitialEventListener getEventListener() {
-        return (InterstitialEventListener) WhiteBox.getInternalState(mInterstitialAdUnit, "mInterstitialEventListener");
+        return (InterstitialEventListener) WhiteBox.getInternalState(mInterstitialAdUnit, "interstitialEventListener");
     }
 
     private void changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState adUnitState) {
-        WhiteBox.setInternalState(mInterstitialAdUnit, "mInterstitialAdUnitState", adUnitState);
+        WhiteBox.setInternalState(mInterstitialAdUnit, "interstitialAdUnitState", adUnitState);
     }
 }

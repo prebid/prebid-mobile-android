@@ -28,6 +28,7 @@ import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -66,7 +67,7 @@ public class InterstitialControllerTest {
 
     @Test
     public void showInterstitialType_ExecuteInterstitialViewShowInterstitialFromRoot() {
-        WhiteBox.setInternalState(mInterstitialController, "mAdUnitIdentifierType", AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL);
+        WhiteBox.setInternalState(mInterstitialController, "mAdUnitIdentifierType", AdFormat.INTERSTITIAL);
         mInterstitialController.show();
 
         verify(mMockInterstitialView, times(1)).showAsInterstitialFromRoot();
@@ -74,7 +75,7 @@ public class InterstitialControllerTest {
 
     @Test
     public void showVastType_ExecuteInterstitialViewShowVideoAsInterstitial() {
-        WhiteBox.setInternalState(mInterstitialController, "mAdUnitIdentifierType", AdUnitConfiguration.AdUnitIdentifierType.VAST);
+        WhiteBox.setInternalState(mInterstitialController, "mAdUnitIdentifierType", AdFormat.VAST);
         mInterstitialController.show();
 
         verify(mMockInterstitialView, times(1)).showVideoAsInterstitial();

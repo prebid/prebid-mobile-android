@@ -29,6 +29,7 @@ import org.prebid.mobile.rendering.loading.AdLoadListener;
 import org.prebid.mobile.rendering.loading.VastParserExtractor;
 import org.prebid.mobile.test.utils.ResourceUtils;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -82,7 +83,7 @@ public class CreativeModelMakerBidsTest {
     @Test
     public void whenMakeModelsAndBidRequestContainsAcjAd_CreateAcjModel() throws IOException {
         AdUnitConfiguration configuration = new AdUnitConfiguration();
-        configuration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        configuration.setAdFormat(AdFormat.BANNER);
 
         String responseString = ResourceUtils.convertResourceToString("bidding_response_obj.json");
         BidResponse bidResponse = new BidResponse(responseString);
@@ -107,7 +108,7 @@ public class CreativeModelMakerBidsTest {
 
         mModelMakerBids.makeVideoModels(mockConfig, vast);
 
-        verify(mockConfig).setAdUnitIdentifierType(eq(AdUnitConfiguration.AdUnitIdentifierType.VAST));
+        verify(mockConfig).setAdFormat(eq(AdFormat.VAST));
         verify(mMockExtractor).extract(eq(vast));
     }
 

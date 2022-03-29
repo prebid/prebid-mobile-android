@@ -2,6 +2,7 @@ package org.prebid.mobile;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class JsonUserDataTest {
 
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setConfigId("configId");
-        configuration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        configuration.setAdFormat(AdFormat.BANNER);
         for (DataObject data : userDataObjects) {
             configuration.addUserData(data);
         }

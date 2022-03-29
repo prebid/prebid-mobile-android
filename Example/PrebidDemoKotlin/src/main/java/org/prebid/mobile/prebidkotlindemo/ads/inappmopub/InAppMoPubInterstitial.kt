@@ -9,6 +9,7 @@ import com.mopub.mobileads.MoPubErrorCode
 import com.mopub.mobileads.MoPubInterstitial
 import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
+import java.util.*
 
 object InAppMoPubInterstitial {
 
@@ -38,7 +39,7 @@ object InAppMoPubInterstitial {
         adUnit = MediationInterstitialAdUnit(
             activity,
             configId,
-            AdUnitFormat.DISPLAY,
+            EnumSet.of(AdUnitFormat.DISPLAY),
             mediationUtils
         )
         adUnit?.setMinSizePercentage(minPercentageWidth, minPercentageHeight)

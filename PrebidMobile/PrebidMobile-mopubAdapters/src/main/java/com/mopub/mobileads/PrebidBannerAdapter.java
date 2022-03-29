@@ -26,6 +26,7 @@ import com.mopub.common.logging.MoPubLog;
 import org.prebid.mobile.rendering.bidding.display.DisplayView;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 /**
@@ -121,7 +122,7 @@ public class PrebidBannerAdapter extends BaseAd {
     private void initDisplayView(Context context, String responseId) {
         try {
             AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
-            adUnitConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+            adUnitConfiguration.setAdFormat(AdFormat.BANNER);
             mDisplayView = new DisplayView(context, mDisplayViewListener, adUnitConfiguration, responseId);
         }
         catch (AdException e) {

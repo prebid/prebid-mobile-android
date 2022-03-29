@@ -31,10 +31,13 @@ import org.prebid.mobile.rendering.bidding.enums.BannerAdPosition;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.util.EnumSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -74,7 +77,7 @@ public class MediationBannerAdUnitTest {
         mMediationBannerAdUnit.initAdConfig("config", adSize);
         AdUnitConfiguration adConfiguration = mMediationBannerAdUnit.mAdUnitConfig;
         assertEquals("config", adConfiguration.getConfigId());
-        assertEquals(AdUnitConfiguration.AdUnitIdentifierType.BANNER, adConfiguration.getAdUnitIdentifierType());
+        assertEquals(EnumSet.of(AdFormat.BANNER), adConfiguration.getAdFormats());
         assertTrue(adConfiguration.getSizes().contains(adSize));
     }
 

@@ -67,7 +67,8 @@ open class PpmBannersWithInterstitialFragment : BaseBannersWithInterstitialFragm
     }
 
     open fun initInterstitialAdUnit(configId: String): InterstitialAdUnit {
-        val interstitialAdUnit = InterstitialAdUnit(requireContext(), configId, AdSize(30, 30))
+        val interstitialAdUnit = InterstitialAdUnit(requireContext(), configId)
+        interstitialAdUnit.setMinSizePercentage(AdSize(30, 30))
         interstitialAdUnit.setInterstitialAdUnitListener(getInterstitialAdListener())
         return interstitialAdUnit
     }

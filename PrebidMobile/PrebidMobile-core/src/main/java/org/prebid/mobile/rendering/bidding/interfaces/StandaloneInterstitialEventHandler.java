@@ -21,6 +21,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 
 public class StandaloneInterstitialEventHandler implements InterstitialEventHandler {
+
     private InterstitialEventListener mInterstitialEventListener;
 
     @Override
@@ -30,8 +31,8 @@ public class StandaloneInterstitialEventHandler implements InterstitialEventHand
 
     @Override
     public void requestAdWithBid(
-        @Nullable
-            Bid bid) {
+            @Nullable Bid bid
+    ) {
         mInterstitialEventListener.onPrebidSdkWin();
     }
 
@@ -49,4 +50,5 @@ public class StandaloneInterstitialEventHandler implements InterstitialEventHand
     public void destroy() {
 
     }
+
 }

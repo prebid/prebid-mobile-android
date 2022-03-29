@@ -19,7 +19,8 @@ object InAppGamInterstitial {
         configId: String
     ) {
         val eventHandler = GamInterstitialEventHandler(activity, adUnitId)
-        adUnit = InterstitialAdUnit(activity, configId, AdSize(minPercentageWidth, minPercentageHeight), eventHandler)
+        adUnit = InterstitialAdUnit(activity, configId, eventHandler)
+        adUnit?.setMinSizePercentage(AdSize(minPercentageWidth, minPercentageHeight))
         adUnit?.setInterstitialAdUnitListener(object : InterstitialAdUnitListener {
             override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
                 adUnit?.show()

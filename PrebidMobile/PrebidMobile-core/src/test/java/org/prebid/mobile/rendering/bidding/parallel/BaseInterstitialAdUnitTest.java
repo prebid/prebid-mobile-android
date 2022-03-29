@@ -179,7 +179,8 @@ public class BaseInterstitialAdUnitTest {
 
     private BidRequesterListener getBidRequesterListener() {
         try {
-            return (BidRequesterListener) WhiteBox.field(BaseInterstitialAdUnit.class, "mBidRequesterListener").get(mBaseInterstitialAdUnit);
+            return (BidRequesterListener) WhiteBox.field(BaseInterstitialAdUnit.class, "bidRequesterListener")
+                                                  .get(mBaseInterstitialAdUnit);
         }
         catch (IllegalAccessException e) {
             e.printStackTrace();

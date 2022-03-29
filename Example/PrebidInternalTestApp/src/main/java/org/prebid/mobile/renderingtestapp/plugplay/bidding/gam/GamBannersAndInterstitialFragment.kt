@@ -36,8 +36,12 @@ class GamBannersAndInterstitialFragment : PpmBannersWithInterstitialFragment() {
     }
 
     override fun initInterstitialAdUnit(configId: String): InterstitialAdUnit {
-        val eventHandler = GamInterstitialEventHandler(requireActivity(), getString(R.string.adunit_gam_interstitial_320_480_app_event))
-        val interstitialAdUnit = InterstitialAdUnit(requireContext(), configId, AdSize(30, 30), eventHandler)
+        val eventHandler = GamInterstitialEventHandler(
+            requireActivity(),
+            getString(R.string.adunit_gam_interstitial_320_480_app_event)
+        )
+        val interstitialAdUnit = InterstitialAdUnit(requireContext(), configId, eventHandler)
+        interstitialAdUnit.setMinSizePercentage(AdSize(30, 30))
         interstitialAdUnit.setInterstitialAdUnitListener(getInterstitialAdListener())
         interstitialAdUnit.loadAd()
         return interstitialAdUnit

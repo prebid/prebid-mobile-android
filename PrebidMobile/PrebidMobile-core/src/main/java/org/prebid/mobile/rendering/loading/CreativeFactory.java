@@ -36,6 +36,7 @@ import org.prebid.mobile.rendering.video.VideoCreative;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;
 import org.prebid.mobile.rendering.video.vast.VASTErrorCodes;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
@@ -63,7 +64,7 @@ public class CreativeFactory {
                            Listener listener,
                            OmAdSessionManager omAdSessionManager,
                            InterstitialManager interstitialManager)
-    throws AdException {
+            throws AdException {
         if (context == null) {
             throw new AdException(AdException.INTERNAL_ERROR, "Context is null");
         }
@@ -85,25 +86,19 @@ public class CreativeFactory {
 
     public void start() {
         try {
-            AdUnitConfiguration.AdUnitIdentifierType adUnitIdentifierType = mCreativeModel.getAdConfiguration().getAdUnitIdentifierType();
-            switch (adUnitIdentifierType) {
-                case BANNER:
-                case INTERSTITIAL:
-                    attemptAuidCreative();
-                    break;
-                case VAST:
-                    attemptVastCreative();
-                    break;
-                default:
-                    String msg = "Unable to start creativeFactory. adConfig.adUnitIdentifierType doesn't match supported types"
-                                 + "adConfig.adUnitIdentifierType: " + adUnitIdentifierType;
-                    LogUtil.error(TAG, msg);
-                    AdException adException = new AdException(AdException.INTERNAL_ERROR, msg);
-                    mListener.onFailure(adException);
-                    break;
+            AdUnitConfiguration configuration = mCreativeModel.getAdConfiguration();
+
+            if (configuration.isAdType(AdFormat.BANNER) || configuration.isAdType(AdFormat.INTERSTITIAL)) {
+                attemptAuidCreative();
+            } else if (configuration.isAdType(AdFormat.VAST)) {
+                attemptVastCreative();
+            } else {
+                String msg = "Unable to start creativeFactory. adConfig.adUnitIdentifierType doesn't match supported types adConfig.adFormat: " + configuration.getAdFormats();
+                LogUtil.error(TAG, msg);
+                AdException adException = new AdException(AdException.INTERNAL_ERROR, msg);
+                mListener.onFailure(adException);
             }
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             String message = "Creative Factory failed: " + exception.getMessage();
             LogUtil.error(TAG, message + Log.getStackTraceString(exception));
             AdException adException = new AdException(AdException.INTERNAL_ERROR, message);
@@ -142,8 +137,7 @@ public class CreativeFactory {
                 rcUrls.add(mCreativeModel.getClickUrl());
                 mCreativeModel.registerTrackingEvent(TrackingEvent.Events.CLICK, rcUrls);
             }
-        }
-        else {
+        } else {
             mListener.onFailure(new AdException(AdException.INTERNAL_ERROR, "Tracking info not found"));
         }
         markWorkStart(BANNER_TIMEOUT);
@@ -167,8 +161,7 @@ public class CreativeFactory {
         try {
             if (mCreativeModel.getAdConfiguration().isRewarded()) {
                 newCreative = new RewardedVideoCreative(mContextReference.get(), videoCreativeModel, mOmAdSessionManager, mInterstitialManager);
-            }
-            else {
+            } else {
                 newCreative = new VideoCreative(mContextReference.get(), videoCreativeModel, mOmAdSessionManager, mInterstitialManager);
             }
 
@@ -176,8 +169,7 @@ public class CreativeFactory {
             mCreative = newCreative;
             markWorkStart(VAST_TIMEOUT);
             newCreative.load();
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             LogUtil.error(TAG, "VideoCreative creation failed: " + Log.getStackTraceString(exception));
             mListener.onFailure(new AdException(AdException.INTERNAL_ERROR, "VideoCreative creation failed: " + exception.getMessage()));
         }

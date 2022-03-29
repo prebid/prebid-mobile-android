@@ -6,6 +6,7 @@ import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.rendering.bidding.parallel.InterstitialAdUnit
 import org.prebid.mobile.rendering.errors.AdException
+import java.util.*
 
 object InAppGamVideoInterstitial {
 
@@ -13,7 +14,7 @@ object InAppGamVideoInterstitial {
 
     fun create(activity: Activity, adUnitId: String, configId: String) {
         val eventHandler = GamInterstitialEventHandler(activity, adUnitId)
-        adUnit = InterstitialAdUnit(activity, configId, AdUnitFormat.VIDEO, eventHandler)
+        adUnit = InterstitialAdUnit(activity, configId, EnumSet.of(AdUnitFormat.VIDEO), eventHandler)
         adUnit?.setInterstitialAdUnitListener(object : InterstitialAdUnitListener {
             override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
                 adUnit?.show()

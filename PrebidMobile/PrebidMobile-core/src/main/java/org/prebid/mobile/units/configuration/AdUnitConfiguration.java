@@ -3,6 +3,7 @@ package org.prebid.mobile.units.configuration;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.*;
+import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat;
 import org.prebid.mobile.rendering.interstitial.InterstitialSizes;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
@@ -29,7 +30,7 @@ public class AdUnitConfiguration {
     private String pbAdSlot;
     private String interstitialSize;
 
-    private AdUnitIdentifierType adUnitIdentifierType;
+    private final EnumSet<AdFormat> adFormats = EnumSet.noneOf(AdFormat.class);
     private AdSize minSizePercentage;
     private PlacementType placementType;
     private AdPosition adPosition;
@@ -217,20 +218,53 @@ public class AdUnitConfiguration {
         return videoSkipOffset;
     }
 
-    public void setAdUnitIdentifierType(@Nullable AdUnitIdentifierType adUnitIdentifierType) {
-        if (adUnitIdentifierType == AdUnitIdentifierType.NATIVE) {
+    public void addAdFormat(@Nullable AdFormat adFormat) {
+        if (adFormat == null) return;
+
+        if (adFormat == AdFormat.NATIVE) {
             nativeConfiguration = new NativeAdUnitConfiguration();
         }
-        this.adUnitIdentifierType = adUnitIdentifierType;
+
+        adFormats.add(adFormat);
     }
 
-    @Nullable
-    public AdUnitIdentifierType getAdUnitIdentifierType() {
-        return adUnitIdentifierType;
+    /**
+     * Clears ad formats list and adds only one ad format.
+     */
+    public void setAdFormat(@Nullable AdFormat adFormat) {
+        if (adFormat == null) return;
+
+        if (adFormat == AdFormat.NATIVE) {
+            nativeConfiguration = new NativeAdUnitConfiguration();
+        }
+
+        adFormats.clear();
+        adFormats.add(adFormat);
     }
 
-    public boolean isAdType(AdUnitIdentifierType type) {
-        return adUnitIdentifierType == type;
+    /**
+     * Clears previous ad formats and adds AdFormats corresponding to AdUnitFormat types.
+     */
+    public void setAdFormats(@Nullable EnumSet<AdUnitFormat> adUnitFormats) {
+        if (adUnitFormats == null) return;
+
+        adFormats.clear();
+
+        if (adUnitFormats.contains(AdUnitFormat.DISPLAY)) {
+            adFormats.add(AdFormat.INTERSTITIAL);
+        }
+        if (adUnitFormats.contains(AdUnitFormat.VIDEO)) {
+            adFormats.add(AdFormat.VAST);
+        }
+    }
+
+    @NonNull
+    public EnumSet<AdFormat> getAdFormats() {
+        return adFormats;
+    }
+
+    public boolean isAdType(AdFormat type) {
+        return adFormats.contains(type);
     }
 
     public void setRewarded(boolean rewarded) {
@@ -322,14 +356,6 @@ public class AdUnitConfiguration {
     @Override
     public int hashCode() {
         return configId != null ? configId.hashCode() : 0;
-    }
-
-
-    public enum AdUnitIdentifierType {
-        BANNER,
-        INTERSTITIAL,
-        NATIVE,
-        VAST
     }
 
 }

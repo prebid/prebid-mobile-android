@@ -26,10 +26,13 @@ import org.prebid.mobile.AdSize;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.bidding.config.MockMediationUtils;
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.util.EnumSet;
 
 import static org.junit.Assert.assertEquals;
 
@@ -58,13 +61,18 @@ public class MediationInterstitialAdUnitTest {
         mMediationInterstitialAdUnit.initAdConfig("config", adSize);
         AdUnitConfiguration adConfiguration = mMediationInterstitialAdUnit.mAdUnitConfig;
         assertEquals("config", adConfiguration.getConfigId());
-        assertEquals(AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL, adConfiguration.getAdUnitIdentifierType());
+        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL), adConfiguration.getAdFormats());
         assertEquals(adSize, adConfiguration.getMinSizePercentage());
     }
 
     @Test
     public void whenConstructorAndAdUnitFormatVideo_AdUnitIdentifierTypeVideo() {
-        mMediationInterstitialAdUnit = new MediationInterstitialAdUnit(mContext, "config", AdUnitFormat.VIDEO, new MockMediationUtils());
-        assertEquals(AdUnitConfiguration.AdUnitIdentifierType.VAST, mMediationInterstitialAdUnit.mAdUnitConfig.getAdUnitIdentifierType());
+        mMediationInterstitialAdUnit = new MediationInterstitialAdUnit(
+                mContext,
+                "config",
+                EnumSet.of(AdUnitFormat.VIDEO),
+                new MockMediationUtils()
+        );
+        assertEquals(EnumSet.of(AdFormat.VAST), mMediationInterstitialAdUnit.mAdUnitConfig.getAdFormats());
     }
 }

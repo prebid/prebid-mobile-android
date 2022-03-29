@@ -39,7 +39,10 @@ import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+
+import java.util.EnumSet;
 
 public class HTMLCreative extends AbstractCreative
     implements WebViewDelegate, InterstitialManagerDisplayDelegate, Comparable {
@@ -76,21 +79,24 @@ public class HTMLCreative extends AbstractCreative
             throw new AdException(AdException.INTERNAL_ERROR, "Context is null. Could not load adHtml");
         }
         CreativeModel model = getCreativeModel();
-        AdUnitConfiguration.AdUnitIdentifierType adType = model.getAdConfiguration().getAdUnitIdentifierType();
-        if (model.getAdConfiguration().isBuiltInVideo()) {
-            adType = AdUnitConfiguration.AdUnitIdentifierType.BANNER;
-        }
 
-        if (adType == null) {
+        EnumSet<AdFormat> adFormats = model.getAdConfiguration().getAdFormats();
+        if (adFormats.isEmpty()) {
             throw new AdException(AdException.INTERNAL_ERROR, "Can't create a WebView for a null adtype");
         }
-        //create a webview here
+
+        AdFormat adType = adFormats.iterator().next();
+
+        if (model.getAdConfiguration().isBuiltInVideo()) {
+            adType = AdFormat.BANNER;
+        }
+
         PrebidWebViewBase prebidWebView = null;
-        if (adType == AdUnitConfiguration.AdUnitIdentifierType.BANNER) {
+        if (adType == AdFormat.BANNER) {
             //do all banner
             prebidWebView = (PrebidWebViewBanner) ViewPool.getInstance()
                     .getUnoccupiedView(mContextReference.get(), null, adType, mInterstitialManager);
-        } else if (adType == AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL) {
+        } else if (adType == AdFormat.INTERSTITIAL) {
             //do all interstitials
             prebidWebView = (PrebidWebViewInterstitial) ViewPool.getInstance()
                     .getUnoccupiedView(mContextReference.get(), null, adType, mInterstitialManager);

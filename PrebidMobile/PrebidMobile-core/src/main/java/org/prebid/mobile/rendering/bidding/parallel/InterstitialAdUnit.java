@@ -30,180 +30,197 @@ import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
+import java.util.EnumSet;
+
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
 import static org.prebid.mobile.rendering.bidding.parallel.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
 
 public class InterstitialAdUnit extends BaseInterstitialAdUnit {
+
     private static final String TAG = InterstitialAdUnit.class.getSimpleName();
 
-    private final InterstitialEventHandler mEventHandler;
+    /**
+     * Handler that is responsible for requesting, displaying and destroying of
+     * primary ad (e.g. GAM). Also it tracks impression and sets listener.
+     */
+    private final InterstitialEventHandler eventHandler;
 
-    @Nullable
-    private InterstitialAdUnitListener mInterstitialAdUnitListener;
+    /**
+     * Listener that must be applied to InterstitialEventHandler.
+     * It is responsible for onAdServerWin or onPrebidSdkWin.
+     * Also, onAdDisplayed, onAdFailed, onAdClosed.
+     */
+    private final InterstitialEventListener interstitialEventListener = createEventListener();
 
-    //region ==================== Listener implementation
-    private final InterstitialEventListener mInterstitialEventListener = new InterstitialEventListener() {
-        @Override
-        public void onPrebidSdkWin() {
-            if (isBidInvalid()) {
-                changeInterstitialAdUnitState(READY_FOR_LOAD);
-                notifyErrorListener(new AdException(AdException.INTERNAL_ERROR, "WinnerBid is null when executing onPrebidSdkWin."));
-                return;
-            }
+    /**
+     * Interstitial ad units events listener (like onAdLoaded, onAdFailed...)
+     */
+    @Nullable private InterstitialAdUnitListener adUnitEventsListener;
 
-            loadPrebidAd();
-        }
-
-        @Override
-        public void onAdServerWin() {
-            changeInterstitialAdUnitState(READY_TO_DISPLAY_GAM);
-            notifyAdEventListener(AdListenerEvent.AD_LOADED);
-        }
-
-        @Override
-        public void onAdFailed(AdException exception) {
-            if (isBidInvalid()) {
-                changeInterstitialAdUnitState(READY_FOR_LOAD);
-                notifyErrorListener(exception);
-                return;
-            }
-
-            onPrebidSdkWin();
-        }
-
-        @Override
-        public void onAdClosed() {
-            notifyAdEventListener(AdListenerEvent.AD_CLOSE);
-        }
-
-        @Override
-        public void onAdDisplayed() {
-            changeInterstitialAdUnitState(READY_FOR_LOAD);
-            notifyAdEventListener(AdListenerEvent.AD_DISPLAYED);
-        }
-    };
-    //endregion ==================== Listener implementation
+    /**
+     * Instantiates an HTML InterstitialAdUnit for the given configurationId.
+     */
+    public InterstitialAdUnit(
+            Context context,
+            String configId
+    ) {
+        this(context, configId, EnumSet.of(AdUnitFormat.DISPLAY), null);
+    }
 
     /**
      * Instantiates an InterstitialAdUnit for the given configurationId and adUnitType.
      */
-    public InterstitialAdUnit(Context context, String configId, AdUnitFormat adUnitFormat) {
-        this(context, configId, adUnitFormat, null, new StandaloneInterstitialEventHandler());
+    public InterstitialAdUnit(
+            Context context,
+            String configId,
+            EnumSet<AdUnitFormat> adUnitFormats
+    ) {
+        this(context, configId, adUnitFormats, null);
     }
 
     /**
-     * Instantiates an HTML InterstitialAdUnit for the given configurationId and minimum size in percentage (optional).
+     * Instantiates an InterstitialAdUnit for HTML GAM prebid integration.
      */
-    public InterstitialAdUnit(Context context, String configId,
-                              @Nullable
-                                      AdSize minSizePercentage) {
-        this(context, configId, AdUnitFormat.DISPLAY, minSizePercentage, new StandaloneInterstitialEventHandler());
-    }
-
-    /**
-     * Instantiates an InterstitialAdUnit for HTML GAM prebid integration with given minimum size in percentage (optional).
-     */
-    public InterstitialAdUnit(Context context, String configId,
-                              @Nullable
-                                     AdSize minSizePercentage,
-                              InterstitialEventHandler eventHandler) {
-        this(context, configId, AdUnitFormat.DISPLAY, minSizePercentage, eventHandler);
+    public InterstitialAdUnit(
+            Context context,
+            String configId,
+            InterstitialEventHandler eventHandler
+    ) {
+        this(context, configId, EnumSet.of(AdUnitFormat.DISPLAY), eventHandler);
     }
 
     /**
      * Instantiates an InterstitialAdUnit for GAM prebid integration with given adUnitType.
      */
-    public InterstitialAdUnit(Context context, String configId,
-                              @NonNull
-                                     AdUnitFormat adUnitFormat,
-                              InterstitialEventHandler eventHandler) {
-        this(context, configId, adUnitFormat, null, eventHandler);
-    }
-
-    private InterstitialAdUnit(Context context, String configId,
-                               @NonNull
-                                      AdUnitFormat adUnitFormat,
-                               @Nullable
-                                      AdSize minSizePercentage,
-                               InterstitialEventHandler eventHandler) {
+    public InterstitialAdUnit(
+            Context context,
+            String configId,
+            @NonNull EnumSet<AdUnitFormat> adUnitFormats,
+            InterstitialEventHandler eventHandler
+    ) {
         super(context);
-        mEventHandler = eventHandler;
-        mEventHandler.setInterstitialEventListener(mInterstitialEventListener);
+
+        if (eventHandler == null) {
+            this.eventHandler = createStandaloneEventHandler();
+        } else {
+            this.eventHandler = eventHandler;
+        }
+        this.eventHandler.setInterstitialEventListener(interstitialEventListener);
 
         AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         adUnitConfiguration.setConfigId(configId);
-        adUnitConfiguration.setMinSizePercentage(minSizePercentage);
-        adUnitConfiguration.setAdUnitIdentifierType(mapPrebidAdUnitTypeToAdConfigAdUnitType(adUnitFormat));
-
+        adUnitConfiguration.setAdFormats(adUnitFormats);
         init(adUnitConfiguration);
     }
 
-    public void destroy() {
-        super.destroy();
-        if (mEventHandler != null) {
-            mEventHandler.destroy();
-        }
-    }
-
-    //region ==================== getters and setters
-    public void setInterstitialAdUnitListener(
-        @Nullable
-            InterstitialAdUnitListener interstitialAdUnitListener) {
-        mInterstitialAdUnitListener = interstitialAdUnitListener;
-    }
-    //endregion ==================== getters and setters
-
-    @Override
-    void requestAdWithBid(
-        @Nullable
-            Bid bid) {
-        mEventHandler.requestAdWithBid(bid);
-    }
 
     @Override
     void showGamAd() {
-        mEventHandler.show();
+        eventHandler.show();
+    }
+
+    @Override
+    void requestAdWithBid(@Nullable Bid bid) {
+        eventHandler.requestAdWithBid(bid);
     }
 
     @Override
     void notifyAdEventListener(AdListenerEvent adListenerEvent) {
-        if (mInterstitialAdUnitListener == null) {
-            LogUtil.debug(TAG, "notifyAdEventListener: Failed. AdUnitListener is null. Passed listener event: " + adListenerEvent);
+        if (adUnitEventsListener == null) {
+            LogUtil.debug(TAG,
+                    "notifyAdEventListener: Failed. AdUnitListener is null. Passed listener event: " + adListenerEvent
+            );
             return;
         }
 
         switch (adListenerEvent) {
             case AD_CLOSE:
-                mInterstitialAdUnitListener.onAdClosed(InterstitialAdUnit.this);
+                adUnitEventsListener.onAdClosed(InterstitialAdUnit.this);
                 break;
             case AD_LOADED:
-                mInterstitialAdUnitListener.onAdLoaded(InterstitialAdUnit.this);
+                adUnitEventsListener.onAdLoaded(InterstitialAdUnit.this);
                 break;
             case AD_DISPLAYED:
-                mInterstitialAdUnitListener.onAdDisplayed(InterstitialAdUnit.this);
+                adUnitEventsListener.onAdDisplayed(InterstitialAdUnit.this);
                 break;
             case AD_CLICKED:
-                mInterstitialAdUnitListener.onAdClicked(InterstitialAdUnit.this);
+                adUnitEventsListener.onAdClicked(InterstitialAdUnit.this);
                 break;
         }
     }
 
     @Override
     void notifyErrorListener(AdException exception) {
-        if (mInterstitialAdUnitListener != null) {
-            mInterstitialAdUnitListener.onAdFailed(InterstitialAdUnit.this, exception);
+        if (adUnitEventsListener != null) {
+            adUnitEventsListener.onAdFailed(InterstitialAdUnit.this, exception);
         }
     }
 
-    private AdUnitConfiguration.AdUnitIdentifierType mapPrebidAdUnitTypeToAdConfigAdUnitType(AdUnitFormat adUnitFormat) {
-        switch (adUnitFormat) {
-            case DISPLAY:
-                return AdUnitConfiguration.AdUnitIdentifierType.INTERSTITIAL;
-            case VIDEO:
-                return AdUnitConfiguration.AdUnitIdentifierType.VAST;
-            default:
-                LogUtil.debug(TAG, "setAdUnitIdentifierType: Provided AdUnitType [" + adUnitFormat + "] doesn't match any expected adUnitType.");
-                return null;
+
+    public void setInterstitialAdUnitListener(@Nullable InterstitialAdUnitListener adUnitEventsListener) {
+        this.adUnitEventsListener = adUnitEventsListener;
+    }
+
+    public void setMinSizePercentage(AdSize minSizePercentage) {
+        adUnitConfig.setMinSizePercentage(minSizePercentage);
+    }
+
+
+    public void destroy() {
+        super.destroy();
+        if (eventHandler != null) {
+            eventHandler.destroy();
         }
     }
+
+
+    private StandaloneInterstitialEventHandler createStandaloneEventHandler() {
+        return new StandaloneInterstitialEventHandler();
+    }
+
+    private InterstitialEventListener createEventListener() {
+        return new InterstitialEventListener() {
+            @Override
+            public void onPrebidSdkWin() {
+                if (isBidInvalid()) {
+                    changeInterstitialAdUnitState(READY_FOR_LOAD);
+                    notifyErrorListener(new AdException(AdException.INTERNAL_ERROR,
+                            "WinnerBid is null when executing onPrebidSdkWin."
+                    ));
+                    return;
+                }
+
+                loadPrebidAd();
+            }
+
+            @Override
+            public void onAdServerWin() {
+                changeInterstitialAdUnitState(READY_TO_DISPLAY_GAM);
+                notifyAdEventListener(AdListenerEvent.AD_LOADED);
+            }
+
+            @Override
+            public void onAdFailed(AdException exception) {
+                if (isBidInvalid()) {
+                    changeInterstitialAdUnitState(READY_FOR_LOAD);
+                    notifyErrorListener(exception);
+                    return;
+                }
+
+                onPrebidSdkWin();
+            }
+
+            @Override
+            public void onAdClosed() {
+                notifyAdEventListener(AdListenerEvent.AD_CLOSE);
+            }
+
+            @Override
+            public void onAdDisplayed() {
+                changeInterstitialAdUnitState(READY_FOR_LOAD);
+                notifyAdEventListener(AdListenerEvent.AD_DISPLAYED);
+            }
+        };
+    }
+
 }

@@ -26,7 +26,7 @@ import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.units.configuration.AdFormat;
 
 import java.util.ArrayList;
 
@@ -99,7 +99,7 @@ public class ViewPool {
     //Q: why are we keeping it in occupied? Should we not put/get from unoccupied directly?
     //A: Because, when a videoCreativeView is created, we will have to, anyways, add the view to the occupied bucket as it is going to be given to adView.
     //So, do that step here itself.(distribution of work!)
-    public View getUnoccupiedView(Context context, VideoCreativeViewListener videoCreativeViewListener, AdUnitConfiguration.AdUnitIdentifierType adType, InterstitialManager interstitialManager)
+    public View getUnoccupiedView(Context context, VideoCreativeViewListener videoCreativeViewListener, AdFormat adType, InterstitialManager interstitialManager)
             throws AdException {
         if (context == null) {
             throw new AdException(AdException.INTERNAL_ERROR, "Context is null");

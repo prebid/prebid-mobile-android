@@ -5,13 +5,14 @@ import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.rendering.bidding.parallel.InterstitialAdUnit
 import org.prebid.mobile.rendering.errors.AdException
+import java.util.*
 
 object InAppVideoInterstitial {
 
     private var adUnit: InterstitialAdUnit? = null
 
     fun create(context: Context, configId: String) {
-        adUnit = InterstitialAdUnit(context, configId, AdUnitFormat.VIDEO)
+        adUnit = InterstitialAdUnit(context, configId, EnumSet.of(AdUnitFormat.VIDEO))
         adUnit?.setInterstitialAdUnitListener(object : InterstitialAdUnitListener {
             override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
                 adUnit?.show()

@@ -17,6 +17,7 @@ import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.display.DisplayView;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.HashMap;
@@ -68,7 +69,7 @@ public class PrebidBannerAdapter extends PrebidBaseAdapter implements CustomEven
         }
 
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        adConfiguration.setAdFormat(AdFormat.BANNER);
         DisplayViewListener listener = getListener(adMobListener);
         adView = new DisplayView(
                 context,

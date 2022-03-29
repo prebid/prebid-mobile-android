@@ -50,6 +50,7 @@ import org.prebid.mobile.rendering.models.ntv.NativeEventTracker;
 import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
+import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.Map;
@@ -273,7 +274,7 @@ public class BannerView extends FrameLayout {
 
     //region ==================== getters and setters
     public void setAutoRefreshDelay(int seconds) {
-        if (!mAdUnitConfig.isAdType(AdUnitConfiguration.AdUnitIdentifierType.BANNER)) {
+        if (!mAdUnitConfig.isAdType(AdFormat.BANNER)) {
             LogUtil.info(TAG, "Autorefresh is available only for Banner ad type");
             return;
         }
@@ -301,7 +302,7 @@ public class BannerView extends FrameLayout {
     }
 
     public void setVideoPlacementType(VideoPlacementType videoPlacement) {
-        mAdUnitConfig.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.VAST);
+        mAdUnitConfig.setAdFormat(AdFormat.VAST);
 
         final PlacementType placementType = VideoPlacementType.mapToPlacementType(videoPlacement);
         mAdUnitConfig.setPlacementType(placementType);
@@ -437,7 +438,7 @@ public class BannerView extends FrameLayout {
         mAdUnitConfig.setConfigId(mConfigId);
         mAdUnitConfig.setAutoRefreshDelay(mRefreshIntervalSec);
         mEventHandler.setBannerEventListener(mBannerEventListener);
-        mAdUnitConfig.setAdUnitIdentifierType(AdUnitConfiguration.AdUnitIdentifierType.BANNER);
+        mAdUnitConfig.setAdFormat(AdFormat.BANNER);
         mAdUnitConfig.addSizes(mEventHandler.getAdSizeArray());
     }
 
