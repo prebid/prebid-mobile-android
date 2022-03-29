@@ -18,14 +18,14 @@ public class InfoActivity extends AppCompatActivity {
     public static final String EXTRA_TITLE = "screen_title";
     public static final String EXTRA_HTML_CONTENT = "screen_html_content";
 
-    private WebView mWebView;
+    private WebView webView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
-        mWebView = findViewById(R.id.web_view);
+        webView = findViewById(R.id.web_view);
 
         Bundle extras = getIntent().getExtras();
 
@@ -51,7 +51,7 @@ public class InfoActivity extends AppCompatActivity {
             finish();
         } else {
             String url = String.format(Locale.ENGLISH, "file:///android_asset/%s", htmlFile);
-            mWebView.loadUrl(url);
+            webView.loadUrl(url);
         }
     }
 

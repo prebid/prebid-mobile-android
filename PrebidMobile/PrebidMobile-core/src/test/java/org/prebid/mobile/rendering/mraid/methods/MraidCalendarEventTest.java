@@ -39,15 +39,15 @@ import static org.robolectric.Shadows.shadowOf;
 @Config(sdk = 19)
 public class MraidCalendarEventTest {
 
-    public final static String mCalendarFile = "calendar.txt";
-    private String mCalendarParameters = null;
-    private Activity mTestActivity;
+    public final static String calendarFile = "calendar.txt";
+    private String calendarParameters = null;
+    private Activity testActivity;
 
     @Before
     public void setUp() throws Exception {
-        mTestActivity = Robolectric.buildActivity(Activity.class).create().get();
-        mCalendarParameters = ResourceUtils.convertResourceToString(mCalendarFile);
-        ManagersResolver.getInstance().prepare(mTestActivity);
+        testActivity = Robolectric.buildActivity(Activity.class).create().get();
+        calendarParameters = ResourceUtils.convertResourceToString(calendarFile);
+        ManagersResolver.getInstance().prepare(testActivity);
     }
 
     @After
@@ -60,8 +60,8 @@ public class MraidCalendarEventTest {
         BaseJSInterface mockJs = mock(BaseJSInterface.class);
         MraidCalendarEvent event = new MraidCalendarEvent(mockJs);
 
-        event.createCalendarEvent(mCalendarParameters);
-        ShadowActivity shadowActivity = shadowOf(mTestActivity);
+        event.createCalendarEvent(calendarParameters);
+        ShadowActivity shadowActivity = shadowOf(testActivity);
         Intent startedIntent = shadowActivity.getNextStartedActivity();
 
         assertFalse("somecrap.calendar/event".equals(startedIntent.getType()));

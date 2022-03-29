@@ -57,38 +57,33 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class CreativeVisibilityTrackerTest {
 
-    private final VisibilityTrackerOption mVisibilityTrackerOption = new VisibilityTrackerOption(NativeEventTracker.EventType.IMPRESSION);
+    private final VisibilityTrackerOption visibilityTrackerOption = new VisibilityTrackerOption(NativeEventTracker.EventType.IMPRESSION);
 
-    private Activity mActivity;
-    private CreativeVisibilityTracker mCreativeVisibilityTracker;
-    private Handler mVisibilityHandler;
+    private Activity activity;
+    private CreativeVisibilityTracker creativeVisibilityTracker;
+    private Handler visibilityHandler;
 
-    private VisibilityChecker mSpyVisibilityChecker;
-    @Mock
-    private View mMockView;
-    @Mock
-    private VisibilityTrackerListener mMockVisibilityTrackerListener;
-    @Mock
-    private Window mMockWindow;
-    @Mock
-    private View mMockDecorView;
-    @Mock
-    private ViewTreeObserver mMockViewTreeObserver;
+    private VisibilityChecker spyVisibilityChecker;
+    @Mock private View mockView;
+    @Mock private VisibilityTrackerListener mockVisibilityTrackerListener;
+    @Mock private Window mockWindow;
+    @Mock private View mockDecorView;
+    @Mock private ViewTreeObserver mockViewTreeObserver;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        mActivity = Robolectric.buildActivity(Activity.class).create().get();
+        activity = Robolectric.buildActivity(Activity.class).create().get();
 
-        mCreativeVisibilityTracker = new CreativeVisibilityTracker(mMockView, mVisibilityTrackerOption);
-        mCreativeVisibilityTracker.setVisibilityTrackerListener(mMockVisibilityTrackerListener);
+        creativeVisibilityTracker = new CreativeVisibilityTracker(mockView, visibilityTrackerOption);
+        creativeVisibilityTracker.setVisibilityTrackerListener(mockVisibilityTrackerListener);
 
-        mVisibilityHandler = (Handler) getFieldValue("mVisibilityHandler");
+        visibilityHandler = (Handler) getFieldValue("visibilityHandler");
 
-        mSpyVisibilityChecker = spy(new VisibilityChecker(mVisibilityTrackerOption));
+        spyVisibilityChecker = spy(new VisibilityChecker(visibilityTrackerOption));
         List<VisibilityChecker> visibilityCheckerList = new ArrayList<>();
-        visibilityCheckerList.add(mSpyVisibilityChecker);
-        WhiteBox.setInternalState(mCreativeVisibilityTracker, "mVisibilityCheckerList", visibilityCheckerList);
+        visibilityCheckerList.add(spyVisibilityChecker);
+        WhiteBox.setInternalState(creativeVisibilityTracker, "visibilityCheckerList", visibilityCheckerList);
 
         // We need this to ensure that our SystemClock starts
         ShadowSystemClock.currentTimeMillis();
@@ -96,20 +91,24 @@ public class CreativeVisibilityTrackerTest {
 
     @Test
     public void startVisibilityCheck_shouldSetOnPreDrawListenerForDecorView() throws Exception {
-        Activity spyActivity = spy(mActivity);
+        Activity spyActivity = spy(activity);
 
-        when(spyActivity.getWindow()).thenReturn(mMockWindow);
-        when(mMockWindow.getDecorView()).thenReturn(mMockDecorView);
-        when(mMockDecorView.findViewById(anyInt())).thenReturn(mMockDecorView);
-        when(mMockDecorView.getViewTreeObserver()).thenReturn(mMockViewTreeObserver);
-        when(mMockViewTreeObserver.isAlive()).thenReturn(true);
+        when(spyActivity.getWindow()).thenReturn(mockWindow);
+        when(mockWindow.getDecorView()).thenReturn(mockDecorView);
+        when(mockDecorView.findViewById(anyInt())).thenReturn(mockDecorView);
+        when(mockDecorView.getViewTreeObserver()).thenReturn(mockViewTreeObserver);
+        when(mockViewTreeObserver.isAlive()).thenReturn(true);
 
-        mCreativeVisibilityTracker = new CreativeVisibilityTracker(mMockView, mVisibilityTrackerOption);
-        mCreativeVisibilityTracker.startVisibilityCheck(spyActivity);
-        ViewTreeObserver.OnPreDrawListener expectedListener = (ViewTreeObserver.OnPreDrawListener) getFieldValue("mOnPreDrawListener");
+        creativeVisibilityTracker = new CreativeVisibilityTracker(mockView, visibilityTrackerOption);
+        creativeVisibilityTracker.startVisibilityCheck(spyActivity);
+        ViewTreeObserver.OnPreDrawListener expectedListener = (ViewTreeObserver.OnPreDrawListener) getFieldValue(
+                "onPreDrawListener");
         assertNotNull(expectedListener);
-        verify(mMockViewTreeObserver).addOnPreDrawListener(eq(expectedListener));
-        assertEquals(mMockViewTreeObserver, ((WeakReference<ViewTreeObserver>) getFieldValue("mWeakViewTreeObserver")).get());
+        verify(mockViewTreeObserver).addOnPreDrawListener(eq(expectedListener));
+        assertEquals(
+                mockViewTreeObserver,
+                ((WeakReference<ViewTreeObserver>) getFieldValue("weakViewTreeObserver")).get()
+        );
     }
 
     @Test
@@ -117,24 +116,24 @@ public class CreativeVisibilityTrackerTest {
     throws Exception {
         Activity mockActivity = mock(Activity.class);
 
-        when(mockActivity.getWindow()).thenReturn(mMockWindow);
-        when(mMockWindow.getDecorView()).thenReturn(mMockDecorView);
-        when(mMockDecorView.getViewTreeObserver()).thenReturn(mMockViewTreeObserver);
-        when(mMockViewTreeObserver.isAlive()).thenReturn(false);
+        when(mockActivity.getWindow()).thenReturn(mockWindow);
+        when(mockWindow.getDecorView()).thenReturn(mockDecorView);
+        when(mockDecorView.getViewTreeObserver()).thenReturn(mockViewTreeObserver);
+        when(mockViewTreeObserver.isAlive()).thenReturn(false);
 
-        mCreativeVisibilityTracker = new CreativeVisibilityTracker(mMockView, mVisibilityTrackerOption);
-        mCreativeVisibilityTracker.startVisibilityCheck(mockActivity);
-        verify(mMockViewTreeObserver, never()).addOnPreDrawListener(any(ViewTreeObserver.OnPreDrawListener.class));
-        assertNull(((WeakReference<ViewTreeObserver>) getFieldValue("mWeakViewTreeObserver")).get());
+        creativeVisibilityTracker = new CreativeVisibilityTracker(mockView, visibilityTrackerOption);
+        creativeVisibilityTracker.startVisibilityCheck(mockActivity);
+        verify(mockViewTreeObserver, never()).addOnPreDrawListener(any(ViewTreeObserver.OnPreDrawListener.class));
+        assertNull(((WeakReference<ViewTreeObserver>) getFieldValue("weakViewTreeObserver")).get());
     }
 
     @Test
     public void startVisibilityCheckWithApplicationContext_shouldNotSetOnPreDrawListener()
     throws IllegalAccessException {
-        mCreativeVisibilityTracker = new CreativeVisibilityTracker(mMockView, mVisibilityTrackerOption);
-        mCreativeVisibilityTracker.startVisibilityCheck(mActivity.getApplicationContext());
+        creativeVisibilityTracker = new CreativeVisibilityTracker(mockView, visibilityTrackerOption);
+        creativeVisibilityTracker.startVisibilityCheck(activity.getApplicationContext());
 
-        assertNull(((WeakReference<ViewTreeObserver>) getFieldValue("mWeakViewTreeObserver")).get());
+        assertNull(((WeakReference<ViewTreeObserver>) getFieldValue("weakViewTreeObserver")).get());
     }
 
     @Test
@@ -142,35 +141,38 @@ public class CreativeVisibilityTrackerTest {
     throws IllegalAccessException {
         View mockRootView = mock(View.class);
 
-        when(mMockView.getContext()).thenReturn(mActivity.getApplicationContext());
-        when(mMockView.getRootView()).thenReturn(mockRootView);
-        when(mockRootView.getViewTreeObserver()).thenReturn(mMockViewTreeObserver);
-        when(mMockViewTreeObserver.isAlive()).thenReturn(true);
+        when(mockView.getContext()).thenReturn(activity.getApplicationContext());
+        when(mockView.getRootView()).thenReturn(mockRootView);
+        when(mockRootView.getViewTreeObserver()).thenReturn(mockViewTreeObserver);
+        when(mockViewTreeObserver.isAlive()).thenReturn(true);
 
-        mCreativeVisibilityTracker = new CreativeVisibilityTracker(mMockView, mVisibilityTrackerOption);
-        mCreativeVisibilityTracker.startVisibilityCheck(mActivity.getApplicationContext());
-        assertEquals(mMockViewTreeObserver, ((WeakReference<ViewTreeObserver>) getFieldValue("mWeakViewTreeObserver")).get());
+        creativeVisibilityTracker = new CreativeVisibilityTracker(mockView, visibilityTrackerOption);
+        creativeVisibilityTracker.startVisibilityCheck(activity.getApplicationContext());
+        assertEquals(
+                mockViewTreeObserver,
+                ((WeakReference<ViewTreeObserver>) getFieldValue("weakViewTreeObserver")).get()
+        );
     }
 
     @Test
     public void destroy_shouldRemoveListenerFromDecorView() throws Exception {
-        Activity spyActivity = spy(mActivity);
+        Activity spyActivity = spy(activity);
 
-        when(spyActivity.getWindow()).thenReturn(mMockWindow);
-        when(mMockWindow.getDecorView()).thenReturn(mMockDecorView);
-        when(mMockDecorView.findViewById(anyInt())).thenReturn(mMockDecorView);
-        when(mMockDecorView.getViewTreeObserver()).thenReturn(mMockViewTreeObserver);
-        when(mMockViewTreeObserver.isAlive()).thenReturn(true);
+        when(spyActivity.getWindow()).thenReturn(mockWindow);
+        when(mockWindow.getDecorView()).thenReturn(mockDecorView);
+        when(mockDecorView.findViewById(anyInt())).thenReturn(mockDecorView);
+        when(mockDecorView.getViewTreeObserver()).thenReturn(mockViewTreeObserver);
+        when(mockViewTreeObserver.isAlive()).thenReturn(true);
 
-        mCreativeVisibilityTracker = new CreativeVisibilityTracker(mMockView, mVisibilityTrackerOption);
-        mCreativeVisibilityTracker.startVisibilityCheck(spyActivity);
-        mCreativeVisibilityTracker.stopVisibilityCheck();
+        creativeVisibilityTracker = new CreativeVisibilityTracker(mockView, visibilityTrackerOption);
+        creativeVisibilityTracker.startVisibilityCheck(spyActivity);
+        creativeVisibilityTracker.stopVisibilityCheck();
 
-        assertFalse(mVisibilityHandler.hasMessages(0));
-        assertFalse((Boolean) getFieldValue("mIsVisibilityScheduled"));
-        verify(mMockViewTreeObserver).removeOnPreDrawListener(any(ViewTreeObserver.OnPreDrawListener.class));
-        assertNull(((WeakReference<ViewTreeObserver>) getFieldValue("mWeakViewTreeObserver")).get());
-        assertNull(getFieldValue("mVisibilityTrackerListener"));
+        assertFalse(visibilityHandler.hasMessages(0));
+        assertFalse((Boolean) getFieldValue("isVisibilityScheduled"));
+        verify(mockViewTreeObserver).removeOnPreDrawListener(any(ViewTreeObserver.OnPreDrawListener.class));
+        assertNull(((WeakReference<ViewTreeObserver>) getFieldValue("weakViewTreeObserver")).get());
+        assertNull(getFieldValue("visibilityTrackerListener"));
     }
 
     // VisibilityRunnable Tests
@@ -178,84 +180,93 @@ public class CreativeVisibilityTrackerTest {
     public void visibilityRunnable_runWithViewVisibleForAtLeastMinDuration_CallOnVisibilityChanged_ImpTrackerFiredTrue_IsVisibilityScheduledFalse()
     throws Exception {
         ViewExposure viewExposure = new ViewExposure(100, new Rect(0, 0, 100, 100), null);
-        when(mSpyVisibilityChecker.isVisible(any(View.class))).thenReturn(true);
-        when(mSpyVisibilityChecker.checkViewExposure(any(View.class))).thenReturn(viewExposure);
-        when(mSpyVisibilityChecker.hasBeenVisible()).thenReturn(true);
-        when(mSpyVisibilityChecker.hasRequiredTimeElapsed()).thenReturn(true);
+        when(spyVisibilityChecker.isVisible(any(View.class))).thenReturn(true);
+        when(spyVisibilityChecker.checkViewExposure(any(View.class))).thenReturn(viewExposure);
+        when(spyVisibilityChecker.hasBeenVisible()).thenReturn(true);
+        when(spyVisibilityChecker.hasRequiredTimeElapsed()).thenReturn(true);
 
-        mCreativeVisibilityTracker.mVisibilityRunnable.run();
+        creativeVisibilityTracker.visibilityRunnable.run();
 
         VisibilityTrackerResult result = new VisibilityTrackerResult(NativeEventTracker.EventType.IMPRESSION,
-                                                                     viewExposure, true, true);
-        verify(mMockVisibilityTrackerListener).onVisibilityChanged(result);
-        final VisibilityTrackerOption visibilityTrackerOption = mSpyVisibilityChecker.getVisibilityTrackerOption();
+                viewExposure,
+                true,
+                true
+        );
+        verify(mockVisibilityTrackerListener).onVisibilityChanged(result);
+        final VisibilityTrackerOption visibilityTrackerOption = spyVisibilityChecker.getVisibilityTrackerOption();
         assertTrue(visibilityTrackerOption.isImpressionTracked());
-        assertFalse((Boolean) getFieldValue("mIsVisibilityScheduled"));
+        assertFalse((Boolean) getFieldValue("isVisibilityScheduled"));
     }
 
     @Test
     public void visibilityRunnable_runWithViewNotVisible_CallOnVisibilityChangedWithFalseValues_ImpTrackerFiredFalse_IsVisibilityScheduledTrue()
     throws Exception {
-        when(mMockView.getVisibility()).thenReturn(View.INVISIBLE);
+        when(mockView.getVisibility()).thenReturn(View.INVISIBLE);
         VisibilityTrackerResult result = new VisibilityTrackerResult(NativeEventTracker.EventType.IMPRESSION,
-                                                                     null, false, false);
-        when(mSpyVisibilityChecker.checkViewExposure(any(View.class))).thenReturn(null);
+                null,
+                false,
+                false
+        );
+        when(spyVisibilityChecker.checkViewExposure(any(View.class))).thenReturn(null);
 
-        mCreativeVisibilityTracker.mVisibilityRunnable.run();
+        creativeVisibilityTracker.visibilityRunnable.run();
 
-        verify(mMockVisibilityTrackerListener).onVisibilityChanged(result);
-        final VisibilityTrackerOption visibilityTrackerOption = mSpyVisibilityChecker.getVisibilityTrackerOption();
+        verify(mockVisibilityTrackerListener).onVisibilityChanged(result);
+        final VisibilityTrackerOption visibilityTrackerOption = spyVisibilityChecker.getVisibilityTrackerOption();
         assertFalse(visibilityTrackerOption.isImpressionTracked());
-        assertTrue((Boolean) getFieldValue("mIsVisibilityScheduled"));
+        assertTrue((Boolean) getFieldValue("isVisibilityScheduled"));
     }
 
     @Test
     public void visibilityRunnable_runWitViewVisibleForLessThanMinDuration_ShouldNotCallOnVisibilityChanged_ImpTrackerFiredFalse_IsVisibilityScheduledTrue()
     throws Exception {
         ViewExposure viewExposure = new ViewExposure(5.0f, null, null);
-        when(mSpyVisibilityChecker.isVisible(any(View.class))).thenReturn(true);
-        when(mSpyVisibilityChecker.hasBeenVisible()).thenReturn(false);
-        when(mSpyVisibilityChecker.hasRequiredTimeElapsed()).thenReturn(false);
-        when(mSpyVisibilityChecker.checkViewExposure(any(View.class))).thenReturn(viewExposure);
+        when(spyVisibilityChecker.isVisible(any(View.class))).thenReturn(true);
+        when(spyVisibilityChecker.hasBeenVisible()).thenReturn(false);
+        when(spyVisibilityChecker.hasRequiredTimeElapsed()).thenReturn(false);
+        when(spyVisibilityChecker.checkViewExposure(any(View.class))).thenReturn(viewExposure);
 
         VisibilityTrackerResult result = new VisibilityTrackerResult(NativeEventTracker.EventType.IMPRESSION,
-                                                                     viewExposure, true, false);
+                viewExposure,
+                true,
+                false
+        );
 
-        mCreativeVisibilityTracker.mVisibilityRunnable.run();
+        creativeVisibilityTracker.visibilityRunnable.run();
 
-        verify(mMockVisibilityTrackerListener).onVisibilityChanged(result);
-        final VisibilityTrackerOption visibilityTrackerOption = mSpyVisibilityChecker.getVisibilityTrackerOption();
+        verify(mockVisibilityTrackerListener).onVisibilityChanged(result);
+        final VisibilityTrackerOption visibilityTrackerOption = spyVisibilityChecker.getVisibilityTrackerOption();
         assertFalse(visibilityTrackerOption.isImpressionTracked());
-        assertTrue((Boolean) getFieldValue("mIsVisibilityScheduled"));
+        assertTrue((Boolean) getFieldValue("isVisibilityScheduled"));
     }
 
     // VisibilityChecker Tests
     @Test
     public void hasRequiredTimeElapsedWithStartTimeNotSet_ReturnFalse() {
-        assertFalse(mSpyVisibilityChecker.hasRequiredTimeElapsed());
+        assertFalse(spyVisibilityChecker.hasRequiredTimeElapsed());
     }
 
     @Test
     public void hasRequiredTimeElapsedWithStartTimeSet_And_ElapsedTimeGreaterThanMinTimeViewed_ReturnTrue() {
-        mSpyVisibilityChecker = new VisibilityChecker(mVisibilityTrackerOption);
-        mSpyVisibilityChecker.setStartTimeMillis();
+        spyVisibilityChecker = new VisibilityChecker(visibilityTrackerOption);
+        spyVisibilityChecker.setStartTimeMillis();
 
         // minVisibleMillis is 0 ms as defined by constant MIN_VISIBLE_MILLIS
-        assertTrue(mSpyVisibilityChecker.hasRequiredTimeElapsed());
+        assertTrue(spyVisibilityChecker.hasRequiredTimeElapsed());
     }
 
     @Test
     public void hasRequiredTimeElapsedWithStartTimeSet_And_ElapsedTimeLessThanMinTimeViewed_ReturnFalse() {
-        mSpyVisibilityChecker = new VisibilityChecker(new VisibilityTrackerOption(NativeEventTracker.EventType.VIEWABLE_MRC50));
-        mSpyVisibilityChecker.setStartTimeMillis();
+        spyVisibilityChecker = new VisibilityChecker(new VisibilityTrackerOption(NativeEventTracker.EventType.VIEWABLE_MRC50));
+        spyVisibilityChecker.setStartTimeMillis();
 
         // minVisibleMillis is 1 sec, should return false since we are checking immediately before 1 sec elapses
-        assertFalse(mSpyVisibilityChecker.hasRequiredTimeElapsed());
+        assertFalse(spyVisibilityChecker.hasRequiredTimeElapsed());
     }
 
     @Test
     public void isVisibleWhenViewIsNull_ReturnFalse() {
-        assertNull(mSpyVisibilityChecker.checkViewExposure(null));
+        assertNull(spyVisibilityChecker.checkViewExposure(null));
     }
 
     @Test
@@ -274,11 +285,14 @@ public class CreativeVisibilityTrackerTest {
         visibilityTrackerOptionSet.add(trackerOptionMrc100);
         visibilityTrackerOptionSet.add(trackerOptionViewableVideo50);
 
-        CreativeVisibilityTracker creativeVisibilityTracker = new CreativeVisibilityTracker(mMockView, visibilityTrackerOptionSet);
-        creativeVisibilityTracker.setVisibilityTrackerListener(mMockVisibilityTrackerListener);
+        CreativeVisibilityTracker creativeVisibilityTracker = new CreativeVisibilityTracker(
+                mockView,
+                visibilityTrackerOptionSet
+        );
+        creativeVisibilityTracker.setVisibilityTrackerListener(mockVisibilityTrackerListener);
         mockVisibilityChecker(creativeVisibilityTracker, viewExposure, visibilityTrackerOptionSet);
 
-        creativeVisibilityTracker.mVisibilityRunnable.run();
+        creativeVisibilityTracker.visibilityRunnable.run();
 
         // 0 sec visibility duration
         assertTrue(trackerOptionImpression.isImpressionTracked());
@@ -291,39 +305,51 @@ public class CreativeVisibilityTrackerTest {
         assertFalse(trackerOptionViewableVideo50.isImpressionTracked());
 
         VisibilityTrackerResult impressionResult = new VisibilityTrackerResult(NativeEventTracker.EventType.IMPRESSION,
-                                                                               viewExposure, true, true);
+                viewExposure,
+                true,
+                true
+        );
         VisibilityTrackerResult mrc50Result = new VisibilityTrackerResult(NativeEventTracker.EventType.VIEWABLE_MRC50,
-                                                                          viewExposure, true, true);
+                viewExposure,
+                true,
+                true
+        );
         VisibilityTrackerResult mrc100Result = new VisibilityTrackerResult(NativeEventTracker.EventType.VIEWABLE_MRC100,
-                                                                           viewExposure, true, true);
+                viewExposure,
+                true,
+                true
+        );
         VisibilityTrackerResult videoResult = new VisibilityTrackerResult(NativeEventTracker.EventType.VIEWABLE_VIDEO50,
-                                                                          viewExposure, true, true);
+                viewExposure,
+                true,
+                true
+        );
 
-        verify(mMockVisibilityTrackerListener, times(1)).onVisibilityChanged(eq(impressionResult));
-        verify(mMockVisibilityTrackerListener, times(1)).onVisibilityChanged(eq(mrc50Result));
-        verify(mMockVisibilityTrackerListener, times(1)).onVisibilityChanged(eq(mrc100Result));
-        verify(mMockVisibilityTrackerListener, times(0)).onVisibilityChanged(eq(videoResult));
+        verify(mockVisibilityTrackerListener, times(1)).onVisibilityChanged(eq(impressionResult));
+        verify(mockVisibilityTrackerListener, times(1)).onVisibilityChanged(eq(mrc50Result));
+        verify(mockVisibilityTrackerListener, times(1)).onVisibilityChanged(eq(mrc100Result));
+        verify(mockVisibilityTrackerListener, times(0)).onVisibilityChanged(eq(videoResult));
     }
 
     private Object getFieldValue(String fieldName) {
-        return WhiteBox.getInternalState(mCreativeVisibilityTracker, fieldName);
+        return WhiteBox.getInternalState(creativeVisibilityTracker, fieldName);
     }
 
     private void mockView() {
         final ViewParent mockParent = mock(ViewParent.class);
-        when(mMockView.getWidth()).thenReturn(200);
-        when(mMockView.getHeight()).thenReturn(300);
-        when(mMockView.isShown()).thenReturn(true);
-        when(mMockView.hasWindowFocus()).thenReturn(true);
+        when(mockView.getWidth()).thenReturn(200);
+        when(mockView.getHeight()).thenReturn(300);
+        when(mockView.isShown()).thenReturn(true);
+        when(mockView.hasWindowFocus()).thenReturn(true);
         when(mockParent.getParent()).thenReturn(mockParent);
-        when(mMockView.getParent()).thenReturn(mockParent);
-        when(mMockView.getContext()).thenReturn(mActivity);
+        when(mockView.getParent()).thenReturn(mockParent);
+        when(mockView.getContext()).thenReturn(activity);
         doAnswer(invocation -> {
             final Rect clipRect = invocation.getArgument(0);
             clipRect.right = 200;
             clipRect.bottom = 300;
             return true;
-        }).when(mMockView).getGlobalVisibleRect(any(Rect.class));
+        }).when(mockView).getGlobalVisibleRect(any(Rect.class));
     }
 
     private void mockVisibilityChecker(CreativeVisibilityTracker visibilityTracker, ViewExposure desiredViewExposure, Set<VisibilityTrackerOption> optionSet) {
@@ -333,6 +359,6 @@ public class CreativeVisibilityTrackerTest {
             when(visibilityChecker.checkViewExposure(any(View.class))).thenReturn(desiredViewExposure);
             visibilityCheckerList.add(visibilityChecker);
         }
-        WhiteBox.setInternalState(visibilityTracker, "mVisibilityCheckerList", visibilityCheckerList);
+        WhiteBox.setInternalState(visibilityTracker, "visibilityCheckerList", visibilityCheckerList);
     }
 }

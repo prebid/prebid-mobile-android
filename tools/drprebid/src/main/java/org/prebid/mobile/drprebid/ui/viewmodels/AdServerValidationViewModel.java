@@ -6,27 +6,28 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class AdServerValidationViewModel extends ViewModel {
-    private final MutableLiveData<Boolean> mRequestSent;
-    private final MutableLiveData<Boolean> mCreativeServed;
+
+    private final MutableLiveData<Boolean> requestSent;
+    private final MutableLiveData<Boolean> creativeServed;
 
     public AdServerValidationViewModel() {
-        mRequestSent = new MutableLiveData<>();
-        mCreativeServed = new MutableLiveData<>();
+        requestSent = new MutableLiveData<>();
+        creativeServed = new MutableLiveData<>();
     }
 
     public LiveData<Boolean> getRequestSent() {
-        return mRequestSent;
+        return requestSent;
     }
 
     public void setRequestSent(boolean requestSent) {
-        mRequestSent.setValue(requestSent);
+        this.requestSent.setValue(requestSent);
     }
 
     public LiveData<Boolean> getCreativeServed() {
-        return mCreativeServed;
+        return creativeServed;
     }
 
     public void setCreativeServed(@Nullable Boolean creativeServed) {
-        mCreativeServed.setValue(creativeServed);
+        this.creativeServed.setValue(creativeServed);
     }
 }

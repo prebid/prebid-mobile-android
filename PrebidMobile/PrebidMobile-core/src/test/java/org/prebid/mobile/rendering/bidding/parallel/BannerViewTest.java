@@ -64,40 +64,40 @@ public class BannerViewTest {
     private static final String AD_UNIT_ID = "12345678";
     private static final AdSize AD_SIZE = new AdSize(320, 50);
 
-    private BannerView mBannerView;
+    private BannerView bannerView;
 
-    private Context mMockContext;
+    private Context mockContext;
     @Mock
-    private BidLoader mMockBidLoader;
+    private BidLoader mockBidLoader;
     @Mock
-    private BannerEventHandler mMockEventHandler;
+    private BannerEventHandler mockEventHandler;
     @Mock
-    private BannerViewListener mMockBannerListener;
+    private BannerViewListener mockBannerListener;
     @Mock
-    private DisplayView mMockDisplayView;
+    private DisplayView mockDisplayView;
     @Mock
-    private ScreenStateReceiver mMockScreenStateReceiver;
+    private ScreenStateReceiver mockScreenStateReceiver;
 
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mMockContext = Robolectric.buildActivity(Activity.class).create().get();
+        mockContext = Robolectric.buildActivity(Activity.class).create().get();
 
-        when(mMockEventHandler.getAdSizeArray()).thenReturn(new AdSize[]{AD_SIZE});
-        mBannerView = new BannerView(mMockContext, AD_UNIT_ID, mMockEventHandler);
-        WhiteBox.field(BannerView.class, "mBidLoader").set(mBannerView, mMockBidLoader);
-        WhiteBox.field(BannerView.class, "mDisplayView").set(mBannerView, mMockDisplayView);
-        WhiteBox.field(BannerView.class, "mDisplayView").set(mBannerView, mMockDisplayView);
-        WhiteBox.field(BannerView.class, "mScreenStateReceiver").set(mBannerView, mMockScreenStateReceiver);
-        mBannerView.setBannerListener(mMockBannerListener);
+        when(mockEventHandler.getAdSizeArray()).thenReturn(new AdSize[]{AD_SIZE});
+        bannerView = new BannerView(mockContext, AD_UNIT_ID, mockEventHandler);
+        WhiteBox.field(BannerView.class, "bidLoader").set(bannerView, mockBidLoader);
+        WhiteBox.field(BannerView.class, "displayView").set(bannerView, mockDisplayView);
+        WhiteBox.field(BannerView.class, "displayView").set(bannerView, mockDisplayView);
+        WhiteBox.field(BannerView.class, "screenStateReceiver").set(bannerView, mockScreenStateReceiver);
+        bannerView.setBannerListener(mockBannerListener);
 
-        assertEquals(BannerAdPosition.UNDEFINED.getValue(), mBannerView.getAdPosition().getValue());
+        assertEquals(BannerAdPosition.UNDEFINED.getValue(), bannerView.getAdPosition().getValue());
     }
 
     @Test
     public void createPrebidBannerViewWithAttributes_InstanceCreated() {
         AttributeSet attributes = Robolectric.buildAttributeSet().build();
-        BannerView bannerView = new BannerView(mMockContext, attributes);
+        BannerView bannerView = new BannerView(mockContext, attributes);
 
         assertNotNull(bannerView);
     }
@@ -105,10 +105,10 @@ public class BannerViewTest {
     @Test
     public void createPrebidBannerViewNoEventHandler_InstanceCreatedAndBidLoaderIsNotNullAndStandaloneEventHandlerProvided()
     throws IllegalAccessException {
-        BannerView bannerView = new BannerView(mMockContext, AD_UNIT_ID, AD_SIZE);
+        BannerView bannerView = new BannerView(mockContext, AD_UNIT_ID, AD_SIZE);
 
-        Object eventHandler = WhiteBox.field(BannerView.class, "mEventHandler").get(bannerView);
-        BidLoader bidLoader = ((BidLoader) WhiteBox.field(BannerView.class, "mBidLoader").get(bannerView));
+        Object eventHandler = WhiteBox.field(BannerView.class, "eventHandler").get(bannerView);
+        BidLoader bidLoader = ((BidLoader) WhiteBox.field(BannerView.class, "bidLoader").get(bannerView));
 
         assertNotNull(bannerView);
         assertTrue(eventHandler instanceof StandaloneBannerEventHandler);
@@ -117,57 +117,57 @@ public class BannerViewTest {
 
     @Test
     public void loadAdWithNullBidLoader_NoExceptionIsThrown() throws IllegalAccessException {
-        WhiteBox.field(BannerView.class, "mBidLoader").set(mBannerView, null);
+        WhiteBox.field(BannerView.class, "bidLoader").set(bannerView, null);
 
-        mBannerView.loadAd();
+        bannerView.loadAd();
     }
 
     @Test
     public void loadAdWithPrimaryAdServerRequestInProgress_DoNothing() {
         changePrimaryAdServerRequestStatus(true);
-        mBannerView.loadAd();
+        bannerView.loadAd();
 
-        verifyZeroInteractions(mMockBidLoader);
+        verifyZeroInteractions(mockBidLoader);
     }
 
     @Test
     public void loadAd_bidResponseIsInitialized() {
-        mBannerView.loadAd();
+        bannerView.loadAd();
 
-        BidResponse response = mBannerView.getBidResponse();
+        BidResponse response = bannerView.getBidResponse();
         System.out.println(response);
     }
 
     @Test
     public void loadAdWithValidBidLoaderAndPrimaryAdRequestNotInProgress_ExecuteBidLoad() {
-        mBannerView.loadAd();
+        bannerView.loadAd();
 
-        verify(mMockBidLoader, times(1)).load();
+        verify(mockBidLoader, times(1)).load();
     }
 
     @Test
     public void destroy_DestroyEventHandlerAndBidLoader() {
-        mBannerView.destroy();
+        bannerView.destroy();
 
-        verify(mMockEventHandler).destroy();
-        verify(mMockBidLoader).destroy();
-        verify(mMockScreenStateReceiver).unregister();
+        verify(mockEventHandler).destroy();
+        verify(mockBidLoader).destroy();
+        verify(mockScreenStateReceiver).unregister();
     }
 
     @Test
     public void setAutoRefreshDelayInSec_EqualsGetAutoRefreshDelayInMs() {
         final int interval = 30;
-        mBannerView.setAutoRefreshDelay(interval);
+        bannerView.setAutoRefreshDelay(interval);
 
-        assertEquals(interval * 1000, mBannerView.getAutoRefreshDelayInMs());
+        assertEquals(interval * 1000, bannerView.getAutoRefreshDelayInMs());
     }
 
     @Test
     public void setRefreshIntervalInSecSmallerThanZero_ExpectDefaultRefresh() {
         final int interval = -1;
-        mBannerView.setAutoRefreshDelay(interval);
+        bannerView.setAutoRefreshDelay(interval);
 
-        assertEquals(0, mBannerView.getAutoRefreshDelayInMs());
+        assertEquals(0, bannerView.getAutoRefreshDelayInMs());
     }
 
     @Test
@@ -177,9 +177,9 @@ public class BannerViewTest {
         expectedSet.add(AD_SIZE); // from eventHandler
         expectedSet.add(adSize);
 
-        mBannerView.addAdditionalSizes(adSize);
+        bannerView.addAdditionalSizes(adSize);
 
-        assertEquals(expectedSet, mBannerView.getAdditionalSizes());
+        assertEquals(expectedSet, bannerView.getAdditionalSizes());
     }
 
     @Test
@@ -187,9 +187,9 @@ public class BannerViewTest {
     throws IllegalAccessException {
         final VideoPlacementType videoPlacement = VideoPlacementType.IN_BANNER;
         AdUnitConfiguration mockAdConfiguration = mock(AdUnitConfiguration.class);
-        WhiteBox.field(BannerView.class, "mAdUnitConfig").set(mBannerView, mockAdConfiguration);
+        WhiteBox.field(BannerView.class, "adUnitConfig").set(bannerView, mockAdConfiguration);
 
-        mBannerView.setVideoPlacementType(videoPlacement);
+        bannerView.setVideoPlacementType(videoPlacement);
 
         verify(mockAdConfiguration, times(1)).setPlacementType(eq(VideoPlacementType.mapToPlacementType(videoPlacement)));
         verify(mockAdConfiguration, times(1)).setAdFormat(eq(AdFormat.VAST));
@@ -197,17 +197,17 @@ public class BannerViewTest {
 
     @Test
     public void setAdVideoPlacement_EqualsGetVideoPlacement() {
-        mBannerView.setVideoPlacementType(null);
-        assertNull(mBannerView.getVideoPlacementType());
+        bannerView.setVideoPlacementType(null);
+        assertNull(bannerView.getVideoPlacementType());
 
-        mBannerView.setVideoPlacementType(VideoPlacementType.IN_ARTICLE);
-        assertEquals(VideoPlacementType.IN_ARTICLE, mBannerView.getVideoPlacementType());
+        bannerView.setVideoPlacementType(VideoPlacementType.IN_ARTICLE);
+        assertEquals(VideoPlacementType.IN_ARTICLE, bannerView.getVideoPlacementType());
 
-        mBannerView.setVideoPlacementType(VideoPlacementType.IN_BANNER);
-        assertEquals(VideoPlacementType.IN_BANNER, mBannerView.getVideoPlacementType());
+        bannerView.setVideoPlacementType(VideoPlacementType.IN_BANNER);
+        assertEquals(VideoPlacementType.IN_BANNER, bannerView.getVideoPlacementType());
 
-        mBannerView.setVideoPlacementType(VideoPlacementType.IN_FEED);
-        assertEquals(VideoPlacementType.IN_FEED, mBannerView.getVideoPlacementType());
+        bannerView.setVideoPlacementType(VideoPlacementType.IN_FEED);
+        assertEquals(VideoPlacementType.IN_FEED, bannerView.getVideoPlacementType());
     }
     //region ======================= BidRequestListener tests
     @Test
@@ -220,13 +220,13 @@ public class BannerViewTest {
         BidRequesterListener listener = getBidRequesterListener();
         listener.onFetchCompleted(mockBidResponse);
 
-        Bid winningBid = mBannerView.getWinnerBid();
-        BidResponse actualResponse = mBannerView.getBidResponse();
+        Bid winningBid = bannerView.getWinnerBid();
+        BidResponse actualResponse = bannerView.getBidResponse();
 
         assertEquals(winningBid, mockBid);
         assertEquals(mockBidResponse, actualResponse);
-        verify(mMockEventHandler, times(1)).requestAdWithBid(eq(mockBid));
-        assertTrue(mBannerView.isPrimaryAdServerRequestInProgress());
+        verify(mockEventHandler, times(1)).requestAdWithBid(eq(mockBid));
+        assertTrue(bannerView.isPrimaryAdServerRequestInProgress());
     }
 
     @Test
@@ -235,14 +235,14 @@ public class BannerViewTest {
         final Bid mockBid = mock(Bid.class);
 
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
-        mBannerView.setBidResponse(mockBidResponse);
+        bannerView.setBidResponse(mockBidResponse);
 
         BidRequesterListener listener = getBidRequesterListener();
         listener.onError(any());
 
-        assertNull(mBannerView.getWinnerBid());
-        assertNull(mBannerView.getBidResponse());
-        verify(mMockEventHandler, times(1)).requestAdWithBid(eq(null));
+        assertNull(bannerView.getWinnerBid());
+        assertNull(bannerView.getBidResponse());
+        verify(mockEventHandler, times(1)).requestAdWithBid(eq(null));
     }
     //endregion ======================= BidRequestListener tests
 
@@ -251,12 +251,12 @@ public class BannerViewTest {
     public void onPrebidSdkWinAndWinnerBidIsNull_AdRequestStatusIsFinishedNotifyErrorListener() {
         changePrimaryAdServerRequestStatus(true);
         final BannerEventListener bannerEventListener = getBannerEventListener();
-        mBannerView.setBidResponse(null);
+        bannerView.setBidResponse(null);
 
         bannerEventListener.onPrebidSdkWin();
 
-        verify(mMockBannerListener, times(1)).onAdFailed(eq(mBannerView), any(AdException.class));
-        assertFalse(mBannerView.isPrimaryAdServerRequestInProgress());
+        verify(mockBannerListener, times(1)).onAdFailed(eq(bannerView), any(AdException.class));
+        assertFalse(bannerView.isPrimaryAdServerRequestInProgress());
     }
 
     @Test
@@ -269,11 +269,11 @@ public class BannerViewTest {
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
         when(mockBidResponse.getWinningBidWidthHeightPairDips(any())).thenReturn(Pair.create(0, 0));
 
-        mBannerView.setBidResponse(mockBidResponse);
+        bannerView.setBidResponse(mockBidResponse);
 
         bannerEventListener.onPrebidSdkWin();
 
-        assertFalse(mBannerView.isPrimaryAdServerRequestInProgress());
+        assertFalse(bannerView.isPrimaryAdServerRequestInProgress());
     }
 
     @Test
@@ -285,22 +285,22 @@ public class BannerViewTest {
 
         bannerEventListener.onAdServerWin(mockView);
 
-        assertFalse(mBannerView.isPrimaryAdServerRequestInProgress());
-        verify(mMockBannerListener, times(1)).onAdLoaded(mBannerView);
+        assertFalse(bannerView.isPrimaryAdServerRequestInProgress());
+        verify(mockBannerListener, times(1)).onAdLoaded(bannerView);
         // verify(spyBannerView).displayAdServerView(mockView);
     }
 
     @Test
     public void onFailedAndNoWinnerBid_AdRequestStatusIsFinishedNotifyErrorListener() {
         changePrimaryAdServerRequestStatus(true);
-        mBannerView.setBidResponse(null);
+        bannerView.setBidResponse(null);
 
         final AdException exception = new AdException(AdException.INTERNAL_ERROR, "Test");
         final BannerEventListener bannerEventListener = getBannerEventListener();
 
         bannerEventListener.onAdFailed(exception);
 
-        verify(mMockBannerListener, times(1)).onAdFailed(mBannerView, exception);
+        verify(mockBannerListener, times(1)).onAdFailed(bannerView, exception);
     }
 
     @Test
@@ -313,10 +313,10 @@ public class BannerViewTest {
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
         when(mockBidResponse.getWinningBidWidthHeightPairDips(any())).thenReturn(Pair.create(0, 0));
 
-        mBannerView.setBidResponse(mockBidResponse);
+        bannerView.setBidResponse(mockBidResponse);
         spyEventListener.onAdFailed(new AdException(AdException.INTERNAL_ERROR, "Test"));
 
-        assertFalse(mBannerView.isPrimaryAdServerRequestInProgress());
+        assertFalse(bannerView.isPrimaryAdServerRequestInProgress());
         verify(spyEventListener, times(1)).onPrebidSdkWin();
     }
 
@@ -325,7 +325,7 @@ public class BannerViewTest {
         final BannerEventListener bannerEventListener = getBannerEventListener();
         bannerEventListener.onAdClicked();
 
-        verify(mMockBannerListener, times(1)).onAdClicked(mBannerView);
+        verify(mockBannerListener, times(1)).onAdClicked(bannerView);
     }
 
     @Test
@@ -333,13 +333,13 @@ public class BannerViewTest {
         final BannerEventListener bannerEventListener = getBannerEventListener();
         bannerEventListener.onAdClosed();
 
-        verify(mMockBannerListener, times(1)).onAdClosed(mBannerView);
+        verify(mockBannerListener, times(1)).onAdClosed(bannerView);
     }
     //endregion ================= BannerEventListener test
 
     private void changePrimaryAdServerRequestStatus(boolean isLoading) {
         try {
-            WhiteBox.field(BannerView.class, "mIsPrimaryAdServerRequestInProgress").set(mBannerView, isLoading);
+            WhiteBox.field(BannerView.class, "isPrimaryAdServerRequestInProgress").set(bannerView, isLoading);
         }
         catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -348,51 +348,51 @@ public class BannerViewTest {
 
     @Test
     public void whenLoadAd_CallBidLoaderLoad() {
-        mBannerView.loadAd();
-        verify(mMockBidLoader).load();
+        bannerView.loadAd();
+        verify(mockBidLoader).load();
     }
 
     @Test
     public void whenDisplayViewOnAdLoaded_CallBannerListenerOnAdLoaded()
     throws IllegalAccessException {
         getDisplayViewListener().onAdLoaded();
-        verify(mMockBannerListener).onAdLoaded(mBannerView);
+        verify(mockBannerListener).onAdLoaded(bannerView);
     }
 
     @Test
     public void whenDisplayViewOnAdDisplayed_CallBannerListenerOnAdDisplayedAndTrackImpression()
     throws IllegalAccessException {
         getDisplayViewListener().onAdDisplayed();
-        verify(mMockBannerListener).onAdDisplayed(mBannerView);
-        verify(mMockEventHandler).trackImpression();
+        verify(mockBannerListener).onAdDisplayed(bannerView);
+        verify(mockEventHandler).trackImpression();
     }
 
     @Test
     public void whenDisplayViewOnAdFailed_CallBannerListenerOnAdFailed()
     throws IllegalAccessException {
         getDisplayViewListener().onAdFailed(new AdException(AdException.INTERNAL_ERROR, ""));
-        verify(mMockBannerListener).onAdFailed(eq(mBannerView), any(AdException.class));
+        verify(mockBannerListener).onAdFailed(eq(bannerView), any(AdException.class));
     }
 
     @Test
     public void whenDisplayViewOnAdOpened_CallBannerListenerOnAdClicked()
     throws IllegalAccessException {
         getDisplayViewListener().onAdClicked();
-        verify(mMockBannerListener).onAdClicked(mBannerView);
+        verify(mockBannerListener).onAdClicked(bannerView);
     }
 
     @Test
     public void whenDisplayViewOnAdClosed_CallBannerListenerOnAdClosed()
     throws IllegalAccessException {
         getDisplayViewListener().onAdClosed();
-        verify(mMockBannerListener).onAdClosed(mBannerView);
+        verify(mockBannerListener).onAdClosed(bannerView);
     }
 
     @Test
     public void whenStopRefresh_BidLoaderCancelRefresh() {
-        mBannerView.stopRefresh();
+        bannerView.stopRefresh();
 
-        verify(mMockBidLoader, times(1)).cancelRefresh();
+        verify(mockBidLoader, times(1)).cancelRefresh();
     }
 
     @Test
@@ -406,27 +406,27 @@ public class BannerViewTest {
         expectedMap.put("key2", value2);
 
         // add
-        mBannerView.addContextData("key1", "value1");
-        mBannerView.addContextData("key2", "value2");
+        bannerView.addContextData("key1", "value1");
+        bannerView.addContextData("key2", "value2");
 
-        assertEquals(expectedMap, mBannerView.getContextDataDictionary());
+        assertEquals(expectedMap, bannerView.getContextDataDictionary());
 
         // update
         HashSet<String> updateSet = new HashSet<>();
         updateSet.add("value3");
-        mBannerView.updateContextData("key1", updateSet);
+        bannerView.updateContextData("key1", updateSet);
         expectedMap.replace("key1", updateSet);
 
-        assertEquals(expectedMap, mBannerView.getContextDataDictionary());
+        assertEquals(expectedMap, bannerView.getContextDataDictionary());
 
         // remove
-        mBannerView.removeContextData("key1");
+        bannerView.removeContextData("key1");
         expectedMap.remove("key1");
-        assertEquals(expectedMap, mBannerView.getContextDataDictionary());
+        assertEquals(expectedMap, bannerView.getContextDataDictionary());
 
         // clear
-        mBannerView.clearContextData();
-        assertTrue(mBannerView.getContextDataDictionary().isEmpty());
+        bannerView.clearContextData();
+        assertTrue(bannerView.getContextDataDictionary().isEmpty());
     }
 
     @Test
@@ -436,53 +436,53 @@ public class BannerViewTest {
         expectedSet.add("key2");
 
         // add
-        mBannerView.addContextKeyword("key1");
-        mBannerView.addContextKeyword("key2");
+        bannerView.addContextKeyword("key1");
+        bannerView.addContextKeyword("key2");
 
-        assertEquals(expectedSet, mBannerView.getContextKeywordsSet());
+        assertEquals(expectedSet, bannerView.getContextKeywordsSet());
 
         // remove
-        mBannerView.removeContextKeyword("key2");
+        bannerView.removeContextKeyword("key2");
         expectedSet.remove("key2");
-        assertEquals(expectedSet, mBannerView.getContextKeywordsSet());
+        assertEquals(expectedSet, bannerView.getContextKeywordsSet());
 
         // clear
-        mBannerView.clearContextKeywords();
-        assertTrue(mBannerView.getContextKeywordsSet().isEmpty());
+        bannerView.clearContextKeywords();
+        assertTrue(bannerView.getContextKeywordsSet().isEmpty());
 
         // add all
-        mBannerView.addContextKeywords(expectedSet);
-        assertEquals(expectedSet, mBannerView.getContextKeywordsSet());
+        bannerView.addContextKeywords(expectedSet);
+        assertEquals(expectedSet, bannerView.getContextKeywordsSet());
     }
 
     @Test
     public void setAdPosition_EqualsGetAdPosition() {
-        mBannerView.setAdPosition(null);
-        assertEquals(BannerAdPosition.UNDEFINED, mBannerView.getAdPosition());
+        bannerView.setAdPosition(null);
+        assertEquals(BannerAdPosition.UNDEFINED, bannerView.getAdPosition());
 
-        mBannerView.setAdPosition(BannerAdPosition.FOOTER);
-        assertEquals(BannerAdPosition.FOOTER, mBannerView.getAdPosition());
+        bannerView.setAdPosition(BannerAdPosition.FOOTER);
+        assertEquals(BannerAdPosition.FOOTER, bannerView.getAdPosition());
 
-        mBannerView.setAdPosition(BannerAdPosition.HEADER);
-        assertEquals(BannerAdPosition.HEADER, mBannerView.getAdPosition());
+        bannerView.setAdPosition(BannerAdPosition.HEADER);
+        assertEquals(BannerAdPosition.HEADER, bannerView.getAdPosition());
 
-        mBannerView.setAdPosition(BannerAdPosition.SIDEBAR);
-        assertEquals(BannerAdPosition.SIDEBAR, mBannerView.getAdPosition());
+        bannerView.setAdPosition(BannerAdPosition.SIDEBAR);
+        assertEquals(BannerAdPosition.SIDEBAR, bannerView.getAdPosition());
 
-        mBannerView.setAdPosition(BannerAdPosition.UNKNOWN);
-        assertEquals(BannerAdPosition.UNKNOWN, mBannerView.getAdPosition());
+        bannerView.setAdPosition(BannerAdPosition.UNKNOWN);
+        assertEquals(BannerAdPosition.UNKNOWN, bannerView.getAdPosition());
     }
 
     @Test
     public void setPbAdSlot_EqualsGetPbAdSlot() {
         final String expected = "12345";
-        mBannerView.setPbAdSlot(expected);
-        assertEquals(expected, mBannerView.getPbAdSlot());
+        bannerView.setPbAdSlot(expected);
+        assertEquals(expected, bannerView.getPbAdSlot());
     }
 
     private BidRequesterListener getBidRequesterListener() {
         try {
-            return (BidRequesterListener) WhiteBox.field(BannerView.class, "mBidRequesterListener").get(mBannerView);
+            return (BidRequesterListener) WhiteBox.field(BannerView.class, "bidRequesterListener").get(bannerView);
         }
         catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -492,7 +492,7 @@ public class BannerViewTest {
 
     private DisplayViewListener getDisplayViewListener() {
         try {
-            return (DisplayViewListener) WhiteBox.field(BannerView.class, "mDisplayViewListener").get(mBannerView);
+            return (DisplayViewListener) WhiteBox.field(BannerView.class, "displayViewListener").get(bannerView);
         }
         catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -502,7 +502,7 @@ public class BannerViewTest {
 
     private BannerEventListener getBannerEventListener() {
         try {
-            return (BannerEventListener) WhiteBox.field(BannerView.class, "mBannerEventListener").get(mBannerView);
+            return (BannerEventListener) WhiteBox.field(BannerView.class, "bannerEventListener").get(bannerView);
         }
         catch (IllegalAccessException e) {
             e.printStackTrace();

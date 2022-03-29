@@ -37,10 +37,8 @@ public class MoPubMediationUtilsWithAdUnitsTest {
 
     private Context context;
 
-    @Mock
-    private AdSize mockAdSize;
-    @Mock
-    private BidLoader mMockBidLoader;
+    @Mock private AdSize mockAdSize;
+    @Mock private BidLoader mockBidLoader;
 
     @Before
     public void setUp() {
@@ -62,7 +60,7 @@ public class MoPubMediationUtilsWithAdUnitsTest {
 
         MoPubBannerMediationUtils bannerUtils = mock(MoPubBannerMediationUtils.class);
         OpenMediationBaseAdUnit adUnit = new OpenMediationBaseAdUnit(context, testConfigId, mockAdSize, bannerUtils);
-        WhiteBox.setInternalState(adUnit, "mBidLoader", mMockBidLoader);
+        WhiteBox.setInternalState(adUnit, "bidLoader", mockBidLoader);
 
         adUnit.fetchDemand(mockListener);
         adUnit.onResponseReceived(bidResponse);
@@ -86,7 +84,7 @@ public class MoPubMediationUtilsWithAdUnitsTest {
                 "mopub",
                 mediationUtils
         );
-        WhiteBox.setInternalState(adUnit, "mBidLoader", mMockBidLoader);
+        WhiteBox.setInternalState(adUnit, "bidLoader", mockBidLoader);
         adUnit.fetchDemand(mockListener);
         adUnit.onResponse(bidResponse);
 

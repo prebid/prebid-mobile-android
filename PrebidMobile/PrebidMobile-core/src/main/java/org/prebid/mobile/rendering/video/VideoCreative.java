@@ -48,15 +48,13 @@ public class VideoCreative extends VideoCreativeProtocol
     implements VideoCreativeViewListener, InterstitialManagerVideoDelegate {
     private static final String TAG = VideoCreative.class.getSimpleName();
 
-    @NonNull
-    private final VideoCreativeModel mModel;
+    @NonNull private final VideoCreativeModel model;
 
-    @VisibleForTesting
-    VideoCreativeView mVideoCreativeView;
+    @VisibleForTesting VideoCreativeView videoCreativeView;
 
-    private AsyncTask mVideoDownloadTask;
+    private AsyncTask videoDownloadTask;
 
-    private String mPreloadedVideoFilePath;
+    private String preloadedVideoFilePath;
 
     public VideoCreative(Context context,
                          @NonNull
@@ -64,9 +62,9 @@ public class VideoCreative extends VideoCreativeProtocol
     throws AdException {
         super(context, model, omAdSessionManager, interstitialManager);
 
-        mModel = model;
-        if (mInterstitialManager != null) {
-            mInterstitialManager.setInterstitialVideoDelegate(this);
+        this.model = model;
+        if (this.interstitialManager != null) {
+            this.interstitialManager.setInterstitialVideoDelegate(this);
         }
     }
 
@@ -75,27 +73,27 @@ public class VideoCreative extends VideoCreativeProtocol
         //Use URLConnection to download a video file.
         BaseNetworkTask.GetUrlParams params = new BaseNetworkTask.GetUrlParams();
 
-        params.url = mModel.getMediaUrl();
+        params.url = model.getMediaUrl();
         params.userAgent = AppInfoManager.getUserAgent();
         params.requestType = "GET";
         params.name = BaseNetworkTask.DOWNLOAD_TASK;
 
-        Context context = mContextReference.get();
+        Context context = contextReference.get();
         if (context != null) {
-            AdUnitConfiguration adConfiguration = mModel.getAdConfiguration();
+            AdUnitConfiguration adConfiguration = model.getAdConfiguration();
             String shortenedPath = LruController.getShortenedPath(params.url);
             File file = new File(context.getFilesDir(), shortenedPath);
             VideoDownloadTask videoDownloadTask = new VideoDownloadTask(context, file,
                                                                         new VideoCreativeVideoPreloadListener(this), adConfiguration);
-            mVideoDownloadTask = videoDownloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+            this.videoDownloadTask = videoDownloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
         }
     }
 
     @Override
     public void display() {
-        if (mVideoCreativeView != null) {
-            mVideoCreativeView.start(mModel.getAdConfiguration().getVideoInitialVolume());
-            mModel.trackPlayerStateChange(InternalPlayerState.NORMAL);
+        if (videoCreativeView != null) {
+            videoCreativeView.start(model.getAdConfiguration().getVideoInitialVolume());
+            model.trackPlayerStateChange(InternalPlayerState.NORMAL);
             startViewabilityTracker();
         }
     }
@@ -103,7 +101,7 @@ public class VideoCreative extends VideoCreativeProtocol
     @Override
     public void skip() {
         LogUtil.debug(TAG, "Track 'skip' event");
-        mModel.trackVideoEvent(VideoAdEvent.Event.AD_SKIP);
+        model.trackVideoEvent(VideoAdEvent.Event.AD_SKIP);
         // Send it to AdView
         getCreativeViewListener().creativeDidComplete(this);
     }
@@ -121,27 +119,27 @@ public class VideoCreative extends VideoCreativeProtocol
     @Override
     public void onFailure(AdException error) {
         // ad -> inline -> error
-        mModel.trackVideoEvent(VideoAdEvent.Event.AD_ERROR);
+        model.trackVideoEvent(VideoAdEvent.Event.AD_ERROR);
         getResolutionListener().creativeFailed(error);
     }
 
     @Override
     public void onEvent(VideoAdEvent.Event trackingEvent) {
-        mModel.trackVideoEvent(trackingEvent);
+        model.trackVideoEvent(trackingEvent);
 
         notifyCreativeViewListener(trackingEvent);
     }
 
     @Override
     public void trackAdLoaded() {
-        mModel.trackNonSkippableStandaloneVideoLoaded(false);
+        model.trackNonSkippableStandaloneVideoLoaded(false);
     }
 
     @Override
     public void onVolumeChanged(float volume) {
         notifyVolumeChanged(volume);
 
-        OmAdSessionManager omAdSessionManager = mWeakOmAdSessionManager.get();
+        OmAdSessionManager omAdSessionManager = weakOmAdSessionManager.get();
         if (omAdSessionManager == null) {
             LogUtil.error(TAG, "trackVolume failed, OmAdSessionManager is null");
             return;
@@ -151,17 +149,17 @@ public class VideoCreative extends VideoCreativeProtocol
 
     @Override
     public void onPlayerStateChanged(InternalPlayerState state) {
-        mModel.trackPlayerStateChange(state);
+        model.trackPlayerStateChange(state);
     }
 
     @Override
     public boolean isInterstitialClosed() {
-        return mModel.hasEndCard();
+        return model.hasEndCard();
     }
 
     @Override
     public long getMediaDuration() {
-        return mModel.getMediaDuration();
+        return model.getMediaDuration();
     }
 
     @Override
@@ -172,14 +170,14 @@ public class VideoCreative extends VideoCreativeProtocol
 
     @Override
     public void resume() {
-        if (mVideoCreativeView != null && mVideoCreativeView.hasVideoStarted()) {
-            mVideoCreativeView.resume();
+        if (videoCreativeView != null && videoCreativeView.hasVideoStarted()) {
+            videoCreativeView.resume();
         }
     }
 
     @Override
     public boolean isPlaying() {
-        return mVideoCreativeView != null && mVideoCreativeView.isPlaying();
+        return videoCreativeView != null && videoCreativeView.isPlaying();
     }
 
     @Override
@@ -190,38 +188,38 @@ public class VideoCreative extends VideoCreativeProtocol
 
     @Override
     public void pause() {
-        if (mVideoCreativeView != null && mVideoCreativeView.isPlaying()) {
-            mVideoCreativeView.pause();
+        if (videoCreativeView != null && videoCreativeView.isPlaying()) {
+            videoCreativeView.pause();
         }
     }
 
     @Override
     public void mute() {
-        if (mVideoCreativeView != null && mVideoCreativeView.getVolume() != 0) {
-            mVideoCreativeView.mute();
+        if (videoCreativeView != null && videoCreativeView.getVolume() != 0) {
+            videoCreativeView.mute();
         }
     }
 
     @Override
     public void unmute() {
-        if (mVideoCreativeView != null && mVideoCreativeView.getVolume() == 0) {
-            mVideoCreativeView.unMute();
+        if (videoCreativeView != null && videoCreativeView.getVolume() == 0) {
+            videoCreativeView.unMute();
         }
     }
 
     @Override
     public void createOmAdSession() {
-        OmAdSessionManager omAdSessionManager = mWeakOmAdSessionManager.get();
+        OmAdSessionManager omAdSessionManager = weakOmAdSessionManager.get();
         if (omAdSessionManager == null) {
             LogUtil.error(TAG, "Error creating AdSession. OmAdSessionManager is null");
             return;
         }
 
-        AdUnitConfiguration adConfiguration = mModel.getAdConfiguration();
+        AdUnitConfiguration adConfiguration = model.getAdConfiguration();
         ContentObject contentObject = adConfiguration.getAppContent();
         String contentUrl = null;
         if (contentObject != null) contentUrl = contentObject.getUrl();
-        omAdSessionManager.initVideoAdSession(mModel.getAdVerifications(), contentUrl);
+        omAdSessionManager.initVideoAdSession(model.getAdVerifications(), contentUrl);
         startOmSession();
     }
 
@@ -229,28 +227,27 @@ public class VideoCreative extends VideoCreativeProtocol
     public void startViewabilityTracker() {
         VisibilityTrackerOption visibilityTrackerOption = new VisibilityTrackerOption(NativeEventTracker.EventType.IMPRESSION);
 
-        mCreativeVisibilityTracker = new CreativeVisibilityTracker(getCreativeView(),
-                                                                   visibilityTrackerOption);
-        mCreativeVisibilityTracker.setVisibilityTrackerListener((result) -> {
+        creativeVisibilityTracker = new CreativeVisibilityTracker(getCreativeView(), visibilityTrackerOption);
+        creativeVisibilityTracker.setVisibilityTrackerListener((result) -> {
             if (result.isVisible() && result.shouldFireImpression()) {
-                mModel.trackVideoEvent(VideoAdEvent.Event.AD_IMPRESSION);
-                mCreativeVisibilityTracker.stopVisibilityCheck();
-                mCreativeVisibilityTracker = null;
+                model.trackVideoEvent(VideoAdEvent.Event.AD_IMPRESSION);
+                creativeVisibilityTracker.stopVisibilityCheck();
+                creativeVisibilityTracker = null;
             }
         });
-        mCreativeVisibilityTracker.startVisibilityCheck(mContextReference.get());
+        creativeVisibilityTracker.startVisibilityCheck(contextReference.get());
     }
 
     @Override
     public void destroy() {
         super.destroy();
 
-        if (mVideoCreativeView != null) {
-            mVideoCreativeView.destroy();
+        if (videoCreativeView != null) {
+            videoCreativeView.destroy();
         }
 
-        if (mVideoDownloadTask != null) {
-            mVideoDownloadTask.cancel(true);
+        if (videoDownloadTask != null) {
+            videoDownloadTask.cancel(true);
         }
     }
 
@@ -265,12 +262,12 @@ public class VideoCreative extends VideoCreativeProtocol
     }
 
     /**
-     * @return true if {@link #mPreloadedVideoFilePath} is not empty and file exists in filesDir, false otherwise.
+     * @return true if {@link #preloadedVideoFilePath} is not empty and file exists in filesDir, false otherwise.
      */
     @Override
     public boolean isResolved() {
-        if (mContextReference.get() != null && !TextUtils.isEmpty(mPreloadedVideoFilePath)) {
-            File file = new File(mContextReference.get().getFilesDir(), mPreloadedVideoFilePath);
+        if (contextReference.get() != null && !TextUtils.isEmpty(preloadedVideoFilePath)) {
+            File file = new File(contextReference.get().getFilesDir(), preloadedVideoFilePath);
             return file.exists();
         }
         return false;
@@ -283,8 +280,8 @@ public class VideoCreative extends VideoCreativeProtocol
 
     @Override
     public void onVideoInterstitialClosed() {
-        if (mVideoCreativeView != null) {
-            mVideoCreativeView.destroy();
+        if (videoCreativeView != null) {
+            videoCreativeView.destroy();
         }
         if (getCreativeViewListener() != null) {
             getCreativeViewListener().creativeDidComplete(this);
@@ -292,18 +289,18 @@ public class VideoCreative extends VideoCreativeProtocol
     }
 
     public long getVideoSkipOffset() {
-        return mModel.getSkipOffset();
+        return model.getSkipOffset();
     }
 
     @Override
     public void trackVideoEvent(VideoAdEvent.Event event) {
-        mModel.trackVideoEvent(event);
+        model.trackVideoEvent(event);
     }
 
     @Override
     @NonNull
     public VideoCreativeModel getCreativeModel() {
-        return mModel;
+        return model;
     }
 
     private void loadContinued() {
@@ -314,7 +311,7 @@ public class VideoCreative extends VideoCreativeProtocol
             getResolutionListener().creativeFailed(e);
             return;
         }
-        setCreativeView(mVideoCreativeView);
+        setCreativeView(videoCreativeView);
         //VideoView has been created. Send adDidLoad() to pubs
         onReadyForDisplay();
     }
@@ -323,61 +320,61 @@ public class VideoCreative extends VideoCreativeProtocol
     private void createCreativeView() throws AdException {
         Uri videoUri = null;
 
-        final Context context = mContextReference.get();
+        final Context context = contextReference.get();
         if (context != null) {
-            final AdUnitConfiguration adConfiguration = mModel.getAdConfiguration();
-            mVideoCreativeView = new VideoCreativeView(context, this);
-            mVideoCreativeView.setBroadcastId(adConfiguration.getBroadcastId());
+            final AdUnitConfiguration adConfiguration = model.getAdConfiguration();
+            videoCreativeView = new VideoCreativeView(context, this);
+            videoCreativeView.setBroadcastId(adConfiguration.getBroadcastId());
 
             // Get the preloaded video from device file storage
-            videoUri = Uri.parse(context.getFilesDir() + (mModel.getMediaUrl()));
+            videoUri = Uri.parse(context.getFilesDir() + (model.getMediaUrl()));
         }
 
         // Show call-to-action overlay right away if click through url is available & end card is not available
         showCallToAction();
 
-        mVideoCreativeView.setCallToActionUrl(mModel.getVastClickthroughUrl());
-        mVideoCreativeView.setVastVideoDuration(getMediaDuration());
-        mVideoCreativeView.setVideoUri(videoUri);
+        videoCreativeView.setCallToActionUrl(model.getVastClickthroughUrl());
+        videoCreativeView.setVastVideoDuration(getMediaDuration());
+        videoCreativeView.setVideoUri(videoUri);
     }
 
     private void startOmSession() {
-        OmAdSessionManager omAdSessionManager = mWeakOmAdSessionManager.get();
+        OmAdSessionManager omAdSessionManager = weakOmAdSessionManager.get();
 
         if (omAdSessionManager == null) {
             LogUtil.error(TAG, "startOmSession: Failed. omAdSessionManager is null");
             return;
         }
 
-        if (mVideoCreativeView == null) {
+        if (videoCreativeView == null) {
             LogUtil.error(TAG, "startOmSession: Failed. VideoCreativeView is null");
             return;
         }
 
-        startOmSession(omAdSessionManager, (View) mVideoCreativeView.getVideoPlayerView());
-        mModel.registerActiveOmAdSession(omAdSessionManager);
+        startOmSession(omAdSessionManager, (View) videoCreativeView.getVideoPlayerView());
+        model.registerActiveOmAdSession(omAdSessionManager);
     }
 
     private void trackVideoAdStart() {
-        if (mVideoCreativeView == null || mVideoCreativeView.getVideoPlayerView() == null) {
-            LogUtil.error(TAG, "trackVideoAdStart error. mVideoCreativeView or VideoPlayerView is null.");
+        if (videoCreativeView == null || videoCreativeView.getVideoPlayerView() == null) {
+            LogUtil.error(TAG, "trackVideoAdStart error. videoCreativeView or VideoPlayerView is null.");
             return;
         }
 
-        VideoPlayerView plugPlayVideoView = mVideoCreativeView.getVideoPlayerView();
+        VideoPlayerView plugPlayVideoView = videoCreativeView.getVideoPlayerView();
         int duration = plugPlayVideoView.getDuration();
         float volume = plugPlayVideoView.getVolume();
 
-        mModel.trackVideoAdStarted(duration, volume);
+        model.trackVideoAdStarted(duration, volume);
     }
 
     protected void complete() {
         LogUtil.debug(TAG, "track 'complete' event");
 
-        mModel.trackVideoEvent(VideoAdEvent.Event.AD_COMPLETE);
+        model.trackVideoEvent(VideoAdEvent.Event.AD_COMPLETE);
 
-        if (mVideoCreativeView != null) {
-            mVideoCreativeView.hideVolumeControls();
+        if (videoCreativeView != null) {
+            videoCreativeView.hideVolumeControls();
         }
 
         // Send it to AdView
@@ -385,10 +382,9 @@ public class VideoCreative extends VideoCreativeProtocol
     }
 
     protected void showCallToAction() {
-        if (!mModel.getAdConfiguration().isBuiltInVideo()
-            && Utils.isNotBlank(mModel.getVastClickthroughUrl())
-            && !mModel.hasEndCard()) {
-            mVideoCreativeView.showCallToAction();
+        if (!model.getAdConfiguration()
+                  .isBuiltInVideo() && Utils.isNotBlank(model.getVastClickthroughUrl()) && !model.hasEndCard()) {
+            videoCreativeView.showCallToAction();
         }
     }
 
@@ -400,7 +396,7 @@ public class VideoCreative extends VideoCreativeProtocol
                 trackVideoAdStart();
                 break;
             case AD_CLICK:
-                creativeViewListener.creativeWasClicked(this, mVideoCreativeView.getCallToActionUrl());
+                creativeViewListener.creativeWasClicked(this, videoCreativeView.getCallToActionUrl());
                 break;
             case AD_RESUME:
                 creativeViewListener.creativeResumed(this);
@@ -424,28 +420,28 @@ public class VideoCreative extends VideoCreativeProtocol
 
     private static class VideoCreativeVideoPreloadListener implements FileDownloadListener {
 
-        private WeakReference<VideoCreative> mWeakVideoCreative;
+        private WeakReference<VideoCreative> weakVideoCreative;
 
         VideoCreativeVideoPreloadListener(VideoCreative videoCreative) {
-            mWeakVideoCreative = new WeakReference<>(videoCreative);
+            weakVideoCreative = new WeakReference<>(videoCreative);
         }
 
         @Override
         public void onFileDownloaded(String shortenedPath) {
-            VideoCreative videoCreative = mWeakVideoCreative.get();
+            VideoCreative videoCreative = weakVideoCreative.get();
             if (videoCreative == null) {
                 LogUtil.warning(TAG, "VideoCreative is null");
                 return;
             }
 
-            videoCreative.mPreloadedVideoFilePath = shortenedPath;
-            videoCreative.mModel.setMediaUrl(shortenedPath);
+            videoCreative.preloadedVideoFilePath = shortenedPath;
+            videoCreative.model.setMediaUrl(shortenedPath);
             videoCreative.loadContinued();
         }
 
         @Override
         public void onFileDownloadError(String error) {
-            VideoCreative videoCreative = mWeakVideoCreative.get();
+            VideoCreative videoCreative = weakVideoCreative.get();
             if (videoCreative == null) {
                 LogUtil.warning(TAG, "VideoCreative is null");
                 return;

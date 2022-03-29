@@ -24,18 +24,23 @@ import org.prebid.mobile.core.R;
 
 
 public class VolumeControlView extends ImageView {
-    private VolumeState mVolumeState = VolumeState.MUTED;
-    private VolumeControlListener mVolumeControlListener;
 
-    public VolumeControlView(Context context, VolumeState initialState) {
+    private VolumeState volumeState = VolumeState.MUTED;
+    private VolumeControlListener volumeControlListener;
+
+    public VolumeControlView(
+            Context context,
+            VolumeState initialState
+    ) {
         super(context);
         updateVolumeState(initialState);
         init();
     }
 
-    public VolumeControlView(Context context,
-                             @Nullable
-                                 AttributeSet attrs) {
+    public VolumeControlView(
+            Context context,
+            @Nullable AttributeSet attrs
+    ) {
         super(context, attrs);
         init();
     }
@@ -48,7 +53,7 @@ public class VolumeControlView extends ImageView {
     }
 
     public void setVolumeControlListener(VolumeControlListener volumeControlListener) {
-        mVolumeControlListener = volumeControlListener;
+        this.volumeControlListener = volumeControlListener;
     }
 
     public void mute() {
@@ -70,22 +75,21 @@ public class VolumeControlView extends ImageView {
 
     private void init() {
         setOnClickListener(view -> {
-            if (mVolumeState == VolumeState.MUTED) {
+            if (volumeState == VolumeState.MUTED) {
                 unMute();
-            }
-            else {
+            } else {
                 mute();
             }
         });
     }
 
     private void updateVolumeState(VolumeState volumeState) {
-        mVolumeState = volumeState;
+        this.volumeState = volumeState;
 
-        updateIcon(mVolumeState);
+        updateIcon(this.volumeState);
 
-        if (mVolumeControlListener != null) {
-            mVolumeControlListener.onStateChange(mVolumeState);
+        if (volumeControlListener != null) {
+            volumeControlListener.onStateChange(this.volumeState);
         }
     }
 

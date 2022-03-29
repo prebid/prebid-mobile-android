@@ -37,64 +37,65 @@ import static org.prebid.mobile.rendering.views.browser.AdBrowserActivity.EXTRA_
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class AdBrowserActivityTest {
-    private AdBrowserActivity mAdBrowserActivity;
-    private Intent mIntent;
+
+    private AdBrowserActivity adBrowserActivity;
+    private Intent intent;
 
     @Before
     public void setUp() throws Exception {
-        mIntent = new Intent();
-        mIntent.putExtra(AdBrowserActivity.EXTRA_IS_VIDEO, false);
-        mIntent.putExtra(EXTRA_URL, "tel:123123");
-        mAdBrowserActivity = Robolectric.buildActivity(AdBrowserActivity.class, mIntent).create().get();
+        intent = new Intent();
+        intent.putExtra(AdBrowserActivity.EXTRA_IS_VIDEO, false);
+        intent.putExtra(EXTRA_URL, "tel:123123");
+        adBrowserActivity = Robolectric.buildActivity(AdBrowserActivity.class, intent).create().get();
     }
 
     @Test
     public void initTest() {
         //verify that activity creates without an Exception
-        mAdBrowserActivity = Robolectric.buildActivity(AdBrowserActivity.class, mIntent).create().get();
+        adBrowserActivity = Robolectric.buildActivity(AdBrowserActivity.class, intent).create().get();
 
-        mIntent.putExtra(AdBrowserActivity.EXTRA_IS_VIDEO, true);
-        mAdBrowserActivity = Robolectric.buildActivity(AdBrowserActivity.class, mIntent).create().get();
+        intent.putExtra(AdBrowserActivity.EXTRA_IS_VIDEO, true);
+        adBrowserActivity = Robolectric.buildActivity(AdBrowserActivity.class, intent).create().get();
     }
 
     @Test
     public void onKeyDownTest() throws IllegalAccessException {
         WebView mockWebView = mock(WebView.class);
-        WhiteBox.field(AdBrowserActivity.class, "mWebView").set(mAdBrowserActivity, mockWebView);
+        WhiteBox.field(AdBrowserActivity.class, "webView").set(adBrowserActivity, mockWebView);
 
-        mAdBrowserActivity.onKeyDown(KeyEvent.KEYCODE_BACK, new KeyEvent(0, 0));
+        adBrowserActivity.onKeyDown(KeyEvent.KEYCODE_BACK, new KeyEvent(0, 0));
         verify(mockWebView).goBack();
     }
 
     @Test
     public void onPauseTest() throws IllegalAccessException {
         VideoView mockView = mock(VideoView.class);
-        WhiteBox.field(AdBrowserActivity.class, "mVideoView").set(mAdBrowserActivity, mockView);
+        WhiteBox.field(AdBrowserActivity.class, "videoView").set(adBrowserActivity, mockView);
 
-        mAdBrowserActivity.onPause();
+        adBrowserActivity.onPause();
         verify(mockView).suspend();
     }
 
     @Test
     public void onResumeTest() throws IllegalAccessException {
         VideoView mockView = mock(VideoView.class);
-        WhiteBox.field(AdBrowserActivity.class, "mVideoView").set(mAdBrowserActivity, mockView);
+        WhiteBox.field(AdBrowserActivity.class, "videoView").set(adBrowserActivity, mockView);
 
-        mAdBrowserActivity.onResume();
+        adBrowserActivity.onResume();
         verify(mockView).resume();
     }
 
     @Test
     public void onDestroyTest() throws IllegalAccessException {
-        mIntent.putExtra(AdBrowserActivity.EXTRA_IS_VIDEO, true);
-        mAdBrowserActivity = Robolectric.buildActivity(AdBrowserActivity.class, mIntent).create().get();
+        intent.putExtra(AdBrowserActivity.EXTRA_IS_VIDEO, true);
+        adBrowserActivity = Robolectric.buildActivity(AdBrowserActivity.class, intent).create().get();
 
         WebView mockWebView = mock(WebView.class);
         VideoView mockVideoView = mock(VideoView.class);
-        WhiteBox.field(AdBrowserActivity.class, "mWebView").set(mAdBrowserActivity, mockWebView);
-        WhiteBox.field(AdBrowserActivity.class, "mVideoView").set(mAdBrowserActivity, mockVideoView);
+        WhiteBox.field(AdBrowserActivity.class, "webView").set(adBrowserActivity, mockWebView);
+        WhiteBox.field(AdBrowserActivity.class, "videoView").set(adBrowserActivity, mockVideoView);
 
-        mAdBrowserActivity.onDestroy();
+        adBrowserActivity.onDestroy();
         verify(mockWebView).destroy();
         verify(mockVideoView).suspend();
     }
@@ -109,9 +110,12 @@ public class AdBrowserActivityTest {
         InterstitialManager mockManager = mock(InterstitialManager.class);
         when(mockManager.getInterstitialDisplayDelegate()).thenReturn(null);
 
-        WhiteBox.field(AdBrowserActivity.class, "mShouldFireEvents").set(mAdBrowserActivity, true);
-        WhiteBox.field(AdBrowserActivity.class, "mWebView").set(mAdBrowserActivity, mockWebView);
-        BrowserControlsEventsListener eventsListener = ((BrowserControls) WhiteBox.field(AdBrowserActivity.class, "mBrowserControls").get(mAdBrowserActivity)).getBrowserControlsEventsListener();
+        WhiteBox.field(AdBrowserActivity.class, "shouldFireEvents").set(adBrowserActivity, true);
+        WhiteBox.field(AdBrowserActivity.class, "webView").set(adBrowserActivity, mockWebView);
+        BrowserControlsEventsListener eventsListener = ((BrowserControls) WhiteBox.field(
+                AdBrowserActivity.class,
+                "browserControls"
+        ).get(adBrowserActivity)).getBrowserControlsEventsListener();
 
         eventsListener.onRelaod();
         verify(mockWebView).reload();

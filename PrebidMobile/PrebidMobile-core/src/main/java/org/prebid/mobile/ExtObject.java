@@ -10,26 +10,26 @@ import java.util.Map;
 
 public class ExtObject implements Serializable {
 
-    private Map<String, Object> mExtValuesHashMap = new HashMap<>();
+    private Map<String, Object> extValuesHashMap = new HashMap<>();
 
     public JSONObject getJsonObject() {
-        return new JSONObject(mExtValuesHashMap);
+        return new JSONObject(extValuesHashMap);
     }
 
     public void put(String key, String value) {
-        mExtValuesHashMap.put(key, value);
+        extValuesHashMap.put(key, value);
     }
 
     public void put(String key, Integer value) {
-        mExtValuesHashMap.put(key, value);
+        extValuesHashMap.put(key, value);
     }
 
     public void put(String key, JSONObject value) {
-        mExtValuesHashMap.put(key, value);
+        extValuesHashMap.put(key, value);
     }
 
     public void put(String key, JSONArray value) {
-        mExtValuesHashMap.put(key, value);
+        extValuesHashMap.put(key, value);
     }
 
     public void put(JSONObject jsonObject) {
@@ -39,16 +39,16 @@ public class ExtObject implements Serializable {
         Iterator<String> jsonIterator = jsonObject.keys();
         while (jsonIterator.hasNext()) {
             String key = jsonIterator.next();
-            mExtValuesHashMap.put(key, jsonObject.opt(key));
+            extValuesHashMap.put(key, jsonObject.opt(key));
         }
     }
 
     public void remove(String key) {
-        mExtValuesHashMap.remove(key);
+        extValuesHashMap.remove(key);
     }
 
     public Map<String, Object> getMap() {
-        return mExtValuesHashMap;
+        return extValuesHashMap;
     }
 
     @Override
@@ -62,13 +62,11 @@ public class ExtObject implements Serializable {
 
         ExtObject ext = (ExtObject) o;
 
-        return mExtValuesHashMap != null
-                ? mExtValuesHashMap.equals(ext.mExtValuesHashMap)
-                : ext.mExtValuesHashMap == null;
+        return extValuesHashMap != null ? extValuesHashMap.equals(ext.extValuesHashMap) : ext.extValuesHashMap == null;
     }
 
     @Override
     public int hashCode() {
-        return mExtValuesHashMap != null ? mExtValuesHashMap.hashCode() : 0;
+        return extValuesHashMap != null ? extValuesHashMap.hashCode() : 0;
     }
 }

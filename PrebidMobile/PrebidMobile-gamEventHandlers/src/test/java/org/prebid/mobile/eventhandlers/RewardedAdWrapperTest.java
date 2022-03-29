@@ -50,10 +50,9 @@ import static org.prebid.mobile.eventhandlers.global.Constants.APP_EVENT;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class RewardedAdWrapperTest {
-    private RewardedAdWrapper mRewardedAdWrapper;
+    private RewardedAdWrapper rewardedAdWrapper;
 
-    @Mock
-    GamAdEventListener mMockListener;
+    @Mock GamAdEventListener mockListener;
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
@@ -64,13 +63,12 @@ public class RewardedAdWrapperTest {
         MockitoAnnotations.initMocks(this);
         Context context = Robolectric.buildActivity(Activity.class).create().get();
 
-        mRewardedAdWrapper = RewardedAdWrapper.newInstance(context, "123", mMockListener);
+        rewardedAdWrapper = RewardedAdWrapper.newInstance(context, "123", mockListener);
     }
 
     @Test
     public void newInstance_WithNullContext_NullValueReturned() {
-        RewardedAdWrapper rewardedAdWrapper = RewardedAdWrapper
-            .newInstance(null, "124", mMockListener);
+        RewardedAdWrapper rewardedAdWrapper = RewardedAdWrapper.newInstance(null, "124", mockListener);
 
         assertNull(rewardedAdWrapper);
     }
@@ -85,7 +83,7 @@ public class RewardedAdWrapperTest {
 
         rewardedAdLoadCallback.onAdLoaded(mockRewardedAd);
 
-        verify(mMockListener, times(1)).onEvent(eq(AdEvent.APP_EVENT_RECEIVED));
+        verify(mockListener, times(1)).onEvent(eq(AdEvent.APP_EVENT_RECEIVED));
     }
 
     @Test
@@ -97,14 +95,14 @@ public class RewardedAdWrapperTest {
 
         rewardedAdLoadCallback.onAdLoaded(mockRewardedAd);
 
-        verify(mMockListener, times(0)).onEvent(eq(AdEvent.APP_EVENT_RECEIVED));
+        verify(mockListener, times(0)).onEvent(eq(AdEvent.APP_EVENT_RECEIVED));
     }
 
     @Test
     public void onGamAdClosed_NotifyEventCloseListener() {
-        mRewardedAdWrapper.onAdDismissedFullScreenContent();
+        rewardedAdWrapper.onAdDismissedFullScreenContent();
 
-        verify(mMockListener, times(1)).onEvent(AdEvent.CLOSED);
+        verify(mockListener, times(1)).onEvent(AdEvent.CLOSED);
     }
 
     @Test
@@ -113,46 +111,46 @@ public class RewardedAdWrapperTest {
 
         for (int i = 0; i < wantedNumberOfInvocations; i++) {
             AdError adError = new AdError(i, "", "");
-            mRewardedAdWrapper.onAdFailedToShowFullScreenContent(adError);
+            rewardedAdWrapper.onAdFailedToShowFullScreenContent(adError);
         }
-        verify(mMockListener, times(wantedNumberOfInvocations)).onEvent(eq(AdEvent.FAILED));
+        verify(mockListener, times(wantedNumberOfInvocations)).onEvent(eq(AdEvent.FAILED));
     }
 
     @Test
     public void onGamAdOpened_NotifyBannerEventDisplayListener() {
-        mRewardedAdWrapper.onAdShowedFullScreenContent();
+        rewardedAdWrapper.onAdShowedFullScreenContent();
 
-        verify(mMockListener, times(1)).onEvent(AdEvent.DISPLAYED);
+        verify(mockListener, times(1)).onEvent(AdEvent.DISPLAYED);
     }
 
     @Test
     public void onUserEarnedReward_NotifyClosedAndRewardEarnedListeners() {
-        mRewardedAdWrapper.onUserEarnedReward(null);
+        rewardedAdWrapper.onUserEarnedReward(null);
 
-        verify(mMockListener, times(1)).onEvent(eq(AdEvent.REWARD_EARNED));
-        verify(mMockListener, times(1)).onEvent(eq(AdEvent.CLOSED));
+        verify(mockListener, times(1)).onEvent(eq(AdEvent.REWARD_EARNED));
+        verify(mockListener, times(1)).onEvent(eq(AdEvent.CLOSED));
     }
 
     @Test
     public void onGamAdLoadedAppEventExpected_ScheduleAppEventHandler() {
         getRewardedAdLoadCallback().onAdLoaded(mock(RewardedAd.class));
 
-        verify(mMockListener, times(1)).onEvent(eq(AdEvent.LOADED));
+        verify(mockListener, times(1)).onEvent(eq(AdEvent.LOADED));
     }
 
     @Test
     public void isLoaded_adIsNull_ReturnFalse() {
-        assertFalse(mRewardedAdWrapper.isLoaded());
+        assertFalse(rewardedAdWrapper.isLoaded());
     }
 
     @Test
     public void isLoaded_adIsNonNull_ReturnTrue() {
         getRewardedAdLoadCallback().onAdLoaded(mock(RewardedAd.class));
 
-        assertTrue(mRewardedAdWrapper.isLoaded());
+        assertTrue(rewardedAdWrapper.isLoaded());
     }
 
     private RewardedAdLoadCallback getRewardedAdLoadCallback() {
-        return WhiteBox.getInternalState(mRewardedAdWrapper, "mRewardedAdLoadCallback");
+        return WhiteBox.getInternalState(rewardedAdWrapper, "rewardedAdLoadCallback");
     }
 }

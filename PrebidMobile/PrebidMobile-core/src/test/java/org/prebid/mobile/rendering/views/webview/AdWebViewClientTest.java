@@ -33,34 +33,34 @@ public class AdWebViewClientTest {
 
     public static final String TEST_URL = "test";
 
-    private AdWebViewClient mAdWebViewClient;
-    private AdWebViewClient.AdAssetsLoadedListener mAdAssetLoadListener;
+    private AdWebViewClient adWebViewClient;
+    private AdWebViewClient.AdAssetsLoadedListener adAssetLoadListener;
 
     @Before
     public void setup() {
-        mAdAssetLoadListener = mock(AdWebViewClient.AdAssetsLoadedListener.class);
+        adAssetLoadListener = mock(AdWebViewClient.AdAssetsLoadedListener.class);
 
-        mAdWebViewClient = new AdWebViewClient(mAdAssetLoadListener);
+        adWebViewClient = new AdWebViewClient(adAssetLoadListener);
     }
 
     @Test
     public void onPageStartedLoadingTest() {
         WebView mockWebView = mock(WebView.class);
 
-        mAdWebViewClient.onPageStarted(mockWebView, TEST_URL, null);
+        adWebViewClient.onPageStarted(mockWebView, TEST_URL, null);
 
-        verify(mAdAssetLoadListener).startLoadingAssets();
-        assertEquals(false, mAdWebViewClient.isLoadingFinished());
+        verify(adAssetLoadListener).startLoadingAssets();
+        assertEquals(false, adWebViewClient.isLoadingFinished());
     }
 
     @Test
     public void onPageFinishedTest() {
         WebView mockWebView = mock(WebView.class);
 
-        mAdWebViewClient.onPageFinished(mockWebView, TEST_URL);
+        adWebViewClient.onPageFinished(mockWebView, TEST_URL);
 
-        verify(mAdAssetLoadListener).adAssetsLoaded();
-        assertEquals(true, mAdWebViewClient.isLoadingFinished());
+        verify(adAssetLoadListener).adAssetsLoaded();
+        assertEquals(true, adWebViewClient.isLoadingFinished());
     }
 
     @Test
@@ -73,7 +73,7 @@ public class AdWebViewClientTest {
         when(mockWebView.getHitTestResult()).thenReturn(mockHitTestResult);
         when(mockHitTestResult.getType()).thenReturn(WebView.HitTestResult.SRC_ANCHOR_TYPE);
 
-        mAdWebViewClient.onLoadResource(mockWebView, TEST_URL);
+        adWebViewClient.onLoadResource(mockWebView, TEST_URL);
 
         verify(mockWebView).stopLoading();
         verify(mockWebView).loadUrl(TEST_URL);
@@ -84,7 +84,7 @@ public class AdWebViewClientTest {
         WebViewBase mockWebView = mock(WebViewBase.class);
         when(mockWebView.isClicked()).thenReturn(false);
 
-        boolean returnValue = mAdWebViewClient.shouldOverrideUrlLoading(mockWebView, TEST_URL);
+        boolean returnValue = adWebViewClient.shouldOverrideUrlLoading(mockWebView, TEST_URL);
 
         // Get the rendered HTML
         verify(mockWebView).loadUrl("javascript:window.HtmlViewer.showHTML" + "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');");
@@ -92,12 +92,12 @@ public class AdWebViewClientTest {
         assertEquals(true, returnValue);
 
         MraidEventsManager.MraidListener mockListener = mock(MraidEventsManager.MraidListener.class);
-        mockWebView.mMraidListener = mockListener;
+        mockWebView.mraidListener = mockListener;
         when(mockWebView.getMRAIDInterface()).thenReturn(mock(BaseJSInterface.class));
         when(mockWebView.getPreloadedListener()).thenReturn(mock(PreloadManager.PreloadedListener.class));
         when(mockWebView.canHandleClick()).thenReturn(true);
         when(mockWebView.isClicked()).thenReturn(true);
-        returnValue = mAdWebViewClient.shouldOverrideUrlLoading(mockWebView, TEST_URL);
+        returnValue = adWebViewClient.shouldOverrideUrlLoading(mockWebView, TEST_URL);
         // Get the rendered HTML
         verify(mockListener).openExternalLink(TEST_URL);
         assertEquals(true, returnValue);

@@ -21,21 +21,21 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
-public class AdSystem extends VASTParserBase
-{
-    private String mVersion;
-    private String mValue;
+public class AdSystem extends VASTParserBase {
+
+    private String version;
+    private String value;
 
     public AdSystem(XmlPullParser p) throws XmlPullParserException, IOException {
-        mVersion = p.getAttributeValue(null, "version");
-        mValue = readText(p);
+        version = p.getAttributeValue(null, "version");
+        value = readText(p);
     }
 
     public String getVersion() {
-        return mVersion;
+        return version;
     }
 
     public String getValue() {
-        return mValue;
+        return value;
     }
 }

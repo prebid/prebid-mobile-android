@@ -29,7 +29,7 @@ import org.prebid.mobile.rendering.views.webview.mraid.JsExecutor;
 public class WebViewBanner extends WebViewBase {
 
     private static final String TAG = WebViewBanner.class.getSimpleName();
-    private MraidEvent mMraidEvent;
+    private MraidEvent mraidEvent;
 
     public WebViewBanner(Context context, String html, int width, int height, PreloadManager.PreloadedListener preloadedListener, MraidEventsManager.MraidListener mraidListener) {
         super(context, html, width, height, preloadedListener, mraidListener);
@@ -50,11 +50,11 @@ public class WebViewBanner extends WebViewBase {
     }
 
     public MraidEvent getMraidEvent() {
-        return mMraidEvent;
+        return mraidEvent;
     }
 
     public void setMraidEvent(MraidEvent event) {
-        mMraidEvent = event;
+        mraidEvent = event;
     }
 
     public void setMRAIDInterface() {

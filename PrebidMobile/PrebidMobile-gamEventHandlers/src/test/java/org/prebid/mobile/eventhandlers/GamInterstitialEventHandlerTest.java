@@ -49,12 +49,10 @@ import static org.mockito.Mockito.when;
 public class GamInterstitialEventHandlerTest {
     private static final String GAM_AD_UNIT_ID = "12345678";
 
-    private GamInterstitialEventHandler mEventHandler;
+    private GamInterstitialEventHandler eventHandler;
 
-    @Mock
-    private InterstitialEventListener mMockEventListener;
-    @Mock
-    private Handler mMockAppEventHandler;
+    @Mock private InterstitialEventListener mockEventListener;
+    @Mock private Handler mockAppEventHandler;
 
     @Before
     public void setup() {
@@ -62,25 +60,25 @@ public class GamInterstitialEventHandlerTest {
 
         Activity activity = Robolectric.buildActivity(Activity.class).get();
 
-        mEventHandler = new GamInterstitialEventHandler(activity, GAM_AD_UNIT_ID);
-        mEventHandler.setInterstitialEventListener(mMockEventListener);
+        eventHandler = new GamInterstitialEventHandler(activity, GAM_AD_UNIT_ID);
+        eventHandler.setInterstitialEventListener(mockEventListener);
     }
 
     @Test
     public void onAppEventWithValidNameAndExpectedAppEvent_HandleAppEvent() {
         changeExpectingAppEventStatus(true);
 
-        mEventHandler.onEvent(AdEvent.APP_EVENT_RECEIVED);
+        eventHandler.onEvent(AdEvent.APP_EVENT_RECEIVED);
 
-        verify(mMockEventListener, times(1)).onPrebidSdkWin();
+        verify(mockEventListener, times(1)).onPrebidSdkWin();
         assertFalse(getExpectingAppEventStatus());
     }
 
     @Test
     public void onGamAdClosed_NotifyEventCloseListener() {
-        mEventHandler.onEvent(AdEvent.CLOSED);
+        eventHandler.onEvent(AdEvent.CLOSED);
 
-        verify(mMockEventListener, times(1)).onAdClosed();
+        verify(mockEventListener, times(1)).onAdClosed();
     }
 
     @Test
@@ -90,55 +88,54 @@ public class GamInterstitialEventHandlerTest {
         for (int i = 0; i < wantedNumberOfInvocations; i++) {
             final AdEvent adEvent = AdEvent.FAILED;
             adEvent.setErrorCode(i);
-            mEventHandler.onEvent(adEvent);
+            eventHandler.onEvent(adEvent);
         }
-        verify(mMockEventListener, times(wantedNumberOfInvocations)).onAdFailed(any(AdException.class));
+        verify(mockEventListener, times(wantedNumberOfInvocations)).onAdFailed(any(AdException.class));
     }
 
     @Test
     public void onGamAdOpened_NotifyBannerEventDisplayListener() {
-        mEventHandler.onEvent(AdEvent.DISPLAYED);
+        eventHandler.onEvent(AdEvent.DISPLAYED);
 
-        verify(mMockEventListener, times(1)).onAdDisplayed();
+        verify(mockEventListener, times(1)).onAdDisplayed();
     }
 
     @Test
     public void onGamAdLoadedAppEventExpected_ScheduleAppEventHandler() {
         changeExpectingAppEventStatus(true);
 
-        mEventHandler.onEvent(AdEvent.LOADED);
+        eventHandler.onEvent(AdEvent.LOADED);
 
-        assertNotNull(WhiteBox.getInternalState(mEventHandler, "mAppEventHandler"));
+        assertNotNull(WhiteBox.getInternalState(eventHandler, "appEventHandler"));
     }
 
     @Test
     public void onGamAdLoadedAppEventNotExpectedAndRequestInterstitialNotNull_NotifyEventListenerOnAdServerWin()
     throws Exception {
         PublisherInterstitialAdWrapper publisherInterstitialAd = mock(PublisherInterstitialAdWrapper.class);
-        WhiteBox.field(GamInterstitialEventHandler.class, "mRequestInterstitial")
-                .set(mEventHandler, publisherInterstitialAd);
+        WhiteBox.field(GamInterstitialEventHandler.class, "requestInterstitial")
+                .set(eventHandler, publisherInterstitialAd);
 
-        mEventHandler.onEvent(AdEvent.LOADED);
+        eventHandler.onEvent(AdEvent.LOADED);
 
-        verify(mMockEventListener, times(1)).onAdServerWin();
+        verify(mockEventListener, times(1)).onAdServerWin();
     }
 
     @Test
     public void onAppEventTimeout_NotifyBannerEventOnAdServerWin() throws Exception {
-        WhiteBox.method(GamInterstitialEventHandler.class, "handleAppEventTimeout").invoke(mEventHandler);
+        WhiteBox.method(GamInterstitialEventHandler.class, "handleAppEventTimeout").invoke(eventHandler);
 
-        verify(mMockEventListener, times(1)).onAdServerWin();
+        verify(mockEventListener, times(1)).onAdServerWin();
     }
 
     @Test
     public void destroy_CancelTimer() throws IllegalAccessException {
         // by default apEventHandler is null if not scheduled
-        WhiteBox.field(GamInterstitialEventHandler.class, "mAppEventHandler")
-                .set(mEventHandler, mMockAppEventHandler);
+        WhiteBox.field(GamInterstitialEventHandler.class, "appEventHandler").set(eventHandler, mockAppEventHandler);
 
-        mEventHandler.destroy();
+        eventHandler.destroy();
 
-        verify(mMockAppEventHandler, times(1)).removeCallbacksAndMessages(null);
+        verify(mockAppEventHandler, times(1)).removeCallbacksAndMessages(null);
     }
 
     @Test
@@ -149,29 +146,29 @@ public class GamInterstitialEventHandlerTest {
 
         when(mockBid.getPrebid()).thenReturn(mockPrebid);
         when(mockBid.getPrice()).thenReturn(0.2);
-        mEventHandler.requestAdWithBid(mockBid);
+        eventHandler.requestAdWithBid(mockBid);
         assertTrue(getExpectingAppEventStatus());
 
         when(mockBid.getPrice()).thenReturn(0.0);
-        mEventHandler.requestAdWithBid(mockBid);
+        eventHandler.requestAdWithBid(mockBid);
         assertFalse(getExpectingAppEventStatus());
 
-        mEventHandler.requestAdWithBid(null);
+        eventHandler.requestAdWithBid(null);
         assertFalse(getExpectingAppEventStatus());
     }
 
     @Test
     public void showWhenEmbeddedInterstitialIsNull_NotifyEventErrorListener() {
-        mEventHandler.show();
+        eventHandler.show();
 
-        verify(mMockEventListener).onAdFailed(any(AdException.class));
+        verify(mockEventListener).onAdFailed(any(AdException.class));
     }
 
     private void changeExpectingAppEventStatus(boolean status) {
-        WhiteBox.setInternalState(mEventHandler, "mIsExpectingAppEvent", status);
+        WhiteBox.setInternalState(eventHandler, "isExpectingAppEvent", status);
     }
 
     private boolean getExpectingAppEventStatus() {
-        return WhiteBox.getInternalState(mEventHandler, "mIsExpectingAppEvent");
+        return WhiteBox.getInternalState(eventHandler, "isExpectingAppEvent");
     }
 }

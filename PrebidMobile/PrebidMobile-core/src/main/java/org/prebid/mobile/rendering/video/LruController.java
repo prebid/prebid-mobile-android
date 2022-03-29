@@ -32,20 +32,20 @@ public class LruController {
     private final static String CACHE_POSTFIX = "_cache";
 
     private static final int MAX_VIDEO_ENTRIES = 30;
-    private final static LruCache<String, byte[]> mLruCache = new LruCache<>(MAX_VIDEO_ENTRIES);
+    private final static LruCache<String, byte[]> lruCache = new LruCache<>(MAX_VIDEO_ENTRIES);
 
     public static void putVideoCache(String videoPath, byte[] data) {
         if (getVideoCache(videoPath) == null) {
-            mLruCache.put(videoPath, data);
+            lruCache.put(videoPath, data);
         }
     }
 
     public static byte[] getVideoCache(String videoPath) {
-        return mLruCache.get(videoPath);
+        return lruCache.get(videoPath);
     }
 
     public static boolean isAlreadyCached(String videoPath) {
-        return mLruCache.get(videoPath) != null;
+        return lruCache.get(videoPath) != null;
     }
 
     public static boolean saveCacheToFile(
@@ -61,7 +61,7 @@ public class LruController {
                 OutputStream os = new FileOutputStream(file);
                 os.write(data);
                 os.close();
-                mLruCache.remove(videoPath);
+                lruCache.remove(videoPath);
                 LogUtil.debug(TAG, "Cache saved to file");
                 return true;
             }

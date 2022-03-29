@@ -27,12 +27,12 @@ public class CreativeExtensions extends VASTParserBase
     private final static String VAST_CREATIVEEXTENSIONS = "CreativeExtensions";
     private final static String VAST_CREATIVEEXTENSION = "CreativeExtension";
 
-    private ArrayList<CreativeExtension> mCreativeExtenstions;
+    private ArrayList<CreativeExtension> creativeExtenstions;
 
 	public CreativeExtensions(XmlPullParser p) throws XmlPullParserException, IOException
 	{
 
-        mCreativeExtenstions = new ArrayList<>();
+		creativeExtenstions = new ArrayList<>();
 
 		p.require(XmlPullParser.START_TAG, null, VAST_CREATIVEEXTENSIONS);
 		while (p.next() != XmlPullParser.END_TAG)
@@ -45,7 +45,7 @@ public class CreativeExtensions extends VASTParserBase
 			if (name != null && name.equals(VAST_CREATIVEEXTENSION))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_CREATIVEEXTENSION);
-                mCreativeExtenstions.add(new CreativeExtension(p));
+				creativeExtenstions.add(new CreativeExtension(p));
 
 				p.require(XmlPullParser.END_TAG, null, VAST_CREATIVEEXTENSION);
 
@@ -59,6 +59,6 @@ public class CreativeExtensions extends VASTParserBase
 	}
 
     public ArrayList<CreativeExtension> getCreativeExtenstions() {
-        return mCreativeExtenstions;
+		return creativeExtenstions;
     }
 }

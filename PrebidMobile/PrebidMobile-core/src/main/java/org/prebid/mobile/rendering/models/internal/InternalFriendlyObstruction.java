@@ -21,26 +21,31 @@ import android.view.View;
 import java.lang.ref.WeakReference;
 
 public class InternalFriendlyObstruction {
-    private WeakReference<View> mViewWeakReference;
-    private InternalFriendlyObstruction.Purpose mFriendlyObstructionPurpose;
-    private String mDetailedDescription;
 
-    public InternalFriendlyObstruction(View view, InternalFriendlyObstruction.Purpose friendlyObstructionPurpose, String detailedDescription) {
-        mViewWeakReference = new WeakReference<>(view);
-        mFriendlyObstructionPurpose = friendlyObstructionPurpose;
-        mDetailedDescription = detailedDescription;
+    private WeakReference<View> viewWeakReference;
+    private InternalFriendlyObstruction.Purpose friendlyObstructionPurpose;
+    private String detailedDescription;
+
+    public InternalFriendlyObstruction(
+            View view,
+            InternalFriendlyObstruction.Purpose friendlyObstructionPurpose,
+            String detailedDescription
+    ) {
+        viewWeakReference = new WeakReference<>(view);
+        this.friendlyObstructionPurpose = friendlyObstructionPurpose;
+        this.detailedDescription = detailedDescription;
     }
 
     public View getView() {
-        return mViewWeakReference.get();
+        return viewWeakReference.get();
     }
 
     public InternalFriendlyObstruction.Purpose getPurpose() {
-        return mFriendlyObstructionPurpose;
+        return friendlyObstructionPurpose;
     }
 
     public String getDetailedDescription() {
-        return mDetailedDescription;
+        return detailedDescription;
     }
 
     public enum Purpose {

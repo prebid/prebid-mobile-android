@@ -36,29 +36,35 @@ import static org.mockito.Mockito.mock;
 @Config(sdk = 19)
 public class WebViewBannerTest {
 
-    private Context mContext;
-    private PreloadManager.PreloadedListener mMockPreloadListener;
-    private MraidEventsManager.MraidListener mMockMraidListener;
-    private String mAdHTML;
+    private Context context;
+    private PreloadManager.PreloadedListener mockPreloadListener;
+    private MraidEventsManager.MraidListener mockMraidListener;
+    private String adHTML;
 
     @Before
     public void setup() throws IOException {
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
-        ManagersResolver.getInstance().prepare(mContext);
+        context = Robolectric.buildActivity(Activity.class).create().get();
+        ManagersResolver.getInstance().prepare(context);
 
-        mMockPreloadListener = mock(PreloadManager.PreloadedListener.class);
+        mockPreloadListener = mock(PreloadManager.PreloadedListener.class);
 
-        mMockMraidListener = mock(MraidEventsManager.MraidListener.class);
+        mockMraidListener = mock(MraidEventsManager.MraidListener.class);
 
-        mAdHTML = ResourceUtils.convertResourceToString("ad_not_mraid_html.txt");
+        adHTML = ResourceUtils.convertResourceToString("ad_not_mraid_html.txt");
     }
 
     @Test
-    public void initTest(){
-        WebViewBanner webViewBanner = new WebViewBanner(mContext, mAdHTML, 100, 200,  mMockPreloadListener, mMockMraidListener);
+    public void initTest() {
+        WebViewBanner webViewBanner = new WebViewBanner(context,
+                adHTML,
+                100,
+                200,
+                mockPreloadListener,
+                mockMraidListener
+        );
         assertNotNull(webViewBanner.getMRAIDInterface());
 
-        webViewBanner = new WebViewBanner(mContext, mock(PrebidWebViewBase.class), mMockMraidListener);
+        webViewBanner = new WebViewBanner(context, mock(PrebidWebViewBase.class), mockMraidListener);
         assertNotNull(webViewBanner.getMRAIDInterface());
     }
 }

@@ -30,10 +30,10 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int VIEW_TYPE_PREBID_SERVER_SETTINGS = 3;
     private static final int VIEW_TYPE_SUBMIT = 4;
 
-    private final List<SettingsItem> mItems;
+    private final List<SettingsItem> items;
 
     public SettingsAdapter(Context context) {
-        mItems = new ArrayList<>();
+        items = new ArrayList<>();
 
         setupSettings(context);
     }
@@ -57,7 +57,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        SettingsItem item = mItems.get(position);
+        SettingsItem item = items.get(position);
         if (item instanceof GeneralSettings) {
             return VIEW_TYPE_GENERAL_SETTINGS;
         } else if (item instanceof AdServerSettings) {
@@ -79,13 +79,13 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return items.size();
     }
 
     private void setupSettings(Context context) {
-        mItems.add(SettingsManager.getInstance(context).getGeneralSettings());
-        mItems.add(SettingsManager.getInstance(context).getAdServerSettings());
-        mItems.add(SettingsManager.getInstance(context).getPrebidServerSettings());
-        mItems.add(new SubmitSettings());
+        items.add(SettingsManager.getInstance(context).getGeneralSettings());
+        items.add(SettingsManager.getInstance(context).getAdServerSettings());
+        items.add(SettingsManager.getInstance(context).getPrebidServerSettings());
+        items.add(new SubmitSettings());
     }
 }

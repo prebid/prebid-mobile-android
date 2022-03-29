@@ -34,26 +34,30 @@ public class Transaction {
 
     public static final String TAG = Transaction.class.getSimpleName();
 
-    private List<CreativeFactory> mCreativeFactories;
-    private Iterator<CreativeFactory> mCreativeFactoryIterator;
+    private List<CreativeFactory> creativeFactories;
+    private Iterator<CreativeFactory> creativeFactoryIterator;
 
-    private List<CreativeModel> mCreativeModels;
+    private List<CreativeModel> creativeModels;
 
-    private WeakReference<Context> mContextReference;
-    private Listener mListener;
-    private OmAdSessionManager mOmAdSessionManager;
-    private final InterstitialManager mInterstitialManager;
+    private WeakReference<Context> contextReference;
+    private Listener listener;
+    private OmAdSessionManager omAdSessionManager;
+    private final InterstitialManager interstitialManager;
 
-    private String mTransactionState;
-    private String mLoaderIdentifier;
+    private String transactionState;
+    private String loaderIdentifier;
 
-    private long mTransactionCreateTime;
+    private long transactionCreateTime;
 
     public interface Listener {
 
         void onTransactionSuccess(Transaction transaction);
 
-        void onTransactionFailure(AdException e, String identifier);
+        void onTransactionFailure(
+                AdException e,
+                String identifier
+        );
+
     }
 
     private Transaction(Context context, List<CreativeModel> creativeModels,
@@ -73,16 +77,16 @@ public class Transaction {
             throw new AdException(AdException.INTERNAL_ERROR, "Transaction - Listener is null");
         }
 
-        mContextReference = new WeakReference<>(context);
-        mCreativeModels = creativeModels;
+        contextReference = new WeakReference<>(context);
+        this.creativeModels = creativeModels;
         checkForBuiltInVideo();
-        mTransactionState = transactionState;
-        mListener = listener;
-        mInterstitialManager = interstitialManager;
+        this.transactionState = transactionState;
+        this.listener = listener;
+        this.interstitialManager = interstitialManager;
 
-        mOmAdSessionManager = OmAdSessionManager.createNewInstance(JSLibraryManager.getInstance(context));
+        omAdSessionManager = OmAdSessionManager.createNewInstance(JSLibraryManager.getInstance(context));
 
-        mCreativeFactories = new ArrayList<>();
+        creativeFactories = new ArrayList<>();
     }
 
     public static Transaction createTransaction(Context context, CreativeModelsMaker.Result result,
@@ -102,11 +106,11 @@ public class Transaction {
 
     private void checkForBuiltInVideo() {
         try {
-            if (mCreativeModels != null && mCreativeModels.size() > 1) {
-                CreativeModel creativeModel = mCreativeModels.get(0);
+            if (creativeModels != null && creativeModels.size() > 1) {
+                CreativeModel creativeModel = creativeModels.get(0);
                 boolean isBannerVideo = creativeModel.getAdConfiguration().isBuiltInVideo();
                 if (isBannerVideo) {
-                    CreativeModel possibleEndCard = mCreativeModels.get(1);
+                    CreativeModel possibleEndCard = creativeModels.get(1);
                     possibleEndCard.getAdConfiguration().setBuiltInVideo(true);
                 }
             }
@@ -117,78 +121,80 @@ public class Transaction {
     }
 
     public String getTransactionState() {
-        return mTransactionState;
+        return transactionState;
     }
 
     public void startCreativeFactories() {
         try {
             // Initialize list of CreativeFactories
-            mCreativeFactories.clear();
-            for (CreativeModel creativeModel : mCreativeModels) {
-                CreativeFactory creativeFactory = new CreativeFactory(mContextReference.get(), creativeModel,
-                                                                      new CreativeFactoryListener(this),
-                                                                      mOmAdSessionManager,
-                                                                      mInterstitialManager);
-                mCreativeFactories.add(creativeFactory);
+            creativeFactories.clear();
+            for (CreativeModel creativeModel : creativeModels) {
+                CreativeFactory creativeFactory = new CreativeFactory(contextReference.get(),
+                        creativeModel,
+                        new CreativeFactoryListener(this),
+                        omAdSessionManager,
+                        interstitialManager
+                );
+                creativeFactories.add(creativeFactory);
             }
 
             // Start first CreativeFactory, if any
             // On success, the CreativeFactoryListener will start the next CreativeFactory
-            mCreativeFactoryIterator = mCreativeFactories.iterator();
+            creativeFactoryIterator = creativeFactories.iterator();
             startNextCreativeFactory();
         }
         catch (AdException e) {
-            mListener.onTransactionFailure(e, mLoaderIdentifier);
+            listener.onTransactionFailure(e, loaderIdentifier);
         }
     }
 
     public void destroy() {
         stopOmAdSession();
 
-        for (CreativeFactory creativeFactory : mCreativeFactories) {
+        for (CreativeFactory creativeFactory : creativeFactories) {
             creativeFactory.destroy();
         }
     }
 
     private boolean startNextCreativeFactory() {
         // No CreativeFactory to start
-        if (mCreativeFactoryIterator == null || !mCreativeFactoryIterator.hasNext()) {
+        if (creativeFactoryIterator == null || !creativeFactoryIterator.hasNext()) {
             return false;
         }
 
-        CreativeFactory creativeFactory = mCreativeFactoryIterator.next();
+        CreativeFactory creativeFactory = creativeFactoryIterator.next();
         creativeFactory.start();
         return true;
     }
 
     private void stopOmAdSession() {
-        if (mOmAdSessionManager == null) {
+        if (omAdSessionManager == null) {
             LogUtil.error(TAG, "Failed to stopOmAdSession. OmAdSessionManager is null");
             return;
         }
 
-        mOmAdSessionManager.stopAdSession();
-        mOmAdSessionManager = null;
+        omAdSessionManager.stopAdSession();
+        omAdSessionManager = null;
     }
 
     public List<CreativeFactory> getCreativeFactories() {
-        return mCreativeFactories;
+        return creativeFactories;
     }
 
     public String getLoaderIdentifier() {
-        return mLoaderIdentifier;
+        return loaderIdentifier;
     }
 
     public void setLoaderIdentifier(String loaderIdentifier) {
-        mLoaderIdentifier = loaderIdentifier;
+        this.loaderIdentifier = loaderIdentifier;
     }
 
     public long getTransactionCreateTime() {
-        return mTransactionCreateTime;
+        return transactionCreateTime;
     }
 
     public void setTransactionCreateTime(long transactionCreateTime) {
-        mTransactionCreateTime = transactionCreateTime;
+        this.transactionCreateTime = transactionCreateTime;
     }
 
     /**
@@ -197,15 +203,15 @@ public class Transaction {
      */
     public static class CreativeFactoryListener implements CreativeFactory.Listener {
 
-        private WeakReference<Transaction> mWeakTransaction;
+        private WeakReference<Transaction> weakTransaction;
 
         CreativeFactoryListener(Transaction transaction) {
-            mWeakTransaction = new WeakReference<>(transaction);
+            weakTransaction = new WeakReference<>(transaction);
         }
 
         @Override
         public void onSuccess() {
-            Transaction transaction = mWeakTransaction.get();
+            Transaction transaction = weakTransaction.get();
             if (transaction == null) {
                 LogUtil.warning(TAG, "CreativeMaker is null");
                 return;
@@ -217,18 +223,18 @@ public class Transaction {
             }
 
             // If all CreativeFactories succeeded, return success
-            transaction.mListener.onTransactionSuccess(transaction);
+            transaction.listener.onTransactionSuccess(transaction);
         }
 
         @Override
         public void onFailure(AdException e) {
-            Transaction transaction = mWeakTransaction.get();
+            Transaction transaction = weakTransaction.get();
             if (transaction == null) {
                 LogUtil.warning(TAG, "CreativeMaker is null");
                 return;
             }
 
-            transaction.mListener.onTransactionFailure(e, transaction.getLoaderIdentifier());
+            transaction.listener.onTransactionFailure(e, transaction.getLoaderIdentifier());
             transaction.destroy();
         }
     }

@@ -26,39 +26,39 @@ import java.util.List;
 public class Seatbid {
 
     // Array of 1+ Bid objects each related to an impression.
-    private List<Bid> mBids = new ArrayList<>();
+    private List<Bid> bids = new ArrayList<>();
 
     // ID of the buyer seat (e.g., advertiser, agency) on whose behalf
     // this bid is made
-    private String mSeat;
+    private String seat;
 
     // 0 = impressions can be won individually; 1 = impressions must
     // be won or lost as a group.
-    private int mGroup;
+    private int group;
 
     // Placeholder for bidder-specific extensions to OpenRTB.
-    private Ext mExt;
+    private Ext ext;
 
     protected Seatbid() {
     }
 
     public List<Bid> getBids() {
-        return mBids;
+        return bids;
     }
 
     public String getSeat() {
-        return mSeat;
+        return seat;
     }
 
     public int getGroup() {
-        return mGroup;
+        return group;
     }
 
     public Ext getExt() {
-        if (mExt == null) {
-            mExt = new Ext();
+        if (ext == null) {
+            ext = new Ext();
         }
-        return mExt;
+        return ext;
     }
 
     public static Seatbid fromJSONObject(JSONObject jsonObject) {
@@ -72,15 +72,15 @@ public class Seatbid {
             for (int i = 0; i < jsonArray.length(); i++) {
                 Bid bid = Bid.fromJSONObject(jsonArray.optJSONObject(i));
                 if (bid != null) {
-                    seatbid.mBids.add(bid);
+                    seatbid.bids.add(bid);
                 }
             }
         }
-        seatbid.mSeat = jsonObject.optString("seat");
-        seatbid.mGroup = jsonObject.optInt("group", -1);
-        seatbid.mExt = new Ext();
+        seatbid.seat = jsonObject.optString("seat");
+        seatbid.group = jsonObject.optInt("group", -1);
+        seatbid.ext = new Ext();
         if (jsonObject.has("ext")) {
-            seatbid.mExt.put(jsonObject.optJSONObject("ext"));
+            seatbid.ext.put(jsonObject.optJSONObject("ext"));
         }
 
         return seatbid;

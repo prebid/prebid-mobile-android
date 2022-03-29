@@ -27,19 +27,23 @@ import java.net.URLEncoder;
 import java.util.Hashtable;
 
 public class URLComponents {
+
     private static final String TAG = URLComponents.class.getSimpleName();
     private static final String MISC_OPENRTB = "openrtb";
 
-    private final String mBaseUrl;
-    public final AdRequestInput mAdRequestInput;
+    private final String baseUrl;
+    public final AdRequestInput adRequestInput;
 
-    public URLComponents(String baseUrl, AdRequestInput adRequestInput) {
-        mBaseUrl = baseUrl;
-        mAdRequestInput = adRequestInput;
+    public URLComponents(
+            String baseUrl,
+            AdRequestInput adRequestInput
+    ) {
+        this.baseUrl = baseUrl;
+        this.adRequestInput = adRequestInput;
     }
 
     public String getFullUrl() {
-        String fullUrl = mBaseUrl;
+        String fullUrl = baseUrl;
         String queryArgString = getQueryArgString();
         if (Utils.isNotBlank(queryArgString)) {
             fullUrl += "?" + queryArgString;
@@ -53,7 +57,7 @@ public class URLComponents {
 
         // If BidRequest object available, put into query arg hashtable
         try {
-            JSONObject bidRequestJson = mAdRequestInput.getBidRequest().getJsonObject();
+            JSONObject bidRequestJson = adRequestInput.getBidRequest().getJsonObject();
 
             if (bidRequestJson.length() > 0) {
                 tempQueryArgs.put(MISC_OPENRTB, bidRequestJson.toString());
@@ -91,10 +95,10 @@ public class URLComponents {
     }
 
     public String getBaseUrl() {
-        return mBaseUrl;
+        return baseUrl;
     }
 
     public AdRequestInput getAdRequestInput() {
-        return mAdRequestInput;
+        return adRequestInput;
     }
 }

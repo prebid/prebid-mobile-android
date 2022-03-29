@@ -49,21 +49,21 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 21)
 public class MoPubMediationUtilsMethodsTest {
 
-    private Context mContext;
+    private Context context;
 
     private static final AdSize AD_SIZE = new AdSize(1, 1);
     private static final String ID = "configId";
 
-    private MoPubView mMoPubView;
-    private MoPubInterstitial mMoPubInterstitial;
-    private MoPubNative mMoPubNative;
-    private HashMap<String, String> mMoPubNativeKeywords = mock(HashMap.class);
-    private HashMap<String, String> mMoPubRewardedKeywords = mock(HashMap.class);
+    private MoPubView moPubView;
+    private MoPubInterstitial moPubInterstitial;
+    private MoPubNative moPubNative;
+    private HashMap<String, String> moPubNativeKeywords = mock(HashMap.class);
+    private HashMap<String, String> moPubRewardedKeywords = mock(HashMap.class);
 
-    private MediationBannerAdUnit mMediationBannerAdUnit;
-    private MediationInterstitialAdUnit mMediationInterstitialAdUnit;
-    private MediationNativeAdUnit mMediationNativeAdUnit;
-    private MediationRewardedVideoAdUnit mMoPubRewardedAdUnit;
+    private MediationBannerAdUnit mediationBannerAdUnit;
+    private MediationInterstitialAdUnit mediationInterstitialAdUnit;
+    private MediationNativeAdUnit mediationNativeAdUnit;
+    private MediationRewardedVideoAdUnit moPubRewardedAdUnit;
 
     private MoPubBannerMediationUtils bannerUtils;
     private MoPubInterstitialMediationUtils interstitialUtils;
@@ -74,22 +74,22 @@ public class MoPubMediationUtilsMethodsTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
+        context = Robolectric.buildActivity(Activity.class).create().get();
 
-        mMoPubView = mock(MoPubView.class);
-        bannerUtils = new MoPubBannerMediationUtils(mMoPubView);
-        mMediationBannerAdUnit = new MediationBannerAdUnit(mContext, ID, AD_SIZE, bannerUtils);
+        moPubView = mock(MoPubView.class);
+        bannerUtils = new MoPubBannerMediationUtils(moPubView);
+        mediationBannerAdUnit = new MediationBannerAdUnit(context, ID, AD_SIZE, bannerUtils);
 
-        mMoPubInterstitial = mock(MoPubInterstitial.class);
-        interstitialUtils = new MoPubInterstitialMediationUtils(mMoPubInterstitial);
-        mMediationInterstitialAdUnit = new MediationInterstitialAdUnit(mContext, ID, AD_SIZE, interstitialUtils);
+        moPubInterstitial = mock(MoPubInterstitial.class);
+        interstitialUtils = new MoPubInterstitialMediationUtils(moPubInterstitial);
+        mediationInterstitialAdUnit = new MediationInterstitialAdUnit(context, ID, AD_SIZE, interstitialUtils);
 
-        mMoPubNative = mock(MoPubNative.class);
-        nativeUtils = new MoPubNativeMediationUtils(mMoPubNativeKeywords, mMoPubNative);
-        mMediationNativeAdUnit = new MediationNativeAdUnit(ID, nativeUtils);
+        moPubNative = mock(MoPubNative.class);
+        nativeUtils = new MoPubNativeMediationUtils(moPubNativeKeywords, moPubNative);
+        mediationNativeAdUnit = new MediationNativeAdUnit(ID, nativeUtils);
 
-        rewardedUtils = new MoPubRewardedVideoMediationUtils(mMoPubRewardedKeywords);
-        mMoPubRewardedAdUnit = new MediationRewardedVideoAdUnit(mContext, ID, rewardedUtils);
+        rewardedUtils = new MoPubRewardedVideoMediationUtils(moPubRewardedKeywords);
+        moPubRewardedAdUnit = new MediationRewardedVideoAdUnit(context, ID, rewardedUtils);
     }
 
     @Test
@@ -110,7 +110,7 @@ public class MoPubMediationUtilsMethodsTest {
 
         HashMap<String, String> responseId = new HashMap<>();
         responseId.put("PREBID_BID_RESPONSE_ID", "id");
-        verify(mMoPubView).setLocalExtras(responseId);
+        verify(moPubView).setLocalExtras(responseId);
     }
 
     @Test
@@ -120,7 +120,7 @@ public class MoPubMediationUtilsMethodsTest {
 
         HashMap<String, String> responseId = new HashMap<>();
         responseId.put("PREBID_BID_RESPONSE_ID", "id");
-        verify(mMoPubInterstitial).setLocalExtras(responseId);
+        verify(moPubInterstitial).setLocalExtras(responseId);
     }
 
     @Test
@@ -128,8 +128,8 @@ public class MoPubMediationUtilsMethodsTest {
         HashMap<String, String> keywords = TestResponse.getKeywordsMap();
         bannerUtils.handleKeywordsUpdate(keywords);
 
-        verify(mMoPubView, atLeastOnce()).getKeywords();
-        verify(mMoPubView).setKeywords(TestResponse.getKeywordsString());
+        verify(moPubView, atLeastOnce()).getKeywords();
+        verify(moPubView).setKeywords(TestResponse.getKeywordsString());
     }
 
     @Test
@@ -137,8 +137,8 @@ public class MoPubMediationUtilsMethodsTest {
         HashMap<String, String> keywords = TestResponse.getKeywordsMap();
         interstitialUtils.handleKeywordsUpdate(keywords);
 
-        verify(mMoPubInterstitial, atLeastOnce()).getKeywords();
-        verify(mMoPubInterstitial).setKeywords(TestResponse.getKeywordsString());
+        verify(moPubInterstitial, atLeastOnce()).getKeywords();
+        verify(moPubInterstitial).setKeywords(TestResponse.getKeywordsString());
     }
 
     @Test
@@ -146,8 +146,8 @@ public class MoPubMediationUtilsMethodsTest {
         HashMap<String, String> keywords = TestResponse.getKeywordsMap();
         nativeUtils.handleKeywordsUpdate(keywords);
 
-        verify(mMoPubNativeKeywords).clear();
-        verify(mMoPubNativeKeywords).putAll(keywords);
+        verify(moPubNativeKeywords).clear();
+        verify(moPubNativeKeywords).putAll(keywords);
     }
 
     @Test
@@ -155,8 +155,8 @@ public class MoPubMediationUtilsMethodsTest {
         HashMap<String, String> keywords = TestResponse.getKeywordsMap();
         rewardedUtils.handleKeywordsUpdate(keywords);
 
-        verify(mMoPubRewardedKeywords).clear();
-        verify(mMoPubRewardedKeywords).putAll(keywords);
+        verify(moPubRewardedKeywords).clear();
+        verify(moPubRewardedKeywords).putAll(keywords);
     }
 
 }

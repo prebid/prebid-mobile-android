@@ -41,44 +41,44 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class BaseAdViewTest {
 
-    private BaseAdView mBaseAdView;
-    private Context mMockContext;
-    private AdViewManager mMockAdViewManager;
+    private BaseAdView baseAdView;
+    private Context mockContext;
+    private AdViewManager mockAdViewManager;
 
     @Before
     public void setUp() throws Exception {
-        mMockContext = spy(Robolectric.buildActivity(Activity.class).create().get());
+        mockContext = spy(Robolectric.buildActivity(Activity.class).create().get());
 
-        mBaseAdView = new BaseAdView(mMockContext) {
+        baseAdView = new BaseAdView(mockContext) {
             @Override
             protected void notifyErrorListeners(AdException adException) {
 
             }
         };
-        mMockAdViewManager = Mockito.mock(AdViewManager.class);
-        when(mMockAdViewManager.getAdConfiguration()).thenReturn(new AdUnitConfiguration());
-        Field field = WhiteBox.field(BaseAdView.class, "mAdViewManager");
-        field.set(mBaseAdView, mMockAdViewManager);
+        mockAdViewManager = Mockito.mock(AdViewManager.class);
+        when(mockAdViewManager.getAdConfiguration()).thenReturn(new AdUnitConfiguration());
+        Field field = WhiteBox.field(BaseAdView.class, "adViewManager");
+        field.set(baseAdView, mockAdViewManager);
     }
 
     @Test
     public void getMediaDurationTest() {
-        when(mMockAdViewManager.getMediaDuration()).thenReturn(0L);
-        assertEquals(0, mBaseAdView.getMediaDuration());
+        when(mockAdViewManager.getMediaDuration()).thenReturn(0L);
+        assertEquals(0, baseAdView.getMediaDuration());
     }
 
     @Test
     public void whenGetMediaOffsetEmpty_ReturnDefault() {
-        when(mMockAdViewManager.getSkipOffset()).thenReturn(0L);
-        assertEquals(0, mBaseAdView.getMediaOffset());
+        when(mockAdViewManager.getSkipOffset()).thenReturn(0L);
+        assertEquals(0, baseAdView.getMediaOffset());
     }
 
     @Test
     public void onWindowFocusChangedTest() throws IllegalAccessException {
-        WhiteBox.field(BaseAdView.class, "mScreenVisibility").set(mBaseAdView, -1);
+        WhiteBox.field(BaseAdView.class, "screenVisibility").set(baseAdView, -1);
 
-        mBaseAdView.onWindowFocusChanged(true);
-        verify(mMockAdViewManager).setAdVisibility(eq(View.VISIBLE));
+        baseAdView.onWindowFocusChanged(true);
+        verify(mockAdViewManager).setAdVisibility(eq(View.VISIBLE));
     }
 
 }

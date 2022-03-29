@@ -33,25 +33,25 @@ public class Wrapper extends VASTParserBase {
     private final static String VAST_CREATIVES = "Creatives";
     private final static String VAST_EXTENSIONS = "Extensions";
 
-    private String mFollowAdditionalWrappers;
-    private String mAllowMultipleAds;
-    private String mFallbackOnNoAd;
-    private AdSystem mAdSystem;
-    private VastUrl mVastUrl;
-    private Error mError;
-    private ArrayList<Impression> mImpressions;
+    private String followAdditionalWrappers;
+    private String allowMultipleAds;
+    private String fallbackOnNoAd;
+    private AdSystem adSystem;
+    private VastUrl vastUrl;
+    private Error error;
+    private ArrayList<Impression> impressions;
     //SDK considers this to be an "optional" param in the video creative, right now.
     //https://github.com/InteractiveAdvertisingBureau/vast/blob/master/vast4.xsd#L1411
-    private ArrayList<Creative> mCreatives;
-    private Extensions mExtensions;
+    private ArrayList<Creative> creatives;
+    private Extensions extensions;
 
     public Wrapper(XmlPullParser p) throws XmlPullParserException, IOException {
 
         p.require(XmlPullParser.START_TAG, null, VAST_WRAPPER);
 
-        mFollowAdditionalWrappers = p.getAttributeValue(null, "followAdditionalWrappers");
-        mAllowMultipleAds = p.getAttributeValue(null, "allowMultipleAds");
-        mFallbackOnNoAd = p.getAttributeValue(null, "fallbackOnNoAd");
+        followAdditionalWrappers = p.getAttributeValue(null, "followAdditionalWrappers");
+        allowMultipleAds = p.getAttributeValue(null, "allowMultipleAds");
+        fallbackOnNoAd = p.getAttributeValue(null, "fallbackOnNoAd");
 
         while (p.next() != XmlPullParser.END_TAG) {
             if (p.getEventType() != XmlPullParser.START_TAG) {
@@ -60,35 +60,35 @@ public class Wrapper extends VASTParserBase {
             String name = p.getName();
             if (name != null && name.equals(VAST_ADSYSTEM)) {
                 p.require(XmlPullParser.START_TAG, null, VAST_ADSYSTEM);
-                mAdSystem = new AdSystem(p);
+                adSystem = new AdSystem(p);
                 p.require(XmlPullParser.END_TAG, null, VAST_ADSYSTEM);
             }
             else if (name != null && name.equals(VAST_ERROR)) {
                 p.require(XmlPullParser.START_TAG, null, VAST_ERROR);
-                mError = new Error(p);
+                error = new Error(p);
                 p.require(XmlPullParser.END_TAG, null, VAST_ERROR);
             }
             else if (name != null && name.equals(VAST_VASTADTAGURI)) {
                 p.require(XmlPullParser.START_TAG, null, VAST_VASTADTAGURI);
-                mVastUrl = new VastUrl(p);
+                vastUrl = new VastUrl(p);
                 p.require(XmlPullParser.END_TAG, null, VAST_VASTADTAGURI);
             }
             else if (name != null && name.equals(VAST_IMPRESSION)) {
-                if (mImpressions == null) {
-                    mImpressions = new ArrayList<>();
+                if (impressions == null) {
+                    impressions = new ArrayList<>();
                 }
                 p.require(XmlPullParser.START_TAG, null, VAST_IMPRESSION);
-                mImpressions.add(new Impression(p));
+                impressions.add(new Impression(p));
                 p.require(XmlPullParser.END_TAG, null, VAST_IMPRESSION);
             }
             else if (name != null && name.equals(VAST_CREATIVES)) {
                 p.require(XmlPullParser.START_TAG, null, VAST_CREATIVES);
-                mCreatives = (new Creatives(p)).getCreatives();
+                creatives = (new Creatives(p)).getCreatives();
                 p.require(XmlPullParser.END_TAG, null, VAST_CREATIVES);
             }
             else if (name != null && name.equals(VAST_EXTENSIONS)) {
                 p.require(XmlPullParser.START_TAG, null, VAST_EXTENSIONS);
-                mExtensions = new Extensions(p);
+                extensions = new Extensions(p);
                 p.require(XmlPullParser.END_TAG, null, VAST_EXTENSIONS);
             }
             else {
@@ -98,34 +98,34 @@ public class Wrapper extends VASTParserBase {
     }
 
     public String getAllowMultipleAds() {
-        return mAllowMultipleAds;
+        return allowMultipleAds;
     }
 
     public String getFallbackOnNoAd() {
-        return mFallbackOnNoAd;
+        return fallbackOnNoAd;
     }
 
     public AdSystem getAdSystem() {
-        return mAdSystem;
+        return adSystem;
     }
 
     public VastUrl getVastUrl() {
-        return mVastUrl;
+        return vastUrl;
     }
 
     public Error getError() {
-        return mError;
+        return error;
     }
 
     public ArrayList<Impression> getImpressions() {
-        return mImpressions;
+        return impressions;
     }
 
     public ArrayList<Creative> getCreatives() {
-        return mCreatives;
+        return creatives;
     }
 
     public Extensions getExtensions() {
-        return mExtensions;
+        return extensions;
     }
 }

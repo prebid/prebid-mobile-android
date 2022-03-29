@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
 
     private val TAG = MainActivity::class.java.simpleName
 
-    private lateinit var mProgress: ProgressDialog
+    private lateinit var progress: ProgressDialog
     private lateinit var bottomAppBar: BottomNavigationView
     private lateinit var titleText: TextView
 
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
 
     override fun onSDKInit() {
         Log.i(TAG, "Prebid rendering SDK initialized successfully")
-        mProgress.dismiss()
+        progress.dismiss()
     }
 
     fun getIdlingResource(): IdlingResource? {
@@ -114,11 +114,11 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
     }
 
     private fun initProgressDialog() {
-        mProgress = ProgressDialog(this)
-        mProgress.setTitle("Please wait")
-        mProgress.setMessage("Caching video ads")
-        mProgress.setCancelable(false)
-        mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        progress = ProgressDialog(this)
+        progress.setTitle("Please wait")
+        progress.setMessage("Caching video ads")
+        progress.setCancelable(false)
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER)
     }
 
     private fun initBarNavigation() {

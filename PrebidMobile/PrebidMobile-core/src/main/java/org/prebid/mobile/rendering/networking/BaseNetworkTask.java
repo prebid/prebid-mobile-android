@@ -50,11 +50,11 @@ public class BaseNetworkTask
     protected static final String CONTENT_TYPE_HEADER = "Content-Type";
     protected static final String CONTENT_TYPE_HEADER_VALUE = "application/json";
 
-    protected GetUrlResult mResult;
+    protected GetUrlResult result;
 
-    private long mStart;
-    private BaseResponseHandler mResponseHandler;
-    private URLConnection mConnection = null;
+    private long start;
+    private BaseResponseHandler responseHandler;
+    private URLConnection connection = null;
 
     /**
      * Creates a network object
@@ -62,8 +62,8 @@ public class BaseNetworkTask
      * @param handler instance of a class handling ad server responses (like , InterstitialSwitchActivity)
      */
     public BaseNetworkTask(BaseResponseHandler handler) {
-        mResponseHandler = handler;
-        mResult = new GetUrlResult();
+        responseHandler = handler;
+        result = new GetUrlResult();
     }
 
     @Override
@@ -77,7 +77,7 @@ public class BaseNetworkTask
             LogUtil.debug(TAG, "URL result is null");
             return;
         }
-        if (mResponseHandler == null) {
+        if (responseHandler == null) {
             LogUtil.debug(TAG, "No ResponseHandler on: may be a tracking event");
             return;
         }
@@ -86,20 +86,20 @@ public class BaseNetworkTask
         LogUtil.debug(TAG, "Result: " + urlResult.responseString);
 
         long stop = System.currentTimeMillis();
-        long delta = stop - mStart;
+        long delta = stop - start;
         urlResult.responseTime = delta;
         if (urlResult.getException() != null) {
-            ((ResponseHandler) mResponseHandler).onErrorWithException(urlResult.getException(), delta);
+            ((ResponseHandler) responseHandler).onErrorWithException(urlResult.getException(), delta);
             return;
         }
 
         //differentiate between vast response & normal tracking response
         //Ex: <VAST version="2.0"> </VAST> is a wrong response for av calls. So should fail
         if (urlResult.responseString != null && urlResult.responseString.length() < 100 && urlResult.responseString.contains("<VAST")) {
-            ((ResponseHandler) mResponseHandler).onError("Invalid VAST Response: less than 100 characters.", delta);
+            ((ResponseHandler) responseHandler).onError("Invalid VAST Response: less than 100 characters.", delta);
         }
         else {
-            ((ResponseHandler) mResponseHandler).onResponse(urlResult);
+            ((ResponseHandler) responseHandler).onResponse(urlResult);
         }
     }
 
@@ -107,8 +107,8 @@ public class BaseNetworkTask
     protected void onCancelled() {
         super.onCancelled();
         LogUtil.debug(TAG, "Request cancelled. Disconnecting connection");
-        if (mConnection instanceof HttpURLConnection) {
-            ((HttpURLConnection) mConnection).disconnect();
+        if (connection instanceof HttpURLConnection) {
+            ((HttpURLConnection) connection).disconnect();
         }
     }
 
@@ -119,7 +119,7 @@ public class BaseNetworkTask
 
     /*  NOTE THIS GETS OVERRIDDEN IN CHILD CLASS */
     public GetUrlResult customParser(int code, URLConnection urlConnection) {
-        return mResult;
+        return result;
     }
 
     public GetUrlResult sendRequest(GetUrlParams param) throws Exception {
@@ -130,25 +130,23 @@ public class BaseNetworkTask
         LogUtil.debug(TAG, "queryParams: " + param.queryParams);
 
         int responseCode = 0;
-        mConnection = setHttpURLConnectionProperty(param);
+        connection = setHttpURLConnectionProperty(param);
 
-        if (mConnection instanceof HttpURLConnection) {
-            responseCode = ((HttpURLConnection) mConnection).getResponseCode();
+        if (connection instanceof HttpURLConnection) {
+            responseCode = ((HttpURLConnection) connection).getResponseCode();
         }
 
-        if (Utils.isNotBlank(param.name)
-                && !DOWNLOAD_TASK.equals(param.name)
-            && !REDIRECT_TASK.equals(param.name)) {
-            mResult = parseHttpURLResponse(responseCode);
+        if (Utils.isNotBlank(param.name) && !DOWNLOAD_TASK.equals(param.name) && !REDIRECT_TASK.equals(param.name)) {
+            result = parseHttpURLResponse(responseCode);
         }
-        mResult = customParser(responseCode, mConnection);
-        mResult.statusCode = responseCode;
-        return mResult;
+        result = customParser(responseCode, connection);
+        result.statusCode = responseCode;
+        return result;
     }
 
     public boolean validParams(GetUrlParams... params) {
         if (params == null || params[0] == null) {
-            mResult.setException(new Exception("Invalid Params"));
+            result.setException(new Exception("Invalid Params"));
             return false;
         }
         return true;
@@ -193,75 +191,74 @@ public class BaseNetworkTask
         GetUrlParams param;
 
         if (isCancelled()) {
-            return mResult;
+            return result;
         }
         else if (validParams(params) && !isCancelled()) {
             param = params[0];
             try {
-                mStart = System.currentTimeMillis();
-                mResult = sendRequest(param);
+                start = System.currentTimeMillis();
+                result = sendRequest(param);
             }
             catch (MalformedURLException e) {
                 LogUtil.warning(TAG, "Network Error: MalformedURLException" + e.getMessage());
                 // This error will be handled in onPostExecute()- so no need to handle here - Nice
-                mResult.setException(e);
+                result.setException(e);
             }
             catch (SocketTimeoutException e) {
                 LogUtil.warning(TAG, "Network Error: SocketTimeoutException" + e.getMessage());
-                mResult.setException(e);
+                result.setException(e);
             }
             catch (ConnectTimeoutException e) {
                 LogUtil.warning(TAG, "Network Error: ConnectTimeoutException" + e.getMessage());
-                mResult.setException(e);
+                result.setException(e);
             }
             catch (IOException e) {
                 LogUtil.warning(TAG, "Network Error: IOException" + e.getMessage());
-                mResult.setException(e);
+                result.setException(e);
             }
             catch (Exception e) {
                 LogUtil.warning(TAG, "Network Error: Exception" + e.getMessage());
-                mResult.setException(e);
+                result.setException(e);
             }
             finally {
-                if (mConnection instanceof HttpURLConnection) {
-                    ((HttpURLConnection) mConnection).disconnect();
+                if (connection instanceof HttpURLConnection) {
+                    ((HttpURLConnection) connection).disconnect();
                 }
             }
         }
         else {
-            mResult = null;
+            result = null;
         }
 
-        return mResult;
+        return result;
     }
 
     private URLConnection setHttpURLConnectionProperty(GetUrlParams param) throws Exception {
         URL url = new URL(param.url);
-        mConnection = url.openConnection();
-        if (mConnection instanceof HttpURLConnection) {
-            ((HttpURLConnection) mConnection).setRequestMethod(param.requestType);
-            ((HttpURLConnection) mConnection).setInstanceFollowRedirects(false);
+        connection = url.openConnection();
+        if (connection instanceof HttpURLConnection) {
+            ((HttpURLConnection) connection).setRequestMethod(param.requestType);
+            ((HttpURLConnection) connection).setInstanceFollowRedirects(false);
         }
 
-        mConnection.setRequestProperty(USER_AGENT_HEADER, param.userAgent);
-        mConnection.setRequestProperty(ACCEPT_LANGUAGE_HEADER, Locale.getDefault().toString());
-        mConnection.setRequestProperty(ACCEPT_HEADER, ACCEPT_HEADER_VALUE);
-        mConnection.setRequestProperty(CONTENT_TYPE_HEADER, CONTENT_TYPE_HEADER_VALUE);
+        connection.setRequestProperty(USER_AGENT_HEADER, param.userAgent);
+        connection.setRequestProperty(ACCEPT_LANGUAGE_HEADER, Locale.getDefault().toString());
+        connection.setRequestProperty(ACCEPT_HEADER, ACCEPT_HEADER_VALUE);
+        connection.setRequestProperty(CONTENT_TYPE_HEADER, CONTENT_TYPE_HEADER_VALUE);
 
-        mConnection.setReadTimeout(SOCKET_TIMEOUT);
-        mConnection.setConnectTimeout(PrebidMobile.getTimeoutMillis());
+        connection.setReadTimeout(SOCKET_TIMEOUT);
+        connection.setConnectTimeout(PrebidMobile.getTimeoutMillis());
 
         if ("POST".equals(param.requestType)) {
             // Send post request
-            mConnection.setDoOutput(true);
+            connection.setDoOutput(true);
             DataOutputStream wr = null;
             try {
-                wr = new DataOutputStream(mConnection.getOutputStream());
+                wr = new DataOutputStream(connection.getOutputStream());
                 if (param.queryParams != null) {
                     wr.writeBytes(param.queryParams);
                 }
-            }
-            finally {
+            } finally {
                 if (wr != null) {
                     wr.flush();
                     wr.close();
@@ -269,8 +266,8 @@ public class BaseNetworkTask
             }
         }
 
-        mConnection = openConnectionCheckRedirects(mConnection);
-        return mConnection;
+        connection = openConnectionCheckRedirects(connection);
+        return connection;
     }
 
     private URLConnection openConnectionCheckRedirects(URLConnection connection) throws Exception {
@@ -322,10 +319,15 @@ public class BaseNetworkTask
         String response = "";
 
         if (httpURLResponseCode == 200) {
-            response = readResponse(mConnection.getInputStream());
+            response = readResponse(connection.getInputStream());
         }
         else if (httpURLResponseCode >= 400 && httpURLResponseCode < 600) {
-            String status = String.format(Locale.getDefault(), "Code %d. %s", httpURLResponseCode, readResponse(((HttpURLConnection) mConnection).getErrorStream()));
+            String status = String.format(
+                    Locale.getDefault(),
+                    "Code %d. %s",
+                    httpURLResponseCode,
+                    readResponse(((HttpURLConnection) connection).getErrorStream())
+            );
             LogUtil.error(TAG, status);
             throw new Exception(status);
         }
@@ -335,9 +337,9 @@ public class BaseNetworkTask
             LogUtil.error(TAG, error);
             throw new Exception(error);
         }
-        mResult.responseString = response;
+        result.responseString = response;
 
-        return mResult;
+        return result;
     }
 
     public static class GetUrlParams {

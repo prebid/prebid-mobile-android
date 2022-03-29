@@ -33,27 +33,27 @@ import static org.mockito.Mockito.mock;
 @Config(sdk = 19)
 public class InterstitialJSInterfaceTest {
 
-    private InterstitialJSInterface mInterstitialJSInterface;
-    private Context mContext;
-    private WebViewBase mMockWebViewBase;
+    private InterstitialJSInterface interstitialJSInterface;
+    private Context context;
+    private WebViewBase mockWebViewBase;
 
     @Before
     public void setUp() throws Exception {
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
-        mMockWebViewBase = mock(WebViewBase.class);
+        context = Robolectric.buildActivity(Activity.class).create().get();
+        mockWebViewBase = mock(WebViewBase.class);
 
-        mInterstitialJSInterface = new InterstitialJSInterface(mContext, mMockWebViewBase, mock(JsExecutor.class));
+        interstitialJSInterface = new InterstitialJSInterface(context, mockWebViewBase, mock(JsExecutor.class));
     }
 
     @Test
     public void getPlacementTypeTest() {
-        assertEquals("interstitial", mInterstitialJSInterface.getPlacementType());
+        assertEquals("interstitial", interstitialJSInterface.getPlacementType());
     }
 
     @Test
     public void expandTest() {
         //do nothing
-        mInterstitialJSInterface.expand();
+        interstitialJSInterface.expand();
     }
 
 }

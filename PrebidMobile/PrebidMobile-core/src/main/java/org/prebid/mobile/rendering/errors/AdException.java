@@ -27,10 +27,10 @@ public class AdException extends Exception {
     public static final String SERVER_ERROR = "Server error";
     public static final String THIRD_PARTY = "Third Party SDK";
 
-    private String mMessage;
+    private String message;
 
     public void setMessage(String msg) {
-        mMessage = msg;
+        message = msg;
     }
 
     /**
@@ -40,7 +40,7 @@ public class AdException extends Exception {
      */
     @Override
     public String getMessage() {
-        return mMessage;
+        return message;
     }
 
     public AdException(String type, String message) {

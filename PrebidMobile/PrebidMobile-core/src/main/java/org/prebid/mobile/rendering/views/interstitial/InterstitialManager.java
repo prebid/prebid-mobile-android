@@ -42,52 +42,56 @@ public class InterstitialManager implements InterstitialManagerInterface {
     private static String TAG = InterstitialManager.class.getSimpleName();
     private static final int INTERSTITIAL_WEBVIEW_ID = 123456789;
 
-    private InterstitialDisplayPropertiesInternal mInterstitialDisplayProperties = new InterstitialDisplayPropertiesInternal();
-    private AdInterstitialDialog mInterstitialDialog;
+    private InterstitialDisplayPropertiesInternal interstitialDisplayProperties = new InterstitialDisplayPropertiesInternal();
+    private AdInterstitialDialog interstitialDialog;
 
-    private InterstitialManagerDisplayDelegate mInterstitialDisplayDelegate;
-    private InterstitialManagerVideoDelegate mInterstitialVideoDelegate;
+    private InterstitialManagerDisplayDelegate interstitialDisplayDelegate;
+    private InterstitialManagerVideoDelegate interstitialVideoDelegate;
 
-    private InterstitialManagerMraidDelegate mMraidDelegate;
-    private AdViewManager.AdViewManagerInterstitialDelegate mAdViewManagerInterstitialDelegate;
+    private InterstitialManagerMraidDelegate mraidDelegate;
+    private AdViewManager.AdViewManagerInterstitialDelegate adViewManagerInterstitialDelegate;
 
-    private final Stack<View> mViewStack = new Stack<>();
+    private final Stack<View> viewStack = new Stack<>();
 
     public void setMraidDelegate(InterstitialManagerMraidDelegate mraidDelegate) {
-        mMraidDelegate = mraidDelegate;
+        this.mraidDelegate = mraidDelegate;
     }
 
     public void configureInterstitialProperties(AdUnitConfiguration adConfiguration) {
-        InterstitialLayoutConfigurator.configureDisplayProperties(adConfiguration, mInterstitialDisplayProperties);
+        InterstitialLayoutConfigurator.configureDisplayProperties(adConfiguration, interstitialDisplayProperties);
     }
 
     public InterstitialDisplayPropertiesInternal getInterstitialDisplayProperties() {
-        return mInterstitialDisplayProperties;
+        return interstitialDisplayProperties;
     }
 
     public void setInterstitialDisplayDelegate(InterstitialManagerDisplayDelegate interstitialDisplayDelegate) {
-        mInterstitialDisplayDelegate = interstitialDisplayDelegate;
+        this.interstitialDisplayDelegate = interstitialDisplayDelegate;
     }
 
     public void setInterstitialVideoDelegate(InterstitialManagerVideoDelegate interstitialVideoDelegate) {
-        mInterstitialVideoDelegate = interstitialVideoDelegate;
+        this.interstitialVideoDelegate = interstitialVideoDelegate;
     }
 
     @VisibleForTesting
     public InterstitialManagerDisplayDelegate getInterstitialDisplayDelegate() {
-        return mInterstitialDisplayDelegate;
+        return interstitialDisplayDelegate;
     }
 
     public void setAdViewManagerInterstitialDelegate(AdViewManager.AdViewManagerInterstitialDelegate adViewManagerInterstitialDelegate) {
-        mAdViewManagerInterstitialDelegate = adViewManagerInterstitialDelegate;
+        this.adViewManagerInterstitialDelegate = adViewManagerInterstitialDelegate;
     }
 
     public void displayPrebidWebViewForMraid(final WebViewBase adBaseView,
                                              final boolean isNewlyLoaded) {
 
         //if it has come from htmlcreative, then nothing in stack. send closed() callback to pubs
-        if (mMraidDelegate != null) {
-            mMraidDelegate.displayPrebidWebViewForMraid(adBaseView, isNewlyLoaded, ((WebViewBanner) adBaseView).getMraidEvent());
+        if (mraidDelegate != null) {
+            mraidDelegate.displayPrebidWebViewForMraid(
+                    adBaseView,
+                    isNewlyLoaded,
+                    ((WebViewBanner) adBaseView).getMraidEvent()
+            );
         }
     }
 
@@ -116,28 +120,28 @@ public class InterstitialManager implements InterstitialManagerInterface {
     }
 
     public void destroy() {
-        if (mInterstitialDisplayProperties != null) {
+        if (interstitialDisplayProperties != null) {
             //reset all these for new ads to honour their own creative details
-            mInterstitialDisplayProperties.resetExpandValues();
+            interstitialDisplayProperties.resetExpandValues();
         }
 
-        if (mMraidDelegate != null) {
-            mMraidDelegate.destroyMraidExpand();
-            mMraidDelegate = null;
+        if (mraidDelegate != null) {
+            mraidDelegate.destroyMraidExpand();
+            mraidDelegate = null;
         }
 
-        mViewStack.clear();
+        viewStack.clear();
 
-        mInterstitialDisplayDelegate = null;
+        interstitialDisplayDelegate = null;
     }
 
     @Override
     public void interstitialAdClosed() {
-        if (mInterstitialDisplayDelegate != null) {
-            mInterstitialDisplayDelegate.interstitialAdClosed();
+        if (interstitialDisplayDelegate != null) {
+            interstitialDisplayDelegate.interstitialAdClosed();
         }
-        if (mInterstitialVideoDelegate != null) {
-            mInterstitialVideoDelegate.onVideoInterstitialClosed();
+        if (interstitialVideoDelegate != null) {
+            interstitialVideoDelegate.onVideoInterstitialClosed();
         }
     }
 
@@ -146,30 +150,29 @@ public class InterstitialManager implements InterstitialManagerInterface {
         LogUtil.debug(TAG, "interstitialClosed");
 
         try {
-            if (!mViewStack.isEmpty() && mMraidDelegate != null) {
-                View poppedViewState = mViewStack.pop();
+            if (!viewStack.isEmpty() && mraidDelegate != null) {
+                View poppedViewState = viewStack.pop();
                 //take the old one  & display(ex: close of a video inside of an expanded ad
                 //should take it back to the defaultview of the ad.
-                mMraidDelegate.displayViewInInterstitial(poppedViewState, false, null, null);
+                mraidDelegate.displayViewInInterstitial(poppedViewState, false, null, null);
                 return;
             }
 
             //check to see if there's something on the backstack we should return to
             //if so, go back or else call interstitialAdClosed
             //IMPORTANT: HAS to be there inspite of calling close above.
-            if ((mMraidDelegate == null || !mMraidDelegate.collapseMraid())
-                && mInterstitialDialog != null) {
-                mInterstitialDialog.nullifyDialog();
-                mInterstitialDialog = null;
+            if ((mraidDelegate == null || !mraidDelegate.collapseMraid()) && interstitialDialog != null) {
+                interstitialDialog.nullifyDialog();
+                interstitialDialog = null;
             }
 
-            if (mMraidDelegate != null) {
-                mMraidDelegate.closeThroughJs((WebViewBase) viewToClose);
+            if (mraidDelegate != null) {
+                mraidDelegate.closeThroughJs((WebViewBase) viewToClose);
             }
             //let adview know when an interstitial ad was closed(1part expand or 2part expand are not interstitials)
             //resize->click->expandedview->click on playvideo->pressback->goes back to the expanded state. We should not send clickthrough event to pub, for this case.
-            if (mInterstitialDisplayDelegate != null && !(viewToClose instanceof WebViewBanner)) {
-                mInterstitialDisplayDelegate.interstitialAdClosed();
+            if (interstitialDisplayDelegate != null && !(viewToClose instanceof WebViewBanner)) {
+                interstitialDisplayDelegate.interstitialAdClosed();
             }
         }
         catch (Exception e) {
@@ -179,18 +182,18 @@ public class InterstitialManager implements InterstitialManagerInterface {
 
     @Override
     public void interstitialDialogShown(ViewGroup rootViewGroup) {
-        if (mInterstitialDisplayDelegate == null) {
-            LogUtil.debug(TAG, "interstitialDialogShown(): Failed. mInterstitialDelegate == null");
+        if (interstitialDisplayDelegate == null) {
+            LogUtil.debug(TAG, "interstitialDialogShown(): Failed. interstitialDelegate == null");
             return;
         }
-        mInterstitialDisplayDelegate.interstitialDialogShown(rootViewGroup);
+        interstitialDisplayDelegate.interstitialDialogShown(rootViewGroup);
     }
 
     private void showInterstitialDialog(Context context, InterstitialView interstitialView) {
         WebViewBase webViewBase = ((PrebidWebViewInterstitial) interstitialView.getCreativeView()).getWebView();
         webViewBase.setId(INTERSTITIAL_WEBVIEW_ID);
-        mInterstitialDialog = new AdInterstitialDialog(context, webViewBase, interstitialView, this);
-        mInterstitialDialog.show();
+        interstitialDialog = new AdInterstitialDialog(context, webViewBase, interstitialView, this);
+        interstitialDialog.show();
     }
 
     public void addOldViewToBackStack(WebViewBase adBaseView, String expandUrl, AdBaseDialog interstitialViewController) {
@@ -203,17 +206,17 @@ public class InterstitialManager implements InterstitialManagerInterface {
         }
 
         if (oldWebView != null) {
-            mViewStack.push(oldWebView);
+            viewStack.push(oldWebView);
         }
     }
 
     public void show() {
-        if (mAdViewManagerInterstitialDelegate != null) {
-            mAdViewManagerInterstitialDelegate.showInterstitial();
+        if (adViewManagerInterstitialDelegate != null) {
+            adViewManagerInterstitialDelegate.showInterstitial();
         }
     }
 
     public HTMLCreative getHtmlCreative() {
-        return (HTMLCreative) mInterstitialDisplayDelegate;
+        return (HTMLCreative) interstitialDisplayDelegate;
     }
 }

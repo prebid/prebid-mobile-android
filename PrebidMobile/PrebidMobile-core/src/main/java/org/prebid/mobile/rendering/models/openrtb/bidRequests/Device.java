@@ -68,7 +68,7 @@ public class Device extends BaseBid {
 
     public Geo geo = null;
 
-    private Ext mExt;
+    private Ext ext;
 
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
@@ -99,7 +99,7 @@ public class Device extends BaseBid {
         toJSON(jsonObject, "js", js);
         toJSON(jsonObject, "connectiontype", connectiontype);
         toJSON(jsonObject, "pxratio", pxratio);
-        toJSON(jsonObject, "ext", (mExt != null) ? mExt.getJsonObject() : null);
+        toJSON(jsonObject, "ext", (ext != null) ? ext.getJsonObject() : null);
 
         toJSON(jsonObject, "geo", (geo != null) ? geo.getJsonObject() : null);
 
@@ -122,9 +122,9 @@ public class Device extends BaseBid {
     }
 
     public Ext getExt() {
-        if (mExt == null) {
-            mExt = new Ext();
+        if (ext == null) {
+            ext = new Ext();
         }
-        return mExt;
+        return ext;
     }
 }

@@ -51,83 +51,83 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricTestRunner.class)
 public class DeviceInfoImplTest {
 
-    private DeviceInfoImpl mDeviceInfoImpl;
+    private DeviceInfoImpl deviceInfoImpl;
     @Mock
-    private Context mMockContext;
+    private Context mockContext;
     @Mock
-    private TelephonyManager mMockTelephonyManger;
+    private TelephonyManager mockTelephonyManger;
     @Mock
-    private WindowManager mMockWindowManager;
+    private WindowManager mockWindowManager;
     @Mock
-    private PowerManager mMockPowerManager;
+    private PowerManager mockPowerManager;
     @Mock
-    private KeyguardManager mMockKeyguardManager;
+    private KeyguardManager mockKeyguardManager;
     @Mock
-    private PackageManager mMockPackageManager;
+    private PackageManager mockPackageManager;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mDeviceInfoImpl = new DeviceInfoImpl();
+        deviceInfoImpl = new DeviceInfoImpl();
 
-        when(mMockContext.getSystemService(Context.TELEPHONY_SERVICE)).thenReturn(mMockTelephonyManger);
-        when(mMockContext.getSystemService(Context.WINDOW_SERVICE)).thenReturn(mMockWindowManager);
-        when(mMockContext.getSystemService(Context.POWER_SERVICE)).thenReturn(mMockPowerManager);
-        when(mMockContext.getSystemService(Context.KEYGUARD_SERVICE)).thenReturn(mMockKeyguardManager);
-        when(mMockContext.getPackageManager()).thenReturn(mMockPackageManager);
+        when(mockContext.getSystemService(Context.TELEPHONY_SERVICE)).thenReturn(mockTelephonyManger);
+        when(mockContext.getSystemService(Context.WINDOW_SERVICE)).thenReturn(mockWindowManager);
+        when(mockContext.getSystemService(Context.POWER_SERVICE)).thenReturn(mockPowerManager);
+        when(mockContext.getSystemService(Context.KEYGUARD_SERVICE)).thenReturn(mockKeyguardManager);
+        when(mockContext.getPackageManager()).thenReturn(mockPackageManager);
 
-        mDeviceInfoImpl.init(mMockContext);
+        deviceInfoImpl.init(mockContext);
     }
 
     @Test
     public void hasTelephonyTest() throws IllegalAccessException {
-        when(mMockPackageManager.hasSystemFeature(anyString())).thenReturn(Boolean.TRUE);
-        assertTrue(mDeviceInfoImpl.hasTelephony());
+        when(mockPackageManager.hasSystemFeature(anyString())).thenReturn(Boolean.TRUE);
+        assertTrue(deviceInfoImpl.hasTelephony());
 
-        WhiteBox.field(DeviceInfoImpl.class, "mTelephonyManager").set(mDeviceInfoImpl, null);
-        assertFalse(mDeviceInfoImpl.hasTelephony());
+        WhiteBox.field(DeviceInfoImpl.class, "telephonyManager").set(deviceInfoImpl, null);
+        assertFalse(deviceInfoImpl.hasTelephony());
 
-        WhiteBox.field(DeviceInfoImpl.class, "mTelephonyManager").set(mDeviceInfoImpl, mMockTelephonyManger);
-        WhiteBox.field(DeviceInfoImpl.class, "mPackageManager").set(mDeviceInfoImpl, null);
-        assertFalse(mDeviceInfoImpl.hasTelephony());
+        WhiteBox.field(DeviceInfoImpl.class, "telephonyManager").set(deviceInfoImpl, mockTelephonyManger);
+        WhiteBox.field(DeviceInfoImpl.class, "packageManager").set(deviceInfoImpl, null);
+        assertFalse(deviceInfoImpl.hasTelephony());
     }
 
     @Test
     public void getMccMncTest() {
-        when(mMockTelephonyManger.getNetworkOperator()).thenReturn("0123456");
-        assertEquals("012-3456", mDeviceInfoImpl.getMccMnc());
+        when(mockTelephonyManger.getNetworkOperator()).thenReturn("0123456");
+        assertEquals("012-3456", deviceInfoImpl.getMccMnc());
 
-        when(mMockTelephonyManger.getNetworkOperator()).thenReturn("01");
-        assertNull(mDeviceInfoImpl.getMccMnc());
+        when(mockTelephonyManger.getNetworkOperator()).thenReturn("01");
+        assertNull(deviceInfoImpl.getMccMnc());
     }
 
     @Test
     public void getCarrierTest() {
-        when(mMockTelephonyManger.getNetworkOperatorName()).thenReturn("test");
-        assertEquals("test", mDeviceInfoImpl.getCarrier());
+        when(mockTelephonyManger.getNetworkOperatorName()).thenReturn("test");
+        assertEquals("test", deviceInfoImpl.getCarrier());
     }
 
     @Test
     public void isScreenOnTest() throws IllegalAccessException {
-        when(mMockPowerManager.isScreenOn()).thenReturn(true);
-        assertTrue(mDeviceInfoImpl.isScreenOn());
+        when(mockPowerManager.isScreenOn()).thenReturn(true);
+        assertTrue(deviceInfoImpl.isScreenOn());
 
-        WhiteBox.field(DeviceInfoImpl.class, "mPowerManager").set(mDeviceInfoImpl, null);
-        assertFalse(mDeviceInfoImpl.isScreenOn());
+        WhiteBox.field(DeviceInfoImpl.class, "powerManager").set(deviceInfoImpl, null);
+        assertFalse(deviceInfoImpl.isScreenOn());
     }
 
     @Test
     public void isScreenLockedTest() throws IllegalAccessException {
-        when(mMockKeyguardManager.inKeyguardRestrictedInputMode()).thenReturn(true);
-        assertTrue(mDeviceInfoImpl.isScreenLocked());
+        when(mockKeyguardManager.inKeyguardRestrictedInputMode()).thenReturn(true);
+        assertTrue(deviceInfoImpl.isScreenLocked());
 
-        WhiteBox.field(DeviceInfoImpl.class, "mKeyguardManager").set(mDeviceInfoImpl, null);
-        assertFalse(mDeviceInfoImpl.isScreenLocked());
+        WhiteBox.field(DeviceInfoImpl.class, "keyguardManager").set(deviceInfoImpl, null);
+        assertFalse(deviceInfoImpl.isScreenLocked());
     }
 
     @Test
     public void isActivityOrientationLockedWithApplicationContext_ReturnFalse() {
-        assertFalse(mDeviceInfoImpl.isActivityOrientationLocked(mMockContext));
+        assertFalse(deviceInfoImpl.isActivityOrientationLocked(mockContext));
     }
 
     @Test
@@ -135,7 +135,7 @@ public class DeviceInfoImplTest {
         Activity mockActivity = mock(Activity.class);
         when(mockActivity.getRequestedOrientation()).thenReturn(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        assertTrue(mDeviceInfoImpl.isActivityOrientationLocked(mockActivity));
+        assertTrue(deviceInfoImpl.isActivityOrientationLocked(mockActivity));
     }
 
     @Test
@@ -143,13 +143,13 @@ public class DeviceInfoImplTest {
         Activity mockActivity = mock(Activity.class);
         when(mockActivity.getRequestedOrientation()).thenReturn(ActivityInfo.SCREEN_ORIENTATION_USER);
 
-        assertFalse(mDeviceInfoImpl.isActivityOrientationLocked(mockActivity));
+        assertFalse(deviceInfoImpl.isActivityOrientationLocked(mockActivity));
     }
 
     @Test
     public void playVideoTest() {
-        mDeviceInfoImpl.playVideo("test");
-        verify(mMockContext).startActivity(any(Intent.class));
+        deviceInfoImpl.playVideo("test");
+        verify(mockContext).startActivity(any(Intent.class));
     }
 
     @Test
@@ -158,29 +158,29 @@ public class DeviceInfoImplTest {
         DisplayMetrics mockMetrics = mock(DisplayMetrics.class);
         mockMetrics.density = 2.0f;
 
-        when(mMockContext.getResources()).thenReturn(mockResources);
+        when(mockContext.getResources()).thenReturn(mockResources);
         when(mockResources.getDisplayMetrics()).thenReturn(mockMetrics);
-        assertEquals(2.0f, mDeviceInfoImpl.getDeviceDensity(), 0);
+        assertEquals(2.0f, deviceInfoImpl.getDeviceDensity(), 0);
 
         WeakReference<Context> weakReference = new WeakReference<>(null);
-        WhiteBox.field(DeviceInfoImpl.class, "mContextReference").set(mDeviceInfoImpl, weakReference);
-        assertEquals(1.0f, mDeviceInfoImpl.getDeviceDensity(), 0);
+        WhiteBox.field(DeviceInfoImpl.class, "contextReference").set(deviceInfoImpl, weakReference);
+        assertEquals(1.0f, deviceInfoImpl.getDeviceDensity(), 0);
     }
 
     @Test
     public void isPermissionGrantedTest() {
-        when(mMockContext.checkCallingOrSelfPermission(anyString())).thenReturn(PackageManager.PERMISSION_GRANTED);
-        assertTrue(mDeviceInfoImpl.isPermissionGranted("test"));
+        when(mockContext.checkCallingOrSelfPermission(anyString())).thenReturn(PackageManager.PERMISSION_GRANTED);
+        assertTrue(deviceInfoImpl.isPermissionGranted("test"));
     }
 
     @Test
     public void canStorePictureTest() {
-        assertTrue(mDeviceInfoImpl.canStorePicture());
+        assertTrue(deviceInfoImpl.canStorePicture());
     }
 
     @Test
     public void storePictureOnQ_GetOutputStreamForQ() throws Exception {
-        DeviceInfoImpl spyDeviceImpl = spy(mDeviceInfoImpl);
+        DeviceInfoImpl spyDeviceImpl = spy(deviceInfoImpl);
         String url = "http://test.com/somefile.png";
 
         Field versionField = WhiteBox.field(Build.VERSION.class, "SDK_INT");
@@ -204,7 +204,7 @@ public class DeviceInfoImplTest {
 
     @Test
     public void storePicturePreQ_GetOutputStreamPreQ() throws Exception {
-        DeviceInfoImpl spyDeviceImpl = spy(mDeviceInfoImpl);
+        DeviceInfoImpl spyDeviceImpl = spy(deviceInfoImpl);
         String url = "http://test.com/somefile.png";
 
         ShadowEnvironment.setExternalStorageState(Environment.MEDIA_MOUNTED);
@@ -220,7 +220,7 @@ public class DeviceInfoImplTest {
     @Test
     public void storePictureWithFileExtension_AddFieExtensionToFileName()
     throws Exception {
-        DeviceInfoImpl spyDeviceImpl = spy(mDeviceInfoImpl);
+        DeviceInfoImpl spyDeviceImpl = spy(deviceInfoImpl);
         final String url = "http://test.com/somefile.png";
         final String extension = ".png";
 
@@ -237,7 +237,7 @@ public class DeviceInfoImplTest {
     @Test
     public void storePictureEmptyOrNullFileExtension_FileNameUnmodified() throws Exception {
         final String url = "http://test.com/somefile";
-        DeviceInfoImpl spyDeviceImpl = spy(mDeviceInfoImpl);
+        DeviceInfoImpl spyDeviceImpl = spy(deviceInfoImpl);
 
         ShadowEnvironment.setExternalStorageState(Environment.MEDIA_MOUNTED);
         doReturn(null).when(spyDeviceImpl).getOutputStreamPreQ(anyString());

@@ -38,7 +38,7 @@ class MopubInterstitialFragment : AdFragment() {
 
     private lateinit var mopubInterstitialAdUnit: MediationInterstitialAdUnit
     private lateinit var moPubInterstitial: MoPubInterstitial
-    private val mListener = object : MoPubInterstitial.InterstitialAdListener {
+    private val listener = object : MoPubInterstitial.InterstitialAdListener {
         override fun onInterstitialLoaded(interstitial: MoPubInterstitial) {
             btnAdDidLoad?.isEnabled = true
             btnLoad?.isEnabled = true
@@ -98,7 +98,7 @@ class MopubInterstitialFragment : AdFragment() {
 
     private fun initInterstitialView(adUnitId: String, configId: String, title: String) {
         moPubInterstitial = MoPubInterstitial(requireActivity(), adUnitId)
-        moPubInterstitial.interstitialAdListener = mListener
+        moPubInterstitial.interstitialAdListener = listener
 
         val isVideo = (title.contains("Video", true) && !title.contains("MRAID", true))
         val mediationUtils = MoPubInterstitialMediationUtils(moPubInterstitial)

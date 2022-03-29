@@ -44,23 +44,26 @@ import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.EnumSet;
 
-public class HTMLCreative extends AbstractCreative
-    implements WebViewDelegate, InterstitialManagerDisplayDelegate, Comparable {
+public class HTMLCreative extends AbstractCreative implements WebViewDelegate, InterstitialManagerDisplayDelegate, Comparable {
 
     private static final String TAG = HTMLCreative.class.getSimpleName();
 
-    private MraidController mMraidController;
+    private MraidController mraidController;
 
-    private PrebidWebViewBase mTwoPartNewWebViewBase;
+    private PrebidWebViewBase twoPartNewWebViewBase;
 
-    private boolean mIsEndCard = false;
-    private boolean mResolved;
+    private boolean isEndCard = false;
+    private boolean resolved;
 
-    public HTMLCreative(Context context, CreativeModel model, OmAdSessionManager omAdSessionManager, InterstitialManager interstitialManager)
-    throws AdException {
+    public HTMLCreative(
+            Context context,
+            CreativeModel model,
+            OmAdSessionManager omAdSessionManager,
+            InterstitialManager interstitialManager
+    ) throws AdException {
         super(context, model, omAdSessionManager, interstitialManager);
-        mInterstitialManager.setInterstitialDisplayDelegate(this);
-        mMraidController = new MraidController(mInterstitialManager);
+        this.interstitialManager.setInterstitialDisplayDelegate(this);
+        mraidController = new MraidController(this.interstitialManager);
     }
 
     @Override
@@ -75,7 +78,7 @@ public class HTMLCreative extends AbstractCreative
 
     @Override
     public void load() throws AdException {
-        if (mContextReference == null || mContextReference.get() == null) {
+        if (contextReference == null || contextReference.get() == null) {
             throw new AdException(AdException.INTERNAL_ERROR, "Context is null. Could not load adHtml");
         }
         CreativeModel model = getCreativeModel();
@@ -95,11 +98,19 @@ public class HTMLCreative extends AbstractCreative
         if (adType == AdFormat.BANNER) {
             //do all banner
             prebidWebView = (PrebidWebViewBanner) ViewPool.getInstance()
-                    .getUnoccupiedView(mContextReference.get(), null, adType, mInterstitialManager);
+                                                          .getUnoccupiedView(contextReference.get(),
+                                                                  null,
+                                                                  adType,
+                                                                  interstitialManager
+                                                          );
         } else if (adType == AdFormat.INTERSTITIAL) {
             //do all interstitials
             prebidWebView = (PrebidWebViewInterstitial) ViewPool.getInstance()
-                    .getUnoccupiedView(mContextReference.get(), null, adType, mInterstitialManager);
+                                                                .getUnoccupiedView(contextReference.get(),
+                                                                        null,
+                                                                        adType,
+                                                                        interstitialManager
+                                                                );
         }
 
         if (prebidWebView == null) {
@@ -123,14 +134,14 @@ public class HTMLCreative extends AbstractCreative
             setCreativeView(prebidWebView);
         }
 
-        mIsEndCard = model.hasEndCard();
+        isEndCard = model.hasEndCard();
     }
 
     @Override
     public void display() {
 
         if (!(getCreativeView() instanceof PrebidWebViewBase)) {
-            LogUtil.error(TAG, "Could not cast mCreativeView to a PrebidWebViewBase");
+            LogUtil.error(TAG, "Could not cast creativeView to a PrebidWebViewBase");
             return;
         }
         PrebidWebViewBase creativeWebView = (PrebidWebViewBase) getCreativeView();
@@ -146,7 +157,7 @@ public class HTMLCreative extends AbstractCreative
             return;
         }
 
-        OmAdSessionManager omAdSessionManager = mWeakOmAdSessionManager.get();
+        OmAdSessionManager omAdSessionManager = weakOmAdSessionManager.get();
         if (omAdSessionManager == null) {
             LogUtil.error(TAG, "Error creating adSession. OmAdSessionManager is null");
             return;
@@ -171,13 +182,12 @@ public class HTMLCreative extends AbstractCreative
     @Override
     public void startViewabilityTracker() {
         VisibilityTrackerOption visibilityTrackerOption = new VisibilityTrackerOption(NativeEventTracker.EventType.IMPRESSION);
-        mCreativeVisibilityTracker = new CreativeVisibilityTracker(
-            getCreativeView().getWebView(),
-            visibilityTrackerOption,
-            ((PrebidWebViewBase) getCreativeView()).getWebView().isMRAID()
+        creativeVisibilityTracker = new CreativeVisibilityTracker(getCreativeView().getWebView(),
+                visibilityTrackerOption,
+                ((PrebidWebViewBase) getCreativeView()).getWebView().isMRAID()
         );
-        mCreativeVisibilityTracker.setVisibilityTrackerListener(this::onVisibilityEvent);
-        mCreativeVisibilityTracker.startVisibilityCheck(mContextReference.get());
+        creativeVisibilityTracker.setVisibilityTrackerListener(this::onVisibilityEvent);
+        creativeVisibilityTracker.startVisibilityCheck(contextReference.get());
     }
 
     @Override
@@ -190,21 +200,21 @@ public class HTMLCreative extends AbstractCreative
 
     @Override
     public void webViewReadyToDisplay() {
-        if (mResolved) {
+        if (resolved) {
             return;
         }
 
-        mResolved = true;
+        resolved = true;
         getResolutionListener().creativeReady(this);
     }
 
     @Override
     public void webViewFailedToLoad(AdException error) {
-        if (mResolved) {
+        if (resolved) {
             return;
         }
 
-        mResolved = true;
+        resolved = true;
         getResolutionListener().creativeFailed(error);
     }
 
@@ -285,7 +295,7 @@ public class HTMLCreative extends AbstractCreative
      * @return true if WebView is resolved (loaded or failed to load callback triggered), false otherwise.
      */
     public boolean isResolved() {
-        return mResolved;
+        return resolved;
     }
 
     /**
@@ -293,7 +303,7 @@ public class HTMLCreative extends AbstractCreative
      */
     @Override
     public boolean isEndCard() {
-        return mIsEndCard;
+        return isEndCard;
     }
 
     public void destroy() {
@@ -303,8 +313,8 @@ public class HTMLCreative extends AbstractCreative
             getCreativeView().destroy();
         }
 
-        if (mMraidController != null) {
-            mMraidController.destroy();
+        if (mraidController != null) {
+            mraidController.destroy();
         }
 
         ViewPool.getInstance().clear();
@@ -318,10 +328,10 @@ public class HTMLCreative extends AbstractCreative
     }
 
     public void handleMRAIDEventsInCreative(final MraidEvent mraidEvent, final WebViewBase oldWebViewBase) {
-        if (mMraidController == null) {
-            mMraidController = new MraidController(mInterstitialManager);
+        if (mraidController == null) {
+            mraidController = new MraidController(interstitialManager);
         }
-        mMraidController.handleMraidEvent(mraidEvent, this, oldWebViewBase, mTwoPartNewWebViewBase);
+        mraidController.handleMraidEvent(mraidEvent, this, oldWebViewBase, twoPartNewWebViewBase);
     }
 
     /**
@@ -332,7 +342,7 @@ public class HTMLCreative extends AbstractCreative
      */
     private String injectingScriptContent(String html) {
         try {
-            OmAdSessionManager omAdSessionManager = mWeakOmAdSessionManager.get();
+            OmAdSessionManager omAdSessionManager = weakOmAdSessionManager.get();
             if (omAdSessionManager == null) {
                 LogUtil.debug(TAG, "Unable to injectScriptContent. AdSessionManager is null.");
                 return html;
@@ -346,6 +356,6 @@ public class HTMLCreative extends AbstractCreative
     }
 
     public void setTwoPartNewWebViewBase(PrebidWebViewBase twoPartNewWebViewBase) {
-        mTwoPartNewWebViewBase = twoPartNewWebViewBase;
+        this.twoPartNewWebViewBase = twoPartNewWebViewBase;
     }
 }

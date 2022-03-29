@@ -21,22 +21,21 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
-public class StaticResource extends VASTParserBase
-{
-    private String mCreativeType;
-    private String mValue;
+public class StaticResource extends VASTParserBase {
 
-	public StaticResource(XmlPullParser p) throws XmlPullParserException, IOException
-	{
-        mCreativeType = p.getAttributeValue(null, "creativeType");
-        mValue = readText(p);
+    private String creativeType;
+    private String value;
+
+    public StaticResource(XmlPullParser p) throws XmlPullParserException, IOException {
+        creativeType = p.getAttributeValue(null, "creativeType");
+        value = readText(p);
     }
 
     public String getCreativeType() {
-        return mCreativeType;
+        return creativeType;
     }
 
     public String getValue() {
-        return mValue;
+        return value;
 	}
 }

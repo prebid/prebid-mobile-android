@@ -42,15 +42,15 @@ import static org.mockito.Mockito.mock;
 @Config(sdk = 19)
 public class MediationRewardedVideoAdUnitTest {
 
-    private Context mContext;
-    private MediationRewardedVideoAdUnit mMopubRewardedAdUnit;
+    private Context context;
+    private MediationRewardedVideoAdUnit mopubRewardedAdUnit;
 
     @Before
     public void setUp() throws Exception {
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
+        context = Robolectric.buildActivity(Activity.class).create().get();
         PrebidMobile.setPrebidServerAccountId("id");
-        mMopubRewardedAdUnit = new MediationRewardedVideoAdUnit(mContext, "config", new MockMediationUtils());
-        WhiteBox.setInternalState(mMopubRewardedAdUnit, "mBidLoader", mock(BidLoader.class));
+        mopubRewardedAdUnit = new MediationRewardedVideoAdUnit(context, "config", new MockMediationUtils());
+        WhiteBox.setInternalState(mopubRewardedAdUnit, "bidLoader", mock(BidLoader.class));
     }
 
     @After
@@ -60,8 +60,8 @@ public class MediationRewardedVideoAdUnitTest {
 
     @Test
     public void whenInitAdConfig_PrepareAdConfigForInterstitial() {
-        mMopubRewardedAdUnit.initAdConfig("config", null);
-        AdUnitConfiguration adConfiguration = mMopubRewardedAdUnit.mAdUnitConfig;
+        mopubRewardedAdUnit.initAdConfig("config", null);
+        AdUnitConfiguration adConfiguration = mopubRewardedAdUnit.adUnitConfig;
         assertEquals("config", adConfiguration.getConfigId());
         assertEquals(EnumSet.of(AdFormat.VAST), adConfiguration.getAdFormats());
         assertTrue(adConfiguration.isRewarded());

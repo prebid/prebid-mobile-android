@@ -37,9 +37,8 @@ import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class InterstitialViewTest {
-    private InterstitialView mSpyBidInterstitialView;
-    @Mock
-    private AdViewManager mMockAdViewManager;
+    private InterstitialView spyBidInterstitialView;
+    @Mock private AdViewManager mockAdViewManager;
 
     @Before
     public void setup() throws AdException, IllegalAccessException {
@@ -47,10 +46,10 @@ public class InterstitialViewTest {
 
         Context context = Robolectric.buildActivity(Activity.class).create().get();
 
-        mSpyBidInterstitialView = spy(new InterstitialView(context));
+        spyBidInterstitialView = spy(new InterstitialView(context));
 
-        when(mMockAdViewManager.getAdConfiguration()).thenReturn(mock(AdUnitConfiguration.class));
-        WhiteBox.field(InterstitialView.class, "mAdViewManager").set(mSpyBidInterstitialView, mMockAdViewManager);
+        when(mockAdViewManager.getAdConfiguration()).thenReturn(mock(AdUnitConfiguration.class));
+        WhiteBox.field(InterstitialView.class, "adViewManager").set(spyBidInterstitialView, mockAdViewManager);
     }
 
     @Test
@@ -58,17 +57,17 @@ public class InterstitialViewTest {
         AdUnitConfiguration mockAdUnitConfiguration = mock(AdUnitConfiguration.class);
         BidResponse mockBidResponse = mock(BidResponse.class);
 
-        mSpyBidInterstitialView.loadAd(mockAdUnitConfiguration, mockBidResponse);
+        spyBidInterstitialView.loadAd(mockAdUnitConfiguration, mockBidResponse);
 
-        verify(mMockAdViewManager, times(1)).loadBidTransaction(eq(mockAdUnitConfiguration), eq(mockBidResponse));
+        verify(mockAdViewManager, times(1)).loadBidTransaction(eq(mockAdUnitConfiguration), eq(mockBidResponse));
     }
 
     @Test
     public void setInterstitialViewListener_ExecuteAddEventListener() {
         final InterstitialViewListener mockInterstitialViewListener = mock(InterstitialViewListener.class);
 
-        mSpyBidInterstitialView.setInterstitialViewListener(mockInterstitialViewListener);
+        spyBidInterstitialView.setInterstitialViewListener(mockInterstitialViewListener);
 
-        verify(mSpyBidInterstitialView, times(1)).setInterstitialViewListener(eq(mockInterstitialViewListener));
+        verify(spyBidInterstitialView, times(1)).setInterstitialViewListener(eq(mockInterstitialViewListener));
     }
 }

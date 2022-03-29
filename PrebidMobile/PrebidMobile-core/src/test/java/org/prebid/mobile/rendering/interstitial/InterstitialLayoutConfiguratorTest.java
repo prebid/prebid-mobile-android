@@ -32,8 +32,8 @@ import static org.junit.Assert.*;
 @Config(sdk = 19)
 public class InterstitialLayoutConfiguratorTest {
 
-    private InterstitialDisplayPropertiesInternal mDisplayProperties = new InterstitialDisplayPropertiesInternal();
-    private AdUnitConfiguration mAdConfiguration = new AdUnitConfiguration();
+    private InterstitialDisplayPropertiesInternal displayProperties = new InterstitialDisplayPropertiesInternal();
+    private AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
 
     @Before
     public void setUp() throws Exception {
@@ -42,32 +42,32 @@ public class InterstitialLayoutConfiguratorTest {
 
     @Test
     public void orientationPortrait_whenNoLayoutAndSize() {
-        InterstitialLayoutConfigurator.configureDisplayProperties(mAdConfiguration, mDisplayProperties);
-        assertEquals(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, mDisplayProperties.orientation);
-        assertFalse(mDisplayProperties.isRotationEnabled);
+        InterstitialLayoutConfigurator.configureDisplayProperties(adConfiguration, displayProperties);
+        assertEquals(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, displayProperties.orientation);
+        assertFalse(displayProperties.isRotationEnabled);
     }
 
     @Test
     public void rotationEnabled_whenNoLayoutAndSizeIsAspectRatio() {
-        mAdConfiguration.setInterstitialSize(InterstitialSizes.InterstitialSize.ASPECT_RATIO_300x200);
-        InterstitialLayoutConfigurator.configureDisplayProperties(mAdConfiguration, mDisplayProperties);
-        assertEquals(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, mDisplayProperties.orientation);
-        assertTrue(mDisplayProperties.isRotationEnabled);
+        adConfiguration.setInterstitialSize(InterstitialSizes.InterstitialSize.ASPECT_RATIO_300x200);
+        InterstitialLayoutConfigurator.configureDisplayProperties(adConfiguration, displayProperties);
+        assertEquals(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, displayProperties.orientation);
+        assertTrue(displayProperties.isRotationEnabled);
     }
 
     @Test
     public void orientationLandscapeAndNoRotation_whenSizeIsLandscape() {
-        mAdConfiguration.setInterstitialSize(InterstitialSizes.InterstitialSize.LANDSCAPE_480x320);
-        InterstitialLayoutConfigurator.configureDisplayProperties(mAdConfiguration, mDisplayProperties);
-        assertEquals(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE, mDisplayProperties.orientation);
-        assertFalse(mDisplayProperties.isRotationEnabled);
+        adConfiguration.setInterstitialSize(InterstitialSizes.InterstitialSize.LANDSCAPE_480x320);
+        InterstitialLayoutConfigurator.configureDisplayProperties(adConfiguration, displayProperties);
+        assertEquals(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE, displayProperties.orientation);
+        assertFalse(displayProperties.isRotationEnabled);
     }
 
     @Test
     public void orientationPortraitAndNoRotation_whenSizeIsVertical() {
-        mAdConfiguration.setInterstitialSize(InterstitialSizes.InterstitialSize.VERTICAL_270x480);
-        InterstitialLayoutConfigurator.configureDisplayProperties(mAdConfiguration, mDisplayProperties);
-        assertEquals(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, mDisplayProperties.orientation);
-        assertFalse(mDisplayProperties.isRotationEnabled);
+        adConfiguration.setInterstitialSize(InterstitialSizes.InterstitialSize.VERTICAL_270x480);
+        InterstitialLayoutConfigurator.configureDisplayProperties(adConfiguration, displayProperties);
+        assertEquals(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT, displayProperties.orientation);
+        assertFalse(displayProperties.isRotationEnabled);
     }
 }

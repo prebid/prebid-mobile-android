@@ -31,48 +31,48 @@ import static org.mockito.Mockito.*;
 @RunWith(JUnit4.class)
 @Config(sdk = 19)
 public class OmEventTrackerTest {
-    private OmEventTracker mOmEventTracker;
+    private OmEventTracker omEventTracker;
 
-    private OmAdSessionManager mMockOmAdSessionManager;
+    private OmAdSessionManager mockOmAdSessionManager;
 
     @Before
     public void setup() {
-        mMockOmAdSessionManager = mock(OmAdSessionManager.class);
-        mOmEventTracker = new OmEventTracker();
-        mOmEventTracker.registerActiveAdSession(mMockOmAdSessionManager);
+        mockOmAdSessionManager = mock(OmAdSessionManager.class);
+        omEventTracker = new OmEventTracker();
+        omEventTracker.registerActiveAdSession(mockOmAdSessionManager);
     }
 
     @Test
     public void trackOmVideoAdEventTest() {
         VideoAdEvent.Event anyVideoEvent = any(VideoAdEvent.Event.class);
-        mOmEventTracker.trackOmVideoAdEvent(anyVideoEvent);
-        verify(mMockOmAdSessionManager, times(1)).trackAdVideoEvent(anyVideoEvent);
+        omEventTracker.trackOmVideoAdEvent(anyVideoEvent);
+        verify(mockOmAdSessionManager, times(1)).trackAdVideoEvent(anyVideoEvent);
     }
 
     @Test
     public void trackOmHtmlAdEventTest() {
-        mOmEventTracker.trackOmHtmlAdEvent(TrackingEvent.Events.IMPRESSION);
-        mOmEventTracker.trackOmHtmlAdEvent(TrackingEvent.Events.CLICK);
+        omEventTracker.trackOmHtmlAdEvent(TrackingEvent.Events.IMPRESSION);
+        omEventTracker.trackOmHtmlAdEvent(TrackingEvent.Events.CLICK);
 
-        verify(mMockOmAdSessionManager, times(1)).trackDisplayAdEvent(TrackingEvent.Events.IMPRESSION);
-        verify(mMockOmAdSessionManager, times(1)).trackDisplayAdEvent(TrackingEvent.Events.CLICK);
+        verify(mockOmAdSessionManager, times(1)).trackDisplayAdEvent(TrackingEvent.Events.IMPRESSION);
+        verify(mockOmAdSessionManager, times(1)).trackDisplayAdEvent(TrackingEvent.Events.CLICK);
     }
 
     @Test
     public void trackOmPlayerStateChangeTest() {
-        mOmEventTracker.trackOmPlayerStateChange(InternalPlayerState.NORMAL);
-        verify(mMockOmAdSessionManager, times(1)).trackPlayerStateChangeEvent(InternalPlayerState.NORMAL);
+        omEventTracker.trackOmPlayerStateChange(InternalPlayerState.NORMAL);
+        verify(mockOmAdSessionManager, times(1)).trackPlayerStateChangeEvent(InternalPlayerState.NORMAL);
     }
 
     @Test
     public void trackVideoAdStartedTest() {
-        mOmEventTracker.trackVideoAdStarted(0, 0);
-        verify(mMockOmAdSessionManager).videoAdStarted(0, 0);
+        omEventTracker.trackVideoAdStarted(0, 0);
+        verify(mockOmAdSessionManager).videoAdStarted(0, 0);
     }
 
     @Test
     public void trackNonSkippableVideoLoadedTest() {
-        mOmEventTracker.trackNonSkippableStandaloneVideoLoaded(false);
-        verify(mMockOmAdSessionManager).nonSkippableStandaloneVideoAdLoaded(false);
+        omEventTracker.trackNonSkippableStandaloneVideoLoaded(false);
+        verify(mockOmAdSessionManager).nonSkippableStandaloneVideoAdLoaded(false);
     }
 }

@@ -25,44 +25,46 @@ import org.prebid.mobile.drprebid.ui.viewmodels.SettingsViewModel;
 import org.prebid.mobile.drprebid.util.HelpScreenUtil;
 
 public class PrebidServerSettingsViewholder extends RecyclerView.ViewHolder implements SettingsViewHolder, LifecycleOwner, View.OnClickListener {
-    private TextView mServerView;
-    private TextView mAccountIdView;
-    private TextView mConfigIdView;
-    private SettingsViewModel mSettingsViewModel;
+
+    private TextView serverView;
+    private TextView accountIdView;
+    private TextView configIdView;
+    private SettingsViewModel settingsViewModel;
 
     public PrebidServerSettingsViewholder(@NonNull final View itemView) {
         super(itemView);
 
         itemView.findViewById(R.id.button_info).setOnClickListener(this);
 
-        mServerView = itemView.findViewById(R.id.view_prebid_server);
-        mServerView.setOnClickListener(this);
-        mAccountIdView = itemView.findViewById(R.id.view_account_id);
-        mAccountIdView.setOnClickListener(this);
-        mConfigIdView = itemView.findViewById(R.id.view_config_id);
-        mConfigIdView.setOnClickListener(this);
+        serverView = itemView.findViewById(R.id.view_prebid_server);
+        serverView.setOnClickListener(this);
+        accountIdView = itemView.findViewById(R.id.view_account_id);
+        accountIdView.setOnClickListener(this);
+        configIdView = itemView.findViewById(R.id.view_config_id);
+        configIdView.setOnClickListener(this);
 
-        mSettingsViewModel = ViewModelProviders.of((AppCompatActivity) itemView.getContext()).get(SettingsViewModel.class);
+        settingsViewModel = ViewModelProviders.of((AppCompatActivity) itemView.getContext())
+                                              .get(SettingsViewModel.class);
 
-        mSettingsViewModel.getPrebidServer().observe(this, prebidServer -> {
+        settingsViewModel.getPrebidServer().observe(this, prebidServer -> {
             if (prebidServer != null) {
                 fillPrebidServer(prebidServer);
             }
         });
 
-        mSettingsViewModel.getAccountId().observe(this, accountId -> {
+        settingsViewModel.getAccountId().observe(this, accountId -> {
             if (!TextUtils.isEmpty(accountId)) {
-                mAccountIdView.setText(accountId);
+                accountIdView.setText(accountId);
             } else {
-                mAccountIdView.setText(R.string.click_to_choose);
+                accountIdView.setText(R.string.click_to_choose);
             }
         });
 
-        mSettingsViewModel.getConfigId().observe(this, configId -> {
+        settingsViewModel.getConfigId().observe(this, configId -> {
             if (!TextUtils.isEmpty(configId)) {
-                mConfigIdView.setText(configId);
+                configIdView.setText(configId);
             } else {
-                mConfigIdView.setText(R.string.click_to_choose);
+                configIdView.setText(R.string.click_to_choose);
             }
         });
     }
@@ -84,24 +86,24 @@ public class PrebidServerSettingsViewholder extends RecyclerView.ViewHolder impl
         fillPrebidServer(settings.getPrebidServer());
 
         if (!TextUtils.isEmpty(settings.getAccountId())) {
-            mAccountIdView.setText(settings.getAccountId());
+            accountIdView.setText(settings.getAccountId());
         }
 
         if (!TextUtils.isEmpty(settings.getConfigId())) {
-            mConfigIdView.setText(settings.getConfigId());
+            configIdView.setText(settings.getConfigId());
         }
     }
 
     private void fillPrebidServer(PrebidServer prebidServer) {
         switch (prebidServer) {
             case APPNEXUS:
-                mServerView.setText(R.string.prebid_server_appnexus);
+                serverView.setText(R.string.prebid_server_appnexus);
                 break;
             case RUBICON:
-                mServerView.setText(R.string.prebid_server_rubicon);
+                serverView.setText(R.string.prebid_server_rubicon);
                 break;
             case CUSTOM:
-                mServerView.setText(R.string.prebid_server_custom);
+                serverView.setText(R.string.prebid_server_custom);
                 break;
         }
     }

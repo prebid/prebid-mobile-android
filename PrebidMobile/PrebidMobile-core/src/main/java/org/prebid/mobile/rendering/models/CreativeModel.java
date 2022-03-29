@@ -42,56 +42,59 @@ public class CreativeModel {
     private static String TAG = CreativeModel.class.getSimpleName();
 
     //internal data
-    private AdUnitConfiguration mAdConfiguration;
+    private AdUnitConfiguration adConfiguration;
     //helper to get the right creative class
-    private String mName;
-    private int mDisplayDurationInSeconds = 0;
+    private String name;
+    private int displayDurationInSeconds = 0;
     //all - creative width
-    private int mWidth = 0;
+    private int width = 0;
 
     //all - creative height
-    private int mHeight = 0;
+    private int height = 0;
 
     //all - creative html
-    private String mHtml;
+    private String html;
 
-    @Nullable
-    private Integer mRefreshMax;
+    @Nullable private Integer refreshMax;
 
-    HashMap<TrackingEvent.Events, ArrayList<String>> mTrackingURLs = new HashMap<>();
+    HashMap<TrackingEvent.Events, ArrayList<String>> trackingURLs = new HashMap<>();
 
-    protected TrackingManager mTrackingManager;
-    protected OmEventTracker mOmEventTracker;
+    protected TrackingManager trackingManager;
+    protected OmEventTracker omEventTracker;
 
     //all - a unique transaction state of the ad
-    private String mTransactionState;
+    private String transactionState;
 
     //all - resolved ri url of an ad
-    private String mImpressionUrl;
+    private String impressionUrl;
 
     // Determines whether an impression is needed
     // For end cards, an impression is not necessary
-    private boolean mRequireImpressionUrl = true;
+    private boolean requireImpressionUrl = true;
 
     //all - resolved rc url of an ad
-    private String mClickUrl;
+    private String clickUrl;
 
-    private String mTracking;
-    private String mTargetUrl;
+    private String tracking;
+    private String targetUrl;
 
     // Flags that the creative is part of a transaction with an end card
     // This is important for the display layer to perform end card functions
-    private boolean mHasEndCard = false;
+    private boolean hasEndCard = false;
 
-    public CreativeModel(TrackingManager trackingManager, OmEventTracker omEventTracker, AdUnitConfiguration adConfiguration) {
-        mTrackingManager = trackingManager;
-        mAdConfiguration = adConfiguration;
-        mOmEventTracker = omEventTracker;
+    public CreativeModel(
+            TrackingManager trackingManager,
+            OmEventTracker omEventTracker,
+            AdUnitConfiguration adConfiguration
+    ) {
+        this.trackingManager = trackingManager;
+        this.adConfiguration = adConfiguration;
+        this.omEventTracker = omEventTracker;
     }
 
     //tracking firing here from Model always
     public void registerTrackingEvent(TrackingEvent.Events event, ArrayList<String> urls) {
-        mTrackingURLs.put(event, urls);
+        trackingURLs.put(event, urls);
     }
 
     //Tracking an event
@@ -101,7 +104,7 @@ public class CreativeModel {
     }
 
     public void trackEventNamed(TrackingEvent.Events event) {
-        ArrayList<String> trackingUrls = mTrackingURLs.get(event);
+        ArrayList<String> trackingUrls = trackingURLs.get(event);
 
         if (trackingUrls == null || trackingUrls.isEmpty()) {
             LogUtil.debug(TAG, "Event" + event + ": url not found for tracking");
@@ -110,144 +113,143 @@ public class CreativeModel {
 
         //Impression tracker changes
         if (event.equals(TrackingEvent.Events.IMPRESSION)) {
-            mTrackingManager.fireEventTrackingImpressionURLs(trackingUrls);
+            trackingManager.fireEventTrackingImpressionURLs(trackingUrls);
         }
         else {
             //for everything else, use standard logic with no redirection check
             //clicks(rc), would go through GetOriginalUrlTask path, for any redirection related task
             //TODO: Check if we can merge redirection check into our standard BaseNetwork class,
             //for all requests(adrequest & recordEvents)
-            mTrackingManager.fireEventTrackingURLs(trackingUrls);
+            trackingManager.fireEventTrackingURLs(trackingUrls);
         }
     }
 
     public void registerActiveOmAdSession(OmAdSessionManager omAdSessionManager) {
-        mOmEventTracker.registerActiveAdSession(omAdSessionManager);
+        omEventTracker.registerActiveAdSession(omAdSessionManager);
     }
 
     private void handleOmTracking(TrackingEvent.Events event) {
         //checking if this click is made on the end card so that we could track it in the scope
         //of OM video session
-        if (mHasEndCard && event == TrackingEvent.Events.CLICK) {
-            mOmEventTracker.trackOmVideoAdEvent(VideoAdEvent.Event.AD_CLICK);
-        }
-        else {
-            mOmEventTracker.trackOmHtmlAdEvent(event);
+        if (hasEndCard && event == TrackingEvent.Events.CLICK) {
+            omEventTracker.trackOmVideoAdEvent(VideoAdEvent.Event.AD_CLICK);
+        } else {
+            omEventTracker.trackOmHtmlAdEvent(event);
         }
     }
 
     public AdUnitConfiguration getAdConfiguration() {
-        return mAdConfiguration;
+        return adConfiguration;
     }
 
     public void setAdConfiguration(AdUnitConfiguration adConfiguration) {
-        mAdConfiguration = adConfiguration;
+        this.adConfiguration = adConfiguration;
     }
 
     public String getName() {
-        return mName;
+        return name;
     }
 
     public void setName(String name) {
-        mName = name;
+        this.name = name;
     }
 
     public int getDisplayDurationInSeconds() {
-        return mDisplayDurationInSeconds;
+        return displayDurationInSeconds;
     }
 
     public void setDisplayDurationInSeconds(int displayDurationInSeconds) {
-        mDisplayDurationInSeconds = displayDurationInSeconds;
+        this.displayDurationInSeconds = displayDurationInSeconds;
     }
 
     public int getWidth() {
-        return mWidth;
+        return width;
     }
 
     public void setWidth(int width) {
-        mWidth = width;
+        this.width = width;
     }
 
     public int getHeight() {
-        return mHeight;
+        return height;
     }
 
     public void setHeight(int height) {
-        mHeight = height;
+        this.height = height;
     }
 
     public String getHtml() {
-        return mHtml;
+        return html;
     }
 
     public void setHtml(String html) {
-        mHtml = html;
+        this.html = html;
     }
 
     @Nullable
     public Integer getRefreshMax() {
-        return mRefreshMax;
+        return refreshMax;
     }
 
     public void setRefreshMax(
         @Nullable
             Integer refreshMax) {
-        mRefreshMax = refreshMax;
+        this.refreshMax = refreshMax;
     }
 
     public String getTransactionState() {
-        return mTransactionState;
+        return transactionState;
     }
 
     public void setTransactionState(String transactionState) {
-        mTransactionState = transactionState;
+        this.transactionState = transactionState;
     }
 
     public String getImpressionUrl() {
-        return mImpressionUrl;
+        return impressionUrl;
     }
 
     public void setImpressionUrl(String impressionUrl) {
-        mImpressionUrl = impressionUrl;
+        this.impressionUrl = impressionUrl;
     }
 
     public boolean isRequireImpressionUrl() {
-        return mRequireImpressionUrl;
+        return requireImpressionUrl;
     }
 
     public void setRequireImpressionUrl(boolean requireImpressionUrl) {
-        mRequireImpressionUrl = requireImpressionUrl;
+        this.requireImpressionUrl = requireImpressionUrl;
     }
 
     public String getClickUrl() {
-        return mClickUrl;
+        return clickUrl;
     }
 
     public void setClickUrl(String clickUrl) {
-        mClickUrl = clickUrl;
+        this.clickUrl = clickUrl;
     }
 
     public String getTracking() {
-        return mTracking;
+        return tracking;
     }
 
     public void setTracking(String tracking) {
-        mTracking = tracking;
+        this.tracking = tracking;
     }
 
     public boolean hasEndCard() {
-        return mHasEndCard;
+        return hasEndCard;
     }
 
     public void setHasEndCard(boolean hasEndCard) {
-        mHasEndCard = hasEndCard;
+        this.hasEndCard = hasEndCard;
     }
 
     public void setTargetUrl(String targetUrl) {
-        mTargetUrl = targetUrl;
+        this.targetUrl = targetUrl;
     }
 
     public String getTargetUrl() {
-        return mTargetUrl;
+        return targetUrl;
     }
 }

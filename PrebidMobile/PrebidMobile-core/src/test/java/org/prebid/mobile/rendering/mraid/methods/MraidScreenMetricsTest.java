@@ -32,92 +32,92 @@ import static org.junit.Assert.*;
 @Config(sdk = 19)
 public class MraidScreenMetricsTest {
 
-    private MraidScreenMetrics mMraidScreenMetrics;
+    private MraidScreenMetrics mraidScreenMetrics;
 
     @Before
     public void setUp() throws Exception {
         Context context = Robolectric.buildActivity(Activity.class).create().get();
-        mMraidScreenMetrics = new MraidScreenMetrics(context, 1f);
+        mraidScreenMetrics = new MraidScreenMetrics(context, 1f);
     }
 
     @Test
     public void getDensityTest() {
-        assertEquals(1f, mMraidScreenMetrics.getDensity(), 0);
+        assertEquals(1f, mraidScreenMetrics.getDensity(), 0);
     }
 
     @Test
     public void setScreenSizeTest() {
         Rect expected = new Rect(0, 0, 100, 200);
-        assertNotEquals(expected, mMraidScreenMetrics.getScreenRect());
+        assertNotEquals(expected, mraidScreenMetrics.getScreenRect());
 
-        mMraidScreenMetrics.setScreenSize(100, 200);
-        assertEquals(expected, mMraidScreenMetrics.getScreenRect());
+        mraidScreenMetrics.setScreenSize(100, 200);
+        assertEquals(expected, mraidScreenMetrics.getScreenRect());
     }
 
     @Test
     public void getScreenRectTest() {
-        assertNotNull(mMraidScreenMetrics.getScreenRect());
+        assertNotNull(mraidScreenMetrics.getScreenRect());
     }
 
     @Test
     public void getScreenRectDipsTest() {
-        assertNotNull(mMraidScreenMetrics.getScreenRectDips());
+        assertNotNull(mraidScreenMetrics.getScreenRectDips());
     }
 
     @Test
     public void setRootViewPositionTest() {
         Rect expected = new Rect(1, 2, 101, 202);
-        assertNotEquals(expected, mMraidScreenMetrics.getRootViewRect());
+        assertNotEquals(expected, mraidScreenMetrics.getRootViewRect());
 
-        mMraidScreenMetrics.setRootViewPosition(1, 2, 100, 200);
-        assertEquals(expected, mMraidScreenMetrics.getRootViewRect());
+        mraidScreenMetrics.setRootViewPosition(1, 2, 100, 200);
+        assertEquals(expected, mraidScreenMetrics.getRootViewRect());
     }
 
     @Test
     public void getRootViewRectTest() {
-        assertNotNull(mMraidScreenMetrics.getRootViewRect());
+        assertNotNull(mraidScreenMetrics.getRootViewRect());
     }
 
     @Test
     public void getRootViewRectDipsTest() {
-        assertNotNull(mMraidScreenMetrics.getRootViewRectDips());
+        assertNotNull(mraidScreenMetrics.getRootViewRectDips());
     }
 
     @Test
     public void setCurrentAdPositionTest() {
         Rect expected = new Rect(1, 2, 101, 202);
-        assertNotEquals(expected, mMraidScreenMetrics.getCurrentAdRect());
+        assertNotEquals(expected, mraidScreenMetrics.getCurrentAdRect());
 
-        mMraidScreenMetrics.setCurrentAdPosition(1, 2, 100, 200);
-        assertEquals(expected, mMraidScreenMetrics.getCurrentAdRect());
+        mraidScreenMetrics.setCurrentAdPosition(1, 2, 100, 200);
+        assertEquals(expected, mraidScreenMetrics.getCurrentAdRect());
     }
 
     @Test
     public void getCurrentAdRectTest() {
-        assertNotNull(mMraidScreenMetrics.getCurrentAdRect());
+        assertNotNull(mraidScreenMetrics.getCurrentAdRect());
     }
 
     @Test
     public void getCurrentAdRectDipsTest() {
-        assertNotNull(mMraidScreenMetrics.getCurrentAdRectDips());
+        assertNotNull(mraidScreenMetrics.getCurrentAdRectDips());
     }
 
     @Test
     public void setDefaultAdPositionTest() {
         Rect expected = new Rect(1, 2, 101, 202);
-        assertNotEquals(expected, mMraidScreenMetrics.getDefaultAdRect());
+        assertNotEquals(expected, mraidScreenMetrics.getDefaultAdRect());
 
-        mMraidScreenMetrics.setDefaultAdPosition(1, 2, 100, 200);
-        assertEquals(expected, mMraidScreenMetrics.getDefaultAdRect());
+        mraidScreenMetrics.setDefaultAdPosition(1, 2, 100, 200);
+        assertEquals(expected, mraidScreenMetrics.getDefaultAdRect());
     }
 
     @Test
     public void getDefaultAdRectTest() {
-        assertNotNull(mMraidScreenMetrics.getDefaultAdRect());
+        assertNotNull(mraidScreenMetrics.getDefaultAdRect());
     }
 
     @Test
     public void getDefaultAdRectDipsTest() {
-        assertNotNull(mMraidScreenMetrics.getDefaultAdRectDips());
+        assertNotNull(mraidScreenMetrics.getDefaultAdRectDips());
     }
 }

@@ -21,28 +21,27 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
-public class Pricing extends VASTParserBase
-{
-    private String mModel;
-    private String mCurrency;
-    private String mValue;
+public class Pricing extends VASTParserBase {
 
-	public Pricing(XmlPullParser p) throws XmlPullParserException, IOException
-	{
-        mModel = p.getAttributeValue(null, "model");
-        mCurrency = p.getAttributeValue(null, "currency");
-        mValue = readText(p);
+    private String model;
+    private String currency;
+    private String value;
+
+    public Pricing(XmlPullParser p) throws XmlPullParserException, IOException {
+        model = p.getAttributeValue(null, "model");
+        currency = p.getAttributeValue(null, "currency");
+        value = readText(p);
     }
 
     public String getModel() {
-        return mModel;
+        return model;
     }
 
     public String getCurrency() {
-        return mCurrency;
+        return currency;
     }
 
     public String getValue() {
-        return mValue;
+        return value;
 	}
 }

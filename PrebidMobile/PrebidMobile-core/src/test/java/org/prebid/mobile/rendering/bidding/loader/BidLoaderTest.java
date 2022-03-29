@@ -42,79 +42,75 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class BidLoaderTest {
 
-    private BidLoader mBidLoader;
-    private Context mContext;
-    @Mock
-    private AdUnitConfiguration mMockAdConfiguration;
-    @Mock
-    private BidRequesterListener mBidRequesterListener;
-    @Mock
-    private BidRequester mMockRequester;
-    @Mock
-    private RefreshTimerTask mMockTimerTask;
+    private BidLoader bidLoader;
+    private Context context;
+    @Mock private AdUnitConfiguration mockAdConfiguration;
+    @Mock private BidRequesterListener bidRequesterListener;
+    @Mock private BidRequester mockRequester;
+    @Mock private RefreshTimerTask mockTimerTask;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
-        when(mMockAdConfiguration.isAdType(any(AdFormat.class))).thenReturn(true);
-        when(mMockAdConfiguration.getAutoRefreshDelay()).thenReturn(60000);
-        mBidLoader = createBidLoader(mContext, mMockAdConfiguration, mBidRequesterListener);
+        context = Robolectric.buildActivity(Activity.class).create().get();
+        when(mockAdConfiguration.isAdType(any(AdFormat.class))).thenReturn(true);
+        when(mockAdConfiguration.getAutoRefreshDelay()).thenReturn(60000);
+        bidLoader = createBidLoader(context, mockAdConfiguration, bidRequesterListener);
     }
 
     @Test
     public void whenLoadAndNoContext_NoStartAdRequestCall() {
-        mBidLoader = createBidLoader(mContext, null, mBidRequesterListener);
-        mBidLoader.load();
-        verify(mMockRequester, never()).startAdRequest();
+        bidLoader = createBidLoader(context, null, bidRequesterListener);
+        bidLoader.load();
+        verify(mockRequester, never()).startAdRequest();
     }
 
     @Test
     public void whenLoadAndNoAdConfiguration_NoStartAdRequestCall() {
-        mBidLoader = createBidLoader(null, mMockAdConfiguration, mBidRequesterListener);
-        mBidLoader.load();
-        verify(mMockRequester, never()).startAdRequest();
+        bidLoader = createBidLoader(null, mockAdConfiguration, bidRequesterListener);
+        bidLoader.load();
+        verify(mockRequester, never()).startAdRequest();
     }
 
     @Test
     public void whenLoadAndNoListener_NoStartAdRequestCall() {
-        mBidLoader = createBidLoader(mContext, mMockAdConfiguration, null);
-        mBidLoader.load();
-        verify(mMockRequester, never()).startAdRequest();
+        bidLoader = createBidLoader(context, mockAdConfiguration, null);
+        bidLoader.load();
+        verify(mockRequester, never()).startAdRequest();
     }
 
     @Test
     public void whenFreshLoadAndAdUnitConfigPassed_CallStartAdRequest() {
-        mBidLoader.load();
-        verify(mMockRequester).startAdRequest();
+        bidLoader.load();
+        verify(mockRequester).startAdRequest();
     }
 
     @Test
     public void whenLoadAndCurrentlyLoading_NoStartAdRequestCall() {
-        WhiteBox.setInternalState(mBidLoader, "mCurrentlyLoading", new AtomicBoolean(true));
-        mBidLoader.load();
-        verify(mMockRequester, never()).startAdRequest();
+        WhiteBox.setInternalState(bidLoader, "currentlyLoading", new AtomicBoolean(true));
+        bidLoader.load();
+        verify(mockRequester, never()).startAdRequest();
     }
 
     @Test
     public void whenDestroy_RequesterAndTimerTaskDestroyed() throws IllegalAccessException {
-        WhiteBox.field(BidLoader.class, "mBidRequester").set(mBidLoader, mMockRequester);
-        mBidLoader.destroy();
-        verify(mMockRequester).destroy();
-        verify(mMockTimerTask).cancelRefreshTimer();
-        verify(mMockTimerTask).destroy();
+        WhiteBox.field(BidLoader.class, "bidRequester").set(bidLoader, mockRequester);
+        bidLoader.destroy();
+        verify(mockRequester).destroy();
+        verify(mockTimerTask).cancelRefreshTimer();
+        verify(mockTimerTask).destroy();
     }
 
     @Test
-    public void whenCancelRefresh_CancelRefreshTimerTask(){
-        mBidLoader.cancelRefresh();
-        verify(mMockTimerTask).cancelRefreshTimer();
+    public void whenCancelRefresh_CancelRefreshTimerTask() {
+        bidLoader.cancelRefresh();
+        verify(mockTimerTask).cancelRefreshTimer();
     }
 
     private BidLoader createBidLoader(Context context, AdUnitConfiguration adConfiguration, BidRequesterListener requestListener) {
         BidLoader bidLoader = new BidLoader(context, adConfiguration, requestListener);
-        WhiteBox.setInternalState(bidLoader, "mBidRequester", mMockRequester);
-        WhiteBox.setInternalState(bidLoader, "mRefreshTimerTask", mMockTimerTask);
+        WhiteBox.setInternalState(bidLoader, "bidRequester", mockRequester);
+        WhiteBox.setInternalState(bidLoader, "refreshTimerTask", mockTimerTask);
         return bidLoader;
     }
 }

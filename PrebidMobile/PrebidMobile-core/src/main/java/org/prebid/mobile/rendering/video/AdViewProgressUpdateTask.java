@@ -32,27 +32,30 @@ import java.lang.ref.WeakReference;
  * Created by matthew.rolufs on 9/1/15.
  */
 public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
+
     private static String TAG = AdViewProgressUpdateTask.class.getSimpleName();
-    private long mCurrent = 0;
-    private WeakReference<View> mCreativeViewWeakReference;
-    private long mDuration;
-    private VideoCreativeViewListener mTrackEventListener;
-    private boolean mFirstQuartile, mMidpoint, mThirdQuartile;
-    private long mVastVideoDuration = -1;
-    private Handler mMainHandler;
+    private long current = 0;
+    private WeakReference<View> creativeViewWeakReference;
+    private long duration;
+    private VideoCreativeViewListener trackEventListener;
+    private boolean firstQuartile, midpoint, thirdQuartile;
+    private long vastVideoDuration = -1;
+    private Handler mainHandler;
 
-    private long mLastTime;
+    private long lastTime;
 
-    public AdViewProgressUpdateTask(VideoCreativeViewListener trackEventListener, int duration)
-    throws AdException {
+    public AdViewProgressUpdateTask(
+            VideoCreativeViewListener trackEventListener,
+            int duration
+    ) throws AdException {
         if (trackEventListener == null) {
             throw new AdException(AdException.INTERNAL_ERROR, "VideoViewListener is null");
         }
-        mTrackEventListener = trackEventListener;
+        this.trackEventListener = trackEventListener;
         AbstractCreative creative = (AbstractCreative) trackEventListener;
-        mCreativeViewWeakReference = new WeakReference<>(creative.getCreativeView());
-        mDuration = duration;
-        mMainHandler = new Handler(Looper.getMainLooper());
+        creativeViewWeakReference = new WeakReference<>(creative.getCreativeView());
+        this.duration = duration;
+        mainHandler = new Handler(Looper.getMainLooper());
     }
 
     @Override
@@ -65,12 +68,12 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
             //until ad completes total duration
             //or until ad is cancelled or closed or destroyed which calls AsyncTask.cancel()
             do {
-                if (System.currentTimeMillis() - mLastTime >= 50) {
+                if (System.currentTimeMillis() - lastTime >= 50) {
                     if (!isCancelled()) {
-                        final View creativeView = mCreativeViewWeakReference.get();
+                        final View creativeView = creativeViewWeakReference.get();
                         if (creativeView instanceof VideoCreativeView) {
 
-                            mMainHandler.post(() -> {
+                            mainHandler.post(() -> {
 
                                 try {
                                     VideoCreativeView videoCreativeView = (VideoCreativeView) creativeView;
@@ -81,16 +84,18 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
                                         // to end the AsyncTask
                                         long newCurrent = videoView.getCurrentPosition();
 
-                                        if (mVastVideoDuration != -1 && newCurrent >= mVastVideoDuration) {
-                                            LogUtil.debug(VideoCreativeView.class.getName(), "VAST duration reached, video interrupted. VAST duration:" + mVastVideoDuration + " ms, Video duration: " + mDuration + " ms");
+                                        if (vastVideoDuration != -1 && newCurrent >= vastVideoDuration) {
+                                            LogUtil.debug(
+                                                    VideoCreativeView.class.getName(),
+                                                    "VAST duration reached, video interrupted. VAST duration:" + vastVideoDuration + " ms, Video duration: " + duration + " ms"
+                                            );
                                             videoView.forceStop();
                                         }
 
-                                        if (newCurrent == 0 && mCurrent > 0) {
-                                            mCurrent = mDuration;
-                                        }
-                                        else {
-                                            mCurrent = newCurrent;
+                                        if (newCurrent == 0 && current > 0) {
+                                            current = duration;
+                                        } else {
+                                            current = newCurrent;
                                         }
                                     }
                                 }
@@ -101,21 +106,19 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
                         }
 
                         try {
-                            if (mDuration > 0) {
-                                publishProgress((mCurrent * 100 / mDuration), mDuration);
+                            if (duration > 0) {
+                                publishProgress((current * 100 / duration), duration);
                             }
-                            if (mCurrent >= mDuration) {
+                            if (current >= duration) {
                                 break;
                             }
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) {
                             LogUtil.error(TAG, "Failed to publish video progress: " + Log.getStackTraceString(e));
                         }
                     }
-                    mLastTime = System.currentTimeMillis();
+                    lastTime = System.currentTimeMillis();
                 }
-            }
-            while (mCurrent <= mDuration && !isCancelled());
+            } while (current <= duration && !isCancelled());
         }
         catch (Exception e) {
             LogUtil.error(TAG, "Failed to update video progress: " + Log.getStackTraceString(e));
@@ -141,40 +144,40 @@ public class AdViewProgressUpdateTask extends AsyncTask<Void, Long, Void> {
         //TODO - uncomment when we have to show the countdown on video
         //trackEventListener.countdown(values[1]);
 
-        if (!mFirstQuartile && values[0] >= 25) {
+        if (!firstQuartile && values[0] >= 25) {
             LogUtil.debug(TAG, "firstQuartile: " + values[0]);
-            mFirstQuartile = true;
-            mTrackEventListener.onEvent(VideoAdEvent.Event.AD_FIRSTQUARTILE);
+            firstQuartile = true;
+            trackEventListener.onEvent(VideoAdEvent.Event.AD_FIRSTQUARTILE);
         }
-        if (!mMidpoint && values[0] >= 50) {
+        if (!midpoint && values[0] >= 50) {
             LogUtil.debug(TAG, "midpoint: " + values[0]);
-            mMidpoint = true;
-            mTrackEventListener.onEvent(VideoAdEvent.Event.AD_MIDPOINT);
+            midpoint = true;
+            trackEventListener.onEvent(VideoAdEvent.Event.AD_MIDPOINT);
         }
-        if (!mThirdQuartile && values[0] >= 75) {
+        if (!thirdQuartile && values[0] >= 75) {
             LogUtil.debug(TAG, "thirdQuartile: " + values[0]);
-            mThirdQuartile = true;
-            mTrackEventListener.onEvent(VideoAdEvent.Event.AD_THIRDQUARTILE);
+            thirdQuartile = true;
+            trackEventListener.onEvent(VideoAdEvent.Event.AD_THIRDQUARTILE);
         }
     }
 
     public long getCurrentPosition() {
-        return mCurrent;
+        return current;
     }
 
     public boolean getFirstQuartile() {
-        return mFirstQuartile;
+        return firstQuartile;
     }
 
     public boolean getMidpoint() {
-        return mMidpoint;
+        return midpoint;
     }
 
     public boolean getThirdQuartile() {
-        return mThirdQuartile;
+        return thirdQuartile;
     }
 
     public void setVastVideoDuration(long vastVideoDuration) {
-        mVastVideoDuration = vastVideoDuration;
+        this.vastVideoDuration = vastVideoDuration;
     }
 }

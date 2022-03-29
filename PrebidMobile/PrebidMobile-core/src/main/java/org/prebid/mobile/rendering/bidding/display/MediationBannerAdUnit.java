@@ -29,41 +29,41 @@ import org.prebid.mobile.units.configuration.AdFormat;
 public class MediationBannerAdUnit extends MediationBaseAdUnit {
     private static final String TAG = MediationBannerAdUnit.class.getSimpleName();
 
-    private final ScreenStateReceiver mScreenStateReceiver = new ScreenStateReceiver();
+    private final ScreenStateReceiver screenStateReceiver = new ScreenStateReceiver();
 
-    private boolean mAdFailed;
+    private boolean adFailed;
 
     public MediationBannerAdUnit(Context context, String configId, AdSize size, PrebidMediationDelegate mediationDelegate) {
         super(context, configId, size, mediationDelegate);
-        mScreenStateReceiver.register(context);
+        screenStateReceiver.register(context);
     }
 
     @Override
     protected final void initAdConfig(String configId, AdSize adSize) {
-        mAdUnitConfig.addSize(adSize);
-        mAdUnitConfig.setConfigId(configId);
-        mAdUnitConfig.setAdFormat(AdFormat.BANNER);
+        adUnitConfig.addSize(adSize);
+        adUnitConfig.setConfigId(configId);
+        adUnitConfig.setAdFormat(AdFormat.BANNER);
     }
 
     @Override
     public void destroy() {
         super.destroy();
-        mScreenStateReceiver.unregister();
+        screenStateReceiver.unregister();
     }
 
     @Override
     protected void initBidLoader() {
         super.initBidLoader();
 
-        mBidLoader.setBidRefreshListener(() -> {
-            if (mAdFailed) {
-                mAdFailed = false;
+        bidLoader.setBidRefreshListener(() -> {
+            if (adFailed) {
+                adFailed = false;
                 LogUtil.debug(TAG, "Ad failed, can perform refresh.");
                 return true;
             }
 
-            boolean isViewVisible = mMediationDelegate.canPerformRefresh();
-            boolean canRefresh = mScreenStateReceiver.isScreenOn() && isViewVisible;
+            boolean isViewVisible = mediationDelegate.canPerformRefresh();
+            boolean canRefresh = screenStateReceiver.isScreenOn() && isViewVisible;
             LogUtil.debug(TAG, "Can perform refresh: " + canRefresh);
             return canRefresh;
         });
@@ -77,29 +77,29 @@ public class MediationBannerAdUnit extends MediationBaseAdUnit {
     }
 
     public final void addAdditionalSizes(AdSize... sizes) {
-        mAdUnitConfig.addSizes(sizes);
+        adUnitConfig.addSizes(sizes);
     }
 
     public final void setRefreshInterval(int seconds) {
-        mAdUnitConfig.setAutoRefreshDelay(seconds);
+        adUnitConfig.setAutoRefreshDelay(seconds);
     }
 
     public void setAdPosition(BannerAdPosition bannerAdPosition) {
         final AdPosition adPosition = BannerAdPosition.mapToAdPosition(bannerAdPosition);
-        mAdUnitConfig.setAdPosition(adPosition);
+        adUnitConfig.setAdPosition(adPosition);
     }
 
     public BannerAdPosition getAdPosition() {
-        return BannerAdPosition.mapToDisplayAdPosition(mAdUnitConfig.getAdPositionValue());
+        return BannerAdPosition.mapToDisplayAdPosition(adUnitConfig.getAdPositionValue());
     }
 
     public void stopRefresh() {
-        if (mBidLoader != null) {
-            mBidLoader.cancelRefresh();
+        if (bidLoader != null) {
+            bidLoader.cancelRefresh();
         }
     }
 
     public void onAdFailed() {
-        mAdFailed = true;
+        adFailed = true;
     }
 }

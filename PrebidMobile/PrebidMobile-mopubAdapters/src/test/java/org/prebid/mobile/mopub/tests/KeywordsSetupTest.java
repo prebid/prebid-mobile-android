@@ -40,16 +40,16 @@ import static junit.framework.Assert.assertEquals;
 public class KeywordsSetupTest {
 
     private static final String KEY_BID_RESPONSE = "PREBID_BID_RESPONSE_ID";
-    private Activity mActivity;
+    private Activity activity;
 
     @Before
     public void setup() {
-        mActivity = Robolectric.buildActivity(Activity.class).create().get();
+        activity = Robolectric.buildActivity(Activity.class).create().get();
     }
 
     @Test
     public void handleMoPubKeywordsUpdateWithBanner_KeyWordsShouldMatchExpected() {
-        MoPubView adView = new MoPubView(mActivity);
+        MoPubView adView = new MoPubView(activity);
         MoPubBannerMediationUtils mediationUtils = new MoPubBannerMediationUtils(adView);
 
         adView.setKeywords("key1:value1,key2:value2");
@@ -66,7 +66,7 @@ public class KeywordsSetupTest {
 
     @Test
     public void handleMoPubKeywordsUpdateWithInterstitial_KeyWordsShouldMatchExpected() {
-        MoPubInterstitial moPubInterstitial = new MoPubInterstitial(mActivity, "123456");
+        MoPubInterstitial moPubInterstitial = new MoPubInterstitial(activity, "123456");
         MoPubInterstitialMediationUtils mediationUtils = new MoPubInterstitialMediationUtils(moPubInterstitial);
         HashMap<String, String> bids = new HashMap<>();
         bids.put("hb_pb", "0.50");
@@ -82,7 +82,7 @@ public class KeywordsSetupTest {
 
     @Test
     public void setResponseToMoPubLocalExtrasWithMoPubBannerOrInterstitialView_ResponseStoredInLocalExtras() {
-        MoPubView moPubView = new MoPubView(mActivity);
+        MoPubView moPubView = new MoPubView(activity);
         MoPubBannerMediationUtils mediationUtils = new MoPubBannerMediationUtils(moPubView);
         BidResponse response = new BidResponse("{\"response\":\"test\", \"id\":\"1234\"}");
         Map<String, Object> expectedLocalExtras = Collections.singletonMap(KEY_BID_RESPONSE, response.getId());

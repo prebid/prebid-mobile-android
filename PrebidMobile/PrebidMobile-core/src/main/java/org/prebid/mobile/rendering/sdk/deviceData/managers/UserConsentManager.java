@@ -41,33 +41,33 @@ public class UserConsentManager extends BaseManager {
     // CCPA
     private static final String US_PRIVACY_STRING = "IABUSPrivacy_String";
 
-    private String mUsPrivacyString;
+    private String usPrivacyString;
 
-    private String mIsSubjectToGdpr = "";
-    private String mConsentString;
-    private String mPurposeConsent;
+    private String isSubjectToGdpr = "";
+    private String consentString;
+    private String purposeConsent;
 
-    private String mTcfV2ConsentString;
-    private int mTcfV2GdprApplies = NOT_ASSIGNED;
+    private String tcfV2ConsentString;
+    private int tcfV2GdprApplies = NOT_ASSIGNED;
     /**
      * The unsigned integer ID of CMP SDK. Less than 0 values should be considered invalid.
      */
-    private int mCmpSdkId = NOT_ASSIGNED;
+    private int cmpSdkId = NOT_ASSIGNED;
 
-    private SharedPreferences mSharedPreferences;
-    private SharedPreferences.OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
 
     @Override
     public void init(Context context) {
         super.init(context);
 
         if (super.isInit() && context != null) {
-            mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-            initConsentValuesAtStart(mSharedPreferences);
+            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+            initConsentValuesAtStart(sharedPreferences);
 
-            mOnSharedPreferenceChangeListener = this::getConsentValues;
+            onSharedPreferenceChangeListener = this::getConsentValues;
 
-            mSharedPreferences.registerOnSharedPreferenceChangeListener(mOnSharedPreferenceChangeListener);
+            sharedPreferences.registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
         }
     }
 
@@ -84,19 +84,19 @@ public class UserConsentManager extends BaseManager {
     private Object getConsentValues(SharedPreferences preferences, String key) {
         switch (key) {
             case SUBJECT_TO_GDPR:
-                return mIsSubjectToGdpr = preferences.getString(SUBJECT_TO_GDPR, null);
+                return isSubjectToGdpr = preferences.getString(SUBJECT_TO_GDPR, null);
             case CONSENT_STRING:
-                return mConsentString = preferences.getString(CONSENT_STRING, null);
+                return consentString = preferences.getString(CONSENT_STRING, null);
             case CMP_SDK_ID:
-                return mCmpSdkId = preferences.getInt(CMP_SDK_ID, NOT_ASSIGNED);
+                return cmpSdkId = preferences.getInt(CMP_SDK_ID, NOT_ASSIGNED);
             case GDPR_APPLIES:
-                return mTcfV2GdprApplies = preferences.getInt(GDPR_APPLIES, NOT_ASSIGNED);
+                return tcfV2GdprApplies = preferences.getInt(GDPR_APPLIES, NOT_ASSIGNED);
             case TRANSPARENCY_CONSENT_STRING:
-                return mTcfV2ConsentString = preferences.getString(TRANSPARENCY_CONSENT_STRING, null);
+                return tcfV2ConsentString = preferences.getString(TRANSPARENCY_CONSENT_STRING, null);
             case US_PRIVACY_STRING:
-                return mUsPrivacyString = preferences.getString(US_PRIVACY_STRING, null);
+                return usPrivacyString = preferences.getString(US_PRIVACY_STRING, null);
             case PURPOSE_CONSENT:
-                return mPurposeConsent = preferences.getString(PURPOSE_CONSENT, null);
+                return purposeConsent = preferences.getString(PURPOSE_CONSENT, null);
         }
 
         return null;
@@ -107,19 +107,19 @@ public class UserConsentManager extends BaseManager {
             return getTcfV2GdprApplies();
         }
 
-        return mIsSubjectToGdpr;
+        return isSubjectToGdpr;
     }
 
     public String getUserConsentString() {
         if (shouldUseTcfV2()) {
-            return mTcfV2ConsentString;
+            return tcfV2ConsentString;
         }
 
-        return mConsentString;
+        return consentString;
     }
 
     public String getUsPrivacyString() {
-        return mUsPrivacyString;
+        return usPrivacyString;
     }
 
     //fetch advertising identifier based TCF 2.0 Purpose1 value
@@ -154,24 +154,24 @@ public class UserConsentManager extends BaseManager {
 
     @Nullable
     Boolean getPurposeConsent(int consentIndex) {
-        boolean isConsentStringInvalid = TextUtils.isEmpty(mPurposeConsent) || mPurposeConsent.length() <= consentIndex;
-        return isConsentStringInvalid ? null : mPurposeConsent.charAt(consentIndex) == '1';
+        boolean isConsentStringInvalid = TextUtils.isEmpty(purposeConsent) || purposeConsent.length() <= consentIndex;
+        return isConsentStringInvalid ? null : purposeConsent.charAt(consentIndex) == '1';
     }
 
     /**
-     * @return true if {@link #mCmpSdkId} is grater or equal than 0, false otherwise.
+     * @return true if {@link #cmpSdkId} is grater or equal than 0, false otherwise.
      */
     @VisibleForTesting
     boolean shouldUseTcfV2() {
-        return mCmpSdkId >= 0;
+        return cmpSdkId >= 0;
     }
 
     @VisibleForTesting
     String getTcfV2GdprApplies() {
-        if (mTcfV2GdprApplies == NOT_ASSIGNED) {
+        if (tcfV2GdprApplies == NOT_ASSIGNED) {
             return null;
         }
 
-        return String.valueOf(mTcfV2GdprApplies);
+        return String.valueOf(tcfV2GdprApplies);
     }
 }

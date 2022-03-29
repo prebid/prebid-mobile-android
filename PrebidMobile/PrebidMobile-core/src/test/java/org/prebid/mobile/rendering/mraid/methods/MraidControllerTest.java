@@ -59,18 +59,17 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class MraidControllerTest {
 
-    @Mock
-    private InterstitialManager mMockInterstitialManager;
+    @Mock private InterstitialManager mockInterstitialManager;
 
-    private MraidController mMraidController;
-    private Context mContext;
+    private MraidController mraidController;
+    private Context context;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mMraidController = spy(new MraidController(mMockInterstitialManager));
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
-        ManagersResolver.getInstance().prepare(mContext);
+        mraidController = spy(new MraidController(mockInterstitialManager));
+        context = Robolectric.buildActivity(Activity.class).create().get();
+        ManagersResolver.getInstance().prepare(context);
     }
 
     @After
@@ -81,7 +80,7 @@ public class MraidControllerTest {
     @Test
     public void handleMraidEventWhenCloseEvent_CallClose() {
         callControllerHandler(createMraidEvent(JSInterface.ACTION_CLOSE, null));
-        verify(mMockInterstitialManager).interstitialClosed(any(View.class));
+        verify(mockInterstitialManager).interstitialClosed(any(View.class));
     }
 
     @Test
@@ -90,12 +89,13 @@ public class MraidControllerTest {
         CreativeViewListener mockListener = mock(CreativeViewListener.class);
         when(mockCreative.getCreativeViewListener()).thenReturn(mockListener);
 
-        mMraidController.handleMraidEvent(createMraidEvent(JSInterface.ACTION_UNLOAD, null),
-                                          mockCreative,
-                                          mock(WebViewBase.class),
-                                          mock(PrebidWebViewBase.class));
+        mraidController.handleMraidEvent(createMraidEvent(JSInterface.ACTION_UNLOAD, null),
+                mockCreative,
+                mock(WebViewBase.class),
+                mock(PrebidWebViewBase.class)
+        );
 
-        verify(mMockInterstitialManager).interstitialClosed(any(View.class));
+        verify(mockInterstitialManager).interstitialClosed(any(View.class));
         verify(mockListener).creativeDidComplete(mockCreative);
     }
 
@@ -103,7 +103,7 @@ public class MraidControllerTest {
     public void handleMraidEventWhenCalendarEvent_CallCreateCalendarEvent() {
         String actionHelper = "{\"description\":\"Mayan Apocalypse/End of World\",\"location\":\"everywhere\",\"start\":\"2013-12-21T00:00-05:00\",\"end\":\"2013-12-22T00:00-05:00\"}";
         callControllerHandler(createMraidEvent(JSInterface.ACTION_CREATE_CALENDAR_EVENT, actionHelper));
-        assertNotNull(WhiteBox.getInternalState(mMraidController, "mMraidCalendarEvent"));
+        assertNotNull(WhiteBox.getInternalState(mraidController, "mraidCalendarEvent"));
     }
 
     @Test
@@ -113,12 +113,13 @@ public class MraidControllerTest {
         WebViewBase mockOldWebView = mock(WebViewBase.class);
 
         when(mockOldWebView.getMraidListener()).thenReturn(mock(MraidEventsManager.MraidListener.class));
-        when(mockOldWebView.getContext()).thenReturn(mContext);
+        when(mockOldWebView.getContext()).thenReturn(context);
 
-        mMraidController.handleMraidEvent(event, mockCreative, mockOldWebView, mock(PrebidWebViewBase.class));
-        verify(mMraidController).initMraidExpand(any(View.class),
-                                                 any(MraidController.DisplayCompletionListener.class),
-                                                 any(MraidEvent.class));
+        mraidController.handleMraidEvent(event, mockCreative, mockOldWebView, mock(PrebidWebViewBase.class));
+        verify(mraidController).initMraidExpand(any(View.class),
+                any(MraidController.DisplayCompletionListener.class),
+                any(MraidEvent.class)
+        );
     }
 
     @Test
@@ -128,11 +129,11 @@ public class MraidControllerTest {
         WebViewBase mockOldWebView = mock(WebViewBase.class);
 
         when(mockOldWebView.getMraidListener()).thenReturn(mock(MraidEventsManager.MraidListener.class));
-        when(mockOldWebView.getContext()).thenReturn(mContext);
+        when(mockOldWebView.getContext()).thenReturn(context);
 
-        mMraidController.handleMraidEvent(event, mockCreative, mockOldWebView, mock(PrebidWebViewBase.class));
+        mraidController.handleMraidEvent(event, mockCreative, mockOldWebView, mock(PrebidWebViewBase.class));
         ShadowLooper.runUiThreadTasks();
-        verify(mMraidController, times(1)).expand(any(WebViewBase.class), any(PrebidWebViewBase.class), eq(event));
+        verify(mraidController, times(1)).expand(any(WebViewBase.class), any(PrebidWebViewBase.class), eq(event));
     }
 
     @Test
@@ -145,7 +146,7 @@ public class MraidControllerTest {
         when(mockNewWebView.getMraidWebView()).thenReturn(mockBanner);
         when(mockOldWebView.getMraidListener()).thenReturn(mock(MraidEventsManager.MraidListener.class));
 
-        mMraidController.expand(mockOldWebView, mockNewWebView, event);
+        mraidController.expand(mockOldWebView, mockNewWebView, event);
         verify(mockNewWebView, times(1)).getMraidWebView();
         verify(mockBanner).setMraidEvent(eq(event));
     }
@@ -156,7 +157,7 @@ public class MraidControllerTest {
         MraidExpand mockMraidExpand = mock(MraidExpand.class);
         AdBaseDialog mockDialog = mock(AdBaseDialog.class);
         when(mockMraidExpand.getInterstitialViewController()).thenReturn(mockDialog);
-        WhiteBox.field(MraidController.class, "mMraidExpand").set(mMraidController, mockMraidExpand);
+        WhiteBox.field(MraidController.class, "mraidExpand").set(mraidController, mockMraidExpand);
 
         callControllerHandler(createMraidEvent(JSInterface.ACTION_ORIENTATION_CHANGE, null));
         verify(mockDialog).handleSetOrientationProperties();
@@ -165,7 +166,7 @@ public class MraidControllerTest {
     @Test
     public void handleMraidEventWhenOpenEvent_CallOpen() {
         callControllerHandler(createMraidEvent(JSInterface.ACTION_OPEN, "test"));
-        assertNotNull(WhiteBox.getInternalState(mMraidController, "mMraidUrlHandler"));
+        assertNotNull(WhiteBox.getInternalState(mraidController, "mraidUrlHandler"));
     }
 
     @Test
@@ -174,9 +175,10 @@ public class MraidControllerTest {
         callControllerHandler(event);
 
         // called when displaying interstitial
-        verify(mMraidController).initMraidExpand(any(View.class),
-                                                 any(MraidController.DisplayCompletionListener.class),
-                                                 any(MraidEvent.class));
+        verify(mraidController).initMraidExpand(any(View.class),
+                any(MraidController.DisplayCompletionListener.class),
+                any(MraidEvent.class)
+        );
     }
 
     @Test
@@ -187,16 +189,21 @@ public class MraidControllerTest {
         when(mockJsInterface.getMraidVariableContainer()).thenReturn(container);
 
         WebViewBase mockOldWebView = mock(WebViewBase.class);
-        when(mockOldWebView.getContext()).thenReturn(mContext);
+        when(mockOldWebView.getContext()).thenReturn(context);
         when(mockOldWebView.getMRAIDInterface()).thenReturn(mockJsInterface);
-        mMraidController.handleMraidEvent(createMraidEvent(JSInterface.ACTION_RESIZE, null), mock(HTMLCreative.class), mockOldWebView, mock(PrebidWebViewBase.class));
-        assertNotNull(WhiteBox.getInternalState(mMraidController, "mMraidResize"));
+        mraidController.handleMraidEvent(
+                createMraidEvent(JSInterface.ACTION_RESIZE, null),
+                mock(HTMLCreative.class),
+                mockOldWebView,
+                mock(PrebidWebViewBase.class)
+        );
+        assertNotNull(WhiteBox.getInternalState(mraidController, "mraidResize"));
     }
 
     @Test
     public void handleMraidEventWhenStorePictureEvent_CallStorePicture() throws Exception {
         callControllerHandler(createMraidEvent(JSInterface.ACTION_STORE_PICTURE, "test"));
-        assertNotNull(WhiteBox.getInternalState(mMraidController, "mMraidStorePicture"));
+        assertNotNull(WhiteBox.getInternalState(mraidController, "mraidStorePicture"));
     }
 
     @Test
@@ -204,10 +211,10 @@ public class MraidControllerTest {
         MraidResize mockMraidResize = mock(MraidResize.class);
         MraidUrlHandler mockMraidUrlHandler = mock(MraidUrlHandler.class);
 
-        WhiteBox.field(MraidController.class, "mMraidResize").set(mMraidController, mockMraidResize);
-        WhiteBox.field(MraidController.class, "mMraidUrlHandler").set(mMraidController, mockMraidUrlHandler);
+        WhiteBox.field(MraidController.class, "mraidResize").set(mraidController, mockMraidResize);
+        WhiteBox.field(MraidController.class, "mraidUrlHandler").set(mraidController, mockMraidUrlHandler);
 
-        mMraidController.destroy();
+        mraidController.destroy();
         verify(mockMraidResize).destroy();
         verify(mockMraidUrlHandler).destroy();
     }
@@ -215,7 +222,7 @@ public class MraidControllerTest {
     @Test
     public void delegateDisplayViewInInterstitialAndExpandNull_InitExpand()
     throws Exception {
-        mMraidController = new MraidController(mMockInterstitialManager);
+        mraidController = new MraidController(mockInterstitialManager);
         MraidEvent mockEvent = mock(MraidEvent.class);
 
         mockEvent.mraidAction = JSInterface.ACTION_EXPAND;
@@ -223,16 +230,17 @@ public class MraidControllerTest {
 
         InterstitialManagerMraidDelegate delegate = getMraidDelegate();
         delegate.displayViewInInterstitial(mock(WebViewBase.class),
-                                           true,
-                                           mockEvent,
-                                           mock(MraidController.DisplayCompletionListener.class));
-        assertNotNull(WhiteBox.getInternalState(mMraidController, "mMraidExpand"));
+                true,
+                mockEvent,
+                mock(MraidController.DisplayCompletionListener.class)
+        );
+        assertNotNull(WhiteBox.getInternalState(mraidController, "mraidExpand"));
     }
 
     @Test
     public void delegateDisplayViewInInterstitialAndExpandNotNull_SetExpandDisplayViewAndInitMraidExpanded()
     throws IllegalAccessException {
-        mMraidController = new MraidController(mMockInterstitialManager);
+        mraidController = new MraidController(mockInterstitialManager);
         WebViewBase mockWebView = mock(WebViewBase.class);
         MraidEvent mockEvent = mock(MraidEvent.class);
         MraidExpand mockMraidExpand = mock(MraidExpand.class);
@@ -244,7 +252,7 @@ public class MraidControllerTest {
         when(mockMraidExpand.getInterstitialViewController()).thenReturn(mock(AdBaseDialog.class));
         when(mockWebView.getPreloadedListener()).thenReturn(mockWebViewBase);
 
-        WhiteBox.field(MraidController.class, "mMraidExpand").set(mMraidController, mockMraidExpand);
+        WhiteBox.field(MraidController.class, "mraidExpand").set(mraidController, mockMraidExpand);
         getMraidDelegate().displayPrebidWebViewForMraid(mockWebView, true, mockEvent);
 
         verify(mockMraidExpand, times(1)).setDisplayView(mockWebView);
@@ -253,35 +261,35 @@ public class MraidControllerTest {
 
     @Test
     public void delegateOnInterstitialClosed_NullifyExpand() throws IllegalAccessException {
-        mMraidController = new MraidController(mMockInterstitialManager);
+        mraidController = new MraidController(mockInterstitialManager);
         MraidExpand mockMraidExpand = mock(MraidExpand.class);
         HTMLCreative mockCreative = mock(HTMLCreative.class);
 
         when(mockMraidExpand.isMraidExpanded()).thenReturn(true);
-        when(mMockInterstitialManager.getHtmlCreative()).thenReturn(mockCreative);
+        when(mockInterstitialManager.getHtmlCreative()).thenReturn(mockCreative);
 
-        Field expandField = WhiteBox.field(MraidController.class, "mMraidExpand");
-        expandField.set(mMraidController, mockMraidExpand);
+        Field expandField = WhiteBox.field(MraidController.class, "mraidExpand");
+        expandField.set(mraidController, mockMraidExpand);
 
         getMraidDelegate().collapseMraid();
         verify(mockCreative).mraidAdCollapsed();
         verify(mockMraidExpand).nullifyDialog();
-        assertNull(expandField.get(mMraidController));
+        assertNull(expandField.get(mraidController));
     }
 
     @Test
     public void delegateOnDestroy_DestroyMraidExpand() throws IllegalAccessException {
-        mMraidController = new MraidController(mMockInterstitialManager);
+        mraidController = new MraidController(mockInterstitialManager);
         MraidExpand mockMraidExpand = mock(MraidExpand.class);
 
         when(mockMraidExpand.isMraidExpanded()).thenReturn(true);
 
-        Field expandField = WhiteBox.field(MraidController.class, "mMraidExpand");
-        expandField.set(mMraidController, mockMraidExpand);
+        Field expandField = WhiteBox.field(MraidController.class, "mraidExpand");
+        expandField.set(mraidController, mockMraidExpand);
 
         getMraidDelegate().destroyMraidExpand();
         verify(mockMraidExpand).destroy();
-        assertNull(expandField.get(mMraidController));
+        assertNull(expandField.get(mraidController));
     }
 
     private void callControllerHandler(MraidEvent event) {
@@ -291,9 +299,9 @@ public class MraidControllerTest {
 
         when(mockCreative.getCreativeModel()).thenReturn(mockCreativeModel);
         when(mockCreativeModel.getAdConfiguration()).thenReturn(mock(AdUnitConfiguration.class));
-        when(mockOldWebView.getContext()).thenReturn(mContext);
+        when(mockOldWebView.getContext()).thenReturn(context);
 
-        mMraidController.handleMraidEvent(event, mockCreative, mockOldWebView, mock(PrebidWebViewBase.class));
+        mraidController.handleMraidEvent(event, mockCreative, mockOldWebView, mock(PrebidWebViewBase.class));
     }
 
     private MraidEvent createMraidEvent(String eventType, String helper) {
@@ -304,6 +312,9 @@ public class MraidControllerTest {
     }
 
     private InterstitialManagerMraidDelegate getMraidDelegate() throws IllegalAccessException {
-        return (InterstitialManagerMraidDelegate) WhiteBox.field(MraidController.class, "mInterstitialManagerMraidDelegate").get(mMraidController);
+        return (InterstitialManagerMraidDelegate) WhiteBox.field(
+                MraidController.class,
+                "interstitialManagerMraidDelegate"
+        ).get(mraidController);
     }
 }

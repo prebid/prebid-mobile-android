@@ -23,16 +23,22 @@ import org.prebid.mobile.drprebid.ui.activities.QrCodeCaptureActivity;
 import org.prebid.mobile.drprebid.ui.viewmodels.SettingsViewModel;
 
 public class InputDialog extends DialogFragment {
+
     public static final String TAG = InputDialog.class.getSimpleName();
 
-    private EditText mInput;
-    private SettingsViewModel mSettingsViewModel;
+    private EditText input;
+    private SettingsViewModel settingsViewModel;
 
     public InputDialog() {
 
     }
 
-    public static InputDialog newInstance(String title, int type, int format, boolean shouldShowQrScanner) {
+    public static InputDialog newInstance(
+            String title,
+            int type,
+            int format,
+            boolean shouldShowQrScanner
+    ) {
         InputDialog fragment = new InputDialog();
         Bundle args = new Bundle();
         args.putString(Constants.Params.INPUT_TITLE, title);
@@ -58,7 +64,7 @@ public class InputDialog extends DialogFragment {
             final View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_input, null, false);
             builder.setView(view);
 
-            mInput = view.findViewById(R.id.field_input);
+            input = view.findViewById(R.id.field_input);
 
             if (getArguments() != null && getArguments().containsKey(Constants.Params.INPUT_TYPE)) {
                 int type = getArguments().getInt(Constants.Params.INPUT_TYPE, -1);
@@ -67,16 +73,16 @@ public class InputDialog extends DialogFragment {
 
                 switch (type) {
                     case Constants.Params.TYPE_AD_UNIT_ID:
-                        mInput.setText(settingsManager.getAdServerSettings().getAdUnitId());
+                        input.setText(settingsManager.getAdServerSettings().getAdUnitId());
                         break;
                     case Constants.Params.TYPE_BID_PRICE:
-                        mInput.setText(String.valueOf(settingsManager.getAdServerSettings().getBidPrice()));
+                        input.setText(String.valueOf(settingsManager.getAdServerSettings().getBidPrice()));
                         break;
                     case Constants.Params.TYPE_ACCOUNT_ID:
-                        mInput.setText(settingsManager.getPrebidServerSettings().getAccountId());
+                        input.setText(settingsManager.getPrebidServerSettings().getAccountId());
                         break;
                     case Constants.Params.TYPE_CONFIG_ID:
-                        mInput.setText(settingsManager.getPrebidServerSettings().getConfigId());
+                        input.setText(settingsManager.getPrebidServerSettings().getConfigId());
                         break;
                 }
             }
@@ -87,16 +93,16 @@ public class InputDialog extends DialogFragment {
 
                 switch (format) {
                     case Constants.Params.FORMAT_TEXT:
-                        mInput.setInputType(InputType.TYPE_CLASS_TEXT);
+                        input.setInputType(InputType.TYPE_CLASS_TEXT);
                         break;
                     case Constants.Params.FORMAT_INT:
-                        mInput.setInputType(InputType.TYPE_CLASS_NUMBER);
+                        input.setInputType(InputType.TYPE_CLASS_NUMBER);
                         break;
                     case Constants.Params.FORMAT_FLOAT:
-                        mInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                         break;
                     default:
-                        mInput.setInputType(InputType.TYPE_CLASS_TEXT);
+                        input.setInputType(InputType.TYPE_CLASS_TEXT);
 
                 }
             }
@@ -114,32 +120,32 @@ public class InputDialog extends DialogFragment {
 
                 if (getArguments() != null && getArguments().containsKey(Constants.Params.INPUT_TYPE)) {
                     int type = getArguments().getInt(Constants.Params.INPUT_TYPE, -1);
-                    mSettingsViewModel = ViewModelProviders.of(getActivity()).get(SettingsViewModel.class);
+                    settingsViewModel = ViewModelProviders.of(getActivity()).get(SettingsViewModel.class);
 
-                    String text = mInput.getText().toString();
+                    String text = input.getText().toString();
                     SettingsManager settingsManager = SettingsManager.getInstance(getActivity());
 
                     switch (type) {
                         case Constants.Params.TYPE_AD_UNIT_ID:
-                            mSettingsViewModel.setAdUnitId(text);
+                            settingsViewModel.setAdUnitId(text);
                             settingsManager.setAdUnitId(text);
                             break;
                         case Constants.Params.TYPE_BID_PRICE:
                             if (TextUtils.isEmpty(text)) {
-                                mSettingsViewModel.setBidPrice(0.0f);
+                                settingsViewModel.setBidPrice(0.0f);
                                 settingsManager.setBidPrice(0.0f);
                             } else {
                                 float value = Float.valueOf(text);
-                                mSettingsViewModel.setBidPrice(value);
+                                settingsViewModel.setBidPrice(value);
                                 settingsManager.setBidPrice(value);
                             }
                             break;
                         case Constants.Params.TYPE_ACCOUNT_ID:
-                            mSettingsViewModel.setAccountId(text);
+                            settingsViewModel.setAccountId(text);
                             settingsManager.setAccountId(text);
                             break;
                         case Constants.Params.TYPE_CONFIG_ID:
-                            mSettingsViewModel.setConfigId(text);
+                            settingsViewModel.setConfigId(text);
                             settingsManager.setConfigId(text);
                             break;
                     }
@@ -186,7 +192,7 @@ public class InputDialog extends DialogFragment {
             if (QrCodeScanCacheManager.getInstance(getContext()).hasCache()) {
                 String readValue = QrCodeScanCacheManager.getInstance(getContext()).getCache();
                 if (!TextUtils.isEmpty(readValue)) {
-                    mInput.setText(readValue);
+                    input.setText(readValue);
                 }
             }
     }

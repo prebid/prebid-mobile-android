@@ -41,7 +41,7 @@ public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
             PrebidMediationDelegate mediationDelegate
     ) {
         super(context, configId, minSizePercentage, mediationDelegate);
-        mAdUnitConfig.setAdFormat(AdFormat.INTERSTITIAL);
+        adUnitConfig.setAdFormat(AdFormat.INTERSTITIAL);
     }
 
     /**
@@ -54,7 +54,7 @@ public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
             PrebidMediationDelegate mediationDelegate
     ) {
         super(context, configId, null, mediationDelegate);
-        mAdUnitConfig.setAdFormats(adUnitFormats);
+        adUnitConfig.setAdFormats(adUnitFormats);
     }
 
     @Override
@@ -64,9 +64,9 @@ public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
 
     @Override
     protected final void initAdConfig(String configId, AdSize minSizePercentage) {
-        mAdUnitConfig.setMinSizePercentage(minSizePercentage);
-        mAdUnitConfig.setConfigId(configId);
-        mAdUnitConfig.setAdPosition(AdPosition.FULLSCREEN);
+        adUnitConfig.setMinSizePercentage(minSizePercentage);
+        adUnitConfig.setConfigId(configId);
+        adUnitConfig.setAdPosition(AdPosition.FULLSCREEN);
     }
 
     /**
@@ -76,7 +76,7 @@ public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
             @IntRange(from = 0, to = 100) int width,
             @IntRange(from = 0, to = 100) int height
     ) {
-        mAdUnitConfig.setMinSizePercentage(new AdSize(width, height));
+        adUnitConfig.setMinSizePercentage(new AdSize(width, height));
     }
 
 }

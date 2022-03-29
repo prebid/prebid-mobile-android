@@ -38,7 +38,7 @@ class MoPubRewardedVideoFragment: AdFragment() {
 
     private var rewardedAdUnit: MediationRewardedVideoAdUnit? = null
     private val keywordsMap = HashMap<String, String>()
-    private val mListener = object : MoPubRewardedAdListener {
+    private val listener = object : MoPubRewardedAdListener {
 
         override fun onRewardedAdLoadSuccess(adUnitId: String) {
             btnAdDidLoad.isEnabled = true
@@ -96,7 +96,7 @@ class MoPubRewardedVideoFragment: AdFragment() {
         val builder = SdkConfiguration.Builder(adUnitId)
         MoPubRewardedAdManager.init(requireActivity())
         MoPubRewardedAdManager.updateActivity(requireActivity())
-        MoPubRewardedAds.setRewardedAdListener(mListener)
+        MoPubRewardedAds.setRewardedAdListener(listener)
         MoPub.initializeSdk(requireContext(), builder.build()) {
             fetchAdUnit(adUnitId)
         }

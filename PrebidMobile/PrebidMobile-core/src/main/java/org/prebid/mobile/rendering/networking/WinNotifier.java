@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 public class WinNotifier {
+
     private static final String TAG = WinNotifier.class.getSimpleName();
 
     private static final String KEY_CACHE_HOST = "hb_cache_host";
@@ -39,26 +40,25 @@ public class WinNotifier {
     private static final String KEY_UUID = "hb_uuid";
     private static final String CACHE_URL_TEMPLATE = "https://%1$s%2$s?uuid=%3$s";
 
-    private final LinkedList<String> mUrlQueue = new LinkedList<>();
-    private WinNotifierListener mWinNotifierListener;
-    private Bid mBid;
+    private final LinkedList<String> urlQueue = new LinkedList<>();
+    private WinNotifierListener winNotifierListener;
+    private Bid bid;
 
     // For Testing purposes
     private static final String CACHE_URL_TEST_TEMPLATE = "http://%1$s%2$s?uuid=%3$s";
-    private boolean mIsUnderTest = false;
+    private boolean isUnderTest = false;
 
-    private final ResponseHandler mWinResponseHandler = new ResponseHandler() {
+    private final ResponseHandler winResponseHandler = new ResponseHandler() {
         @Override
         public void onResponse(BaseNetworkTask.GetUrlResult response) {
             String adMarkup;
             String responseString = response.responseString;
             if (isJson(responseString)) {
                 adMarkup = extractAdm(responseString);
-            }
-            else {
+            } else {
                 adMarkup = responseString;
             }
-            mBid.setAdm(adMarkup);
+            bid.setAdm(adMarkup);
             sendNextWinRequest();
         }
 
@@ -82,49 +82,48 @@ public class WinNotifier {
     public void notifyWin(BidResponse bidResponse,
                           @NonNull
                               WinNotifierListener listener) {
-        mWinNotifierListener = listener;
-        mBid = bidResponse.getWinningBid();
+        winNotifierListener = listener;
+        bid = bidResponse.getWinningBid();
 
-        if (mBid == null) {
-            mWinNotifierListener.onResult();
+        if (bid == null) {
+            winNotifierListener.onResult();
             return;
         }
 
-        String cacheIdUrl = getCacheUrlFromBid(mBid, KEY_CACHE_ID);
-        String uuidUrl = getCacheUrlFromBid(mBid, KEY_UUID);
+        String cacheIdUrl = getCacheUrlFromBid(bid, KEY_CACHE_ID);
+        String uuidUrl = getCacheUrlFromBid(bid, KEY_UUID);
 
-        mUrlQueue.add(cacheIdUrl);
-        mUrlQueue.add(uuidUrl);
-        mUrlQueue.add(mBid.getNurl());
-        mUrlQueue.removeAll(Collections.singleton(null));
+        urlQueue.add(cacheIdUrl);
+        urlQueue.add(uuidUrl);
+        urlQueue.add(bid.getNurl());
+        urlQueue.removeAll(Collections.singleton(null));
 
         sendNextWinRequest();
     }
 
     private void sendNextWinRequest() {
         // All events have been fired, notify listener
-        if (mUrlQueue.isEmpty()) {
-            if (mWinNotifierListener != null) {
-                mWinNotifierListener.onResult();
+        if (urlQueue.isEmpty()) {
+            if (winNotifierListener != null) {
+                winNotifierListener.onResult();
                 cleanup();
             }
             return;
         }
-        String winUrl = mUrlQueue.poll();
+        String winUrl = urlQueue.poll();
         if (TextUtils.isEmpty(winUrl)) {
             // Skip url and start next one
             sendNextWinRequest();
             return;
         }
-        if (mBid.getAdm() != null && !TextUtils.isEmpty(mBid.getAdm())) {
+        if (bid.getAdm() != null && !TextUtils.isEmpty(bid.getAdm())) {
             // Fire async event and start next one
             ServerConnection.fireAndForget(winUrl);
             sendNextWinRequest();
-        }
-        else {
+        } else {
             // Fire async event and wait for its result
             LogUtil.debug(TAG, "Bid.adm is null or empty. Getting the ad from prebid cache");
-            ServerConnection.fireWithResult(winUrl, mWinResponseHandler);
+            ServerConnection.fireWithResult(winUrl, winResponseHandler);
         }
     }
 
@@ -144,8 +143,8 @@ public class WinNotifier {
     }
 
     private void cleanup() {
-        mBid = null;
-        mWinNotifierListener = null;
+        bid = null;
+        winNotifierListener = null;
     }
 
     private boolean isJson(String response) {
@@ -169,16 +168,15 @@ public class WinNotifier {
     }
 
     private String getUrlTemplate() {
-        if (mIsUnderTest) {
+        if (isUnderTest) {
             return CACHE_URL_TEST_TEMPLATE;
-        }
-        else {
+        } else {
             return CACHE_URL_TEMPLATE;
         }
     }
 
     @VisibleForTesting
     void enableTestFlag() {
-        mIsUnderTest = true;
+        isUnderTest = true;
     }
 }

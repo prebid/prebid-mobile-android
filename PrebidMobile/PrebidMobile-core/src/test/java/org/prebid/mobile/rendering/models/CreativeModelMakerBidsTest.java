@@ -46,38 +46,38 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class CreativeModelMakerBidsTest {
 
-    private CreativeModelMakerBids mModelMakerBids;
+    private CreativeModelMakerBids modelMakerBids;
     @Mock
-    private AdLoadListener mMockLoadListener;
+    private AdLoadListener mockLoadListener;
     @Mock
-    private VastParserExtractor mMockExtractor;
+    private VastParserExtractor mockExtractor;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mModelMakerBids = new CreativeModelMakerBids(mMockLoadListener);
+        modelMakerBids = new CreativeModelMakerBids(mockLoadListener);
 
-        WhiteBox.setInternalState(mModelMakerBids, "mParserExtractor", mMockExtractor);
+        WhiteBox.setInternalState(modelMakerBids, "parserExtractor", mockExtractor);
     }
 
     @Test
     public void whenMakeModelsAndNoAdConfiguration_CallErrorListener() {
-        mModelMakerBids.makeModels(null, mock(BidResponse.class));
-        verify(mMockLoadListener).onFailedToLoadAd(any(AdException.class), any());
+        modelMakerBids.makeModels(null, mock(BidResponse.class));
+        verify(mockLoadListener).onFailedToLoadAd(any(AdException.class), any());
     }
 
     @Test
     public void whenMakeModelsAndNoBidResponse_CallErrorListener() {
-        mModelMakerBids.makeModels(mock(AdUnitConfiguration.class), null);
-        verify(mMockLoadListener).onFailedToLoadAd(any(AdException.class), any());
+        modelMakerBids.makeModels(mock(AdUnitConfiguration.class), null);
+        verify(mockLoadListener).onFailedToLoadAd(any(AdException.class), any());
     }
 
     @Test
     public void whenMakeModelsAndBidResponseWithError_CallErrorListener() {
         BidResponse mockResponse = mock(BidResponse.class);
         when(mockResponse.hasParseError()).thenReturn(true);
-        mModelMakerBids.makeModels(null, mockResponse);
-        verify(mMockLoadListener).onFailedToLoadAd(any(AdException.class), any());
+        modelMakerBids.makeModels(null, mockResponse);
+        verify(mockLoadListener).onFailedToLoadAd(any(AdException.class), any());
     }
 
     @Test
@@ -90,8 +90,8 @@ public class CreativeModelMakerBidsTest {
 
         ArgumentCaptor<CreativeModelsMaker.Result> resultArgumentCaptor = ArgumentCaptor.forClass(CreativeModelsMaker.Result.class);
 
-        mModelMakerBids.makeModels(configuration, bidResponse);
-        verify(mMockLoadListener).onCreativeModelReady(resultArgumentCaptor.capture());
+        modelMakerBids.makeModels(configuration, bidResponse);
+        verify(mockLoadListener).onCreativeModelReady(resultArgumentCaptor.capture());
         CreativeModel creativeModel = resultArgumentCaptor.getValue().creativeModels.get(0);
         Bid bid = bidResponse.getSeatbids().get(0).getBids().get(0);
         assertEquals("HTML", creativeModel.getName());
@@ -106,16 +106,16 @@ public class CreativeModelMakerBidsTest {
         final AdUnitConfiguration mockConfig = mock(AdUnitConfiguration.class);
         final String vast = "1234";
 
-        mModelMakerBids.makeVideoModels(mockConfig, vast);
+        modelMakerBids.makeVideoModels(mockConfig, vast);
 
         verify(mockConfig).setAdFormat(eq(AdFormat.VAST));
-        verify(mMockExtractor).extract(eq(vast));
+        verify(mockExtractor).extract(eq(vast));
     }
 
     @Test
     public void cancel_CancelExtractor() {
-        mModelMakerBids.cancel();
+        modelMakerBids.cancel();
 
-        verify(mMockExtractor).cancel();
+        verify(mockExtractor).cancel();
     }
 }

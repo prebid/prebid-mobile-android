@@ -31,21 +31,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionManager implements AdLoadListener, Transaction.Listener {
+
     private static final String TAG = "TransactionManager";
 
-    private final WeakReference<Context> mWeakContextReference;
-    private final List<Transaction> mTransactions = new ArrayList<>();
-    private final InterstitialManager mInterstitialManager;
-    private final CreativeModelMakerBids mCreativeModelMakerBids = new CreativeModelMakerBids(this);
+    private final WeakReference<Context> weakContextReference;
+    private final List<Transaction> transactions = new ArrayList<>();
+    private final InterstitialManager interstitialManager;
+    private final CreativeModelMakerBids creativeModelMakerBids = new CreativeModelMakerBids(this);
 
-    private Transaction mLatestTransaction;
-    private int mCurrentTransactionCreativeIndex;
-    private TransactionManagerListener mListener;
+    private Transaction latestTransaction;
+    private int currentTransactionCreativeIndex;
+    private TransactionManagerListener listener;
 
-    public TransactionManager(Context context, TransactionManagerListener listener, InterstitialManager interstitialManager) {
-        mWeakContextReference = new WeakReference<>(context);
-        mListener = listener;
-        mInterstitialManager = interstitialManager;
+    public TransactionManager(
+            Context context,
+            TransactionManagerListener listener,
+            InterstitialManager interstitialManager
+    ) {
+        weakContextReference = new WeakReference<>(context);
+        this.listener = listener;
+        this.interstitialManager = interstitialManager;
     }
 
     //// AdLoadManager.Listener implementation
@@ -53,11 +58,12 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
     public void onCreativeModelReady(CreativeModelsMaker.Result result) {
         try {
             // Assign transaction to a field to prevent from being destroyed
-            mLatestTransaction = Transaction.createTransaction(mWeakContextReference.get(),
-                                                               result,
-                                                               mInterstitialManager,
-                                                               this);
-            mLatestTransaction.startCreativeFactories();
+            latestTransaction = Transaction.createTransaction(weakContextReference.get(),
+                    result,
+                    interstitialManager,
+                    this
+            );
+            latestTransaction.startCreativeFactories();
         }
         catch (AdException e) {
             notifyListenerError(e);
@@ -72,13 +78,13 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
     //// Transaction.Listener implementation
     @Override
     public void onTransactionSuccess(Transaction transaction) {
-        mLatestTransaction = null;
-        if (mListener == null) {
+        latestTransaction = null;
+        if (listener == null) {
             LogUtil.warning(TAG, "Unable to notify listener. Listener is null");
             return;
         }
-        mTransactions.add(transaction);
-        mListener.onFetchingCompleted(transaction);
+        transactions.add(transaction);
+        listener.onFetchingCompleted(transaction);
     }
 
     @Override
@@ -93,11 +99,11 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
      * @param bidResponse     - parsed bid response
      */
     public void fetchBidTransaction(AdUnitConfiguration adConfiguration, BidResponse bidResponse) {
-        mCreativeModelMakerBids.makeModels(adConfiguration, bidResponse);
+        creativeModelMakerBids.makeModels(adConfiguration, bidResponse);
     }
 
     public void fetchVideoTransaction(AdUnitConfiguration adConfiguration, String vastXml) {
-        mCreativeModelMakerBids.makeVideoModels(adConfiguration, vastXml);
+        creativeModelMakerBids.makeVideoModels(adConfiguration, vastXml);
     }
 
     /**
@@ -107,7 +113,7 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
      */
     public Transaction getCurrentTransaction() {
         if (hasTransaction()) {
-            return mTransactions.get(0);
+            return transactions.get(0);
         }
         return null;
     }
@@ -119,7 +125,7 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
      */
     public Transaction dismissCurrentTransaction() {
         if (hasTransaction()) {
-            mTransactions.remove(0);
+            transactions.remove(0);
         }
         return getCurrentTransaction();
     }
@@ -130,7 +136,7 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
             LogUtil.error(TAG, "Get Current creative called with no ad");
             return null;
         }
-        return transaction.getCreativeFactories().get(mCurrentTransactionCreativeIndex).getCreative();
+        return transaction.getCreativeFactories().get(currentTransactionCreativeIndex).getCreative();
     }
 
     public boolean hasNextCreative() {
@@ -139,51 +145,51 @@ public class TransactionManager implements AdLoadListener, Transaction.Listener 
             return false;
         }
         int creativeFactoriesSize = currentTransaction.getCreativeFactories().size();
-        return mCurrentTransactionCreativeIndex < creativeFactoriesSize - 1;
+        return currentTransactionCreativeIndex < creativeFactoriesSize - 1;
     }
 
     public void resetState() {
         Transaction transaction = getCurrentTransaction();
         if (transaction != null) {
             transaction.destroy();
-            mTransactions.remove(0);
+            transactions.remove(0);
         }
-        mCurrentTransactionCreativeIndex = 0;
+        currentTransactionCreativeIndex = 0;
         cancelBidModelMaker();
     }
 
     public boolean hasTransaction() {
-        return !mTransactions.isEmpty();
+        return !transactions.isEmpty();
     }
 
     public void destroy() {
-        for (Transaction transaction : mTransactions) {
+        for (Transaction transaction : transactions) {
             transaction.destroy();
         }
-        if (mLatestTransaction != null) {
-            mLatestTransaction.destroy();
-            mLatestTransaction = null;
+        if (latestTransaction != null) {
+            latestTransaction.destroy();
+            latestTransaction = null;
         }
 
         cancelBidModelMaker();
-        mListener = null;
+        listener = null;
     }
 
     public void incrementCreativesCounter() {
-        mCurrentTransactionCreativeIndex++;
+        currentTransactionCreativeIndex++;
     }
 
     private void cancelBidModelMaker() {
-        if (mCreativeModelMakerBids != null) {
-            mCreativeModelMakerBids.cancel();
+        if (creativeModelMakerBids != null) {
+            creativeModelMakerBids.cancel();
         }
     }
 
     private void notifyListenerError(AdException e) {
-        if (mListener == null) {
+        if (listener == null) {
             LogUtil.warning(TAG, "Unable to notify listener. Listener is null");
             return;
         }
-        mListener.onFetchingFailed(e);
+        listener.onFetchingFailed(e);
     }
 }

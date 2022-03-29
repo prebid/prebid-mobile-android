@@ -46,28 +46,24 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class VideoCreativeTest {
 
-    private Context mContext;
-    @Mock
-    private VideoCreativeModel mMockModel;
-    @Mock
-    private OmAdSessionManager mMockOmAdSessionManager;
-    @Mock
-    private InterstitialManager mMockInterstitialManager;
-    @Mock
-    private VideoCreativeView mMockVideoCreativeView;
+    private Context context;
+    @Mock private VideoCreativeModel mockModel;
+    @Mock private OmAdSessionManager mockOmAdSessionManager;
+    @Mock private InterstitialManager mockInterstitialManager;
+    @Mock private VideoCreativeView mockVideoCreativeView;
 
-    private VideoCreative mVideoCreative;
+    private VideoCreative videoCreative;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
+        context = Robolectric.buildActivity(Activity.class).create().get();
 
         AdUnitConfiguration mockConfig = mock(AdUnitConfiguration.class);
-        when(mMockModel.getAdConfiguration()).thenReturn(mockConfig);
+        when(mockModel.getAdConfiguration()).thenReturn(mockConfig);
 
-        mVideoCreative = new VideoCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
-        mVideoCreative.mVideoCreativeView = mMockVideoCreativeView;
+        videoCreative = new VideoCreative(context, mockModel, mockOmAdSessionManager, mockInterstitialManager);
+        videoCreative.videoCreativeView = mockVideoCreativeView;
     }
 
     @After
@@ -77,93 +73,93 @@ public class VideoCreativeTest {
 
     @Test
     public void displayTest() throws Exception {
-        VideoCreative spyVideoCreative = spy(mVideoCreative);
+        VideoCreative spyVideoCreative = spy(videoCreative);
 
         spyVideoCreative.display();
 
-        verify(mVideoCreative.mVideoCreativeView).start(anyFloat());
+        verify(videoCreative.videoCreativeView).start(anyFloat());
     }
 
     @Test
     public void initNativeAdSessionManagerSuccessTest() throws Exception {
-        mVideoCreative.mVideoCreativeView = new VideoCreativeView(mContext, mVideoCreative);
-        VideoCreative spyVideoCreative = spy(mVideoCreative);
+        videoCreative.videoCreativeView = new VideoCreativeView(context, videoCreative);
+        VideoCreative spyVideoCreative = spy(videoCreative);
 
         spyVideoCreative.createOmAdSession();
 
-        verify(mMockOmAdSessionManager).initVideoAdSession(any(), any());
+        verify(mockOmAdSessionManager).initVideoAdSession(any(), any());
     }
 
     @Test
     public void initNativeAdSessionManagerFailureTest() {
-        mVideoCreative.mVideoCreativeView = null;
-        VideoCreative spyVideoCreative = Mockito.spy(mVideoCreative);
+        videoCreative.videoCreativeView = null;
+        VideoCreative spyVideoCreative = Mockito.spy(videoCreative);
 
         spyVideoCreative.createOmAdSession();
 
-        verify(mMockOmAdSessionManager, never()).registerAdView(any());
-        verify(mMockOmAdSessionManager, never()).startAdSession();
+        verify(mockOmAdSessionManager, never()).registerAdView(any());
+        verify(mockOmAdSessionManager, never()).startAdSession();
     }
 
     @Test
     public void trackAdVideoEventTest() throws Exception {
         CreativeViewListener mockCreativeViewListener = mock(CreativeViewListener.class);
         VideoPlayerView mockView = mock(VideoPlayerView.class);
-        mVideoCreative.setCreativeViewListener(mockCreativeViewListener);
+        videoCreative.setCreativeViewListener(mockCreativeViewListener);
         when(mockView.getDuration()).thenReturn(0);
         when(mockView.getVolume()).thenReturn(0f);
-        when(mMockVideoCreativeView.hasVideoStarted()).thenReturn(true);
-        when(mMockVideoCreativeView.isPlaying()).thenReturn(true);
-        when(mMockVideoCreativeView.getVideoPlayerView()).thenReturn(mockView);
+        when(mockVideoCreativeView.hasVideoStarted()).thenReturn(true);
+        when(mockVideoCreativeView.isPlaying()).thenReturn(true);
+        when(mockVideoCreativeView.getVideoPlayerView()).thenReturn(mockView);
 
-        mVideoCreative.complete();
-        verify(mMockModel).trackVideoEvent(VideoAdEvent.Event.AD_COMPLETE);
-        mockCreativeViewListener.creativeDidComplete(mVideoCreative);
+        videoCreative.complete();
+        verify(mockModel).trackVideoEvent(VideoAdEvent.Event.AD_COMPLETE);
+        mockCreativeViewListener.creativeDidComplete(videoCreative);
 
-        mVideoCreative.onVolumeChanged(1);
-        verify(mMockOmAdSessionManager).trackVolumeChange(1);
+        videoCreative.onVolumeChanged(1);
+        verify(mockOmAdSessionManager).trackVolumeChange(1);
 
-        mVideoCreative.onPlayerStateChanged(InternalPlayerState.NORMAL);
-        verify(mMockModel).trackPlayerStateChange(InternalPlayerState.NORMAL);
+        videoCreative.onPlayerStateChanged(InternalPlayerState.NORMAL);
+        verify(mockModel).trackPlayerStateChange(InternalPlayerState.NORMAL);
 
-        mVideoCreative.skip();
-        verify(mMockModel).trackVideoEvent(VideoAdEvent.Event.AD_SKIP);
-        mockCreativeViewListener.creativeDidComplete(mVideoCreative);
+        videoCreative.skip();
+        verify(mockModel).trackVideoEvent(VideoAdEvent.Event.AD_SKIP);
+        mockCreativeViewListener.creativeDidComplete(videoCreative);
 
-        mVideoCreative.onEvent(VideoAdEvent.Event.AD_RESUME);
-        verify(mMockModel).trackVideoEvent(VideoAdEvent.Event.AD_RESUME);
+        videoCreative.onEvent(VideoAdEvent.Event.AD_RESUME);
+        verify(mockModel).trackVideoEvent(VideoAdEvent.Event.AD_RESUME);
 
-        mVideoCreative.onEvent(VideoAdEvent.Event.AD_PAUSE);
-        verify(mMockModel).trackVideoEvent(VideoAdEvent.Event.AD_PAUSE);
+        videoCreative.onEvent(VideoAdEvent.Event.AD_PAUSE);
+        verify(mockModel).trackVideoEvent(VideoAdEvent.Event.AD_PAUSE);
 
-        mVideoCreative.onEvent(VideoAdEvent.Event.AD_UNMUTE);
-        verify(mMockModel).trackVideoEvent(VideoAdEvent.Event.AD_UNMUTE);
+        videoCreative.onEvent(VideoAdEvent.Event.AD_UNMUTE);
+        verify(mockModel).trackVideoEvent(VideoAdEvent.Event.AD_UNMUTE);
 
-        mVideoCreative.onEvent(VideoAdEvent.Event.AD_MUTE);
-        verify(mMockModel).trackVideoEvent(VideoAdEvent.Event.AD_MUTE);
+        videoCreative.onEvent(VideoAdEvent.Event.AD_MUTE);
+        verify(mockModel).trackVideoEvent(VideoAdEvent.Event.AD_MUTE);
 
-        mVideoCreative.onEvent(VideoAdEvent.Event.AD_FULLSCREEN);
-        verify(mMockModel).trackVideoEvent(VideoAdEvent.Event.AD_FULLSCREEN);
+        videoCreative.onEvent(VideoAdEvent.Event.AD_FULLSCREEN);
+        verify(mockModel).trackVideoEvent(VideoAdEvent.Event.AD_FULLSCREEN);
 
-        mVideoCreative.onEvent(VideoAdEvent.Event.AD_EXITFULLSCREEN);
-        verify(mMockModel).trackVideoEvent(VideoAdEvent.Event.AD_EXITFULLSCREEN);
+        videoCreative.onEvent(VideoAdEvent.Event.AD_EXITFULLSCREEN);
+        verify(mockModel).trackVideoEvent(VideoAdEvent.Event.AD_EXITFULLSCREEN);
 
-        mVideoCreative.onEvent(VideoAdEvent.Event.AD_START);
-        verify(mMockModel).trackVideoEvent(VideoAdEvent.Event.AD_START);
+        videoCreative.onEvent(VideoAdEvent.Event.AD_START);
+        verify(mockModel).trackVideoEvent(VideoAdEvent.Event.AD_START);
 
-        mVideoCreative.mVideoCreativeView = null;
-        mVideoCreative.onEvent(VideoAdEvent.Event.AD_START);
-        verify(mMockModel, atLeastOnce()).trackVideoEvent(VideoAdEvent.Event.AD_START);
+        videoCreative.videoCreativeView = null;
+        videoCreative.onEvent(VideoAdEvent.Event.AD_START);
+        verify(mockModel, atLeastOnce()).trackVideoEvent(VideoAdEvent.Event.AD_START);
     }
 
     @Test
     public void destroyTest() throws Exception {
         VideoDownloadTask mockVideoDownloadTask = mock(VideoDownloadTask.class);
-        WhiteBox.field(VideoCreative.class, "mVideoDownloadTask").set(mVideoCreative, mockVideoDownloadTask);
+        WhiteBox.field(VideoCreative.class, "videoDownloadTask").set(videoCreative, mockVideoDownloadTask);
 
-        mVideoCreative.destroy();
+        videoCreative.destroy();
 
-        verify(mMockVideoCreativeView).destroy();
+        verify(mockVideoCreativeView).destroy();
         verify(mockVideoDownloadTask).cancel(true);
     }
 
@@ -173,73 +169,73 @@ public class VideoCreativeTest {
         when(mockModel.getMediaUrl()).thenReturn("/video.mp4");
         AdUnitConfiguration mockAdConfig = mock(AdUnitConfiguration.class);
         when(mockModel.getAdConfiguration()).thenReturn(mockAdConfig);
-        WhiteBox.field(VideoCreative.class, "mModel").set(mVideoCreative, mockModel);
+        WhiteBox.field(VideoCreative.class, "model").set(videoCreative, mockModel);
 
-        mVideoCreative.load();
-        assertNotNull(WhiteBox.getInternalState(mVideoCreative, "mVideoDownloadTask"));
+        videoCreative.load();
+        assertNotNull(WhiteBox.getInternalState(videoCreative, "videoDownloadTask"));
     }
 
     @Test
     public void getVideoDurationTest() {
         long duration = 15 * 1000;
-        when(mMockModel.getMediaDuration()).thenReturn(duration);
-        assertEquals(15000, mVideoCreative.getMediaDuration());
+        when(mockModel.getMediaDuration()).thenReturn(duration);
+        assertEquals(15000, videoCreative.getMediaDuration());
     }
 
     @Test
     public void mute_volumeZero_DoNothing() {
-        when(mMockVideoCreativeView.getVolume()).thenReturn(0f);
+        when(mockVideoCreativeView.getVolume()).thenReturn(0f);
 
-        mVideoCreative.mute();
+        videoCreative.mute();
 
-        verify(mMockVideoCreativeView, never()).mute();
+        verify(mockVideoCreativeView, never()).mute();
     }
 
     @Test
     public void mute_volumeNotZero_MuteVideoCreativeView() {
-        when(mMockVideoCreativeView.getVolume()).thenReturn(1f);
+        when(mockVideoCreativeView.getVolume()).thenReturn(1f);
 
-        mVideoCreative.mute();
+        videoCreative.mute();
 
-        verify(mMockVideoCreativeView).mute();
+        verify(mockVideoCreativeView).mute();
     }
 
     @Test
     public void unmute_volumeZero_UnMuteVideoCreativeView() {
-        when(mMockVideoCreativeView.getVolume()).thenReturn(0f);
+        when(mockVideoCreativeView.getVolume()).thenReturn(0f);
 
-        mVideoCreative.unmute();
+        videoCreative.unmute();
 
-        verify(mMockVideoCreativeView).unMute();
+        verify(mockVideoCreativeView).unMute();
     }
 
     @Test
     public void unmute_volumeNotZero_DoNothing() {
-        when(mMockVideoCreativeView.getVolume()).thenReturn(1f);
+        when(mockVideoCreativeView.getVolume()).thenReturn(1f);
 
-        mVideoCreative.unmute();
+        videoCreative.unmute();
 
-        verify(mMockVideoCreativeView, never()).unMute();
+        verify(mockVideoCreativeView, never()).unMute();
     }
 
     @Test
     public void getCreativeModelTest() {
-        assertEquals(mMockModel, mVideoCreative.getCreativeModel());
+        assertEquals(mockModel, videoCreative.getCreativeModel());
     }
 
     @Test
     public void videoAdLoaded_TrackEvent() {
-        mVideoCreative.trackAdLoaded();
-        verify(mMockModel).trackNonSkippableStandaloneVideoLoaded(false);
+        videoCreative.trackAdLoaded();
+        verify(mockModel).trackNonSkippableStandaloneVideoLoaded(false);
     }
 
     @Test
     public void whenOnCallToAction_CreativeViewListenerCreativeWasClicked() {
         CreativeViewListener mockListener = mock(CreativeViewListener.class);
-        when(mMockVideoCreativeView.getCallToActionUrl()).thenReturn("url");
-        mVideoCreative.setCreativeViewListener(mockListener);
+        when(mockVideoCreativeView.getCallToActionUrl()).thenReturn("url");
+        videoCreative.setCreativeViewListener(mockListener);
 
-        mVideoCreative.onEvent(VideoAdEvent.Event.AD_CLICK);
+        videoCreative.onEvent(VideoAdEvent.Event.AD_CLICK);
 
         verify(mockListener).creativeWasClicked(any(AbstractCreative.class), eq("url"));
     }
@@ -248,10 +244,10 @@ public class VideoCreativeTest {
     public void whenOnVideoInterstitialClosed_DestroyCreativeViewAndCallCreativeDidComplete() {
         CreativeViewListener mockListener = mock(CreativeViewListener.class);
 
-        mVideoCreative.setCreativeViewListener(mockListener);
+        videoCreative.setCreativeViewListener(mockListener);
 
-        mVideoCreative.onVideoInterstitialClosed();
-        verify(mMockVideoCreativeView).destroy();
+        videoCreative.onVideoInterstitialClosed();
+        verify(mockVideoCreativeView).destroy();
         verify(mockListener).creativeDidComplete(any(AbstractCreative.class));
     }
 }

@@ -57,25 +57,25 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class AdViewManagerTest {
-    private Context mContext;
-    private AdViewManager mAdViewManager;
+    private Context context;
+    private AdViewManager adViewManager;
 
     @Mock
-    private AdViewManagerListener mMockAdViewListener;
+    private AdViewManagerListener mockAdViewListener;
     @Mock
     private InterstitialView mockAdView;
     @Mock
-    private VideoCreative mMockVideoCreative;
+    private VideoCreative mockVideoCreative;
     @Mock
-    private VideoCreativeView mMockVideoCreativeView;
+    private VideoCreativeView mockVideoCreativeView;
     @Mock
-    InterstitialManager mMockInterstitialManager;
+    InterstitialManager mockInterstitialManager;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mContext = Robolectric.buildActivity(Activity.class).create().get().getApplicationContext();
-        mAdViewManager = new AdViewManager(mContext, mMockAdViewListener, mockAdView, mMockInterstitialManager);
+        context = Robolectric.buildActivity(Activity.class).create().get().getApplicationContext();
+        adViewManager = new AdViewManager(context, mockAdViewListener, mockAdView, mockInterstitialManager);
     }
 
     @Test
@@ -83,7 +83,9 @@ public class AdViewManagerTest {
         AdViewManagerListener mockAdViewListener = mock(AdViewManagerListener.class);
         InterstitialView mockAdView = mock(InterstitialView.class);
 
-        AdViewManager adViewManager = new AdViewManager(mContext, mockAdViewListener, mockAdView, mMockInterstitialManager);
+        AdViewManager adViewManager = new AdViewManager(context, mockAdViewListener, mockAdView,
+                mockInterstitialManager
+        );
         assertNotNull(adViewManager);
     }
 
@@ -93,7 +95,7 @@ public class AdViewManagerTest {
         AdViewManager adViewManager = null;
         AdException err = null;
         try {
-            adViewManager = new AdViewManager(mContext, null, mockAdView, mMockInterstitialManager);
+            adViewManager = new AdViewManager(context, null, mockAdView, mockInterstitialManager);
         }
         catch (AdException e) {
             err = e;
@@ -109,7 +111,7 @@ public class AdViewManagerTest {
         AdViewManager adViewManager = null;
         AdException err = null;
         try {
-            adViewManager = new AdViewManager(mContext, null, mockAdView, mMockInterstitialManager);
+            adViewManager = new AdViewManager(context, null, mockAdView, mockInterstitialManager);
         }
         catch (Exception e) {
             err = new AdException(AdException.INTERNAL_ERROR, e.getMessage());
@@ -125,31 +127,31 @@ public class AdViewManagerTest {
 
         TransactionManager mockTransactionManager = mock(TransactionManager.class);
         when(mockTransactionManager.getCurrentCreative()).thenReturn(mock);
-        WhiteBox.field(AdViewManager.class, "mTransactionManager").set(mAdViewManager, mockTransactionManager);
+        WhiteBox.field(AdViewManager.class, "transactionManager").set(adViewManager, mockTransactionManager);
 
-        mAdViewManager.show();
-        verify(mMockAdViewListener).viewReadyForImmediateDisplay(any(View.class));
+        adViewManager.show();
+        verify(mockAdViewListener).viewReadyForImmediateDisplay(any(View.class));
     }
 
     @Test
     public void whenBannerHtmlNotResolved_Return() throws IllegalAccessException, AdException {
         ViewGroup mockBanner = mock(ViewGroup.class);
-        mAdViewManager = new AdViewManager(mContext, mMockAdViewListener, mockBanner, mock(InterstitialManager.class));
+        adViewManager = new AdViewManager(context, mockAdViewListener, mockBanner, mock(InterstitialManager.class));
 
         AbstractCreative mockCreative = mock(AbstractCreative.class);
         when(mockCreative.isDisplay()).thenReturn(true);
         when(mockCreative.isResolved()).thenReturn(false);
-        WhiteBox.field(AdViewManager.class, "mCurrentCreative").set(mAdViewManager, mockCreative);
+        WhiteBox.field(AdViewManager.class, "currentCreative").set(adViewManager, mockCreative);
 
         TransactionManager mockTransactionManager = mock(TransactionManager.class);
         when(mockTransactionManager.getCurrentCreative()).thenReturn(mockCreative);
-        WhiteBox.field(AdViewManager.class, "mTransactionManager").set(mAdViewManager, mockTransactionManager);
+        WhiteBox.field(AdViewManager.class, "transactionManager").set(adViewManager, mockTransactionManager);
 
         ArgumentCaptor exceptionCaptor = ArgumentCaptor.forClass(AdException.class);
 
-        mAdViewManager.show();
-        verify(mMockAdViewListener, never()).viewReadyForImmediateDisplay(any(View.class));
-        verify(mMockAdViewListener).failedToLoad((AdException) exceptionCaptor.capture());
+        adViewManager.show();
+        verify(mockAdViewListener, never()).viewReadyForImmediateDisplay(any(View.class));
+        verify(mockAdViewListener).failedToLoad((AdException) exceptionCaptor.capture());
         assertEquals("SDK internal error: Creative has not been resolved yet", ((AdException) exceptionCaptor.getValue()).getMessage());
     }
 
@@ -159,17 +161,17 @@ public class AdViewManagerTest {
         AbstractCreative mockCreative = mock(AbstractCreative.class);
         when(mockCreative.isDisplay()).thenReturn(true);
         when(mockCreative.isResolved()).thenReturn(false);
-        WhiteBox.field(AdViewManager.class, "mCurrentCreative").set(mAdViewManager, mockCreative);
+        WhiteBox.field(AdViewManager.class, "currentCreative").set(adViewManager, mockCreative);
 
         TransactionManager mockTransactionManager = mock(TransactionManager.class);
         when(mockTransactionManager.getCurrentCreative()).thenReturn(mockCreative);
-        WhiteBox.field(AdViewManager.class, "mTransactionManager").set(mAdViewManager, mockTransactionManager);
+        WhiteBox.field(AdViewManager.class, "transactionManager").set(adViewManager, mockTransactionManager);
 
         ArgumentCaptor exceptionCaptor = ArgumentCaptor.forClass(AdException.class);
 
-        mAdViewManager.show();
-        verify(mMockAdViewListener, never()).viewReadyForImmediateDisplay(any(View.class));
-        verify(mMockAdViewListener).failedToLoad((AdException) exceptionCaptor.capture());
+        adViewManager.show();
+        verify(mockAdViewListener, never()).viewReadyForImmediateDisplay(any(View.class));
+        verify(mockAdViewListener).failedToLoad((AdException) exceptionCaptor.capture());
         assertEquals("SDK internal error: Creative has not been resolved yet", ((AdException) exceptionCaptor.getValue()).getMessage());
     }
 
@@ -180,39 +182,39 @@ public class AdViewManagerTest {
         when(mockCreative.isDisplay()).thenReturn(false);
         when(mockCreative.isVideo()).thenReturn(true);
         when(mockCreative.isResolved()).thenReturn(false);
-        WhiteBox.field(AdViewManager.class, "mCurrentCreative").set(mAdViewManager, mockCreative);
+        WhiteBox.field(AdViewManager.class, "currentCreative").set(adViewManager, mockCreative);
 
         TransactionManager mockTransactionManager = mock(TransactionManager.class);
         when(mockTransactionManager.getCurrentCreative()).thenReturn(mockCreative);
-        WhiteBox.field(AdViewManager.class, "mTransactionManager").set(mAdViewManager, mockTransactionManager);
+        WhiteBox.field(AdViewManager.class, "transactionManager").set(adViewManager, mockTransactionManager);
 
         ArgumentCaptor exceptionCaptor = ArgumentCaptor.forClass(AdException.class);
 
-        mAdViewManager.show();
-        verify(mMockAdViewListener, never()).viewReadyForImmediateDisplay(any(View.class));
-        verify(mMockAdViewListener).failedToLoad((AdException) exceptionCaptor.capture());
+        adViewManager.show();
+        verify(mockAdViewListener, never()).viewReadyForImmediateDisplay(any(View.class));
+        verify(mockAdViewListener).failedToLoad((AdException) exceptionCaptor.capture());
         assertEquals("SDK internal error: Creative has not been resolved yet", ((AdException) exceptionCaptor.getValue()).getMessage());
     }
 
     @Test
     public void whenVideoNotResolved_Return() throws AdException, IllegalAccessException {
         VideoView mockVideoView = mock(VideoView.class);
-        mAdViewManager = new AdViewManager(mContext, mMockAdViewListener, mockVideoView, mock(InterstitialManager.class));
+        adViewManager = new AdViewManager(context, mockAdViewListener, mockVideoView, mock(InterstitialManager.class));
 
         AbstractCreative mockCreative = mock(AbstractCreative.class);
         when(mockCreative.isVideo()).thenReturn(true);
         when(mockCreative.isResolved()).thenReturn(false);
-        WhiteBox.field(AdViewManager.class, "mCurrentCreative").set(mAdViewManager, mockCreative);
+        WhiteBox.field(AdViewManager.class, "currentCreative").set(adViewManager, mockCreative);
 
         TransactionManager mockTransactionManager = mock(TransactionManager.class);
         when(mockTransactionManager.getCurrentCreative()).thenReturn(mockCreative);
-        WhiteBox.field(AdViewManager.class, "mTransactionManager").set(mAdViewManager, mockTransactionManager);
+        WhiteBox.field(AdViewManager.class, "transactionManager").set(adViewManager, mockTransactionManager);
 
         ArgumentCaptor exceptionCaptor = ArgumentCaptor.forClass(AdException.class);
 
-        mAdViewManager.show();
-        verify(mMockAdViewListener, never()).viewReadyForImmediateDisplay(any(View.class));
-        verify(mMockAdViewListener).failedToLoad((AdException) exceptionCaptor.capture());
+        adViewManager.show();
+        verify(mockAdViewListener, never()).viewReadyForImmediateDisplay(any(View.class));
+        verify(mockAdViewListener).failedToLoad((AdException) exceptionCaptor.capture());
         assertEquals("SDK internal error: Creative has not been resolved yet", ((AdException) exceptionCaptor.getValue()).getMessage());
     }
 
@@ -229,23 +231,23 @@ public class AdViewManagerTest {
         when(mockTransactionManager.getCurrentTransaction()).thenReturn(mockTransaction);
         when(mockTransaction.getCreativeFactories()).thenReturn(creativeFactories);
 
-        WhiteBox.field(AdViewManager.class, "mTransactionManager").set(mAdViewManager, mockTransactionManager);
-        WhiteBox.field(AdViewManager.class, "mAdView").set(mAdViewManager, mockAdView);
+        WhiteBox.field(AdViewManager.class, "transactionManager").set(adViewManager, mockTransactionManager);
+        WhiteBox.field(AdViewManager.class, "adView").set(adViewManager, mockAdView);
 
-        mAdViewManager.creativeDidComplete(mockVideoCreative);
+        adViewManager.creativeDidComplete(mockVideoCreative);
         verify(mockAdView).closeInterstitialVideo();
-        verify(mMockAdViewListener, times(1)).adCompleted();
+        verify(mockAdViewListener, times(1)).adCompleted();
 
-        mAdViewManager.creativeDidComplete(mockVideoCreative);
-        verify(mMockAdViewListener, times(2)).adCompleted();
+        adViewManager.creativeDidComplete(mockVideoCreative);
+        verify(mockAdViewListener, times(2)).adCompleted();
     }
 
     @Test
     public void creativeWasClickedTest() {
         AbstractCreative mockCreative = mock(AbstractCreative.class);
 
-        mAdViewManager.creativeWasClicked(mockCreative, "test");
-        verify(mMockAdViewListener).creativeClicked(eq("test"));
+        adViewManager.creativeWasClicked(mockCreative, "test");
+        verify(mockAdViewListener).creativeClicked(eq("test"));
     }
 
     @Test
@@ -254,100 +256,100 @@ public class AdViewManagerTest {
         TransactionManager mock = mock(TransactionManager.class);
         Transaction transaction = mock(Transaction.class);
         when(mock.getCurrentTransaction()).thenReturn(transaction);
-        WhiteBox.field(AdViewManager.class, "mTransactionManager").set(mAdViewManager, mock);
+        WhiteBox.field(AdViewManager.class, "transactionManager").set(adViewManager, mock);
 
-        mAdViewManager.creativeInterstitialDidClose(mockCreative);
-        verify(mMockAdViewListener).creativeInterstitialClosed();
+        adViewManager.creativeInterstitialDidClose(mockCreative);
+        verify(mockAdViewListener).creativeInterstitialClosed();
     }
 
     @Test
     public void creativeDidExpandTest() {
         AbstractCreative mockCreative = mock(AbstractCreative.class);
 
-        mAdViewManager.creativeDidExpand(mockCreative);
-        verify(mMockAdViewListener).creativeExpanded();
+        adViewManager.creativeDidExpand(mockCreative);
+        verify(mockAdViewListener).creativeExpanded();
     }
 
     @Test
     public void creativeDidCollapseTest() {
         AbstractCreative mockCreative = mock(AbstractCreative.class);
 
-        mAdViewManager.creativeDidCollapse(mockCreative);
-        verify(mMockAdViewListener).creativeCollapsed();
+        adViewManager.creativeDidCollapse(mockCreative);
+        verify(mockAdViewListener).creativeCollapsed();
     }
 
     @Test
     public void creativeVolumeStateChanged_NotifyListener() {
-        mAdViewManager.creativeMuted(mMockVideoCreative);
-        verify(mMockAdViewListener).creativeMuted();
+        adViewManager.creativeMuted(mockVideoCreative);
+        verify(mockAdViewListener).creativeMuted();
 
-        mAdViewManager.creativeUnMuted(mMockVideoCreative);
-        verify(mMockAdViewListener).creativeMuted();
+        adViewManager.creativeUnMuted(mockVideoCreative);
+        verify(mockAdViewListener).creativeMuted();
     }
 
     @Test
     public void creativePlaybackStateChanged_NotifyListener() {
-        mAdViewManager.creativePaused(mMockVideoCreative);
-        verify(mMockAdViewListener).creativePaused();
+        adViewManager.creativePaused(mockVideoCreative);
+        verify(mockAdViewListener).creativePaused();
 
-        mAdViewManager.creativeResumed(mMockVideoCreative);
-        verify(mMockAdViewListener).creativeResumed();
+        adViewManager.creativeResumed(mockVideoCreative);
+        verify(mockAdViewListener).creativeResumed();
     }
 
     @Test
     public void changeVolumeState_InvokeCreative() throws IllegalAccessException {
         setupCreative();
 
-        mAdViewManager.mute();
-        verify(mMockVideoCreative).mute();
+        adViewManager.mute();
+        verify(mockVideoCreative).mute();
 
-        mAdViewManager.unmute();
-        verify(mMockVideoCreative).unmute();
+        adViewManager.unmute();
+        verify(mockVideoCreative).unmute();
     }
 
     @Test
     public void isNotShowingEndCard_withEndCard_ReturnFalse() throws IllegalAccessException {
         setupCreative();
-        when(mMockVideoCreative.isDisplay()).thenReturn(true);
-        when(mMockVideoCreative.isEndCard()).thenReturn(true);
+        when(mockVideoCreative.isDisplay()).thenReturn(true);
+        when(mockVideoCreative.isEndCard()).thenReturn(true);
 
-        assertFalse(mAdViewManager.isNotShowingEndCard());
+        assertFalse(adViewManager.isNotShowingEndCard());
     }
 
     @Test
     public void isNotShowingEndCard_noEndCard_ReturnTrue() throws IllegalAccessException {
         setupCreative();
-        when(mMockVideoCreative.isDisplay()).thenReturn(false);
-        when(mMockVideoCreative.isEndCard()).thenReturn(true);
+        when(mockVideoCreative.isDisplay()).thenReturn(false);
+        when(mockVideoCreative.isEndCard()).thenReturn(true);
 
-        assertTrue(mAdViewManager.isNotShowingEndCard());
+        assertTrue(adViewManager.isNotShowingEndCard());
     }
 
     @Test
     public void hasEndCard_withEndCard_ReturnTrue() throws IllegalAccessException {
         setupCreative();
-        when(mMockVideoCreative.isDisplay()).thenReturn(true);
+        when(mockVideoCreative.isDisplay()).thenReturn(true);
 
-        assertTrue(mAdViewManager.hasEndCard());
+        assertTrue(adViewManager.hasEndCard());
     }
 
     @Test
     public void hasEndCard_noEndCard_ReturnFalse() throws IllegalAccessException {
         setupCreative();
-        when(mMockVideoCreative.isDisplay()).thenReturn(false);
-        when(mMockVideoCreative.isEndCard()).thenReturn(true);
+        when(mockVideoCreative.isDisplay()).thenReturn(false);
+        when(mockVideoCreative.isEndCard()).thenReturn(true);
 
-        assertFalse(mAdViewManager.hasEndCard());
+        assertFalse(adViewManager.hasEndCard());
     }
 
     @Test
     public void hideTest() throws IllegalAccessException {
         AbstractCreative mockCreative = mock(AbstractCreative.class);
 
-        mAdViewManager.hide();
+        adViewManager.hide();
         verify(mockAdView, never()).removeView(any(View.class));
-        WhiteBox.field(AdViewManager.class, "mCurrentCreative").set(mAdViewManager, mockCreative);
-        mAdViewManager.hide();
+        WhiteBox.field(AdViewManager.class, "currentCreative").set(adViewManager, mockCreative);
+        adViewManager.hide();
         verify(mockAdView).removeView(any());
     }
 
@@ -355,49 +357,49 @@ public class AdViewManagerTest {
     public void destroy_Cleanup() throws IllegalAccessException {
         setupCreative();
         TransactionManager mockTransactionManager = mock(TransactionManager.class);
-        WhiteBox.field(AdViewManager.class, "mTransactionManager").set(mAdViewManager, mockTransactionManager);
+        WhiteBox.field(AdViewManager.class, "transactionManager").set(adViewManager, mockTransactionManager);
 
-        mAdViewManager.destroy();
+        adViewManager.destroy();
         verify(mockTransactionManager).destroy();
-        verify(mMockVideoCreative).destroy();
+        verify(mockVideoCreative).destroy();
     }
 
     @Test
     public void setAdVisibilityTest() throws IllegalAccessException {
         AbstractCreative mockCreative = mock(AbstractCreative.class);
-        WhiteBox.field(AdViewManager.class, "mCurrentCreative").set(mAdViewManager, mockCreative);
+        WhiteBox.field(AdViewManager.class, "currentCreative").set(adViewManager, mockCreative);
 
-        mAdViewManager.setAdVisibility(View.INVISIBLE);
+        adViewManager.setAdVisibility(View.INVISIBLE);
         verify(mockCreative).handleAdWindowNoFocus();
 
-        mAdViewManager.setAdVisibility(View.VISIBLE);
+        adViewManager.setAdVisibility(View.VISIBLE);
         verify(mockCreative).handleAdWindowFocus();
     }
 
     @Test
     public void testGetMediaDuration() throws IllegalAccessException {
-        long mediaDuration = mAdViewManager.getMediaDuration();
+        long mediaDuration = adViewManager.getMediaDuration();
         assertEquals(0, mediaDuration);
         VideoCreative videoCreative = mock(VideoCreative.class);
         long expectedValue = 15 * 1000;
         when(videoCreative.getMediaDuration()).thenReturn(expectedValue);
-        WhiteBox.field(AdViewManager.class, "mCurrentCreative").set(mAdViewManager, videoCreative);
-        assertEquals(expectedValue, mAdViewManager.getMediaDuration());
+        WhiteBox.field(AdViewManager.class, "currentCreative").set(adViewManager, videoCreative);
+        assertEquals(expectedValue, adViewManager.getMediaDuration());
     }
 
     @Test
     public void testInterstitialClosed() throws IllegalAccessException {
-        assertFalse(mAdViewManager.isInterstitialClosed());
+        assertFalse(adViewManager.isInterstitialClosed());
 
         VideoCreative videoCreative = mock(VideoCreative.class);
         final VideoCreativeModel videoCreativeModel = mock(VideoCreativeModel.class);
 
         when(videoCreative.getCreativeModel()).thenReturn(videoCreativeModel);
         when(videoCreative.isInterstitialClosed()).thenReturn(true);
-        WhiteBox.field(AdViewManager.class, "mCurrentCreative").set(mAdViewManager, videoCreative);
-        assertTrue(mAdViewManager.isInterstitialClosed());
+        WhiteBox.field(AdViewManager.class, "currentCreative").set(adViewManager, videoCreative);
+        assertTrue(adViewManager.isInterstitialClosed());
         when(videoCreativeModel.hasEndCard()).thenReturn(false);
-        WhiteBox.field(VideoCreative.class, "mModel").set(videoCreative, videoCreativeModel);
+        WhiteBox.field(VideoCreative.class, "model").set(videoCreative, videoCreativeModel);
         when(videoCreative.isInterstitialClosed()).then(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -405,24 +407,24 @@ public class AdViewManagerTest {
                 return null;
             }
         });
-        mAdViewManager.isInterstitialClosed();
+        adViewManager.isInterstitialClosed();
         verify(videoCreativeModel).trackVideoEvent(VideoAdEvent.Event.AD_CLOSE);
     }
 
     @Test
     public void testIsPlaying() throws IllegalAccessException {
-        assertFalse(mAdViewManager.isPlaying());
+        assertFalse(adViewManager.isPlaying());
 
         setupCreative();
 
-        assertTrue(mAdViewManager.isPlaying());
+        assertTrue(adViewManager.isPlaying());
     }
 
     private void setupCreative() throws IllegalAccessException {
-        when(mMockVideoCreative.isBuiltInVideo()).thenReturn(true);
-        when(mMockVideoCreative.isPlaying()).thenReturn(true);
-        when(mMockVideoCreative.getCreativeView()).thenReturn(mMockVideoCreativeView);
-        WhiteBox.field(AdViewManager.class, "mCurrentCreative").set(mAdViewManager, mMockVideoCreative);
+        when(mockVideoCreative.isBuiltInVideo()).thenReturn(true);
+        when(mockVideoCreative.isPlaying()).thenReturn(true);
+        when(mockVideoCreative.getCreativeView()).thenReturn(mockVideoCreativeView);
+        WhiteBox.field(AdViewManager.class, "currentCreative").set(adViewManager, mockVideoCreative);
     }
 
     @Test
@@ -431,74 +433,74 @@ public class AdViewManagerTest {
 
         setupCreative();
 
-        when(mMockVideoCreative.isVideo()).thenReturn(true);
-        mAdViewManager.returnFromVideo(mockCallView);
-        verify(mMockVideoCreativeView).hideCallToAction();
-        verify(mMockVideoCreative).updateAdView(mockCallView);
-        verify(mMockVideoCreativeView).mute();
-        verify(mMockVideoCreative).onPlayerStateChanged(InternalPlayerState.NORMAL);
+        when(mockVideoCreative.isVideo()).thenReturn(true);
+        adViewManager.returnFromVideo(mockCallView);
+        verify(mockVideoCreativeView).hideCallToAction();
+        verify(mockVideoCreative).updateAdView(mockCallView);
+        verify(mockVideoCreativeView).mute();
+        verify(mockVideoCreative).onPlayerStateChanged(InternalPlayerState.NORMAL);
     }
 
     @Test
     public void testCanShowFullScreen() throws IllegalAccessException {
-        assertFalse(mAdViewManager.canShowFullScreen());
+        assertFalse(adViewManager.canShowFullScreen());
         setupCreative();
-        assertTrue(mAdViewManager.canShowFullScreen());
+        assertTrue(adViewManager.canShowFullScreen());
     }
 
     @Test
     public void testTrackVideoStateChange() throws IllegalAccessException {
-        WhiteBox.field(AdViewManager.class, "mCurrentCreative").set(mAdViewManager, mMockVideoCreative);
-        when(mMockVideoCreative.isVideo()).thenReturn(true);
+        WhiteBox.field(AdViewManager.class, "currentCreative").set(adViewManager, mockVideoCreative);
+        when(mockVideoCreative.isVideo()).thenReturn(true);
 
-        mAdViewManager.trackVideoStateChange(InternalPlayerState.NORMAL);
+        adViewManager.trackVideoStateChange(InternalPlayerState.NORMAL);
 
-        verify(mMockVideoCreative).trackVideoStateChange(eq(InternalPlayerState.NORMAL));
+        verify(mockVideoCreative).trackVideoStateChange(eq(InternalPlayerState.NORMAL));
     }
 
     @Test
     public void testUpdateAdView() throws IllegalAccessException {
         setupCreative();
         View mock = mock(View.class);
-        mAdViewManager.updateAdView(mock);
-        verify(mMockVideoCreative).updateAdView(mock);
+        adViewManager.updateAdView(mock);
+        verify(mockVideoCreative).updateAdView(mock);
     }
 
     @Test
     public void whenConditionNotMet_ResumeNotCalled() {
-        mAdViewManager.resume();
-        verify(mMockVideoCreative, never()).resume();
+        adViewManager.resume();
+        verify(mockVideoCreative, never()).resume();
     }
 
     @Test
     public void whenConditionNotMet_PauseNotCalled() {
-        mAdViewManager.pause();
-        verify(mMockVideoCreative, never()).pause();
+        adViewManager.pause();
+        verify(mockVideoCreative, never()).pause();
     }
 
     @Test
     public void whenResumeCalled_CreativeResumeCalled() throws IllegalAccessException {
-        WhiteBox.field(AdViewManager.class, "mCurrentCreative").set(mAdViewManager, mMockVideoCreative);
-        when(mMockVideoCreative.isVideo()).thenReturn(true);
-        mAdViewManager.resume();
-        verify(mMockVideoCreative).resume();
+        WhiteBox.field(AdViewManager.class, "currentCreative").set(adViewManager, mockVideoCreative);
+        when(mockVideoCreative.isVideo()).thenReturn(true);
+        adViewManager.resume();
+        verify(mockVideoCreative).resume();
     }
 
     @Test
     public void whenResumeCalled_CreativePauseCalled() throws IllegalAccessException {
-        WhiteBox.field(AdViewManager.class, "mCurrentCreative").set(mAdViewManager, mMockVideoCreative);
-        when(mMockVideoCreative.isVideo()).thenReturn(true);
-        mAdViewManager.pause();
-        verify(mMockVideoCreative).pause();
+        WhiteBox.field(AdViewManager.class, "currentCreative").set(adViewManager, mockVideoCreative);
+        when(mockVideoCreative.isVideo()).thenReturn(true);
+        adViewManager.pause();
+        verify(mockVideoCreative).pause();
     }
 
     @Test
     public void whenFetchedWithException_callFailedToLoad() {
         AdException adException = new AdException(AdException.INTERNAL_ERROR, "Error message");
-        mAdViewManager.onFetchingFailed(adException);
+        adViewManager.onFetchingFailed(adException);
 
         ArgumentCaptor exceptionCaptor = ArgumentCaptor.forClass(AdException.class);
-        verify(mMockAdViewListener).failedToLoad((AdException) exceptionCaptor.capture());
+        verify(mockAdViewListener).failedToLoad((AdException) exceptionCaptor.capture());
         assertEquals("SDK internal error: Error message", ((AdException) exceptionCaptor.getValue()).getMessage());
     }
 
@@ -514,8 +516,8 @@ public class AdViewManagerTest {
         when(mockTransaction.getTransactionState()).thenReturn("state");
         when(mockTransaction.getCreativeFactories()).thenReturn(creativeFactories);
 
-        mAdViewManager.onFetchingCompleted(mockTransaction);
+        adViewManager.onFetchingCompleted(mockTransaction);
         verify(mockCreative).createOmAdSession();
-        verify(mMockAdViewListener).adLoaded(any(AdDetails.class));
+        verify(mockAdViewListener).adLoaded(any(AdDetails.class));
     }
 }

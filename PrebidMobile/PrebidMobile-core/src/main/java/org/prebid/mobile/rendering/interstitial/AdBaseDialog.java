@@ -49,34 +49,34 @@ import java.lang.ref.WeakReference;
 
 //Class to show ad as an interstitial i.e, a fullscreen ad
 public abstract class AdBaseDialog extends Dialog {
+
     private static final String TAG = AdBaseDialog.class.getSimpleName();
 
-    private final WeakReference<Context> mContextReference;
-    private final OrientationBroadcastReceiver mOrientationBroadcastReceiver =
-        new OrientationBroadcastReceiver();
+    private final WeakReference<Context> contextReference;
+    private final OrientationBroadcastReceiver orientationBroadcastReceiver = new OrientationBroadcastReceiver();
 
-    protected JsExecutor mJsExecutor;
-    protected InterstitialManager mInterstitialManager;
+    protected JsExecutor jsExecutor;
+    protected InterstitialManager interstitialManager;
 
-    protected WebViewBase mWebViewBase;
-    protected FrameLayout mAdViewContainer;
-    protected View mDisplayView;
-    private View mCloseView;
+    protected WebViewBase webViewBase;
+    protected FrameLayout adViewContainer;
+    protected View displayView;
+    private View closeView;
 
     // IMP: shud be always none. cos this val is used when expand is called with an url.
-    protected OrientationManager.ForcedOrientation mForceOrientation = OrientationManager.ForcedOrientation.none;
-    @Nullable private Integer mOriginalActivityOrientation;
+    protected OrientationManager.ForcedOrientation forceOrientation = OrientationManager.ForcedOrientation.none;
+    @Nullable private Integer originalActivityOrientation;
     /**
      * Is used when deciding to handle orientation changes. Orientation changes allowed (true) by default.
      */
-    protected boolean mAllowOrientationChange = true;
-    protected boolean mHasExpandProperties;
+    protected boolean allowOrientationChange = true;
+    protected boolean hasExpandProperties;
 
-    protected int mInitialOrientation;
-    private int mScreenVisibility;
-    private int mCloseViewVisibility = View.GONE;
+    protected int initialOrientation;
+    private int screenVisibility;
+    private int closeViewVisibility = View.GONE;
 
-    private final FetchPropertiesHandler.FetchPropertyCallback mExpandPropertiesCallback = new FetchPropertiesHandler.FetchPropertyCallback() {
+    private final FetchPropertiesHandler.FetchPropertyCallback expandPropertiesCallback = new FetchPropertiesHandler.FetchPropertyCallback() {
         @Override
         public void onResult(String propertyJson) {
             handleExpandPropertiesResult(propertyJson);
@@ -87,12 +87,12 @@ public abstract class AdBaseDialog extends Dialog {
             LogUtil.error(TAG, "ExpandProperties failed: " + Log.getStackTraceString(throwable));
         }
     };
-    private DialogEventListener mListener;
+    private DialogEventListener listener;
 
     public AdBaseDialog(Context context, int theme, InterstitialManager interstitialManager) {
         super(context, theme);
-        mContextReference = new WeakReference<>(context);
-        mInterstitialManager = interstitialManager;
+        contextReference = new WeakReference<>(context);
+        this.interstitialManager = interstitialManager;
 
         setOnShowListener(new OnDialogShowListener(this));
     }
@@ -100,16 +100,16 @@ public abstract class AdBaseDialog extends Dialog {
     public AdBaseDialog(Context context, WebViewBase webViewBaseLocal, InterstitialManager interstitialManager) {
         super(context, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
 
-        mContextReference = new WeakReference<>(context);
-        mWebViewBase = webViewBaseLocal;
-        mInterstitialManager = interstitialManager;
-        mJsExecutor = webViewBaseLocal.getMRAIDInterface().getJsExecutor();
+        contextReference = new WeakReference<>(context);
+        webViewBase = webViewBaseLocal;
+        this.interstitialManager = interstitialManager;
+        jsExecutor = webViewBaseLocal.getMRAIDInterface().getJsExecutor();
 
         setOnShowListener(new OnDialogShowListener(this));
 
         setOnKeyListener((dialog, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
-                if (mWebViewBase.isMRAID()) {
+                if (webViewBase.isMRAID()) {
                     handleCloseClick();
                 }
                 return true;
@@ -119,7 +119,7 @@ public abstract class AdBaseDialog extends Dialog {
     }
 
     public void setDialogListener(DialogEventListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     @Override
@@ -127,11 +127,11 @@ public abstract class AdBaseDialog extends Dialog {
 
         super.onWindowFocusChanged(hasWindowFocus);
         int visibility = (!hasWindowFocus ? View.INVISIBLE : View.VISIBLE);
-        if (Utils.hasScreenVisibilityChanged(mScreenVisibility, visibility)) {
+        if (Utils.hasScreenVisibilityChanged(screenVisibility, visibility)) {
             //visibility has changed. Send the changed value for mraid update for interstitials
-            mScreenVisibility = visibility;
-            if (mJsExecutor != null) {
-                mJsExecutor.executeOnViewableChange(Utils.isScreenVisible(mScreenVisibility));
+            screenVisibility = visibility;
+            if (jsExecutor != null) {
+                jsExecutor.executeOnViewableChange(Utils.isScreenVisible(screenVisibility));
             }
         }
     }
@@ -139,48 +139,48 @@ public abstract class AdBaseDialog extends Dialog {
     @Override
     public void cancel() {
         super.cancel();
-        if (mListener != null) {
-            mListener.onEvent(DialogEventListener.EventType.CLOSED);
+        if (listener != null) {
+            listener.onEvent(DialogEventListener.EventType.CLOSED);
         }
     }
 
     @VisibleForTesting
     void setCloseView(View closeView) {
-        mCloseView = closeView;
+        this.closeView = closeView;
     }
 
     public View getDisplayView() {
-        return mDisplayView;
+        return displayView;
     }
 
     public void setDisplayView(View displayView) {
-        mDisplayView = displayView;
+        this.displayView = displayView;
     }
 
     /**
-     * Changes {@link #mCloseView} visibility. if {@link #mCloseView} is not defined - visibility is remembered
+     * Changes {@link #closeView} visibility. if {@link #closeView} is not defined - visibility is remembered
      * and applied when closeView is added to container
      */
     public void changeCloseViewVisibility(int visibility) {
-        if (mCloseView != null) {
-            mCloseView.setVisibility(visibility);
+        if (closeView != null) {
+            closeView.setVisibility(visibility);
             return;
         }
 
-        mCloseViewVisibility = visibility;
+        closeViewVisibility = visibility;
     }
 
     public void handleSetOrientationProperties() throws AdException {
         initOrientationProperties();
         applyOrientation();
-        if (mWebViewBase.isMRAID()) {
-            mWebViewBase.getMRAIDInterface().updateScreenMetricsAsync(null);
+        if (webViewBase.isMRAID()) {
+            webViewBase.getMRAIDInterface().updateScreenMetricsAsync(null);
         }
     }
 
     public void cleanup() {
         try {
-            mOrientationBroadcastReceiver.unregister();
+            orientationBroadcastReceiver.unregister();
         }
         catch (IllegalArgumentException e) {
 
@@ -200,7 +200,7 @@ public abstract class AdBaseDialog extends Dialog {
 
         Activity activity = getActivity();
         if (activity != null) {
-            mInitialOrientation = getActivity().getRequestedOrientation();
+            initialOrientation = getActivity().getRequestedOrientation();
         }
 
         RelativeLayout.LayoutParams params =
@@ -209,59 +209,59 @@ public abstract class AdBaseDialog extends Dialog {
 
         params.addRule(RelativeLayout.CENTER_IN_PARENT);
 
-        mWebViewBase.setLayoutParams(params);
+        webViewBase.setLayoutParams(params);
 
-        if (mWebViewBase.isMRAID()) {
+        if (webViewBase.isMRAID()) {
             MraidContinue();
-        }
-        else {
+        } else {
             init();
         }
 
         //Remove the current parent of webViewBase(that's a default container, in all cases)
         //java.lang.IllegalStateException: The specified child already has a parent. You must call removeView() on the child's parent first.??
-        Views.removeFromParent(mWebViewBase);
+        Views.removeFromParent(webViewBase);
 
-        if (mAdViewContainer == null) {
-            mAdViewContainer = new FrameLayout(getContext());
-            mAdViewContainer.setLayoutParams(new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        if (adViewContainer == null) {
+            adViewContainer = new FrameLayout(getContext());
+            adViewContainer.setLayoutParams(new FrameLayout.LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.MATCH_PARENT
+            ));
         }
-        mAdViewContainer.addView(mWebViewBase, mAdViewContainer.getChildCount());
+        adViewContainer.addView(webViewBase, adViewContainer.getChildCount());
     }
 
     protected void init() {
-        if (mWebViewBase.isMRAID()) {
+        if (webViewBase.isMRAID()) {
 
             try {
                 applyOrientation();
-            }
-            catch (AdException e) {
+            } catch (AdException e) {
                 LogUtil.error(TAG, Log.getStackTraceString(e));
             }
             //Register orientation change listener for MRAID ads only
-            if (mContextReference.get() != null) {
-                mOrientationBroadcastReceiver.register(mContextReference.get());
+            if (contextReference.get() != null) {
+                orientationBroadcastReceiver.register(contextReference.get());
             }
         }
-        mWebViewBase.setVisibility(View.VISIBLE);
+        webViewBase.setVisibility(View.VISIBLE);
 
         // render default close btn
         //good only if it is from expanded ad. Interstitial crash with null displayproperties. check.
         changeCloseViewVisibility(View.VISIBLE);
 
-        mWebViewBase.requestLayout();
+        webViewBase.requestLayout();
 
-        if (mJsExecutor != null) {
-            mJsExecutor.executeOnViewableChange(true);
+        if (jsExecutor != null) {
+            jsExecutor.executeOnViewableChange(true);
         }
     }
 
     protected void MraidContinue() {
-        if (!mHasExpandProperties) {
+        if (!hasExpandProperties) {
             //1st always false. so this always happens 1st.
             loadExpandProperties();
-        }
-        else {
+        } else {
             init();
         }
     }
@@ -274,8 +274,8 @@ public abstract class AdBaseDialog extends Dialog {
          * ExpandProperties per the MRAID spec. So we go to the js and extract these
          * properties and then the layout gets built based on these things.
          */
-        if (mJsExecutor != null) {
-            mJsExecutor.executeGetExpandProperties(new FetchPropertiesHandler(mExpandPropertiesCallback));
+        if (jsExecutor != null) {
+            jsExecutor.executeGetExpandProperties(new FetchPropertiesHandler(expandPropertiesCallback));
         }
     }
 
@@ -301,8 +301,8 @@ public abstract class AdBaseDialog extends Dialog {
             return;
         }
 
-        if (mOriginalActivityOrientation == null) {
-            mOriginalActivityOrientation = activity.getRequestedOrientation();
+        if (originalActivityOrientation == null) {
+            originalActivityOrientation = activity.getRequestedOrientation();
         }
 
         activity.setRequestedOrientation(screenOrientation);
@@ -310,15 +310,15 @@ public abstract class AdBaseDialog extends Dialog {
 
     protected void unApplyOrientation() {
 
-        if (getActivity() != null && mOriginalActivityOrientation != null) {
-            getActivity().setRequestedOrientation(mOriginalActivityOrientation);
+        if (getActivity() != null && originalActivityOrientation != null) {
+            getActivity().setRequestedOrientation(originalActivityOrientation);
         }
-        mOriginalActivityOrientation = null;
+        originalActivityOrientation = null;
     }
 
     protected Activity getActivity() {
         try {
-            return (Activity) mContextReference.get();
+            return (Activity) contextReference.get();
         }
         catch (Exception e) {
             LogUtil.error(TAG, "Context is not an activity");
@@ -327,36 +327,38 @@ public abstract class AdBaseDialog extends Dialog {
     }
 
     protected void addCloseView() {
-        if (mAdViewContainer == null) {
+        if (adViewContainer == null) {
             LogUtil.error(TAG, "Unable to add close button. Container is null");
             return;
         }
 
-        mCloseView = Utils.createCloseView(mContextReference.get());
+        closeView = Utils.createCloseView(contextReference.get());
 
-        if (mCloseView == null) {
+        if (closeView == null) {
             LogUtil.error(TAG, "Unable to add close button. Close view is null");
             return;
         }
 
-        mCloseView.setVisibility(mCloseViewVisibility);
+        closeView.setVisibility(closeViewVisibility);
 
-        Views.removeFromParent(mCloseView);
-        mAdViewContainer.addView(mCloseView);
-        mCloseView.setOnClickListener(v -> handleCloseClick());
+        Views.removeFromParent(closeView);
+        adViewContainer.addView(closeView);
+        closeView.setOnClickListener(v -> handleCloseClick());
     }
 
     private void applyOrientation() throws AdException {
         DeviceInfoManager deviceManager = ManagersResolver.getInstance().getDeviceManager();
-        if (mForceOrientation == OrientationManager.ForcedOrientation.none) {
-            if (mAllowOrientationChange) {
+        if (forceOrientation == OrientationManager.ForcedOrientation.none) {
+            if (allowOrientationChange) {
                 // If screen orientation can be changed, an orientation of NONE means that any
                 // orientation lock should be removed
                 unApplyOrientation();
-            }
-            else {
+            } else {
                 if (getActivity() == null) {
-                    throw new AdException(AdException.INTERNAL_ERROR, "Unable to set MRAID expand orientation to " + "'none'; expected passed in Activity Context.");
+                    throw new AdException(
+                            AdException.INTERNAL_ERROR,
+                            "Unable to set MRAID expand orientation to " + "'none'; expected passed in Activity Context."
+                    );
                 }
 
                 // If screen orientation cannot be changed and we can obtain the current
@@ -368,29 +370,30 @@ public abstract class AdBaseDialog extends Dialog {
         }
         else {
             // Otherwise, we have a valid, non-NONE orientation. Lock the screen based on this value
-            lockOrientation(mForceOrientation.getActivityInfoOrientation());
+            lockOrientation(forceOrientation.getActivityInfoOrientation());
         }
     }
 
     private void handleExpandPropertiesResult(String expandProperties) {
-        if (mWebViewBase == null || mWebViewBase.getMRAIDInterface() == null) {
+        if (webViewBase == null || webViewBase.getMRAIDInterface() == null) {
             LogUtil.debug(TAG, "handleExpandPropertiesResult: WebViewBase or MraidInterface is null. Skipping.");
             return;
         }
 
-        final MraidVariableContainer mraidVariableContainer = mWebViewBase.getMRAIDInterface()
-                                                                          .getMraidVariableContainer();
+        final MraidVariableContainer mraidVariableContainer = webViewBase.getMRAIDInterface()
+                                                                         .getMraidVariableContainer();
 
         mraidVariableContainer.setExpandProperties(expandProperties);
 
         // Fill interstitial manager with expand properties.
-        mDisplayView = mWebViewBase;
-        mHasExpandProperties = true;
+        displayView = webViewBase;
+        hasExpandProperties = true;
         MraidContinue();
     }
 
     private void initOrientationProperties() {
-        final MraidVariableContainer mraidVariableContainer = mWebViewBase.getMRAIDInterface().getMraidVariableContainer();
+        final MraidVariableContainer mraidVariableContainer = webViewBase.getMRAIDInterface()
+                                                                         .getMraidVariableContainer();
 
         JSONObject orientationProperties;
         //IMP : must  be true by default cos this is used if expand(url) is called as at line#if (!webViewBase.getMRAIDInterface().isLaunchWithURL()) check
@@ -407,29 +410,30 @@ public abstract class AdBaseDialog extends Dialog {
         }
 
         if (!mraidVariableContainer.isLaunchedWithUrl()) {
-            mAllowOrientationChange = allowOrientationChange;
-            mForceOrientation = OrientationManager.ForcedOrientation.valueOf(forceOrientation);
+            this.allowOrientationChange = allowOrientationChange;
+            this.forceOrientation = OrientationManager.ForcedOrientation.valueOf(forceOrientation);
         }
     }
 
     private static class OnDialogShowListener implements OnShowListener {
-        private final WeakReference<AdBaseDialog> mWeakAdBaseDialog;
+
+        private final WeakReference<AdBaseDialog> weakAdBaseDialog;
 
         OnDialogShowListener(AdBaseDialog adBaseDialog) {
-            mWeakAdBaseDialog = new WeakReference<>(adBaseDialog);
+            weakAdBaseDialog = new WeakReference<>(adBaseDialog);
         }
 
         @Override
         public void onShow(DialogInterface dialog) {
-            AdBaseDialog adBaseDialog = mWeakAdBaseDialog.get();
+            AdBaseDialog adBaseDialog = weakAdBaseDialog.get();
             if (adBaseDialog == null) {
                 LogUtil.debug(TAG, "onShown(): Error notifying show listeners. AdBaseDialog is null.");
                 return;
             }
             adBaseDialog.handleDialogShow();
             adBaseDialog.addCloseView();
-            adBaseDialog.mInterstitialManager.interstitialDialogShown(adBaseDialog.mAdViewContainer);
-            final DialogEventListener listener = adBaseDialog.mListener;
+            adBaseDialog.interstitialManager.interstitialDialogShown(adBaseDialog.adViewContainer);
+            final DialogEventListener listener = adBaseDialog.listener;
 
             if (listener != null) {
                 listener.onEvent(DialogEventListener.EventType.SHOWN);

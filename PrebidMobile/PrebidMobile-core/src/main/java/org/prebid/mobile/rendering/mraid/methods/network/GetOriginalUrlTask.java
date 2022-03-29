@@ -34,11 +34,11 @@ import java.util.Arrays;
 public class GetOriginalUrlTask extends BaseNetworkTask {
 
     static final int MAX_REDIRECTS = 3;
-    private String mConnectionURL;
+    private String connectionURL;
 
     public GetOriginalUrlTask(ResponseHandler handler) {
         super(handler);
-        mResult = new GetUrlResult();
+        result = new GetUrlResult();
     }
 
     private static boolean isRedirect(int code) {
@@ -61,10 +61,9 @@ public class GetOriginalUrlTask extends BaseNetworkTask {
             if (location == null) {
                 location = urlConnection.getRequestProperty("Location");
             }
-            retVal[0] = !TextUtils.isEmpty(location) ? location : mConnectionURL;
-        }
-        else {
-            retVal[0] = mConnectionURL;
+            retVal[0] = !TextUtils.isEmpty(location) ? location : connectionURL;
+        } else {
+            retVal[0] = connectionURL;
             retVal[2] = "quit";
         }
         retVal[1] = urlConnection.getHeaderField("Content-Type");
@@ -72,21 +71,21 @@ public class GetOriginalUrlTask extends BaseNetworkTask {
             retVal[1] = urlConnection.getRequestProperty("Content-Type");
         }
 
-        mResult.JSRedirectURI = retVal;
-        return mResult;
+        result.JSRedirectURI = retVal;
+        return result;
     }
 
     private String[] getRedirectionUrlWithType(GetUrlParams param) {
-        mConnectionURL = param.url;
+        connectionURL = param.url;
 
         if (Utils.isMraidActionUrl(param.url) || TextUtils.isEmpty(param.url)) {
             // Avoid network connection creation
             return new String[]{param.url, null, null};
         }
 
-        mResult = super.doInBackground(param);
+        result = super.doInBackground(param);
 
-        return mResult.JSRedirectURI;
+        return result.JSRedirectURI;
     }
 
     @Override
@@ -97,15 +96,15 @@ public class GetOriginalUrlTask extends BaseNetworkTask {
     private GetUrlResult getUrl(GetUrlParams... params) {
 
         if (isCancelled() || !validParams(params)) {
-            return mResult;
+            return result;
         }
 
         GetUrlParams param = params[0];
-        mResult.originalUrl = param != null ? param.url : null;
+        result.originalUrl = param != null ? param.url : null;
 
         processRedirects(param);
 
-        return mResult;
+        return result;
     }
 
     /*
@@ -131,8 +130,8 @@ public class GetOriginalUrlTask extends BaseNetworkTask {
 
             if (TextUtils.isEmpty(currentUrl)) {
                 // First call
-                if (TextUtils.isEmpty(mResult.contentType)) {
-                    mResult.contentType = currentResponse[1];
+                if (TextUtils.isEmpty(result.contentType)) {
+                    result.contentType = currentResponse[1];
                 }
                 break;
             }
@@ -143,8 +142,8 @@ public class GetOriginalUrlTask extends BaseNetworkTask {
                 this an opportunity for clarity should we actually need to hold
                 on to the originally requested url...
              */
-            mResult.originalUrl = currentResponse[0];
-            mResult.contentType = currentResponse[1];
+            result.originalUrl = currentResponse[0];
+            result.contentType = currentResponse[1];
 
             //no more redirects so we break, retval[2] was explicitly set to "quit"
             if (currentResponse[2] == "quit") {

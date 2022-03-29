@@ -46,12 +46,12 @@ import static org.mockito.Mockito.when;
 @Config(sdk = 19)
 public class BaseInterstitialAdUnitTest {
 
-    private BaseInterstitialAdUnit mBaseInterstitialAdUnit;
+    private BaseInterstitialAdUnit baseInterstitialAdUnit;
 
     @Before
     public void setUp() throws Exception {
         Context context = Robolectric.buildActivity(Activity.class).create().get();
-        mBaseInterstitialAdUnit = new BaseInterstitialAdUnit(context) {
+        baseInterstitialAdUnit = new BaseInterstitialAdUnit(context) {
             @Override
             void requestAdWithBid(
                 @Nullable
@@ -75,7 +75,7 @@ public class BaseInterstitialAdUnitTest {
             }
         };
         final AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
-        mBaseInterstitialAdUnit.init(adUnitConfiguration);
+        baseInterstitialAdUnit.init(adUnitConfiguration);
         assertEquals(AdPosition.FULLSCREEN.getValue(), adUnitConfiguration.getAdPositionValue());
     }
 
@@ -90,27 +90,27 @@ public class BaseInterstitialAdUnitTest {
         expectedMap.put("key2", value2);
 
         // add
-        mBaseInterstitialAdUnit.addContextData("key1", "value1");
-        mBaseInterstitialAdUnit.addContextData("key2", "value2");
+        baseInterstitialAdUnit.addContextData("key1", "value1");
+        baseInterstitialAdUnit.addContextData("key2", "value2");
 
-        assertEquals(expectedMap, mBaseInterstitialAdUnit.getContextDataDictionary());
+        assertEquals(expectedMap, baseInterstitialAdUnit.getContextDataDictionary());
 
         // update
         HashSet<String> updateSet = new HashSet<>();
         updateSet.add("value3");
-        mBaseInterstitialAdUnit.updateContextData("key1", updateSet);
+        baseInterstitialAdUnit.updateContextData("key1", updateSet);
         expectedMap.replace("key1", updateSet);
 
-        assertEquals(expectedMap, mBaseInterstitialAdUnit.getContextDataDictionary());
+        assertEquals(expectedMap, baseInterstitialAdUnit.getContextDataDictionary());
 
         // remove
-        mBaseInterstitialAdUnit.removeContextData("key1");
+        baseInterstitialAdUnit.removeContextData("key1");
         expectedMap.remove("key1");
-        assertEquals(expectedMap, mBaseInterstitialAdUnit.getContextDataDictionary());
+        assertEquals(expectedMap, baseInterstitialAdUnit.getContextDataDictionary());
 
         // clear
-        mBaseInterstitialAdUnit.clearContextData();
-        assertTrue(mBaseInterstitialAdUnit.getContextDataDictionary().isEmpty());
+        baseInterstitialAdUnit.clearContextData();
+        assertTrue(baseInterstitialAdUnit.getContextDataDictionary().isEmpty());
     }
 
     @Test
@@ -120,35 +120,35 @@ public class BaseInterstitialAdUnitTest {
         expectedSet.add("key2");
 
         // add
-        mBaseInterstitialAdUnit.addContextKeyword("key1");
-        mBaseInterstitialAdUnit.addContextKeyword("key2");
+        baseInterstitialAdUnit.addContextKeyword("key1");
+        baseInterstitialAdUnit.addContextKeyword("key2");
 
-        assertEquals(expectedSet, mBaseInterstitialAdUnit.getContextKeywordsSet());
+        assertEquals(expectedSet, baseInterstitialAdUnit.getContextKeywordsSet());
 
         // remove
-        mBaseInterstitialAdUnit.removeContextKeyword("key2");
+        baseInterstitialAdUnit.removeContextKeyword("key2");
         expectedSet.remove("key2");
-        assertEquals(expectedSet, mBaseInterstitialAdUnit.getContextKeywordsSet());
+        assertEquals(expectedSet, baseInterstitialAdUnit.getContextKeywordsSet());
 
         // clear
-        mBaseInterstitialAdUnit.clearContextKeywords();
-        assertTrue(mBaseInterstitialAdUnit.getContextKeywordsSet().isEmpty());
+        baseInterstitialAdUnit.clearContextKeywords();
+        assertTrue(baseInterstitialAdUnit.getContextKeywordsSet().isEmpty());
 
         // add all
-        mBaseInterstitialAdUnit.addContextKeywords(expectedSet);
-        assertEquals(expectedSet, mBaseInterstitialAdUnit.getContextKeywordsSet());
+        baseInterstitialAdUnit.addContextKeywords(expectedSet);
+        assertEquals(expectedSet, baseInterstitialAdUnit.getContextKeywordsSet());
     }
 
     @Test
     public void setPbAdSlot_EqualsGetPbAdSlot() {
         final String expected = "12345";
-        mBaseInterstitialAdUnit.setPbAdSlot(expected);
-        assertEquals(expected, mBaseInterstitialAdUnit.getPbAdSlot());
+        baseInterstitialAdUnit.setPbAdSlot(expected);
+        assertEquals(expected, baseInterstitialAdUnit.getPbAdSlot());
     }
 
     @Test
     public void loadAd_BidResponseIsInitialized() {
-        BidResponse bidResponse = mBaseInterstitialAdUnit.getBidResponse();
+        BidResponse bidResponse = baseInterstitialAdUnit.getBidResponse();
         assertNull(bidResponse);
 
         final BidResponse mockBidResponse = mock(BidResponse.class);
@@ -157,30 +157,30 @@ public class BaseInterstitialAdUnitTest {
         BidRequesterListener listener = getBidRequesterListener();
         listener.onFetchCompleted(mockBidResponse);
 
-        mBaseInterstitialAdUnit.loadAd();
+        baseInterstitialAdUnit.loadAd();
 
-        BidResponse actualBidResponse = mBaseInterstitialAdUnit.getBidResponse();
+        BidResponse actualBidResponse = baseInterstitialAdUnit.getBidResponse();
         assertEquals(mockBidResponse, actualBidResponse);
     }
 
     @Test
     public void loadAdWithError_BidResponseIsNull() {
-        BidResponse bidResponse = mBaseInterstitialAdUnit.getBidResponse();
+        BidResponse bidResponse = baseInterstitialAdUnit.getBidResponse();
         assertNull(bidResponse);
 
         final AdException adException = mock(AdException.class);
         BidRequesterListener listener = getBidRequesterListener();
         listener.onError(adException);
-        mBaseInterstitialAdUnit.loadAd();
+        baseInterstitialAdUnit.loadAd();
 
-        bidResponse = mBaseInterstitialAdUnit.getBidResponse();
+        bidResponse = baseInterstitialAdUnit.getBidResponse();
         assertNull(bidResponse);
     }
 
     private BidRequesterListener getBidRequesterListener() {
         try {
             return (BidRequesterListener) WhiteBox.field(BaseInterstitialAdUnit.class, "bidRequesterListener")
-                                                  .get(mBaseInterstitialAdUnit);
+                                                  .get(baseInterstitialAdUnit);
         }
         catch (IllegalAccessException e) {
             e.printStackTrace();

@@ -201,21 +201,25 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
                 }
             });
             moPubNative.registerAdRenderer(new MoPubStaticNativeAdRenderer(null));
-            RequestParameters.Builder mRP = new RequestParameters.Builder();
+            RequestParameters.Builder requestParams = new RequestParameters.Builder();
 
             // Fetching the demannd using OnCompleteListener
-            nativeAdUnit.fetchDemand(mRP, new OnCompleteListener() {
+            nativeAdUnit.fetchDemand(requestParams, new OnCompleteListener() {
                 @Override
                 public void onComplete(ResultCode resultCode) {
                     if (resultCode == ResultCode.SUCCESS) {
-                        moPubNative.makeRequest(mRP.build());
+                        moPubNative.makeRequest(requestParams.build());
                     } else {
-                        Toast.makeText(XandrNativeInAppMoPubDemoActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(
+                                XandrNativeInAppMoPubDemoActivity.this,
+                                "Native Ad Unit: " + resultCode.name(),
+                                Toast.LENGTH_SHORT
+                        ).show();
                     }
 
                     refreshCount++;
                     XandrNativeInAppMoPubDemoActivity.this.resultCode = resultCode;
-                    request = mRP.build();
+                    request = requestParams.build();
                 }
             });
 
@@ -235,9 +239,9 @@ public class XandrNativeInAppMoPubDemoActivity extends AppCompatActivity {
                         }
                         // removing last ","
                         keywords = keywords.substring(0, keywords.length()-1);
-                        RequestParameters mRP = new RequestParameters.Builder().keywords(keywords).build();
-                        Log.d("Prebid", mRP.getKeywords());
-                        mMoPubNative.makeRequest(mRP);
+                        RequestParameters requestParams = new RequestParameters.Builder().keywords(keywords).build();
+                        Log.d("Prebid", requestParams.getKeywords());
+                        moPubNative.makeRequest(requestParams);
                     }
                     Toast.makeText(XandrNativeInAppMoPubDemoActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
                 }

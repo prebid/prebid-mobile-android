@@ -35,22 +35,23 @@ import org.prebid.mobile.rendering.views.video.VideoViewListener;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class DisplayView extends FrameLayout {
+
     private final static String TAG = DisplayView.class.getSimpleName();
     private static final String CONTENT_DESCRIPTION_AD_VIEW = "adView";
 
-    private AdUnitConfiguration mAdUnitConfiguration;
-    private DisplayViewListener mDisplayViewListener;
-    private InterstitialManager mInterstitialManager;
-    private AdViewManager mAdViewManager;
-    private VideoView mVideoView;
+    private AdUnitConfiguration adUnitConfiguration;
+    private DisplayViewListener displayViewListener;
+    private InterstitialManager interstitialManager;
+    private AdViewManager adViewManager;
+    private VideoView videoView;
 
-    private EventForwardingLocalBroadcastReceiver mEventForwardingReceiver;
-    private final EventForwardingLocalBroadcastReceiver.EventForwardingBroadcastListener mBroadcastListener = this::handleBroadcastAction;
+    private EventForwardingLocalBroadcastReceiver eventForwardingReceiver;
+    private final EventForwardingLocalBroadcastReceiver.EventForwardingBroadcastListener broadcastListener = this::handleBroadcastAction;
 
-    private final AdViewManagerListener mAdViewManagerListener = new AdViewManagerListener() {
+    private final AdViewManagerListener adViewManagerListener = new AdViewManagerListener() {
         @Override
         public void adLoaded(AdDetails adDetails) {
-            // for banner mAdViewManager.show() will be called automatically
+            // for banner adViewManager.show() will be called automatically
             notifyListenerLoaded();
         }
 
@@ -83,11 +84,12 @@ public class DisplayView extends FrameLayout {
         }
     };
 
-    private final VideoViewListener mVideoViewListener = new VideoViewListener() {
+    private final VideoViewListener videoViewListener = new VideoViewListener() {
         @Override
         public void onLoaded(
-            @NonNull
-                VideoView videoAdView, AdDetails adDetails) {
+                @NonNull VideoView videoAdView,
+                AdDetails adDetails
+        ) {
             videoAdView.setContentDescription(CONTENT_DESCRIPTION_AD_VIEW);
             notifyListenerLoaded();
         }
@@ -130,17 +132,16 @@ public class DisplayView extends FrameLayout {
             @NonNull
                     BidResponse response) {
         super(context);
-        mInterstitialManager = new InterstitialManager();
-        mAdUnitConfiguration = adUnitConfiguration;
-        mDisplayViewListener = listener;
+        interstitialManager = new InterstitialManager();
+        this.adUnitConfiguration = adUnitConfiguration;
+        displayViewListener = listener;
 
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(response, () -> {
             try {
                 if (response.isVideo()) {
                     displayVideoAd(response);
-                }
-                else {
+                } else {
                     displayHtmlAd(response);
                 }
             }
@@ -162,72 +163,74 @@ public class DisplayView extends FrameLayout {
     }
 
     public void destroy() {
-        mAdUnitConfiguration = null;
-        mDisplayViewListener = null;
-        mInterstitialManager = null;
-        if (mVideoView != null) {
-            mVideoView.destroy();
+        adUnitConfiguration = null;
+        displayViewListener = null;
+        interstitialManager = null;
+        if (videoView != null) {
+            videoView.destroy();
         }
-        if (mAdViewManager != null) {
-            mAdViewManager.destroy();
-            mAdViewManager = null;
+        if (adViewManager != null) {
+            adViewManager.destroy();
+            adViewManager = null;
         }
 
-        if (mEventForwardingReceiver != null) {
-            mEventForwardingReceiver.unregister(mEventForwardingReceiver);
-            mEventForwardingReceiver = null;
+        if (eventForwardingReceiver != null) {
+            eventForwardingReceiver.unregister(eventForwardingReceiver);
+            eventForwardingReceiver = null;
         }
     }
 
     private void displayHtmlAd(BidResponse response) throws AdException {
-        mAdViewManager = new AdViewManager(getContext(), mAdViewManagerListener, this, mInterstitialManager);
-        mAdViewManager.loadBidTransaction(mAdUnitConfiguration, response);
+        adViewManager = new AdViewManager(getContext(), adViewManagerListener, this, interstitialManager);
+        adViewManager.loadBidTransaction(adUnitConfiguration, response);
 
-        mEventForwardingReceiver = new EventForwardingLocalBroadcastReceiver(mAdUnitConfiguration.getBroadcastId(),
-                                                                             mBroadcastListener);
-        mEventForwardingReceiver.register(getContext(), mEventForwardingReceiver);
+        eventForwardingReceiver = new EventForwardingLocalBroadcastReceiver(
+                adUnitConfiguration.getBroadcastId(),
+                broadcastListener
+        );
+        eventForwardingReceiver.register(getContext(), eventForwardingReceiver);
     }
 
     private void displayVideoAd(BidResponse response) throws AdException {
-        mVideoView = new VideoView(getContext(), mAdUnitConfiguration);
-        mVideoView.setVideoViewListener(mVideoViewListener);
-        mVideoView.setVideoPlayerClick(true);
-        mVideoView.loadAd(mAdUnitConfiguration, response);
-        addView(mVideoView);
+        videoView = new VideoView(getContext(), adUnitConfiguration);
+        videoView.setVideoViewListener(videoViewListener);
+        videoView.setVideoPlayerClick(true);
+        videoView.loadAd(adUnitConfiguration, response);
+        addView(videoView);
     }
 
     private void notifyListenerError(AdException e) {
         LogUtil.debug(TAG, "onAdFailed");
-        if (mDisplayViewListener != null) {
-            mDisplayViewListener.onAdFailed(e);
+        if (displayViewListener != null) {
+            displayViewListener.onAdFailed(e);
         }
     }
 
     private void notifyListenerClicked() {
         LogUtil.debug(TAG, "onAdClicked");
-        if (mDisplayViewListener != null) {
-            mDisplayViewListener.onAdClicked();
+        if (displayViewListener != null) {
+            displayViewListener.onAdClicked();
         }
     }
 
     private void notifyListenerClose() {
         LogUtil.debug(TAG, "onAdClosed");
-        if (mDisplayViewListener != null) {
-            mDisplayViewListener.onAdClosed();
+        if (displayViewListener != null) {
+            displayViewListener.onAdClosed();
         }
     }
 
     private void notifyListenerDisplayed() {
         LogUtil.debug(TAG, "onAdDisplayed");
-        if (mDisplayViewListener != null) {
-            mDisplayViewListener.onAdDisplayed();
+        if (displayViewListener != null) {
+            displayViewListener.onAdDisplayed();
         }
     }
 
     private void notifyListenerLoaded() {
         LogUtil.debug(TAG, "onAdLoaded");
-        if (mDisplayViewListener != null) {
-            mDisplayViewListener.onAdLoaded();
+        if (displayViewListener != null) {
+            displayViewListener.onAdLoaded();
         }
     }
 

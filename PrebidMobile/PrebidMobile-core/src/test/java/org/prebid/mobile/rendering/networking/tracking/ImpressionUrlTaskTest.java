@@ -30,25 +30,25 @@ import static junit.framework.Assert.assertNull;
 
 public class ImpressionUrlTaskTest {
 
-    private MockWebServer mServer;
+    private MockWebServer server;
 
     @Before
     public void setUp() throws Exception {
-        mServer = new MockWebServer();
+        server = new MockWebServer();
     }
 
     @After
     public void tearDown() throws Exception {
-        mServer.shutdown();
+        server.shutdown();
     }
 
     //@Ignore
     @Test
     public void redirectTest() throws Exception {
-        mServer.enqueue(new MockResponse().setResponseCode(302).addHeader("Location: " + mServer.url("/new-path"))
-                                          .setBody("This page has moved!"));
+        server.enqueue(new MockResponse().setResponseCode(302).addHeader("Location: " + server.url("/new-path"))
+                                         .setBody("This page has moved!"));
 
-        mServer.enqueue(new MockResponse().setResponseCode(200).setBody("This is the new location!"));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("This is the new location!"));
 
         ImpressionUrlTask impressionUrlTask = new ImpressionUrlTask(null);
 
@@ -56,7 +56,7 @@ public class ImpressionUrlTaskTest {
         params.requestType = "GET";
         params.userAgent = "user-agent";
         //get server url
-        HttpUrl baseUrl = mServer.url("/first");
+        HttpUrl baseUrl = server.url("/first");
         //give server url to SDK network class
         params.url = baseUrl.url().toString();
         params.name = BaseNetworkTask.REDIRECT_TASK;
@@ -66,19 +66,19 @@ public class ImpressionUrlTaskTest {
         //validate
         assertEquals("This is the new location!", result.responseString);
 
-        RecordedRequest first = mServer.takeRequest();
+        RecordedRequest first = server.takeRequest();
         assertEquals("GET /first HTTP/1.1", first.getRequestLine());
 
-        RecordedRequest redirect = mServer.takeRequest();
+        RecordedRequest redirect = server.takeRequest();
         assertEquals("GET /new-path HTTP/1.1", redirect.getRequestLine());
     }
 
     @Test
     public void redirectWithThrowExceptionTest() throws Exception {
-        mServer.enqueue(new MockResponse().setResponseCode(302).addHeader("Location: " + mServer.url("/new-path"))
-                                          .setBody("This page has moved!"));
+        server.enqueue(new MockResponse().setResponseCode(302).addHeader("Location: " + server.url("/new-path"))
+                                         .setBody("This page has moved!"));
 
-        mServer.enqueue(new MockResponse().setResponseCode(400).setBody("Bad server response. Should throw exception"));
+        server.enqueue(new MockResponse().setResponseCode(400).setBody("Bad server response. Should throw exception"));
 
         ImpressionUrlTask impressionUrlTask = new ImpressionUrlTask(null);
 
@@ -86,7 +86,7 @@ public class ImpressionUrlTaskTest {
         params.requestType = "GET";
         params.userAgent = "user-agent";
         //get server url
-        HttpUrl baseUrl = mServer.url("/first");
+        HttpUrl baseUrl = server.url("/first");
         //give server url to SDK network class
         params.url = baseUrl.url().toString();
         params.name = BaseNetworkTask.REDIRECT_TASK;
@@ -98,10 +98,10 @@ public class ImpressionUrlTaskTest {
         //There should be no exception set. We only log an error msg for an exception case
         assertNull(result.getException());
 
-        RecordedRequest first = mServer.takeRequest();
+        RecordedRequest first = server.takeRequest();
         assertEquals("GET /first HTTP/1.1", first.getRequestLine());
 
-        RecordedRequest redirect = mServer.takeRequest();
+        RecordedRequest redirect = server.takeRequest();
         assertEquals("GET /new-path HTTP/1.1", redirect.getRequestLine());
     }
 }

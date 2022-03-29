@@ -30,13 +30,13 @@ import static org.junit.Assert.assertFalse;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class DeepLinkActionTest {
-    private DeepLinkAction mDeepLinkAction;
+    private DeepLinkAction deepLinkAction;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(DeepLinkActionTest.class);
 
-        mDeepLinkAction = new DeepLinkAction();
+        deepLinkAction = new DeepLinkAction();
     }
 
     @Test
@@ -44,19 +44,19 @@ public class DeepLinkActionTest {
         Uri httpUri = Uri.parse("http://prebid.com");
         Uri httpsUri = Uri.parse("https://prebid.com");
 
-        assertFalse(mDeepLinkAction.shouldOverrideUrlLoading(httpUri));
-        assertFalse(mDeepLinkAction.shouldOverrideUrlLoading(httpsUri));
+        assertFalse(deepLinkAction.shouldOverrideUrlLoading(httpUri));
+        assertFalse(deepLinkAction.shouldOverrideUrlLoading(httpsUri));
     }
 
     @Test
     public void whenShouldOverrideUrlLoadingCustomScheme_ReturnTrue() {
         Uri customSchemeUri = Uri.parse("prebid://open");
 
-        assertTrue(mDeepLinkAction.shouldOverrideUrlLoading(customSchemeUri));
+        assertTrue(deepLinkAction.shouldOverrideUrlLoading(customSchemeUri));
     }
 
     @Test
     public void whenShouldBeTriggeredByUserAction_ReturnTrue() {
-        assertTrue(mDeepLinkAction.shouldBeTriggeredByUserAction());
+        assertTrue(deepLinkAction.shouldBeTriggeredByUserAction());
     }
 }

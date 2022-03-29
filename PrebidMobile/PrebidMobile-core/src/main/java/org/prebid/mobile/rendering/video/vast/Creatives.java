@@ -27,12 +27,12 @@ public class Creatives extends VASTParserBase
     private final static String VAST_CREATIVES = "Creatives";
     private final static String VAST_CREATIVE = "Creative";
 
-    private ArrayList<Creative> mCreatives;
+    private ArrayList<Creative> creatives;
 
 	public Creatives(XmlPullParser p) throws XmlPullParserException, IOException
 	{
 
-		mCreatives = new ArrayList<>();
+		creatives = new ArrayList<>();
 
 		p.require(XmlPullParser.START_TAG, null, VAST_CREATIVES);
 		while (p.next() != XmlPullParser.END_TAG)
@@ -45,7 +45,7 @@ public class Creatives extends VASTParserBase
 			if (name != null && name.equals(VAST_CREATIVE))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_CREATIVE);
-                mCreatives.add(new Creative(p));
+				creatives.add(new Creative(p));
 				p.require(XmlPullParser.END_TAG, null, VAST_CREATIVE);
 			}
 			else
@@ -57,6 +57,6 @@ public class Creatives extends VASTParserBase
 	}
 
     public ArrayList<Creative> getCreatives() {
-        return mCreatives;
+		return creatives;
     }
 }

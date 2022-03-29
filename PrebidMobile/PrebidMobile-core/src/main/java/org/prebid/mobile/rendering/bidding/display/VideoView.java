@@ -41,40 +41,40 @@ import org.prebid.mobile.rendering.views.webview.mraid.Views;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class VideoView extends BaseAdView {
+
     private final static String TAG = VideoView.class.getSimpleName();
 
-    private VideoViewListener mListener;
+    private VideoViewListener listener;
 
-    private CreativeVisibilityTracker mVisibilityTracker;
-    private final CreativeVisibilityTracker.VisibilityTrackerListener mVisibilityTrackerListener = this::handleVisibilityChange;
+    private CreativeVisibilityTracker visibilityTracker;
+    private final CreativeVisibilityTracker.VisibilityTrackerListener visibilityTrackerListener = this::handleVisibilityChange;
 
-    private State mVideoViewState = State.UNDEFINED;
+    private State videoViewState = State.UNDEFINED;
 
-    private boolean mEnableVideoPlayerClick;
-    private boolean mEnableAutoPlay = true;
+    private boolean enableVideoPlayerClick;
+    private boolean enableAutoPlay = true;
 
     //region ========== Listener Area
 
-    private final AdViewManagerListener mOnAdViewManagerListener = new AdViewManagerListener() {
+    private final AdViewManagerListener onAdViewManagerListener = new AdViewManagerListener() {
         @Override
         public void adLoaded(final AdDetails adDetails) {
-            mListener.onLoaded(VideoView.this, adDetails);
+            listener.onLoaded(VideoView.this, adDetails);
             changeState(State.PLAYBACK_NOT_STARTED);
-            if (mEnableAutoPlay) {
+            if (enableAutoPlay) {
                 startVisibilityTracking();
             }
         }
 
         @Override
         public void viewReadyForImmediateDisplay(View view) {
-            if (mAdViewManager.isNotShowingEndCard()) {
-                mListener.onDisplayed(VideoView.this);
+            if (adViewManager.isNotShowingEndCard()) {
+                listener.onDisplayed(VideoView.this);
             }
             removeAllViews();
-            if (mAdViewManager.hasEndCard()) {
+            if (adViewManager.hasEndCard()) {
                 showEndCardCreative(view);
-            }
-            else {
+            } else {
                 showVideoCreative(view);
             }
         }
@@ -88,36 +88,36 @@ public class VideoView extends BaseAdView {
         public void videoCreativePlaybackFinished() {
             stopVisibilityTracking();
             changeState(State.PLAYBACK_FINISHED);
-            mListener.onPlayBackCompleted(VideoView.this);
+            listener.onPlayBackCompleted(VideoView.this);
 
-            if (mAdViewManager.isNotShowingEndCard()) {
+            if (adViewManager.isNotShowingEndCard()) {
                 showWatchAgain();
             }
         }
 
         @Override
         public void creativeClicked(String url) {
-            mListener.onClickThroughOpened(VideoView.this);
+            listener.onClickThroughOpened(VideoView.this);
         }
 
         @Override
         public void creativeMuted() {
-            mListener.onVideoMuted();
+            listener.onVideoMuted();
         }
 
         @Override
         public void creativeUnMuted() {
-            mListener.onVideoUnMuted();
+            listener.onVideoUnMuted();
         }
 
         @Override
         public void creativePaused() {
-            mListener.onPlaybackPaused();
+            listener.onPlaybackPaused();
         }
 
         @Override
         public void creativeResumed() {
-            mListener.onPlaybackResumed();
+            listener.onPlaybackResumed();
         }
     };
     //endregion ========== Listener Area
@@ -134,14 +134,14 @@ public class VideoView extends BaseAdView {
     }
 
     void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
-        mAdViewManager.loadBidTransaction(adUnitConfiguration, bidResponse);
+        adViewManager.loadBidTransaction(adUnitConfiguration, bidResponse);
     }
 
     public void loadAd(AdUnitConfiguration adConfiguration, String vastXml) {
         stopVisibilityTracking();
         changeState(State.UNDEFINED);
 
-        mAdViewManager.loadVideoTransaction(adConfiguration, vastXml);
+        adViewManager.loadVideoTransaction(adConfiguration, vastXml);
     }
 
     @Override
@@ -149,32 +149,32 @@ public class VideoView extends BaseAdView {
         super.destroy();
         stopVisibilityTracking();
 
-        // if (mVideoDialog != null) {
-        //     mVideoDialog.hide();
-        //     mVideoDialog.cancel();
-        //     mVideoDialog = null;
+        // if (videoDialog != null) {
+        //     videoDialog.hide();
+        //     videoDialog.cancel();
+        //     videoDialog = null;
         // }
     }
 
     public void mute(boolean enabled) {
         if (enabled) {
-            mAdViewManager.mute();
+            adViewManager.mute();
         }
         else {
-            mAdViewManager.unmute();
+            adViewManager.unmute();
         }
     }
 
     public void setVideoViewListener(VideoViewListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     public void setVideoPlayerClick(boolean enable) {
-        mEnableVideoPlayerClick = enable;
+        enableVideoPlayerClick = enable;
     }
 
     public void setAutoPlay(boolean enable) {
-        mEnableAutoPlay = enable;
+        enableAutoPlay = enable;
 
         if (!enable) {
             stopVisibilityTracking();
@@ -183,32 +183,32 @@ public class VideoView extends BaseAdView {
 
     public void pause() {
         if (!canPause()) {
-            LogUtil.debug(TAG, "pause() can't pause " + mVideoViewState);
+            LogUtil.debug(TAG, "pause() can't pause " + videoViewState);
             return;
         }
 
         changeState(State.PAUSED_BY_USER);
-        mAdViewManager.pause();
+        adViewManager.pause();
     }
 
     public void resume() {
         if (!canResume()) {
-            LogUtil.debug(TAG, "resume() can't resume " + mVideoViewState);
+            LogUtil.debug(TAG, "resume() can't resume " + videoViewState);
             return;
         }
 
         changeState(State.PLAYING);
-        mAdViewManager.resume();
+        adViewManager.resume();
     }
 
     public void play() {
         if (!canPlay()) {
-            LogUtil.debug(TAG, "play() can't play " + mVideoViewState);
+            LogUtil.debug(TAG, "play() can't play " + videoViewState);
             return;
         }
 
         changeState(State.PLAYING);
-        mAdViewManager.show();
+        adViewManager.show();
     }
 
     @Override
@@ -228,20 +228,20 @@ public class VideoView extends BaseAdView {
     protected void handleBroadcastAction(String action) {
         switch (action) {
             case IntentActions.ACTION_BROWSER_CLOSE:
-                mListener.onClickThroughClosed(VideoView.this);
+                listener.onClickThroughClosed(VideoView.this);
                 break;
         }
     }
 
     protected void setAdViewManagerValues() throws AdException {
-        mAdViewManager = new AdViewManager(getContext(), mOnAdViewManagerListener, this, mInterstitialManager);
+        adViewManager = new AdViewManager(getContext(), onAdViewManagerListener, this, interstitialManager);
     }
 
     @Override
     protected void handleWindowFocusChange(boolean hasWindowFocus) {
         LogUtil.debug(TAG, "handleWindowFocusChange() called with: hasWindowFocus = [" + hasWindowFocus + "]");
         // visibility checker will handle resume
-        if (mEnableAutoPlay) {
+        if (enableAutoPlay) {
             return;
         }
 
@@ -250,7 +250,7 @@ public class VideoView extends BaseAdView {
 
     @Override
     public void notifyErrorListeners(final AdException adException) {
-        mListener.onLoadFailed(VideoView.this, adException);
+        listener.onLoadFailed(VideoView.this, adException);
     }
 
     private void prepareAdConfiguration(AdUnitConfiguration adUnitConfiguration) {
@@ -262,7 +262,7 @@ public class VideoView extends BaseAdView {
     private void showVideoCreative(View view) {
         VideoCreativeView videoCreativeView = (VideoCreativeView) view;
 
-        if (mEnableVideoPlayerClick) {
+        if (enableVideoPlayerClick) {
             videoCreativeView.enableVideoPlayerClick();
         }
         videoCreativeView.showVolumeControls();
@@ -273,7 +273,7 @@ public class VideoView extends BaseAdView {
 
     private void showEndCardCreative(View creativeView) {
         // if (isFullScreen()) {
-        //     mVideoDialog.showBannerCreative(creativeView);
+        //     videoDialog.showBannerCreative(creativeView);
         // }
         // else {
         Views.removeFromParent(creativeView);
@@ -299,7 +299,7 @@ public class VideoView extends BaseAdView {
             startVisibilityTracking();
         });
         // if (isFullScreen()) {
-        //     mVideoDialog.dismiss();
+        //     videoDialog.dismiss();
         // }
         addView(watchAgainButton);
     }
@@ -312,23 +312,21 @@ public class VideoView extends BaseAdView {
         InternalFriendlyObstruction obstruction = new InternalFriendlyObstruction(view,
                                                                                   InternalFriendlyObstruction.Purpose.VIDEO_CONTROLS,
                                                                                   description);
-        mAdViewManager.addObstructions(obstruction);
+        adViewManager.addObstructions(obstruction);
     }
 
     private void startVisibilityTracking() {
         stopVisibilityTracking();
 
         final VisibilityTrackerOption visibilityTrackerOption = new VisibilityTrackerOption(NativeEventTracker.EventType.IMPRESSION);
-        mVisibilityTracker = new CreativeVisibilityTracker(this,
-                                                           visibilityTrackerOption,
-                                                           true);
-        mVisibilityTracker.setVisibilityTrackerListener(mVisibilityTrackerListener);
-        mVisibilityTracker.startVisibilityCheck(getContext());
+        visibilityTracker = new CreativeVisibilityTracker(this, visibilityTrackerOption, true);
+        visibilityTracker.setVisibilityTrackerListener(visibilityTrackerListener);
+        visibilityTracker.startVisibilityCheck(getContext());
     }
 
     private void stopVisibilityTracking() {
-        if (mVisibilityTracker != null) {
-            mVisibilityTracker.stopVisibilityCheck();
+        if (visibilityTracker != null) {
+            visibilityTracker.stopVisibilityCheck();
         }
     }
 
@@ -337,7 +335,7 @@ public class VideoView extends BaseAdView {
 
         if (isVisible && canPlay()) {
             play();
-            LogUtil.debug(TAG, "handleVisibilityChange: auto show " + mVideoViewState);
+            LogUtil.debug(TAG, "handleVisibilityChange: auto show " + videoViewState);
             return;
         }
 
@@ -346,19 +344,19 @@ public class VideoView extends BaseAdView {
 
     private void handlePlaybackBasedOnVisibility(boolean isVisible) {
         if (!isVisible && canPause()) {
-            mAdViewManager.pause();
+            adViewManager.pause();
             changeState(State.PAUSED_AUTO);
-            LogUtil.debug(TAG, "handleVisibilityChange: auto pause " + mVideoViewState);
+            LogUtil.debug(TAG, "handleVisibilityChange: auto pause " + videoViewState);
         }
         else if (isVisible && isInState(State.PAUSED_AUTO)) {
-            mAdViewManager.resume();
+            adViewManager.resume();
             changeState(State.PLAYING);
-            LogUtil.debug(TAG, "handleVisibilityChange: auto resume " + mVideoViewState);
+            LogUtil.debug(TAG, "handleVisibilityChange: auto resume " + videoViewState);
         }
     }
 
     private void changeState(State undefined) {
-        mVideoViewState = undefined;
+        videoViewState = undefined;
     }
 
     private boolean canPlay() {
@@ -374,7 +372,7 @@ public class VideoView extends BaseAdView {
     }
 
     private boolean isInState(State state) {
-        return mVideoViewState == state;
+        return videoViewState == state;
     }
 
     enum State {
@@ -386,59 +384,59 @@ public class VideoView extends BaseAdView {
         PLAYBACK_FINISHED
     }
 
-    // private VideoDialog mVideoDialog;
-    // private ViewParent mViewParentBeforeExpand;
-    // private ViewGroup.LayoutParams mLayoutParamsBeforeExpand;
+    // private VideoDialog videoDialog;
+    // private ViewParent viewParentBeforeExpand;
+    // private ViewGroup.LayoutParams layoutParamsBeforeExpand;
 
-    // private final VideoDialogListener mVideoDialogListener = new VideoDialogListener() {
+    // private final VideoDialogListener videoDialogListener = new VideoDialogListener() {
     //     @Override
     //     public void onVideoDialogClosed() {
-    //         if (mAdViewManager.isInterstitialClosed()) {
-    //             mAdViewManager.trackCloseEvent();
+    //         if (adViewManager.isInterstitialClosed()) {
+    //             adViewManager.trackCloseEvent();
     //             return;
     //         }
-    //         mAdViewManager.resetTransactionState(); //?
+    //         adViewManager.resetTransactionState(); //?
     //
-    //         mListener.adInterstitialDidClose(VideoView.this);
+    //         listener.adInterstitialDidClose(VideoView.this);
     //     }
     // };
 
     // private void resetViewToInitialState() {
-    // mVideoDialog = null;
+    // videoDialog = null;
     // VideoView videoAdView = VideoView.this;
     //
-    // mAdViewManager.returnFromVideo(videoAdView);
+    // adViewManager.returnFromVideo(videoAdView);
     //
     // removeView(findViewById(R.id.iv_close_interstitial));
     //
     // Views.removeFromParent(videoAdView);
     //
-    // if (mLayoutParamsBeforeExpand != null) {
-    //     setLayoutParams(mLayoutParamsBeforeExpand);
+    // if (layoutParamsBeforeExpand != null) {
+    //     setLayoutParams(layoutParamsBeforeExpand);
     // }
     //
-    // if (mViewParentBeforeExpand instanceof ViewGroup) {
-    //     ((ViewGroup) mViewParentBeforeExpand).addView(videoAdView);
+    // if (viewParentBeforeExpand instanceof ViewGroup) {
+    //     ((ViewGroup) viewParentBeforeExpand).addView(videoAdView);
     // }
     // }
 
     //
     // @VisibleForTesting
     // protected void createDialog(Context context, final VideoCreativeView view) {
-    //     mViewParentBeforeExpand = getParent();
-    //     mLayoutParamsBeforeExpand = getLayoutParams();
+    //     viewParentBeforeExpand = getParent();
+    //     layoutParamsBeforeExpand = getLayoutParams();
     //
     //     Views.removeFromParent(this);
     //
-    //     mVideoDialog = new VideoDialog(context, view, mAdViewManager, mInterstitialManager, this);
-    //     mVideoDialog.setOnDismissListener(new VideoView.VideoDialogDismissListener(this));
-    //     mVideoDialog.setVideoDialogListener(mVideoDialogListener);
-    //     mVideoDialog.show();
+    //     videoDialog = new VideoDialog(context, view, adViewManager, interstitialManager, this);
+    //     videoDialog.setOnDismissListener(new VideoView.VideoDialogDismissListener(this));
+    //     videoDialog.setVideoDialogListener(videoDialogListener);
+    //     videoDialog.show();
     // }
 
     // private void showFullScreen() {
     //     View currentView = getChildAt(0);
-    //     if (mAdViewManager.canShowFullScreen() && mVideoDialog == null && currentView instanceof VideoCreativeView) {
+    //     if (adViewManager.canShowFullScreen() && videoDialog == null && currentView instanceof VideoCreativeView) {
     //         createDialog(getContext(), (VideoCreativeView) currentView);
     //     }
     // }
@@ -448,19 +446,19 @@ public class VideoView extends BaseAdView {
     // }
     //
     // private boolean isFullScreen() {
-    //     return mVideoDialog != null && mVideoDialog.isShowing();
+    //     return videoDialog != null && videoDialog.isShowing();
     // }
 
     // protected static class VideoDialogDismissListener implements DialogInterface.OnDismissListener {
-    //     private final WeakReference<VideoView> mWeakVideoAdView;
+    //     private final WeakReference<VideoView> weakVideoAdView;
     //
     //     public VideoDialogDismissListener(VideoView videoDialog) {
-    //         mWeakVideoAdView = new WeakReference<>(videoDialog);
+    //         weakVideoAdView = new WeakReference<>(videoDialog);
     //     }
     //
     //     @Override
     //     public void onDismiss(DialogInterface dialog) {
-    //         VideoView videoAdView = mWeakVideoAdView.get();
+    //         VideoView videoAdView = weakVideoAdView.get();
     //         if (videoAdView == null) {
     //             Log.debug(TAG, "VideoDialog.onDismiss(): Unable to perform dismiss action. VideoAdView is null");
     //             return;

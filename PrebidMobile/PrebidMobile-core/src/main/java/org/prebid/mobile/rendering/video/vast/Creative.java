@@ -23,30 +23,31 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Creative extends VASTParserBase {
+
     private final static String VAST_CREATIVE = "Creative";
     private final static String VAST_CREATIVEEXTENSTONS = "CreativeExtensions";
     private final static String VAST_LINEAR = "Linear";
     private final static String VAST_COMPANIONADS = "CompanionAds";
     private final static String VAST_NONLINEARADS = "NonLinearAds";
 
-    private String mId;
-    private String mSequence;
-    private String mAdID;
-    private String mApiFramework;
+    private String id;
+    private String sequence;
+    private String adID;
+    private String apiFramework;
 
-    private ArrayList<CreativeExtension> mCreativeExtensions;
-    private Linear mLinear;
-    private ArrayList<Companion> mCompanionAds;
-    private NonLinearAds mNonLinearAds;
+    private ArrayList<CreativeExtension> creativeExtensions;
+    private Linear linear;
+    private ArrayList<Companion> companionAds;
+    private NonLinearAds nonLinearAds;
 
     public Creative(XmlPullParser p) throws XmlPullParserException, IOException {
 
         p.require(XmlPullParser.START_TAG, null, VAST_CREATIVE);
 
-        mId = p.getAttributeValue(null, "id");
-        mSequence = p.getAttributeValue(null, "sequence");
-        mAdID = p.getAttributeValue(null, "adID");
-        mApiFramework = p.getAttributeValue(null, "apiFramework");
+        id = p.getAttributeValue(null, "id");
+        sequence = p.getAttributeValue(null, "sequence");
+        adID = p.getAttributeValue(null, "adID");
+        apiFramework = p.getAttributeValue(null, "apiFramework");
 
         while (p.next() != XmlPullParser.END_TAG) {
             if (p.getEventType() != XmlPullParser.START_TAG) {
@@ -55,22 +56,22 @@ public class Creative extends VASTParserBase {
             String name = p.getName();
             if (name != null && name.equals(VAST_CREATIVEEXTENSTONS)) {
                 p.require(XmlPullParser.START_TAG, null, VAST_CREATIVEEXTENSTONS);
-                mCreativeExtensions = (new CreativeExtensions(p)).getCreativeExtenstions();
+                creativeExtensions = (new CreativeExtensions(p)).getCreativeExtenstions();
                 p.require(XmlPullParser.END_TAG, null, VAST_CREATIVEEXTENSTONS);
             }
             else if (name != null && name.equals(VAST_LINEAR)) {
                 p.require(XmlPullParser.START_TAG, null, VAST_LINEAR);
-                mLinear = new Linear(p);
+                linear = new Linear(p);
                 p.require(XmlPullParser.END_TAG, null, VAST_LINEAR);
             }
             else if (name != null && name.equals(VAST_COMPANIONADS)) {
                 p.require(XmlPullParser.START_TAG, null, VAST_COMPANIONADS);
-                mCompanionAds = (new CompanionAds(p)).getCompanionAds();
+                companionAds = (new CompanionAds(p)).getCompanionAds();
                 p.require(XmlPullParser.END_TAG, null, VAST_COMPANIONADS);
             }
             else if (name != null && name.equals(VAST_NONLINEARADS)) {
                 p.require(XmlPullParser.START_TAG, null, VAST_NONLINEARADS);
-                mNonLinearAds = new NonLinearAds(p);
+                nonLinearAds = new NonLinearAds(p);
                 p.require(XmlPullParser.END_TAG, null, VAST_NONLINEARADS);
             }
             else {
@@ -80,38 +81,38 @@ public class Creative extends VASTParserBase {
     }
 
     public String getId() {
-        return mId;
+        return id;
     }
 
     public String getSequence() {
-        return mSequence;
+        return sequence;
     }
 
     public String getAdID() {
-        return mAdID;
+        return adID;
     }
 
     public String getApiFramework() {
-        return mApiFramework;
+        return apiFramework;
     }
 
     public ArrayList<CreativeExtension> getCreativeExtensions() {
-        return mCreativeExtensions;
+        return creativeExtensions;
     }
 
     public Linear getLinear() {
-        return mLinear;
+        return linear;
     }
 
     public ArrayList<Companion> getCompanionAds() {
-        return mCompanionAds;
+        return companionAds;
     }
 
     public void setCompanionAds(ArrayList<Companion> companionAds) {
-        mCompanionAds = companionAds;
+        this.companionAds = companionAds;
     }
 
     public NonLinearAds getNonLinearAds() {
-        return mNonLinearAds;
+        return nonLinearAds;
     }
 }

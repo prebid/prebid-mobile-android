@@ -26,10 +26,10 @@ public class UserConsentParameterBuilder extends ParameterBuilder {
     private static final String US_PRIVACY = "us_privacy";
     private static final String CONSENT = "consent";
 
-    private final UserConsentManager mUserConsentManager;
+    private final UserConsentManager userConsentManager;
 
     public UserConsentParameterBuilder(UserConsentManager userConsentManager) {
-        mUserConsentManager = userConsentManager;
+        this.userConsentManager = userConsentManager;
     }
 
     @Override
@@ -41,13 +41,13 @@ public class UserConsentParameterBuilder extends ParameterBuilder {
     }
 
     private void appendGdprParameter(BidRequest bidRequest) {
-        String isSubjectToGdpr = mUserConsentManager.getSubjectToGdpr();
+        String isSubjectToGdpr = userConsentManager.getSubjectToGdpr();
 
         if (!Utils.isBlank(isSubjectToGdpr)) {
             Integer gdprValue = "1".equals(isSubjectToGdpr) ? 1 : 0;
             bidRequest.getRegs().getExt().put(GDPR, gdprValue);
 
-            String userConsentString = mUserConsentManager.getUserConsentString();
+            String userConsentString = userConsentManager.getUserConsentString();
             if (!Utils.isBlank(userConsentString)) {
                 bidRequest.getUser().getExt().put(CONSENT, userConsentString);
             }
@@ -55,7 +55,7 @@ public class UserConsentParameterBuilder extends ParameterBuilder {
     }
 
     private void appendCcpaParameter(BidRequest bidRequest) {
-        String usPrivacyString = mUserConsentManager.getUsPrivacyString();
+        String usPrivacyString = userConsentManager.getUsPrivacyString();
 
         if (!Utils.isBlank(usPrivacyString)) {
             bidRequest.getRegs().getExt().put(US_PRIVACY, usPrivacyString);

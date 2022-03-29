@@ -33,21 +33,24 @@ import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import java.util.ArrayList;
 
 public class CreativeModelMakerBids {
+
     private static final String TAG = CreativeModelMakerBids.class.getSimpleName();
 
-    @NonNull
-    private final AdLoadListener mListener;
-    private final VastParserExtractor mParserExtractor = new VastParserExtractor(this::handleExtractorResult);
+    @NonNull private final AdLoadListener listener;
+    private final VastParserExtractor parserExtractor = new VastParserExtractor(this::handleExtractorResult);
 
-    private AdUnitConfiguration mAdConfiguration;
+    private AdUnitConfiguration adConfiguration;
 
     public CreativeModelMakerBids(
-            @NonNull
-                    AdLoadListener listener) {
-        mListener = listener;
+            @NonNull AdLoadListener listener
+    ) {
+        this.listener = listener;
     }
 
-    public void makeModels(AdUnitConfiguration adConfiguration, BidResponse bidResponse) {
+    public void makeModels(
+            AdUnitConfiguration adConfiguration,
+            BidResponse bidResponse
+    ) {
         if (adConfiguration == null) {
             notifyErrorListener("Successful ad response but has a null config to continue");
             return;
@@ -72,19 +75,19 @@ public class CreativeModelMakerBids {
     }
 
     public void makeVideoModels(AdUnitConfiguration adConfiguration, String vast) {
-        mAdConfiguration = adConfiguration;
-        mAdConfiguration.setAdFormat(AdFormat.VAST);
-        mParserExtractor.extract(vast);
+        this.adConfiguration = adConfiguration;
+        this.adConfiguration.setAdFormat(AdFormat.VAST);
+        parserExtractor.extract(vast);
     }
 
     public void cancel() {
-        if (mParserExtractor != null) {
-            mParserExtractor.cancel();
+        if (parserExtractor != null) {
+            parserExtractor.cancel();
         }
     }
 
     private void notifyErrorListener(String msg) {
-        mListener.onFailedToLoadAd(new AdException(AdException.INTERNAL_ERROR, msg), null);
+        listener.onFailedToLoadAd(new AdException(AdException.INTERNAL_ERROR, msg), null);
     }
 
     private void parseAcj(AdUnitConfiguration adConfiguration, BidResponse bidResponse) {
@@ -105,7 +108,7 @@ public class CreativeModelMakerBids {
         result.creativeModels.add(model);
         result.transactionState = "bid";
 
-        mListener.onCreativeModelReady(result);
+        listener.onCreativeModelReady(result);
     }
 
     private String getAdHtml(AdUnitConfiguration adConfiguration, Bid bid) {
@@ -125,11 +128,11 @@ public class CreativeModelMakerBids {
         final String loadIdentifier = result.getLoadIdentifier();
 
         if (result.hasException()) {
-            mListener.onFailedToLoadAd(result.getAdException(), loadIdentifier);
+            listener.onFailedToLoadAd(result.getAdException(), loadIdentifier);
             return;
         }
 
-        CreativeModelsMaker modelsMaker = new CreativeModelsMakerVast(loadIdentifier, mListener);
-        modelsMaker.makeModels(mAdConfiguration, result.getVastResponseParserArray());
+        CreativeModelsMaker modelsMaker = new CreativeModelsMakerVast(loadIdentifier, listener);
+        modelsMaker.makeModels(adConfiguration, result.getVastResponseParserArray());
     }
 }

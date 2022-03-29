@@ -30,13 +30,13 @@ public class BidRequester extends Requester {
 
     public BidRequester(Context context, AdUnitConfiguration config, AdRequestInput adRequestInput, ResponseHandler responseHandler) {
         super(context, config, adRequestInput, responseHandler);
-        mRequestName = REQUEST_NAME;
+        requestName = REQUEST_NAME;
     }
 
     @Override
     public void startAdRequest() {
-        if (TextUtils.isEmpty (mAdConfiguration.getConfigId())) {
-            mAdResponseCallBack.onError("No configuration id specified.", 0);
+        if (TextUtils.isEmpty(adConfiguration.getConfigId())) {
+            adResponseCallBack.onError("No configuration id specified.", 0);
             return;
         }
 

@@ -23,16 +23,16 @@ import java.io.IOException;
 
 public class BaseValue extends VASTParserBase
 {
-    private String mValue;
+    private String value;
 
 	public BaseValue(XmlPullParser p) throws XmlPullParserException, IOException
 	{
 
-        mValue = readText(p);
+        value = readText(p);
 
 	}
 
     public String getValue() {
-        return mValue;
+        return value;
     }
 }

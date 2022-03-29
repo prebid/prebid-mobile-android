@@ -53,33 +53,33 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class AdBaseDialogTest {
 
-    private AdBaseDialog mAdBaseDialog;
+    private AdBaseDialog adBaseDialog;
 
     @Mock
-    Activity mMockActivity;
-    Context mMockContext;
+    Activity mockActivity;
+    Context mockContext;
     @Mock
-    WebViewBase mMockWebViewBase;
+    WebViewBase mockWebViewBase;
     @Mock
-    BaseJSInterface mMockBaseJSInterface;
+    BaseJSInterface mockBaseJSInterface;
     @Mock
-    JsExecutor mMockJsExecutor;
+    JsExecutor mockJsExecutor;
     @Mock
-    InterstitialManager mMockInterstitialManager;
+    InterstitialManager mockInterstitialManager;
     @Mock
-    MraidVariableContainer mMockMraidVariableContainer;
+    MraidVariableContainer mockMraidVariableContainer;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mMockContext = Robolectric.buildActivity(Activity.class).create().get().getApplicationContext();
+        mockContext = Robolectric.buildActivity(Activity.class).create().get().getApplicationContext();
 
-        when(mMockWebViewBase.getMRAIDInterface()).thenReturn(mMockBaseJSInterface);
-        when(mMockBaseJSInterface.getJsExecutor()).thenReturn(mMockJsExecutor);
-        when(mMockBaseJSInterface.getMraidVariableContainer()).thenReturn(mMockMraidVariableContainer);
-        when(mMockInterstitialManager.getInterstitialDisplayProperties()).thenReturn(mock(InterstitialDisplayPropertiesInternal.class));
+        when(mockWebViewBase.getMRAIDInterface()).thenReturn(mockBaseJSInterface);
+        when(mockBaseJSInterface.getJsExecutor()).thenReturn(mockJsExecutor);
+        when(mockBaseJSInterface.getMraidVariableContainer()).thenReturn(mockMraidVariableContainer);
+        when(mockInterstitialManager.getInterstitialDisplayProperties()).thenReturn(mock(InterstitialDisplayPropertiesInternal.class));
 
-        mAdBaseDialog = spy(new AdBaseDialog(mMockContext, mMockWebViewBase, mMockInterstitialManager) {
+        adBaseDialog = spy(new AdBaseDialog(mockContext, mockWebViewBase, mockInterstitialManager) {
             @Override
             protected void handleCloseClick() {
 
@@ -91,57 +91,57 @@ public class AdBaseDialogTest {
             }
         });
 
-        when(mAdBaseDialog.getActivity()).thenReturn(mMockActivity);
+        when(adBaseDialog.getActivity()).thenReturn(mockActivity);
     }
 
     @Test
     public void preInitTest() throws Exception {
 
         FrameLayout mockAdContainer = mock(FrameLayout.class);
-        Field adContainerField = WhiteBox.field(AdBaseDialog.class, "mAdViewContainer");
-        adContainerField.set(mAdBaseDialog, mockAdContainer);
+        Field adContainerField = WhiteBox.field(AdBaseDialog.class, "adViewContainer");
+        adContainerField.set(adBaseDialog, mockAdContainer);
 
-        when(mMockWebViewBase.isMRAID()).thenReturn(false);
-        mAdBaseDialog.preInit();
-        verify(mAdBaseDialog, times(1)).init();
-        verify(mAdBaseDialog, times(0)).MraidContinue();
-        verify(mockAdContainer, atLeastOnce()).addView(eq(mMockWebViewBase), anyInt());
+        when(mockWebViewBase.isMRAID()).thenReturn(false);
+        adBaseDialog.preInit();
+        verify(adBaseDialog, times(1)).init();
+        verify(adBaseDialog, times(0)).MraidContinue();
+        verify(mockAdContainer, atLeastOnce()).addView(eq(mockWebViewBase), anyInt());
 
-        reset(mAdBaseDialog);
-        when(mMockWebViewBase.isMRAID()).thenReturn(true);
-        mAdBaseDialog.preInit();
-        verify(mAdBaseDialog, times(0)).init();
-        verify(mAdBaseDialog, times(1)).MraidContinue();
-        verify(mockAdContainer, atLeastOnce()).addView(eq(mMockWebViewBase), anyInt());
+        reset(adBaseDialog);
+        when(mockWebViewBase.isMRAID()).thenReturn(true);
+        adBaseDialog.preInit();
+        verify(adBaseDialog, times(0)).init();
+        verify(adBaseDialog, times(1)).MraidContinue();
+        verify(mockAdContainer, atLeastOnce()).addView(eq(mockWebViewBase), anyInt());
     }
 
     @Test
     public void onWindowFocusChangedTest() {
-        mAdBaseDialog.onWindowFocusChanged(true);
-        verify(mMockJsExecutor, times(0)).executeOnViewableChange(anyBoolean());
+        adBaseDialog.onWindowFocusChanged(true);
+        verify(mockJsExecutor, times(0)).executeOnViewableChange(anyBoolean());
 
-        mAdBaseDialog.onWindowFocusChanged(false);
-        verify(mMockJsExecutor, times(1)).executeOnViewableChange(anyBoolean());
+        adBaseDialog.onWindowFocusChanged(false);
+        verify(mockJsExecutor, times(1)).executeOnViewableChange(anyBoolean());
     }
 
     @Test
     public void MRAIDContinueTest() throws Exception {
-        Field hasExpandPropertiesField = WhiteBox.field(AdBaseDialog.class, "mHasExpandProperties");
+        Field hasExpandPropertiesField = WhiteBox.field(AdBaseDialog.class, "hasExpandProperties");
         String expandedProperties = "{\"width\":0,\"height\":0,\"useCustomClose\":false,\"isModal\":true}";
 
         doAnswer(prepareHandlerAnswer(expandedProperties))
-            .when(mMockJsExecutor).executeGetExpandProperties(any(Handler.class));
+                .when(mockJsExecutor).executeGetExpandProperties(any(Handler.class));
 
         //MRAIDGetExpandProperties()
-        hasExpandPropertiesField.set(mAdBaseDialog, false);
-        mAdBaseDialog.MraidContinue();
-        verify(mAdBaseDialog, times(1)).loadExpandProperties();
+        hasExpandPropertiesField.set(adBaseDialog, false);
+        adBaseDialog.MraidContinue();
+        verify(adBaseDialog, times(1)).loadExpandProperties();
 
         //init()
-        reset(mAdBaseDialog);
-        hasExpandPropertiesField.set(mAdBaseDialog, true);
-        mAdBaseDialog.MraidContinue();
-        verify(mAdBaseDialog, times(1)).init();
+        reset(adBaseDialog);
+        hasExpandPropertiesField.set(adBaseDialog, true);
+        adBaseDialog.MraidContinue();
+        verify(adBaseDialog, times(1)).init();
     }
 
     private Answer<Object> prepareHandlerAnswer(final String jsonString) {
@@ -160,52 +160,52 @@ public class AdBaseDialogTest {
 
     @Test
     public void initTest() {
-        mAdBaseDialog.init();
+        adBaseDialog.init();
 
-        verify(mMockWebViewBase).requestLayout();
+        verify(mockWebViewBase).requestLayout();
     }
 
     @Test
     public void lockOrientationTest() throws AdException {
-        mAdBaseDialog.lockOrientation(0);
+        adBaseDialog.lockOrientation(0);
 
-        verify(mMockActivity).setRequestedOrientation(0);
+        verify(mockActivity).setRequestedOrientation(0);
     }
 
     @Test
     public void renderCustomCloseTest() {
         View mockCloseView = mock(View.class);
-        mAdBaseDialog.setCloseView(mockCloseView);
+        adBaseDialog.setCloseView(mockCloseView);
 
-        mAdBaseDialog.changeCloseViewVisibility(View.VISIBLE);
+        adBaseDialog.changeCloseViewVisibility(View.VISIBLE);
 
         verify(mockCloseView).setVisibility(View.VISIBLE);
     }
 
     @Test
     public void handleSetOrientationProperties() throws AdException, IllegalAccessException {
-        Field forceOrientationField = WhiteBox.field(AdBaseDialog.class, "mForceOrientation");
-        Field allowOrientationChangeField = WhiteBox.field(AdBaseDialog.class, "mAllowOrientationChange");
+        Field forceOrientationField = WhiteBox.field(AdBaseDialog.class, "forceOrientation");
+        Field allowOrientationChangeField = WhiteBox.field(AdBaseDialog.class, "allowOrientationChange");
         String orientationProperties = "{\"allowOrientationChange\":true,\"forceOrientation\":\"landscape\"}";
-        when(mMockMraidVariableContainer.getOrientationProperties()).thenReturn(orientationProperties);
+        when(mockMraidVariableContainer.getOrientationProperties()).thenReturn(orientationProperties);
 
-        when(mMockWebViewBase.isMRAID()).thenReturn(true);
+        when(mockWebViewBase.isMRAID()).thenReturn(true);
 
-        mAdBaseDialog.handleSetOrientationProperties();
-        assertTrue(allowOrientationChangeField.getBoolean(mAdBaseDialog));
-        assertEquals(OrientationManager.ForcedOrientation.landscape, forceOrientationField.get(mAdBaseDialog));
-        verify(mMockBaseJSInterface).updateScreenMetricsAsync(null);
+        adBaseDialog.handleSetOrientationProperties();
+        assertTrue(allowOrientationChangeField.getBoolean(adBaseDialog));
+        assertEquals(OrientationManager.ForcedOrientation.landscape, forceOrientationField.get(adBaseDialog));
+        verify(mockBaseJSInterface).updateScreenMetricsAsync(null);
     }
 
     @Test
     public void cleanup() {
-        mAdBaseDialog.cleanup();
+        adBaseDialog.cleanup();
 
-        verify(mAdBaseDialog).cancel();
+        verify(adBaseDialog).cancel();
     }
 
     @Test
     public void getActivity() {
-        assertEquals(mMockActivity, mAdBaseDialog.getActivity());
+        assertEquals(mockActivity, adBaseDialog.getActivity());
     }
 }

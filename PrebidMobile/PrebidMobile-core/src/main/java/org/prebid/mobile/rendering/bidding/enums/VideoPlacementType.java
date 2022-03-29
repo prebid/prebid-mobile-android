@@ -24,14 +24,14 @@ public enum VideoPlacementType {
     IN_ARTICLE(3),
     IN_FEED(4);
 
-    private final int mValue;
+    private final int value;
 
     VideoPlacementType(int value) {
-        mValue = value;
+        this.value = value;
     }
 
     public int getValue() {
-        return mValue;
+        return value;
     }
 
     @Nullable

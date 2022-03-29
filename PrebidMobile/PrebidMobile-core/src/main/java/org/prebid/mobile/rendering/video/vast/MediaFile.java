@@ -21,95 +21,94 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
-public class MediaFile extends VASTParserBase
-{
-    private String mId;
-    private String mValue;
-    private String mDelivery;
-    private String mType;
-    private String mBitrate;
-    private String mMinBitrate;
-    private String mMaxBitrate;
-    private String mWidth;
-    private String mHeight;
-    private String mXPosition;
-    private String mYPosition;
-    private String mDuration;
-    private String mOffset;
-    private String mApiFramework;
+public class MediaFile extends VASTParserBase {
 
-	public MediaFile(XmlPullParser p) throws XmlPullParserException, IOException
-	{
+    private String id;
+    private String value;
+    private String delivery;
+    private String type;
+    private String bitrate;
+    private String minBitrate;
+    private String maxBitrate;
+    private String width;
+    private String height;
+    private String xPosition;
+    private String yPosition;
+    private String duration;
+    private String offset;
+    private String apiFramework;
 
-        mId = p.getAttributeValue(null, "id");
-        mDelivery = p.getAttributeValue(null, "delivery");
-        mType = p.getAttributeValue(null, "type");
-        mBitrate = p.getAttributeValue(null, "bitrate");
-        mMinBitrate = p.getAttributeValue(null, "minBitrate");
-        mMaxBitrate = p.getAttributeValue(null, "maxBitrate");
-        mWidth = p.getAttributeValue(null, "width");
-        mHeight = p.getAttributeValue(null, "height");
-        mXPosition = p.getAttributeValue(null, "xPosition");
-        mYPosition = p.getAttributeValue(null, "yPosition");
-        mDuration = p.getAttributeValue(null, "duration");
-        mOffset = p.getAttributeValue(null, "offset");
-        mApiFramework = p.getAttributeValue(null, "apiFramework");
-        mValue = readText(p);
+    public MediaFile(XmlPullParser p) throws XmlPullParserException, IOException {
+
+        id = p.getAttributeValue(null, "id");
+        delivery = p.getAttributeValue(null, "delivery");
+        type = p.getAttributeValue(null, "type");
+        bitrate = p.getAttributeValue(null, "bitrate");
+        minBitrate = p.getAttributeValue(null, "minBitrate");
+        maxBitrate = p.getAttributeValue(null, "maxBitrate");
+        width = p.getAttributeValue(null, "width");
+        height = p.getAttributeValue(null, "height");
+        xPosition = p.getAttributeValue(null, "xPosition");
+        yPosition = p.getAttributeValue(null, "yPosition");
+        duration = p.getAttributeValue(null, "duration");
+        offset = p.getAttributeValue(null, "offset");
+        apiFramework = p.getAttributeValue(null, "apiFramework");
+        value = readText(p);
     }
 
     public String getId() {
-        return mId;
+        return id;
     }
 
     public String getValue() {
-        return mValue;
+        return value;
     }
 
     public String getDelivery() {
-        return mDelivery;
+        return delivery;
     }
 
     public String getType() {
-        return mType;
+        return type;
     }
 
     public String getBitrate() {
-        return mBitrate;
+        return bitrate;
     }
 
     public String getMinBitrate() {
-        return mMinBitrate;
+        return minBitrate;
     }
 
     public String getMaxBitrate() {
-        return mMaxBitrate;
+        return maxBitrate;
     }
 
     public String getWidth() {
-        return mWidth;
+        return width;
     }
 
     public String getHeight() {
-        return mHeight;
+        return height;
     }
 
     public String getXPosition() {
-        return mXPosition;
+        return xPosition;
     }
 
     public String getYPosition() {
-        return mYPosition;
+        return yPosition;
     }
 
     public String getDuration() {
-        return mDuration;
+        return duration;
     }
 
     public String getOffset() {
-        return mOffset;
+        return offset;
     }
 
     public String getApiFramework() {
-        return mApiFramework;
+        return apiFramework;
     }
 }

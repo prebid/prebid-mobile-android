@@ -22,24 +22,22 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class NonLinearAds extends VASTParserBase
-{
+public class NonLinearAds extends VASTParserBase {
+
 	private final static String VAST_NONLINEAERADS = "NonLinearAds";
 	private final static String VAST_NONLINEAR = "NonLinear";
 	private final static String VAST_TRACKINGEVENTS = "TrackingEvents";
 
-    private ArrayList<NonLinear> mNonLinearAds;
-    private ArrayList<Tracking> mTrackingEvents;
+	private ArrayList<NonLinear> nonLinearAds;
+	private ArrayList<Tracking> trackingEvents;
 
-	public NonLinearAds(XmlPullParser p) throws XmlPullParserException, IOException
-	{
+	public NonLinearAds(XmlPullParser p) throws XmlPullParserException, IOException {
 
-		mNonLinearAds = new ArrayList<>();
+		nonLinearAds = new ArrayList<>();
 
 		p.require(XmlPullParser.START_TAG, null, VAST_NONLINEAERADS);
 
-		while (p.next() != XmlPullParser.END_TAG)
-		{
+		while (p.next() != XmlPullParser.END_TAG) {
 			if (p.getEventType() != XmlPullParser.START_TAG)
 			{
 				continue;
@@ -48,13 +46,13 @@ public class NonLinearAds extends VASTParserBase
 			if (name != null && name.equals(VAST_NONLINEAR))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_NONLINEAR);
-                mNonLinearAds.add(new NonLinear(p));
+				nonLinearAds.add(new NonLinear(p));
 				p.require(XmlPullParser.END_TAG, null, VAST_NONLINEAR);
 			}
 			else if (name != null && name.equals(VAST_TRACKINGEVENTS))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_TRACKINGEVENTS);
-                mTrackingEvents = (new TrackingEvents(p)).getTrackingEvents();
+				trackingEvents = (new TrackingEvents(p)).getTrackingEvents();
 				p.require(XmlPullParser.END_TAG, null, VAST_TRACKINGEVENTS);
 			}
 			else
@@ -66,10 +64,10 @@ public class NonLinearAds extends VASTParserBase
 	}
 
     public ArrayList<NonLinear> getNonLinearAds() {
-        return mNonLinearAds;
+		return nonLinearAds;
     }
 
     public ArrayList<Tracking> getTrackingEvents() {
-        return mTrackingEvents;
+		return trackingEvents;
     }
 }

@@ -36,45 +36,43 @@ import static org.mockito.Mockito.verify;
 @Config(sdk = 19)
 public class VideoCreativeModelTest {
 
-    private VideoCreativeModel mVideoCreativeModel;
+    private VideoCreativeModel videoCreativeModel;
 
-    private OmEventTracker mMockOmEventTracker;
-    private TrackingManager mMockTrackingManager;
+    private OmEventTracker mockOmEventTracker;
+    private TrackingManager mockTrackingManager;
 
     @Before
     public void setup() {
         AdUnitConfiguration adConfiguration = mock(AdUnitConfiguration.class);
-        mMockOmEventTracker = mock(OmEventTracker.class);
+        mockOmEventTracker = mock(OmEventTracker.class);
 
-        mMockTrackingManager = mock(TrackingManager.class);
+        mockTrackingManager = mock(TrackingManager.class);
 
-        mVideoCreativeModel = new VideoCreativeModel(mMockTrackingManager,
-                                                     mMockOmEventTracker,
-                                                     adConfiguration);
+        videoCreativeModel = new VideoCreativeModel(mockTrackingManager, mockOmEventTracker, adConfiguration);
     }
 
     @Test
     public void trackVideoEventTest() {
-        mVideoCreativeModel.getVideoEventUrls().put(VideoAdEvent.Event.AD_COLLAPSE, new ArrayList<String>());
+        videoCreativeModel.getVideoEventUrls().put(VideoAdEvent.Event.AD_COLLAPSE, new ArrayList<String>());
 
-        mVideoCreativeModel.trackVideoEvent(VideoAdEvent.Event.AD_COLLAPSE);
-        verify(mMockTrackingManager).fireEventTrackingURLs(any(ArrayList.class));
-        verify(mMockOmEventTracker).trackOmVideoAdEvent(VideoAdEvent.Event.AD_COLLAPSE);
+        videoCreativeModel.trackVideoEvent(VideoAdEvent.Event.AD_COLLAPSE);
+        verify(mockTrackingManager).fireEventTrackingURLs(any(ArrayList.class));
+        verify(mockOmEventTracker).trackOmVideoAdEvent(VideoAdEvent.Event.AD_COLLAPSE);
 
-        mVideoCreativeModel.trackNonSkippableStandaloneVideoLoaded(false);
-        verify(mMockOmEventTracker).trackNonSkippableStandaloneVideoLoaded(false);
+        videoCreativeModel.trackNonSkippableStandaloneVideoLoaded(false);
+        verify(mockOmEventTracker).trackNonSkippableStandaloneVideoLoaded(false);
 
-        mVideoCreativeModel.trackPlayerStateChange(InternalPlayerState.FULLSCREEN);
-        verify(mMockOmEventTracker).trackOmPlayerStateChange(InternalPlayerState.FULLSCREEN);
+        videoCreativeModel.trackPlayerStateChange(InternalPlayerState.FULLSCREEN);
+        verify(mockOmEventTracker).trackOmPlayerStateChange(InternalPlayerState.FULLSCREEN);
 
-        mVideoCreativeModel.trackVideoAdStarted(0, 0);
-        verify(mMockOmEventTracker).trackVideoAdStarted(0, 0);
+        videoCreativeModel.trackVideoAdStarted(0, 0);
+        verify(mockOmEventTracker).trackVideoAdStarted(0, 0);
     }
 
     @Test
     public void registerVideoEventTest() {
-        assertEquals(0, mVideoCreativeModel.getVideoEventUrls().size());
-        mVideoCreativeModel.registerVideoEvent(VideoAdEvent.Event.AD_COLLAPSE, new ArrayList<String>());
-        assertEquals(1, mVideoCreativeModel.getVideoEventUrls().size());
+        assertEquals(0, videoCreativeModel.getVideoEventUrls().size());
+        videoCreativeModel.registerVideoEvent(VideoAdEvent.Event.AD_COLLAPSE, new ArrayList<String>());
+        assertEquals(1, videoCreativeModel.getVideoEventUrls().size());
     }
 }

@@ -31,28 +31,30 @@ import static android.webkit.WebView.HitTestResult.SRC_ANCHOR_TYPE;
 import static android.webkit.WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE;
 
 public class AdWebViewClient extends WebViewClient {
+
     private static final String TAG = AdWebViewClient.class.getSimpleName();
 
-    private static final String JS__GET_RENDERED_HTML = "javascript:window.HtmlViewer.showHTML"
-                                                        + "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');";
+    private static final String JS__GET_RENDERED_HTML = "javascript:window.HtmlViewer.showHTML" + "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');";
 
-    protected AdAssetsLoadedListener mAdAssetsLoadedListener;
+    protected AdAssetsLoadedListener adAssetsLoadedListener;
 
-    private boolean mLoadingFinished = true;
+    private boolean loadingFinished = true;
 
-    private HashSet<String> mUrls = new HashSet<>();
-    private String mPageUrl;
+    private HashSet<String> urls = new HashSet<>();
+    private String pageUrl;
 
     public interface AdAssetsLoadedListener {
+
         void startLoadingAssets();
 
         void adAssetsLoaded();
 
         void notifyMraidScriptInjected();
+
     }
 
     public AdWebViewClient(AdAssetsLoadedListener adAssetsLoadedListener) {
-        mAdAssetsLoadedListener = adAssetsLoadedListener;
+        this.adAssetsLoadedListener = adAssetsLoadedListener;
     }
 
     @Override
@@ -65,11 +67,11 @@ public class AdWebViewClient extends WebViewClient {
         try {
             super.onPageStarted(view, url, favicon);
 
-            mPageUrl = url;
+            pageUrl = url;
 
-            mLoadingFinished = false;
+            loadingFinished = false;
 
-            mAdAssetsLoadedListener.startLoadingAssets();
+            adAssetsLoadedListener.startLoadingAssets();
         }
         catch (Exception e) {
             LogUtil.error(TAG, "onPageStarted failed for url: " + url + " : " + Log.getStackTraceString(e));
@@ -85,7 +87,7 @@ public class AdWebViewClient extends WebViewClient {
         LogUtil.debug(TAG, "onPageFinished: " + view);
         try {
 
-            mAdAssetsLoadedListener.adAssetsLoaded();
+            adAssetsLoadedListener.adAssetsLoaded();
 
             view.setBackgroundColor(Color.TRANSPARENT);
         }
@@ -101,7 +103,7 @@ public class AdWebViewClient extends WebViewClient {
             return;
         }
 
-        if (url != null && url.equals(mPageUrl)) {
+        if (url != null && url.equals(pageUrl)) {
             return;
         }
         try {
@@ -111,11 +113,9 @@ public class AdWebViewClient extends WebViewClient {
             // Need to check webViewBase.containsIFrame() because displayed ad could contain another
             // injected script (for example OpenMeasurement) that initializes own resources.
             // Otherwise, we could get an error: jira/browse/MOBILE-5100
-            if (webViewBase.containsIFrame()
-                && webViewBase.isClicked()
-                && !mUrls.contains(url)
-                && view.getHitTestResult() != null
-                && (view.getHitTestResult().getType() == SRC_ANCHOR_TYPE || view.getHitTestResult().getType() == SRC_IMAGE_ANCHOR_TYPE)) {
+            if (webViewBase.containsIFrame() && webViewBase.isClicked() && !urls.contains(url) && view.getHitTestResult() != null && (view.getHitTestResult()
+                                                                                                                                          .getType() == SRC_ANCHOR_TYPE || view.getHitTestResult()
+                                                                                                                                                                               .getType() == SRC_IMAGE_ANCHOR_TYPE)) {
 
                 // stop loading the iframe or whatever
                 // instead simply change the location of the webview - this will
@@ -123,7 +123,7 @@ public class AdWebViewClient extends WebViewClient {
                 reloadUrl(view, url);
             }
 
-            mUrls.add(url);
+            urls.add(url);
             super.onLoadResource(view, url);
         }
         catch (Exception e) {
@@ -158,7 +158,7 @@ public class AdWebViewClient extends WebViewClient {
     }
 
     boolean isLoadingFinished() {
-        return mLoadingFinished;
+        return loadingFinished;
     }
 
     @Override
@@ -179,19 +179,19 @@ public class AdWebViewClient extends WebViewClient {
     }
 
     private void handleWebViewClick(String url, WebViewBase webViewBase) {
-        mUrls.clear();
+        urls.clear();
 
-        mLoadingFinished = false;
+        loadingFinished = false;
 
         String targetUrl = webViewBase.getTargetUrl();
         url = TextUtils.isEmpty(targetUrl) ? url : targetUrl;
 
         if (webViewBase.canHandleClick()) {
-            mLoadingFinished = true;
-            mUrls.clear();
+            loadingFinished = true;
+            urls.clear();
 
             //all(generally non-mraid) comes here - open/click here
-            webViewBase.mMraidListener.openExternalLink(url);
+            webViewBase.mraidListener.openExternalLink(url);
         }
     }
 }

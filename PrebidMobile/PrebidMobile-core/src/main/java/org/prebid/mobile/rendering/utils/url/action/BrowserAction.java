@@ -29,12 +29,16 @@ import org.prebid.mobile.rendering.utils.url.UrlHandler;
 import org.prebid.mobile.rendering.views.browser.AdBrowserActivity;
 
 public class BrowserAction implements UrlAction {
-    private final int mBroadcastId;
-    @Nullable private final OnBrowserActionResultListener mOnBrowserActionResultListener;
 
-    public BrowserAction(int broadcastId, @Nullable OnBrowserActionResultListener onBrowserActionResultListener) {
-        mBroadcastId = broadcastId;
-        mOnBrowserActionResultListener = onBrowserActionResultListener;
+    private final int broadcastId;
+    @Nullable private final OnBrowserActionResultListener onBrowserActionResultListener;
+
+    public BrowserAction(
+            int broadcastId,
+            @Nullable OnBrowserActionResultListener onBrowserActionResultListener
+    ) {
+        this.broadcastId = broadcastId;
+        this.onBrowserActionResultListener = onBrowserActionResultListener;
     }
 
     @Override
@@ -50,7 +54,7 @@ public class BrowserAction implements UrlAction {
             throw new ActionNotResolvedException("performAction(): Failed. Url is invalid or there is no activity to handle action.");
         }
 
-        ExternalViewerUtils.startBrowser(context, uri.toString(), mBroadcastId, true, mOnBrowserActionResultListener);
+        ExternalViewerUtils.startBrowser(context, uri.toString(), broadcastId, true, onBrowserActionResultListener);
     }
 
     private boolean canHandleLink(Context context, Uri uri) {

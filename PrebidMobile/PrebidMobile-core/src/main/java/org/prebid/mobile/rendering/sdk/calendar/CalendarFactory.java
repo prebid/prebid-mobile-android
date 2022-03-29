@@ -20,14 +20,14 @@ import org.prebid.mobile.rendering.utils.helpers.Utils;
 
 final public class CalendarFactory {
 
-    private ICalendar mImplementation;
+    private ICalendar implementation;
 
     private CalendarFactory() {
         if (Utils.atLeastICS()) {
-            mImplementation = new CalendarGTE14();
+            implementation = new CalendarGTE14();
         }
         else {
-            mImplementation = new CalendarLT14();
+            implementation = new CalendarLT14();
         }
     }
 
@@ -36,6 +36,6 @@ final public class CalendarFactory {
     }
 
     public static ICalendar getCalendarInstance() {
-        return CalendarImplHolder.instance.mImplementation;
+        return CalendarImplHolder.instance.implementation;
     }
 }

@@ -34,121 +34,121 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class AdViewProgressUpdateTaskTest {
 
-    private AdViewProgressUpdateTask mAdViewProgressTask;
-    private VideoCreative mMockVideoCreative;
-    private View mMockCreativeView;
-    private final int mDuration = 50;
+    private AdViewProgressUpdateTask adViewProgressTask;
+    private VideoCreative mockVideoCreative;
+    private View mockCreativeView;
+    private final int duration = 50;
 
     @Before
     public void setup() throws AdException {
-        mMockVideoCreative = mock(VideoCreative.class);
-        mMockCreativeView = mock(VideoCreativeView.class);
+        mockVideoCreative = mock(VideoCreative.class);
+        mockCreativeView = mock(VideoCreativeView.class);
 
-        when(mMockVideoCreative.getCreativeView()).thenReturn(mMockCreativeView);
+        when(mockVideoCreative.getCreativeView()).thenReturn(mockCreativeView);
 
-        mAdViewProgressTask = spy(new AdViewProgressUpdateTask(mMockVideoCreative, mDuration));
+        adViewProgressTask = spy(new AdViewProgressUpdateTask(mockVideoCreative, duration));
     }
 
     @Test
     public void onPostExecuteTest() {
-        mAdViewProgressTask.onPostExecute(null);
-        verify(mAdViewProgressTask).cancel(true);
+        adViewProgressTask.onPostExecute(null);
+        verify(adViewProgressTask).cancel(true);
     }
 
     @Test
     public void onProgressUpdateTest() {
-        assertFalse(mAdViewProgressTask.getFirstQuartile());
-        mAdViewProgressTask.onProgressUpdate((long) 25);
-        verify(mMockVideoCreative).onEvent(VideoAdEvent.Event.AD_FIRSTQUARTILE);
-        assertTrue(mAdViewProgressTask.getFirstQuartile());
+        assertFalse(adViewProgressTask.getFirstQuartile());
+        adViewProgressTask.onProgressUpdate((long) 25);
+        verify(mockVideoCreative).onEvent(VideoAdEvent.Event.AD_FIRSTQUARTILE);
+        assertTrue(adViewProgressTask.getFirstQuartile());
 
-        reset(mMockVideoCreative);
-        assertFalse(mAdViewProgressTask.getMidpoint());
-        mAdViewProgressTask.onProgressUpdate((long) 50);
-        verify(mMockVideoCreative).onEvent(VideoAdEvent.Event.AD_MIDPOINT);
-        assertTrue(mAdViewProgressTask.getMidpoint());
+        reset(mockVideoCreative);
+        assertFalse(adViewProgressTask.getMidpoint());
+        adViewProgressTask.onProgressUpdate((long) 50);
+        verify(mockVideoCreative).onEvent(VideoAdEvent.Event.AD_MIDPOINT);
+        assertTrue(adViewProgressTask.getMidpoint());
 
-        reset(mMockVideoCreative);
-        assertFalse(mAdViewProgressTask.getThirdQuartile());
-        mAdViewProgressTask.onProgressUpdate((long) 75);
-        verify(mMockVideoCreative).onEvent(VideoAdEvent.Event.AD_THIRDQUARTILE);
-        assertTrue(mAdViewProgressTask.getThirdQuartile());
+        reset(mockVideoCreative);
+        assertFalse(adViewProgressTask.getThirdQuartile());
+        adViewProgressTask.onProgressUpdate((long) 75);
+        verify(mockVideoCreative).onEvent(VideoAdEvent.Event.AD_THIRDQUARTILE);
+        assertTrue(adViewProgressTask.getThirdQuartile());
     }
 
     @Test
     public void getCurrentPositionTest() {
-        assertEquals(0, mAdViewProgressTask.getCurrentPosition());
+        assertEquals(0, adViewProgressTask.getCurrentPosition());
     }
 
     @Test
     public void setVastVideoDurationTest() throws IllegalAccessException, NoSuchFieldException {
-        Field vastDurationField = WhiteBox.field(AdViewProgressUpdateTask.class, "mVastVideoDuration");
-        assertEquals((long) -1, vastDurationField.get(mAdViewProgressTask));
+        Field vastDurationField = WhiteBox.field(AdViewProgressUpdateTask.class, "vastVideoDuration");
+        assertEquals((long) -1, vastDurationField.get(adViewProgressTask));
 
-        mAdViewProgressTask.setVastVideoDuration(10);
-        assertEquals((long) 10, vastDurationField.get(mAdViewProgressTask));
+        adViewProgressTask.setVastVideoDuration(10);
+        assertEquals((long) 10, vastDurationField.get(adViewProgressTask));
     }
 
     @Test
     public void whenNoQuartilePassed_NoEventsTracked() {
-        assertFalse(mAdViewProgressTask.getFirstQuartile());
-        assertFalse(mAdViewProgressTask.getMidpoint());
-        assertFalse(mAdViewProgressTask.getThirdQuartile());
-        mAdViewProgressTask.onProgressUpdate((long) 24);
+        assertFalse(adViewProgressTask.getFirstQuartile());
+        assertFalse(adViewProgressTask.getMidpoint());
+        assertFalse(adViewProgressTask.getThirdQuartile());
+        adViewProgressTask.onProgressUpdate((long) 24);
 
-        assertFalse(mAdViewProgressTask.getFirstQuartile());
-        assertFalse(mAdViewProgressTask.getMidpoint());
-        assertFalse(mAdViewProgressTask.getThirdQuartile());
-        verify(mMockVideoCreative, never()).onEvent(VideoAdEvent.Event.AD_FIRSTQUARTILE);
-        verify(mMockVideoCreative, never()).onEvent(VideoAdEvent.Event.AD_MIDPOINT);
-        verify(mMockVideoCreative, never()).onEvent(VideoAdEvent.Event.AD_THIRDQUARTILE);
+        assertFalse(adViewProgressTask.getFirstQuartile());
+        assertFalse(adViewProgressTask.getMidpoint());
+        assertFalse(adViewProgressTask.getThirdQuartile());
+        verify(mockVideoCreative, never()).onEvent(VideoAdEvent.Event.AD_FIRSTQUARTILE);
+        verify(mockVideoCreative, never()).onEvent(VideoAdEvent.Event.AD_MIDPOINT);
+        verify(mockVideoCreative, never()).onEvent(VideoAdEvent.Event.AD_THIRDQUARTILE);
     }
 
     @Test
     public void whenFirstQuartilePassedAndNoEventsTracked_TrackOnlyFirstQuartile() {
-        assertFalse(mAdViewProgressTask.getFirstQuartile());
-        assertFalse(mAdViewProgressTask.getMidpoint());
-        assertFalse(mAdViewProgressTask.getThirdQuartile());
+        assertFalse(adViewProgressTask.getFirstQuartile());
+        assertFalse(adViewProgressTask.getMidpoint());
+        assertFalse(adViewProgressTask.getThirdQuartile());
 
-        mAdViewProgressTask.onProgressUpdate((long) 49);
+        adViewProgressTask.onProgressUpdate((long) 49);
 
-        assertTrue(mAdViewProgressTask.getFirstQuartile());
-        assertFalse(mAdViewProgressTask.getMidpoint());
-        assertFalse(mAdViewProgressTask.getThirdQuartile());
-        verify(mMockVideoCreative).onEvent(VideoAdEvent.Event.AD_FIRSTQUARTILE);
-        verify(mMockVideoCreative, never()).onEvent(VideoAdEvent.Event.AD_MIDPOINT);
-        verify(mMockVideoCreative, never()).onEvent(VideoAdEvent.Event.AD_THIRDQUARTILE);
+        assertTrue(adViewProgressTask.getFirstQuartile());
+        assertFalse(adViewProgressTask.getMidpoint());
+        assertFalse(adViewProgressTask.getThirdQuartile());
+        verify(mockVideoCreative).onEvent(VideoAdEvent.Event.AD_FIRSTQUARTILE);
+        verify(mockVideoCreative, never()).onEvent(VideoAdEvent.Event.AD_MIDPOINT);
+        verify(mockVideoCreative, never()).onEvent(VideoAdEvent.Event.AD_THIRDQUARTILE);
     }
 
     @Test
     public void whenMidpointPassedAndNoEventsTracked_TrackFirstQuartileAndMidpoint() {
-        assertFalse(mAdViewProgressTask.getFirstQuartile());
-        assertFalse(mAdViewProgressTask.getMidpoint());
-        assertFalse(mAdViewProgressTask.getThirdQuartile());
+        assertFalse(adViewProgressTask.getFirstQuartile());
+        assertFalse(adViewProgressTask.getMidpoint());
+        assertFalse(adViewProgressTask.getThirdQuartile());
 
-        mAdViewProgressTask.onProgressUpdate((long) 74);
+        adViewProgressTask.onProgressUpdate((long) 74);
 
-        assertTrue(mAdViewProgressTask.getFirstQuartile());
-        assertTrue(mAdViewProgressTask.getMidpoint());
-        assertFalse(mAdViewProgressTask.getThirdQuartile());
-        verify(mMockVideoCreative).onEvent(VideoAdEvent.Event.AD_FIRSTQUARTILE);
-        verify(mMockVideoCreative).onEvent(VideoAdEvent.Event.AD_MIDPOINT);
-        verify(mMockVideoCreative, never()).onEvent(VideoAdEvent.Event.AD_THIRDQUARTILE);
+        assertTrue(adViewProgressTask.getFirstQuartile());
+        assertTrue(adViewProgressTask.getMidpoint());
+        assertFalse(adViewProgressTask.getThirdQuartile());
+        verify(mockVideoCreative).onEvent(VideoAdEvent.Event.AD_FIRSTQUARTILE);
+        verify(mockVideoCreative).onEvent(VideoAdEvent.Event.AD_MIDPOINT);
+        verify(mockVideoCreative, never()).onEvent(VideoAdEvent.Event.AD_THIRDQUARTILE);
     }
 
     @Test
     public void whenThirdQuartilePassedAndNoEventsTracked_TrackAllEvents() {
-        assertFalse(mAdViewProgressTask.getFirstQuartile());
-        assertFalse(mAdViewProgressTask.getMidpoint());
-        assertFalse(mAdViewProgressTask.getThirdQuartile());
+        assertFalse(adViewProgressTask.getFirstQuartile());
+        assertFalse(adViewProgressTask.getMidpoint());
+        assertFalse(adViewProgressTask.getThirdQuartile());
 
-        mAdViewProgressTask.onProgressUpdate((long) 99);
+        adViewProgressTask.onProgressUpdate((long) 99);
 
-        assertTrue(mAdViewProgressTask.getFirstQuartile());
-        assertTrue(mAdViewProgressTask.getMidpoint());
-        assertTrue(mAdViewProgressTask.getThirdQuartile());
-        verify(mMockVideoCreative).onEvent(VideoAdEvent.Event.AD_FIRSTQUARTILE);
-        verify(mMockVideoCreative).onEvent(VideoAdEvent.Event.AD_MIDPOINT);
-        verify(mMockVideoCreative).onEvent(VideoAdEvent.Event.AD_THIRDQUARTILE);
+        assertTrue(adViewProgressTask.getFirstQuartile());
+        assertTrue(adViewProgressTask.getMidpoint());
+        assertTrue(adViewProgressTask.getThirdQuartile());
+        verify(mockVideoCreative).onEvent(VideoAdEvent.Event.AD_FIRSTQUARTILE);
+        verify(mockVideoCreative).onEvent(VideoAdEvent.Event.AD_MIDPOINT);
+        verify(mockVideoCreative).onEvent(VideoAdEvent.Event.AD_THIRDQUARTILE);
     }
 }

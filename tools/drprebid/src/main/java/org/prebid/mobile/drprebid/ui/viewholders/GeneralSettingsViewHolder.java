@@ -24,21 +24,26 @@ import org.prebid.mobile.drprebid.ui.viewmodels.SettingsViewModel;
 import org.prebid.mobile.drprebid.util.HelpScreenUtil;
 
 public class GeneralSettingsViewHolder extends RecyclerView.ViewHolder implements SettingsViewHolder, LifecycleOwner {
-    private RadioGroup mAdFormatGroup;
-    private TextView mAdSizeView;
-    private SettingsViewModel mSettingsViewModel;
+
+    private RadioGroup adFormatGroup;
+    private TextView adSizeView;
+    private SettingsViewModel settingsViewModel;
 
     public GeneralSettingsViewHolder(@NonNull final View itemView) {
         super(itemView);
 
         itemView.findViewById(R.id.button_info).setOnClickListener(v -> {
             HelpScreen aboutScreen = HelpScreenUtil.getGeneralInfo(itemView.getContext());
-            Intent intent = InfoActivity.newIntent(itemView.getContext(), aboutScreen.getTitle(), aboutScreen.getHtmlAsset());
+            Intent intent = InfoActivity.newIntent(
+                    itemView.getContext(),
+                    aboutScreen.getTitle(),
+                    aboutScreen.getHtmlAsset()
+            );
             itemView.getContext().startActivity(intent);
         });
 
-        mAdFormatGroup = itemView.findViewById(R.id.group_format);
-        mAdFormatGroup.setOnCheckedChangeListener((group, checkedId) -> {
+        adFormatGroup = itemView.findViewById(R.id.group_format);
+        adFormatGroup.setOnCheckedChangeListener((group, checkedId) -> {
             switch (checkedId) {
                 case R.id.radio_banner:
                     SettingsManager.getInstance(itemView.getContext()).setAdFormat(AdFormat.BANNER);
@@ -49,16 +54,17 @@ public class GeneralSettingsViewHolder extends RecyclerView.ViewHolder implement
             }
         });
 
-        mAdSizeView = itemView.findViewById(R.id.view_ad_size);
-        mAdSizeView.setOnClickListener(v -> {
+        adSizeView = itemView.findViewById(R.id.view_ad_size);
+        adSizeView.setOnClickListener(v -> {
             FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
             AdSizeDialog dialog = AdSizeDialog.newInstance();
             dialog.show(fragmentManager, AdSizeDialog.TAG);
         });
 
-        mSettingsViewModel = ViewModelProviders.of((AppCompatActivity) itemView.getContext()).get(SettingsViewModel.class);
+        settingsViewModel = ViewModelProviders.of((AppCompatActivity) itemView.getContext())
+                                              .get(SettingsViewModel.class);
 
-        mSettingsViewModel.getAdSize().observe(this, adSize -> {
+        settingsViewModel.getAdSize().observe(this, adSize -> {
             if (adSize != null) {
                 fillAdSize(adSize);
             }
@@ -83,35 +89,35 @@ public class GeneralSettingsViewHolder extends RecyclerView.ViewHolder implement
 
         switch (settings.getAdFormat()) {
             case BANNER:
-                mAdFormatGroup.check(R.id.radio_banner);
+                adFormatGroup.check(R.id.radio_banner);
                 break;
             case INTERSTITIAL:
-                mAdFormatGroup.check(R.id.radio_interstitial);
+                adFormatGroup.check(R.id.radio_interstitial);
                 break;
             default:
-                mAdFormatGroup.check(R.id.radio_banner);
+                adFormatGroup.check(R.id.radio_banner);
         }
     }
 
     private void fillAdSize(AdSize adSize) {
         switch (adSize) {
             case BANNER_300x250:
-                mAdSizeView.setText(R.string.ad_size_300_250);
+                adSizeView.setText(R.string.ad_size_300_250);
                 break;
             case BANNER_300x600:
-                mAdSizeView.setText(R.string.ad_size_300_600);
+                adSizeView.setText(R.string.ad_size_300_600);
                 break;
             case BANNER_320x50:
-                mAdSizeView.setText(R.string.ad_size_320_50);
+                adSizeView.setText(R.string.ad_size_320_50);
                 break;
             case BANNER_320x100:
-                mAdSizeView.setText(R.string.ad_size_320_100);
+                adSizeView.setText(R.string.ad_size_320_100);
                 break;
             case BANNER_320x480:
-                mAdSizeView.setText(R.string.ad_size_320_480);
+                adSizeView.setText(R.string.ad_size_320_480);
                 break;
             case BANNER_728x90:
-                mAdSizeView.setText(R.string.ad_size_728_90);
+                adSizeView.setText(R.string.ad_size_728_90);
                 break;
         }
     }

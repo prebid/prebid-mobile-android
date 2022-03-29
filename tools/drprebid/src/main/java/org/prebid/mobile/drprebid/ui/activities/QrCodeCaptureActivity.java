@@ -57,9 +57,9 @@ public class QrCodeCaptureActivity extends AppCompatActivity implements CodeGrap
     public static final String EXTRA_USE_FLASH = "UseFlash";
     public static final String BarcodeObject = "Barcode";
 
-    private CameraSource mCameraSource;
-    private CameraSourcePreview mPreview;
-    private GraphicOverlay<CodeGraphic> mGraphicOverlay;
+    private CameraSource cameraSource;
+    private CameraSourcePreview preview;
+    private GraphicOverlay<CodeGraphic> graphicOverlay;
 
     // helper objects for detecting taps and pinches.
     private ScaleGestureDetector scaleGestureDetector;
@@ -75,8 +75,8 @@ public class QrCodeCaptureActivity extends AppCompatActivity implements CodeGrap
 
         setTitle(R.string.qr_code_scan_title);
 
-        mPreview = findViewById(R.id.preview);
-        mGraphicOverlay = findViewById(R.id.graphicOverlay);
+        preview = findViewById(R.id.preview);
+        graphicOverlay = findViewById(R.id.graphicOverlay);
 
         // read parameters from the intent used to launch the activity.
         boolean autoFocus = getIntent().getBooleanExtra(EXTRA_AUTO_FOCUS, false);
@@ -94,8 +94,7 @@ public class QrCodeCaptureActivity extends AppCompatActivity implements CodeGrap
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
-        Snackbar.make(mGraphicOverlay, "Tap to capture. Pinch/Stretch to zoom",
-                Snackbar.LENGTH_LONG)
+        Snackbar.make(graphicOverlay, "Tap to capture. Pinch/Stretch to zoom", Snackbar.LENGTH_LONG)
                 .show();
     }
 
@@ -121,8 +120,7 @@ public class QrCodeCaptureActivity extends AppCompatActivity implements CodeGrap
                 RC_HANDLE_CAMERA_PERM);
 
         findViewById(R.id.topLayout).setOnClickListener(listener);
-        Snackbar.make(mGraphicOverlay, R.string.permission_camera_rationale,
-                Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(graphicOverlay, R.string.permission_camera_rationale, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.action_ok, listener)
                 .show();
     }
@@ -153,7 +151,7 @@ public class QrCodeCaptureActivity extends AppCompatActivity implements CodeGrap
         // graphics for each barcode on screen.  The factory is used by the multi-processor to
         // create a separate tracker instance for each barcode.
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).build();
-        CodeTrackerFactory barcodeFactory = new CodeTrackerFactory(mGraphicOverlay, this);
+        CodeTrackerFactory barcodeFactory = new CodeTrackerFactory(graphicOverlay, this);
         barcodeDetector.setProcessor(
                 new MultiProcessor.Builder<>(barcodeFactory).build());
 
@@ -194,9 +192,7 @@ public class QrCodeCaptureActivity extends AppCompatActivity implements CodeGrap
                     autoFocus ? Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE : null);
         }
 
-        mCameraSource = builder
-                .setFlashMode(useFlash ? Camera.Parameters.FLASH_MODE_TORCH : null)
-                .build();
+        cameraSource = builder.setFlashMode(useFlash ? Camera.Parameters.FLASH_MODE_TORCH : null).build();
     }
 
     /**
@@ -214,8 +210,8 @@ public class QrCodeCaptureActivity extends AppCompatActivity implements CodeGrap
     @Override
     protected void onPause() {
         super.onPause();
-        if (mPreview != null) {
-            mPreview.stop();
+        if (preview != null) {
+            preview.stop();
         }
     }
 
@@ -226,8 +222,8 @@ public class QrCodeCaptureActivity extends AppCompatActivity implements CodeGrap
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mPreview != null) {
-            mPreview.release();
+        if (preview != null) {
+            preview.release();
         }
     }
 
@@ -293,13 +289,13 @@ public class QrCodeCaptureActivity extends AppCompatActivity implements CodeGrap
             dlg.show();
         }
 
-        if (mCameraSource != null) {
+        if (cameraSource != null) {
             try {
-                mPreview.start(mCameraSource, mGraphicOverlay);
+                preview.start(cameraSource, graphicOverlay);
             } catch (IOException e) {
                 Log.e(TAG, "Unable to start camera source.", e);
-                mCameraSource.release();
-                mCameraSource = null;
+                cameraSource.release();
+                cameraSource = null;
             }
         }
     }
@@ -314,14 +310,14 @@ public class QrCodeCaptureActivity extends AppCompatActivity implements CodeGrap
     private boolean onTap(float rawX, float rawY) {
         // Find tap point in preview frame coordinates.
         int[] location = new int[2];
-        mGraphicOverlay.getLocationOnScreen(location);
-        float x = (rawX - location[0]) / mGraphicOverlay.getWidthScaleFactor();
-        float y = (rawY - location[1]) / mGraphicOverlay.getHeightScaleFactor();
+        graphicOverlay.getLocationOnScreen(location);
+        float x = (rawX - location[0]) / graphicOverlay.getWidthScaleFactor();
+        float y = (rawY - location[1]) / graphicOverlay.getHeightScaleFactor();
 
         // Find the barcode whose center is closest to the tapped point.
         Barcode best = null;
         float bestDistance = Float.MAX_VALUE;
-        for (CodeGraphic graphic : mGraphicOverlay.getGraphics()) {
+        for (CodeGraphic graphic : graphicOverlay.getGraphics()) {
             Barcode barcode = graphic.getBarcode();
             if (barcode.getBoundingBox().contains((int) x, (int) y)) {
                 // Exact hit, no need to keep looking.
@@ -407,7 +403,7 @@ public class QrCodeCaptureActivity extends AppCompatActivity implements CodeGrap
          */
         @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
-            mCameraSource.doZoom(detector.getScaleFactor());
+            cameraSource.doZoom(detector.getScaleFactor());
         }
     }
 

@@ -26,7 +26,7 @@ public class OpenMediationBaseAdUnit extends MediationBaseAdUnit {
 
     @Override
     public void initAdConfig(String configId, AdSize adSize) {
-        mAdUnitConfig.setConfigId(configId);
+        adUnitConfig.setConfigId(configId);
     }
 
 

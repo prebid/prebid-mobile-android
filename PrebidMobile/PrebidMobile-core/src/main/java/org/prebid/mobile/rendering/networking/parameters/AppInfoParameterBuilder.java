@@ -29,10 +29,10 @@ import java.util.Set;
 
 public class AppInfoParameterBuilder extends ParameterBuilder {
 
-    private AdUnitConfiguration mAdConfiguration;
+    private AdUnitConfiguration adConfiguration;
 
     public AppInfoParameterBuilder(AdUnitConfiguration adConfiguration) {
-        mAdConfiguration = adConfiguration;
+        this.adConfiguration = adConfiguration;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class AppInfoParameterBuilder extends ParameterBuilder {
             app.getPublisher().name = publisherName;
         }
 
-        app.contentObject = mAdConfiguration.getAppContent();
+        app.contentObject = adConfiguration.getAppContent();
 
         app.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidMobile.SDK_VERSION));
         final Map<String, Set<String>> contextDataDictionary = TargetingParams.getContextDataDictionary();

@@ -24,13 +24,13 @@ public enum InterstitialLayout {
     ROTATABLE(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT),
     UNDEFINED(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
-    private int mOrientation;
+    private int orientation;
 
     InterstitialLayout(int orientation) {
-        mOrientation = orientation;
+        this.orientation = orientation;
     }
 
     public int getOrientation() {
-        return mOrientation;
+        return orientation;
     }
 }

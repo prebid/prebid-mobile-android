@@ -21,7 +21,7 @@ import org.prebid.mobile.drprebid.util.HelpScreenUtil;
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_WELCOME = 2000;
 
-    private RecyclerView mListView;
+    private RecyclerView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        mListView = findViewById(R.id.list_settings);
+        listView = findViewById(R.id.list_settings);
         setupSettingsList();
 
     }
@@ -42,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
     private void setupSettingsList() {
         SettingsAdapter adapter = new SettingsAdapter(this);
 
-        mListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        mListView.setItemAnimator(new DefaultItemAnimator());
-        mListView.setAdapter(adapter);
+        listView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        listView.setItemAnimator(new DefaultItemAnimator());
+        listView.setAdapter(adapter);
     }
 
     @Override

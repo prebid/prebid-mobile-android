@@ -27,10 +27,10 @@ public class OrientationBroadcastReceiver extends BroadcastReceiver {
 
     private static final String TAG = OrientationBroadcastReceiver.class.getSimpleName();
 
-    private Context mApplicationContext;
+    private Context applicationContext;
 
     // -1 until this gets set at least once
-    private int mLastRotation = -1;
+    private int lastRotation = -1;
     private boolean orientationChanged;
 
     @Override
@@ -38,10 +38,10 @@ public class OrientationBroadcastReceiver extends BroadcastReceiver {
         LogUtil.debug(TAG, "onReceive");
         if (Intent.ACTION_CONFIGURATION_CHANGED.equals(intent.getAction())) {
             int orientation = getDisplayRotation();
-            if (orientation != mLastRotation) {
-                mLastRotation = orientation;
+            if (orientation != lastRotation) {
+                lastRotation = orientation;
                 setOrientationChanged(true);
-                handleOrientationChange(mLastRotation);
+                handleOrientationChange(lastRotation);
             } else {
                 setOrientationChanged(false);
             }
@@ -63,26 +63,25 @@ public class OrientationBroadcastReceiver extends BroadcastReceiver {
     }
 
     private int getDisplayRotation() {
-        WindowManager wm = (WindowManager) mApplicationContext.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) applicationContext.getSystemService(Context.WINDOW_SERVICE);
         return wm.getDefaultDisplay().getRotation();
     }
 
     public void register(final Context context) {
         if (context != null) {
             LogUtil.debug(TAG, "register");
-            mApplicationContext = context.getApplicationContext();
-            if (mApplicationContext != null) {
-                mApplicationContext.registerReceiver(this,
-                                                         new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
+            applicationContext = context.getApplicationContext();
+            if (applicationContext != null) {
+                applicationContext.registerReceiver(this, new IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED));
             }
         }
     }
 
     public void unregister() {
-        if (mApplicationContext != null) {
+        if (applicationContext != null) {
             LogUtil.debug(TAG, "unregister");
-            mApplicationContext.unregisterReceiver(this);
-            mApplicationContext = null;
+            applicationContext.unregisterReceiver(this);
+            applicationContext = null;
         }
     }
 }

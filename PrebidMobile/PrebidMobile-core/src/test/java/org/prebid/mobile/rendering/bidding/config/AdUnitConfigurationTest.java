@@ -33,74 +33,74 @@ import static org.junit.Assert.*;
 @Config(sdk = 19)
 public class AdUnitConfigurationTest {
 
-    private AdUnitConfiguration mAdUnitConfig;
+    private AdUnitConfiguration adUnitConfig;
 
     @Before
     public void setUp() throws Exception {
-        mAdUnitConfig = new AdUnitConfiguration();
+        adUnitConfig = new AdUnitConfiguration();
     }
 
     @Test
     public void whenAddSize_SetContainsSize() {
         AdSize adSize = new AdSize(0, 0);
-        assertTrue(mAdUnitConfig.getSizes().isEmpty());
+        assertTrue(adUnitConfig.getSizes().isEmpty());
 
-        mAdUnitConfig.addSize(adSize);
-        assertEquals(1, mAdUnitConfig.getSizes().size());
-        assertTrue(mAdUnitConfig.getSizes().contains(adSize));
+        adUnitConfig.addSize(adSize);
+        assertEquals(1, adUnitConfig.getSizes().size());
+        assertTrue(adUnitConfig.getSizes().contains(adSize));
     }
 
     @Test
     public void whenAddSizes_SetContainsSizes() {
         AdSize adSize = new AdSize(0, 0);
         AdSize adSize1 = new AdSize(1, 1);
-        assertTrue(mAdUnitConfig.getSizes().isEmpty());
+        assertTrue(adUnitConfig.getSizes().isEmpty());
 
-        mAdUnitConfig.addSizes(adSize, adSize1);
-        assertEquals(2, mAdUnitConfig.getSizes().size());
-        assertTrue(mAdUnitConfig.getSizes().contains(adSize));
-        assertTrue(mAdUnitConfig.getSizes().contains(adSize1));
+        adUnitConfig.addSizes(adSize, adSize1);
+        assertEquals(2, adUnitConfig.getSizes().size());
+        assertTrue(adUnitConfig.getSizes().contains(adSize));
+        assertTrue(adUnitConfig.getSizes().contains(adSize1));
     }
 
     @Test
     public void whenAddContextData_ContextDataAdded() {
-        mAdUnitConfig.addContextData("key", "value");
-        assertTrue(mAdUnitConfig.getContextDataDictionary().containsKey("key"));
-        assertTrue(mAdUnitConfig.getContextDataDictionary().get("key").contains("value"));
+        adUnitConfig.addContextData("key", "value");
+        assertTrue(adUnitConfig.getContextDataDictionary().containsKey("key"));
+        assertTrue(adUnitConfig.getContextDataDictionary().get("key").contains("value"));
     }
 
     @Test
     public void whenUpdateContextData_ContextDataUpdated() {
-        mAdUnitConfig.addContextData("key", "test");
+        adUnitConfig.addContextData("key", "test");
         Set<String> stringSet = new HashSet<>();
         stringSet.add("value0");
         stringSet.add("value1");
-        mAdUnitConfig.addContextData("key", stringSet);
-        assertTrue(mAdUnitConfig.getContextDataDictionary().get("key").containsAll(stringSet));
+        adUnitConfig.addContextData("key", stringSet);
+        assertTrue(adUnitConfig.getContextDataDictionary().get("key").containsAll(stringSet));
     }
 
     @Test
     public void whenRemoveContextData_ContextDataRemoved() {
-        mAdUnitConfig.addContextData("key", "value");
-        mAdUnitConfig.addContextData("key1", "value");
-        assertTrue(mAdUnitConfig.getContextDataDictionary().containsKey("key"));
-        mAdUnitConfig.removeContextData("key");
-        assertFalse(mAdUnitConfig.getContextDataDictionary().containsKey("key"));
+        adUnitConfig.addContextData("key", "value");
+        adUnitConfig.addContextData("key1", "value");
+        assertTrue(adUnitConfig.getContextDataDictionary().containsKey("key"));
+        adUnitConfig.removeContextData("key");
+        assertFalse(adUnitConfig.getContextDataDictionary().containsKey("key"));
     }
 
     @Test
     public void whenClearContextData_ContextDataCleared() {
-        mAdUnitConfig.addContextData("key", "value");
-        mAdUnitConfig.addContextData("key1", "value");
-        assertFalse(mAdUnitConfig.getContextDataDictionary().isEmpty());
-        mAdUnitConfig.clearContextData();
-        assertTrue(mAdUnitConfig.getContextDataDictionary().isEmpty());
+        adUnitConfig.addContextData("key", "value");
+        adUnitConfig.addContextData("key1", "value");
+        assertFalse(adUnitConfig.getContextDataDictionary().isEmpty());
+        adUnitConfig.clearContextData();
+        assertTrue(adUnitConfig.getContextDataDictionary().isEmpty());
     }
 
     @Test
     public void whenAddContextKeyword_ContextKeywordAdded() {
-        mAdUnitConfig.addContextKeyword("test");
-        assertTrue(mAdUnitConfig.getContextKeywordsSet().contains("test"));
+        adUnitConfig.addContextKeyword("test");
+        assertTrue(adUnitConfig.getContextKeywordsSet().contains("test"));
     }
 
     @Test
@@ -108,26 +108,26 @@ public class AdUnitConfigurationTest {
         Set<String> stringSet = new HashSet<>();
         stringSet.add("value0");
         stringSet.add("value1");
-        mAdUnitConfig.addContextKeywords(stringSet);
-        assertTrue(mAdUnitConfig.getContextKeywordsSet().containsAll(stringSet));
+        adUnitConfig.addContextKeywords(stringSet);
+        assertTrue(adUnitConfig.getContextKeywordsSet().containsAll(stringSet));
     }
 
     @Test
     public void whenRemoveContextKeyword_ContextKeywordRemoved() {
-        mAdUnitConfig.addContextKeyword("test");
-        mAdUnitConfig.addContextKeyword("keyword");
-        mAdUnitConfig.removeContextKeyword("test");
-        assertFalse(mAdUnitConfig.getContextKeywordsSet().isEmpty());
-        assertFalse(mAdUnitConfig.getContextKeywordsSet().contains("test"));
+        adUnitConfig.addContextKeyword("test");
+        adUnitConfig.addContextKeyword("keyword");
+        adUnitConfig.removeContextKeyword("test");
+        assertFalse(adUnitConfig.getContextKeywordsSet().isEmpty());
+        assertFalse(adUnitConfig.getContextKeywordsSet().contains("test"));
     }
 
     @Test
     public void whenClearContextKeyword_ContextKeywordCleared() {
-        mAdUnitConfig.addContextKeyword("test");
-        mAdUnitConfig.addContextKeyword("keyword");
-        assertFalse(mAdUnitConfig.getContextKeywordsSet().isEmpty());
+        adUnitConfig.addContextKeyword("test");
+        adUnitConfig.addContextKeyword("keyword");
+        assertFalse(adUnitConfig.getContextKeywordsSet().isEmpty());
 
-        mAdUnitConfig.clearContextKeywords();
-        assertTrue(mAdUnitConfig.getContextKeywordsSet().isEmpty());
+        adUnitConfig.clearContextKeywords();
+        assertTrue(adUnitConfig.getContextKeywordsSet().isEmpty());
     }
 }

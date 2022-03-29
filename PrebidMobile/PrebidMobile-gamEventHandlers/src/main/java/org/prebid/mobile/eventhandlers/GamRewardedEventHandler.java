@@ -32,23 +32,27 @@ import org.prebid.mobile.rendering.errors.AdException;
 import java.lang.ref.WeakReference;
 
 public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEventListener {
+
     private static final String TAG = GamRewardedEventHandler.class.getSimpleName();
     private static final long TIMEOUT_APP_EVENT_MS = 600;
 
-    private RewardedAdWrapper mRewardedAd;
+    private RewardedAdWrapper rewardedAd;
 
-    private final WeakReference<Activity> mActivityWeakReference;
-    private final String mGamAdUnitId;
+    private final WeakReference<Activity> activityWeakReference;
+    private final String gamAdUnitId;
 
-    private RewardedVideoEventListener mListener;
-    private Handler mAppEventHandler;
+    private RewardedVideoEventListener listener;
+    private Handler appEventHandler;
 
-    private boolean mIsExpectingAppEvent;
-    private boolean mDidNotifiedBidWin;
+    private boolean isExpectingAppEvent;
+    private boolean didNotifiedBidWin;
 
-    public GamRewardedEventHandler(Activity activity, String gamAdUnitId) {
-        mActivityWeakReference = new WeakReference<>(activity);
-        mGamAdUnitId = gamAdUnitId;
+    public GamRewardedEventHandler(
+            Activity activity,
+            String gamAdUnitId
+    ) {
+        activityWeakReference = new WeakReference<>(activity);
+        this.gamAdUnitId = gamAdUnitId;
     }
 
     //region ==================== EventListener Implementation
@@ -62,16 +66,16 @@ public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEvent
                 primaryAdReceived();
                 break;
             case DISPLAYED:
-                mListener.onAdDisplayed();
+                listener.onAdDisplayed();
                 break;
             case CLOSED:
-                mListener.onAdClosed();
+                listener.onAdClosed();
                 break;
             case FAILED:
                 notifyErrorListener(adEvent.getErrorCode());
                 break;
             case REWARD_EARNED:
-                mListener.onUserEarnedReward();
+                listener.onUserEarnedReward();
                 break;
         }
     }
@@ -82,7 +86,7 @@ public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEvent
     public void setRewardedEventListener(
         @NonNull
             RewardedVideoEventListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     @SuppressLint("MissingPermission")
@@ -90,30 +94,29 @@ public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEvent
     public void requestAdWithBid(
         @Nullable
             Bid bid) {
-        mIsExpectingAppEvent = false;
-        mDidNotifiedBidWin = false;
+        isExpectingAppEvent = false;
+        didNotifiedBidWin = false;
 
         initPublisherRewardedAd();
 
         if (bid != null && bid.getPrice() > 0) {
-            mIsExpectingAppEvent = true;
+            isExpectingAppEvent = true;
         }
 
-        if (mRewardedAd == null) {
+        if (rewardedAd == null) {
             notifyErrorListener(Constants.ERROR_CODE_INTERNAL_ERROR);
             return;
         }
 
-        mRewardedAd.loadAd(bid);
+        rewardedAd.loadAd(bid);
     }
 
     @Override
     public void show() {
-        if (mRewardedAd != null && mRewardedAd.isLoaded()) {
-            mRewardedAd.show(mActivityWeakReference.get());
-        }
-        else {
-            mListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - failed to display ad."));
+        if (rewardedAd != null && rewardedAd.isLoaded()) {
+            rewardedAd.show(activityWeakReference.get());
+        } else {
+            listener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - failed to display ad."));
         }
     }
 
@@ -129,75 +132,77 @@ public class GamRewardedEventHandler implements RewardedEventHandler, GamAdEvent
     //endregion ==================== EventHandler Implementation
 
     private void initPublisherRewardedAd() {
-        mRewardedAd = RewardedAdWrapper.newInstance(mActivityWeakReference.get(), mGamAdUnitId, this);
+        rewardedAd = RewardedAdWrapper.newInstance(activityWeakReference.get(), gamAdUnitId, this);
     }
 
     private void primaryAdReceived() {
-        if (mIsExpectingAppEvent) {
-            if (mAppEventHandler != null) {
+        if (isExpectingAppEvent) {
+            if (appEventHandler != null) {
                 LogUtil.debug(TAG, "primaryAdReceived: AppEventTimer is not null. Skipping timer scheduling.");
                 return;
             }
 
             scheduleTimer();
-        }
-        else if (!mDidNotifiedBidWin) {
-            mListener.onAdServerWin(getRewardItem());
+        } else if (!didNotifiedBidWin) {
+            listener.onAdServerWin(getRewardItem());
         }
     }
 
     private void handleAppEvent() {
-        if (!mIsExpectingAppEvent) {
+        if (!isExpectingAppEvent) {
             LogUtil.debug(TAG, "appEventDetected: Skipping event handling. App event is not expected");
             return;
         }
 
         cancelTimer();
-        mIsExpectingAppEvent = false;
-        mDidNotifiedBidWin = true;
-        mListener.onPrebidSdkWin();
+        isExpectingAppEvent = false;
+        didNotifiedBidWin = true;
+        listener.onPrebidSdkWin();
     }
 
     private void scheduleTimer() {
         cancelTimer();
 
-        mAppEventHandler = new Handler(Looper.getMainLooper());
-        mAppEventHandler.postDelayed(this::handleAppEventTimeout, TIMEOUT_APP_EVENT_MS);
+        appEventHandler = new Handler(Looper.getMainLooper());
+        appEventHandler.postDelayed(this::handleAppEventTimeout, TIMEOUT_APP_EVENT_MS);
     }
 
     private void cancelTimer() {
-        if (mAppEventHandler != null) {
-            mAppEventHandler.removeCallbacksAndMessages(null);
+        if (appEventHandler != null) {
+            appEventHandler.removeCallbacksAndMessages(null);
         }
-        mAppEventHandler = null;
+        appEventHandler = null;
     }
 
     private void handleAppEventTimeout() {
         cancelTimer();
-        mIsExpectingAppEvent = false;
-        mListener.onAdServerWin(getRewardItem());
+        isExpectingAppEvent = false;
+        listener.onAdServerWin(getRewardItem());
     }
 
     private Object getRewardItem() {
-        return mRewardedAd != null ? mRewardedAd.getRewardItem() : null;
+        return rewardedAd != null ? rewardedAd.getRewardItem() : null;
     }
 
     private void notifyErrorListener(int errorCode) {
         switch (errorCode) {
             case Constants.ERROR_CODE_INTERNAL_ERROR:
-                mListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK encountered an internal error."));
+                listener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK encountered an internal error."));
                 break;
             case Constants.ERROR_CODE_INVALID_REQUEST:
-                mListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - invalid request error."));
+                listener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - invalid request error."));
                 break;
             case Constants.ERROR_CODE_NETWORK_ERROR:
-                mListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - network error."));
+                listener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - network error."));
                 break;
             case Constants.ERROR_CODE_NO_FILL:
-                mListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - no fill."));
+                listener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - no fill."));
                 break;
             default:
-                mListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - failed with errorCode: " + errorCode));
+                listener.onAdFailed(new AdException(
+                        AdException.THIRD_PARTY,
+                        "GAM SDK - failed with errorCode: " + errorCode
+                ));
         }
     }
 }

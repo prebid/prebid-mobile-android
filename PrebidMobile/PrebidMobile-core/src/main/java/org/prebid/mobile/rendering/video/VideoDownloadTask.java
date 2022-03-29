@@ -35,19 +35,23 @@ import java.util.concurrent.TimeUnit;
 public class VideoDownloadTask extends FileDownloadTask {
 
     private static final String TAG = VideoDownloadTask.class.getSimpleName();
-    private Context mApplicationContext;
-    private AdUnitConfiguration mAdConfiguration;
+    private Context applicationContext;
+    private AdUnitConfiguration adConfiguration;
 
-    public VideoDownloadTask(Context context, File file, FileDownloadListener fileDownloadListener,
-                             AdUnitConfiguration adConfiguration) {
+    public VideoDownloadTask(
+            Context context,
+            File file,
+            FileDownloadListener fileDownloadListener,
+            AdUnitConfiguration adConfiguration
+    ) {
         super(fileDownloadListener, file);
         if (context == null) {
             String contextIsNull = "Context is null";
             fileDownloadListener.onFileDownloadError(contextIsNull);
             throw new NullPointerException(contextIsNull);
         }
-        mAdConfiguration = adConfiguration;
-        mApplicationContext = context.getApplicationContext();
+        this.adConfiguration = adConfiguration;
+        applicationContext = context.getApplicationContext();
     }
 
     @Override
@@ -59,7 +63,7 @@ public class VideoDownloadTask extends FileDownloadTask {
     }
 
     private String getShortenedPath() {
-        String path = mFile.getPath();
+        String path = file.getPath();
         int beginIndex = path.lastIndexOf("/");
         return beginIndex != -1 ? path.substring(beginIndex) : path;
     }
@@ -67,15 +71,14 @@ public class VideoDownloadTask extends FileDownloadTask {
     @Override
     protected void processData(URLConnection connection, GetUrlResult result) throws IOException {
         String shortenedPath = getShortenedPath();
-        if (mFile.exists() && !LruController.isAlreadyCached(shortenedPath)) {
+        if (file.exists() && !LruController.isAlreadyCached(shortenedPath)) {
             LogUtil.debug(TAG, "Video saved to cache");
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             readAndWriteData(connection, result, outputStream, false);
             LruController.putVideoCache(shortenedPath, outputStream.toByteArray());
-        }
-        else {
+        } else {
             LogUtil.debug(TAG, "Video saved to file: " + shortenedPath);
-            readAndWriteData(connection, result, new FileOutputStream(mFile), true);
+            readAndWriteData(connection, result, new FileOutputStream(file), true);
         }
     }
 
@@ -91,8 +94,8 @@ public class VideoDownloadTask extends FileDownloadTask {
                 // allow canceling with back button
                 if (isCancelled()) {
                     if (deleteOnAbort) {
-                        if (mFile.exists()) {
-                            mFile.delete();
+                        if (file.exists()) {
+                            file.delete();
                         }
                     }
                     result.setException(null);
@@ -127,23 +130,22 @@ public class VideoDownloadTask extends FileDownloadTask {
 
     private GetUrlResult createResult(GetUrlParams param)
     throws Exception {
-        mResult = new GetUrlResult();
+        result = new GetUrlResult();
         String shortenedPath = getShortenedPath();
-        if (mFile.exists()) {
+        if (file.exists()) {
             LogUtil.debug(TAG, "File exists: " + shortenedPath);
-            if (isVideoFileExpired(mFile) || !isVideoFileValid(mApplicationContext, mFile)) {
+            if (isVideoFileExpired(file) || !isVideoFileValid(applicationContext, file)) {
                 LogUtil.debug(TAG, "File " + shortenedPath + " is expired or broken. Downloading a new one");
-                mFile.delete();
-                mResult = super.sendRequest(param);
-            }
-            else if (!LruController.isAlreadyCached(shortenedPath)) {
-                mResult = super.sendRequest(param);
+                file.delete();
+                result = super.sendRequest(param);
+            } else if (!LruController.isAlreadyCached(shortenedPath)) {
+                result = super.sendRequest(param);
             }
         }
         else {
-            mResult = super.sendRequest(param);
+            result = super.sendRequest(param);
         }
-        return mResult;
+        return result;
     }
 
     private boolean isVideoFileExpired(File file) {

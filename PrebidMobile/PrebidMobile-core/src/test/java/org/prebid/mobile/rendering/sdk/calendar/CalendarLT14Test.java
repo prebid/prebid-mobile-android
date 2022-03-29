@@ -42,11 +42,11 @@ import static org.robolectric.Shadows.shadowOf;
 public class CalendarLT14Test {
 
     private final static String CALENDAR_FILE = "calendar.txt";
-    private Activity mTestActivity;
+    private Activity testActivity;
 
     @Before
     public void setUp() throws Exception {
-        mTestActivity = Robolectric.buildActivity(Activity.class).create().get();
+        testActivity = Robolectric.buildActivity(Activity.class).create().get();
     }
 
     @After
@@ -61,9 +61,9 @@ public class CalendarLT14Test {
 
         JSONObject jsonObj = new JSONObject(json);
         CalendarEventWrapper event = new CalendarEventWrapper(jsonObj);
-        calendar.createCalendarEvent(mTestActivity, event);
+        calendar.createCalendarEvent(testActivity, event);
 
-        ShadowActivity shadowActivity = shadowOf(mTestActivity);
+        ShadowActivity shadowActivity = shadowOf(testActivity);
         Intent startedIntent = shadowActivity.getNextStartedActivity();
 
         assertEquals("vnd.android.cursor.item/event", startedIntent.getType());

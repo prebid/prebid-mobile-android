@@ -39,52 +39,54 @@ import java.util.List;
 import java.util.Set;
 
 public class CreativeVisibilityTracker {
+
     private static final String TAG = CreativeVisibilityTracker.class.getSimpleName();
 
     // Time interval to use for throttling visibility checks.
     private static final int VISIBILITY_THROTTLE_MILLIS = 200;
 
     public interface VisibilityTrackerListener {
+
         void onVisibilityChanged(VisibilityTrackerResult result);
+
     }
 
-    private ViewTreeObserver.OnPreDrawListener mOnPreDrawListener;
-    private WeakReference<ViewTreeObserver> mWeakViewTreeObserver;
+    private ViewTreeObserver.OnPreDrawListener onPreDrawListener;
+    private WeakReference<ViewTreeObserver> weakViewTreeObserver;
 
-    private WeakReference<View> mTrackedView;
-    private final List<VisibilityChecker> mVisibilityCheckerList = new ArrayList<>();
-    @VisibleForTesting
-    protected Runnable mVisibilityRunnable;
-    private Handler mVisibilityHandler;
-    private VisibilityTrackerListener mVisibilityTrackerListener;
-    private boolean mProceedAfterImpTracking;
-    private boolean mIsVisibilityScheduled;
+    private WeakReference<View> trackedView;
+    private final List<VisibilityChecker> visibilityCheckerList = new ArrayList<>();
+    @VisibleForTesting protected Runnable visibilityRunnable;
+    private Handler visibilityHandler;
+    private VisibilityTrackerListener visibilityTrackerListener;
+    private boolean proceedAfterImpTracking;
+    private boolean isVisibilityScheduled;
 
     public CreativeVisibilityTracker(
-        @NonNull
-        final View trackedView,
-        final Set<VisibilityTrackerOption> visibilityTrackerOptionSet) {
+            @NonNull final View trackedView,
+            final Set<VisibilityTrackerOption> visibilityTrackerOptionSet
+    ) {
         if (trackedView == null) {
             LogUtil.debug(TAG, "Tracked view can't be null");
             return;
         }
 
-        mTrackedView = new WeakReference<>(trackedView);
+        this.trackedView = new WeakReference<>(trackedView);
         final ViewExposureChecker viewExposureChecker = new ViewExposureChecker();
 
         for (VisibilityTrackerOption trackingOption : visibilityTrackerOptionSet) {
-            mVisibilityCheckerList.add(new VisibilityChecker(trackingOption, viewExposureChecker));
+            visibilityCheckerList.add(new VisibilityChecker(trackingOption, viewExposureChecker));
         }
 
-        mVisibilityHandler = new Handler(Looper.getMainLooper());
-        mVisibilityRunnable = createVisibilityRunnable();
+        visibilityHandler = new Handler(Looper.getMainLooper());
+        visibilityRunnable = createVisibilityRunnable();
 
-        mOnPreDrawListener = () -> {
+        onPreDrawListener = () -> {
             scheduleVisibilityCheck();
             return true;
         };
 
-        mWeakViewTreeObserver = new WeakReference<>(null);
+        weakViewTreeObserver = new WeakReference<>(null);
     }
 
     public CreativeVisibilityTracker(
@@ -93,7 +95,7 @@ public class CreativeVisibilityTracker {
         final Set<VisibilityTrackerOption> visibilityTrackerOptionSet,
         boolean proceedAfterImpTracking) {
         this(trackedView, visibilityTrackerOptionSet);
-        mProceedAfterImpTracking = proceedAfterImpTracking;
+        this.proceedAfterImpTracking = proceedAfterImpTracking;
     }
 
     public CreativeVisibilityTracker(
@@ -116,7 +118,7 @@ public class CreativeVisibilityTracker {
         final Context context,
         @Nullable
         final View view) {
-        final ViewTreeObserver originalViewTreeObserver = mWeakViewTreeObserver.get();
+        final ViewTreeObserver originalViewTreeObserver = weakViewTreeObserver.get();
         if (originalViewTreeObserver != null && originalViewTreeObserver.isAlive()) {
             LogUtil.debug(TAG, "Original ViewTreeObserver is still alive.");
             return;
@@ -130,64 +132,66 @@ public class CreativeVisibilityTracker {
 
         final ViewTreeObserver viewTreeObserver = rootView.getViewTreeObserver();
         if (!viewTreeObserver.isAlive()) {
-            LogUtil.debug(TAG, "Visibility Tracker was unable to track views because the"
-                    + " root view tree observer was not alive");
+            LogUtil.debug(
+                    TAG,
+                    "Visibility Tracker was unable to track views because the" + " root view tree observer was not alive"
+            );
             return;
         }
 
-        mWeakViewTreeObserver = new WeakReference<>(viewTreeObserver);
-        viewTreeObserver.addOnPreDrawListener(mOnPreDrawListener);
+        weakViewTreeObserver = new WeakReference<>(viewTreeObserver);
+        viewTreeObserver.addOnPreDrawListener(onPreDrawListener);
     }
 
     public void setVisibilityTrackerListener(
         @Nullable
         final VisibilityTrackerListener visibilityTrackerListener) {
-        mVisibilityTrackerListener = visibilityTrackerListener;
+        this.visibilityTrackerListener = visibilityTrackerListener;
     }
 
     public void startVisibilityCheck(Context context) {
-        if (mTrackedView == null || mTrackedView.get() == null) {
+        if (trackedView == null || trackedView.get() == null) {
             LogUtil.error(TAG, "Couldn't start visibility check. Target view is null");
             return;
         }
-        setViewTreeObserver(context, mTrackedView.get());
+        setViewTreeObserver(context, trackedView.get());
     }
 
     public void stopVisibilityCheck() {
-        mVisibilityHandler.removeCallbacksAndMessages(null);
-        mIsVisibilityScheduled = false;
-        final ViewTreeObserver viewTreeObserver = mWeakViewTreeObserver.get();
+        visibilityHandler.removeCallbacksAndMessages(null);
+        isVisibilityScheduled = false;
+        final ViewTreeObserver viewTreeObserver = weakViewTreeObserver.get();
         if (viewTreeObserver != null && viewTreeObserver.isAlive()) {
-            viewTreeObserver.removeOnPreDrawListener(mOnPreDrawListener);
+            viewTreeObserver.removeOnPreDrawListener(onPreDrawListener);
         }
-        mWeakViewTreeObserver.clear();
+        weakViewTreeObserver.clear();
     }
 
     void scheduleVisibilityCheck() {
         // Tracking this directly instead of calling hasMessages directly because we measured that
         // this led to slightly better performance.
-        if (mIsVisibilityScheduled) {
+        if (isVisibilityScheduled) {
             return;
         }
 
-        mIsVisibilityScheduled = true;
-        mVisibilityHandler.postDelayed(mVisibilityRunnable, VISIBILITY_THROTTLE_MILLIS);
+        isVisibilityScheduled = true;
+        visibilityHandler.postDelayed(visibilityRunnable, VISIBILITY_THROTTLE_MILLIS);
     }
 
     private Runnable createVisibilityRunnable() {
         return () -> {
-            View trackedView = mTrackedView.get();
+            View trackedView = this.trackedView.get();
             if (trackedView == null) {
                 stopVisibilityCheck();
                 return;
             }
 
-            if (allImpressionsFired() && !mProceedAfterImpTracking) {
+            if (allImpressionsFired() && !proceedAfterImpTracking) {
                 return;
             }
 
-            for (VisibilityChecker visibilityChecker : mVisibilityCheckerList) {
-                mIsVisibilityScheduled = false;
+            for (VisibilityChecker visibilityChecker : visibilityCheckerList) {
+                isVisibilityScheduled = false;
                 ViewExposure viewExposure = visibilityChecker.checkViewExposure(trackedView);
                 boolean shouldFireImpression = false;
                 boolean isVisible = visibilityChecker.isVisible(trackedView, viewExposure);
@@ -217,20 +221,20 @@ public class CreativeVisibilityTracker {
             }
 
             // If visibility requirements are not met or the target is MRAID, check again later.
-            if (!allImpressionsFired() || mProceedAfterImpTracking) {
+            if (!allImpressionsFired() || proceedAfterImpTracking) {
                 scheduleVisibilityCheck();
             }
         };
     }
 
     private void notifyListener(VisibilityTrackerResult visibilityTrackerResult) {
-        if (mVisibilityTrackerListener != null) {
-             mVisibilityTrackerListener.onVisibilityChanged(visibilityTrackerResult);
+        if (visibilityTrackerListener != null) {
+            visibilityTrackerListener.onVisibilityChanged(visibilityTrackerResult);
         }
     }
 
     private boolean allImpressionsFired() {
-        for (VisibilityChecker visibilityChecker : mVisibilityCheckerList) {
+        for (VisibilityChecker visibilityChecker : visibilityCheckerList) {
             final VisibilityTrackerOption visibilityTrackerOption = visibilityChecker.getVisibilityTrackerOption();
             if (!visibilityTrackerOption.isImpressionTracked()) {
                 return false;

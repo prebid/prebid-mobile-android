@@ -47,66 +47,66 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class MraidCloseTest {
 
-    private MraidClose mMraidClose;
-    private Activity mTestActivity;
-    private BaseJSInterface mSpyBaseJSInterface;
-    private WebViewBase mMockWebViewBase;
-    private JsExecutor mMockJsExecutor;
+    private MraidClose mraidClose;
+    private Activity testActivity;
+    private BaseJSInterface spyBaseJSInterface;
+    private WebViewBase mockWebViewBase;
+    private JsExecutor mockJsExecutor;
 
     @Before
     public void setUp() throws Exception {
-        mTestActivity = Robolectric.buildActivity(Activity.class).create().get();
-        mMockJsExecutor = mock(JsExecutor.class);
+        testActivity = Robolectric.buildActivity(Activity.class).create().get();
+        mockJsExecutor = mock(JsExecutor.class);
 
-        mMockWebViewBase = mock(WebViewBase.class);
-        when(mMockWebViewBase.isMRAID()).thenReturn(true);
-        when(mMockWebViewBase.getContext()).thenReturn(mTestActivity);
+        mockWebViewBase = mock(WebViewBase.class);
+        when(mockWebViewBase.isMRAID()).thenReturn(true);
+        when(mockWebViewBase.getContext()).thenReturn(testActivity);
 
-        mSpyBaseJSInterface = Mockito.spy(new BaseJSInterface(mTestActivity, mMockWebViewBase, mMockJsExecutor));
-        WhiteBox.setInternalState(mSpyBaseJSInterface, "mScreenMetricsWaiter", mock(ScreenMetricsWaiter.class));
-        doNothing().when(mSpyBaseJSInterface).onStateChange(anyString());
+        spyBaseJSInterface = Mockito.spy(new BaseJSInterface(testActivity, mockWebViewBase, mockJsExecutor));
+        WhiteBox.setInternalState(spyBaseJSInterface, "screenMetricsWaiter", mock(ScreenMetricsWaiter.class));
+        doNothing().when(spyBaseJSInterface).onStateChange(anyString());
 
-        mMraidClose = new MraidClose(mTestActivity, mSpyBaseJSInterface, mMockWebViewBase);
+        mraidClose = new MraidClose(testActivity, spyBaseJSInterface, mockWebViewBase);
     }
 
     @Test
     public void closeThroughJSTest() throws Exception {
         ViewGroup mockViewGroup = mock(ViewGroup.class);
-        when(mSpyBaseJSInterface.getRootView()).thenReturn(mockViewGroup);
-        final MraidVariableContainer mraidVariableContainer = mSpyBaseJSInterface.getMraidVariableContainer();
+        when(spyBaseJSInterface.getRootView()).thenReturn(mockViewGroup);
+        final MraidVariableContainer mraidVariableContainer = spyBaseJSInterface.getMraidVariableContainer();
 
-        mMraidClose = new MraidClose(null, mSpyBaseJSInterface, mMockWebViewBase);
+        mraidClose = new MraidClose(null, spyBaseJSInterface, mockWebViewBase);
         mraidVariableContainer.setCurrentState(JSInterface.STATE_DEFAULT);
-        mMraidClose.closeThroughJS();
-        verify(mSpyBaseJSInterface, times(0)).onStateChange(anyString());
+        mraidClose.closeThroughJS();
+        verify(spyBaseJSInterface, times(0)).onStateChange(anyString());
 
-        mMraidClose = new MraidClose(mTestActivity, mSpyBaseJSInterface, mMockWebViewBase);
+        mraidClose = new MraidClose(testActivity, spyBaseJSInterface, mockWebViewBase);
         mraidVariableContainer.setCurrentState(JSInterface.STATE_LOADING);
-        mMraidClose.closeThroughJS();
-        verify(mSpyBaseJSInterface, times(0)).onStateChange(anyString());
+        mraidClose.closeThroughJS();
+        verify(spyBaseJSInterface, times(0)).onStateChange(anyString());
 
         mraidVariableContainer.setCurrentState(JSInterface.STATE_DEFAULT);
-        mMraidClose.closeThroughJS();
-        verify(mSpyBaseJSInterface).onStateChange(eq(JSInterface.STATE_HIDDEN));
+        mraidClose.closeThroughJS();
+        verify(spyBaseJSInterface).onStateChange(eq(JSInterface.STATE_HIDDEN));
 
         mraidVariableContainer.setCurrentState(JSInterface.STATE_EXPANDED);
-        mMraidClose.closeThroughJS();
-        verify(mSpyBaseJSInterface).onStateChange(eq(JSInterface.STATE_DEFAULT));
+        mraidClose.closeThroughJS();
+        verify(spyBaseJSInterface).onStateChange(eq(JSInterface.STATE_DEFAULT));
         verify(mockViewGroup).removeView(any());
 
-        reset(mSpyBaseJSInterface);
+        reset(spyBaseJSInterface);
         AdBrowserActivity mockActivity = new AdBrowserActivity();
-        mMraidClose = new MraidClose(mockActivity, mSpyBaseJSInterface, mMockWebViewBase);
+        mraidClose = new MraidClose(mockActivity, spyBaseJSInterface, mockWebViewBase);
         mraidVariableContainer.setCurrentState(JSInterface.STATE_EXPANDED);
-        mMraidClose.closeThroughJS();
-        verify(mSpyBaseJSInterface).onStateChange(eq(JSInterface.STATE_DEFAULT));
+        mraidClose.closeThroughJS();
+        verify(spyBaseJSInterface).onStateChange(eq(JSInterface.STATE_DEFAULT));
     }
 
     @Test
     public void makeViewVisibleTest() throws InvocationTargetException, IllegalAccessException {
         Method method = WhiteBox.method(MraidClose.class, "makeViewInvisible");
 
-        method.invoke(mMraidClose);
-        verify(mMockWebViewBase, timeout(100)).setVisibility(eq(View.INVISIBLE));
+        method.invoke(mraidClose);
+        verify(mockWebViewBase, timeout(100)).setVisibility(eq(View.INVISIBLE));
     }
 }

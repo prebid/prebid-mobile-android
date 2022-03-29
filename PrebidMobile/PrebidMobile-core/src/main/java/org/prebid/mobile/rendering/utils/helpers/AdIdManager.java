@@ -94,20 +94,24 @@ public class AdIdManager {
     }
 
     private static class FetchAdIdInfoTask extends AsyncTask<Void, Void, Void> {
-        private final WeakReference<Context> mContextWeakReference;
-        private final AdIdFetchListener mAdIdFetchListener;
 
-        public FetchAdIdInfoTask(Context context, AdIdFetchListener listener) {
-            mContextWeakReference = new WeakReference<>(context);
+        private final WeakReference<Context> contextWeakReference;
+        private final AdIdFetchListener adIdFetchListener;
+
+        public FetchAdIdInfoTask(
+                Context context,
+                AdIdFetchListener listener
+        ) {
+            contextWeakReference = new WeakReference<>(context);
 
             // All listeners provided are created as local method variables; If these listeners
             // are ever moved to a class member variable, this needs to be changed to a WeakReference
-            mAdIdFetchListener = listener;
+            adIdFetchListener = listener;
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            Context context = mContextWeakReference.get();
+            Context context = contextWeakReference.get();
 
             if (isCancelled()) {
                 return null;
@@ -130,8 +134,8 @@ public class AdIdManager {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if (mAdIdFetchListener != null) {
-                mAdIdFetchListener.adIdFetchCompletion();
+            if (adIdFetchListener != null) {
+                adIdFetchListener.adIdFetchCompletion();
             }
         }
     }

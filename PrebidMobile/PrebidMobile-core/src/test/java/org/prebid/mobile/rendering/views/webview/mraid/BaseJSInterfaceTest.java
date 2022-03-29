@@ -70,34 +70,34 @@ import static org.robolectric.Shadows.shadowOf;
 @Config(sdk = 19)
 public class BaseJSInterfaceTest {
 
-    private Activity mTestActivity;
-    private Context mMockContext;
-    private BaseJSInterface mSpyBaseJSInterface;
-    private HTMLCreative mMockCreative;
+    private Activity testActivity;
+    private Context mockContext;
+    private BaseJSInterface spyBaseJSInterface;
+    private HTMLCreative mockCreative;
 
-    @Mock private WebViewBase mMockWebViewBase;
-    @Mock private PrebidWebViewBase mMockPrebidWebViewBase;
-    @Mock private JsExecutor mMockJsExecutor;
-    @Mock private MraidController mMockMraidController;
-    @Mock private DeviceVolumeObserver mMockDeviceVolumeObserver;
+    @Mock private WebViewBase mockWebViewBase;
+    @Mock private PrebidWebViewBase mockPrebidWebViewBase;
+    @Mock private JsExecutor mockJsExecutor;
+    @Mock private MraidController mockMraidController;
+    @Mock private DeviceVolumeObserver mockDeviceVolumeObserver;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mTestActivity = Robolectric.buildActivity(Activity.class).create().get();
-        mMockContext = mTestActivity.getApplicationContext();
+        testActivity = Robolectric.buildActivity(Activity.class).create().get();
+        mockContext = testActivity.getApplicationContext();
 
-        mMockCreative = Mockito.spy(new HTMLCreative(mMockContext, mock(CreativeModel.class), mock(OmAdSessionManager.class), mock(InterstitialManager.class)));
-        WhiteBox.setInternalState(mMockCreative, "mMraidController", mMockMraidController);
+        mockCreative = Mockito.spy(new HTMLCreative(mockContext, mock(CreativeModel.class), mock(OmAdSessionManager.class), mock(InterstitialManager.class)));
+        WhiteBox.setInternalState(mockCreative, "mraidController", mockMraidController);
 
-        when(mMockPrebidWebViewBase.getCreative()).thenReturn(mMockCreative);
+        when(mockPrebidWebViewBase.getCreative()).thenReturn(mockCreative);
 
-        mSpyBaseJSInterface = Mockito.spy(new BaseJSInterface(mTestActivity, mMockWebViewBase, mMockJsExecutor));
-        WhiteBox.setInternalState(mSpyBaseJSInterface, "mDeviceVolumeObserver", mMockDeviceVolumeObserver);
+        spyBaseJSInterface = Mockito.spy(new BaseJSInterface(testActivity, mockWebViewBase, mockJsExecutor));
+        WhiteBox.setInternalState(spyBaseJSInterface, "deviceVolumeObserver", mockDeviceVolumeObserver);
 
-        when(mMockWebViewBase.getPreloadedListener()).thenReturn(mMockPrebidWebViewBase);
+        when(mockWebViewBase.getPreloadedListener()).thenReturn(mockPrebidWebViewBase);
 
-        Mockito.when(mMockWebViewBase.post(Mockito.any(Runnable.class))).thenAnswer(
+        Mockito.when(mockWebViewBase.post(Mockito.any(Runnable.class))).thenAnswer(
             invocation -> {
                 Runnable runnable = invocation.getArgument(0);
                 if (runnable != null) {
@@ -115,181 +115,181 @@ public class BaseJSInterfaceTest {
 
     @Test
     public void getMaxSizeTest() {
-        assertEquals("{}", mSpyBaseJSInterface.getMaxSize());
-        final MraidScreenMetrics screenMetrics = mSpyBaseJSInterface.getScreenMetrics();
+        assertEquals("{}", spyBaseJSInterface.getMaxSize());
+        final MraidScreenMetrics screenMetrics = spyBaseJSInterface.getScreenMetrics();
 
         Rect rect = new Rect(0, 0, 100, 100);
         screenMetrics.setCurrentMaxSizeRect(rect);
-        assertEquals("{\"width\":100,\"height\":100}", mSpyBaseJSInterface.getMaxSize());
+        assertEquals("{\"width\":100,\"height\":100}", spyBaseJSInterface.getMaxSize());
     }
 
     @Test
     public void setMaxSizeTest() {
-        assertEquals("{}", mSpyBaseJSInterface.getMaxSize());
+        assertEquals("{}", spyBaseJSInterface.getMaxSize());
 
         Rect rect = new Rect(0, 0, 0, 0);
-        final MraidScreenMetrics screenMetrics = mSpyBaseJSInterface.getScreenMetrics();
+        final MraidScreenMetrics screenMetrics = spyBaseJSInterface.getScreenMetrics();
         screenMetrics.setCurrentMaxSizeRect(rect);
-        assertEquals("{\"width\":0,\"height\":0}", mSpyBaseJSInterface.getMaxSize());
+        assertEquals("{\"width\":0,\"height\":0}", spyBaseJSInterface.getMaxSize());
 
         rect = new Rect(100, 100, 0, 0);
         screenMetrics.setCurrentMaxSizeRect(rect);
-        assertEquals("{\"width\":-100,\"height\":-100}", mSpyBaseJSInterface.getMaxSize());
+        assertEquals("{\"width\":-100,\"height\":-100}", spyBaseJSInterface.getMaxSize());
 
         rect = new Rect(100, 0, 0, 0);
         screenMetrics.setCurrentMaxSizeRect(rect);
-        assertEquals("{\"width\":-100,\"height\":0}", mSpyBaseJSInterface.getMaxSize());
+        assertEquals("{\"width\":-100,\"height\":0}", spyBaseJSInterface.getMaxSize());
 
         rect = new Rect(0, 100, 0, 0);
         screenMetrics.setCurrentMaxSizeRect(rect);
-        assertEquals("{\"width\":0,\"height\":-100}", mSpyBaseJSInterface.getMaxSize());
+        assertEquals("{\"width\":0,\"height\":-100}", spyBaseJSInterface.getMaxSize());
 
         rect = new Rect(0, 0, 100, 0);
         screenMetrics.setCurrentMaxSizeRect(rect);
-        assertEquals("{\"width\":100,\"height\":0}", mSpyBaseJSInterface.getMaxSize());
+        assertEquals("{\"width\":100,\"height\":0}", spyBaseJSInterface.getMaxSize());
 
         rect = new Rect(0, 0, 0, 100);
         screenMetrics.setCurrentMaxSizeRect(rect);
-        assertEquals("{\"width\":0,\"height\":100}", mSpyBaseJSInterface.getMaxSize());
+        assertEquals("{\"width\":0,\"height\":100}", spyBaseJSInterface.getMaxSize());
 
         rect = new Rect(0, 0, 100, 100);
         screenMetrics.setCurrentMaxSizeRect(rect);
-        assertEquals("{\"width\":100,\"height\":100}", mSpyBaseJSInterface.getMaxSize());
+        assertEquals("{\"width\":100,\"height\":100}", spyBaseJSInterface.getMaxSize());
     }
 
     @Test
     public void getDefaultPositionTest() {
-        assertEquals("{}", mSpyBaseJSInterface.getDefaultPosition());
+        assertEquals("{}", spyBaseJSInterface.getDefaultPosition());
 
-        final MraidScreenMetrics screenMetrics = mSpyBaseJSInterface.getScreenMetrics();
+        final MraidScreenMetrics screenMetrics = spyBaseJSInterface.getScreenMetrics();
         screenMetrics.setDefaultPosition(new Rect(0, 0, 0, 0));
 
-        assertEquals("{\"x\":0,\"width\":0,\"y\":0,\"height\":0}", mSpyBaseJSInterface.getDefaultPosition());
+        assertEquals("{\"x\":0,\"width\":0,\"y\":0,\"height\":0}", spyBaseJSInterface.getDefaultPosition());
     }
 
     @Test
     public void onOrientationPropertiesChangedTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mMraidEvent");
+        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
 
-        mSpyBaseJSInterface.onOrientationPropertiesChanged("test");
-        MraidEvent event = (MraidEvent) field.get(mSpyBaseJSInterface);
+        spyBaseJSInterface.onOrientationPropertiesChanged("test");
+        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
 
         assertEquals(JSInterface.ACTION_ORIENTATION_CHANGE, event.mraidAction);
         assertEquals("test", event.mraidActionHelper);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
+        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
     public void closeTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mMraidEvent");
+        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
 
-        mSpyBaseJSInterface.close();
-        MraidEvent event = (MraidEvent) field.get(mSpyBaseJSInterface);
+        spyBaseJSInterface.close();
+        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
 
         assertEquals(JSInterface.ACTION_CLOSE, event.mraidAction);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
+        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
     public void resizeTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mMraidEvent");
+        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
 
-        mSpyBaseJSInterface.resize();
-        MraidEvent event = (MraidEvent) field.get(mSpyBaseJSInterface);
+        spyBaseJSInterface.resize();
+        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
 
         assertEquals(JSInterface.ACTION_RESIZE, event.mraidAction);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
+        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
     public void expandNoUrlTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mMraidEvent");
+        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
 
-        mSpyBaseJSInterface.expand();
-        MraidEvent event = (MraidEvent) field.get(mSpyBaseJSInterface);
+        spyBaseJSInterface.expand();
+        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
 
         assertEquals(JSInterface.ACTION_EXPAND, event.mraidAction);
         assertNull(event.mraidActionHelper);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
+        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
     public void expandWithUrlTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mMraidEvent");
+        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
 
-        mSpyBaseJSInterface.expand(null);
-        MraidEvent event = (MraidEvent) field.get(mSpyBaseJSInterface);
+        spyBaseJSInterface.expand(null);
+        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
 
         assertEquals(JSInterface.ACTION_EXPAND, event.mraidAction);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
+        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
     public void openTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mMraidEvent");
+        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
 
-        mSpyBaseJSInterface.open("test");
-        MraidEvent event = (MraidEvent) field.get(mSpyBaseJSInterface);
+        spyBaseJSInterface.open("test");
+        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
 
-        verify(mMockWebViewBase, times(1)).sendClickCallBack(anyString());
+        verify(mockWebViewBase, times(1)).sendClickCallBack(anyString());
         assertEquals(JSInterface.ACTION_OPEN, event.mraidAction);
         assertEquals("test", event.mraidActionHelper);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
+        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
     public void createCalendarEventTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mMraidEvent");
+        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
 
-        mSpyBaseJSInterface.createCalendarEvent("test");
-        MraidEvent event = (MraidEvent) field.get(mSpyBaseJSInterface);
+        spyBaseJSInterface.createCalendarEvent("test");
+        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
 
         assertEquals(JSInterface.ACTION_CREATE_CALENDAR_EVENT, event.mraidAction);
         assertEquals("test", event.mraidActionHelper);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
+        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
     public void storePictureTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mMraidEvent");
+        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
 
-        mSpyBaseJSInterface.storePicture("test");
-        MraidEvent event = (MraidEvent) field.get(mSpyBaseJSInterface);
+        spyBaseJSInterface.storePicture("test");
+        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
 
         assertEquals(JSInterface.ACTION_STORE_PICTURE, event.mraidAction);
         assertEquals("test", event.mraidActionHelper);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
+        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
     public void playVideoTest() throws Exception {
-        Field field = WhiteBox.field(BaseJSInterface.class, "mMraidEvent");
+        Field field = WhiteBox.field(BaseJSInterface.class, "mraidEvent");
 
-        mSpyBaseJSInterface.playVideo("test");
-        MraidEvent event = (MraidEvent) field.get(mSpyBaseJSInterface);
+        spyBaseJSInterface.playVideo("test");
+        MraidEvent event = (MraidEvent) field.get(spyBaseJSInterface);
 
         assertEquals(JSInterface.ACTION_PLAY_VIDEO, event.mraidAction);
         assertEquals("test", event.mraidActionHelper);
 
-        verify(mMockMraidController).handleMraidEvent(eq(event), eq(mMockCreative), any(WebViewBase.class), any());
+        verify(mockMraidController).handleMraidEvent(eq(event), eq(mockCreative), any(WebViewBase.class), any());
     }
 
     @Test
     public void getPlacementTypeTest() {
-        assertNull(mSpyBaseJSInterface.getPlacementType());
+        assertNull(spyBaseJSInterface.getPlacementType());
     }
 
     @Test
     public void setOrientationPropertiesTest() throws IllegalAccessException {
-        final MraidVariableContainer mraidVariableContainer = mSpyBaseJSInterface.getMraidVariableContainer();
+        final MraidVariableContainer mraidVariableContainer = spyBaseJSInterface.getMraidVariableContainer();
 
         assertNull(mraidVariableContainer.getOrientationProperties());
 
@@ -302,31 +302,31 @@ public class BaseJSInterfaceTest {
     @Test
     @LooperMode(LooperMode.Mode.PAUSED)
     public void onStateChangeTest() {
-        mSpyBaseJSInterface.onStateChange(null);
-        verify(mSpyBaseJSInterface, never()).updateScreenMetricsAsync(any());
+        spyBaseJSInterface.onStateChange(null);
+        verify(spyBaseJSInterface, never()).updateScreenMetricsAsync(any());
 
-        mSpyBaseJSInterface.onStateChange("test");
-        verify(mSpyBaseJSInterface, times(1)).updateScreenMetricsAsync(any());
+        spyBaseJSInterface.onStateChange("test");
+        verify(spyBaseJSInterface, times(1)).updateScreenMetricsAsync(any());
     }
 
     @Test
     public void getScreenSizeTest() {
-        String size = mSpyBaseJSInterface.getScreenSize();
+        String size = spyBaseJSInterface.getScreenSize();
         assertEquals("{\"width\":0,\"height\":0}", size);
 
-        ManagersResolver.getInstance().prepare(mTestActivity);
+        ManagersResolver.getInstance().prepare(testActivity);
 
-        size = mSpyBaseJSInterface.getScreenSize();
+        size = spyBaseJSInterface.getScreenSize();
 
         assertNotEquals("{}", size);
     }
 
     @Test
     public void getCurrentPositionTest() {
-        String currentPosition = mSpyBaseJSInterface.getCurrentPosition();
+        String currentPosition = spyBaseJSInterface.getCurrentPosition();
         assertEquals("{\"x\":0,\"width\":0,\"y\":0,\"height\":0}", currentPosition);
 
-        when(mMockWebViewBase.getGlobalVisibleRect(any(Rect.class))).then(invocation -> {
+        when(mockWebViewBase.getGlobalVisibleRect(any(Rect.class))).then(invocation -> {
             Rect argumentRect = invocation.getArgument(0);
             argumentRect.left = 1;
             argumentRect.top = 2;
@@ -335,39 +335,39 @@ public class BaseJSInterfaceTest {
             return null;
         });
 
-        currentPosition = mSpyBaseJSInterface.getCurrentPosition();
+        currentPosition = spyBaseJSInterface.getCurrentPosition();
         assertNotEquals("{\"x\":0,\"width\":0,\"y\":0,\"height\":0}", currentPosition);
     }
 
     @Test
     @LooperMode(LooperMode.Mode.PAUSED)
     public void prepareAndSendReadyTest() {
-        when(mMockWebViewBase.getHeight()).thenReturn(1);
-        when(mMockPrebidWebViewBase.getHeight()).thenReturn(1);
+        when(mockWebViewBase.getHeight()).thenReturn(1);
+        when(mockPrebidWebViewBase.getHeight()).thenReturn(1);
 
-        mSpyBaseJSInterface.prepareAndSendReady();
+        spyBaseJSInterface.prepareAndSendReady();
         Shadows.shadowOf(Looper.getMainLooper()).idle();
 
-        verify(mMockJsExecutor).executeOnReady();
+        verify(mockJsExecutor).executeOnReady();
     }
 
     @Test
     @LooperMode(LooperMode.Mode.PAUSED)
     public void onReadyExpandedTest() {
-        when(mMockWebViewBase.getHeight()).thenReturn(1);
-        when(mMockPrebidWebViewBase.getHeight()).thenReturn(1);
+        when(mockWebViewBase.getHeight()).thenReturn(1);
+        when(mockPrebidWebViewBase.getHeight()).thenReturn(1);
 
-        mSpyBaseJSInterface.onReadyExpanded();
+        spyBaseJSInterface.onReadyExpanded();
         Shadows.shadowOf(Looper.getMainLooper()).idle();
 
-        verify(mSpyBaseJSInterface, timeout(100)).updateScreenMetricsAsync(any(Runnable.class));
-        verify(mSpyBaseJSInterface).supports(any());
-        verify(mMockJsExecutor).executeOnReadyExpanded();
+        verify(spyBaseJSInterface, timeout(100)).updateScreenMetricsAsync(any(Runnable.class));
+        verify(spyBaseJSInterface).supports(any());
+        verify(mockJsExecutor).executeOnReadyExpanded();
     }
 
     @Test
     public void setExpandPropertiesTest() {
-        final MraidVariableContainer mraidVariableContainer = mSpyBaseJSInterface.getMraidVariableContainer();
+        final MraidVariableContainer mraidVariableContainer = spyBaseJSInterface.getMraidVariableContainer();
         String expandProperties = mraidVariableContainer.getExpandProperties();
 
         assertNull(expandProperties);
@@ -378,7 +378,7 @@ public class BaseJSInterfaceTest {
 
     @Test
     public void setURLForLaunchingTest() throws IllegalAccessException {
-        final MraidVariableContainer mraidVariableContainer = mSpyBaseJSInterface.getMraidVariableContainer();
+        final MraidVariableContainer mraidVariableContainer = spyBaseJSInterface.getMraidVariableContainer();
 
         assertEquals("", mraidVariableContainer.getUrlForLaunching());
 
@@ -388,7 +388,7 @@ public class BaseJSInterfaceTest {
 
     @Test
     public void getURLForLaunchingTest() throws IllegalAccessException {
-        final MraidVariableContainer mraidVariableContainer = mSpyBaseJSInterface.getMraidVariableContainer();
+        final MraidVariableContainer mraidVariableContainer = spyBaseJSInterface.getMraidVariableContainer();
 
         assertEquals("", mraidVariableContainer.getUrlForLaunching());
         mraidVariableContainer.setUrlForLaunching("test");
@@ -398,10 +398,10 @@ public class BaseJSInterfaceTest {
     @Test
     public void getOriginalURLCallBackTest() throws IllegalAccessException {
         RedirectUrlListener mockListener = mock(RedirectUrlListener.class);
-        mSpyBaseJSInterface.followToOriginalUrl("test", mockListener);
+        spyBaseJSInterface.followToOriginalUrl("test", mockListener);
 
-        GetOriginalUrlTask redirectedUrlAsyncTask = WhiteBox.getInternalState(mSpyBaseJSInterface, "mRedirectedUrlAsyncTask");
-        ResponseHandler getOriginalURLCallBack = WhiteBox.getInternalState(redirectedUrlAsyncTask, "mResponseHandler");
+        GetOriginalUrlTask redirectedUrlAsyncTask = WhiteBox.getInternalState(spyBaseJSInterface, "redirectedUrlAsyncTask");
+        ResponseHandler getOriginalURLCallBack = WhiteBox.getInternalState(redirectedUrlAsyncTask, "responseHandler");
 
         getOriginalURLCallBack.onResponse(mock(BaseNetworkTask.GetUrlResult.class));
         verify(mockListener).onSuccess(any(), any());
@@ -420,10 +420,10 @@ public class BaseJSInterfaceTest {
 
     @Test
     public void whenGetLocationAndLocationAvailable_ReturnLocationJson() throws JSONException {
-        ShadowActivity shadowActivity = shadowOf(mTestActivity);
+        ShadowActivity shadowActivity = shadowOf(testActivity);
         shadowActivity.grantPermissions("android.permission.ACCESS_FINE_LOCATION");
 
-        LocationManager locationManager = (LocationManager) mTestActivity.getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) testActivity.getSystemService(Context.LOCATION_SERVICE);
         ShadowLocationManager shadowLocationManager = shadowOf(locationManager);
         Location location = new Location("");
         location.setLatitude(1.0);
@@ -432,7 +432,7 @@ public class BaseJSInterfaceTest {
         location.setTime(System.currentTimeMillis() - 4000);
         shadowLocationManager.setLastKnownLocation("gps", location);
         ManagersResolver.getInstance().dispose();
-        ManagersResolver.getInstance().prepare(mTestActivity);
+        ManagersResolver.getInstance().prepare(testActivity);
 
         JSONObject locationJson = new JSONObject();
         locationJson.put(LOCATION_LAT, 1.0);
@@ -441,79 +441,79 @@ public class BaseJSInterfaceTest {
         locationJson.put(LOCATION_ACCURACY, 3F);
         locationJson.put(LOCATION_LASTFIX, (long) 4);
 
-        assertEquals(locationJson.toString(), mSpyBaseJSInterface.getLocation());
+        assertEquals(locationJson.toString(), spyBaseJSInterface.getLocation());
     }
 
     @Test
     public void whenGetLocationAndLocationNotAvailable_ReturnError() {
-        ManagersResolver.getInstance().prepare(mTestActivity);
+        ManagersResolver.getInstance().prepare(testActivity);
 
-        assertEquals(LOCATION_ERROR, mSpyBaseJSInterface.getLocation());
+        assertEquals(LOCATION_ERROR, spyBaseJSInterface.getLocation());
     }
 
     @Test
     @Config(qualifiers = "land")
     public void whenGetAppOrientation_ReturnAppOrientation() throws JSONException {
-        mTestActivity.setRequestedOrientation(1);
-        ManagersResolver.getInstance().prepare(mTestActivity);
+        testActivity.setRequestedOrientation(1);
+        ManagersResolver.getInstance().prepare(testActivity);
 
         JSONObject appOrientation = new JSONObject();
         appOrientation.put(DEVICE_ORIENTATION, "landscape");
         appOrientation.put(DEVICE_ORIENTATION_LOCKED, true);
 
-        assertEquals(appOrientation.toString(), mSpyBaseJSInterface.getCurrentAppOrientation());
+        assertEquals(appOrientation.toString(), spyBaseJSInterface.getCurrentAppOrientation());
     }
 
     @Test
     public void handleScreenViewabilityChange_ExecuteOnViewableChange() {
-        mSpyBaseJSInterface.handleScreenViewabilityChange(true);
+        spyBaseJSInterface.handleScreenViewabilityChange(true);
 
-        verify(mMockJsExecutor).executeOnViewableChange(true);
+        verify(mockJsExecutor).executeOnViewableChange(true);
     }
 
     @Test
     public void handleScreenViewabilityChangeAndIsViewable_StartVolumeObserver() {
-        mSpyBaseJSInterface.handleScreenViewabilityChange(true);
+        spyBaseJSInterface.handleScreenViewabilityChange(true);
 
-        verify(mMockDeviceVolumeObserver).start();
+        verify(mockDeviceVolumeObserver).start();
     }
 
     @Test
     public void handleScreenViewabilityChangeAndNotViewable_StopVolumeObserver() {
-        mSpyBaseJSInterface.handleScreenViewabilityChange(false);
+        spyBaseJSInterface.handleScreenViewabilityChange(false);
 
-        verify(mMockDeviceVolumeObserver).stop();
+        verify(mockDeviceVolumeObserver).stop();
     }
 
     @Test
     public void handleScreenViewabilityChangeAndNotViewable_ExecuteAudioVolumeChangedNull() {
-        mSpyBaseJSInterface.handleScreenViewabilityChange(false);
+        spyBaseJSInterface.handleScreenViewabilityChange(false);
 
-        verify(mMockJsExecutor).executeAudioVolumeChange(null);
+        verify(mockJsExecutor).executeAudioVolumeChange(null);
     }
 
     @Test
     public void notifyScreenMetrics_UpdateAdStateWithJsExecutor() {
         final MraidScreenMetrics mockScreenMetrics = mock(MraidScreenMetrics.class);
 
-        mSpyBaseJSInterface.notifyScreenMetricsChanged();
+        spyBaseJSInterface.notifyScreenMetricsChanged();
 
-        verify(mMockJsExecutor).executeSetScreenSize(any(Rect.class));
-        assertNotNull(mSpyBaseJSInterface.getScreenMetrics().getCurrentMaxSizeRect());
-        verify(mMockJsExecutor).executeSetCurrentPosition(any(Rect.class));
-        verify(mMockJsExecutor).executeSetDefaultPosition(any(Rect.class));
-        verify(mMockJsExecutor).executeOnSizeChange(any(Rect.class));
+        verify(mockJsExecutor).executeSetScreenSize(any(Rect.class));
+        assertNotNull(spyBaseJSInterface.getScreenMetrics().getCurrentMaxSizeRect());
+        verify(mockJsExecutor).executeSetCurrentPosition(any(Rect.class));
+        verify(mockJsExecutor).executeSetDefaultPosition(any(Rect.class));
+        verify(mockJsExecutor).executeOnSizeChange(any(Rect.class));
     }
 
     @Test
     public void getDefaultPositionNotSet_ReturnNull() {
-        final MraidScreenMetrics screenMetrics = mSpyBaseJSInterface.getScreenMetrics();
-        assertNull(mSpyBaseJSInterface.getScreenMetrics().getDefaultPosition());
+        final MraidScreenMetrics screenMetrics = spyBaseJSInterface.getScreenMetrics();
+        assertNull(spyBaseJSInterface.getScreenMetrics().getDefaultPosition());
     }
 
     @Test
     public void getDefaultPositionAndItWasSet_ReturnSetPosition() {
-        final MraidScreenMetrics screenMetrics = mSpyBaseJSInterface.getScreenMetrics();
+        final MraidScreenMetrics screenMetrics = spyBaseJSInterface.getScreenMetrics();
         Rect rect = new Rect(0, 1, 2, 3);
 
         screenMetrics.setDefaultPosition(rect);

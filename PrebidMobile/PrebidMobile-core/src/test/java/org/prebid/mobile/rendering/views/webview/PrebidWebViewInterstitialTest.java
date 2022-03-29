@@ -42,42 +42,42 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class PrebidWebViewInterstitialTest {
 
-    private PrebidWebViewInterstitial mPrebidWebViewInterstitial;
-    private Context mContext;
-    private String mAdHTML;
+    private PrebidWebViewInterstitial prebidWebViewInterstitial;
+    private Context context;
+    private String adHTML;
 
     @Before
     public void setUp() throws Exception {
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
-        ManagersResolver.getInstance().prepare(mContext);
+        context = Robolectric.buildActivity(Activity.class).create().get();
+        ManagersResolver.getInstance().prepare(context);
 
-        mAdHTML = ResourceUtils.convertResourceToString("ad_not_mraid_html.txt");
+        adHTML = ResourceUtils.convertResourceToString("ad_not_mraid_html.txt");
 
-        mPrebidWebViewInterstitial = new PrebidWebViewInterstitial(mContext, mock(InterstitialManager.class));
+        prebidWebViewInterstitial = new PrebidWebViewInterstitial(context, mock(InterstitialManager.class));
     }
 
     @Test
     public void loadHTMLTest() throws IOException {
-        mPrebidWebViewInterstitial.mCreative = mock(HTMLCreative.class);
+        prebidWebViewInterstitial.creative = mock(HTMLCreative.class);
         CreativeModel mockModel = mock(CreativeModel.class);
-        when(mPrebidWebViewInterstitial.mCreative.getCreativeModel()).thenReturn(mockModel);
+        when(prebidWebViewInterstitial.creative.getCreativeModel()).thenReturn(mockModel);
         when(mockModel.getHtml()).thenReturn(ResourceUtils.convertResourceToString("ad_contains_iframe"));
         when(mockModel.getAdConfiguration()).thenReturn(new AdUnitConfiguration());
-        mPrebidWebViewInterstitial.loadHTML(mAdHTML, 100, 200);
+        prebidWebViewInterstitial.loadHTML(adHTML, 100, 200);
 
-        assertNotNull(mPrebidWebViewInterstitial.mWebView);
-        assertEquals("WebViewInterstitial", mPrebidWebViewInterstitial.mWebView.mMRAIDBridgeName);
+        assertNotNull(prebidWebViewInterstitial.webView);
+        assertEquals("WebViewInterstitial", prebidWebViewInterstitial.webView.MRAIDBridgeName);
     }
 
     @Test
     public void preloadedTest() {
         WebViewBase mockWebView = mock(WebViewBase.class);
-        mPrebidWebViewInterstitial.mWebViewDelegate = mock(WebViewDelegate.class);
+        prebidWebViewInterstitial.webViewDelegate = mock(WebViewDelegate.class);
 
-        mPrebidWebViewInterstitial.preloaded(null);
-        verify(mPrebidWebViewInterstitial.mWebViewDelegate, never()).webViewReadyToDisplay();
+        prebidWebViewInterstitial.preloaded(null);
+        verify(prebidWebViewInterstitial.webViewDelegate, never()).webViewReadyToDisplay();
 
-        mPrebidWebViewInterstitial.preloaded(mockWebView);
-        verify(mPrebidWebViewInterstitial.mWebViewDelegate).webViewReadyToDisplay();
+        prebidWebViewInterstitial.preloaded(mockWebView);
+        verify(prebidWebViewInterstitial.webViewDelegate).webViewReadyToDisplay();
     }
 }

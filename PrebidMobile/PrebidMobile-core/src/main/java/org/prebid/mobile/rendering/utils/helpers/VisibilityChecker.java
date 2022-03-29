@@ -30,30 +30,33 @@ import static org.prebid.mobile.rendering.models.ntv.NativeEventTracker.EventTyp
 import static org.prebid.mobile.rendering.models.ntv.NativeEventTracker.EventType.OMID;
 
 public class VisibilityChecker {
+
     private final String TAG = VisibilityChecker.class.getSimpleName();
 
-    private final VisibilityTrackerOption mVisibilityTrackerOption;
-    private final ViewExposureChecker mViewExposureChecker;
+    private final VisibilityTrackerOption visibilityTrackerOption;
+    private final ViewExposureChecker viewExposureChecker;
 
-    private final Rect mClipRect = new Rect();
+    private final Rect clipRect = new Rect();
 
     public VisibilityChecker(final VisibilityTrackerOption visibilityTrackerOption) {
-        mVisibilityTrackerOption = visibilityTrackerOption;
-        mViewExposureChecker = new ViewExposureChecker();
+        this.visibilityTrackerOption = visibilityTrackerOption;
+        viewExposureChecker = new ViewExposureChecker();
     }
 
-    public VisibilityChecker(final VisibilityTrackerOption visibilityTrackerOption,
-                             final ViewExposureChecker viewExposureChecker) {
-        mVisibilityTrackerOption = visibilityTrackerOption;
-        mViewExposureChecker = viewExposureChecker;
+    public VisibilityChecker(
+            final VisibilityTrackerOption visibilityTrackerOption,
+            final ViewExposureChecker viewExposureChecker
+    ) {
+        this.visibilityTrackerOption = visibilityTrackerOption;
+        this.viewExposureChecker = viewExposureChecker;
     }
 
     public boolean hasBeenVisible() {
-        return mVisibilityTrackerOption.getStartTimeMillis() != Long.MIN_VALUE;
+        return visibilityTrackerOption.getStartTimeMillis() != Long.MIN_VALUE;
     }
 
     public void setStartTimeMillis() {
-        mVisibilityTrackerOption.setStartTimeMillis(SystemClock.uptimeMillis());
+        visibilityTrackerOption.setStartTimeMillis(SystemClock.uptimeMillis());
     }
 
     public boolean hasRequiredTimeElapsed() {
@@ -61,12 +64,11 @@ public class VisibilityChecker {
             return false;
         }
 
-        return SystemClock.uptimeMillis() - mVisibilityTrackerOption.getStartTimeMillis() >= mVisibilityTrackerOption.getMinimumVisibleMillis();
+        return SystemClock.uptimeMillis() - visibilityTrackerOption.getStartTimeMillis() >= visibilityTrackerOption.getMinimumVisibleMillis();
     }
 
     public boolean isVisible(View trackedView, ViewExposure viewExposure) {
-        if (mVisibilityTrackerOption.isType(IMPRESSION)
-            || mVisibilityTrackerOption.isType(OMID)) {
+        if (visibilityTrackerOption.isType(IMPRESSION) || visibilityTrackerOption.isType(OMID)) {
             return isVisible(trackedView);
         }
 
@@ -75,7 +77,7 @@ public class VisibilityChecker {
         }
 
         final float exposurePercentage = viewExposure.getExposurePercentage() * 100;
-        return exposurePercentage >= mVisibilityTrackerOption.getMinVisibilityPercentage();
+        return exposurePercentage >= visibilityTrackerOption.getMinVisibilityPercentage();
     }
 
     public boolean isVisible(
@@ -103,13 +105,11 @@ public class VisibilityChecker {
         }
 
         // Calculate area of view not clipped by any of its parents
-        final int widthInDips = Dips.pixelsToIntDips((float) mClipRect.width(),
-                                                     view.getContext());
-        final int heightInDips = Dips.pixelsToIntDips((float) mClipRect.height(),
-                                                      view.getContext());
+        final int widthInDips = Dips.pixelsToIntDips((float) clipRect.width(), view.getContext());
+        final int heightInDips = Dips.pixelsToIntDips((float) clipRect.height(), view.getContext());
         final long visibleViewAreaInDips = (long) (widthInDips * heightInDips);
 
-        return visibleViewAreaInDips >= mVisibilityTrackerOption.getMinVisibilityPercentage();
+        return visibleViewAreaInDips >= visibilityTrackerOption.getMinVisibilityPercentage();
     }
 
     public boolean isVisibleForRefresh(
@@ -121,7 +121,7 @@ public class VisibilityChecker {
         }
 
         // View completely clipped by its parents
-        return view.getGlobalVisibleRect(mClipRect);
+        return view.getGlobalVisibleRect(clipRect);
     }
 
     public ViewExposure checkViewExposure(
@@ -132,12 +132,12 @@ public class VisibilityChecker {
             return null;
         }
 
-        ViewExposure exposure = mViewExposureChecker.exposure(view);
+        ViewExposure exposure = viewExposureChecker.exposure(view);
         LogUtil.debug(TAG, exposure != null ? exposure.toString() : "null exposure");
         return exposure;
     }
 
     public VisibilityTrackerOption getVisibilityTrackerOption() {
-        return mVisibilityTrackerOption;
+        return visibilityTrackerOption;
     }
 }

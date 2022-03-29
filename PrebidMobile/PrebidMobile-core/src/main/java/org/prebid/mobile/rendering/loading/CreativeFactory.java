@@ -48,23 +48,24 @@ public class CreativeFactory {
     private static final long BANNER_TIMEOUT = 6 * 1000;
     private static final long VAST_TIMEOUT = 30 * 1000;
 
-    private AbstractCreative mCreative;
-    private CreativeModel mCreativeModel;
+    private AbstractCreative creative;
+    private CreativeModel creativeModel;
 
-    private WeakReference<Context> mContextReference;
-    private Listener mListener;
+    private WeakReference<Context> contextReference;
+    private Listener listener;
 
-    private OmAdSessionManager mOmAdSessionManager;
-    private final InterstitialManager mInterstitialManager;
-    private TimeoutState mTimeoutState = TimeoutState.PENDING;
-    private Handler mTimeoutHandler = new Handler(Looper.getMainLooper());
+    private OmAdSessionManager omAdSessionManager;
+    private final InterstitialManager interstitialManager;
+    private TimeoutState timeoutState = TimeoutState.PENDING;
+    private Handler timeoutHandler = new Handler(Looper.getMainLooper());
 
-    public CreativeFactory(Context context,
-                           CreativeModel creativeModel,
-                           Listener listener,
-                           OmAdSessionManager omAdSessionManager,
-                           InterstitialManager interstitialManager)
-            throws AdException {
+    public CreativeFactory(
+            Context context,
+            CreativeModel creativeModel,
+            Listener listener,
+            OmAdSessionManager omAdSessionManager,
+            InterstitialManager interstitialManager
+    ) throws AdException {
         if (context == null) {
             throw new AdException(AdException.INTERNAL_ERROR, "Context is null");
         }
@@ -77,16 +78,16 @@ public class CreativeFactory {
             throw new AdException(AdException.INTERNAL_ERROR, "CreativeFactory listener is null");
         }
 
-        mListener = listener;
-        mContextReference = new WeakReference<>(context);
-        mCreativeModel = creativeModel;
-        mOmAdSessionManager = omAdSessionManager;
-        mInterstitialManager = interstitialManager;
+        this.listener = listener;
+        contextReference = new WeakReference<>(context);
+        this.creativeModel = creativeModel;
+        this.omAdSessionManager = omAdSessionManager;
+        this.interstitialManager = interstitialManager;
     }
 
     public void start() {
         try {
-            AdUnitConfiguration configuration = mCreativeModel.getAdConfiguration();
+            AdUnitConfiguration configuration = creativeModel.getAdConfiguration();
 
             if (configuration.isAdType(AdFormat.BANNER) || configuration.isAdType(AdFormat.INTERSTITIAL)) {
                 attemptAuidCreative();
@@ -96,59 +97,62 @@ public class CreativeFactory {
                 String msg = "Unable to start creativeFactory. adConfig.adUnitIdentifierType doesn't match supported types adConfig.adFormat: " + configuration.getAdFormats();
                 LogUtil.error(TAG, msg);
                 AdException adException = new AdException(AdException.INTERNAL_ERROR, msg);
-                mListener.onFailure(adException);
+                listener.onFailure(adException);
             }
         } catch (Exception exception) {
             String message = "Creative Factory failed: " + exception.getMessage();
             LogUtil.error(TAG, message + Log.getStackTraceString(exception));
             AdException adException = new AdException(AdException.INTERNAL_ERROR, message);
-            mListener.onFailure(adException);
+            listener.onFailure(adException);
         }
     }
 
     public void destroy() {
-        if (mCreative != null) {
-            mCreative.destroy();
+        if (creative != null) {
+            creative.destroy();
         }
-        mTimeoutHandler.removeCallbacks(null);
+        timeoutHandler.removeCallbacks(null);
     }
 
     public AbstractCreative getCreative() {
-        return mCreative;
+        return creative;
     }
 
     private void attemptAuidCreative() throws Exception {
 
-        mCreative = new HTMLCreative(mContextReference.get(), mCreativeModel, mOmAdSessionManager, mInterstitialManager);
-        mCreative.setResolutionListener(new CreativeFactoryCreativeResolutionListener(this));
+        creative = new HTMLCreative(contextReference.get(), creativeModel, omAdSessionManager, interstitialManager);
+        creative.setResolutionListener(new CreativeFactoryCreativeResolutionListener(this));
 
         ArrayList<String> riUrls = new ArrayList<>();
         ArrayList<String> rcUrls = new ArrayList<>();
 
         //get the tracking url & do the registration here. add in the tracking stuff here
         //This needs to be more generalized and allow for multiple click urls
-        if (!mCreativeModel.isRequireImpressionUrl() || Utils.isNotBlank(mCreativeModel.getImpressionUrl())) {
-            if (!TextUtils.isEmpty(mCreativeModel.getImpressionUrl())) {
-                riUrls.add(mCreativeModel.getImpressionUrl());
-                mCreativeModel.registerTrackingEvent(TrackingEvent.Events.IMPRESSION, riUrls);
+        if (!creativeModel.isRequireImpressionUrl() || Utils.isNotBlank(creativeModel.getImpressionUrl())) {
+            if (!TextUtils.isEmpty(creativeModel.getImpressionUrl())) {
+                riUrls.add(creativeModel.getImpressionUrl());
+                creativeModel.registerTrackingEvent(TrackingEvent.Events.IMPRESSION, riUrls);
             }
             //
-            if (!TextUtils.isEmpty(mCreativeModel.getClickUrl())) {
-                rcUrls.add(mCreativeModel.getClickUrl());
-                mCreativeModel.registerTrackingEvent(TrackingEvent.Events.CLICK, rcUrls);
+            if (!TextUtils.isEmpty(creativeModel.getClickUrl())) {
+                rcUrls.add(creativeModel.getClickUrl());
+                creativeModel.registerTrackingEvent(TrackingEvent.Events.CLICK, rcUrls);
             }
         } else {
-            mListener.onFailure(new AdException(AdException.INTERNAL_ERROR, "Tracking info not found"));
+            listener.onFailure(new AdException(AdException.INTERNAL_ERROR, "Tracking info not found"));
         }
         markWorkStart(BANNER_TIMEOUT);
-        mCreative.load();
+        creative.load();
     }
 
     private void attemptVastCreative() {
-        VideoCreativeModel videoCreativeModel = (VideoCreativeModel) mCreativeModel;
+        VideoCreativeModel videoCreativeModel = (VideoCreativeModel) creativeModel;
         String mediaUrl = videoCreativeModel.getMediaUrl();
         if (Utils.isBlank(mediaUrl) || mediaUrl.equals("invalid media file")) {
-            mListener.onFailure(new AdException(AdException.INTERNAL_ERROR, VASTErrorCodes.NO_SUPPORTED_MEDIA_ERROR.toString()));
+            listener.onFailure(new AdException(
+                    AdException.INTERNAL_ERROR,
+                    VASTErrorCodes.NO_SUPPORTED_MEDIA_ERROR.toString()
+            ));
             return;
         }
 
@@ -159,28 +163,39 @@ public class CreativeFactory {
 
         VideoCreative newCreative;
         try {
-            if (mCreativeModel.getAdConfiguration().isRewarded()) {
-                newCreative = new RewardedVideoCreative(mContextReference.get(), videoCreativeModel, mOmAdSessionManager, mInterstitialManager);
+            if (creativeModel.getAdConfiguration().isRewarded()) {
+                newCreative = new RewardedVideoCreative(contextReference.get(),
+                        videoCreativeModel,
+                        omAdSessionManager,
+                        interstitialManager
+                );
             } else {
-                newCreative = new VideoCreative(mContextReference.get(), videoCreativeModel, mOmAdSessionManager, mInterstitialManager);
+                newCreative = new VideoCreative(contextReference.get(),
+                        videoCreativeModel,
+                        omAdSessionManager,
+                        interstitialManager
+                );
             }
 
             newCreative.setResolutionListener(new CreativeFactoryCreativeResolutionListener(this));
-            mCreative = newCreative;
+            creative = newCreative;
             markWorkStart(VAST_TIMEOUT);
             newCreative.load();
         } catch (Exception exception) {
             LogUtil.error(TAG, "VideoCreative creation failed: " + Log.getStackTraceString(exception));
-            mListener.onFailure(new AdException(AdException.INTERNAL_ERROR, "VideoCreative creation failed: " + exception.getMessage()));
+            listener.onFailure(new AdException(
+                    AdException.INTERNAL_ERROR,
+                    "VideoCreative creation failed: " + exception.getMessage()
+            ));
         }
     }
 
     private void markWorkStart(long timeout) {
-        mTimeoutState = TimeoutState.RUNNING;
-        mTimeoutHandler.postDelayed(() -> {
-            if (mTimeoutState != TimeoutState.FINISHED) {
-                mTimeoutState = TimeoutState.EXPIRED;
-                mListener.onFailure((new AdException(AdException.INTERNAL_ERROR, "Creative factory Timeout")));
+        timeoutState = TimeoutState.RUNNING;
+        timeoutHandler.postDelayed(() -> {
+            if (timeoutState != TimeoutState.FINISHED) {
+                timeoutState = TimeoutState.EXPIRED;
+                listener.onFailure((new AdException(AdException.INTERNAL_ERROR, "Creative factory Timeout")));
             }
         }, timeout);
     }
@@ -205,40 +220,40 @@ public class CreativeFactory {
 
     static class CreativeFactoryCreativeResolutionListener implements CreativeResolutionListener {
 
-        private WeakReference<CreativeFactory> mWeakCreativeFactory;
+        private WeakReference<CreativeFactory> weakCreativeFactory;
 
         CreativeFactoryCreativeResolutionListener(CreativeFactory creativeFactory) {
-            mWeakCreativeFactory = new WeakReference<>(creativeFactory);
+            weakCreativeFactory = new WeakReference<>(creativeFactory);
         }
 
         @Override
         public void creativeReady(AbstractCreative creative) {
-            CreativeFactory creativeFactory = mWeakCreativeFactory.get();
+            CreativeFactory creativeFactory = weakCreativeFactory.get();
             if (creativeFactory == null) {
                 LogUtil.warning(TAG, "CreativeFactory is null");
                 return;
             }
-            if (creativeFactory.mTimeoutState == TimeoutState.EXPIRED) {
-                creativeFactory.mListener.onFailure(new AdException(AdException.INTERNAL_ERROR, "Creative Timeout"));
+            if (creativeFactory.timeoutState == TimeoutState.EXPIRED) {
+                creativeFactory.listener.onFailure(new AdException(AdException.INTERNAL_ERROR, "Creative Timeout"));
                 LogUtil.warning(TAG, "Creative timed out, backing out");
                 return;
             }
-            creativeFactory.mTimeoutState = TimeoutState.FINISHED;
+            creativeFactory.timeoutState = TimeoutState.FINISHED;
 
-            creativeFactory.mListener.onSuccess();
+            creativeFactory.listener.onSuccess();
         }
 
         @Override
         public void creativeFailed(AdException error) {
-            CreativeFactory creativeFactory = mWeakCreativeFactory.get();
+            CreativeFactory creativeFactory = weakCreativeFactory.get();
             if (creativeFactory == null) {
                 LogUtil.warning(TAG, "CreativeFactory is null");
                 return;
             }
 
-            creativeFactory.mTimeoutHandler.removeCallbacks(null);
+            creativeFactory.timeoutHandler.removeCallbacks(null);
 
-            creativeFactory.mListener.onFailure(error);
+            creativeFactory.listener.onFailure(error);
         }
     }
 }

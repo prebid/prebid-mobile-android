@@ -46,23 +46,23 @@ public class UrlHandlerTest {
     private static final String VALID_URL = "http://prebid.com";
 
     @Mock
-    Context mMockContext;
+    Context mockContext;
     @Mock
-    TrackingManager mMockTrackingManager;
+    TrackingManager mockTrackingManager;
     @Mock
-    UrlResolutionTask.UrlResolutionListener mMockUrlResolutionListener;
+    UrlResolutionTask.UrlResolutionListener mockUrlResolutionListener;
     @Mock
-    UrlHandler.UrlHandlerResultListener mMockUrlHandlerResultListener;
+    UrlHandler.UrlHandlerResultListener mockUrlHandlerResultListener;
     @Mock
-    DeepLinkAction mMockDeepLinkAction;
+    DeepLinkAction mockDeepLinkAction;
 
-    private UrlHandler mUrlHandler;
+    private UrlHandler urlHandler;
 
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mUrlHandler = createUrlHandler(mMockDeepLinkAction);
-        WhiteBox.field(TrackingManager.class, "sInstance").set(null, mMockTrackingManager);
+        urlHandler = createUrlHandler(mockDeepLinkAction);
+        WhiteBox.field(TrackingManager.class, "sInstance").set(null, mockTrackingManager);
     }
 
     @After
@@ -73,18 +73,18 @@ public class UrlHandlerTest {
     @Test
     public void whenHandleResolvedUrlWithEmptyString_NotifyFailure() {
         boolean result = createUrlHandler(null)
-            .handleResolvedUrl(mMockContext, " ", null, true);
+            .handleResolvedUrl(mockContext, " ", null, true);
 
-        verify(mMockUrlHandlerResultListener, times(1)).onFailure(" ");
+        verify(mockUrlHandlerResultListener, times(1)).onFailure(" ");
         assertFalse(result);
     }
 
     @Test
     public void whenHandleResolvedUrlWithEmptyActions_NotifyFailure() {
         boolean result = createUrlHandler(null)
-            .handleResolvedUrl(mMockContext, VALID_URL, null, true);
+            .handleResolvedUrl(mockContext, VALID_URL, null, true);
 
-        verify(mMockUrlHandlerResultListener, times(1)).onFailure(VALID_URL);
+        verify(mockUrlHandlerResultListener, times(1)).onFailure(VALID_URL);
         assertFalse(result);
     }
 
@@ -96,61 +96,61 @@ public class UrlHandlerTest {
         List<String> trackingUrlList = new ArrayList<>();
         trackingUrlList.add("http://exampleTrackingUrl");
 
-        when(mMockDeepLinkAction.shouldBeTriggeredByUserAction()).thenReturn(true);
-        when(mMockDeepLinkAction.shouldOverrideUrlLoading(destinationUri)).thenReturn(true);
+        when(mockDeepLinkAction.shouldBeTriggeredByUserAction()).thenReturn(true);
+        when(mockDeepLinkAction.shouldOverrideUrlLoading(destinationUri)).thenReturn(true);
 
-        boolean result = mUrlHandler.handleResolvedUrl(mMockContext, url, trackingUrlList, true);
+        boolean result = urlHandler.handleResolvedUrl(mockContext, url, trackingUrlList, true);
 
-        verify(mMockDeepLinkAction, times(1)).performAction(mMockContext, mUrlHandler, destinationUri);
-        verify(mMockTrackingManager, times(1)).fireEventTrackingURLs(trackingUrlList);
-        verify(mMockUrlHandlerResultListener, times(1)).onSuccess(url, mMockDeepLinkAction);
+        verify(mockDeepLinkAction, times(1)).performAction(mockContext, urlHandler, destinationUri);
+        verify(mockTrackingManager, times(1)).fireEventTrackingURLs(trackingUrlList);
+        verify(mockUrlHandlerResultListener, times(1)).onSuccess(url, mockDeepLinkAction);
         assertTrue(result);
     }
 
     @Test
     public void whenHandleResolvedUrlWithInvalidExpectedInteractionCondition_NotifySuccess() {
-        when(mMockDeepLinkAction.shouldBeTriggeredByUserAction()).thenReturn(true);
-        when(mMockDeepLinkAction.shouldOverrideUrlLoading(any())).thenReturn(true);
+        when(mockDeepLinkAction.shouldBeTriggeredByUserAction()).thenReturn(true);
+        when(mockDeepLinkAction.shouldOverrideUrlLoading(any())).thenReturn(true);
 
-        boolean result = mUrlHandler.handleResolvedUrl(mMockContext, VALID_URL, null, false);
+        boolean result = urlHandler.handleResolvedUrl(mockContext, VALID_URL, null, false);
 
         assertFalse(result);
-        verify(mMockUrlHandlerResultListener, times(1)).onFailure(VALID_URL);
+        verify(mockUrlHandlerResultListener, times(1)).onFailure(VALID_URL);
     }
 
     @Test(expected = ActionNotResolvedException.class)
     public void whenHandleActionWithInvalidInteractionCondition_ThrowException()
     throws ActionNotResolvedException {
         Uri destinationUri = Uri.parse(VALID_URL);
-        when(mMockDeepLinkAction.shouldBeTriggeredByUserAction()).thenReturn(true);
+        when(mockDeepLinkAction.shouldBeTriggeredByUserAction()).thenReturn(true);
 
-        mUrlHandler.handleAction(mMockContext, destinationUri, mMockDeepLinkAction, false);
+        urlHandler.handleAction(mockContext, destinationUri, mockDeepLinkAction, false);
     }
 
     @Test
     public void whenHandleActionWithValidInteractionCondition_PerformAction()
     throws ActionNotResolvedException {
         Uri destinationUri = Uri.parse(VALID_URL);
-        when(mMockDeepLinkAction.shouldBeTriggeredByUserAction()).thenReturn(true);
+        when(mockDeepLinkAction.shouldBeTriggeredByUserAction()).thenReturn(true);
 
-        mUrlHandler.handleAction(mMockContext, destinationUri, mMockDeepLinkAction, true);
+        urlHandler.handleAction(mockContext, destinationUri, mockDeepLinkAction, true);
 
-        verify(mMockDeepLinkAction, times(1)).performAction(mMockContext, mUrlHandler, destinationUri);
+        verify(mockDeepLinkAction, times(1)).performAction(mockContext, urlHandler, destinationUri);
     }
 
     @Test
     public void whenHandleUrlWithEmptyString_NotifyFailure() {
         String url = "  ";
 
-        mUrlHandler.handleUrl(mMockContext, url, null, false);
+        urlHandler.handleUrl(mockContext, url, null, false);
 
-        verify(mMockUrlHandlerResultListener, times(1)).onFailure(url);
+        verify(mockUrlHandlerResultListener, times(1)).onFailure(url);
     }
 
     @Test
     public void whenHandleUrlWithValidString_PerformUrlResolutionRequest() {
-        UrlHandler spyUrlHandler = spy(createUrlHandler(mMockDeepLinkAction));
-        spyUrlHandler.handleUrl(mMockContext, VALID_URL, null, false);
+        UrlHandler spyUrlHandler = spy(createUrlHandler(mockDeepLinkAction));
+        spyUrlHandler.handleUrl(mockContext, VALID_URL, null, false);
 
         verify(spyUrlHandler, times(1)).performUrlResolutionRequest(eq(VALID_URL), any(UrlResolutionTask.UrlResolutionListener.class));
     }
@@ -162,7 +162,7 @@ public class UrlHandlerTest {
             builder.withDeepLinkAction(deepLinkAction);
         }
 
-        builder.withResultListener(mMockUrlHandlerResultListener);
+        builder.withResultListener(mockUrlHandlerResultListener);
         return builder.build();
     }
 }

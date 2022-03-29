@@ -28,20 +28,22 @@ import static android.provider.Settings.System.CONTENT_URI;
 
 public class DeviceVolumeObserver extends ContentObserver {
 
-    private final Context mApplicationContext;
-    private final AudioManager mAudioManager;
-    private final DeviceVolumeListener mDeviceVolumeListener;
+    private final Context applicationContext;
+    private final AudioManager audioManager;
+    private final DeviceVolumeListener deviceVolumeListener;
 
-    private Float mStoredDeviceVolume;
+    private Float storedDeviceVolume;
 
-    public DeviceVolumeObserver(final Context applicationContext,
-                                final Handler handler,
-                                final DeviceVolumeListener deviceVolumeListener) {
+    public DeviceVolumeObserver(
+            final Context applicationContext,
+            final Handler handler,
+            final DeviceVolumeListener deviceVolumeListener
+    ) {
         super(handler);
 
-        mApplicationContext = applicationContext;
-        mAudioManager = (AudioManager) applicationContext.getSystemService(AUDIO_SERVICE);
-        mDeviceVolumeListener = deviceVolumeListener;
+        this.applicationContext = applicationContext;
+        audioManager = (AudioManager) applicationContext.getSystemService(AUDIO_SERVICE);
+        this.deviceVolumeListener = deviceVolumeListener;
     }
 
     @Override
@@ -50,20 +52,20 @@ public class DeviceVolumeObserver extends ContentObserver {
 
         final Float currentDeviceVolume = getDeviceVolume();
         if (hasDeviceVolumeChanged(currentDeviceVolume)) {
-            mStoredDeviceVolume = currentDeviceVolume;
+            storedDeviceVolume = currentDeviceVolume;
             notifyDeviceVolumeListener();
         }
     }
 
     public void start() {
-        mStoredDeviceVolume = getDeviceVolume();
+        storedDeviceVolume = getDeviceVolume();
         notifyDeviceVolumeListener();
 
-        mApplicationContext.getContentResolver().registerContentObserver(CONTENT_URI, true, this);
+        applicationContext.getContentResolver().registerContentObserver(CONTENT_URI, true, this);
     }
 
     public void stop() {
-        mApplicationContext.getContentResolver().unregisterContentObserver(this);
+        applicationContext.getContentResolver().unregisterContentObserver(this);
     }
 
     @VisibleForTesting
@@ -81,17 +83,17 @@ public class DeviceVolumeObserver extends ContentObserver {
     }
 
     private Float getDeviceVolume() {
-        final int deviceVolume = mAudioManager.getStreamVolume(STREAM_MUSIC);
-        final int maxVolume = mAudioManager.getStreamMaxVolume(STREAM_MUSIC);
+        final int deviceVolume = audioManager.getStreamVolume(STREAM_MUSIC);
+        final int maxVolume = audioManager.getStreamMaxVolume(STREAM_MUSIC);
         return convertDeviceVolume(deviceVolume, maxVolume);
     }
 
     private boolean hasDeviceVolumeChanged(final Float currentDeviceVolume) {
-        return currentDeviceVolume == null || !currentDeviceVolume.equals(mStoredDeviceVolume);
+        return currentDeviceVolume == null || !currentDeviceVolume.equals(storedDeviceVolume);
     }
 
     private void notifyDeviceVolumeListener() {
-        mDeviceVolumeListener.onDeviceVolumeChanged(mStoredDeviceVolume);
+        deviceVolumeListener.onDeviceVolumeChanged(storedDeviceVolume);
     }
 
     public interface DeviceVolumeListener {

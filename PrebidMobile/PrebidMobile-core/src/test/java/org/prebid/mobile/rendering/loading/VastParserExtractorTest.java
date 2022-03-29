@@ -44,65 +44,62 @@ import static org.prebid.mobile.rendering.video.vast.VASTErrorCodes.WRAPPER_LIMI
 @Config(sdk = 19)
 public class VastParserExtractorTest {
 
-    private VastParserExtractor mVastParserExtractor;
-    @Mock
-    private VastParserExtractor.Listener mMockListener;
-    @Mock
-    private AsyncVastLoader mMockAsyncVastLoader;
-    @Mock
-    private AdResponseParserVast mMockResponseParserVast;
+    private VastParserExtractor vastParserExtractor;
+    @Mock private VastParserExtractor.Listener mockListener;
+    @Mock private AsyncVastLoader mockAsyncVastLoader;
+    @Mock private AdResponseParserVast mockResponseParserVast;
 
-    private String mDefaultResponseString;
+    private String defaultResponseString;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        when(mMockResponseParserVast.getVastUrl()).thenReturn("url");
+        when(mockResponseParserVast.getVastUrl()).thenReturn("url");
 
-        mVastParserExtractor = new VastParserExtractor(mMockListener);
-        WhiteBox.field(VastParserExtractor.class, "mAsyncVastLoader").set(mVastParserExtractor, mMockAsyncVastLoader);
-        mDefaultResponseString = ResourceUtils.convertResourceToString("vast.xml");
+        vastParserExtractor = new VastParserExtractor(mockListener);
+        WhiteBox.field(VastParserExtractor.class, "asyncVastLoader").set(vastParserExtractor, mockAsyncVastLoader);
+        defaultResponseString = ResourceUtils.convertResourceToString("vast.xml");
     }
 
     @Test
     public void whenFirstExtract_AssignRootParserAndMakeRequest()
     throws IllegalAccessException, IOException {
         String responseString = ResourceUtils.convertResourceToString("vast_wrapper_linear_nonlinear.xml");
-        mVastParserExtractor.extract(responseString);
-        assertNotNull(WhiteBox.field(VastParserExtractor.class, "mRootVastParser").get(mVastParserExtractor));
-        verify(mMockAsyncVastLoader).loadVast(anyString(), any());
+        vastParserExtractor.extract(responseString);
+        assertNotNull(WhiteBox.field(VastParserExtractor.class, "rootVastParser").get(vastParserExtractor));
+        verify(mockAsyncVastLoader).loadVast(anyString(), any());
     }
 
     @Test
     public void extractAndRootParserNotNull_SetWrapperToLatestParser()
     throws IllegalAccessException {
         AdResponseParserVast mockParser = mock(AdResponseParserVast.class);
-        WhiteBox.field(VastParserExtractor.class, "mRootVastParser").set(mVastParserExtractor, mMockResponseParserVast);
-        WhiteBox.field(VastParserExtractor.class, "mLatestVastWrapperParser").set(mVastParserExtractor, mockParser);
-        mVastParserExtractor.extract(mDefaultResponseString);
+        WhiteBox.field(VastParserExtractor.class, "rootVastParser").set(vastParserExtractor, mockResponseParserVast);
+        WhiteBox.field(VastParserExtractor.class, "latestVastWrapperParser").set(vastParserExtractor, mockParser);
+        vastParserExtractor.extract(defaultResponseString);
         verify(mockParser).setWrapper(any(AdResponseParserVast.class));
     }
 
     @Test
     public void extractAndVastUrlIsEmpty_NotifyListener() {
-        when(mMockResponseParserVast.getVastUrl()).thenReturn("");
-        mVastParserExtractor.extract(mDefaultResponseString);
-        verify(mMockListener).onResult(any(VastExtractorResult.class));
+        when(mockResponseParserVast.getVastUrl()).thenReturn("");
+        vastParserExtractor.extract(defaultResponseString);
+        verify(mockListener).onResult(any(VastExtractorResult.class));
     }
 
     @Test
     public void extractAndWrapperLimitReached_CallOnFailedToLoad()
     throws IllegalAccessException, IOException {
         String responseString = ResourceUtils.convertResourceToString("vast_wrapper_linear_nonlinear.xml");
-        WhiteBox.field(VastParserExtractor.class, "mVastWrapperCount").set(mVastParserExtractor, 5);
+        WhiteBox.field(VastParserExtractor.class, "vastWrapperCount").set(vastParserExtractor, 5);
         final AdException exception = new AdException(INTERNAL_ERROR, WRAPPER_LIMIT_REACH_ERROR.toString());
 
-        mVastParserExtractor.extract(responseString);
+        vastParserExtractor.extract(responseString);
 
         ArgumentCaptor<VastExtractorResult> argument = ArgumentCaptor.forClass(VastExtractorResult.class);
 
-        verify(mMockListener).onResult(argument.capture());
+        verify(mockListener).onResult(argument.capture());
         final VastExtractorResult value = argument.getValue();
         assertTrue(value.hasException());
         assertEquals(exception.getMessage(), value.getAdException().getMessage());
@@ -110,8 +107,8 @@ public class VastParserExtractorTest {
 
     @Test
     public void cancel_CancelRunningTask() {
-        mVastParserExtractor.cancel();
+        vastParserExtractor.cancel();
 
-        verify(mMockAsyncVastLoader).cancelTask();
+        verify(mockAsyncVastLoader).cancelTask();
     }
 }

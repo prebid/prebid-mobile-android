@@ -48,20 +48,21 @@ import java.util.List;
  * web and native video ad events.
  */
 public class OmAdSessionManager {
+
     private static final String TAG = OmAdSessionManager.class.getSimpleName();
 
     public static final String PARTNER_NAME = "Prebid";
     public static final String PARTNER_VERSION = BuildConfig.VERSION;
 
-    private MediaEvents mMediaEvents;
-    private AdEvents mAdEvents;
-    private JSLibraryManager mJsLibraryManager;
+    private MediaEvents mediaEvents;
+    private AdEvents adEvents;
+    private JSLibraryManager jsLibraryManager;
 
-    private Partner mPartner;
-    private AdSession mAdSession;
+    private Partner partner;
+    private AdSession adSession;
 
     private OmAdSessionManager(JSLibraryManager instance) {
-        mJsLibraryManager = instance;
+        jsLibraryManager = instance;
         initPartner();
     }
 
@@ -94,7 +95,7 @@ public class OmAdSessionManager {
     }
 
     public String injectValidationScriptIntoHtml(String html) {
-        return ScriptInjector.injectScriptContentIntoHtml(mJsLibraryManager.getOMSDKScript(), html);
+        return ScriptInjector.injectScriptContentIntoHtml(jsLibraryManager.getOMSDKScript(), html);
     }
 
     public void initWebAdSessionManager(WebView adView, String contentUrl) {
@@ -128,11 +129,11 @@ public class OmAdSessionManager {
      * Registers the display ad load event.
      */
     public void displayAdLoaded() {
-        if (mAdEvents == null) {
+        if (adEvents == null) {
             LogUtil.error(TAG, "Failed to register displayAdLoaded. AdEvent is null");
             return;
         }
-        mAdEvents.loaded();
+        adEvents.loaded();
     }
 
     /**
@@ -141,14 +142,14 @@ public class OmAdSessionManager {
      * @param isAutoPlay indicates if ad starts after load.
      */
     public void nonSkippableStandaloneVideoAdLoaded(final boolean isAutoPlay) {
-        if (mAdEvents == null) {
+        if (adEvents == null) {
             LogUtil.error(TAG, "Failed to register videoAdLoaded. adEvent is null");
             return;
         }
         try {
             VastProperties vastProperties = VastProperties
                 .createVastPropertiesForNonSkippableMedia(isAutoPlay, Position.STANDALONE);
-            mAdEvents.loaded(vastProperties);
+            adEvents.loaded(vastProperties);
         }
         catch (Exception e) {
             LogUtil.error(TAG, "Failed to register videoAdLoaded. Reason: " + Log.getStackTraceString(e));
@@ -162,23 +163,23 @@ public class OmAdSessionManager {
      * @param videoPlayerVolume native video player volume.
      */
     public void videoAdStarted(final float duration, final float videoPlayerVolume) {
-        if (mMediaEvents == null) {
+        if (mediaEvents == null) {
             LogUtil.error(TAG, "Failed to register videoAdStarted. videoAdEvent is null");
             return;
         }
-        mMediaEvents.start(duration, videoPlayerVolume);
+        mediaEvents.start(duration, videoPlayerVolume);
     }
 
     /**
      * Signals the impression event occurring. Generally accepted to be on ad render.
      */
     public void registerImpression() {
-        if (mAdEvents == null) {
+        if (adEvents == null) {
             LogUtil.error(TAG, "Failed to registerImpression: AdEvent is null");
             return;
         }
         try {
-            mAdEvents.impressionOccurred();
+            adEvents.impressionOccurred();
         }
         catch (IllegalArgumentException | IllegalStateException e) {
             LogUtil.error(TAG, "Failed to registerImpression: " + Log.getStackTraceString(e));
@@ -191,11 +192,11 @@ public class OmAdSessionManager {
      * @param volume changed volume.
      */
     public void trackVolumeChange(float volume) {
-        if (mMediaEvents == null) {
+        if (mediaEvents == null) {
             LogUtil.error(TAG, "Failed to trackVolumeChange. videoAdEvent is null");
             return;
         }
-        mMediaEvents.volumeChange(volume);
+        mediaEvents.volumeChange(volume);
     }
 
     /**
@@ -222,31 +223,31 @@ public class OmAdSessionManager {
      * <pre/>
      */
     public void trackAdVideoEvent(VideoAdEvent.Event adEvent) {
-        if (mMediaEvents == null) {
+        if (mediaEvents == null) {
             LogUtil.error(TAG, "Failed to trackAdVideoEvent. videoAdEvent is null");
             return;
         }
         switch (adEvent) {
             case AD_PAUSE:
-                mMediaEvents.pause();
+                mediaEvents.pause();
                 break;
             case AD_RESUME:
-                mMediaEvents.resume();
+                mediaEvents.resume();
                 break;
             case AD_SKIP:
-                mMediaEvents.skipped();
+                mediaEvents.skipped();
                 break;
             case AD_COMPLETE:
-                mMediaEvents.complete();
+                mediaEvents.complete();
                 break;
             case AD_FIRSTQUARTILE:
-                mMediaEvents.firstQuartile();
+                mediaEvents.firstQuartile();
                 break;
             case AD_MIDPOINT:
-                mMediaEvents.midpoint();
+                mediaEvents.midpoint();
                 break;
             case AD_THIRDQUARTILE:
-                mMediaEvents.thirdQuartile();
+                mediaEvents.thirdQuartile();
                 break;
             case AD_FULLSCREEN:
                 trackPlayerStateChangeEvent(InternalPlayerState.FULLSCREEN);
@@ -290,35 +291,35 @@ public class OmAdSessionManager {
      * @param playerState current video player state.
      */
     public void trackPlayerStateChangeEvent(InternalPlayerState playerState) {
-        if (mMediaEvents == null) {
+        if (mediaEvents == null) {
             LogUtil.error(TAG, "Failed to track PlayerStateChangeEvent. videoAdEvent is null");
             return;
         }
-        mMediaEvents.playerStateChange(OmModelMapper.mapToPlayerState(playerState));
+        mediaEvents.playerStateChange(OmModelMapper.mapToPlayerState(playerState));
     }
 
     /**
      * Prepares the AdSessions for tracking. This does not trigger an impression.
      */
     public void startAdSession() {
-        if (mAdSession == null) {
+        if (adSession == null) {
             LogUtil.error(TAG, "Failed to startAdSession. adSession is null");
             return;
         }
-        mAdSession.start();
+        adSession.start();
     }
 
     /**
      * Stop the AdSessions when the impression has completed and the ad will be destroyed
      */
     public void stopAdSession() {
-        if (mAdSession == null) {
+        if (adSession == null) {
             LogUtil.error(TAG, "Failed to stopAdSession. adSession is null");
             return;
         }
-        mAdSession.finish();
-        mAdSession = null;
-        mMediaEvents = null;
+        adSession.finish();
+        adSession = null;
+        mediaEvents = null;
     }
 
     /**
@@ -327,12 +328,12 @@ public class OmAdSessionManager {
      * @param adView View on which to track viewability.
      */
     public void registerAdView(View adView) {
-        if (mAdSession == null) {
+        if (adSession == null) {
             LogUtil.error(TAG, "Failed to registerAdView. adSession is null");
             return;
         }
         try {
-            mAdSession.registerAdView(adView);
+            adSession.registerAdView(adView);
         }
         catch (IllegalArgumentException e) {
             LogUtil.error(TAG, "Failed to registerAdView. " + Log.getStackTraceString(e));
@@ -344,29 +345,29 @@ public class OmAdSessionManager {
      * (e.g. close button).
      */
     public void addObstruction(InternalFriendlyObstruction friendlyObstruction) {
-        if (mAdSession == null) {
-            LogUtil.error(TAG, "Failed to addObstruction: mAdSession is null");
+        if (adSession == null) {
+            LogUtil.error(TAG, "Failed to addObstruction: adSession is null");
             return;
         }
         try {
-            FriendlyObstructionPurpose friendlyObstructionPurpose =
-                OmModelMapper.mapToFriendlyObstructionPurpose(friendlyObstruction.getPurpose());
-            mAdSession.addFriendlyObstruction(friendlyObstruction.getView(),
-                                              friendlyObstructionPurpose,
-                                              friendlyObstruction.getDetailedDescription());
-        }
-        catch (IllegalArgumentException e) {
+            FriendlyObstructionPurpose friendlyObstructionPurpose = OmModelMapper.mapToFriendlyObstructionPurpose(
+                    friendlyObstruction.getPurpose());
+            adSession.addFriendlyObstruction(friendlyObstruction.getView(),
+                    friendlyObstructionPurpose,
+                    friendlyObstruction.getDetailedDescription()
+            );
+        } catch (IllegalArgumentException e) {
             LogUtil.error(TAG, "Failed to addObstruction. Reason: " + Log.getStackTraceString(e));
         }
     }
 
     private void trackAdUserInteractionEvent(InteractionType type) {
-        if (mMediaEvents == null) {
+        if (mediaEvents == null) {
             LogUtil.error(TAG, "Failed to register adUserInteractionEvent with type: " + type);
             return;
         }
 
-        mMediaEvents.adUserInteraction(type);
+        mediaEvents.adUserInteraction(type);
     }
 
     @Nullable
@@ -400,7 +401,7 @@ public class OmAdSessionManager {
      */
     private void initPartner() {
         try {
-            mPartner = Partner.createPartner(PARTNER_NAME, PARTNER_VERSION);
+            partner = Partner.createPartner(PARTNER_NAME, PARTNER_VERSION);
         }
         catch (IllegalArgumentException e) {
             LogUtil.error(TAG, "Failed to initPartner. Reason: " + Log.getStackTraceString(e));
@@ -414,7 +415,7 @@ public class OmAdSessionManager {
      * @param adSessionContext       concrete context (native/web) for AdSessions.
      */
     private void initAdSession(AdSessionConfiguration adSessionConfiguration, AdSessionContext adSessionContext) {
-        if (mAdSession != null) {
+        if (adSession != null) {
             LogUtil.debug(TAG, "initAdSession: adSession is already created");
             return;
         }
@@ -424,7 +425,7 @@ public class OmAdSessionManager {
             return;
         }
 
-        mAdSession = AdSession.createAdSession(adSessionConfiguration, adSessionContext);
+        adSession = AdSession.createAdSession(adSessionConfiguration, adSessionContext);
     }
 
     /**
@@ -432,7 +433,7 @@ public class OmAdSessionManager {
      */
     private void initMediaAdEvents() {
         try {
-            mMediaEvents = MediaEvents.createMediaEvents(mAdSession);
+            mediaEvents = MediaEvents.createMediaEvents(adSession);
         }
         catch (IllegalArgumentException e) {
             LogUtil.error(TAG, "Failure initMediaAdEvents: " + Log.getStackTraceString(e));
@@ -444,7 +445,7 @@ public class OmAdSessionManager {
      */
     private void initAdEvents() {
         try {
-            mAdEvents = AdEvents.createAdEvents(mAdSession);
+            adEvents = AdEvents.createAdEvents(adSession);
         }
         catch (IllegalArgumentException e) {
             LogUtil.error(TAG, "Failure initAdEvents: " + Log.getStackTraceString(e));
@@ -455,7 +456,7 @@ public class OmAdSessionManager {
     private AdSessionContext createAdSessionContext(WebView adView, String contentUrl) {
         try {
             String customReferenceData = "";
-            return AdSessionContext.createHtmlAdSessionContext(mPartner, adView, contentUrl, customReferenceData);
+            return AdSessionContext.createHtmlAdSessionContext(partner, adView, contentUrl, customReferenceData);
         }
         catch (IllegalArgumentException e) {
             LogUtil.error(TAG, "Failure createAdSessionContext: " + Log.getStackTraceString(e));
@@ -466,11 +467,12 @@ public class OmAdSessionManager {
     @Nullable
     private AdSessionContext createAdSessionContext(List<VerificationScriptResource> verifications, String contentUrl) {
         try {
-            return AdSessionContext.createNativeAdSessionContext(mPartner,
-                                                                 mJsLibraryManager.getOMSDKScript(),
-                                                                 verifications,
-                                                                 contentUrl,
-                                                                 null);
+            return AdSessionContext.createNativeAdSessionContext(partner,
+                    jsLibraryManager.getOMSDKScript(),
+                    verifications,
+                    contentUrl,
+                    null
+            );
         }
         catch (IllegalArgumentException e) {
             LogUtil.error(TAG, "Failure createAdSessionContext: " + Log.getStackTraceString(e));

@@ -45,206 +45,206 @@ import static org.prebid.mobile.rendering.networking.BaseNetworkTask.REDIRECT_TA
 @Config(sdk = 25)
 public class GetOriginalUrlTaskTest {
 
-    private boolean mSuccess;
-    private GetUrlResult mResponse;
-    private MockWebServer mServer;
-    private String mMsg;
-    private BaseNetworkTask.GetUrlParams mParams;
-    private Exception mException;
+    private boolean success;
+    private GetUrlResult response;
+    private MockWebServer server;
+    private String msg;
+    private BaseNetworkTask.GetUrlParams params;
+    private Exception exception;
 
-    private ResponseHandler mBaseResponseHandler = new ResponseHandler() {
+    private ResponseHandler baseResponseHandler = new ResponseHandler() {
 
         @Override
         public void onResponse(GetUrlResult response) {
-            mSuccess = true;
-            mResponse = response;
+            success = true;
+            GetOriginalUrlTaskTest.this.response = response;
         }
 
         @Override
         public void onError(String msg, long responseTime) {
-            mSuccess = false;
-            mMsg = msg;
+            success = false;
+            GetOriginalUrlTaskTest.this.msg = msg;
         }
 
         @Override
         public void onErrorWithException(Exception e, long responseTime) {
-            mSuccess = false;
-            mException = e;
+            success = false;
+            exception = e;
         }
     };
 
     @Before
     public void setUp() throws Exception {
-        mServer = new MockWebServer();
-        mParams = new BaseNetworkTask.GetUrlParams();
-        mParams.name = "TESTFIRST";
-        mParams.userAgent = "user-agent";
-        HttpUrl baseUrl = mServer.url("/first");
-        mParams.url = baseUrl.url().toString();
-        mParams.requestType = "GET";
+        server = new MockWebServer();
+        params = new BaseNetworkTask.GetUrlParams();
+        params.name = "TESTFIRST";
+        params.userAgent = "user-agent";
+        HttpUrl baseUrl = server.url("/first");
+        params.url = baseUrl.url().toString();
+        params.requestType = "GET";
     }
 
     @After
     public void tearDown() throws Exception {
-        mServer.shutdown();
+        server.shutdown();
     }
 
     @Test
     public void testSuccessDoInBackground() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(200).setBody("This is google!"));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("This is google!"));
 
-        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(mBaseResponseHandler);
+        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(baseResponseHandler);
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        assertEquals(true, mSuccess);
+        assertEquals(true, success);
     }
 
     @Test
     public void test400ExceptionError() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(400).setBody("404 not found"));
+        server.enqueue(new MockResponse().setResponseCode(400).setBody("404 not found"));
 
-        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(mBaseResponseHandler);
+        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(baseResponseHandler);
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        assertTrue(mException.getLocalizedMessage().contains("Code 400"));
-        assertEquals(false, mSuccess);
+        assertTrue(exception.getLocalizedMessage().contains("Code 400"));
+        assertEquals(false, success);
     }
 
     @Test
     public void test401ExceptionError() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(401).setBody("404 not found"));
+        server.enqueue(new MockResponse().setResponseCode(401).setBody("404 not found"));
 
-        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(mBaseResponseHandler);
+        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(baseResponseHandler);
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        assertTrue(mException.getLocalizedMessage().contains("Code 401"));
-        assertEquals(false, mSuccess);
+        assertTrue(exception.getLocalizedMessage().contains("Code 401"));
+        assertEquals(false, success);
     }
 
     @Test
     public void test402ExceptionError() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(402).setBody("404 not found"));
+        server.enqueue(new MockResponse().setResponseCode(402).setBody("404 not found"));
 
-        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(mBaseResponseHandler);
+        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(baseResponseHandler);
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        assertTrue(mException.getLocalizedMessage().contains("Code 402"));
-        assertEquals(false, mSuccess);
+        assertTrue(exception.getLocalizedMessage().contains("Code 402"));
+        assertEquals(false, success);
     }
 
     @Test
     public void test403ExceptionError() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(403).setBody("404 not found"));
+        server.enqueue(new MockResponse().setResponseCode(403).setBody("404 not found"));
 
-        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(mBaseResponseHandler);
+        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(baseResponseHandler);
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        assertTrue(mException.getLocalizedMessage().contains("Code 403"));
-        assertEquals(false, mSuccess);
+        assertTrue(exception.getLocalizedMessage().contains("Code 403"));
+        assertEquals(false, success);
     }
 
     @Test
     public void test404ExceptionError() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(404).setBody("404 not found"));
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("404 not found"));
 
-        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(mBaseResponseHandler);
+        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(baseResponseHandler);
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        assertTrue(mException.getLocalizedMessage().contains("Code 404"));
-        assertEquals(false, mSuccess);
+        assertTrue(exception.getLocalizedMessage().contains("Code 404"));
+        assertEquals(false, success);
     }
 
     @Test
     public void test405ExceptionError() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(405).setBody("404 not found"));
+        server.enqueue(new MockResponse().setResponseCode(405).setBody("404 not found"));
 
-        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(mBaseResponseHandler);
+        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(baseResponseHandler);
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        assertTrue(mException.getLocalizedMessage().contains("Code 405"));
-        assertEquals(false, mSuccess);
+        assertTrue(exception.getLocalizedMessage().contains("Code 405"));
+        assertEquals(false, success);
     }
 
     @Test
     public void testEmptyVast() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(200).setBody("<VAST version=\"2.0\"></VAST>"));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("<VAST version=\"2.0\"></VAST>"));
 
-        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(mBaseResponseHandler);
+        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(baseResponseHandler);
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        assertEquals("Invalid VAST Response: less than 100 characters.", mMsg);
-        assertEquals(false, mSuccess);
+        assertEquals("Invalid VAST Response: less than 100 characters.", msg);
+        assertEquals(false, success);
     }
 
     @Test
     public void test301Redirect() throws IOException {
-        mServer.enqueue(new MockResponse()
+        server.enqueue(new MockResponse()
                             .setResponseCode(301)
-                            .addHeader("Location: " + mServer.url("/new-path"))
+                            .addHeader("Location: " + server.url("/new-path"))
                             .setBody("This page has moved!"));
-        mServer.enqueue(new MockResponse().setBody("This is the new location!"));
+        server.enqueue(new MockResponse().setBody("This is the new location!"));
 
-        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(mBaseResponseHandler);
+        GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(baseResponseHandler);
 
-        mParams.name = REDIRECT_TASK;
+        params.name = REDIRECT_TASK;
 
         try {
-            baseNetworkTask.execute(mParams);
+            baseNetworkTask.execute(params);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        assertEquals(true, mSuccess);
+        assertEquals(true, success);
     }
 
     @Test
     public void testCustomParserWith200Code() throws IOException {
 
-        mServer.enqueue(new MockResponse().setResponseCode(200).setBody("this is a success response"));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("this is a success response"));
 
         GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(null);
 
-        HttpUrl baseUrl = mServer.url("/first");
+        HttpUrl baseUrl = server.url("/first");
         URL uUrl = new URL(baseUrl.url().toString());
         HttpURLConnection con = (HttpURLConnection) uUrl.openConnection();
 
@@ -284,9 +284,9 @@ public class GetOriginalUrlTaskTest {
 
     @Test
     public void testCustomParserWith301Code() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(301).setBody("this is a success response"));
+        server.enqueue(new MockResponse().setResponseCode(301).setBody("this is a success response"));
         GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(null);
-        HttpUrl baseUrl = mServer.url("/first");
+        HttpUrl baseUrl = server.url("/first");
         URL uUrl = new URL(baseUrl.url().toString());
         HttpURLConnection con = (HttpURLConnection) uUrl.openConnection();
         con.setInstanceFollowRedirects(false);
@@ -305,9 +305,9 @@ public class GetOriginalUrlTaskTest {
 
     @Test
     public void testCustomParserWith308Code() throws IOException {
-        mServer.enqueue(new MockResponse().setResponseCode(308).setBody("this is a success response"));
+        server.enqueue(new MockResponse().setResponseCode(308).setBody("this is a success response"));
         GetOriginalUrlTask baseNetworkTask = new GetOriginalUrlTask(null);
-        HttpUrl baseUrl = mServer.url("/first");
+        HttpUrl baseUrl = server.url("/first");
         URL uUrl = new URL(baseUrl.url().toString());
         HttpURLConnection con = (HttpURLConnection) uUrl.openConnection();
         con.setInstanceFollowRedirects(false);
@@ -327,11 +327,11 @@ public class GetOriginalUrlTaskTest {
     @Test
     public void getRedirectionUrlWithTypeWithNoUrlParamTest() throws Exception {
         GetOriginalUrlTask getOriginalUrlNetworkTask = new GetOriginalUrlTask(null);
-        mParams.url = "";
+        params.url = "";
         String[] redirectObject = (String[]) WhiteBox.method(GetOriginalUrlTask.class,
                                                              "getRedirectionUrlWithType",
                                                              BaseNetworkTask.GetUrlParams.class)
-                                                     .invoke(getOriginalUrlNetworkTask, mParams);
+                                                     .invoke(getOriginalUrlNetworkTask, params);
         Assert.assertEquals("A param object with empty url should return {'', null null}", redirectObject[0], "");
         Assert.assertEquals("A param object with empty url should return {'', null null}", redirectObject[1], null);
         Assert.assertEquals("A param object with empty url should return {'', null null}", redirectObject[2], null);
@@ -342,38 +342,38 @@ public class GetOriginalUrlTaskTest {
         Method methodGetRedirectionUrl = WhiteBox.method(GetOriginalUrlTask.class, "getRedirectionUrlWithType", BaseNetworkTask.GetUrlParams.class);
 
         GetOriginalUrlTask getOriginalUrlNetworkTask = new GetOriginalUrlTask(null);
-        mParams.url = "tel://123456789";
-        String[] redirectObject = (String[]) methodGetRedirectionUrl.invoke(getOriginalUrlNetworkTask, mParams);
+        params.url = "tel://123456789";
+        String[] redirectObject = (String[]) methodGetRedirectionUrl.invoke(getOriginalUrlNetworkTask, params);
         Assert.assertEquals("A url param object with tel: should return {'', null null}", redirectObject[0], "tel://123456789");
         Assert.assertEquals("A url param object with tel: url should return {'', null null}", redirectObject[1], null);
         Assert.assertEquals("A url param object with tel: url should return {'', null null}", redirectObject[2], null);
-        mParams.url = "voicemail://123456789";
-        redirectObject = (String[]) methodGetRedirectionUrl.invoke(getOriginalUrlNetworkTask, mParams);
+        params.url = "voicemail://123456789";
+        redirectObject = (String[]) methodGetRedirectionUrl.invoke(getOriginalUrlNetworkTask, params);
         Assert.assertEquals("A url param object with voicemail: should return {'', null null}", redirectObject[0], "voicemail://123456789");
         Assert.assertEquals( "A url param object with voicemail: url should return {'', null null}", redirectObject[1], null);
         Assert.assertEquals( "A url param object with voicemail: url should return {'', null null}", redirectObject[2], null);
-        mParams.url = "sms://123456789";
-        redirectObject = (String[]) methodGetRedirectionUrl.invoke(getOriginalUrlNetworkTask, mParams);
+        params.url = "sms://123456789";
+        redirectObject = (String[]) methodGetRedirectionUrl.invoke(getOriginalUrlNetworkTask, params);
         Assert.assertEquals("A url param object with sms: should return {'', null null}", redirectObject[0], "sms://123456789");
         Assert.assertEquals( "A url param object with sms: url should return {'', null null}", redirectObject[1], null);
         Assert.assertEquals( "A url param object with sms: url should return {'', null null}", redirectObject[2], null);
-        mParams.url = "mailto://123456789";
-        redirectObject = (String[]) methodGetRedirectionUrl.invoke(getOriginalUrlNetworkTask, mParams);
+        params.url = "mailto://123456789";
+        redirectObject = (String[]) methodGetRedirectionUrl.invoke(getOriginalUrlNetworkTask, params);
         Assert.assertEquals("A url param object with mailto: should return {'', null null}", redirectObject[0], "mailto://123456789");
         Assert.assertEquals( "A url param object with mailto: url should return {'', null null}", redirectObject[1], null);
         Assert.assertEquals( "A url param object with mailto: url should return {'', null null}", redirectObject[2], null);
-        mParams.url = "geo://123456789";
-        redirectObject = (String[]) methodGetRedirectionUrl.invoke(getOriginalUrlNetworkTask, mParams);
+        params.url = "geo://123456789";
+        redirectObject = (String[]) methodGetRedirectionUrl.invoke(getOriginalUrlNetworkTask, params);
         Assert.assertEquals("A url param object with tel: should return {'', null null}", redirectObject[0], "geo://123456789");
         Assert.assertEquals( "A url param object with tel: url should return {'', null null}", redirectObject[1], null);
         Assert.assertEquals( "A url param object with tel: url should return {'', null null}", redirectObject[2], null);
-        mParams.url = "google.streetview://123456789";
-        redirectObject = (String[]) methodGetRedirectionUrl.invoke(getOriginalUrlNetworkTask, mParams);
+        params.url = "google.streetview://123456789";
+        redirectObject = (String[]) methodGetRedirectionUrl.invoke(getOriginalUrlNetworkTask, params);
         Assert.assertEquals("A url param object with geo: should return {'', null null}", redirectObject[0], "google.streetview://123456789");
         Assert.assertEquals( "A url param object with geo: url should return {'', null null}", redirectObject[1], null);
         Assert.assertEquals( "A url param object with geo: url should return {'', null null}", redirectObject[2], null);
-        mParams.url = "market://123456789";
-        redirectObject = (String[]) methodGetRedirectionUrl.invoke(getOriginalUrlNetworkTask, mParams);
+        params.url = "market://123456789";
+        redirectObject = (String[]) methodGetRedirectionUrl.invoke(getOriginalUrlNetworkTask, params);
         Assert.assertEquals("A url param object with market: should return {'', null null}", redirectObject[0], "market://123456789");
         Assert.assertEquals( "A url param object with market: url should return {'', null null}", redirectObject[1], null);
         Assert.assertEquals( "A url param object with market: url should return {'', null null}", redirectObject[2], null);
@@ -381,130 +381,134 @@ public class GetOriginalUrlTaskTest {
 
     @Test
     public void getRedirectionUrlWithTypeWithRedirectUrlTest() {
-        mServer.enqueue(new MockResponse()
+        server.enqueue(new MockResponse()
                             .setResponseCode(301)
-                            .addHeader("Location: " + mServer.url("/new-path"))
+                            .addHeader("Location: " + server.url("/new-path"))
                             .setBody("This page has moved!"));
-        mServer.enqueue(new MockResponse().setResponseCode(200).setBody("This is the new location"));
-        GetOriginalUrlTask getOriginalUrlNetworkTask = new GetOriginalUrlTask(mBaseResponseHandler);
-        mParams.name = REDIRECT_TASK;
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("This is the new location"));
+        GetOriginalUrlTask getOriginalUrlNetworkTask = new GetOriginalUrlTask(baseResponseHandler);
+        params.name = REDIRECT_TASK;
 
         try {
-            getOriginalUrlNetworkTask.execute(mParams);
+            getOriginalUrlNetworkTask.execute(params);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
-        Assert.assertEquals(true, mSuccess);
+        Assert.assertEquals(true, success);
     }
 
     @Test
     public void getRedirectionUrlWithTypeWithNoRedirectUrlTest() throws Exception {
-        mServer.enqueue(new MockResponse().setResponseCode(200).setBody("this is a success response"));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("this is a success response"));
         GetOriginalUrlTask getOriginalUrlNetworkTask = new GetOriginalUrlTask(null);
-        HttpUrl baseUrl = mServer.url("/first");
-        mParams.url = baseUrl.url().toString();
+        HttpUrl baseUrl = server.url("/first");
+        params.url = baseUrl.url().toString();
         String[] redirectObject = (String[]) WhiteBox.method(GetOriginalUrlTask.class,
                                                              "getRedirectionUrlWithType",
                                                              BaseNetworkTask.GetUrlParams.class)
-                                                     .invoke(getOriginalUrlNetworkTask, mParams);
-        Assert.assertEquals("A param object with non-redirect url should return {non-redirect, application/json quit}", redirectObject[0], mServer.url("/first").toString());
+                                                     .invoke(getOriginalUrlNetworkTask, params);
+        Assert.assertEquals("A param object with non-redirect url should return {non-redirect, application/json quit}", redirectObject[0], server.url("/first").toString());
         Assert.assertEquals("A param object with non-redirect url should return {non-redirect, application/json quit}", redirectObject[1], "application/json");
         Assert.assertEquals("A param object with non-redirect url should return {non-redirect, application/json quit}", redirectObject[2], "quit");
     }
 
     @Test
     public void getUrlTest() throws Exception {
-        mServer.enqueue(new MockResponse().setResponseCode(200).setBody("this is a success response"));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("this is a success response"));
         GetOriginalUrlTask getOriginalUrlNetworkTask = new GetOriginalUrlTask(null);
-        HttpUrl baseUrl = mServer.url("/first");
-        mParams.url = baseUrl.url().toString();
-        BaseNetworkTask.GetUrlParams[] params = {mParams};
+        HttpUrl baseUrl = server.url("/first");
+        params.url = baseUrl.url().toString();
+        BaseNetworkTask.GetUrlParams[] params = {this.params};
         GetUrlResult result = (GetUrlResult) WhiteBox.method(GetOriginalUrlTask.class, "getUrl", BaseNetworkTask.GetUrlParams[].class)
-                                                     .invoke(getOriginalUrlNetworkTask, (Object) new BaseNetworkTask.GetUrlParams[]{
-                                                         mParams});
+                                                     .invoke(getOriginalUrlNetworkTask, (Object) new BaseNetworkTask.GetUrlParams[]{this.params});
         Assert.assertEquals("A successful response should yile a result object with status code 200", result.statusCode, 200);
     }
 
     @Test
     public void getUrlNullParamsTest() throws Exception {
         GetOriginalUrlTask getOriginalUrlNetworkTask = new GetOriginalUrlTask(null);
-        mParams = null;
-        GetUrlResult result = (GetUrlResult) WhiteBox.method(GetOriginalUrlTask.class, "getUrl", BaseNetworkTask.GetUrlParams.class).invoke(getOriginalUrlNetworkTask, mParams);
+        params = null;
+        GetUrlResult result = (GetUrlResult) WhiteBox.method(GetOriginalUrlTask.class, "getUrl", BaseNetworkTask.GetUrlParams.class).invoke(getOriginalUrlNetworkTask,
+                params
+        );
         assertNotNull("A null params object should generate a result object with Exception",result.getException());
     }
 
     @Test
     public void getUrlOriginalUrlShouldBeSetTest() throws Exception {
-        mServer.enqueue(new MockResponse()
+        server.enqueue(new MockResponse()
                             .setResponseCode(301)
-                            .addHeader("Location: " + mServer.url("/new-path"))
+                            .addHeader("Location: " + server.url("/new-path"))
                             .setBody("This page has moved!"));
-        mServer.enqueue(new MockResponse().setResponseCode(200).setBody("This is the new location"));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("This is the new location"));
         GetOriginalUrlTask getOriginalUrlNetworkTask = new GetOriginalUrlTask(null);
-        HttpUrl baseUrl = mServer.url("/first");
-        mParams.url = baseUrl.url().toString();
+        HttpUrl baseUrl = server.url("/first");
+        params.url = baseUrl.url().toString();
         GetUrlResult result = (GetUrlResult) WhiteBox.method(GetOriginalUrlTask.class, "getUrl", BaseNetworkTask.GetUrlParams[].class)
-                                                     .invoke(getOriginalUrlNetworkTask, (Object) new BaseNetworkTask.GetUrlParams[]{
-                                                         mParams});
+                                                     .invoke(getOriginalUrlNetworkTask, (Object) new BaseNetworkTask.GetUrlParams[]{params});
         Assert.assertNotNull("Original url should not be null", result.originalUrl);
     }
 
     @Test
     public void processRedirectsTest() {
-        mServer.enqueue(new MockResponse()
+        server.enqueue(new MockResponse()
                             .setResponseCode(301)
-                            .addHeader("Location: " + mServer.url("/second"))
+                            .addHeader("Location: " + server.url("/second"))
                             .setBody("This page has moved!"));
-        mServer.enqueue(new MockResponse()
+        server.enqueue(new MockResponse()
                             .setResponseCode(301)
-                            .addHeader("Location: " + mServer.url("/third"))
+                            .addHeader("Location: " + server.url("/third"))
                             .setBody("This page has moved!"));
-        mServer.enqueue(new MockResponse()
+        server.enqueue(new MockResponse()
                             .setResponseCode(301)
-                            .addHeader("Location: " + mServer.url("/fourth"))
+                            .addHeader("Location: " + server.url("/fourth"))
                             .setBody("This page has moved!"));
-        mServer.enqueue(new MockResponse().setResponseCode(200).setBody("This is the new location"));
-        GetOriginalUrlTask getOriginalUrlNetworkTask = new GetOriginalUrlTask(mBaseResponseHandler);
-        mParams.name = REDIRECT_TASK;
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("This is the new location"));
+        GetOriginalUrlTask getOriginalUrlNetworkTask = new GetOriginalUrlTask(baseResponseHandler);
+        params.name = REDIRECT_TASK;
         try {
-            getOriginalUrlNetworkTask.execute(mParams);
+            getOriginalUrlNetworkTask.execute(params);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
 
-        Assert.assertEquals("Should iterate through max of 3 redirects after the original landing on the '4th' url ", true, mSuccess);
+        Assert.assertEquals("Should iterate through max of 3 redirects after the original landing on the '4th' url ", true,
+                success
+        );
     }
 
     @Test
     public void processRedirectsMaxOf3RedirectsTest() throws Exception {
-        mServer.enqueue(new MockResponse()
+        server.enqueue(new MockResponse()
                             .setResponseCode(301)
-                            .addHeader("Location: " + mServer.url("/second"))
+                            .addHeader("Location: " + server.url("/second"))
                             .setBody("This page has moved!"));
-        mServer.enqueue(new MockResponse()
+        server.enqueue(new MockResponse()
                             .setResponseCode(301)
-                            .addHeader("Location: " + mServer.url("/third"))
+                            .addHeader("Location: " + server.url("/third"))
                             .setBody("This page has moved!"));
-        mServer.enqueue(new MockResponse()
+        server.enqueue(new MockResponse()
                             .setResponseCode(301)
-                            .addHeader("Location: " + mServer.url("/fourth"))
+                            .addHeader("Location: " + server.url("/fourth"))
                             .setBody("This page has moved!"));
-        mServer.enqueue(new MockResponse()
+        server.enqueue(new MockResponse()
                             .setResponseCode(301)
-                            .addHeader("Location: " + mServer.url("/fifth"))
+                            .addHeader("Location: " + server.url("/fifth"))
                             .setBody("This page has moved!"));
 
-        mServer.enqueue(new MockResponse().setResponseCode(200).setBody("This is the new location"));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("This is the new location"));
 
         GetOriginalUrlTask getOriginalUrlNetworkTask = new GetOriginalUrlTask(null);
-        HttpUrl baseUrl = mServer.url("/first");
-        mParams.url = baseUrl.url().toString();
-        mParams.name = REDIRECT_TASK;
-        WhiteBox.method(GetOriginalUrlTask.class, "processRedirects", BaseNetworkTask.GetUrlParams.class).invoke(getOriginalUrlNetworkTask, mParams);
-        GetUrlResult result = (GetUrlResult) WhiteBox.getInternalState(getOriginalUrlNetworkTask, "mResult");
+        HttpUrl baseUrl = server.url("/first");
+        params.url = baseUrl.url().toString();
+        params.name = REDIRECT_TASK;
+        WhiteBox.method(GetOriginalUrlTask.class, "processRedirects", BaseNetworkTask.GetUrlParams.class).invoke(getOriginalUrlNetworkTask,
+                params
+        );
+        GetUrlResult result = (GetUrlResult) WhiteBox.getInternalState(getOriginalUrlNetworkTask, "result");
         Assert.assertNull("Should not have a valid result.response if over max redirects ", result.responseString);
     }
 

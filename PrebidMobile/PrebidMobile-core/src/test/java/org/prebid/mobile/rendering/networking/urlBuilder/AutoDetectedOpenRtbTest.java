@@ -51,103 +51,103 @@ import static org.robolectric.Shadows.shadowOf;
 @Config(sdk = 19, qualifiers = "w1dp-h1dp")
 public class AutoDetectedOpenRtbTest {
 
-    private ArrayList<ParameterBuilder> mParamBuilderArray;
+    private ArrayList<ParameterBuilder> paramBuilderArray;
 
-    private Activity mActivity;
-    private AdRequestInput mOriginalAdRequestInput;
-    private BidRequest mOriginalOpenRtbParams;
+    private Activity activity;
+    private AdRequestInput originalAdRequestInput;
+    private BidRequest originalOpenRtbParams;
 
     @Before
     public void setup() {
-        mActivity = Robolectric.buildActivity(Activity.class).create().get();
-        ShadowActivity shadowActivity = shadowOf(mActivity);
+        activity = Robolectric.buildActivity(Activity.class).create().get();
+        ShadowActivity shadowActivity = shadowOf(activity);
         shadowActivity.grantPermissions("android.permission.ACCESS_FINE_LOCATION");
 
-        LocationManager locationManager = (LocationManager) mActivity.getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         ShadowLocationManager shadowLocationManager = shadowOf(locationManager);
         Location location = new Location("");
         location.setLatitude(1);
         location.setLongitude(1);
         shadowLocationManager.setLastKnownLocation("gps", location);
 
-        ShadowTelephonyManager shadowTelephonyManager = shadowOf((TelephonyManager) mActivity.getSystemService(Context.TELEPHONY_SERVICE));
+        ShadowTelephonyManager shadowTelephonyManager = shadowOf((TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE));
         shadowTelephonyManager.setNetworkOperatorName("carrier");
         shadowTelephonyManager.setNetworkOperator("carrier");
 
-        ManagersResolver.getInstance().prepare(mActivity);
+        ManagersResolver.getInstance().prepare(activity);
 
-        mParamBuilderArray = new ArrayList<>();
-        mOriginalAdRequestInput = new AdRequestInput();
-        mOriginalOpenRtbParams = new BidRequest();
+        paramBuilderArray = new ArrayList<>();
+        originalAdRequestInput = new AdRequestInput();
+        originalOpenRtbParams = new BidRequest();
     }
 
     @Test
     public void overwrittenGeoLocationParameterBuilderTest() {
-        mOriginalOpenRtbParams.getDevice().getGeo().lat = 0f;
-        mOriginalOpenRtbParams.getDevice().getGeo().lon = 0f;
-        mOriginalOpenRtbParams.getDevice().getGeo().type = 0;
-        mOriginalAdRequestInput.setBidRequest(mOriginalOpenRtbParams);
+        originalOpenRtbParams.getDevice().getGeo().lat = 0f;
+        originalOpenRtbParams.getDevice().getGeo().lon = 0f;
+        originalOpenRtbParams.getDevice().getGeo().type = 0;
+        originalAdRequestInput.setBidRequest(originalOpenRtbParams);
 
-        mParamBuilderArray.add(new GeoLocationParameterBuilder());
-        AdRequestInput newAdRequestInput = URLBuilder.buildParameters(mParamBuilderArray, mOriginalAdRequestInput);
+        paramBuilderArray.add(new GeoLocationParameterBuilder());
+        AdRequestInput newAdRequestInput = URLBuilder.buildParameters(paramBuilderArray, originalAdRequestInput);
         BidRequest newOpenRtbParams = newAdRequestInput.getBidRequest();
 
-        assertNotEquals(mOriginalOpenRtbParams.getDevice().getGeo().lat, newOpenRtbParams.getDevice().getGeo().lat);
-        assertNotEquals(mOriginalOpenRtbParams.getDevice().getGeo().lon, newOpenRtbParams.getDevice().getGeo().lon);
-        assertNotEquals(mOriginalOpenRtbParams.getDevice().getGeo().type, newOpenRtbParams.getDevice().getGeo().type);
+        assertNotEquals(originalOpenRtbParams.getDevice().getGeo().lat, newOpenRtbParams.getDevice().getGeo().lat);
+        assertNotEquals(originalOpenRtbParams.getDevice().getGeo().lon, newOpenRtbParams.getDevice().getGeo().lon);
+        assertNotEquals(originalOpenRtbParams.getDevice().getGeo().type, newOpenRtbParams.getDevice().getGeo().type);
     }
 
     @Test
     public void overwrittenAppInfoParameterBuilder() {
-        mOriginalOpenRtbParams.getApp().name = "foo";
-        mOriginalOpenRtbParams.getApp().bundle = "foo";
-        mOriginalOpenRtbParams.getDevice().ifa = "foo";
-        mOriginalOpenRtbParams.getDevice().lmt = 0;
+        originalOpenRtbParams.getApp().name = "foo";
+        originalOpenRtbParams.getApp().bundle = "foo";
+        originalOpenRtbParams.getDevice().ifa = "foo";
+        originalOpenRtbParams.getDevice().lmt = 0;
 
         AppInfoManager.setAppName("bar");
         AppInfoManager.setPackageName("bar");
         AdIdManager.setAdId("bar");
         AdIdManager.setLimitAdTrackingEnabled(true);
 
-        mParamBuilderArray.add(new AppInfoParameterBuilder(new AdUnitConfiguration()));
-        AdRequestInput newAdRequestInput = URLBuilder.buildParameters(mParamBuilderArray, mOriginalAdRequestInput);
+        paramBuilderArray.add(new AppInfoParameterBuilder(new AdUnitConfiguration()));
+        AdRequestInput newAdRequestInput = URLBuilder.buildParameters(paramBuilderArray, originalAdRequestInput);
         BidRequest newOpenRtbParams = newAdRequestInput.getBidRequest();
 
-        assertNotEquals(mOriginalOpenRtbParams.getApp().name, newOpenRtbParams.getApp().name);
-        assertNotEquals(mOriginalOpenRtbParams.getApp().bundle, newOpenRtbParams.getApp().bundle);
-        assertNotEquals(mOriginalOpenRtbParams.getDevice().ifa, newOpenRtbParams.getDevice().ifa);
-        assertNotEquals(mOriginalOpenRtbParams.getDevice().lmt, newOpenRtbParams.getDevice().lmt);
+        assertNotEquals(originalOpenRtbParams.getApp().name, newOpenRtbParams.getApp().name);
+        assertNotEquals(originalOpenRtbParams.getApp().bundle, newOpenRtbParams.getApp().bundle);
+        assertNotEquals(originalOpenRtbParams.getDevice().ifa, newOpenRtbParams.getDevice().ifa);
+        assertNotEquals(originalOpenRtbParams.getDevice().lmt, newOpenRtbParams.getDevice().lmt);
     }
 
     @Test
     public void overwrittenDeviceInfoParameterBuilder() {
-        mOriginalOpenRtbParams.getDevice().dpidmd5 = "foo";
-        mOriginalOpenRtbParams.getDevice().dpidsha1 = "foo";
-        mOriginalOpenRtbParams.getDevice().w = 0;
-        mOriginalOpenRtbParams.getDevice().h = 0;
+        originalOpenRtbParams.getDevice().dpidmd5 = "foo";
+        originalOpenRtbParams.getDevice().dpidsha1 = "foo";
+        originalOpenRtbParams.getDevice().w = 0;
+        originalOpenRtbParams.getDevice().h = 0;
 
-        mParamBuilderArray.add(new DeviceInfoParameterBuilder(new AdUnitConfiguration()));
-        AdRequestInput newAdRequestInput = URLBuilder.buildParameters(mParamBuilderArray, mOriginalAdRequestInput);
+        paramBuilderArray.add(new DeviceInfoParameterBuilder(new AdUnitConfiguration()));
+        AdRequestInput newAdRequestInput = URLBuilder.buildParameters(paramBuilderArray, originalAdRequestInput);
         BidRequest newOpenRtbParams = newAdRequestInput.getBidRequest();
 
-        assertNotEquals(mOriginalOpenRtbParams.getDevice().dpidmd5, newOpenRtbParams.getDevice().dpidmd5);
-        assertNotEquals(mOriginalOpenRtbParams.getDevice().dpidsha1, newOpenRtbParams.getDevice().dpidsha1);
-        assertNotEquals(mOriginalOpenRtbParams.getDevice().w, newOpenRtbParams.getDevice().w);
-        assertNotEquals(mOriginalOpenRtbParams.getDevice().h, newOpenRtbParams.getDevice().h);
+        assertNotEquals(originalOpenRtbParams.getDevice().dpidmd5, newOpenRtbParams.getDevice().dpidmd5);
+        assertNotEquals(originalOpenRtbParams.getDevice().dpidsha1, newOpenRtbParams.getDevice().dpidsha1);
+        assertNotEquals(originalOpenRtbParams.getDevice().w, newOpenRtbParams.getDevice().w);
+        assertNotEquals(originalOpenRtbParams.getDevice().h, newOpenRtbParams.getDevice().h);
     }
 
     @Test
     public void overwrittenNetworkParameterBuilder() {
-        mOriginalOpenRtbParams.getDevice().mccmnc = "foo";
-        mOriginalOpenRtbParams.getDevice().carrier = "foo";
-        mOriginalOpenRtbParams.getDevice().connectiontype = 0;
+        originalOpenRtbParams.getDevice().mccmnc = "foo";
+        originalOpenRtbParams.getDevice().carrier = "foo";
+        originalOpenRtbParams.getDevice().connectiontype = 0;
 
-        mParamBuilderArray.add(new NetworkParameterBuilder());
-        AdRequestInput newAdRequestInput = URLBuilder.buildParameters(mParamBuilderArray, mOriginalAdRequestInput);
+        paramBuilderArray.add(new NetworkParameterBuilder());
+        AdRequestInput newAdRequestInput = URLBuilder.buildParameters(paramBuilderArray, originalAdRequestInput);
         BidRequest newOpenRtbParams = newAdRequestInput.getBidRequest();
 
-        assertNotEquals(mOriginalOpenRtbParams.getDevice().mccmnc, newOpenRtbParams.getDevice().mccmnc);
-        assertNotEquals(mOriginalOpenRtbParams.getDevice().carrier, newOpenRtbParams.getDevice().carrier);
-        assertNotEquals(mOriginalOpenRtbParams.getDevice().connectiontype, newOpenRtbParams.getDevice().connectiontype);
+        assertNotEquals(originalOpenRtbParams.getDevice().mccmnc, newOpenRtbParams.getDevice().mccmnc);
+        assertNotEquals(originalOpenRtbParams.getDevice().carrier, newOpenRtbParams.getDevice().carrier);
+        assertNotEquals(originalOpenRtbParams.getDevice().connectiontype, newOpenRtbParams.getDevice().connectiontype);
     }
 }

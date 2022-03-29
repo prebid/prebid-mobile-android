@@ -30,49 +30,50 @@ public class MraidUrlHandler {
 
     public static final String TAG = MraidUrlHandler.class.getSimpleName();
 
-    private final Context mContext;
-    private final BaseJSInterface mJsi;
+    private final Context context;
+    private final BaseJSInterface jsi;
 
-    private boolean mUrlHandleInProgress;
+    private boolean urlHandleInProgress;
 
-    public MraidUrlHandler(Context context, BaseJSInterface jsInterface) {
-        mContext = context;
-        mJsi = jsInterface;
+    public MraidUrlHandler(
+            Context context,
+            BaseJSInterface jsInterface
+    ) {
+        this.context = context;
+        jsi = jsInterface;
     }
 
-    public void open(String url, int broadcastId) {
+    public void open(
+            String url,
+            int broadcastId
+    ) {
 
-        if (!mUrlHandleInProgress) {
-            mUrlHandleInProgress = true;
-            createUrlHandler(broadcastId)
-                .handleUrl(mContext,
-                           url,
-                           null,
-                           true); // navigation is performed by user
+        if (!urlHandleInProgress) {
+            urlHandleInProgress = true;
+            createUrlHandler(broadcastId).handleUrl(context, url, null, true); // navigation is performed by user
         }
     }
 
     public void destroy() {
-        if (mJsi != null) {
-            mJsi.destroy();
+        if (jsi != null) {
+            jsi.destroy();
         }
     }
 
     @VisibleForTesting
     UrlHandler createUrlHandler(int broadcastId) {
-        return new UrlHandler.Builder()
-            .withDeepLinkPlusAction(new DeepLinkPlusAction())
-            .withDeepLinkAction(new DeepLinkAction())
-            .withMraidInternalBrowserAction(new MraidInternalBrowserAction(mJsi, broadcastId))
+        return new UrlHandler.Builder().withDeepLinkPlusAction(new DeepLinkPlusAction())
+                                       .withDeepLinkAction(new DeepLinkAction())
+                                       .withMraidInternalBrowserAction(new MraidInternalBrowserAction(jsi, broadcastId))
             .withResultListener(new UrlHandler.UrlHandlerResultListener() {
                 @Override
                 public void onSuccess(String url, UrlAction urlAction) {
-                    mUrlHandleInProgress = false;
+                    urlHandleInProgress = false;
                 }
 
                 @Override
                 public void onFailure(String url) {
-                    mUrlHandleInProgress = false;
+                    urlHandleInProgress = false;
                     LogUtil.debug(TAG, "Failed to handleUrl: " + url);
                 }
             })

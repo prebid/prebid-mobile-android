@@ -40,30 +40,29 @@ public class AdExpandedDialog extends AdBaseDialog {
 
         preInit();
 
-        if (mWebViewBase != null && mWebViewBase.isMRAID()) {
-            mWebViewBase.getMRAIDInterface().onStateChange(JSInterface.STATE_EXPANDED);
+        if (webViewBase != null && webViewBase.isMRAID()) {
+            webViewBase.getMRAIDInterface().onStateChange(JSInterface.STATE_EXPANDED);
         }
         setOnCancelListener(dialog -> {
             try {
-                if (mWebViewBase != null) {
+                if (webViewBase != null) {
                     //detach from closecontainer
-                    mWebViewBase.detachFromParent();
+                    webViewBase.detachFromParent();
                     //add it back to WebView.
-                    PrebidWebViewBase defaultContainer = (PrebidWebViewBase) mWebViewBase.getPreloadedListener();
+                    PrebidWebViewBase defaultContainer = (PrebidWebViewBase) webViewBase.getPreloadedListener();
 
-                    //use getPreloadedListener() to get defaultContainer, as mDefaultContainer is not initiated for non-mraid cases(such as interstitials)
-                    defaultContainer.addView(mWebViewBase);
+                    //use getPreloadedListener() to get defaultContainer, as defaultContainer is not initiated for non-mraid cases(such as interstitials)
+                    defaultContainer.addView(webViewBase);
                     ////IMP - get the default state
                     defaultContainer.setVisibility(View.VISIBLE);
                     //do not ever call prebidWebView.visible. It makes the default adview on click of expand to be blank.
                     if (context instanceof Activity) {
-                        ((Activity) context).setRequestedOrientation(mInitialOrientation);
-                    }
-                    else {
+                        ((Activity) context).setRequestedOrientation(initialOrientation);
+                    } else {
                         LogUtil.error(TAG, "Context is not Activity, can not set orientation");
                     }
 
-                    mWebViewBase.getMRAIDInterface().onStateChange(JSInterface.STATE_DEFAULT);
+                    webViewBase.getMRAIDInterface().onStateChange(JSInterface.STATE_DEFAULT);
                 }
             }
             catch (Exception e) {
@@ -71,20 +70,21 @@ public class AdExpandedDialog extends AdBaseDialog {
             }
         });
 
-        mWebViewBase.setDialog(this);
+        webViewBase.setDialog(this);
     }
 
     @Override
     protected void handleCloseClick() {
-        mInterstitialManager.interstitialClosed(mWebViewBase);
+        interstitialManager.interstitialClosed(webViewBase);
     }
 
     @Override
     protected void handleDialogShow() {
-        Views.removeFromParent(mAdViewContainer);
-        addContentView(mAdViewContainer,
-                                   new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                                                                   RelativeLayout.LayoutParams.MATCH_PARENT)
+        Views.removeFromParent(adViewContainer);
+        addContentView(adViewContainer,
+                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                )
         );
     }
 }

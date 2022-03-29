@@ -34,67 +34,67 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(RobolectricTestRunner.class)
 public class FileDownloadTaskTest {
-    private BaseNetworkTask.GetUrlParams mParams;
-    private MockWebServer mServer;
-    private String mPath;
-    private String mError;
-    private File mFile;
+    private BaseNetworkTask.GetUrlParams params;
+    private MockWebServer server;
+    private String path;
+    private String error;
+    private File file;
 
-    private FileDownloadListener mListener = new FileDownloadListener() {
+    private FileDownloadListener listener = new FileDownloadListener() {
         @Override
         public void onFileDownloaded(String path) {
-            mPath = path;
+            FileDownloadTaskTest.this.path = path;
         }
 
         @Override
         public void onFileDownloadError(String error) {
-            mError = error;
+            FileDownloadTaskTest.this.error = error;
         }
     };
 
     @Before
     public void setup() {
-        mFile = new File("test");
-        mServer = new MockWebServer();
-        mParams = new BaseNetworkTask.GetUrlParams();
-        mPath = null;
-        mError = null;
-        mParams.name = BaseNetworkTask.DOWNLOAD_TASK;
-        mParams.userAgent = "user-agent";
-        HttpUrl baseUrl = mServer.url("/first");
-        mParams.url = baseUrl.url().toString();
-        mParams.requestType = "GET";
+        file = new File("test");
+        server = new MockWebServer();
+        params = new BaseNetworkTask.GetUrlParams();
+        path = null;
+        error = null;
+        params.name = BaseNetworkTask.DOWNLOAD_TASK;
+        params.userAgent = "user-agent";
+        HttpUrl baseUrl = server.url("/first");
+        params.url = baseUrl.url().toString();
+        params.requestType = "GET";
     }
 
     @After
     public void tearDown() throws IOException {
-        mServer.shutdown();
-        mFile.delete();
+        server.shutdown();
+        file.delete();
     }
 
     @Test
     public void testSuccessDoInBackground() throws IOException {
         String body = ResourceUtils.convertResourceToString("mraid.js");
-        mServer.enqueue(new MockResponse().setResponseCode(200).setBody(body));
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(body));
 
-        FileDownloadTask baseNetworkTask = new FileDownloadTask(mListener, mFile);
+        FileDownloadTask baseNetworkTask = new FileDownloadTask(listener, file);
 
-        baseNetworkTask.execute(mParams);
+        baseNetworkTask.execute(params);
 
-        assertNotNull(mPath);
+        assertNotNull(path);
     }
 
     @Test(expected = NullPointerException.class)
     public void testNullFile() {
-        FileDownloadTask task = new FileDownloadTask(mListener, null);
-        task.execute(mParams);
+        FileDownloadTask task = new FileDownloadTask(listener, null);
+        task.execute(params);
     }
 
     @Test
     public void testWrongData() {
-        mServer.enqueue(new MockResponse().setResponseCode(401).setBody("Not found"));
-        FileDownloadTask task = new FileDownloadTask(mListener, mFile);
-        task.execute(mParams);
-        assertNotNull(mError);
+        server.enqueue(new MockResponse().setResponseCode(401).setBody("Not found"));
+        FileDownloadTask task = new FileDownloadTask(listener, file);
+        task.execute(params);
+        assertNotNull(error);
     }
 }

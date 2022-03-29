@@ -33,26 +33,26 @@ import static org.prebid.mobile.rendering.utils.helpers.Utils.addValue;
 
 public class Prebid {
 
-    private Cache mCache;
-    private HashMap<String, String> mTargeting = new HashMap<>();
-    private String mType;
+    private Cache cache;
+    private HashMap<String, String> targeting = new HashMap<>();
+    private String type;
 
     protected Prebid() {
     }
 
     public Cache getCache() {
-        if (mCache == null) {
-            mCache = new Cache();
+        if (cache == null) {
+            cache = new Cache();
         }
-        return mCache;
+        return cache;
     }
 
     public HashMap<String, String> getTargeting() {
-        return mTargeting;
+        return targeting;
     }
 
     public String getType() {
-        return mType;
+        return type;
     }
 
     public static Prebid fromJSONObject(JSONObject jsonObject) {
@@ -60,9 +60,9 @@ public class Prebid {
         if (jsonObject == null) {
             return prebid;
         }
-        prebid.mCache = Cache.fromJSONObject(jsonObject.optJSONObject("cache"));
-        prebid.mType = jsonObject.optString("type");
-        toHashMap(prebid.mTargeting, jsonObject.optJSONObject("targeting"));
+        prebid.cache = Cache.fromJSONObject(jsonObject.optJSONObject("cache"));
+        prebid.type = jsonObject.optString("type");
+        toHashMap(prebid.targeting, jsonObject.optJSONObject("targeting"));
         return prebid;
     }
 

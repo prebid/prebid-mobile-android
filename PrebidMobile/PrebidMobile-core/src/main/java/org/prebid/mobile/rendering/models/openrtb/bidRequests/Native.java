@@ -12,57 +12,56 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Native extends BaseBid {
-    private JSONObject mRequest;
-    private Ext mExt;
+
+    private JSONObject request;
+    private Ext ext;
 
     // Won't be implemented in 1.1
-    private int[] mApi;
-    private int[] mBattr;
+    private int[] api;
+    private int[] battr;
 
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("request", mRequest.toString());
+        jsonObject.put("request", request.toString());
         jsonObject.put("ver", PrebidMobile.NATIVE_VERSION);
-        jsonObject.putOpt("ext", mExt != null ? mExt.getJsonObject() : null);
+        jsonObject.putOpt("ext", ext != null ? ext.getJsonObject() : null);
         return jsonObject;
     }
 
     public void setRequestFrom(NativeAdUnitConfiguration config) {
-        mRequest = new JSONObject();
+        request = new JSONObject();
         try {
-            mRequest.put("ver", PrebidMobile.NATIVE_VERSION);
+            request.put("ver", PrebidMobile.NATIVE_VERSION);
             if (config.getContextType() != null) {
-                mRequest.put("context", config.getContextType().getID());
+                request.put("context", config.getContextType().getID());
             }
             if (config.getContextSubtype() != null) {
-                mRequest.put("contextsubtype", config.getContextSubtype().getID());
+                request.put("contextsubtype", config.getContextSubtype().getID());
             }
             if (config.getPlacementType() != null) {
-                mRequest.put("plcmttype", config.getPlacementType().getID());
+                request.put("plcmttype", config.getPlacementType().getID());
             }
             if (config.getSeq() >= 0) {
-                mRequest.put("seq", config.getSeq());
+                request.put("seq", config.getSeq());
             }
-            mRequest.put("assets", getAssetsJsonArray(config.getAssets()));
+            request.put("assets", getAssetsJsonArray(config.getAssets()));
             if (!config.getEventTrackers().isEmpty()) {
-                mRequest.put("eventtrackers", getTrackersJsonArray(config.getEventTrackers()));
+                request.put("eventtrackers", getTrackersJsonArray(config.getEventTrackers()));
             }
             if (config.getPrivacy()) {
-                mRequest.put("privacy", 1);
+                request.put("privacy", 1);
             }
-            mRequest.putOpt("ext", config.getExt() != null
-                    ? config.getExt()
-                    : null);
+            request.putOpt("ext", config.getExt() != null ? config.getExt() : null);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     public Ext getExt() {
-        if (mExt == null) {
-            mExt = new Ext();
+        if (ext == null) {
+            ext = new Ext();
         }
-        return mExt;
+        return ext;
     }
 
     private JSONArray getAssetsJsonArray(List<NativeAsset> assetList) throws JSONException {

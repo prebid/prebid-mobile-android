@@ -21,80 +21,76 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
-public class Icon extends VASTParserBase
-{
-	private final static String VAST_ICON = "Icon";
-	private final static String VAST_STATICRESOURCE = "StaticResource";
-	private final static String VAST_IFRAMERESOURCE = "IFrameResource";
-	private final static String VAST_HTMLRESOURCE = "HTMLResource";
-	private final static String VAST_ICONCLICKS = "IconClicks";
-	private final static String VAST_ICONVIEWTRACKING = "IconViewTracking";
+public class Icon extends VASTParserBase {
 
-    private String mProgram;
-    private String mWidth;
-    private String mHeight;
-    private String mXPosition;
-    private String mYPosition;
-    private String mDuration;
-    private String mOffset;
-    private String mApiFramework;
+    private final static String VAST_ICON = "Icon";
+    private final static String VAST_STATICRESOURCE = "StaticResource";
+    private final static String VAST_IFRAMERESOURCE = "IFrameResource";
+    private final static String VAST_HTMLRESOURCE = "HTMLResource";
+    private final static String VAST_ICONCLICKS = "IconClicks";
+    private final static String VAST_ICONVIEWTRACKING = "IconViewTracking";
 
-    private StaticResource mStaticResource;
-    private IFrameResource mIFrameResource;
-    private HTMLResource mHtmlResource;
-    private IconClicks mIconClicks;
-    private IconViewTracking mIconViewTracking;
+    private String program;
+    private String width;
+    private String height;
+    private String xPosition;
+    private String yPosition;
+    private String duration;
+    private String offset;
+    private String apiFramework;
 
-	public Icon(XmlPullParser p) throws XmlPullParserException, IOException
-	{
+    private StaticResource staticResource;
+    private IFrameResource iFrameResource;
+    private HTMLResource htmlResource;
+    private IconClicks iconClicks;
+    private IconViewTracking iconViewTracking;
 
-		p.require(XmlPullParser.START_TAG, null, VAST_ICON);
+    public Icon(XmlPullParser p) throws XmlPullParserException, IOException {
 
-        mProgram = p.getAttributeValue(null, "program");
-        mWidth = p.getAttributeValue(null, "width");
-        mHeight = p.getAttributeValue(null, "height");
-        mXPosition = p.getAttributeValue(null, "xPosition");
-        mYPosition = p.getAttributeValue(null, "yPosition");
-        mDuration = p.getAttributeValue(null, "duration");
-        mOffset = p.getAttributeValue(null, "offset");
-        mApiFramework = p.getAttributeValue(null, "apiFramework");
+        p.require(XmlPullParser.START_TAG, null, VAST_ICON);
 
-		while (p.next() != XmlPullParser.END_TAG)
-		{
-			if (p.getEventType() != XmlPullParser.START_TAG)
-			{
-				continue;
-			}
-			String name = p.getName();
-			if (name != null && name.equals(VAST_STATICRESOURCE))
-			{
-				p.require(XmlPullParser.START_TAG, null, VAST_STATICRESOURCE);
-                mStaticResource = new StaticResource(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_STATICRESOURCE);
+        program = p.getAttributeValue(null, "program");
+        width = p.getAttributeValue(null, "width");
+        height = p.getAttributeValue(null, "height");
+        xPosition = p.getAttributeValue(null, "xPosition");
+        yPosition = p.getAttributeValue(null, "yPosition");
+        duration = p.getAttributeValue(null, "duration");
+        offset = p.getAttributeValue(null, "offset");
+        apiFramework = p.getAttributeValue(null, "apiFramework");
+
+        while (p.next() != XmlPullParser.END_TAG) {
+            if (p.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = p.getName();
+            if (name != null && name.equals(VAST_STATICRESOURCE)) {
+                p.require(XmlPullParser.START_TAG, null, VAST_STATICRESOURCE);
+                staticResource = new StaticResource(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_STATICRESOURCE);
 			}
 			else if (name != null && name.equals(VAST_IFRAMERESOURCE))
 			{
-				p.require(XmlPullParser.START_TAG, null, VAST_IFRAMERESOURCE);
-                mIFrameResource = new IFrameResource(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_IFRAMERESOURCE);
+                p.require(XmlPullParser.START_TAG, null, VAST_IFRAMERESOURCE);
+                iFrameResource = new IFrameResource(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_IFRAMERESOURCE);
 			}
 			else if (name != null && name.equals(VAST_HTMLRESOURCE))
 			{
-				p.require(XmlPullParser.START_TAG, null, VAST_HTMLRESOURCE);
-                mHtmlResource = new HTMLResource(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_HTMLRESOURCE);
+                p.require(XmlPullParser.START_TAG, null, VAST_HTMLRESOURCE);
+                htmlResource = new HTMLResource(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_HTMLRESOURCE);
 			}
 			else if (name != null && name.equals(VAST_ICONCLICKS))
 			{
-				p.require(XmlPullParser.START_TAG, null, VAST_ICONCLICKS);
-                mIconClicks = new IconClicks(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_ICONCLICKS);
+                p.require(XmlPullParser.START_TAG, null, VAST_ICONCLICKS);
+                iconClicks = new IconClicks(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_ICONCLICKS);
 			}
 			else if (name != null && name.equals(VAST_ICONVIEWTRACKING))
 			{
-				p.require(XmlPullParser.START_TAG, null, VAST_ICONVIEWTRACKING);
-                mIconViewTracking = new IconViewTracking(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_ICONVIEWTRACKING);
+                p.require(XmlPullParser.START_TAG, null, VAST_ICONVIEWTRACKING);
+                iconViewTracking = new IconViewTracking(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_ICONVIEWTRACKING);
 			}
 			else
 			{
@@ -105,34 +101,34 @@ public class Icon extends VASTParserBase
 	}
 
     public String getProgram() {
-        return mProgram;
+        return program;
     }
 
     public String getWidth() {
-        return mWidth;
+        return width;
     }
 
     public String getHeight() {
-        return mHeight;
+        return height;
     }
 
     public String getXPosition() {
-        return mXPosition;
+        return xPosition;
     }
 
     public String getYPosition() {
-        return mYPosition;
+        return yPosition;
     }
 
     public String getDuration() {
-        return mDuration;
+        return duration;
     }
 
     public String getOffset() {
-        return mOffset;
+        return offset;
     }
 
     public String getApiFramework() {
-        return mApiFramework;
+        return apiFramework;
     }
 }

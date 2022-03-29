@@ -37,61 +37,67 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static java.lang.Math.max;
 
 public class BidLoader {
+
     private final static String TAG = BidLoader.class.getSimpleName();
 
     private final static String TMAX_REQUEST_KEY = "tmaxrequest";
     private static boolean sTimeoutHasChanged = false;
 
-    private WeakReference<Context> mContextReference;
-    private AdUnitConfiguration mAdConfiguration;
-    private BidRequester mBidRequester;
-    private AtomicBoolean mCurrentlyLoading;
+    private WeakReference<Context> contextReference;
+    private AdUnitConfiguration adConfiguration;
+    private BidRequester bidRequester;
+    private AtomicBoolean currentlyLoading;
 
-    private BidRequesterListener mRequestListener;
-    private BidRefreshListener mBidRefreshListener;
+    private BidRequesterListener requestListener;
+    private BidRefreshListener bidRefreshListener;
 
-    private final ResponseHandler mResponseHandler = new ResponseHandler() {
+    private final ResponseHandler responseHandler = new ResponseHandler() {
         @Override
         public void onResponse(BaseNetworkTask.GetUrlResult response) {
-            mCurrentlyLoading.set(false);
+            currentlyLoading.set(false);
             BidResponse bidResponse = new BidResponse(response.responseString);
             if (bidResponse.hasParseError()) {
                 failedToLoadBid(bidResponse.getParseError());
                 return;
             }
             checkTmax(response, bidResponse);
-            if (mRequestListener != null) {
+            if (requestListener != null) {
                 setupRefreshTimer();
-                mRequestListener.onFetchCompleted(bidResponse);
-            }
-            else {
+                requestListener.onFetchCompleted(bidResponse);
+            } else {
                 cancelRefresh();
             }
         }
 
         @Override
-        public void onError(String msg, long responseTime) {
+        public void onError(
+                String msg,
+                long responseTime
+        ) {
             failedToLoadBid(msg);
         }
 
         @Override
-        public void onErrorWithException(Exception e, long responseTime) {
+        public void onErrorWithException(
+                Exception e,
+                long responseTime
+        ) {
             failedToLoadBid(e.getMessage());
         }
     };
 
-    private final RefreshTimerTask mRefreshTimerTask = new RefreshTimerTask(() -> {
-        if (mAdConfiguration == null) {
+    private final RefreshTimerTask refreshTimerTask = new RefreshTimerTask(() -> {
+        if (adConfiguration == null) {
             LogUtil.error(TAG, "handleRefresh(): Failure. AdConfiguration is null");
             return;
         }
 
-        if (mBidRefreshListener == null) {
+        if (bidRefreshListener == null) {
             LogUtil.error(TAG, "RefreshListener is null. No refresh or load will be performed.");
             return;
         }
 
-        if (!mBidRefreshListener.canPerformRefresh()) {
+        if (!bidRefreshListener.canPerformRefresh()) {
             LogUtil.debug(TAG, "handleRefresh(): Loading skipped, rescheduling timer. View is not visible.");
             setupRefreshTimer();
             return;
@@ -102,51 +108,50 @@ public class BidLoader {
     });
 
     public BidLoader(Context context, AdUnitConfiguration adConfiguration, BidRequesterListener requestListener) {
-        mContextReference = new WeakReference<>(context);
-        mAdConfiguration = adConfiguration;
-        mRequestListener = requestListener;
-        mCurrentlyLoading = new AtomicBoolean();
+        contextReference = new WeakReference<>(context);
+        this.adConfiguration = adConfiguration;
+        this.requestListener = requestListener;
+        currentlyLoading = new AtomicBoolean();
     }
 
     public void setBidRefreshListener(BidRefreshListener bidRefreshListener) {
-        mBidRefreshListener = bidRefreshListener;
+        this.bidRefreshListener = bidRefreshListener;
     }
 
     public void load() {
-        if (mRequestListener == null) {
+        if (requestListener == null) {
             LogUtil.warning(TAG, "Listener is null");
             return;
         }
-        if (mAdConfiguration == null) {
+        if (adConfiguration == null) {
             LogUtil.warning(TAG, "No ad request configuration to load");
             return;
         }
-        if (mContextReference.get() == null) {
+        if (contextReference.get() == null) {
             LogUtil.warning(TAG, "Context is null");
             return;
         }
 
-        // If mCurrentlyLoading == false, set it to true and return true; else return false
-        // If compareAndSet returns false, it means mCurrentlyLoading was already true and therefore we should skip loading
-        if (!mCurrentlyLoading.compareAndSet(false, true)) {
+        // If currentlyLoading == false, set it to true and return true; else return false
+        // If compareAndSet returns false, it means currentlyLoading was already true and therefore we should skip loading
+        if (!currentlyLoading.compareAndSet(false, true)) {
             LogUtil.warning(TAG, "Previous load is in progress. Load() ignored.");
             return;
         }
 
-        sendBidRequest(mContextReference.get(), mAdConfiguration);
+        sendBidRequest(contextReference.get(), adConfiguration);
     }
 
     public void setupRefreshTimer() {
         LogUtil.debug(TAG, "Schedule refresh timer");
 
-        boolean isRefreshAvailable = mAdConfiguration != null
-                && mAdConfiguration.isAdType(AdFormat.BANNER);
+        boolean isRefreshAvailable = adConfiguration != null && adConfiguration.isAdType(AdFormat.BANNER);
         if (!isRefreshAvailable) {
             LogUtil.debug(TAG, "setupRefreshTimer: Canceled. AdConfiguration is null or AdType is not Banner");
             return;
         }
 
-        int refreshTimeMillis = mAdConfiguration.getAutoRefreshDelay();
+        int refreshTimeMillis = adConfiguration.getAutoRefreshDelay();
         //for user or server values <= 0, no refreshtask should be created.
         //for such invalid values, refreshTimeMillis has been set to Integer.MAX_VALUE already.
         //So, check it against it to stop it from creating a refreshtask
@@ -159,45 +164,45 @@ public class BidLoader {
 
         int reloadTime = max(refreshTimeMillis, 1000);
 
-        mRefreshTimerTask.scheduleRefreshTask(reloadTime);
+        refreshTimerTask.scheduleRefreshTask(reloadTime);
     }
 
     public void cancelRefresh() {
         LogUtil.debug(TAG, "Cancel refresh timer");
-        mRefreshTimerTask.cancelRefreshTimer();
+        refreshTimerTask.cancelRefreshTimer();
     }
 
     public void destroy() {
         cancelRefresh();
-        mRefreshTimerTask.destroy();
+        refreshTimerTask.destroy();
 
-        if (mBidRequester != null) {
-            mBidRequester.destroy();
+        if (bidRequester != null) {
+            bidRequester.destroy();
         }
-        mRequestListener = null;
-        mBidRefreshListener = null;
+        requestListener = null;
+        bidRefreshListener = null;
     }
 
     private void sendBidRequest(Context context, AdUnitConfiguration config) {
-        mCurrentlyLoading.set(true);
-        if (mBidRequester == null) {
-            mBidRequester = new BidRequester(context, config, new AdRequestInput(), mResponseHandler);
+        currentlyLoading.set(true);
+        if (bidRequester == null) {
+            bidRequester = new BidRequester(context, config, new AdRequestInput(), responseHandler);
         }
-        mBidRequester.startAdRequest();
+        bidRequester.startAdRequest();
     }
 
     private void failedToLoadBid(String msg) {
         LogUtil.error(TAG, "Invalid bid response: " + msg);
-        mCurrentlyLoading.set(false);
+        currentlyLoading.set(false);
 
-        if (mRequestListener == null) {
+        if (requestListener == null) {
             LogUtil.warning(TAG, "onFailedToLoad: Listener is null.");
             cancelRefresh();
             return;
         }
 
         setupRefreshTimer();
-        mRequestListener.onError(new AdException(AdException.INTERNAL_ERROR, "Invalid bid response: " + msg));
+        requestListener.onError(new AdException(AdException.INTERNAL_ERROR, "Invalid bid response: " + msg));
     }
 
     private void checkTmax(BaseNetworkTask.GetUrlResult response, BidResponse parsedResponse) {

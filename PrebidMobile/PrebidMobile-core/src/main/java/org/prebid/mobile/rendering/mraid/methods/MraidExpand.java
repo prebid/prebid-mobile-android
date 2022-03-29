@@ -37,33 +37,40 @@ import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
 public class MraidExpand {
+
     public static final String TAG = MraidExpand.class.getSimpleName();
-    private WebViewBase mWebViewBanner;
+    private WebViewBase webViewBanner;
 
-    private BaseJSInterface mJsi;
-    private InterstitialManager mInterstitialManager;
-    private Context mContext;
-    private AdBaseDialog mExpandedDialog;
+    private BaseJSInterface jsi;
+    private InterstitialManager interstitialManager;
+    private Context context;
+    private AdBaseDialog expandedDialog;
 
-    private boolean mMraidExpanded;
+    private boolean mraidExpanded;
 
-    public MraidExpand(Context context, WebViewBase adBaseView, InterstitialManager interstitialManager) {
-        mContext = context;
-        mWebViewBanner = adBaseView;
-        mJsi = adBaseView.getMRAIDInterface();
-        mInterstitialManager = interstitialManager;
+    public MraidExpand(
+            Context context,
+            WebViewBase adBaseView,
+            InterstitialManager interstitialManager
+    ) {
+        this.context = context;
+        webViewBanner = adBaseView;
+        jsi = adBaseView.getMRAIDInterface();
+        this.interstitialManager = interstitialManager;
     }
 
     public void expand(final String url, final CompletedCallBack completedCallBack) {
 
-        mJsi.followToOriginalUrl(url, new RedirectUrlListener() {
+        jsi.followToOriginalUrl(url, new RedirectUrlListener() {
             @Override
-            public void onSuccess(final String url, String contentType) {
+            public void onSuccess(
+                    final String url,
+                    String contentType
+            ) {
 
                 if (Utils.isVideoContent(contentType)) {
-                    mJsi.playVideo(url);
-                }
-                else {
+                    jsi.playVideo(url);
+                } else {
                     performExpand(url, completedCallBack);
                 }
             }
@@ -77,29 +84,29 @@ public class MraidExpand {
     }
 
     public void setDisplayView(View displayView) {
-        if (mExpandedDialog != null) {
-            mExpandedDialog.setDisplayView(displayView);
+        if (expandedDialog != null) {
+            expandedDialog.setDisplayView(displayView);
         }
     }
 
     public AdBaseDialog getInterstitialViewController() {
-        return mExpandedDialog;
+        return expandedDialog;
     }
 
     public void nullifyDialog() {
-        if (mExpandedDialog != null) {
-            mExpandedDialog.cancel();
-            mExpandedDialog.cleanup();
-            mExpandedDialog = null;
+        if (expandedDialog != null) {
+            expandedDialog.cancel();
+            expandedDialog.cleanup();
+            expandedDialog = null;
         }
     }
 
     public void destroy() {
-        if (mJsi != null) {
-            Views.removeFromParent(mJsi.getDefaultAdContainer());
+        if (jsi != null) {
+            Views.removeFromParent(jsi.getDefaultAdContainer());
         }
-        if (mExpandedDialog != null) {
-            mExpandedDialog.dismiss();
+        if (expandedDialog != null) {
+            expandedDialog.dismiss();
         }
     }
 
@@ -108,7 +115,7 @@ public class MraidExpand {
      * This flag is used to enable/disable MRAID expand property.
      */
     public boolean isMraidExpanded() {
-        return mMraidExpanded;
+        return mraidExpanded;
     }
 
     /**
@@ -116,11 +123,11 @@ public class MraidExpand {
      * This flag is used to enable/disable MRAID expand property.
      */
     public void setMraidExpanded(boolean mraidExpanded) {
-        this.mMraidExpanded = mraidExpanded;
+        this.mraidExpanded = mraidExpanded;
     }
 
     private void performExpand(String url, CompletedCallBack completedCallBack) {
-        final Context context = mContext;
+        final Context context = this.context;
         if (context == null) {
             LogUtil.error(TAG, "Context is null");
             return;
@@ -129,7 +136,7 @@ public class MraidExpand {
         Handler uiHandler = new Handler(Looper.getMainLooper());
         uiHandler.post(() -> {
             try {
-                final MraidVariableContainer mraidVariableContainer = mJsi.getMraidVariableContainer();
+                final MraidVariableContainer mraidVariableContainer = jsi.getMraidVariableContainer();
 
                 String state = mraidVariableContainer.getCurrentState();
 
@@ -138,7 +145,7 @@ public class MraidExpand {
                     return;
                 }
 
-                mJsi.setDefaultLayoutParams(mWebViewBanner.getLayoutParams());
+                jsi.setDefaultLayoutParams(webViewBanner.getLayoutParams());
 
                 if (url != null) {
                     mraidVariableContainer.setUrlForLaunching(url);
@@ -166,9 +173,9 @@ public class MraidExpand {
             return;
         }
 
-        mExpandedDialog = new AdExpandedDialog(context, mWebViewBanner, mInterstitialManager);//HAS be on UI thread
+        expandedDialog = new AdExpandedDialog(context, webViewBanner, interstitialManager);//HAS be on UI thread
         //Workaround fix for a random crash on multiple clicks on 2part expand and press back key
-        mExpandedDialog.show();
+        expandedDialog.show();
         if (completedCallBack != null) {
             completedCallBack.expandDialogShown();
         }
