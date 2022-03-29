@@ -162,7 +162,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
     }
 
     public void setMinSizePercentage(AdSize minSizePercentage) {
-        configuration.setMinSizePercentage(minSizePercentage);
+        adUnitConfig.setMinSizePercentage(minSizePercentage);
     }
 
 

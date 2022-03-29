@@ -42,7 +42,7 @@ public abstract class BaseInterstitialAdUnit {
 
     private static final String TAG = BaseInterstitialAdUnit.class.getSimpleName();
 
-    protected AdUnitConfiguration configuration;
+    protected AdUnitConfiguration adUnitConfig;
 
     private BidLoader bidLoader;
     private BidResponse bidResponse;
@@ -119,55 +119,55 @@ public abstract class BaseInterstitialAdUnit {
             String key,
             String value
     ) {
-        configuration.addContextData(key, value);
+        adUnitConfig.addContextData(key, value);
     }
 
     public void updateContextData(
             String key,
             Set<String> value
     ) {
-        configuration.addContextData(key, value);
+        adUnitConfig.addContextData(key, value);
     }
 
     public void removeContextData(String key) {
-        configuration.removeContextData(key);
+        adUnitConfig.removeContextData(key);
     }
 
     public void clearContextData() {
-        configuration.clearContextData();
+        adUnitConfig.clearContextData();
     }
 
     public Map<String, Set<String>> getContextDataDictionary() {
-        return configuration.getContextDataDictionary();
+        return adUnitConfig.getContextDataDictionary();
     }
 
     public void addContextKeyword(String keyword) {
-        configuration.addContextKeyword(keyword);
+        adUnitConfig.addContextKeyword(keyword);
     }
 
     public void addContextKeywords(Set<String> keywords) {
-        configuration.addContextKeywords(keywords);
+        adUnitConfig.addContextKeywords(keywords);
     }
 
     public void removeContextKeyword(String keyword) {
-        configuration.removeContextKeyword(keyword);
+        adUnitConfig.removeContextKeyword(keyword);
     }
 
     public Set<String> getContextKeywordsSet() {
-        return configuration.getContextKeywordsSet();
+        return adUnitConfig.getContextKeywordsSet();
     }
 
     public void clearContextKeywords() {
-        configuration.clearContextKeywords();
+        adUnitConfig.clearContextKeywords();
     }
 
     @Nullable
     public String getPbAdSlot() {
-        return configuration.getPbAdSlot();
+        return adUnitConfig.getPbAdSlot();
     }
 
     public void setPbAdSlot(String adSlot) {
-        configuration.setPbAdSlot(adSlot);
+        adUnitConfig.setPbAdSlot(adSlot);
     }
 
     /**
@@ -183,8 +183,8 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     protected void init(AdUnitConfiguration adUnitConfiguration) {
-        configuration = adUnitConfiguration;
-        configuration.setAdPosition(AdPosition.FULLSCREEN);
+        adUnitConfig = adUnitConfiguration;
+        adUnitConfig.setAdPosition(AdPosition.FULLSCREEN);
 
         initPrebidRenderingSdk();
         initBidLoader();
@@ -199,7 +199,7 @@ public abstract class BaseInterstitialAdUnit {
             return;
         }
 
-        interstitialController.loadAd(configuration, bidResponse);
+        interstitialController.loadAd(adUnitConfig, bidResponse);
     }
 
     @Nullable
@@ -220,7 +220,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     private void initBidLoader() {
-        bidLoader = new BidLoader(getContext(), configuration, bidRequesterListener);
+        bidLoader = new BidLoader(getContext(), adUnitConfig, bidRequesterListener);
     }
 
     private void initInterstitialController() {
@@ -253,7 +253,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     public void addContent(ContentObject content) {
-        configuration.setAppContent(content);
+        adUnitConfig.setAppContent(content);
     }
 
 
