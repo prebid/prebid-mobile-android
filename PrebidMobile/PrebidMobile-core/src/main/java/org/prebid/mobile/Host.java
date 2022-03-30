@@ -19,9 +19,9 @@ package org.prebid.mobile;
 public enum Host {
 
     /**
-     * URL <a href=https://prebid.adnxs.com/pbs/v1/openrtb2/auction>https://prebid.adnxs.com/pbs/v1/openrtb2/auction</a>
+     * URL <a href=https://ib.adnxs.com/openrtb2/prebid>https://ib.adnxs.com/openrtb2/prebid</a>
      */
-    APPNEXUS("https://prebid.adnxs.com/pbs/v1/openrtb2/auction"),
+    APPNEXUS("https://ib.adnxs.com/openrtb2/prebid"),
 
     /**
      * URL <a href=https://prebid-server.rubiconproject.com/openrtb2/auction>https://prebid-server.rubiconproject.com/openrtb2/auction</a>
