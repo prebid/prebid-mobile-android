@@ -19,6 +19,7 @@ package org.prebid.mobile.rendering.models;
 import androidx.annotation.NonNull;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.rendering.errors.VastParseError;
 import org.prebid.mobile.rendering.loading.AdLoadListener;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.parser.AdResponseParserBase;
@@ -108,6 +109,8 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
             final String videoDuration = mLatestVastWrapperParser.getVideoDuration(mLatestVastWrapperParser, 0);
             final String skipOffset = mLatestVastWrapperParser.getSkipOffset(mLatestVastWrapperParser, 0);
             final AdVerifications adVerifications = mRootVastParser.getAdVerification(mLatestVastWrapperParser, 0);
+
+            checkVideoDuration(Utils.getMsFrom(videoDuration));
 
             Result result = new Result();
             result.loaderIdentifier = mAdLoaderIdentifier;
@@ -209,8 +212,7 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
             }
             mAdConfiguration.setInterstitialSize(videoModel.getWidth() + "x" + videoModel.getHeight());
             mListener.onCreativeModelReady(result);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LogUtil.error(TAG, "Video failed with: " + e.getMessage());
             notifyErrorListener("Video failed: " + e.getMessage());
         }
@@ -219,4 +221,14 @@ public class CreativeModelsMakerVast extends CreativeModelsMaker {
     private void notifyErrorListener(String msg) {
         mListener.onFailedToLoadAd(new AdException(AdException.INTERNAL_ERROR, msg), mAdLoaderIdentifier);
     }
+
+    private void checkVideoDuration(long currentDuration) throws VastParseError {
+        if (mAdConfiguration != null && mAdConfiguration.getMaxVideoDuration() != null) {
+            long maxDuration = mAdConfiguration.getMaxVideoDuration() * 1000;
+            if (currentDuration > maxDuration) {
+                throw new VastParseError("Video duration can't be more then ad unit max video duration: " + maxDuration + " (current duration: " + currentDuration + ")");
+            }
+        }
+    }
+
 }

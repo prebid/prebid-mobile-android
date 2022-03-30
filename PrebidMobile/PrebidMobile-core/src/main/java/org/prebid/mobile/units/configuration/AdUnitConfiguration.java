@@ -26,6 +26,8 @@ public class AdUnitConfiguration {
     private final int broadcastId = Utils.generateRandomInt();
     private float videoInitialVolume = ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME;
 
+    private int maxVideoDuration = 3600;
+
     private String configId;
     private String pbAdSlot;
     private String interstitialSize;
@@ -332,6 +334,14 @@ public class AdUnitConfiguration {
         return broadcastId;
     }
 
+    public void setMaxVideoDuration(int seconds) {
+        this.maxVideoDuration = seconds;
+    }
+
+    @Nullable
+    public Integer getMaxVideoDuration() {
+        return maxVideoDuration;
+    }
 
     @Nullable
     public NativeAdUnitConfiguration getNativeConfiguration() {
