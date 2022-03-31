@@ -20,6 +20,8 @@ public class AdUnitConfiguration {
 
     private boolean isRewarded;
     private boolean isBuiltInVideo = false;
+    private boolean isMuted = false;
+    private boolean isSoundButtonVisible = false;
 
     private int videoSkipOffset = SKIP_OFFSET_NOT_ASSIGNED;
     private int autoRefreshDelayInMillis = 0;
@@ -193,6 +195,22 @@ public class AdUnitConfiguration {
 
     public boolean isBuiltInVideo() {
         return isBuiltInVideo;
+    }
+
+    public void setIsMuted(boolean isMuted) {
+        this.isMuted = isMuted;
+    }
+
+    public boolean isMuted() {
+        return isMuted;
+    }
+
+    public void setIsSoundButtonVisible(boolean isSoundButtonVisible) {
+        this.isSoundButtonVisible = isSoundButtonVisible;
+    }
+
+    public boolean isSoundButtonVisible() {
+        return isSoundButtonVisible;
     }
 
     public void setAutoRefreshDelay(int autoRefreshDelayInSeconds) {

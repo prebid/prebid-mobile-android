@@ -216,9 +216,12 @@ public class InterstitialView extends BaseAdView {
     private void handleDialogEvent(DialogEventListener.EventType eventType) {
         if (eventType == DialogEventListener.EventType.SHOWN) {
             mAdViewManager.addObstructions((formInterstitialObstructionsArray()));
-        }
-        else if (eventType == DialogEventListener.EventType.CLOSED) {
+        } else if (eventType == DialogEventListener.EventType.CLOSED) {
             handleActionClose();
+        } else if (eventType == DialogEventListener.EventType.MUTE) {
+            mAdViewManager.mute();
+        } else if (eventType == DialogEventListener.EventType.UNMUTE) {
+            mAdViewManager.unmute();
         }
     }
 

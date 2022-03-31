@@ -28,6 +28,7 @@ import android.util.DisplayMetrics;
 import android.view.*;
 import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import org.json.JSONArray;
@@ -429,16 +430,31 @@ public final class Utils {
     }
 
     public static View createCloseView(Context context) {
+        return createView(context, R.layout.lyt_close, Gravity.END | Gravity.TOP);
+    }
+
+    public static View createSoundView(Context context) {
+        return createView(context, R.layout.lyt_sound, Gravity.END | Gravity.BOTTOM);
+    }
+
+    private static View createView(
+            Context context,
+            @LayoutRes int layoutId,
+            int gravity
+    ) {
         if (context == null) {
-            LogUtil.error(TAG, "Unable to create close view. Context is null");
+            LogUtil.error(TAG, "Unable to create view. Context is null");
             return null;
         }
 
-        View closeView = LayoutInflater.from(context).inflate(R.layout.lyt_close, null);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.gravity = Gravity.RIGHT | Gravity.TOP;
-        closeView.setLayoutParams(params);
-        return closeView;
+        View view = LayoutInflater.from(context).inflate(layoutId, null);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        params.gravity = gravity;
+        view.setLayoutParams(params);
+        return view;
     }
 
     public static View createWatchAgainView(Context context) {
