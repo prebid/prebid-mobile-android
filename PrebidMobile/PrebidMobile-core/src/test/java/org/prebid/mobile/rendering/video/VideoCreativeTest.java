@@ -74,7 +74,7 @@ public class VideoCreativeTest {
 
     @After
     public void tearDown() throws Exception {
-
+        mVideoCreative.destroy();
     }
 
     @Test
@@ -259,42 +259,42 @@ public class VideoCreativeTest {
 
     @Test
     public void whenAdConfigurationMuted_MuteCreative() throws AdException {
-        mVideoCreative = spy(new VideoCreative(
-                mContext,
-                mMockModel,
+        VideoCreativeModel mockModel = mock(VideoCreativeModel.class);
+        VideoCreative videoCreative = spy(new VideoCreative(mContext,
+                mockModel,
                 mMockOmAdSessionManager,
                 mMockInterstitialManager
         ));
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setIsMuted(true);
 
-        when(mMockModel.getAdConfiguration()).thenReturn(configuration);
-        Reflection.setVariableTo(mVideoCreative, "mVideoCreativeView", mock(VideoCreativeView.class));
+        when(mockModel.getAdConfiguration()).thenReturn(configuration);
+        Reflection.setVariableTo(videoCreative, "mVideoCreativeView", mock(VideoCreativeView.class));
 
-        mVideoCreative.display();
+        videoCreative.display();
 
-        verify(mVideoCreative).mute();
-        verify(mVideoCreative, never()).unmute();
+        verify(videoCreative).mute();
+        verify(videoCreative, never()).unmute();
     }
 
     @Test
     public void whenAdConfigurationUnMuted_UnMuteCreative() throws AdException {
-        mVideoCreative = spy(new VideoCreative(
-                mContext,
-                mMockModel,
+        VideoCreativeModel mockModel = mock(VideoCreativeModel.class);
+        VideoCreative videoCreative = spy(new VideoCreative(mContext,
+                mockModel,
                 mMockOmAdSessionManager,
                 mMockInterstitialManager
         ));
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setIsMuted(false);
 
-        when(mMockModel.getAdConfiguration()).thenReturn(configuration);
-        Reflection.setVariableTo(mVideoCreative, "mVideoCreativeView", mock(VideoCreativeView.class));
+        when(mockModel.getAdConfiguration()).thenReturn(configuration);
+        Reflection.setVariableTo(videoCreative, "mVideoCreativeView", mock(VideoCreativeView.class));
 
-        mVideoCreative.display();
+        videoCreative.display();
 
-        verify(mVideoCreative).unmute();
-        verify(mVideoCreative, never()).mute();
+        verify(videoCreative).unmute();
+        verify(videoCreative, never()).mute();
     }
 
 }
