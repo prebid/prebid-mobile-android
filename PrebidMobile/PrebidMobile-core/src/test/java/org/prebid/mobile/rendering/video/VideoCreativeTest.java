@@ -25,6 +25,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.reflection.Reflection;
+import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
 import org.prebid.mobile.rendering.models.AbstractCreative;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
@@ -254,4 +256,45 @@ public class VideoCreativeTest {
         verify(mMockVideoCreativeView).destroy();
         verify(mockListener).creativeDidComplete(any(AbstractCreative.class));
     }
+
+    @Test
+    public void whenAdConfigurationMuted_MuteCreative() throws AdException {
+        mVideoCreative = spy(new VideoCreative(
+                mContext,
+                mMockModel,
+                mMockOmAdSessionManager,
+                mMockInterstitialManager
+        ));
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsMuted(true);
+
+        when(mMockModel.getAdConfiguration()).thenReturn(configuration);
+        Reflection.setVariableTo(mVideoCreative, "mVideoCreativeView", mock(VideoCreativeView.class));
+
+        mVideoCreative.display();
+
+        verify(mVideoCreative).mute();
+        verify(mVideoCreative, never()).unmute();
+    }
+
+    @Test
+    public void whenAdConfigurationUnMuted_UnMuteCreative() throws AdException {
+        mVideoCreative = spy(new VideoCreative(
+                mContext,
+                mMockModel,
+                mMockOmAdSessionManager,
+                mMockInterstitialManager
+        ));
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsMuted(false);
+
+        when(mMockModel.getAdConfiguration()).thenReturn(configuration);
+        Reflection.setVariableTo(mVideoCreative, "mVideoCreativeView", mock(VideoCreativeView.class));
+
+        mVideoCreative.display();
+
+        verify(mVideoCreative).unmute();
+        verify(mVideoCreative, never()).mute();
+    }
+
 }
