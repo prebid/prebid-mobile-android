@@ -357,7 +357,7 @@ public abstract class AdBaseDialog extends Dialog {
             return;
         }
 
-        mSoundView = Utils.createSoundView(mContextReference.get());
+        mSoundView = createSoundView(mContextReference.get());
 
         if (mSoundView == null || !(mSoundView instanceof ImageView)) {
             LogUtil.error(TAG, "Unable to add sound button. Sound view is null");
@@ -389,6 +389,10 @@ public abstract class AdBaseDialog extends Dialog {
                 }
             }
         });
+    }
+
+    protected View createSoundView(Context context) {
+        return Utils.createSoundView(context);
     }
 
     private void applyOrientation() throws AdException {

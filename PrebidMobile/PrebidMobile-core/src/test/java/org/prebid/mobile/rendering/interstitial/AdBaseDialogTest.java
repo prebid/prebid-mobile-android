@@ -28,7 +28,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.mockito.stubbing.Answer;
 import org.prebid.mobile.core.R;
@@ -37,7 +36,6 @@ import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.mraid.methods.others.OrientationManager;
-import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
@@ -216,26 +214,13 @@ public class AdBaseDialogTest {
 
     @Test
     public void testAddSoundView() {
-        AdBaseDialog dialog = new AdBaseDialog(mMockContext, mMockWebViewBase, mMockInterstitialManager) {
-            @Override
-            protected void handleCloseClick() {}
-
-            @Override
-            protected void handleDialogShow() {}
-
-            @Override
-            public void addSoundView(boolean isMutedOnStart) {
-                super.addSoundView(isMutedOnStart);
-            }
-        };
         FrameLayout wrapper = mock(FrameLayout.class);
-        Reflection.setVariableTo(dialog, "mAdViewContainer", wrapper);
+        Reflection.setVariableTo(mAdBaseDialog, "mAdViewContainer", wrapper);
 
         ImageView view = mock(ImageView.class);
-        MockedStatic<Utils> mockUtils = mockStatic(Utils.class);
-        mockUtils.when(() -> Utils.createSoundView(any())).thenReturn(view);
+        doReturn(view).when(mAdBaseDialog).createSoundView(any());
 
-        dialog.addSoundView(true);
+        mAdBaseDialog.addSoundView(true);
 
         verify(view).setVisibility(View.VISIBLE);
         verify(view).setImageResource(R.drawable.ic_volume_on);
