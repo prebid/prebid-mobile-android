@@ -20,7 +20,7 @@ public class AdUnitConfiguration {
 
     private boolean isRewarded;
     private boolean isBuiltInVideo = false;
-    private boolean isMuted = false;
+    private boolean isMuted = true;
     private boolean isSoundButtonVisible = false;
 
     private int videoSkipOffset = SKIP_OFFSET_NOT_ASSIGNED;
