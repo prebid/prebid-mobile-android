@@ -97,6 +97,7 @@
     <string name="demo_bidding_in_app_interstitial_video_320_480_deeplink">Video Interstitial 320x480 Deeplink+ (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_video_320_480_skipoffset">Video Interstitial 320x480 SkipOffset (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_video_320_480_end_card">Video Interstitial 320x480 With End Card (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_video_320_480_end_card_close_button_area">Video Interstitial 320x480 With End Card and Close Button Area (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_video_320_480_end_card_sound_button">Video Interstitial 320x480 With End Card and Sound Button (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_video_320_480_mraid_end_card">Video Interstitial 320x480 with MRAID End Card (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_video_320_480_no_bids">Video Interstitial 320x480 (In-App) [noBids]</string>
