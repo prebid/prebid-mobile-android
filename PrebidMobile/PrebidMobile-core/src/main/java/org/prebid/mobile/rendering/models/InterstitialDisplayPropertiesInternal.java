@@ -19,9 +19,12 @@ package org.prebid.mobile.rendering.models;
 import android.content.pm.ActivityInfo;
 
 public class InterstitialDisplayPropertiesInternal extends InterstitialDisplayPropertiesPublic {
+
     public int expandWidth;
     public int expandHeight;
     public int orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+    public boolean isSoundButtonVisible = false;
+    public boolean isMuted = false;
 
     public boolean isRotationEnabled = false;
 
@@ -29,4 +32,5 @@ public class InterstitialDisplayPropertiesInternal extends InterstitialDisplayPr
         expandHeight = 0;
         expandWidth = 0;
     }
+
 }

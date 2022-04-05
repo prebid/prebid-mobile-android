@@ -170,6 +170,14 @@ public abstract class BaseInterstitialAdUnit {
         adUnitConfig.setPbAdSlot(adSlot);
     }
 
+    public void setIsMuted(boolean isMuted) {
+        adUnitConfig.setIsMuted(isMuted);
+    }
+
+    public void setIsSoundButtonVisible(boolean isSoundButtonVisible) {
+        adUnitConfig.setIsSoundButtonVisible(isSoundButtonVisible);
+    }
+
     public void setMaxVideoDuration(int seconds) {
         adUnitConfig.setMaxVideoDuration(seconds);
     }

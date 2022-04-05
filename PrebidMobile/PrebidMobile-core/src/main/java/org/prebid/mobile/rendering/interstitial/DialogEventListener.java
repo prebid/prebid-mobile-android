@@ -22,6 +22,8 @@ public interface DialogEventListener {
 
     enum EventType {
         CLOSED,
-        SHOWN
+        SHOWN,
+        MUTE,
+        UNMUTE
     }
 }

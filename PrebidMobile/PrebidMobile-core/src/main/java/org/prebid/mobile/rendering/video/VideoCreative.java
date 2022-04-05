@@ -95,6 +95,13 @@ public class VideoCreative extends VideoCreativeProtocol
     public void display() {
         if (mVideoCreativeView != null) {
             mVideoCreativeView.start(mModel.getAdConfiguration().getVideoInitialVolume());
+
+            if (mModel.getAdConfiguration().isMuted()) {
+                mute();
+            } else {
+                unmute();
+            }
+
             mModel.trackPlayerStateChange(InternalPlayerState.NORMAL);
             startViewabilityTracker();
         }

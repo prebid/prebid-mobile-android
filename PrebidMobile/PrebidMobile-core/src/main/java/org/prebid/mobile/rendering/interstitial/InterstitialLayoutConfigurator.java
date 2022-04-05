@@ -37,5 +37,8 @@ public class InterstitialLayoutConfigurator {
         } else {
             displayProperties.isRotationEnabled = true;
         }
+
+        displayProperties.isSoundButtonVisible = adConfiguration.isSoundButtonVisible();
+        displayProperties.isMuted = adConfiguration.isMuted();
     }
 }
