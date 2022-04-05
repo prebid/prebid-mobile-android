@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.video.VideoCreativeView;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
@@ -68,6 +69,8 @@ public class VideoDialogTest {
 
     @Test
     public void showBannerCreative_NullAdView() throws IllegalAccessException {
+        InterstitialDisplayPropertiesInternal propertiesInternal = new InterstitialDisplayPropertiesInternal();
+        when(mMockInterstitialManager.getInterstitialDisplayProperties()).thenReturn(propertiesInternal);
         mVideoDialog.showBannerCreative(mock(View.class));
         Object adView = WhiteBox.field(VideoDialog.class, "mAdView").get(mVideoDialog);
         Assert.assertNull(adView);

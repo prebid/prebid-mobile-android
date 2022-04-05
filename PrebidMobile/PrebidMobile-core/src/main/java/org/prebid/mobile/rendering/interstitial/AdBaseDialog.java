@@ -332,7 +332,7 @@ public abstract class AdBaseDialog extends Dialog {
     }
 
     protected void addCloseView() {
-        if (mAdViewContainer == null) {
+        if (mAdViewContainer == null || mInterstitialManager == null) {
             LogUtil.error(TAG, "Unable to add close button. Container is null");
             return;
         }
