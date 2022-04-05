@@ -170,6 +170,10 @@ public abstract class BaseInterstitialAdUnit {
         adUnitConfig.setPbAdSlot(adSlot);
     }
 
+    public void setMaxVideoDuration(int seconds) {
+        adUnitConfig.setMaxVideoDuration(seconds);
+    }
+
     /**
      * Cleans up resources when destroyed.
      */

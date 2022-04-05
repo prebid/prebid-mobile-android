@@ -19,6 +19,7 @@ package org.prebid.mobile.rendering.models;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -182,10 +184,63 @@ public class CreativeModelsMakerVastTest {
         assertTrue(result.creativeModels.get(0) instanceof VideoCreativeModel);
     }
 
-    private List<AdResponseParserBase> getVastParsers(BaseNetworkTask.GetUrlResult adResponse)
-    throws
-    NoSuchFieldException,
-    IllegalAccessException {
+    @Test
+    public void testRightLimits() throws Exception {
+        // Subject initialization
+        String testFileName = "vast_inline_linear.xml";
+
+        BaseNetworkTask.GetUrlResult adResponse = new BaseNetworkTask.GetUrlResult();
+        adResponse.responseString = ResourceUtils.convertResourceToString(testFileName);
+
+        CreativeModelsMakerVast creativeModelsMakerVast = new CreativeModelsMakerVast(null, mMockListener);
+
+        List<AdResponseParserBase> parsers = getVastParsers(adResponse);
+
+        AdResponseParserVast rootParser = (AdResponseParserVast) parsers.get(0);
+        AdResponseParserVast latestParser = (AdResponseParserVast) parsers.get(1);
+
+        // Current video duration 96 sec
+        mAdConfiguration.setMaxVideoDuration(100);
+
+        // Run
+        creativeModelsMakerVast.makeModels(mAdConfiguration, rootParser, latestParser);
+
+        // Check
+        verify(mMockListener).onCreativeModelReady(any());
+    }
+
+    @Test
+    public void testWrongLimits() throws Exception {
+        // Subject initialization
+        String testFileName = "vast_inline_linear.xml";
+
+        BaseNetworkTask.GetUrlResult adResponse = new BaseNetworkTask.GetUrlResult();
+        adResponse.responseString = ResourceUtils.convertResourceToString(testFileName);
+
+        CreativeModelsMakerVast creativeModelsMakerVast = new CreativeModelsMakerVast(null, mMockListener);
+
+        List<AdResponseParserBase> parsers = getVastParsers(adResponse);
+
+        AdResponseParserVast rootParser = (AdResponseParserVast) parsers.get(0);
+        AdResponseParserVast latestParser = (AdResponseParserVast) parsers.get(1);
+
+        // Current video duration 96 sec
+        mAdConfiguration.setMaxVideoDuration(90);
+
+        // Run
+        creativeModelsMakerVast.makeModels(mAdConfiguration, rootParser, latestParser);
+
+        // Check
+        ArgumentCaptor<AdException> errorMessage = ArgumentCaptor.forClass(AdException.class);
+        verify(mMockListener).onFailedToLoadAd(errorMessage.capture(), any());
+
+        MatcherAssert.assertThat(
+                errorMessage.getValue().getMessage(),
+                containsString("Video duration can't be more then ad unit max video duration")
+        );
+    }
+
+    private List<AdResponseParserBase> getVastParsers(BaseNetworkTask.GetUrlResult adResponse) throws NoSuchFieldException, IllegalAccessException {
 
         final VastParserExtractor.Listener mockListener = mock(VastParserExtractor.Listener.class);
         VastParserExtractor parserExtractor = new VastParserExtractor(mockListener);
