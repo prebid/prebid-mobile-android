@@ -449,9 +449,8 @@ public final class Utils {
         FrameLayout.LayoutParams params;
         View closeView = LayoutInflater.from(context).inflate(R.layout.lyt_close, null);
         if (closeButtonArea == null || closeButtonArea < 0.05 || closeButtonArea > 1) {
-            params = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
+            params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
             );
         } else {
             int screenSize = getSmallestScreenSideSize(context);

@@ -16,12 +16,16 @@
 
 package org.prebid.mobile.rendering.utils.helpers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.Gravity;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import androidx.test.filters.Suppress;
 import junit.framework.TestCase;
 import org.json.JSONArray;
@@ -35,8 +39,10 @@ import org.mockito.stubbing.Answer;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.test.utils.ResourceUtils;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -51,6 +57,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
+@Config(sdk = 19, qualifiers = "w1920dp-h1080dp")
 public class UtilsTest extends TestCase {
 
     @Test
@@ -388,4 +395,54 @@ public class UtilsTest extends TestCase {
 
         assertEquals(refreshDelaySec * 1000, clampAutoRefresh);
     }
+
+    @Test
+    public void createCloseView_UseConstructorOnlyWithContext_CreateViewWithDefaultSize() {
+        Activity activity = Robolectric.buildActivity(Activity.class).get();
+
+        View closeView = Utils.createCloseView(activity);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
+
+        assertEquals(Gravity.END | Gravity.TOP, params.gravity);
+        assertEquals(FrameLayout.LayoutParams.WRAP_CONTENT, params.width);
+        assertEquals(FrameLayout.LayoutParams.WRAP_CONTENT, params.height);
+    }
+
+    @Test
+    public void createCloseView_UseNullCloseButtonArea_CreateViewWithDefaultSize() {
+        Activity activity = Robolectric.buildActivity(Activity.class).get();
+
+        View closeView = Utils.createCloseView(activity, null);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
+
+        assertEquals(Gravity.END | Gravity.TOP, params.gravity);
+        assertEquals(FrameLayout.LayoutParams.WRAP_CONTENT, params.width);
+        assertEquals(FrameLayout.LayoutParams.WRAP_CONTENT, params.height);
+    }
+
+    @Test
+    public void createCloseView_UseCloseButtonAreaOutOfRange_CreateViewWithDefaultSize() {
+        Activity activity = Robolectric.buildActivity(Activity.class).get();
+
+        View closeView = Utils.createCloseView(activity, 0.0);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
+
+        assertEquals(Gravity.END | Gravity.TOP, params.gravity);
+        assertEquals(FrameLayout.LayoutParams.WRAP_CONTENT, params.width);
+        assertEquals(FrameLayout.LayoutParams.WRAP_CONTENT, params.height);
+    }
+
+    @Test
+    public void createCloseView_UseCustomCloseButtonArea_CreateViewWithCalculatedSize() {
+        Activity activity = Robolectric.buildActivity(Activity.class).get();
+
+        View closeView = Utils.createCloseView(activity, 0.2);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
+
+        assertEquals(Gravity.END | Gravity.TOP, params.gravity);
+        assertEquals(216, params.width);
+        assertEquals(216, params.height);
+        assertEquals(43, closeView.getPaddingTop());
+    }
+
 }
