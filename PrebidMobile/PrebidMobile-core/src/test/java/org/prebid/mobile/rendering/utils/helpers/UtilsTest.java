@@ -37,8 +37,10 @@ import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.test.utils.ResourceUtils;
+import org.prebid.mobile.units.configuration.Position;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
@@ -424,7 +426,9 @@ public class UtilsTest extends TestCase {
     public void createCloseView_UseCloseButtonAreaOutOfRange_CreateViewWithDefaultSize() {
         Activity activity = Robolectric.buildActivity(Activity.class).get();
 
-        View closeView = Utils.createCloseView(activity, 0.0);
+        InterstitialDisplayPropertiesInternal properties = new InterstitialDisplayPropertiesInternal();
+        properties.closeButtonArea = 0.0;
+        View closeView = Utils.createCloseView(activity, properties);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
 
         assertEquals(Gravity.END | Gravity.TOP, params.gravity);
@@ -436,13 +440,49 @@ public class UtilsTest extends TestCase {
     public void createCloseView_UseCustomCloseButtonArea_CreateViewWithCalculatedSize() {
         Activity activity = Robolectric.buildActivity(Activity.class).get();
 
-        View closeView = Utils.createCloseView(activity, 0.2);
+        InterstitialDisplayPropertiesInternal properties = new InterstitialDisplayPropertiesInternal();
+        properties.closeButtonArea = 0.2;
+        View closeView = Utils.createCloseView(activity, properties);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
 
         assertEquals(Gravity.END | Gravity.TOP, params.gravity);
         assertEquals(216, params.width);
         assertEquals(216, params.height);
         assertEquals(43, closeView.getPaddingTop());
+    }
+
+    @Test
+    public void createCloseView_UseCustomPosition_CreateViewWithSetPosition() {
+        Activity activity = Robolectric.buildActivity(Activity.class).get();
+
+        InterstitialDisplayPropertiesInternal properties = new InterstitialDisplayPropertiesInternal();
+        properties.closeButtonPosition = Position.TOP_LEFT;
+        View closeView = Utils.createCloseView(activity, properties);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
+
+        assertEquals(Gravity.START | Gravity.TOP, params.gravity);
+    }
+
+    @Test
+    public void createCloseView_UseWrongPosition_CreateViewWithDefaultTopRight() {
+        Activity activity = Robolectric.buildActivity(Activity.class).get();
+
+        InterstitialDisplayPropertiesInternal properties = new InterstitialDisplayPropertiesInternal();
+        properties.closeButtonPosition = Position.BOTTOM;
+        View closeView = Utils.createCloseView(activity, properties);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
+
+        assertEquals(Gravity.END | Gravity.TOP, params.gravity);
+    }
+
+    @Test
+    public void createCloseView_UseNullProperties_CreateViewWithDefaultTopRight() {
+        Activity activity = Robolectric.buildActivity(Activity.class).get();
+
+        View closeView = Utils.createCloseView(activity, null);
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) (closeView.getLayoutParams());
+
+        assertEquals(Gravity.END | Gravity.TOP, params.gravity);
     }
 
 }

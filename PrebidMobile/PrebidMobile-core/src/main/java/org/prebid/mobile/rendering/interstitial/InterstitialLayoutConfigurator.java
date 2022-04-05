@@ -41,5 +41,6 @@ public class InterstitialLayoutConfigurator {
         displayProperties.closeButtonArea = adConfiguration.getCloseButtonArea();
         displayProperties.isSoundButtonVisible = adConfiguration.isSoundButtonVisible();
         displayProperties.isMuted = adConfiguration.isMuted();
+        displayProperties.closeButtonPosition = adConfiguration.getCloseButtonPosition();
     }
 }

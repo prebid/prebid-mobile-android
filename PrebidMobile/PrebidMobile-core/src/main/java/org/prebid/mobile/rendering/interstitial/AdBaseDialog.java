@@ -338,7 +338,7 @@ public abstract class AdBaseDialog extends Dialog {
         }
 
         InterstitialDisplayPropertiesInternal properties = mInterstitialManager.getInterstitialDisplayProperties();
-        mCloseView = Utils.createCloseView(mContextReference.get(), properties.closeButtonArea);
+        mCloseView = Utils.createCloseView(mContextReference.get(), properties);
 
         if (mCloseView == null) {
             LogUtil.error(TAG, "Unable to add close button. Close view is null");

@@ -3,6 +3,7 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 import org.prebid.mobile.rendering.bidding.parallel.InterstitialAdUnit
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
+import org.prebid.mobile.units.configuration.Position
 import java.util.*
 
 class PpmInterstitialCloseButtonAreaFragment : BaseBidInterstitialFragment() {
@@ -21,6 +22,7 @@ class PpmInterstitialCloseButtonAreaFragment : BaseBidInterstitialFragment() {
         }
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
         interstitialAdUnit?.setCloseButtonArea(0.40)
+        interstitialAdUnit?.setCloseButtonPosition(Position.TOP_LEFT)
     }
 
 }

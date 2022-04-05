@@ -32,6 +32,7 @@ import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.units.configuration.Position;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -189,6 +190,14 @@ public abstract class BaseInterstitialAdUnit {
      */
     public void setCloseButtonArea(@FloatRange(from = 0, to = 1.0) double closeButtonArea) {
         adUnitConfig.setCloseButtonArea(closeButtonArea);
+    }
+
+    /**
+     * Sets close button position on the screen. Suitable values TOP_LEFT and TOP_RIGHT.
+     * Default value TOP_RIGHT.
+     */
+    public void setCloseButtonPosition(@Nullable Position closeButtonPosition) {
+        adUnitConfig.setCloseButtonPosition(closeButtonPosition);
     }
 
     /**

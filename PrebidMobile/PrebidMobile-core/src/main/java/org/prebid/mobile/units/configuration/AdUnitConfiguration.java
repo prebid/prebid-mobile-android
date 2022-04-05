@@ -36,7 +36,7 @@ public class AdUnitConfiguration {
     private String pbAdSlot;
     private String interstitialSize;
 
-    private final EnumSet<AdFormat> adFormats = EnumSet.noneOf(AdFormat.class);
+    private Position closeButtonPosition = Position.TOP_RIGHT;
     private AdSize minSizePercentage;
     private PlacementType placementType;
     private AdPosition adPosition;
@@ -45,6 +45,7 @@ public class AdUnitConfiguration {
     private VideoBaseAdUnit.Parameters videoParameters;
     private NativeAdUnitConfiguration nativeConfiguration;
 
+    private final EnumSet<AdFormat> adFormats = EnumSet.noneOf(AdFormat.class);
     private final HashSet<AdSize> adSizes = new HashSet<>();
     private final ArrayList<DataObject> userDataObjects = new ArrayList<>();
     private final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
@@ -315,13 +316,29 @@ public class AdUnitConfiguration {
         interstitialSize = size;
     }
 
-    public void setInterstitialSize(int width, int height) {
+    public void setInterstitialSize(
+            int width,
+            int height
+    ) {
         interstitialSize = width + "x" + height;
     }
 
     @Nullable
     public String getInterstitialSize() {
         return interstitialSize;
+    }
+
+    public void setCloseButtonPosition(@Nullable Position closeButtonPosition) {
+        if (closeButtonPosition != null) {
+            if (closeButtonPosition == Position.TOP_LEFT || closeButtonPosition == Position.TOP_RIGHT) {
+                this.closeButtonPosition = closeButtonPosition;
+            }
+        }
+    }
+
+    @NonNull
+    public Position getCloseButtonPosition() {
+        return closeButtonPosition;
     }
 
     public void setVideoInitialVolume(float videoInitialVolume) {

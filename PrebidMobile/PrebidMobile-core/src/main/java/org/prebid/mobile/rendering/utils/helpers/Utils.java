@@ -29,18 +29,18 @@ import android.util.DisplayMetrics;
 import android.view.*;
 import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.core.R;
+import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.parser.AdResponseParserVast;
 import org.prebid.mobile.rendering.video.vast.VAST;
+import org.prebid.mobile.units.configuration.Position;
 
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -439,55 +439,57 @@ public final class Utils {
 
     public static View createCloseView(
             Context context,
-            @Nullable Double closeButtonArea
+            InterstitialDisplayPropertiesInternal properties
     ) {
         if (context == null) {
             LogUtil.error(TAG, "Unable to create close view. Context is null");
             return null;
         }
 
-        FrameLayout.LayoutParams params;
         View closeView = LayoutInflater.from(context).inflate(R.layout.lyt_close, null);
-        if (closeButtonArea == null || closeButtonArea < 0.05 || closeButtonArea > 1) {
-            params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT
-            );
-        } else {
-            int screenSize = getSmallestScreenSideSize(context);
-            int buttonSize = (int) (screenSize * closeButtonArea);
-            if (convertPxToDp(buttonSize, context) < MIN_BUTTON_SIZE_DP) {
-                buttonSize = convertDpToPx(MIN_BUTTON_SIZE_DP, context);
-            }
-            int padding = (int) (buttonSize * 0.2);
-            closeView.setPadding(padding, padding, padding, padding);
-            params = new FrameLayout.LayoutParams(buttonSize, buttonSize);
-        }
+        FrameLayout.LayoutParams params = calculateButtonSize(closeView, properties);
 
         params.gravity = Gravity.END | Gravity.TOP;
+        if (properties != null && properties.closeButtonPosition == Position.TOP_LEFT) {
+            params.gravity = Gravity.START | Gravity.TOP;
+        }
+
         closeView.setLayoutParams(params);
         return closeView;
     }
 
-    public static View createSoundView(Context context) {
-        return createView(context, R.layout.lyt_sound, Gravity.END | Gravity.BOTTOM);
+    private static FrameLayout.LayoutParams calculateButtonSize(
+            View view,
+            InterstitialDisplayPropertiesInternal properties
+    ) {
+        Context context = view.getContext();
+        if (properties == null || properties.closeButtonArea < 0.05 || properties.closeButtonArea > 1) {
+            return new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+            );
+        }
+
+        int screenSize = getSmallestScreenSideSize(context);
+        int buttonSize = (int) (screenSize * properties.closeButtonArea);
+        if (convertPxToDp(buttonSize, context) < MIN_BUTTON_SIZE_DP) {
+            buttonSize = convertDpToPx(MIN_BUTTON_SIZE_DP, context);
+        }
+        int padding = (int) (buttonSize * 0.2);
+        view.setPadding(padding, padding, padding, padding);
+        return new FrameLayout.LayoutParams(buttonSize, buttonSize);
     }
 
-    private static View createView(
-            Context context,
-            @LayoutRes int layoutId,
-            int gravity
-    ) {
+    public static View createSoundView(Context context) {
         if (context == null) {
             LogUtil.error(TAG, "Unable to create view. Context is null");
             return null;
         }
 
-        View view = LayoutInflater.from(context).inflate(layoutId, null);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
+        View view = LayoutInflater.from(context).inflate(R.layout.lyt_sound, null);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        params.gravity = gravity;
+        params.gravity = Gravity.END | Gravity.BOTTOM;
         view.setLayoutParams(params);
         return view;
     }
