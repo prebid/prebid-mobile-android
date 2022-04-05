@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.bidding.parallel;
 
 import android.content.Context;
+import androidx.annotation.FloatRange;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.ContentObject;
@@ -180,6 +181,14 @@ public abstract class BaseInterstitialAdUnit {
 
     public void setMaxVideoDuration(int seconds) {
         adUnitConfig.setMaxVideoDuration(seconds);
+    }
+
+    /**
+     * Sets close button percentage size in range from 0.05 to 1.
+     * If value less than 0.05, size will be default.
+     */
+    public void setCloseButtonArea(@FloatRange(from = 0, to = 1.0) double closeButtonArea) {
+        adUnitConfig.setCloseButtonArea(closeButtonArea);
     }
 
     /**

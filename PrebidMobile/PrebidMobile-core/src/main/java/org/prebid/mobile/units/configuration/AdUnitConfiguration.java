@@ -1,5 +1,6 @@
 package org.prebid.mobile.units.configuration;
 
+import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.*;
@@ -27,6 +28,7 @@ public class AdUnitConfiguration {
     private int autoRefreshDelayInMillis = 0;
     private final int broadcastId = Utils.generateRandomInt();
     private float videoInitialVolume = ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME;
+    private double closeButtonArea = 0;
 
     private int maxVideoDuration = 3600;
 
@@ -293,6 +295,14 @@ public class AdUnitConfiguration {
 
     public boolean isRewarded() {
         return isRewarded;
+    }
+
+    public void setCloseButtonArea(@FloatRange(from = 0, to = 1.0) double closeButtonArea) {
+        this.closeButtonArea = closeButtonArea;
+    }
+
+    public double getCloseButtonArea() {
+        return closeButtonArea;
     }
 
     public void setInterstitialSize(@Nullable InterstitialSizes.InterstitialSize size) {

@@ -16,6 +16,7 @@
 
 package org.prebid.mobile.rendering.utils.helpers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -30,6 +31,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -429,8 +431,42 @@ public final class Utils {
         return map;
     }
 
+    private static final int MIN_BUTTON_SIZE_DP = 30;
+
     public static View createCloseView(Context context) {
-        return createView(context, R.layout.lyt_close, Gravity.END | Gravity.TOP);
+        return createCloseView(context, null);
+    }
+
+    public static View createCloseView(
+            Context context,
+            @Nullable Double closeButtonArea
+    ) {
+        if (context == null) {
+            LogUtil.error(TAG, "Unable to create close view. Context is null");
+            return null;
+        }
+
+        FrameLayout.LayoutParams params;
+        View closeView = LayoutInflater.from(context).inflate(R.layout.lyt_close, null);
+        if (closeButtonArea == null || closeButtonArea < 0.05 || closeButtonArea > 1) {
+            params = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+        } else {
+            int screenSize = getSmallestScreenSideSize(context);
+            int buttonSize = (int) (screenSize * closeButtonArea);
+            if (convertPxToDp(buttonSize, context) < MIN_BUTTON_SIZE_DP) {
+                buttonSize = convertDpToPx(MIN_BUTTON_SIZE_DP, context);
+            }
+            int padding = (int) (buttonSize * 0.2);
+            closeView.setPadding(padding, padding, padding, padding);
+            params = new FrameLayout.LayoutParams(buttonSize, buttonSize);
+        }
+
+        params.gravity = Gravity.END | Gravity.TOP;
+        closeView.setLayoutParams(params);
+        return closeView;
     }
 
     public static View createSoundView(Context context) {
@@ -457,13 +493,45 @@ public final class Utils {
         return view;
     }
 
+    private static int getSmallestScreenSideSize(Context context) {
+        try {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int result = Math.min(displayMetrics.widthPixels, displayMetrics.heightPixels);
+            if (result > 0) {
+                return result;
+            }
+        } catch (Exception exception) {}
+        DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
+        return Math.min(displayMetrics.heightPixels, displayMetrics.widthPixels);
+    }
+
+    public static int convertPxToDp(
+            int px,
+            Context context
+    ) {
+        return (int) (px / ((float) context.getResources()
+                                           .getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
+
+    public static int convertDpToPx(
+            int dp,
+            Context context
+    ) {
+        return (int) (dp * ((float) context.getResources()
+                                           .getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
+
     public static View createWatchAgainView(Context context) {
         if (context == null) {
             LogUtil.error(TAG, "Unable to create watch again view. Context is null");
             return null;
         }
         View watchAgainView = LayoutInflater.from(context).inflate(R.layout.lyt_watch_again, null);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
         params.gravity = Gravity.CENTER;
         watchAgainView.setLayoutParams(params);
         return watchAgainView;

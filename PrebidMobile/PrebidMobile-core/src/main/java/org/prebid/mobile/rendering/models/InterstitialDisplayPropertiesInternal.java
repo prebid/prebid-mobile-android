@@ -22,6 +22,7 @@ public class InterstitialDisplayPropertiesInternal extends InterstitialDisplayPr
 
     public int expandWidth;
     public int expandHeight;
+    public double closeButtonArea;
     public int orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
     public boolean isSoundButtonVisible = false;
     public boolean isMuted = false;
