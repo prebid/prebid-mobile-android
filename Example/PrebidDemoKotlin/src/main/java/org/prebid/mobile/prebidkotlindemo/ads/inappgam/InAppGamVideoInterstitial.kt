@@ -1,6 +1,7 @@
 package org.prebid.mobile.prebidkotlindemo.ads.inappgam
 
 import android.app.Activity
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialAdUnitListener
@@ -12,7 +13,8 @@ object InAppGamVideoInterstitial {
 
     private var adUnit: InterstitialAdUnit? = null
 
-    fun create(activity: Activity, adUnitId: String, configId: String) {
+    fun create(activity: Activity, adUnitId: String, configId: String,storedAuctionResponse: String) {
+        PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
         val eventHandler = GamInterstitialEventHandler(activity, adUnitId)
         adUnit = InterstitialAdUnit(activity, configId, EnumSet.of(AdUnitFormat.VIDEO), eventHandler)
         adUnit?.setInterstitialAdUnitListener(object : InterstitialAdUnitListener {
@@ -30,6 +32,7 @@ object InAppGamVideoInterstitial {
 
     fun destroy() {
         adUnit?.destroy()
+        PrebidMobile.setStoredAuctionResponse(null)
         adUnit = null
     }
 

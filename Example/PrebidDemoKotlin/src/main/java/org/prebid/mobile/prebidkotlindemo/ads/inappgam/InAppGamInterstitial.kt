@@ -2,6 +2,7 @@ package org.prebid.mobile.prebidkotlindemo.ads.inappgam
 
 import android.app.Activity
 import org.prebid.mobile.AdSize
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.rendering.bidding.parallel.InterstitialAdUnit
@@ -16,10 +17,12 @@ object InAppGamInterstitial {
         minPercentageWidth: Int,
         minPercentageHeight: Int,
         adUnitId: String,
-        configId: String
+        configId: String,
+        storedAuctionResponse: String
     ) {
         val eventHandler = GamInterstitialEventHandler(activity, adUnitId)
         adUnit = InterstitialAdUnit(activity, configId, eventHandler)
+        PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
         adUnit?.setMinSizePercentage(AdSize(minPercentageWidth, minPercentageHeight))
         adUnit?.setInterstitialAdUnitListener(object : InterstitialAdUnitListener {
             override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
@@ -36,6 +39,7 @@ object InAppGamInterstitial {
 
     fun destroy() {
         adUnit?.destroy()
+        PrebidMobile.setStoredAuctionResponse(null)
         adUnit = null
     }
 
