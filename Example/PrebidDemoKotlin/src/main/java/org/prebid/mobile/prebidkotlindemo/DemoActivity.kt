@@ -55,7 +55,7 @@ class DemoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_demo)
 
-        AdTypesRepository.useOpenXServer()
+        AdTypesRepository.usePrebidServer()
         useFakeGDPR()
         parseArguments()
         initViews()

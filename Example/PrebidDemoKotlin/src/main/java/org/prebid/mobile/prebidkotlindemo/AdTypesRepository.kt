@@ -67,7 +67,7 @@ object AdTypesRepository {
                     InAppBanner.create(
                         wrapper, autoRefreshTime / 1000,
                         320, 50,
-                        "50699c03-0910-477c-b4a4-911dbe2b9d42"
+                        "imp-prebid-banner-320-50","response-prebid-banner-320-50"
                     )
                 },
                 onDestroy = { InAppBanner.destroy() }
@@ -242,9 +242,9 @@ object AdTypesRepository {
         )
     )
 
-    fun useOpenXServer() {
+    fun usePrebidServer() {
         PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid.openx.net/openrtb2/auction"))
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
     }
 
     private fun useTestServer() {
