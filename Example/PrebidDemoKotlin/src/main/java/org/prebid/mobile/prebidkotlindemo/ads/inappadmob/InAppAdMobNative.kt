@@ -19,12 +19,13 @@ object InAppAdMobNative {
 
     private var nativeAd: NativeAd? = null
 
-    fun create(wrapper: ViewGroup, adUnitId: String, configId: String) {
-        val host = Host.CUSTOM
-        host.hostUrl = "https://prebid.qa.openx.net/openrtb2/auction"
-        PrebidMobile.setPrebidServerHost(host)
-        PrebidMobile.setPrebidServerAccountId("08efa38c-b6b4-48c4-adc0-bcb791caa791")
-
+    fun create(
+        wrapper: ViewGroup,
+        adUnitId: String,
+        configId: String,
+        storedAuctionResponse: String
+    ) {
+        PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
         val nativeAdOptions = NativeAdOptions
             .Builder()
             .build()
@@ -61,6 +62,7 @@ object InAppAdMobNative {
 
     fun destroy() {
         nativeAd?.destroy()
+        PrebidMobile.setStoredAuctionResponse(null)
         nativeAd = null
     }
 

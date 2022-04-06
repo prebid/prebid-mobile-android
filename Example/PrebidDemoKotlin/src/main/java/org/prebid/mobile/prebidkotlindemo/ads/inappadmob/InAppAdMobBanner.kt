@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.ViewGroup
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.initialization.InitializationStatus
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.admob.AdMobBannerMediationUtils
 import org.prebid.mobile.admob.PrebidBannerAdapter
 import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
@@ -24,20 +25,24 @@ object InAppAdMobBanner {
         width: Int,
         height: Int,
         adUnitId: String,
-        configId: String
+        configId: String,
+        storedAuctionResponse: String
     ) {
         MobileAds.initialize(wrapper.context) { status ->
             Log.d("MobileAds", "Initialization complete.")
             logAdaptersInitializationStatus(status)
         }
-
+        PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
         /** Google recommends put activity for mediation ad networks */
         bannerView = AdView(activity)
         bannerView?.adSize = AdSize.BANNER
         bannerView?.adUnitId = adUnitId
         bannerView?.adListener = object : AdListener() {
             override fun onAdLoaded() {
-                Log.d("AdListener", "Won ad network: ${bannerView?.responseInfo?.mediationAdapterClassName}")
+                Log.d(
+                    "AdListener",
+                    "Won ad network: ${bannerView?.responseInfo?.mediationAdapterClassName}"
+                )
             }
 
             override fun onAdFailedToLoad(p0: LoadAdError) {
@@ -69,7 +74,7 @@ object InAppAdMobBanner {
     fun destroy() {
         bannerView?.destroy()
         bannerView = null
-
+        PrebidMobile.setStoredAuctionResponse(null)
         adUnit?.destroy()
         adUnit = null
     }

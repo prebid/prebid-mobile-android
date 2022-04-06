@@ -182,7 +182,7 @@ object AdTypesRepository {
                         activity, wrapper, autoRefreshTime,
                         320, 50,
                         "ca-app-pub-1875909575462531/3793078260",
-                        "50699c03-0910-477c-b4a4-911dbe2b9d42"
+                        "imp-prebid-banner-320-50","response-prebid-banner-320-50"
                     )
                 },
                 onDestroy = { InAppAdMobBanner.destroy() }
@@ -193,8 +193,8 @@ object AdTypesRepository {
                     InAppAdMobInterstitial.create(
                         activity,
                         "ca-app-pub-1875909575462531/6393291067",
-                        "5a4b8dcf-f984-4b04-9448-6529908d6cb6",
-                        EnumSet.of(AdUnitFormat.DISPLAY)
+                        "imp-prebid-display-interstitial-320-480",
+                        EnumSet.of(AdUnitFormat.DISPLAY),"response-prebid-display-interstitial-320-480"
                     )
                 },
                 onDestroy = { InAppAdMobInterstitial.destroy() }
@@ -205,8 +205,8 @@ object AdTypesRepository {
                     InAppAdMobInterstitial.create(
                         activity,
                         "ca-app-pub-1875909575462531/6393291067",
-                        "12f58bc2-b664-4672-8d19-638bcc96fd5c",
-                        EnumSet.of(AdUnitFormat.VIDEO)
+                        "imp-prebid-video-interstitial-320-480",
+                        EnumSet.of(AdUnitFormat.VIDEO),"response-prebid-video-interstitial-320-480"
                     )
                 },
                 onDestroy = { InAppAdMobInterstitial.destroy() }
@@ -217,7 +217,7 @@ object AdTypesRepository {
                     InAppAdMobRewarded.create(
                         activity,
                         "ca-app-pub-1875909575462531/1908212572",
-                        "9007b76d-c73c-49c6-b0a8-1c7890a84b33"
+                        "imp-prebid-video-rewarded-320-480","response-prebid-video-rewarded-320-480"
                     )
                 },
                 onDestroy = { InAppAdMobRewarded.destroy() }
@@ -229,7 +229,7 @@ object AdTypesRepository {
                     InAppAdMobNative.create(
                         wrapper,
                         "ca-app-pub-1875909575462531/9720985924",
-                        "51fe68ba-aff2-401e-9e15-f3ed89d5c036"
+                        "imp-prebid-banner-native-styles","response-prebid-banner-native-styles"
                     )
                 },
                 onDestroy = {
