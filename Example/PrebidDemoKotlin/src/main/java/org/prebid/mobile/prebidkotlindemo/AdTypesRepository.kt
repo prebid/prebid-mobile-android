@@ -60,6 +60,7 @@ object AdTypesRepository {
                 onDestroy = { GamInterstitial.destroy() }
             )
         ),
+
         "In-App" to listOf(
             AdType(
                 "Banner 320x50",
