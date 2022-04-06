@@ -17,16 +17,20 @@
 package org.prebid.mobile.rendering.models;
 
 import android.content.pm.ActivityInfo;
+import org.prebid.mobile.units.configuration.Position;
 
 public class InterstitialDisplayPropertiesInternal extends InterstitialDisplayPropertiesPublic {
 
     public int expandWidth;
     public int expandHeight;
+    public double closeButtonArea = 0;
     public int orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
     public boolean isSoundButtonVisible = false;
     public boolean isMuted = false;
 
     public boolean isRotationEnabled = false;
+
+    public Position closeButtonPosition = Position.TOP_RIGHT;
 
     public void resetExpandValues() {
         expandHeight = 0;

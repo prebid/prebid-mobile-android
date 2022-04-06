@@ -16,6 +16,7 @@
 
 package org.prebid.mobile.rendering.utils.helpers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -28,7 +29,6 @@ import android.util.DisplayMetrics;
 import android.view.*;
 import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import org.json.JSONArray;
@@ -36,9 +36,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.core.R;
+import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.parser.AdResponseParserVast;
 import org.prebid.mobile.rendering.video.vast.VAST;
+import org.prebid.mobile.units.configuration.Position;
 
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -429,32 +431,96 @@ public final class Utils {
         return map;
     }
 
+    private static final int MIN_BUTTON_SIZE_DP = 30;
+
     public static View createCloseView(Context context) {
-        return createView(context, R.layout.lyt_close, Gravity.END | Gravity.TOP);
+        return createCloseView(context, null);
+    }
+
+    public static View createCloseView(
+            Context context,
+            InterstitialDisplayPropertiesInternal properties
+    ) {
+        if (context == null) {
+            LogUtil.error(TAG, "Unable to create close view. Context is null");
+            return null;
+        }
+
+        View closeView = LayoutInflater.from(context).inflate(R.layout.lyt_close, null);
+        FrameLayout.LayoutParams params = calculateButtonSize(closeView, properties);
+
+        params.gravity = Gravity.END | Gravity.TOP;
+        if (properties != null && properties.closeButtonPosition == Position.TOP_LEFT) {
+            params.gravity = Gravity.START | Gravity.TOP;
+        }
+
+        closeView.setLayoutParams(params);
+        return closeView;
+    }
+
+    private static FrameLayout.LayoutParams calculateButtonSize(
+            View view,
+            InterstitialDisplayPropertiesInternal properties
+    ) {
+        Context context = view.getContext();
+        if (properties == null || properties.closeButtonArea < 0.05 || properties.closeButtonArea > 1) {
+            return new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+            );
+        }
+
+        int screenSize = getSmallestScreenSideSize(context);
+        int buttonSize = (int) (screenSize * properties.closeButtonArea);
+        if (convertPxToDp(buttonSize, context) < MIN_BUTTON_SIZE_DP) {
+            buttonSize = convertDpToPx(MIN_BUTTON_SIZE_DP, context);
+        }
+        int padding = (int) (buttonSize * 0.2);
+        view.setPadding(padding, padding, padding, padding);
+        return new FrameLayout.LayoutParams(buttonSize, buttonSize);
     }
 
     public static View createSoundView(Context context) {
-        return createView(context, R.layout.lyt_sound, Gravity.END | Gravity.BOTTOM);
-    }
-
-    private static View createView(
-            Context context,
-            @LayoutRes int layoutId,
-            int gravity
-    ) {
         if (context == null) {
             LogUtil.error(TAG, "Unable to create view. Context is null");
             return null;
         }
 
-        View view = LayoutInflater.from(context).inflate(layoutId, null);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
+        View view = LayoutInflater.from(context).inflate(R.layout.lyt_sound, null);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        params.gravity = gravity;
+        params.gravity = Gravity.END | Gravity.BOTTOM;
         view.setLayoutParams(params);
         return view;
+    }
+
+    private static int getSmallestScreenSideSize(Context context) {
+        try {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int result = Math.min(displayMetrics.widthPixels, displayMetrics.heightPixels);
+            if (result > 0) {
+                return result;
+            }
+        } catch (Exception exception) {}
+        DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
+        return Math.min(displayMetrics.heightPixels, displayMetrics.widthPixels);
+    }
+
+    public static int convertPxToDp(
+            int px,
+            Context context
+    ) {
+        return (int) (px / ((float) context.getResources()
+                                           .getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
+
+    public static int convertDpToPx(
+            int dp,
+            Context context
+    ) {
+        return (int) (dp * ((float) context.getResources()
+                                           .getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
     public static View createWatchAgainView(Context context) {
@@ -463,7 +529,10 @@ public final class Utils {
             return null;
         }
         View watchAgainView = LayoutInflater.from(context).inflate(R.layout.lyt_watch_again, null);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
         params.gravity = Gravity.CENTER;
         watchAgainView.setLayoutParams(params);
         return watchAgainView;

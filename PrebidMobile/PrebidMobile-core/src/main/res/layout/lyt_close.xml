@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~    Copyright 2018-2021 Prebid.org, Inc.
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +14,9 @@
   ~    limitations under the License.
   -->
 
-<ImageView
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/iv_close_interstitial"
-    android:padding="25dp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:src="@drawable/prebid_ic_close_interstitial"/>
+    android:layout_width="70dp"
+    android:layout_height="70dp"
+    android:padding="15dp"
+    android:src="@drawable/prebid_ic_close_interstitial" />
