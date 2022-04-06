@@ -251,12 +251,15 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
     }
 
     public boolean isNotShowingEndCard() {
-        return mCurrentCreative != null && (!(mCurrentCreative.isDisplay())
-                                            || !mCurrentCreative.isEndCard());
+        return mCurrentCreative != null && (!(mCurrentCreative.isDisplay()) || !mCurrentCreative.isEndCard());
     }
 
     public boolean hasEndCard() {
         return mCurrentCreative != null && mCurrentCreative.isDisplay();
+    }
+
+    public boolean hasNextCreative() {
+        return mTransactionManager.hasNextCreative();
     }
 
     public void updateAdView(View view) {

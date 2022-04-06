@@ -431,6 +431,21 @@ public final class Utils {
         return map;
     }
 
+    public static View createSkipView(Context context) {
+        if (context == null) {
+            LogUtil.error(TAG, "Unable to create view. Context is null");
+            return null;
+        }
+
+        View view = LayoutInflater.from(context).inflate(R.layout.lyt_skip, null);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.gravity = Gravity.END | Gravity.TOP;
+        view.setLayoutParams(params);
+        return view;
+    }
+
     private static final int MIN_BUTTON_SIZE_DP = 30;
 
     public static View createCloseView(Context context) {

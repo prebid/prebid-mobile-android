@@ -56,8 +56,7 @@ public abstract class AdBaseDialog extends Dialog {
     private static final String TAG = AdBaseDialog.class.getSimpleName();
 
     private final WeakReference<Context> mContextReference;
-    private final OrientationBroadcastReceiver mOrientationBroadcastReceiver =
-        new OrientationBroadcastReceiver();
+    private final OrientationBroadcastReceiver mOrientationBroadcastReceiver = new OrientationBroadcastReceiver();
 
     protected JsExecutor mJsExecutor;
     protected InterstitialManager mInterstitialManager;
@@ -65,8 +64,9 @@ public abstract class AdBaseDialog extends Dialog {
     protected WebViewBase mWebViewBase;
     protected FrameLayout mAdViewContainer;
     protected View mDisplayView;
+    protected View mSoundView;
+    protected View mSkipView;
     private View mCloseView;
-    private View mSoundView;
 
     // IMP: shud be always none. cos this val is used when expand is called with an url.
     protected OrientationManager.ForcedOrientation mForceOrientation = OrientationManager.ForcedOrientation.none;
@@ -352,6 +352,26 @@ public abstract class AdBaseDialog extends Dialog {
         mCloseView.setOnClickListener(v -> handleCloseClick());
     }
 
+    protected void addSkipView() {
+        if (mAdViewContainer == null) {
+            LogUtil.error(TAG, "Unable to add close button. Container is null");
+            return;
+        }
+
+        mSkipView = Utils.createSkipView(mContextReference.get());
+
+        if (mSkipView == null) {
+            LogUtil.error(TAG, "Unable to add skip button. Skip view is null");
+            return;
+        }
+
+        mSkipView.setVisibility(View.GONE);
+
+        Views.removeFromParent(mSkipView);
+        mAdViewContainer.addView(mSkipView);
+        mSkipView.setOnClickListener(v -> handleCloseClick());
+    }
+
     protected void addSoundView(boolean isMutedOnStart) {
         if (mAdViewContainer == null) {
             LogUtil.error(TAG, "Unable to add sound button. Container is null");
@@ -481,6 +501,10 @@ public abstract class AdBaseDialog extends Dialog {
             InterstitialDisplayPropertiesInternal properties = adBaseDialog.mInterstitialManager.getInterstitialDisplayProperties();
             if (properties.isSoundButtonVisible && (adBaseDialog instanceof InterstitialVideo)) {
                 adBaseDialog.addSoundView(properties.isMuted);
+            }
+
+            if (adBaseDialog instanceof InterstitialVideo) {
+                adBaseDialog.addSkipView();
             }
 
             adBaseDialog.mInterstitialManager.interstitialDialogShown(adBaseDialog.mAdViewContainer);

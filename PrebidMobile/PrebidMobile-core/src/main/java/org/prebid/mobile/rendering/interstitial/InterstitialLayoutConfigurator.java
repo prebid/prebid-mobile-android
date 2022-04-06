@@ -38,9 +38,10 @@ public class InterstitialLayoutConfigurator {
             displayProperties.isRotationEnabled = true;
         }
 
-        displayProperties.closeButtonArea = adConfiguration.getCloseButtonArea();
         displayProperties.isSoundButtonVisible = adConfiguration.isSoundButtonVisible();
         displayProperties.isMuted = adConfiguration.isMuted();
+        displayProperties.closeButtonArea = adConfiguration.getCloseButtonArea();
         displayProperties.closeButtonPosition = adConfiguration.getCloseButtonPosition();
+        displayProperties.skipDelay = adConfiguration.getSkipDelay();
     }
 }

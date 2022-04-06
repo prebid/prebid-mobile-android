@@ -26,6 +26,7 @@ public class AdUnitConfiguration {
 
     private int videoSkipOffset = SKIP_OFFSET_NOT_ASSIGNED;
     private int autoRefreshDelayInMillis = 0;
+    private int skipDelay = 10;
     private final int broadcastId = Utils.generateRandomInt();
     private float videoInitialVolume = ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME;
     private double closeButtonArea = 0;
@@ -279,6 +280,14 @@ public class AdUnitConfiguration {
         if (adUnitFormats.contains(AdUnitFormat.VIDEO)) {
             adFormats.add(AdFormat.VAST);
         }
+    }
+
+    public void setSkipDelay(int seconds) {
+        this.skipDelay = seconds;
+    }
+
+    public int getSkipDelay() {
+        return skipDelay;
     }
 
     @NonNull

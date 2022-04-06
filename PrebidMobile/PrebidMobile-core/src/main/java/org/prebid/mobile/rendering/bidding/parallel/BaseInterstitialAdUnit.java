@@ -172,6 +172,13 @@ public abstract class BaseInterstitialAdUnit {
         adUnitConfig.setPbAdSlot(adSlot);
     }
 
+    /**
+     * Sets delay in seconds to show skip or close button.
+     */
+    public void setSkipDelay(int secondsDelay) {
+        adUnitConfig.setSkipDelay(secondsDelay);
+    }
+
     public void setIsMuted(boolean isMuted) {
         adUnitConfig.setIsMuted(isMuted);
     }

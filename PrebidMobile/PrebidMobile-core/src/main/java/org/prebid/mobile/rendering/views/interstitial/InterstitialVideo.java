@@ -34,6 +34,7 @@ import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.interstitial.AdBaseDialog;
+import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.views.base.BaseAdView;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
@@ -50,8 +51,11 @@ public class InterstitialVideo extends AdBaseDialog {
 
     private static final String TAG = InterstitialVideo.class.getSimpleName();
 
-    private static final int CLOSE_DELAY_DEFAULT_IN_MS = 2 * 1000;
+    private static final int CLOSE_DELAY_DEFAULT_IN_MS = 10 * 1000;
     private static final int CLOSE_DELAY_MAX_IN_MS = 30 * 1000;
+
+    private boolean useSkipButton = false;
+    private boolean hasEndCard = false;
 
     //Leaving context here for testing
     //Reason:
@@ -76,10 +80,12 @@ public class InterstitialVideo extends AdBaseDialog {
     private int mRemainingTimeInMs = -1;
     private boolean mVideoPaused = true;
 
-    public InterstitialVideo(Context context,
-                             FrameLayout adView,
-                             InterstitialManager interstitialManager,
-                             AdUnitConfiguration adConfiguration) {
+    public InterstitialVideo(
+            Context context,
+            FrameLayout adView,
+            InterstitialManager interstitialManager,
+            AdUnitConfiguration adConfiguration
+    ) {
         super(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen, interstitialManager);
 
         mContextReference = new WeakReference<>(context);
@@ -107,16 +113,7 @@ public class InterstitialVideo extends AdBaseDialog {
     protected void handleDialogShow() {
         handleAdViewShow();
 
-        // For rewarded video, show close button on video complete;
-        // Else, schedule close button show according to close button delay logic
-        if (mAdConfiguration.isRewarded()) {
-            mShowCloseBtnOnComplete = true;
-            long durationInMillis = getDuration(mAdViewContainer);
-            showDurationTimer(durationInMillis);
-        }
-        else {
-            scheduleShowCloseBtnTask(mAdViewContainer);
-        }
+        scheduleShowButtonTask();
     }
 
     public boolean shouldShowCloseButtonOnComplete() {
@@ -127,6 +124,10 @@ public class InterstitialVideo extends AdBaseDialog {
         mShowCloseBtnOnComplete = isEnabled;
     }
 
+    public void setHasEndCard(boolean hasEndCard) {
+        this.hasEndCard = hasEndCard;
+    }
+
     public boolean isVideoPaused() {
         return mVideoPaused;
     }
@@ -135,7 +136,24 @@ public class InterstitialVideo extends AdBaseDialog {
         scheduleShowCloseBtnTask(adView, AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED);
     }
 
-    public void scheduleShowCloseBtnTask(View adView, int closeDelayInMs) {
+    public void scheduleShowButtonTask() {
+        if (hasEndCard) useSkipButton = true;
+
+        int skipDelay = getSkipDelayMs();
+        long videoLength = getDuration(mAdViewContainer);
+
+        if (videoLength <= skipDelay) {
+            scheduleTimer(videoLength);
+            mShowCloseBtnOnComplete = true;
+        } else {
+            scheduleTimer(skipDelay);
+        }
+    }
+
+    public void scheduleShowCloseBtnTask(
+            View adView,
+            int closeDelayInMs
+    ) {
         long delayInMs = getCloseDelayInMs(adView, closeDelayInMs);
         if (delayInMs == 0) {
             LogUtil.debug(TAG, "Delay is 0. Not scheduling skip button show.");
@@ -147,8 +165,7 @@ public class InterstitialVideo extends AdBaseDialog {
         if (videoLength <= delayInMs) {
             // Short video, show close at the end
             mShowCloseBtnOnComplete = true;
-        }
-        else {
+        } else {
             // Clamp close delay value
             long upperBound = Math.min(videoLength, CLOSE_DELAY_MAX_IN_MS);
             long closeDelayTimeInMs = Utils.clampInMillis((int) delayInMs, 0, (int) upperBound);
@@ -166,8 +183,7 @@ public class InterstitialVideo extends AdBaseDialog {
     public void resumeVideo() {
         LogUtil.debug(TAG, "resumeVideo");
         mVideoPaused = false;
-        if (getRemainingTimerTimeInMs() != AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED
-                && getRemainingTimerTimeInMs() > 500L) {
+        if (getRemainingTimerTimeInMs() != AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED && getRemainingTimerTimeInMs() > 500L) {
             scheduleShowCloseBtnTask(mAdViewContainer, getRemainingTimerTimeInMs());
         }
     }
@@ -215,20 +231,22 @@ public class InterstitialVideo extends AdBaseDialog {
         //remove it from parent, if any, before adding it to the new view
         Views.removeFromParent(mAdViewContainer);
         addContentView(mAdViewContainer,
-                       new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                                                       RelativeLayout.LayoutParams.MATCH_PARENT)
+                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                )
         );
         // mInterstitialManager.setCountDownTimerView(mLytCountDownCircle);
         setOnKeyListener((dialog, keyCode, event) -> keyCode == KeyEvent.KEYCODE_BACK);
     }
 
     private long getOffsetLong(View view) {
-        return (view instanceof BaseAdView)
-                ? ((BaseAdView) view).getMediaOffset()
-                : AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
+        return (view instanceof BaseAdView) ? ((BaseAdView) view).getMediaOffset() : AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
     }
 
-    private long getCloseDelayInMs(View adView, int closeDelayInMs) {
+    private long getCloseDelayInMs(
+            View adView,
+            int closeDelayInMs
+    ) {
         long delayInMs = AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
 
         long offsetLong = getOffsetLong(adView);
@@ -259,12 +277,12 @@ public class InterstitialVideo extends AdBaseDialog {
 
                 queueUIThreadTask(() -> {
                     try {
-                        // with default x image);
-                        if (!mAdConfiguration.isRewarded()) {
+                        if (useSkipButton) {
+                            mSkipView.setVisibility(View.VISIBLE);
+                        } else {
                             changeCloseViewVisibility(View.VISIBLE);
                         }
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         LogUtil.error(TAG, "Failed to render custom close icon: " + Log.getStackTraceString(e));
                     }
                 });
@@ -275,9 +293,7 @@ public class InterstitialVideo extends AdBaseDialog {
     }
 
     private long getDuration(View view) {
-        return (view instanceof BaseAdView)
-               ? ((BaseAdView) view).getMediaDuration()
-               : 0;
+        return (view instanceof BaseAdView) ? ((BaseAdView) view).getMediaDuration() : 0;
     }
 
     private void stopTimer() {
@@ -344,9 +360,13 @@ public class InterstitialVideo extends AdBaseDialog {
         pbProgress.setMax((int) durationInMillis);
 
         // Turns progress bar ccw 90 degrees so progress starts from the top
-        final Animation animation = new RotateAnimation(0.0f, -90.0f,
-                                                        Animation.RELATIVE_TO_PARENT, 0.5f,
-                                                        Animation.RELATIVE_TO_PARENT, 0.5f);
+        final Animation animation = new RotateAnimation(0.0f,
+                -90.0f,
+                Animation.RELATIVE_TO_PARENT,
+                0.5f,
+                Animation.RELATIVE_TO_PARENT,
+                0.5f
+        );
         animation.setFillAfter(true);
         pbProgress.startAnimation(animation);
 
@@ -384,4 +404,17 @@ public class InterstitialVideo extends AdBaseDialog {
     protected void setRemainingTimeInMs(int value) {
         mRemainingTimeInMs = value;
     }
+
+    private int getSkipDelayMs() {
+        InterstitialDisplayPropertiesInternal properties = mInterstitialManager.getInterstitialDisplayProperties();
+        if (properties != null) {
+            long videoDuration = getDuration(mAdViewContainer);
+            long upperBound = Math.min(videoDuration, CLOSE_DELAY_MAX_IN_MS);
+
+            int delay = properties.skipDelay * 1000;
+            return Utils.clampInMillis(delay, 0, (int) upperBound);
+        }
+        return CLOSE_DELAY_DEFAULT_IN_MS;
+    }
+
 }

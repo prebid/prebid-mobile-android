@@ -145,9 +145,11 @@ public class InterstitialView extends BaseAdView {
             final AdUnitConfiguration adConfiguration = mAdViewManager.getAdConfiguration();
             mInterstitialManager.configureInterstitialProperties(adConfiguration);
             mInterstitialVideo = new InterstitialVideo(getContext(),
-                                                       InterstitialView.this,
-                                                       mInterstitialManager,
-                                                       adConfiguration);
+                    InterstitialView.this,
+                    mInterstitialManager,
+                    adConfiguration
+            );
+            mInterstitialVideo.setHasEndCard(mAdViewManager.hasNextCreative());
             mInterstitialVideo.setDialogListener(this::handleDialogEvent);
             mInterstitialVideo.show();
         }
