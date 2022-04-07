@@ -30,6 +30,7 @@ public class AdUnitConfiguration {
     private final int broadcastId = Utils.generateRandomInt();
     private float videoInitialVolume = ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME;
     private double closeButtonArea = 0;
+    private double skipButtonArea = 0;
 
     private int maxVideoDuration = 3600;
 
@@ -38,6 +39,7 @@ public class AdUnitConfiguration {
     private String interstitialSize;
 
     private Position closeButtonPosition = Position.TOP_RIGHT;
+    private Position skipButtonPosition = Position.TOP_RIGHT;
     private AdSize minSizePercentage;
     private PlacementType placementType;
     private AdPosition adPosition;
@@ -290,6 +292,25 @@ public class AdUnitConfiguration {
         return skipDelay;
     }
 
+    public double getSkipButtonArea() {
+        return skipButtonArea;
+    }
+
+    public void setSkipButtonArea(double skipButtonArea) {
+        this.skipButtonArea = skipButtonArea;
+    }
+
+    @NonNull
+    public Position getSkipButtonPosition() {
+        return skipButtonPosition;
+    }
+
+    public void setSkipButtonPosition(@Nullable Position skipButtonPosition) {
+        if (skipButtonPosition != null) {
+            this.skipButtonPosition = skipButtonPosition;
+        }
+    }
+
     @NonNull
     public EnumSet<AdFormat> getAdFormats() {
         return adFormats;
@@ -339,9 +360,7 @@ public class AdUnitConfiguration {
 
     public void setCloseButtonPosition(@Nullable Position closeButtonPosition) {
         if (closeButtonPosition != null) {
-            if (closeButtonPosition == Position.TOP_LEFT || closeButtonPosition == Position.TOP_RIGHT) {
-                this.closeButtonPosition = closeButtonPosition;
-            }
+            this.closeButtonPosition = closeButtonPosition;
         }
     }
 

@@ -358,7 +358,8 @@ public abstract class AdBaseDialog extends Dialog {
             return;
         }
 
-        mSkipView = Utils.createSkipView(mContextReference.get());
+        InterstitialDisplayPropertiesInternal properties = mInterstitialManager.getInterstitialDisplayProperties();
+        mSkipView = Utils.createSkipView(mContextReference.get(), properties);
 
         if (mSkipView == null) {
             LogUtil.error(TAG, "Unable to add skip button. Skip view is null");
