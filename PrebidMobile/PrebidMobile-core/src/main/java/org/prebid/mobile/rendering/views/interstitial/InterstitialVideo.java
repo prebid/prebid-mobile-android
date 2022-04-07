@@ -292,7 +292,7 @@ public class InterstitialVideo extends AdBaseDialog {
         mCurrentTimerTaskHash = mCurrentTimerTask.hashCode();
     }
 
-    private long getDuration(View view) {
+    protected long getDuration(View view) {
         return (view instanceof BaseAdView) ? ((BaseAdView) view).getMediaDuration() : 0;
     }
 
@@ -405,7 +405,7 @@ public class InterstitialVideo extends AdBaseDialog {
         mRemainingTimeInMs = value;
     }
 
-    private int getSkipDelayMs() {
+    protected int getSkipDelayMs() {
         InterstitialDisplayPropertiesInternal properties = mInterstitialManager.getInterstitialDisplayProperties();
         if (properties != null) {
             long videoDuration = getDuration(mAdViewContainer);
