@@ -81,6 +81,7 @@ modules=(
   "PrebidMobile-gamEventHandlers"
   "PrebidMobile-mopubAdapters"
   "PrebidMobile-admobAdapters"
+  "PrebidMobile-maxAdapters"
 )
 
 projectPaths=(
@@ -89,6 +90,7 @@ projectPaths=(
   "$BASEDIR/PrebidMobile/PrebidMobile-gamEventHandlers"
   "$BASEDIR/PrebidMobile/PrebidMobile-mopubAdapters"
   "$BASEDIR/PrebidMobile/PrebidMobile-admobAdapters"
+  "$BASEDIR/PrebidMobile/PrebidMobile-maxAdapters"
 )
 
 mkdir "$OUTDIR/aar"
