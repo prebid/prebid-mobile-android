@@ -6,14 +6,19 @@ import android.widget.FrameLayout
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxAdViewAdListener
 import com.applovin.mediation.MaxError
+import com.applovin.mediation.adapters.MaxBannerMediationUtils
+import com.applovin.mediation.adapters.PrebidMAXMediationAdapter
 import com.applovin.mediation.ads.MaxAdView
+import org.prebid.mobile.AdSize
 import org.prebid.mobile.prebidkotlindemo.R
+import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
 
 object InAppMaxBanner {
 
     private const val TAG = "InAppMaxBanner"
 
     private var adView: MaxAdView? = null
+    private var adUnit: MediationBannerAdUnit? = null
 
     fun create(
         wrapper: ViewGroup,
@@ -28,9 +33,21 @@ object InAppMaxBanner {
             ViewGroup.LayoutParams.MATCH_PARENT,
             wrapper.context.resources.getDimensionPixelSize(R.dimen.banner_height)
         )
+        adView?.setLocalExtraParameter(PrebidMAXMediationAdapter.EXTRA_RESPONSE_ID, "Lol")
 
         wrapper.addView(adView)
-        adView?.loadAd()
+
+        val mediationUtils = MaxBannerMediationUtils(adView)
+        adUnit = MediationBannerAdUnit(
+            wrapper.context,
+            configId,
+            AdSize(320, 50),
+            mediationUtils
+        )
+        adUnit?.setRefreshInterval(autoRefreshTime)
+        adUnit?.fetchDemand {
+            adView?.loadAd()
+        }
     }
 
     fun destroy() {

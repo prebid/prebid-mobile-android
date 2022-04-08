@@ -351,7 +351,7 @@ object AdTypesRepository {
                     useTestServer()
                     PrebidMobile.setStoredAuctionResponse("response-prebid-banner-320-50")
                     InAppMaxBanner.create(
-                        wrapper, autoRefreshTime,
+                        wrapper, autoRefreshTime / 1000,
                         "3d8a0bcbb6d571d5",
                         "imp-prebid-banner-320-50"
                     )
