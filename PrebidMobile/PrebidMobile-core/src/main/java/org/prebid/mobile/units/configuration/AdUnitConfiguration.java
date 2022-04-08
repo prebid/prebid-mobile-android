@@ -1,5 +1,6 @@
 package org.prebid.mobile.units.configuration;
 
+import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.*;
@@ -20,17 +21,25 @@ public class AdUnitConfiguration {
 
     private boolean isRewarded;
     private boolean isBuiltInVideo = false;
+    private boolean isMuted = true;
+    private boolean isSoundButtonVisible = false;
 
     private int videoSkipOffset = SKIP_OFFSET_NOT_ASSIGNED;
     private int autoRefreshDelayInMillis = 0;
+    private int skipDelay = 10;
     private final int broadcastId = Utils.generateRandomInt();
     private float videoInitialVolume = ExoPlayerView.DEFAULT_INITIAL_VIDEO_VOLUME;
+    private double closeButtonArea = 0;
+    private double skipButtonArea = 0;
+
+    private int maxVideoDuration = 3600;
 
     private String configId;
     private String pbAdSlot;
     private String interstitialSize;
 
-    private final EnumSet<AdFormat> adFormats = EnumSet.noneOf(AdFormat.class);
+    private Position closeButtonPosition = Position.TOP_RIGHT;
+    private Position skipButtonPosition = Position.TOP_RIGHT;
     private AdSize minSizePercentage;
     private PlacementType placementType;
     private AdPosition adPosition;
@@ -39,6 +48,7 @@ public class AdUnitConfiguration {
     private VideoBaseAdUnit.Parameters videoParameters;
     private NativeAdUnitConfiguration nativeConfiguration;
 
+    private final EnumSet<AdFormat> adFormats = EnumSet.noneOf(AdFormat.class);
     private final HashSet<AdSize> adSizes = new HashSet<>();
     private final ArrayList<DataObject> userDataObjects = new ArrayList<>();
     private final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
@@ -193,6 +203,22 @@ public class AdUnitConfiguration {
         return isBuiltInVideo;
     }
 
+    public void setIsMuted(boolean isMuted) {
+        this.isMuted = isMuted;
+    }
+
+    public boolean isMuted() {
+        return isMuted;
+    }
+
+    public void setIsSoundButtonVisible(boolean isSoundButtonVisible) {
+        this.isSoundButtonVisible = isSoundButtonVisible;
+    }
+
+    public boolean isSoundButtonVisible() {
+        return isSoundButtonVisible;
+    }
+
     public void setAutoRefreshDelay(int autoRefreshDelayInSeconds) {
         if (autoRefreshDelayInSeconds < 0) {
             LogUtil.error(TAG, "Auto refresh delay can't be less then 0.");
@@ -258,6 +284,33 @@ public class AdUnitConfiguration {
         }
     }
 
+    public void setSkipDelay(int seconds) {
+        this.skipDelay = seconds;
+    }
+
+    public int getSkipDelay() {
+        return skipDelay;
+    }
+
+    public double getSkipButtonArea() {
+        return skipButtonArea;
+    }
+
+    public void setSkipButtonArea(double skipButtonArea) {
+        this.skipButtonArea = skipButtonArea;
+    }
+
+    @NonNull
+    public Position getSkipButtonPosition() {
+        return skipButtonPosition;
+    }
+
+    public void setSkipButtonPosition(@Nullable Position skipButtonPosition) {
+        if (skipButtonPosition != null) {
+            this.skipButtonPosition = skipButtonPosition;
+        }
+    }
+
     @NonNull
     public EnumSet<AdFormat> getAdFormats() {
         return adFormats;
@@ -275,6 +328,14 @@ public class AdUnitConfiguration {
         return isRewarded;
     }
 
+    public void setCloseButtonArea(@FloatRange(from = 0, to = 1.0) double closeButtonArea) {
+        this.closeButtonArea = closeButtonArea;
+    }
+
+    public double getCloseButtonArea() {
+        return closeButtonArea;
+    }
+
     public void setInterstitialSize(@Nullable InterstitialSizes.InterstitialSize size) {
         if (size != null) {
             interstitialSize = size.getSize();
@@ -285,13 +346,27 @@ public class AdUnitConfiguration {
         interstitialSize = size;
     }
 
-    public void setInterstitialSize(int width, int height) {
+    public void setInterstitialSize(
+            int width,
+            int height
+    ) {
         interstitialSize = width + "x" + height;
     }
 
     @Nullable
     public String getInterstitialSize() {
         return interstitialSize;
+    }
+
+    public void setCloseButtonPosition(@Nullable Position closeButtonPosition) {
+        if (closeButtonPosition != null) {
+            this.closeButtonPosition = closeButtonPosition;
+        }
+    }
+
+    @NonNull
+    public Position getCloseButtonPosition() {
+        return closeButtonPosition;
     }
 
     public void setVideoInitialVolume(float videoInitialVolume) {
@@ -332,6 +407,14 @@ public class AdUnitConfiguration {
         return broadcastId;
     }
 
+    public void setMaxVideoDuration(int seconds) {
+        this.maxVideoDuration = seconds;
+    }
+
+    @Nullable
+    public Integer getMaxVideoDuration() {
+        return maxVideoDuration;
+    }
 
     @Nullable
     public NativeAdUnitConfiguration getNativeConfiguration() {

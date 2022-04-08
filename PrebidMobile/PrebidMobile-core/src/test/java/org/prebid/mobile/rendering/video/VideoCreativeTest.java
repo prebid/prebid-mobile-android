@@ -25,6 +25,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.reflection.Reflection;
+import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
 import org.prebid.mobile.rendering.models.AbstractCreative;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
@@ -72,7 +74,7 @@ public class VideoCreativeTest {
 
     @After
     public void tearDown() throws Exception {
-
+        mVideoCreative.destroy();
     }
 
     @Test
@@ -254,4 +256,45 @@ public class VideoCreativeTest {
         verify(mMockVideoCreativeView).destroy();
         verify(mockListener).creativeDidComplete(any(AbstractCreative.class));
     }
+
+    @Test
+    public void whenAdConfigurationMuted_MuteCreative() throws AdException {
+        VideoCreativeModel mockModel = mock(VideoCreativeModel.class);
+        VideoCreative videoCreative = spy(new VideoCreative(mContext,
+                mockModel,
+                mMockOmAdSessionManager,
+                mMockInterstitialManager
+        ));
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsMuted(true);
+
+        when(mockModel.getAdConfiguration()).thenReturn(configuration);
+        Reflection.setVariableTo(videoCreative, "mVideoCreativeView", mock(VideoCreativeView.class));
+
+        videoCreative.display();
+
+        verify(videoCreative).mute();
+        verify(videoCreative, never()).unmute();
+    }
+
+    @Test
+    public void whenAdConfigurationUnMuted_UnMuteCreative() throws AdException {
+        VideoCreativeModel mockModel = mock(VideoCreativeModel.class);
+        VideoCreative videoCreative = spy(new VideoCreative(mContext,
+                mockModel,
+                mMockOmAdSessionManager,
+                mMockInterstitialManager
+        ));
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsMuted(false);
+
+        when(mockModel.getAdConfiguration()).thenReturn(configuration);
+        Reflection.setVariableTo(videoCreative, "mVideoCreativeView", mock(VideoCreativeView.class));
+
+        videoCreative.display();
+
+        verify(videoCreative).unmute();
+        verify(videoCreative, never()).mute();
+    }
+
 }

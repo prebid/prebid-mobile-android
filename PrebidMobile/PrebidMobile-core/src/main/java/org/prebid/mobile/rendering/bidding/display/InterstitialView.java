@@ -145,9 +145,11 @@ public class InterstitialView extends BaseAdView {
             final AdUnitConfiguration adConfiguration = mAdViewManager.getAdConfiguration();
             mInterstitialManager.configureInterstitialProperties(adConfiguration);
             mInterstitialVideo = new InterstitialVideo(getContext(),
-                                                       InterstitialView.this,
-                                                       mInterstitialManager,
-                                                       adConfiguration);
+                    InterstitialView.this,
+                    mInterstitialManager,
+                    adConfiguration
+            );
+            mInterstitialVideo.setHasEndCard(mAdViewManager.hasNextCreative());
             mInterstitialVideo.setDialogListener(this::handleDialogEvent);
             mInterstitialVideo.show();
         }
@@ -216,9 +218,12 @@ public class InterstitialView extends BaseAdView {
     private void handleDialogEvent(DialogEventListener.EventType eventType) {
         if (eventType == DialogEventListener.EventType.SHOWN) {
             mAdViewManager.addObstructions((formInterstitialObstructionsArray()));
-        }
-        else if (eventType == DialogEventListener.EventType.CLOSED) {
+        } else if (eventType == DialogEventListener.EventType.CLOSED) {
             handleActionClose();
+        } else if (eventType == DialogEventListener.EventType.MUTE) {
+            mAdViewManager.mute();
+        } else if (eventType == DialogEventListener.EventType.UNMUTE) {
+            mAdViewManager.unmute();
         }
     }
 

@@ -27,12 +27,15 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
 import org.prebid.mobile.rendering.mraid.handler.FetchPropertiesHandler;
 import org.prebid.mobile.rendering.mraid.methods.others.OrientationManager;
@@ -41,6 +44,7 @@ import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
 import org.prebid.mobile.rendering.utils.broadcast.OrientationBroadcastReceiver;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
+import org.prebid.mobile.rendering.views.interstitial.InterstitialVideo;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
 import org.prebid.mobile.rendering.views.webview.mraid.JsExecutor;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
@@ -52,8 +56,7 @@ public abstract class AdBaseDialog extends Dialog {
     private static final String TAG = AdBaseDialog.class.getSimpleName();
 
     private final WeakReference<Context> mContextReference;
-    private final OrientationBroadcastReceiver mOrientationBroadcastReceiver =
-        new OrientationBroadcastReceiver();
+    private final OrientationBroadcastReceiver mOrientationBroadcastReceiver = new OrientationBroadcastReceiver();
 
     protected JsExecutor mJsExecutor;
     protected InterstitialManager mInterstitialManager;
@@ -61,6 +64,8 @@ public abstract class AdBaseDialog extends Dialog {
     protected WebViewBase mWebViewBase;
     protected FrameLayout mAdViewContainer;
     protected View mDisplayView;
+    protected View mSoundView;
+    protected View mSkipView;
     private View mCloseView;
 
     // IMP: shud be always none. cos this val is used when expand is called with an url.
@@ -327,12 +332,13 @@ public abstract class AdBaseDialog extends Dialog {
     }
 
     protected void addCloseView() {
-        if (mAdViewContainer == null) {
+        if (mAdViewContainer == null || mInterstitialManager == null) {
             LogUtil.error(TAG, "Unable to add close button. Container is null");
             return;
         }
 
-        mCloseView = Utils.createCloseView(mContextReference.get());
+        InterstitialDisplayPropertiesInternal properties = mInterstitialManager.getInterstitialDisplayProperties();
+        mCloseView = Utils.createCloseView(mContextReference.get(), properties);
 
         if (mCloseView == null) {
             LogUtil.error(TAG, "Unable to add close button. Close view is null");
@@ -346,6 +352,71 @@ public abstract class AdBaseDialog extends Dialog {
         mCloseView.setOnClickListener(v -> handleCloseClick());
     }
 
+    protected void addSkipView() {
+        if (mAdViewContainer == null) {
+            LogUtil.error(TAG, "Unable to add close button. Container is null");
+            return;
+        }
+
+        InterstitialDisplayPropertiesInternal properties = mInterstitialManager.getInterstitialDisplayProperties();
+        mSkipView = Utils.createSkipView(mContextReference.get(), properties);
+
+        if (mSkipView == null) {
+            LogUtil.error(TAG, "Unable to add skip button. Skip view is null");
+            return;
+        }
+
+        mSkipView.setVisibility(View.GONE);
+
+        Views.removeFromParent(mSkipView);
+        mAdViewContainer.addView(mSkipView);
+        mSkipView.setOnClickListener(v -> handleCloseClick());
+    }
+
+    protected void addSoundView(boolean isMutedOnStart) {
+        if (mAdViewContainer == null) {
+            LogUtil.error(TAG, "Unable to add sound button. Container is null");
+            return;
+        }
+
+        mSoundView = createSoundView(mContextReference.get());
+
+        if (mSoundView == null || !(mSoundView instanceof ImageView)) {
+            LogUtil.error(TAG, "Unable to add sound button. Sound view is null");
+            return;
+        }
+
+        mSoundView.setVisibility(View.VISIBLE);
+
+        if (isMutedOnStart) {
+            ImageView img = (ImageView) mSoundView;
+            img.setImageResource(R.drawable.ic_volume_on);
+            img.setTag("on");
+        }
+
+        Views.removeFromParent(mSoundView);
+        mAdViewContainer.addView(mSoundView);
+        mSoundView.setOnClickListener(view -> {
+            if (mListener != null) {
+                ImageView img = (ImageView) view;
+                String tag = (String) img.getTag();
+                if (tag.equals("off")) {
+                    mListener.onEvent(DialogEventListener.EventType.MUTE);
+                    img.setImageResource(R.drawable.ic_volume_on);
+                    img.setTag("on");
+                } else {
+                    mListener.onEvent(DialogEventListener.EventType.UNMUTE);
+                    img.setImageResource(R.drawable.ic_volume_off);
+                    img.setTag("off");
+                }
+            }
+        });
+    }
+
+    protected View createSoundView(Context context) {
+        return Utils.createSoundView(context);
+    }
+
     private void applyOrientation() throws AdException {
         DeviceInfoManager deviceManager = ManagersResolver.getInstance().getDeviceManager();
         if (mForceOrientation == OrientationManager.ForcedOrientation.none) {
@@ -353,8 +424,7 @@ public abstract class AdBaseDialog extends Dialog {
                 // If screen orientation can be changed, an orientation of NONE means that any
                 // orientation lock should be removed
                 unApplyOrientation();
-            }
-            else {
+            } else {
                 if (getActivity() == null) {
                     throw new AdException(AdException.INTERNAL_ERROR, "Unable to set MRAID expand orientation to " + "'none'; expected passed in Activity Context.");
                 }
@@ -428,6 +498,16 @@ public abstract class AdBaseDialog extends Dialog {
             }
             adBaseDialog.handleDialogShow();
             adBaseDialog.addCloseView();
+
+            InterstitialDisplayPropertiesInternal properties = adBaseDialog.mInterstitialManager.getInterstitialDisplayProperties();
+            if (properties.isSoundButtonVisible && (adBaseDialog instanceof InterstitialVideo)) {
+                adBaseDialog.addSoundView(properties.isMuted);
+            }
+
+            if (adBaseDialog instanceof InterstitialVideo) {
+                adBaseDialog.addSkipView();
+            }
+
             adBaseDialog.mInterstitialManager.interstitialDialogShown(adBaseDialog.mAdViewContainer);
             final DialogEventListener listener = adBaseDialog.mListener;
 

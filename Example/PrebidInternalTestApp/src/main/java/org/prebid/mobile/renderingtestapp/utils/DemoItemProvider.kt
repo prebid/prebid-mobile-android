@@ -35,6 +35,12 @@ class DemoItemProvider private constructor() {
 
         private const val ppmBannerAction = R.id.action_header_bidding_to_in_app_banner
         private const val ppmInterstitialAction = R.id.action_header_bidding_to_in_app_interstitial
+        private const val ppmInterstitialCloseButtonAreaAction =
+            R.id.action_header_bidding_to_in_app_interstitial_close_button_area
+        private const val ppmInterstitialSoundButtonAction =
+            R.id.action_header_bidding_to_in_app_interstitial_sound_button
+        private const val ppmInterstitialSkipButtonAction =
+            R.id.action_header_bidding_to_in_app_interstitial_skip_button
         private const val ppmRewardedAction = R.id.action_header_bidding_to_in_app_video_rewarded
 
         private const val gamBannerAction = R.id.action_header_bidding_to_gam_banner
@@ -413,6 +419,48 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_in_app_interstitial_video_320_480_end_card),
                     ppmInterstitialAction,
+                    ppmVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
+                        null,
+                        MIN_WIDTH_PERC,
+                        MIN_HEIGHT_PERC,
+                        R.string.response_prebid_video_interstitial_320_480_with_end_card
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_in_app_interstitial_video_320_480_close_button_area),
+                    ppmInterstitialCloseButtonAreaAction,
+                    ppmVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_interstitial_320_480,
+                        null,
+                        MIN_WIDTH_PERC,
+                        MIN_HEIGHT_PERC,
+                        R.string.response_prebid_video_interstitial_320_480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_in_app_interstitial_video_320_480_end_card_sound_button),
+                    ppmInterstitialSoundButtonAction,
+                    ppmVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
+                        null,
+                        MIN_WIDTH_PERC,
+                        MIN_HEIGHT_PERC,
+                        R.string.response_prebid_video_interstitial_320_480_with_end_card
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_in_app_interstitial_video_320_480_end_card_skip_button),
+                    ppmInterstitialSkipButtonAction,
                     ppmVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,

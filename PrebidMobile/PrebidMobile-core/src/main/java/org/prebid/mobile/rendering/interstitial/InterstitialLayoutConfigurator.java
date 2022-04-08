@@ -37,5 +37,13 @@ public class InterstitialLayoutConfigurator {
         } else {
             displayProperties.isRotationEnabled = true;
         }
+
+        displayProperties.isSoundButtonVisible = adConfiguration.isSoundButtonVisible();
+        displayProperties.isMuted = adConfiguration.isMuted();
+        displayProperties.closeButtonArea = adConfiguration.getCloseButtonArea();
+        displayProperties.closeButtonPosition = adConfiguration.getCloseButtonPosition();
+        displayProperties.skipDelay = adConfiguration.getSkipDelay();
+        displayProperties.skipButtonArea = adConfiguration.getSkipButtonArea();
+        displayProperties.skipButtonPosition = adConfiguration.getSkipButtonPosition();
     }
 }

@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.bidding.parallel;
 
 import android.content.Context;
+import androidx.annotation.FloatRange;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.ContentObject;
@@ -31,6 +32,7 @@ import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.units.configuration.Position;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -168,6 +170,57 @@ public abstract class BaseInterstitialAdUnit {
 
     public void setPbAdSlot(String adSlot) {
         adUnitConfig.setPbAdSlot(adSlot);
+    }
+
+    /**
+     * Sets delay in seconds to show skip or close button.
+     */
+    public void setSkipDelay(int secondsDelay) {
+        adUnitConfig.setSkipDelay(secondsDelay);
+    }
+
+    /**
+     * Sets skip button percentage size in range from 0.05 to 1.
+     * If value less than 0.05, size will be default.
+     */
+    public void setSkipButtonArea(@FloatRange(from = 0, to = 1.0) double buttonArea) {
+        adUnitConfig.setSkipButtonArea(buttonArea);
+    }
+
+    /**
+     * Sets skip button position on the screen. Suitable values TOP_LEFT and TOP_RIGHT.
+     * Default value TOP_RIGHT.
+     */
+    public void setSkipButtonPosition(Position skipButtonPosition) {
+        adUnitConfig.setSkipButtonPosition(skipButtonPosition);
+    }
+
+    public void setIsMuted(boolean isMuted) {
+        adUnitConfig.setIsMuted(isMuted);
+    }
+
+    public void setIsSoundButtonVisible(boolean isSoundButtonVisible) {
+        adUnitConfig.setIsSoundButtonVisible(isSoundButtonVisible);
+    }
+
+    public void setMaxVideoDuration(int seconds) {
+        adUnitConfig.setMaxVideoDuration(seconds);
+    }
+
+    /**
+     * Sets close button percentage size in range from 0.05 to 1.
+     * If value less than 0.05, size will be default.
+     */
+    public void setCloseButtonArea(@FloatRange(from = 0, to = 1.0) double closeButtonArea) {
+        adUnitConfig.setCloseButtonArea(closeButtonArea);
+    }
+
+    /**
+     * Sets close button position on the screen. Suitable values TOP_LEFT and TOP_RIGHT.
+     * Default value TOP_RIGHT.
+     */
+    public void setCloseButtonPosition(@Nullable Position closeButtonPosition) {
+        adUnitConfig.setCloseButtonPosition(closeButtonPosition);
     }
 
     /**
