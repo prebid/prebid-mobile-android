@@ -81,6 +81,15 @@
             app:popUpTo="@+id/headerBiddingFragment" />
 
         <action
+            android:id="@+id/action_header_bidding_to_in_app_interstitial_skip_button"
+            app:destination="@id/navigation_in_app_interstitial_skip_button"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
             android:id="@+id/action_header_bidding_to_in_app_video_rewarded"
             app:destination="@id/navigation_in_app_video_rewarded"
             app:enterAnim="@anim/nav_default_enter_anim"
@@ -425,6 +434,11 @@
         android:id="@+id/navigation_in_app_interstitial_sound_button"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmInterstitialSoundButtonFragment"
         android:label="In-App Interstitial with Sound button" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_interstitial_skip_button"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmInterstitialSkipButtonFragment"
+        android:label="In-App Interstitial with Skip button" />
 
     <fragment
         android:id="@+id/navigation_in_app_video_rewarded"

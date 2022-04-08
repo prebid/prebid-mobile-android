@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.reflection.Reflection;
 import org.prebid.mobile.rendering.bidding.display.InterstitialView;
 import org.prebid.mobile.rendering.models.AbstractCreative;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
@@ -250,7 +251,7 @@ public class InterstitialVideoTest {
     @Test
     public void whenNoOffsetPresent_UseDefaultOffset() {
         mSpyInterstitialVideo.scheduleShowCloseBtnTask(mMockAdView);
-        verify(mSpyInterstitialVideo).scheduleTimer(2L * 1000);
+        verify(mSpyInterstitialVideo).scheduleTimer(10L * 1000);
     }
 
     private void mockMediaDuration(long duration) {
@@ -260,4 +261,59 @@ public class InterstitialVideoTest {
     private void mockOffset(long value) {
         when(mMockAdView.getMediaOffset()).thenReturn(value);
     }
+
+    @Test
+    public void scheduleShowCloseBtnTask_TestDefaultUseSkipButton() {
+        mSpyInterstitialVideo.scheduleShowButtonTask();
+
+        assertFalse(getUseSkipButton());
+    }
+
+    @Test
+    public void scheduleShowCloseBtnTask_TestFalseUseSkipButton() {
+        mSpyInterstitialVideo.setHasEndCard(false);
+
+        mSpyInterstitialVideo.scheduleShowButtonTask();
+
+        assertFalse(getUseSkipButton());
+    }
+
+    @Test
+    public void scheduleShowCloseBtnTask_TestTrueUseSkipButton() {
+        mSpyInterstitialVideo.setHasEndCard(true);
+
+        mSpyInterstitialVideo.scheduleShowButtonTask();
+
+        assertTrue(getUseSkipButton());
+    }
+
+    private boolean getUseSkipButton() {
+        return (boolean) Reflection.getField(mSpyInterstitialVideo, "useSkipButton");
+    }
+
+
+    @Test
+    public void scheduleShowCloseBtnTask_VideoDurationLessThanSkipDelay_CallScheduleTimeWithVideoLength() {
+        int skipDelay = 10_000;
+        long videoDuration = 5_000;
+        when(mSpyInterstitialVideo.getDuration(any())).thenReturn(videoDuration);
+        when(mSpyInterstitialVideo.getSkipDelayMs()).thenReturn(skipDelay);
+
+        mSpyInterstitialVideo.scheduleShowButtonTask();
+
+        verify(mSpyInterstitialVideo).scheduleTimer(videoDuration);
+    }
+
+    @Test
+    public void scheduleShowCloseBtnTask_VideoDurationBiggerThanSkipDelay_CallScheduleTimeWithSkipDelayLength() {
+        int skipDelay = 5_000;
+        long videoDuration = 10_000;
+        when(mSpyInterstitialVideo.getDuration(any())).thenReturn(videoDuration);
+        when(mSpyInterstitialVideo.getSkipDelayMs()).thenReturn(skipDelay);
+
+        mSpyInterstitialVideo.scheduleShowButtonTask();
+
+        verify(mSpyInterstitialVideo).scheduleTimer(skipDelay);
+    }
+
 }

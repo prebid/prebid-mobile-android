@@ -172,6 +172,29 @@ public abstract class BaseInterstitialAdUnit {
         adUnitConfig.setPbAdSlot(adSlot);
     }
 
+    /**
+     * Sets delay in seconds to show skip or close button.
+     */
+    public void setSkipDelay(int secondsDelay) {
+        adUnitConfig.setSkipDelay(secondsDelay);
+    }
+
+    /**
+     * Sets skip button percentage size in range from 0.05 to 1.
+     * If value less than 0.05, size will be default.
+     */
+    public void setSkipButtonArea(@FloatRange(from = 0, to = 1.0) double buttonArea) {
+        adUnitConfig.setSkipButtonArea(buttonArea);
+    }
+
+    /**
+     * Sets skip button position on the screen. Suitable values TOP_LEFT and TOP_RIGHT.
+     * Default value TOP_RIGHT.
+     */
+    public void setSkipButtonPosition(Position skipButtonPosition) {
+        adUnitConfig.setSkipButtonPosition(skipButtonPosition);
+    }
+
     public void setIsMuted(boolean isMuted) {
         adUnitConfig.setIsMuted(isMuted);
     }

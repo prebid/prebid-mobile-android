@@ -29,7 +29,9 @@ import android.util.DisplayMetrics;
 import android.view.*;
 import android.webkit.MimeTypeMap;
 import android.widget.FrameLayout;
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -431,7 +433,16 @@ public final class Utils {
         return map;
     }
 
-    private static final int MIN_BUTTON_SIZE_DP = 30;
+    public static View createSkipView(
+            Context context,
+            @Nullable InterstitialDisplayPropertiesInternal properties
+    ) {
+        return createButtonToNextPage(context,
+                R.layout.lyt_skip,
+                properties != null ? properties.skipButtonArea : 0,
+                properties != null ? properties.skipButtonPosition : Position.TOP_RIGHT
+        );
+    }
 
     public static View createCloseView(Context context) {
         return createCloseView(context, null);
@@ -439,38 +450,54 @@ public final class Utils {
 
     public static View createCloseView(
             Context context,
-            InterstitialDisplayPropertiesInternal properties
+            @Nullable InterstitialDisplayPropertiesInternal properties
+    ) {
+        return createButtonToNextPage(context,
+                R.layout.lyt_close,
+                properties != null ? properties.closeButtonArea : 0,
+                properties != null ? properties.closeButtonPosition : Position.TOP_RIGHT
+        );
+    }
+
+    private static View createButtonToNextPage(
+            @Nullable Context context,
+            @LayoutRes int layoutResId,
+            double buttonArea,
+            @NonNull Position buttonPosition
     ) {
         if (context == null) {
             LogUtil.error(TAG, "Unable to create close view. Context is null");
             return null;
         }
 
-        View closeView = LayoutInflater.from(context).inflate(R.layout.lyt_close, null);
-        FrameLayout.LayoutParams params = calculateButtonSize(closeView, properties);
+        View view = LayoutInflater.from(context).inflate(layoutResId, null);
 
+        FrameLayout.LayoutParams params;
+        params = calculateButtonSize(view, buttonArea);
         params.gravity = Gravity.END | Gravity.TOP;
-        if (properties != null && properties.closeButtonPosition == Position.TOP_LEFT) {
+        if (buttonPosition == Position.TOP_LEFT) {
             params.gravity = Gravity.START | Gravity.TOP;
         }
 
-        closeView.setLayoutParams(params);
-        return closeView;
+        view.setLayoutParams(params);
+        return view;
     }
+
+    private static final int MIN_BUTTON_SIZE_DP = 30;
 
     private static FrameLayout.LayoutParams calculateButtonSize(
             View view,
-            InterstitialDisplayPropertiesInternal properties
+            double closeButtonArea
     ) {
         Context context = view.getContext();
-        if (properties == null || properties.closeButtonArea < 0.05 || properties.closeButtonArea > 1) {
+        if (closeButtonArea < 0.05 || closeButtonArea > 1) {
             return new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
                     FrameLayout.LayoutParams.WRAP_CONTENT
             );
         }
 
         int screenSize = getSmallestScreenSideSize(context);
-        int buttonSize = (int) (screenSize * properties.closeButtonArea);
+        int buttonSize = (int) (screenSize * closeButtonArea);
         if (convertPxToDp(buttonSize, context) < MIN_BUTTON_SIZE_DP) {
             buttonSize = convertDpToPx(MIN_BUTTON_SIZE_DP, context);
         }

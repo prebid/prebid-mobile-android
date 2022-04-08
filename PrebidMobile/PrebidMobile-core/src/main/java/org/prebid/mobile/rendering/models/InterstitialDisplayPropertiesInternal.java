@@ -23,14 +23,17 @@ public class InterstitialDisplayPropertiesInternal extends InterstitialDisplayPr
 
     public int expandWidth;
     public int expandHeight;
-    public double closeButtonArea = 0;
     public int orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+    public int skipDelay = 0;
+    public double closeButtonArea = 0;
+    public double skipButtonArea = 0;
+
     public boolean isSoundButtonVisible = false;
     public boolean isMuted = false;
-
     public boolean isRotationEnabled = false;
 
     public Position closeButtonPosition = Position.TOP_RIGHT;
+    public Position skipButtonPosition = Position.TOP_RIGHT;
 
     public void resetExpandValues() {
         expandHeight = 0;
