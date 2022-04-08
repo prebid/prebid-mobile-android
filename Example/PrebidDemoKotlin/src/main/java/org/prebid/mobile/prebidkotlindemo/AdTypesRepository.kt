@@ -13,6 +13,7 @@ import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobNative
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobRewarded
 import org.prebid.mobile.prebidkotlindemo.ads.inappgam.*
+import org.prebid.mobile.prebidkotlindemo.ads.inappmax.InAppMaxBanner
 import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubBanner
 import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubRewardedInterstitial
@@ -341,6 +342,22 @@ object AdTypesRepository {
                     InAppAdMobNative.destroy()
                 }
             )
+        ),
+
+        "In-App + Applovin Max" to listOf(
+            AdType(
+                "Banner",
+                onCreate = { activity, wrapper, autoRefreshTime ->
+                    useTestServer()
+                    PrebidMobile.setStoredAuctionResponse("response-prebid-banner-320-50")
+                    InAppMaxBanner.create(
+                        wrapper, autoRefreshTime,
+                        "3d8a0bcbb6d571d5",
+                        "imp-prebid-banner-320-50"
+                    )
+                },
+                onDestroy = { InAppMaxBanner.destroy() }
+            ),
         )
     )
 

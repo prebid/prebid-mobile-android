@@ -1,8 +1,11 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'applovin-quality-service'
+
+applovin {
+    apiKey "GFK71zBxyxVAos4h_nh9NHqmym-hXdJisa0oDLiZ6CpGo6TaA-C08qHDlWcvguArWJJF03h77gL4dqJ3e9ubnn"
+}
 
 android {
     compileSdkVersion 30
@@ -57,6 +60,9 @@ dependencies {
         exclude module: 'libAvid-mopub' // To exclude AVID
         exclude module: 'moat-mobile-app-kit' // To exclude Moat
     }
+    implementation "com.applovin:applovin-sdk:11.3.2"
+    implementation "com.google.android.gms:play-services-ads-identifier:18.0.1" // For Applovin Max
+
 
     // Multidex
     implementation 'androidx.multidex:multidex:2.0.0'
