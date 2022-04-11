@@ -79,7 +79,6 @@ modules=(
   "PrebidMobile"
   "PrebidMobile-core"
   "PrebidMobile-gamEventHandlers"
-  "PrebidMobile-mopubAdapters"
   "PrebidMobile-admobAdapters"
 )
 
@@ -87,7 +86,6 @@ projectPaths=(
   "$BASEDIR/PrebidMobile"
   "$BASEDIR/PrebidMobile/PrebidMobile-core"
   "$BASEDIR/PrebidMobile/PrebidMobile-gamEventHandlers"
-  "$BASEDIR/PrebidMobile/PrebidMobile-mopubAdapters"
   "$BASEDIR/PrebidMobile/PrebidMobile-admobAdapters"
 )
 
@@ -129,11 +127,9 @@ for n in ${!modules[@]}; do
 	rm -r $TEMPDIR/output/META-INF/com
 
 	# Creating a JAR File
-	if [ "${modules[$n]}" == "PrebidMobile-mopubAdapters" ]; then
-	  jar cf ${modules[$n]}.jar org* com* META-INF*
-	else
-	  jar cf ${modules[$n]}.jar org* META-INF*
-  fi
+
+	jar cf ${modules[$n]}.jar org* META-INF*
+
 
 	# move jar into a result direcotory
 	mv ${modules[$n]}.jar $OUTDIR
