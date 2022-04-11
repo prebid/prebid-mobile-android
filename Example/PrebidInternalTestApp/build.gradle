@@ -106,9 +106,7 @@ dependencies {
     // Ad dependencies
     implementation 'com.google.android.gms:play-services-base:17.6.0'
     implementation 'com.google.android.gms:play-services-ads:20.4.0'
-    implementation ('com.mopub:mopub-sdk:5.17.0@aar') {
-        transitive = true
-    }
+
 
     // Navigation component
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"

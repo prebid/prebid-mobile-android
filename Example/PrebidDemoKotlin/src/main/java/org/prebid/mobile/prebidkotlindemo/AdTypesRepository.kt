@@ -1,22 +1,16 @@
 package org.prebid.mobile.prebidkotlindemo
 
-import com.mopub.mobileads.MoPubView
 import org.prebid.mobile.Host
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.prebidkotlindemo.ads.GamBanner
 import org.prebid.mobile.prebidkotlindemo.ads.GamInterstitial
-import org.prebid.mobile.prebidkotlindemo.ads.MoPubBanner
-import org.prebid.mobile.prebidkotlindemo.ads.MoPubInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.inapp.*
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobBanner
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobNative
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobRewarded
 import org.prebid.mobile.prebidkotlindemo.ads.inappgam.*
-import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubBanner
-import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubInterstitial
-import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubRewardedInterstitial
-import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubVideoInterstitial
+
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 import java.util.*
 
@@ -66,51 +60,6 @@ object AdTypesRepository {
                 onDestroy = { GamInterstitial.destroy() }
             )
         ),
-
-        "MoPub" to listOf(
-            AdType(
-                "Banner 320x50",
-                onCreate = { _, wrapper, autoRefreshTime ->
-                    useTestServer()
-                    PrebidMobile.setStoredAuctionResponse("response-prebid-banner-320-50")
-                    MoPubBanner.create(
-                        wrapper, autoRefreshTime,
-                        320, 50, MoPubView.MoPubAdSize.HEIGHT_50,
-                        "42b99af979cd474ea32f497c044b5d71",
-                        "imp-prebid-banner-320-50"
-                    )
-                },
-                onDestroy = { MoPubBanner.destroy() }
-            ),
-            AdType(
-                "Banner 300x250",
-                onCreate = { _, wrapper, autoRefreshTime ->
-                    useAppNexusServer()
-                    MoPubBanner.create(
-                        wrapper, autoRefreshTime,
-                        300, 250, MoPubView.MoPubAdSize.HEIGHT_250,
-                        // TODO: Problem with ids
-                        "a935eac11acd416f92640411234fbba6",
-                        "6ace8c7d-88c0-4623-8117-75bc3f0a2e45"
-                    )
-                },
-                onDestroy = { MoPubBanner.destroy() }
-            ),
-            AdType(
-                "Interstitial",
-                onCreate = { activity, _, autoRefreshTime ->
-                    useAppNexusServer()
-                    MoPubInterstitial.create(
-                        activity, autoRefreshTime,
-                        // TODO: Problem with ids
-                        "2829868d308643edbec0795977f17437",
-                        "625c6125-f19e-4d5b-95c5-55501526b2a4"
-                    )
-                },
-                onDestroy = { MoPubInterstitial.destroy() }
-            )
-        ),
-
         "In-App" to listOf(
             AdType(
                 "Banner 320x50",
@@ -225,57 +174,6 @@ object AdTypesRepository {
                     )
                 },
                 onDestroy = { InAppGamRewardedInterstitial.destroy() }
-            )
-        ),
-
-        "In-App + MoPub" to listOf(
-            AdType(
-                "Banner 320x50",
-                onCreate = { _, wrapper, autoRefreshTime ->
-                    InAppMoPubBanner.create(
-                        wrapper, autoRefreshTime / 1000,
-                        320, 50,
-                        "093eef131ec7455b9bda52b7eb456c51",
-                        "50699c03-0910-477c-b4a4-911dbe2b9d42"
-                    )
-                },
-                onDestroy = { InAppMoPubBanner.destroy() }
-            ),
-            AdType(
-                "Interstitial",
-                onCreate = { activity, _, _ ->
-                    InAppMoPubInterstitial.create(
-                        activity,
-                        30, 30,
-                        "d6cc98e81ef44d648bd93c79d372c451",
-                        "5a4b8dcf-f984-4b04-9448-6529908d6cb6"
-                    )
-                },
-                onDestroy = { InAppMoPubInterstitial.destroy() }
-            ),
-            AdType(
-                "Video Interstitial",
-                onCreate = { activity, _, _ ->
-                    InAppMoPubVideoInterstitial.create(
-                        activity,
-                        "062a5be1c0764e84b45244ecd58b237f",
-                        "28259226-68de-49f8-88d6-f0f2fab846e3",
-                        30, 30
-                    )
-                },
-                onDestroy = { InAppMoPubVideoInterstitial.destroy() }
-            ),
-            AdType(
-                "Rewarded Interstitial",
-                onCreate = { activity, _, _ ->
-                    InAppMoPubRewardedInterstitial.create(
-                        activity,
-                        "7c8fe21705a948c8a89dc6b496e8ad35",
-                        "12f58bc2-b664-4672-8d19-638bcc96fd5c",
-                        hashMapOf()
-                    )
-                },
-                onDestroy = { InAppMoPubRewardedInterstitial.destroy() }
             )
         ),
 

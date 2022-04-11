@@ -19,7 +19,6 @@ package org.prebid.mobile.renderingtestapp.plugplay.utilities.version
 import android.os.Bundle
 import android.view.View
 import com.google.android.gms.ads.MobileAds
-import com.mopub.common.MoPub
 import kotlinx.android.synthetic.main.fragments_version_info.*
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.renderingtestapp.R

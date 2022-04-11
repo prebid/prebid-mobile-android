@@ -26,16 +26,13 @@ import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 import android.webkit.WebView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
-import com.mopub.common.MoPub
-import com.mopub.common.SdkConfiguration
-import com.mopub.common.logging.MoPubLog
+
 import org.prebid.mobile.PrebidMobile
 
 class CustomApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        initMopubSDK()
         initPrebidSDK()
         initAdMob()
         if (BuildConfig.DEBUG) {
@@ -46,13 +43,7 @@ class CustomApplication : Application() {
         }
     }
 
-    private fun initMopubSDK() {
-        val sdkConfiguration = SdkConfiguration.Builder("42b99af979cd474ea32f497c044b5d71")
-        sdkConfiguration.withLogLevel(MoPubLog.LogLevel.NONE)
-        MoPub.initializeSdk(this, sdkConfiguration.build()) {
-            Log.d("MoPub", "Initialized successfully!")
-        }
-    }
+
 
     private fun initPrebidSDK() {
 //        PrebidMobile.setPbsDebug(true)

@@ -34,7 +34,6 @@ android {
 dependencies {
     implementation project(':PrebidMobile')
     implementation project(':PrebidMobile-gamEventHandlers')
-    implementation project(':PrebidMobile-mopubAdapters')
     implementation project(':PrebidMobile-admobAdapters')
 
     // For testing staging releases
@@ -50,11 +49,7 @@ dependencies {
 
     // Advertisement
     implementation 'com.google.android.gms:play-services-ads:20.4.0'
-    implementation('com.mopub:mopub-sdk:5.17.0@aar') {
-        transitive = true
-        exclude module: 'libAvid-mopub' // To exclude AVID
-        exclude module: 'moat-mobile-app-kit' // To exclude Moat
-    }
+
 
     // Multidex
     implementation 'androidx.multidex:multidex:2.0.0'
