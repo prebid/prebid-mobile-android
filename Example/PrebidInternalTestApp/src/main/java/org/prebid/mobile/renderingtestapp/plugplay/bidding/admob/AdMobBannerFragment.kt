@@ -8,9 +8,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 import kotlinx.android.synthetic.main.events_admob.*
-import kotlinx.android.synthetic.main.events_mopub_banner.*
-import kotlinx.android.synthetic.main.events_mopub_banner.btnAdClicked
-import kotlinx.android.synthetic.main.events_mopub_banner.btnAdFailed
+
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.admob.AdMobBannerMediationUtils
@@ -87,11 +85,8 @@ open class AdMobBannerFragment : AdFragment() {
     override val layoutRes = R.layout.fragment_bidding_banner_admob
 
     private fun resetAdEvents() {
-        btnAdDidLoad?.isEnabled = false
         btnAdFailed?.isEnabled = false
         btnAdClicked?.isEnabled = false
-        btnAdExpanded?.isEnabled = false
-        btnAdCollapsed?.isEnabled = false
     }
 
     override fun onDestroyView() {

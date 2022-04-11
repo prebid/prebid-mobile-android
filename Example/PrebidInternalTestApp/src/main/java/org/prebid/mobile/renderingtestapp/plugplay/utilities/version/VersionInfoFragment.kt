@@ -31,7 +31,7 @@ class VersionInfoFragment : BaseFragment() {
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         MobileAds.initialize(requireContext())
         tvPrebidRenderingVersion.text = PrebidMobile.SDK_VERSION
-        tvMopubVersion.text = MoPub.SDK_VERSION
+
         tvGamVersion.text = MobileAds.getVersionString()
         tvOmsdkVersion.text = PrebidMobile.OMSDK_VERSION
     }

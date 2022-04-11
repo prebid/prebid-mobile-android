@@ -86,7 +86,6 @@ dependencies {
 
     implementation project(':PrebidMobile')
     implementation project(':PrebidMobile-gamEventHandlers')
-    implementation project(':PrebidMobile-mopubAdapters')
     implementation project(':PrebidMobile-admobAdapters')
 
     // For testing staging releases
