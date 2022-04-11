@@ -54,7 +54,6 @@
     </string-array>
 
     <string name="google_ad_manager">Google Ad Manager</string>
-    <string name="mopub">MoPub</string>
 
     <string name="bid_price">Bid price</string>
     <string name="ad_unit_id">Ad unit id</string>

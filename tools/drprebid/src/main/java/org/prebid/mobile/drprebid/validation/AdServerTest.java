@@ -1,9 +1,10 @@
 package org.prebid.mobile.drprebid.validation;
 
+import static org.prebid.mobile.drprebid.managers.LineItemKeywordManager.KEYWORD_REQUEST_ID;
+
 import android.app.Activity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 
@@ -11,23 +12,15 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
-import com.mopub.mobileads.MoPubErrorCode;
-import com.mopub.mobileads.MoPubInterstitial;
-import com.mopub.mobileads.MoPubView;
-import com.mopub.network.Networking;
-import com.mopub.volley.Request;
-import com.mopub.volley.RequestQueue;
 
 import org.prebid.mobile.drprebid.managers.LineItemKeywordManager;
 import org.prebid.mobile.drprebid.managers.SettingsManager;
 import org.prebid.mobile.drprebid.model.AdFormat;
-import org.prebid.mobile.drprebid.model.AdServer;
 import org.prebid.mobile.drprebid.model.AdServerSettings;
 import org.prebid.mobile.drprebid.model.AdSize;
 import org.prebid.mobile.drprebid.model.GeneralSettings;
 import org.prebid.mobile.drprebid.model.PrebidServer;
 import org.prebid.mobile.drprebid.model.PrebidServerSettings;
-import org.prebid.mobile.drprebid.util.DimenUtil;
 import org.prebid.mobile.drprebid.util.IOUtil;
 
 import java.io.ByteArrayInputStream;
@@ -47,9 +40,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static org.prebid.mobile.drprebid.managers.LineItemKeywordManager.KEYWORD_REQUEST_ID;
-
-public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstitial.InterstitialAdListener {
+public class AdServerTest {
     private static final String TAG = AdServerTest.class.getSimpleName();
 
     public interface Listener {
@@ -65,8 +56,7 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
     private final Listener mListener;
     private final Activity mContext;
 
-    private MoPubView mMoPubAd;
-    private MoPubInterstitial mMoPubInterstitial;
+
     private PublisherAdView mGoogleAd;
     private PublisherInterstitialAd mGoogleInterstitial;
 
@@ -102,67 +92,39 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
         mKeywords = createMapKeywords(adServerSettings.getBidPrice(),
                 generalSettings.getAdSize(), generalSettings.getAdFormat(), prebidServerSettings.getPrebidServer());
 
-        if (adServerSettings.getAdServer() == AdServer.MOPUB) {
-            String keywords = createStringKeywords();
+        PublisherAdRequest adRequest = null;
 
-            if (generalSettings.getAdFormat() == AdFormat.BANNER) {
-                AdSize adSize = generalSettings.getAdSize();
-                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
-                        DimenUtil.convertPxToDp(mContext, adSize.getWidth()),
-                        DimenUtil.convertPxToDp(mContext, adSize.getHeight()));
-                mMoPubAd = new MoPubView(mContext);
-                mMoPubAd.setLayoutParams(layoutParams);
-                mMoPubAd.setAdUnitId(adServerSettings.getAdUnitId());
-                mMoPubAd.setAutorefreshEnabled(false);
-                mMoPubAd.setBannerAdListener(this);
-                mMoPubAd.setKeywords(keywords);
+        if (generalSettings.getAdFormat() == AdFormat.BANNER) {
+            mGoogleAd = new PublisherAdView(mContext);
+            AdSize adSize = generalSettings.getAdSize();
+            mGoogleAd.setAdSizes(new com.google.android.gms.ads.AdSize(adSize.getWidth(), adSize.getHeight()));
+            mGoogleAd.setAdUnitId(adServerSettings.getAdUnitId());
+            mGoogleAd.setAdListener(mGoogleBannerListener);
 
-                Networking.getRequestQueue(mContext).addRequestFinishedListener(mMoPubRequestFinishedListener);
-
-                mMoPubAd.loadAd();
-            } else if (generalSettings.getAdFormat() == AdFormat.INTERSTITIAL) {
-                mMoPubInterstitial = new MoPubInterstitial(mContext, adServerSettings.getAdUnitId());
-                mMoPubInterstitial.setInterstitialAdListener(this);
-                mMoPubInterstitial.setKeywords(keywords);
-
-                Networking.getRequestQueue(mContext).addRequestFinishedListener(mMoPubRequestFinishedListener);
-
-                mMoPubInterstitial.load();
-            }
-        } else if (adServerSettings.getAdServer() == AdServer.GOOGLE_AD_MANAGER) {
-            PublisherAdRequest adRequest = null;
-
-            if (generalSettings.getAdFormat() == AdFormat.BANNER) {
-                mGoogleAd = new PublisherAdView(mContext);
-                AdSize adSize = generalSettings.getAdSize();
-                mGoogleAd.setAdSizes(new com.google.android.gms.ads.AdSize(adSize.getWidth(), adSize.getHeight()));
-                mGoogleAd.setAdUnitId(adServerSettings.getAdUnitId());
-                mGoogleAd.setAdListener(mGoogleBannerListener);
-
-            } else if (generalSettings.getAdFormat() == AdFormat.INTERSTITIAL) {
-                mGoogleInterstitial = new PublisherInterstitialAd(mContext);
-                mGoogleInterstitial.setAdUnitId(adServerSettings.getAdUnitId());
-                mGoogleInterstitial.setAdListener(mGoogleInterstitialListener);
-            }
-
-            PublisherAdRequest.Builder adRequestBuilder = new PublisherAdRequest.Builder();
-
-            for (String key : mKeywords.keySet()) {
-                if (mKeywords.containsKey(key)) {
-                    adRequestBuilder.addCustomTargeting(key, mKeywords.get(key));
-                }
-            }
-
-            adRequest = adRequestBuilder.build();
-
-            if (generalSettings.getAdFormat() == AdFormat.BANNER) {
-                mGoogleAd.loadAd(adRequest);
-            } else if (generalSettings.getAdFormat() == AdFormat.INTERSTITIAL) {
-                mGoogleInterstitial.loadAd(adRequest);
-            }
-
-            checkRequestForKeywordsAM(adRequest);
+        } else if (generalSettings.getAdFormat() == AdFormat.INTERSTITIAL) {
+            mGoogleInterstitial = new PublisherInterstitialAd(mContext);
+            mGoogleInterstitial.setAdUnitId(adServerSettings.getAdUnitId());
+            mGoogleInterstitial.setAdListener(mGoogleInterstitialListener);
         }
+
+        PublisherAdRequest.Builder adRequestBuilder = new PublisherAdRequest.Builder();
+
+        for (String key : mKeywords.keySet()) {
+            if (mKeywords.containsKey(key)) {
+                adRequestBuilder.addCustomTargeting(key, mKeywords.get(key));
+            }
+        }
+
+        adRequest = adRequestBuilder.build();
+
+        if (generalSettings.getAdFormat() == AdFormat.BANNER) {
+            mGoogleAd.loadAd(adRequest);
+        } else if (generalSettings.getAdFormat() == AdFormat.INTERSTITIAL) {
+            mGoogleInterstitial.loadAd(adRequest);
+        }
+
+        checkRequestForKeywordsAM(adRequest);
+
     }
 
     private String createStringKeywords() {
@@ -238,112 +200,7 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
         }
     };
 
-    //---------------------------------- MoPub Banner Listener -------------------------------------
 
-    @Override
-    public void onBannerLoaded(MoPubView banner) {
-
-    }
-
-    @Override
-    public void onBannerFailed(MoPubView banner, MoPubErrorCode errorCode) {
-
-    }
-
-    @Override
-    public void onBannerClicked(MoPubView banner) {
-
-    }
-
-    @Override
-    public void onBannerExpanded(MoPubView banner) {
-
-    }
-
-    @Override
-    public void onBannerCollapsed(MoPubView banner) {
-
-    }
-
-    //------------------------------- MoPub Interstitial Listener ----------------------------------
-
-    @Override
-    public void onInterstitialLoaded(MoPubInterstitial interstitial) {
-
-    }
-
-    @Override
-    public void onInterstitialFailed(MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
-
-    }
-
-    @Override
-    public void onInterstitialShown(MoPubInterstitial interstitial) {
-
-    }
-
-    @Override
-    public void onInterstitialClicked(MoPubInterstitial interstitial) {
-
-    }
-
-    @Override
-    public void onInterstitialDismissed(MoPubInterstitial interstitial) {
-
-    }
-
-    private final RequestQueue.RequestFinishedListener mMoPubRequestFinishedListener = request -> {
-        if (request != null) {
-            processMoPubRequest(request);
-        }
-    };
-
-    private void processMoPubRequest(Request request) {
-        Networking.getRequestQueue(mContext).removeRequestFinishedListener(mMoPubRequestFinishedListener);
-
-        try {
-            String url = request.getUrl();
-
-            if (!TextUtils.isEmpty(url) && request.getBody() != null) {
-                ByteArrayInputStream postBodyStream = new ByteArrayInputStream(request.getBody());
-                String postBody = IOUtil.getStringFromStream(postBodyStream);
-                postBodyStream.close();
-
-                checkRequestForKeywords(url, postBody);
-
-                OkHttpClient client = new OkHttpClient.Builder().build();
-
-                RequestBody body = RequestBody.create(MediaType.parse(request.getBodyContentType()), postBody);
-
-                okhttp3.Request httpRequest = new okhttp3.Request.Builder()
-                        .url(url)
-                        .post(body)
-                        .build();
-
-                client.newCall(httpRequest).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Log.e(TAG, e.getMessage());
-                        invokeContainsPrebidCreative(false);
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        if (response.body() != null) {
-                            InputStream inputStream = response.body().byteStream();
-                            mAdServerResponse = IOUtil.getStringFromStream(inputStream);
-                            inputStream.close();
-                            checkResponseForPrebidCreative();
-                        } else {
-                            invokeContainsPrebidCreative(false);
-                        }
-                    }
-                });
-            }
-        } catch (Exception exception) {
-            Log.e(TAG, exception.getMessage());
-        }
-    }
 
     //Check PublisherAdRequest
     private void checkRequestForKeywordsAM(@Nullable PublisherAdRequest adRequest) {
@@ -408,14 +265,6 @@ public class AdServerTest implements MoPubView.BannerAdListener, MoPubInterstiti
     }
 
     private void invokeTestFinished() {
-        if (mMoPubAd != null) {
-            mMoPubAd.destroy();
-        }
-
-        if (mMoPubInterstitial != null) {
-            mMoPubInterstitial.destroy();
-        }
-
         if (mGoogleAd != null) {
             mGoogleAd.destroy();
         }

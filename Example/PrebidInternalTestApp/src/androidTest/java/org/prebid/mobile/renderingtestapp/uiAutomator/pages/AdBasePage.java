@@ -44,10 +44,7 @@ public class AdBasePage<T> extends BasePage<T> {
         public static BySelector adWasClicked = By.res(TAG, "btnAdClicked");
         public static BySelector adDidCollapse = By.res(TAG, "btnAdCollapsed");
 
-        //Mopub locators
-        public static BySelector mopubAdDismissed = By.res(TAG, "btnAdDismissed");
-        public static BySelector mopubAdVideoStarted = By.res(TAG, "btnAdVideoStarted");
-        public static BySelector mopubAdPlaybackError = By.res(TAG, "btnAdVideoPlaybackError");
+
 
         // Bidding events
         public static BySelector onAdLoaded = By.res(TAG, "btnAdLoaded");

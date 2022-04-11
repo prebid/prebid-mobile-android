@@ -47,10 +47,6 @@ class DemoItemProvider private constructor() {
         private const val gamInterstitialAction = R.id.action_header_bidding_to_gam_interstitial
         private const val gamRewardedAction = R.id.action_header_bidding_to_gam_video_rewarded
 
-        private const val mopubBannerAction = R.id.action_header_bidding_to_mopub_banner
-        private const val mopubInterstitialAction = R.id.action_header_bidding_to_mopub_interstitial
-        private const val mopubRewardedAction = R.id.action_header_bidding_to_mopub_rewarded_video
-
         private const val adMobBannerAction = R.id.action_header_bidding_to_admob_banner
         private const val adMobRandomBannerAction =
             R.id.action_header_bidding_to_admob_random_banner

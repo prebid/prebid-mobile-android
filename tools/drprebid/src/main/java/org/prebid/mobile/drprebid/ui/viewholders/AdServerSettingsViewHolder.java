@@ -61,13 +61,8 @@ public class AdServerSettingsViewHolder extends RecyclerView.ViewHolder implemen
 
         mAdServerGroup = itemView.findViewById(R.id.group_ad_server);
         mAdServerGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            switch (checkedId) {
-                case R.id.radio_dfp:
-                    SettingsManager.getInstance(itemView.getContext()).setAdServer(AdServer.GOOGLE_AD_MANAGER);
-                    break;
-                case R.id.radio_mopub:
-                    SettingsManager.getInstance(itemView.getContext()).setAdServer(AdServer.MOPUB);
-                    break;
+            if (checkedId == R.id.radio_dfp) {
+                SettingsManager.getInstance(itemView.getContext()).setAdServer(AdServer.GOOGLE_AD_MANAGER);
             }
         });
 
@@ -102,14 +97,8 @@ public class AdServerSettingsViewHolder extends RecyclerView.ViewHolder implemen
     private void fillValues() {
         AdServerSettings settings = SettingsManager.getInstance(itemView.getContext()).getAdServerSettings();
 
-        switch (settings.getAdServer()) {
-            case GOOGLE_AD_MANAGER:
-                mAdServerGroup.check(R.id.radio_dfp);
-                break;
-            case MOPUB:
-                mAdServerGroup.check(R.id.radio_mopub);
-                break;
-        }
+        mAdServerGroup.check(R.id.radio_dfp);
+
 
         mBidPriceView.setText(String.format(Locale.ENGLISH, "$ %.2f", settings.getBidPrice()));
 
