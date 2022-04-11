@@ -31,42 +31,19 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".XandrNativeInAppMoPubDemoActivity"/>
         <activity android:name=".XandrNativeInAppGAMDemoActivity"/>
         <activity android:name=".RubiconBannerGamDemoActivity" />
-        <activity android:name=".RubiconBannerMoPubDemoActivity" />
         <activity android:name=".RubiconInterstitialGamDemoActivity" />
-        <activity android:name=".RubiconInterstitialMoPubDemoActivity" />
         <activity android:name=".RubiconBannerVideoGamDemoActivity" />
         <activity android:name=".RubiconInterstitialVideoGamDemoActivity" />
-        <activity android:name=".RubiconInterstitialVideoMoPubDemoActivity" />
         <activity android:name=".RubiconRewardedVideoGamDemoActivity" />
-        <activity android:name=".RubiconRewardedVideoMoPubDemoActivity" />
         <activity android:name=".RubiconInstreamVideoIMADemoActivity" />
         <activity android:name=".XandrBannerGamDemoActivity" />
-        <activity android:name=".XandrBannerMoPubDemoActivity" />
         <activity android:name=".XandrInterstitialGamDemoActivity" />
-        <activity android:name=".XandrInterstitialMoPubDemoActivity" />
         <activity android:name=".XandrNativeInBannerGamDemoActivity" />
-        <activity android:name=".XandrNativeInBannerMoPubDemoActivity" />
         <activity android:name=".XandrInstreamVideoGamActivity" />
         <activity android:name=".TestActivity" />
-        <!--MoPub Activities-->
-        <activity
-            android:name="com.mopub.mobileads.MoPubActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
-        <activity
-            android:name="com.mopub.mobileads.MraidActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
-        <activity
-            android:name="com.mopub.mobileads.RewardedMraidActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
-        <activity
-            android:name="com.mopub.common.MoPubBrowser"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
-        <activity
-            android:name="com.mopub.mobileads.MraidVideoPlayerActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
+
     </application>
 
 </manifest>
