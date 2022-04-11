@@ -1,7 +1,6 @@
 include ':PrebidMobile',
         ':PrebidMobile-core',
         ':PrebidMobile-gamEventHandlers',
-        ':PrebidMobile-mopubAdapters',
         ':PrebidMobile-admobAdapters',
         ':test-utils',
         ':omsdk-android',
@@ -16,7 +15,6 @@ include ':PrebidMobile',
 project(':PrebidMobile').projectDir = new File('PrebidMobile')
 project(':PrebidMobile-core').projectDir = new File('PrebidMobile/PrebidMobile-core')
 project(':PrebidMobile-gamEventHandlers').projectDir = new File('PrebidMobile/PrebidMobile-gamEventHandlers')
-project(':PrebidMobile-mopubAdapters').projectDir = new File('PrebidMobile/PrebidMobile-mopubAdapters')
 project(':PrebidMobile-admobAdapters').projectDir = new File('PrebidMobile/PrebidMobile-admobAdapters')
 project(':omsdk-android').projectDir = new File('PrebidMobile/omsdk-android')
 project(':test-utils').projectDir = new File('PrebidMobile/test-utils')
