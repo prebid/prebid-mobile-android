@@ -24,8 +24,7 @@ import android.webkit.WebView;
 
 import androidx.multidex.MultiDexApplication;
 
-import com.mopub.common.MoPub;
-import com.mopub.common.SdkConfiguration;
+
 
 import org.prebid.mobile.PrebidMobile;
 
@@ -38,9 +37,7 @@ public class CustomApplication extends Application {
     public void onCreate() {
         super.onCreate();
         //init MoPub SDK
-        SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder("a935eac11acd416f92640411234fbba6")
-                .build();
-        MoPub.initializeSdk(this, sdkConfiguration, null);
+
         //set Prebid Mobile global Settings
         //region PrebidMobile API
 
