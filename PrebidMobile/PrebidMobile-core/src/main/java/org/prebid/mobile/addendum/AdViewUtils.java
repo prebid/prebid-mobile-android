@@ -47,7 +47,6 @@ public final class AdViewUtils {
     private static final String GAM_VIEW_CLASS_2 = "com.google.android.gms.ads.admanager.AdManagerAdView";
     private static final String GAM_CUSTOM_TEMPLATE_AD_CLASS = "com.google.android.gms.ads.formats.NativeCustomTemplateAd";
     private static final String GAM_CUSTOM_TEMPLATE_AD_CLASS_2 = "com.google.android.gms.ads.nativead.NativeCustomFormatAd";
-    private static final String MOPUB_NATIVE_AD_CLASS = "com.mopub.nativeads.NativeAd";
 
     private AdViewUtils() { }
 
@@ -410,8 +409,6 @@ public final class AdViewUtils {
         if (GAM_VIEW_CLASS.equals(objectClassName) || GAM_VIEW_CLASS_2.equals(objectClassName)) {
             View adView = (View) object;
             findNativeInGAMPublisherAdView(adView, listener);
-        } else if (MOPUB_NATIVE_AD_CLASS.equals(objectClassName)) {
-            findNativeInMoPubNativeAd(object, listener);
         } else if (implementsInterface(object, GAM_CUSTOM_TEMPLATE_AD_CLASS) || implementsInterface(object, GAM_CUSTOM_TEMPLATE_AD_CLASS_2)) {
             findNativeInGAMCustomTemplateAd(object, listener);
         } else {
@@ -436,26 +433,6 @@ public final class AdViewUtils {
             PrebidNativeAd ad = createPrebidNativeAd(cacheId, listener);
             if (ad != null) {
                 listener.onPrebidNativeLoaded(ad);
-            } else {
-                listener.onPrebidNativeNotValid();
-            }
-        } else {
-            listener.onPrebidNativeNotFound();
-        }
-    }
-
-    private static void findNativeInMoPubNativeAd(@NonNull Object object, @NonNull PrebidNativeAdListener listener) {
-        Object baseNativeAd = callMethodOnObject(object, "getBaseNativeAd");
-        LogUtil.debug("Prebid", "" + baseNativeAd);
-        Boolean isPrebid = (Boolean) callMethodOnObject(baseNativeAd, "getExtra", "isPrebid");
-        if (isPrebid != null && isPrebid) {
-            String cacheId = (String) callMethodOnObject(baseNativeAd, "getExtra", "hb_cache_id_local");
-            if (CacheManager.isValid(cacheId)) {
-                PrebidNativeAd ad = createPrebidNativeAd(cacheId, listener);
-                if (ad != null) {
-                    listener.onPrebidNativeLoaded(ad);
-                    return;
-                }
             } else {
                 listener.onPrebidNativeNotValid();
             }
