@@ -15,13 +15,15 @@ ext {
 buildscript {
     ext.kotlin_version = '1.5.32'
     repositories {
-        mavenCentral()
         google()
+        mavenCentral()
+        maven { url 'https://artifacts.applovin.com/android' } // For Applovin Max Ad Review
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:4.1.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.applovin.quality:AppLovinQualityServiceGradlePlugin:4.3.9"
     }
 }
 

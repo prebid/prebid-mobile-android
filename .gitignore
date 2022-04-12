@@ -58,3 +58,6 @@ captures/
 
 # Keystore files
 *.jks
+
+# Applovin Max Ad Review plugin
+.safedk/

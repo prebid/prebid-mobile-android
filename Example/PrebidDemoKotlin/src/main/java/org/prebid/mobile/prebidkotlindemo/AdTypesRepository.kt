@@ -269,6 +269,22 @@ object AdTypesRepository {
                     InAppAdMobNative.destroy()
                 }
             )
+        ),
+
+        "In-App + Applovin Max" to listOf(
+            AdType(
+                "Banner",
+                onCreate = { activity, wrapper, autoRefreshTime ->
+                    useTestServer()
+                    PrebidMobile.setStoredAuctionResponse("response-prebid-banner-320-50")
+                    InAppMaxBanner.create(
+                        wrapper, autoRefreshTime / 1000,
+                        "3d8a0bcbb6d571d5",
+                        "imp-prebid-banner-320-50"
+                    )
+                },
+                onDestroy = { InAppMaxBanner.destroy() }
+            ),
         )
     )
 
@@ -276,6 +292,5 @@ object AdTypesRepository {
         PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
         PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
     }
-
 
 }
