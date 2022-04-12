@@ -41,7 +41,7 @@ sh ./buildPrebidMobile.sh
 cp -r ../generated/* "$DEPLOY_DIR_ABSOLUTE" || true
 
 modules=("PrebidMobile" "PrebidMobile-core" "PrebidMobile-gamEventHandlers" "PrebidMobile-admobAdapters")
-extensions=("jar" "aar" "jar" "jar" "jar")
+extensions=("jar" "aar" "jar" "jar")
 for n in ${!modules[@]}; do
   echo -e "\n"
   echoX "Deploying ${modules[$n]} on Maven..."

@@ -16,20 +16,14 @@
 
 package org.prebid.mobile.renderingtestapp.uiAutomator.pages;
 
+import androidx.test.uiautomator.*;
+
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import androidx.test.uiautomator.By;
-import androidx.test.uiautomator.BySelector;
-import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject2;
-import androidx.test.uiautomator.Until;
-
 import static androidx.test.uiautomator.By.copy;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class AdBasePage<T> extends BasePage<T> {
 
@@ -73,7 +67,7 @@ public class AdBasePage<T> extends BasePage<T> {
         public static BySelector fetchDemandSuccess = By.res(TAG, "btnFetchDemandResultSuccess");
         public static BySelector fetchDemandFailure = By.res(TAG, "btnFetchDemandResultFailure");
 
-        // Ppm native / MoPub events
+        // Ppm native events
         public static BySelector getNativeAdSuccess = By.res(TAG, "btnGetNativeAdResultSuccess");
         public static BySelector getNativeAdFailure = By.res(TAG, "btnGetNativeAdResultFailure");
         public static BySelector nativeAdFailed = By.res(TAG, "btnNativeAdFailed");

@@ -1,48 +1,23 @@
 package org.prebid.mobile.drprebid.validation;
 
-import static org.prebid.mobile.ResultCode.SUCCESS;
-
 import android.app.Activity;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
-
 import androidx.annotation.Nullable;
-
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
-
-import org.prebid.mobile.AdUnit;
-import org.prebid.mobile.BannerAdUnit;
-import org.prebid.mobile.BidLog;
-import org.prebid.mobile.Host;
-import org.prebid.mobile.InterstitialAdUnit;
-import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.*;
 import org.prebid.mobile.drprebid.managers.SettingsManager;
-import org.prebid.mobile.drprebid.model.AdFormat;
-import org.prebid.mobile.drprebid.model.AdServerSettings;
 import org.prebid.mobile.drprebid.model.AdSize;
-import org.prebid.mobile.drprebid.model.GeneralSettings;
-import org.prebid.mobile.drprebid.model.PrebidServerSettings;
-import org.prebid.mobile.drprebid.util.IOUtil;
+import org.prebid.mobile.drprebid.model.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.net.ssl.HttpsURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import static org.prebid.mobile.ResultCode.SUCCESS;
 
 public class SdkTest {
     private static final String TAG = SdkTest.class.getSimpleName();
@@ -271,8 +246,6 @@ public class SdkTest {
             invokeContainsPrebidCreative(false);
         }
     };
-
-    //---------------------------------- MoPub Banner Listener -------------------------------------
 
 
     private void checkResponseForPrebidCreative() {

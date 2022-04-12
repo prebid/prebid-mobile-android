@@ -35,7 +35,7 @@ public enum ResultCode {
      */
     INVALID_HOST_URL,
     /**
-     * For MoPub banner view, we don't support multi-size request
+     * For banner view, we don't support multi-size request
      */
     INVALID_SIZE,
     /**
@@ -43,7 +43,7 @@ public enum ResultCode {
      */
     INVALID_CONTEXT,
     /**
-     * Currently, we only support MoPub Banner, Interstitial, DFP Banner, Interstitial
+     * Currently, we only support Banner, Interstitial, DFP Banner, Interstitial
      */
     INVALID_AD_OBJECT,
     /**

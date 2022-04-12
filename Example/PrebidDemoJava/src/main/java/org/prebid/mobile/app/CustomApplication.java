@@ -20,24 +20,14 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
-import android.webkit.WebView;
-
-import androidx.multidex.MultiDexApplication;
-
-
-
 import org.prebid.mobile.PrebidMobile;
 
-import static android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
-import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
-import static android.view.WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON;
+import static android.view.WindowManager.LayoutParams.*;
 
 public class CustomApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //init MoPub SDK
-
         //set Prebid Mobile global Settings
         //region PrebidMobile API
 
