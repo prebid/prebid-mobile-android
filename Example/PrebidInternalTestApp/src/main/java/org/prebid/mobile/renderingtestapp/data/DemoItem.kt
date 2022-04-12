@@ -33,6 +33,7 @@ enum class Tag(val tagName: String) {
     GAM("GAM"),
     MOPUB("MoPub"),
     ADMOB("AdMob"),
+    MAX("Max"),
 
     ALL("All")
 }
