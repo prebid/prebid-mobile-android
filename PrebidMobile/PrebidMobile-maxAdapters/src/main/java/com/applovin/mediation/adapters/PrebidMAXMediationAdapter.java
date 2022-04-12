@@ -91,7 +91,9 @@ public class PrebidMAXMediationAdapter extends MediationAdapterBase implements M
     ) {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         adConfiguration.setAdFormat(AdFormat.BANNER);
-        DisplayViewListener listener = createBannerListener(bannerListener);
+        DisplayViewListener listener = ListenersCreator.createBannerListener(bannerListener,
+                () -> bannerListener.onAdViewAdLoaded(adView)
+        );
 
         if (activity != null) {
             LogUtil.info(TAG, "Prebid ad won: " + parameters.getThirdPartyAdPlacementId());
@@ -120,7 +122,7 @@ public class PrebidMAXMediationAdapter extends MediationAdapterBase implements M
 
         activity.runOnUiThread(() -> {
             try {
-                InterstitialControllerListener listener = createInterstitialListener(maxListener);
+                InterstitialControllerListener listener = ListenersCreator.createInterstitialListener(maxListener);
                 interstitialController = new InterstitialController(activity, listener);
                 interstitialController.loadAd(responseId, false);
             } catch (AdException e) {
@@ -160,7 +162,7 @@ public class PrebidMAXMediationAdapter extends MediationAdapterBase implements M
 
         activity.runOnUiThread(() -> {
             try {
-                InterstitialControllerListener listener = createRewardedListener(maxListener);
+                InterstitialControllerListener listener = ListenersCreator.createRewardedListener(maxListener);
                 interstitialController = new InterstitialController(activity, listener);
                 interstitialController.loadAd(responseId, true);
             } catch (AdException e) {
@@ -206,6 +208,7 @@ public class PrebidMAXMediationAdapter extends MediationAdapterBase implements M
         }
     }
 
+
     private void onBannerError(
             int code,
             String error
@@ -231,99 +234,6 @@ public class PrebidMAXMediationAdapter extends MediationAdapterBase implements M
         if (rewardedListener != null) {
             rewardedListener.onRewardedAdLoadFailed(new MaxAdapterError(code, error));
         }
-    }
-
-    private DisplayViewListener createBannerListener(
-            MaxAdViewAdapterListener maxListener
-    ) {
-        return new DisplayViewListener() {
-            @Override
-            public void onAdLoaded() {
-                maxListener.onAdViewAdLoaded(adView);
-            }
-
-            @Override
-            public void onAdDisplayed() {
-                maxListener.onAdViewAdDisplayed();
-            }
-
-            @Override
-            public void onAdFailed(AdException exception) {
-                maxListener.onAdViewAdDisplayFailed(new MaxAdapterError(2001, "Ad failed: " + exception.getMessage()));
-            }
-
-            @Override
-            public void onAdClicked() {
-                maxListener.onAdViewAdClicked();
-                maxListener.onAdViewAdExpanded();
-            }
-
-            @Override
-            public void onAdClosed() {
-                maxListener.onAdViewAdCollapsed();
-                maxListener.onAdViewAdHidden();
-            }
-        };
-    }
-
-    private InterstitialControllerListener createInterstitialListener(MaxInterstitialAdapterListener maxListener) {
-        return new InterstitialControllerListener() {
-            @Override
-            public void onInterstitialReadyForDisplay() {
-                maxListener.onInterstitialAdLoaded();
-            }
-
-            @Override
-            public void onInterstitialClicked() {
-                maxListener.onInterstitialAdClicked();
-            }
-
-            @Override
-            public void onInterstitialFailedToLoad(AdException exception) {
-                maxListener.onInterstitialAdLoadFailed(new MaxAdapterError(2002,
-                        "Ad failed: " + exception.getMessage()
-                ));
-            }
-
-            @Override
-            public void onInterstitialDisplayed() {
-                maxListener.onInterstitialAdDisplayed();
-            }
-
-            @Override
-            public void onInterstitialClosed() {
-                maxListener.onInterstitialAdHidden();
-            }
-        };
-    }
-
-    private InterstitialControllerListener createRewardedListener(MaxRewardedAdapterListener maxListener) {
-        return new InterstitialControllerListener() {
-            @Override
-            public void onInterstitialReadyForDisplay() {
-                maxListener.onRewardedAdLoaded();
-            }
-
-            @Override
-            public void onInterstitialClicked() {
-                maxListener.onRewardedAdClicked();
-            }
-
-            @Override
-            public void onInterstitialFailedToLoad(AdException exception) {
-                maxListener.onRewardedAdLoadFailed(new MaxAdapterError(2002, "Ad failed: " + exception.getMessage()));
-            }
-
-            @Override
-            public void onInterstitialDisplayed() {
-                maxListener.onRewardedAdDisplayed();
-            }
-
-            @Override
-            public void onInterstitialClosed() {
-                maxListener.onRewardedAdHidden();
-            }
-        };
     }
 
 }
