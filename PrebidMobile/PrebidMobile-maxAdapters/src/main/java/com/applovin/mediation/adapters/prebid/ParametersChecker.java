@@ -41,7 +41,7 @@ public class ParametersChecker {
 
     @Nullable
     public static BidResponse getBidResponse(
-            String responseId,
+            @Nullable String responseId,
             OnError onErrorListener
     ) {
         if (responseId == null) {
