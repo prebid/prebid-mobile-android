@@ -7,12 +7,11 @@ import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
-import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback
+import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
+import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
 import org.prebid.mobile.AdUnit
+import org.prebid.mobile.InterstitialAdUnit
 import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.VideoAdUnit
-import org.prebid.mobile.VideoInterstitialAdUnit
 
 object GamVideoInterstitial {
     private val TAG = GamVideoInterstitial::class.java.simpleName
@@ -28,12 +27,11 @@ object GamVideoInterstitial {
         val request = AdManagerAdRequest.Builder().build()
         PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
 
-        adUnit = VideoInterstitialAdUnit(configId)
+        adUnit = InterstitialAdUnit(configId)
         adUnit?.fetchDemand(request) { resultCode ->
             Log.d(TAG, "Result code: $resultCode")
             loadAd(activity, adUnitId, request)
         }
-
 
     }
 
@@ -42,10 +40,10 @@ object GamVideoInterstitial {
         adUnitId: String,
         request: AdManagerAdRequest
     ) {
-        val adLoadCallback = object : RewardedInterstitialAdLoadCallback() {
-            override fun onAdLoaded(rewardedInterstitialAd: RewardedInterstitialAd) {
+        val adLoadCallback = object : AdManagerInterstitialAdLoadCallback() {
+            override fun onAdLoaded(rewardedInterstitialAd: AdManagerInterstitialAd) {
                 super.onAdLoaded(rewardedInterstitialAd)
-                rewardedInterstitialAd.show(activity) {}
+                rewardedInterstitialAd.show(activity)
             }
 
             override fun onAdFailedToLoad(loadAdError: LoadAdError) {
@@ -65,7 +63,7 @@ object GamVideoInterstitial {
         }
 
 
-        RewardedInterstitialAd.load(
+        AdManagerInterstitialAd.load(
             activity,
             adUnitId,
             request,
@@ -74,7 +72,6 @@ object GamVideoInterstitial {
     }
 
     fun destroy() {
-        adUnit?.stopAutoRefresh()
         PrebidMobile.setStoredAuctionResponse(null)
         adUnit = null
     }
