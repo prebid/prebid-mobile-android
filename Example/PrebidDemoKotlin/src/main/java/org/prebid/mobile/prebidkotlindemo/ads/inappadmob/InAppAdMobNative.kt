@@ -10,7 +10,7 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
 import org.prebid.mobile.*
 import org.prebid.mobile.admob.PrebidNativeAdapter
-import org.prebid.mobile.prebidkotlindemo.databinding.ViewNativeAdBinding
+import org.prebid.mobile.prebidkotlindemo.databinding.ViewNativeAdAdMobBinding
 
 
 object InAppAdMobNative {
@@ -66,7 +66,7 @@ object InAppAdMobNative {
 
     private fun createCustomView(wrapper: ViewGroup, nativeAd: NativeAd) {
         wrapper.removeAllViews()
-        val binding = ViewNativeAdBinding.inflate(LayoutInflater.from(wrapper.context))
+        val binding = ViewNativeAdAdMobBinding.inflate(LayoutInflater.from(wrapper.context))
 
         binding.apply {
             tvHeadline.text = nativeAd.headline
