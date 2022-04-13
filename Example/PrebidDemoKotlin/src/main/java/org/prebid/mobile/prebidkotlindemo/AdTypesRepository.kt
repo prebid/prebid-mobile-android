@@ -4,6 +4,7 @@ import org.prebid.mobile.Host
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.prebidkotlindemo.ads.GamBanner
 import org.prebid.mobile.prebidkotlindemo.ads.GamInterstitial
+import org.prebid.mobile.prebidkotlindemo.ads.GamVideoInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.inapp.*
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobBanner
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobInterstitial
@@ -25,8 +26,9 @@ object AdTypesRepository {
                         wrapper, autoRefreshTime,
                         320, 50,
                         // TODO: Problem with ids
-                        "/5300653/pavliuchyk_test_adunit_1x1_puc",
-                        "imp-prebid-banner-320-50", "response-prebid-banner-320-50"
+                        "/21808260008/prebid_demo_app_original_api_banner",
+                        "imp-prebid-banner-320-50",
+                        "response-prebid-banner-320-50"
                     )
                 },
                 onDestroy = { GamBanner.destroy() }
@@ -44,13 +46,26 @@ object AdTypesRepository {
                 onDestroy = { GamBanner.destroy() }
             ),
             AdType(
-                "Interstitial",
+                "Display Interstitial",
                 onCreate = { activity, _, autoRefreshTime ->
                     GamInterstitial.create(
                         activity, autoRefreshTime,
                         // TODO: Problem with ids
-                        "/5300653/pavliuchyk_test_adunit_1x1_puc",
-                        "imp-prebid-display-interstitial-320-480","response-prebid-display-interstitial-320-480"
+                        "/21808260008/prebid-demo-app-original-api-display-interstitial",
+                        "imp-prebid-display-interstitial-320-480",
+                        "response-prebid-display-interstitial-320-480"
+                    )
+                },
+                onDestroy = { GamInterstitial.destroy() }
+            ),
+            AdType(
+                "Video Interstitial",
+                onCreate = { activity, _, _ ->
+                    GamVideoInterstitial.create(
+                        activity,
+                        "/21808260008/prebid-demo-app-original-api-video-interstitial",
+                        "imp-prebid-video-interstitial-320-480",
+                        "response-prebid-video-interstitial-320-480"
                     )
                 },
                 onDestroy = { GamInterstitial.destroy() }
@@ -64,7 +79,8 @@ object AdTypesRepository {
                     InAppBanner.create(
                         wrapper, autoRefreshTime / 1000,
                         320, 50,
-                        "imp-prebid-banner-320-50","response-prebid-banner-320-50"
+                        "imp-prebid-banner-320-50",
+                        "response-prebid-banner-320-50"
                     )
                 },
                 onDestroy = { InAppBanner.destroy() }
@@ -155,7 +171,7 @@ object AdTypesRepository {
                 onCreate = { activity, _, _ ->
                     InAppGamVideoInterstitial.create(
                         activity,
-                        "/21808260008/prebid_oxb_320x480_interstitial_video_static",
+                        "/21808260008/prebid-demo-app-original-api-video-interstitial",
                         "imp-prebid-video-interstitial-320-480","response-prebid-video-interstitial-320-480"
                     )
                 },
@@ -244,14 +260,5 @@ object AdTypesRepository {
         PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
     }
 
-//    private fun useTestServer() {
-//        PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
-//        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
-//    }
-//
-//    private fun useAppNexusServer() {
-//        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0")
-//        PrebidMobile.setPrebidServerHost(Host.APPNEXUS)
-//    }
 
 }
