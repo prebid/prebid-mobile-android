@@ -20,9 +20,9 @@ import com.applovin.sdk.AppLovinSdk;
 import org.prebid.mobile.PrebidMobile;
 
 @Keep
-public class PrebidMAXMediationAdapter extends MediationAdapterBase implements MaxAdViewAdapter, MaxInterstitialAdapter, MaxRewardedAdapter, MaxNativeAdAdapter {
+public class PrebidMaxMediationAdapter extends MediationAdapterBase implements MaxAdViewAdapter, MaxInterstitialAdapter, MaxRewardedAdapter, MaxNativeAdAdapter {
 
-    public static final String TAG = PrebidMAXMediationAdapter.class.getSimpleName();
+    public static final String TAG = PrebidMaxMediationAdapter.class.getSimpleName();
     public static final String EXTRA_RESPONSE_ID = TAG + "ExtraResponseId";
     public static final String EXTRA_KEYWORDS_ID = TAG + "ExtraKeywordsId";
 
@@ -30,7 +30,7 @@ public class PrebidMAXMediationAdapter extends MediationAdapterBase implements M
     private MaxInterstitialManager maxInterstitialManager;
     private MaxNativeManager maxNativeManager;
 
-    public PrebidMAXMediationAdapter(AppLovinSdk appLovinSdk) {
+    public PrebidMaxMediationAdapter(AppLovinSdk appLovinSdk) {
         super(appLovinSdk);
     }
 

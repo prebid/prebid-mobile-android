@@ -12,8 +12,8 @@ import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.applovin.mediation.adapters.PrebidMAXMediationAdapter.EXTRA_KEYWORDS_ID;
-import static com.applovin.mediation.adapters.PrebidMAXMediationAdapter.EXTRA_RESPONSE_ID;
+import static com.applovin.mediation.adapters.PrebidMaxMediationAdapter.EXTRA_KEYWORDS_ID;
+import static com.applovin.mediation.adapters.PrebidMaxMediationAdapter.EXTRA_RESPONSE_ID;
 
 public class ParametersChecker {
 

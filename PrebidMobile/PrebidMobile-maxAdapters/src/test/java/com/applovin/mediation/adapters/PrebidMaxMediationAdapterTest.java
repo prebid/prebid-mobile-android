@@ -6,7 +6,7 @@ import org.prebid.mobile.Util;
 
 import static org.junit.Assert.assertEquals;
 
-public class PrebidMAXMediationAdapterTest {
+public class PrebidMaxMediationAdapterTest {
 
     @Before
     public void setUp() throws Exception {
@@ -14,12 +14,12 @@ public class PrebidMAXMediationAdapterTest {
 
     @Test
     public void compareAdapterResponseKeyWithUtilsKey() {
-        assertEquals(PrebidMAXMediationAdapter.EXTRA_RESPONSE_ID, Util.APPLOVIN_MAX_RESPONSE_ID_KEY);
+        assertEquals(PrebidMaxMediationAdapter.EXTRA_RESPONSE_ID, Util.APPLOVIN_MAX_RESPONSE_ID_KEY);
     }
 
     @Test
     public void compareAdapterKeywordsKeyWithUtilsKey() {
-        assertEquals(PrebidMAXMediationAdapter.EXTRA_KEYWORDS_ID, Util.APPLOVIN_MAX_KEYWORDS_KEY);
+        assertEquals(PrebidMaxMediationAdapter.EXTRA_KEYWORDS_ID, Util.APPLOVIN_MAX_KEYWORDS_KEY);
     }
 
 }
