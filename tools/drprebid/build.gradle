@@ -49,12 +49,5 @@ dependencies {
 
     implementation 'androidx.multidex:multidex:2.0.1'
 
-    implementation('com.mopub:mopub-sdk:5.4.1@aar') {
-        transitive = true
 
-        exclude module: 'libAvid-mopub' // To exclude AVID
-        exclude module: 'moat-mobile-app-kit' // To exclude Moat
-    }
-
-    compileOnly 'com.mopub.volley:mopub-volley:2.0.0'
 }

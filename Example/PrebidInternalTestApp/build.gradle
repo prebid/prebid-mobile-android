@@ -86,13 +86,11 @@ dependencies {
 
     implementation project(':PrebidMobile')
     implementation project(':PrebidMobile-gamEventHandlers')
-    implementation project(':PrebidMobile-mopubAdapters')
     implementation project(':PrebidMobile-admobAdapters')
 
     // For testing staging releases
 //    implementation 'org.prebid:prebid-mobile-sdk:1.13.0-beta2'
 //    implementation 'org.prebid:prebid-mobile-sdk-gam-event-handlers:1.13.0-beta2'
-//    implementation 'org.prebid:prebid-mobile-sdk-mopub-adapters:1.13.0-beta2'
 //    implementation 'org.prebid:prebid-mobile-sdk-admob-adapters:1.13.0-beta2'
 
     // Base dependencies
@@ -107,9 +105,7 @@ dependencies {
     // Ad dependencies
     implementation 'com.google.android.gms:play-services-base:17.6.0'
     implementation 'com.google.android.gms:play-services-ads:20.4.0'
-    implementation ('com.mopub:mopub-sdk:5.17.0@aar') {
-        transitive = true
-    }
+
 
     // Navigation component
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"

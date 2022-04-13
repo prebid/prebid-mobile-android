@@ -27,11 +27,9 @@
     <string name="adServerText">Ad Server</string>
 
     <string name="adServerAdManager">AdManager</string>
-    <string name="adServerMoPub">MoPub</string>
 
     <string-array name="adServerArray">
         <item>@string/adServerAdManager</item>
-        <item>@string/adServerMoPub</item>
     </string-array>
 
     <string name="adSizeText">Ad Size</string>

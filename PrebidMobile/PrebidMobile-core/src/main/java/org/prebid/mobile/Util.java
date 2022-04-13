@@ -16,33 +16,33 @@
 
 package org.prebid.mobile;
 
-import android.annotation.TargetApi;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
-import android.view.ViewGroup;
-import android.webkit.ValueCallback;
-import android.webkit.WebView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 public class Util {
 
-    static final String MOPUB_BANNER_VIEW_CLASS = "com.mopub.mobileads.MoPubView";
-    static final String MOPUB_INTERSTITIAL_CLASS = "com.mopub.mobileads.MoPubInterstitial";
-    static final String MOPUB_NATIVE_CLASS = "com.mopub.nativeads.RequestParameters$Builder";
-    static final String MOPUB_NATIVE_OBJECT = "com.mopub.mediation.MoPubNativeMediationUtils";
+
     static final String AD_MANAGER_REQUEST_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest";
     static final String AD_MANAGER_REQUEST_CLASS_V20 = "com.google.android.gms.ads.admanager.AdManagerAdRequest";
     static final String AD_MANAGER_REQUEST_BUILDER_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest$Builder";
@@ -53,7 +53,6 @@ public class Util {
     public static final int NATIVE_AD_VISIBLE_PERIOD_MILLIS = 1000;
     private static final Random RANDOM = new Random();
     private static final HashSet<String> reservedKeys;
-    private static final int MoPubQueryStringLimit = 4000;
 
     static {
         reservedKeys = new HashSet<>();
@@ -69,65 +68,6 @@ public class Util {
         void onPrebidAdNotFound();
     }
 
-    /**
-     * This method resizes a view that contains prebid in banner native ad to the size you desired
-     *
-     * @param adView   the adView to be resized
-     * @param params   the size to be resized to, note the view group has to be the adView's parent view group type
-     * @param listener the listener to be called when resize is done
-     */
-    @TargetApi(19)
-    public static void resizeInBannerNative(@NonNull final ViewGroup adView, final ViewGroup.LayoutParams params, @Nullable final ResizeInBannerNativeListener listener) {
-        if (adView.getClass() == getClassFromString(MOPUB_BANNER_VIEW_CLASS)) {
-
-            final Handler handler = new Handler(Looper.getMainLooper());
-            final long startTime = System.currentTimeMillis();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if ((System.currentTimeMillis() - startTime) > 500) {
-                        listener.onPrebidAdNotFound();
-                    } else {
-                        if (adView.getChildCount() > 0) {
-                            final WebView wv = (WebView) adView.getChildAt(0);
-                            wv.evaluateJavascript("document.body.innerHTML", new ValueCallback<String>() {
-
-
-                                @Override
-                                public void onReceiveValue(@Nullable String html) {
-
-                                    if (!TextUtils.isEmpty(html) && html.contains("native-trk.js")) {
-                                        wv.setLayoutParams(new FrameLayout.LayoutParams(params.width, params.height));
-                                        adView.setLayoutParams(params);
-                                        listener.onResizePrebidAdSuccessful();
-                                    } else {
-                                        listener.onPrebidAdNotFound();
-                                    }
-                                }
-                            });
-                        } else {
-                            handler.postDelayed(this, 50);
-                        }
-                    }
-
-                }
-            }, 50);
-        }
-    }
-
-    @NonNull
-    public static String convertMapToMoPubKeywords(Map<String, String> keywordMap) {
-        StringBuilder result = new StringBuilder();
-        for (String key : keywordMap.keySet()) {
-            result.append(key).append(":").append(keywordMap.get(key)).append(",");
-        }
-
-        if (result.length() > 0) {
-            result.delete(result.length() - 1, result.length());
-        }
-
-        return result.toString();
-    }
 
     @Nullable
     static JSONObject getObjectWithoutEmptyValues(@NonNull JSONObject jsonObject) {
@@ -383,14 +323,10 @@ public class Util {
 
     static boolean supportedAdObject(Object adObj) {
         if (adObj == null) return false;
-        if (adObj.getClass() == getClassFromString(MOPUB_BANNER_VIEW_CLASS)
-                || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)
-                || adObj.getClass() == getClassFromString(MOPUB_NATIVE_OBJECT)
-                || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS)
+        if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS)
                 || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)
                 || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS)
                 || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS_V20)
-                || adObj.getClass() == getClassFromString(MOPUB_NATIVE_CLASS)
                 || adObj.getClass() == getClassFromString(ANDROID_OS_BUNDLE)
                 || adObj.getClass() == HashMap.class)
             return true;
@@ -399,14 +335,7 @@ public class Util {
 
     static void apply(HashMap<String, String> bids, Object adObj) {
         if (adObj == null) return;
-        if (adObj.getClass() == getClassFromString(MOPUB_BANNER_VIEW_CLASS)
-                || adObj.getClass() == getClassFromString(MOPUB_INTERSTITIAL_CLASS)) {
-            handleMoPubKeywordsUpdate(bids, adObj);
-        } else if (adObj.getClass() == getClassFromString(MOPUB_NATIVE_CLASS)) {
-            handleMoPubBuilderCustomTargeting(bids, adObj);
-        } else if (adObj.getClass() == getClassFromString(MOPUB_NATIVE_OBJECT)) {
-            handleMoPubNativeObjectKeywordsUpdate(bids, adObj);
-        } else if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS) || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)) {
+        if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS) || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)) {
             handleAdManagerCustomTargeting(bids, adObj);
         } else if (adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS) || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS_V20)) {
             handleAdManagerBuilderCustomTargeting(bids, adObj);
@@ -426,8 +355,6 @@ public class Util {
         if (adObject.getClass() == getClassFromString(ANDROID_OS_BUNDLE)) {
             Bundle adBundle = (Bundle) adObject;
             adBundle.putString(NativeAdUnit.BUNDLE_KEY_CACHE_ID, cacheId);
-        } else if (adObject.getClass() == getClassFromString(MOPUB_NATIVE_OBJECT)) {
-            Util.callMethodOnObject(adObject, "saveCacheId", cacheId);
         }
     }
 
@@ -440,41 +367,12 @@ public class Util {
         }
     }
 
-    static void handleMoPubNativeObjectKeywordsUpdate(HashMap<String, String> bids, Object adObj) {
-        if (bids != null) {
-            Util.callMethodOnObject(adObj, "handleKeywordsUpdate", bids);
-        }
-    }
-
-
-    private static void handleMoPubKeywordsUpdate(HashMap<String, String> bids, Object adObj) {
-        removeUsedKeywordsForMoPub(adObj);
-        if (bids != null && !bids.isEmpty()) {
-            StringBuilder keywordsBuilder = new StringBuilder();
-            for (String key : bids.keySet()) {
-                addReservedKeys(key);
-                keywordsBuilder.append(key).append(":").append(bids.get(key)).append(",");
-            }
-            String pbmKeywords = keywordsBuilder.toString();
-            String adViewKeywords = (String) Util.callMethodOnObject(adObj, "getKeywords");
-            if (!TextUtils.isEmpty(adViewKeywords)) {
-                adViewKeywords = pbmKeywords + adViewKeywords;
-            } else {
-                adViewKeywords = pbmKeywords;
-            }
-            // only set keywords if less than mopub query string limit
-            if (adViewKeywords.length() <= MoPubQueryStringLimit) {
-                Util.callMethodOnObject(adObj, "setKeywords", adViewKeywords);
-            }
-        }
-    }
 
     private static void handleAdManagerCustomTargeting(HashMap<String, String> bids, Object publisherAdRequest) {
         removeUsedCustomTargetingForDFP(publisherAdRequest);
         if (bids != null && !bids.isEmpty()) {
             Bundle bundle = (Bundle) Util.callMethodOnObject(publisherAdRequest, "getCustomTargeting");
             if (bundle != null) {
-                // retrieve keywords from mopub adview
                 for (String key : bids.keySet()) {
                     bundle.putString(key, bids.get(key));
                     addReservedKeys(key);
@@ -501,53 +399,6 @@ public class Util {
         }
     }
 
-    private static void handleMoPubBuilderCustomTargeting(HashMap<String, String> bids, Object requestParametersBuilder) {
-        removeUsedKeywordsForMoPub(requestParametersBuilder);
-
-        if (bids != null && !bids.isEmpty()) {
-            StringBuilder keywordsBuilder = new StringBuilder();
-            for (String key : bids.keySet()) {
-                addReservedKeys(key);
-                keywordsBuilder.append(key).append(":").append(bids.get(key)).append(",");
-            }
-            String pbmKeywords = keywordsBuilder.toString();
-            String adViewKeywords = (String) Util.callMethodOnObject(requestParametersBuilder, "getKeywords");
-            if (!TextUtils.isEmpty(adViewKeywords)) {
-                adViewKeywords = pbmKeywords + adViewKeywords;
-            } else {
-                adViewKeywords = pbmKeywords;
-            }
-
-            // only set keywords if less than mopub query string limit
-            if (adViewKeywords.length() <= MoPubQueryStringLimit) {
-                Util.callMethodOnObject(requestParametersBuilder, "keywords", adViewKeywords);
-            }
-        }
-    }
-
-    private static void removeUsedKeywordsForMoPub(Object adViewObj) {
-        String adViewKeywords = (String) Util.callMethodOnObject(adViewObj, "getKeywords");
-        if (!TextUtils.isEmpty(adViewKeywords) && reservedKeys != null && !reservedKeys.isEmpty()) {
-            // Copy used keywords to a temporary list to avoid concurrent modification
-            // while iterating through the list
-            String[] adViewKeywordsArray = adViewKeywords.split(",");
-            ArrayList<String> adViewKeywordsArrayList = new ArrayList<>(Arrays.asList(adViewKeywordsArray));
-            LinkedList<String> toRemove = new LinkedList<>();
-            for (String keyword : adViewKeywordsArray) {
-                if (!TextUtils.isEmpty(keyword) && keyword.contains(":")) {
-                    String[] keywordArray = keyword.split(":");
-                    if (keywordArray.length > 0) {
-                        if (reservedKeys.contains(keywordArray[0])) {
-                            toRemove.add(keyword);
-                        }
-                    }
-                }
-            }
-            adViewKeywordsArrayList.removeAll(toRemove);
-            adViewKeywords = TextUtils.join(",", adViewKeywordsArrayList);
-            Util.callMethodOnObject(adViewObj, "setKeywords", adViewKeywords);
-        }
-    }
 
     private static void removeUsedCustomTargetingForDFP(Object publisherAdRequest) {
         Bundle bundle = (Bundle) Util.callMethodOnObject(publisherAdRequest, "getCustomTargeting");
@@ -621,10 +472,9 @@ public class Util {
     /**
      * Generate ad tag url for Google's IMA SDK to fetch ads
      *
-     * @param adUnit GAM ad unit id
-     * @param sizes a set of ad sizes, only 640x480 and 400x300 are valid
+     * @param adUnit         GAM ad unit id
+     * @param sizes          a set of ad sizes, only 640x480 and 400x300 are valid
      * @param prebidKeywords prebid keywords
-     *
      * @return ad tag url
      */
     public static String generateInstreamUriForGam(String adUnit, HashSet<AdSize> sizes, Map<String, String> prebidKeywords) {

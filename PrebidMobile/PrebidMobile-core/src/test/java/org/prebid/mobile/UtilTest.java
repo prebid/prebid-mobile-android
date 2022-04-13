@@ -18,8 +18,7 @@ package org.prebid.mobile;
 
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
-import com.mopub.mobileads.MoPubInterstitial;
-import com.mopub.mobileads.MoPubView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,31 +55,12 @@ public class UtilTest extends BaseSetup {
 
     @Test
     public void testGetClassFromString() throws Exception {
-        assertEquals(MoPubView.class, Util.getClassFromString(Util.MOPUB_BANNER_VIEW_CLASS));
-        assertEquals(MoPubInterstitial.class, Util.getClassFromString(Util.MOPUB_INTERSTITIAL_CLASS));
+
         assertEquals(AdManagerAdRequest.class, Util.getClassFromString(Util.AD_MANAGER_REQUEST_CLASS_V20));
         assertEquals(AdManagerAdRequest.Builder.class, Util.getClassFromString(Util.AD_MANAGER_REQUEST_BUILDER_CLASS_V20));
     }
 
-    @Test
-    public void testApplyBidsToMoPubAdobject() throws Exception {
-        MoPubView adView = new MoPubView(activity);
-        adView.setKeywords("key1:value1,key2:value2");
-        HashMap<String, String> bids = new HashMap<>();
-        bids.put("hb_pb", "0.50");
-        bids.put("hb_cache_id", "123456");
-        Util.apply(bids, adView);
-        String adViewKeywords = adView.getKeywords();
-        assertEquals("hb_pb:0.50,hb_cache_id:123456,key1:value1,key2:value2", adViewKeywords);
-        Util.apply(null, adView);
-        assertEquals("key1:value1,key2:value2", adView.getKeywords());
-        MoPubInterstitial instl = new MoPubInterstitial(activity, "123456");
-        instl.setKeywords("key1:value1,key2:value2");
-        Util.apply(bids, instl);
-        assertEquals("hb_pb:0.50,hb_cache_id:123456,key1:value1,key2:value2", instl.getKeywords());
-        Util.apply(null, instl);
-        assertEquals("key1:value1,key2:value2", instl.getKeywords());
-    }
+
 
     @Test
     public void testApplyBidsToDFOAdObject() throws Exception {
@@ -108,20 +88,7 @@ public class UtilTest extends BaseSetup {
         assertEquals("Value", request.getCustomTargeting().get("Key"));
     }
 
-    @Test
-    public void testSupportedAdObject() throws Exception {
-        MoPubView testView = new MoPubView(activity);
-        assertTrue(Util.supportedAdObject(testView));
-        assertFalse(Util.supportedAdObject(null));
-        MoPubInterstitial interstitial = new MoPubInterstitial(activity, "");
-        assertTrue(Util.supportedAdObject(interstitial));
-        AdManagerAdRequest request = new AdManagerAdRequest.Builder().build();
-        assertTrue(Util.supportedAdObject(request));
-        AdManagerAdRequest.Builder requestBuilder = new AdManagerAdRequest.Builder();
-        assertTrue(Util.supportedAdObject(requestBuilder));
-        Object object = new Object();
-        assertFalse(Util.supportedAdObject(object));
-    }
+
 
     @Test
     public void testGetObjectWithoutEmptyValues() throws JSONException {
@@ -303,31 +270,7 @@ public class UtilTest extends BaseSetup {
         Assert.assertEquals("{\"key1\":[\"value11\",\"value12\"],\"key2\":[\"value21\"]}", jsonObject5.toString());
     }
 
-    @Test
-    public void testConvertMapToMoPubKeywords() throws JSONException {
-        //given
-        Map<String, String> map = new HashMap<>(2);
-        map.put("key1", "value1");
-        map.put("key2", "value2");
 
-        //when
-        String result = Util.convertMapToMoPubKeywords(map);
-
-        //then
-        Assert.assertTrue("key1:value1,key2:value2".equals(result) || "key2:value2,key1:value1".equals(result));
-    }
-
-    @Test
-    public void testConvertMapToMoPubKeywordsEmpty() throws JSONException {
-        //given
-        Map<String, String> map = new HashMap<>(0);
-
-        //when
-        String result = Util.convertMapToMoPubKeywords(map);
-
-        //then
-        Assert.assertEquals("", result);
-    }
 
     @Test
     public void testConvertJSONArray() throws Exception {

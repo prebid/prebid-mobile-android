@@ -33,11 +33,7 @@ public class Constants {
     static final String PBS_CONFIG_ID_320x50_APPNEXUS = "625c6125-f19e-4d5b-95c5-55501526b2a4";
     static final String PBS_CONFIG_ID_INTERSTITIAL_APPNEXUS = "625c6125-f19e-4d5b-95c5-55501526b2a4";
     static final String PBS_CONFIG_ID_NATIVE_APPNEXUS = "03f3341f-1737-402c-bc7d-bc81dfebe9cf"; // 25e17008-5081-4676-94d5-923ced4359d3
-    // MoPub ad unit ids
-    static final String MOPUB_BANNER_ADUNIT_ID_300x250_APPNEXUS = "a935eac11acd416f92640411234fbba6";
-    static final String MOPUB_BANNER_ADUNIT_ID_320x50_APPNEXUS = "9dbccb87ab4d4a178450c0bc986b4571";
-    static final String MOPUB_INTERSTITIAL_ADUNIT_ID_APPNEXUS = "2829868d308643edbec0795977f17437";
-    static final String MOPUB_IN_BANNER_NATIVE_ADUNIT_ID_APPNEXUS = "037a743e5d184129ab79c941240efff8";
+
     // DFP ad unit ids
     static final String DFP_BANNER_ADUNIT_ID_300x250_APPNEXUS = "/19968336/PriceCheck_300x250";
     static final String DFP_BANNER_ADUNIT_ID_ALL_SIZES_APPNEXUS = "/19968336/PrebidMobileValidator_Banner_All_Sizes";
@@ -51,11 +47,7 @@ public class Constants {
     static final String PBS_CONFIG_ID_INTERSTITIAL_RUBICON = "1001-1";
     static final String PBS_STORED_RESPONSE_300x250_RUBICON = "1001-rubicon-300x250";
     static final String PBS_STORED_RESPONSE_VAST_RUBICON = "sample_video_response";
-    // MoPub ad unit ids
-    static final String MOPUB_BANNER_ADUNIT_ID_300x250_RUBICON = "a108b8dd5ebc472098167e6f1c118120";
-    static final String MOPUB_INTERSTITIAL_ADUNIT_ID_RUBICON = "d5c75d9f0b8742cab579610930077c35";
-    static final String MOPUB_INTERSTITIAL_VIDEO_ADUNIT_ID_RUBICON = "723dd84529b04075aa003a152ede0c4b";
-    static final String MP_ADUNITID_REWARDED = "066483fc44bf4793b4e275522ef7c428";
+
     // DFP ad unit ids
     static final String DFP_BANNER_ADUNIT_ID_300x250_RUBICON = "/5300653/pavliuchyk_test_adunit_1x1_puc";
     static final String DFP_INTERSTITIAL_ADUNIT_ID_RUBICON = "/5300653/pavliuchyk_test_adunit_1x1_puc";

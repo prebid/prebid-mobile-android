@@ -20,7 +20,6 @@ import androidx.test.uiautomator.UiDevice;
 
 import org.prebid.mobile.renderingtestapp.uiAutomator.pages.PageFactory;
 import org.prebid.mobile.renderingtestapp.uiAutomator.pages.bidding.gam.GamBannerPage;
-import org.prebid.mobile.renderingtestapp.uiAutomator.pages.bidding.mopub.MoPubBiddingBannerPage;
 import org.prebid.mobile.renderingtestapp.uiAutomator.pages.bidding.ppm.PpmBannerPage;
 import org.prebid.mobile.renderingtestapp.uiAutomator.pages.bidding.ppm.PpmBannerVideoPage;
 
@@ -45,8 +44,5 @@ public class BannerPageFactory extends PageFactory {
         return new PpmBannerVideoPage(device);
     }
 
-    public MoPubBiddingBannerPage goToBiddingMoPubBannerExample(String example) {
-        findListItem(example);
-        return new MoPubBiddingBannerPage(device);
-    }
+
 }

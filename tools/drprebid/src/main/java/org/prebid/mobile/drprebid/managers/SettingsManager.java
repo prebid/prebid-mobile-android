@@ -80,15 +80,8 @@ public class SettingsManager {
     public AdServerSettings getAdServerSettings() {
         AdServerSettings settings = new AdServerSettings();
 
-        switch (mSharedPreferences.getInt(Constants.Settings.AD_SERVER, Constants.Settings.AdServerCodes.GOOGLE_AD_MANAGER)) {
-            case Constants.Settings.AdServerCodes.GOOGLE_AD_MANAGER:
-                settings.setAdServer(AdServer.GOOGLE_AD_MANAGER);
-                break;
-            case Constants.Settings.AdServerCodes.MOPUB:
-                settings.setAdServer(AdServer.MOPUB);
-                break;
-            default:
-                settings.setAdServer(AdServer.MOPUB);
+        if (mSharedPreferences.getInt(Constants.Settings.AD_SERVER, Constants.Settings.AdServerCodes.GOOGLE_AD_MANAGER) == Constants.Settings.AdServerCodes.GOOGLE_AD_MANAGER) {
+            settings.setAdServer(AdServer.GOOGLE_AD_MANAGER);
         }
 
         settings.setBidPrice(mSharedPreferences.getFloat(Constants.Settings.BID_PRICE, 0.0f));

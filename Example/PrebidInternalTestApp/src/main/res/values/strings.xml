@@ -35,17 +35,7 @@
     <string name="onAdClicked">onAdClicked called</string>
     <string name="onAdClosed">onAdClosed called</string>
 
-    <string name="event_mopub_banner_loaded">onBannerLoaded</string>
-    <string name="event_mopub_banner_failed">onBannerFailed</string>
-    <string name="event_mopub_banner_clicked">onBannerClicked</string>
-    <string name="event_mopub_banner_expanded">onBannerExpanded</string>
-    <string name="event_mopub_banner_collapsed">onBannerCollapsed</string>
 
-    <string name="event_mopub_interstitial_loaded">onInterstitialLoaded</string>
-    <string name="event_mopub_interstitial_failed">onInterstitialFailed</string>
-    <string name="event_mopub_interstitial_displayed">onInterstitialShown</string>
-    <string name="event_mopub_interstitial_clicked">onInterstitialClicked</string>
-    <string name="event_mopub_interstitial_dismissed">onInterstitialDismissed</string>
 
     <string name="event_admob_loaded">onAdLoaded</string>
     <string name="event_admob_clicked">onAdClicked</string>
@@ -168,36 +158,7 @@
     <string name="demo_bidding_gam_native_feed">Native Ad Feed (GAM) [OK, NativeAd]</string>
 
 
-    <!--MoPub Titles-->
-    <string name="demo_bidding_mopub_banner_320_50_adapter">Banner 320x50 (MoPub) [OK, OXB Adapter]</string>
-    <string name="demo_bidding_mopub_banner_320_50_no_bids">Banner 320x50 (MoPub) [noBids, MoPub Ad]</string>
-    <string name="demo_bidding_mopub_banner_320_50_random">Banner 320x50 (MoPub) [OK, Random]</string>
-    <string name="demo_bidding_mopub_banner_300_250">Banner 300x250 (MoPub)</string>
-    <string name="demo_bidding_mopub_banner_728_90">Banner 728x90 (MoPub)</string>
-    <string name="demo_bidding_mopub_banner_multisize">Banner Multisize (MoPub)</string>
-    <string name="demo_bidding_mopub_interstitial_320_480_adapter">Display Interstitial 320x480 (MoPub) [OK, OXB Adapter]</string>
-    <string name="demo_bidding_mopub_interstitial_320_480_random">Display Interstitial 320x480 (MoPub) [OK, Random]</string>
-    <string name="demo_bidding_mopub_interstitial_320_480_no_bids">Display Interstitial 320x480 (MoPub) [noBids, MoPub Ad]</string>
-    <string name="demo_bidding_mopub_video_interstitial_320_480_adapter">Video Interstitial 320x480 (MoPub) [OK, OXB Adapter]</string>
-    <string name="demo_bidding_mopub_video_interstitial_320_480_no_bids">Video Interstitial 320x480 (MoPub) [noBids, MoPub Ad]</string>
-    <string name="demo_bidding_mopub_video_interstitial_320_480_random">Video Interstitial 320x480 (MoPub) [OK, Random]</string>
-    <string name="demo_bidding_mopub_rewarded_video_320_480_adapter">Video Rewarded 320x480 without End Card (MoPub) [OK, OXB Adapter]</string>
-    <string name="demo_bidding_mopub_rewarded_video_end_card_320_480_adapter">Video Rewarded 320x480 (MoPub) [OK, OXB Adapter]</string>
-    <string name="demo_bidding_mopub_rewarded_video_end_card_320_480_random">Video Rewarded 320x480 (MoPub) [OK, Random]</string>
-    <string name="demo_bidding_mopub_rewarded_video_end_card_320_480_no_bids">Video Rewarded 320x480 (MoPub) [noBids, MoPub Ad]</string>
-    <string name="demo_bidding_mopub_mraid_resize">MRAID 2.0: Resize (MoPub)</string>
-    <string name="demo_bidding_mopub_mraid_expand">MRAID 2.0: Expand - 1 Part (MoPub)</string>
-    <string name="demo_bidding_mopub_banner_320_50_vanilla">Banner 320x50 - Vanilla Prebid Order (MoPub)</string>
-    <string name="demo_bidding_mopub_interstitial_320_480_vanilla">Display Interstitial 320x480 - Vanilla Prebid Order (MoPub)</string>
-    <string name="demo_bidding_mopub_video_interstitial_320_480_vanilla">Video Interstitial 320x480 - Vanilla Prebid Order (MoPub)</string>
-    <string name="demo_bidding_mopub_banners_and_interstitial">Banners and Interstitial (MoPub) [OK, Adapter]</string>
-    <string name="demo_bidding_mopub_mraid_fullscreen_video">MRAID 2.0: Video Interstitial (MoPub)</string>
-    <string name="demo_bidding_mopub_native_styles">Banner Native Styles (MoPub)</string>
-    <string name="demo_bidding_mopub_native_styles_no_assets">Banner Native Styles No Assets (MoPub)</string>
-    <string name="demo_bidding_mopub_native_no_bids">Native Ad (MoPub) [noBids, MPNativeAd] </string>
-    <string name="demo_bidding_mopub_native_feed_no_bids">Native Ad Feed (MoPub) [noBids, MPNativeAd] </string>
-    <string name="demo_bidding_mopub_native_adapter">Native Ad (MoPub) [OK, NativeAdAdapter]</string>
-    <string name="demo_bidding_mopub_native_adapter_video">Native Ad Video (MoPub) [OK, NativeAdAdapter]</string>
+
 
     <!--AdMob Titles-->
     <string name="demo_bidding_admob_banner_320_50_adapter">Banner 320x50 (AdMob) [OK, OXB Adapter]</string>
@@ -251,25 +212,6 @@
     <string name="adunit_gam_native_unified">/21808260008/unified_native_ad_unit</string>
     <string name="adunit_gam_native_unified_static">/21808260008/unified_native_ad_unit_static</string>
 
-    <!--MoPub AdUnits-->
-    <string name="mopub_banner_bidding_ad_unit_id_adapter">093eef131ec7455b9bda52b7eb456c51</string>
-    <string name="mopub_banner_bidding_ad_unit_id_no_bids">9f98febf90ee4366a18bfd60d7bdf870</string>
-    <string name="mopub_banner_bidding_ad_unit_id_random">78df2f92b9ce4a5b9475739592e71253</string>
-    <string name="mopub_interstitial_bidding_ad_unit_id_ok">d6cc98e81ef44d648bd93c79d372c451</string>
-    <string name="mopub_interstitial_bidding_ad_unit_id_random">d2206fff8c44443c964e3340ccf3e13c</string>
-    <string name="mopub_interstitial_bidding_ad_unit_id_no_bids">6e096195c9874d8f9ac7bfa6ef4c5a16</string>
-    <string name="mopub_video_interstitial_bidding_adapter">ed260a9f4e594462924a4f107cc8f6c1</string>
-    <string name="mopub_video_interstitial_bidding_random">85d44de7fea24845819021ba5e103025</string>
-    <string name="mopub_video_interstitial_bidding_no_bids">062a5be1c0764e84b45244ecd58b237f</string>
-    <string name="mopub_rewarded_video_bidding_adapter">7c8fe21705a948c8a89dc6b496e8ad35</string>
-    <string name="mopub_rewarded_video_bidding_random">110021a0333c440f844b9115ae8e4589</string>
-    <string name="mopub_rewarded_video_bidding_no_bids">a63a0710520d4b6c8a7f434084801573</string>
-    <string name="mopub_banner_bidding_ad_unit_id_vanilla">cf040372c8a14975b7af007cd98d5167</string>
-    <string name="mopub_interstitial_bidding_ad_unit_id_vanilla">12da0f996d56430b836898245c763e2d</string>
-    <string name="mopub_video_interstitial_bidding_vanilla">7c26d57952e34585af09a5e780547225</string>
-    <string name="mopub_native_styles">fb6098c7083e49aa8a724ea74f1f3462</string>
-    <string name="mopub_native_adapter">2916ffe4c05443408cef74f815d6d668</string>
-    <string name="mopub_native_no_bids">27a0aca8ce2c41e19195ea9beeb05e67</string>
 
     <!--AdMob AdUnits-->
     <string name="admob_banner_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/3793078260</string>
@@ -348,20 +290,13 @@
     <string name="dialog_configurator_min_width_percentage">Min. Width Percentage</string>
 
     <string name="version_tag_prebid_rendering">Prebid Rendering:</string>
-    <string name="version_tag_mopub">MoPub:</string>
     <string name="version_tag_gam">GAM:</string>
     <string name="version_tag_omsdk">OMSDK:</string>
 
     <string name="event_counter">%1$d ( %2$s )</string>
     <string name="event_counter_default">0 ( 0 )</string>
     <string name="event_counter_delimiter">-</string>
-    <string name="events_mopub_rewarded_loaded">onRewardedVideoLoadSuccess</string>
-    <string name="events_mopub_rewarded_failed">onRewardedVideoLoadFailure</string>
-    <string name="events_mopub_rewarded_started">onRewardedVideoStarted</string>
-    <string name="events_mopub_rewarded_playback_error">onRewardedVideoPlaybackError</string>
-    <string name="events_mopub_rewarded_clicked">onRewardedVideoClicked</string>
-    <string name="events_mopub_rewarded_collapsed">onRewardedVideoClosed</string>
-    <string name="events_mopub_rewarded_completed">onRewardedVideoCompleted</string>
+
     <string name="event_fetch_demand_failed">fetchDemand failed</string>
     <string name="event_fetch_demand_success">fetchDemand success</string>
     <string name="stored_auction_response">storedAuctionResponse</string>

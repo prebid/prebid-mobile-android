@@ -10,8 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.ads.MobileAds;
-import com.mopub.common.MoPub;
-import com.mopub.common.SdkConfiguration;
+
 
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.managers.SettingsManager;
@@ -47,17 +46,11 @@ public class TestResultsActivity extends AppCompatActivity {
 
         AdServerSettings adServerSettings = SettingsManager.getInstance(this).getAdServerSettings();
 
-        if (adServerSettings.getAdServer() == AdServer.MOPUB) {
-            initMoPub(adServerSettings.getAdUnitId());
-        } else {
-            initGoogleAdsManager();
-        }
+        initGoogleAdsManager();
+
     }
 
-    private void initMoPub(String adUnitId) {
-        SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(adUnitId).build();
-        MoPub.initializeSdk(this, sdkConfiguration, this::runTests);
-    }
+
 
     private void initGoogleAdsManager() {
         MobileAds.initialize(this.getApplication());
