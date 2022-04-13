@@ -1,7 +1,8 @@
-package com.applovin.mediation.adapters;
+package com.applovin.mediation.adapters.prebid.utils;
 
 import android.util.Log;
 import androidx.annotation.Nullable;
+import com.applovin.mediation.adapters.PrebidMAXMediationAdapter;
 import com.applovin.mediation.ads.MaxAdView;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;

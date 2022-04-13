@@ -5,7 +5,7 @@ import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxError
 import com.applovin.mediation.MaxReward
 import com.applovin.mediation.MaxRewardedAdListener
-import com.applovin.mediation.adapters.MaxRewardedMediationUtils
+import com.applovin.mediation.adapters.prebid.utils.MaxRewardedMediationUtils
 import com.applovin.mediation.ads.MaxRewardedAd
 import org.prebid.mobile.rendering.bidding.display.MediationRewardedVideoAdUnit
 
@@ -21,7 +21,8 @@ object InAppMaxRewarded {
         maxRewardedAd = MaxRewardedAd.getInstance(adUnitId, activity)
         maxRewardedAd?.setListener(createListener())
 
-        val mediationUtils = MaxRewardedMediationUtils(maxRewardedAd)
+        val mediationUtils =
+            MaxRewardedMediationUtils(maxRewardedAd)
         val adUnit = MediationRewardedVideoAdUnit(
             activity,
             configId,

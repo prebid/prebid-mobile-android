@@ -1,4 +1,4 @@
-package com.applovin.mediation.adapters;
+package com.applovin.mediation.adapters.prebid;
 
 import android.os.Bundle;
 import android.view.View;
@@ -26,12 +26,16 @@ public class PrebidMaxNativeAd extends MaxNativeAd {
         this.maxListener = maxListener;
     }
 
+    /**
+     * Makes all views clickable.
+     */
     @Override
     public void prepareViewForInteraction(MaxNativeAdView maxView) {
         super.prepareViewForInteraction(maxView);
 
         ArrayList<View> views = new ArrayList<>(7);
-        views.addAll(Arrays.asList(maxView.getAdvertiserTextView(),
+        views.addAll(Arrays.asList(
+                maxView.getAdvertiserTextView(),
                 maxView.getBodyTextView(),
                 maxView.getTitleTextView(),
                 maxView.getMainView(),
