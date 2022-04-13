@@ -5,6 +5,7 @@ import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.prebidkotlindemo.ads.GamBanner
 import org.prebid.mobile.prebidkotlindemo.ads.GamInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.GamVideoInterstitial
+
 import org.prebid.mobile.prebidkotlindemo.ads.inapp.*
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobBanner
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobInterstitial
@@ -71,6 +72,7 @@ object AdTypesRepository {
                 onDestroy = { GamInterstitial.destroy() }
             )
         ),
+
 
         "In-App" to listOf(
             AdType(

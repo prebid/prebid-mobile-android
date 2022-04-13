@@ -43,7 +43,7 @@ public enum FetchDemandResult {
      */
     INVALID_CONTEXT,
     /**
-     * GAM and MoPub views supported only
+     * GAM views supported only
      */
     INVALID_AD_OBJECT,
     /**

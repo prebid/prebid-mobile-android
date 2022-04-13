@@ -401,9 +401,10 @@ public final class AdViewUtils {
     /**
      * This API can be used to find if the passed object contains info to retreive valid cached Native response or not,
      * and notifies using the {@link PrebidNativeAdListener}
-     * @param object   instances of Google and MoPub Native Ads
+     *
+     * @param object   instances of Google Native Ads
      * @param listener to notify the validity of passed object via @onPrebidNativeLoaded, #onPrebidNativeNotFound, #onPrebidNativeNotValid
-     * */
+     */
     public static void findNative(@NonNull Object object, @NonNull PrebidNativeAdListener listener) {
         String objectClassName = object.getClass().getCanonicalName();
         if (GAM_VIEW_CLASS.equals(objectClassName) || GAM_VIEW_CLASS_2.equals(objectClassName)) {
