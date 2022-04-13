@@ -271,10 +271,10 @@ object AdTypesRepository {
             )
         ),
 
-        "In-App + Applovin Max" to listOf(
+        "In-App + Applovin MAX" to listOf(
             AdType(
                 "Banner",
-                onCreate = { activity, wrapper, autoRefreshTime ->
+                onCreate = { _, wrapper, autoRefreshTime ->
                     useTestServer()
                     PrebidMobile.setStoredAuctionResponse("response-prebid-banner-320-50")
                     InAppMaxBanner.create(
@@ -284,6 +284,32 @@ object AdTypesRepository {
                     )
                 },
                 onDestroy = { InAppMaxBanner.destroy() }
+            ),
+            AdType(
+                "Interstitial",
+                onCreate = { activity, _, _ ->
+                    useTestServer()
+                    PrebidMobile.setStoredAuctionResponse("response-prebid-display-interstitial-320-480")
+                    InAppMaxInterstitial.create(
+                        activity,
+                        "393697e649678807",
+                        "imp-prebid-display-interstitial-320-480"
+                    )
+                },
+                onDestroy = { InAppMaxInterstitial.destroy() }
+            ),
+            AdType(
+                "Rewarded",
+                onCreate = { activity, _, _ ->
+                    useTestServer()
+                    PrebidMobile.setStoredAuctionResponse("response-prebid-video-rewarded-320-480")
+                    InAppMaxRewarded.create(
+                        activity,
+                        "897f2fc59d617715",
+                        "imp-prebid-video-rewarded-320-480"
+                    )
+                },
+                onDestroy = { InAppMaxRewarded.destroy() }
             ),
         )
     )

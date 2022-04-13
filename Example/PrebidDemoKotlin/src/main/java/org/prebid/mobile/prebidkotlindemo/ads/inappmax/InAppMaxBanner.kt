@@ -7,7 +7,6 @@ import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxAdViewAdListener
 import com.applovin.mediation.MaxError
 import com.applovin.mediation.adapters.MaxBannerMediationUtils
-import com.applovin.mediation.adapters.PrebidMAXMediationAdapter
 import com.applovin.mediation.ads.MaxAdView
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.prebidkotlindemo.R
@@ -28,13 +27,10 @@ object InAppMaxBanner {
     ) {
         adView = MaxAdView(adUnitId, wrapper.context)
         adView?.setListener(createListener())
-
         adView?.layoutParams = FrameLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             wrapper.context.resources.getDimensionPixelSize(R.dimen.banner_height)
         )
-        adView?.setLocalExtraParameter(PrebidMAXMediationAdapter.EXTRA_RESPONSE_ID, "Lol")
-
         wrapper.addView(adView)
 
         val mediationUtils = MaxBannerMediationUtils(adView)
