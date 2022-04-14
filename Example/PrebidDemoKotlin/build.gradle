@@ -1,11 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'applovin-quality-service'
-
-applovin {
-    apiKey "GFK71zBxyxVAos4h_nh9NHqmym-hXdJisa0oDLiZ6CpGo6TaA-C08qHDlWcvguArWJJF03h77gL4dqJ3e9ubnn"
-}
 
 android {
     compileSdkVersion 30
