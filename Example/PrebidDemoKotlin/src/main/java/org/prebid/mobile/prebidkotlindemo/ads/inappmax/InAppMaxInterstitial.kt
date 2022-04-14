@@ -13,6 +13,7 @@ import java.util.*
 object InAppMaxInterstitial {
 
     private var maxInterstitialAd: MaxInterstitialAd? = null
+    private var adUnit: MediationInterstitialAdUnit? = null
 
     fun create(
         activity: Activity,
@@ -26,19 +27,21 @@ object InAppMaxInterstitial {
             MaxInterstitialMediationUtils(
                 maxInterstitialAd
             )
-        val adUnit = MediationInterstitialAdUnit(
+        adUnit = MediationInterstitialAdUnit(
             activity,
             configId,
             EnumSet.of(AdUnitFormat.DISPLAY),
             mediationUtils
         )
-        adUnit.fetchDemand {
+        adUnit?.fetchDemand {
             maxInterstitialAd?.loadAd()
         }
     }
 
     fun destroy() {
         maxInterstitialAd?.destroy()
+
+        adUnit?.destroy()
     }
 
     private fun createListener(): MaxAdListener {

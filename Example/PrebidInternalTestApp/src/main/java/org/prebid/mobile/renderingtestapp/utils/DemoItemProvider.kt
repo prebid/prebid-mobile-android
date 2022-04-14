@@ -86,6 +86,7 @@ class DemoItemProvider private constructor() {
             addGamPbsExamples()
             addMoPubPbsExamples()
             addAdMobPbsExamples()
+            addApplovinMaxPbsExamples()
         }
 
         private fun addInAppPbsExamples() {
@@ -1521,7 +1522,94 @@ class DemoItemProvider private constructor() {
                     adMobNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_no_bids,
-                        R.string.admob_native_bidding_ad_unit_id_adapter,storedResponse = R.string.response_prebid_no_bids
+                        R.string.admob_native_bidding_ad_unit_id_adapter,
+                        storedResponse = R.string.response_prebid_no_bids
+                    )
+                )
+            )
+        }
+
+        private fun addApplovinMaxPbsExamples() {
+            val maxBannerTagList = listOf(Tag.ALL, Tag.MAX, Tag.BANNER, Tag.REMOTE)
+            val maxBannerAction = R.id.action_header_bidding_to_max_banner
+            val maxBannerRandomAction = R.id.action_header_bidding_to_max_banner_random
+            val maxBannerAdaptiveAction = R.id.action_header_bidding_to_max_banner_adaptive
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_banner_320_50_adapter),
+                    maxBannerAction,
+                    maxBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_320x50,
+                        R.string.max_banner_ad_unit_id,
+                        320, 50,
+                        R.string.response_prebid_banner_320_50
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_banner_320_50_no_bids),
+                    maxBannerAction,
+                    maxBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_no_bids,
+                        R.string.max_banner_ad_unit_id,
+                        320, 50,
+                        R.string.response_prebid_no_bids
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_banner_320_50_random),
+                    maxBannerRandomAction,
+                    maxBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_320x50,
+                        R.string.max_banner_ad_unit_id,
+                        320, 50,
+                        R.string.response_prebid_banner_320_50
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_banner_300_250_adapter),
+                    maxBannerAction,
+                    maxBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_300x250,
+                        R.string.max_mrec_ad_unit_id,
+                        300, 250,
+                        R.string.response_prebid_banner_300_250
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_banner_300_250_no_bids),
+                    maxBannerAction,
+                    maxBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_no_bids,
+                        R.string.max_mrec_ad_unit_id,
+                        300, 250,
+                        R.string.response_prebid_no_bids
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_banner_adaptive),
+                    maxBannerAdaptiveAction,
+                    maxBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_320x50,
+                        R.string.max_banner_ad_unit_id,
+                        320, 50,
+                        R.string.response_prebid_banner_320_50
                     )
                 )
             )

@@ -20,6 +20,7 @@ object InAppMaxMrec {
     private const val TAG = "InAppMaxMrec"
 
     private var adView: MaxAdView? = null
+    private var adUnit: MediationBannerAdUnit? = null
 
     fun create(
         wrapper: ViewGroup,
@@ -37,20 +38,22 @@ object InAppMaxMrec {
         wrapper.addView(adView)
 
         val mediationUtils = MaxBannerMediationUtils(adView)
-        val adUnit = MediationBannerAdUnit(
+        adUnit = MediationBannerAdUnit(
             wrapper.context,
             configId,
             AdSize(300, 250),
             mediationUtils
         )
-        adUnit.setRefreshInterval(autoRefreshTime)
-        adUnit.fetchDemand {
+        adUnit?.setRefreshInterval(autoRefreshTime)
+        adUnit?.fetchDemand {
             adView?.loadAd()
         }
     }
 
     fun destroy() {
         adView?.destroy()
+
+        adUnit?.destroy()
     }
 
     private fun createListener(): MaxAdViewAdListener {

@@ -109,16 +109,18 @@ dependencies {
     // Ad dependencies
     implementation 'com.google.android.gms:play-services-base:17.6.0'
     implementation 'com.google.android.gms:play-services-ads:20.4.0'
-    implementation ('com.mopub:mopub-sdk:5.17.0@aar') {
+    implementation('com.mopub:mopub-sdk:5.17.0@aar') {
         transitive = true
     }
+    implementation "com.applovin:applovin-sdk:11.3.2"
+    implementation "com.google.android.gms:play-services-ads-identifier:18.0.1" // For Applovin Max
 
     // Navigation component
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     // Mock server
-    implementation ('com.squareup.okhttp3:mockwebserver:4.9.2') {
+    implementation('com.squareup.okhttp3:mockwebserver:4.9.2') {
         exclude group: 'junit'
     }
     implementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'

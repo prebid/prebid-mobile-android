@@ -76,7 +76,7 @@ class CustomApplication : Application() {
     private fun initApplovinMax() {
         AppLovinSdk.getInstance(this).mediationProvider = "max"
         AppLovinSdk.getInstance(this).initializeSdk { configuration: AppLovinSdkConfiguration -> }
-//        AppLovinSdk.getInstance(this).settings.setVerboseLogging(true);
+        AppLovinSdk.getInstance(this).settings.setVerboseLogging(false)
     }
 
     private fun activateKeepScreenOnFlag() {

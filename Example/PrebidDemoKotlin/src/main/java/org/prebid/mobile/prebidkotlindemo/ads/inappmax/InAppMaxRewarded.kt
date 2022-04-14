@@ -12,6 +12,7 @@ import org.prebid.mobile.rendering.bidding.display.MediationRewardedVideoAdUnit
 object InAppMaxRewarded {
 
     private var maxRewardedAd: MaxRewardedAd? = null
+    private var adUnit: MediationRewardedVideoAdUnit? = null
 
     fun create(
         activity: Activity,
@@ -23,19 +24,21 @@ object InAppMaxRewarded {
 
         val mediationUtils =
             MaxRewardedMediationUtils(maxRewardedAd)
-        val adUnit = MediationRewardedVideoAdUnit(
+        adUnit = MediationRewardedVideoAdUnit(
             activity,
             configId,
             mediationUtils
         )
 
-        adUnit.fetchDemand {
+        adUnit?.fetchDemand {
             maxRewardedAd?.loadAd()
         }
     }
 
     fun destroy() {
         maxRewardedAd?.destroy()
+
+        adUnit?.destroy()
     }
 
     private fun createListener(): MaxRewardedAdListener {
