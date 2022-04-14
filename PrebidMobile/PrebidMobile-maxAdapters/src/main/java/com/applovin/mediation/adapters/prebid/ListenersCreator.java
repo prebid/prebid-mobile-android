@@ -1,4 +1,4 @@
-package com.applovin.mediation.adapters;
+package com.applovin.mediation.adapters.prebid;
 
 import com.applovin.mediation.adapter.MaxAdapterError;
 import com.applovin.mediation.adapter.listeners.MaxAdViewAdapterListener;
@@ -48,7 +48,7 @@ public class ListenersCreator {
      * This callback created for calling MAX onAdViewAdLoaded listener from outside
      * because it needs ad view parameter when ad will be loaded.
      */
-    interface OnBannerAdViewLoaded {
+    public interface OnBannerAdViewLoaded {
 
         void run();
 
