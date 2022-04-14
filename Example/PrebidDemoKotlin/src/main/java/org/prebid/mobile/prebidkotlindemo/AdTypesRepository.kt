@@ -13,10 +13,7 @@ import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobNative
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobRewarded
 import org.prebid.mobile.prebidkotlindemo.ads.inappgam.*
-import org.prebid.mobile.prebidkotlindemo.ads.inappmax.InAppMaxBanner
-import org.prebid.mobile.prebidkotlindemo.ads.inappmax.InAppMaxInterstitial
-import org.prebid.mobile.prebidkotlindemo.ads.inappmax.InAppMaxNative
-import org.prebid.mobile.prebidkotlindemo.ads.inappmax.InAppMaxRewarded
+import org.prebid.mobile.prebidkotlindemo.ads.inappmax.*
 import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubBanner
 import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubRewardedInterstitial
@@ -360,6 +357,19 @@ object AdTypesRepository {
                     )
                 },
                 onDestroy = { InAppMaxBanner.destroy() }
+            ),
+            AdType(
+                "MREC",
+                onCreate = { _, wrapper, autoRefreshTime ->
+                    useTestServer()
+                    PrebidMobile.setStoredAuctionResponse("response-prebid-banner-300-250")
+                    InAppMaxMrec.create(
+                        wrapper, autoRefreshTime / 1000,
+                        "550e6c2fe979a641",
+                        "imp-prebid-banner-300-250"
+                    )
+                },
+                onDestroy = { InAppMaxMrec.destroy() }
             ),
             AdType(
                 "Interstitial",
