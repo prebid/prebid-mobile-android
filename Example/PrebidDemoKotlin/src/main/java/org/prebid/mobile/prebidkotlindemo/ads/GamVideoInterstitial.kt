@@ -9,14 +9,14 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
-import org.prebid.mobile.AdUnit
-import org.prebid.mobile.InterstitialAdUnit
-import org.prebid.mobile.PrebidMobile
+import org.prebid.mobile.*
+
 
 object GamVideoInterstitial {
     private val TAG = GamVideoInterstitial::class.java.simpleName
 
     private var adUnit: AdUnit? = null
+//    private var amInterstitial: PublisherInterstitialAd? = null
 
     fun create(
         activity: Activity,
@@ -27,7 +27,25 @@ object GamVideoInterstitial {
         val request = AdManagerAdRequest.Builder().build()
         PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
 
-        adUnit = InterstitialAdUnit(configId)
+        val videoInterstitialAdUnit = VideoInterstitialAdUnit(configId)
+        val parameters = VideoBaseAdUnit.Parameters().apply {
+            placement = Signals.Placement.Interstitial
+            api = listOf(
+                Signals.Api.VPAID_1,
+                Signals.Api.VPAID_2
+            )
+            maxBitrate = 1500
+            minBitrate = 300
+            maxDuration = 30
+            minDuration = 5
+            mimes = listOf("video/x-flv", "video/mp4")
+            playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOn)
+            protocols = listOf(
+                Signals.Protocols.VAST_2_0
+            )
+        }
+        videoInterstitialAdUnit.parameters = parameters
+        adUnit = videoInterstitialAdUnit
         adUnit?.fetchDemand(request) { resultCode ->
             Log.d(TAG, "Result code: $resultCode")
             loadAd(activity, adUnitId, request)
