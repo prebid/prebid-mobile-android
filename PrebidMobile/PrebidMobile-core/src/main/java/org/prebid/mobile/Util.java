@@ -49,8 +49,8 @@ public class Util {
     static final String APPLOVIN_MAX_NATIVE_AD_LOADER = "com.applovin.mediation.nativeAds.MaxNativeAdLoader";
     static final String ANDROID_OS_BUNDLE = "android.os.Bundle";
 
-    public static final String APPLOVIN_MAX_RESPONSE_ID_KEY = "PrebidMAXMediationAdapterExtraResponseId";
-    public static final String APPLOVIN_MAX_KEYWORDS_KEY = "PrebidMAXMediationAdapterExtraKeywordsId";
+    public static final String APPLOVIN_MAX_RESPONSE_ID_KEY = "PrebidMaxMediationAdapterExtraResponseId";
+    public static final String APPLOVIN_MAX_KEYWORDS_KEY = "PrebidMaxMediationAdapterExtraKeywordsId";
 
     public static final int HTTP_CONNECTION_TIMEOUT = 15000;
     public static final int HTTP_SOCKET_TIMEOUT = 20000;
