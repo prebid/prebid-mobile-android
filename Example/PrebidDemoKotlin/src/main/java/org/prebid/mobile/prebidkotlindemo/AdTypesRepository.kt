@@ -40,8 +40,9 @@ object AdTypesRepository {
                     GamBanner.create(
                         wrapper, autoRefreshTime,
                         300, 250,
-                        "/5300653/pavliuchyk_test_adunit_1x1_puc",
-                        "imp-prebid-banner-300-250","response-prebid-banner-300-250"
+                        "/21808260008/prebid_demo_app_original_api_banner_300x250_order",
+                        "imp-prebid-banner-300-250",
+                        "response-prebid-banner-300-250"
                     )
                 },
                 onDestroy = { GamBanner.destroy() }
@@ -93,7 +94,8 @@ object AdTypesRepository {
                     InAppInterstitial.create(
                         context,
                         30, 30,
-                        "imp-prebid-display-interstitial-320-480","response-prebid-display-interstitial-320-480"
+                        "imp-prebid-display-interstitial-320-480",
+                        "response-prebid-display-interstitial-320-480"
                     )
                 },
                 onDestroy = { InAppInterstitial.destroy() }
@@ -104,7 +106,8 @@ object AdTypesRepository {
                     InAppVideoBanner.create(
                         wrapper, autoRefreshTime / 1000,
                         300, 250,
-                        "imp-prebid-video-outstream","response-prebid-video-outstream"
+                        "imp-prebid-video-outstream",
+                        "response-prebid-video-outstream"
                     )
                 },
                 onDestroy = { InAppVideoBanner.destroy() }
@@ -114,7 +117,8 @@ object AdTypesRepository {
                 onCreate = { context, _, _ ->
                     InAppVideoInterstitial.create(
                         context,
-                        "imp-prebid-video-interstitial-320-480","response-prebid-video-interstitial-320-480"
+                        "imp-prebid-video-interstitial-320-480",
+                        "response-prebid-video-interstitial-320-480"
                     )
                 },
                 onDestroy = { InAppVideoInterstitial.destroy() }
@@ -124,7 +128,8 @@ object AdTypesRepository {
                 onCreate = { context, _, _ ->
                     InAppRewardedInterstitial.create(
                         context,
-                        "imp-prebid-video-rewarded-320-480","response-prebid-video-rewarded-320-480"
+                        "imp-prebid-video-rewarded-320-480",
+                        "response-prebid-video-rewarded-320-480"
                     )
                 },
                 onDestroy = { InAppRewardedInterstitial.destroy() }
@@ -139,7 +144,8 @@ object AdTypesRepository {
                         wrapper, autoRefreshTime / 1000,
                         320, 50,
                         "/21808260008/prebid_oxb_320x50_banner",
-                        "imp-prebid-banner-320-50","response-prebid-banner-320-50"
+                        "imp-prebid-banner-320-50",
+                        "response-prebid-banner-320-50"
                     )
                 },
                 onDestroy = { InAppGamBanner.destroy() }
@@ -151,7 +157,8 @@ object AdTypesRepository {
                         context,
                         30, 30,
                         "/21808260008/prebid_oxb_html_interstitial",
-                        "imp-prebid-display-interstitial-320-480","response-prebid-display-interstitial-320-480"
+                        "imp-prebid-display-interstitial-320-480",
+                        "response-prebid-display-interstitial-320-480"
                     )
                 },
                 onDestroy = { InAppGamInterstitial.destroy() }
@@ -163,7 +170,8 @@ object AdTypesRepository {
                         wrapper, autoRefreshTime / 1000,
                         300, 250,
                         "/21808260008/prebid_oxb_300x250_banner",
-                        "imp-prebid-video-outstream","response-prebid-video-outstream"
+                        "imp-prebid-video-outstream",
+                        "response-prebid-video-outstream"
                     )
                 },
                 onDestroy = { InAppGamVideoBanner.destroy() }
@@ -174,7 +182,8 @@ object AdTypesRepository {
                     InAppGamVideoInterstitial.create(
                         activity,
                         "/21808260008/prebid-demo-app-original-api-video-interstitial",
-                        "imp-prebid-video-interstitial-320-480","response-prebid-video-interstitial-320-480"
+                        "imp-prebid-video-interstitial-320-480",
+                        "response-prebid-video-interstitial-320-480"
                     )
                 },
                 onDestroy = { InAppGamVideoInterstitial.destroy() }
@@ -185,7 +194,8 @@ object AdTypesRepository {
                     InAppGamRewardedInterstitial.create(
                         activity,
                         "/21808260008/prebid_oxb_rewarded_video_test",
-                        "imp-prebid-video-rewarded-320-480","response-prebid-video-rewarded-320-480"
+                        "imp-prebid-video-rewarded-320-480",
+                        "response-prebid-video-rewarded-320-480"
                     )
                 },
                 onDestroy = { InAppGamRewardedInterstitial.destroy() }
@@ -200,7 +210,8 @@ object AdTypesRepository {
                         activity, wrapper, autoRefreshTime,
                         320, 50,
                         "ca-app-pub-1875909575462531/3793078260",
-                        "imp-prebid-banner-320-50","response-prebid-banner-320-50"
+                        "imp-prebid-banner-320-50",
+                        "response-prebid-banner-320-50"
                     )
                 },
                 onDestroy = { InAppAdMobBanner.destroy() }
@@ -212,7 +223,8 @@ object AdTypesRepository {
                         activity,
                         "ca-app-pub-1875909575462531/6393291067",
                         "imp-prebid-display-interstitial-320-480",
-                        EnumSet.of(AdUnitFormat.DISPLAY),"response-prebid-display-interstitial-320-480"
+                        EnumSet.of(AdUnitFormat.DISPLAY),
+                        "response-prebid-display-interstitial-320-480"
                     )
                 },
                 onDestroy = { InAppAdMobInterstitial.destroy() }
@@ -224,7 +236,8 @@ object AdTypesRepository {
                         activity,
                         "ca-app-pub-1875909575462531/6393291067",
                         "imp-prebid-video-interstitial-320-480",
-                        EnumSet.of(AdUnitFormat.VIDEO),"response-prebid-video-interstitial-320-480"
+                        EnumSet.of(AdUnitFormat.VIDEO),"" +
+                                "response-prebid-video-interstitial-320-480"
                     )
                 },
                 onDestroy = { InAppAdMobInterstitial.destroy() }
@@ -235,7 +248,8 @@ object AdTypesRepository {
                     InAppAdMobRewarded.create(
                         activity,
                         "ca-app-pub-1875909575462531/1908212572",
-                        "imp-prebid-video-rewarded-320-480","response-prebid-video-rewarded-320-480"
+                        "imp-prebid-video-rewarded-320-480",
+                        "response-prebid-video-rewarded-320-480"
                     )
                 },
                 onDestroy = { InAppAdMobRewarded.destroy() }
@@ -247,7 +261,8 @@ object AdTypesRepository {
                     InAppAdMobNative.create(
                         wrapper,
                         "ca-app-pub-1875909575462531/9720985924",
-                        "imp-prebid-banner-native-styles","response-prebid-banner-native-styles"
+                        "imp-prebid-banner-native-styles",
+                        "response-prebid-banner-native-styles"
                     )
                 },
                 onDestroy = {
