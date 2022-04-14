@@ -6,7 +6,7 @@ import android.widget.FrameLayout
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxAdViewAdListener
 import com.applovin.mediation.MaxError
-import com.applovin.mediation.adapters.MaxBannerMediationUtils
+import com.applovin.mediation.adapters.prebid.utils.MaxBannerMediationUtils
 import com.applovin.mediation.ads.MaxAdView
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.prebidkotlindemo.R
@@ -49,6 +49,9 @@ object InAppMaxBanner {
     fun destroy() {
         adView?.stopAutoRefresh()
         adView?.destroy()
+
+        adUnit?.stopRefresh()
+        adUnit?.destroy()
     }
 
     private fun createListener(): MaxAdViewAdListener {

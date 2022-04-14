@@ -62,13 +62,16 @@ public class ParametersMatcher {
         }
 
         HashMap<String, String> parameters = new HashMap<>();
-        for (String bundleKey : bundle.keySet()) {
-            String bundleValue = bundle.getString(bundleKey);
-            if (bundleValue != null) {
-                parameters.put(bundleKey, bundleValue);
+        if (bundle.size() > 0) {
+            for (String bundleKey : bundle.keySet()) {
+                String bundleValue = bundle.getString(bundleKey);
+                if (bundleValue != null) {
+                    parameters.put(bundleKey, bundleValue);
+                }
             }
+            return parameters;
         }
-        return parameters;
+        return null;
     }
 
     @Nullable

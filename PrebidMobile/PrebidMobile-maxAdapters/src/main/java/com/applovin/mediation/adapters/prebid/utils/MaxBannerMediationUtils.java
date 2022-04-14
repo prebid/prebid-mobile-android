@@ -1,7 +1,8 @@
-package com.applovin.mediation.adapters;
+package com.applovin.mediation.adapters.prebid.utils;
 
 import android.util.Log;
 import androidx.annotation.Nullable;
+import com.applovin.mediation.adapters.PrebidMaxMediationAdapter;
 import com.applovin.mediation.ads.MaxAdView;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -26,7 +27,7 @@ public class MaxBannerMediationUtils implements PrebidMediationDelegate {
     @Override
     public void setResponseToLocalExtras(@Nullable BidResponse response) {
         if (response != null && adViewReference.get() != null) {
-            adViewReference.get().setLocalExtraParameter(PrebidMAXMediationAdapter.EXTRA_RESPONSE_ID, response.getId());
+            adViewReference.get().setLocalExtraParameter(PrebidMaxMediationAdapter.EXTRA_RESPONSE_ID, response.getId());
         }
     }
 

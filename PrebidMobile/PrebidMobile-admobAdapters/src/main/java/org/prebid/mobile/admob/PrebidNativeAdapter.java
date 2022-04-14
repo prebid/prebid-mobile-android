@@ -18,6 +18,7 @@ import com.google.android.gms.ads.mediation.customevent.CustomEventNative;
 import com.google.android.gms.ads.mediation.customevent.CustomEventNativeListener;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.NativeAdUnit;
+import org.prebid.mobile.ParametersMatcher;
 import org.prebid.mobile.PrebidNativeAd;
 
 import java.io.InputStream;

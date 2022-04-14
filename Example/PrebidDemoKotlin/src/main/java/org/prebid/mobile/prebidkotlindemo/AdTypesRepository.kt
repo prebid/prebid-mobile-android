@@ -15,6 +15,7 @@ import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobRewarded
 import org.prebid.mobile.prebidkotlindemo.ads.inappgam.*
 import org.prebid.mobile.prebidkotlindemo.ads.inappmax.InAppMaxBanner
 import org.prebid.mobile.prebidkotlindemo.ads.inappmax.InAppMaxInterstitial
+import org.prebid.mobile.prebidkotlindemo.ads.inappmax.InAppMaxNative
 import org.prebid.mobile.prebidkotlindemo.ads.inappmax.InAppMaxRewarded
 import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubBanner
 import org.prebid.mobile.prebidkotlindemo.ads.inappmopub.InAppMoPubInterstitial
@@ -385,6 +386,20 @@ object AdTypesRepository {
                     )
                 },
                 onDestroy = { InAppMaxRewarded.destroy() }
+            ),
+            AdType(
+                "Native",
+                onCreate = { activity, wrapper, _ ->
+                    useTestServer()
+                    PrebidMobile.setStoredAuctionResponse("response-prebid-banner-native-styles")
+                    InAppMaxNative.create(
+                        activity,
+                        wrapper,
+                        "f3bdfa9dd8da1c4d",
+                        "imp-prebid-banner-native-styles"
+                    )
+                },
+                onDestroy = { InAppMaxNative.destroy() }
             ),
         )
     )

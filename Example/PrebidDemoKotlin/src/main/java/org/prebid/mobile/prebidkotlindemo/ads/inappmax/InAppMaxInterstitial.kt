@@ -4,7 +4,7 @@ import android.app.Activity
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxAdListener
 import com.applovin.mediation.MaxError
-import com.applovin.mediation.adapters.MaxInterstitialMediationUtils
+import com.applovin.mediation.adapters.prebid.utils.MaxInterstitialMediationUtils
 import com.applovin.mediation.ads.MaxInterstitialAd
 import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
@@ -22,7 +22,10 @@ object InAppMaxInterstitial {
         maxInterstitialAd = MaxInterstitialAd(adUnitId, activity)
         maxInterstitialAd?.setListener(createListener())
 
-        val mediationUtils = MaxInterstitialMediationUtils(maxInterstitialAd)
+        val mediationUtils =
+            MaxInterstitialMediationUtils(
+                maxInterstitialAd
+            )
         val adUnit = MediationInterstitialAdUnit(
             activity,
             configId,
