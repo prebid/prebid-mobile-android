@@ -74,7 +74,6 @@ object InAppAdMobBanner {
     fun destroy() {
         bannerView?.destroy()
         bannerView = null
-        PrebidMobile.setStoredAuctionResponse(null)
         adUnit?.destroy()
         adUnit = null
     }

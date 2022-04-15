@@ -29,7 +29,6 @@ object InAppVideoBanner {
 
     fun destroy() {
         bannerView?.destroy()
-        PrebidMobile.setStoredAuctionResponse(null)
         bannerView = null
     }
 

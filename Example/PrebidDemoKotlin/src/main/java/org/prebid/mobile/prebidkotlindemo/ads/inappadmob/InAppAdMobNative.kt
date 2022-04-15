@@ -62,7 +62,6 @@ object InAppAdMobNative {
 
     fun destroy() {
         nativeAd?.destroy()
-        PrebidMobile.setStoredAuctionResponse(null)
         nativeAd = null
     }
 

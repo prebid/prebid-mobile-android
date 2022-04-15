@@ -58,7 +58,6 @@ object InAppAdMobRewarded {
 
     fun destroy() {
         rewardedAd = null
-        PrebidMobile.setStoredAuctionResponse(null)
         adUnit?.destroy()
         adUnit = null
     }

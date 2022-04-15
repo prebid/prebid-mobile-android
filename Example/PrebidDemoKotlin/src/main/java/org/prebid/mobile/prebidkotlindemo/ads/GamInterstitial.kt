@@ -65,7 +65,7 @@ object GamInterstitial {
 
     fun destroy() {
         adUnit?.stopAutoRefresh()
-        PrebidMobile.setStoredAuctionResponse(null)
+
         adUnit = null
     }
 

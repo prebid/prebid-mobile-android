@@ -32,7 +32,6 @@ object InAppGamVideoInterstitial {
 
     fun destroy() {
         adUnit?.destroy()
-        PrebidMobile.setStoredAuctionResponse(null)
         adUnit = null
     }
 

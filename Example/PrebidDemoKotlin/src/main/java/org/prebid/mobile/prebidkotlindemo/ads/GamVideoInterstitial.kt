@@ -90,7 +90,6 @@ object GamVideoInterstitial {
     }
 
     fun destroy() {
-        PrebidMobile.setStoredAuctionResponse(null)
         adUnit = null
     }
 }

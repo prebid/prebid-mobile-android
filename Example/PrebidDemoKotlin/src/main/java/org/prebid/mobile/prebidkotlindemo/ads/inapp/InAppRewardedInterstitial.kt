@@ -29,7 +29,6 @@ object InAppRewardedInterstitial {
 
     fun destroy() {
         adUnit?.destroy()
-        PrebidMobile.setStoredAuctionResponse(null)
         adUnit = null
     }
 

@@ -30,7 +30,6 @@ object InAppBanner {
 
     fun destroy() {
         adView?.destroy()
-        PrebidMobile.setStoredAuctionResponse(null)
         adView = null
     }
 

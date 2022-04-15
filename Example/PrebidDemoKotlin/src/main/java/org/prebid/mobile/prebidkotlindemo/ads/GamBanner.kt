@@ -63,7 +63,6 @@ object GamBanner {
 
     fun destroy() {
         adUnit?.stopAutoRefresh()
-        PrebidMobile.setStoredAuctionResponse(null)
         adUnit = null
     }
 
