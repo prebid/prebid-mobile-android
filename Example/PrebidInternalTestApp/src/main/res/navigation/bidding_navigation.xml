@@ -446,6 +446,15 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@+id/headerBiddingFragment" />
 
+        <action
+            android:id="@+id/action_header_bidding_to_max_native"
+            app:destination="@+id/navigation_max_native"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
 
     </fragment>
 
@@ -647,5 +656,9 @@
     <fragment
         android:id="@+id/navigation_max_rewarded"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.max.MaxRewardedFragment" />
+
+    <fragment
+        android:id="@+id/navigation_max_native"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.max.MaxNativeFragment" />
 
 </navigation>

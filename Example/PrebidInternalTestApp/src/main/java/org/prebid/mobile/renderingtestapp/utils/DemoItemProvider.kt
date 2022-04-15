@@ -1728,6 +1728,35 @@ class DemoItemProvider private constructor() {
                     )
                 )
             )
+
+
+            val maxNativeAction = R.id.action_header_bidding_to_max_native
+            val maxNativeTagList = listOf(Tag.ALL, Tag.MAX, Tag.NATIVE, Tag.REMOTE)
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_native_adapter),
+                    maxNativeAction,
+                    maxNativeTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_native_styles,
+                        R.string.max_native_ad_unit_id,
+                        storedResponse = R.string.response_prebid_native_styles
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_native_no_bids),
+                    maxNativeAction,
+                    maxNativeTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_no_bids,
+                        R.string.max_native_ad_unit_id,
+                        storedResponse = R.string.response_prebid_no_bids
+                    )
+                )
+            )
         }
 
         private fun createBannerBundle(

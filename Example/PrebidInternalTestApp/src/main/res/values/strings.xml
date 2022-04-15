@@ -42,6 +42,10 @@
     <string name="onRewardedVideoStarted">onRewardedVideoStarted called</string>
     <string name="onRewardedVideoCompleted">onRewardedVideoCompleted called</string>
     <string name="onUserRewarded">onUserRewarded called</string>
+    <string name="onAdRevenuePaid">onAdRevenuePaid called</string>
+    <string name="onNativeAdLoaded">onNativeAdLoaded called</string>
+    <string name="onNativeAdClicked">onNativeAdClicked called</string>
+    <string name="onNativeAdLoadFailed">onNativeAdLoadFailed called</string>
 
     <string name="event_mopub_banner_loaded">onBannerLoaded</string>
     <string name="event_mopub_banner_failed">onBannerFailed</string>
@@ -248,6 +252,9 @@
     <string name="demo_bidding_max_rewarded_random">Video Rewarded 320x480 (MAX) [OK, Random]</string>
     <string name="demo_bidding_max_rewarded_no_bids">Video Rewarded 320x480 (MAX) [noBids, MAX ad]</string>
     <string name="demo_bidding_max_rewarded_random_no_end_card">Video Rewarded 320x480 no EndCard (MAX) [OK, Random]</string>
+
+    <string name="demo_bidding_max_native_adapter">Native Ad (MAX) [OK, Adapter]</string>
+    <string name="demo_bidding_max_native_no_bids">Native Ad (MAX) [noBids, MAX ad]</string>
 
     <!--GAM AdUnits-->
     <string name="adunit_gam_banner_320_50_app_event">/21808260008/prebid_oxb_320x50_banner</string>
