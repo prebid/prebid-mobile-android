@@ -7,6 +7,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.admob.AdMobRewardedMediationUtils
 import org.prebid.mobile.admob.PrebidRewardedAdapter
 import org.prebid.mobile.rendering.bidding.display.MediationRewardedVideoAdUnit
@@ -17,14 +18,19 @@ object InAppAdMobRewarded {
     private var rewardedAd: RewardedAd? = null
     private var adUnit: MediationRewardedVideoAdUnit? = null
 
-    fun create(activity: Activity, adUnitId: String, configId: String) {
+    fun create(
+        activity: Activity,
+        adUnitId: String,
+        configId: String,
+        storedAuctionResponse: String
+    ) {
         val extras = Bundle()
         val request = AdRequest
             .Builder()
             .addNetworkExtrasBundle(PrebidRewardedAdapter::class.java, extras)
             .build()
         val mediationUtils = AdMobRewardedMediationUtils(extras)
-
+        PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
         adUnit = MediationRewardedVideoAdUnit(activity, configId, mediationUtils)
         adUnit?.fetchDemand { result ->
             Log.d("Prebid", "Fetch demand result: $result")
@@ -52,7 +58,6 @@ object InAppAdMobRewarded {
 
     fun destroy() {
         rewardedAd = null
-
         adUnit?.destroy()
         adUnit = null
     }

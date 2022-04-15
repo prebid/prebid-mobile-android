@@ -1,6 +1,7 @@
 package org.prebid.mobile.prebidkotlindemo.ads.inapp
 
 import android.content.Context
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.rendering.bidding.listeners.RewardedAdUnitListener
 import org.prebid.mobile.rendering.bidding.parallel.RewardedAdUnit
 import org.prebid.mobile.rendering.errors.AdException
@@ -9,8 +10,9 @@ object InAppRewardedInterstitial {
 
     private var adUnit: RewardedAdUnit? = null
 
-    fun create(context: Context, configId: String) {
+    fun create(context: Context, configId: String,storedAuctionResponse:String) {
         adUnit = RewardedAdUnit(context, configId)
+        PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
         adUnit?.setRewardedAdUnitListener(object : RewardedAdUnitListener {
             override fun onAdLoaded(rewardedAdUnit: RewardedAdUnit?) {
                 adUnit?.show()

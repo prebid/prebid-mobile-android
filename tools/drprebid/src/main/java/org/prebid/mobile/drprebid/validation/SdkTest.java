@@ -1,13 +1,17 @@
 package org.prebid.mobile.drprebid.validation;
 
+import static org.prebid.mobile.ResultCode.SUCCESS;
+
 import android.app.Activity;
 import android.net.Uri;
 import android.text.TextUtils;
+
 import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.android.gms.ads.doubleclick.PublisherInterstitialAd;
+
 import org.prebid.mobile.*;
 import org.prebid.mobile.drprebid.managers.SettingsManager;
 import org.prebid.mobile.drprebid.model.AdSize;
@@ -16,6 +20,7 @@ import org.prebid.mobile.drprebid.model.*;
 import javax.net.ssl.HttpsURLConnection;
 import java.util.HashMap;
 import java.util.Map;
+
 
 import static org.prebid.mobile.ResultCode.SUCCESS;
 
@@ -246,6 +251,7 @@ public class SdkTest {
             invokeContainsPrebidCreative(false);
         }
     };
+
 
 
     private void checkResponseForPrebidCreative() {

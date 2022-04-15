@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
+
 import org.prebid.mobile.PrebidMobile;
 
 import static android.view.WindowManager.LayoutParams.*;
@@ -28,6 +29,7 @@ public class CustomApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         //set Prebid Mobile global Settings
         //region PrebidMobile API
 
