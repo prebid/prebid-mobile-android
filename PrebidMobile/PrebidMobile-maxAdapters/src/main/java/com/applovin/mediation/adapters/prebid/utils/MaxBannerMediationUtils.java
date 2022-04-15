@@ -26,8 +26,12 @@ public class MaxBannerMediationUtils implements PrebidMediationDelegate {
 
     @Override
     public void setResponseToLocalExtras(@Nullable BidResponse response) {
-        if (response != null && adViewReference.get() != null) {
-            adViewReference.get().setLocalExtraParameter(PrebidMaxMediationAdapter.EXTRA_RESPONSE_ID, response.getId());
+        if (adViewReference.get() != null) {
+            String responseId; if (response != null) {
+                responseId = response.getId();
+            } else {
+                responseId = null;
+            } adViewReference.get().setLocalExtraParameter(PrebidMaxMediationAdapter.EXTRA_RESPONSE_ID, responseId);
         }
     }
 

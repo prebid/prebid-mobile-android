@@ -18,8 +18,12 @@ public class MaxInterstitialMediationUtils implements PrebidMediationDelegate {
 
     @Override
     public void setResponseToLocalExtras(@Nullable BidResponse response) {
-        if (response != null && interstitialAd != null) {
-            interstitialAd.setLocalExtraParameter(PrebidMaxMediationAdapter.EXTRA_RESPONSE_ID, response.getId());
+        if (interstitialAd != null) {
+            String responseId; if (response != null) {
+                responseId = response.getId();
+            } else {
+                responseId = null;
+            } interstitialAd.setLocalExtraParameter(PrebidMaxMediationAdapter.EXTRA_RESPONSE_ID, responseId);
         }
     }
 

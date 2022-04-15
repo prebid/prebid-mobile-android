@@ -419,6 +419,33 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@+id/headerBiddingFragment" />
 
+        <action
+            android:id="@+id/action_header_bidding_to_max_interstitial"
+            app:destination="@+id/navigation_max_interstitial"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_max_interstitial_multiformat"
+            app:destination="@+id/navigation_max_interstitial_multiformat"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_max_rewarded"
+            app:destination="@+id/navigation_max_rewarded"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
 
     </fragment>
 
@@ -608,5 +635,17 @@
     <fragment
         android:id="@+id/navigation_max_banner_adaptive"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.max.MaxBannerFragmentAdaptive" />
+
+    <fragment
+        android:id="@+id/navigation_max_interstitial"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.max.MaxInterstitialFragment" />
+
+    <fragment
+        android:id="@+id/navigation_max_interstitial_multiformat"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.max.MaxInterstitialFragmentMultiformat" />
+
+    <fragment
+        android:id="@+id/navigation_max_rewarded"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.max.MaxRewardedFragment" />
 
 </navigation>

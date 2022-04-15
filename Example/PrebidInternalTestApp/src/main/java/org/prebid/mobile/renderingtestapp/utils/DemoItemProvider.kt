@@ -1613,6 +1613,121 @@ class DemoItemProvider private constructor() {
                     )
                 )
             )
+
+            val maxInterstitialTagList = listOf(Tag.ALL, Tag.MAX, Tag.INTERSTITIAL, Tag.REMOTE)
+            val maxVideoInterstitialTagList = listOf(Tag.ALL, Tag.MAX, Tag.VIDEO, Tag.REMOTE)
+            val maxInterstitialAction = R.id.action_header_bidding_to_max_interstitial
+            val maxMultiformatInterstitialAction = R.id.action_header_bidding_to_max_interstitial_multiformat
+
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_interstitial_random),
+                    maxInterstitialAction,
+                    maxInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_interstitial_320_480,
+                        R.string.max_interstitial_ad_unit_id,
+                        320, 480,
+                        R.string.response_prebid_display_interstitial_320_480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_interstitial_no_bids),
+                    maxInterstitialAction,
+                    maxInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_no_bids,
+                        R.string.max_interstitial_ad_unit_id,
+                        320, 480,
+                        R.string.response_prebid_no_bids
+                    )
+                )
+            )
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_video_interstitial_random),
+                    maxInterstitialAction,
+                    maxVideoInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_interstitial_320_480,
+                        R.string.max_interstitial_ad_unit_id,
+                        320, 480,
+                        R.string.response_prebid_video_interstitial_320_480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_video_interstitial_no_bids),
+                    maxInterstitialAction,
+                    maxVideoInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_no_bids,
+                        R.string.max_interstitial_ad_unit_id,
+                        320, 480,
+                        R.string.response_prebid_no_bids
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_interstitial_multiformat_adapter),
+                    maxMultiformatInterstitialAction,
+                    maxVideoInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_interstitial_320_480,
+                        R.string.max_interstitial_ad_unit_id,
+                        320, 480,
+                        R.string.response_prebid_video_interstitial_320_480
+                    )
+                )
+            )
+
+            val maxRewardedAction = R.id.action_header_bidding_to_max_rewarded
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_rewarded_random),
+                    maxRewardedAction,
+                    maxVideoInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_rewarded_320_480,
+                        R.string.max_rewarded_ad_unit_id,
+                        320, 480,
+                        R.string.response_prebid_video_rewarded_320_480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_rewarded_no_bids),
+                    maxRewardedAction,
+                    maxVideoInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_no_bids,
+                        R.string.max_rewarded_ad_unit_id,
+                        320, 480,
+                        R.string.response_prebid_no_bids
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_rewarded_random_no_end_card),
+                    maxRewardedAction,
+                    maxVideoInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_rewarded_end_card_320_480,
+                        R.string.max_rewarded_ad_unit_id,
+                        320, 480,
+                        R.string.response_prebid_video_rewarded_end_card_320_480
+                    )
+                )
+            )
         }
 
         private fun createBannerBundle(
