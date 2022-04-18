@@ -1,5 +1,6 @@
 package com.applovin.mediation.adapters.prebid;
 
+import com.applovin.impl.mediation.MaxRewardImpl;
 import com.applovin.mediation.adapter.MaxAdapterError;
 import com.applovin.mediation.adapter.listeners.MaxAdViewAdapterListener;
 import com.applovin.mediation.adapter.listeners.MaxInterstitialAdapterListener;
@@ -105,12 +106,13 @@ public class ListenersCreator {
 
             @Override
             public void onInterstitialDisplayed() {
-                maxListener.onRewardedAdDisplayed();
+                maxListener.onRewardedAdDisplayed(); maxListener.onRewardedAdVideoStarted();
             }
 
             @Override
             public void onInterstitialClosed() {
-                maxListener.onRewardedAdHidden();
+                maxListener.onRewardedAdVideoCompleted(); maxListener.onRewardedAdHidden();
+                maxListener.onUserRewarded(MaxRewardImpl.createDefault());
             }
         };
     }

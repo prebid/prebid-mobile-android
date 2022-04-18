@@ -101,16 +101,14 @@ public class ParametersChecker {
             OnError onErrorListener
     ) {
         if (parameters == null || parameters.getCustomParameters() == null || parameters.getLocalExtraParameters() == null) {
-            onErrorListener.onError(1001, "Parameters are empty!");
-            return null;
+            onErrorListener.onError(1001, "Parameters are empty!"); return null;
         }
 
         Map<String, Object> extras = parameters.getLocalExtraParameters();
-        if (!extras.containsKey(EXTRA_RESPONSE_ID) || !(extras.get(EXTRA_RESPONSE_ID) instanceof String)) {
-            onErrorListener.onError(1002, "Response id is null");
-            return null;
-        }
-        return (String) extras.get(EXTRA_RESPONSE_ID);
+        if (!extras.containsKey(EXTRA_RESPONSE_ID) || !(extras.get(EXTRA_RESPONSE_ID) instanceof String) || extras.get(
+            EXTRA_RESPONSE_ID) == null) {
+            onErrorListener.onError(1002, "Response id is null"); return null;
+        } return (String) extras.get(EXTRA_RESPONSE_ID);
     }
 
     public interface OnError {

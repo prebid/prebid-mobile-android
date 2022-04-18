@@ -286,6 +286,19 @@ object AdTypesRepository {
                 onDestroy = { InAppMaxBanner.destroy() }
             ),
             AdType(
+                "MREC",
+                onCreate = { _, wrapper, autoRefreshTime ->
+                    useTestServer()
+                    PrebidMobile.setStoredAuctionResponse("response-prebid-banner-300-250")
+                    InAppMaxMrec.create(
+                        wrapper, autoRefreshTime / 1000,
+                        "550e6c2fe979a641",
+                        "imp-prebid-banner-300-250"
+                    )
+                },
+                onDestroy = { InAppMaxMrec.destroy() }
+            ),
+            AdType(
                 "Interstitial",
                 onCreate = { activity, _, _ ->
                     useTestServer()

@@ -26,8 +26,7 @@ public class MaxInterstitialManager {
             Activity activity,
             MaxInterstitialAdapterListener maxListener
     ) {
-        setListener(maxListener);
-        loadAd(parameters, activity);
+        this.maxListener = maxListener; isRewarded = false; loadAd(parameters, activity);
     }
 
     public void loadAd(
@@ -35,8 +34,7 @@ public class MaxInterstitialManager {
             Activity activity,
             MaxRewardedAdapterListener maxListener
     ) {
-        setListener(maxListener);
-        loadAd(parameters, activity);
+        this.maxListener = maxListener; isRewarded = true; loadAd(parameters, activity);
     }
 
     private void loadAd(
@@ -78,16 +76,6 @@ public class MaxInterstitialManager {
         interstitialController.destroy();
     }
 
-
-    private void setListener(Object maxListener) {
-        if (maxListener instanceof MaxInterstitialAdapterListener) {
-            isRewarded = false;
-            this.maxListener = maxListener;
-        } else if (maxListener instanceof MaxRewardedAdapterListener) {
-            isRewarded = true;
-            this.maxListener = maxListener;
-        }
-    }
 
     private InterstitialControllerListener createPrebidListener() {
         if (maxListener != null) {

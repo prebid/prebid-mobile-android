@@ -18,8 +18,12 @@ public class MaxRewardedMediationUtils implements PrebidMediationDelegate {
 
     @Override
     public void setResponseToLocalExtras(@Nullable BidResponse response) {
-        if (response != null && rewardedAd != null) {
-            rewardedAd.setLocalExtraParameter(PrebidMaxMediationAdapter.EXTRA_RESPONSE_ID, response.getId());
+        if (rewardedAd != null) {
+            String responseId; if (response != null) {
+                responseId = response.getId();
+            } else {
+                responseId = null;
+            } rewardedAd.setLocalExtraParameter(PrebidMaxMediationAdapter.EXTRA_RESPONSE_ID, responseId);
         }
     }
 

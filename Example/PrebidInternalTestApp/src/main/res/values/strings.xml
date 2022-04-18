@@ -31,9 +31,21 @@
 
     <string name="onAdLoaded">onAdLoaded called</string>
     <string name="onAdDisplayed">onAdDisplayed called</string>
+    <string name="onAdHidden">onAdHidden called</string>
     <string name="onAdFailed">onAdFailed called</string>
     <string name="onAdClicked">onAdClicked called</string>
     <string name="onAdClosed">onAdClosed called</string>
+    <string name="onAdLoadFailed">onAdLoadFailed called</string>
+    <string name="onAdDisplayFailed">onAdDisplayFailed called</string>
+    <string name="onAdExpanded">onAdExpanded called</string>
+    <string name="onAdCollapsed">onAdCollapsed called</string>
+    <string name="onRewardedVideoStarted">onRewardedVideoStarted called</string>
+    <string name="onRewardedVideoCompleted">onRewardedVideoCompleted called</string>
+    <string name="onUserRewarded">onUserRewarded called</string>
+    <string name="onAdRevenuePaid">onAdRevenuePaid called</string>
+    <string name="onNativeAdLoaded">onNativeAdLoaded called</string>
+    <string name="onNativeAdClicked">onNativeAdClicked called</string>
+    <string name="onNativeAdLoadFailed">onNativeAdLoadFailed called</string>
 
 
 
@@ -184,6 +196,27 @@
     <string name="demo_bidding_admob_native_adapter">Native Ad (AdMob) [OK, OXB Adapter]</string>
     <string name="demo_bidding_admob_native_no_bids">Native Ad (AdMob) [noBids, AdMob ad]</string>
 
+    <!--MAX Titles-->
+    <string name="demo_bidding_max_banner_320_50_adapter">Banner 320x50 (MAX) [OK, Adapter]</string>
+    <string name="demo_bidding_max_banner_320_50_no_bids">Banner 320x50 (MAX) [noBids, MAX ad]</string>
+    <string name="demo_bidding_max_banner_320_50_random">Banner 320x50 (MAX) [Random, Respectively]</string>
+    <string name="demo_bidding_max_banner_300_250_adapter">Banner 300x250 (MAX) [OK, Adapter]</string>
+    <string name="demo_bidding_max_banner_300_250_no_bids">Banner 300x250 (MAX) [noBids, MAX ad]</string>
+    <string name="demo_bidding_max_banner_adaptive">Banner adaptive banners (MAX) [OK, Adapter]</string>
+
+    <string name="demo_bidding_max_interstitial_random">Display Interstitial 320x480 (MAX) [OK, Random]</string>
+    <string name="demo_bidding_max_interstitial_no_bids">Display Interstitial 320x480 (MAX) [noBids, MAX ad]</string>
+    <string name="demo_bidding_max_video_interstitial_no_bids">Video Interstitial 320x480 (MAX) [noBids, MAX ad]</string>
+    <string name="demo_bidding_max_video_interstitial_random">Video Interstitial 320x480 (MAX) [OK, Random]</string>
+    <string name="demo_bidding_max_interstitial_multiformat_adapter">Multiformat Interstitial 320x480 (MAX) [OK, Random]</string>
+
+    <string name="demo_bidding_max_rewarded_random">Video Rewarded 320x480 (MAX) [OK, Random]</string>
+    <string name="demo_bidding_max_rewarded_no_bids">Video Rewarded 320x480 (MAX) [noBids, MAX ad]</string>
+    <string name="demo_bidding_max_rewarded_random_no_end_card">Video Rewarded 320x480 no EndCard (MAX) [OK, Random]</string>
+
+    <string name="demo_bidding_max_native_adapter">Native Ad (MAX) [OK, Adapter]</string>
+    <string name="demo_bidding_max_native_no_bids">Native Ad (MAX) [noBids, MAX ad]</string>
+
     <!--GAM AdUnits-->
     <string name="adunit_gam_banner_320_50_app_event">/21808260008/prebid_oxb_320x50_banner</string>
     <string name="adunit_gam_banner_320_50_gam_ad">/21808260008/prebid_oxb_320x50_banner_static</string>
@@ -218,6 +251,13 @@
     <string name="admob_interstitial_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/6393291067</string>
     <string name="admob_rewarded_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/1908212572</string>
     <string name="admob_native_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/9720985924</string>
+
+    <!-- Applovin MAX AdUnits -->
+    <string name="max_banner_ad_unit_id">2712409601eb0b64</string>
+    <string name="max_interstitial_ad_unit_id">3c61bf5180526594</string>
+    <string name="max_rewarded_ad_unit_id">4adc922f52679355</string>
+    <string name="max_native_ad_unit_id">fa4a9d137e6f3dff</string>
+    <string name="max_mrec_ad_unit_id">0b831dee5ef00774</string>
 
     <!--    Bidding configs-->
     <string name="prebid_account_id_prod">0689a263-318d-448b-a3d4-b02e8a709d9d</string>
