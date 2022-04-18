@@ -5,14 +5,13 @@ import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.prebidkotlindemo.ads.GamBanner
 import org.prebid.mobile.prebidkotlindemo.ads.GamInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.GamVideoInterstitial
-
 import org.prebid.mobile.prebidkotlindemo.ads.inapp.*
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobBanner
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobNative
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobRewarded
 import org.prebid.mobile.prebidkotlindemo.ads.inappgam.*
-
+import org.prebid.mobile.prebidkotlindemo.ads.inappmax.*
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 import java.util.*
 
@@ -70,10 +69,9 @@ object AdTypesRepository {
                         "response-prebid-video-interstitial-320-480"
                     )
                 },
-                onDestroy = { GamInterstitial.destroy() }
+                onDestroy = { GamVideoInterstitial.destroy() }
             )
         ),
-
 
         "In-App" to listOf(
             AdType(
@@ -275,7 +273,6 @@ object AdTypesRepository {
             AdType(
                 "Banner",
                 onCreate = { _, wrapper, autoRefreshTime ->
-                    useTestServer()
                     PrebidMobile.setStoredAuctionResponse("response-prebid-banner-320-50")
                     InAppMaxBanner.create(
                         wrapper, autoRefreshTime / 1000,
@@ -288,7 +285,6 @@ object AdTypesRepository {
             AdType(
                 "MREC",
                 onCreate = { _, wrapper, autoRefreshTime ->
-                    useTestServer()
                     PrebidMobile.setStoredAuctionResponse("response-prebid-banner-300-250")
                     InAppMaxMrec.create(
                         wrapper, autoRefreshTime / 1000,
@@ -301,7 +297,6 @@ object AdTypesRepository {
             AdType(
                 "Interstitial",
                 onCreate = { activity, _, _ ->
-                    useTestServer()
                     PrebidMobile.setStoredAuctionResponse("response-prebid-display-interstitial-320-480")
                     InAppMaxInterstitial.create(
                         activity,
@@ -314,7 +309,6 @@ object AdTypesRepository {
             AdType(
                 "Rewarded",
                 onCreate = { activity, _, _ ->
-                    useTestServer()
                     PrebidMobile.setStoredAuctionResponse("response-prebid-video-rewarded-320-480")
                     InAppMaxRewarded.create(
                         activity,
@@ -327,7 +321,6 @@ object AdTypesRepository {
             AdType(
                 "Native",
                 onCreate = { activity, wrapper, _ ->
-                    useTestServer()
                     PrebidMobile.setStoredAuctionResponse("response-prebid-banner-native-styles")
                     InAppMaxNative.create(
                         activity,
