@@ -29,6 +29,7 @@ public class Video extends BaseBid {
     public Integer maxduration = null;
 
     public int[] protocols;
+    public int[] api;
 
     //TODO: ORTB2.5: Auto detect? how?
     public Integer w = null;
@@ -48,6 +49,8 @@ public class Video extends BaseBid {
     public Integer placement = null;
 
     public Integer playbackend;
+
+    public Integer startDelay;
 
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
@@ -83,7 +86,7 @@ public class Video extends BaseBid {
 
         toJSON(jsonObject, "w", w);
         toJSON(jsonObject, "h", h);
-        //toJSON(jsonObject, "startdelay", this.startdelay);
+        toJSON(jsonObject, "startdelay", startDelay);
         toJSON(jsonObject, "linearity", linearity);
 
         toJSON(jsonObject, "minbitrate", minbitrate);
@@ -113,6 +116,14 @@ public class Video extends BaseBid {
             }
 
             toJSON(jsonObject, "delivery", jsonArray);
+        }
+
+        if (api != null) {
+            JSONArray jsonArray = new JSONArray();
+            for (int number : api) {
+                jsonArray.put(number);
+            }
+            toJSON(jsonObject, "api", jsonArray);
         }
 
         toJSON(jsonObject, "pos", pos);

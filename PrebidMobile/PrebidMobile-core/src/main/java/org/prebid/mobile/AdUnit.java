@@ -51,6 +51,7 @@ public abstract class AdUnit {
     AdUnit(@NonNull String configId, @NonNull AdFormat adType) {
         configuration.setConfigId(configId);
         configuration.setAdFormat(adType);
+        configuration.setIsOriginalAdUnit(true);
     }
 
     /**

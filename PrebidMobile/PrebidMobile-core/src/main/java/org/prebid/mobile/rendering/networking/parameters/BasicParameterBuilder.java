@@ -184,17 +184,76 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
     private void setVideoImpValues(Imp imp) {
         Video video = new Video();
-        //Common values for all video reqs
-        video.mimes = SUPPORTED_VIDEO_MIME_TYPES;
-        video.protocols = SUPPORTED_VIDEO_PROTOCOLS;
-        video.linearity = VIDEO_LINEARITY_LINEAR;
 
-        //Interstitial video specific values
-        video.playbackend = VIDEO_INTERSTITIAL_PLAYBACK_END;//On Leaving Viewport or when Terminated by User
-        video.delivery = new int[]{VIDEO_DELIVERY_DOWNLOAD};
+        if (mAdConfiguration.isOriginalAdUnit()) {
+            VideoBaseAdUnit.Parameters videoParameters = mAdConfiguration.getVideoParameters();
+            if (videoParameters != null) {
+                video.minduration = videoParameters.getMinDuration();
+                video.maxduration = videoParameters.getMaxDuration();
 
-        if (mAdConfiguration.isAdPositionValid()) {
-            video.pos = mAdConfiguration.getAdPositionValue();
+                video.minbitrate = videoParameters.getMinBitrate();
+                video.maxbitrate = videoParameters.getMaxBitrate();
+
+                if (videoParameters.getStartDelay() != null) {
+                    video.startDelay = videoParameters.getStartDelay().getValue();
+                }
+
+                List<Signals.PlaybackMethod> playbackObjects = videoParameters.getPlaybackMethod();
+                if (playbackObjects != null) {
+                    int size = playbackObjects.size();
+                    int[] playbackMethods = new int[size];
+
+                    for (int i = 0; i < size; i++) {
+                        playbackMethods[i] = playbackObjects.get(i).getValue();
+                    }
+
+                    video.playbackmethod = playbackMethods;
+                }
+
+                List<Signals.Api> apiObjects = videoParameters.getApi();
+                if (apiObjects != null && apiObjects.size() > 0) {
+                    int size = apiObjects.size();
+                    int[] apiArray = new int[size];
+                    for (int i = 0; i < size; i++) {
+                        apiArray[i] = apiObjects.get(i).getValue();
+                    }
+                    video.api = apiArray;
+                }
+
+                List<String> mimesObjects = videoParameters.getMimes();
+                if (mimesObjects != null && mimesObjects.size() > 0) {
+                    int size = mimesObjects.size();
+                    String[] mimesArray = new String[size];
+                    for (int i = 0; i < size; i++) {
+                        mimesArray[i] = mimesObjects.get(i);
+                    }
+                    video.mimes = mimesArray;
+                }
+
+
+                List<Signals.Protocols> protocolsObjects = videoParameters.getProtocols();
+                if (protocolsObjects != null && protocolsObjects.size() > 0) {
+                    int size = protocolsObjects.size();
+                    int[] protocolsArray = new int[size];
+                    for (int i = 0; i < size; i++) {
+                        protocolsArray[i] = protocolsObjects.get(i).getValue();
+                    }
+                    video.protocols = protocolsArray;
+                }
+            }
+        } else {
+            //Common values for all video reqs
+            video.mimes = SUPPORTED_VIDEO_MIME_TYPES;
+            video.protocols = SUPPORTED_VIDEO_PROTOCOLS;
+            video.linearity = VIDEO_LINEARITY_LINEAR;
+
+            //Interstitial video specific values
+            video.playbackend = VIDEO_INTERSTITIAL_PLAYBACK_END;//On Leaving Viewport or when Terminated by User
+            video.delivery = new int[]{VIDEO_DELIVERY_DOWNLOAD};
+
+            if (mAdConfiguration.isAdPositionValid()) {
+                video.pos = mAdConfiguration.getAdPositionValue();
+            }
         }
 
         if (!mAdConfiguration.isPlacementTypeValid()) {
@@ -219,7 +278,19 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
     private void setBannerImpValues(Imp imp) {
         Banner banner = new Banner();
-        banner.api = getApiFrameworks();
+        if (mAdConfiguration.isOriginalAdUnit()) {
+            BannerBaseAdUnit.Parameters parameters = mAdConfiguration.getBannerParameters();
+            if (parameters != null && parameters.getApi() != null && parameters.getApi().size() > 0) {
+                List<Signals.Api> apiObjects = parameters.getApi();
+                int[] api = new int[apiObjects.size()];
+                for (int i = 0; i < apiObjects.size(); i++) {
+                    api[i] = apiObjects.get(i).getValue();
+                }
+                banner.api = api;
+            }
+        } else {
+            banner.api = getApiFrameworks();
+        }
 
         if (mAdConfiguration.isAdType(AdFormat.BANNER)) {
             for (AdSize size : mAdConfiguration.getSizes()) {
@@ -227,8 +298,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
             }
         } else if (mAdConfiguration.isAdType(AdFormat.INTERSTITIAL) && mResources != null) {
             Configuration deviceConfiguration = mResources.getConfiguration();
-            banner.addFormat(deviceConfiguration.screenWidthDp,
-                    deviceConfiguration.screenHeightDp);
+            banner.addFormat(deviceConfiguration.screenWidthDp, deviceConfiguration.screenHeightDp);
         }
 
         if (mAdConfiguration.isAdPositionValid()) {
