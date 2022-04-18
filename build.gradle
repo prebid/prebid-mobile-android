@@ -15,8 +15,8 @@ ext {
 buildscript {
     ext.kotlin_version = '1.5.32'
     repositories {
-        mavenCentral()
         google()
+        mavenCentral()
     }
 
     dependencies {

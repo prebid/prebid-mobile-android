@@ -24,6 +24,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 import android.webkit.WebView
+import com.applovin.sdk.AppLovinSdk
+import com.applovin.sdk.AppLovinSdkConfiguration
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 
@@ -35,6 +37,7 @@ class CustomApplication : Application() {
         super.onCreate()
         initPrebidSDK()
         initAdMob()
+        initApplovinMax()
         if (BuildConfig.DEBUG) {
             activateKeepScreenOnFlag()
         }
@@ -59,6 +62,12 @@ class CustomApplication : Application() {
             listOf("38250D98D8E3A07A2C03CD3552013B29")
         ).build()
         MobileAds.setRequestConfiguration(configuration)
+    }
+
+    private fun initApplovinMax() {
+        AppLovinSdk.getInstance(this).mediationProvider = "max"
+        AppLovinSdk.getInstance(this).initializeSdk { configuration: AppLovinSdkConfiguration -> }
+        AppLovinSdk.getInstance(this).settings.setVerboseLogging(false)
     }
 
     private fun activateKeepScreenOnFlag() {

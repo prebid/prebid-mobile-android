@@ -23,6 +23,8 @@ import android.preference.PreferenceManager
 import android.webkit.WebView
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
+import com.applovin.sdk.AppLovinSdk
+import com.applovin.sdk.AppLovinSdkConfiguration
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.renderingtestapp.utils.DemoItemProvider
 import org.prebid.mobile.renderingtestapp.utils.SourcePicker
@@ -52,15 +54,23 @@ class InternalTestApplication : MultiDexApplication() {
         // Only uncomment while testing memory leaks
         checkKeepConsentSettingsFlag()
         WebView.setWebContentsDebuggingEnabled(true)
+
+        initApplovinMax()
+    }
+
+    private fun initApplovinMax() {
+        AppLovinSdk.getInstance(this).mediationProvider = "max"
+        AppLovinSdk.getInstance(this).initializeSdk { configuration: AppLovinSdkConfiguration -> }
+        AppLovinSdk.getInstance(this).settings.setVerboseLogging(false);
     }
 
 
     private fun enableStrictMode() {
         StrictMode.setThreadPolicy(
-                StrictMode.ThreadPolicy.Builder()
-                        .detectAll()
-                        .penaltyLog()
-                        .build()
+            StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .build()
         )
         StrictMode.setVmPolicy(VmPolicy.Builder()
                 .detectLeakedSqlLiteObjects()

@@ -1,4 +1,4 @@
-package org.prebid.mobile.admob;
+package org.prebid.mobile;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 public class ParametersMatcherTest {
 
     @Test
-    public void putBlankAdMobParameters_ReturnsFalse() {
+    public void putBlankPrimaryParameters_ReturnsFalse() {
         String adMobParameters = " ";
         HashMap<String, String> prebidParameters = new HashMap<>();
         prebidParameters.put("a", "a1");
@@ -24,11 +24,11 @@ public class ParametersMatcherTest {
     }
 
     @Test
-    public void putNullAdMobParameters_ReturnsFalse() {
+    public void putNullPrimaryParameters_ReturnsFalse() {
         HashMap<String, String> prebidParameters = new HashMap<>();
         prebidParameters.put("a", "a1");
 
-        assertFalse(ParametersMatcher.doParametersMatch(null, prebidParameters));
+        assertFalse(ParametersMatcher.doParametersMatch((String) null, prebidParameters));
     }
 
     @Test
@@ -39,63 +39,63 @@ public class ParametersMatcherTest {
     }
 
     @Test
-    public void adMobParametersContainsKeyThatNotExistInPrebid_ReturnsFalse() {
-        String adMobParameters = "{\"hb_pb\":\"0.10\",\"any\":\"10\"}";
+    public void primaryParametersContainsKeyThatNotExistInPrebid_ReturnsFalse() {
+        String primaryParameters = "{\"hb_pb\":\"0.10\",\"any\":\"10\"}";
 
         HashMap<String, String> prebidParameters = new HashMap<>();
         prebidParameters.put("hb_pb_pi", "10");
         prebidParameters.put("hb_pb", "0.10");
         prebidParameters.put("hb_bidder_pi", "PI");
 
-        assertFalse(ParametersMatcher.doParametersMatch(adMobParameters, prebidParameters));
+        assertFalse(ParametersMatcher.doParametersMatch(primaryParameters, prebidParameters));
     }
 
     @Test
     public void putWrongPrice_ReturnsFalse() {
-        String adMobParameters = "{\"hb_pb\":\"1.00\"}";
+        String primaryParameters = "{\"hb_pb\":\"1.00\"}";
 
         HashMap<String, String> prebidParameters = new HashMap<>();
         prebidParameters.put("hb_pb_pi", "10");
         prebidParameters.put("hb_pb", "0.10");
         prebidParameters.put("hb_bidder_pi", "PI");
 
-        assertFalse(ParametersMatcher.doParametersMatch(adMobParameters, prebidParameters));
+        assertFalse(ParametersMatcher.doParametersMatch(primaryParameters, prebidParameters));
     }
 
     @Test
     public void putCorrectParameters_ReturnsTrue() {
-        String adMobParameters = "{\"hb_pb\":\"0.10\"}";
+        String primaryParameters = "{\"hb_pb\":\"0.10\"}";
 
         HashMap<String, String> prebidParameters = new HashMap<>();
         prebidParameters.put("hb_pb_pi", "10");
         prebidParameters.put("hb_pb", "0.10");
         prebidParameters.put("hb_bidder_pi", "PI");
 
-        assertTrue(ParametersMatcher.doParametersMatch(adMobParameters, prebidParameters));
+        assertTrue(ParametersMatcher.doParametersMatch(primaryParameters, prebidParameters));
     }
 
     @Test
     public void putMultipleCorrectParameters_ReturnsTrue() {
-        String adMobParameters = "{\"hb_pb\":\"0.10\",\"hb_bidder_pi\":\"PI\"}";
+        String primaryParameters = "{\"hb_pb\":\"0.10\",\"hb_bidder_pi\":\"PI\"}";
 
         HashMap<String, String> prebidParameters = new HashMap<>();
         prebidParameters.put("hb_pb_pi", "10");
         prebidParameters.put("hb_pb", "0.10");
         prebidParameters.put("hb_bidder_pi", "PI");
 
-        assertTrue(ParametersMatcher.doParametersMatch(adMobParameters, prebidParameters));
+        assertTrue(ParametersMatcher.doParametersMatch(primaryParameters, prebidParameters));
     }
 
     @Test
     public void putRightAndWrongParameters_ReturnsFalse() {
-        String adMobParameters = "{\"hb_pb\":\"0.10\",\"hb_bidder_pi\":\"prebid\"}";
+        String primaryParameters = "{\"hb_pb\":\"0.10\",\"hb_bidder_pi\":\"prebid\"}";
 
         HashMap<String, String> prebidParameters = new HashMap<>();
         prebidParameters.put("hb_pb_pi", "10");
         prebidParameters.put("hb_pb", "0.10");
         prebidParameters.put("hb_bidder_pi", "PI");
 
-        assertFalse(ParametersMatcher.doParametersMatch(adMobParameters, prebidParameters));
+        assertFalse(ParametersMatcher.doParametersMatch(primaryParameters, prebidParameters));
     }
 
 }

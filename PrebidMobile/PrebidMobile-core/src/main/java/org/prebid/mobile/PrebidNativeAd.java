@@ -340,12 +340,14 @@ public class PrebidNativeAd {
 
             if (viewList != null && viewList.size() > 0) {
                 for (View views : viewList) {
-                    views.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            handleClick(v, listener);
-                        }
-                    });
+                    if (views != null) {
+                        views.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                handleClick(v, listener);
+                            }
+                        });
+                    }
                 }
             }
             return true;

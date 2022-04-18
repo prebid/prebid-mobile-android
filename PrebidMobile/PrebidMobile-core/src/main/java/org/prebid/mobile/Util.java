@@ -28,7 +28,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,7 +46,12 @@ public class Util {
     static final String AD_MANAGER_REQUEST_CLASS_V20 = "com.google.android.gms.ads.admanager.AdManagerAdRequest";
     static final String AD_MANAGER_REQUEST_BUILDER_CLASS = "com.google.android.gms.ads.doubleclick.PublisherAdRequest$Builder";
     static final String AD_MANAGER_REQUEST_BUILDER_CLASS_V20 = "com.google.android.gms.ads.admanager.AdManagerAdRequest$Builder";
+    static final String APPLOVIN_MAX_NATIVE_AD_LOADER = "com.applovin.mediation.nativeAds.MaxNativeAdLoader";
     static final String ANDROID_OS_BUNDLE = "android.os.Bundle";
+
+    public static final String APPLOVIN_MAX_RESPONSE_ID_KEY = "PrebidMaxMediationAdapterExtraResponseId";
+    public static final String APPLOVIN_MAX_KEYWORDS_KEY = "PrebidMaxMediationAdapterExtraKeywordsId";
+
     public static final int HTTP_CONNECTION_TIMEOUT = 15000;
     public static final int HTTP_SOCKET_TIMEOUT = 20000;
     public static final int NATIVE_AD_VISIBLE_PERIOD_MILLIS = 1000;
@@ -186,7 +190,11 @@ public class Util {
         return null;
     }
 
-    static Object callMethodOnObject(Object object, String methodName, Object... params) {
+    static Object callMethodOnObject(
+            Object object,
+            String methodName,
+            Object... params
+    ) {
         try {
             int len = params.length;
             Class<?>[] classes = new Class[len];
@@ -195,14 +203,8 @@ public class Util {
             }
             Method method = object.getClass().getMethod(methodName, classes);
             return method.invoke(object, params);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            LogUtil.error("Util", "Can't call method: " + methodName + "() on object " + object.getClass());
         }
         return null;
     }
@@ -328,6 +330,7 @@ public class Util {
                 || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS)
                 || adObj.getClass() == getClassFromString(AD_MANAGER_REQUEST_BUILDER_CLASS_V20)
                 || adObj.getClass() == getClassFromString(ANDROID_OS_BUNDLE)
+                || adObj.getClass() == getClassFromString(APPLOVIN_MAX_NATIVE_AD_LOADER)
                 || adObj.getClass() == HashMap.class)
             return true;
         return false;
@@ -341,6 +344,8 @@ public class Util {
             handleAdManagerBuilderCustomTargeting(bids, adObj);
         } else if (adObj.getClass() == getClassFromString(ANDROID_OS_BUNDLE)) {
             handleAndroidBundleCustomTargeting(bids, adObj);
+        } else if (adObj.getClass() == getClassFromString(APPLOVIN_MAX_NATIVE_AD_LOADER)) {
+            handleApplovinMaxCustomTargeting(adObj, bids);
         } else if (adObj.getClass() == HashMap.class) {
             if (bids != null && !bids.isEmpty()) {
                 HashMap map = ((HashMap) adObj);
@@ -350,15 +355,55 @@ public class Util {
         }
     }
 
-    static void saveCacheId(@Nullable String cacheId, Object adObject) {
+    static void saveCacheId(
+            @Nullable String cacheId,
+            Object adObject
+    ) {
         if (adObject == null) return;
         if (adObject.getClass() == getClassFromString(ANDROID_OS_BUNDLE)) {
             Bundle adBundle = (Bundle) adObject;
             adBundle.putString(NativeAdUnit.BUNDLE_KEY_CACHE_ID, cacheId);
+        } else if (adObject.getClass() == getClassFromString(APPLOVIN_MAX_NATIVE_AD_LOADER)) {
+            setApplovinMaxLocalParameters(adObject, cacheId);
         }
     }
 
-    static void handleAndroidBundleCustomTargeting(@Nullable HashMap<String, String> bids, Object adObject) {
+    private static void setApplovinMaxLocalParameters(
+            Object adObject,
+            String cacheId
+    ) {
+        setLocalParamsToMax(adObject, APPLOVIN_MAX_RESPONSE_ID_KEY, cacheId);
+    }
+
+    private static void handleApplovinMaxCustomTargeting(
+            Object adObject,
+            HashMap<String, String> bids
+    ) {
+        setLocalParamsToMax(adObject, APPLOVIN_MAX_KEYWORDS_KEY, bids);
+    }
+
+    private static void setLocalParamsToMax(
+            Object adObject,
+            String key,
+            Object value
+    ) {
+        String methodName = "setLocalExtraParameter";
+        try {
+            Class<?>[] classes = new Class[2];
+            classes[0] = String.class;
+            classes[1] = Object.class;
+
+            Method method = adObject.getClass().getMethod(methodName, classes);
+            method.invoke(adObject, key, value);
+        } catch (Exception exception) {
+            LogUtil.error("Util", "Can't call method: " + methodName + "() on object " + adObject.getClass());
+        }
+    }
+
+    static void handleAndroidBundleCustomTargeting(
+            @Nullable HashMap<String, String> bids,
+            Object adObject
+    ) {
         Bundle adBundle = (Bundle) adObject;
         if (bids != null) {
             for (Map.Entry<String, String> entry : bids.entrySet()) {

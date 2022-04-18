@@ -5,14 +5,13 @@ import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.prebidkotlindemo.ads.GamBanner
 import org.prebid.mobile.prebidkotlindemo.ads.GamInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.GamVideoInterstitial
-
 import org.prebid.mobile.prebidkotlindemo.ads.inapp.*
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobBanner
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobNative
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobRewarded
 import org.prebid.mobile.prebidkotlindemo.ads.inappgam.*
-
+import org.prebid.mobile.prebidkotlindemo.ads.inappmax.*
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 import java.util.*
 
@@ -70,10 +69,9 @@ object AdTypesRepository {
                         "response-prebid-video-interstitial-320-480"
                     )
                 },
-                onDestroy = { GamInterstitial.destroy() }
+                onDestroy = { GamVideoInterstitial.destroy() }
             )
         ),
-
 
         "In-App" to listOf(
             AdType(
@@ -269,6 +267,70 @@ object AdTypesRepository {
                     InAppAdMobNative.destroy()
                 }
             )
+        ),
+
+        "In-App + Applovin MAX" to listOf(
+            AdType(
+                "Banner",
+                onCreate = { _, wrapper, autoRefreshTime ->
+                    PrebidMobile.setStoredAuctionResponse("response-prebid-banner-320-50")
+                    InAppMaxBanner.create(
+                        wrapper, autoRefreshTime / 1000,
+                        "3d8a0bcbb6d571d5",
+                        "imp-prebid-banner-320-50"
+                    )
+                },
+                onDestroy = { InAppMaxBanner.destroy() }
+            ),
+            AdType(
+                "MREC",
+                onCreate = { _, wrapper, autoRefreshTime ->
+                    PrebidMobile.setStoredAuctionResponse("response-prebid-banner-300-250")
+                    InAppMaxMrec.create(
+                        wrapper, autoRefreshTime / 1000,
+                        "550e6c2fe979a641",
+                        "imp-prebid-banner-300-250"
+                    )
+                },
+                onDestroy = { InAppMaxMrec.destroy() }
+            ),
+            AdType(
+                "Interstitial",
+                onCreate = { activity, _, _ ->
+                    PrebidMobile.setStoredAuctionResponse("response-prebid-display-interstitial-320-480")
+                    InAppMaxInterstitial.create(
+                        activity,
+                        "393697e649678807",
+                        "imp-prebid-display-interstitial-320-480"
+                    )
+                },
+                onDestroy = { InAppMaxInterstitial.destroy() }
+            ),
+            AdType(
+                "Rewarded",
+                onCreate = { activity, _, _ ->
+                    PrebidMobile.setStoredAuctionResponse("response-prebid-video-rewarded-320-480")
+                    InAppMaxRewarded.create(
+                        activity,
+                        "897f2fc59d617715",
+                        "imp-prebid-video-rewarded-320-480"
+                    )
+                },
+                onDestroy = { InAppMaxRewarded.destroy() }
+            ),
+            AdType(
+                "Native",
+                onCreate = { activity, wrapper, _ ->
+                    PrebidMobile.setStoredAuctionResponse("response-prebid-banner-native-styles")
+                    InAppMaxNative.create(
+                        activity,
+                        wrapper,
+                        "f3bdfa9dd8da1c4d",
+                        "imp-prebid-banner-native-styles"
+                    )
+                },
+                onDestroy = { InAppMaxNative.destroy() }
+            ),
         )
     )
 
@@ -276,6 +338,5 @@ object AdTypesRepository {
         PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
         PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
     }
-
 
 }

@@ -51,13 +51,18 @@
                 android:value="true"/>
 
         <meta-data
-                android:name="com.google.android.gms.ads.flag.NATIVE_AD_DEBUGGER_ENABLED"
-                android:value="false"/>
+            android:name="com.google.android.gms.ads.flag.NATIVE_AD_DEBUGGER_ENABLED"
+            android:value="false" />
 
         <!--AdMob id-->
         <meta-data
-                android:name="com.google.android.gms.ads.APPLICATION_ID"
-                android:value="ca-app-pub-1875909575462531~6255590079"/>
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1875909575462531~6255590079" />
+
+        <!-- Applovin MAX id -->
+        <meta-data
+            android:name="applovin.sdk.key"
+            android:value="1tLUnP4cVQqpHuHH2yMtfdESvvUhTB05NdbCoDTceDDNVnhd_T8kwIzXDN9iwbdULTboByF-TtNaiTmsoVbxZw" />
 
     </application>
 
