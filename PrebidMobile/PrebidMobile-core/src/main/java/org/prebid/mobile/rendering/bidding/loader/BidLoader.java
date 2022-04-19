@@ -17,11 +17,13 @@
 package org.prebid.mobile.rendering.bidding.loader;
 
 import android.content.Context;
+import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.modelcontrollers.BidRequester;
@@ -60,6 +62,7 @@ public class BidLoader {
                 return;
             }
             checkTmax(response, bidResponse);
+            updateAdUnitConfiguration(bidResponse.getMobileSdkPassThrough());
             if (mRequestListener != null) {
                 setupRefreshTimer();
                 mRequestListener.onFetchCompleted(bidResponse);
@@ -200,7 +203,10 @@ public class BidLoader {
         mRequestListener.onError(new AdException(AdException.INTERNAL_ERROR, "Invalid bid response: " + msg));
     }
 
-    private void checkTmax(BaseNetworkTask.GetUrlResult response, BidResponse parsedResponse) {
+    private void checkTmax(
+            BaseNetworkTask.GetUrlResult response,
+            BidResponse parsedResponse
+    ) {
         Map<String, Object> extMap = parsedResponse.getExt().getMap();
         if (!sTimeoutHasChanged && extMap.containsKey(TMAX_REQUEST_KEY)) {
             int tmaxRequest = (int) extMap.get(TMAX_REQUEST_KEY);
@@ -211,7 +217,16 @@ public class BidLoader {
         }
     }
 
-    public interface BidRefreshListener {
-        boolean canPerformRefresh();
+    private void updateAdUnitConfiguration(@Nullable MobileSdkPassThrough mobileSdkPassThrough) {
+        if (mobileSdkPassThrough != null) {
+            mobileSdkPassThrough.modifyAdUnitConfiguration(mAdConfiguration);
+        }
     }
+
+    public interface BidRefreshListener {
+
+        boolean canPerformRefresh();
+
+    }
+
 }
