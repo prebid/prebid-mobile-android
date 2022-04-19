@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.prebid.mobile.units.configuration.Position;
 
@@ -20,17 +21,23 @@ public class MobileSdkPassThrough {
     @Nullable
     public static MobileSdkPassThrough create(JSONObject extJson) {
         try {
-            if (extJson.has("prebid")) {
-                JSONObject prebid = extJson.getJSONObject("prebid");
-                if (prebid.has("passthrough")) {
-                    JSONArray passThroughArray = prebid.getJSONArray("passthrough");
-                    for (int i = 0; i < passThroughArray.length(); i++) {
-                        JSONObject passThrough = passThroughArray.getJSONObject(i);
-                        if (passThrough.has("type")) {
-                            String currentType = passThrough.getString("type");
-                            if (currentType.equals("prebidmobilesdk") && passThrough.has("adconfiguration")) {
-                                return new MobileSdkPassThrough(passThrough);
-                            }
+            JSONObject rootJsonObject;
+            if (!BuildConfig.DEBUG) {
+                if (extJson.has("prebid")) {
+                    rootJsonObject = extJson.getJSONObject("prebid");
+                } else return null;
+            } else {
+                rootJsonObject = extJson;
+            }
+
+            if (rootJsonObject.has("passthrough")) {
+                JSONArray passThroughArray = rootJsonObject.getJSONArray("passthrough");
+                for (int i = 0; i < passThroughArray.length(); i++) {
+                    JSONObject passThrough = passThroughArray.getJSONObject(i);
+                    if (passThrough.has("type")) {
+                        String currentType = passThrough.getString("type");
+                        if (currentType.equals("prebidmobilesdk") && passThrough.has("adconfiguration")) {
+                            return new MobileSdkPassThrough(passThrough);
                         }
                     }
                 }

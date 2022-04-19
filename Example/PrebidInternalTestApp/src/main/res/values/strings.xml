@@ -104,9 +104,12 @@
     <string name="demo_bidding_in_app_interstitial_video_320_480_end_card_skip_button">Video Interstitial 320x480 With End Card and Skip Button (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_video_320_480_mraid_end_card">Video Interstitial 320x480 with MRAID End Card (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_video_320_480_no_bids">Video Interstitial 320x480 (In-App) [noBids]</string>
+    <string name="demo_bidding_in_app_interstitial_video_320_480_with_ad_configuration">Video Interstitial 320x480 With Ad Configuration (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_video_320_480_end_card_with_ad_configuration">Video Interstitial 320x480 With End Card With Ad Configuration (In-App)</string>
     <string name="demo_bidding_in_app_video_rewarded_end_card_320_480">Video Rewarded 320x480 (In-App)</string>
     <string name="demo_bidding_in_app_video_rewarded_end_card_320_480_no_bids">Video Rewarded 320x480 with End Card (In-App) [noBids]</string>
     <string name="demo_bidding_in_app_video_rewarded_320_480">Video Rewarded 320x480 without End Card (In-App)</string>
+    <string name="demo_bidding_in_app_video_rewarded_320_480_with_ad_configuration">Video Rewarded 320x480 With Ad Configuration (In-App)</string>
     <string name="demo_bidding_in_app_mraid_expand">MRAID 2.0: Expand - 1 Part (In-App)</string>
     <string name="demo_bidding_in_app_mraid_expand_2">MRAID 2.0: Expand - 2 Part (In-App)</string>
     <string name="demo_bidding_in_app_mraid_resize">MRAID 2.0: Resize (In-App)</string>
@@ -362,12 +365,15 @@
     <string name="response_prebid_video_interstitial_320_480_with_end_card">response-prebid-video-interstitial-320-480-with-end-card</string>
     <string name="response_prebid_video_interstitial_deeplink">response-prebid-video-interstitial-320-480-deeplink</string>
     <string name="response_prebid_video_interstitial_skipoffset">response-prebid-video-interstitial-320-480-skip-offset</string>
+    <string name="response_prebid_video_interstitial_ad_configuration">response-prebid-video-interstitial-320-480-with-ad-configuration</string>
+    <string name="response_prebid_video_interstitial_end_card_ad_configuration">response-prebid-video-interstitial-320-480-with-end-card-with-ad-configuration</string>
     <!--  Video Outstream  -->
     <string name="response_prebid_video_outstream">response-prebid-video-outstream</string>
     <string name="response_prebid_video_outstream_end_card">response-prebid-video-outstream-with-end-card</string>
     <!--  Video Rewarded  -->
     <string name="response_prebid_video_rewarded_end_card_320_480">response-prebid-video-rewarded-320-480-without-end-card</string>
     <string name="response_prebid_video_rewarded_320_480">response-prebid-video-rewarded-320-480</string>
+    <string name="response_prebid_video_rewarded_320_480_with_ad_configuration">response-prebid-video-rewarded-320-480-with-ad-configuration</string>
 
     <!--  MRAID  -->
     <string name="response_prebid_mraid_resize">response-prebid-mraid-resize</string>
