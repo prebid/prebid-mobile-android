@@ -23,6 +23,7 @@ public class AdUnitConfiguration {
     private boolean isBuiltInVideo = false;
     private boolean isMuted = true;
     private boolean isSoundButtonVisible = false;
+    private boolean isOriginalAdUnit = false;
 
     private int videoSkipOffset = SKIP_OFFSET_NOT_ASSIGNED;
     private int autoRefreshDelayInMillis = 0;
@@ -421,6 +422,13 @@ public class AdUnitConfiguration {
         return nativeConfiguration;
     }
 
+    public boolean isOriginalAdUnit() {
+        return isOriginalAdUnit;
+    }
+
+    public void setIsOriginalAdUnit(boolean originalAdUnit) {
+        isOriginalAdUnit = originalAdUnit;
+    }
 
     @Override
     public boolean equals(Object o) {
