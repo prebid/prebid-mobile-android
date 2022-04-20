@@ -1,7 +1,7 @@
 <resources>
     <string name="content_url"><![CDATA[https://storage.googleapis.com/gvabox/media/samples/stock.mp4]]></string>
 
-    <string name="app_name">API1.0Demo</string>
+    <string name="app_name">Prebid Demo Java</string>
     <string name="adTypeText">Ad Type</string>
 
     <string name="adTypeBanner">Banner</string>

@@ -34,9 +34,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     buildTypes {
-
         debug {
             minifyEnabled false
 
@@ -54,7 +52,6 @@ project.gradle.taskGraph.whenReady {
 }
 
 dependencies {
-
 //    Source code
     implementation project(':PrebidMobile')
 
@@ -68,7 +65,6 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.13.3'
     implementation 'com.google.android.exoplayer:extension-ima:2.13.3'
     implementation 'androidx.multidex:multidex:2.0.0'
-
 
     androidTestImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
