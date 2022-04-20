@@ -18,11 +18,11 @@ package org.prebid.mobile.app;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.ResultCode;
+import org.prebid.mobile.app.ads.xandr.XandrNativeInAppGAMDemoActivity;
 
 import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
@@ -42,9 +42,9 @@ public class DFPNativeTest {
 
     @Test
     public void testAppNexusDFPNativeSanityAppCheckTest() throws Exception {
-        onView(withId(R.id.adTypeSpinner)).perform(click());
+        onView(withId(R.id.spinnerAdType)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Native"))).perform(click());
-        onView(withId(R.id.showAd)).perform(click());
+        onView(withId(R.id.btnShowAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(1, ((XandrNativeInAppGAMDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         assertEquals(ResultCode.SUCCESS, ((XandrNativeInAppGAMDemoActivity) TestUtil.getCurrentActivity()).resultCode);
@@ -54,10 +54,10 @@ public class DFPNativeTest {
 
     @Test
     public void testDFPNativeWithValidAutoRefresh() throws Exception {
-        onView(withId(R.id.adTypeSpinner)).perform(click());
+        onView(withId(R.id.spinnerAdType)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Native"))).perform(click());
-        onView(withId(R.id.autoRefreshInput)).perform(typeText("30000"));
-        onView(withId(R.id.showAd)).perform(click());
+        onView(withId(R.id.etAutoRefresh)).perform(typeText("30000"));
+        onView(withId(R.id.btnShowAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(1, ((XandrNativeInAppGAMDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         assertEquals(ResultCode.SUCCESS, ((XandrNativeInAppGAMDemoActivity) TestUtil.getCurrentActivity()).resultCode);
@@ -70,10 +70,10 @@ public class DFPNativeTest {
 
     @Test
     public void testDFPNativeWithoutAutoRefresh() throws Exception {
-        onView(withId(R.id.adTypeSpinner)).perform(click());
+        onView(withId(R.id.spinnerAdType)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Native"))).perform(click());
-        onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
-        onView(withId(R.id.showAd)).perform(click());
+        onView(withId(R.id.etAutoRefresh)).perform(typeText("0"));
+        onView(withId(R.id.btnShowAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(1, ((XandrNativeInAppGAMDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         assertEquals(ResultCode.SUCCESS, ((XandrNativeInAppGAMDemoActivity) TestUtil.getCurrentActivity()).resultCode);
@@ -83,10 +83,10 @@ public class DFPNativeTest {
 
     @Test
     public void testDFPNativeWithInvalidAutoRefresh() throws Exception {
-        onView(withId(R.id.adTypeSpinner)).perform(click());
+        onView(withId(R.id.spinnerAdType)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Native"))).perform(click());
-        onView(withId(R.id.autoRefreshInput)).perform(typeText("20000"));
-        onView(withId(R.id.showAd)).perform(click());
+        onView(withId(R.id.etAutoRefresh)).perform(typeText("20000"));
+        onView(withId(R.id.btnShowAd)).perform(click());
         Thread.sleep(10000);
         assertEquals(1, ((XandrNativeInAppGAMDemoActivity) TestUtil.getCurrentActivity()).refreshCount);
         assertEquals(ResultCode.SUCCESS, ((XandrNativeInAppGAMDemoActivity) TestUtil.getCurrentActivity()).resultCode);

@@ -19,7 +19,6 @@ package org.prebid.mobile.app;
 import androidx.test.espresso.Espresso;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,11 +34,8 @@ import static androidx.test.espresso.web.assertion.WebViewAssertions.webMatches;
 import static androidx.test.espresso.web.matcher.DomMatchers.containingTextInBody;
 import static androidx.test.espresso.web.model.Atoms.getCurrentUrl;
 import static androidx.test.espresso.web.sugar.Web.onWebView;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.AllOf.allOf;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4.class)
@@ -49,10 +45,10 @@ public class DFPInterstitialTest {
 
     @Test
     public void testDFPInterstitialWithoutAutoRefresh() throws Exception {
-        onView(withId(R.id.adTypeSpinner)).perform(click());
+        onView(withId(R.id.spinnerAdType)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Interstitial"))).perform(click());
-        onView(withId(R.id.autoRefreshInput)).perform(typeText("0"));
-        onView(withId(R.id.showAd)).perform(click());
+        onView(withId(R.id.etAutoRefresh)).perform(typeText("0"));
+        onView(withId(R.id.btnShowAd)).perform(click());
         Thread.sleep(10000);
         String activityName = TestUtil.getCurrentActivity().getClass().getName();
         if ("com.google.android.gms.ads.AdActivity".equals(activityName)) {
@@ -71,10 +67,10 @@ public class DFPInterstitialTest {
 
     @Test
     public void testDFPInterstitialWithAutoRefresh() throws Exception {
-        onView(withId(R.id.adTypeSpinner)).perform(click());
+        onView(withId(R.id.spinnerAdType)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Interstitial"))).perform(click());
-        onView(withId(R.id.autoRefreshInput)).perform(typeText("30000"));
-        onView(withId(R.id.showAd)).perform(click());
+        onView(withId(R.id.etAutoRefresh)).perform(typeText("30000"));
+        onView(withId(R.id.btnShowAd)).perform(click());
         Thread.sleep(10000);
         String activityName = TestUtil.getCurrentActivity().getClass().getName();
         if ("com.google.android.gms.ads.AdActivity".equals(activityName)) {

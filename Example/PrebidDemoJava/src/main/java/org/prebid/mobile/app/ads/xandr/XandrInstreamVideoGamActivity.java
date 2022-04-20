@@ -1,4 +1,4 @@
-package org.prebid.mobile.app;
+package org.prebid.mobile.app.ads.xandr;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -32,8 +32,8 @@ public class XandrInstreamVideoGamActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_instream_video);
-        playerView = findViewById(R.id.player_view);
+        setContentView(org.prebid.mobile.app.R.layout.activity_instream_video);
+        playerView = findViewById(org.prebid.mobile.app.R.id.player_view);
 
         initPrebid();
         initVideoAdUnit();
@@ -95,9 +95,9 @@ public class XandrInstreamVideoGamActivity extends AppCompatActivity {
         playerView.setPlayer(player);
         adsLoader.setPlayer(player);
 
-        Uri uri = Uri.parse(getString(R.string.content_url));
+        Uri uri = Uri.parse("<![CDATA[https://storage.googleapis.com/gvabox/media/samples/stock.mp4]]>");
         MediaItem mediaItem = MediaItem.fromUri(uri);
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, getString(R.string.app_name));
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, getString(org.prebid.mobile.app.R.string.app_name));
         ProgressiveMediaSource.Factory mediaSourceFactory = new ProgressiveMediaSource.Factory(dataSourceFactory);
         MediaSource mediaSource = mediaSourceFactory.createMediaSource(mediaItem);
 

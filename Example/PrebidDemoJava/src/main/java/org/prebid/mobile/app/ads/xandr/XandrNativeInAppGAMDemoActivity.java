@@ -1,4 +1,4 @@
-package org.prebid.mobile.app;
+package org.prebid.mobile.app.ads.xandr;
 
 import android.os.Bundle;
 import android.view.View;
@@ -14,9 +14,9 @@ import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
 import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import org.prebid.mobile.Util;
 import org.prebid.mobile.*;
 import org.prebid.mobile.addendum.AdViewUtils;
+import org.prebid.mobile.app.Constants;
 
 import java.util.ArrayList;
 
@@ -28,13 +28,13 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
     private UnifiedNativeAd unifiedNativeAd;
 
     //Used by UI tests
-    int refreshCount;
-    ResultCode resultCode;
-    AdManagerAdRequest request;
-    AdUnit adUnit;
+    public int refreshCount;
+    public ResultCode resultCode;
+    public AdManagerAdRequest request;
+    public AdUnit adUnit;
 
     private void removePreviousAds() {
-        ((FrameLayout) findViewById(R.id.adFrame)).removeAllViews();
+        ((FrameLayout) findViewById(org.prebid.mobile.app.R.id.adFrame)).removeAllViews();
         if (adView != null) {
             adView.destroy();
             adView = null;
@@ -47,7 +47,7 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
     }
 
     private void inflatePrebidNativeAd(final PrebidNativeAd ad) {
-        View nativeContainer = View.inflate(this, R.layout.layout_native, null);
+        View nativeContainer = View.inflate(this, org.prebid.mobile.app.R.layout.layout_native, null);
         ad.registerView(nativeContainer, new PrebidNativeAdEventListener() {
             @Override
             public void onAdClicked() {
@@ -64,23 +64,23 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
                 Toast.makeText(XandrNativeInAppGAMDemoActivity.this, "onAdExpired", Toast.LENGTH_SHORT).show();
             }
         });
-        ImageView icon = nativeContainer.findViewById(R.id.imgIcon);
+        ImageView icon = nativeContainer.findViewById(org.prebid.mobile.app.R.id.imgIcon);
         Util.loadImage(icon, ad.getIconUrl());
-        TextView title = nativeContainer.findViewById(R.id.tvTitle);
+        TextView title = nativeContainer.findViewById(org.prebid.mobile.app.R.id.tvTitle);
         title.setText(ad.getTitle());
-        ImageView image = nativeContainer.findViewById(R.id.imgImage);
+        ImageView image = nativeContainer.findViewById(org.prebid.mobile.app.R.id.imgImage);
         Util.loadImage(image, ad.getImageUrl());
-        TextView description = nativeContainer.findViewById(R.id.tvDesc);
+        TextView description = nativeContainer.findViewById(org.prebid.mobile.app.R.id.tvDesc);
         description.setText(ad.getDescription());
-        Button cta = nativeContainer.findViewById(R.id.btnCta);
+        Button cta = nativeContainer.findViewById(org.prebid.mobile.app.R.id.btnCta);
         cta.setText(ad.getCallToAction());
-        ((FrameLayout) XandrNativeInAppGAMDemoActivity.this.findViewById(R.id.adFrame)).addView(nativeContainer);
+        ((FrameLayout) XandrNativeInAppGAMDemoActivity.this.findViewById(org.prebid.mobile.app.R.id.adFrame)).addView(nativeContainer);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_demo);
+        setContentView(org.prebid.mobile.app.R.layout.activity_demo);
         loadInAppNative();
     }
 
@@ -189,7 +189,7 @@ public class XandrNativeInAppGAMDemoActivity extends AppCompatActivity {
                     @Override
                     public void onAdManagerAdViewLoaded(AdManagerAdView adManagerAdView) {
                         adView = adManagerAdView;
-                        ((FrameLayout) findViewById(R.id.adFrame)).addView(adManagerAdView);
+                        ((FrameLayout) findViewById(org.prebid.mobile.app.R.id.adFrame)).addView(adManagerAdView);
                     }
                 }, AdSize.BANNER)
                 .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {

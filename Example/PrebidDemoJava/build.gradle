@@ -43,6 +43,9 @@ android {
 
         }
     }
+    buildFeatures {
+        dataBinding true
+    }
 }
 
 project.gradle.taskGraph.whenReady {

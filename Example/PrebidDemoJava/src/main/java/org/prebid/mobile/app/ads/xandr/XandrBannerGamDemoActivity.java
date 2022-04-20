@@ -1,28 +1,20 @@
-package org.prebid.mobile.app;
+package org.prebid.mobile.app.ads.xandr;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
-
-import org.prebid.mobile.AdUnit;
-import org.prebid.mobile.BannerAdUnit;
-import org.prebid.mobile.BannerBaseAdUnit;
-import org.prebid.mobile.Host;
-import org.prebid.mobile.OnCompleteListener;
-import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.ResultCode;
-import org.prebid.mobile.Signals;
+import org.prebid.mobile.*;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.addendum.PbFindSizeError;
+import org.prebid.mobile.app.Constants;
+import org.prebid.mobile.app.R;
 
 import java.util.Arrays;
 

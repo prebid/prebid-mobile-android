@@ -22,14 +22,19 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import org.prebid.mobile.ExternalUserId;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.app.ads.AdType;
+import org.prebid.mobile.app.ads.AdTypesRepository;
+import org.prebid.mobile.app.ads.xandr.*;
+import org.prebid.mobile.app.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,62 +43,38 @@ public class MainActivity extends AppCompatActivity {
     private String adSize = "";
     private Host host = Host.RUBICON;
 
+    private ActivityMainBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding.btnShowAd.setOnClickListener((view) -> showAd());
         initPrebidExternalUserIds();
-        initHostSpinner();
-        initAdTypeSpinner();
         initAdServerSpinner();
-        initAdSizeSpinner();
     }
 
+    public void showAd() {
+        int autoRefreshTime = getAutoRefreshTime();
+        Intent intent = DemoActivity.getIntent(this, adServer, adType, autoRefreshTime);
+        startActivity(intent);
+    }
+
+    private int getAutoRefreshTime() {
+        String refreshTimeString = binding.etAutoRefresh.getText().toString();
+        try {
+            return Integer.parseInt(refreshTimeString);
+        } catch (Exception ignored) {
+        }
+        return 0;
+    }
+
+    @Deprecated
     public void showAd(View view) {
-        EditText autoRefreshMillis = findViewById(R.id.autoRefreshInput);
+        EditText autoRefreshMillis = binding.etAutoRefresh;
         String refreshMillisString = autoRefreshMillis.getText().toString();
         Intent intent = null;
-        if (host.equals(Host.RUBICON)) {
-            if (adType.equals(getString(R.string.adTypeBanner)) && adServer.equals(getString(R.string.adServerAdManager))) {
-                intent = new Intent(this, RubiconBannerGamDemoActivity.class);
-                intent.putExtra(Constants.AD_SIZE_NAME, adSize);
-                if (!TextUtils.isEmpty(refreshMillisString)) {
-                    int refreshMillis = Integer.valueOf(refreshMillisString);
-                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
-                }
-            } else if (adType.equals(getString(R.string.adTypeInterstitial)) && adServer.equals(getString(R.string.adServerAdManager))) {
-                intent = new Intent(this, RubiconInterstitialGamDemoActivity.class);
-                if (!TextUtils.isEmpty(refreshMillisString)) {
-                    int refreshMillis = Integer.valueOf(refreshMillisString);
-                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
-                }
-            } else if (adType.equals(getString(R.string.adTypeBannerVideo)) && adServer.equals(getString(R.string.adServerAdManager))) {
-                intent = new Intent(this, RubiconBannerVideoGamDemoActivity.class);
-                if (!TextUtils.isEmpty(refreshMillisString)) {
-                    int refreshMillis = Integer.valueOf(refreshMillisString);
-                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
-                }
-            } else if (adType.equals(getString(R.string.adTypeInterstitialVideo)) && adServer.equals(getString(R.string.adServerAdManager))) {
-                intent = new Intent(this, RubiconInterstitialVideoGamDemoActivity.class);
-                if (!TextUtils.isEmpty(refreshMillisString)) {
-                    int refreshMillis = Integer.valueOf(refreshMillisString);
-                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
-                }
-            } else if (adType.equals(getString(R.string.adTypeRewardedVideo)) && adServer.equals(getString(R.string.adServerAdManager))) {
-                intent = new Intent(this, RubiconRewardedVideoGamDemoActivity.class);
-                if (!TextUtils.isEmpty(refreshMillisString)) {
-                    int refreshMillis = Integer.valueOf(refreshMillisString);
-                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
-                }
-            } else if (adType.equals(getString(R.string.adTypeInstreamVideo)) && adServer.equals(getString(R.string.adServerAdManager))) {
-                intent = new Intent(this, RubiconInstreamVideoIMADemoActivity.class);
-                if (!TextUtils.isEmpty(refreshMillisString)) {
-                    int refreshMillis = Integer.valueOf(refreshMillisString);
-                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
-                }
-            }
-        } else if (host.equals(Host.APPNEXUS)) {
+        if (host.equals(Host.APPNEXUS)) {
             if (adType.equals(getString(R.string.adTypeBanner)) && adServer.equals(getString(R.string.adServerAdManager))) {
                 intent = new Intent(this, XandrBannerGamDemoActivity.class);
                 intent.putExtra(Constants.AD_SIZE_NAME, adSize);
@@ -101,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                     int refreshMillis = Integer.valueOf(refreshMillisString);
                     intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
                 }
-            }  else if (adType.equals(getString(R.string.adTypeInterstitial)) && adServer.equals(getString(R.string.adServerAdManager))) {
+            } else if (adType.equals(getString(R.string.adTypeInterstitial)) && adServer.equals(getString(R.string.adServerAdManager))) {
                 intent = new Intent(this, XandrInterstitialGamDemoActivity.class);
                 if (!TextUtils.isEmpty(refreshMillisString)) {
                     int refreshMillis = Integer.valueOf(refreshMillisString);
@@ -113,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     int refreshMillis = Integer.valueOf(refreshMillisString);
                     intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
                 }
-            }  else if (adType.equals(getString(R.string.adTypeInstreamVideo)) && adServer.equals(getString(R.string.adServerAdManager))) {
+            } else if (adType.equals(getString(R.string.adTypeInstreamVideo)) && adServer.equals(getString(R.string.adServerAdManager))) {
                 intent = new Intent(this, XandrInstreamVideoGamActivity.class);
                 if (!TextUtils.isEmpty(refreshMillisString)) {
                     int refreshMillis = Integer.valueOf(refreshMillisString);
@@ -137,7 +118,9 @@ public class MainActivity extends AppCompatActivity {
                 "adserver.org",
                 "111111111111",
                 null,
-                new HashMap() {{put("rtiPartner", "TDID");}}
+                new HashMap() {{
+                    put("rtiPartner", "TDID");
+                }}
         ));
         externalUserIdArray.add(new ExternalUserId("netid.de", "999888777", null, null));
         externalUserIdArray.add(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
@@ -146,146 +129,51 @@ public class MainActivity extends AppCompatActivity {
                 "sharedid.org",
                 "111111111111",
                 1,
-                new HashMap() {{put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");}}
+                new HashMap() {{
+                    put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");
+                }}
         ));
         PrebidMobile.setExternalUserIds(externalUserIdArray);
     }
 
-    private void initHostSpinner() {
-        Spinner hostSpinner = findViewById(R.id.hostSpinner);
-        ArrayAdapter<CharSequence> hostAdapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.hostArray,
-                android.R.layout.simple_spinner_item
-        );
-        hostAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        hostSpinner.setAdapter(hostAdapter);
-        hostSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            List<String> hosts = Arrays.asList(getResources().getStringArray(R.array.hostArray));
+    private void initAdServerSpinner() {
+        Map<String, List<AdType>> repository = AdTypesRepository.get();
+        ArrayList<String> primaryAdServers = new ArrayList<>(repository.keySet());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, primaryAdServers);
 
+        Spinner spinner = binding.spinnerAdServer;
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(
-                    AdapterView<?> parent,
-                    View view,
-                    int position,
-                    long id
-            ) {
-                if (position > hosts.size()) {
-                    return;
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                adServer = primaryAdServers.get(position);
+                List<AdType> adTypes = repository.get(adServer);
+                ArrayList<String> stringTypes = new ArrayList<>(5);
+                for (AdType adType : adTypes) {
+                    stringTypes.add(adType.getName());
                 }
-                host = hosts.get(position).equals("Rubicon") ? Host.RUBICON : Host.APPNEXUS;
+                initAdTypeSpinner(stringTypes);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
     }
 
-    private void initAdTypeSpinner() {
-        Spinner adTypeSpinner = findViewById(R.id.adTypeSpinner);
-        ArrayAdapter<CharSequence> adTypeAdapter = ArrayAdapter.createFromResource(this,
-                R.array.adTypeArray,
-                android.R.layout.simple_spinner_item
-        );
-        adTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        adTypeSpinner.setAdapter(adTypeAdapter);
+    private void initAdTypeSpinner(ArrayList<String> list) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, list);
 
-        final LinearLayout adSizeRow = findViewById(R.id.adSizeRow);
-        final LinearLayout adRefreshRow = findViewById(R.id.autoRefreshRow);
-        adTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            List<String> adTypes = Arrays.asList(getResources().getStringArray(R.array.adTypeArray));
-
+        Spinner spinner = binding.spinnerAdType;
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(
-                    AdapterView<?> adapterView,
-                    View view,
-                    int pos,
-                    long l
-            ) {
-
-                adSizeRow.setVisibility(View.INVISIBLE);
-                adRefreshRow.setVisibility(View.INVISIBLE);
-
-                if (pos > adTypes.size()) {
-                    return;
-                }
-                adType = adTypes.get(pos);
-                if (adType.equals("Banner")) {
-                    // show size and refresh millis
-
-                    adSizeRow.setVisibility(View.VISIBLE);
-                    adRefreshRow.setVisibility(View.VISIBLE);
-                } else if (adType.equals("Interstitial")) {
-                    adRefreshRow.setVisibility(View.VISIBLE);
-                }
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                adType = list.get(position);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
-    }
-
-    private void initAdServerSpinner() {
-        // Ad Server Spinner
-        Spinner adServerSpinner = (Spinner) findViewById(R.id.adServerSpinner);
-        ArrayAdapter<CharSequence> adServerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.adServerArray,
-                android.R.layout.simple_spinner_item
-        );
-        adServerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        adServerSpinner.setAdapter(adServerAdapter);
-        adServerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            List<String> adServers = Arrays.asList(getResources().getStringArray(R.array.adServerArray));
-
-            @Override
-            public void onItemSelected(
-                    AdapterView<?> adapterView,
-                    View view,
-                    int pos,
-                    long l
-            ) {
-                if (pos > adServers.size()) {
-                    return;
-                }
-                adServer = adServers.get(pos);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
-    }
-
-    private void initAdSizeSpinner() {
-        Spinner adSizeSpinner = (Spinner) findViewById(R.id.adSizeSpinner);
-        ArrayAdapter<CharSequence> adSizeAdapter = ArrayAdapter.createFromResource(this,
-                R.array.adSizeArray,
-                android.R.layout.simple_spinner_item
-        );
-        adSizeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        adSizeSpinner.setEnabled(false);
-        adSizeSpinner.setAdapter(adSizeAdapter);
-        adSizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            List<String> adSizes = Arrays.asList(getResources().getStringArray(R.array.adSizeArray));
-
-            @Override
-            public void onItemSelected(
-                    AdapterView<?> adapterView,
-                    View view,
-                    int pos,
-                    long l
-            ) {
-                if (pos > adSizes.size()) {
-                    return;
-                }
-                adSize = adSizes.get(pos);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }

@@ -463,7 +463,7 @@ public class AdManagerComplexTest {
         final CountDownLatch lock = new CountDownLatch(1);
 
         PrebidMobile.setPrebidServerHost(Host.RUBICON);
-        PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_RUBICON);
+        PrebidMobile.setPrebidServerAccountId("1001");
         PrebidMobile.setStoredAuctionResponse("1001-rubicon-300x250");
 
         TestActivity activity = testActivityRule.getActivity();
@@ -494,7 +494,7 @@ public class AdManagerComplexTest {
         dfpAdView.setAdSizes(new AdSize(300, 250), new AdSize(728, 90));
         */
 
-        final BannerAdUnit bannerAdUnit = new BannerAdUnit(Constants.PBS_CONFIG_ID_300x250_RUBICON, 300, 250);
+        final BannerAdUnit bannerAdUnit = new BannerAdUnit("1001-1", 300, 250);
 
         final AdManagerAdRequest request = new AdManagerAdRequest.Builder().build();
         final OnCompleteListener completeListener = new OnCompleteListener() {

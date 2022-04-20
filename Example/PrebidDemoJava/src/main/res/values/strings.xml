@@ -1,6 +1,4 @@
 <resources>
-    <string name="content_url"><![CDATA[https://storage.googleapis.com/gvabox/media/samples/stock.mp4]]></string>
-
     <string name="app_name">Prebid Demo Java</string>
     <string name="adTypeText">Ad Type</string>
 
@@ -43,5 +41,5 @@
         <item>Xandr</item>
     </string-array>
     <string name="buttonText">Show Ad</string>
-    <string name="autoRefreshText">Refresh Millis</string>
+    <string name="autoRefreshText">Auto Refresh Seconds</string>
 </resources>

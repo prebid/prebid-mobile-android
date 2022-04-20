@@ -1,4 +1,4 @@
-package org.prebid.mobile.app;
+package org.prebid.mobile.app.ads.xandr;
 
 import android.os.Bundle;
 import android.widget.FrameLayout;
@@ -9,6 +9,8 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import org.prebid.mobile.*;
+import org.prebid.mobile.app.Constants;
+import org.prebid.mobile.app.R;
 
 import java.util.ArrayList;
 
@@ -27,7 +29,7 @@ public class XandrNativeInBannerGamDemoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_demo);
+        setContentView(org.prebid.mobile.app.R.layout.activity_demo);
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
         PrebidMobile.setPrebidServerAccountId(Constants.PBS_ACCOUNT_ID_APPNEXUS);
         adUnit = new NativeAdUnit(Constants.PBS_CONFIG_ID_NATIVE_APPNEXUS);
