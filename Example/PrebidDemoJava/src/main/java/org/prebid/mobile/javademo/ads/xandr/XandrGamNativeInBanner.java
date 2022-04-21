@@ -1,4 +1,4 @@
-package org.prebid.mobile.app.ads.xandr;
+package org.prebid.mobile.javademo.ads.xandr;
 
 import android.util.Log;
 import android.view.ViewGroup;

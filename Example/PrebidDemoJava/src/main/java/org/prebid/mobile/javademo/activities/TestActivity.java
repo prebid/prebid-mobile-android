@@ -14,26 +14,20 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile.app;
+package org.prebid.mobile.javademo.activities;
 
-import android.app.Application;
-import android.os.Build;
-import android.webkit.WebView;
-import org.prebid.mobile.PrebidMobile;
 
-public class CustomApplication extends Application {
+import android.os.Bundle;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import org.prebid.mobile.javademo.R;
+
+public class TestActivity extends AppCompatActivity {
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-
-        PrebidMobile.setShareGeoLocation(true);
-        PrebidMobile.setApplicationContext(getApplicationContext());
-
-        ScreenUtils.closeSystemWindowsAndKeepScreenOn(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(true);
-        }
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_test);
     }
 
 }

@@ -1,4 +1,4 @@
-package org.prebid.mobile.app.ads;
+package org.prebid.mobile.javademo.ads;
 
 import android.app.Activity;
 import android.view.ViewGroup;

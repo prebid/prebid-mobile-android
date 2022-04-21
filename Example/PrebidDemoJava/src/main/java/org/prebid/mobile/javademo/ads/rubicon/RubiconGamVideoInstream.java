@@ -1,4 +1,4 @@
-package org.prebid.mobile.app.ads.rubicon;
+package org.prebid.mobile.javademo.ads.rubicon;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,7 +18,7 @@ import org.prebid.mobile.AdSize;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.Util;
 import org.prebid.mobile.VideoAdUnit;
-import org.prebid.mobile.app.R;
+import org.prebid.mobile.javademo.R;
 
 import java.util.Collections;
 import java.util.HashSet;

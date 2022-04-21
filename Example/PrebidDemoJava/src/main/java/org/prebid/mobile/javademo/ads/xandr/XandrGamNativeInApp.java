@@ -1,4 +1,4 @@
-package org.prebid.mobile.app.ads.xandr;
+package org.prebid.mobile.javademo.ads.xandr;
 
 import android.util.Log;
 import android.view.View;
@@ -19,6 +19,7 @@ import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import org.prebid.mobile.*;
 import org.prebid.mobile.addendum.AdViewUtils;
+import org.prebid.mobile.javademo.R;
 
 import java.util.ArrayList;
 
@@ -64,7 +65,7 @@ public class XandrGamNativeInApp {
     }
 
     private static void inflatePrebidNativeAd(final PrebidNativeAd ad, ViewGroup wrapper) {
-        View nativeContainer = View.inflate(wrapper.getContext(), org.prebid.mobile.app.R.layout.layout_native, null);
+        View nativeContainer = View.inflate(wrapper.getContext(), R.layout.layout_native, null);
         ad.registerView(nativeContainer, new PrebidNativeAdEventListener() {
             @Override
             public void onAdClicked() {
@@ -81,15 +82,15 @@ public class XandrGamNativeInApp {
                 Toast.makeText(wrapper.getContext(), "onAdExpired", Toast.LENGTH_SHORT).show();
             }
         });
-        ImageView icon = nativeContainer.findViewById(org.prebid.mobile.app.R.id.imgIcon);
+        ImageView icon = nativeContainer.findViewById(R.id.imgIcon);
         Util.loadImage(icon, ad.getIconUrl());
-        TextView title = nativeContainer.findViewById(org.prebid.mobile.app.R.id.tvTitle);
+        TextView title = nativeContainer.findViewById(R.id.tvTitle);
         title.setText(ad.getTitle());
-        ImageView image = nativeContainer.findViewById(org.prebid.mobile.app.R.id.imgImage);
+        ImageView image = nativeContainer.findViewById(R.id.imgImage);
         Util.loadImage(image, ad.getImageUrl());
-        TextView description = nativeContainer.findViewById(org.prebid.mobile.app.R.id.tvDesc);
+        TextView description = nativeContainer.findViewById(R.id.tvDesc);
         description.setText(ad.getDescription());
-        Button cta = nativeContainer.findViewById(org.prebid.mobile.app.R.id.btnCta);
+        Button cta = nativeContainer.findViewById(R.id.btnCta);
         cta.setText(ad.getCallToAction());
         wrapper.addView(nativeContainer);
     }

@@ -1,4 +1,4 @@
-package org.prebid.mobile.app;
+package org.prebid.mobile.javademo.utils;
 
 import android.app.Activity;
 import android.app.Application;

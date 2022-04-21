@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.prebid.mobile.app">
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.prebid.mobile.javademo">
 
     <!-- Required permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -23,18 +24,15 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".DemoActivity" />
-        <activity android:name=".ads.xandr.XandrBannerGamDemoActivity" />
-        <activity android:name=".ads.xandr.XandrInterstitialGamDemoActivity" />
-        <activity android:name=".ads.xandr.XandrInstreamVideoGamActivity" />
-        <activity android:name=".TestActivity" />
+        <activity android:name=".activities.DemoActivity" />
+        <activity android:name=".activities.TestActivity" />
 
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"

@@ -1,4 +1,4 @@
-package org.prebid.mobile.app.ads.rubicon;
+package org.prebid.mobile.javademo.ads.rubicon;
 
 import android.app.Activity;
 import android.util.Log;

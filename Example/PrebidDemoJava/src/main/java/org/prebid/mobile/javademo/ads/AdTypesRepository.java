@@ -1,9 +1,9 @@
-package org.prebid.mobile.app.ads;
+package org.prebid.mobile.javademo.ads;
 
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.app.ads.rubicon.*;
-import org.prebid.mobile.app.ads.xandr.XandrGamNativeInApp;
-import org.prebid.mobile.app.ads.xandr.XandrGamNativeInBanner;
+import org.prebid.mobile.javademo.ads.rubicon.*;
+import org.prebid.mobile.javademo.ads.xandr.XandrGamNativeInApp;
+import org.prebid.mobile.javademo.ads.xandr.XandrGamNativeInBanner;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ public class AdTypesRepository {
     public static Map<String, List<AdType>> get() {
         Map<String, List<AdType>> result = new HashMap<>();
 
-        result.put("Google Ad Manager (Rubicon)",
+        result.put("Google Ad Manager (Rubicon and Xandr)",
                 Arrays.asList(
                         new AdType(
                                 "Banner 300x250",

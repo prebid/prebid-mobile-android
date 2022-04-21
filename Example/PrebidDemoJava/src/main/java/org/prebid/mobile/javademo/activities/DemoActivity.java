@@ -1,4 +1,4 @@
-package org.prebid.mobile.app;
+package org.prebid.mobile.javademo.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,9 +10,10 @@ import androidx.databinding.DataBindingUtil;
 import androidx.preference.PreferenceManager;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.app.ads.AdType;
-import org.prebid.mobile.app.ads.AdTypesRepository;
-import org.prebid.mobile.app.databinding.ActivityDemoNewBinding;
+import org.prebid.mobile.javademo.R;
+import org.prebid.mobile.javademo.ads.AdType;
+import org.prebid.mobile.javademo.ads.AdTypesRepository;
+import org.prebid.mobile.javademo.databinding.ActivityDemoBinding;
 
 import java.util.List;
 import java.util.Map;
@@ -43,13 +44,13 @@ public class DemoActivity extends AppCompatActivity {
     private String adPrimaryServerName = "";
     private String adTypeName = "";
 
-    private ActivityDemoNewBinding binding;
+    private ActivityDemoBinding binding;
     private AdType currentAdType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_demo_new);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_demo);
 
         parseArguments();
         choosePrebidServer();
@@ -76,7 +77,7 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     private void choosePrebidServer() {
-        if (adPrimaryServerName.equals("Google Ad Manager (Rubicon)")) {
+        if (adPrimaryServerName.equals("Google Ad Manager (Rubicon and Xandr)")) {
             PrebidMobile.setPrebidServerAccountId("1001");
             PrebidMobile.setPrebidServerHost(
                     Host.createCustomHost("https://prebid-server.rubiconproject.com/openrtb2/auction")
