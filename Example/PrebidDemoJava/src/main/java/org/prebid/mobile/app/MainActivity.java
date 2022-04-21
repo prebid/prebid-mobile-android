@@ -18,17 +18,16 @@ package org.prebid.mobile.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import org.prebid.mobile.ExternalUserId;
-import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.app.ads.AdType;
 import org.prebid.mobile.app.ads.AdTypesRepository;
-import org.prebid.mobile.app.ads.xandr.*;
 import org.prebid.mobile.app.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -40,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
     private String adType = "";
     private String adServer = "";
-    private String adSize = "";
-    private Host host = Host.RUBICON;
 
     private ActivityMainBinding binding;
 
@@ -67,48 +64,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception ignored) {
         }
         return 0;
-    }
-
-    @Deprecated
-    public void showAd(View view) {
-        EditText autoRefreshMillis = binding.etAutoRefresh;
-        String refreshMillisString = autoRefreshMillis.getText().toString();
-        Intent intent = null;
-        if (host.equals(Host.APPNEXUS)) {
-            if (adType.equals(getString(R.string.adTypeBanner)) && adServer.equals(getString(R.string.adServerAdManager))) {
-                intent = new Intent(this, XandrBannerGamDemoActivity.class);
-                intent.putExtra(Constants.AD_SIZE_NAME, adSize);
-                if (!TextUtils.isEmpty(refreshMillisString)) {
-                    int refreshMillis = Integer.valueOf(refreshMillisString);
-                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
-                }
-            } else if (adType.equals(getString(R.string.adTypeInterstitial)) && adServer.equals(getString(R.string.adServerAdManager))) {
-                intent = new Intent(this, XandrInterstitialGamDemoActivity.class);
-                if (!TextUtils.isEmpty(refreshMillisString)) {
-                    int refreshMillis = Integer.valueOf(refreshMillisString);
-                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
-                }
-            } else if (adType.equals(getString(R.string.adTypeInBannerNative)) && adServer.equals(getString(R.string.adServerAdManager))) {
-                intent = new Intent(this, XandrNativeInBannerGamDemoActivity.class);
-                if (!TextUtils.isEmpty(refreshMillisString)) {
-                    int refreshMillis = Integer.valueOf(refreshMillisString);
-                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
-                }
-            } else if (adType.equals(getString(R.string.adTypeInstreamVideo)) && adServer.equals(getString(R.string.adServerAdManager))) {
-                intent = new Intent(this, XandrInstreamVideoGamActivity.class);
-                if (!TextUtils.isEmpty(refreshMillisString)) {
-                    int refreshMillis = Integer.valueOf(refreshMillisString);
-                    intent.putExtra(Constants.AUTO_REFRESH_NAME, refreshMillis);
-                }
-            } else if (adType.equals(getString(R.string.adTypeInAppNative)) && adServer.equals(getString(R.string.adServerAdManager))) {
-                intent = new Intent(this, XandrNativeInAppGAMDemoActivity.class);
-            }
-        }
-        if (intent != null) {
-            startActivity(intent);
-        } else {
-            Toast.makeText(getApplicationContext(), "Not supported yet.", Toast.LENGTH_SHORT).show();
-        }
     }
 
 

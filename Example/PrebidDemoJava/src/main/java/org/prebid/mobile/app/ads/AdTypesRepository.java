@@ -2,6 +2,8 @@ package org.prebid.mobile.app.ads;
 
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.app.ads.rubicon.*;
+import org.prebid.mobile.app.ads.xandr.XandrGamNativeInApp;
+import org.prebid.mobile.app.ads.xandr.XandrGamNativeInBanner;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -91,9 +93,30 @@ public class AdTypesRepository {
                                     );
                                 },
                                 RubiconGamVideoInstream::destroy
-
+                        ),
+                        new AdType(
+                                "Native In App",
+                                (activity, wrapper, autoRefreshTime) -> {
+                                    XandrGamNativeInApp.create(
+                                            wrapper,
+                                            "/19968336/Abhas_test_native_native_adunit",
+                                            "25e17008-5081-4676-94d5-923ced4359d3"
+                                    );
+                                },
+                                XandrGamNativeInApp::destroy
+                        ),
+                        new AdType(
+                                "Native In Banner",
+                                (activity, wrapper, autoRefreshTime) -> {
+                                    XandrGamNativeInBanner.create(
+                                            wrapper,
+                                            "/19968336/Wei_Prebid_Native_Test",
+                                            "03f3341f-1737-402c-bc7d-bc81dfebe9cf",
+                                            autoRefreshTime
+                                    );
+                                },
+                                XandrGamNativeInBanner::destroy
                         )
-
                 )
         );
 

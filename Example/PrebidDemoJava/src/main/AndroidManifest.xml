@@ -31,10 +31,8 @@
         </activity>
 
         <activity android:name=".DemoActivity" />
-        <activity android:name=".ads.xandr.XandrNativeInAppGAMDemoActivity" />
         <activity android:name=".ads.xandr.XandrBannerGamDemoActivity" />
         <activity android:name=".ads.xandr.XandrInterstitialGamDemoActivity" />
-        <activity android:name=".ads.xandr.XandrNativeInBannerGamDemoActivity" />
         <activity android:name=".ads.xandr.XandrInstreamVideoGamActivity" />
         <activity android:name=".TestActivity" />
 
