@@ -32,7 +32,6 @@
         </activity>
 
         <activity android:name=".activities.DemoActivity" />
-        <activity android:name=".activities.TestActivity" />
 
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
