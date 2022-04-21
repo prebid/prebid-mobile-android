@@ -1,9 +1,7 @@
 package org.prebid.mobile.javademo.ads;
 
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.javademo.ads.rubicon.*;
-import org.prebid.mobile.javademo.ads.xandr.XandrGamNativeInApp;
-import org.prebid.mobile.javademo.ads.xandr.XandrGamNativeInBanner;
+import org.prebid.mobile.javademo.ads.gam.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,13 +13,13 @@ public class AdTypesRepository {
     public static Map<String, List<AdType>> get() {
         Map<String, List<AdType>> result = new HashMap<>();
 
-        result.put("Google Ad Manager (Rubicon and Xandr)",
+        result.put("Google Ad Manager (Rubicon)",
                 Arrays.asList(
                         new AdType(
                                 "Banner 300x250",
                                 (activity, wrapper, autoRefreshTime) -> {
                                     PrebidMobile.setStoredAuctionResponse("1001-rubicon-300x250");
-                                    RubiconGamBanner.create(
+                                    GamBanner.create(
                                             wrapper,
                                             "/5300653/pavliuchyk_test_adunit_1x1_puc",
                                             "1001-1",
@@ -29,93 +27,70 @@ public class AdTypesRepository {
                                             autoRefreshTime
                                     );
                                 },
-                                RubiconGamBanner::destroy
+                                GamBanner::destroy
                         ),
                         new AdType(
                                 "Interstitial",
                                 (activity, wrapper, autoRefreshTime) -> {
                                     PrebidMobile.setStoredAuctionResponse("1001-rubicon-300x250");
-                                    RubiconGamInterstitial.create(
+                                    GamInterstitial.create(
                                             activity,
                                             "/5300653/pavliuchyk_test_adunit_1x1_puc",
                                             "1001-1",
                                             autoRefreshTime
                                     );
                                 },
-                                RubiconGamInterstitial::destroy
+                                GamInterstitial::destroy
                         ),
                         new AdType(
                                 "Video Banner",
                                 (activity, wrapper, autoRefreshTime) -> {
                                     PrebidMobile.setStoredAuctionResponse("sample_video_response");
-                                    RubiconGamVideoBanner.create(
+                                    GamVideoBanner.create(
                                             wrapper,
                                             "/5300653/test_adunit_vast_pavliuchyk",
                                             "1001-1",
                                             autoRefreshTime
                                     );
                                 },
-                                RubiconGamVideoBanner::destroy
+                                GamVideoBanner::destroy
                         ),
                         new AdType(
                                 "Video Interstitial",
                                 (activity, wrapper, autoRefreshTime) -> {
                                     PrebidMobile.setStoredAuctionResponse("sample_video_response");
-                                    RubiconGamVideoInterstitial.create(
+                                    GamVideoInterstitial.create(
                                             activity,
                                             "/5300653/test_adunit_vast_pavliuchyk",
                                             "1001-1",
                                             autoRefreshTime
                                     );
                                 },
-                                RubiconGamVideoInterstitial::destroy
+                                GamVideoInterstitial::destroy
                         ),
                         new AdType(
                                 "Rewarded",
                                 (activity, wrapper, autoRefreshTime) -> {
                                     PrebidMobile.setStoredAuctionResponse("sample_video_response");
-                                    RubiconGamRewarded.create(
+                                    GamRewarded.create(
                                             activity,
                                             "/5300653/test_adunit_vast_rewarded-video_pavliuchyk",
                                             "1001-1"
                                     );
                                 },
-                                RubiconGamRewarded::destroy
+                                GamRewarded::destroy
                         ),
                         new AdType(
                                 "Video Instream",
                                 (activity, wrapper, autoRefreshTime) -> {
                                     PrebidMobile.setStoredAuctionResponse("sample_video_response");
-                                    RubiconGamVideoInstream.create(
+                                    GamVideoInstream.create(
                                             wrapper,
                                             "/5300653/test_adunit_vast_pavliuchyk",
                                             "1001-1"
                                     );
                                 },
-                                RubiconGamVideoInstream::destroy
-                        ),
-                        new AdType(
-                                "Native In App",
-                                (activity, wrapper, autoRefreshTime) -> {
-                                    XandrGamNativeInApp.create(
-                                            wrapper,
-                                            "/19968336/Abhas_test_native_native_adunit",
-                                            "25e17008-5081-4676-94d5-923ced4359d3"
-                                    );
-                                },
-                                XandrGamNativeInApp::destroy
-                        ),
-                        new AdType(
-                                "Native In Banner",
-                                (activity, wrapper, autoRefreshTime) -> {
-                                    XandrGamNativeInBanner.create(
-                                            wrapper,
-                                            "/19968336/Wei_Prebid_Native_Test",
-                                            "03f3341f-1737-402c-bc7d-bc81dfebe9cf",
-                                            autoRefreshTime
-                                    );
-                                },
-                                XandrGamNativeInBanner::destroy
+                                GamVideoInstream::destroy
                         )
                 )
         );
@@ -125,18 +100,120 @@ public class AdTypesRepository {
                         new AdType(
                                 "Banner 320x50",
                                 (activity, wrapper, autoRefreshTime) -> {
-
+                                    PrebidMobile.setStoredAuctionResponse("response-prebid-banner-320-50");
+                                    GamBanner.create(
+                                            wrapper,
+                                            "/21808260008/prebid_demo_app_original_api_banner",
+                                            "imp-prebid-banner-320-50",
+                                            320, 50,
+                                            autoRefreshTime
+                                    );
                                 },
-                                () -> {
-                                }
+                                GamBanner::destroy
                         ),
                         new AdType(
                                 "Banner 300x250",
                                 (activity, wrapper, autoRefreshTime) -> {
-
+                                    PrebidMobile.setStoredAuctionResponse("response-prebid-banner-300-250");
+                                    GamBanner.create(
+                                            wrapper,
+                                            "/21808260008/prebid_demo_app_original_api_banner_300x250_order",
+                                            "imp-prebid-banner-300-250",
+                                            300, 250,
+                                            autoRefreshTime
+                                    );
                                 },
-                                () -> {
-                                }
+                                GamBanner::destroy
+                        ),
+                        new AdType(
+                                "Interstitial",
+                                (activity, wrapper, autoRefreshTime) -> {
+                                    PrebidMobile.setStoredAuctionResponse("response-prebid-display-interstitial-320-480");
+                                    GamInterstitial.create(
+                                            activity,
+                                            "/21808260008/prebid-demo-app-original-api-display-interstitial",
+                                            "imp-prebid-display-interstitial-320-480",
+                                            autoRefreshTime
+                                    );
+                                },
+                                GamInterstitial::destroy
+                        ),
+                        new AdType(
+                                "Video Banner",
+                                (activity, wrapper, autoRefreshTime) -> {
+                                    PrebidMobile.setStoredAuctionResponse("response-prebid-video-interstitial-320-480");
+                                    PrebidMobile.setStoredAuctionResponse("response-prebid-video-outstream");
+                                    GamVideoBanner.create(
+                                            wrapper,
+                                            "/21808260008/prebid_oxb_outstream_video_reandom",
+                                            "imp-prebid-video-outstream",
+                                            autoRefreshTime
+                                    );
+                                },
+                                GamVideoBanner::destroy
+                        ),
+                        new AdType(
+                                "Video Interstitial (not working)",
+                                (activity, wrapper, autoRefreshTime) -> {
+                                    PrebidMobile.setStoredAuctionResponse("response-prebid-video-interstitial-320-480");
+                                    GamVideoInterstitial.create(
+                                            activity,
+                                            "/21808260008/prebid_oxb_interstitial_video",
+                                            "imp-prebid-video-interstitial-320-480",
+                                            autoRefreshTime
+                                    );
+                                },
+                                GamVideoInterstitial::destroy
+                        ),
+                        new AdType(
+                                "Rewarded",
+                                (activity, wrapper, autoRefreshTime) -> {
+                                    PrebidMobile.setStoredAuctionResponse("response-prebid-video-rewarded-320-480-without-end-card");
+                                    GamRewarded.create(
+                                            activity,
+                                            "/21808260008/prebid_oxb_rewarded_video_static",
+                                            "imp-prebid-video-rewarded-320-480-without-end-card"
+                                    );
+                                },
+                                GamRewarded::destroy
+                        ),
+                        new AdType(
+                                "Video Instream (not working)",
+                                (activity, wrapper, autoRefreshTime) -> {
+                                    PrebidMobile.setStoredAuctionResponse("response-prebid-video-outstream");
+                                    GamVideoInstream.create(
+                                            wrapper,
+                                            "/21808260008/prebid_oxb_outstream_video_reandom",
+                                            "imp-prebid-video-outstream"
+                                    );
+                                },
+                                GamVideoInstream::destroy
+                        ),
+                        new AdType(
+                                "Native In App (not working)",
+                                (activity, wrapper, autoRefreshTime) -> {
+                                    PrebidMobile.setStoredAuctionResponse("response-prebid-banner-native-styles");
+                                    GamNativeInApp.create(
+                                            wrapper,
+//                                            "/21808260008/unified_native_ad_unit",
+                                            "/21808260008/unified_native_ad_unit_static",
+                                            "imp-prebid-banner-native-styles"
+                                    );
+                                },
+                                GamNativeInApp::destroy
+                        ),
+                        new AdType(
+                                "Native In Banner",
+                                (activity, wrapper, autoRefreshTime) -> {
+                                    PrebidMobile.setStoredAuctionResponse("response-prebid-banner-native-styles");
+                                    GamNativeInBanner.create(
+                                            wrapper,
+                                            "/21808260008/unified_native_ad_unit",
+                                            "imp-prebid-banner-native-styles",
+                                            autoRefreshTime
+                                    );
+                                },
+                                GamNativeInBanner::destroy
                         )
                 )
         );

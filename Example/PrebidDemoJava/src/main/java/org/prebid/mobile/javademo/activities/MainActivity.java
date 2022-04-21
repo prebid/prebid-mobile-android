@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
      * This START fields help to set start values for selectors.
      */
     private static final String START_AD_SERVER = "Google Ad Manager (AWS)";
-    private static final String START_AD_TYPE = "";
+    private static final String START_AD_TYPE = "Native In App (not working)";
 
     private boolean isFirstInit = true;
     private String adType = "";
@@ -158,8 +158,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (indexOfServer >= 0) {
             binding.spinnerAdServer.setSelection(indexOfServer, false);
-        } else {
-            isFirstInit = false;
         }
     }
 
@@ -168,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
             isFirstInit = false;
 
             try {
-                List<AdType> adTypes = AdTypesRepository.get().get(START_AD_TYPE);
+                List<AdType> adTypes = AdTypesRepository.get().get(START_AD_SERVER);
                 if (adTypes != null) {
                     for (int i = 0; i < adTypes.size(); i++) {
                         AdType adType = adTypes.get(i);

@@ -1,4 +1,4 @@
-package org.prebid.mobile.javademo.ads.xandr;
+package org.prebid.mobile.javademo.ads.gam;
 
 import android.util.Log;
 import android.view.ViewGroup;
@@ -10,9 +10,9 @@ import org.prebid.mobile.*;
 
 import java.util.ArrayList;
 
-public class XandrGamNativeInBanner {
+public class GamNativeInBanner {
 
-    private static final String TAG = XandrGamNativeInBanner.class.getSimpleName();
+    private static final String TAG = GamNativeInBanner.class.getSimpleName();
 
     private static NativeAdUnit nativeAdUnit;
 
@@ -22,9 +22,6 @@ public class XandrGamNativeInBanner {
             String configId,
             int autoRefreshTime
     ) {
-        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
-        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
-
         nativeAdUnit = new NativeAdUnit(configId);
         configureNativeAdUnit(nativeAdUnit);
 

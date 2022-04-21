@@ -8,6 +8,15 @@
         android:orientation="vertical"
         tools:context="org.prebid.mobile.javademo.activities.MainActivity">
 
+        <TextView
+            android:id="@+id/tvAppTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Java"
+            android:textColor="#ff4081"
+            android:textSize="34sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

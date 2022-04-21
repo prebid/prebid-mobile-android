@@ -1,4 +1,4 @@
-package org.prebid.mobile.javademo.ads.rubicon;
+package org.prebid.mobile.javademo.ads.gam;
 
 import android.app.Activity;
 import android.util.Log;
@@ -13,9 +13,9 @@ import org.prebid.mobile.VideoBaseAdUnit;
 
 import java.util.Collections;
 
-public class RubiconGamRewarded {
+public class GamRewarded {
 
-    private static final String TAG = RubiconGamRewarded.class.getSimpleName();
+    private static final String TAG = GamRewarded.class.getSimpleName();
 
     private static RewardedVideoAdUnit adUnit;
 

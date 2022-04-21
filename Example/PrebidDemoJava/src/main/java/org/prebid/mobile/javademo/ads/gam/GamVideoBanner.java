@@ -1,4 +1,4 @@
-package org.prebid.mobile.javademo.ads.rubicon;
+package org.prebid.mobile.javademo.ads.gam;
 
 import android.util.Log;
 import android.view.ViewGroup;
@@ -7,51 +7,50 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
-import org.prebid.mobile.BannerAdUnit;
-import org.prebid.mobile.BannerBaseAdUnit;
 import org.prebid.mobile.Signals;
+import org.prebid.mobile.VideoAdUnit;
+import org.prebid.mobile.VideoBaseAdUnit;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.addendum.PbFindSizeError;
 
 import java.util.Collections;
 
-public class RubiconGamBanner {
+public class GamVideoBanner {
 
-    private static final String TAG = RubiconGamBanner.class.getSimpleName();
+    private static final String TAG = GamVideoBanner.class.getSimpleName();
 
-    public static BannerAdUnit adUnit;
+    private static VideoAdUnit adUnit;
 
     public static void create(
             ViewGroup wrapper,
             String adUnitId,
             String configId,
-            int width,
-            int height,
             int autoRefreshTime
     ) {
-        BannerBaseAdUnit.Parameters parameters = new BannerBaseAdUnit.Parameters();
-        parameters.setApi(Collections.singletonList(Signals.Api.MRAID_2));
-        adUnit = new BannerAdUnit(configId, width, height);
+        VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
+        parameters.setMimes(Collections.singletonList("video/mp4"));
+        parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
+        parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));
+        parameters.setPlacement(Signals.Placement.InBanner);
+
+        adUnit = new VideoAdUnit(configId, 300, 250);
         adUnit.setParameters(parameters);
 
-        /* For GAM less than version 20 use PublisherAdView */
         final AdManagerAdView gamView = new AdManagerAdView(wrapper.getContext());
         gamView.setAdUnitId(adUnitId);
-        gamView.setAdSizes(new com.google.android.gms.ads.AdSize(width, height));
+        gamView.setAdSizes(new AdSize(300, 250));
+        gamView.setAdListener(createListener(gamView));
 
         wrapper.removeAllViews();
         wrapper.addView(gamView);
 
-        gamView.setAdListener(createListener(gamView));
-
         final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
+
         adUnit.setAutoRefreshInterval(autoRefreshTime);
         adUnit.fetchDemand(builder, resultCode -> {
-            /* For GAM less than version 20 use PublisherAdRequest */
             AdManagerAdRequest request = builder.build();
             gamView.loadAd(request);
         });
-
     }
 
     public static void destroy() {
@@ -68,16 +67,14 @@ public class RubiconGamBanner {
                 AdViewUtils.findPrebidCreativeSize(gamView, new AdViewUtils.PbFindSizeListener() {
                     @Override
                     public void success(int width, int height) {
-                        gamView.setAdSizes(new AdSize(width, height));
-
+                        gamView.setAdSizes(new com.google.android.gms.ads.AdSize(width, height));
                     }
 
                     @Override
                     public void failure(@NonNull PbFindSizeError error) {
-                        Log.d(TAG, "Can't find prebid creative size: " + error.getDescription());
+                        Log.d(TAG, "Can't find prebid creative size: " + error);
                     }
                 });
-
             }
         };
     }

@@ -1,4 +1,4 @@
-package org.prebid.mobile.javademo.ads.rubicon;
+package org.prebid.mobile.javademo.ads.gam;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.HashSet;
 
 @SuppressLint("StaticFieldLeak")
-public class RubiconGamVideoInstream {
+public class GamVideoInstream {
 
     private static VideoAdUnit adUnit;
     private static SimpleExoPlayer player;

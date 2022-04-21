@@ -1,4 +1,4 @@
-package org.prebid.mobile.javademo.ads.rubicon;
+package org.prebid.mobile.javademo.ads.gam;
 
 import android.app.Activity;
 import android.os.Build;
@@ -14,7 +14,7 @@ import org.prebid.mobile.VideoInterstitialAdUnit;
 
 import java.util.Collections;
 
-public class RubiconGamVideoInterstitial {
+public class GamVideoInterstitial {
 
     private static VideoInterstitialAdUnit adUnit;
 

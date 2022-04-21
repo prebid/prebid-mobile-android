@@ -1,4 +1,4 @@
-package org.prebid.mobile.javademo.ads.xandr;
+package org.prebid.mobile.javademo.ads.gam;
 
 import android.util.Log;
 import android.view.View;
@@ -23,9 +23,9 @@ import org.prebid.mobile.javademo.R;
 
 import java.util.ArrayList;
 
-public class XandrGamNativeInApp {
+public class GamNativeInApp {
 
-    private static final String TAG = XandrGamNativeInApp.class.getSimpleName();
+    private static final String TAG = GamNativeInApp.class.getSimpleName();
 
     private static AdManagerAdView adView;
     private static UnifiedNativeAd unifiedNativeAd;
@@ -37,9 +37,6 @@ public class XandrGamNativeInApp {
             String adUnitId,
             String configId
     ) {
-        PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
-        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0");
-
         adUnit = new NativeAdUnit(configId);
         configureNativeAdUnit(adUnit);
 
@@ -103,7 +100,7 @@ public class XandrGamNativeInApp {
 
         UnifiedNativeAd.OnUnifiedNativeAdLoadedListener onUnifiedAdLoaded = unifiedNativeAd -> {
             Log.d(TAG, "native loaded");
-            XandrGamNativeInApp.unifiedNativeAd = unifiedNativeAd;
+            GamNativeInApp.unifiedNativeAd = unifiedNativeAd;
         };
 
         NativeCustomTemplateAd.OnCustomTemplateAdLoadedListener onCustomAdLoaded = nativeCustomTemplateAd -> {

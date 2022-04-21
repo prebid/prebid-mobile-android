@@ -77,18 +77,16 @@ public class DemoActivity extends AppCompatActivity {
     }
 
     private void choosePrebidServer() {
-        if (adPrimaryServerName.equals("Google Ad Manager (Rubicon and Xandr)")) {
+        if (adPrimaryServerName.equals("Google Ad Manager (Rubicon)")) {
             PrebidMobile.setPrebidServerAccountId("1001");
             PrebidMobile.setPrebidServerHost(
                     Host.createCustomHost("https://prebid-server.rubiconproject.com/openrtb2/auction")
             );
-        } else if (adPrimaryServerName.equals("Google Ad Manager (AWS)")) {
+        } else {
             PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d");
             PrebidMobile.setPrebidServerHost(
                     Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction")
             );
-        } else {
-            Log.e(TAG, "Can't find this Ad Server");
         }
     }
 

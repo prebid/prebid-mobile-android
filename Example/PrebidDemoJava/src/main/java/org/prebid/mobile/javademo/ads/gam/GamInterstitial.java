@@ -1,4 +1,4 @@
-package org.prebid.mobile.javademo.ads.rubicon;
+package org.prebid.mobile.javademo.ads.gam;
 
 import android.app.Activity;
 import android.os.Build;
@@ -11,7 +11,7 @@ import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.InterstitialAdUnit;
 
-public class RubiconGamInterstitial {
+public class GamInterstitial {
 
     public static AdUnit adUnit;
 
