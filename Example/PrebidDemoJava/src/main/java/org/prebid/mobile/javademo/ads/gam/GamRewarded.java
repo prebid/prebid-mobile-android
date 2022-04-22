@@ -20,9 +20,9 @@ public class GamRewarded {
     private static RewardedVideoAdUnit adUnit;
 
     public static void create(
-            Activity activity,
-            String adUnitId,
-            String configId
+        Activity activity,
+        String adUnitId,
+        String configId
     ) {
         VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
         parameters.setMimes(Collections.singletonList("video/mp4"));
@@ -36,7 +36,6 @@ public class GamRewarded {
             AdManagerAdRequest request = builder.build();
             RewardedAd.load(activity, adUnitId, request, createListener(activity));
         });
-
     }
 
     public static void destroy() {

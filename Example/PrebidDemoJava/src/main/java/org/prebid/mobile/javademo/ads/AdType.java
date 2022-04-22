@@ -9,7 +9,11 @@ public class AdType {
     private final OnAdTypeCreate onCreate;
     private final OnAdTypeDestroy onDestroy;
 
-    public AdType(String name, OnAdTypeCreate onCreate, OnAdTypeDestroy onDestroy) {
+    public AdType(
+        String name,
+        OnAdTypeCreate onCreate,
+        OnAdTypeDestroy onDestroy
+    ) {
         this.name = name;
         this.onCreate = onCreate;
         this.onDestroy = onDestroy;
@@ -31,13 +35,17 @@ public class AdType {
 
     public interface OnAdTypeCreate {
 
-        public void run(Activity activity, ViewGroup wrapper, int autoRefreshTime);
+        void run(
+            Activity activity,
+            ViewGroup wrapper,
+            int autoRefreshTime
+        );
 
     }
 
     public interface OnAdTypeDestroy {
 
-        public void run();
+        void run();
 
     }
 

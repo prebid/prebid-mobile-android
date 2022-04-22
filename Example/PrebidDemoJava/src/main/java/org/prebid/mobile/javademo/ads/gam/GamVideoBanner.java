@@ -22,10 +22,10 @@ public class GamVideoBanner {
     private static VideoAdUnit adUnit;
 
     public static void create(
-            ViewGroup wrapper,
-            String adUnitId,
-            String configId,
-            int autoRefreshTime
+        ViewGroup wrapper,
+        String adUnitId,
+        String configId,
+        int autoRefreshTime
     ) {
         VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
         parameters.setMimes(Collections.singletonList("video/mp4"));
@@ -66,7 +66,10 @@ public class GamVideoBanner {
             public void onAdLoaded() {
                 AdViewUtils.findPrebidCreativeSize(gamView, new AdViewUtils.PbFindSizeListener() {
                     @Override
-                    public void success(int width, int height) {
+                    public void success(
+                        int width,
+                        int height
+                    ) {
                         gamView.setAdSizes(new com.google.android.gms.ads.AdSize(width, height));
                     }
 

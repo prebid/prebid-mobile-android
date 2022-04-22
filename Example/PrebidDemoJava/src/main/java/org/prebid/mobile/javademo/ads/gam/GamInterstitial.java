@@ -16,10 +16,10 @@ public class GamInterstitial {
     public static AdUnit adUnit;
 
     public static void create(
-            Activity activity,
-            String adUnitId,
-            String configId,
-            int autoRefreshTime
+        Activity activity,
+        String adUnitId,
+        String configId,
+        int autoRefreshTime
     ) {
         adUnit = new InterstitialAdUnit(configId);
         adUnit.setAutoRefreshInterval(autoRefreshTime);
@@ -52,7 +52,10 @@ public class GamInterstitial {
         };
     }
 
-    private static void createDialog(Activity activity, String message) {
+    private static void createDialog(
+        Activity activity,
+        String message
+    ) {
         AlertDialog.Builder builder1;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder1 = new AlertDialog.Builder(activity, android.R.style.Theme_Material_Dialog_Alert);
@@ -60,9 +63,9 @@ public class GamInterstitial {
             builder1 = new AlertDialog.Builder(activity);
         }
         builder1.setTitle("Failed to load AdManager interstitial ad")
-                .setMessage("Error: " + message)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+            .setMessage("Error: " + message)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show();
     }
 
 }

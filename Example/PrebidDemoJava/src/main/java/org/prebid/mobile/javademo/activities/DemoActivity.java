@@ -27,10 +27,10 @@ public class DemoActivity extends AppCompatActivity {
     private static final String ARGS_AD_REFRESH_TIME = "autoRefresh";
 
     public static Intent getIntent(
-            Context context,
-            String adPrimaryServerName,
-            String adTypeName,
-            int adAutoRefreshTime
+        Context context,
+        String adPrimaryServerName,
+        String adTypeName,
+        int adAutoRefreshTime
     ) {
         Intent intent = new Intent(context, DemoActivity.class);
         intent.putExtra(ARGS_AD_SERVER_NAME, adPrimaryServerName);
@@ -80,23 +80,23 @@ public class DemoActivity extends AppCompatActivity {
         if (adPrimaryServerName.equals("Google Ad Manager (Rubicon)")) {
             PrebidMobile.setPrebidServerAccountId("1001");
             PrebidMobile.setPrebidServerHost(
-                    Host.createCustomHost("https://prebid-server.rubiconproject.com/openrtb2/auction")
+                Host.createCustomHost("https://prebid-server.rubiconproject.com/openrtb2/auction")
             );
         } else {
             PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d");
             PrebidMobile.setPrebidServerHost(
-                    Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction")
+                Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction")
             );
         }
     }
 
     private void useFakeGpdr() {
         PreferenceManager
-                .getDefaultSharedPreferences(this)
-                .edit()
-                .putInt("IABTCF_gdprApplies", 0)
-                .putInt("IABTCF_CmpSdkID", 123)
-                .apply();
+            .getDefaultSharedPreferences(this)
+            .edit()
+            .putInt("IABTCF_gdprApplies", 0)
+            .putInt("IABTCF_CmpSdkID", 123)
+            .apply();
     }
 
     private void initViews() {

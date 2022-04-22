@@ -20,12 +20,7 @@ public class DownloadImageTask {
 
     public void execute(final String url) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            TasksManager.getInstance().executeOnBackgroundThread(new Runnable() {
-                @Override
-                public void run() {
-                    fetchAndProcessImage(url);
-                }
-            });
+            TasksManager.getInstance().executeOnBackgroundThread(() -> fetchAndProcessImage(url));
         } else {
             fetchAndProcessImage(url);
         }
@@ -43,14 +38,12 @@ public class DownloadImageTask {
     }
 
     private void processImage(final Bitmap result) {
-        TasksManager.getInstance().executeOnMainThread(new Runnable() {
-            @Override
-            public void run() {
-                ImageView image = imageRef.get();
-                if (image != null) {
-                    image.setImageBitmap(result);
-                }
+        TasksManager.getInstance().executeOnMainThread(() -> {
+            ImageView image = imageRef.get();
+            if (image != null) {
+                image.setImageBitmap(result);
             }
         });
     }
+
 }

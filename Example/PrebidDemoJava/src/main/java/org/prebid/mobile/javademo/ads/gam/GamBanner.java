@@ -22,12 +22,12 @@ public class GamBanner {
     public static BannerAdUnit adUnit;
 
     public static void create(
-            ViewGroup wrapper,
-            String adUnitId,
-            String configId,
-            int width,
-            int height,
-            int autoRefreshTime
+        ViewGroup wrapper,
+        String adUnitId,
+        String configId,
+        int width,
+        int height,
+        int autoRefreshTime
     ) {
         BannerBaseAdUnit.Parameters parameters = new BannerBaseAdUnit.Parameters();
         parameters.setApi(Collections.singletonList(Signals.Api.MRAID_2));
@@ -51,7 +51,6 @@ public class GamBanner {
             AdManagerAdRequest request = builder.build();
             gamView.loadAd(request);
         });
-
     }
 
     public static void destroy() {
@@ -67,9 +66,11 @@ public class GamBanner {
             public void onAdLoaded() {
                 AdViewUtils.findPrebidCreativeSize(gamView, new AdViewUtils.PbFindSizeListener() {
                     @Override
-                    public void success(int width, int height) {
+                    public void success(
+                        int width,
+                        int height
+                    ) {
                         gamView.setAdSizes(new AdSize(width, height));
-
                     }
 
                     @Override
@@ -77,7 +78,6 @@ public class GamBanner {
                         Log.d(TAG, "Can't find prebid creative size: " + error.getDescription());
                     }
                 });
-
             }
         };
     }

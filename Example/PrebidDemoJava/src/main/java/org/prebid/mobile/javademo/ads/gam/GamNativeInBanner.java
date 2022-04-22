@@ -17,10 +17,10 @@ public class GamNativeInBanner {
     private static NativeAdUnit nativeAdUnit;
 
     public static void create(
-            ViewGroup wrapper,
-            String adUnitId,
-            String configId,
-            int autoRefreshTime
+        ViewGroup wrapper,
+        String adUnitId,
+        String configId,
+        int autoRefreshTime
     ) {
         nativeAdUnit = new NativeAdUnit(configId);
         configureNativeAdUnit(nativeAdUnit);
@@ -67,7 +67,6 @@ public class GamNativeInBanner {
             adUnit.addEventTracker(tracker);
         } catch (Exception e) {
             e.printStackTrace();
-
         }
         NativeTitleAsset title = new NativeTitleAsset();
         title.setLength(90);

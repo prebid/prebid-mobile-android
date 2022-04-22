@@ -19,10 +19,10 @@ public class GamVideoInterstitial {
     private static VideoInterstitialAdUnit adUnit;
 
     public static void create(
-            Activity activity,
-            String adUnitId,
-            String configId,
-            int autoRefreshTime
+        Activity activity,
+        String adUnitId,
+        String configId,
+        int autoRefreshTime
     ) {
         VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
         parameters.setMimes(Collections.singletonList("video/mp4"));
@@ -63,7 +63,10 @@ public class GamVideoInterstitial {
         };
     }
 
-    private static void showDialog(Activity activity, String message) {
+    private static void showDialog(
+        Activity activity,
+        String message
+    ) {
         AlertDialog.Builder builder;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder = new AlertDialog.Builder(activity, android.R.style.Theme_Material_Dialog_Alert);
@@ -71,9 +74,9 @@ public class GamVideoInterstitial {
             builder = new AlertDialog.Builder(activity);
         }
         builder.setTitle("Failed to load AdManager interstitial ad")
-                .setMessage("Error: " + message)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+            .setMessage("Error: " + message)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show();
     }
 
 }

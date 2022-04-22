@@ -33,9 +33,9 @@ public class GamVideoInstream {
     private static PlayerView playerView;
 
     public static void create(
-            ViewGroup wrapper,
-            String adUnitId,
-            String configId
+        ViewGroup wrapper,
+        String adUnitId,
+        String configId
     ) {
         playerView = new PlayerView(wrapper.getContext());
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 600);
@@ -92,7 +92,7 @@ public class GamVideoInstream {
         adsLoader.setPlayer(player);
 
         Uri uri = Uri.parse("https://storage.googleapis.com/gvabox/media/samples/stock.mp4");
-        //        Uri uri = Uri.parse("<![CDATA[https://storage.googleapis.com/gvabox/media/samples/stock.mp4]]>");
+//        Uri uri = Uri.parse("<![CDATA[https://storage.googleapis.com/gvabox/media/samples/stock.mp4]]>");
         MediaItem mediaItem = MediaItem.fromUri(uri);
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context, context.getString(R.string.app_name));
         ProgressiveMediaSource.Factory mediaSourceFactory = new ProgressiveMediaSource.Factory(dataSourceFactory);

@@ -15,8 +15,8 @@ public class ScreenUtils {
         application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(
-                    Activity activity,
-                    Bundle savedInstanceState
+                Activity activity,
+                Bundle savedInstanceState
             ) {
                 activity.getWindow().addFlags(FLAG_KEEP_SCREEN_ON);
 
@@ -42,8 +42,8 @@ public class ScreenUtils {
 
             @Override
             public void onActivitySaveInstanceState(
-                    Activity activity,
-                    Bundle outState
+                Activity activity,
+                Bundle outState
             ) {}
 
             @Override

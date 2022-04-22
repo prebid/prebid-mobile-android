@@ -13,7 +13,6 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
-
     }
     flavorDimensions "version"
     productFlavors {
@@ -37,20 +36,12 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
-
 //            minifyEnabled true
 //            proguardFiles 'proguard-rules.pro'
-
         }
     }
     buildFeatures {
         dataBinding true
-    }
-}
-
-project.gradle.taskGraph.whenReady {
-    connectedSourceCodeDebugAndroidTest {
-        ignoreFailures = true
     }
 }
 

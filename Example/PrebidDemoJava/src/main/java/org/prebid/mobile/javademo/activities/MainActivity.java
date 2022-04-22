@@ -39,10 +39,10 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     /**
-     * This START fields help to set start values for selectors.
+     * These START fields help to set start values for selectors.
      */
     private static final String START_AD_SERVER = "Google Ad Manager (AWS)";
-    private static final String START_AD_TYPE = "Native In App (not working)";
+    private static final String START_AD_TYPE = "";
 
     private boolean isFirstInit = true;
     private String adType = "";
@@ -93,9 +93,10 @@ public class MainActivity extends AppCompatActivity {
     private void initAdServerSpinner() {
         Map<String, List<AdType>> repository = AdTypesRepository.get();
         ArrayList<String> primaryAdServers = new ArrayList<>(repository.keySet());
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_dropdown_item,
-                primaryAdServers
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            primaryAdServers
         );
 
         Spinner spinner = binding.spinnerAdServer;
@@ -103,10 +104,10 @@ public class MainActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(
-                    AdapterView<?> parent,
-                    View view,
-                    int position,
-                    long id
+                AdapterView<?> parent,
+                View view,
+                int position,
+                long id
             ) {
                 adServer = primaryAdServers.get(position);
                 List<AdType> adTypes = repository.get(adServer);
@@ -118,8 +119,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 
@@ -131,18 +131,17 @@ public class MainActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(
-                    AdapterView<?> parent,
-                    View view,
-                    int position,
-                    long id
+                AdapterView<?> parent,
+                View view,
+                int position,
+                long id
             ) {
                 adType = list.get(position);
                 initStartAdType();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 
@@ -175,8 +174,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
     }
 
