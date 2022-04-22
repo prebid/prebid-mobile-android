@@ -14,9 +14,9 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
-import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
 import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeCustomFormatAd;
 import org.prebid.mobile.*;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.javademo.R;
@@ -29,7 +29,7 @@ public class GamNativeInApp {
     private static final String TAG = GamNativeInApp.class.getSimpleName();
 
     private static AdManagerAdView adView;
-    private static UnifiedNativeAd unifiedNativeAd;
+    private static NativeAd unifiedNativeAd;
     private static NativeAdUnit adUnit;
     private static AdLoader adLoader;
 
@@ -61,9 +61,17 @@ public class GamNativeInApp {
             unifiedNativeAd.destroy();
             unifiedNativeAd = null;
         }
+        if (adUnit != null) {
+            adUnit.stopAutoRefresh();
+            adUnit = null;
+        }
+        adLoader = null;
     }
 
-    private static void inflatePrebidNativeAd(final PrebidNativeAd ad, ViewGroup wrapper) {
+    private static void inflatePrebidNativeAd(
+        final PrebidNativeAd ad,
+        ViewGroup wrapper
+    ) {
         View nativeContainer = View.inflate(wrapper.getContext(), R.layout.layout_native, null);
         ad.registerView(nativeContainer, new PrebidNativeAdEventListener() {
             @Override
@@ -105,12 +113,12 @@ public class GamNativeInApp {
             wrapper.addView(adManagerAdView);
         };
 
-        UnifiedNativeAd.OnUnifiedNativeAdLoadedListener onUnifiedAdLoaded = unifiedNativeAd -> {
+        NativeAd.OnNativeAdLoadedListener onUnifiedAdLoaded = unifiedNativeAd -> {
             Log.d(TAG, "Unified native loaded");
             GamNativeInApp.unifiedNativeAd = unifiedNativeAd;
         };
 
-        NativeCustomTemplateAd.OnCustomTemplateAdLoadedListener onCustomAdLoaded = nativeCustomTemplateAd -> {
+        NativeCustomFormatAd.OnCustomFormatAdLoadedListener onCustomAdLoaded = nativeCustomTemplateAd -> {
             Log.d(TAG, "Custom ad loaded");
             AdViewUtils.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
                 @Override
@@ -134,16 +142,16 @@ public class GamNativeInApp {
 
         return new AdLoader.Builder(wrapper.getContext(), adUnitId)
             .forAdManagerAdView(onGamAdLoaded, AdSize.BANNER)
-            .forUnifiedNativeAd(onUnifiedAdLoaded)
-            .forCustomTemplateAd(customFormatId, onCustomAdLoaded, (customAd, s) -> {})
-                .withAdListener(new AdListener() {
-                    @Override
-                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                        super.onAdFailedToLoad(loadAdError);
-                        Toast.makeText(wrapper.getContext(), "DFP onAdFailedToLoad", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .build();
+            .forNativeAd(onUnifiedAdLoaded)
+            .forCustomFormatAd(customFormatId, onCustomAdLoaded, (customAd, s) -> {})
+            .withAdListener(new AdListener() {
+                @Override
+                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                    super.onAdFailedToLoad(loadAdError);
+                    Toast.makeText(wrapper.getContext(), "DFP onAdFailedToLoad", Toast.LENGTH_SHORT).show();
+                }
+            })
+            .build();
     }
 
     private static void configureNativeAdUnit(NativeAdUnit adUnit) {
@@ -194,29 +202,5 @@ public class GamNativeInApp {
     ) {
         new DownloadImageTask(image).execute(url);
     }
-
-    //================================================================================
-    // SAMPLE CODE: Fetching the demand using OnCompleteListener2
-    //================================================================================
-
-        /*
-        nativeAdUnit.fetchDemand(new OnCompleteListener2() {
-            @Override
-            public void onComplete(ResultCode resultCode, Map<String, String> unmodifiableMap) {
-                if (resultCode == ResultCode.SUCCESS) {
-                    final AdManagerAdRequest.Builder adManagerAdRequestBuilder = new AdManagerAdRequest.Builder();
-                    for (String key: unmodifiableMap.keySet()) {
-                        adManagerAdRequestBuilder.addCustomTargeting(key, unmodifiableMap.get(key));
-                    }
-                    loadDfp(adManagerAdRequestBuilder.build());
-                }
-                Toast.makeText(XandrNativeInAppGAMDemoActivity.this, "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        */
-
-    //================================================================================
-    // SAMPLE CODE: END
-    //================================================================================
 
 }
