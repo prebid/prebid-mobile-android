@@ -1,9 +1,10 @@
-package org.prebid.mobile;
+package org.prebid.mobile.javademo.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Looper;
 import android.widget.ImageView;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.tasksmanager.TasksManager;
 
 import java.io.InputStream;
@@ -13,11 +14,11 @@ public class DownloadImageTask {
 
     WeakReference<ImageView> imageRef;
 
-    protected DownloadImageTask(ImageView image) {
+    public DownloadImageTask(ImageView image) {
         this.imageRef = new WeakReference<>(image);
     }
 
-    protected void execute(final String url) {
+    public void execute(final String url) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             TasksManager.getInstance().executeOnBackgroundThread(new Runnable() {
                 @Override

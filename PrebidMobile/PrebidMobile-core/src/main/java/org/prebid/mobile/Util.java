@@ -18,26 +18,15 @@ package org.prebid.mobile;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.ImageView;
-
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class Util {
 
@@ -360,7 +349,9 @@ public class Util {
             Object adObject
     ) {
         if (adObject == null) return;
-        if (adObject.getClass() == getClassFromString(ANDROID_OS_BUNDLE)) {
+        if (adObject.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS) || adObject.getClass() == getClassFromString(AD_MANAGER_REQUEST_CLASS_V20)) {
+            setCacheIdToGamManager(cacheId, adObject);
+        } else if (adObject.getClass() == getClassFromString(ANDROID_OS_BUNDLE)) {
             Bundle adBundle = (Bundle) adObject;
             adBundle.putString(NativeAdUnit.BUNDLE_KEY_CACHE_ID, cacheId);
         } else if (adObject.getClass() == getClassFromString(APPLOVIN_MAX_NATIVE_AD_LOADER)) {
@@ -368,15 +359,32 @@ public class Util {
         }
     }
 
+    private static void setCacheIdToGamManager(
+        String cacheId,
+        Object object
+    ) {
+        if (cacheId == null) {
+            return;
+        }
+        try {
+            Bundle bundle = (Bundle) Util.callMethodOnObject(object, "getCustomTargeting");
+            if (bundle != null) {
+                String key = "hb_cache_id_local";
+                bundle.putString(key, cacheId);
+                addReservedKeys(key);
+            }
+        } catch (Exception ignored) {}
+    }
+
     private static void setApplovinMaxLocalParameters(
-            Object adObject,
-            String cacheId
+        Object adObject,
+        String cacheId
     ) {
         setLocalParamsToMax(adObject, APPLOVIN_MAX_RESPONSE_ID_KEY, cacheId);
     }
 
     private static void handleApplovinMaxCustomTargeting(
-            Object adObject,
+        Object adObject,
             HashMap<String, String> bids
     ) {
         setLocalParamsToMax(adObject, APPLOVIN_MAX_KEYWORDS_KEY, bids);
@@ -549,10 +557,6 @@ public class Util {
             }
         }
         return uri;
-    }
-
-    public static void loadImage(ImageView image, String url) {
-        new DownloadImageTask(image).execute(url);
     }
 }
 

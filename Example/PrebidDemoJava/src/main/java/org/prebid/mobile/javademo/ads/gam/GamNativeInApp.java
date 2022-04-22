@@ -20,6 +20,7 @@ import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import org.prebid.mobile.*;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.javademo.R;
+import org.prebid.mobile.javademo.utils.DownloadImageTask;
 
 import java.util.ArrayList;
 
@@ -33,15 +34,16 @@ public class GamNativeInApp {
     private static AdLoader adLoader;
 
     public static void create(
-            ViewGroup wrapper,
-            String adUnitId,
-            String configId
+        ViewGroup wrapper,
+        String adUnitId,
+        String configId,
+        String customFormatId
     ) {
         adUnit = new NativeAdUnit(configId);
         configureNativeAdUnit(adUnit);
 
         final AdManagerAdRequest adRequest = new AdManagerAdRequest.Builder().build();
-        adLoader = createAdLoader(wrapper, adUnitId);
+        adLoader = createAdLoader(wrapper, adUnitId, customFormatId);
         adUnit.fetchDemand(adRequest, resultCode -> {
             if (resultCode != ResultCode.SUCCESS) {
                 Toast.makeText(wrapper.getContext(), "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
@@ -80,11 +82,11 @@ public class GamNativeInApp {
             }
         });
         ImageView icon = nativeContainer.findViewById(R.id.imgIcon);
-        Util.loadImage(icon, ad.getIconUrl());
+        loadImage(icon, ad.getIconUrl());
         TextView title = nativeContainer.findViewById(R.id.tvTitle);
         title.setText(ad.getTitle());
         ImageView image = nativeContainer.findViewById(R.id.imgImage);
-        Util.loadImage(image, ad.getImageUrl());
+        loadImage(image, ad.getImageUrl());
         TextView description = nativeContainer.findViewById(R.id.tvDesc);
         description.setText(ad.getDescription());
         Button cta = nativeContainer.findViewById(R.id.btnCta);
@@ -92,19 +94,24 @@ public class GamNativeInApp {
         wrapper.addView(nativeContainer);
     }
 
-    private static AdLoader createAdLoader(ViewGroup wrapper, String adUnitId) {
+    private static AdLoader createAdLoader(
+        ViewGroup wrapper,
+        String adUnitId,
+        String customFormatId
+    ) {
         OnAdManagerAdViewLoadedListener onGamAdLoaded = adManagerAdView -> {
+            Log.d(TAG, "Gam loaded");
             adView = adManagerAdView;
             wrapper.addView(adManagerAdView);
         };
 
         UnifiedNativeAd.OnUnifiedNativeAdLoadedListener onUnifiedAdLoaded = unifiedNativeAd -> {
-            Log.d(TAG, "native loaded");
+            Log.d(TAG, "Unified native loaded");
             GamNativeInApp.unifiedNativeAd = unifiedNativeAd;
         };
 
         NativeCustomTemplateAd.OnCustomTemplateAdLoadedListener onCustomAdLoaded = nativeCustomTemplateAd -> {
-            Log.d(TAG, "custom ad loaded");
+            Log.d(TAG, "Custom ad loaded");
             AdViewUtils.findNative(nativeCustomTemplateAd, new PrebidNativeAdListener() {
                 @Override
                 public void onPrebidNativeLoaded(PrebidNativeAd ad) {
@@ -126,10 +133,9 @@ public class GamNativeInApp {
         };
 
         return new AdLoader.Builder(wrapper.getContext(), adUnitId)
-                .forAdManagerAdView(onGamAdLoaded, AdSize.BANNER)
-                .forUnifiedNativeAd(onUnifiedAdLoaded)
-                .forCustomTemplateAd("11963183", onCustomAdLoaded, (customAd, s) -> {
-                })
+            .forAdManagerAdView(onGamAdLoaded, AdSize.BANNER)
+            .forUnifiedNativeAd(onUnifiedAdLoaded)
+            .forCustomTemplateAd(customFormatId, onCustomAdLoaded, (customAd, s) -> {})
                 .withAdListener(new AdListener() {
                     @Override
                     public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
@@ -182,6 +188,12 @@ public class GamNativeInApp {
         adUnit.addAsset(cta);
     }
 
+    private static void loadImage(
+        ImageView image,
+        String url
+    ) {
+        new DownloadImageTask(image).execute(url);
+    }
 
     //================================================================================
     // SAMPLE CODE: Fetching the demand using OnCompleteListener2

@@ -38,7 +38,7 @@ public class GamVideoInstream {
             String configId
     ) {
         playerView = new PlayerView(wrapper.getContext());
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 600);
         wrapper.addView(playerView, params);
 
         VideoAdUnit.Parameters parameters = new VideoAdUnit.Parameters();
@@ -66,31 +66,6 @@ public class GamVideoInstream {
             adUnit.stopAutoRefresh();
             adUnit = null;
         }
-        releasePlayer();
-    }
-
-
-    private static void initializePlayer(Context context) {
-        SimpleExoPlayer.Builder playerBuilder = new SimpleExoPlayer.Builder(context);
-        player = playerBuilder.build();
-        playerView.setPlayer(player);
-        adsLoader.setPlayer(player);
-
-        Uri uri = Uri.parse("<![CDATA[https://storage.googleapis.com/gvabox/media/samples/stock.mp4]]>");
-        MediaItem mediaItem = MediaItem.fromUri(uri);
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context, context.getString(R.string.app_name));
-        ProgressiveMediaSource.Factory mediaSourceFactory = new ProgressiveMediaSource.Factory(dataSourceFactory);
-        MediaSource mediaSource = mediaSourceFactory.createMediaSource(mediaItem);
-
-        DataSpec dataSpec = new DataSpec(adsUri);
-        AdsMediaSource adsMediaSource = new AdsMediaSource(mediaSource, dataSpec, "ad", mediaSourceFactory, adsLoader, playerView);
-
-        player.setMediaSource(adsMediaSource);
-        player.setPlayWhenReady(true);
-        player.prepare();
-    }
-
-    private static void releasePlayer() {
         if (adsLoader != null) {
             adsLoader.setPlayer(null);
             adsLoader.release();
@@ -104,6 +79,31 @@ public class GamVideoInstream {
             player.release();
             player = null;
         }
+        if (adsUri != null) {
+            adsUri = null;
+        }
+    }
+
+
+    private static void initializePlayer(Context context) {
+        SimpleExoPlayer.Builder playerBuilder = new SimpleExoPlayer.Builder(context);
+        player = playerBuilder.build();
+        playerView.setPlayer(player);
+        adsLoader.setPlayer(player);
+
+        Uri uri = Uri.parse("https://storage.googleapis.com/gvabox/media/samples/stock.mp4");
+        //        Uri uri = Uri.parse("<![CDATA[https://storage.googleapis.com/gvabox/media/samples/stock.mp4]]>");
+        MediaItem mediaItem = MediaItem.fromUri(uri);
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context, context.getString(R.string.app_name));
+        ProgressiveMediaSource.Factory mediaSourceFactory = new ProgressiveMediaSource.Factory(dataSourceFactory);
+        MediaSource mediaSource = mediaSourceFactory.createMediaSource(mediaItem);
+
+        DataSpec dataSpec = new DataSpec(adsUri);
+        AdsMediaSource adsMediaSource = new AdsMediaSource(mediaSource, dataSpec, "ad", mediaSourceFactory, adsLoader, playerView);
+
+        player.setMediaSource(adsMediaSource);
+        player.setPlayWhenReady(true);
+        player.prepare();
     }
 
 }

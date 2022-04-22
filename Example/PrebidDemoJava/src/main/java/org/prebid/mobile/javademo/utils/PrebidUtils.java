@@ -4,7 +4,7 @@ import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
 
-public class Util {
+public class PrebidUtils {
 
     public static void enableAdditionalFunctionality(AdUnit adUnit) {
         enableCOPPA();

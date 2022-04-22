@@ -153,17 +153,17 @@ public class AdTypesRepository {
                                 GamVideoBanner::destroy
                         ),
                         new AdType(
-                                "Video Interstitial (not working)",
-                                (activity, wrapper, autoRefreshTime) -> {
-                                    PrebidMobile.setStoredAuctionResponse("response-prebid-video-interstitial-320-480");
-                                    GamVideoInterstitial.create(
-                                            activity,
-                                            "/21808260008/prebid_oxb_interstitial_video",
-                                            "imp-prebid-video-interstitial-320-480",
-                                            autoRefreshTime
-                                    );
-                                },
-                                GamVideoInterstitial::destroy
+                            "Video Interstitial",
+                            (activity, wrapper, autoRefreshTime) -> {
+                                PrebidMobile.setStoredAuctionResponse("response-prebid-video-interstitial-320-480");
+                                GamVideoInterstitial.create(
+                                    activity,
+                                    "/21808260008/prebid_oxb_320x480_interstitial_video_static",
+                                    "imp-prebid-video-interstitial-320-480",
+                                    autoRefreshTime
+                                );
+                            },
+                            GamVideoInterstitial::destroy
                         ),
                         new AdType(
                                 "Rewarded",
@@ -178,29 +178,17 @@ public class AdTypesRepository {
                                 GamRewarded::destroy
                         ),
                         new AdType(
-                                "Video Instream (not working)",
-                                (activity, wrapper, autoRefreshTime) -> {
-                                    PrebidMobile.setStoredAuctionResponse("response-prebid-video-outstream");
-                                    GamVideoInstream.create(
-                                            wrapper,
-                                            "/21808260008/prebid_oxb_outstream_video_reandom",
-                                            "imp-prebid-video-outstream"
-                                    );
-                                },
-                                GamVideoInstream::destroy
-                        ),
-                        new AdType(
-                                "Native In App (not working)",
-                                (activity, wrapper, autoRefreshTime) -> {
-                                    PrebidMobile.setStoredAuctionResponse("response-prebid-banner-native-styles");
-                                    GamNativeInApp.create(
-                                            wrapper,
-//                                            "/21808260008/unified_native_ad_unit",
-                                            "/21808260008/unified_native_ad_unit_static",
-                                            "imp-prebid-banner-native-styles"
-                                    );
-                                },
-                                GamNativeInApp::destroy
+                            "Native In App",
+                            (activity, wrapper, autoRefreshTime) -> {
+                                PrebidMobile.setStoredAuctionResponse("response-prebid-banner-native-styles");
+                                GamNativeInApp.create(
+                                    wrapper,
+                                    "/21808260008/apollo_custom_template_native_ad_unit",
+                                    "imp-prebid-banner-native-styles",
+                                    "11934135"
+                                );
+                            },
+                            GamNativeInApp::destroy
                         ),
                         new AdType(
                                 "Native In Banner",
