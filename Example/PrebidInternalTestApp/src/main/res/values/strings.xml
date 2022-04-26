@@ -207,15 +207,18 @@
     <string name="demo_bidding_max_banner_300_250_no_bids">Banner 300x250 (MAX) [noBids, MAX ad]</string>
     <string name="demo_bidding_max_banner_adaptive">Banner adaptive banners (MAX) [OK, Adapter]</string>
 
+    <string name="demo_bidding_max_interstitial_adapter">Display Interstitial 320x480 (MAX) [OK, Adapter]</string>
     <string name="demo_bidding_max_interstitial_random">Display Interstitial 320x480 (MAX) [OK, Random]</string>
     <string name="demo_bidding_max_interstitial_no_bids">Display Interstitial 320x480 (MAX) [noBids, MAX ad]</string>
-    <string name="demo_bidding_max_video_interstitial_no_bids">Video Interstitial 320x480 (MAX) [noBids, MAX ad]</string>
+    <string name="demo_bidding_max_video_interstitial_adapter">Video Interstitial 320x480 (MAX) [OK, Adapter]</string>
     <string name="demo_bidding_max_video_interstitial_random">Video Interstitial 320x480 (MAX) [OK, Random]</string>
+    <string name="demo_bidding_max_video_interstitial_no_bids">Video Interstitial 320x480 (MAX) [noBids, MAX ad]</string>
     <string name="demo_bidding_max_interstitial_multiformat_adapter">Multiformat Interstitial 320x480 (MAX) [OK, Random]</string>
 
+    <string name="demo_bidding_max_rewarded_adapter">Video Rewarded 320x480 (MAX) [OK, Adapter]</string>
     <string name="demo_bidding_max_rewarded_random">Video Rewarded 320x480 (MAX) [OK, Random]</string>
     <string name="demo_bidding_max_rewarded_no_bids">Video Rewarded 320x480 (MAX) [noBids, MAX ad]</string>
-    <string name="demo_bidding_max_rewarded_random_no_end_card">Video Rewarded 320x480 no EndCard (MAX) [OK, Random]</string>
+    <string name="demo_bidding_max_rewarded_adapter_no_end_card">Video Rewarded 320x480 no EndCard (MAX) [OK, Adapter]</string>
 
     <string name="demo_bidding_max_native_adapter">Native Ad (MAX) [OK, Adapter]</string>
     <string name="demo_bidding_max_native_no_bids">Native Ad (MAX) [noBids, MAX ad]</string>

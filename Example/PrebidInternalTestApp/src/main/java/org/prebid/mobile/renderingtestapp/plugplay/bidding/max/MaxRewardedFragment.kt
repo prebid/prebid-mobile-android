@@ -16,7 +16,7 @@ import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 
-class MaxRewardedFragment : AdFragment() {
+open class MaxRewardedFragment : AdFragment() {
 
     companion object {
         private const val TAG = "MaxRewardedFragment"
