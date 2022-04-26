@@ -53,6 +53,7 @@ open class MaxInterstitialFragment : AdFragment() {
             EnumSet.of(AdUnitFormat.DISPLAY),
             mediationUtils
         )
+        adUnit?.setMinSizePercentage(30, 30)
         return adUnit
     }
 
