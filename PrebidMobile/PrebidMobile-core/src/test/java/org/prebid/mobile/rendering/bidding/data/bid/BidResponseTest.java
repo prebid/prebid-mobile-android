@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.bidding.data.bid;
 
 import org.junit.Test;
+import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.test.utils.ResourceUtils;
 import org.prebid.mobile.units.configuration.Position;
@@ -72,21 +73,23 @@ public class BidResponseTest {
 
     @Test
     public void testMobileSdkPassThrough_checkFieldsUnification_returnUnifiedFields() throws IOException {
-        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/mobile_sdk_pass_through.json");
+        if (!BuildConfig.DEBUG) {
+            String responseString = ResourceUtils.convertResourceToString("BidResponseTest/mobile_sdk_pass_through.json");
 
-        BidResponse subject = new BidResponse(responseString);
-        MobileSdkPassThrough mobileSdkPassThrough = subject.getMobileSdkPassThrough();
+            BidResponse subject = new BidResponse(responseString);
+            MobileSdkPassThrough mobileSdkPassThrough = subject.getMobileSdkPassThrough();
 
-        assertNotNull(mobileSdkPassThrough);
-        assertTrue(mobileSdkPassThrough.isMuted);
-        assertEquals((Double) 0.1, mobileSdkPassThrough.closeButtonArea);
-        assertEquals(Position.TOP_LEFT, mobileSdkPassThrough.closeButtonPosition);
-        assertEquals((Double) 0.2, mobileSdkPassThrough.skipButtonArea);
-        assertEquals(Position.TOP_RIGHT, mobileSdkPassThrough.skipButtonPosition);
-        assertEquals((Integer) 15, mobileSdkPassThrough.skipDelay);
+            assertNotNull(mobileSdkPassThrough);
+            assertTrue(mobileSdkPassThrough.isMuted);
+            assertEquals((Double) 0.1, mobileSdkPassThrough.closeButtonArea);
+            assertEquals(Position.TOP_LEFT, mobileSdkPassThrough.closeButtonPosition);
+            assertEquals((Double) 0.2, mobileSdkPassThrough.skipButtonArea);
+            assertEquals(Position.TOP_RIGHT, mobileSdkPassThrough.skipButtonPosition);
+            assertEquals((Integer) 15, mobileSdkPassThrough.skipDelay);
 
-        /* This field presents in both MobileSdkPassThrough objects */
-        assertEquals((Integer) 11, mobileSdkPassThrough.maxVideoDuration);
+            /* This field presents in both MobileSdkPassThrough objects */
+            assertEquals((Integer) 11, mobileSdkPassThrough.maxVideoDuration);
+        }
     }
 
 }
