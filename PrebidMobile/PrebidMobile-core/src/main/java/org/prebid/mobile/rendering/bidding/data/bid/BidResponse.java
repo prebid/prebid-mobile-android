@@ -240,4 +240,8 @@ public class BidResponse {
         return mobileSdkPassThrough;
     }
 
+    public void setMobileSdkPassThrough(@Nullable MobileSdkPassThrough mobileSdkPassThrough) {
+        this.mobileSdkPassThrough = mobileSdkPassThrough;
+    }
+
 }

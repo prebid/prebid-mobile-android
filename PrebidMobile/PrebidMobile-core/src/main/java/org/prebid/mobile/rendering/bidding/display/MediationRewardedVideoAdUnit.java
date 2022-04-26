@@ -26,11 +26,15 @@ import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.units.configuration.AdFormat;
 
-public class MediationRewardedVideoAdUnit extends MediationBaseAdUnit {
+public class MediationRewardedVideoAdUnit extends MediationBaseFullScreenAdUnit {
 
-    private static final String TAG = "MediationRewardedVideoAdUnit";
+    private static final String TAG = "MediationRewardedAdUnit";
 
-    public MediationRewardedVideoAdUnit(Context context, String configId, PrebidMediationDelegate mediationDelegate) {
+    public MediationRewardedVideoAdUnit(
+        Context context,
+        String configId,
+        PrebidMediationDelegate mediationDelegate
+    ) {
         super(context, configId, null, mediationDelegate);
     }
 
