@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.utils.helpers.Dips;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
@@ -60,6 +61,8 @@ public class BidResponse {
     private String winningBidJson;
 
     private long mCreationTime;
+
+    private MobileSdkPassThrough mobileSdkPassThrough;
 
     public BidResponse(String json) {
         mSeatbids = new ArrayList<>();
@@ -120,9 +123,14 @@ public class BidResponse {
             mCustomData = responseJson.optString("customdata");
             mNbr = responseJson.optInt("nbr", -1);
 
+            MobileSdkPassThrough rootMobilePassThrough = null;
             if (responseJson.has("ext")) {
                 mExt = new Ext();
-                mExt.put(responseJson.optJSONObject("ext"));
+                JSONObject extJsonObject = responseJson.optJSONObject("ext");
+                mExt.put(extJsonObject);
+                if (extJsonObject != null) {
+                    rootMobilePassThrough = MobileSdkPassThrough.create(extJsonObject);
+                }
             }
 
             JSONArray jsonSeatbids = responseJson.optJSONArray("seatbid");
@@ -132,12 +140,18 @@ public class BidResponse {
                     mSeatbids.add(seatbid);
                 }
             }
-            if (getWinningBid() == null) {
+
+            MobileSdkPassThrough bidMobilePassThrough = null;
+            Bid winningBid = getWinningBid();
+            if (winningBid == null) {
                 mHasParseError = true;
                 mParseError = "Failed to parse bids. No winning bids were found.";
                 LogUtil.info(TAG, mParseError);
+            } else {
+                bidMobilePassThrough = winningBid.getMobileSdkPassThrough();
             }
 
+            mobileSdkPassThrough = MobileSdkPassThrough.combine(bidMobilePassThrough, rootMobilePassThrough);
             mCreationTime = System.currentTimeMillis();
         }
         catch (JSONException e) {
@@ -220,4 +234,10 @@ public class BidResponse {
         final int height = Dips.dipsToIntPixels(winningBid.getHeight(), context);
         return new Pair<>(width, height);
     }
+
+    @Nullable
+    public MobileSdkPassThrough getMobileSdkPassThrough() {
+        return mobileSdkPassThrough;
+    }
+
 }

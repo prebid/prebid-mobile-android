@@ -17,7 +17,9 @@
 package org.prebid.mobile.rendering.bidding.data.bid;
 
 import org.junit.Test;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.test.utils.ResourceUtils;
+import org.prebid.mobile.units.configuration.Position;
 
 import java.io.IOException;
 
@@ -38,6 +40,7 @@ public class BidResponseTest {
         assertEquals("bidid", bidResponse.getBidId());
         assertEquals("custom", bidResponse.getCustomData());
         assertEquals(1, bidResponse.getNbr());
+        assertNull(bidResponse.getMobileSdkPassThrough());
     }
 
     @Test
@@ -66,4 +69,24 @@ public class BidResponseTest {
         assertEquals("id", bidResponse.getId());
         assertNotNull(bidResponse.getExt());
     }
+
+    @Test
+    public void testMobileSdkPassThrough_checkFieldsUnification_returnUnifiedFields() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/mobile_sdk_pass_through.json");
+
+        BidResponse subject = new BidResponse(responseString);
+        MobileSdkPassThrough mobileSdkPassThrough = subject.getMobileSdkPassThrough();
+
+        assertNotNull(mobileSdkPassThrough);
+        assertTrue(mobileSdkPassThrough.isMuted);
+        assertEquals((Double) 0.1, mobileSdkPassThrough.closeButtonArea);
+        assertEquals(Position.TOP_LEFT, mobileSdkPassThrough.closeButtonPosition);
+        assertEquals((Double) 0.2, mobileSdkPassThrough.skipButtonArea);
+        assertEquals(Position.TOP_RIGHT, mobileSdkPassThrough.skipButtonPosition);
+        assertEquals((Integer) 15, mobileSdkPassThrough.skipDelay);
+
+        /* This field presents in both MobileSdkPassThrough objects */
+        assertEquals((Integer) 11, mobileSdkPassThrough.maxVideoDuration);
+    }
+
 }

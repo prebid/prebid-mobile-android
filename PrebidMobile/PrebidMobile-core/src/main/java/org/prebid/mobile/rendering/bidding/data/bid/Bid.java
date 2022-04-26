@@ -21,6 +21,7 @@ import android.util.Base64;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.rendering.models.internal.MacrosModel;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.utils.helpers.MacrosResolutionHelper;
 
 import java.util.HashMap;
@@ -124,6 +125,8 @@ public class Bid {
     // Advisory as to the number of seconds the bidder is willing to
     // wait between the auction and the actual impression
     private int mExp;
+
+    private MobileSdkPassThrough mobileSdkPassThrough;
 
     protected Bid() {
     }
@@ -243,6 +246,10 @@ public class Bid {
         return jsonString;
     }
 
+    public MobileSdkPassThrough getMobileSdkPassThrough() {
+        return mobileSdkPassThrough;
+    }
+
     public static Bid fromJSONObject(JSONObject jsonObject) {
         Bid bid = new Bid();
         if (jsonObject == null) {
@@ -280,6 +287,7 @@ public class Bid {
         JSONObject ext = jsonObject.optJSONObject("ext");
         if (ext != null) {
             bid.mPrebid = Prebid.fromJSONObject(ext.optJSONObject("prebid"));
+            bid.mobileSdkPassThrough = MobileSdkPassThrough.create(ext);
         }
 
         substituteMacros(bid);
