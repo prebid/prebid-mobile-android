@@ -21,10 +21,13 @@ open class MaxInterstitialFragment : AdFragment() {
 
     companion object {
         private const val TAG = "MaxInterstitialFragment"
+
+        public const val ARG_IS_VIDEO = TAG + "IsVideo"
     }
 
     protected var maxInterstitialAd: MaxInterstitialAd? = null
     protected var adUnit: MediationInterstitialAdUnit? = null
+    protected var isVideo = false
 
     override val layoutRes = R.layout.fragment_bidding_interstitial_applovin_max
 
@@ -40,17 +43,20 @@ open class MaxInterstitialFragment : AdFragment() {
     }
 
     override fun initAd(): Any? {
+        isVideo = arguments?.getBoolean(ARG_IS_VIDEO) ?: false
+
         maxInterstitialAd = MaxInterstitialAd(adUnitId, activity)
         maxInterstitialAd?.setListener(createListener())
 
-        val mediationUtils =
-            MaxMediationInterstitialUtils(
-                maxInterstitialAd
-            )
+        val mediationUtils = MaxMediationInterstitialUtils(maxInterstitialAd)
+        var adUnitFormats = EnumSet.of(AdUnitFormat.DISPLAY)
+        if (isVideo) {
+            adUnitFormats = EnumSet.of(AdUnitFormat.VIDEO)
+        }
         adUnit = MediationInterstitialAdUnit(
             activity,
             configId,
-            EnumSet.of(AdUnitFormat.DISPLAY),
+            adUnitFormats,
             mediationUtils
         )
         adUnit?.setMinSizePercentage(30, 30)

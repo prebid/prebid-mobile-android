@@ -23,6 +23,7 @@ import org.prebid.mobile.renderingtestapp.data.DemoItem
 import org.prebid.mobile.renderingtestapp.data.Tag
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobInterstitialFragment
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeFragment
+import org.prebid.mobile.renderingtestapp.plugplay.bidding.max.MaxInterstitialFragment
 
 class DemoItemProvider private constructor() {
 
@@ -1088,8 +1089,6 @@ class DemoItemProvider private constructor() {
             )
         }
 
-
-
         private fun addAdMobPbsExamples() {
             val adMobBannerTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.BANNER, Tag.REMOTE)
             val adMobInterstitialTagList = listOf(Tag.ALL, Tag.ADMOB, Tag.INTERSTITIAL, Tag.REMOTE)
@@ -1495,7 +1494,7 @@ class DemoItemProvider private constructor() {
                         R.string.max_interstitial_ad_unit_id,
                         320, 480,
                         R.string.response_prebid_video_interstitial_320_480
-                    )
+                    ).apply { putBoolean(MaxInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
             demoList.add(
@@ -1508,7 +1507,7 @@ class DemoItemProvider private constructor() {
                         R.string.max_interstitial_ad_unit_id,
                         320, 480,
                         R.string.response_prebid_no_bids
-                    )
+                    ).apply { putBoolean(MaxInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
             demoList.add(
@@ -1521,7 +1520,7 @@ class DemoItemProvider private constructor() {
                         R.string.max_interstitial_ad_unit_id,
                         320, 480,
                         R.string.response_prebid_video_interstitial_320_480
-                    )
+                    ).apply { putBoolean(MaxInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
             demoList.add(
