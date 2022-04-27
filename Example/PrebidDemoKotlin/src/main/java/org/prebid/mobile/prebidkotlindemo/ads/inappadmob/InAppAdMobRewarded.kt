@@ -8,7 +8,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.admob.AdMobRewardedMediationUtils
+import org.prebid.mobile.admob.AdMobMediationRewardedUtils
 import org.prebid.mobile.admob.PrebidRewardedAdapter
 import org.prebid.mobile.rendering.bidding.display.MediationRewardedVideoAdUnit
 
@@ -29,7 +29,7 @@ object InAppAdMobRewarded {
             .Builder()
             .addNetworkExtrasBundle(PrebidRewardedAdapter::class.java, extras)
             .build()
-        val mediationUtils = AdMobRewardedMediationUtils(extras)
+        val mediationUtils = AdMobMediationRewardedUtils(extras)
         PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
         adUnit = MediationRewardedVideoAdUnit(activity, configId, mediationUtils)
         adUnit?.fetchDemand { result ->

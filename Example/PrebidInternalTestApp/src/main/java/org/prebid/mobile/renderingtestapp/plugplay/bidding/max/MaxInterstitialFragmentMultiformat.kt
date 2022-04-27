@@ -1,6 +1,6 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.max
 
-import com.applovin.mediation.adapters.prebid.utils.MaxInterstitialMediationUtils
+import com.applovin.mediation.adapters.prebid.utils.MaxMediationInterstitialUtils
 import com.applovin.mediation.ads.MaxInterstitialAd
 import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
@@ -12,9 +12,10 @@ class MaxInterstitialFragmentMultiformat : MaxInterstitialFragment() {
         maxInterstitialAd = MaxInterstitialAd(adUnitId, activity)
         maxInterstitialAd?.setListener(createListener())
 
-        val mediationUtils = MaxInterstitialMediationUtils(
-            maxInterstitialAd
-        )
+        val mediationUtils =
+            MaxMediationInterstitialUtils(
+                maxInterstitialAd
+            )
         adUnit = MediationInterstitialAdUnit(
             activity,
             configId,

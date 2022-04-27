@@ -2,28 +2,28 @@ package com.applovin.mediation.adapters.prebid.utils;
 
 import androidx.annotation.Nullable;
 import com.applovin.mediation.adapters.PrebidMaxMediationAdapter;
-import com.applovin.mediation.ads.MaxRewardedAd;
+import com.applovin.mediation.ads.MaxInterstitialAd;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
 
 import java.util.HashMap;
 
-public class MaxRewardedMediationUtils implements PrebidMediationDelegate {
+public class MaxMediationInterstitialUtils implements PrebidMediationDelegate {
 
-    private final MaxRewardedAd rewardedAd;
+    private final MaxInterstitialAd interstitialAd;
 
-    public MaxRewardedMediationUtils(MaxRewardedAd rewardedAd) {
-        this.rewardedAd = rewardedAd;
+    public MaxMediationInterstitialUtils(MaxInterstitialAd interstitialAd) {
+        this.interstitialAd = interstitialAd;
     }
 
     @Override
     public void setResponseToLocalExtras(@Nullable BidResponse response) {
-        if (rewardedAd != null) {
+        if (interstitialAd != null) {
             String responseId; if (response != null) {
                 responseId = response.getId();
             } else {
                 responseId = null;
-            } rewardedAd.setLocalExtraParameter(PrebidMaxMediationAdapter.EXTRA_RESPONSE_ID, responseId);
+            } interstitialAd.setLocalExtraParameter(PrebidMaxMediationAdapter.EXTRA_RESPONSE_ID, responseId);
         }
     }
 

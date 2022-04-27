@@ -6,7 +6,7 @@ import android.widget.FrameLayout
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxAdViewAdListener
 import com.applovin.mediation.MaxError
-import com.applovin.mediation.adapters.prebid.utils.MaxBannerMediationUtils
+import com.applovin.mediation.adapters.prebid.utils.MaxMediationBannerUtils
 import com.applovin.mediation.ads.MaxAdView
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.prebidkotlindemo.R
@@ -33,7 +33,8 @@ object InAppMaxBanner {
         )
         wrapper.addView(adView)
 
-        val mediationUtils = MaxBannerMediationUtils(adView)
+        val mediationUtils =
+            MaxMediationBannerUtils(adView)
         adUnit = MediationBannerAdUnit(
             wrapper.context,
             configId,

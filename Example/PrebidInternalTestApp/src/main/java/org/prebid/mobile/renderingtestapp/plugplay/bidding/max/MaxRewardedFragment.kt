@@ -7,7 +7,7 @@ import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxError
 import com.applovin.mediation.MaxReward
 import com.applovin.mediation.MaxRewardedAdListener
-import com.applovin.mediation.adapters.prebid.utils.MaxRewardedMediationUtils
+import com.applovin.mediation.adapters.prebid.utils.MaxMediationRewardedUtils
 import com.applovin.mediation.ads.MaxRewardedAd
 import kotlinx.android.synthetic.main.events_max_rewarded.*
 import kotlinx.android.synthetic.main.fragment_bidding_rewarded_applovin_max.*
@@ -42,7 +42,7 @@ class MaxRewardedFragment : AdFragment() {
         maxRewardedAd = MaxRewardedAd.getInstance(adUnitId, activity)
         maxRewardedAd?.setListener(createListener())
 
-        val mediationUtils = MaxRewardedMediationUtils(
+        val mediationUtils = MaxMediationRewardedUtils(
             maxRewardedAd
         )
         adUnit = MediationRewardedVideoAdUnit(

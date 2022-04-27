@@ -8,7 +8,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.admob.AdMobInterstitialMediationUtils
+import org.prebid.mobile.admob.AdMobMediationInterstitialUtils
 import org.prebid.mobile.admob.PrebidInterstitialAdapter
 import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
@@ -31,7 +31,7 @@ object InAppAdMobInterstitial {
             .Builder()
             .addCustomEventExtrasBundle(PrebidInterstitialAdapter::class.java, extras)
             .build()
-        val mediationUtils = AdMobInterstitialMediationUtils(extras)
+        val mediationUtils = AdMobMediationInterstitialUtils(extras)
         PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
         adUnit = MediationInterstitialAdUnit(
             activity,

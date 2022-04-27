@@ -14,13 +14,13 @@ import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
-public class MaxBannerMediationUtils implements PrebidMediationDelegate {
+public class MaxMediationBannerUtils implements PrebidMediationDelegate {
 
-    private static final String TAG = MaxBannerMediationUtils.class.getSimpleName();
+    private static final String TAG = MaxMediationBannerUtils.class.getSimpleName();
 
     private final WeakReference<MaxAdView> adViewReference;
 
-    public MaxBannerMediationUtils(MaxAdView adView) {
+    public MaxMediationBannerUtils(MaxAdView adView) {
         adViewReference = new WeakReference<>(adView);
     }
 

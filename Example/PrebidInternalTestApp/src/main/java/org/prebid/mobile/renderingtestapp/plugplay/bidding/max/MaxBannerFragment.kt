@@ -8,7 +8,7 @@ import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxAdFormat
 import com.applovin.mediation.MaxAdViewAdListener
 import com.applovin.mediation.MaxError
-import com.applovin.mediation.adapters.prebid.utils.MaxBannerMediationUtils
+import com.applovin.mediation.adapters.prebid.utils.MaxMediationBannerUtils
 import com.applovin.mediation.ads.MaxAdView
 import com.applovin.sdk.AppLovinSdkUtils
 import kotlinx.android.synthetic.main.events_max_banner.*
@@ -62,7 +62,8 @@ open class MaxBannerFragment : AdFragment() {
         )
         viewContainer.addView(adView)
 
-        val mediationUtils = MaxBannerMediationUtils(adView)
+        val mediationUtils =
+            MaxMediationBannerUtils(adView)
         adUnit = MediationBannerAdUnit(
             requireContext(),
             configId,

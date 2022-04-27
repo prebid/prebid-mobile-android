@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.initialization.InitializationStatus
 import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.admob.AdMobBannerMediationUtils
+import org.prebid.mobile.admob.AdMobMediationBannerUtils
 import org.prebid.mobile.admob.PrebidBannerAdapter
 import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
 
@@ -56,7 +56,7 @@ object InAppAdMobBanner {
             .Builder()
             .addCustomEventExtrasBundle(PrebidBannerAdapter::class.java, extras)
             .build()
-        val mediationUtils = AdMobBannerMediationUtils(extras, bannerView)
+        val mediationUtils = AdMobMediationBannerUtils(extras, bannerView)
 
         adUnit = MediationBannerAdUnit(
             wrapper.context,

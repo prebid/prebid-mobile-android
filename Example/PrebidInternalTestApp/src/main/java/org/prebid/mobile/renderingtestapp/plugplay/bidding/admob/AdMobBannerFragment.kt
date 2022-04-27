@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.events_admob.*
 
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.admob.AdMobBannerMediationUtils
+import org.prebid.mobile.admob.AdMobMediationBannerUtils
 import org.prebid.mobile.admob.PrebidBannerAdapter
 import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
@@ -58,7 +58,8 @@ open class AdMobBannerFragment : AdFragment() {
             .Builder()
             .addCustomEventExtrasBundle(PrebidBannerAdapter::class.java, adRequestExtras!!)
             .build()
-        val mediationUtils = AdMobBannerMediationUtils(adRequestExtras, bannerView)
+        val mediationUtils =
+            AdMobMediationBannerUtils(adRequestExtras, bannerView)
 
 
         adUnit = MediationBannerAdUnit(
