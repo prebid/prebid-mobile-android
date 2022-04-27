@@ -63,6 +63,15 @@
             app:popUpTo="@+id/headerBiddingFragment" />
 
         <action
+            android:id="@+id/action_header_bidding_to_in_app_interstitial_multiformat"
+            app:destination="@id/navigation_in_app_interstitial_multiformat"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
             android:id="@+id/action_header_bidding_to_in_app_interstitial_close_button_area"
             app:destination="@id/navigation_in_app_interstitial_close_button_area"
             app:enterAnim="@anim/nav_default_enter_anim"
@@ -209,6 +218,15 @@
             app:popUpTo="@+id/headerBiddingFragment" />
 
         <action
+            android:id="@+id/action_header_bidding_to_gam_interstitial_multiformat"
+            app:destination="@id/navigation_gam_interstitial_multiformat"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
             android:id="@+id/action_header_bidding_to_gam_multisize_interstitial"
             app:destination="@id/navigation_gam_interstitial"
             app:enterAnim="@anim/nav_default_enter_anim"
@@ -286,26 +304,34 @@
                 app:enterAnim="@anim/nav_default_enter_anim"
                 app:exitAnim="@anim/nav_default_exit_anim"
                 app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-                app:popExitAnim="@anim/nav_default_pop_exit_anim"
-                app:popUpTo="@+id/headerBiddingFragment"/>
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
         <action
-                android:id="@+id/action_header_bidding_to_admob_interstitial"
-                app:destination="@+id/navigation_admob_interstitial"
-                app:enterAnim="@anim/nav_default_enter_anim"
-                app:exitAnim="@anim/nav_default_exit_anim"
-                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-                app:popExitAnim="@anim/nav_default_pop_exit_anim"
-                app:popUpTo="@+id/headerBiddingFragment"/>
+            android:id="@+id/action_header_bidding_to_admob_interstitial"
+            app:destination="@+id/navigation_admob_interstitial"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
         <action
-                android:id="@+id/action_header_bidding_to_admob_interstitial_random"
-                app:destination="@+id/navigation_admob_interstitial_random"
-                app:enterAnim="@anim/nav_default_enter_anim"
-                app:exitAnim="@anim/nav_default_exit_anim"
-                app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-                app:popExitAnim="@anim/nav_default_pop_exit_anim"
-                app:popUpTo="@+id/headerBiddingFragment"/>
+            android:id="@+id/action_header_bidding_to_admob_interstitial_multiformat"
+            app:destination="@+id/navigation_admob_interstitial"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
         <action
-                android:id="@+id/action_header_bidding_to_admob_rewarded"
+            android:id="@+id/action_header_bidding_to_admob_interstitial_random"
+            app:destination="@+id/navigation_admob_interstitial_random"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+        <action
+            android:id="@+id/action_header_bidding_to_admob_rewarded"
                 app:destination="@+id/navigation_admob_rewarded"
                 app:enterAnim="@anim/nav_default_enter_anim"
                 app:exitAnim="@anim/nav_default_exit_anim"
@@ -445,6 +471,11 @@
         android:label="In-App Interstitial" />
 
     <fragment
+        android:id="@+id/navigation_in_app_interstitial_multiformat"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmInterstitialMultiformatFragment"
+        android:label="In-App Interstitial" />
+
+    <fragment
         android:id="@+id/navigation_in_app_interstitial_close_button_area"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmInterstitialCloseButtonAreaFragment"
         android:label="In-App Interstitial Close Button Area" />
@@ -507,6 +538,11 @@
         android:label="GAM Interstitial" />
 
     <fragment
+        android:id="@+id/navigation_gam_interstitial_multiformat"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamInterstitialMultiformatFragment"
+        android:label="GAM Interstitial" />
+
+    <fragment
         android:id="@+id/navigation_gam_video_rewarded"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamRewardedVideoFragment"
         android:label="GAM Video Rewarded" />
@@ -533,7 +569,7 @@
     <!-- AdMob fragments -->
     <fragment
             android:id="@+id/navigation_admob_banner"
-            android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobBannerFragment"/>
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobBannerFragment" />
     <fragment
         android:id="@+id/navigation_admob_random_banner"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobBannerRandomFragment" />
@@ -541,10 +577,13 @@
         android:id="@+id/navigation_admob_flexible_banner"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobBannerFlexibleFragment" />
     <fragment
-            android:id="@+id/navigation_admob_interstitial"
-            android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobInterstitialFragment"/>
+        android:id="@+id/navigation_admob_interstitial"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobInterstitialFragment" />
     <fragment
-            android:id="@+id/navigation_admob_interstitial_random"
+        android:id="@+id/navigation_admob_interstitial_multiformat"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobInterstitialMultiformatFragment" />
+    <fragment
+        android:id="@+id/navigation_admob_interstitial_random"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobInterstitialRandomFragment" />
     <fragment
         android:id="@+id/navigation_admob_rewarded"
