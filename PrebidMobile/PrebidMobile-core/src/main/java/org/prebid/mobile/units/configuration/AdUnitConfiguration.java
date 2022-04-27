@@ -21,7 +21,7 @@ public class AdUnitConfiguration {
 
     private boolean isRewarded;
     private boolean isBuiltInVideo = false;
-    private boolean isMuted = true;
+    private boolean isMuted = false;
     private boolean isSoundButtonVisible = false;
     private boolean isOriginalAdUnit = false;
 
