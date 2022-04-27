@@ -27,7 +27,7 @@ import org.prebid.mobile.units.configuration.AdFormat;
 
 import java.util.EnumSet;
 
-public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
+public class MediationInterstitialAdUnit extends MediationBaseFullScreenAdUnit {
 
     private static final String TAG = MediationInterstitialAdUnit.class.getSimpleName();
 
@@ -35,9 +35,9 @@ public class MediationInterstitialAdUnit extends MediationBaseAdUnit {
      * Constructor to fetch demand for a display interstitial ad with specified minHeightPercentage and minWidthPercentage
      */
     public MediationInterstitialAdUnit(
-            Context context,
-            String configId,
-            AdSize minSizePercentage,
+        Context context,
+        String configId,
+        AdSize minSizePercentage,
             PrebidMediationDelegate mediationDelegate
     ) {
         super(context, configId, minSizePercentage, mediationDelegate);

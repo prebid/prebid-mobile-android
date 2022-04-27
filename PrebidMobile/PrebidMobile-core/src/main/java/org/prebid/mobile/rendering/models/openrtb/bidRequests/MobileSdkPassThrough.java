@@ -1,5 +1,6 @@
 package org.prebid.mobile.rendering.models.openrtb.bidRequests;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,8 +57,8 @@ public class MobileSdkPassThrough {
      */
     @Nullable
     public static MobileSdkPassThrough combine(
-            @Nullable MobileSdkPassThrough fromBid,
-            @Nullable MobileSdkPassThrough fromRoot
+        @Nullable MobileSdkPassThrough fromBid,
+        @Nullable MobileSdkPassThrough fromRoot
     ) {
         if (fromBid == null && fromRoot == null) {
             return null;
@@ -91,6 +92,48 @@ public class MobileSdkPassThrough {
         return fromBid;
     }
 
+    /**
+     * Combines unified pass through object with rendering controls
+     * from ad unit configuration. Settings from ad unit configuration
+     * have lower priority.
+     */
+    @NonNull
+    public static MobileSdkPassThrough combine(
+        @Nullable MobileSdkPassThrough unifiedPassThrough,
+        @NonNull AdUnitConfiguration configuration
+    ) {
+        MobileSdkPassThrough result;
+        if (unifiedPassThrough == null) {
+            result = new MobileSdkPassThrough();
+        } else {
+            result = unifiedPassThrough;
+        }
+
+        if (result.isMuted == null) {
+            result.isMuted = configuration.isMuted();
+        }
+        if (result.maxVideoDuration == null) {
+            result.maxVideoDuration = configuration.getMaxVideoDuration();
+        }
+        if (result.skipDelay == null) {
+            result.skipDelay = configuration.getSkipDelay();
+        }
+        if (result.skipButtonArea == null) {
+            result.skipButtonArea = configuration.getSkipButtonArea();
+        }
+        if (result.skipButtonPosition == null) {
+            result.skipButtonPosition = configuration.getSkipButtonPosition();
+        }
+        if (result.closeButtonArea == null) {
+            result.closeButtonArea = configuration.getCloseButtonArea();
+        }
+        if (result.closeButtonPosition == null) {
+            result.closeButtonPosition = configuration.getCloseButtonPosition();
+        }
+        return result;
+    }
+
+
     public Boolean isMuted;
 
     public Integer maxVideoDuration;
@@ -103,6 +146,8 @@ public class MobileSdkPassThrough {
     public Position skipButtonPosition;
 
     private JSONObject configuration;
+
+    private MobileSdkPassThrough() {}
 
     private MobileSdkPassThrough(JSONObject passThrough) {
         try {
@@ -148,9 +193,9 @@ public class MobileSdkPassThrough {
     }
 
     private <T> void getAndSave(
-            String key,
-            Class<T> classType,
-            AfterCast<T> afterCast
+        String key,
+        Class<T> classType,
+        AfterCast<T> afterCast
     ) {
         try {
             if (configuration.has(key)) {

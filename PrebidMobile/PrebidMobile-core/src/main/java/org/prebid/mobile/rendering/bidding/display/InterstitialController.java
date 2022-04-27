@@ -23,6 +23,7 @@ import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerList
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.models.AdDetails;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 import org.prebid.mobile.units.configuration.AdFormat;
 import org.prebid.mobile.units.configuration.AdUnitConfiguration;
@@ -94,6 +95,7 @@ public class InterstitialController {
     }
 
     public void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
+        setRenderingControlSettings(adUnitConfiguration, bidResponse);
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(bidResponse, () -> {
             mAdUnitIdentifierType = bidResponse.isVideo()
@@ -132,12 +134,23 @@ public class InterstitialController {
                 break;
             default:
                 LogUtil.error(TAG, "show: Failed. Did you specify correct AdUnitConfigurationType? "
-                        + "Supported types: VAST, INTERSTITIAL. "
-                        + "Provided type: " + mAdUnitIdentifierType);
+                    + "Supported types: VAST, INTERSTITIAL. "
+                    + "Provided type: " + mAdUnitIdentifierType);
         }
     }
 
     public void destroy() {
         mBidInterstitialView.destroy();
     }
+
+    private void setRenderingControlSettings(
+        AdUnitConfiguration adUnitConfiguration,
+        BidResponse bidResponse
+    ) {
+        MobileSdkPassThrough renderingControlSettings = bidResponse.getMobileSdkPassThrough();
+        if (renderingControlSettings != null) {
+            renderingControlSettings.modifyAdUnitConfiguration(adUnitConfiguration);
+        }
+    }
+
 }
