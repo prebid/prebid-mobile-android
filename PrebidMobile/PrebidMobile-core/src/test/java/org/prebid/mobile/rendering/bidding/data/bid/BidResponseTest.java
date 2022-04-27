@@ -78,7 +78,7 @@ public class BidResponseTest {
         MobileSdkPassThrough mobileSdkPassThrough = subject.getMobileSdkPassThrough();
 
         assertNotNull(mobileSdkPassThrough);
-        assertFalse(mobileSdkPassThrough.isMuted);
+        assertTrue(mobileSdkPassThrough.isMuted);
         assertEquals((Double) 0.1, mobileSdkPassThrough.closeButtonArea);
         assertEquals(Position.TOP_LEFT, mobileSdkPassThrough.closeButtonPosition);
         assertEquals((Double) 0.2, mobileSdkPassThrough.skipButtonArea);
