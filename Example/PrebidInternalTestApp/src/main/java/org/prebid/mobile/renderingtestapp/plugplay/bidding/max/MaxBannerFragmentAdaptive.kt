@@ -3,7 +3,7 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.max
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.applovin.mediation.MaxAdFormat
-import com.applovin.mediation.adapters.prebid.utils.MaxBannerMediationUtils
+import com.applovin.mediation.adapters.prebid.utils.MaxMediationBannerUtils
 import com.applovin.mediation.ads.MaxAdView
 import com.applovin.sdk.AppLovinSdkUtils
 import kotlinx.android.synthetic.main.fragment_bidding_banner_applovin_max.*
@@ -23,7 +23,8 @@ class MaxBannerFragmentAdaptive : MaxBannerFragment() {
         adView?.setExtraParameter("adaptive_banner", "true")
         viewContainer.addView(adView)
 
-        val mediationUtils = MaxBannerMediationUtils(adView)
+        val mediationUtils =
+            MaxMediationBannerUtils(adView)
         adUnit = MediationBannerAdUnit(
             requireContext(),
             configId,

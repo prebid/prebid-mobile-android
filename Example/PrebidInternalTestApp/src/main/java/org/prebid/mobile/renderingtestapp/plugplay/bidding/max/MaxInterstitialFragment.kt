@@ -6,7 +6,7 @@ import android.view.View
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxAdListener
 import com.applovin.mediation.MaxError
-import com.applovin.mediation.adapters.prebid.utils.MaxInterstitialMediationUtils
+import com.applovin.mediation.adapters.prebid.utils.MaxMediationInterstitialUtils
 import com.applovin.mediation.ads.MaxInterstitialAd
 import kotlinx.android.synthetic.main.events_max_interstitial.*
 import kotlinx.android.synthetic.main.fragment_bidding_interstitial_applovin_max.*
@@ -44,7 +44,7 @@ open class MaxInterstitialFragment : AdFragment() {
         maxInterstitialAd?.setListener(createListener())
 
         val mediationUtils =
-            MaxInterstitialMediationUtils(
+            MaxMediationInterstitialUtils(
                 maxInterstitialAd
             )
         adUnit = MediationInterstitialAdUnit(

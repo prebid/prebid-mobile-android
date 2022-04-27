@@ -14,14 +14,17 @@ import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
-public class AdMobBannerMediationUtils implements PrebidMediationDelegate {
+public class AdMobMediationBannerUtils implements PrebidMediationDelegate {
 
     private static final String TAG = "BannerMediationUtils";
 
     private final Bundle extras;
     private final WeakReference<AdView> adView;
 
-    public AdMobBannerMediationUtils(Bundle adMobExtrasBundle, AdView adView) {
+    public AdMobMediationBannerUtils(
+        Bundle adMobExtrasBundle,
+        AdView adView
+    ) {
         this.extras = adMobExtrasBundle;
         this.adView = new WeakReference<>(adView);
     }

@@ -7,7 +7,7 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.admob.AdMobBannerMediationUtils
+import org.prebid.mobile.admob.AdMobMediationBannerUtils
 import org.prebid.mobile.admob.PrebidBannerAdapter
 import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
 import com.google.android.gms.ads.AdSize as GamAdSize
@@ -35,7 +35,8 @@ class AdMobBannerFlexibleFragment : AdMobBannerFragment() {
             .Builder()
             .addCustomEventExtrasBundle(PrebidBannerAdapter::class.java, adRequestExtras!!)
             .build()
-        val mediationUtils = AdMobBannerMediationUtils(adRequestExtras, bannerView)
+        val mediationUtils =
+            AdMobMediationBannerUtils(adRequestExtras, bannerView)
 
 
         adUnit = MediationBannerAdUnit(

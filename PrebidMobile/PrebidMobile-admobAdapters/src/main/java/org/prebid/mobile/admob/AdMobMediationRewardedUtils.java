@@ -7,11 +7,11 @@ import org.prebid.mobile.rendering.bidding.display.PrebidMediationDelegate;
 
 import java.util.HashMap;
 
-public class AdMobRewardedMediationUtils implements PrebidMediationDelegate {
+public class AdMobMediationRewardedUtils implements PrebidMediationDelegate {
 
     private final Bundle extras;
 
-    public AdMobRewardedMediationUtils(Bundle adMobExtrasBundle) {
+    public AdMobMediationRewardedUtils(Bundle adMobExtrasBundle) {
         this.extras = adMobExtrasBundle;
     }
 

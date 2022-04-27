@@ -11,7 +11,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import kotlinx.android.synthetic.main.events_admob_rewarded.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
-import org.prebid.mobile.admob.AdMobInterstitialMediationUtils
+import org.prebid.mobile.admob.AdMobMediationInterstitialUtils
 import org.prebid.mobile.admob.PrebidInterstitialAdapter
 import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit
 import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
@@ -45,7 +45,7 @@ open class AdMobInterstitialFragment : AdFragment() {
 
     override fun initAd(): Any? {
         extras = Bundle()
-        val mediationUtils = AdMobInterstitialMediationUtils(extras)
+        val mediationUtils = AdMobMediationInterstitialUtils(extras)
 
         isVideo = arguments?.getBoolean(ARG_IS_VIDEO) ?: false
         var adUnitFormat = EnumSet.of(AdUnitFormat.DISPLAY)

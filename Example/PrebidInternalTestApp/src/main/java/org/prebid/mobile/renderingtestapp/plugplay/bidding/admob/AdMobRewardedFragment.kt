@@ -11,7 +11,7 @@ import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import kotlinx.android.synthetic.main.events_admob_rewarded.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
-import org.prebid.mobile.admob.AdMobRewardedMediationUtils
+import org.prebid.mobile.admob.AdMobMediationRewardedUtils
 import org.prebid.mobile.admob.PrebidRewardedAdapter
 import org.prebid.mobile.rendering.bidding.display.MediationRewardedVideoAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
@@ -41,7 +41,7 @@ open class AdMobRewardedFragment : AdFragment() {
 
     override fun initAd(): Any? {
         extras = Bundle()
-        val mediationUtils = AdMobRewardedMediationUtils(extras)
+        val mediationUtils = AdMobMediationRewardedUtils(extras)
         adUnit = MediationRewardedVideoAdUnit(activity, configId, mediationUtils)
         return adUnit
     }
