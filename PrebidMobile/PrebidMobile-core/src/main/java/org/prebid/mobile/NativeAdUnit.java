@@ -3,11 +3,11 @@ package org.prebid.mobile;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import org.json.JSONObject;
+import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.configuration.NativeAdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
-import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.units.configuration.AdFormat;
-import org.prebid.mobile.units.configuration.NativeAdUnitConfiguration;
 
 import java.util.HashMap;
 

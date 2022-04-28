@@ -3,10 +3,10 @@ package org.prebid.mobile.prebidkotlindemo.ads.inappgam
 import android.app.Activity
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.PrebidMobile
+import org.prebid.mobile.api.exceptions.AdException
+import org.prebid.mobile.api.rendering.InterstitialAdUnit
+import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
-import org.prebid.mobile.rendering.bidding.listeners.InterstitialAdUnitListener
-import org.prebid.mobile.rendering.bidding.parallel.InterstitialAdUnit
-import org.prebid.mobile.rendering.errors.AdException
 
 object InAppGamInterstitial {
 
@@ -21,10 +21,12 @@ object InAppGamInterstitial {
         storedAuctionResponse: String
     ) {
         val eventHandler = GamInterstitialEventHandler(activity, adUnitId)
-        adUnit = InterstitialAdUnit(activity, configId, eventHandler)
+        adUnit =
+            InterstitialAdUnit(activity, configId, eventHandler)
         PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
         adUnit?.setMinSizePercentage(AdSize(minPercentageWidth, minPercentageHeight))
-        adUnit?.setInterstitialAdUnitListener(object : InterstitialAdUnitListener {
+        adUnit?.setInterstitialAdUnitListener(object :
+            InterstitialAdUnitListener {
             override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
                 adUnit?.show()
             }

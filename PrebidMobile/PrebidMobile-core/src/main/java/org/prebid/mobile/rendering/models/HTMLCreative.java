@@ -23,7 +23,9 @@ import android.view.ViewGroup;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.interstitial.InterstitialManagerDisplayDelegate;
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
 import org.prebid.mobile.rendering.listeners.WebViewDelegate;
@@ -39,8 +41,6 @@ import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBase;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
-import org.prebid.mobile.units.configuration.AdFormat;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.EnumSet;
 

@@ -18,7 +18,7 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam
 
 import android.os.Bundle
 import com.google.android.gms.ads.AdLoader
-import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
+import org.prebid.mobile.api.mediation.MediationNativeAdUnit
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseFeedFragment
 import org.prebid.mobile.renderingtestapp.utils.adapters.BaseFeedAdapter
 import org.prebid.mobile.renderingtestapp.utils.adapters.NativeGamFeedAdapter

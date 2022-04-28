@@ -18,9 +18,9 @@ package org.prebid.mobile.rendering.models;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
 import org.prebid.mobile.rendering.video.OmEventTracker;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 

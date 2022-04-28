@@ -21,9 +21,9 @@ import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.events_bids.*
 import kotlinx.android.synthetic.main.fragment_bidding_interstitial.*
-import org.prebid.mobile.rendering.bidding.listeners.RewardedAdUnitListener
-import org.prebid.mobile.rendering.bidding.parallel.RewardedAdUnit
-import org.prebid.mobile.rendering.errors.AdException
+import org.prebid.mobile.api.exceptions.AdException
+import org.prebid.mobile.api.rendering.RewardedAdUnit
+import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
@@ -76,7 +76,8 @@ abstract class BaseBidRewardedFragment : AdFragment() {
         }
     }
 
-    protected fun createRewardedAdUnitListener() = object : RewardedAdUnitListener {
+    protected fun createRewardedAdUnitListener() = object :
+        RewardedAdUnitListener {
 
         override fun onAdLoaded(rewardedAdUnit: RewardedAdUnit?) {
             Log.d(TAG, "onAdLoaded() called with: reward = [${rewardedAdUnit?.userReward}]")

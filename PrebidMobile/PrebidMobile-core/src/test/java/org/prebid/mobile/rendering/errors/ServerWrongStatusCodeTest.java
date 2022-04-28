@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.errors;
 
 import org.junit.Test;
+import org.prebid.mobile.api.exceptions.AdException;
 
 import static org.junit.Assert.assertEquals;
 

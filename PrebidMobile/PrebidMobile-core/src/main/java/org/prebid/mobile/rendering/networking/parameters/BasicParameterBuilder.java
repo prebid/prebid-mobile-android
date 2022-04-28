@@ -22,6 +22,8 @@ import android.util.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.*;
+import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
@@ -33,8 +35,6 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.units.configuration.AdFormat;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.*;
 

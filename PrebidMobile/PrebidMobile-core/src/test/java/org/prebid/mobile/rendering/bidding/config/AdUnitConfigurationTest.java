@@ -20,7 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.AdSize;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 

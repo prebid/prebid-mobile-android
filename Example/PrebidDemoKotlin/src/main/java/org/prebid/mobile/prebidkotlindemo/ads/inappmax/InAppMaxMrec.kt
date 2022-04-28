@@ -12,7 +12,7 @@ import com.applovin.mediation.adapters.prebid.utils.MaxMediationBannerUtils
 import com.applovin.mediation.ads.MaxAdView
 import com.applovin.sdk.AppLovinSdkUtils
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
+import org.prebid.mobile.api.mediation.MediationBannerAdUnit
 
 
 object InAppMaxMrec {

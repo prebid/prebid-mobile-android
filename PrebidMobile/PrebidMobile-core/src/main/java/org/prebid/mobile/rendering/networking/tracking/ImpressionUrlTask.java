@@ -17,7 +17,7 @@
 package org.prebid.mobile.rendering.networking.tracking;
 
 import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.BaseResponseHandler;
 

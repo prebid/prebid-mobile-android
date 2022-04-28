@@ -16,7 +16,7 @@
 
 package org.prebid.mobile.rendering.models.internal;
 
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.parser.AdResponseParserBase;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 

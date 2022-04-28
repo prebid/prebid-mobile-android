@@ -9,7 +9,7 @@ import com.google.android.gms.ads.initialization.InitializationStatus
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.admob.AdMobMediationBannerUtils
 import org.prebid.mobile.admob.PrebidBannerAdapter
-import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
+import org.prebid.mobile.api.mediation.MediationBannerAdUnit
 
 object InAppAdMobBanner {
 

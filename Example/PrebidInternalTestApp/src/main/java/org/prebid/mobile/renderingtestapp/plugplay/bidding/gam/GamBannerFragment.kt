@@ -22,15 +22,16 @@ import android.view.View
 import kotlinx.android.synthetic.main.events_bids.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import org.prebid.mobile.AdSize
+import org.prebid.mobile.api.exceptions.AdException
+import org.prebid.mobile.api.rendering.BannerView
+import org.prebid.mobile.api.rendering.listeners.BannerViewListener
 import org.prebid.mobile.eventhandlers.GamBannerEventHandler
-import org.prebid.mobile.rendering.bidding.listeners.BannerViewListener
-import org.prebid.mobile.rendering.bidding.parallel.BannerView
-import org.prebid.mobile.rendering.errors.AdException
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 
-open class GamBannerFragment : AdFragment(), BannerViewListener {
+open class GamBannerFragment : AdFragment(),
+    BannerViewListener {
     private val TAG = GamBannerFragment::class.java.simpleName
 
     override val layoutRes = R.layout.fragment_bidding_banner
@@ -101,9 +102,11 @@ open class GamBannerFragment : AdFragment(), BannerViewListener {
     }
 
     protected open fun initBanner(configId: String?, eventHandler: GamBannerEventHandler): BannerView {
-        return BannerView(requireContext(),
-                configId,
-                eventHandler)
+        return BannerView(
+            requireContext(),
+            configId,
+            eventHandler
+        )
     }
 
     protected open fun getGamAdSizeArray(initialSize: AdSize) = arrayOf(initialSize)

@@ -25,7 +25,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.interstitial.InterstitialManagerVideoDelegate;
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
 import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
@@ -39,7 +40,6 @@ import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.io.File;
 import java.lang.ref.WeakReference;

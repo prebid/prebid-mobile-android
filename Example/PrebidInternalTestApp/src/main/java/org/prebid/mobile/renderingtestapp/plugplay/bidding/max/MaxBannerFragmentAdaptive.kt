@@ -8,7 +8,7 @@ import com.applovin.mediation.ads.MaxAdView
 import com.applovin.sdk.AppLovinSdkUtils
 import kotlinx.android.synthetic.main.fragment_bidding_banner_applovin_max.*
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
+import org.prebid.mobile.api.mediation.MediationBannerAdUnit
 
 class MaxBannerFragmentAdaptive : MaxBannerFragment() {
 

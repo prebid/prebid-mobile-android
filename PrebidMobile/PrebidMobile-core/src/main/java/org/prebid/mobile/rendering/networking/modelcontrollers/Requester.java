@@ -20,7 +20,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.listeners.AdIdFetchListener;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
@@ -35,7 +36,6 @@ import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

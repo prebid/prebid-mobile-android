@@ -21,16 +21,17 @@ import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.events_bids.*
 import kotlinx.android.synthetic.main.fragment_bidding_interstitial.*
-import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
-import org.prebid.mobile.rendering.bidding.listeners.InterstitialAdUnitListener
-import org.prebid.mobile.rendering.bidding.parallel.InterstitialAdUnit
-import org.prebid.mobile.rendering.errors.AdException
+import org.prebid.mobile.api.data.AdUnitFormat
+import org.prebid.mobile.api.exceptions.AdException
+import org.prebid.mobile.api.rendering.InterstitialAdUnit
+import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamInterstitialFragment
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 
-abstract class BaseBidInterstitialFragment : AdFragment(), InterstitialAdUnitListener {
+abstract class BaseBidInterstitialFragment : AdFragment(),
+    InterstitialAdUnitListener {
     private val TAG = GamInterstitialFragment::class.java.simpleName
 
     override val layoutRes = R.layout.fragment_bidding_interstitial

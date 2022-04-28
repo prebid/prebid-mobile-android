@@ -2,8 +2,8 @@ package org.prebid.mobile;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.prebid.mobile.units.configuration.AdFormat;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
+import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 
 import java.util.ArrayList;
 

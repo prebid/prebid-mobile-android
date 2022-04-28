@@ -24,7 +24,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.loading.AdLoadListener;
 import org.prebid.mobile.rendering.loading.VastParserExtractor;
 import org.prebid.mobile.rendering.models.internal.VastExtractorResult;
@@ -38,7 +39,6 @@ import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;
 import org.prebid.mobile.test.utils.ResourceUtils;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 

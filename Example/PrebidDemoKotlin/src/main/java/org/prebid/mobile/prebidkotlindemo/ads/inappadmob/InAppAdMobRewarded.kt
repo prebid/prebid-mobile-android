@@ -10,7 +10,7 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.admob.AdMobMediationRewardedUtils
 import org.prebid.mobile.admob.PrebidRewardedAdapter
-import org.prebid.mobile.rendering.bidding.display.MediationRewardedVideoAdUnit
+import org.prebid.mobile.api.mediation.MediationRewardedVideoAdUnit
 
 object InAppAdMobRewarded {
 
@@ -31,7 +31,11 @@ object InAppAdMobRewarded {
             .build()
         val mediationUtils = AdMobMediationRewardedUtils(extras)
         PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
-        adUnit = MediationRewardedVideoAdUnit(activity, configId, mediationUtils)
+        adUnit = MediationRewardedVideoAdUnit(
+            activity,
+            configId,
+            mediationUtils
+        )
         adUnit?.fetchDemand { result ->
             Log.d("Prebid", "Fetch demand result: $result")
 

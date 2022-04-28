@@ -20,11 +20,11 @@ import android.util.Log
 import android.widget.Button
 import kotlinx.android.synthetic.main.fragment_interstitial_html_with_banners.*
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.rendering.bidding.listeners.BannerViewListener
-import org.prebid.mobile.rendering.bidding.listeners.InterstitialAdUnitListener
-import org.prebid.mobile.rendering.bidding.parallel.BannerView
-import org.prebid.mobile.rendering.bidding.parallel.InterstitialAdUnit
-import org.prebid.mobile.rendering.errors.AdException
+import org.prebid.mobile.api.rendering.listeners.BannerViewListener
+import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
+import org.prebid.mobile.api.rendering.BannerView
+import org.prebid.mobile.api.rendering.InterstitialAdUnit
+import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBannersWithInterstitialFragment
 import org.prebid.mobile.renderingtestapp.utils.getAdDescription
@@ -60,14 +60,19 @@ open class PpmBannersWithInterstitialFragment : BaseBannersWithInterstitialFragm
     }
 
     open fun initBannerView(configId: String, refreshIntervalSec: Int, impressionCounterButton: Button?): BannerView {
-        val bannerView = BannerView(requireContext(), configId, AdSize(BANNER_WIDTH, BANNER_HEIGHT))
+        val bannerView = BannerView(
+            requireContext(),
+            configId,
+            AdSize(BANNER_WIDTH, BANNER_HEIGHT)
+        )
         bannerView.setAutoRefreshDelay(refreshIntervalSec)
         bannerView.setBannerListener(getBannerAdListener(configId, refreshIntervalSec, impressionCounterButton))
         return bannerView
     }
 
     open fun initInterstitialAdUnit(configId: String): InterstitialAdUnit {
-        val interstitialAdUnit = InterstitialAdUnit(requireContext(), configId)
+        val interstitialAdUnit =
+            InterstitialAdUnit(requireContext(), configId)
         interstitialAdUnit.setMinSizePercentage(AdSize(30, 30))
         interstitialAdUnit.setInterstitialAdUnitListener(getInterstitialAdListener())
         return interstitialAdUnit

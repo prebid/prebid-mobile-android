@@ -18,16 +18,15 @@ package org.prebid.mobile.eventhandlers;
 
 import android.app.Activity;
 import android.os.Handler;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
-import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -35,15 +34,9 @@ import org.robolectric.annotation.Config;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 21)

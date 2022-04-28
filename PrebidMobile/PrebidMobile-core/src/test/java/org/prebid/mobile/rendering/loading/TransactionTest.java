@@ -22,7 +22,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.models.CreativeModel;
 import org.prebid.mobile.rendering.models.CreativeModelsMaker;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;

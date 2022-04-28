@@ -2,10 +2,10 @@ package org.prebid.mobile.prebidkotlindemo.ads.inappgam
 
 import android.app.Activity
 import org.prebid.mobile.PrebidMobile
+import org.prebid.mobile.api.exceptions.AdException
+import org.prebid.mobile.api.rendering.RewardedAdUnit
+import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener
 import org.prebid.mobile.eventhandlers.GamRewardedEventHandler
-import org.prebid.mobile.rendering.bidding.listeners.RewardedAdUnitListener
-import org.prebid.mobile.rendering.bidding.parallel.RewardedAdUnit
-import org.prebid.mobile.rendering.errors.AdException
 
 object InAppGamRewardedInterstitial {
 
@@ -20,7 +20,8 @@ object InAppGamRewardedInterstitial {
         PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
         val eventHandler = GamRewardedEventHandler(activity, adUnitId)
         adUnit = RewardedAdUnit(activity, configId, eventHandler)
-        adUnit?.setRewardedAdUnitListener(object : RewardedAdUnitListener {
+        adUnit?.setRewardedAdUnitListener(object :
+            RewardedAdUnitListener {
             override fun onAdLoaded(rewardedAdUnit: RewardedAdUnit?) {
                 adUnit?.show()
             }

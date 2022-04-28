@@ -18,7 +18,9 @@ package org.prebid.mobile.rendering.models;
 
 import androidx.annotation.NonNull;
 import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.errors.VastParseError;
 import org.prebid.mobile.rendering.loading.AdLoadListener;
 import org.prebid.mobile.rendering.networking.tracking.TrackingManager;
@@ -30,8 +32,6 @@ import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;
 import org.prebid.mobile.rendering.video.vast.Tracking;
 import org.prebid.mobile.rendering.video.vast.*;
-import org.prebid.mobile.units.configuration.AdFormat;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.ArrayList;
 

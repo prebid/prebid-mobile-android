@@ -18,11 +18,11 @@ package org.prebid.mobile.rendering.networking.modelcontrollers;
 
 import android.content.Context;
 import android.text.TextUtils;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.parameters.AdRequestInput;
 import org.prebid.mobile.rendering.networking.urlBuilder.BidPathBuilder;
 import org.prebid.mobile.rendering.networking.urlBuilder.PathBuilderBase;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 public class BidRequester extends Requester {
 

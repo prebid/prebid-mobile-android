@@ -20,7 +20,8 @@ import android.content.Context;
 import android.view.View;
 import androidx.annotation.NonNull;
 import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.listeners.CreativeResolutionListener;
 import org.prebid.mobile.rendering.listeners.CreativeViewListener;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
@@ -29,7 +30,6 @@ import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.lang.ref.WeakReference;
 

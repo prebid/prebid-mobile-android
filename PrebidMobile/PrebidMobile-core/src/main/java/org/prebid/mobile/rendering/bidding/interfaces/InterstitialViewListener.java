@@ -16,8 +16,8 @@
 
 package org.prebid.mobile.rendering.bidding.interfaces;
 
-import org.prebid.mobile.rendering.bidding.display.InterstitialView;
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.InterstitialView;
 import org.prebid.mobile.rendering.models.AdDetails;
 
 public interface InterstitialViewListener {

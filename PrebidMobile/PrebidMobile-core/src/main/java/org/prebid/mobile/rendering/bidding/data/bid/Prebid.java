@@ -22,8 +22,8 @@ import org.json.JSONObject;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.HashMap;
 import java.util.Iterator;

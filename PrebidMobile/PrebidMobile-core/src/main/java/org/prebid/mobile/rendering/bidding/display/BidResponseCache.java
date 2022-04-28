@@ -77,17 +77,24 @@ public class BidResponseCache {
      * @param key      Custom key to store response
      * @param response Parsed bid response
      */
-    void putBidResponse(String key, BidResponse response) {
+    public void putBidResponse(
+        String key,
+        BidResponse response
+    ) {
         trimCache();
         // Ignore request when max size is reached.
         if (sCachedBidResponses.size() >= MAX_SIZE) {
-            LogUtil.error(TAG,
-                    "Unable to cache BidResponse. Please destroy some via #destroy() and try again.");
+            LogUtil.error(
+                TAG,
+                "Unable to cache BidResponse. Please destroy some via #destroy() and try again."
+            );
             return;
         }
         if (TextUtils.isEmpty(key)) {
-            LogUtil.error(TAG,
-                    "Unable to cache BidResponse. Key is empty or null.");
+            LogUtil.error(
+                TAG,
+                "Unable to cache BidResponse. Key is empty or null."
+            );
             return;
         }
 

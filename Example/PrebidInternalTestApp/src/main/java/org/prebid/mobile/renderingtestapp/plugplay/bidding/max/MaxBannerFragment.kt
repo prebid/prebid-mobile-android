@@ -14,7 +14,7 @@ import com.applovin.sdk.AppLovinSdkUtils
 import kotlinx.android.synthetic.main.events_max_banner.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner_applovin_max.*
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
+import org.prebid.mobile.api.mediation.MediationBannerAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment

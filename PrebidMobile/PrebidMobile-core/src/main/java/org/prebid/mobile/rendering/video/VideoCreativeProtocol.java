@@ -17,7 +17,7 @@
 package org.prebid.mobile.rendering.video;
 
 import android.content.Context;
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.models.AbstractCreative;
 import org.prebid.mobile.rendering.models.CreativeModel;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;

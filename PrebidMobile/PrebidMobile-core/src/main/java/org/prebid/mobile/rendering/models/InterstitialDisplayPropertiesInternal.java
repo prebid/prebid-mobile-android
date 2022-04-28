@@ -17,7 +17,7 @@
 package org.prebid.mobile.rendering.models;
 
 import android.content.pm.ActivityInfo;
-import org.prebid.mobile.units.configuration.Position;
+import org.prebid.mobile.api.data.Position;
 
 public class InterstitialDisplayPropertiesInternal extends InterstitialDisplayPropertiesPublic {
 

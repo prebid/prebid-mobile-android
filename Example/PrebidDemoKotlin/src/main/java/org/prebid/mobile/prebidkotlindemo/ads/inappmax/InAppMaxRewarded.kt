@@ -7,7 +7,7 @@ import com.applovin.mediation.MaxReward
 import com.applovin.mediation.MaxRewardedAdListener
 import com.applovin.mediation.adapters.prebid.utils.MaxMediationRewardedUtils
 import com.applovin.mediation.ads.MaxRewardedAd
-import org.prebid.mobile.rendering.bidding.display.MediationRewardedVideoAdUnit
+import org.prebid.mobile.api.mediation.MediationRewardedVideoAdUnit
 
 object InAppMaxRewarded {
 

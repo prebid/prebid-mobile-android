@@ -10,8 +10,8 @@ import com.applovin.mediation.adapters.prebid.utils.MaxMediationInterstitialUtil
 import com.applovin.mediation.ads.MaxInterstitialAd
 import kotlinx.android.synthetic.main.events_max_interstitial.*
 import kotlinx.android.synthetic.main.fragment_bidding_interstitial_applovin_max.*
-import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit
-import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
+import org.prebid.mobile.api.mediation.MediationInterstitialAdUnit
+import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment

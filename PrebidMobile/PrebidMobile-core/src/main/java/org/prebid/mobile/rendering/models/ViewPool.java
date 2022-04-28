@@ -19,14 +19,14 @@ package org.prebid.mobile.rendering.models;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.View;
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
 import org.prebid.mobile.rendering.video.ExoPlayerView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewBanner;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
-import org.prebid.mobile.units.configuration.AdFormat;
 
 import java.util.ArrayList;
 

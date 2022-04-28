@@ -23,12 +23,12 @@ import android.widget.FrameLayout;
 import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.utils.broadcast.local.EventForwardingLocalBroadcastReceiver;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 /**
  * This class provides common functionality for Interstitial and Banner ads.

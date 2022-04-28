@@ -23,7 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;

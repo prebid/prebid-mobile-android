@@ -3,8 +3,8 @@ package org.prebid.mobile.prebidkotlindemo.ads.inapp
 import android.view.ViewGroup
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.rendering.bidding.enums.VideoPlacementType
-import org.prebid.mobile.rendering.bidding.parallel.BannerView
+import org.prebid.mobile.api.data.VideoPlacementType
+import org.prebid.mobile.api.rendering.BannerView
 
 object InAppVideoBanner {
 
@@ -18,7 +18,11 @@ object InAppVideoBanner {
         configId: String,
         storedAuctionResponse: String
     ) {
-        bannerView = BannerView(wrapper.context, configId, AdSize(width, height))
+        bannerView = BannerView(
+            wrapper.context,
+            configId,
+            AdSize(width, height)
+        )
         wrapper.addView(bannerView)
         PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
 

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import org.prebid.mobile.NativeAsset;
 import org.prebid.mobile.NativeEventTracker;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.units.configuration.NativeAdUnitConfiguration;
+import org.prebid.mobile.configuration.NativeAdUnitConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -16,8 +16,8 @@
 
 package org.prebid.mobile.rendering.models;
 
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.parser.AdResponseParserBase;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.List;
 

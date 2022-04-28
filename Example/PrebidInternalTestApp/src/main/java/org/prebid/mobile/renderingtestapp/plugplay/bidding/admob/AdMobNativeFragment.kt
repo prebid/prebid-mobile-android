@@ -12,7 +12,7 @@ import com.google.android.gms.ads.nativead.NativeAdOptions
 import kotlinx.android.synthetic.main.events_admob_native.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import org.prebid.mobile.admob.PrebidNativeAdapter
-import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
+import org.prebid.mobile.api.mediation.MediationNativeAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.ViewNativeAdBinding
