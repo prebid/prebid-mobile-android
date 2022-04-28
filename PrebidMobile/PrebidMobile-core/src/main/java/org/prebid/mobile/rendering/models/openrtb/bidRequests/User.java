@@ -21,7 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.DataObject;
-import org.prebid.mobile.ExtObject;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class User extends BaseBid {
     public Geo geo = null;
     public String customData = null;
     public String id = null;
-    public ExtObject ext = null;
+    public Ext ext = null;
     public String buyerUid = null;
     public ArrayList<DataObject> dataObjects = new ArrayList<>();
 
@@ -78,14 +77,14 @@ public class User extends BaseBid {
         this.geo = geo;
     }
 
-    public ExtObject getExt() {
+    public Ext getExt() {
         if (ext == null) {
-            ext = new ExtObject();
+            ext = new Ext();
         }
         return ext;
     }
 
-    public void setExt(ExtObject ext) {
+    public void setExt(Ext ext) {
         this.ext = ext;
     }
 

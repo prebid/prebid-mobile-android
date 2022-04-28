@@ -22,6 +22,7 @@ import android.util.Pair;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.json.JSONArray;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 
 import java.util.*;
 
@@ -48,7 +49,7 @@ public class TargetingParams {
     private static String omidPartnerVersion;
     private static String userCustomData;
     private static Pair<Float, Float> userLatLon;
-    private static ExtObject userExt;
+    private static Ext userExt;
     private static JSONArray extendedUserIds;
 
 
@@ -704,11 +705,11 @@ public class TargetingParams {
      *
      * @param ext Placeholder for exchange-specific extensions to OpenRTB.
      */
-    public static void setUserExt(ExtObject ext) {
+    public static void setUserExt(Ext ext) {
         userExt = ext;
     }
 
-    public static ExtObject getUserExt() {
+    public static Ext getUserExt() {
         return userExt;
     }
 

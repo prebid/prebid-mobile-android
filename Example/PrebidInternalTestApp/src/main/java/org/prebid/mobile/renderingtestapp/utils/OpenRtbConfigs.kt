@@ -17,8 +17,8 @@
 package org.prebid.mobile.renderingtestapp.utils
 
 import com.google.gson.Gson
-import org.prebid.mobile.ExtObject
 import org.prebid.mobile.TargetingParams
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext
 import java.lang.reflect.InvocationTargetException
 
 object OpenRtbConfigs {
@@ -56,7 +56,7 @@ object OpenRtbConfigs {
             TargetingParams.setPublisherName(openRtbExtra.publisherName)
         }
         if (openRtbExtra.userExt?.isNotEmpty() == true) {
-            val ext = ExtObject()
+            val ext = Ext()
             val gson = Gson()
             for (key in openRtbExtra.userExt.keys) {
                 ext.put(key, gson.toJson(openRtbExtra.userExt[key]))

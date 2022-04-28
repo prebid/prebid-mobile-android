@@ -245,7 +245,7 @@ public class BasicParameterBuilderTest {
         TargetingParams.setUserCustomData(USER_CUSTOM);
         TargetingParams.setGender(TargetingParams.GENDER.MALE);
         TargetingParams.setBuyerId(USER_BUYER_ID);
-        TargetingParams.setUserExt(new ExtObject());
+        TargetingParams.setUserExt(new Ext());
         TargetingParams.setUserLatLng(USER_LAT, USER_LON);
 
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
@@ -390,7 +390,7 @@ public class BasicParameterBuilderTest {
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
-        Ext impExt = adRequestInput.getBidRequest().getImp().get(0).getExt();
+        org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext impExt = adRequestInput.getBidRequest().getImp().get(0).getExt();
         assertTrue(impExt.getMap().containsKey("context"));
         JSONObject contextDataJson = ((JSONObject) impExt.getMap().get("context")).getJSONObject("data");
         assertTrue(contextDataJson.has("context"));
@@ -563,7 +563,7 @@ public class BasicParameterBuilderTest {
         user.buyerUid = USER_BUYER_ID;
         List<ExternalUserId> extendedUserIds = TargetingParams.fetchStoredExternalUserIds();
         if (extendedUserIds != null && extendedUserIds.size() > 0) {
-            user.ext = new ExtObject();
+            user.ext = new Ext();
             JSONArray idsJson = new JSONArray();
             for (ExternalUserId id : extendedUserIds) {
                 idsJson.put(id.getJson());
