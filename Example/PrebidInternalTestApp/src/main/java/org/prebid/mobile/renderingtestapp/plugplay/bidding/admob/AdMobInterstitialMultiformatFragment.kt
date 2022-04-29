@@ -2,8 +2,8 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.admob
 
 import android.os.Bundle
 import org.prebid.mobile.admob.AdMobMediationInterstitialUtils
-import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit
-import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
+import org.prebid.mobile.api.data.AdUnitFormat
+import org.prebid.mobile.api.mediation.MediationInterstitialAdUnit
 import java.util.*
 
 open class AdMobInterstitialMultiformatFragment : AdMobInterstitialFragment() {

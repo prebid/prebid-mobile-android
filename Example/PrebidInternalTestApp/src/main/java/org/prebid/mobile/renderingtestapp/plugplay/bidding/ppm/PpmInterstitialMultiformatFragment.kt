@@ -16,8 +16,9 @@
 
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 
-import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
-import org.prebid.mobile.rendering.bidding.parallel.InterstitialAdUnit
+import org.prebid.mobile.AdSize
+import org.prebid.mobile.api.data.AdUnitFormat
+import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
 import java.util.*
 
@@ -29,5 +30,6 @@ open class PpmInterstitialMultiformatFragment : BaseBidInterstitialFragment() {
         interstitialAdUnit =
             InterstitialAdUnit(requireContext(), configId, EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO))
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
+        interstitialAdUnit?.setMinSizePercentage(AdSize(30, 30))
     }
 }
