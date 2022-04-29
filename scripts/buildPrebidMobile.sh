@@ -130,8 +130,11 @@ for n in ${!modules[@]}; do
 
 	# Creating a JAR File
 
-	jar cf ${modules[$n]}.jar org* META-INF*
-
+  if [ "${modules[$n]}" == "PrebidMobile-maxAdapters" ]; then
+    jar cf ${modules[$n]}.jar org* com* META-INF*
+  else
+    jar cf ${modules[$n]}.jar org* META-INF*
+  fi
 
 	# move jar into a result direcotory
 	mv ${modules[$n]}.jar $OUTDIR

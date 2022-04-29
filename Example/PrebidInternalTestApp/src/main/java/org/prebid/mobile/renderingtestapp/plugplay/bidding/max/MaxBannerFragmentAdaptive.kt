@@ -23,8 +23,7 @@ class MaxBannerFragmentAdaptive : MaxBannerFragment() {
         adView?.setExtraParameter("adaptive_banner", "true")
         viewContainer.addView(adView)
 
-        val mediationUtils =
-            MaxMediationBannerUtils(adView)
+        val mediationUtils = MaxMediationBannerUtils(adView)
         adUnit = MediationBannerAdUnit(
             requireContext(),
             configId,
