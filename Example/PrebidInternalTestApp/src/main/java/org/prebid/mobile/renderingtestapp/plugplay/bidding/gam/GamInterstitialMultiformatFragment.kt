@@ -16,6 +16,7 @@
 
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam
 
+import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
@@ -38,5 +39,6 @@ open class GamInterstitialMultiformatFragment : BaseBidInterstitialFragment() {
             interstitialEventHandler
         )
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
+        interstitialAdUnit?.setMinSizePercentage(AdSize(30, 30))
     }
 }
