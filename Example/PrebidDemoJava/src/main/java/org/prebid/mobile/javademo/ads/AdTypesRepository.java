@@ -157,10 +157,10 @@ public class AdTypesRepository {
                 new AdType(
                     "Video Interstitial",
                     (activity, wrapper, autoRefreshTime) -> {
-                        PrebidMobile.setStoredAuctionResponse("response-prebid-video-interstitial-320-480");
+                        PrebidMobile.setStoredAuctionResponse("response-prebid-video-interstitial-320-480-original-api");
                         GamVideoInterstitial.create(
                             activity,
-                            "/21808260008/prebid_oxb_320x480_interstitial_video_static",
+                            "/21808260008/prebid-demo-app-original-api-video-interstitial",
                             "imp-prebid-video-interstitial-320-480",
                             autoRefreshTime
                         );

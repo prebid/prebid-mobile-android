@@ -31,6 +31,7 @@ class MaxBannerFragmentAdaptive : MaxBannerFragment() {
             AdSize(width, height),
             mediationUtils
         )
+        adUnit?.addAdditionalSizes(AdSize(728, 90))
         adUnit?.setRefreshInterval(refreshDelay)
         return adUnit
     }
