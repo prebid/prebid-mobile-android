@@ -17,10 +17,10 @@
 package org.prebid.mobile.rendering.bidding.data.bid;
 
 import org.junit.Test;
+import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.test.utils.ResourceUtils;
-import org.prebid.mobile.units.configuration.Position;
 
 import java.io.IOException;
 

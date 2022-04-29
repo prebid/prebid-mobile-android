@@ -23,8 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.rendering.bidding.display.InterstitialView;
-import org.prebid.mobile.rendering.bidding.display.VideoView;
+import org.prebid.mobile.api.rendering.InterstitialView;
+import org.prebid.mobile.api.rendering.VideoView;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.interstitial.*;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
@@ -33,7 +34,6 @@ import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.webview.PrebidWebViewInterstitial;
 import org.prebid.mobile.rendering.views.webview.WebViewBanner;
 import org.prebid.mobile.rendering.views.webview.WebViewBase;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.Stack;
 

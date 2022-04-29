@@ -20,8 +20,8 @@ import android.util.Pair;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.ExtObject;
 import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.networking.parameters.UserParameters;
 import org.robolectric.RobolectricTestRunner;
 
@@ -91,7 +91,7 @@ public class TargetingParamsTest {
 
     @Test
     public void setUserExt_EqualToGetUserExt() {
-        final ExtObject expected = new ExtObject();
+        final Ext expected = new Ext();
         expected.put("external", "value");
 
         TargetingParams.setUserExt(expected);

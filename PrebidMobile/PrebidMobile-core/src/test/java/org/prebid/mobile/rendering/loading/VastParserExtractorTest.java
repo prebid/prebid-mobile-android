@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.models.internal.VastExtractorResult;
 import org.prebid.mobile.rendering.networking.modelcontrollers.AsyncVastLoader;
 import org.prebid.mobile.rendering.parser.AdResponseParserVast;
@@ -37,7 +37,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.prebid.mobile.rendering.errors.AdException.INTERNAL_ERROR;
+import static org.prebid.mobile.api.exceptions.AdException.INTERNAL_ERROR;
 import static org.prebid.mobile.rendering.video.vast.VASTErrorCodes.WRAPPER_LIMIT_REACH_ERROR;
 
 @RunWith(RobolectricTestRunner.class)

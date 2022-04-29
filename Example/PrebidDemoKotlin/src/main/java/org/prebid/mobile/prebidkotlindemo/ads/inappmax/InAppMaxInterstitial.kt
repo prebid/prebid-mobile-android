@@ -6,8 +6,8 @@ import com.applovin.mediation.MaxAdListener
 import com.applovin.mediation.MaxError
 import com.applovin.mediation.adapters.prebid.utils.MaxMediationInterstitialUtils
 import com.applovin.mediation.ads.MaxInterstitialAd
-import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit
-import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
+import org.prebid.mobile.api.data.AdUnitFormat
+import org.prebid.mobile.api.mediation.MediationInterstitialAdUnit
 import java.util.*
 
 object InAppMaxInterstitial {

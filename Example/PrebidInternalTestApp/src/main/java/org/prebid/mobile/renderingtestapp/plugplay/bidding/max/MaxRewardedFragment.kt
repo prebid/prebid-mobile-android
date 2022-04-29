@@ -11,7 +11,7 @@ import com.applovin.mediation.adapters.prebid.utils.MaxMediationRewardedUtils
 import com.applovin.mediation.ads.MaxRewardedAd
 import kotlinx.android.synthetic.main.events_max_rewarded.*
 import kotlinx.android.synthetic.main.fragment_bidding_rewarded_applovin_max.*
-import org.prebid.mobile.rendering.bidding.display.MediationRewardedVideoAdUnit
+import org.prebid.mobile.api.mediation.MediationRewardedVideoAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment

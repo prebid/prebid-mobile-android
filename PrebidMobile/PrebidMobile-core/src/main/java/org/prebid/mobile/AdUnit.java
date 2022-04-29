@@ -25,14 +25,14 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
+import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.FetchDemandResult;
+import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
-import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.tasksmanager.TasksManager;
-import org.prebid.mobile.units.configuration.AdFormat;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.*;
 

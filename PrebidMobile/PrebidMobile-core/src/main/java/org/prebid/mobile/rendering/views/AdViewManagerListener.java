@@ -17,7 +17,7 @@
 package org.prebid.mobile.rendering.views;
 
 import android.view.View;
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.models.AdDetails;
 
 public abstract class AdViewManagerListener {

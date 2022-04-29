@@ -24,8 +24,8 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.rendering.bidding.enums.VideoPlacementType
-import org.prebid.mobile.rendering.bidding.parallel.BannerView
+import org.prebid.mobile.api.data.VideoPlacementType
+import org.prebid.mobile.api.rendering.BannerView
 
 private const val TAG = "FeedAdapter"
 
@@ -43,7 +43,11 @@ open class FeedAdapter(context: Context,
 
     override fun initAndLoadAdView(parent: ViewGroup?, container: FrameLayout): View? {
         if (videoView == null) {
-            videoView = BannerView(container.context, configId, AdSize(width, height))
+            videoView = BannerView(
+                container.context,
+                configId,
+                AdSize(width, height)
+            )
             videoView?.videoPlacementType = VideoPlacementType.IN_FEED
             val layoutParams = FrameLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
             layoutParams.gravity = Gravity.CENTER

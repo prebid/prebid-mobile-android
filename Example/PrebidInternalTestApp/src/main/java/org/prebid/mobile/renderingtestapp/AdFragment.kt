@@ -29,7 +29,7 @@ import androidx.preference.PreferenceManager
 import androidx.test.espresso.idling.CountingIdlingResource
 import kotlinx.android.synthetic.main.events_bids.*
 import org.prebid.mobile.*
-import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
+import org.prebid.mobile.api.mediation.MediationNativeAdUnit
 import org.prebid.mobile.renderingtestapp.plugplay.config.*
 import org.prebid.mobile.renderingtestapp.utils.BaseFragment
 import org.prebid.mobile.renderingtestapp.utils.ConfigurationViewSettings

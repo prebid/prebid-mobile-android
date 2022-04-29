@@ -30,10 +30,10 @@ import kotlinx.android.synthetic.main.lyt_native_ad.view.*
 import org.prebid.mobile.NativeData
 import org.prebid.mobile.PrebidNativeAd
 import org.prebid.mobile.PrebidNativeAdEventListener
+import org.prebid.mobile.api.data.FetchDemandResult
+import org.prebid.mobile.api.mediation.MediationNativeAdUnit
+import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener
 import org.prebid.mobile.eventhandlers.utils.GamUtils
-import org.prebid.mobile.rendering.bidding.data.FetchDemandResult
-import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
-import org.prebid.mobile.rendering.bidding.listeners.OnFetchCompleteListener
 import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.utils.loadImage
@@ -49,20 +49,21 @@ class NativeGamFeedAdapter(
 
     private var nativeAdLayout: ConstraintLayout? = null
 
-    private val fetchCompleteListener = OnFetchCompleteListener {
-        val builder = AdManagerAdRequest.Builder()
-        val publisherAdRequest = builder.build()
+    private val fetchCompleteListener =
+        OnFetchCompleteListener {
+            val builder = AdManagerAdRequest.Builder()
+            val publisherAdRequest = builder.build()
 
-        nativeAdUnit.fetchDemand { result ->
-            if (result != FetchDemandResult.SUCCESS) {
+            nativeAdUnit.fetchDemand { result ->
+                if (result != FetchDemandResult.SUCCESS) {
+                    gamAdLoader.loadAd(publisherAdRequest)
+                    return@fetchDemand
+                }
+
+                GamUtils.prepare(publisherAdRequest, extras)
                 gamAdLoader.loadAd(publisherAdRequest)
-                return@fetchDemand
             }
-
-            GamUtils.prepare(publisherAdRequest, extras)
-            gamAdLoader.loadAd(publisherAdRequest)
         }
-    }
 
     override fun destroy() {
         nativeAdUnit.destroy()

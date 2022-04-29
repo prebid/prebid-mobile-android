@@ -3,9 +3,9 @@ package org.prebid.mobile.prebidkotlindemo.ads.inappgam
 import android.view.ViewGroup
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.PrebidMobile
+import org.prebid.mobile.api.data.VideoPlacementType
+import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.eventhandlers.GamBannerEventHandler
-import org.prebid.mobile.rendering.bidding.enums.VideoPlacementType
-import org.prebid.mobile.rendering.bidding.parallel.BannerView
 
 object InAppGamVideoBanner {
 
@@ -23,7 +23,8 @@ object InAppGamVideoBanner {
         val eventHandler = GamBannerEventHandler(wrapper.context, adUnitId, AdSize(width, height))
         PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
 
-        bannerView = BannerView(wrapper.context, configId, eventHandler)
+        bannerView =
+            BannerView(wrapper.context, configId, eventHandler)
         bannerView?.videoPlacementType = VideoPlacementType.IN_BANNER
         bannerView?.setAutoRefreshDelay(autoRefreshTime)
         wrapper.addView(bannerView)

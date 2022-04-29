@@ -23,11 +23,11 @@ import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.eventhandlers.global.Constants;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.RewardedEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
-import org.prebid.mobile.rendering.errors.AdException;
 
 import java.lang.ref.WeakReference;
 

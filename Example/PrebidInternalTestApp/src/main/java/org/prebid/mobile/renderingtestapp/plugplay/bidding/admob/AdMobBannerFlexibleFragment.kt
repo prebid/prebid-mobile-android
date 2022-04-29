@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.admob.AdMobMediationBannerUtils
 import org.prebid.mobile.admob.PrebidBannerAdapter
-import org.prebid.mobile.rendering.bidding.display.MediationBannerAdUnit
+import org.prebid.mobile.api.mediation.MediationBannerAdUnit
 import com.google.android.gms.ads.AdSize as GamAdSize
 
 

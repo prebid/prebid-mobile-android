@@ -16,7 +16,7 @@
 
 package org.prebid.mobile.rendering.loading;
 
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.models.CreativeModelsMaker;
 
 public interface AdLoadListener {

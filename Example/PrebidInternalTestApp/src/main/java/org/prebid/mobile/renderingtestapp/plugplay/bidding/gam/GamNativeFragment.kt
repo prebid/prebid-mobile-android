@@ -32,13 +32,12 @@ import com.google.android.gms.ads.nativead.NativeAdView
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd
 import kotlinx.android.synthetic.main.lyt_native_ad.*
 import kotlinx.android.synthetic.main.lyt_native_gam_events.*
+import org.prebid.mobile.api.data.FetchDemandResult
 import org.prebid.mobile.eventhandlers.utils.GamUtils
-import org.prebid.mobile.rendering.bidding.data.FetchDemandResult
 import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeFragment
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
-import org.prebid.mobile.renderingtestapp.utils.SourcePicker
 import org.prebid.mobile.renderingtestapp.utils.loadImage
 
 class GamNativeFragment(

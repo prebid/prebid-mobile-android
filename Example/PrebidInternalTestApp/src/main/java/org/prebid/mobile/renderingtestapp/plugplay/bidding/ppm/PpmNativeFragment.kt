@@ -25,13 +25,12 @@ import kotlinx.android.synthetic.main.lyt_native_ad.*
 import kotlinx.android.synthetic.main.lyt_native_in_app_events.*
 import org.prebid.mobile.PrebidNativeAd
 import org.prebid.mobile.PrebidNativeAdEventListener
-import org.prebid.mobile.rendering.bidding.data.FetchDemandResult
-import org.prebid.mobile.rendering.bidding.display.MediationNativeAdUnit
+import org.prebid.mobile.api.data.FetchDemandResult
+import org.prebid.mobile.api.mediation.MediationNativeAdUnit
 import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
-import org.prebid.mobile.renderingtestapp.utils.SourcePicker
 import org.prebid.mobile.renderingtestapp.utils.loadImage
 
 open class PpmNativeFragment : AdFragment() {

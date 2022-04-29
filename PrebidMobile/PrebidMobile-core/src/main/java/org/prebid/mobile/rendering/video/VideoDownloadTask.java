@@ -21,9 +21,9 @@ import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.loading.FileDownloadListener;
 import org.prebid.mobile.rendering.loading.FileDownloadTask;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.io.*;
 import java.net.URLConnection;

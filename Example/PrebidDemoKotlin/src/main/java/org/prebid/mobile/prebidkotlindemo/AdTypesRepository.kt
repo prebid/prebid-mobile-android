@@ -2,6 +2,7 @@ package org.prebid.mobile.prebidkotlindemo
 
 import org.prebid.mobile.Host
 import org.prebid.mobile.PrebidMobile
+import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.prebidkotlindemo.ads.GamBanner
 import org.prebid.mobile.prebidkotlindemo.ads.GamInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.GamVideoInterstitial
@@ -12,7 +13,6 @@ import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobNative
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobRewarded
 import org.prebid.mobile.prebidkotlindemo.ads.inappgam.*
 import org.prebid.mobile.prebidkotlindemo.ads.inappmax.*
-import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
 import java.util.*
 
 object AdTypesRepository {

@@ -17,9 +17,9 @@
 package org.prebid.mobile.rendering.interstitial;
 
 import android.text.TextUtils;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.models.InterstitialLayout;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 /**
  * Util class to configure InterstitialDisplayProperties based on adConfiguration

@@ -5,9 +5,9 @@ import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.testutils.BaseSetup;
-import org.prebid.mobile.units.configuration.AdFormat;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 

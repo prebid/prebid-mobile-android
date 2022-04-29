@@ -16,7 +16,7 @@
 
 package org.prebid.mobile.rendering.listeners;
 
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.video.VideoAdEvent;
 

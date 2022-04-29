@@ -11,10 +11,10 @@ import com.google.android.gms.ads.mediation.customevent.CustomEventInterstitial;
 import com.google.android.gms.ads.mediation.customevent.CustomEventInterstitialListener;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.ParametersMatcher;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
-import org.prebid.mobile.rendering.errors.AdException;
 
 import java.util.HashMap;
 

@@ -6,9 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.api.data.Position;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.BuildConfig;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
-import org.prebid.mobile.units.configuration.Position;
 
 /**
  * A class responsible for parsing "prebidmobilesdk" pass through type from bid response.

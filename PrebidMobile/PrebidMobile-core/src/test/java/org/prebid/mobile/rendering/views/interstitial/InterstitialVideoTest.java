@@ -24,15 +24,15 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.api.rendering.InterstitialView;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.reflection.Reflection;
-import org.prebid.mobile.rendering.bidding.display.InterstitialView;
 import org.prebid.mobile.rendering.models.AbstractCreative;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
 import org.prebid.mobile.rendering.video.VideoCreativeModel;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.test.utils.WhiteBox;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.Timer;
 import java.util.TimerTask;

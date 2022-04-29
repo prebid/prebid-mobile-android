@@ -18,8 +18,8 @@ package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.rendering.models.AdPosition;
-import org.prebid.mobile.units.configuration.AdFormat;
 
 public class InterstitialAdUnit extends BannerBaseAdUnit {
 

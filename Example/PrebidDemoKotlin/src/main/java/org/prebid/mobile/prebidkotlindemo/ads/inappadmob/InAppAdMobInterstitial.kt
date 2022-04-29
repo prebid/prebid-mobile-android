@@ -10,8 +10,8 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.admob.AdMobMediationInterstitialUtils
 import org.prebid.mobile.admob.PrebidInterstitialAdapter
-import org.prebid.mobile.rendering.bidding.display.MediationInterstitialAdUnit
-import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
+import org.prebid.mobile.api.data.AdUnitFormat
+import org.prebid.mobile.api.mediation.MediationInterstitialAdUnit
 import java.util.*
 
 object InAppAdMobInterstitial {

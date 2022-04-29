@@ -22,8 +22,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.core.R;
-import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
 import org.prebid.mobile.rendering.models.ViewPool;
 import org.prebid.mobile.rendering.utils.helpers.Dips;
@@ -33,7 +34,6 @@ import org.prebid.mobile.rendering.utils.url.action.DeepLinkAction;
 import org.prebid.mobile.rendering.utils.url.action.DeepLinkPlusAction;
 import org.prebid.mobile.rendering.utils.url.action.UrlAction;
 import org.prebid.mobile.rendering.views.VolumeControlView;
-import org.prebid.mobile.units.configuration.AdFormat;
 
 import static android.widget.RelativeLayout.LayoutParams.MATCH_PARENT;
 import static android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT;

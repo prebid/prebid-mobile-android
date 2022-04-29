@@ -27,8 +27,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.*;
+import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.AdUnitFormat;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
-import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
@@ -43,8 +45,6 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.units.configuration.AdFormat;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -245,7 +245,7 @@ public class BasicParameterBuilderTest {
         TargetingParams.setUserCustomData(USER_CUSTOM);
         TargetingParams.setGender(TargetingParams.GENDER.MALE);
         TargetingParams.setBuyerId(USER_BUYER_ID);
-        TargetingParams.setUserExt(new ExtObject());
+        TargetingParams.setUserExt(new Ext());
         TargetingParams.setUserLatLng(USER_LAT, USER_LON);
 
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, mContext.getResources(), mBrowserActivityAvailable);
@@ -390,7 +390,7 @@ public class BasicParameterBuilderTest {
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
-        Ext impExt = adRequestInput.getBidRequest().getImp().get(0).getExt();
+        org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext impExt = adRequestInput.getBidRequest().getImp().get(0).getExt();
         assertTrue(impExt.getMap().containsKey("context"));
         JSONObject contextDataJson = ((JSONObject) impExt.getMap().get("context")).getJSONObject("data");
         assertTrue(contextDataJson.has("context"));
@@ -563,7 +563,7 @@ public class BasicParameterBuilderTest {
         user.buyerUid = USER_BUYER_ID;
         List<ExternalUserId> extendedUserIds = TargetingParams.fetchStoredExternalUserIds();
         if (extendedUserIds != null && extendedUserIds.size() > 0) {
-            user.ext = new ExtObject();
+            user.ext = new Ext();
             JSONArray idsJson = new JSONArray();
             for (ExternalUserId id : extendedUserIds) {
                 idsJson.put(id.getJson());

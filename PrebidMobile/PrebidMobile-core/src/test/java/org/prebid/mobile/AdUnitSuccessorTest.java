@@ -22,11 +22,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.reflection.AdUnitReflection;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.testutils.BaseSetup;
-import org.prebid.mobile.units.configuration.AdFormat;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 

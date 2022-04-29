@@ -18,11 +18,11 @@ package org.prebid.mobile.rendering.networking.parameters;
 
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.App;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
 
 import java.util.Map;
 import java.util.Set;

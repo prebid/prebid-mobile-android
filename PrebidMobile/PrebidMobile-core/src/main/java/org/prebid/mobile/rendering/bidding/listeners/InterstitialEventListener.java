@@ -16,7 +16,7 @@
 
 package org.prebid.mobile.rendering.bidding.listeners;
 
-import org.prebid.mobile.rendering.errors.AdException;
+import org.prebid.mobile.api.exceptions.AdException;
 
 public interface InterstitialEventListener {
     void onPrebidSdkWin();

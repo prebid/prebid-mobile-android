@@ -1,7 +1,7 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 
-import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
-import org.prebid.mobile.rendering.bidding.parallel.InterstitialAdUnit
+import org.prebid.mobile.api.data.AdUnitFormat
+import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import java.util.*
 
 class PpmInterstitialSoundButtonFragment : PpmInterstitialFragment() {
@@ -14,7 +14,11 @@ class PpmInterstitialSoundButtonFragment : PpmInterstitialFragment() {
         height: Int
     ) {
         interstitialAdUnit = if (adUnitFormat == AdUnitFormat.VIDEO) {
-            InterstitialAdUnit(requireContext(), configId, EnumSet.of(adUnitFormat))
+            InterstitialAdUnit(
+                requireContext(),
+                configId,
+                EnumSet.of(adUnitFormat)
+            )
         } else {
             InterstitialAdUnit(requireContext(), configId)
         }

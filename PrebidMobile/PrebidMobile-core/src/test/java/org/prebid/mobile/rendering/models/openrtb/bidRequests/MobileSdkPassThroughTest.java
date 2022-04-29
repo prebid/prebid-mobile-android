@@ -3,9 +3,9 @@ package org.prebid.mobile.rendering.models.openrtb.bidRequests;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
+import org.prebid.mobile.api.data.Position;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.BuildConfig;
-import org.prebid.mobile.units.configuration.AdUnitConfiguration;
-import org.prebid.mobile.units.configuration.Position;
 
 import static org.junit.Assert.*;
 
