@@ -54,12 +54,11 @@ abstract class BaseFeedAdapter(context: Context) : BaseAdapter() {
         textView.text = container.context.getString(R.string.app_name)
         textView.visibility = View.GONE
 
-        if (position % 5 == 0) {
+        if (position % 5 == 0 && position != 0) {
             adView = initAndLoadAdView(parent, container) ?: return container
             Views.removeFromParent(adView)
             container.addView(adView)
-        }
-        else {
+        } else {
             textView.visibility = View.VISIBLE
             if (container.childCount > 1) {
                 container.removeViewAt(1)
