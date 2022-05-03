@@ -34,7 +34,6 @@ object InAppVideoBanner {
         bannerView?.setBannerListener(object : BannerViewListener {
             override fun onAdLoaded(bannerView: BannerView?) {
                 Log.d(TAG, "Ad loaded")
-                InAppVideoBanner.bannerView?.invalidate()
             }
 
             override fun onAdDisplayed(bannerView: BannerView?) {

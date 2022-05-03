@@ -51,11 +51,14 @@ public class VideoCreativeView extends RelativeLayout {
     private String callToActionUrl;
     private boolean urlHandleInProgress;
     private int broadcastId;
+    private boolean isFirstRunOfCreative = true;
+    private boolean isMuted = false;
 
     public VideoCreativeView(
-            Context context,
-            VideoCreativeViewListener videoCreativeViewListener
-    ) throws AdException {
+        Context context,
+        VideoCreativeViewListener videoCreativeViewListener
+
+        ) throws AdException {
         super(context);
         this.videoCreativeViewListener = videoCreativeViewListener;
         init();
@@ -102,15 +105,26 @@ public class VideoCreativeView extends RelativeLayout {
         exoPlayerView.resume();
     }
 
-    public void mute() {
-        exoPlayerView.mute();
+    public void setStartIsMutedProperty(boolean isMuted) {
+        if (isFirstRunOfCreative) {
+            isFirstRunOfCreative = false;
+            if (isMuted) {
+                mute();
+            } else {
+                unMute();
+            }
+        }
+    }
 
+    public void mute() {
+        isMuted = true;
+        exoPlayerView.mute();
         updateVolumeControlView(VolumeControlView.VolumeState.MUTED);
     }
 
     public void unMute() {
+        isMuted = false;
         exoPlayerView.unMute();
-
         updateVolumeControlView(VolumeControlView.VolumeState.UN_MUTED);
     }
 
@@ -197,23 +211,26 @@ public class VideoCreativeView extends RelativeLayout {
     }
 
     private void addVolumeControlView() {
-        LayoutParams layoutParams = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
-        volumeControlView = new VolumeControlView(getContext(), VolumeControlView.VolumeState.MUTED);
-        volumeControlView.setVolumeControlListener(state -> {
-            if (state == VolumeControlView.VolumeState.MUTED) {
-                mute();
-            } else {
-                unMute();
-            }
-        });
+        boolean notContainsVolumeControl = indexOfChild(mVolumeControlView) == -1;
+        if (notContainsVolumeControl) {
+            LayoutParams layoutParams = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
+            volumeControlView = new VolumeControlView(getContext(), isMuted ? VolumeControlView.VolumeState.MUTED : VolumeControlView.VolumeState.UN_MUTED);
+            volumeControlView.setVolumeControlListener(state -> {
+                if (state == VolumeControlView.VolumeState.MUTED) {
+                    mute();
+                } else {
+                    unMute();
+                }
+            });
 
-        final int margin = Dips.dipsToIntPixels(10, getContext());
+            final int margin = Dips.dipsToIntPixels(10, getContext());
 
-        layoutParams.addRule(ALIGN_PARENT_BOTTOM);
-        layoutParams.addRule(ALIGN_PARENT_LEFT);
-        layoutParams.setMargins(margin, margin, margin, margin);
+            layoutParams.addRule(ALIGN_PARENT_BOTTOM);
+            layoutParams.addRule(ALIGN_PARENT_LEFT);
+            layoutParams.setMargins(margin, margin, margin, margin);
 
-        addView(volumeControlView, layoutParams);
+            addView(volumeControlView, layoutParams);
+        }
     }
 
     private void handleCallToActionClick() {

@@ -218,7 +218,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
     }
 
     public boolean isAutoDisplayOnLoad() {
-        return adConfiguration.isAdType(AdFormat.BANNER);
+        return adConfiguration.isAdType(AdFormat.BANNER) || adConfiguration.isBuiltInVideo();
     }
 
     public void destroy() {
