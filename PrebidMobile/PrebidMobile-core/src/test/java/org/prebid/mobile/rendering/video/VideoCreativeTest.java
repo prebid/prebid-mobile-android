@@ -256,20 +256,23 @@ public class VideoCreativeTest {
     @Test
     public void whenAdConfigurationMuted_MuteCreative() throws AdException {
         VideoCreativeModel mockModel = mock(VideoCreativeModel.class);
-        VideoCreative videoCreative = spy(new VideoCreative(context,
-                mockModel,
-                mockOmAdSessionManager,
-                mockInterstitialManager
+        VideoCreative videoCreative = spy(new VideoCreative(
+            context,
+            mockModel,
+            mockOmAdSessionManager,
+            mockInterstitialManager
         ));
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setIsMuted(true);
 
         when(mockModel.getAdConfiguration()).thenReturn(configuration);
-        Reflection.setVariableTo(videoCreative, "videoCreativeView", mock(VideoCreativeView.class));
+        VideoCreativeView videoCreativeView = mock(VideoCreativeView.class);
+        Reflection.setVariableTo(videoCreative, "videoCreativeView", videoCreativeView);
 
         videoCreative.display();
 
-        verify(videoCreative).mute();
+        verify(videoCreativeView).setStartIsMutedProperty(true);
+        verify(videoCreative, never()).mute();
         verify(videoCreative, never()).unmute();
     }
 
@@ -284,12 +287,14 @@ public class VideoCreativeTest {
         AdUnitConfiguration configuration = new AdUnitConfiguration();
         configuration.setIsMuted(false);
 
+        VideoCreativeView videoCreativeView = mock(VideoCreativeView.class);
         when(mockModel.getAdConfiguration()).thenReturn(configuration);
-        Reflection.setVariableTo(videoCreative, "videoCreativeView", mock(VideoCreativeView.class));
+        Reflection.setVariableTo(videoCreative, "videoCreativeView", videoCreativeView);
 
         videoCreative.display();
 
-        verify(videoCreative).unmute();
+        verify(videoCreativeView).setStartIsMutedProperty(false);
+        verify(videoCreative, never()).unmute();
         verify(videoCreative, never()).mute();
     }
 
