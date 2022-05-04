@@ -30,103 +30,108 @@ public class VideoCreativeModel extends CreativeModel {
 
     private static String TAG = VideoCreativeModel.class.getSimpleName();
 
-    private HashMap<VideoAdEvent.Event, ArrayList<String>> mVideoEventUrls = new HashMap<>();
-    private String mMediaUrl;
+    private HashMap<VideoAdEvent.Event, ArrayList<String>> videoEventUrls = new HashMap<>();
+    private String mediaUrl;
 
     //interstitial video: media duration
-    private long mMediaDuration;
-    private String mAuid;
-    private long mSkipOffset;
+    private long mediaDuration;
+    private String auid;
+    private long skipOffset;
 
     // interstitial video: click-through URL
-    private String mVastClickthroughUrl;
-    private AdVerifications mAdVerifications;
+    private String vastClickthroughUrl;
+    private AdVerifications adVerifications;
 
 
-    public VideoCreativeModel(TrackingManager trackingManager,
-                              OmEventTracker omEventTracker,
-                              AdUnitConfiguration adConfiguration) {
+    public VideoCreativeModel(
+            TrackingManager trackingManager,
+            OmEventTracker omEventTracker,
+            AdUnitConfiguration adConfiguration
+    ) {
         super(trackingManager, omEventTracker, adConfiguration);
     }
 
-    public void registerVideoEvent(VideoAdEvent.Event event, ArrayList<String> urls) {
-        mVideoEventUrls.put(event, urls);
+    public void registerVideoEvent(
+            VideoAdEvent.Event event,
+            ArrayList<String> urls
+    ) {
+        videoEventUrls.put(event, urls);
     }
 
     public void trackVideoEvent(VideoAdEvent.Event videoEvent) {
-        mOmEventTracker.trackOmVideoAdEvent(videoEvent);
-        ArrayList<String> urls = mVideoEventUrls.get(videoEvent);
+        omEventTracker.trackOmVideoAdEvent(videoEvent);
+        ArrayList<String> urls = videoEventUrls.get(videoEvent);
         if (urls == null) {
             LogUtil.debug(TAG, "Event" + videoEvent + " not found");
             return;
         }
 
-        mTrackingManager.fireEventTrackingURLs(urls);
+        trackingManager.fireEventTrackingURLs(urls);
 
         LogUtil.info(TAG, "Video event '" + videoEvent.name() + "' was fired with urls: " + urls.toString());
     }
 
     public void trackPlayerStateChange(InternalPlayerState changedPlayerState) {
-        mOmEventTracker.trackOmPlayerStateChange(changedPlayerState);
+        omEventTracker.trackOmPlayerStateChange(changedPlayerState);
     }
 
     public void trackVideoAdStarted(float duration, float volume) {
-        mOmEventTracker.trackVideoAdStarted(duration, volume);
+        omEventTracker.trackVideoAdStarted(duration, volume);
     }
 
     public void trackNonSkippableStandaloneVideoLoaded(boolean isAutoPlay) {
-        mOmEventTracker.trackNonSkippableStandaloneVideoLoaded(isAutoPlay);
+        omEventTracker.trackNonSkippableStandaloneVideoLoaded(isAutoPlay);
     }
 
     public HashMap<VideoAdEvent.Event, ArrayList<String>> getVideoEventUrls() {
-        return mVideoEventUrls;
+        return videoEventUrls;
     }
 
     public String getMediaUrl() {
-        return mMediaUrl;
+        return mediaUrl;
     }
 
     public void setMediaUrl(String mediaUrl) {
-        mMediaUrl = mediaUrl;
+        this.mediaUrl = mediaUrl;
     }
 
     public long getMediaDuration() {
-        return mMediaDuration;
+        return mediaDuration;
     }
 
     public void setMediaDuration(long mediaDuration) {
-        mMediaDuration = mediaDuration;
+        this.mediaDuration = mediaDuration;
     }
 
     public long getSkipOffset() {
-        return mSkipOffset;
+        return skipOffset;
     }
 
     public void setSkipOffset(long skipOffset) {
-        mSkipOffset = skipOffset;
+        this.skipOffset = skipOffset;
     }
 
     public String getAuid() {
-        return mAuid;
+        return auid;
     }
 
     public void setAuid(String auid) {
-        mAuid = auid;
+        this.auid = auid;
     }
 
     public String getVastClickthroughUrl() {
-        return mVastClickthroughUrl;
+        return vastClickthroughUrl;
     }
 
     public void setVastClickthroughUrl(String vastClickthroughUrl) {
-        mVastClickthroughUrl = vastClickthroughUrl;
+        this.vastClickthroughUrl = vastClickthroughUrl;
     }
 
     public AdVerifications getAdVerifications() {
-        return mAdVerifications;
+        return adVerifications;
     }
 
     public void setAdVerifications(AdVerifications adVerifications) {
-        mAdVerifications = adVerifications;
+        this.adVerifications = adVerifications;
     }
 }

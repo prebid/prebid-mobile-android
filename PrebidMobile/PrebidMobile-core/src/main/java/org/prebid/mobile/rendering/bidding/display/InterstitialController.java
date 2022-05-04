@@ -30,34 +30,41 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrou
 import org.prebid.mobile.rendering.networking.WinNotifier;
 
 public class InterstitialController {
+
     private static final String TAG = InterstitialController.class.getSimpleName();
 
-    private final InterstitialView mBidInterstitialView;
-    private final InterstitialControllerListener mListener;
-    private AdFormat mAdUnitIdentifierType;
+    private final InterstitialView bidInterstitialView;
+    private final InterstitialControllerListener listener;
+    private AdFormat adUnitIdentifierType;
 
-    private final InterstitialViewListener mInterstitialViewListener = new InterstitialViewListener() {
+    private final InterstitialViewListener interstitialViewListener = new InterstitialViewListener() {
         @Override
-        public void onAdLoaded(InterstitialView interstitialView, AdDetails adDetails) {
+        public void onAdLoaded(
+                InterstitialView interstitialView,
+                AdDetails adDetails
+        ) {
             LogUtil.debug(TAG, "onAdLoaded");
-            if (mListener != null) {
-                mListener.onInterstitialReadyForDisplay();
+            if (listener != null) {
+                listener.onInterstitialReadyForDisplay();
             }
         }
 
         @Override
-        public void onAdFailed(InterstitialView interstitialView, AdException error) {
+        public void onAdFailed(
+                InterstitialView interstitialView,
+                AdException error
+        ) {
             LogUtil.debug(TAG, "onAdFailed");
-            if (mListener != null) {
-                mListener.onInterstitialFailedToLoad(error);
+            if (listener != null) {
+                listener.onInterstitialFailedToLoad(error);
             }
         }
 
         @Override
         public void onAdDisplayed(InterstitialView interstitialView) {
             LogUtil.debug(TAG, "onAdDisplayed");
-            if (mListener != null) {
-                mListener.onInterstitialDisplayed();
+            if (listener != null) {
+                listener.onInterstitialDisplayed();
             }
         }
 
@@ -68,8 +75,8 @@ public class InterstitialController {
         @Override
         public void onAdClicked(InterstitialView interstitialView) {
             LogUtil.debug(TAG, "onAdClicked");
-            if (mListener != null) {
-                mListener.onInterstitialClicked();
+            if (listener != null) {
+                listener.onInterstitialClicked();
             }
         }
 
@@ -81,37 +88,38 @@ public class InterstitialController {
         @Override
         public void onAdClosed(InterstitialView interstitialView) {
             LogUtil.debug(TAG, "onAdClosed");
-            if (mListener != null) {
-                mListener.onInterstitialClosed();
+            if (listener != null) {
+                listener.onInterstitialClosed();
             }
         }
     };
 
     public InterstitialController(Context context, InterstitialControllerListener listener)
     throws AdException {
-        mListener = listener;
-        mBidInterstitialView = new InterstitialView(context);
-        mBidInterstitialView.setInterstitialViewListener(mInterstitialViewListener);
-        mBidInterstitialView.setPubBackGroundOpacity(1.0f);
+        this.listener = listener;
+        bidInterstitialView = new InterstitialView(context);
+        bidInterstitialView.setInterstitialViewListener(interstitialViewListener);
+        bidInterstitialView.setPubBackGroundOpacity(1.0f);
     }
 
     public void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
         setRenderingControlSettings(adUnitConfiguration, bidResponse);
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(bidResponse, () -> {
-            mAdUnitIdentifierType = bidResponse.isVideo()
-                    ? AdFormat.VAST
-                    : AdFormat.INTERSTITIAL;
-            adUnitConfiguration.setAdFormat(mAdUnitIdentifierType);
-            mBidInterstitialView.loadAd(adUnitConfiguration, bidResponse);
+            adUnitIdentifierType = bidResponse.isVideo() ? AdFormat.VAST : AdFormat.INTERSTITIAL;
+            adUnitConfiguration.setAdFormat(adUnitIdentifierType);
+            bidInterstitialView.loadAd(adUnitConfiguration, bidResponse);
         });
     }
 
     public void loadAd(String responseId, boolean isRewarded) {
         BidResponse bidResponse = BidResponseCache.getInstance().popBidResponse(responseId);
         if (bidResponse == null) {
-            if (mListener != null) {
-                mListener.onInterstitialFailedToLoad(new AdException(AdException.INTERNAL_ERROR, "No bid response found in the cache"));
+            if (listener != null) {
+                listener.onInterstitialFailedToLoad(new AdException(
+                        AdException.INTERNAL_ERROR,
+                        "No bid response found in the cache"
+                ));
             }
             return;
         }
@@ -121,27 +129,28 @@ public class InterstitialController {
     }
 
     public void show() {
-        if (mAdUnitIdentifierType == null) {
+        if (adUnitIdentifierType == null) {
             LogUtil.error(TAG, "show: Failed. AdUnitIdentifierType is not defined!");
             return;
         }
 
-        switch (mAdUnitIdentifierType) {
+        switch (adUnitIdentifierType) {
             case INTERSTITIAL:
-                mBidInterstitialView.showAsInterstitialFromRoot();
+                bidInterstitialView.showAsInterstitialFromRoot();
                 break;
             case VAST:
-                mBidInterstitialView.showVideoAsInterstitial();
+                bidInterstitialView.showVideoAsInterstitial();
                 break;
             default:
                 LogUtil.error(TAG, "show: Failed. Did you specify correct AdUnitConfigurationType? "
                     + "Supported types: VAST, INTERSTITIAL. "
-                    + "Provided type: " + mAdUnitIdentifierType);
+                    + "Provided type: " + adUnitIdentifierType
+                );
         }
     }
 
     public void destroy() {
-        mBidInterstitialView.destroy();
+        bidInterstitialView.destroy();
     }
 
     private void setRenderingControlSettings(

@@ -55,39 +55,39 @@ public class InterstitialAdUnitTest {
     private static final String CONFIGURATION_ID = "12345678";
     private static final AdSize AD_SIZE = new AdSize(320, 480);
 
-    private InterstitialAdUnit mInterstitialAdUnit;
-    private Context mContext;
+    private InterstitialAdUnit interstitialAdUnit;
+    private Context context;
 
     @Mock
-    BidLoader mMockBidLoader;
+    BidLoader mockBidLoader;
     @Mock
-    InterstitialAdUnitListener mMockInterstitialAdUnitListener;
+    InterstitialAdUnitListener mockInterstitialAdUnitListener;
     @Mock
-    InterstitialEventHandler mMockInterstitialEventHandler;
+    InterstitialEventHandler mockInterstitialEventHandler;
     @Mock
-    InterstitialController mMockInterstitialController;
+    InterstitialController mockInterstitialController;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
+        context = Robolectric.buildActivity(Activity.class).create().get();
 
-        mInterstitialAdUnit = new InterstitialAdUnit(mContext, CONFIGURATION_ID, mMockInterstitialEventHandler);
-        mInterstitialAdUnit.setMinSizePercentage(AD_SIZE);
+        interstitialAdUnit = new InterstitialAdUnit(context, CONFIGURATION_ID, mockInterstitialEventHandler);
+        interstitialAdUnit.setMinSizePercentage(AD_SIZE);
 
-        mInterstitialAdUnit.setInterstitialAdUnitListener(mMockInterstitialAdUnitListener);
-        WhiteBox.setInternalState(mInterstitialAdUnit, "bidLoader", mMockBidLoader);
-        WhiteBox.setInternalState(mInterstitialAdUnit, "interstitialController", mMockInterstitialController);
+        interstitialAdUnit.setInterstitialAdUnitListener(mockInterstitialAdUnitListener);
+        WhiteBox.setInternalState(interstitialAdUnit, "bidLoader", mockBidLoader);
+        WhiteBox.setInternalState(interstitialAdUnit, "interstitialController", mockInterstitialController);
 
-        final AdUnitConfiguration adUnitConfig = mInterstitialAdUnit.adUnitConfig;
+        final AdUnitConfiguration adUnitConfig = interstitialAdUnit.adUnitConfig;
         assertEquals(AdPosition.FULLSCREEN.getValue(), adUnitConfig.getAdPositionValue());
     }
 
     @Test
     public void createInterstitialAdUnitNoEventHandler_InstanceCreatedStandaloneEventHandlerProvidedBidLoaderIsNotNull() {
         InterstitialAdUnit interstitialAdUnit = new InterstitialAdUnit(
-            mContext,
+            context,
             CONFIGURATION_ID,
             EnumSet.of(AdUnitFormat.VIDEO)
         );
@@ -102,51 +102,51 @@ public class InterstitialAdUnitTest {
 
     @Test
     public void loadAdWithNullBidLoader_NoExceptionIsThrown() {
-        WhiteBox.setInternalState(mInterstitialAdUnit, "bidLoader", null);
+        WhiteBox.setInternalState(interstitialAdUnit, "bidLoader", null);
 
-        mInterstitialAdUnit.loadAd();
+        interstitialAdUnit.loadAd();
     }
 
     @Test
     public void loadAdWithInvalidInterstitialAdState_DoNothing() {
         changeInterstitialState(LOADING);
-        mInterstitialAdUnit.loadAd();
-        verifyZeroInteractions(mMockBidLoader);
+        interstitialAdUnit.loadAd();
+        verifyZeroInteractions(mockBidLoader);
 
         changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_PREBID);
-        mInterstitialAdUnit.loadAd();
-        verifyZeroInteractions(mMockBidLoader);
+        interstitialAdUnit.loadAd();
+        verifyZeroInteractions(mockBidLoader);
 
         changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM);
-        mInterstitialAdUnit.loadAd();
-        verifyZeroInteractions(mMockBidLoader);
+        interstitialAdUnit.loadAd();
+        verifyZeroInteractions(mockBidLoader);
 
         changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.PREBID_LOADING);
-        mInterstitialAdUnit.loadAd();
-        verifyZeroInteractions(mMockBidLoader);
+        interstitialAdUnit.loadAd();
+        verifyZeroInteractions(mockBidLoader);
     }
 
     @Test
     public void loadAdWithValidBidLoaderAndAdUnitState_ExecuteBidLoad() {
-        mInterstitialAdUnit.loadAd();
+        interstitialAdUnit.loadAd();
 
-        verify(mMockBidLoader, times(1)).load();
+        verify(mockBidLoader, times(1)).load();
     }
 
     @Test
     public void showWhenAuctionWinnerIsNotReadyToDisplay_DoNothing() {
-        mInterstitialAdUnit.show();
+        interstitialAdUnit.show();
 
-        verify(mMockInterstitialEventHandler, times(0)).show();
+        verify(mockInterstitialEventHandler, times(0)).show();
     }
 
     @Test
     public void showWhenAuctionWinnerIsGAM_ShowGam() {
         changeInterstitialState(READY_TO_DISPLAY_GAM);
 
-        mInterstitialAdUnit.show();
+        interstitialAdUnit.show();
 
-        verify(mMockInterstitialEventHandler, times(1)).show();
+        verify(mockInterstitialEventHandler, times(1)).show();
     }
 
     @Test
@@ -155,8 +155,8 @@ public class InterstitialAdUnitTest {
 
         changeInterstitialState(READY_TO_DISPLAY_PREBID);
 
-        WhiteBox.setInternalState(mInterstitialAdUnit, "interstitialController", mockInterstitialController);
-        mInterstitialAdUnit.show();
+        WhiteBox.setInternalState(interstitialAdUnit, "interstitialController", mockInterstitialController);
+        interstitialAdUnit.show();
 
         verify(mockInterstitialController, times(1)).show();
     }
@@ -164,31 +164,31 @@ public class InterstitialAdUnitTest {
     @Test
     public void isLoadedWhenAuctionIsNotReadyForDisplay_ReturnFalse() {
         changeInterstitialState(READY_FOR_LOAD);
-        assertFalse(mInterstitialAdUnit.isLoaded());
+        assertFalse(interstitialAdUnit.isLoaded());
 
         changeInterstitialState(LOADING);
-        assertFalse(mInterstitialAdUnit.isLoaded());
+        assertFalse(interstitialAdUnit.isLoaded());
 
         changeInterstitialState(PREBID_LOADING);
-        assertFalse(mInterstitialAdUnit.isLoaded());
+        assertFalse(interstitialAdUnit.isLoaded());
     }
 
     @Test
     public void isLoadedWhenAuctionIsReadyForDisplay_ReturnTrue() {
         changeInterstitialState(READY_TO_DISPLAY_PREBID);
-        assertTrue(mInterstitialAdUnit.isLoaded());
+        assertTrue(interstitialAdUnit.isLoaded());
 
         changeInterstitialState(READY_TO_DISPLAY_GAM);
-        assertTrue(mInterstitialAdUnit.isLoaded());
+        assertTrue(interstitialAdUnit.isLoaded());
     }
 
     @Test
     public void destroy_DestroyEventHandlerAndBidLoader() {
-        mInterstitialAdUnit.destroy();
+        interstitialAdUnit.destroy();
 
-        verify(mMockInterstitialEventHandler).destroy();
-        verify(mMockBidLoader).destroy();
-        verify(mMockInterstitialController).destroy();
+        verify(mockInterstitialEventHandler).destroy();
+        verify(mockBidLoader).destroy();
+        verify(mockInterstitialController).destroy();
     }
 
     //region ======================= BidRequestListener tests
@@ -202,8 +202,8 @@ public class InterstitialAdUnitTest {
         BidRequesterListener listener = getBidRequesterListener();
         listener.onFetchCompleted(mockBidResponse);
 
-        verify(mMockInterstitialEventHandler, times(1)).requestAdWithBid(eq(mockBid));
-        assertEquals(LOADING, mInterstitialAdUnit.getAdUnitState());
+        verify(mockInterstitialEventHandler, times(1)).requestAdWithBid(eq(mockBid));
+        assertEquals(LOADING, interstitialAdUnit.getAdUnitState());
     }
 
     @Test
@@ -211,7 +211,7 @@ public class InterstitialAdUnitTest {
         BidRequesterListener listener = getBidRequesterListener();
         listener.onError(any());
 
-        verify(mMockInterstitialEventHandler, times(1)).requestAdWithBid(eq(null));
+        verify(mockInterstitialEventHandler, times(1)).requestAdWithBid(eq(null));
     }
     //endregion ======================= BidRequestListener tests
 
@@ -222,8 +222,8 @@ public class InterstitialAdUnitTest {
 
         eventListener.onPrebidSdkWin();
 
-        verify(mMockInterstitialAdUnitListener, times(1)).onAdFailed(eq(mInterstitialAdUnit), any(AdException.class));
-        assertEquals(READY_FOR_LOAD, mInterstitialAdUnit.getAdUnitState());
+        verify(mockInterstitialAdUnitListener, times(1)).onAdFailed(eq(interstitialAdUnit), any(AdException.class));
+        assertEquals(READY_FOR_LOAD, interstitialAdUnit.getAdUnitState());
     }
 
     @Test
@@ -232,8 +232,8 @@ public class InterstitialAdUnitTest {
 
         eventListener.onAdServerWin();
 
-        assertEquals(BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM, mInterstitialAdUnit.getAdUnitState());
-        verify(mMockInterstitialAdUnitListener, times(1)).onAdLoaded(mInterstitialAdUnit);
+        assertEquals(BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM, interstitialAdUnit.getAdUnitState());
+        verify(mockInterstitialAdUnitListener, times(1)).onAdLoaded(interstitialAdUnit);
     }
 
     @Test
@@ -243,8 +243,8 @@ public class InterstitialAdUnitTest {
 
         eventListener.onAdFailed(exception);
 
-        verify(mMockInterstitialAdUnitListener, times(1)).onAdFailed(mInterstitialAdUnit, exception);
-        assertEquals(READY_FOR_LOAD, mInterstitialAdUnit.getAdUnitState());
+        verify(mockInterstitialAdUnitListener, times(1)).onAdFailed(interstitialAdUnit, exception);
+        assertEquals(READY_FOR_LOAD, interstitialAdUnit.getAdUnitState());
     }
 
     @Test
@@ -255,8 +255,8 @@ public class InterstitialAdUnitTest {
         final InterstitialEventListener spyEventListener = spy(getEventListener());
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
 
-        WhiteBox.setInternalState(mInterstitialAdUnit, "bidResponse", mockBidResponse);
-        WhiteBox.setInternalState(mInterstitialAdUnit, "interstitialController", mockInterstitialController);
+        WhiteBox.setInternalState(interstitialAdUnit, "bidResponse", mockBidResponse);
+        WhiteBox.setInternalState(interstitialAdUnit, "interstitialController", mockInterstitialController);
 
         spyEventListener.onAdFailed(new AdException(AdException.INTERNAL_ERROR, "Test"));
 
@@ -269,20 +269,20 @@ public class InterstitialAdUnitTest {
         final InterstitialEventListener eventListener = getEventListener();
         eventListener.onAdClosed();
 
-        verify(mMockInterstitialAdUnitListener, times(1)).onAdClosed(mInterstitialAdUnit);
+        verify(mockInterstitialAdUnitListener, times(1)).onAdClosed(interstitialAdUnit);
     }
     //endregion ================= EventListener tests
 
     private BidRequesterListener getBidRequesterListener() {
-        return (BidRequesterListener) WhiteBox.getInternalState(mInterstitialAdUnit, "bidRequesterListener");
+        return (BidRequesterListener) WhiteBox.getInternalState(interstitialAdUnit, "bidRequesterListener");
     }
 
     private InterstitialEventListener getEventListener() {
-        return (InterstitialEventListener) WhiteBox.getInternalState(mInterstitialAdUnit, "interstitialEventListener");
+        return (InterstitialEventListener) WhiteBox.getInternalState(interstitialAdUnit, "interstitialEventListener");
     }
 
     private void changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState adUnitState) {
-        WhiteBox.setInternalState(mInterstitialAdUnit, "interstitialAdUnitState", adUnitState);
+        WhiteBox.setInternalState(interstitialAdUnit, "interstitialAdUnitState", adUnitState);
     }
 
 }

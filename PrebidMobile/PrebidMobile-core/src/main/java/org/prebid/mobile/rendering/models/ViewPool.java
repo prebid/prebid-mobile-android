@@ -31,10 +31,10 @@ import org.prebid.mobile.rendering.views.webview.mraid.Views;
 import java.util.ArrayList;
 
 public class ViewPool {
-    @SuppressLint("StaticFieldLeak")
-    private static ViewPool sInstance = null;
-    private ArrayList<View> mOccupiedViews = new ArrayList<>();
-    private ArrayList<View> mUnoccupiedViews = new ArrayList<>();
+
+    @SuppressLint("StaticFieldLeak") private static ViewPool sInstance = null;
+    private ArrayList<View> occupiedViews = new ArrayList<>();
+    private ArrayList<View> unoccupiedViews = new ArrayList<>();
 
     private ViewPool() {
 
@@ -48,49 +48,49 @@ public class ViewPool {
     }
 
     protected int sizeOfOccupied() {
-        return mOccupiedViews.size();
+        return occupiedViews.size();
     }
 
     protected int sizeOfUnoccupied() {
-        return mUnoccupiedViews.size();
+        return unoccupiedViews.size();
     }
 
     //This will add views into occupied bucket
     public void addToOccupied(View view) {
-        if (!mOccupiedViews.contains(view) && !mUnoccupiedViews.contains(view)) {
-            mOccupiedViews.add(view);
+        if (!occupiedViews.contains(view) && !unoccupiedViews.contains(view)) {
+            occupiedViews.add(view);
         }
     }
 
     public void addToUnoccupied(View view) {
-        if (!mUnoccupiedViews.contains(view) && !mOccupiedViews.contains(view)) {
-            mUnoccupiedViews.add(view);
+        if (!unoccupiedViews.contains(view) && !occupiedViews.contains(view)) {
+            unoccupiedViews.add(view);
         }
     }
 
     //This will swap from occupied to unoccupied(after windowclose) and removes it from occupied bucket
     public void swapToUnoccupied(View view) {
-        if (!mUnoccupiedViews.contains(view)) {
-            mUnoccupiedViews.add(view);
+        if (!unoccupiedViews.contains(view)) {
+            unoccupiedViews.add(view);
 
             Views.removeFromParent(view);
         }
-        mOccupiedViews.remove(view);
+        occupiedViews.remove(view);
     }
 
     //This will swap from unoccupied to occupied(after showing/displaying) and removes it from unoccupied bucket
     private void swapToOccupied(View view) {
-        if (!mOccupiedViews.contains(view)) {
-            mOccupiedViews.add(view);
+        if (!occupiedViews.contains(view)) {
+            occupiedViews.add(view);
         }
 
-        mUnoccupiedViews.remove(view);
+        unoccupiedViews.remove(view);
     }
 
     //This only clears the bucketlist. It does not actually remove the lists. Means (size becomes 0 but list still exists)
     public void clear() {
-        mOccupiedViews.clear();
-        mUnoccupiedViews.clear();
+        occupiedViews.clear();
+        unoccupiedViews.clear();
         plugPlayView = null;
     }
 
@@ -104,15 +104,15 @@ public class ViewPool {
         if (context == null) {
             throw new AdException(AdException.INTERNAL_ERROR, "Context is null");
         }
-        if (mUnoccupiedViews != null && mUnoccupiedViews.size() > 0) {
+        if (unoccupiedViews != null && unoccupiedViews.size() > 0) {
 
-            View view = mUnoccupiedViews.get(0);
+            View view = unoccupiedViews.get(0);
 
             Views.removeFromParent(view);
 
             //get item from unoccupied & add it to occupied
             swapToOccupied(view);
-            return mOccupiedViews.get(mOccupiedViews.size() - 1);
+            return occupiedViews.get(occupiedViews.size() - 1);
         }
         //create a new one
 

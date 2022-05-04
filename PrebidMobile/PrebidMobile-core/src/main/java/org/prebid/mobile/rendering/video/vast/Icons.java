@@ -27,12 +27,12 @@ public class Icons extends VASTParserBase
     private final static String VAST_ICONS = "Icons";
     private final static String VAST_ICON = "Icon";
 
-    private ArrayList<Icon> mIcons;
+    private ArrayList<Icon> icons;
 
 	public Icons(XmlPullParser p) throws XmlPullParserException, IOException
 	{
 
-		mIcons = new ArrayList<>();
+		icons = new ArrayList<>();
 
 		p.require(XmlPullParser.START_TAG, null, VAST_ICONS);
 		while (p.next() != XmlPullParser.END_TAG)
@@ -45,7 +45,7 @@ public class Icons extends VASTParserBase
 			if (name != null && name.equals(VAST_ICON))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_ICON);
-                mIcons.add(new Icon(p));
+				icons.add(new Icon(p));
 				p.require(XmlPullParser.END_TAG, null, VAST_ICON);
 			}
 			else
@@ -57,6 +57,6 @@ public class Icons extends VASTParserBase
 	}
 
     public ArrayList<Icon> getIcons() {
-        return mIcons;
+		return icons;
     }
 }

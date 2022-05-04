@@ -26,14 +26,15 @@ import org.prebid.mobile.rendering.utils.helpers.Utils;
  * Provides JS scripts extracted from bundled resource
  */
 public class JSLibraryManager {
+
     private static JSLibraryManager sInstance;
 
-    private Context mContext;
-    private String mMRAIDscript;
-    private String mOMSDKscirpt;
+    private Context context;
+    private String MRAIDscript;
+    private String OMSDKscirpt;
 
     private JSLibraryManager(Context context) {
-        mContext = context.getApplicationContext();
+        this.context = context.getApplicationContext();
         initScriptStrings();
     }
 
@@ -49,16 +50,16 @@ public class JSLibraryManager {
     }
 
     public String getMRAIDScript() {
-        return mMRAIDscript;
+        return MRAIDscript;
     }
 
     public String getOMSDKScript() {
-        return mOMSDKscirpt;
+        return OMSDKscirpt;
     }
 
     private void initScriptStrings() {
-        Resources resources = mContext.getResources();
-        mMRAIDscript = Utils.loadStringFromFile(resources, R.raw.mraid);
-        mOMSDKscirpt = Utils.loadStringFromFile(resources, R.raw.omsdk_v1);
+        Resources resources = context.getResources();
+        MRAIDscript = Utils.loadStringFromFile(resources, R.raw.mraid);
+        OMSDKscirpt = Utils.loadStringFromFile(resources, R.raw.omsdk_v1);
     }
 }

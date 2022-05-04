@@ -43,46 +43,46 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class AdExpandedDialogTest {
 
-    private AdExpandedDialog mAdExpandedDialog;
+    private AdExpandedDialog adExpandedDialog;
 
-    private Context mMockContext;
-    private WebViewBase mMockWebViewBase;
-    private BaseJSInterface mMockBaseJSInterface;
-    private PrebidWebViewBase mMockPrebidWebView;
-    private InterstitialManager mMockInterstitialManager;
+    private Context mockContext;
+    private WebViewBase mockWebViewBase;
+    private BaseJSInterface mockBaseJSInterface;
+    private PrebidWebViewBase mockPrebidWebView;
+    private InterstitialManager mockInterstitialManager;
 
     @Before
     public void setUp() throws Exception {
-        mMockContext = Robolectric.buildActivity(Activity.class).create().get();
-        mMockWebViewBase = mock(WebViewBase.class);
-        mMockBaseJSInterface = mock(BaseJSInterface.class);
-        mMockInterstitialManager = mock(InterstitialManager.class);
+        mockContext = Robolectric.buildActivity(Activity.class).create().get();
+        mockWebViewBase = mock(WebViewBase.class);
+        mockBaseJSInterface = mock(BaseJSInterface.class);
+        mockInterstitialManager = mock(InterstitialManager.class);
 
-        mMockPrebidWebView = mock(PrebidWebViewBase.class);
+        mockPrebidWebView = mock(PrebidWebViewBase.class);
 
-        when(mMockWebViewBase.getMRAIDInterface()).thenReturn(mMockBaseJSInterface);
-        when(mMockWebViewBase.getPreloadedListener()).thenReturn(mMockPrebidWebView);
+        when(mockWebViewBase.getMRAIDInterface()).thenReturn(mockBaseJSInterface);
+        when(mockWebViewBase.getPreloadedListener()).thenReturn(mockPrebidWebView);
 
-        mAdExpandedDialog = new AdExpandedDialog(mMockContext, mMockWebViewBase, mMockInterstitialManager);
+        adExpandedDialog = new AdExpandedDialog(mockContext, mockWebViewBase, mockInterstitialManager);
     }
 
     @Test
     public void handleCloseClick() throws IllegalAccessException {
         InterstitialManager interstitialManager = mock(InterstitialManager.class);
-        Field interstitialManagerField = WhiteBox.field(AdInterstitialDialog.class, "mInterstitialManager");
-        interstitialManagerField.set(mAdExpandedDialog, interstitialManager);
+        Field interstitialManagerField = WhiteBox.field(AdInterstitialDialog.class, "interstitialManager");
+        interstitialManagerField.set(adExpandedDialog, interstitialManager);
 
-        mAdExpandedDialog.handleCloseClick();
-        verify(interstitialManager).interstitialClosed(eq(mMockWebViewBase));
+        adExpandedDialog.handleCloseClick();
+        verify(interstitialManager).interstitialClosed(eq(mockWebViewBase));
     }
 
     @Test
     public void cancelTest() {
-        when(mMockPrebidWebView.getCreative()).thenReturn(mock(HTMLCreative.class));
-        when(mMockWebViewBase.getJSName()).thenReturn("");
+        when(mockPrebidWebView.getCreative()).thenReturn(mock(HTMLCreative.class));
+        when(mockWebViewBase.getJSName()).thenReturn("");
 
-        mAdExpandedDialog.cancel();
-        verify(mMockPrebidWebView, atLeast(1)).addView(any(View.class));
-        verify(mMockBaseJSInterface).onStateChange(eq(JSInterface.STATE_DEFAULT));
+        adExpandedDialog.cancel();
+        verify(mockPrebidWebView, atLeast(1)).addView(any(View.class));
+        verify(mockBaseJSInterface).onStateChange(eq(JSInterface.STATE_DEFAULT));
     }
 }

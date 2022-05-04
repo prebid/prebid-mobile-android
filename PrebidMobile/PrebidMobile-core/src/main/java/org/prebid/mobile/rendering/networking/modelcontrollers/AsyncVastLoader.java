@@ -24,7 +24,7 @@ import org.prebid.mobile.rendering.utils.helpers.Utils;
 
 public class AsyncVastLoader {
 
-    private AsyncTask mVideoRequestAsyncTask;
+    private AsyncTask videoRequestAsyncTask;
 
     public void loadVast(String vastUrl, BaseResponseHandler responseHandler) {
         cancelTask();
@@ -38,12 +38,12 @@ public class AsyncVastLoader {
             params.name = "videorequest";
         }
 
-        mVideoRequestAsyncTask = videoRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+        videoRequestAsyncTask = videoRequestTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
     }
 
     public void cancelTask() {
-        if (mVideoRequestAsyncTask != null) {
-            mVideoRequestAsyncTask.cancel(true);
+        if (videoRequestAsyncTask != null) {
+            videoRequestAsyncTask.cancel(true);
         }
     }
 }

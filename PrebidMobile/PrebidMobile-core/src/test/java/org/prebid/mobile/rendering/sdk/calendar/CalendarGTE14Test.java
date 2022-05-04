@@ -50,11 +50,11 @@ public class CalendarGTE14Test {
     private static final String CALENDAR_RECURRENCE_YEARLY_DETAILED = "calendarRecurrenceYearlyDetailed.txt";
     private static final String CALENDAR_RECURRENCE_YEARLY_EMPTY_WEEK_IN_MONTH = "calendarRecurrenceYearlyEmptyWeekInMonth.txt";
 
-    private Activity mTestActivity;
+    private Activity testActivity;
 
     @Before
     public void setUp() throws Exception {
-        mTestActivity = Robolectric.buildActivity(Activity.class).create().get();
+        testActivity = Robolectric.buildActivity(Activity.class).create().get();
     }
 
     @Test
@@ -147,7 +147,7 @@ public class CalendarGTE14Test {
         JSONObject jsonObj = new JSONObject(json);
 
         CalendarEventWrapper event = new CalendarEventWrapper(jsonObj);
-        calendar.createCalendarEvent(mTestActivity, event);
+        calendar.createCalendarEvent(testActivity, event);
     }
 
     private String getNextStartedActivityExtraCalendarRule() {
@@ -155,7 +155,7 @@ public class CalendarGTE14Test {
     }
 
     private Intent getNextStartedActivityIntent() {
-        ShadowActivity shadowActivity = shadowOf(mTestActivity);
+        ShadowActivity shadowActivity = shadowOf(testActivity);
         return shadowActivity.getNextStartedActivity();
     }
 }

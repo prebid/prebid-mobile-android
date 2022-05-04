@@ -40,14 +40,14 @@ import static org.junit.Assert.assertEquals;
 @Config(sdk = 19)
 public class MediationInterstitialAdUnitTest {
 
-    private Context mContext;
-    private MediationInterstitialAdUnit mMediationInterstitialAdUnit;
+    private Context context;
+    private MediationInterstitialAdUnit mediationInterstitialAdUnit;
 
     @Before
     public void setUp() throws Exception {
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
+        context = Robolectric.buildActivity(Activity.class).create().get();
         PrebidMobile.setPrebidServerAccountId("id");
-        mMediationInterstitialAdUnit = new MediationInterstitialAdUnit(mContext, "config", new AdSize(1, 2), new MockMediationUtils());
+        mediationInterstitialAdUnit = new MediationInterstitialAdUnit(context, "config", new AdSize(1, 2), new MockMediationUtils());
     }
 
     @After
@@ -58,8 +58,8 @@ public class MediationInterstitialAdUnitTest {
     @Test
     public void whenInitAdConfig_PrepareAdConfigForInterstitial() {
         AdSize adSize = new AdSize(1, 2);
-        mMediationInterstitialAdUnit.initAdConfig("config", adSize);
-        AdUnitConfiguration adConfiguration = mMediationInterstitialAdUnit.mAdUnitConfig;
+        mediationInterstitialAdUnit.initAdConfig("config", adSize);
+        AdUnitConfiguration adConfiguration = mediationInterstitialAdUnit.adUnitConfig;
         assertEquals("config", adConfiguration.getConfigId());
         assertEquals(EnumSet.of(AdFormat.INTERSTITIAL), adConfiguration.getAdFormats());
         assertEquals(adSize, adConfiguration.getMinSizePercentage());
@@ -67,13 +67,13 @@ public class MediationInterstitialAdUnitTest {
 
     @Test
     public void whenConstructorAndAdUnitFormatVideo_AdUnitIdentifierTypeVideo() {
-        mMediationInterstitialAdUnit = new MediationInterstitialAdUnit(
-            mContext,
+        mediationInterstitialAdUnit = new MediationInterstitialAdUnit(
+            context,
             "config",
             EnumSet.of(AdUnitFormat.VIDEO),
             new MockMediationUtils()
         );
-        assertEquals(EnumSet.of(AdFormat.VAST), mMediationInterstitialAdUnit.mAdUnitConfig.getAdFormats());
+        assertEquals(EnumSet.of(AdFormat.VAST), mediationInterstitialAdUnit.adUnitConfig.getAdFormats());
     }
 
 }

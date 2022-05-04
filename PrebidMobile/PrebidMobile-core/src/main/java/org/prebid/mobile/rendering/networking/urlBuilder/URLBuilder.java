@@ -23,19 +23,23 @@ import java.util.ArrayList;
 
 public class URLBuilder {
 
-    private final URLPathBuilder mPathBuilder;
-    private final ArrayList<ParameterBuilder> mParamBuilders;
-    private final AdRequestInput mAdRequestInput;
+    private final URLPathBuilder pathBuilder;
+    private final ArrayList<ParameterBuilder> paramBuilders;
+    private final AdRequestInput adRequestInput;
 
-    public URLBuilder(URLPathBuilder pathBuilder, ArrayList<ParameterBuilder> parameterBuilders, AdRequestInput adRequestInput) {
-        mPathBuilder = pathBuilder;
-        mParamBuilders = parameterBuilders;
-        mAdRequestInput = adRequestInput;
+    public URLBuilder(
+            URLPathBuilder pathBuilder,
+            ArrayList<ParameterBuilder> parameterBuilders,
+            AdRequestInput adRequestInput
+    ) {
+        this.pathBuilder = pathBuilder;
+        paramBuilders = parameterBuilders;
+        this.adRequestInput = adRequestInput;
     }
 
     public BidUrlComponents buildUrl() {
-        AdRequestInput adRequestInput = buildParameters(mParamBuilders, mAdRequestInput);
-        String initialPath = mPathBuilder.buildURLPath("");
+        AdRequestInput adRequestInput = buildParameters(paramBuilders, this.adRequestInput);
+        String initialPath = pathBuilder.buildURLPath("");
         return new BidUrlComponents(initialPath, adRequestInput);
     }
 

@@ -28,30 +28,30 @@ import static org.junit.Assert.assertEquals;
 
 public class MockServerTest {
 
-    private MockWebServer mServer;
+    private MockWebServer server;
 
     @Before
     public void setUp() throws Exception {
-        mServer = new MockWebServer();
+        server = new MockWebServer();
     }
 
     @After
     public void tearDown() throws Exception {
-        mServer.shutdown();
+        server.shutdown();
     }
 
     @Test
     public void redirectResponseCodeTest() throws Exception {
-        mServer.enqueue(new MockResponse().setResponseCode(302));
-        mServer.enqueue(new MockResponse().setResponseCode(307));
-        mServer.start();
+        server.enqueue(new MockResponse().setResponseCode(302));
+        server.enqueue(new MockResponse().setResponseCode(307));
+        server.start();
 
         BaseNetworkTask.GetUrlParams params = new BaseNetworkTask.GetUrlParams();
         params.name = "foo";
         params.requestType = "GET";
         params.userAgent = "user-agent";
 
-        HttpUrl baseUrl = mServer.url("/test");
+        HttpUrl baseUrl = server.url("/test");
         params.url = baseUrl.url().toString();
 
         // HTTP 302

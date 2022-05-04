@@ -24,10 +24,10 @@ import org.prebid.mobile.rendering.networking.ResponseHandler;
 class OriginalUrlResponseCallBack implements ResponseHandler {
     private static final String TAG = OriginalUrlResponseCallBack.class.getSimpleName();
 
-    private RedirectUrlListener mRedirectUrlListener;
+    private RedirectUrlListener redirectUrlListener;
 
     OriginalUrlResponseCallBack(RedirectUrlListener redirectUrlListener) {
-        mRedirectUrlListener = redirectUrlListener;
+        this.redirectUrlListener = redirectUrlListener;
     }
 
     @Override
@@ -38,8 +38,8 @@ class OriginalUrlResponseCallBack implements ResponseHandler {
             return;
         }
 
-        if (mRedirectUrlListener != null) {
-            mRedirectUrlListener.onSuccess(result.originalUrl, result.contentType);
+        if (redirectUrlListener != null) {
+            redirectUrlListener.onSuccess(result.originalUrl, result.contentType);
         }
     }
 
@@ -56,8 +56,8 @@ class OriginalUrlResponseCallBack implements ResponseHandler {
     }
 
     private void notifyFailureListener() {
-        if (mRedirectUrlListener != null) {
-            mRedirectUrlListener.onFailed();
+        if (redirectUrlListener != null) {
+            redirectUrlListener.onFailed();
         }
     }
 }

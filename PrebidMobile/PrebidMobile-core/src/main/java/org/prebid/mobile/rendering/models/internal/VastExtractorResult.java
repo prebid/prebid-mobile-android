@@ -23,32 +23,33 @@ import org.prebid.mobile.rendering.utils.helpers.Utils;
 import java.util.Arrays;
 
 public class VastExtractorResult {
-    private final String mLoadIdentifier = String.valueOf(Utils.generateRandomInt());
-    private AdException mAdException;
-    private AdResponseParserBase[] mVastResponseParserArray;
+
+    private final String loadIdentifier = String.valueOf(Utils.generateRandomInt());
+    private AdException adException;
+    private AdResponseParserBase[] vastResponseParserArray;
 
     public VastExtractorResult(AdResponseParserBase[] vastResponseParserArray) {
-        mVastResponseParserArray = vastResponseParserArray;
+        this.vastResponseParserArray = vastResponseParserArray;
     }
 
     public VastExtractorResult(AdException adException) {
-        mAdException = adException;
+        this.adException = adException;
     }
 
     public AdException getAdException() {
-        return mAdException;
+        return adException;
     }
 
     public String getLoadIdentifier() {
-        return mLoadIdentifier;
+        return loadIdentifier;
     }
 
     public AdResponseParserBase[] getVastResponseParserArray() {
-        return mVastResponseParserArray;
+        return vastResponseParserArray;
     }
 
     public boolean hasException() {
-        return mAdException != null;
+        return adException != null;
     }
 
     @Override
@@ -62,16 +63,14 @@ public class VastExtractorResult {
 
         VastExtractorResult that = (VastExtractorResult) o;
 
-        return mLoadIdentifier != null
-               ? mLoadIdentifier.equals(that.mLoadIdentifier)
-               : that.mLoadIdentifier == null;
+        return loadIdentifier != null ? loadIdentifier.equals(that.loadIdentifier) : that.loadIdentifier == null;
     }
 
     @Override
     public int hashCode() {
-        int result = mLoadIdentifier != null ? mLoadIdentifier.hashCode() : 0;
-        result = 31 * result + (mAdException != null ? mAdException.hashCode() : 0);
-        result = 31 * result + Arrays.hashCode(mVastResponseParserArray);
+        int result = loadIdentifier != null ? loadIdentifier.hashCode() : 0;
+        result = 31 * result + (adException != null ? adException.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(vastResponseParserArray);
         return result;
     }
 }

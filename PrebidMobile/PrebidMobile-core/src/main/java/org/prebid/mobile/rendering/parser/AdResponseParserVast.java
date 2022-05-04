@@ -44,28 +44,28 @@ public class AdResponseParserVast extends AdResponseParserBase {
     public static final int RESOURCE_FORMAT_IFRAME = 2;
     public static final int RESOURCE_FORMAT_STATIC = 3;
 
-    private boolean mReady;
+    private boolean ready;
 
-    private volatile AdResponseParserVast mWrappedVASTXml;
+    private volatile AdResponseParserVast wrappedVASTXml;
 
-    private ArrayList<org.prebid.mobile.rendering.video.vast.Tracking> mTrackings;
-    private ArrayList<ClickTracking> mClickTrackings;
-    private ArrayList<Impression> mImpressions;
+    private ArrayList<org.prebid.mobile.rendering.video.vast.Tracking> trackings;
+    private ArrayList<ClickTracking> clickTrackings;
+    private ArrayList<Impression> impressions;
 
-    private VAST mVast;
+    private VAST vast;
 
     public ArrayList<org.prebid.mobile.rendering.video.vast.Tracking> getTrackings() {
-        return mTrackings;
+        return trackings;
     }
 
     public ArrayList<Impression> getImpressions() {
 
-        return mImpressions;
+        return impressions;
     }
 
     public ArrayList<ClickTracking> getClickTrackings() {
 
-        return mClickTrackings;
+        return clickTrackings;
     }
 
     public static class Tracking {
@@ -118,13 +118,13 @@ public class AdResponseParserVast extends AdResponseParserBase {
             "impression",
             "click"};
 
-        private int mEvent;
+        private int event;
 
-        private String mUrl;
+        private String url;
 
         public Tracking(String event, String url) {
-            mEvent = findEvent(event);
-            mUrl = url;
+            this.event = findEvent(event);
+            this.url = url;
         }
 
         private int findEvent(String event) {
@@ -137,31 +137,30 @@ public class AdResponseParserVast extends AdResponseParserBase {
         }
 
         public int getEvent() {
-            return mEvent;
+            return event;
         }
 
         public String getUrl() {
-            return mUrl;
+            return url;
         }
     }
 
     public AdResponseParserVast(String data) throws VastParseError {
-        mTrackings = new ArrayList<>();
-        mImpressions = new ArrayList<>();
-        mClickTrackings = new ArrayList<>();
-        mReady = false;
+        trackings = new ArrayList<>();
+        impressions = new ArrayList<>();
+        clickTrackings = new ArrayList<>();
+        ready = false;
 
         try {
             readVAST(data);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new VastParseError(e.getLocalizedMessage());
         }
-        mReady = true;
+        ready = true;
     }
 
     public VAST getVast() {
-        return mVast;
+        return vast;
     }
 
     private void readVAST(String data) throws XmlPullParserException, IOException {
@@ -174,7 +173,7 @@ public class AdResponseParserVast extends AdResponseParserBase {
         parser.setInput(new StringReader(data));
         parser.nextTag();
 
-        mVast = new VAST(parser);
+        vast = new VAST(parser);
     }
 
     @Nullable
@@ -192,8 +191,8 @@ public class AdResponseParserVast extends AdResponseParserBase {
 
     public List<String> getImpressionTrackerUrl() {
         List<String> urls = new ArrayList<>();
-        if (mWrappedVASTXml != null && mWrappedVASTXml.getImpressionTrackerUrl() != null) {
-            urls.addAll(mWrappedVASTXml.getImpressionTrackerUrl());
+        if (wrappedVASTXml != null && wrappedVASTXml.getImpressionTrackerUrl() != null) {
+            urls.addAll(wrappedVASTXml.getImpressionTrackerUrl());
         }
 
         return urls;
@@ -201,7 +200,7 @@ public class AdResponseParserVast extends AdResponseParserBase {
 
     public String getVastUrl() {
 
-        for (Ad ad : mVast.getAds()) {
+        for (Ad ad : vast.getAds()) {
 
             if (ad.getWrapper() != null && ad.getWrapper().getVastUrl() != null) {
 
@@ -221,8 +220,8 @@ public class AdResponseParserVast extends AdResponseParserBase {
          * and then we get its meduaFile URL. Note that index is hardcoded in the call
          * as 0 for the first Ad node. So we have to figure out a solution for Ad pods.
          */
-        if (mWrappedVASTXml != null) {
-            mWrappedVASTXml.getMediaFileUrl(mWrappedVASTXml, index);
+        if (wrappedVASTXml != null) {
+            wrappedVASTXml.getMediaFileUrl(wrappedVASTXml, index);
         }
         /**
          * Now that we have reached the last node, we can get its mediaFileUrl.
@@ -231,7 +230,7 @@ public class AdResponseParserVast extends AdResponseParserBase {
          */
         else {
 
-            Ad ad = parserVast.mVast.getAds().get(index);
+            Ad ad = parserVast.vast.getAds().get(index);
 
             for (Creative creative : ad.getInline().getCreatives()) {
 
@@ -289,18 +288,18 @@ public class AdResponseParserVast extends AdResponseParserBase {
     }
 
     public ArrayList<Impression> getImpressions(AdResponseParserVast parserVast, int index) {
-        if (getImpressionEvents(parserVast.mVast, index) != null) {
-            mImpressions.addAll(getImpressionEvents(parserVast.mVast, index));
+        if (getImpressionEvents(parserVast.vast, index) != null) {
+            impressions.addAll(getImpressionEvents(parserVast.vast, index));
         }
 
         /**
          * Here we use a recursion pattern to traverse the nested VAST nodes "parserVast",
          */
-        if (parserVast.mWrappedVASTXml != null) {
-            getImpressions(parserVast.mWrappedVASTXml, index);
+        if (parserVast.wrappedVASTXml != null) {
+            getImpressions(parserVast.wrappedVASTXml, index);
         }
 
-        return mImpressions;
+        return impressions;
     }
 
     public ArrayList<org.prebid.mobile.rendering.video.vast.Tracking> getTrackingEvents(VAST vast, int index) {
@@ -349,22 +348,22 @@ public class AdResponseParserVast extends AdResponseParserBase {
 
     public ArrayList<org.prebid.mobile.rendering.video.vast.Tracking> getAllTrackings(AdResponseParserVast parserVast, int index) {
 
-        if (getTrackingEvents(parserVast.mVast, index) != null) {
-            mTrackings.addAll(getTrackingEvents(parserVast.mVast, index));
+        if (getTrackingEvents(parserVast.vast, index) != null) {
+            trackings.addAll(getTrackingEvents(parserVast.vast, index));
         }
 
         /**
          * Here we use a recursion pattern to traverse the nested VAST nodes "parserVast",
          */
-        if (parserVast.mWrappedVASTXml != null) {
-            getAllTrackings(parserVast.mWrappedVASTXml, index);
+        if (parserVast.wrappedVASTXml != null) {
+            getAllTrackings(parserVast.wrappedVASTXml, index);
         }
 
-        return mTrackings;
+        return trackings;
     }
 
     public ArrayList<String> getTrackingByType(VideoAdEvent.Event event) {
-        Iterator<org.prebid.mobile.rendering.video.vast.Tracking> iterator = mTrackings.iterator();
+        Iterator<org.prebid.mobile.rendering.video.vast.Tracking> iterator = trackings.iterator();
 
         ArrayList<String> urls = new ArrayList<>();
 
@@ -383,12 +382,11 @@ public class AdResponseParserVast extends AdResponseParserBase {
 
     public String getSkipOffset(AdResponseParserVast parserVast, int index) {
 
-        if (mWrappedVASTXml != null) {
-            return mWrappedVASTXml.getSkipOffset(parserVast, index);
-        }
-        else {
+        if (wrappedVASTXml != null) {
+            return wrappedVASTXml.getSkipOffset(parserVast, index);
+        } else {
 
-            Ad ad = parserVast.mVast.getAds().get(index);
+            Ad ad = parserVast.vast.getAds().get(index);
 
             if (ad != null && ad.getInline() != null) {
 
@@ -406,13 +404,11 @@ public class AdResponseParserVast extends AdResponseParserBase {
 
     public String getVideoDuration(AdResponseParserVast parserVast, int index) {
 
-        if (mWrappedVASTXml != null) {
-            return mWrappedVASTXml.getVideoDuration(parserVast, index);
-        }
+        if (wrappedVASTXml != null) {
+            return wrappedVASTXml.getVideoDuration(parserVast, index);
+        } else {
 
-        else {
-
-            Ad ad = parserVast.mVast.getAds().get(index);
+            Ad ad = parserVast.vast.getAds().get(index);
 
             if (ad != null && ad.getInline() != null) {
 
@@ -430,7 +426,7 @@ public class AdResponseParserVast extends AdResponseParserBase {
 
     public AdVerifications getAdVerification(AdResponseParserVast parserVast, int index) {
 
-        Ad ad = parserVast.mVast.getAds().get(index);
+        Ad ad = parserVast.vast.getAds().get(index);
 
         if (ad == null || ad.getInline() == null) {
             return null;
@@ -463,7 +459,7 @@ public class AdResponseParserVast extends AdResponseParserBase {
 
     public String getError(AdResponseParserVast parserVast, int index) {
 
-        Ad ad = parserVast.mVast.getAds().get(index);
+        Ad ad = parserVast.vast.getAds().get(index);
 
         if (ad != null && ad.getInline() != null && ad.getInline().getError() != null) {
             return ad.getInline().getError().getValue();
@@ -474,17 +470,18 @@ public class AdResponseParserVast extends AdResponseParserBase {
 
     public String getClickThroughUrl(AdResponseParserVast parserVast, int index) {
 
-        if (mWrappedVASTXml != null) {
-            return mWrappedVASTXml.getClickThroughUrl(mWrappedVASTXml, index);
-        }
+        if (wrappedVASTXml != null) {
+            return wrappedVASTXml.getClickThroughUrl(wrappedVASTXml, index);
+        } else {
 
-        else {
-
-            Ad ad = parserVast.mVast.getAds().get(index);
+            Ad ad = parserVast.vast.getAds().get(index);
 
             for (Creative creative : ad.getInline().getCreatives()) {
 
-                if (creative.getLinear() != null && creative.getLinear().getVideoClicks() != null && creative.getLinear().getVideoClicks().getClickThrough() != null) {
+                if (creative.getLinear() != null && creative.getLinear()
+                                                            .getVideoClicks() != null && creative.getLinear()
+                                                                                                 .getVideoClicks()
+                                                                                                 .getClickThrough() != null) {
 
                     return creative.getLinear().getVideoClicks().getClickThrough().getValue();
                 }
@@ -522,26 +519,26 @@ public class AdResponseParserVast extends AdResponseParserBase {
     }
 
     public ArrayList<ClickTracking> getClickTrackings(AdResponseParserVast parserVast, int index) {
-        ArrayList<ClickTracking> clickTrackingsList = findClickTrackings(parserVast.mVast, index);
+        ArrayList<ClickTracking> clickTrackingsList = findClickTrackings(parserVast.vast, index);
         if (clickTrackingsList != null) {
-            mClickTrackings.addAll(clickTrackingsList);
+            clickTrackings.addAll(clickTrackingsList);
         }
 
         /**
          * Here we use a recursion pattern to traverse the nested VAST nodes "parserVast",
          */
-        if (parserVast.mWrappedVASTXml != null) {
-            getClickTrackings(parserVast.mWrappedVASTXml, index);
+        if (parserVast.wrappedVASTXml != null) {
+            getClickTrackings(parserVast.wrappedVASTXml, index);
         }
 
-        return mClickTrackings;
+        return clickTrackings;
     }
 
     public List<String> getClickTrackingUrl() {
 
         List<String> urls = new ArrayList<>();
-        if (mWrappedVASTXml != null && mWrappedVASTXml.getClickTrackingUrl() != null) {
-            urls.addAll(mWrappedVASTXml.getClickTrackingUrl());
+        if (wrappedVASTXml != null && wrappedVASTXml.getClickTrackingUrl() != null) {
+            urls.addAll(wrappedVASTXml.getClickTrackingUrl());
         }
 
         return urls;
@@ -682,24 +679,32 @@ public class AdResponseParserVast extends AdResponseParserBase {
 
     public synchronized boolean isReady() {
 
-        return mReady && (mWrappedVASTXml == null || mWrappedVASTXml.isReady());
+        return ready && (wrappedVASTXml == null || wrappedVASTXml.isReady());
     }
 
 
     public void setWrapper(AdResponseParserVast vastXml) {
-        mWrappedVASTXml = vastXml;
+        wrappedVASTXml = vastXml;
     }
 
     /**
      * @return null if no wrapped XML is present, a reference to a wrapped VASTXmlParse if it is
      */
     public AdResponseParserVast getWrappedVASTXml() {
-        return mWrappedVASTXml;
+        return wrappedVASTXml;
     }
 
     public int getWidth() {
         try {
-            return Integer.parseInt(mVast.getAds().get(0).getInline().getCreatives().get(0).getLinear().getMediaFiles().get(0).getWidth());
+            return Integer.parseInt(vast.getAds()
+                                        .get(0)
+                                        .getInline()
+                                        .getCreatives()
+                                        .get(0)
+                                        .getLinear()
+                                        .getMediaFiles()
+                                        .get(0)
+                                        .getWidth());
         }
         catch (Exception e) {
             return 0;
@@ -708,7 +713,15 @@ public class AdResponseParserVast extends AdResponseParserBase {
 
     public int getHeight() {
         try {
-            return Integer.parseInt(mVast.getAds().get(0).getInline().getCreatives().get(0).getLinear().getMediaFiles().get(0).getHeight());
+            return Integer.parseInt(vast.getAds()
+                                        .get(0)
+                                        .getInline()
+                                        .getCreatives()
+                                        .get(0)
+                                        .getLinear()
+                                        .getMediaFiles()
+                                        .get(0)
+                                        .getHeight());
         }
         catch (Exception e) {
             return 0;

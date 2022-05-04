@@ -25,10 +25,10 @@ import java.util.ArrayList;
 public class AdVerifications extends VASTParserBase {
     private static final String VAST_VERIFICATION = "Verification";
 
-    private final ArrayList<Verification> mVerifications;
+    private final ArrayList<Verification> verifications;
 
     public AdVerifications(XmlPullParser p) throws IOException, XmlPullParserException {
-        mVerifications = new ArrayList<>();
+        verifications = new ArrayList<>();
         while (p.next() != XmlPullParser.END_TAG) {
             if (p.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -37,7 +37,7 @@ public class AdVerifications extends VASTParserBase {
             if (name != null && name.equals(VAST_VERIFICATION)) {
                 p.require(XmlPullParser.START_TAG, null, VAST_VERIFICATION);
                 Verification verification = new Verification(p);
-                mVerifications.add(verification);
+                verifications.add(verification);
                 p.require(XmlPullParser.END_TAG, null, VAST_VERIFICATION);
             }
             else {
@@ -47,6 +47,6 @@ public class AdVerifications extends VASTParserBase {
     }
 
     public ArrayList<Verification> getVerifications() {
-        return mVerifications;
+        return verifications;
     }
 }

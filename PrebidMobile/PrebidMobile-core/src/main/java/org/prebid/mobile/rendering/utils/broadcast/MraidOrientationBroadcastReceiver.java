@@ -24,21 +24,22 @@ import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 import java.lang.ref.WeakReference;
 
 public class MraidOrientationBroadcastReceiver extends OrientationBroadcastReceiver {
+
     private static final String TAG = MraidOrientationBroadcastReceiver.class.getSimpleName();
 
-    private final WeakReference<BaseJSInterface> mBaseJSInterfaceWeakReference;
+    private final WeakReference<BaseJSInterface> baseJSInterfaceWeakReference;
 
-    private String mMraidAction;
-    private String mState;
+    private String mraidAction;
+    private String state;
 
     public MraidOrientationBroadcastReceiver(BaseJSInterface baseJSInterface) {
-        mBaseJSInterfaceWeakReference = new WeakReference<>(baseJSInterface);
+        baseJSInterfaceWeakReference = new WeakReference<>(baseJSInterface);
     }
 
     @Override
     public void handleOrientationChange(int currentRotation) {
         super.handleOrientationChange(currentRotation);
-        BaseJSInterface baseJSInterface = mBaseJSInterfaceWeakReference.get();
+        BaseJSInterface baseJSInterface = baseJSInterfaceWeakReference.get();
         if (baseJSInterface == null) {
             LogUtil.debug(TAG, "handleOrientationChange failure. BaseJsInterface is null");
             return;
@@ -51,17 +52,15 @@ public class MraidOrientationBroadcastReceiver extends OrientationBroadcastRecei
     }
 
     public void setState(String state) {
-        mState = state;
+        this.state = state;
     }
 
     public void setMraidAction(String action) {
-        mMraidAction = action;
+        mraidAction = action;
     }
 
     private boolean shouldHandleClose() {
-        return mState != null
-               && !JSInterface.STATE_DEFAULT.equals(mState)
-               && Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT
-               && JSInterface.ACTION_RESIZE.equals(mMraidAction);
+        return state != null && !JSInterface.STATE_DEFAULT.equals(state) && Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT && JSInterface.ACTION_RESIZE.equals(
+                mraidAction);
     }
 }

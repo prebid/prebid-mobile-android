@@ -52,191 +52,191 @@ public class WinNotifierTest {
     private static final String CACHE_ID = "id";
     private static final String CACHE_UUID = "uuid";
 
-    private WinNotifier mWinNotifier;
-    private String mCacheHost;
-    private Bid mBid;
-    private MockWebServer mMockWebServer;
-    private HashMap<String, String> mTargeting;
+    private WinNotifier winNotifier;
+    private String cacheHost;
+    private Bid bid;
+    private MockWebServer mockWebServer;
+    private HashMap<String, String> targeting;
 
     // Set to TRUE to dispatch an error through MockWebServer
-    private boolean mDispatchError;
+    private boolean dispatchError;
 
     @Mock
-    private WinNotifier.WinNotifierListener mMockListener;
+    private WinNotifier.WinNotifierListener mockListener;
     @Mock
-    private BidResponse mMockBidResponse;
+    private BidResponse mockBidResponse;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mDispatchError = false;
+        dispatchError = false;
 
-        mWinNotifier = new WinNotifier();
-        mWinNotifier.enableTestFlag();
+        winNotifier = new WinNotifier();
+        winNotifier.enableTestFlag();
 
-        mMockWebServer = new MockWebServer();
-        mMockWebServer.setDispatcher(getDispatcher());
-        mMockWebServer.start();
+        mockWebServer = new MockWebServer();
+        mockWebServer.setDispatcher(getDispatcher());
+        mockWebServer.start();
 
         String cachePath = "/cache";
-        HttpUrl httpUrl = mMockWebServer.url(cachePath);
+        HttpUrl httpUrl = mockWebServer.url(cachePath);
 
-        mCacheHost = httpUrl.host() + ":" + httpUrl.port();
-        mTargeting = new HashMap<>();
-        mTargeting.put("hb_cache_host", mCacheHost);
-        mTargeting.put("hb_cache_path", cachePath);
+        cacheHost = httpUrl.host() + ":" + httpUrl.port();
+        targeting = new HashMap<>();
+        targeting.put("hb_cache_host", cacheHost);
+        targeting.put("hb_cache_path", cachePath);
 
-        mBid = Bid.fromJSONObject(new JSONObject(ResourceUtils.convertResourceToString(PATH_BID_SHORT_JSON)));
-        mBid.setAdm("test");
-        WhiteBox.setInternalState(mBid, "mPrebid", mock(Prebid.class));
+        bid = Bid.fromJSONObject(new JSONObject(ResourceUtils.convertResourceToString(PATH_BID_SHORT_JSON)));
+        bid.setAdm("test");
+        WhiteBox.setInternalState(bid, "prebid", mock(Prebid.class));
 
-        when(mMockBidResponse.getWinningBid()).thenReturn(mBid);
-        when(mBid.getPrebid().getTargeting()).thenReturn(mTargeting);
+        when(mockBidResponse.getWinningBid()).thenReturn(bid);
+        when(bid.getPrebid().getTargeting()).thenReturn(targeting);
     }
 
     @After
     public void cleanup() throws IOException {
-        mMockWebServer.shutdown();
+        mockWebServer.shutdown();
     }
 
     @Test
     public void whenAllUrlsInTargetingAndNoAdm_AllRequestsSent_AdmWasChanged()
     throws InterruptedException, IOException {
-        mTargeting.put(KEY_CACHE_ID, CACHE_ID);
-        mTargeting.put(KEY_UUID, CACHE_UUID);
+        targeting.put(KEY_CACHE_ID, CACHE_ID);
+        targeting.put(KEY_UUID, CACHE_UUID);
 
-        WhiteBox.setInternalState(mBid, "mNurl", String.format("http://%1$s/cache?uuid=nurl", mCacheHost));
-        mBid.setAdm(null);
+        WhiteBox.setInternalState(bid, "nurl", String.format("http://%1$s/cache?uuid=nurl", cacheHost));
+        bid.setAdm(null);
 
-        mWinNotifier.notifyWin(mMockBidResponse, mMockListener);
+        winNotifier.notifyWin(mockBidResponse, mockListener);
 
-        assertEquals(3, mMockWebServer.getRequestCount());
-        verifyRequest(mMockWebServer.takeRequest(), "/cache?uuid=id");
-        verifyRequest(mMockWebServer.takeRequest(), "/cache?uuid=uuid");
-        verifyRequest(mMockWebServer.takeRequest(), "/cache?uuid=nurl");
+        assertEquals(3, mockWebServer.getRequestCount());
+        verifyRequest(mockWebServer.takeRequest(), "/cache?uuid=id");
+        verifyRequest(mockWebServer.takeRequest(), "/cache?uuid=uuid");
+        verifyRequest(mockWebServer.takeRequest(), "/cache?uuid=nurl");
 
-        verify(mMockListener).onResult();
-        assertNotNull(mBid.getAdm());
+        verify(mockListener).onResult();
+        assertNotNull(bid.getAdm());
     }
 
     @Test
     public void whenAllUrlsInTargetingAndAdmPresents_AllRequestsSent_AdmWasNotChanged()
     throws InterruptedException {
-        mTargeting.put(KEY_CACHE_ID, CACHE_ID);
-        mTargeting.put(KEY_UUID, CACHE_UUID);
+        targeting.put(KEY_CACHE_ID, CACHE_ID);
+        targeting.put(KEY_UUID, CACHE_UUID);
 
-        WhiteBox.setInternalState(mBid, "mNurl", String.format("http://%1$s/cache?uuid=nurl", mCacheHost));
+        WhiteBox.setInternalState(bid, "nurl", String.format("http://%1$s/cache?uuid=nurl", cacheHost));
 
-        mWinNotifier.notifyWin(mMockBidResponse, mMockListener);
+        winNotifier.notifyWin(mockBidResponse, mockListener);
 
-        assertEquals(3, mMockWebServer.getRequestCount());
-        verifyRequest(mMockWebServer.takeRequest(), "/cache?uuid=id");
-        verifyRequest(mMockWebServer.takeRequest(), "/cache?uuid=uuid");
-        verifyRequest(mMockWebServer.takeRequest(), "/cache?uuid=nurl");
+        assertEquals(3, mockWebServer.getRequestCount());
+        verifyRequest(mockWebServer.takeRequest(), "/cache?uuid=id");
+        verifyRequest(mockWebServer.takeRequest(), "/cache?uuid=uuid");
+        verifyRequest(mockWebServer.takeRequest(), "/cache?uuid=nurl");
 
-        verify(mMockListener).onResult();
-        assertEquals("test", mBid.getAdm());
+        verify(mockListener).onResult();
+        assertEquals("test", bid.getAdm());
     }
 
     @Test
     public void whenNurlInTargetingAndNoAdm_AdmWasExtractedFromReceivedBid()
     throws InterruptedException {
-        mBid.setAdm(null);
-        WhiteBox.setInternalState(mBid, "mNurl", String.format("http://%1$s/cache?uuid=nurl", mCacheHost));
+        bid.setAdm(null);
+        WhiteBox.setInternalState(bid, "nurl", String.format("http://%1$s/cache?uuid=nurl", cacheHost));
 
-        mWinNotifier.notifyWin(mMockBidResponse, mMockListener);
+        winNotifier.notifyWin(mockBidResponse, mockListener);
 
-        assertEquals(1, mMockWebServer.getRequestCount());
-        verifyRequest(mMockWebServer.takeRequest(), "/cache?uuid=nurl");
+        assertEquals(1, mockWebServer.getRequestCount());
+        verifyRequest(mockWebServer.takeRequest(), "/cache?uuid=nurl");
 
-        verify(mMockListener).onResult();
-        assertEquals("VAST", mBid.getAdm());
+        verify(mockListener).onResult();
+        assertEquals("VAST", bid.getAdm());
     }
 
     @Test
     public void whenCacheIdInTargetingAndNoAdm_AdmWasExtractedFromReceivedBid()
     throws InterruptedException {
-        mBid.setAdm(null);
-        mTargeting.put(KEY_CACHE_ID, CACHE_ID);
+        bid.setAdm(null);
+        targeting.put(KEY_CACHE_ID, CACHE_ID);
 
-        mWinNotifier.notifyWin(mMockBidResponse, mMockListener);
+        winNotifier.notifyWin(mockBidResponse, mockListener);
 
-        assertEquals(1, mMockWebServer.getRequestCount());
-        verifyRequest(mMockWebServer.takeRequest(), "/cache?uuid=id");
+        assertEquals(1, mockWebServer.getRequestCount());
+        verifyRequest(mockWebServer.takeRequest(), "/cache?uuid=id");
 
-        verify(mMockListener).onResult();
-        assertEquals("test", mBid.getAdm());
+        verify(mockListener).onResult();
+        assertEquals("test", bid.getAdm());
     }
 
     @Test
     public void whenUuidInTargetingAndNoAdm_ResponseStringWasSetToAdm()
     throws InterruptedException {
-        mBid.setAdm(null);
-        mTargeting.put(KEY_UUID, CACHE_UUID);
+        bid.setAdm(null);
+        targeting.put(KEY_UUID, CACHE_UUID);
 
-        mWinNotifier.notifyWin(mMockBidResponse, mMockListener);
+        winNotifier.notifyWin(mockBidResponse, mockListener);
 
-        assertEquals(1, mMockWebServer.getRequestCount());
-        verifyRequest(mMockWebServer.takeRequest(), "/cache?uuid=uuid");
+        assertEquals(1, mockWebServer.getRequestCount());
+        verifyRequest(mockWebServer.takeRequest(), "/cache?uuid=uuid");
 
-        verify(mMockListener).onResult();
-        assertEquals("VAST", mBid.getAdm());
+        verify(mockListener).onResult();
+        assertEquals("VAST", bid.getAdm());
     }
 
     @Test
     public void whenBidIsNull_NoRequestWasMade_OnResultCalled() {
-        when(mMockBidResponse.getWinningBid()).thenReturn(null);
-        mWinNotifier.notifyWin(mMockBidResponse, mMockListener);
-        assertEquals(0, mMockWebServer.getRequestCount());
-        verify(mMockListener).onResult();
+        when(mockBidResponse.getWinningBid()).thenReturn(null);
+        winNotifier.notifyWin(mockBidResponse, mockListener);
+        assertEquals(0, mockWebServer.getRequestCount());
+        verify(mockListener).onResult();
     }
 
     @Test
     public void whenTargetingIsEmpty_NoRequestWasMade_OnResultCalled() {
-        mTargeting.clear();
-        mWinNotifier.notifyWin(mMockBidResponse, mMockListener);
-        assertEquals(0, mMockWebServer.getRequestCount());
-        verify(mMockListener).onResult();
+        targeting.clear();
+        winNotifier.notifyWin(mockBidResponse, mockListener);
+        assertEquals(0, mockWebServer.getRequestCount());
+        verify(mockListener).onResult();
     }
 
     @Test
     public void whenNoAdmAndRequestFails_AllRequestAttemptsWereMade() throws InterruptedException {
-        mDispatchError = true;
-        mTargeting.put(KEY_CACHE_ID, CACHE_ID);
-        mTargeting.put(KEY_UUID, CACHE_UUID);
+        dispatchError = true;
+        targeting.put(KEY_CACHE_ID, CACHE_ID);
+        targeting.put(KEY_UUID, CACHE_UUID);
 
-        WhiteBox.setInternalState(mBid, "mNurl", String.format("http://%1$s/cache?uuid=nurl", mCacheHost));
-        mBid.setAdm(null);
+        WhiteBox.setInternalState(bid, "nurl", String.format("http://%1$s/cache?uuid=nurl", cacheHost));
+        bid.setAdm(null);
 
-        mWinNotifier.notifyWin(mMockBidResponse, mMockListener);
+        winNotifier.notifyWin(mockBidResponse, mockListener);
 
-        assertEquals(3, mMockWebServer.getRequestCount());
-        verifyRequest(mMockWebServer.takeRequest(), "/cache?uuid=id");
-        verifyRequest(mMockWebServer.takeRequest(), "/cache?uuid=uuid");
-        verifyRequest(mMockWebServer.takeRequest(), "/cache?uuid=nurl");
+        assertEquals(3, mockWebServer.getRequestCount());
+        verifyRequest(mockWebServer.takeRequest(), "/cache?uuid=id");
+        verifyRequest(mockWebServer.takeRequest(), "/cache?uuid=uuid");
+        verifyRequest(mockWebServer.takeRequest(), "/cache?uuid=nurl");
 
-        verify(mMockListener).onResult();
-        assertNull(mBid.getAdm());
+        verify(mockListener).onResult();
+        assertNull(bid.getAdm());
     }
 
     @Test
     public void whenWinUrlIsEpty_WinUrlWasSkipped() throws InterruptedException {
-        mTargeting.put(KEY_CACHE_ID, CACHE_ID);
-        mTargeting.put(KEY_UUID, CACHE_UUID);
-        WhiteBox.setInternalState(mBid, "mNurl", "");
+        targeting.put(KEY_CACHE_ID, CACHE_ID);
+        targeting.put(KEY_UUID, CACHE_UUID);
+        WhiteBox.setInternalState(bid, "nurl", "");
 
         String test = "";
         int length = test.length();
         boolean isEmpty = TextUtils.isEmpty(test);
 
-        mWinNotifier.notifyWin(mMockBidResponse, mMockListener);
+        winNotifier.notifyWin(mockBidResponse, mockListener);
 
-        assertEquals(2, mMockWebServer.getRequestCount());
-        verifyRequest(mMockWebServer.takeRequest(), "/cache?uuid=id");
-        verifyRequest(mMockWebServer.takeRequest(), "/cache?uuid=uuid");
+        assertEquals(2, mockWebServer.getRequestCount());
+        verifyRequest(mockWebServer.takeRequest(), "/cache?uuid=id");
+        verifyRequest(mockWebServer.takeRequest(), "/cache?uuid=uuid");
 
-        verify(mMockListener).onResult();
-        assertNotNull(mBid.getAdm());
+        verify(mockListener).onResult();
+        assertNotNull(bid.getAdm());
     }
 
     private void verifyRequest(RecordedRequest recordedRequest, String path) {
@@ -251,7 +251,7 @@ public class WinNotifierTest {
                 @NotNull
                     RecordedRequest request) {
                 MockResponse mockResponse = new MockResponse().setResponseCode(200);
-                if (mDispatchError) {
+                if (dispatchError) {
                     mockResponse.setResponseCode(404);
                 }
                 String path = request.getPath();

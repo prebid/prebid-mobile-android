@@ -28,10 +28,10 @@ public class AdRequestInput {
 
     private static final String TAG = AdRequestInput.class.getSimpleName();
 
-    private BidRequest mBidRequest;
+    private BidRequest bidRequest;
 
     public AdRequestInput() {
-        mBidRequest = new BidRequest();
+        bidRequest = new BidRequest();
     }
 
     public AdRequestInput getDeepCopy() {
@@ -40,10 +40,10 @@ public class AdRequestInput {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(mBidRequest);
+            oos.writeObject(bidRequest);
             ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
             ObjectInputStream ois = new ObjectInputStream(bais);
-            newAdRequestInput.mBidRequest = (BidRequest) ois.readObject();
+            newAdRequestInput.bidRequest = (BidRequest) ois.readObject();
         }
         catch (Exception e) {
             LogUtil.error(TAG, "Failed to make deep copy of bid request");
@@ -54,10 +54,10 @@ public class AdRequestInput {
     }
 
     public BidRequest getBidRequest() {
-        return mBidRequest;
+        return bidRequest;
     }
 
     public void setBidRequest(BidRequest bidRequest) {
-        mBidRequest = bidRequest;
+        this.bidRequest = bidRequest;
     }
 }

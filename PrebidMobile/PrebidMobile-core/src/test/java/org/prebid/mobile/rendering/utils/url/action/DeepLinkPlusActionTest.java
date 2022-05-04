@@ -61,26 +61,26 @@ public class DeepLinkPlusActionTest {
                                                                           + "&primaryTrackingUrl=http%3A%2F%2Fmopub.com%2Fclicktracking&primaryTrackingUrl=http%3A%2F%2Fmopub.com%2Fmopubtracking"
                                                                           + "&fallbackUrl=deeplink%2B://Fmobile.twitter.com&fallbackTrackingUrl=http%3A%2F%2Fmopub.com%2Fmopubtrackingfallback";
 
-    private DeepLinkPlusAction mDeepLinkPlusAction;
+    private DeepLinkPlusAction deepLinkPlusAction;
 
     @Mock
-    Context mMockContext;
+    Context mockContext;
     @Mock
-    UrlHandler mMockUrlHandler;
+    UrlHandler mockUrlHandler;
     @Mock
-    TrackingManager mMockTrackingManager;
+    TrackingManager mockTrackingManager;
     @Mock
-    PackageManager mMockPackageManager;
+    PackageManager mockPackageManager;
 
     @Before
     public void setup() throws IllegalAccessException {
         MockitoAnnotations.initMocks(this);
-        mDeepLinkPlusAction = new DeepLinkPlusAction();
+        deepLinkPlusAction = new DeepLinkPlusAction();
 
-        WhiteBox.field(TrackingManager.class, "sInstance").set(null, mMockTrackingManager);
+        WhiteBox.field(TrackingManager.class, "sInstance").set(null, mockTrackingManager);
 
-        when(mMockPackageManager.queryIntentActivities(any(Intent.class), anyInt())).thenReturn(new ArrayList<>());
-        when(mMockContext.getPackageManager()).thenReturn(mMockPackageManager);
+        when(mockPackageManager.queryIntentActivities(any(Intent.class), anyInt())).thenReturn(new ArrayList<>());
+        when(mockContext.getPackageManager()).thenReturn(mockPackageManager);
     }
 
     @After
@@ -94,14 +94,14 @@ public class DeepLinkPlusActionTest {
         Uri httpsUri = Uri.parse("https://prebid.com");
         Uri customScheme = Uri.parse("prebid://open");
 
-        assertFalse(mDeepLinkPlusAction.shouldOverrideUrlLoading(httpUri));
-        assertFalse(mDeepLinkPlusAction.shouldOverrideUrlLoading(httpsUri));
-        assertFalse(mDeepLinkPlusAction.shouldOverrideUrlLoading(customScheme));
+        assertFalse(deepLinkPlusAction.shouldOverrideUrlLoading(httpUri));
+        assertFalse(deepLinkPlusAction.shouldOverrideUrlLoading(httpsUri));
+        assertFalse(deepLinkPlusAction.shouldOverrideUrlLoading(customScheme));
     }
 
     @Test
     public void shouldOverrideUrlLoadingDeepLinkPlusScheme_ReturnTrue() {
-        assertTrue(mDeepLinkPlusAction.shouldOverrideUrlLoading(Uri.parse(INVALID_DEEPLINK_EXAMPLE)));
+        assertTrue(deepLinkPlusAction.shouldOverrideUrlLoading(Uri.parse(INVALID_DEEPLINK_EXAMPLE)));
     }
 
     @Test
@@ -110,7 +110,7 @@ public class DeepLinkPlusActionTest {
         String actualMessage = "";
 
         try {
-            mDeepLinkPlusAction.performAction(mMockContext, mMockUrlHandler, Uri.parse("example.com/holiday/prebid/"));
+            deepLinkPlusAction.performAction(mockContext, mockUrlHandler, Uri.parse("example.com/holiday/prebid/"));
         }
         catch (ActionNotResolvedException e) {
             actualMessage = e.getMessage();
@@ -124,7 +124,7 @@ public class DeepLinkPlusActionTest {
         String actualMessage = "";
 
         try {
-            mDeepLinkPlusAction.performAction(mMockContext, mMockUrlHandler, Uri.parse("deeplink+://navigate?"));
+            deepLinkPlusAction.performAction(mockContext, mockUrlHandler, Uri.parse("deeplink+://navigate?"));
         }
         catch (ActionNotResolvedException e) {
             actualMessage = e.getMessage();
@@ -138,7 +138,7 @@ public class DeepLinkPlusActionTest {
         String actualMessage = "";
 
         try {
-            mDeepLinkPlusAction.performAction(mMockContext, mMockUrlHandler, Uri.parse(INVALID_NESTED_DEEPLINK_IN_PRIMARY_URL));
+            deepLinkPlusAction.performAction(mockContext, mockUrlHandler, Uri.parse(INVALID_NESTED_DEEPLINK_IN_PRIMARY_URL));
         }
         catch (ActionNotResolvedException e) {
             actualMessage = e.getMessage();
@@ -151,14 +151,14 @@ public class DeepLinkPlusActionTest {
     throws ActionNotResolvedException {
         ArrayList<ResolveInfo> resolveInfos = new ArrayList<>();
         resolveInfos.add(mock(ResolveInfo.class));
-        when(mMockPackageManager.queryIntentActivities(any(Intent.class), anyInt())).thenReturn(resolveInfos);
+        when(mockPackageManager.queryIntentActivities(any(Intent.class), anyInt())).thenReturn(resolveInfos);
 
         Uri validDeepLinkPlusUri = Uri.parse(FULL_DEEPLINK_EXAMPLE);
         List<String> primaryTrackingUrl = validDeepLinkPlusUri.getQueryParameters(QUERY_PRIMARY_TRACKING_URL);
 
-        mDeepLinkPlusAction.performAction(mMockContext, mMockUrlHandler, validDeepLinkPlusUri);
+        deepLinkPlusAction.performAction(mockContext, mockUrlHandler, validDeepLinkPlusUri);
 
-        verify(mMockTrackingManager, times(1)).fireEventTrackingURLs(primaryTrackingUrl);
+        verify(mockTrackingManager, times(1)).fireEventTrackingURLs(primaryTrackingUrl);
     }
 
     @Test
@@ -166,13 +166,13 @@ public class DeepLinkPlusActionTest {
     throws ActionNotResolvedException {
         ArrayList<ResolveInfo> resolveInfos = new ArrayList<>();
         resolveInfos.add(mock(ResolveInfo.class));
-        when(mMockPackageManager.queryIntentActivities(any(Intent.class), anyInt())).thenReturn(resolveInfos);
+        when(mockPackageManager.queryIntentActivities(any(Intent.class), anyInt())).thenReturn(resolveInfos);
 
         Uri validDeepLinkPlusUri = Uri.parse(FULL_DEEPLINK_EXAMPLE);
         List<String> primaryTrackingUrl = validDeepLinkPlusUri.getQueryParameters(QUERY_PRIMARY_TRACKING_URL);
 
-        mDeepLinkPlusAction.performAction(mMockContext, mMockUrlHandler, validDeepLinkPlusUri);
-        verify(mMockTrackingManager, times(1)).fireEventTrackingURLs(primaryTrackingUrl);
+        deepLinkPlusAction.performAction(mockContext, mockUrlHandler, validDeepLinkPlusUri);
+        verify(mockTrackingManager, times(1)).fireEventTrackingURLs(primaryTrackingUrl);
     }
 
     @Test
@@ -183,7 +183,7 @@ public class DeepLinkPlusActionTest {
         String actualMessage = "";
 
         try {
-            mDeepLinkPlusAction.performAction(mMockContext, mMockUrlHandler, emptyFallbackDeepLink);
+            deepLinkPlusAction.performAction(mockContext, mockUrlHandler, emptyFallbackDeepLink);
         }
         catch (ActionNotResolvedException e) {
             actualMessage = e.getMessage();
@@ -199,7 +199,7 @@ public class DeepLinkPlusActionTest {
         String actualMessage = "";
 
         try {
-            mDeepLinkPlusAction.performAction(mMockContext, mMockUrlHandler, invalidFallbackDeepLink);
+            deepLinkPlusAction.performAction(mockContext, mockUrlHandler, invalidFallbackDeepLink);
         }
         catch (ActionNotResolvedException e) {
             actualMessage = e.getMessage();
@@ -214,13 +214,13 @@ public class DeepLinkPlusActionTest {
         String fallbackUrl = validFallbackDeepLinkUri.getQueryParameter(QUERY_FALLBACK_URL);
         List<String> fallbackTrackingUrls = validFallbackDeepLinkUri.getQueryParameters(QUERY_FALLBACK_TRACKING_URL);
 
-        mDeepLinkPlusAction.performAction(mMockContext, mMockUrlHandler, validFallbackDeepLinkUri);
+        deepLinkPlusAction.performAction(mockContext, mockUrlHandler, validFallbackDeepLinkUri);
 
-        verify(mMockUrlHandler).handleUrl(mMockContext, fallbackUrl, fallbackTrackingUrls, true);
+        verify(mockUrlHandler).handleUrl(mockContext, fallbackUrl, fallbackTrackingUrls, true);
     }
 
     @Test
     public void shouldBeTriggeredByUser_ReturnTrue() {
-        assertTrue(mDeepLinkPlusAction.shouldBeTriggeredByUserAction());
+        assertTrue(deepLinkPlusAction.shouldBeTriggeredByUserAction());
     }
 }

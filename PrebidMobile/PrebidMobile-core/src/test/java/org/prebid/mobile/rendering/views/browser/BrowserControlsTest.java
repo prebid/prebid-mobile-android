@@ -42,83 +42,84 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class BrowserControlsTest {
 
-    private BrowserControls mBrowserControls;
-    private Context mContext;
-    private BrowserControlsEventsListener mMockListener;
+    private BrowserControls browserControls;
+    private Context context;
+    private BrowserControlsEventsListener mockListener;
 
     @Before
     public void setUp() throws Exception {
-        mContext = spy(Robolectric.buildActivity(Activity.class).create().get());
-        mMockListener = mock(BrowserControlsEventsListener.class);
+        context = spy(Robolectric.buildActivity(Activity.class).create().get());
+        mockListener = mock(BrowserControlsEventsListener.class);
 
-        mBrowserControls = new BrowserControls(mContext, mMockListener);
+        browserControls = new BrowserControls(context, mockListener);
     }
 
     @Test
     public void updateNavigationButtonsStateTest() throws IllegalAccessException {
-        Field backBtnField = WhiteBox.field(BrowserControls.class, "mBackBtn");
-        Field forthBtnField = WhiteBox.field(BrowserControls.class, "mForthBtn");
-        Button backBtn = spy((Button) backBtnField.get(mBrowserControls));
-        Button forthBtn = spy((Button) forthBtnField.get(mBrowserControls));
-        backBtnField.set(mBrowserControls, backBtn);
-        forthBtnField.set(mBrowserControls, forthBtn);
+        Field backBtnField = WhiteBox.field(BrowserControls.class, "backBtn");
+        Field forthBtnField = WhiteBox.field(BrowserControls.class, "forthBtn");
+        Button backBtn = spy((Button) backBtnField.get(browserControls));
+        Button forthBtn = spy((Button) forthBtnField.get(browserControls));
+        backBtnField.set(browserControls, backBtn);
+        forthBtnField.set(browserControls, forthBtn);
 
-        mBrowserControls.updateNavigationButtonsState();
+        browserControls.updateNavigationButtonsState();
         verify(backBtn).setBackgroundResource(eq(R.drawable.prebid_ic_back_inactive));
         verify(forthBtn).setBackgroundResource(eq(R.drawable.prebid_ic_forth_inactive));
 
-        when(mMockListener.canGoBack()).thenReturn(true);
-        when(mMockListener.canGoForward()).thenReturn(true);
-        mBrowserControls.updateNavigationButtonsState();
+        when(mockListener.canGoBack()).thenReturn(true);
+        when(mockListener.canGoForward()).thenReturn(true);
+        browserControls.updateNavigationButtonsState();
         verify(backBtn).setBackgroundResource(eq(R.drawable.prebid_ic_back_active));
         verify(forthBtn).setBackgroundResource(eq(R.drawable.prebid_ic_forth_active));
     }
 
     @Test
     public void openURLInExternalBrowserTest() {
-        mBrowserControls.openURLInExternalBrowser("tel:");
-        verify(mContext).startActivity(any(Intent.class));
+        browserControls.openURLInExternalBrowser("tel:");
+        verify(context).startActivity(any(Intent.class));
     }
 
     @Test
     public void showHideNavigationControlsTest() throws IllegalAccessException {
-        Field leftPartField = WhiteBox.field(BrowserControls.class, "mLeftPart");
+        Field leftPartField = WhiteBox.field(BrowserControls.class, "leftPart");
 
-        mBrowserControls.showNavigationControls();
-        Assert.assertEquals(View.VISIBLE, ((LinearLayout) leftPartField.get(mBrowserControls)).getVisibility());
+        browserControls.showNavigationControls();
+        Assert.assertEquals(View.VISIBLE, ((LinearLayout) leftPartField.get(browserControls)).getVisibility());
 
-        mBrowserControls.hideNavigationControls();
-        Assert.assertEquals(View.GONE, ((LinearLayout) leftPartField.get(mBrowserControls)).getVisibility());
+        browserControls.hideNavigationControls();
+        Assert.assertEquals(View.GONE, ((LinearLayout) leftPartField.get(browserControls)).getVisibility());
     }
 
     @Test
     public void clickListenersTest() throws IllegalAccessException {
-        Button closeBtn = (Button) WhiteBox.field(BrowserControls.class, "mCloseBtn").get(mBrowserControls);
-        Button backBtn = (Button) WhiteBox.field(BrowserControls.class, "mBackBtn").get(mBrowserControls);
-        Button forthBtn = (Button) WhiteBox.field(BrowserControls.class, "mForthBtn").get(mBrowserControls);
-        Button refreshBtn = (Button) WhiteBox.field(BrowserControls.class, "mRefreshBtn").get(mBrowserControls);
-        Button openInExternalBtn = (Button) WhiteBox.field(BrowserControls.class, "mOpenInExternalBrowserBtn").get(mBrowserControls);
+        Button closeBtn = (Button) WhiteBox.field(BrowserControls.class, "closeBtn").get(browserControls);
+        Button backBtn = (Button) WhiteBox.field(BrowserControls.class, "backBtn").get(browserControls);
+        Button forthBtn = (Button) WhiteBox.field(BrowserControls.class, "forthBtn").get(browserControls);
+        Button refreshBtn = (Button) WhiteBox.field(BrowserControls.class, "refreshBtn").get(browserControls);
+        Button openInExternalBtn = (Button) WhiteBox.field(BrowserControls.class, "openInExternalBrowserBtn")
+                                                    .get(browserControls);
 
         closeBtn.callOnClick();
-        verify(mMockListener).closeBrowser();
+        verify(mockListener).closeBrowser();
 
         backBtn.callOnClick();
-        verify(mMockListener).onGoBack();
+        verify(mockListener).onGoBack();
 
         forthBtn.callOnClick();
-        verify(mMockListener).onGoForward();
+        verify(mockListener).onGoForward();
 
         refreshBtn.callOnClick();
-        verify(mMockListener).onRelaod();
+        verify(mockListener).onRelaod();
 
         openInExternalBtn.callOnClick();
-        verify(mMockListener).getCurrentURL();
-        verify(mContext, times(0)).startActivity(any(Intent.class));
+        verify(mockListener).getCurrentURL();
+        verify(context, times(0)).startActivity(any(Intent.class));
 
-        reset(mMockListener);
-        when(mMockListener.getCurrentURL()).thenReturn("url");
+        reset(mockListener);
+        when(mockListener.getCurrentURL()).thenReturn("url");
         openInExternalBtn.callOnClick();
-        verify(mMockListener).getCurrentURL();
-        verify(mContext).startActivity(any(Intent.class));
+        verify(mockListener).getCurrentURL();
+        verify(context).startActivity(any(Intent.class));
     }
 }

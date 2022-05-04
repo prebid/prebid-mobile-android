@@ -52,23 +52,23 @@ import static org.mockito.Mockito.verify;
 @Config(sdk = 19)
 public class MediationBaseAdUnitTest {
 
-    private MediationBaseAdUnit mBaseAdUnit;
-    private Context mContext;
-    private Object mMopubView = new Object();
+    private MediationBaseAdUnit baseAdUnit;
+    private Context context;
+    private Object mopubView = new Object();
     @Mock
-    private AdSize mMockAdSize;
+    private AdSize mockAdSize;
     @Mock
-    private BidLoader mMockBidLoader;
+    private BidLoader mockBidLoader;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
-        mBaseAdUnit = createAdUnit("config");
+        context = Robolectric.buildActivity(Activity.class).create().get();
+        baseAdUnit = createAdUnit("config");
         PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
 
-        assertEquals(BannerAdPosition.UNDEFINED.getValue(), mBaseAdUnit.mAdUnitConfig.getAdPositionValue());
+        assertEquals(BannerAdPosition.UNDEFINED.getValue(), baseAdUnit.adUnitConfig.getAdPositionValue());
     }
 
     @After
@@ -79,13 +79,13 @@ public class MediationBaseAdUnitTest {
     @Test
     public void whenFetchDemandAndNotMoPubViewPassed_InvalidAdObjectResult() {
         PrebidMobile.setPrebidServerAccountId("testAccountId");
-        new MediationBaseAdUnit(mContext, "123", mMockAdSize, new MockMediationUtils()) {
+        new MediationBaseAdUnit(context, "123", mockAdSize, new MockMediationUtils()) {
             @Override
             protected void initAdConfig(
                 String configId,
                 AdSize adSize
             ) {
-                mAdUnitConfig.setConfigId(configId);
+                adUnitConfig.setConfigId(configId);
             }
         }.fetchDemand(result -> {
             assertEquals(FetchDemandResult.INVALID_AD_OBJECT, result);
@@ -94,7 +94,7 @@ public class MediationBaseAdUnitTest {
 
     @Test
     public void whenFetchDemandAndNoAccountId_InvalidAccountIdResult() {
-        mBaseAdUnit.fetchDemand(result -> {
+        baseAdUnit.fetchDemand(result -> {
             assertEquals(FetchDemandResult.INVALID_ACCOUNT_ID, result);
         });
     }
@@ -102,8 +102,8 @@ public class MediationBaseAdUnitTest {
     @Test
     public void whenFetchDemandAndNoConfigId_InvalidConfigIdResult() {
         PrebidMobile.setPrebidServerAccountId("id");
-        mBaseAdUnit = createAdUnit("");
-        mBaseAdUnit.fetchDemand(result -> {
+        baseAdUnit = createAdUnit("");
+        baseAdUnit.fetchDemand(result -> {
             assertEquals(FetchDemandResult.INVALID_CONFIG_ID, result);
         });
     }
@@ -114,8 +114,8 @@ public class MediationBaseAdUnitTest {
         final Host custom = Host.CUSTOM;
         custom.setHostUrl("");
         PrebidMobile.setPrebidServerHost(custom);
-        mBaseAdUnit = createAdUnit("123");
-        mBaseAdUnit.fetchDemand(result -> {
+        baseAdUnit = createAdUnit("123");
+        baseAdUnit.fetchDemand(result -> {
             assertEquals(FetchDemandResult.INVALID_HOST_URL, result);
         });
     }
@@ -123,15 +123,15 @@ public class MediationBaseAdUnitTest {
     @Test
     public void whenFetchDemandAndEverythingOK_BidLoaderLoadCalled() {
         PrebidMobile.setPrebidServerAccountId("id");
-        mBaseAdUnit.fetchDemand(result -> {
+        baseAdUnit.fetchDemand(result -> {
         });
-        verify(mMockBidLoader).load();
+        verify(mockBidLoader).load();
     }
 
     @Test
     public void whenDestroy_DestroyBidLoader() {
-        mBaseAdUnit.destroy();
-        verify(mMockBidLoader).destroy();
+        baseAdUnit.destroy();
+        verify(mockBidLoader).destroy();
     }
 
     @Test
@@ -140,8 +140,8 @@ public class MediationBaseAdUnitTest {
         OnFetchCompleteListener mockListener = mock(OnFetchCompleteListener.class);
         AdException adException = new AdException(AdException.INTERNAL_ERROR, "");
 
-        mBaseAdUnit.fetchDemand(mockListener);
-        mBaseAdUnit.onErrorReceived(adException);
+        baseAdUnit.fetchDemand(mockListener);
+        baseAdUnit.onErrorReceived(adException);
         verify(mockListener).onComplete(FetchDemandResult.SERVER_ERROR);
     }
 
@@ -156,27 +156,27 @@ public class MediationBaseAdUnitTest {
         expectedMap.put("key2", value2);
 
         // add
-        mBaseAdUnit.addContextData("key1", "value1");
-        mBaseAdUnit.addContextData("key2", "value2");
+        baseAdUnit.addContextData("key1", "value1");
+        baseAdUnit.addContextData("key2", "value2");
 
-        assertEquals(expectedMap, mBaseAdUnit.getContextDataDictionary());
+        assertEquals(expectedMap, baseAdUnit.getContextDataDictionary());
 
         // update
         HashSet<String> updateSet = new HashSet<>();
         updateSet.add("value3");
-        mBaseAdUnit.updateContextData("key1", updateSet);
+        baseAdUnit.updateContextData("key1", updateSet);
         expectedMap.replace("key1", updateSet);
 
-        assertEquals(expectedMap, mBaseAdUnit.getContextDataDictionary());
+        assertEquals(expectedMap, baseAdUnit.getContextDataDictionary());
 
         // remove
-        mBaseAdUnit.removeContextData("key1");
+        baseAdUnit.removeContextData("key1");
         expectedMap.remove("key1");
-        assertEquals(expectedMap, mBaseAdUnit.getContextDataDictionary());
+        assertEquals(expectedMap, baseAdUnit.getContextDataDictionary());
 
         // clear
-        mBaseAdUnit.clearContextData();
-        assertTrue(mBaseAdUnit.getContextDataDictionary().isEmpty());
+        baseAdUnit.clearContextData();
+        assertTrue(baseAdUnit.getContextDataDictionary().isEmpty());
     }
 
     @Test
@@ -186,56 +186,56 @@ public class MediationBaseAdUnitTest {
         expectedSet.add("key2");
 
         // add
-        mBaseAdUnit.addContextKeyword("key1");
-        mBaseAdUnit.addContextKeyword("key2");
+        baseAdUnit.addContextKeyword("key1");
+        baseAdUnit.addContextKeyword("key2");
 
-        assertEquals(expectedSet, mBaseAdUnit.getContextKeywordsSet());
+        assertEquals(expectedSet, baseAdUnit.getContextKeywordsSet());
 
         // remove
-        mBaseAdUnit.removeContextKeyword("key2");
+        baseAdUnit.removeContextKeyword("key2");
         expectedSet.remove("key2");
-        assertEquals(expectedSet, mBaseAdUnit.getContextKeywordsSet());
+        assertEquals(expectedSet, baseAdUnit.getContextKeywordsSet());
 
         // clear
-        mBaseAdUnit.clearContextKeywords();
-        assertTrue(mBaseAdUnit.getContextKeywordsSet().isEmpty());
+        baseAdUnit.clearContextKeywords();
+        assertTrue(baseAdUnit.getContextKeywordsSet().isEmpty());
 
         // add all
-        mBaseAdUnit.addContextKeywords(expectedSet);
-        assertEquals(expectedSet, mBaseAdUnit.getContextKeywordsSet());
+        baseAdUnit.addContextKeywords(expectedSet);
+        assertEquals(expectedSet, baseAdUnit.getContextKeywordsSet());
     }
 
     @Test
     public void setPbAdSlot_EqualsGetPbAdSlot() {
         final String expected = "12345";
-        mBaseAdUnit.setPbAdSlot(expected);
-        assertEquals(expected, mBaseAdUnit.getPbAdSlot());
+        baseAdUnit.setPbAdSlot(expected);
+        assertEquals(expected, baseAdUnit.getPbAdSlot());
     }
 
     private MediationBaseAdUnit createAdUnit(String configId) {
-        MediationBaseAdUnit baseAdUnit = new MediationBaseAdUnit(mContext, configId, mMockAdSize, new MockMediationUtils()) {
+        MediationBaseAdUnit baseAdUnit = new MediationBaseAdUnit(context, configId, mockAdSize, new MockMediationUtils()) {
             @Override
             protected void initAdConfig(
                 String configId,
                 AdSize adSize
             ) {
-                mAdUnitConfig.setConfigId(configId);
+                adUnitConfig.setConfigId(configId);
             }
         };
-        WhiteBox.setInternalState(baseAdUnit, "mBidLoader", mMockBidLoader);
+        WhiteBox.setInternalState(baseAdUnit, "bidLoader", mockBidLoader);
         return baseAdUnit;
     }
 
     public static class MediationViewMock {
 
-        private String mKeywords;
+        private String keywords;
 
         public void setKeywords(String keywords) {
-            mKeywords = keywords;
+            this.keywords = keywords;
         }
 
         public String getKeywords() {
-            return mKeywords;
+            return keywords;
         }
 
     }

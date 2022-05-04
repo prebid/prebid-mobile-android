@@ -38,74 +38,74 @@ public class BidResponse {
     public static final String KEY_CACHE_ID = "hb_cache_id_local";
 
     // ID of the bid request to which this is a response
-    private String mId;
+    private String id;
 
     // Bid currency using ISO-4217 alpha codes.
-    private String mCur;
+    private String cur;
 
     //Bidder generated response ID to assist with logging/tracking.
-    private String mBidId;
+    private String bidId;
 
     //Optional feature to allow a bidder to set data in the exchange’s cookie
-    private String mCustomData;
+    private String customData;
 
     // Reason for not bidding
-    private int mNbr;
+    private int nbr;
 
     // Array of seatbid objects; 1+ required if a bid is to be made.
-    private List<Seatbid> mSeatbids;
-    private Ext mExt;
+    private List<Seatbid> seatbids;
+    private Ext ext;
 
-    private boolean mHasParseError = false;
-    private String mParseError;
+    private boolean hasParseError = false;
+    private String parseError;
     private String winningBidJson;
 
-    private long mCreationTime;
+    private long creationTime;
 
     private MobileSdkPassThrough mobileSdkPassThrough;
 
     public BidResponse(String json) {
-        mSeatbids = new ArrayList<>();
+        seatbids = new ArrayList<>();
         parseJson(json);
     }
 
     public String getId() {
-        return mId;
+        return id;
     }
 
     public List<Seatbid> getSeatbids() {
-        return mSeatbids;
+        return seatbids;
     }
 
     public String getCur() {
-        return mCur;
+        return cur;
     }
 
     public Ext getExt() {
-        if (mExt == null) {
-            mExt = new Ext();
+        if (ext == null) {
+            ext = new Ext();
         }
-        return mExt;
+        return ext;
     }
 
     public boolean hasParseError() {
-        return mHasParseError;
+        return hasParseError;
     }
 
     public String getParseError() {
-        return mParseError;
+        return parseError;
     }
 
     public String getBidId() {
-        return mBidId;
+        return bidId;
     }
 
     public String getCustomData() {
-        return mCustomData;
+        return customData;
     }
 
     public int getNbr() {
-        return mNbr;
+        return nbr;
     }
 
     public String getWinningBidJson() {
@@ -117,17 +117,17 @@ public class BidResponse {
 
         try {
             JSONObject responseJson = new JSONObject(json);
-            mId = responseJson.optString("id");
-            mCur = responseJson.optString("cur");
-            mBidId = responseJson.optString("bidid");
-            mCustomData = responseJson.optString("customdata");
-            mNbr = responseJson.optInt("nbr", -1);
+            id = responseJson.optString("id");
+            cur = responseJson.optString("cur");
+            bidId = responseJson.optString("bidid");
+            customData = responseJson.optString("customdata");
+            nbr = responseJson.optInt("nbr", -1);
 
             MobileSdkPassThrough rootMobilePassThrough = null;
             if (responseJson.has("ext")) {
-                mExt = new Ext();
+                ext = new Ext();
                 JSONObject extJsonObject = responseJson.optJSONObject("ext");
-                mExt.put(extJsonObject);
+                ext.put(extJsonObject);
                 if (extJsonObject != null) {
                     rootMobilePassThrough = MobileSdkPassThrough.create(extJsonObject);
                 }
@@ -137,41 +137,41 @@ public class BidResponse {
             if (jsonSeatbids != null) {
                 for (int i = 0; i < jsonSeatbids.length(); i++) {
                     Seatbid seatbid = Seatbid.fromJSONObject(jsonSeatbids.optJSONObject(i));
-                    mSeatbids.add(seatbid);
+                    seatbids.add(seatbid);
                 }
             }
 
             MobileSdkPassThrough bidMobilePassThrough = null;
             Bid winningBid = getWinningBid();
             if (winningBid == null) {
-                mHasParseError = true;
-                mParseError = "Failed to parse bids. No winning bids were found.";
-                LogUtil.info(TAG, mParseError);
+                hasParseError = true;
+                parseError = "Failed to parse bids. No winning bids were found.";
+                LogUtil.info(TAG, parseError);
             } else {
                 bidMobilePassThrough = winningBid.getMobileSdkPassThrough();
             }
 
             mobileSdkPassThrough = MobileSdkPassThrough.combine(bidMobilePassThrough, rootMobilePassThrough);
-            mCreationTime = System.currentTimeMillis();
+            creationTime = System.currentTimeMillis();
         }
         catch (JSONException e) {
-            mHasParseError = true;
-            mParseError = "Failed to parse JSON String: " + e.getMessage();
-            LogUtil.error(TAG, mParseError);
+            hasParseError = true;
+            parseError = "Failed to parse JSON String: " + e.getMessage();
+            LogUtil.error(TAG, parseError);
         }
     }
 
     public long getCreationTime() {
-        return mCreationTime;
+        return creationTime;
     }
 
     @Nullable
     public Bid getWinningBid() {
-        if (mSeatbids == null) {
+        if (seatbids == null) {
             return null;
         }
 
-        for (Seatbid seatbid : mSeatbids) {
+        for (Seatbid seatbid : seatbids) {
             for (Bid bid : seatbid.getBids()) {
                 if (hasWinningKeywords(bid.getPrebid())) {
                     winningBidJson = bid.getJsonString();
@@ -186,7 +186,7 @@ public class BidResponse {
     @NonNull
     public HashMap<String, String> getTargeting() {
         HashMap<String, String> keywords = new HashMap<>();
-        for (Seatbid seatbid : mSeatbids) {
+        for (Seatbid seatbid : seatbids) {
             for (Bid bid : seatbid.getBids()) {
                 if (bid.getPrebid() != null) {
                     keywords.putAll(bid.getPrebid().getTargeting());
@@ -201,7 +201,7 @@ public class BidResponse {
     public HashMap<String, String> getTargetingWithCacheId() {
         // required for future BidResponseCache access
         final HashMap<String, String> targeting = getTargeting();
-        targeting.put(KEY_CACHE_ID, mId);
+        targeting.put(KEY_CACHE_ID, id);
         return targeting;
     }
 

@@ -24,13 +24,13 @@ public enum AdPosition {
     SIDEBAR(6),
     FULLSCREEN(7);
 
-    private final int mValue;
+    private final int value;
 
     AdPosition(int value) {
-        mValue = value;
+        this.value = value;
     }
 
     public int getValue() {
-        return mValue;
+        return value;
     }
 }

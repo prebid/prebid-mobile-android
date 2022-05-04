@@ -32,27 +32,30 @@ import org.prebid.mobile.rendering.parser.AdResponseParserVast;
 import org.prebid.mobile.rendering.video.vast.VASTErrorCodes;
 
 public class VastParserExtractor {
+
     private static final String TAG = VastParserExtractor.class.getSimpleName();
 
     public static final int WRAPPER_NESTING_LIMIT = 5;
 
-    private final AsyncVastLoader mAsyncVastLoader = new AsyncVastLoader();
-    @NonNull
-    private final VastParserExtractor.Listener mListener;
+    private final AsyncVastLoader asyncVastLoader = new AsyncVastLoader();
+    @NonNull private final VastParserExtractor.Listener listener;
 
-    private AdResponseParserVast mRootVastParser;
-    private AdResponseParserVast mLatestVastWrapperParser;
+    private AdResponseParserVast rootVastParser;
+    private AdResponseParserVast latestVastWrapperParser;
 
-    private int mVastWrapperCount;
+    private int vastWrapperCount;
 
-    private final ResponseHandler mResponseHandler = new ResponseHandler() {
+    private final ResponseHandler responseHandler = new ResponseHandler() {
         @Override
         public void onResponse(BaseNetworkTask.GetUrlResult response) {
             performVastUnwrap(response.responseString);
         }
 
         @Override
-        public void onError(String msg, long responseTime) {
+        public void onError(
+                String msg,
+                long responseTime
+        ) {
             failedToLoadAd(msg);
         }
 
@@ -65,12 +68,12 @@ public class VastParserExtractor {
     public VastParserExtractor(
         @NonNull
             Listener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     public void cancel() {
-        if (mAsyncVastLoader != null) {
-            mAsyncVastLoader.cancelTask();
+        if (asyncVastLoader != null) {
+            asyncVastLoader.cancelTask();
         }
     }
 
@@ -81,58 +84,57 @@ public class VastParserExtractor {
     private void performVastUnwrap(String vast) {
         if (!vast.contains("VAST version")) {
             final AdException adException = new AdException(AdException.INTERNAL_ERROR, VASTErrorCodes.VAST_SCHEMA_ERROR.toString());
-            mListener.onResult(createExtractorFailureResult(adException));
+            listener.onResult(createExtractorFailureResult(adException));
             return;
         }
 
-        mVastWrapperCount++;
+        vastWrapperCount++;
 
         // A new response has come back, either from the initial VAST request or a wrapper request.
         // Parse the response.
         AdResponseParserVast adResponseParserVast;
         try {
             adResponseParserVast = new AdResponseParserVast(vast);
-        }
-        catch (VastParseError e) {
+        } catch (VastParseError e) {
             LogUtil.error(TAG, "AdResponseParserVast creation failed: " + Log.getStackTraceString(e));
 
             final AdException adException = new AdException(AdException.INTERNAL_ERROR, e.getMessage());
-            mListener.onResult(createExtractorFailureResult(adException));
+            listener.onResult(createExtractorFailureResult(adException));
             return;
         }
 
         // Check if this is the response from the initial request or from unwrapping a wrapper
-        if (mRootVastParser == null) {
-            // If mRootVastParser doesn't exist then it is the initial VAST request
+        if (rootVastParser == null) {
+            // If rootVastParser doesn't exist then it is the initial VAST request
             LogUtil.debug(TAG, "Initial VAST Request");
-            mRootVastParser = adResponseParserVast;
-        }
-        else {
+            rootVastParser = adResponseParserVast;
+        } else {
             // Otherwise, this is the result of unwrapping a Wrapper.
             LogUtil.debug(TAG, "Unwrapping VAST Wrapper");
-            mLatestVastWrapperParser.setWrapper(adResponseParserVast);
+            latestVastWrapperParser.setWrapper(adResponseParserVast);
         }
 
-        mLatestVastWrapperParser = adResponseParserVast;
+        latestVastWrapperParser = adResponseParserVast;
 
         // Check if this response is a wrapper
-        String vastUrl = mLatestVastWrapperParser.getVastUrl();
+        String vastUrl = latestVastWrapperParser.getVastUrl();
         if (!TextUtils.isEmpty(vastUrl)) {
-            if (mVastWrapperCount >= WRAPPER_NESTING_LIMIT) {
-                final AdException adException = new AdException(AdException.INTERNAL_ERROR, VASTErrorCodes.WRAPPER_LIMIT_REACH_ERROR.toString());
+            if (vastWrapperCount >= WRAPPER_NESTING_LIMIT) {
+                final AdException adException = new AdException(
+                        AdException.INTERNAL_ERROR,
+                        VASTErrorCodes.WRAPPER_LIMIT_REACH_ERROR.toString()
+                );
                 final VastExtractorResult extractorFailureResult = createExtractorFailureResult(adException);
-                mListener.onResult(extractorFailureResult);
-                mVastWrapperCount = 0;
+                listener.onResult(extractorFailureResult);
+                vastWrapperCount = 0;
                 return;
             }
 
-            mAsyncVastLoader.loadVast(vastUrl, mResponseHandler);
+            asyncVastLoader.loadVast(vastUrl, responseHandler);
         }
         else {
-            final AdResponseParserBase[] parserArray = {
-                mRootVastParser,
-                mLatestVastWrapperParser};
-            mListener.onResult(new VastExtractorResult(parserArray));
+            final AdResponseParserBase[] parserArray = {rootVastParser, latestVastWrapperParser};
+            listener.onResult(new VastExtractorResult(parserArray));
         }
     }
 
@@ -140,7 +142,7 @@ public class VastParserExtractor {
         LogUtil.error(TAG, "Invalid ad response: " + msg);
 
         final AdException adException = new AdException(AdException.INTERNAL_ERROR, "Invalid ad response: " + msg);
-        mListener.onResult(createExtractorFailureResult(adException));
+        listener.onResult(createExtractorFailureResult(adException));
     }
 
     @VisibleForTesting

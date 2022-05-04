@@ -28,135 +28,129 @@ import org.prebid.mobile.rendering.utils.helpers.Dips;
  * extra memory that would otherwise be needed to do these conversions.
  */
 public class MraidScreenMetrics {
-    @NonNull
-    private final Context mContext;
-    @NonNull
-    private final Rect mScreenRect;
-    @NonNull
-    private final Rect mScreenRectDips;
+    @NonNull private final Context context;
+    @NonNull private final Rect screenRect;
+    @NonNull private final Rect screenRectDips;
 
-    @NonNull
-    private final Rect mRootViewRect;
-    @NonNull
-    private final Rect mRootViewRectDips;
+    @NonNull private final Rect rootViewRect;
+    @NonNull private final Rect rootViewRectDips;
 
-    @NonNull
-    private final Rect mCurrentAdRect;
-    @NonNull
-    private final Rect mCurrentAdRectDips;
+    @NonNull private final Rect currentAdRect;
+    @NonNull private final Rect currentAdRectDips;
 
-    @NonNull
-    private final Rect mDefaultAdRect;
-    @NonNull
-    private final Rect mDefaultAdRectDips;
+    @NonNull private final Rect defaultAdRect;
+    @NonNull private final Rect defaultAdRectDips;
 
-    private Rect mCurrentMaxSizeRect;
-    private Rect mDefaultPosition;
+    private Rect currentMaxSizeRect;
+    private Rect defaultPosition;
 
-    private final float mDensity;
+    private final float density;
 
-    public MraidScreenMetrics(Context context, float density) {
-        mContext = context.getApplicationContext();
-        mDensity = density;
+    public MraidScreenMetrics(
+            Context context,
+            float density
+    ) {
+        this.context = context.getApplicationContext();
+        this.density = density;
 
-        mScreenRect = new Rect();
-        mScreenRectDips = new Rect();
+        screenRect = new Rect();
+        screenRectDips = new Rect();
 
-        mRootViewRect = new Rect();
-        mRootViewRectDips = new Rect();
+        rootViewRect = new Rect();
+        rootViewRectDips = new Rect();
 
-        mCurrentAdRect = new Rect();
-        mCurrentAdRectDips = new Rect();
+        currentAdRect = new Rect();
+        currentAdRectDips = new Rect();
 
-        mDefaultAdRect = new Rect();
-        mDefaultAdRectDips = new Rect();
+        defaultAdRect = new Rect();
+        defaultAdRectDips = new Rect();
     }
 
     private void convertToDips(Rect sourceRect, Rect outRect) {
-        outRect.set(
-                Dips.pixelsToIntDips(sourceRect.left, mContext),
-                Dips.pixelsToIntDips(sourceRect.top, mContext),
-                Dips.pixelsToIntDips(sourceRect.right, mContext),
-                Dips.pixelsToIntDips(sourceRect.bottom, mContext));
+        outRect.set(Dips.pixelsToIntDips(sourceRect.left, context),
+                Dips.pixelsToIntDips(sourceRect.top, context),
+                Dips.pixelsToIntDips(sourceRect.right, context),
+                Dips.pixelsToIntDips(sourceRect.bottom, context)
+        );
     }
 
     public float getDensity() {
-        return mDensity;
+        return density;
     }
 
     public void setScreenSize(int width, int height) {
-        mScreenRect.set(0, 0, width, height);
-        convertToDips(mScreenRect, mScreenRectDips);
+        screenRect.set(0, 0, width, height);
+        convertToDips(screenRect, screenRectDips);
     }
 
     @NonNull
     public Rect getScreenRect() {
-        return mScreenRect;
+        return screenRect;
     }
 
     @NonNull
     public Rect getScreenRectDips() {
-        return mScreenRectDips;
+        return screenRectDips;
     }
 
     public void setRootViewPosition(int x, int y, int width, int height) {
-        mRootViewRect.set(x, y, x + width, y + height);
-        convertToDips(mRootViewRect, mRootViewRectDips);
+        rootViewRect.set(x, y, x + width, y + height);
+        convertToDips(rootViewRect, rootViewRectDips);
     }
 
     @NonNull
     public Rect getRootViewRect() {
-        return mRootViewRect;
+        return rootViewRect;
     }
 
     @NonNull
     public Rect getRootViewRectDips() {
-        return mRootViewRectDips;
+        return rootViewRectDips;
     }
 
     public void setCurrentAdPosition(int x, int y, int width, int height) {
-        mCurrentAdRect.set(x, y, x + width, y + height);
-        convertToDips(mCurrentAdRect, mCurrentAdRectDips);
+        currentAdRect.set(x, y, x + width, y + height);
+        convertToDips(currentAdRect, currentAdRectDips);
     }
 
     @NonNull
     public Rect getCurrentAdRect() {
-        return mCurrentAdRect;
+        return currentAdRect;
     }
 
     @NonNull
     public Rect getCurrentAdRectDips() {
-        return mCurrentAdRectDips;
+        return currentAdRectDips;
     }
 
     public void setDefaultAdPosition(int x, int y, int width, int height) {
-        mDefaultAdRect.set(x, y, x + width, y + height);
-        convertToDips(mDefaultAdRect, mDefaultAdRectDips);
+        defaultAdRect.set(x, y, x + width, y + height);
+        convertToDips(defaultAdRect, defaultAdRectDips);
     }
 
     @NonNull
     public Rect getDefaultAdRect() {
-        return mDefaultAdRect;
+        return defaultAdRect;
     }
 
     @NonNull
     public Rect getDefaultAdRectDips() {
-        return mDefaultAdRectDips;
+        return defaultAdRectDips;
     }
 
     public Rect getCurrentMaxSizeRect() {
-        return mCurrentMaxSizeRect;
+        return currentMaxSizeRect;
     }
 
     public void setCurrentMaxSizeRect(Rect currentMaxSizeRect) {
-        mCurrentMaxSizeRect = new Rect(0, 0, currentMaxSizeRect.width(), currentMaxSizeRect.height());
+        this.currentMaxSizeRect = new Rect(0, 0, currentMaxSizeRect.width(), currentMaxSizeRect.height());
     }
 
     public void setDefaultPosition(Rect defaultPosition) {
-        mDefaultPosition = defaultPosition;
+        this.defaultPosition = defaultPosition;
     }
 
     public Rect getDefaultPosition() {
-        return mDefaultPosition;
+        return defaultPosition;
     }
 }

@@ -34,10 +34,10 @@ import java.net.URL;
 public class UrlResolutionTask extends AsyncTask<String, Void, String> {
     private static final String TAG = UrlResolutionTask.class.getSimpleName();
 
-    @NonNull private final UrlResolutionListener mListener;
+    @NonNull private final UrlResolutionListener listener;
 
     public UrlResolutionTask(@NonNull UrlResolutionListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     @Nullable
@@ -143,7 +143,7 @@ public class UrlResolutionTask extends AsyncTask<String, Void, String> {
             onCancelled();
         }
         else {
-            mListener.onSuccess(resolvedUrl);
+            listener.onSuccess(resolvedUrl);
         }
     }
 
@@ -151,7 +151,7 @@ public class UrlResolutionTask extends AsyncTask<String, Void, String> {
     protected void onCancelled() {
         super.onCancelled();
 
-        mListener.onFailure("Task for resolving url was cancelled", null);
+        listener.onFailure("Task for resolving url was cancelled", null);
     }
 
     public interface UrlResolutionListener {

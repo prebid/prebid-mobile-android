@@ -21,13 +21,13 @@ package org.prebid.mobile.rendering.models;
  */
 public class AdDetails {
 
-    private String mTransactionId;
+    private String transactionId;
 
     public String getTransactionId() {
-        return mTransactionId;
+        return transactionId;
     }
 
     public void setTransactionId(String transactionId) {
-        mTransactionId = transactionId;
+        this.transactionId = transactionId;
     }
 }

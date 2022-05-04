@@ -24,104 +24,101 @@ import java.util.ArrayList;
 
 public class Companion extends VASTParserBase
 {
-	private final static String VAST_COMPANION = "Companion";
-	private final static String VAST_STATICRESOURCE = "StaticResource";
-	private final static String VAST_IFRAMERESOUCE = "IFrameResource";
-	private final static String VAST_HTMLRESOURCE = "HTMLResource";
-	private final static String VAST_ADPARAMETERS = "AdParameters";
-	private final static String VAST_ALTTEXT = "AltText";
-	private final static String VAST_COMPANIONCLICKTHROUGH = "CompanionClickThrough";
-	private final static String VAST_COMPANIONCLICKTRACKING = "CompanionClickTracking";
-	private final static String VAST_TRACKINGEVENTS = "TrackingEvents";
 
-    private String mId;
-    private String mWidth;
-    private String mHeight;
-    private String mAssetWidth;
-    private String mAssetHeight;
-    private String mExpandedWidth;
-    private String mExpandedHeight;
-    private String mApiFramework;
-    private String mAdSlotID;
+    private final static String VAST_COMPANION = "Companion";
+    private final static String VAST_STATICRESOURCE = "StaticResource";
+    private final static String VAST_IFRAMERESOUCE = "IFrameResource";
+    private final static String VAST_HTMLRESOURCE = "HTMLResource";
+    private final static String VAST_ADPARAMETERS = "AdParameters";
+    private final static String VAST_ALTTEXT = "AltText";
+    private final static String VAST_COMPANIONCLICKTHROUGH = "CompanionClickThrough";
+    private final static String VAST_COMPANIONCLICKTRACKING = "CompanionClickTracking";
+    private final static String VAST_TRACKINGEVENTS = "TrackingEvents";
 
-    private StaticResource mStaticResource;
-    private IFrameResource mIFrameResource;
-    private HTMLResource mHTMLResource;
-    private AdParameters mAdParameters;
-    private AltText mAltText;
-    private CompanionClickThrough mCompanionClickThrough;
-    private CompanionClickTracking mCompanionClickTracking;
-    private ArrayList<Tracking> mTrackingEvents;
+    private String id;
+    private String width;
+    private String height;
+    private String assetWidth;
+    private String assetHeight;
+    private String expandedWidth;
+    private String expandedHeight;
+    private String apiFramework;
+    private String adSlotID;
 
-	public Companion(XmlPullParser p) throws XmlPullParserException, IOException
-	{
+    private StaticResource staticResource;
+    private IFrameResource iFrameResource;
+    private HTMLResource HTMLResource;
+    private AdParameters adParameters;
+    private AltText altText;
+    private CompanionClickThrough companionClickThrough;
+    private CompanionClickTracking companionClickTracking;
+    private ArrayList<Tracking> trackingEvents;
 
-		p.require(XmlPullParser.START_TAG, null, VAST_COMPANION);
+    public Companion(XmlPullParser p) throws XmlPullParserException, IOException {
 
-        mId = p.getAttributeValue(null, "id");
-        mWidth = p.getAttributeValue(null, "width");
-        mHeight = p.getAttributeValue(null, "height");
-        mAssetWidth = p.getAttributeValue(null, "assetWidth");
-        mAssetHeight = p.getAttributeValue(null, "assetHeight");
-        mExpandedWidth = p.getAttributeValue(null, "expandedWidth");
-        mExpandedHeight = p.getAttributeValue(null, "expandedHeight");
-        mApiFramework = p.getAttributeValue(null, "apiFramework");
-        mAdSlotID = p.getAttributeValue(null, "adSlotID");
+        p.require(XmlPullParser.START_TAG, null, VAST_COMPANION);
 
-		while (p.next() != XmlPullParser.END_TAG)
-		{
-			if (p.getEventType() != XmlPullParser.START_TAG)
-			{
-				continue;
-			}
-			String name = p.getName();
-			if (name != null && name.equals(VAST_STATICRESOURCE))
-			{
-				p.require(XmlPullParser.START_TAG, null, VAST_STATICRESOURCE);
-                mStaticResource = new StaticResource(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_STATICRESOURCE);
+        id = p.getAttributeValue(null, "id");
+        width = p.getAttributeValue(null, "width");
+        height = p.getAttributeValue(null, "height");
+        assetWidth = p.getAttributeValue(null, "assetWidth");
+        assetHeight = p.getAttributeValue(null, "assetHeight");
+        expandedWidth = p.getAttributeValue(null, "expandedWidth");
+        expandedHeight = p.getAttributeValue(null, "expandedHeight");
+        apiFramework = p.getAttributeValue(null, "apiFramework");
+        adSlotID = p.getAttributeValue(null, "adSlotID");
+
+        while (p.next() != XmlPullParser.END_TAG) {
+            if (p.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = p.getName();
+            if (name != null && name.equals(VAST_STATICRESOURCE)) {
+                p.require(XmlPullParser.START_TAG, null, VAST_STATICRESOURCE);
+                staticResource = new StaticResource(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_STATICRESOURCE);
 			}
 			else if (name != null && name.equals(VAST_IFRAMERESOUCE))
 			{
-				p.require(XmlPullParser.START_TAG, null, VAST_IFRAMERESOUCE);
-                mIFrameResource = new IFrameResource(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_IFRAMERESOUCE);
+                p.require(XmlPullParser.START_TAG, null, VAST_IFRAMERESOUCE);
+                iFrameResource = new IFrameResource(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_IFRAMERESOUCE);
 			}
 			else if (name != null && name.equals(VAST_HTMLRESOURCE))
 			{
-				p.require(XmlPullParser.START_TAG, null, VAST_HTMLRESOURCE);
-                mHTMLResource = new HTMLResource(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_HTMLRESOURCE);
+                p.require(XmlPullParser.START_TAG, null, VAST_HTMLRESOURCE);
+                HTMLResource = new HTMLResource(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_HTMLRESOURCE);
 			}
 			else if (name != null && name.equals(VAST_ADPARAMETERS))
 			{
-				p.require(XmlPullParser.START_TAG, null, VAST_ADPARAMETERS);
-                mAdParameters = new AdParameters(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_ADPARAMETERS);
+                p.require(XmlPullParser.START_TAG, null, VAST_ADPARAMETERS);
+                adParameters = new AdParameters(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_ADPARAMETERS);
 			}
 			else if (name != null && name.equals(VAST_ALTTEXT))
 			{
-				p.require(XmlPullParser.START_TAG, null, VAST_ALTTEXT);
-                mAltText = new AltText(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_ALTTEXT);
+                p.require(XmlPullParser.START_TAG, null, VAST_ALTTEXT);
+                altText = new AltText(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_ALTTEXT);
 			}
 			else if (name != null && name.equals(VAST_COMPANIONCLICKTHROUGH))
 			{
-				p.require(XmlPullParser.START_TAG, null, VAST_COMPANIONCLICKTHROUGH);
-                mCompanionClickThrough = new CompanionClickThrough(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_COMPANIONCLICKTHROUGH);
+                p.require(XmlPullParser.START_TAG, null, VAST_COMPANIONCLICKTHROUGH);
+                companionClickThrough = new CompanionClickThrough(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_COMPANIONCLICKTHROUGH);
 			}
 			else if (name != null && name.equals(VAST_COMPANIONCLICKTRACKING))
 			{
-				p.require(XmlPullParser.START_TAG, null, VAST_COMPANIONCLICKTRACKING);
-                mCompanionClickTracking = new CompanionClickTracking(p);
-				p.require(XmlPullParser.END_TAG, null, VAST_COMPANIONCLICKTRACKING);
+                p.require(XmlPullParser.START_TAG, null, VAST_COMPANIONCLICKTRACKING);
+                companionClickTracking = new CompanionClickTracking(p);
+                p.require(XmlPullParser.END_TAG, null, VAST_COMPANIONCLICKTRACKING);
 			}
 			else if (name != null && name.equals(VAST_TRACKINGEVENTS))
 			{
-				p.require(XmlPullParser.START_TAG, null, VAST_TRACKINGEVENTS);
-                mTrackingEvents = (new TrackingEvents(p)).getTrackingEvents();
-				p.require(XmlPullParser.END_TAG, null, VAST_TRACKINGEVENTS);
+                p.require(XmlPullParser.START_TAG, null, VAST_TRACKINGEVENTS);
+                trackingEvents = (new TrackingEvents(p)).getTrackingEvents();
+                p.require(XmlPullParser.END_TAG, null, VAST_TRACKINGEVENTS);
 			}
 			else
 			{
@@ -132,70 +129,70 @@ public class Companion extends VASTParserBase
 	}
 
     public String getId() {
-        return mId;
+        return id;
     }
 
     public String getWidth() {
-        return mWidth;
+        return width;
     }
 
     public String getHeight() {
-        return mHeight;
+        return height;
     }
 
     public String getAssetWidth() {
-        return mAssetWidth;
+        return assetWidth;
     }
 
     public String getAssetHeight() {
-        return mAssetHeight;
+        return assetHeight;
     }
 
     public String getExpandedWidth() {
-        return mExpandedWidth;
+        return expandedWidth;
     }
 
     public String getExpandedHeight() {
-        return mExpandedHeight;
+        return expandedHeight;
     }
 
     public String getApiFramework() {
-        return mApiFramework;
+        return apiFramework;
     }
 
     public String getAdSlotID() {
-        return mAdSlotID;
+        return adSlotID;
     }
 
     public StaticResource getStaticResource() {
-        return mStaticResource;
+        return staticResource;
     }
 
     public IFrameResource getIFrameResource() {
-        return mIFrameResource;
+        return iFrameResource;
     }
 
     public HTMLResource getHtmlResource() {
-        return mHTMLResource;
+        return HTMLResource;
     }
 
     public AdParameters getAdParameters() {
-        return mAdParameters;
+        return adParameters;
     }
 
     public AltText getAltText() {
-        return mAltText;
+        return altText;
     }
 
     public CompanionClickThrough getCompanionClickThrough() {
-        return mCompanionClickThrough;
+        return companionClickThrough;
     }
 
     public CompanionClickTracking getCompanionClickTracking() {
-        return mCompanionClickTracking;
+        return companionClickTracking;
     }
 
     public ArrayList<Tracking> getTrackingEvents() {
-        return mTrackingEvents;
+        return trackingEvents;
     }
 }

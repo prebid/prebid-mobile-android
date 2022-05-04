@@ -38,14 +38,14 @@ import static org.mockito.Mockito.mock;
 @Config(sdk = 19)
 public class URLBuilderTest {
 
-    private AdUnitConfiguration mMockConfig;
-    private Context mContext;
-    private final boolean mBrowserActivityAvailable = true;
+    private AdUnitConfiguration mockConfig;
+    private Context context;
+    private final boolean browserActivityAvailable = true;
 
     @Before
     public void setUp() throws Exception {
-        mMockConfig = mock(AdUnitConfiguration.class);
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
+        mockConfig = mock(AdUnitConfiguration.class);
+        context = Robolectric.buildActivity(Activity.class).create().get();
     }
 
     @Test

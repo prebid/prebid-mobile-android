@@ -63,36 +63,36 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class HTMLCreativeTest {
 
-    private Context mContext;
+    private Context context;
     @Mock
-    AdUnitConfiguration mMockConfig;
+    AdUnitConfiguration mockConfig;
     @Mock
-    CreativeModel mMockModel;
+    CreativeModel mockModel;
     @Mock
-    OmAdSessionManager mMockOmAdSessionManager;
+    OmAdSessionManager mockOmAdSessionManager;
     @Mock
-    InterstitialManager mMockInterstitialManager;
+    InterstitialManager mockInterstitialManager;
     @Mock
-    MraidController mMockMraidController;
+    MraidController mockMraidController;
     @Mock
-    CreativeVisibilityTracker mMockCreativeVisibilityTracker;
+    CreativeVisibilityTracker mockCreativeVisibilityTracker;
     @Mock
-    PrebidWebViewBase mMockPrebidWebView;
+    PrebidWebViewBase mockPrebidWebView;
 
-    private HTMLCreative mHtmlCreative;
+    private HTMLCreative htmlCreative;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
+        context = Robolectric.buildActivity(Activity.class).create().get();
 
-        ManagersResolver.getInstance().prepare(mContext);
+        ManagersResolver.getInstance().prepare(context);
 
-        when(mMockModel.getAdConfiguration()).thenReturn(mMockConfig);
-        mHtmlCreative = new HTMLCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
-        mHtmlCreative.setCreativeView(mMockPrebidWebView);
-        WhiteBox.setInternalState(mHtmlCreative, "mMraidController", mMockMraidController);
+        when(mockModel.getAdConfiguration()).thenReturn(mockConfig);
+        htmlCreative = new HTMLCreative(context, mockModel, mockOmAdSessionManager, mockInterstitialManager);
+        htmlCreative.setCreativeView(mockPrebidWebView);
+        WhiteBox.setInternalState(htmlCreative, "mraidController", mockMraidController);
     }
 
     @After
@@ -108,7 +108,7 @@ public class HTMLCreativeTest {
     @Test
     public void constructorTest() {
         try {
-            new HTMLCreative(null, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
+            new HTMLCreative(null, mockModel, mockOmAdSessionManager, mockInterstitialManager);
             fail("AdException was NOT thrown");
         }
         catch (AdException e) {
@@ -129,71 +129,71 @@ public class HTMLCreativeTest {
 
         // Test null context
         try {
-            WhiteBox.field(HTMLCreative.class, "mContextReference").set(mHtmlCreative, null);
-            mHtmlCreative.load();
+            WhiteBox.field(HTMLCreative.class, "contextReference").set(htmlCreative, null);
+            htmlCreative.load();
             fail("AdException was NOT thrown");
         }
         catch (AdException e) {
         }
-        mHtmlCreative = new HTMLCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
+        htmlCreative = new HTMLCreative(context, mockModel, mockOmAdSessionManager, mockInterstitialManager);
 
         EnumSet<AdFormat> result = EnumSet.noneOf(AdFormat.class);
         result.add(AdFormat.BANNER);
         // Test empty html
         try {
-            when(mMockConfig.getAdFormats()).thenReturn(result);
-            mHtmlCreative = new HTMLCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
-            mHtmlCreative.load();
+            when(mockConfig.getAdFormats()).thenReturn(result);
+            htmlCreative = new HTMLCreative(context, mockModel, mockOmAdSessionManager, mockInterstitialManager);
+            htmlCreative.load();
             fail("AdException was NOT thrown");
         } catch (AdException e) {
         }
 
         // Test non-empty html
-        when(mMockConfig.getAdFormats()).thenReturn(result);
-        when(mMockModel.getHtml()).thenReturn("foo");
+        when(mockConfig.getAdFormats()).thenReturn(result);
+        when(mockModel.getHtml()).thenReturn("foo");
 
-        mHtmlCreative = new HTMLCreative(mContext, mMockModel, mMockOmAdSessionManager, mMockInterstitialManager);
-        mHtmlCreative.load();
+        htmlCreative = new HTMLCreative(context, mockModel, mockOmAdSessionManager, mockInterstitialManager);
+        htmlCreative.load();
         verify(mockPrebidWebViewBanner).loadHTML(any(), anyInt(), anyInt());
-        assertEquals(mockPrebidWebViewBanner, mHtmlCreative.getCreativeView());
+        assertEquals(mockPrebidWebViewBanner, htmlCreative.getCreativeView());
     }
 
     @Test
     public void displayTest() throws Exception {
         // Null view
-        PrebidWebViewBase prebidWebViewBase = new PrebidWebViewBase(mContext, mMockInterstitialManager);
-        WhiteBox.setInternalState(prebidWebViewBase, "mWebView", mock(WebViewBase.class));
-        when(mMockPrebidWebView.getWebView()).thenReturn(mock(WebViewBase.class));
+        PrebidWebViewBase prebidWebViewBase = new PrebidWebViewBase(context, mockInterstitialManager);
+        WhiteBox.setInternalState(prebidWebViewBase, "webView", mock(WebViewBase.class));
+        when(mockPrebidWebView.getWebView()).thenReturn(mock(WebViewBase.class));
 
         EnumSet<AdFormat> result = EnumSet.noneOf(AdFormat.class);
         result.add(AdFormat.BANNER);
-        when(mMockConfig.getAdFormats()).thenReturn(result);
+        when(mockConfig.getAdFormats()).thenReturn(result);
 
-        mHtmlCreative.display();
-        verify(mMockModel, never()).trackDisplayAdEvent(TrackingEvent.Events.IMPRESSION);
+        htmlCreative.display();
+        verify(mockModel, never()).trackDisplayAdEvent(TrackingEvent.Events.IMPRESSION);
     }
 
     @Test
     public void adSessionSuccessInitializationTest() throws Exception {
-        PrebidWebViewBase prebidWebView = new PrebidWebViewBase(mContext, mMockInterstitialManager);
+        PrebidWebViewBase prebidWebView = new PrebidWebViewBase(context, mockInterstitialManager);
         WebViewBase mockWebViewBase = mock(WebViewBase.class);
         BaseJSInterface baseJSInterface = mock(BaseJSInterface.class);
         when(mockWebViewBase.getMRAIDInterface()).thenReturn(baseJSInterface);
-        WhiteBox.setInternalState(prebidWebView, "mWebView", mockWebViewBase);
+        WhiteBox.setInternalState(prebidWebView, "webView", mockWebViewBase);
 
-        mHtmlCreative.setCreativeView(prebidWebView);
-        mHtmlCreative.setCreativeView(prebidWebView);
-        HTMLCreative spyHtmlCreative = spy(mHtmlCreative);
+        htmlCreative.setCreativeView(prebidWebView);
+        htmlCreative.setCreativeView(prebidWebView);
+        HTMLCreative spyHtmlCreative = spy(htmlCreative);
 
         spyHtmlCreative.display();
     }
 
     @Test
     public void adSessionFailureInitializationTest() throws Exception {
-        PrebidWebViewBase prebidWebViewBase = new PrebidWebViewBase(mContext, mMockInterstitialManager);
-        WhiteBox.setInternalState(prebidWebViewBase, "mWebView", mock(WebViewBase.class));
-        mHtmlCreative.setCreativeView(prebidWebViewBase);
-        HTMLCreative spyHtmlCreative = spy(mHtmlCreative);
+        PrebidWebViewBase prebidWebViewBase = new PrebidWebViewBase(context, mockInterstitialManager);
+        WhiteBox.setInternalState(prebidWebViewBase, "webView", mock(WebViewBase.class));
+        htmlCreative.setCreativeView(prebidWebViewBase);
+        HTMLCreative spyHtmlCreative = spy(htmlCreative);
 
         spyHtmlCreative.display();
 
@@ -203,39 +203,39 @@ public class HTMLCreativeTest {
     @Test
     public void creativeViewListenerEventsTest() throws AdException {
         CreativeViewListener mockCreativeViewListener = mock(CreativeViewListener.class);
-        mHtmlCreative.setCreativeViewListener(mockCreativeViewListener);
+        htmlCreative.setCreativeViewListener(mockCreativeViewListener);
 
-        mHtmlCreative.interstitialAdClosed();
-        verify(mockCreativeViewListener).creativeInterstitialDidClose(mHtmlCreative);
+        htmlCreative.interstitialAdClosed();
+        verify(mockCreativeViewListener).creativeInterstitialDidClose(htmlCreative);
 
-        mHtmlCreative.mraidAdExpanded();
-        verify(mockCreativeViewListener).creativeDidExpand(mHtmlCreative);
+        htmlCreative.mraidAdExpanded();
+        verify(mockCreativeViewListener).creativeDidExpand(htmlCreative);
 
-        mHtmlCreative.mraidAdCollapsed();
-        verify(mockCreativeViewListener).creativeDidCollapse(mHtmlCreative);
+        htmlCreative.mraidAdCollapsed();
+        verify(mockCreativeViewListener).creativeDidCollapse(htmlCreative);
     }
 
     @Test
     public void changeVisibilityTrackerStateAdWebViewNoFocusVisibilityTrackerNotNull_StopVisibilityCheck()
     throws IllegalAccessException {
-        WhiteBox.setInternalState(mHtmlCreative, "mCreativeVisibilityTracker", mMockCreativeVisibilityTracker);
+        WhiteBox.setInternalState(htmlCreative, "creativeVisibilityTracker", mockCreativeVisibilityTracker);
 
-        mHtmlCreative.changeVisibilityTrackerState(false);
+        htmlCreative.changeVisibilityTrackerState(false);
 
-        verify(mMockCreativeVisibilityTracker, times(1)).stopVisibilityCheck();
-        verifyNoMoreInteractions(mMockCreativeVisibilityTracker);
+        verify(mockCreativeVisibilityTracker, times(1)).stopVisibilityCheck();
+        verifyNoMoreInteractions(mockCreativeVisibilityTracker);
     }
 
     @Test
     public void changeVisibilityTrackerStateAdWebViewHasFocusVisibilityTrackerNotNull_StartVisibilityCheck()
     throws IllegalAccessException {
-        WhiteBox.setInternalState(mHtmlCreative, "mCreativeVisibilityTracker", mMockCreativeVisibilityTracker);
+        WhiteBox.setInternalState(htmlCreative, "creativeVisibilityTracker", mockCreativeVisibilityTracker);
 
-        mHtmlCreative.changeVisibilityTrackerState(true);
+        htmlCreative.changeVisibilityTrackerState(true);
 
-        verify(mMockCreativeVisibilityTracker, times(1)).stopVisibilityCheck();
-        verify(mMockCreativeVisibilityTracker, times(1)).startVisibilityCheck(mContext);
-        verifyNoMoreInteractions(mMockCreativeVisibilityTracker);
+        verify(mockCreativeVisibilityTracker, times(1)).stopVisibilityCheck();
+        verify(mockCreativeVisibilityTracker, times(1)).startVisibilityCheck(context);
+        verifyNoMoreInteractions(mockCreativeVisibilityTracker);
     }
 
     @Test
@@ -243,7 +243,7 @@ public class HTMLCreativeTest {
     throws Exception {
         PrebidWebViewBase mockPrebidWebViewBase = mock(PrebidWebViewBase.class);
         when(mockPrebidWebViewBase.getWebView()).thenReturn(mock(WebViewBase.class));
-        mHtmlCreative.setCreativeView(mockPrebidWebViewBase);
+        htmlCreative.setCreativeView(mockPrebidWebViewBase);
 
         VisibilityTrackerResult result = new VisibilityTrackerResult(NativeEventTracker.EventType.IMPRESSION,
                                                                      null, false, false);
@@ -254,12 +254,12 @@ public class HTMLCreativeTest {
 
             listener.onVisibilityChanged(result);
             return null;
-        }).when(mMockCreativeVisibilityTracker)
+        }).when(mockCreativeVisibilityTracker)
           .setVisibilityTrackerListener(any(CreativeVisibilityTracker.VisibilityTrackerListener.class));
 
-        mHtmlCreative.onVisibilityEvent(result);
+        htmlCreative.onVisibilityEvent(result);
 
-        verify(mMockModel, never()).trackDisplayAdEvent(TrackingEvent.Events.IMPRESSION);
+        verify(mockModel, never()).trackDisplayAdEvent(TrackingEvent.Events.IMPRESSION);
         verify(mockPrebidWebViewBase, times(1)).onWindowFocusChanged(false);
         verify(mockPrebidWebViewBase, times(1)).onViewExposureChange(null);
     }
@@ -270,13 +270,13 @@ public class HTMLCreativeTest {
 
         PrebidWebViewBase mockPrebidWebViewBase = mock(PrebidWebViewBase.class);
         when(mockPrebidWebViewBase.getWebView()).thenReturn(mock(WebViewBase.class));
-        mHtmlCreative.setCreativeView(mockPrebidWebViewBase);
+        htmlCreative.setCreativeView(mockPrebidWebViewBase);
 
         VisibilityTrackerResult result = new VisibilityTrackerResult(NativeEventTracker.EventType.IMPRESSION,
                                                                      viewExposure, true, true);
-        mHtmlCreative.onVisibilityEvent(result);
+        htmlCreative.onVisibilityEvent(result);
 
-        verify(mMockModel, times(1)).trackDisplayAdEvent(TrackingEvent.Events.IMPRESSION);
+        verify(mockModel, times(1)).trackDisplayAdEvent(TrackingEvent.Events.IMPRESSION);
         verify(mockPrebidWebViewBase, times(1)).onWindowFocusChanged(true);
         verify(mockPrebidWebViewBase, times(1)).onViewExposureChange(viewExposure);
     }
@@ -284,32 +284,32 @@ public class HTMLCreativeTest {
     @Test
     public void webViewReadyToDisplayTest() throws Exception {
         CreativeResolutionListener mockResolutionListener = mock(CreativeResolutionListener.class);
-        mHtmlCreative.setResolutionListener(mockResolutionListener);
+        htmlCreative.setResolutionListener(mockResolutionListener);
 
         // Resolved
-        WhiteBox.field(HTMLCreative.class, "mResolved").set(mHtmlCreative, true);
-        mHtmlCreative.webViewReadyToDisplay();
+        WhiteBox.field(HTMLCreative.class, "resolved").set(htmlCreative, true);
+        htmlCreative.webViewReadyToDisplay();
         verify(mockResolutionListener, never()).creativeReady(any(AbstractCreative.class));
 
         // Not resolved
-        WhiteBox.field(HTMLCreative.class, "mResolved").set(mHtmlCreative, false);
-        mHtmlCreative.webViewReadyToDisplay();
+        WhiteBox.field(HTMLCreative.class, "resolved").set(htmlCreative, false);
+        htmlCreative.webViewReadyToDisplay();
         verify(mockResolutionListener).creativeReady(any(AbstractCreative.class));
     }
 
     @Test
     public void webViewFailedToLoadTest() throws Exception {
         CreativeResolutionListener mockResolutionListener = mock(CreativeResolutionListener.class);
-        mHtmlCreative.setResolutionListener(mockResolutionListener);
+        htmlCreative.setResolutionListener(mockResolutionListener);
 
         // Resolved
-        WhiteBox.field(HTMLCreative.class, "mResolved").set(mHtmlCreative, true);
-        mHtmlCreative.webViewFailedToLoad(new AdException("foo", "bar"));
+        WhiteBox.field(HTMLCreative.class, "resolved").set(htmlCreative, true);
+        htmlCreative.webViewFailedToLoad(new AdException("foo", "bar"));
         verify(mockResolutionListener, never()).creativeFailed(any(AdException.class));
 
         // Not resolved
-        WhiteBox.field(HTMLCreative.class, "mResolved").set(mHtmlCreative, false);
-        mHtmlCreative.webViewFailedToLoad(new AdException("foo", "bar"));
+        WhiteBox.field(HTMLCreative.class, "resolved").set(htmlCreative, false);
+        htmlCreative.webViewFailedToLoad(new AdException("foo", "bar"));
         verify(mockResolutionListener).creativeFailed(any(AdException.class));
     }
 
@@ -320,23 +320,23 @@ public class HTMLCreativeTest {
         Mockito.doNothing().when(mockPrebidWebViewBase).handleOpen(anyString());
         when(mockPrebidWebViewBase.post(any(Runnable.class))).thenReturn(anyBoolean());
 
-        mHtmlCreative.setCreativeView(mockPrebidWebViewBase);
-        mHtmlCreative.webViewShouldOpenExternalLink("foo");
+        htmlCreative.setCreativeView(mockPrebidWebViewBase);
+        htmlCreative.webViewShouldOpenExternalLink("foo");
         verify(mockPrebidWebViewBase).handleOpen(anyString());
 
         // MRAID link
         CreativeViewListener mockCreativeViewListener = mock(CreativeViewListener.class);
-        mHtmlCreative.setCreativeViewListener(mockCreativeViewListener);
-        mHtmlCreative.webViewShouldOpenMRAIDLink("foo");
+        htmlCreative.setCreativeViewListener(mockCreativeViewListener);
+        htmlCreative.webViewShouldOpenMRAIDLink("foo");
         verify(mockCreativeViewListener).creativeWasClicked(any(HTMLCreative.class), anyString());
         verify(mockPrebidWebViewBase).post(any(Runnable.class));
     }
 
     @Test
     public void handleMRAIDEventsInCreativeTest() throws Exception {
-        mHtmlCreative.handleMRAIDEventsInCreative(mock(MraidEvent.class), mock(WebViewBase.class));
-        verify(mMockMraidController).handleMraidEvent(any(MraidEvent.class),
-                                                      eq(mHtmlCreative),
+        htmlCreative.handleMRAIDEventsInCreative(mock(MraidEvent.class), mock(WebViewBase.class));
+        verify(mockMraidController).handleMraidEvent(any(MraidEvent.class),
+                                                      eq(htmlCreative),
                                                       any(WebViewBase.class),
                                                       any());
     }
@@ -344,10 +344,10 @@ public class HTMLCreativeTest {
     @Test
     public void destroyTest() {
         MraidController mockController = mock(MraidController.class);
-        WhiteBox.setInternalState(mHtmlCreative, "mMraidController", mockController);
+        WhiteBox.setInternalState(htmlCreative, "mraidController", mockController);
 
-        mHtmlCreative.destroy();
-        verify(mMockPrebidWebView).destroy();
+        htmlCreative.destroy();
+        verify(mockPrebidWebView).destroy();
         verify(mockController).destroy();
     }
 
@@ -356,32 +356,32 @@ public class HTMLCreativeTest {
         PrebidWebViewBase mockWebView = mock(PrebidWebViewBase.class);
         when(mockWebView.getWebView()).thenReturn(mock(WebViewBase.class));
 
-        mHtmlCreative.setCreativeView(mockWebView);
+        htmlCreative.setCreativeView(mockWebView);
 
-        mHtmlCreative.createOmAdSession();
-        verify(mMockOmAdSessionManager).initWebAdSessionManager(any(WebViewBase.class), any());
-        verify(mMockOmAdSessionManager).registerAdView(any(View.class));
-        verify(mMockOmAdSessionManager).startAdSession();
+        htmlCreative.createOmAdSession();
+        verify(mockOmAdSessionManager).initWebAdSessionManager(any(WebViewBase.class), any());
+        verify(mockOmAdSessionManager).registerAdView(any(View.class));
+        verify(mockOmAdSessionManager).startAdSession();
 
-        reset(mMockOmAdSessionManager);
-        mHtmlCreative.mWeakOmAdSessionManager = new WeakReference<>(null);
-        mHtmlCreative.createOmAdSession();
-        verify(mMockOmAdSessionManager, never()).startAdSession();
+        reset(mockOmAdSessionManager);
+        htmlCreative.weakOmAdSessionManager = new WeakReference<>(null);
+        htmlCreative.createOmAdSession();
+        verify(mockOmAdSessionManager, never()).startAdSession();
 
-        mHtmlCreative.setCreativeView(null);
-        mHtmlCreative.createOmAdSession();
-        verify(mMockOmAdSessionManager, never()).startAdSession();
+        htmlCreative.setCreativeView(null);
+        htmlCreative.createOmAdSession();
+        verify(mockOmAdSessionManager, never()).startAdSession();
     }
 
     @Test
     public void isResolvedTest() {
-        assertFalse(mHtmlCreative.isResolved());
+        assertFalse(htmlCreative.isResolved());
     }
 
     @Test
     public void htmlAdLoaded_TrackEvent() {
-        mHtmlCreative.trackAdLoaded();
+        htmlCreative.trackAdLoaded();
 
-        verify(mMockModel).trackDisplayAdEvent(TrackingEvent.Events.LOADED);
+        verify(mockModel).trackDisplayAdEvent(TrackingEvent.Events.LOADED);
     }
 }

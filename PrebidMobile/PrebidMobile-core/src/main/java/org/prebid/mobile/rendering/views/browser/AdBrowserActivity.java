@@ -54,21 +54,24 @@ public final class AdBrowserActivity extends Activity
 
     private static final int BROWSER_CONTROLS_ID = 235799;
 
-    private WebView mWebView;
-    private VideoView mVideoView;
-    private BrowserControls mBrowserControls;
+    private WebView webView;
+    private VideoView videoView;
+    private BrowserControls browserControls;
 
-    private boolean mIsVideo;
-    private boolean mShouldFireEvents;
-    private int mBroadcastId;
-    private String mUrl;
+    private boolean isVideo;
+    private boolean shouldFireEvents;
+    private int broadcastId;
+    private String url;
 
     //jira/browse/MOBILE-1222 - Enable physical BACK button of the device in the in-app browser in Android
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyDown(
+            int keyCode,
+            KeyEvent event
+    ) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-            if (mWebView != null) {
-                mWebView.goBack();
+            if (webView != null) {
+                webView.goBack();
             }
             finish();
         }
@@ -78,16 +81,16 @@ public final class AdBrowserActivity extends Activity
     @Override
     protected void onPause() {
         super.onPause();
-        if (mVideoView != null) {
-            mVideoView.suspend();
+        if (videoView != null) {
+            videoView.suspend();
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mVideoView != null) {
-            mVideoView.resume();
+        if (videoView != null) {
+            videoView.resume();
         }
     }
 
@@ -100,10 +103,9 @@ public final class AdBrowserActivity extends Activity
         final Bundle extras = getIntent().getExtras();
         claimExtras(extras);
 
-        if (mIsVideo) {
+        if (isVideo) {
             handleVideoDisplay();
-        }
-        else {
+        } else {
             handleWebViewDisplay();
         }
     }
@@ -112,27 +114,27 @@ public final class AdBrowserActivity extends Activity
     protected void onDestroy() {
         super.onDestroy();
         // Solves memory leak
-        if (mWebView != null) {
-            mWebView.destroy();
+        if (webView != null) {
+            webView.destroy();
         }
 
-        if (mVideoView != null) {
-            mVideoView.suspend();
+        if (videoView != null) {
+            videoView.suspend();
         }
     }
 
     // Ignore back press on ad browser, except on video since there is no close
     @Override
     public void onBackPressed() {
-        if (mIsVideo) {
+        if (isVideo) {
             super.onBackPressed();
         }
     }
 
     @Override
     public void onPageFinished() {
-        if (mBrowserControls != null) {
-            mBrowserControls.updateNavigationButtonsState();
+        if (browserControls != null) {
+            browserControls.updateNavigationButtonsState();
         }
     }
 
@@ -154,10 +156,10 @@ public final class AdBrowserActivity extends Activity
             return;
         }
 
-        mUrl = extras.getString(EXTRA_URL, null);
-        mShouldFireEvents = extras.getBoolean(EXTRA_SHOULD_FIRE_EVENTS, true);
-        mIsVideo = extras.getBoolean(EXTRA_IS_VIDEO, false);
-        mBroadcastId = extras.getInt(EXTRA_BROADCAST_ID, -1);
+        url = extras.getString(EXTRA_URL, null);
+        shouldFireEvents = extras.getBoolean(EXTRA_SHOULD_FIRE_EVENTS, true);
+        isVideo = extras.getBoolean(EXTRA_IS_VIDEO, false);
+        broadcastId = extras.getInt(EXTRA_BROADCAST_ID, -1);
     }
 
     private void handleWebViewDisplay() {
@@ -166,67 +168,70 @@ public final class AdBrowserActivity extends Activity
         RelativeLayout contentLayout = new RelativeLayout(this);
         RelativeLayout.LayoutParams barLayoutParams = null;
         RelativeLayout.LayoutParams webViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                                                                                          LayoutParams.MATCH_PARENT);
+                LayoutParams.MATCH_PARENT
+        );
 
-        if (!TextUtils.isEmpty(mUrl)) {
-            mWebView = new WebView(this);
+        if (!TextUtils.isEmpty(url)) {
+            webView = new WebView(this);
             setWebViewSettings();
 
-            mWebView.setWebViewClient(new AdBrowserActivityWebViewClient(AdBrowserActivity.this));
-            mWebView.loadUrl(mUrl);
+            webView.setWebViewClient(new AdBrowserActivityWebViewClient(AdBrowserActivity.this));
+            webView.loadUrl(url);
 
-            barLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-                                                              LayoutParams.WRAP_CONTENT);
-            if (mBrowserControls != null) {
-                mBrowserControls.showNavigationControls();
+            barLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+            if (browserControls != null) {
+                browserControls.showNavigationControls();
             }
 
             webViewLayoutParams.addRule(RelativeLayout.BELOW, BROWSER_CONTROLS_ID);
         }
 
-        if (mWebView != null) {
-            contentLayout.addView(mWebView, webViewLayoutParams);
+        if (webView != null) {
+            contentLayout.addView(webView, webViewLayoutParams);
         }
 
-        if (mBrowserControls != null) {
-            contentLayout.addView(mBrowserControls, barLayoutParams);
+        if (browserControls != null) {
+            contentLayout.addView(browserControls, barLayoutParams);
         }
 
         setContentView(contentLayout);
     }
 
     private void handleVideoDisplay() {
-        mVideoView = new VideoView(this);
+        videoView = new VideoView(this);
         RelativeLayout content = new RelativeLayout(this);
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT
+        );
         lp.addRule(RelativeLayout.CENTER_IN_PARENT);
-        content.addView(mVideoView, lp);
+        content.addView(videoView, lp);
         setContentView(content);
         MediaController mc = new MediaController(this);
-        mVideoView.setMediaController(mc);
-        mVideoView.setVideoURI(Uri.parse(mUrl));
-        mVideoView.start();
+        videoView.setMediaController(mc);
+        videoView.setVideoURI(Uri.parse(url));
+        videoView.start();
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private void setWebViewSettings() {
 
-        if (mWebView != null) {
-            mWebView.getSettings().setJavaScriptEnabled(true);
-            mWebView.getSettings().setJavaScriptCanOpenWindowsAutomatically(false);
-            mWebView.getSettings().setPluginState(WebSettings.PluginState.OFF);
-            mWebView.setHorizontalScrollBarEnabled(false);
-            mWebView.setVerticalScrollBarEnabled(false);
-            mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        if (webView != null) {
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(false);
+            webView.getSettings().setPluginState(WebSettings.PluginState.OFF);
+            webView.setHorizontalScrollBarEnabled(false);
+            webView.setVerticalScrollBarEnabled(false);
+            webView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
-            mWebView.getSettings().setBuiltInZoomControls(true);
+            webView.getSettings().setBuiltInZoomControls(true);
 
             //MOB-2160 - Ad Browser: Leaking memory on zoom.(Though it looks like a chromiun webview problem)
             //Activity browser.AdBrowserActivity has leaked window android.widget.ZoomButtonsController$Container
-            mWebView.getSettings().setDisplayZoomControls(false);
+            webView.getSettings().setDisplayZoomControls(false);
 
-            mWebView.getSettings().setLoadWithOverviewMode(true);
-            mWebView.getSettings().setUseWideViewPort(true);
+            webView.getSettings().setLoadWithOverviewMode(true);
+            webView.getSettings().setUseWideViewPort(true);
         }
     }
 
@@ -235,29 +240,29 @@ public final class AdBrowserActivity extends Activity
 
             @Override
             public void onRelaod() {
-                if (mWebView != null) {
-                    mWebView.reload();
+                if (webView != null) {
+                    webView.reload();
                 }
             }
 
             @Override
             public void onGoForward() {
-                if (mWebView != null) {
-                    mWebView.goForward();
+                if (webView != null) {
+                    webView.goForward();
                 }
             }
 
             @Override
             public void onGoBack() {
-                if (mWebView != null) {
-                    mWebView.goBack();
+                if (webView != null) {
+                    webView.goBack();
                 }
             }
 
             @Override
             public String getCurrentURL() {
-                if (mWebView != null) {
-                    return mWebView.getUrl();
+                if (webView != null) {
+                    return webView.getUrl();
                 }
                 return null;
             }
@@ -270,31 +275,29 @@ public final class AdBrowserActivity extends Activity
 
             @Override
             public boolean canGoForward() {
-                if (mWebView != null) {
-                    return mWebView.canGoForward();
+                if (webView != null) {
+                    return webView.canGoForward();
                 }
                 return false;
             }
 
             @Override
             public boolean canGoBack() {
-                if (mWebView != null) {
-                    return mWebView.canGoBack();
+                if (webView != null) {
+                    return webView.canGoBack();
                 }
                 return false;
             }
         });
         controls.setId(BROWSER_CONTROLS_ID);
-        mBrowserControls = controls;
+        browserControls = controls;
     }
 
     private void sendLocalBroadcast(String action) {
-        if (!mShouldFireEvents) {
+        if (!shouldFireEvents) {
             return;
         }
 
-        BaseLocalBroadcastReceiver.sendLocalBroadcast(getApplicationContext(),
-                                                      mBroadcastId,
-                                                      action);
+        BaseLocalBroadcastReceiver.sendLocalBroadcast(getApplicationContext(), broadcastId, action);
     }
 }

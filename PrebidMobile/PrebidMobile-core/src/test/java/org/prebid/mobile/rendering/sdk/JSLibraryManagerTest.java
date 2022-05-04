@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 public class JSLibraryManagerTest {
-    private JSLibraryManager mManager;
+    private JSLibraryManager manager;
 
     @Before
     public void setup() throws Exception {
@@ -38,12 +38,12 @@ public class JSLibraryManagerTest {
         when(mock.getApplicationContext()).thenReturn(mock);
         when(mock.getResources()).thenReturn(mock(Resources.class));
 
-        mManager = Mockito.spy(JSLibraryManager.getInstance(mock));
+        manager = Mockito.spy(JSLibraryManager.getInstance(mock));
     }
 
     @Test
     public void testInitialStrings() {
-        Assert.assertEquals("", mManager.getMRAIDScript());
-        Assert.assertEquals("", mManager.getOMSDKScript());
+        Assert.assertEquals("", manager.getMRAIDScript());
+        Assert.assertEquals("", manager.getOMSDKScript());
     }
 }

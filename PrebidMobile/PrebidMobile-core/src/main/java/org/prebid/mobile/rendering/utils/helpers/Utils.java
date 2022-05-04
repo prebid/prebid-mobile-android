@@ -66,16 +66,9 @@ public final class Utils {
 
     public static float DENSITY;
 
-    private static final String[] mRecognizedMraidActionPrefixes = new String[]{
-        "tel:",
-        "voicemail:",
-        "sms:",
-        "mailto:",
-        "geo:",
-        "google.streetview:",
-        "market:"};
+    private static final String[] recognizedMraidActionPrefixes = new String[]{"tel:", "voicemail:", "sms:", "mailto:", "geo:", "google.streetview:", "market:"};
 
-    private static final String[] mVideoContent = new String[]{"3gp", "mp4", "ts", "webm", "mkv"};
+    private static final String[] videoContent = new String[]{"3gp", "mp4", "ts", "webm", "mkv"};
 
     private static String convertParamsToString(String url, String key, String value) {
 
@@ -106,7 +99,7 @@ public final class Utils {
 
     public static boolean isMraidActionUrl(String url) {
         if (!TextUtils.isEmpty(url)) {
-            for (String prefix : mRecognizedMraidActionPrefixes) {
+            for (String prefix : recognizedMraidActionPrefixes) {
                 if (url.startsWith(prefix)) {
                     return true;
                 }
@@ -120,7 +113,7 @@ public final class Utils {
         if (!TextUtils.isEmpty(type)) {
             String ext = MimeTypeMap.getSingleton().getExtensionFromMimeType(type);
             if (!TextUtils.isEmpty(ext)) {
-                for (String content : mVideoContent) {
+                for (String content : videoContent) {
                     if (ext.equalsIgnoreCase(content)) {
                         return true;
                     }
@@ -274,25 +267,24 @@ public final class Utils {
      * @return true if available and writeable
      */
     public static boolean isExternalStorageAvailable() {
-        boolean mExternalStorageAvailable;
-        boolean mExternalStorageWriteable;
+        boolean externalStorageAvailable;
+        boolean externalStorageWriteable;
         String state = Environment.getExternalStorageState();
         if (Environment.MEDIA_MOUNTED.equals(state)) {
             // We can read and write the media
-            mExternalStorageAvailable = mExternalStorageWriteable = true;
-        }
-        else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            externalStorageAvailable = externalStorageWriteable = true;
+        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
             // We can only read the media
-            mExternalStorageAvailable = true;
-            mExternalStorageWriteable = false;
+            externalStorageAvailable = true;
+            externalStorageWriteable = false;
         }
         else {
             // Something else is wrong. It may be one of many other states, but
             // all we need to know is we can neither read nor write
-            mExternalStorageAvailable = mExternalStorageWriteable = false;
+            externalStorageAvailable = externalStorageWriteable = false;
         }
 
-        return mExternalStorageAvailable && mExternalStorageWriteable;
+        return externalStorageAvailable && externalStorageWriteable;
     }
 
     private static boolean osAtLeast(int requiredVersion) {

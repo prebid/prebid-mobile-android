@@ -68,53 +68,58 @@ public class UrlHandler {
      * {@link Builder} provides an API to configure {@link UrlHandler} and create it.
      */
     public static class Builder {
-        private Set<UrlAction> mSupportedUrlHandlerList = new HashSet<>();
-        private UrlHandlerResultListener mUrlHandlerResultListener = EMPTY_LISTENER;
+
+        private Set<UrlAction> supportedUrlHandlerList = new HashSet<>();
+        private UrlHandlerResultListener urlHandlerResultListener = EMPTY_LISTENER;
 
         public Builder withDeepLinkPlusAction(@NonNull DeepLinkPlusAction deepLinkPlusAction) {
-            mSupportedUrlHandlerList.add(deepLinkPlusAction);
+            supportedUrlHandlerList.add(deepLinkPlusAction);
             return this;
         }
 
         public Builder withDeepLinkAction(@NonNull DeepLinkAction deepLinkAction) {
-            mSupportedUrlHandlerList.add(deepLinkAction);
+            supportedUrlHandlerList.add(deepLinkAction);
             return this;
         }
 
         public Builder withMraidInternalBrowserAction(@NonNull MraidInternalBrowserAction mraidInternalBrowserAction) {
-            mSupportedUrlHandlerList.add(mraidInternalBrowserAction);
+            supportedUrlHandlerList.add(mraidInternalBrowserAction);
             return this;
         }
 
         public Builder withBrowserAction(@NonNull BrowserAction browserAction) {
-            mSupportedUrlHandlerList.add(browserAction);
+            supportedUrlHandlerList.add(browserAction);
             return this;
         }
 
         public Builder withResultListener(@NonNull UrlHandlerResultListener urlHandlerResultListener) {
-            mUrlHandlerResultListener = urlHandlerResultListener;
+            this.urlHandlerResultListener = urlHandlerResultListener;
             return this;
         }
 
         public UrlHandler build() {
-            return new UrlHandler(mSupportedUrlHandlerList, mUrlHandlerResultListener);
+            return new UrlHandler(supportedUrlHandlerList, urlHandlerResultListener);
         }
+
     }
 
-    private final Set<UrlAction> mSupportedUrlActionList;
-    private final UrlHandlerResultListener mUrlHandlerResultListener;
+    private final Set<UrlAction> supportedUrlActionList;
+    private final UrlHandlerResultListener urlHandlerResultListener;
 
-    private boolean mAlreadySucceeded;
-    private boolean mTaskPending;
+    private boolean alreadySucceeded;
+    private boolean taskPending;
 
     /**
      * Use {@link Builder} to instantiate the {@link UrlHandler}
      */
-    private UrlHandler(Set<UrlAction> supportedUrlActionList, UrlHandlerResultListener urlHandlerResultListener) {
-        mSupportedUrlActionList = supportedUrlActionList;
-        mUrlHandlerResultListener = urlHandlerResultListener;
-        mTaskPending = false;
-        mAlreadySucceeded = false;
+    private UrlHandler(
+            Set<UrlAction> supportedUrlActionList,
+            UrlHandlerResultListener urlHandlerResultListener
+    ) {
+        this.supportedUrlActionList = supportedUrlActionList;
+        this.urlHandlerResultListener = urlHandlerResultListener;
+        taskPending = false;
+        alreadySucceeded = false;
     }
 
     /**
@@ -127,7 +132,7 @@ public class UrlHandler {
      */
     public void handleUrl(Context context, String url, List<String> trackingUrls, boolean isFromUserAction) {
         if (url == null || TextUtils.isEmpty(url.trim())) {
-            mUrlHandlerResultListener.onFailure(url);
+            urlHandlerResultListener.onFailure(url);
             LogUtil.error(TAG, "handleUrl(): Attempted to handle empty url.");
             return;
         }
@@ -135,14 +140,14 @@ public class UrlHandler {
         UrlResolutionTask.UrlResolutionListener urlResolutionListener = new UrlResolutionTask.UrlResolutionListener() {
             @Override
             public void onSuccess(@NonNull String resolvedUrl) {
-                mTaskPending = false;
+                taskPending = false;
                 handleResolvedUrl(context, resolvedUrl, trackingUrls, isFromUserAction);
             }
 
             @Override
             public void onFailure(@NonNull String message, @Nullable Throwable throwable) {
-                mTaskPending = false;
-                mUrlHandlerResultListener.onFailure(url);
+                taskPending = false;
+                urlHandlerResultListener.onFailure(url);
                 LogUtil.error(TAG, message);
             }
         };
@@ -165,26 +170,28 @@ public class UrlHandler {
                                      @Nullable List<String> trackingUrlList,
                                      final boolean isFromUserAction) {
         if (TextUtils.isEmpty(url)) {
-            mUrlHandlerResultListener.onFailure(url);
+            urlHandlerResultListener.onFailure(url);
             LogUtil.error(TAG, "handleResolvedUrl(): Attempted to handle empty url.");
             return false;
         }
 
         final Uri destinationUri = Uri.parse(url);
 
-        for (UrlAction urlAction : mSupportedUrlActionList) {
+        for (UrlAction urlAction : supportedUrlActionList) {
             if (urlAction.shouldOverrideUrlLoading(destinationUri)) {
                 try {
                     handleAction(context, destinationUri, urlAction, isFromUserAction);
                     notifySuccess(url, trackingUrlList, urlAction);
                     return true;
-                }
-                catch (ActionNotResolvedException e) {
-                    LogUtil.error(TAG, "handleResolvedUrl(): Unable to handle action: " + urlAction + " for given uri: " + destinationUri);
+                } catch (ActionNotResolvedException e) {
+                    LogUtil.error(
+                            TAG,
+                            "handleResolvedUrl(): Unable to handle action: " + urlAction + " for given uri: " + destinationUri
+                    );
                 }
             }
         }
-        mUrlHandlerResultListener.onFailure(url);
+        urlHandlerResultListener.onFailure(url);
         return false;
     }
 
@@ -204,19 +211,19 @@ public class UrlHandler {
     void performUrlResolutionRequest(String url, UrlResolutionTask.UrlResolutionListener urlResolutionListener) {
         UrlResolutionTask urlResolutionTask = new UrlResolutionTask(urlResolutionListener);
         urlResolutionTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
-        mTaskPending = true;
+        taskPending = true;
     }
 
     private void notifySuccess(@NonNull String url,
                                @Nullable List<String> trackingUrlList,
                                UrlAction urlAction) {
-        if (mAlreadySucceeded || mTaskPending) {
+        if (alreadySucceeded || taskPending) {
             LogUtil.warning(TAG, "notifySuccess(): Action is finished or action is still pending.");
             return;
         }
 
         TrackingManager.getInstance().fireEventTrackingURLs(trackingUrlList);
-        mUrlHandlerResultListener.onSuccess(url, urlAction);
-        mAlreadySucceeded = true;
+        urlHandlerResultListener.onSuccess(url, urlAction);
+        alreadySucceeded = true;
     }
 }

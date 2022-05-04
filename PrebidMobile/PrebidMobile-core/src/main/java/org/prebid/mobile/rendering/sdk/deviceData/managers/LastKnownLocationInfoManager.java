@@ -29,8 +29,8 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 public final class LastKnownLocationInfoManager extends BaseManager implements LocationInfoManager {
 
     private static String TAG = LastKnownLocationInfoManager.class.getSimpleName();
-    private android.location.LocationManager mLocManager;
-    private Location mLocation;
+    private android.location.LocationManager locManager;
+    private Location location;
 
     private static final int TWO_MINUTES = 1000 * 60 * 2;
 
@@ -51,22 +51,21 @@ public final class LastKnownLocationInfoManager extends BaseManager implements L
         Location gpsLastKnownLocation = null;
         Location ntwLastKnownLocation = null;
         if (super.isInit() && getContext() != null) {
-            mLocManager = (android.location.LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+            locManager = (android.location.LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
-            if (isLocationPermissionGranted() && mLocManager != null) {
-                gpsLastKnownLocation = mLocManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER);
-                ntwLastKnownLocation = mLocManager.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER);
+            if (isLocationPermissionGranted() && locManager != null) {
+                gpsLastKnownLocation = locManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER);
+                ntwLastKnownLocation = locManager.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER);
             }
 
             if (gpsLastKnownLocation != null) {
-                mLocation = gpsLastKnownLocation;
+                location = gpsLastKnownLocation;
 
-                if (ntwLastKnownLocation != null && isBetterLocation(ntwLastKnownLocation, mLocation)) {
-                    mLocation = ntwLastKnownLocation;
+                if (ntwLastKnownLocation != null && isBetterLocation(ntwLastKnownLocation, location)) {
+                    location = ntwLastKnownLocation;
                 }
-            }
-            else if (ntwLastKnownLocation != null) {
-                mLocation = ntwLastKnownLocation;
+            } else if (ntwLastKnownLocation != null) {
+                location = ntwLastKnownLocation;
             }
         }
     }
@@ -142,7 +141,7 @@ public final class LastKnownLocationInfoManager extends BaseManager implements L
      */
     @Override
     public Double getLatitude() {
-        return mLocation != null ? mLocation.getLatitude() : null;
+        return location != null ? location.getLatitude() : null;
     }
 
     /**
@@ -150,22 +149,22 @@ public final class LastKnownLocationInfoManager extends BaseManager implements L
      */
     @Override
     public Double getLongitude() {
-        return mLocation != null ? mLocation.getLongitude() : null;
+        return location != null ? location.getLongitude() : null;
     }
 
     @Override
     public Float getAccuracy() {
-        return mLocation != null ? mLocation.getAccuracy() : null;
+        return location != null ? location.getAccuracy() : null;
     }
 
     @Override
     public Long getElapsedSeconds() {
-        return mLocation != null ? (System.currentTimeMillis() - mLocation.getTime()) / 1000 : null;
+        return location != null ? (System.currentTimeMillis() - location.getTime()) / 1000 : null;
     }
 
     @Override
     public boolean isLocationAvailable() {
-        return mLocation != null;
+        return location != null;
     }
 
     /**
@@ -175,8 +174,8 @@ public final class LastKnownLocationInfoManager extends BaseManager implements L
     @Override
     public void dispose() {
         super.dispose();
-        mLocManager = null;
-        mLocation = null;
+        locManager = null;
+        location = null;
     }
 
     private boolean isLocationPermissionGranted() {

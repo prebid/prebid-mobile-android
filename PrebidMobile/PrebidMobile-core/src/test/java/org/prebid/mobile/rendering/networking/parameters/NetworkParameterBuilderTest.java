@@ -43,19 +43,19 @@ public class NetworkParameterBuilderTest {
 
     private String NETWORK_CARRIER = "carrier";
 
-    private ShadowTelephonyManager mShadowTelephonyManager;
-    private ShadowConnectivityManager mShadowConnectivityManager;
+    private ShadowTelephonyManager shadowTelephonyManager;
+    private ShadowConnectivityManager shadowConnectivityManager;
 
     @Before
     public void setUp() throws Exception {
         Activity robolectricActivity = Robolectric.buildActivity(Activity.class).create().get();
         ShadowActivity shadowActivity = shadowOf(robolectricActivity);
         shadowActivity.grantPermissions("android.permission.ACCESS_NETWORK_STATE");
-        mShadowConnectivityManager = shadowOf((ConnectivityManager) robolectricActivity.getSystemService(Context.CONNECTIVITY_SERVICE));
-        mShadowTelephonyManager = shadowOf((TelephonyManager) robolectricActivity.getSystemService(Context.TELEPHONY_SERVICE));
+        shadowConnectivityManager = shadowOf((ConnectivityManager) robolectricActivity.getSystemService(Context.CONNECTIVITY_SERVICE));
+        shadowTelephonyManager = shadowOf((TelephonyManager) robolectricActivity.getSystemService(Context.TELEPHONY_SERVICE));
 
-        mShadowTelephonyManager.setNetworkOperatorName(NETWORK_CARRIER);
-        mShadowTelephonyManager.setNetworkOperator(NETWORK_CARRIER);
+        shadowTelephonyManager.setNetworkOperatorName(NETWORK_CARRIER);
+        shadowTelephonyManager.setNetworkOperator(NETWORK_CARRIER);
 
         ManagersResolver.getInstance().prepare(robolectricActivity);
     }
@@ -65,7 +65,7 @@ public class NetworkParameterBuilderTest {
         NetworkInfo mockInfo = mock(NetworkInfo.class);
         when(mockInfo.getType()).thenReturn(ConnectivityManager.TYPE_WIFI);
         when(mockInfo.isConnected()).thenReturn(true);
-        mShadowConnectivityManager.setActiveNetworkInfo(mockInfo);
+        shadowConnectivityManager.setActiveNetworkInfo(mockInfo);
 
         BidRequest expectedBidRequest = new BidRequest();
         expectedBidRequest.getDevice().mccmnc = "car-rier";
@@ -84,7 +84,7 @@ public class NetworkParameterBuilderTest {
         NetworkInfo mockInfo = mock(NetworkInfo.class);
         when(mockInfo.getType()).thenReturn(ConnectivityManager.TYPE_MOBILE);
         when(mockInfo.isConnected()).thenReturn(true);
-        mShadowConnectivityManager.setActiveNetworkInfo(mockInfo);
+        shadowConnectivityManager.setActiveNetworkInfo(mockInfo);
 
         BidRequest expectedBidRequest = new BidRequest();
         expectedBidRequest.getDevice().mccmnc = "car-rier";

@@ -43,32 +43,35 @@ import static org.mockito.Mockito.when;
 @Config(sdk = 23, qualifiers = "w800dp-h800dp-xhdpi")
 public class ViewExposureCheckerTest {
 
-    private Activity mActivity;
-    private FrameLayout mContainer;
-    private ViewExposureChecker mViewExposureChecker;
+    private Activity activity;
+    private FrameLayout container;
+    private ViewExposureChecker viewExposureChecker;
 
     @Before
     public void setup() {
-        mActivity = Robolectric.buildActivity(Activity.class)
-                               .setup()
-                               .create()
-                               .visible()
-                               .resume()
-                               .windowFocusChanged(true)
-                               .get();
-        mContainer = new FrameLayout(mActivity);
-        mContainer.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        mActivity.setContentView(mContainer);
-        mViewExposureChecker = new ViewExposureChecker();
+        activity = Robolectric.buildActivity(Activity.class)
+                              .setup()
+                              .create()
+                              .visible()
+                              .resume()
+                              .windowFocusChanged(true)
+                              .get();
+        container = new FrameLayout(activity);
+        container.setLayoutParams(new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        ));
+        activity.setContentView(container);
+        viewExposureChecker = new ViewExposureChecker();
     }
 
     @Test
     public void whenNoObstruction_FullyVisible() {
-        FrameLayout grandParent = new FrameLayout(mActivity);
-        FrameLayout parent = new FrameLayout(mActivity);
-        View view = new View(mActivity);
+        FrameLayout grandParent = new FrameLayout(activity);
+        FrameLayout parent = new FrameLayout(activity);
+        View view = new View(activity);
 
-        mContainer.addView(grandParent);
+        container.addView(grandParent);
         grandParent.addView(parent);
         parent.addView(view);
 
@@ -76,7 +79,7 @@ public class ViewExposureCheckerTest {
         parent.layout(20, 20, 320, 720);
         view.layout(20, 20, 220, 220);
 
-        ViewExposure resultExposure = mViewExposureChecker.exposure(view);
+        ViewExposure resultExposure = viewExposureChecker.exposure(view);
         assertEquals(new ViewExposure(1, new Rect(0, 0, 200, 200), new ArrayList<>()), resultExposure);
     }
 
@@ -151,11 +154,11 @@ public class ViewExposureCheckerTest {
 
     @Test
     public void whenSingleObstruction_DetectObstruction() {
-        FrameLayout root = new FrameLayout(mActivity);
-        FrameLayout grandParent = new FrameLayout(mActivity);
-        FrameLayout parent = new FrameLayout(mActivity);
-        View view = new View(mActivity);
-        View obstruction = new View(mActivity);
+        FrameLayout root = new FrameLayout(activity);
+        FrameLayout grandParent = new FrameLayout(activity);
+        FrameLayout parent = new FrameLayout(activity);
+        View view = new View(activity);
+        View obstruction = new View(activity);
 
         final ColorDrawable background = mock(ColorDrawable.class);
         when(background.getAlpha()).thenReturn(255);
@@ -163,11 +166,11 @@ public class ViewExposureCheckerTest {
         grandParent.setBackground(background);
         root.setBackground(background);
 
-        mContainer.addView(root);
+        container.addView(root);
         root.addView(grandParent);
         grandParent.addView(parent);
         parent.addView(view);
-        mContainer.addView(obstruction);
+        container.addView(obstruction);
 
         root.layout(10, 10, 250, 410);
         grandParent.layout(80, 40, 540, 180);
@@ -228,7 +231,7 @@ public class ViewExposureCheckerTest {
         ///table 4
         parent.setClipChildren(false);
         Views.removeFromParent(obstruction);
-        mContainer.addView(obstruction, 0);
+        container.addView(obstruction, 0);
         root.layout(10, 10, 250, 410);
         grandParent.layout(80, 40, 540, 180);
         parent.layout(240, 40, 380, 320);
@@ -284,29 +287,29 @@ public class ViewExposureCheckerTest {
 
     @Test
     public void whenMultipleObstructions_DetectObstructions() {
-        FrameLayout parent = new FrameLayout(mActivity);
-        View adView = new View(mActivity);
-        View brother = new View(mActivity);
-        View xBtn = new View(mActivity);
-        View uncle = new View(mActivity);
-        FrameLayout aunt = new FrameLayout(mActivity);
-        View cousin = new View(mActivity);
+        FrameLayout parent = new FrameLayout(activity);
+        View adView = new View(activity);
+        View brother = new View(activity);
+        View xBtn = new View(activity);
+        View uncle = new View(activity);
+        FrameLayout aunt = new FrameLayout(activity);
+        View cousin = new View(activity);
 
         final ColorDrawable background = mock(ColorDrawable.class);
         when(background.getAlpha()).thenReturn(255);
         parent.setBackground(background);
         aunt.setBackground(background);
 
-        mContainer.setClipChildren(false);
+        container.setClipChildren(false);
         parent.setClipChildren(false);
         aunt.setClipChildren(false);
 
-        mContainer.addView(parent);
+        container.addView(parent);
         parent.addView(adView);
         parent.addView(brother);
         parent.addView(xBtn);
-        mContainer.addView(uncle);
-        mContainer.addView(aunt);
+        container.addView(uncle);
+        container.addView(aunt);
         aunt.addView(cousin);
 
         parent.layout(10, 10, 610, 410);
@@ -364,7 +367,7 @@ public class ViewExposureCheckerTest {
 
     @Test
     public void whenShouldCollectObstructionWithTransparentBgAndNonTransparentFg_ReturnTrue() {
-        FrameLayout child = new FrameLayout(mActivity);
+        FrameLayout child = new FrameLayout(activity);
         final ColorDrawable foreground = mock(ColorDrawable.class);
         final ColorDrawable background = mock(ColorDrawable.class);
         when(foreground.getAlpha()).thenReturn(255);
@@ -372,12 +375,12 @@ public class ViewExposureCheckerTest {
 
         child.setForeground(foreground);
         child.setBackground(background);
-        assertTrue(mViewExposureChecker.shouldCollectObstruction(child));
+        assertTrue(viewExposureChecker.shouldCollectObstruction(child));
     }
 
     @Test
     public void whenShouldCollectObstructionWithTransparentFgAndNonTransparentBg_ReturnTrue() {
-        FrameLayout child = new FrameLayout(mActivity);
+        FrameLayout child = new FrameLayout(activity);
         final ColorDrawable foreground = mock(ColorDrawable.class);
         final ColorDrawable background = mock(ColorDrawable.class);
         when(foreground.getAlpha()).thenReturn(0);
@@ -385,18 +388,18 @@ public class ViewExposureCheckerTest {
 
         child.setForeground(foreground);
         child.setBackground(background);
-        assertTrue(mViewExposureChecker.shouldCollectObstruction(child));
+        assertTrue(viewExposureChecker.shouldCollectObstruction(child));
     }
 
     @Test
     public void whenShouldCollectObstructionWithNonViewGroup_ReturnTrue() {
-        View child = new View(mActivity);
-        assertTrue(mViewExposureChecker.shouldCollectObstruction(child));
+        View child = new View(activity);
+        assertTrue(viewExposureChecker.shouldCollectObstruction(child));
     }
 
     @Test
     public void whenShouldCollectObstructionWithTransparentBgAndTransparentFg_ReturnFalse() {
-        FrameLayout child = new FrameLayout(mActivity);
+        FrameLayout child = new FrameLayout(activity);
         final ColorDrawable foreground = mock(ColorDrawable.class);
         final ColorDrawable background = mock(ColorDrawable.class);
         when(foreground.getAlpha()).thenReturn(0);
@@ -404,10 +407,10 @@ public class ViewExposureCheckerTest {
 
         child.setForeground(foreground);
         child.setBackground(background);
-        assertFalse(mViewExposureChecker.shouldCollectObstruction(child));
+        assertFalse(viewExposureChecker.shouldCollectObstruction(child));
     }
 
     private ViewExposure getViewExposure(View view) {
-        return mViewExposureChecker.exposure(view);
+        return viewExposureChecker.exposure(view);
     }
 }

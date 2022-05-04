@@ -33,8 +33,8 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 public class UserConsentParameterBuilderTest {
 
-    private UserConsentParameterBuilder mBuilder;
-    private SharedPreferences mSharedPreferences;
+    private UserConsentParameterBuilder builder;
+    private SharedPreferences sharedPreferences;
 
     @Before
     public void setUp() throws Exception {
@@ -42,21 +42,21 @@ public class UserConsentParameterBuilderTest {
         ManagersResolver.getInstance().prepare(robolectricActivity);
 
         PrebidMobile.setPbsDebug(false);
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(robolectricActivity);
-        mSharedPreferences
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(robolectricActivity);
+        sharedPreferences
                 .edit()
                 .putString("IABConsent_ConsentString", "foobar_consent_string")
                 .commit();
 
-        mBuilder = new UserConsentParameterBuilder(ManagersResolver.getInstance().getUserConsentManager());
+        builder = new UserConsentParameterBuilder(ManagersResolver.getInstance().getUserConsentManager());
     }
 
     @Test
     public void setAndGetUserConsentParamteterValuesWhenSubjectToGdgprIs1() throws JSONException {
-        mSharedPreferences.edit().putString("IABConsent_SubjectToGDPR", "1").commit();
+        sharedPreferences.edit().putString("IABConsent_SubjectToGDPR", "1").commit();
         AdRequestInput adRequestInput = new AdRequestInput();
 
-        mBuilder.appendBuilderParameters(adRequestInput);
+        builder.appendBuilderParameters(adRequestInput);
 
         String expectedJSON = "{\"regs\":{\"ext\":{\"gdpr\":1}},\"user\":{\"ext\":{\"consent\":\"foobar_consent_string\"}}}";
         assertEquals("Wrong values are set on pub Imp for the given adType", expectedJSON,
@@ -65,10 +65,10 @@ public class UserConsentParameterBuilderTest {
 
     @Test
     public void setAndGetUserConsentParamteterValuesWhenSubjectToGdprIs0() throws JSONException {
-        mSharedPreferences.edit().putString("IABConsent_SubjectToGDPR", "0").commit();
+        sharedPreferences.edit().putString("IABConsent_SubjectToGDPR", "0").commit();
         AdRequestInput adRequestInput = new AdRequestInput();
 
-        mBuilder.appendBuilderParameters(adRequestInput);
+        builder.appendBuilderParameters(adRequestInput);
 
         String expectedJSON = "{\"regs\":{\"ext\":{\"gdpr\":0}},\"user\":{\"ext\":{\"consent\":\"foobar_consent_string\"}}}";
         assertEquals("Wrong values are set on pub Imp for the given adType", expectedJSON,
@@ -77,10 +77,10 @@ public class UserConsentParameterBuilderTest {
 
     @Test
     public void WhenSubjectToGdprIsNullOrEmptyDontSendUserConsentValues() throws JSONException {
-        mSharedPreferences.edit().remove("IABConsent_SubjectToGDPR").commit();
+        sharedPreferences.edit().remove("IABConsent_SubjectToGDPR").commit();
         AdRequestInput adRequestInput = new AdRequestInput();
 
-        mBuilder.appendBuilderParameters(adRequestInput);
+        builder.appendBuilderParameters(adRequestInput);
 
         String expectedJSON = "{}";
         assertEquals("Wrong values are set on pub Imp for the given adType", expectedJSON,
@@ -89,10 +89,10 @@ public class UserConsentParameterBuilderTest {
 
     @Test
     public void usPrivacyStringIsEmpty_DontAppendToUserConsentValues() throws JSONException {
-        mSharedPreferences.edit().putString("IABUSPrivacy_String", "").commit();
+        sharedPreferences.edit().putString("IABUSPrivacy_String", "").commit();
         AdRequestInput adRequestInput = new AdRequestInput();
 
-        mBuilder.appendBuilderParameters(adRequestInput);
+        builder.appendBuilderParameters(adRequestInput);
 
         String expectedJSON = "{}";
         assertEquals(expectedJSON, adRequestInput.getBidRequest().getJsonObject().toString());
@@ -100,10 +100,10 @@ public class UserConsentParameterBuilderTest {
 
     @Test
     public void usPrivacyStringIsNull_DontAppendToUserConsentValues() throws JSONException {
-        mSharedPreferences.edit().remove("IABUSPrivacy_String").commit();
+        sharedPreferences.edit().remove("IABUSPrivacy_String").commit();
         AdRequestInput adRequestInput = new AdRequestInput();
 
-        mBuilder.appendBuilderParameters(adRequestInput);
+        builder.appendBuilderParameters(adRequestInput);
 
         String expectedJSON = "{}";
         assertEquals(expectedJSON, adRequestInput.getBidRequest().getJsonObject().toString());
@@ -111,10 +111,10 @@ public class UserConsentParameterBuilderTest {
 
     @Test
     public void usPrivacyStringIsNotEmpty_AppendToUserConsentValues() throws JSONException {
-        mSharedPreferences.edit().putString("IABUSPrivacy_String", "1YY").commit();
+        sharedPreferences.edit().putString("IABUSPrivacy_String", "1YY").commit();
         AdRequestInput adRequestInput = new AdRequestInput();
 
-        mBuilder.appendBuilderParameters(adRequestInput);
+        builder.appendBuilderParameters(adRequestInput);
 
         String expectedJSON = "{\"regs\":{\"ext\":{\"us_privacy\":\"1YY\"}}}";
         assertEquals(expectedJSON, adRequestInput.getBidRequest().getJsonObject().toString());
@@ -122,12 +122,12 @@ public class UserConsentParameterBuilderTest {
 
     @Test
     public void usPrivacAndGdprStringsNotEmtpy_AppendToUserConsentValues() throws JSONException {
-        mSharedPreferences.edit().putString("IABUSPrivacy_String", "1YY").commit();
-        mSharedPreferences.edit().putString("IABConsent_SubjectToGDPR", "0").commit();
+        sharedPreferences.edit().putString("IABUSPrivacy_String", "1YY").commit();
+        sharedPreferences.edit().putString("IABConsent_SubjectToGDPR", "0").commit();
 
         AdRequestInput adRequestInput = new AdRequestInput();
 
-        mBuilder.appendBuilderParameters(adRequestInput);
+        builder.appendBuilderParameters(adRequestInput);
 
         String expectedJSON = "{\"regs\":{\"ext\":{\"us_privacy\":\"1YY\",\"gdpr\":0}},\"user\":{\"ext\":{\"consent\":\"foobar_consent_string\"}}}";
         assertEquals("Wrong values are set on pub Imp for the given adType", expectedJSON,

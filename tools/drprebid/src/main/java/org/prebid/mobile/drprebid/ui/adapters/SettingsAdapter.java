@@ -1,24 +1,14 @@
 package org.prebid.mobile.drprebid.ui.adapters;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.managers.SettingsManager;
-import org.prebid.mobile.drprebid.model.AdServerSettings;
-import org.prebid.mobile.drprebid.model.GeneralSettings;
-import org.prebid.mobile.drprebid.model.PrebidServerSettings;
-import org.prebid.mobile.drprebid.model.SettingsItem;
-import org.prebid.mobile.drprebid.model.SubmitSettings;
-import org.prebid.mobile.drprebid.ui.viewholders.AdServerSettingsViewHolder;
-import org.prebid.mobile.drprebid.ui.viewholders.DividerViewHolder;
-import org.prebid.mobile.drprebid.ui.viewholders.GeneralSettingsViewHolder;
-import org.prebid.mobile.drprebid.ui.viewholders.PrebidServerSettingsViewholder;
-import org.prebid.mobile.drprebid.ui.viewholders.SettingsViewHolder;
-import org.prebid.mobile.drprebid.ui.viewholders.SubmitViewHolder;
+import org.prebid.mobile.drprebid.model.*;
+import org.prebid.mobile.drprebid.ui.viewholders.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +20,10 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int VIEW_TYPE_PREBID_SERVER_SETTINGS = 3;
     private static final int VIEW_TYPE_SUBMIT = 4;
 
-    private final List<SettingsItem> mItems;
+    private final List<SettingsItem> items;
 
     public SettingsAdapter(Context context) {
-        mItems = new ArrayList<>();
+        items = new ArrayList<>();
 
         setupSettings(context);
     }
@@ -57,7 +47,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        SettingsItem item = mItems.get(position);
+        SettingsItem item = items.get(position);
         if (item instanceof GeneralSettings) {
             return VIEW_TYPE_GENERAL_SETTINGS;
         } else if (item instanceof AdServerSettings) {
@@ -79,13 +69,13 @@ public class SettingsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return items.size();
     }
 
     private void setupSettings(Context context) {
-        mItems.add(SettingsManager.getInstance(context).getGeneralSettings());
-        mItems.add(SettingsManager.getInstance(context).getAdServerSettings());
-        mItems.add(SettingsManager.getInstance(context).getPrebidServerSettings());
-        mItems.add(new SubmitSettings());
+        items.add(SettingsManager.getInstance(context).getGeneralSettings());
+        items.add(SettingsManager.getInstance(context).getAdServerSettings());
+        items.add(SettingsManager.getInstance(context).getPrebidServerSettings());
+        items.add(new SubmitSettings());
     }
 }

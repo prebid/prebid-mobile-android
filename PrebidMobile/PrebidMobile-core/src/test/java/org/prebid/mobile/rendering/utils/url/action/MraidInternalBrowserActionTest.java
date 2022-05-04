@@ -53,22 +53,22 @@ public class MraidInternalBrowserActionTest {
     private static final Uri VALID_URI = Uri.parse("http://prebid.com");
     private static final String VALID_URL = VALID_URI.toString();
 
-    private MraidInternalBrowserAction mMraidInternalBrowserAction;
+    private MraidInternalBrowserAction mraidInternalBrowserAction;
 
-    @Mock BaseJSInterface mMockBaseJsInterface;
-    @Mock Context mMockContext;
-    @Mock UrlHandler mMockUrlHandler;
+    @Mock BaseJSInterface mockBaseJsInterface;
+    @Mock Context mockContext;
+    @Mock UrlHandler mockUrlHandler;
     @Mock
-    MraidVariableContainer mMockMraidVariableContainer;
-    private Context mContext;
+    MraidVariableContainer mockMraidVariableContainer;
+    private Context context;
 
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
-        mMraidInternalBrowserAction = new MraidInternalBrowserAction(mMockBaseJsInterface, -1);
-        when(mMockBaseJsInterface.getMraidVariableContainer()).thenReturn(mMockMraidVariableContainer);
+        context = Robolectric.buildActivity(Activity.class).create().get();
+        mraidInternalBrowserAction = new MraidInternalBrowserAction(mockBaseJsInterface, -1);
+        when(mockBaseJsInterface.getMraidVariableContainer()).thenReturn(mockMraidVariableContainer);
     }
 
     @Test
@@ -76,8 +76,8 @@ public class MraidInternalBrowserActionTest {
         Uri httpUri = Uri.parse("http://prebid.com");
         Uri httpsUri = Uri.parse("https://prebid.com");
 
-        assertTrue(mMraidInternalBrowserAction.shouldOverrideUrlLoading(httpUri));
-        assertTrue(mMraidInternalBrowserAction.shouldOverrideUrlLoading(httpsUri));
+        assertTrue(mraidInternalBrowserAction.shouldOverrideUrlLoading(httpUri));
+        assertTrue(mraidInternalBrowserAction.shouldOverrideUrlLoading(httpsUri));
     }
 
     @Test
@@ -85,8 +85,8 @@ public class MraidInternalBrowserActionTest {
         Uri customUri = Uri.parse("prebid://open");
         Uri deepLinkPlusUri = Uri.parse("deeplink+://open");
 
-        assertFalse(mMraidInternalBrowserAction.shouldOverrideUrlLoading(customUri));
-        assertFalse(mMraidInternalBrowserAction.shouldOverrideUrlLoading(deepLinkPlusUri));
+        assertFalse(mraidInternalBrowserAction.shouldOverrideUrlLoading(customUri));
+        assertFalse(mraidInternalBrowserAction.shouldOverrideUrlLoading(deepLinkPlusUri));
     }
 
     @Test
@@ -97,7 +97,7 @@ public class MraidInternalBrowserActionTest {
         String actualMessage = "";
 
         try {
-            mraidInternalBrowserAction.performAction(mMockContext, mMockUrlHandler, VALID_URI);
+            mraidInternalBrowserAction.performAction(mockContext, mockUrlHandler, VALID_URI);
         }
         catch (ActionNotResolvedException e) {
             actualMessage = e.getMessage();
@@ -110,27 +110,27 @@ public class MraidInternalBrowserActionTest {
     throws ActionNotResolvedException {
         String url = VALID_URI.toString();
 
-        mMraidInternalBrowserAction.performAction(mMockContext, mMockUrlHandler, VALID_URI);
+        mraidInternalBrowserAction.performAction(mockContext, mockUrlHandler, VALID_URI);
 
-        verify(mMockBaseJsInterface).followToOriginalUrl(eq(url), any(RedirectUrlListener.class));
+        verify(mockBaseJsInterface).followToOriginalUrl(eq(url), any(RedirectUrlListener.class));
     }
 
     @Test
     public void handleInternalBrowserActionFollowUrlSuccessAndIsMraid_StartActionViewActivity() {
-        when(mMockContext.getApplicationContext()).thenReturn(mMockContext);
+        when(mockContext.getApplicationContext()).thenReturn(mockContext);
 
         ArgumentCaptor<RedirectUrlListener> callbackCapture = ArgumentCaptor.forClass(RedirectUrlListener.class);
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
         String url = Uri.parse("tel://222").toString();
 
-        mMraidInternalBrowserAction.handleInternalBrowserAction(mMockContext, mMockBaseJsInterface, url);
+        mraidInternalBrowserAction.handleInternalBrowserAction(mockContext, mockBaseJsInterface, url);
 
-        verify(mMockBaseJsInterface).followToOriginalUrl(eq(url), callbackCapture.capture());
+        verify(mockBaseJsInterface).followToOriginalUrl(eq(url), callbackCapture.capture());
 
         callbackCapture.getValue().onSuccess(url, null);
 
-        verify(mMockContext, times(1)).getApplicationContext();
-        verify(mMockContext, times(1)).startActivity(intentArgumentCaptor.capture());
+        verify(mockContext, times(1)).getApplicationContext();
+        verify(mockContext, times(1)).startActivity(intentArgumentCaptor.capture());
 
         Intent intentArgument = intentArgumentCaptor.getValue();
 
@@ -141,16 +141,16 @@ public class MraidInternalBrowserActionTest {
     @Test
     public void handleInternalBrowserActionFollowUrlSuccessAndNotMraidAndNotVideoContent_LaunchBrowserActivity() {
         String url = VALID_URI.toString();
-        MraidInternalBrowserAction spyMraidInternalBrowserAction = spy(mMraidInternalBrowserAction);
+        MraidInternalBrowserAction spyMraidInternalBrowserAction = spy(mraidInternalBrowserAction);
         ArgumentCaptor<RedirectUrlListener> callbackCapture = ArgumentCaptor.forClass(RedirectUrlListener.class);
 
-        spyMraidInternalBrowserAction.handleInternalBrowserAction(mContext, mMockBaseJsInterface, url);
+        spyMraidInternalBrowserAction.handleInternalBrowserAction(context, mockBaseJsInterface, url);
 
-        verify(mMockBaseJsInterface).followToOriginalUrl(eq(url), callbackCapture.capture());
+        verify(mockBaseJsInterface).followToOriginalUrl(eq(url), callbackCapture.capture());
 
         callbackCapture.getValue().onSuccess(url, null);
 
-        verify(spyMraidInternalBrowserAction).launchBrowserActivity(any(Activity.class), eq(mMockBaseJsInterface), eq(url));
+        verify(spyMraidInternalBrowserAction).launchBrowserActivity(any(Activity.class), eq(mockBaseJsInterface), eq(url));
     }
 
     @Test
@@ -161,18 +161,18 @@ public class MraidInternalBrowserActionTest {
         shadowOf(MimeTypeMap.getSingleton()).addExtensionMimeTypMapping("mp4", extension);
 
         ArgumentCaptor<RedirectUrlListener> callbackCapture = ArgumentCaptor.forClass(RedirectUrlListener.class);
-        mMraidInternalBrowserAction.handleInternalBrowserAction(mContext, mMockBaseJsInterface, url);
+        mraidInternalBrowserAction.handleInternalBrowserAction(context, mockBaseJsInterface, url);
 
-        verify(mMockBaseJsInterface).followToOriginalUrl(eq(url), callbackCapture.capture());
+        verify(mockBaseJsInterface).followToOriginalUrl(eq(url), callbackCapture.capture());
 
         callbackCapture.getValue().onSuccess(url, extension);
 
-        verify(mMockBaseJsInterface).playVideo(url);
+        verify(mockBaseJsInterface).playVideo(url);
     }
 
     @Test
     public void shouldBeTriggeredByUser_ReturnTrue() {
-        assertTrue(mMraidInternalBrowserAction.shouldBeTriggeredByUserAction());
+        assertTrue(mraidInternalBrowserAction.shouldBeTriggeredByUserAction());
     }
 
     @Test
@@ -181,18 +181,18 @@ public class MraidInternalBrowserActionTest {
         resolveInfoArrayList.add(null);
         prepareContextAndInterfaceMocks(false, null, resolveInfoArrayList);
 
-        mMraidInternalBrowserAction.launchBrowserActivity(mMockContext, mMockBaseJsInterface, null);
+        mraidInternalBrowserAction.launchBrowserActivity(mockContext, mockBaseJsInterface, null);
 
-        verify(mMockContext).startActivity(any(Intent.class));
+        verify(mockContext).startActivity(any(Intent.class));
     }
 
     @Test
     public void launchBrowserActivityWithNullUrlAndEmptyResolveInfoList_NeverStartBrowserActivity() {
         prepareContextAndInterfaceMocks(false, null, new ArrayList<>());
 
-        mMraidInternalBrowserAction.launchBrowserActivity(mMockContext, mMockBaseJsInterface, null);
+        mraidInternalBrowserAction.launchBrowserActivity(mockContext, mockBaseJsInterface, null);
 
-        verify(mMockContext, never()).startActivity(any(Intent.class));
+        verify(mockContext, never()).startActivity(any(Intent.class));
     }
 
     @Test
@@ -202,10 +202,10 @@ public class MraidInternalBrowserActionTest {
         resolveInfos.add(null);
         prepareContextAndInterfaceMocks(true, url, resolveInfos);
 
-        mMraidInternalBrowserAction.launchBrowserActivity(mMockContext, mMockBaseJsInterface, url);
+        mraidInternalBrowserAction.launchBrowserActivity(mockContext, mockBaseJsInterface, url);
 
-        verify(mMockMraidVariableContainer).setUrlForLaunching(url);
-        verify(mMockContext).startActivity(any(Intent.class));
+        verify(mockMraidVariableContainer).setUrlForLaunching(url);
+        verify(mockContext).startActivity(any(Intent.class));
     }
 
     @Test
@@ -213,17 +213,17 @@ public class MraidInternalBrowserActionTest {
         String demo = VALID_URI.toString();
         prepareContextAndInterfaceMocks(true, demo, new ArrayList<>());
 
-        mMraidInternalBrowserAction.launchBrowserActivity(mMockContext, mMockBaseJsInterface, demo);
+        mraidInternalBrowserAction.launchBrowserActivity(mockContext, mockBaseJsInterface, demo);
 
-        verify(mMockMraidVariableContainer).setUrlForLaunching(demo);
-        verify(mMockContext).startActivity(any(Intent.class));
+        verify(mockMraidVariableContainer).setUrlForLaunching(demo);
+        verify(mockContext).startActivity(any(Intent.class));
     }
 
     private void prepareContextAndInterfaceMocks(boolean isLaunchingWithUrl, String url, List<ResolveInfo> resolveInfoList) {
         PackageManager mockPackageManager = mock(PackageManager.class);
-        when(mMockContext.getPackageManager()).thenReturn(mockPackageManager);
+        when(mockContext.getPackageManager()).thenReturn(mockPackageManager);
         when(mockPackageManager.queryIntentActivities(any(Intent.class), eq(PackageManager.MATCH_DEFAULT_ONLY))).thenReturn(resolveInfoList);
-        when(mMockMraidVariableContainer.isLaunchedWithUrl()).thenReturn(isLaunchingWithUrl);
-        when(mMockMraidVariableContainer.getUrlForLaunching()).thenReturn(url);
+        when(mockMraidVariableContainer.isLaunchedWithUrl()).thenReturn(isLaunchingWithUrl);
+        when(mockMraidVariableContainer.getUrlForLaunching()).thenReturn(url);
     }
 }

@@ -27,10 +27,10 @@ import static org.junit.Assert.assertEquals;
 @Config(sdk = 19)
 public class LruControllerTest {
 
-    private String mUrl = "http://path/to/video/Vast_Video.mp4";
+    private String url = "http://path/to/video/Vast_Video.mp4";
 
     @Test
     public void whenNoAdUnits_UseVideoNameOnly() {
-        assertEquals("/Vast_Video", LruController.getShortenedPath(mUrl));
+        assertEquals("/Vast_Video", LruController.getShortenedPath(url));
     }
 }

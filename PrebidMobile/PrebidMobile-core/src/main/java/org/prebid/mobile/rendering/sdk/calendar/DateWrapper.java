@@ -40,35 +40,35 @@ public class DateWrapper {
     private static final String TIME_PATTERN8 = "HH:mm:ssZZZ";
     private static final String TIME_PATTERN9 = "HH:mmZZZ";
 
-    private Date mDate;
-    private String mTimeZone;
-    private boolean mIsEmpty;
+    private Date date;
+    private String timeZone;
+    private boolean isEmpty;
 
     public boolean isEmpty() {
-        return mIsEmpty;
+        return isEmpty;
     }
 
     public Date getDate() {
-        return mDate;
+        return date;
     }
 
     public void setDate(Date date) {
-        mDate = date;
+        this.date = date;
     }
 
     public String getTimeZone() {
-        return mTimeZone;
+        return timeZone;
     }
 
     public void setTimeZone(String timeZone) {
         if (timeZone != null && !timeZone.startsWith("GMT")) {
             timeZone = "GMT" + timeZone;
         }
-        mTimeZone = timeZone;
+        this.timeZone = timeZone;
     }
 
     public long getTime() {
-        return mDate != null ? mDate.getTime() : 0;
+        return date != null ? date.getTime() : 0;
     }
 
     private static SimpleDateFormat tryPattern(String datetime, String pattern) {
@@ -100,7 +100,7 @@ public class DateWrapper {
             }
             else {
                 SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DATE_PATTERN);
-                mDate = dateTimeFormat.parse(dateTimeString);
+                this.date = dateTimeFormat.parse(dateTimeString);
             }
 
             if (date != null && time != null && sep != null) {
@@ -108,7 +108,7 @@ public class DateWrapper {
             }
         }
         else {
-            mIsEmpty = true;
+            isEmpty = true;
         }
     }
 
@@ -156,7 +156,7 @@ public class DateWrapper {
             }
 
             SimpleDateFormat dateTimeFormat = new SimpleDateFormat(dateTimePattern);
-            mDate = dateTimeFormat.parse(dateTimeString);
+            date = dateTimeFormat.parse(dateTimeString);
         }
     }
 
@@ -171,11 +171,11 @@ public class DateWrapper {
 
         DateWrapper dateWrapper = (DateWrapper) o;
 
-        return mDate != null ? mDate.equals(dateWrapper.mDate) : dateWrapper.mDate == null;
+        return date != null ? date.equals(dateWrapper.date) : dateWrapper.date == null;
     }
 
     @Override
     public int hashCode() {
-        return mDate != null ? mDate.hashCode() : 0;
+        return date != null ? date.hashCode() : 0;
     }
 }

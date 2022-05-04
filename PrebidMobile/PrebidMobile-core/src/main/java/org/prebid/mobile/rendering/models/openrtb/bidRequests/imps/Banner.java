@@ -30,7 +30,7 @@ public class Banner extends BaseBid {
     public Integer pos = null;
     public int[] api;
 
-    private HashSet<Format> mFormats = new HashSet<>();
+    private HashSet<Format> formats = new HashSet<>();
 
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
@@ -45,9 +45,9 @@ public class Banner extends BaseBid {
             toJSON(jsonObject, "api", jsonArray);
         }
 
-        if (mFormats.size() > 0) {
+        if (formats.size() > 0) {
             JSONArray formatsArray = new JSONArray();
-            for (Format format : mFormats) {
+            for (Format format : formats) {
                 formatsArray.put(format.getJsonObject());
             }
             toJSON(jsonObject, "format", formatsArray);
@@ -57,11 +57,11 @@ public class Banner extends BaseBid {
     }
 
     public void addFormat(int w, int h) {
-        mFormats.add(new Format(w, h));
+        formats.add(new Format(w, h));
     }
 
     @VisibleForTesting
     public HashSet<Format> getFormats() {
-        return mFormats;
+        return formats;
     }
 }

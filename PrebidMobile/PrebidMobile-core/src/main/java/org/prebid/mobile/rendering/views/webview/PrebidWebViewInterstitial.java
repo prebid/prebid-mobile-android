@@ -32,18 +32,17 @@ public class PrebidWebViewInterstitial extends PrebidWebViewBase
 
     @Override
     public void loadHTML(String html, int width, int height) {
-        LayoutParams layoutParams = new LayoutParams(
-            LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
         setLayoutParams(layoutParams);
-        mWidth = width;
-        mHeight = height;
+        this.width = width;
+        this.height = height;
         //A null context can crash with an exception in webView creation through WebViewBanner. Catch it
-        mWebView = new WebViewInterstitial(mContext, html, width, height, this, this);
-        mWebView.setJSName("WebViewInterstitial");
-        mWebView.initContainsIFrame(mCreative.getCreativeModel().getHtml());
-        mWebView.setTargetUrl(mCreative.getCreativeModel().getTargetUrl());
-        mWebView.loadAd();
+        webView = new WebViewInterstitial(context, html, width, height, this, this);
+        webView.setJSName("WebViewInterstitial");
+        webView.initContainsIFrame(creative.getCreativeModel().getHtml());
+        webView.setTargetUrl(creative.getCreativeModel().getTargetUrl());
+        webView.loadAd();
     }
 
     @Override
@@ -52,15 +51,18 @@ public class PrebidWebViewInterstitial extends PrebidWebViewBase
             //This should never happen.
             LogUtil.error(TAG, "Failed to preload an interstitial. Webview is null.");
 
-            if (mWebViewDelegate != null) {
-                mWebViewDelegate.webViewFailedToLoad(new AdException(AdException.INTERNAL_ERROR, "Preloaded adview is null!"));
+            if (webViewDelegate != null) {
+                webViewDelegate.webViewFailedToLoad(new AdException(
+                        AdException.INTERNAL_ERROR,
+                        "Preloaded adview is null!"
+                ));
             }
             return;
         }
-        mCurrentWebViewBase = adBaseView;
+        currentWebViewBase = adBaseView;
 
-        if (mWebViewDelegate != null) {
-            mWebViewDelegate.webViewReadyToDisplay();
+        if (webViewDelegate != null) {
+            webViewDelegate.webViewReadyToDisplay();
         }
     }
 }

@@ -45,66 +45,66 @@ import static org.mockito.Mockito.mock;
 @Config(sdk = 19)
 public class ViewPoolTest {
 
-    private ViewPool mViewPool;
-    private Context mContext;
-    private View mOccupiedView;
-    private View mUnoccupiedView;
-    private FrameLayout mContainer;
+    private ViewPool viewPool;
+    private Context context;
+    private View occupiedView;
+    private View unoccupiedView;
+    private FrameLayout container;
 
     @Before
     public void setUp() {
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
-        mViewPool = ViewPool.getInstance();
-        mViewPool.clear();
-        mOccupiedView = new View(mContext);
-        mUnoccupiedView = new View(mContext);
-        mContainer = new FrameLayout(mContext);
-        mContainer.addView(mOccupiedView);
+        context = Robolectric.buildActivity(Activity.class).create().get();
+        viewPool = ViewPool.getInstance();
+        viewPool.clear();
+        occupiedView = new View(context);
+        unoccupiedView = new View(context);
+        container = new FrameLayout(context);
+        container.addView(occupiedView);
 
-        mViewPool.addToOccupied(mOccupiedView);
-        mViewPool.addToUnoccupied(mUnoccupiedView);
+        viewPool.addToOccupied(occupiedView);
+        viewPool.addToUnoccupied(unoccupiedView);
     }
 
     @After
     public void clearInstance() throws IllegalAccessException {
-        WhiteBox.setInternalState(mViewPool, "sInstance", null);
+        WhiteBox.setInternalState(viewPool, "sInstance", null);
     }
 
     @Test
     public void sizeOfOccupiedTest() {
-        assertEquals(1, mViewPool.sizeOfOccupied());
+        assertEquals(1, viewPool.sizeOfOccupied());
     }
 
     @Test
     public void sizeOfUnoccupiedTest() {
-        assertEquals(1, mViewPool.sizeOfUnoccupied());
+        assertEquals(1, viewPool.sizeOfUnoccupied());
     }
 
     @Test
     public void addToOccupiedTest() {
-        mViewPool.addToOccupied(new View(mContext));
-        assertEquals(2, mViewPool.sizeOfOccupied());
+        viewPool.addToOccupied(new View(context));
+        assertEquals(2, viewPool.sizeOfOccupied());
     }
 
     @Test
     public void addToUnoccupiedTest() {
-        mViewPool.addToUnoccupied(new View(mContext));
-        assertEquals(2, mViewPool.sizeOfUnoccupied());
+        viewPool.addToUnoccupied(new View(context));
+        assertEquals(2, viewPool.sizeOfUnoccupied());
     }
 
     @Test
     public void swapToUnoccupiedTest() {
-        mViewPool.swapToUnoccupied(mOccupiedView);
-        assertNull(mOccupiedView.getParent());
-        assertEquals(0, mViewPool.sizeOfOccupied());
-        assertEquals(2, mViewPool.sizeOfUnoccupied());
+        viewPool.swapToUnoccupied(occupiedView);
+        assertNull(occupiedView.getParent());
+        assertEquals(0, viewPool.sizeOfOccupied());
+        assertEquals(2, viewPool.sizeOfUnoccupied());
     }
 
     @Test
     public void clearTest() {
-        mViewPool.clear();
-        assertEquals(0, mViewPool.sizeOfUnoccupied());
-        assertEquals(0, mViewPool.sizeOfOccupied());
+        viewPool.clear();
+        assertEquals(0, viewPool.sizeOfUnoccupied());
+        assertEquals(0, viewPool.sizeOfOccupied());
     }
 
     @Test
@@ -113,26 +113,31 @@ public class ViewPoolTest {
         AdFormat adType = AdFormat.BANNER;
         InterstitialManager mockInterstitialManager = mock(InterstitialManager.class);
 
-        View result = mViewPool.getUnoccupiedView(mContext, mockVideoCreativeViewListener, adType, mockInterstitialManager);
-        assertEquals(mUnoccupiedView, result);
-        assertEquals(2, mViewPool.sizeOfOccupied());
-        assertEquals(0, mViewPool.sizeOfUnoccupied());
+        View result = viewPool.getUnoccupiedView(
+                context,
+                mockVideoCreativeViewListener,
+                adType,
+                mockInterstitialManager
+        );
+        assertEquals(unoccupiedView, result);
+        assertEquals(2, viewPool.sizeOfOccupied());
+        assertEquals(0, viewPool.sizeOfUnoccupied());
 
-        result = mViewPool.getUnoccupiedView(mContext, mockVideoCreativeViewListener, adType, mockInterstitialManager);
+        result = viewPool.getUnoccupiedView(context, mockVideoCreativeViewListener, adType, mockInterstitialManager);
         assertThat(result, instanceOf(PrebidWebViewBanner.class));
-        assertEquals(3, mViewPool.sizeOfOccupied());
-        assertEquals(0, mViewPool.sizeOfUnoccupied());
+        assertEquals(3, viewPool.sizeOfOccupied());
+        assertEquals(0, viewPool.sizeOfUnoccupied());
 
         adType = AdFormat.VAST;
-        result = mViewPool.getUnoccupiedView(mContext, mock(VideoCreative.class), adType, mockInterstitialManager);
+        result = viewPool.getUnoccupiedView(context, mock(VideoCreative.class), adType, mockInterstitialManager);
         assertThat(result, instanceOf(ExoPlayerView.class));
-        assertEquals(4, mViewPool.sizeOfOccupied());
-        assertEquals(0, mViewPool.sizeOfUnoccupied());
+        assertEquals(4, viewPool.sizeOfOccupied());
+        assertEquals(0, viewPool.sizeOfUnoccupied());
 
         adType = AdFormat.INTERSTITIAL;
-        result = mViewPool.getUnoccupiedView(mContext, mockVideoCreativeViewListener, adType, mockInterstitialManager);
+        result = viewPool.getUnoccupiedView(context, mockVideoCreativeViewListener, adType, mockInterstitialManager);
         assertThat(result, instanceOf(PrebidWebViewInterstitial.class));
-        assertEquals(5, mViewPool.sizeOfOccupied());
-        assertEquals(0, mViewPool.sizeOfUnoccupied());
+        assertEquals(5, viewPool.sizeOfOccupied());
+        assertEquals(0, viewPool.sizeOfUnoccupied());
     }
 }

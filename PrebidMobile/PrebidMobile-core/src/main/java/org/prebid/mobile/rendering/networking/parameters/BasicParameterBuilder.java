@@ -74,14 +74,18 @@ public class BasicParameterBuilder extends ParameterBuilder {
      */
     private static final List<Integer> SUPPORTED_MRAID_VERSIONS = Arrays.asList(3, 5, 6);
 
-    private final AdUnitConfiguration mAdConfiguration;
-    private final boolean mBrowserActivityAvailable;
-    private final Resources mResources;
+    private final AdUnitConfiguration adConfiguration;
+    private final boolean browserActivityAvailable;
+    private final Resources resources;
 
-    public BasicParameterBuilder(AdUnitConfiguration adConfiguration, Resources resources, boolean browserActivityAvailable) {
-        mAdConfiguration = adConfiguration;
-        mBrowserActivityAvailable = browserActivityAvailable;
-        mResources = resources;
+    public BasicParameterBuilder(
+            AdUnitConfiguration adConfiguration,
+            Resources resources,
+            boolean browserActivityAvailable
+    ) {
+        this.adConfiguration = adConfiguration;
+        this.browserActivityAvailable = browserActivityAvailable;
+        this.resources = resources;
     }
 
     @Override
@@ -101,16 +105,16 @@ public class BasicParameterBuilder extends ParameterBuilder {
     }
 
     private void configureImpObject(Imp imp, String uuid) {
-        if (mAdConfiguration != null) {
+        if (adConfiguration != null) {
             setDisplayManager(imp);
             setCommonImpValues(imp, uuid);
-            if (mAdConfiguration.getNativeConfiguration() != null) {
+            if (adConfiguration.getNativeConfiguration() != null) {
                 setNativeImpValues(imp);
             } else {
-                if (mAdConfiguration.isAdType(AdFormat.BANNER) || mAdConfiguration.isAdType(AdFormat.INTERSTITIAL)) {
+                if (adConfiguration.isAdType(AdFormat.BANNER) || adConfiguration.isAdType(AdFormat.INTERSTITIAL)) {
                     setBannerImpValues(imp);
                 }
-                if (mAdConfiguration.isAdType(AdFormat.VAST)) {
+                if (adConfiguration.isAdType(AdFormat.VAST)) {
                     setVideoImpValues(imp);
                 }
             }
@@ -119,7 +123,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
     private void configureBidRequest(BidRequest bidRequest, String uuid) {
         bidRequest.setId(uuid);
-        boolean isVideo = mAdConfiguration.isAdType(AdFormat.VAST);
+        boolean isVideo = adConfiguration.isAdType(AdFormat.VAST);
         bidRequest.getExt().put("prebid", Prebid.getJsonObjectForBidRequest(PrebidMobile.getPrebidServerAccountId(), isVideo));
         //if coppaEnabled - set 1, else No coppa is sent
         if (PrebidMobile.isCoppaEnabled) {
@@ -143,7 +147,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
         user.buyerUid = TargetingParams.getBuyerId();
         user.ext = TargetingParams.getUserExt();
 
-        ArrayList<DataObject> userData = mAdConfiguration.getUserData();
+        ArrayList<DataObject> userData = adConfiguration.getUserData();
         if (!userData.isEmpty()) {
             user.dataObjects = userData;
         }
@@ -185,8 +189,8 @@ public class BasicParameterBuilder extends ParameterBuilder {
     private void setVideoImpValues(Imp imp) {
         Video video = new Video();
 
-        if (mAdConfiguration.isOriginalAdUnit()) {
-            VideoBaseAdUnit.Parameters videoParameters = mAdConfiguration.getVideoParameters();
+        if (adConfiguration.isOriginalAdUnit()) {
+            VideoBaseAdUnit.Parameters videoParameters = adConfiguration.getVideoParameters();
             if (videoParameters != null) {
                 video.minduration = videoParameters.getMinDuration();
                 video.maxduration = videoParameters.getMaxDuration();
@@ -251,22 +255,21 @@ public class BasicParameterBuilder extends ParameterBuilder {
             video.playbackend = VIDEO_INTERSTITIAL_PLAYBACK_END;//On Leaving Viewport or when Terminated by User
             video.delivery = new int[]{VIDEO_DELIVERY_DOWNLOAD};
 
-            if (mAdConfiguration.isAdPositionValid()) {
-                video.pos = mAdConfiguration.getAdPositionValue();
+            if (adConfiguration.isAdPositionValid()) {
+                video.pos = adConfiguration.getAdPositionValue();
             }
         }
 
-        if (!mAdConfiguration.isPlacementTypeValid()) {
+        if (!adConfiguration.isPlacementTypeValid()) {
             video.placement = PlacementType.INTERSTITIAL.getValue();
-            if (mResources != null) {
-                Configuration deviceConfiguration = mResources.getConfiguration();
+            if (resources != null) {
+                Configuration deviceConfiguration = resources.getConfiguration();
                 video.w = deviceConfiguration.screenWidthDp;
                 video.h = deviceConfiguration.screenHeightDp;
             }
-        }
-        else {
-            video.placement = mAdConfiguration.getPlacementTypeValue();
-            for (AdSize size : mAdConfiguration.getSizes()) {
+        } else {
+            video.placement = adConfiguration.getPlacementTypeValue();
+            for (AdSize size : adConfiguration.getSizes()) {
                 video.w = size.getWidth();
                 video.h = size.getHeight();
                 break;
@@ -278,8 +281,8 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
     private void setBannerImpValues(Imp imp) {
         Banner banner = new Banner();
-        if (mAdConfiguration.isOriginalAdUnit()) {
-            BannerBaseAdUnit.Parameters parameters = mAdConfiguration.getBannerParameters();
+        if (adConfiguration.isOriginalAdUnit()) {
+            BannerBaseAdUnit.Parameters parameters = adConfiguration.getBannerParameters();
             if (parameters != null && parameters.getApi() != null && parameters.getApi().size() > 0) {
                 List<Signals.Api> apiObjects = parameters.getApi();
                 int[] api = new int[apiObjects.size()];
@@ -292,45 +295,44 @@ public class BasicParameterBuilder extends ParameterBuilder {
             banner.api = getApiFrameworks();
         }
 
-        if (mAdConfiguration.isAdType(AdFormat.BANNER)) {
-            for (AdSize size : mAdConfiguration.getSizes()) {
+        if (adConfiguration.isAdType(AdFormat.BANNER)) {
+            for (AdSize size : adConfiguration.getSizes()) {
                 banner.addFormat(size.getWidth(), size.getHeight());
             }
-        } else if (mAdConfiguration.isAdType(AdFormat.INTERSTITIAL) && mResources != null) {
-            Configuration deviceConfiguration = mResources.getConfiguration();
+        } else if (adConfiguration.isAdType(AdFormat.INTERSTITIAL) && resources != null) {
+            Configuration deviceConfiguration = resources.getConfiguration();
             banner.addFormat(deviceConfiguration.screenWidthDp, deviceConfiguration.screenHeightDp);
         }
 
-        if (mAdConfiguration.isAdPositionValid()) {
-            banner.pos = mAdConfiguration.getAdPositionValue();
+        if (adConfiguration.isAdPositionValid()) {
+            banner.pos = adConfiguration.getAdPositionValue();
         }
 
         imp.banner = banner;
     }
 
     private void setNativeImpValues(Imp imp) {
-        if (mAdConfiguration.getNativeConfiguration() != null) {
-            imp.getNative().setRequestFrom(mAdConfiguration.getNativeConfiguration());
+        if (adConfiguration.getNativeConfiguration() != null) {
+            imp.getNative().setRequestFrom(adConfiguration.getNativeConfiguration());
         }
     }
 
     private void setCommonImpValues(Imp imp, String uuid) {
         imp.id = uuid;
-        boolean isInterstitial = mAdConfiguration.isAdType(AdFormat.VAST) ||
-                mAdConfiguration.isAdType(AdFormat.INTERSTITIAL);
+        boolean isInterstitial = adConfiguration.isAdType(AdFormat.VAST) || adConfiguration.isAdType(AdFormat.INTERSTITIAL);
         //Send 1 for interstitial/interstitial video and 0 for banners
         imp.instl = isInterstitial ? 1 : 0;
         // 0 == embedded, 1 == native
-        imp.clickBrowser = !PrebidMobile.useExternalBrowser && mBrowserActivityAvailable ? 0 : 1;
+        imp.clickBrowser = !PrebidMobile.useExternalBrowser && browserActivityAvailable ? 0 : 1;
         //set secure=1 for https or secure=0 for http
-        if (!mAdConfiguration.isAdType(AdFormat.VAST)) {
+        if (!adConfiguration.isAdType(AdFormat.VAST)) {
             imp.secure = 1;
         }
-        imp.getExt().put("prebid", Prebid.getJsonObjectForImp(mAdConfiguration));
+        imp.getExt().put("prebid", Prebid.getJsonObjectForImp(adConfiguration));
 
-        final Map<String, Set<String>> contextDataDictionary = mAdConfiguration.getContextDataDictionary();
+        final Map<String, Set<String>> contextDataDictionary = adConfiguration.getContextDataDictionary();
         JSONObject data = Utils.toJson(contextDataDictionary);
-        Utils.addValue(data, "adslot", mAdConfiguration.getPbAdSlot());
+        Utils.addValue(data, "adslot", adConfiguration.getPbAdSlot());
         JSONObject context = new JSONObject();
 
         if (data.length() > 0) {

@@ -41,16 +41,16 @@ public enum VASTErrorCodes {
     //TODO: linear, vpaid & companion error codes
     UNDEFINED_ERROR("Undefined Error.");
 
-    private final String mMessage;
+    private final String message;
 
     VASTErrorCodes(String message) {
-        mMessage = message;
+        this.message = message;
     }
 
     @NonNull
     @Override
     public final String toString() {
-        return mMessage;
+        return message;
     }
 }
 

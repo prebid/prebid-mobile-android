@@ -38,21 +38,21 @@ public class InterstitialView extends BaseAdView {
 
     private static final String TAG = InterstitialView.class.getSimpleName();
 
-    private InterstitialViewListener mListener;
-    protected InterstitialVideo mInterstitialVideo;
+    private InterstitialViewListener listener;
+    protected InterstitialVideo interstitialVideo;
 
     //region ========== Listener Area
-    private final AdViewManagerListener mOnAdViewManagerListener = new AdViewManagerListener() {
+    private final AdViewManagerListener onAdViewManagerListener = new AdViewManagerListener() {
         @Override
         public void adLoaded(final AdDetails adDetails) {
-            mListener.onAdLoaded(InterstitialView.this, adDetails);
+            listener.onAdLoaded(InterstitialView.this, adDetails);
         }
 
         @Override
         public void viewReadyForImmediateDisplay(View view) {
-            if (mAdViewManager.isNotShowingEndCard()) {
+            if (adViewManager.isNotShowingEndCard()) {
 
-                mListener.onAdDisplayed(InterstitialView.this);
+                listener.onAdDisplayed(InterstitialView.this);
             }
 
             removeAllViews();
@@ -67,16 +67,16 @@ public class InterstitialView extends BaseAdView {
 
         @Override
         public void adCompleted() {
-            mListener.onAdCompleted(InterstitialView.this);
+            listener.onAdCompleted(InterstitialView.this);
 
-            if (mInterstitialVideo != null && mInterstitialVideo.shouldShowCloseButtonOnComplete()) {
-                mInterstitialVideo.changeCloseViewVisibility(View.VISIBLE);
+            if (interstitialVideo != null && interstitialVideo.shouldShowCloseButtonOnComplete()) {
+                interstitialVideo.changeCloseViewVisibility(View.VISIBLE);
             }
         }
 
         @Override
         public void creativeClicked(String url) {
-            mListener.onAdClicked(InterstitialView.this);
+            listener.onAdClicked(InterstitialView.this);
         }
 
         @Override
@@ -93,28 +93,28 @@ public class InterstitialView extends BaseAdView {
     }
 
     public void setPubBackGroundOpacity(float opacity) {
-        mInterstitialManager.getInterstitialDisplayProperties().setPubBackGroundOpacity(opacity);
+        interstitialManager.getInterstitialDisplayProperties().setPubBackGroundOpacity(opacity);
     }
 
     public void loadAd(
         AdUnitConfiguration adUnitConfiguration,
         BidResponse bidResponse
     ) {
-        mAdViewManager.loadBidTransaction(adUnitConfiguration, bidResponse);
+        adViewManager.loadBidTransaction(adUnitConfiguration, bidResponse);
     }
 
     public void setInterstitialViewListener(InterstitialViewListener listener) {
-        mListener = listener;
+        this.listener = listener;
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
-        if (mInterstitialVideo != null) {
+        if (interstitialVideo != null) {
             if (!hasWindowFocus) {
-                mInterstitialVideo.pauseVideo();
+                interstitialVideo.pauseVideo();
             } else {
-                mInterstitialVideo.resumeVideo();
+                interstitialVideo.resumeVideo();
             }
         }
     }
@@ -125,17 +125,17 @@ public class InterstitialView extends BaseAdView {
         // so, activity's destroy() calling adview's destry should not crash
         super.destroy();
 
-        if (mInterstitialVideo != null) {
-            mInterstitialVideo.hide();
-            mInterstitialVideo.cancel();
-            mInterstitialVideo.removeViews();
+        if (interstitialVideo != null) {
+            interstitialVideo.hide();
+            interstitialVideo.cancel();
+            interstitialVideo.removeViews();
         }
     }
 
     public void showAsInterstitialFromRoot() {
         try {
-            mInterstitialManager.configureInterstitialProperties(mAdViewManager.getAdConfiguration());
-            mInterstitialManager.displayAdViewInInterstitial(getContext(), InterstitialView.this);
+            interstitialManager.configureInterstitialProperties(adViewManager.getAdConfiguration());
+            interstitialManager.displayAdViewInInterstitial(getContext(), InterstitialView.this);
         } catch (final Exception e) {
             LogUtil.error(TAG, "Interstitial failed to show:" + Log.getStackTraceString(e));
             notifyErrorListeners(new AdException(AdException.INTERNAL_ERROR, e.getMessage()));
@@ -144,17 +144,17 @@ public class InterstitialView extends BaseAdView {
 
     public void showVideoAsInterstitial() {
         try {
-            final AdUnitConfiguration adConfiguration = mAdViewManager.getAdConfiguration();
-            mInterstitialManager.configureInterstitialProperties(adConfiguration);
-            mInterstitialVideo = new InterstitialVideo(
+            final AdUnitConfiguration adConfiguration = adViewManager.getAdConfiguration();
+            interstitialManager.configureInterstitialProperties(adConfiguration);
+            interstitialVideo = new InterstitialVideo(
                 getContext(),
                 InterstitialView.this,
-                mInterstitialManager,
+                interstitialManager,
                 adConfiguration
             );
-            mInterstitialVideo.setHasEndCard(mAdViewManager.hasNextCreative());
-            mInterstitialVideo.setDialogListener(this::handleDialogEvent);
-            mInterstitialVideo.show();
+            interstitialVideo.setHasEndCard(adViewManager.hasNextCreative());
+            interstitialVideo.setDialogListener(this::handleDialogEvent);
+            interstitialVideo.show();
         } catch (final Exception e) {
             LogUtil.error(TAG, "Video interstitial failed to show:" + Log.getStackTraceString(e));
 
@@ -163,11 +163,11 @@ public class InterstitialView extends BaseAdView {
     }
 
     public void closeInterstitialVideo() {
-        if (mInterstitialVideo != null) {
-            if (mInterstitialVideo.isShowing()) {
-                mInterstitialVideo.close();
+        if (interstitialVideo != null) {
+            if (interstitialVideo.isShowing()) {
+                interstitialVideo.close();
             }
-            mInterstitialVideo = null;
+            interstitialVideo = null;
         }
     }
 
@@ -184,21 +184,21 @@ public class InterstitialView extends BaseAdView {
 
     @Override
     protected void notifyErrorListeners(final AdException adException) {
-        if (mListener != null) {
-            mListener.onAdFailed(InterstitialView.this, adException);
+        if (listener != null) {
+            listener.onAdFailed(InterstitialView.this, adException);
         }
     }
 
     @Override
     protected void handleBroadcastAction(String action) {
         if (IntentActions.ACTION_BROWSER_CLOSE.equals(action)) {
-            mListener.onAdClickThroughClosed(InterstitialView.this);
+            listener.onAdClickThroughClosed(InterstitialView.this);
         }
     }
 
     protected void setAdViewManagerValues() throws AdException {
-        mAdViewManager = new AdViewManager(getContext(), mOnAdViewManagerListener, this, mInterstitialManager);
-        AdUnitConfiguration adConfiguration = mAdViewManager.getAdConfiguration();
+        adViewManager = new AdViewManager(getContext(), onAdViewManagerListener, this, interstitialManager);
+        AdUnitConfiguration adConfiguration = adViewManager.getAdConfiguration();
         adConfiguration.setAutoRefreshDelay(0);
     }
 
@@ -218,25 +218,25 @@ public class InterstitialView extends BaseAdView {
 
     private void handleDialogEvent(DialogEventListener.EventType eventType) {
         if (eventType == DialogEventListener.EventType.SHOWN) {
-            mAdViewManager.addObstructions((formInterstitialObstructionsArray()));
+            adViewManager.addObstructions((formInterstitialObstructionsArray()));
         } else if (eventType == DialogEventListener.EventType.CLOSED) {
             handleActionClose();
         } else if (eventType == DialogEventListener.EventType.MUTE) {
-            mAdViewManager.mute();
+            adViewManager.mute();
         } else if (eventType == DialogEventListener.EventType.UNMUTE) {
-            mAdViewManager.unmute();
+            adViewManager.unmute();
         }
     }
 
     private void handleActionClose() {
-        if (mAdViewManager.isInterstitialClosed()) {
-            mAdViewManager.trackCloseEvent();
+        if (adViewManager.isInterstitialClosed()) {
+            adViewManager.trackCloseEvent();
             return;
         }
 
-        mAdViewManager.resetTransactionState();
+        adViewManager.resetTransactionState();
 
-        mListener.onAdClosed(InterstitialView.this);
+        listener.onAdClosed(InterstitialView.this);
     }
 
 }

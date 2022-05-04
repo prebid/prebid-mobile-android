@@ -44,86 +44,86 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class PrebidWebViewBaseTest {
 
-    private PrebidWebViewBase mPrebidWebViewBase;
-    private WebViewBanner mMockWebViewBanner;
-    private BaseJSInterface mMockBaseJSInterface;
-    private JsExecutor mMockJsExecutor;
+    private PrebidWebViewBase prebidWebViewBase;
+    private WebViewBanner mockWebViewBanner;
+    private BaseJSInterface mockBaseJSInterface;
+    private JsExecutor mockJsExecutor;
 
     @Before
     public void setUp() throws Exception {
         Context context = Robolectric.buildActivity(Activity.class).create().get();
-        mPrebidWebViewBase = new PrebidWebViewBase(context, mock(InterstitialManager.class));
-        mMockWebViewBanner = mock(WebViewBanner.class);
-        mMockBaseJSInterface = mock(BaseJSInterface.class);
-        mMockJsExecutor = mock(JsExecutor.class);
+        prebidWebViewBase = new PrebidWebViewBase(context, mock(InterstitialManager.class));
+        mockWebViewBanner = mock(WebViewBanner.class);
+        mockBaseJSInterface = mock(BaseJSInterface.class);
+        mockJsExecutor = mock(JsExecutor.class);
 
-        when(mMockWebViewBanner.getMRAIDInterface()).thenReturn(mMockBaseJSInterface);
-        when(mMockBaseJSInterface.getJsExecutor()).thenReturn(mMockJsExecutor);
+        when(mockWebViewBanner.getMRAIDInterface()).thenReturn(mockBaseJSInterface);
+        when(mockBaseJSInterface.getJsExecutor()).thenReturn(mockJsExecutor);
 
-        mPrebidWebViewBase.mMraidWebView = mMockWebViewBanner;
+        prebidWebViewBase.mraidWebView = mockWebViewBanner;
     }
 
     @Test
-    public void initMRAIDExpandedTest(){
+    public void initMRAIDExpandedTest() {
 
-        mPrebidWebViewBase.initMraidExpanded();
-        verify(mMockBaseJSInterface, timeout(100)).onReadyExpanded();
+        prebidWebViewBase.initMraidExpanded();
+        verify(mockBaseJSInterface, timeout(100)).onReadyExpanded();
     }
 
     @Test
     public void handleOpenTest() {
         WebViewBase mockWebView = mock(WebViewBase.class);
-        when(mockWebView.getMRAIDInterface()).thenReturn(mMockBaseJSInterface);
-        mPrebidWebViewBase.mCurrentWebViewBase = mockWebView;
+        when(mockWebView.getMRAIDInterface()).thenReturn(mockBaseJSInterface);
+        prebidWebViewBase.currentWebViewBase = mockWebView;
 
-        mPrebidWebViewBase.handleOpen("test");
-        verify(mMockBaseJSInterface).open(eq("test"));
+        prebidWebViewBase.handleOpen("test");
+        verify(mockBaseJSInterface).open(eq("test"));
     }
 
     @Test
     public void openExternalLinkTest() {
         WebViewDelegate mockDelegate = mock(WebViewDelegate.class);
-        mPrebidWebViewBase.mWebViewDelegate = mockDelegate;
+        prebidWebViewBase.webViewDelegate = mockDelegate;
 
-        mPrebidWebViewBase.openExternalLink("test");
+        prebidWebViewBase.openExternalLink("test");
         verify(mockDelegate).webViewShouldOpenExternalLink(eq("test"));
     }
 
     @Test
     public void openMRAIDExternalLinkTest() {
         WebViewDelegate mockDelegate = mock(WebViewDelegate.class);
-        mPrebidWebViewBase.mWebViewDelegate = mockDelegate;
+        prebidWebViewBase.webViewDelegate = mockDelegate;
 
-        mPrebidWebViewBase.openMraidExternalLink("test");
+        prebidWebViewBase.openMraidExternalLink("test");
         verify(mockDelegate).webViewShouldOpenMRAIDLink(eq("test"));
     }
 
     @Test
     public void renderAdViewTest() {
-        when(mMockWebViewBanner.isMRAID()).thenReturn(true);
+        when(mockWebViewBanner.isMRAID()).thenReturn(true);
 
-        mPrebidWebViewBase.renderAdView(null);
-        verify(mMockWebViewBanner, times(0)).setVisibility(eq(View.VISIBLE));
+        prebidWebViewBase.renderAdView(null);
+        verify(mockWebViewBanner, times(0)).setVisibility(eq(View.VISIBLE));
 
-        mPrebidWebViewBase.renderAdView(mMockWebViewBanner);
-        verify(mMockWebViewBanner).setVisibility(eq(View.VISIBLE));
+        prebidWebViewBase.renderAdView(mockWebViewBanner);
+        verify(mockWebViewBanner).setVisibility(eq(View.VISIBLE));
     }
 
     @Test
     public void displayAdViewPlacement() {
-        when(mMockWebViewBanner.getAdHeight()).thenReturn(1);
-        when(mMockWebViewBanner.getAdWidth()).thenReturn(1);
+        when(mockWebViewBanner.getAdHeight()).thenReturn(1);
+        when(mockWebViewBanner.getAdWidth()).thenReturn(1);
 
-        mPrebidWebViewBase.setLayoutParams(mock(FrameLayout.LayoutParams.class));
-        mPrebidWebViewBase.displayAdViewPlacement(mMockWebViewBanner);
-        verify(mMockWebViewBanner, times(2)).getAdHeight();
-        verify(mMockWebViewBanner, times(2)).getAdWidth();
+        prebidWebViewBase.setLayoutParams(mock(FrameLayout.LayoutParams.class));
+        prebidWebViewBase.displayAdViewPlacement(mockWebViewBanner);
+        verify(mockWebViewBanner, times(2)).getAdHeight();
+        verify(mockWebViewBanner, times(2)).getAdWidth();
     }
 
     @Test
     public void destroyTest() throws IllegalAccessException {
         Handler mockHandler = mock(Handler.class);
-        WhiteBox.field(PrebidWebViewBase.class, "mHandler").set(mPrebidWebViewBase, mockHandler);
+        WhiteBox.field(PrebidWebViewBase.class, "handler").set(prebidWebViewBase, mockHandler);
         when(mockHandler.postDelayed(any(Runnable.class), anyLong())).thenAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) {
@@ -133,16 +133,16 @@ public class PrebidWebViewBaseTest {
             }
         });
 
-        mPrebidWebViewBase.destroy();
-        verify(mMockWebViewBanner).destroy();
+        prebidWebViewBase.destroy();
+        verify(mockWebViewBanner).destroy();
     }
 
     @Test
     public void onWindowFocusChangedTest() throws IllegalAccessException {
-        mPrebidWebViewBase.mCurrentWebViewBase = mMockWebViewBanner;
-        WhiteBox.field(PrebidWebViewBase.class, "mScreenVisibility").set(mPrebidWebViewBase, -1);
+        prebidWebViewBase.currentWebViewBase = mockWebViewBanner;
+        WhiteBox.field(PrebidWebViewBase.class, "screenVisibility").set(prebidWebViewBase, -1);
 
-        mPrebidWebViewBase.onWindowFocusChanged(true);
-        verify(mMockBaseJSInterface).handleScreenViewabilityChange(eq(true));
+        prebidWebViewBase.onWindowFocusChanged(true);
+        verify(mockBaseJSInterface).handleScreenViewabilityChange(eq(true));
     }
 }

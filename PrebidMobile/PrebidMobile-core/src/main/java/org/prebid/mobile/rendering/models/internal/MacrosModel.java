@@ -24,15 +24,15 @@ public class MacrosModel {
 
     private static final String MACROS_DEFAULT_VALUE = "\\\\\"\\\\\""; //String representation of "\"\""
 
-    private final String mReplaceValue;
+    private final String replaceValue;
 
     public MacrosModel(String replaceValue) {
-        mReplaceValue = replaceValue;
+        this.replaceValue = replaceValue;
     }
 
     @NonNull
     public String getReplaceValue() {
-        return mReplaceValue == null ? MACROS_DEFAULT_VALUE : mReplaceValue;
+        return replaceValue == null ? MACROS_DEFAULT_VALUE : replaceValue;
     }
 
     @Override
@@ -46,13 +46,11 @@ public class MacrosModel {
 
         MacrosModel that = (MacrosModel) o;
 
-        return mReplaceValue != null
-               ? mReplaceValue.equals(that.mReplaceValue)
-               : that.mReplaceValue == null;
+        return replaceValue != null ? replaceValue.equals(that.replaceValue) : that.replaceValue == null;
     }
 
     @Override
     public int hashCode() {
-        return mReplaceValue != null ? mReplaceValue.hashCode() : 0;
+        return replaceValue != null ? replaceValue.hashCode() : 0;
     }
 }

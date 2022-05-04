@@ -56,30 +56,30 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class PrebidWebViewBannerTest {
 
-    private PrebidWebViewBanner mBanner;
-    private WebViewBanner mMockWebViewBanner;
-    private BaseJSInterface mMockBaseJSInterface;
+    private PrebidWebViewBanner banner;
+    private WebViewBanner mockWebViewBanner;
+    private BaseJSInterface mockBaseJSInterface;
 
-    private Context mContext;
-    private String mAdHTML;
-    private JsExecutor mMockJsExecutor;
+    private Context context;
+    private String adHTML;
+    private JsExecutor mockJsExecutor;
 
     @Before
     public void setUp() throws Exception {
-        mContext = Robolectric.buildActivity(Activity.class).create().get();
-        ManagersResolver.getInstance().prepare(mContext);
+        context = Robolectric.buildActivity(Activity.class).create().get();
+        ManagersResolver.getInstance().prepare(context);
 
-        mAdHTML = ResourceUtils.convertResourceToString("ad_not_mraid_html.txt");
-        mMockWebViewBanner = mock(WebViewBanner.class);
-        mMockBaseJSInterface = mock(BaseJSInterface.class);
-        mMockJsExecutor = mock(JsExecutor.class);
+        adHTML = ResourceUtils.convertResourceToString("ad_not_mraid_html.txt");
+        mockWebViewBanner = mock(WebViewBanner.class);
+        mockBaseJSInterface = mock(BaseJSInterface.class);
+        mockJsExecutor = mock(JsExecutor.class);
 
-        when(mMockBaseJSInterface.getJsExecutor()).thenReturn(mMockJsExecutor);
+        when(mockBaseJSInterface.getJsExecutor()).thenReturn(mockJsExecutor);
 
-        when(mMockWebViewBanner.getMRAIDInterface()).thenReturn(mMockBaseJSInterface);
-        mBanner = new PrebidWebViewBanner(mContext, mock(InterstitialManager.class));
+        when(mockWebViewBanner.getMRAIDInterface()).thenReturn(mockBaseJSInterface);
+        banner = new PrebidWebViewBanner(context, mock(InterstitialManager.class));
 
-        mBanner.mMraidWebView = mMockWebViewBanner;
+        banner.mraidWebView = mockWebViewBanner;
     }
 
     @Test
@@ -96,12 +96,12 @@ public class PrebidWebViewBannerTest {
             message.setData(data);
             handler.handleMessage(message);
             return null;
-        }).when(mMockJsExecutor).executeGetExpandProperties(any(Handler.class));
+        }).when(mockJsExecutor).executeGetExpandProperties(any(Handler.class));
 
         FetchPropertiesHandler.FetchPropertyCallback mockCallback = mock(FetchPropertiesHandler.FetchPropertyCallback.class);
-        WhiteBox.field(PrebidWebViewBanner.class, "mExpandPropertiesCallback").set(mBanner, mockCallback);
+        WhiteBox.field(PrebidWebViewBanner.class, "expandPropertiesCallback").set(banner, mockCallback);
 
-        mBanner.loadMraidExpandProperties();
+        banner.loadMraidExpandProperties();
 
         verify(mockCallback).onResult(eq(jsonAnswer));
     }
@@ -110,41 +110,41 @@ public class PrebidWebViewBannerTest {
     public void preloadedTest() {
         WebViewDelegate mockDelegate = mock(WebViewDelegate.class);
         InterstitialManager mockManager = mock(InterstitialManager.class);
-        mBanner.mWebViewDelegate = mockDelegate;
-        mBanner.mInterstitialManager = mockManager;
+        banner.webViewDelegate = mockDelegate;
+        banner.interstitialManager = mockManager;
         MraidEvent mockEvent = mock(MraidEvent.class);
-        when(mMockWebViewBanner.getMraidEvent()).thenReturn(mockEvent);
+        when(mockWebViewBanner.getMraidEvent()).thenReturn(mockEvent);
 
-        mBanner.preloaded(null);
+        banner.preloaded(null);
         verify(mockDelegate).webViewFailedToLoad(any(AdException.class));
 
-        mMockWebViewBanner.mMRAIDBridgeName = "twopart";
-        mBanner.preloaded(mMockWebViewBanner);
-        verify(mockManager).displayPrebidWebViewForMraid(eq(mMockWebViewBanner), eq(true));
+        mockWebViewBanner.MRAIDBridgeName = "twopart";
+        banner.preloaded(mockWebViewBanner);
+        verify(mockManager).displayPrebidWebViewForMraid(eq(mockWebViewBanner), eq(true));
 
-        mMockWebViewBanner.mMRAIDBridgeName = "else";
-        mBanner.preloaded(mMockWebViewBanner);
+        mockWebViewBanner.MRAIDBridgeName = "else";
+        banner.preloaded(mockWebViewBanner);
         //verify render
-        verify(mMockWebViewBanner).setAdWidth(anyInt());
+        verify(mockWebViewBanner).setAdWidth(anyInt());
 
-        when(mMockWebViewBanner.getParent()).thenReturn(mock(ViewGroup.class));
-        mBanner.preloaded(mMockWebViewBanner);
-        verify(mMockWebViewBanner).bringToFront();
+        when(mockWebViewBanner.getParent()).thenReturn(mock(ViewGroup.class));
+        banner.preloaded(mockWebViewBanner);
+        verify(mockWebViewBanner).bringToFront();
 
         verify(mockDelegate, times(3)).webViewReadyToDisplay();
     }
 
     @Test
     public void initTwoPartAndLoadTest() throws IOException {
-        mBanner.mCreative = mock(HTMLCreative.class);
+        banner.creative = mock(HTMLCreative.class);
         CreativeModel mockModel = mock(CreativeModel.class);
         when(mockModel.getHtml()).thenReturn(ResourceUtils.convertResourceToString("ad_contains_iframe"));
-        when(mBanner.mCreative.getCreativeModel()).thenReturn(mockModel);
+        when(banner.creative.getCreativeModel()).thenReturn(mockModel);
 
-        mBanner.initTwoPartAndLoad(mAdHTML);
+        banner.initTwoPartAndLoad(adHTML);
 
-        assertNotNull(mBanner.mMraidWebView);
-        assertEquals("twopart", mBanner.mMraidWebView.mMRAIDBridgeName);
+        assertNotNull(banner.mraidWebView);
+        assertEquals("twopart", banner.mraidWebView.MRAIDBridgeName);
     }
 
     @Test
@@ -154,12 +154,12 @@ public class PrebidWebViewBannerTest {
         when(mockCreative.getCreativeModel()).thenReturn(mockCreativeModel);
         when(mockCreativeModel.getHtml()).thenReturn(ResourceUtils.convertResourceToString("ad_contains_iframe"));
         when(mockCreativeModel.getAdConfiguration()).thenReturn(new AdUnitConfiguration());
-        mBanner.mCreative = mockCreative;
+        banner.creative = mockCreative;
 
-        mBanner.loadHTML(mAdHTML, 100 ,200);
+        banner.loadHTML(adHTML, 100 ,200);
 
-        assertNotNull(mBanner.mWebView);
-        assertEquals("1part", mBanner.mWebView.mMRAIDBridgeName);
+        assertNotNull(banner.webView);
+        assertEquals("1part", banner.webView.MRAIDBridgeName);
     }
 
 }

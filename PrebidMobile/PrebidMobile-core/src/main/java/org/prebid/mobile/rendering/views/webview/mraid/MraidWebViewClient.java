@@ -36,11 +36,11 @@ public class MraidWebViewClient extends AdWebViewClient {
     private static String TAG = MraidWebViewClient.class.getSimpleName();
     private static final String MRAID_JS = "mraid.js";
 
-    private String mMraidInjectionJavascript;
+    private String mraidInjectionJavascript;
 
     public MraidWebViewClient(AdAssetsLoadedListener adAssetsLoadedListener, String mraidScript) {
         super(adAssetsLoadedListener);
-        mMraidInjectionJavascript = "javascript:" + MraidEnv.getWindowMraidEnv() + mraidScript;
+        mraidInjectionJavascript = "javascript:" + MraidEnv.getWindowMraidEnv() + mraidScript;
     }
 
     @Override
@@ -61,12 +61,11 @@ public class MraidWebViewClient extends AdWebViewClient {
     }
 
     private WebResourceResponse createMraidInjectionResponse() {
-        if (Utils.isNotBlank(mMraidInjectionJavascript)) {
-            mAdAssetsLoadedListener.notifyMraidScriptInjected();
-            InputStream data = new ByteArrayInputStream(mMraidInjectionJavascript.getBytes());
+        if (Utils.isNotBlank(mraidInjectionJavascript)) {
+            adAssetsLoadedListener.notifyMraidScriptInjected();
+            InputStream data = new ByteArrayInputStream(mraidInjectionJavascript.getBytes());
             return new WebResourceResponse("text/javascript", "UTF-8", data);
-        }
-        else {
+        } else {
             LogUtil.error(TAG, "Failed to inject mraid.js into twoPart mraid webview");
         }
         return null;

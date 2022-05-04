@@ -42,22 +42,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Requester {
+
     private static final String TAG = Requester.class.getSimpleName();
 
-    private final UserConsentManager mUserConsentManager;
+    private final UserConsentManager userConsentManager;
 
-    protected String mRequestName;
-    protected WeakReference<Context> mContextReference;
-    protected AdUnitConfiguration mAdConfiguration;
-    protected URLBuilder mUrlBuilder;
-    protected ResponseHandler mAdResponseCallBack;
-    protected AsyncTask mNetworkTask;
+    protected String requestName;
+    protected WeakReference<Context> contextReference;
+    protected AdUnitConfiguration adConfiguration;
+    protected URLBuilder urlBuilder;
+    protected ResponseHandler adResponseCallBack;
+    protected AsyncTask networkTask;
 
-    Requester(Context context, AdUnitConfiguration config, AdRequestInput adRequestInput, ResponseHandler responseHandler) {
-        mRequestName = "";
-        mContextReference = new WeakReference<>(context);
-        mAdConfiguration = config;
-        mUserConsentManager = ManagersResolver.getInstance().getUserConsentManager();
+    Requester(
+            Context context,
+            AdUnitConfiguration config,
+            AdRequestInput adRequestInput,
+            ResponseHandler responseHandler
+    ) {
+        requestName = "";
+        contextReference = new WeakReference<>(context);
+        adConfiguration = config;
+        userConsentManager = ManagersResolver.getInstance().getUserConsentManager();
 
         /*
             IMPORTANT
@@ -65,20 +71,20 @@ public abstract class Requester {
             Later builder parameters has more priority
         */
         ArrayList<ParameterBuilder> parameterBuilderArray = new ArrayList<>(getParameterBuilders());
-        mUrlBuilder = new URLBuilder(getPathBuilder(), parameterBuilderArray, adRequestInput);
-        mAdResponseCallBack = responseHandler;
+        urlBuilder = new URLBuilder(getPathBuilder(), parameterBuilderArray, adRequestInput);
+        adResponseCallBack = responseHandler;
     }
 
     public abstract void startAdRequest();
 
     public void destroy() {
-        if (mNetworkTask != null) {
-            mNetworkTask.cancel(true);
+        if (networkTask != null) {
+            networkTask.cancel(true);
         }
     }
 
     protected List<ParameterBuilder> getParameterBuilders() {
-        Context context = mContextReference.get();
+        Context context = contextReference.get();
         Resources resources = null;
         if (context != null) {
             resources = context.getResources();
@@ -86,12 +92,12 @@ public abstract class Requester {
         boolean browserActivityAvailable = ExternalViewerUtils.isBrowserActivityCallable(context);
 
         ArrayList<ParameterBuilder> parameterBuilderArray = new ArrayList<>();
-        parameterBuilderArray.add(new BasicParameterBuilder(mAdConfiguration, resources, browserActivityAvailable));
+        parameterBuilderArray.add(new BasicParameterBuilder(adConfiguration, resources, browserActivityAvailable));
         parameterBuilderArray.add(new GeoLocationParameterBuilder());
-        parameterBuilderArray.add(new AppInfoParameterBuilder(mAdConfiguration));
-        parameterBuilderArray.add(new DeviceInfoParameterBuilder(mAdConfiguration));
+        parameterBuilderArray.add(new AppInfoParameterBuilder(adConfiguration));
+        parameterBuilderArray.add(new DeviceInfoParameterBuilder(adConfiguration));
         parameterBuilderArray.add(new NetworkParameterBuilder());
-        parameterBuilderArray.add(new UserConsentParameterBuilder(mUserConsentManager));
+        parameterBuilderArray.add(new UserConsentParameterBuilder(userConsentManager));
         return parameterBuilderArray;
     }
 
@@ -102,7 +108,7 @@ public abstract class Requester {
      * must attempt to grab and honor the latest LMT value for each ad request
      */
     protected void getAdId() {
-        final Context context = mContextReference.get();
+        final Context context = contextReference.get();
         if (context == null) {
             sendAdException(
                 "Context is null",
@@ -111,10 +117,9 @@ public abstract class Requester {
             return;
         }
 
-        if (mUserConsentManager.canAccessDeviceData()) {
+        if (userConsentManager.canAccessDeviceData()) {
             AdIdManager.initAdId(context, new AdIdInitListener(this));
-        }
-        else {
+        } else {
             AdIdManager.setAdId(null);
             makeAdRequest();
         }
@@ -125,7 +130,7 @@ public abstract class Requester {
     private void sendAdException(String logMsg, String exceptionMsg) {
         LogUtil.warning(TAG, logMsg);
         AdException adException = new AdException(AdException.INIT_ERROR, exceptionMsg);
-        mAdResponseCallBack.onErrorWithException(adException, 0);
+        adResponseCallBack.onErrorWithException(adException, 0);
     }
 
     protected void makeAdRequest() {
@@ -155,7 +160,7 @@ public abstract class Requester {
     }
 
     protected URLComponents buildUrlComponent() {
-        return mUrlBuilder.buildUrl();
+        return urlBuilder.buildUrl();
     }
 
     protected void sendAdRequest(URLComponents jsonUrlComponents) {
@@ -164,18 +169,18 @@ public abstract class Requester {
         params.queryParams = jsonUrlComponents.getQueryArgString();
         params.requestType = "POST";
         params.userAgent = AppInfoManager.getUserAgent();
-        params.name = mRequestName;
+        params.name = requestName;
 
-        BaseNetworkTask networkTask = new BaseNetworkTask(mAdResponseCallBack);
-        mNetworkTask = networkTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+        BaseNetworkTask networkTask = new BaseNetworkTask(adResponseCallBack);
+        this.networkTask = networkTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
     }
 
     protected static class AdIdInitListener implements AdIdFetchListener {
 
-        private WeakReference<Requester> mWeakRequester;
+        private WeakReference<Requester> weakRequester;
 
         public AdIdInitListener(Requester requester) {
-            mWeakRequester = new WeakReference<>(requester);
+            weakRequester = new WeakReference<>(requester);
         }
 
         @Override
@@ -191,7 +196,7 @@ public abstract class Requester {
         }
 
         private void makeAdRequest() {
-            Requester requester = mWeakRequester.get();
+            Requester requester = weakRequester.get();
             if (requester == null) {
                 LogUtil.warning(TAG, "Requester is null");
                 return;

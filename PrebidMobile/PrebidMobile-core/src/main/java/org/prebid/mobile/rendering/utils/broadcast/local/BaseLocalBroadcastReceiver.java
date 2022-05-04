@@ -27,12 +27,11 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 public abstract class BaseLocalBroadcastReceiver extends BroadcastReceiver {
     private static final String BROADCAST_IDENTIFIER_KEY = "BROADCAST_IDENTIFIER_KEY";
 
-    private final long mBroadcastId;
-    @Nullable
-    private Context mApplicationContext;
+    private final long broadcastId;
+    @Nullable private Context applicationContext;
 
     public BaseLocalBroadcastReceiver(long broadcastId) {
-        mBroadcastId = broadcastId;
+        this.broadcastId = broadcastId;
     }
 
     public static void sendLocalBroadcast(
@@ -53,16 +52,15 @@ public abstract class BaseLocalBroadcastReceiver extends BroadcastReceiver {
         final Context context,
         @NonNull
         final BroadcastReceiver broadcastReceiver) {
-        mApplicationContext = context.getApplicationContext();
-        LocalBroadcastManager.getInstance(mApplicationContext).registerReceiver(broadcastReceiver,
-                                                                                getIntentFilter());
+        applicationContext = context.getApplicationContext();
+        LocalBroadcastManager.getInstance(applicationContext).registerReceiver(broadcastReceiver, getIntentFilter());
     }
 
     public void unregister(final @Nullable
                                BroadcastReceiver broadcastReceiver) {
-        if (mApplicationContext != null && broadcastReceiver != null) {
-            LocalBroadcastManager.getInstance(mApplicationContext).unregisterReceiver(broadcastReceiver);
-            mApplicationContext = null;
+        if (applicationContext != null && broadcastReceiver != null) {
+            LocalBroadcastManager.getInstance(applicationContext).unregisterReceiver(broadcastReceiver);
+            applicationContext = null;
         }
     }
 
@@ -76,6 +74,6 @@ public abstract class BaseLocalBroadcastReceiver extends BroadcastReceiver {
         @NonNull
         final Intent intent) {
         final long receivedIdentifier = intent.getLongExtra(BROADCAST_IDENTIFIER_KEY, -1);
-        return mBroadcastId == receivedIdentifier;
+        return broadcastId == receivedIdentifier;
     }
 }

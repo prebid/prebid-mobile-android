@@ -35,26 +35,31 @@ import java.lang.ref.WeakReference;
 import java.util.Locale;
 
 public class JsExecutor {
+
     private static final String TAG = JsExecutor.class.getSimpleName();
 
-    private final HandlerQueueManager mHandlerQueueManager;
-    private final WebView mWebView;
-    private final Handler mScriptExecutionHandler;
+    private final HandlerQueueManager handlerQueueManager;
+    private final WebView webView;
+    private final Handler scriptExecutionHandler;
 
-    private MraidVariableContainer mMraidVariableContainer;
+    private MraidVariableContainer mraidVariableContainer;
 
-    public JsExecutor(WebView webView, Handler scriptExecutionHandler, HandlerQueueManager handlerQueueManager) {
-        mWebView = webView;
-        mHandlerQueueManager = handlerQueueManager;
-        mScriptExecutionHandler = scriptExecutionHandler;
+    public JsExecutor(
+            WebView webView,
+            Handler scriptExecutionHandler,
+            HandlerQueueManager handlerQueueManager
+    ) {
+        this.webView = webView;
+        this.handlerQueueManager = handlerQueueManager;
+        this.scriptExecutionHandler = scriptExecutionHandler;
     }
 
     public void setMraidVariableContainer(@NonNull MraidVariableContainer mraidVariableContainer) {
-        mMraidVariableContainer = mraidVariableContainer;
+        this.mraidVariableContainer = mraidVariableContainer;
     }
 
     public HandlerQueueManager getHandlerQueueManager() {
-        return mHandlerQueueManager;
+        return handlerQueueManager;
     }
 
     public void executeGetResizeProperties(Handler handler) {
@@ -101,12 +106,12 @@ public class JsExecutor {
     }
 
     public void executeOnReadyExpanded() {
-        mMraidVariableContainer.setCurrentState(JSInterface.STATE_EXPANDED);
+        mraidVariableContainer.setCurrentState(JSInterface.STATE_EXPANDED);
         evaluateMraidScript("mraid.onReadyExpanded();");
     }
 
     public void executeOnReady() {
-        mMraidVariableContainer.setCurrentState(JSInterface.STATE_DEFAULT);
+        mraidVariableContainer.setCurrentState(JSInterface.STATE_DEFAULT);
         evaluateMraidScript("mraid.onReady();");
     }
 
@@ -115,8 +120,8 @@ public class JsExecutor {
     }
 
     public void executeStateChange(String state) {
-        if (!TextUtils.equals(state, mMraidVariableContainer.getCurrentState())) {
-            mMraidVariableContainer.setCurrentState(state);
+        if (!TextUtils.equals(state, mraidVariableContainer.getCurrentState())) {
+            mraidVariableContainer.setCurrentState(state);
             evaluateMraidScript(String.format("mraid.onStateChange('%1$s');", state));
         }
     }
@@ -126,9 +131,9 @@ public class JsExecutor {
      */
     @Deprecated
     public void executeOnViewableChange(boolean isViewable) {
-        final Boolean currentViewable = mMraidVariableContainer.getCurrentViewable();
+        final Boolean currentViewable = mraidVariableContainer.getCurrentViewable();
         if (currentViewable == null || currentViewable != isViewable) {
-            mMraidVariableContainer.setCurrentViewable(isViewable);
+            mraidVariableContainer.setCurrentViewable(isViewable);
 
             evaluateJavaScript(String.format("mraid.onViewableChange(%1$b);", isViewable));
         }
@@ -137,9 +142,9 @@ public class JsExecutor {
     public void executeExposureChange(ViewExposure viewExposure) {
         String exposureChangeString = viewExposure != null ? viewExposure.toString() : null;
 
-        if (!TextUtils.equals(exposureChangeString, mMraidVariableContainer.getCurrentExposure())) {
+        if (!TextUtils.equals(exposureChangeString, mraidVariableContainer.getCurrentExposure())) {
             evaluateMraidScript(String.format("mraid.onExposureChange('%1$s');", exposureChangeString));
-            mMraidVariableContainer.setCurrentExposure(exposureChangeString);
+            mraidVariableContainer.setCurrentExposure(exposureChangeString);
         }
     }
 
@@ -148,43 +153,38 @@ public class JsExecutor {
     }
 
     public void loading() {
-        mMraidVariableContainer.setCurrentState(JSInterface.STATE_LOADING);
+        mraidVariableContainer.setCurrentState(JSInterface.STATE_LOADING);
     }
 
     @VisibleForTesting
     String getCurrentState() {
-        return mMraidVariableContainer.getCurrentState();
+        return mraidVariableContainer.getCurrentState();
     }
 
     @VisibleForTesting
     void evaluateJavaScript(final String script) {
-        if (mWebView == null) {
-            LogUtil.debug(TAG, "evaluateJavaScript failure. mWebView is null");
+        if (webView == null) {
+            LogUtil.debug(TAG, "evaluateJavaScript failure. webView is null");
             return;
         }
 
         LogUtil.debug(TAG, "evaluateJavaScript: " + script);
         try {
             String scriptToEvaluate = "javascript: if (window.mraid && (window.mraid.getState() != 'loading' ) && ( window.mraid.getState() != 'hidden') ) { " + script + " }";
-            mScriptExecutionHandler.post(new EvaluateScriptRunnable(mWebView, scriptToEvaluate));
-        }
-        catch (Exception e) {
+            scriptExecutionHandler.post(new EvaluateScriptRunnable(webView, scriptToEvaluate));
+        } catch (Exception e) {
             LogUtil.error(TAG, "evaluateJavaScript failed for script " + script + Log.getStackTraceString(e));
         }
     }
 
     @VisibleForTesting
     void evaluateJavaScriptMethodWithResult(String method, Handler handler) {
-        if (mWebView instanceof WebViewBase && ((WebViewBase) mWebView).isMRAID()) {
-            String handlerHash = mHandlerQueueManager.queueHandler(handler);
+        if (webView instanceof WebViewBase && ((WebViewBase) webView).isMRAID()) {
+            String handlerHash = handlerQueueManager.queueHandler(handler);
             if (handlerHash != null) {
-                evaluateJavaScript("jsBridge.javaScriptCallback('"
-                                   + handlerHash + "', '"
-                                   + method + "', (function() { var retVal = mraid."
-                                   + method + "(); if (typeof retVal === 'object') { retVal = JSON.stringify(retVal); } return retVal; })())");
+                evaluateJavaScript("jsBridge.javaScriptCallback('" + handlerHash + "', '" + method + "', (function() { var retVal = mraid." + method + "(); if (typeof retVal === 'object') { retVal = JSON.stringify(retVal); } return retVal; })())");
             }
-        }
-        else if (handler != null) {
+        } else if (handler != null) {
             Message responseMessage = new Message();
             Bundle bundle = new Bundle();
             bundle.putString(JSInterface.JSON_METHOD, method);
@@ -196,41 +196,44 @@ public class JsExecutor {
 
     @VisibleForTesting
     void evaluateMraidScript(final String script) {
-        if (mWebView == null) {
-            LogUtil.debug(TAG, "evaluateMraidScript failure. mWebView is null");
+        if (webView == null) {
+            LogUtil.debug(TAG, "evaluateMraidScript failure. webView is null");
             return;
         }
 
         try {
             String scriptToEvaluate = "javascript: if (window.mraid  ) { " + script + " }";
-            mScriptExecutionHandler.post(new EvaluateScriptRunnable(mWebView, scriptToEvaluate));
-        }
-        catch (Exception e) {
+            scriptExecutionHandler.post(new EvaluateScriptRunnable(webView, scriptToEvaluate));
+        } catch (Exception e) {
             LogUtil.error(TAG, "evaluateMraidScript failed: " + Log.getStackTraceString(e));
         }
     }
 
     @VisibleForTesting
     static class EvaluateScriptRunnable implements Runnable {
+
         private static final String TAG = EvaluateScriptRunnable.class.getSimpleName();
 
-        private final WeakReference<WebView> mWeakAdView;
-        private final String mScript;
+        private final WeakReference<WebView> weakAdView;
+        private final String script;
 
-        EvaluateScriptRunnable(WebView webViewBase, String script) {
-            mWeakAdView = new WeakReference<>(webViewBase);
-            mScript = script;
+        EvaluateScriptRunnable(
+                WebView webViewBase,
+                String script
+        ) {
+            weakAdView = new WeakReference<>(webViewBase);
+            this.script = script;
         }
 
         @Override
         public void run() {
-            WebView webView = mWeakAdView.get();
+            WebView webView = weakAdView.get();
             if (webView == null) {
                 LogUtil.error(TAG, "Failed to evaluate script. WebView is null");
                 return;
             }
 
-            webView.loadUrl(mScript);
+            webView.loadUrl(script);
         }
     }
 }

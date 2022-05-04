@@ -22,23 +22,22 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class VAST extends VASTParserBase
-{
+public class VAST extends VASTParserBase {
+
 	private final static String VAST_START = "VAST";
 	private final static String VAST_ERROR = "Error";
 	private final static String VAST_AD = "Ad";
 
-    private Error mError;
-    private ArrayList<Ad> mAds;
+	private Error error;
+	private ArrayList<Ad> ads;
 
-    private String mVersion;
+	private String version;
 
-	public VAST(XmlPullParser p) throws XmlPullParserException, IOException
-	{
+	public VAST(XmlPullParser p) throws XmlPullParserException, IOException {
 
 		p.require(XmlPullParser.START_TAG, null, VAST_START);
 
-        mVersion = p.getAttributeValue(null, "version");
+		version = p.getAttributeValue(null, "version");
 
 		while (p.next() != XmlPullParser.END_TAG)
 		{
@@ -50,19 +49,18 @@ public class VAST extends VASTParserBase
 			if (name != null && name.equals(VAST_ERROR))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_ERROR);
-                mError = new Error(p);
+				error = new Error(p);
 				p.require(XmlPullParser.END_TAG, null, VAST_ERROR);
 			}
 			else if (name != null && name.equals(VAST_AD))
 			{
 
-                if (mAds == null)
-				{
-					mAds = new ArrayList<>();
+				if (ads == null) {
+					ads = new ArrayList<>();
 				}
 
 				p.require(XmlPullParser.START_TAG, null, VAST_AD);
-                mAds.add(new Ad(p));
+				ads.add(new Ad(p));
 				p.require(XmlPullParser.END_TAG, null, VAST_AD);
 			}
 			else
@@ -73,14 +71,14 @@ public class VAST extends VASTParserBase
 	}
 
     public Error getError() {
-        return mError;
+		return error;
     }
 
     public ArrayList<Ad> getAds() {
-        return mAds;
+		return ads;
     }
 
     public String getVersion() {
-        return mVersion;
+		return version;
     }
 }

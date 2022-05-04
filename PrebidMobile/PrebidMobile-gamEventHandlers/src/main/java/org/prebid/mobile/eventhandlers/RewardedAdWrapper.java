@@ -45,29 +45,28 @@ import static org.prebid.mobile.eventhandlers.global.Constants.APP_EVENT;
  * To achieve safe integration between various GAM SDK versions we have to wrap all PublisherAdView method execution in try / catch.
  * This class instance should be created via newInstance method, which will catch any potential exception on RewardedAd / RewardedAdWrapper instance creation
  */
-public class RewardedAdWrapper extends FullScreenContentCallback
-    implements OnUserEarnedRewardListener {
+public class RewardedAdWrapper extends FullScreenContentCallback implements OnUserEarnedRewardListener {
 
     private static final String TAG = RewardedAdWrapper.class.getSimpleName();
     public static final String KEY_METADATA = "AdTitle";
 
-    private final WeakReference<Context> mContextWeakReference;
-    private final GamAdEventListener mListener;
-    private final String mAdUnitId;
+    private final WeakReference<Context> contextWeakReference;
+    private final GamAdEventListener listener;
+    private final String adUnitId;
 
-    private RewardedAd mRewardedAd;
+    private RewardedAd rewardedAd;
 
-    private final RewardedAdLoadCallback mRewardedAdLoadCallback = new RewardedAdLoadCallback() {
+    private final RewardedAdLoadCallback rewardedAdLoadCallback = new RewardedAdLoadCallback() {
         @Override
         public void onAdLoaded(
-            @NonNull
-                RewardedAd rewardedAd) {
-            mRewardedAd = rewardedAd;
-            mRewardedAd.setFullScreenContentCallback(RewardedAdWrapper.this);
-            mListener.onEvent(AdEvent.LOADED);
+                @NonNull RewardedAd rewardedAd
+        ) {
+            RewardedAdWrapper.this.rewardedAd = rewardedAd;
+            RewardedAdWrapper.this.rewardedAd.setFullScreenContentCallback(RewardedAdWrapper.this);
+            listener.onEvent(AdEvent.LOADED);
 
             if (metadataContainsAdEvent()) {
-                mListener.onEvent(AdEvent.APP_EVENT_RECEIVED);
+                listener.onEvent(AdEvent.APP_EVENT_RECEIVED);
             }
         }
 
@@ -75,7 +74,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
         public void onAdFailedToLoad(
             @NonNull
                 LoadAdError loadAdError) {
-            mRewardedAd = null;
+            rewardedAd = null;
             notifyErrorListener(loadAdError.getCode());
         }
     };
@@ -85,9 +84,9 @@ public class RewardedAdWrapper extends FullScreenContentCallback
             throw new IllegalArgumentException("Context can't be null.");
         }
 
-        mListener = eventListener;
-        mContextWeakReference = new WeakReference<>(context);
-        mAdUnitId = gamAdUnitId;
+        listener = eventListener;
+        contextWeakReference = new WeakReference<>(context);
+        adUnitId = gamAdUnitId;
     }
 
     @Nullable
@@ -107,26 +106,26 @@ public class RewardedAdWrapper extends FullScreenContentCallback
     public void onAdFailedToShowFullScreenContent(
         @NonNull
             AdError adError) {
-        mRewardedAd = null;
+        rewardedAd = null;
         notifyErrorListener(adError.getCode());
     }
 
     @Override
     public void onAdShowedFullScreenContent() {
-        mListener.onEvent(AdEvent.DISPLAYED);
+        listener.onEvent(AdEvent.DISPLAYED);
     }
 
     @Override
     public void onAdDismissedFullScreenContent() {
-        mListener.onEvent(AdEvent.CLOSED);
+        listener.onEvent(AdEvent.CLOSED);
     }
 
     @Override
     public void onUserEarnedReward(
         @NonNull
             RewardItem rewardItem) {
-        mListener.onEvent(AdEvent.REWARD_EARNED);
-        mListener.onEvent(AdEvent.CLOSED);
+        listener.onEvent(AdEvent.REWARD_EARNED);
+        listener.onEvent(AdEvent.CLOSED);
     }
     //endregion ==================== GAM FullScreenContentCallback Implementation
 
@@ -139,7 +138,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
                 GamUtils.handleGamCustomTargetingUpdate(adRequest, targetingMap);
             }
 
-            RewardedAd.load(mContextWeakReference.get(), mAdUnitId, adRequest, mRewardedAdLoadCallback);
+            RewardedAd.load(contextWeakReference.get(), adUnitId, adRequest, rewardedAdLoadCallback);
         }
         catch (Throwable throwable) {
             LogUtil.error(TAG, Log.getStackTraceString(throwable));
@@ -148,7 +147,7 @@ public class RewardedAdWrapper extends FullScreenContentCallback
 
     public boolean isLoaded() {
         try {
-            return mRewardedAd != null;
+            return rewardedAd != null;
         }
         catch (Throwable throwable) {
             LogUtil.error(TAG, Log.getStackTraceString(throwable));
@@ -158,13 +157,13 @@ public class RewardedAdWrapper extends FullScreenContentCallback
     }
 
     public void show(Activity activity) {
-        if (mRewardedAd == null) {
+        if (rewardedAd == null) {
             LogUtil.error(TAG, "show: Failed! Rewarded ad is null.");
             return;
         }
 
         try {
-            mRewardedAd.show(activity, this);
+            rewardedAd.show(activity, this);
         }
         catch (Throwable throwable) {
             LogUtil.error(TAG, Log.getStackTraceString(throwable));
@@ -172,24 +171,24 @@ public class RewardedAdWrapper extends FullScreenContentCallback
     }
 
     public Object getRewardItem() {
-        return mRewardedAd != null ? mRewardedAd.getRewardItem() : null;
+        return rewardedAd != null ? rewardedAd.getRewardItem() : null;
     }
 
     private void notifyErrorListener(int errorCode) {
         final AdEvent adEvent = AdEvent.FAILED;
         adEvent.setErrorCode(errorCode);
 
-        mListener.onEvent(adEvent);
+        listener.onEvent(adEvent);
     }
 
     private boolean metadataContainsAdEvent() {
         try {
-            if (mRewardedAd == null) {
+            if (rewardedAd == null) {
                 LogUtil.debug(TAG, "metadataContainsAdEvent: Failed to process. RewardedAd is null.");
                 return false;
             }
 
-            final Bundle adMetadata = mRewardedAd.getAdMetadata();
+            final Bundle adMetadata = rewardedAd.getAdMetadata();
             return APP_EVENT.equals(adMetadata.getString(KEY_METADATA));
         }
         catch (Throwable throwable) {

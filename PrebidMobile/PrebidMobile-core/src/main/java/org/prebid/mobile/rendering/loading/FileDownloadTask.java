@@ -32,16 +32,20 @@ import java.net.URLConnection;
  * More of a general task for downloading files w/o feedback on progress
  */
 public class FileDownloadTask extends BaseNetworkTask {
+
     private static final String TAG = "LibraryDownloadTask";
-    protected FileDownloadListener mListener;
-    protected File mFile;
+    protected FileDownloadListener listener;
+    protected File file;
 
     /**
      * Creates a network object
      *
      * @param handler instance of a class handling ad server responses (like , InterstitialSwitchActivity)
      */
-    public FileDownloadTask(FileDownloadListener handler, File file) {
+    public FileDownloadTask(
+            FileDownloadListener handler,
+            File file
+    ) {
         super(handler);
         if (file == null) {
             String nullFileMessage = "File is null";
@@ -50,18 +54,17 @@ public class FileDownloadTask extends BaseNetworkTask {
             }
             throw new NullPointerException(nullFileMessage);
         }
-        mFile = file;
-        if (!mFile.exists()) {
+        this.file = file;
+        if (!this.file.exists()) {
             try {
-                mFile.createNewFile();
-            }
-            catch (IOException e) {
+                this.file.createNewFile();
+            } catch (IOException e) {
                 String errorCreatingFile = "Error creating file";
                 handler.onFileDownloadError(errorCreatingFile);
                 throw new IllegalStateException(errorCreatingFile);
             }
         }
-        mListener = handler;
+        listener = handler;
     }
 
     protected long getMaxFileSize() {
@@ -104,7 +107,7 @@ public class FileDownloadTask extends BaseNetworkTask {
         FileOutputStream outputStream = null;
         InputStream inputStream = null;
         try {
-            outputStream = new FileOutputStream(mFile);
+            outputStream = new FileOutputStream(file);
             inputStream = connection.getInputStream();
             byte[] data = new byte[16384];
             int count;
@@ -129,15 +132,15 @@ public class FileDownloadTask extends BaseNetworkTask {
     protected void onPostExecute(GetUrlResult urlResult) {
         if (urlResult.getException() != null) {
             LogUtil.debug(TAG, "download of media failed" + urlResult.getException());
-            if (mListener != null) {
-                mListener.onFileDownloadError((urlResult.getException().getMessage()));
+            if (listener != null) {
+                listener.onFileDownloadError((urlResult.getException().getMessage()));
             }
             return;
         }
-        if (mListener != null) {
-            String path = mFile.getPath();
+        if (listener != null) {
+            String path = file.getPath();
             int beginIndex = path.lastIndexOf("/");
-            mListener.onFileDownloaded(beginIndex != -1 ? path.substring(beginIndex) : path);
+            listener.onFileDownloaded(beginIndex != -1 ? path.substring(beginIndex) : path);
         }
     }
 }

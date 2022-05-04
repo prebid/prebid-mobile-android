@@ -1,17 +1,16 @@
 package org.prebid.mobile.drprebid.ui.dialog;
 
 import android.app.Dialog;
-import androidx.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.appcompat.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProviders;
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.managers.SettingsManager;
 import org.prebid.mobile.drprebid.model.PrebidServer;
@@ -19,11 +18,12 @@ import org.prebid.mobile.drprebid.model.PrebidServerSettings;
 import org.prebid.mobile.drprebid.ui.viewmodels.SettingsViewModel;
 
 public class PrebidServerDialog extends DialogFragment {
+
     public static final String TAG = PrebidServerDialog.class.getSimpleName();
 
-    private RadioGroup mServerGroup;
-    private EditText mCustomServerField;
-    private SettingsViewModel mSettingsViewModel;
+    private RadioGroup serverGroup;
+    private EditText customServerField;
+    private SettingsViewModel settingsViewModel;
 
     public PrebidServerDialog() {
 
@@ -40,22 +40,23 @@ public class PrebidServerDialog extends DialogFragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
             builder.setTitle(R.string.prebid_server);
-            View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_prebid_server_selection, null, false);
+            View view = LayoutInflater.from(getActivity())
+                                      .inflate(R.layout.dialog_prebid_server_selection, null, false);
             builder.setView(view);
 
-            mServerGroup = view.findViewById(R.id.group_server);
-            mCustomServerField = view.findViewById(R.id.field_custom_server);
+            serverGroup = view.findViewById(R.id.group_server);
+            customServerField = view.findViewById(R.id.field_custom_server);
 
-            mServerGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            serverGroup.setOnCheckedChangeListener((group, checkedId) -> {
                 switch (checkedId) {
                     case R.id.radio_appnexus:
-                        mCustomServerField.setVisibility(View.GONE);
+                        customServerField.setVisibility(View.GONE);
                         break;
                     case R.id.radio_rubicon:
-                        mCustomServerField.setVisibility(View.GONE);
+                        customServerField.setVisibility(View.GONE);
                         break;
                     case R.id.radio_custom:
-                        mCustomServerField.setVisibility(View.VISIBLE);
+                        customServerField.setVisibility(View.VISIBLE);
                         break;
                 }
             });
@@ -64,23 +65,23 @@ public class PrebidServerDialog extends DialogFragment {
 
             builder.setPositiveButton(R.string.action_accept, (dialog, which) -> {
                 SettingsManager settingsManager = SettingsManager.getInstance(getActivity());
-                mSettingsViewModel = ViewModelProviders.of(getActivity()).get(SettingsViewModel.class);
+                settingsViewModel = ViewModelProviders.of(getActivity()).get(SettingsViewModel.class);
 
-                switch (mServerGroup.getCheckedRadioButtonId()) {
+                switch (serverGroup.getCheckedRadioButtonId()) {
                     case R.id.radio_appnexus:
                         settingsManager.setPrebidServer(PrebidServer.APPNEXUS);
                         settingsManager.setPrebidServerCustomUrl("");
-                        mSettingsViewModel.setPrebidServer(PrebidServer.APPNEXUS);
+                        settingsViewModel.setPrebidServer(PrebidServer.APPNEXUS);
                         break;
                     case R.id.radio_rubicon:
                         settingsManager.setPrebidServer(PrebidServer.RUBICON);
                         settingsManager.setPrebidServerCustomUrl("");
-                        mSettingsViewModel.setPrebidServer(PrebidServer.RUBICON);
+                        settingsViewModel.setPrebidServer(PrebidServer.RUBICON);
                         break;
                     case R.id.radio_custom:
                         settingsManager.setPrebidServer(PrebidServer.CUSTOM);
-                        settingsManager.setPrebidServerCustomUrl(mCustomServerField.getText().toString());
-                        mSettingsViewModel.setPrebidServer(PrebidServer.CUSTOM);
+                        settingsManager.setPrebidServerCustomUrl(customServerField.getText().toString());
+                        settingsViewModel.setPrebidServer(PrebidServer.CUSTOM);
                         break;
                 }
                 dismiss();
@@ -98,14 +99,14 @@ public class PrebidServerDialog extends DialogFragment {
         PrebidServerSettings settings = SettingsManager.getInstance(getActivity()).getPrebidServerSettings();
         switch (settings.getPrebidServer()) {
             case APPNEXUS:
-                mServerGroup.check(R.id.radio_appnexus);
+                serverGroup.check(R.id.radio_appnexus);
                 break;
             case RUBICON:
-                mServerGroup.check(R.id.radio_rubicon);
+                serverGroup.check(R.id.radio_rubicon);
                 break;
             case CUSTOM:
-                mServerGroup.check(R.id.radio_custom);
-                mCustomServerField.setText(settings.getCustomPrebidServerUrl());
+                serverGroup.check(R.id.radio_custom);
+                customServerField.setText(settings.getCustomPrebidServerUrl());
                 break;
         }
     }

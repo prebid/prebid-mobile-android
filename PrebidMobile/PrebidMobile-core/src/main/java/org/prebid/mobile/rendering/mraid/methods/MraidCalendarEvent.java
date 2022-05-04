@@ -24,10 +24,10 @@ import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 
 public class MraidCalendarEvent {
 
-    private BaseJSInterface mJsi;
+    private BaseJSInterface jsi;
 
     public MraidCalendarEvent(BaseJSInterface jsInterface) {
-        this.mJsi = jsInterface;
+        this.jsi = jsInterface;
     }
 
     public void createCalendarEvent(String parameters) {
@@ -39,7 +39,7 @@ public class MraidCalendarEvent {
                 ManagersResolver.getInstance().getDeviceManager().createCalendarEvent(calendarEventWrapper);
             }
             catch (Exception e) {
-                mJsi.onError("create_calendar_event_error", JSInterface.ACTION_CREATE_CALENDAR_EVENT);
+                jsi.onError("create_calendar_event_error", JSInterface.ACTION_CREATE_CALENDAR_EVENT);
             }
         }
     }

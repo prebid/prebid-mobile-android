@@ -26,58 +26,58 @@ import java.lang.ref.WeakReference;
 public class OmEventTracker {
     private static final String TAG = OmEventTracker.class.getSimpleName();
 
-    private WeakReference<OmAdSessionManager> mWeakReferenceOmAdSessionManager;
+    private WeakReference<OmAdSessionManager> weakReferenceOmAdSessionManager;
 
     public void registerActiveAdSession(OmAdSessionManager omAdSessionManager) {
-        mWeakReferenceOmAdSessionManager = new WeakReference<>(omAdSessionManager);
+        weakReferenceOmAdSessionManager = new WeakReference<>(omAdSessionManager);
     }
 
     public void trackOmVideoAdEvent(VideoAdEvent.Event event) {
-        if (mWeakReferenceOmAdSessionManager == null || mWeakReferenceOmAdSessionManager.get() == null) {
+        if (weakReferenceOmAdSessionManager == null || weakReferenceOmAdSessionManager.get() == null) {
             LogUtil.warning(TAG, "Unable to trackOmVideoAdEvent: AdSessionManager is null");
             return;
         }
 
-        OmAdSessionManager omAdSessionManager = mWeakReferenceOmAdSessionManager.get();
+        OmAdSessionManager omAdSessionManager = weakReferenceOmAdSessionManager.get();
         omAdSessionManager.trackAdVideoEvent(event);
     }
 
     public void trackOmHtmlAdEvent(TrackingEvent.Events event) {
-        if (mWeakReferenceOmAdSessionManager == null || mWeakReferenceOmAdSessionManager.get() == null) {
+        if (weakReferenceOmAdSessionManager == null || weakReferenceOmAdSessionManager.get() == null) {
             LogUtil.warning(TAG, "Unable to trackOmHtmlAdEvent: AdSessionManager is null");
             return;
         }
-        OmAdSessionManager omAdSessionManager = mWeakReferenceOmAdSessionManager.get();
+        OmAdSessionManager omAdSessionManager = weakReferenceOmAdSessionManager.get();
         omAdSessionManager.trackDisplayAdEvent(event);
     }
 
     public void trackOmPlayerStateChange(InternalPlayerState playerState) {
-        if (mWeakReferenceOmAdSessionManager == null || mWeakReferenceOmAdSessionManager.get() == null) {
+        if (weakReferenceOmAdSessionManager == null || weakReferenceOmAdSessionManager.get() == null) {
             LogUtil.warning(TAG, "Unable to trackOmPlayerStateChange: AdSessionManager is null");
             return;
         }
 
-        OmAdSessionManager omAdSessionManager = mWeakReferenceOmAdSessionManager.get();
+        OmAdSessionManager omAdSessionManager = weakReferenceOmAdSessionManager.get();
         omAdSessionManager.trackPlayerStateChangeEvent(playerState);
     }
 
     public void trackVideoAdStarted(float duration, float volume) {
-        if (mWeakReferenceOmAdSessionManager == null || mWeakReferenceOmAdSessionManager.get() == null) {
+        if (weakReferenceOmAdSessionManager == null || weakReferenceOmAdSessionManager.get() == null) {
             LogUtil.warning(TAG, "Unable to trackVideoAdStarted: AdSessionManager is null");
             return;
         }
 
-        OmAdSessionManager omAdSessionManager = mWeakReferenceOmAdSessionManager.get();
+        OmAdSessionManager omAdSessionManager = weakReferenceOmAdSessionManager.get();
         omAdSessionManager.videoAdStarted(duration, volume);
     }
 
     public void trackNonSkippableStandaloneVideoLoaded(boolean isAutoPlay) {
-        if (mWeakReferenceOmAdSessionManager == null || mWeakReferenceOmAdSessionManager.get() == null) {
+        if (weakReferenceOmAdSessionManager == null || weakReferenceOmAdSessionManager.get() == null) {
             LogUtil.warning(TAG, "Unable to trackVideoAdStarted: AdSessionManager is null");
             return;
         }
 
-        OmAdSessionManager omAdSessionManager = mWeakReferenceOmAdSessionManager.get();
+        OmAdSessionManager omAdSessionManager = weakReferenceOmAdSessionManager.get();
         omAdSessionManager.nonSkippableStandaloneVideoAdLoaded(isAutoPlay);
     }
 }

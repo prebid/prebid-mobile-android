@@ -40,24 +40,25 @@ public class AdInterstitialDialog extends AdBaseDialog {
                                 FrameLayout adViewContainer,
                                 InterstitialManager interstitialManager) {
         super(context, webViewBaseLocal, interstitialManager);
-        mAdViewContainer = adViewContainer;
+        this.adViewContainer = adViewContainer;
 
 
         preInit();
-        if (mInterstitialManager.getInterstitialDisplayProperties() != null) {
-            mAdViewContainer.setBackgroundColor(mInterstitialManager.getInterstitialDisplayProperties().getPubBackGroundOpacity());
+        if (this.interstitialManager.getInterstitialDisplayProperties() != null) {
+            this.adViewContainer.setBackgroundColor(this.interstitialManager.getInterstitialDisplayProperties()
+                                                                            .getPubBackGroundOpacity());
         }
 
         setListeners();
-        mWebViewBase.setDialog(this);
+        webViewBase.setDialog(this);
     }
 
     private void setListeners() {
         setOnCancelListener(dialog -> {
             try {
-                if (mWebViewBase.isMRAID() && mJsExecutor != null) {
-                    mWebViewBase.getMRAIDInterface().onStateChange(JSInterface.STATE_DEFAULT);
-                    mWebViewBase.detachFromParent();
+                if (webViewBase.isMRAID() && jsExecutor != null) {
+                    webViewBase.getMRAIDInterface().onStateChange(JSInterface.STATE_DEFAULT);
+                    webViewBase.detachFromParent();
                 }
             }
             catch (Exception e) {
@@ -68,15 +69,16 @@ public class AdInterstitialDialog extends AdBaseDialog {
 
     @Override
     protected void handleCloseClick() {
-        mInterstitialManager.interstitialClosed(mWebViewBase);
+        interstitialManager.interstitialClosed(webViewBase);
     }
 
     @Override
     protected void handleDialogShow() {
-        Views.removeFromParent(mAdViewContainer);
-        addContentView(mAdViewContainer,
-                       new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                                                       RelativeLayout.LayoutParams.MATCH_PARENT)
+        Views.removeFromParent(adViewContainer);
+        addContentView(adViewContainer,
+                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                )
         );
     }
 

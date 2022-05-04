@@ -45,151 +45,156 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 public class InterstitialVideoTest {
-    @Mock
-    private InterstitialView mMockAdView;
-    @Mock
-    private Handler mMockHandler;
-    @Mock
-    private InterstitialManager mMockInterstitialManager;
-    @Mock
-    private AdUnitConfiguration mMockAdConfiguration;
+    @Mock private InterstitialView mockAdView;
+    @Mock private Handler mockHandler;
+    @Mock private InterstitialManager mockInterstitialManager;
+    @Mock private AdUnitConfiguration mockAdConfiguration;
 
-    private InterstitialVideo mSpyInterstitialVideo;
+    private InterstitialVideo spyInterstitialVideo;
 
     @Before
     public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        when(mMockInterstitialManager.getInterstitialDisplayProperties()).thenReturn(mock(InterstitialDisplayPropertiesInternal.class));
-        when(mMockAdView.getMediaOffset()).thenReturn(-1L);
+        when(mockInterstitialManager.getInterstitialDisplayProperties()).thenReturn(mock(
+                InterstitialDisplayPropertiesInternal.class));
+        when(mockAdView.getMediaOffset()).thenReturn(-1L);
 
-        mSpyInterstitialVideo = Mockito.spy(new InterstitialVideo(null, mMockAdView, mMockInterstitialManager, mMockAdConfiguration));
+        spyInterstitialVideo = Mockito.spy(new InterstitialVideo(null,
+                mockAdView,
+                mockInterstitialManager,
+                mockAdConfiguration
+        ));
 
         doAnswer(invocation -> {
             Runnable runnable = invocation.getArgument(0);
             runnable.run();
             return null;
-        }).when(mMockHandler).post(any(Runnable.class));
-        WhiteBox.setInternalState(mSpyInterstitialVideo, "mHandler", mMockHandler);
+        }).when(mockHandler).post(any(Runnable.class));
+        WhiteBox.setInternalState(spyInterstitialVideo, "handler", mockHandler);
 
         mockMediaDuration(30 * 1000L);
 
         // ignore, since involves android SDK classes (views). View display is tested in UI tests.
-        doNothing().when(mSpyInterstitialVideo).showDurationTimer(anyLong());
+        doNothing().when(spyInterstitialVideo).showDurationTimer(anyLong());
     }
 
     @Test
     public void scheduleShowCloseBtnTask_WithDefinedOffset_TimerIsScheduledWithOffsetValue() {
         mockOffset(7000L);
         mockMediaDuration(30 * 1000L);
-        mSpyInterstitialVideo.setShowButtonOnComplete(true);
+        spyInterstitialVideo.setShowButtonOnComplete(true);
 
-        mSpyInterstitialVideo.scheduleShowCloseBtnTask(mMockAdView);
+        spyInterstitialVideo.scheduleShowCloseBtnTask(mockAdView);
 
-        assertTrue(mSpyInterstitialVideo.shouldShowCloseButtonOnComplete());
-        verify(mSpyInterstitialVideo, times(1)).scheduleTimer(eq(7000L));
+        assertTrue(spyInterstitialVideo.shouldShowCloseButtonOnComplete());
+        verify(spyInterstitialVideo, times(1)).scheduleTimer(eq(7000L));
     }
 
     @Test
     public void scheduleShowCloseBtnTask_ForShortVideo_NoTimerScheduled() {
         // Short video
         mockMediaDuration(2L * 1000);
-        mSpyInterstitialVideo.setShowButtonOnComplete(false);
+        spyInterstitialVideo.setShowButtonOnComplete(false);
 
-        mSpyInterstitialVideo.scheduleShowCloseBtnTask(mMockAdView);
+        spyInterstitialVideo.scheduleShowCloseBtnTask(mockAdView);
 
-        assertTrue(mSpyInterstitialVideo.shouldShowCloseButtonOnComplete());
-        verify(mSpyInterstitialVideo, never()).scheduleTimer(anyLong());
+        assertTrue(spyInterstitialVideo.shouldShowCloseButtonOnComplete());
+        verify(spyInterstitialVideo, never()).scheduleTimer(anyLong());
     }
 
     @Test
     public void scheduleShowCloseBtnTask_ForZeroDuration_NoTimerScheduledAndShowCloseButtonOnCompleteTrue() {
         // Short video
         mockMediaDuration(0);
-        mSpyInterstitialVideo.setShowButtonOnComplete(false);
+        spyInterstitialVideo.setShowButtonOnComplete(false);
 
-        mSpyInterstitialVideo.scheduleShowCloseBtnTask(mMockAdView);
+        spyInterstitialVideo.scheduleShowCloseBtnTask(mockAdView);
 
-        assertTrue(mSpyInterstitialVideo.shouldShowCloseButtonOnComplete());
-        verify(mSpyInterstitialVideo, never()).scheduleTimer(anyLong());
+        assertTrue(spyInterstitialVideo.shouldShowCloseButtonOnComplete());
+        verify(spyInterstitialVideo, never()).scheduleTimer(anyLong());
     }
 
     @Test
     public void whenGetMediaOffsetValue_ShowCloseButtonAfterPeriod() {
         mockOffset(7000L);
 
-        mSpyInterstitialVideo.scheduleShowCloseBtnTask(mMockAdView);
+        spyInterstitialVideo.scheduleShowCloseBtnTask(mockAdView);
 
-        verify(mSpyInterstitialVideo).scheduleTimer(7000L);
+        verify(spyInterstitialVideo).scheduleTimer(7000L);
     }
 
     @Test
     public void videoPausedTest() {
-        mSpyInterstitialVideo.pauseVideo();
-        assertTrue(mSpyInterstitialVideo.isVideoPaused());
-        mSpyInterstitialVideo.resumeVideo();
-        assertFalse(mSpyInterstitialVideo.isVideoPaused());
+        spyInterstitialVideo.pauseVideo();
+        assertTrue(spyInterstitialVideo.isVideoPaused());
+        spyInterstitialVideo.resumeVideo();
+        assertFalse(spyInterstitialVideo.isVideoPaused());
     }
 
     @Test
     public void scheduleShowCloseBtnAfterPauseTest() throws IllegalAccessException {
         Timer mockTimer = mock(Timer.class);
         TimerTask mockTimerTask = mock(TimerTask.class);
-        WhiteBox.field(InterstitialVideo.class, "mCurrentTimerTask").set(mSpyInterstitialVideo, mockTimerTask);
-        WhiteBox.field(InterstitialVideo.class, "mTimer").set(mSpyInterstitialVideo, mockTimer);
+        WhiteBox.field(InterstitialVideo.class, "currentTimerTask").set(spyInterstitialVideo, mockTimerTask);
+        WhiteBox.field(InterstitialVideo.class, "timer").set(spyInterstitialVideo, mockTimer);
 
-        mSpyInterstitialVideo.pauseVideo();
+        spyInterstitialVideo.pauseVideo();
 
         verify(mockTimer, times(1)).cancel();
         verify(mockTimer, times(1)).purge();
         verify(mockTimerTask, times(1)).cancel();
-        verify(mSpyInterstitialVideo, never()).scheduleTimer(anyLong());
+        verify(spyInterstitialVideo, never()).scheduleTimer(anyLong());
     }
 
     @Test
     public void scheduleShowCloseBtnAfterResumeTest() {
-        mSpyInterstitialVideo.setRemainingTimeInMs(5000);
-        mSpyInterstitialVideo.setShowButtonOnComplete(false);
+        spyInterstitialVideo.setRemainingTimeInMs(5000);
+        spyInterstitialVideo.setShowButtonOnComplete(false);
 
-        mSpyInterstitialVideo.resumeVideo();
+        spyInterstitialVideo.resumeVideo();
 
-        assertFalse(mSpyInterstitialVideo.shouldShowCloseButtonOnComplete());
-        verify(mSpyInterstitialVideo, times(1)).scheduleTimer(5 * 1000L);
+        assertFalse(spyInterstitialVideo.shouldShowCloseButtonOnComplete());
+        verify(spyInterstitialVideo, times(1)).scheduleTimer(5 * 1000L);
     }
 
     @Test
     public void queueUIThreadTaskTest() {
         Runnable mockRunnable = mock(Runnable.class);
-        mSpyInterstitialVideo.queueUIThreadTask(mockRunnable);
-        verify(mMockHandler).post(eq(mockRunnable));
+        spyInterstitialVideo.queueUIThreadTask(mockRunnable);
+        verify(mockHandler).post(eq(mockRunnable));
     }
 
     @Test
     public void closeTest() {
-        mSpyInterstitialVideo.close();
-        verify(mMockInterstitialManager).interstitialAdClosed();
+        spyInterstitialVideo.close();
+        verify(mockInterstitialManager).interstitialAdClosed();
     }
 
     @Test
     public void removeViewsTest() throws IllegalAccessException {
         FrameLayout mockContainer = mock(FrameLayout.class);
-        WhiteBox.field(InterstitialVideo.class, "mAdViewContainer").set(mSpyInterstitialVideo, mockContainer);
+        WhiteBox.field(InterstitialVideo.class, "adViewContainer").set(spyInterstitialVideo, mockContainer);
 
-        mSpyInterstitialVideo.removeViews();
+        spyInterstitialVideo.removeViews();
         verify(mockContainer).removeAllViews();
     }
 
     @Test
     public void handleCloseClickTest() {
-        mSpyInterstitialVideo.handleCloseClick();
+        spyInterstitialVideo.handleCloseClick();
 
-        verify(mSpyInterstitialVideo, atLeastOnce()).close();
+        verify(spyInterstitialVideo, atLeastOnce()).close();
     }
 
     @Test
     public void whenAllOffsetsPresent_UseSscOffset() throws Exception {
         Context context = mock(Context.class);
-        AdViewManager adViewManager = new AdViewManager(context, mock(AdViewManagerListener.class), mMockAdView, mMockInterstitialManager);
+        AdViewManager adViewManager = new AdViewManager(context,
+                mock(AdViewManagerListener.class),
+                mockAdView,
+                mockInterstitialManager
+        );
 
         AdUnitConfiguration adConfiguration = adViewManager.getAdConfiguration();
         adConfiguration.setVideoSkipOffset(10000);
@@ -199,17 +204,21 @@ public class InterstitialVideoTest {
         when(mockModel.getSkipOffset()).thenReturn(20000L);
         when(mockCreative.getCreativeModel()).thenReturn(mockModel);
 
-        WhiteBox.field(AdViewManager.class, "mCurrentCreative").set(adViewManager, mockCreative);
-        when(mMockAdView.getMediaOffset()).thenReturn(adViewManager.getSkipOffset());
+        WhiteBox.field(AdViewManager.class, "currentCreative").set(adViewManager, mockCreative);
+        when(mockAdView.getMediaOffset()).thenReturn(adViewManager.getSkipOffset());
 
-        mSpyInterstitialVideo.scheduleShowCloseBtnTask(mMockAdView);
-        verify(mSpyInterstitialVideo).scheduleTimer(10L * 1000);
+        spyInterstitialVideo.scheduleShowCloseBtnTask(mockAdView);
+        verify(spyInterstitialVideo).scheduleTimer(10L * 1000);
     }
 
     @Test
     public void whenVastAndSscOffsetPresent_UseSscOffset() throws Exception {
         Context context = mock(Context.class);
-        AdViewManager adViewManager = new AdViewManager(context, mock(AdViewManagerListener.class), mMockAdView, mMockInterstitialManager);
+        AdViewManager adViewManager = new AdViewManager(context,
+                mock(AdViewManagerListener.class),
+                mockAdView,
+                mockInterstitialManager
+        );
 
         AdUnitConfiguration adConfiguration = adViewManager.getAdConfiguration();
         adConfiguration.setVideoSkipOffset(10000);
@@ -219,17 +228,22 @@ public class InterstitialVideoTest {
         when(mockModel.getSkipOffset()).thenReturn(20000L);
         when(mockCreative.getCreativeModel()).thenReturn(mockModel);
 
-        WhiteBox.field(AdViewManager.class, "mCurrentCreative").set(adViewManager, mockCreative);
-        when(mMockAdView.getMediaOffset()).thenReturn(adViewManager.getSkipOffset());
+        WhiteBox.field(AdViewManager.class, "currentCreative").set(adViewManager, mockCreative);
+        when(mockAdView.getMediaOffset()).thenReturn(adViewManager.getSkipOffset());
 
-        mSpyInterstitialVideo.scheduleShowCloseBtnTask(mMockAdView);
-        verify(mSpyInterstitialVideo).scheduleTimer(10L * 1000);
+        spyInterstitialVideo.scheduleShowCloseBtnTask(mockAdView);
+        verify(spyInterstitialVideo).scheduleTimer(10L * 1000);
     }
 
     @Test
     public void whenRemainingTimePresent_UseRemainingTime() throws Exception {
         Context context = mock(Context.class);
-        AdViewManager adViewManager = new AdViewManager(context, mock(AdViewManagerListener.class), mMockAdView, mock(InterstitialManager.class));
+        AdViewManager adViewManager = new AdViewManager(
+                context,
+                mock(AdViewManagerListener.class),
+                mockAdView,
+                mock(InterstitialManager.class)
+        );
 
         AdUnitConfiguration adConfiguration = adViewManager.getAdConfiguration();
         adConfiguration.setVideoSkipOffset(10);
@@ -239,56 +253,56 @@ public class InterstitialVideoTest {
         when(mockModel.getSkipOffset()).thenReturn(20L);
         when(mockCreative.getCreativeModel()).thenReturn(mockModel);
 
-        WhiteBox.field(AdViewManager.class, "mCurrentCreative").set(adViewManager, mockCreative);
-        when(mMockAdView.getMediaOffset()).thenReturn(adViewManager.getSkipOffset());
+        WhiteBox.field(AdViewManager.class, "currentCreative").set(adViewManager, mockCreative);
+        when(mockAdView.getMediaOffset()).thenReturn(adViewManager.getSkipOffset());
 
-        mSpyInterstitialVideo.setRemainingTimeInMs(3000);
+        spyInterstitialVideo.setRemainingTimeInMs(3000);
 
-        mSpyInterstitialVideo.scheduleShowCloseBtnTask(mMockAdView, 3000);
-        verify(mSpyInterstitialVideo).scheduleTimer(3L * 1000);
+        spyInterstitialVideo.scheduleShowCloseBtnTask(mockAdView, 3000);
+        verify(spyInterstitialVideo).scheduleTimer(3L * 1000);
     }
 
     @Test
     public void whenNoOffsetPresent_UseDefaultOffset() {
-        mSpyInterstitialVideo.scheduleShowCloseBtnTask(mMockAdView);
-        verify(mSpyInterstitialVideo).scheduleTimer(10L * 1000);
+        spyInterstitialVideo.scheduleShowCloseBtnTask(mockAdView);
+        verify(spyInterstitialVideo).scheduleTimer(10L * 1000);
     }
 
     private void mockMediaDuration(long duration) {
-        when(mMockAdView.getMediaDuration()).thenReturn(duration);
+        when(mockAdView.getMediaDuration()).thenReturn(duration);
     }
 
     private void mockOffset(long value) {
-        when(mMockAdView.getMediaOffset()).thenReturn(value);
+        when(mockAdView.getMediaOffset()).thenReturn(value);
     }
 
     @Test
     public void scheduleShowCloseBtnTask_TestDefaultUseSkipButton() {
-        mSpyInterstitialVideo.scheduleShowButtonTask();
+        spyInterstitialVideo.scheduleShowButtonTask();
 
         assertFalse(getUseSkipButton());
     }
 
     @Test
     public void scheduleShowCloseBtnTask_TestFalseUseSkipButton() {
-        mSpyInterstitialVideo.setHasEndCard(false);
+        spyInterstitialVideo.setHasEndCard(false);
 
-        mSpyInterstitialVideo.scheduleShowButtonTask();
+        spyInterstitialVideo.scheduleShowButtonTask();
 
         assertFalse(getUseSkipButton());
     }
 
     @Test
     public void scheduleShowCloseBtnTask_TestTrueUseSkipButton() {
-        mSpyInterstitialVideo.setHasEndCard(true);
+        spyInterstitialVideo.setHasEndCard(true);
 
-        mSpyInterstitialVideo.scheduleShowButtonTask();
+        spyInterstitialVideo.scheduleShowButtonTask();
 
         assertTrue(getUseSkipButton());
     }
 
     private boolean getUseSkipButton() {
-        return (boolean) Reflection.getField(mSpyInterstitialVideo, "useSkipButton");
+        return (boolean) Reflection.getField(spyInterstitialVideo, "useSkipButton");
     }
 
 
@@ -296,24 +310,24 @@ public class InterstitialVideoTest {
     public void scheduleShowCloseBtnTask_VideoDurationLessThanSkipDelay_CallScheduleTimeWithVideoLength() {
         int skipDelay = 10_000;
         long videoDuration = 5_000;
-        when(mSpyInterstitialVideo.getDuration(any())).thenReturn(videoDuration);
-        when(mSpyInterstitialVideo.getSkipDelayMs()).thenReturn(skipDelay);
+        when(spyInterstitialVideo.getDuration(any())).thenReturn(videoDuration);
+        when(spyInterstitialVideo.getSkipDelayMs()).thenReturn(skipDelay);
 
-        mSpyInterstitialVideo.scheduleShowButtonTask();
+        spyInterstitialVideo.scheduleShowButtonTask();
 
-        verify(mSpyInterstitialVideo).scheduleTimer(videoDuration);
+        verify(spyInterstitialVideo).scheduleTimer(videoDuration);
     }
 
     @Test
     public void scheduleShowCloseBtnTask_VideoDurationBiggerThanSkipDelay_CallScheduleTimeWithSkipDelayLength() {
         int skipDelay = 5_000;
         long videoDuration = 10_000;
-        when(mSpyInterstitialVideo.getDuration(any())).thenReturn(videoDuration);
-        when(mSpyInterstitialVideo.getSkipDelayMs()).thenReturn(skipDelay);
+        when(spyInterstitialVideo.getDuration(any())).thenReturn(videoDuration);
+        when(spyInterstitialVideo.getSkipDelayMs()).thenReturn(skipDelay);
 
-        mSpyInterstitialVideo.scheduleShowButtonTask();
+        spyInterstitialVideo.scheduleShowButtonTask();
 
-        verify(mSpyInterstitialVideo).scheduleTimer(skipDelay);
+        verify(spyInterstitialVideo).scheduleTimer(skipDelay);
     }
 
 }

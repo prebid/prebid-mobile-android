@@ -21,26 +21,25 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
-public class Tracking extends VASTParserBase
-{
-    private String mEvent;
-    private String mValue;
+public class Tracking extends VASTParserBase {
 
-	public Tracking(XmlPullParser p) throws XmlPullParserException, IOException
-	{
-        mEvent = p.getAttributeValue(null, "event");
-        mValue = readText(p);
+    private String event;
+    private String value;
+
+    public Tracking(XmlPullParser p) throws XmlPullParserException, IOException {
+        event = p.getAttributeValue(null, "event");
+        value = readText(p);
     }
 
     public String getEvent() {
-        return mEvent;
+        return event;
     }
 
     public void setEvent(String event) {
-        mEvent = event;
+        this.event = event;
     }
 
     public String getValue() {
-        return mValue;
+        return value;
 	}
 }

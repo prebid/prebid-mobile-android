@@ -25,14 +25,14 @@ public enum BannerAdPosition {
     FOOTER(5),
     SIDEBAR(6);
 
-    private final int mValue;
+    private final int value;
 
     BannerAdPosition(int value) {
-        mValue = value;
+        this.value = value;
     }
 
     public int getValue() {
-        return mValue;
+        return value;
     }
 
     public static BannerAdPosition mapToDisplayAdPosition(int adPosition) {

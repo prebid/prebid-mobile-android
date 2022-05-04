@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 public class Linear extends VASTParserBase
 {
+
 	private final static String VAST_LINEAR = "Linear";
 	private final static String VAST_ADPARAMETERS = "AdParameters";
 	private final static String VAST_DURATION = "Duration";
@@ -32,24 +33,22 @@ public class Linear extends VASTParserBase
 	private final static String VAST_VIDEOCLICKS = "VideoClicks";
 	private final static String VAST_ICONS = "Icons";
 
-    private String mSkipOffset;
+	private String skipOffset;
 
-    private AdParameters mAdParameters;
-    private Duration mDuration;
-    private ArrayList<MediaFile> mMediaFiles;
-    private ArrayList<Tracking> mTrackingEvents;
-    private VideoClicks mVideoClicks;
-    private ArrayList<Icon> mIcons;
+	private AdParameters adParameters;
+	private Duration duration;
+	private ArrayList<MediaFile> mediaFiles;
+	private ArrayList<Tracking> trackingEvents;
+	private VideoClicks videoClicks;
+	private ArrayList<Icon> icons;
 
-	public Linear(XmlPullParser p) throws XmlPullParserException, IOException
-	{
+	public Linear(XmlPullParser p) throws XmlPullParserException, IOException {
 
 		p.require(XmlPullParser.START_TAG, null, VAST_LINEAR);
 
-        mSkipOffset = p.getAttributeValue(null, "skipoffset");
+		skipOffset = p.getAttributeValue(null, "skipoffset");
 
-		while (p.next() != XmlPullParser.END_TAG)
-		{
+		while (p.next() != XmlPullParser.END_TAG) {
 			if (p.getEventType() != XmlPullParser.START_TAG)
 			{
 				continue;
@@ -58,37 +57,37 @@ public class Linear extends VASTParserBase
 			if (name != null && name.equals(VAST_ADPARAMETERS))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_ADPARAMETERS);
-                mAdParameters = new AdParameters(p);
+				adParameters = new AdParameters(p);
 				p.require(XmlPullParser.END_TAG, null, VAST_ADPARAMETERS);
 			}
 			else if (name != null && name.equals(VAST_DURATION))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_DURATION);
-                mDuration = new Duration(p);
+				duration = new Duration(p);
 				p.require(XmlPullParser.END_TAG, null, VAST_DURATION);
 			}
 			else if (name != null && name.equals(VAST_MEDIAFILES))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_MEDIAFILES);
-                mMediaFiles = (new MediaFiles(p)).getMediaFiles();
+				mediaFiles = (new MediaFiles(p)).getMediaFiles();
 				p.require(XmlPullParser.END_TAG, null, VAST_MEDIAFILES);
 			}
 			else if (name != null && name.equals(VAST_TRACKINGEVENTS))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_TRACKINGEVENTS);
-                mTrackingEvents = (new TrackingEvents(p)).getTrackingEvents();
+				trackingEvents = (new TrackingEvents(p)).getTrackingEvents();
 				p.require(XmlPullParser.END_TAG, null, VAST_TRACKINGEVENTS);
 			}
 			else if (name != null && name.equals(VAST_VIDEOCLICKS))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_VIDEOCLICKS);
-                mVideoClicks = new VideoClicks(p);
+				videoClicks = new VideoClicks(p);
 				p.require(XmlPullParser.END_TAG, null, VAST_VIDEOCLICKS);
 			}
 			else if (name != null && name.equals(VAST_ICONS))
 			{
 				p.require(XmlPullParser.START_TAG, null, VAST_ICONS);
-                mIcons = (new Icons(p)).getIcons();
+				icons = (new Icons(p)).getIcons();
 				p.require(XmlPullParser.END_TAG, null, VAST_ICONS);
 			}
 			else
@@ -100,30 +99,30 @@ public class Linear extends VASTParserBase
 	}
 
     public String getSkipOffset() {
-        return mSkipOffset;
+		return skipOffset;
     }
 
     public AdParameters getAdParameters() {
-        return mAdParameters;
+		return adParameters;
     }
 
     public Duration getDuration() {
-        return mDuration;
+		return duration;
     }
 
     public ArrayList<MediaFile> getMediaFiles() {
-        return mMediaFiles;
+		return mediaFiles;
     }
 
     public ArrayList<Tracking> getTrackingEvents() {
-        return mTrackingEvents;
+		return trackingEvents;
     }
 
     public VideoClicks getVideoClicks() {
-        return mVideoClicks;
+		return videoClicks;
     }
 
     public ArrayList<Icon> getIcons() {
-        return mIcons;
+		return icons;
     }
 }

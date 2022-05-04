@@ -46,72 +46,70 @@ import static org.mockito.Mockito.*;
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class TransactionManagerTest {
-    @Mock
-    private TransactionManagerListener mMockListener;
-    @Mock
-    private Transaction mMockTransaction;
+    @Mock private TransactionManagerListener mockListener;
+    @Mock private Transaction mockTransaction;
 
-    private TransactionManager mTransactionManager;
+    private TransactionManager transactionManager;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         Context context = Robolectric.buildActivity(Activity.class).create().get();
-        mTransactionManager = new TransactionManager(context, mMockListener, mock(InterstitialManager.class));
+        transactionManager = new TransactionManager(context, mockListener, mock(InterstitialManager.class));
     }
 
     @Test
     public void whenGetCurrentTransaction_NullResult() {
-        Transaction transaction = mTransactionManager.getCurrentTransaction();
+        Transaction transaction = transactionManager.getCurrentTransaction();
         assertNull(transaction);
-        mTransactionManager.onTransactionSuccess(mMockTransaction);
-        transaction = mTransactionManager.getCurrentTransaction();
+        transactionManager.onTransactionSuccess(mockTransaction);
+        transaction = transactionManager.getCurrentTransaction();
         assertNotNull(transaction);
-        assertEquals(mMockTransaction, transaction);
+        assertEquals(mockTransaction, transaction);
     }
 
     @Test
     public void whenGetCurrentTransaction_NotNullResult() {
-        mTransactionManager.onTransactionSuccess(mMockTransaction);
-        Transaction transaction = mTransactionManager.getCurrentTransaction();
+        transactionManager.onTransactionSuccess(mockTransaction);
+        Transaction transaction = transactionManager.getCurrentTransaction();
         assertNotNull(transaction);
-        assertEquals(mMockTransaction, transaction);
+        assertEquals(mockTransaction, transaction);
     }
 
     @Test
     public void whenDismissTransaction_NullResult() {
-        Transaction transaction = mTransactionManager.dismissCurrentTransaction();
+        Transaction transaction = transactionManager.dismissCurrentTransaction();
         assertNull(transaction);
     }
 
     @Test
     public void whenDismissTransaction_NotNullResult() {
-        mTransactionManager.onTransactionSuccess(mMockTransaction);
+        transactionManager.onTransactionSuccess(mockTransaction);
         Transaction transaction = mock(Transaction.class);
-        mTransactionManager.onTransactionSuccess(transaction);
-        Transaction secondTransaction = mTransactionManager.dismissCurrentTransaction();
+        transactionManager.onTransactionSuccess(transaction);
+        Transaction secondTransaction = transactionManager.dismissCurrentTransaction();
         assertEquals(transaction, secondTransaction);
     }
 
     @Test
     public void whenResetState_TriggerTransactionDestroy() {
-        mTransactionManager.onTransactionSuccess(mMockTransaction);
-        mTransactionManager.resetState();
-        verify(mMockTransaction).destroy();
+        transactionManager.onTransactionSuccess(mockTransaction);
+        transactionManager.resetState();
+        verify(mockTransaction).destroy();
     }
 
     @Test
     public void whenHasTransaction_ResultFalse() {
-        assertFalse(mTransactionManager.hasTransaction());
-        mTransactionManager.onTransactionSuccess(mMockTransaction);
-        assertTrue(mTransactionManager.hasTransaction());
+        assertFalse(transactionManager.hasTransaction());
+        transactionManager.onTransactionSuccess(mockTransaction);
+        assertTrue(transactionManager.hasTransaction());
     }
 
     @Test
     public void whenDestroy_TriggerTransactionAndLoadManager() {
-        mTransactionManager.onTransactionSuccess(mMockTransaction);
-        mTransactionManager.destroy();
-        verify(mMockTransaction).destroy();
+        transactionManager.onTransactionSuccess(mockTransaction);
+        transactionManager.destroy();
+        verify(mockTransaction).destroy();
     }
 
     @Test
@@ -121,8 +119,8 @@ public class TransactionManagerTest {
         creativeFactories.add(mock(CreativeFactory.class));
         when(mockTransaction.getCreativeFactories()).thenReturn(creativeFactories);
 
-        mTransactionManager.onTransactionSuccess(mockTransaction);
-        assertFalse(mTransactionManager.hasNextCreative());
+        transactionManager.onTransactionSuccess(mockTransaction);
+        assertFalse(transactionManager.hasNextCreative());
     }
 
     @Test
@@ -133,13 +131,13 @@ public class TransactionManagerTest {
         creativeFactories.add(mock(CreativeFactory.class));
         when(mockTransaction.getCreativeFactories()).thenReturn(creativeFactories);
 
-        mTransactionManager.onTransactionSuccess(mockTransaction);
-        assertTrue(mTransactionManager.hasNextCreative());
+        transactionManager.onTransactionSuccess(mockTransaction);
+        assertTrue(transactionManager.hasNextCreative());
     }
 
     @Test
     public void whenCurrentTransactionIsNull_ReturnFalse() {
-        assertFalse(mTransactionManager.hasNextCreative());
+        assertFalse(transactionManager.hasNextCreative());
     }
 
     @Test
@@ -148,27 +146,27 @@ public class TransactionManagerTest {
         ArrayList<CreativeModel> models = new ArrayList<>();
         models.add(mock(CreativeModel.class));
         mockResult.creativeModels = models;
-        mTransactionManager.onCreativeModelReady(mockResult);
-        assertNotNull(WhiteBox.getInternalState(mTransactionManager, "mLatestTransaction"));
+        transactionManager.onCreativeModelReady(mockResult);
+        assertNotNull(WhiteBox.getInternalState(transactionManager, "latestTransaction"));
     }
 
     @Test
     public void whenOnFailedToLoad_NotifyListener() {
-        mTransactionManager.onFailedToLoadAd(new AdException("", ""), "");
-        verify(mMockListener).onFetchingFailed(any(AdException.class));
+        transactionManager.onFailedToLoadAd(new AdException("", ""), "");
+        verify(mockListener).onFetchingFailed(any(AdException.class));
     }
 
     @Test
     public void whenOnTransactionSuccess_TransactionAddedAndListenerCalled() {
-        mTransactionManager.onTransactionSuccess(mMockTransaction);
-        verify(mMockListener).onFetchingCompleted(mMockTransaction);
-        assertNotNull(mTransactionManager.getCurrentTransaction());
+        transactionManager.onTransactionSuccess(mockTransaction);
+        verify(mockListener).onFetchingCompleted(mockTransaction);
+        assertNotNull(transactionManager.getCurrentTransaction());
     }
 
     @Test
     public void whenOnTransactionFailed_CallListener() {
-        mTransactionManager.onTransactionFailure(new AdException("", ""), "");
-        verify(mMockListener).onFetchingFailed(any(AdException.class));
+        transactionManager.onTransactionFailure(new AdException("", ""), "");
+        verify(mockListener).onFetchingFailed(any(AdException.class));
     }
 
     @Test
@@ -176,7 +174,7 @@ public class TransactionManagerTest {
         BidResponse mockBidResponse = mock(BidResponse.class);
         when(mockBidResponse.getWinningBid()).thenReturn(mock(Bid.class));
         when(mockBidResponse.getWinningBid().getAdm()).thenReturn("adm");
-        mTransactionManager.fetchBidTransaction(mock(AdUnitConfiguration.class), mockBidResponse);
-        verify(mMockListener).onFetchingFailed(any(AdException.class));
+        transactionManager.fetchBidTransaction(mock(AdUnitConfiguration.class), mockBidResponse);
+        verify(mockListener).onFetchingFailed(any(AdException.class));
     }
 }

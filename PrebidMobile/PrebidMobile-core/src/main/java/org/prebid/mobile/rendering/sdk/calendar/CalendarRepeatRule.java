@@ -26,6 +26,7 @@ import java.text.ParseException;
  * Wraps an JSON calendar repeat rule element.
  */
 public final class CalendarRepeatRule {
+
     private final static String TAG = CalendarRepeatRule.class.getSimpleName();
 
     public enum Frequency {
@@ -36,39 +37,39 @@ public final class CalendarRepeatRule {
         UNKNOWN
     }
 
-    private Frequency mFrequency;
-    private Integer mInterval = 1;
-    private DateWrapper mExpires;
-    private DateWrapper[] mExceptionDates;
-    private Short[] mDaysInWeek;
-    private Short[] mDaysInMonth;
-    private Short[] mDaysInYear;
-    private Short[] mWeeksInMonth;
-    private Short[] mMonthsInYear;
+    private Frequency frequency;
+    private Integer interval = 1;
+    private DateWrapper expires;
+    private DateWrapper[] exceptionDates;
+    private Short[] daysInWeek;
+    private Short[] daysInMonth;
+    private Short[] daysInYear;
+    private Short[] weeksInMonth;
+    private Short[] monthsInYear;
 
     public Frequency getFrequency() {
-        return mFrequency;
+        return frequency;
     }
 
     public void setFrequency(Frequency frequency) {
-        mFrequency = frequency;
+        this.frequency = frequency;
     }
 
     public Integer getInterval() {
-        return mInterval;
+        return interval;
     }
 
     public void setInterval(Integer interval) {
-        mInterval = interval;
+        this.interval = interval;
     }
 
     public DateWrapper getExpires() {
-        return mExpires;
+        return expires;
     }
 
     public void setExpires(String expires) {
         try {
-            mExpires = new DateWrapper(expires);
+            this.expires = new DateWrapper(expires);
         }
         catch (ParseException e) {
             LogUtil.error(TAG, "Failed to parse expires date:" + e.getMessage());
@@ -76,20 +77,20 @@ public final class CalendarRepeatRule {
     }
 
     public DateWrapper[] getExceptionDates() {
-        return mExceptionDates;
+        return exceptionDates;
     }
 
     public void setExceptionDates(String[] exceptionDates) {
         if (exceptionDates != null) {
-            mExceptionDates = new DateWrapper[exceptionDates.length];
+            this.exceptionDates = new DateWrapper[exceptionDates.length];
             int ind = 0;
             for (String dateTimeString : exceptionDates) {
                 try {
-                    mExceptionDates[ind] = new DateWrapper(dateTimeString);
+                    this.exceptionDates[ind] = new DateWrapper(dateTimeString);
                 }
                 catch (ParseException e) {
                     // Date can't be parsed
-                    mExceptionDates[ind] = null;
+                    this.exceptionDates[ind] = null;
 
                     LogUtil.error(TAG, "Failed to parse exception date:" + e.getMessage());
                 }
@@ -99,43 +100,43 @@ public final class CalendarRepeatRule {
     }
 
     public Short[] getDaysInWeek() {
-        return mDaysInWeek;
+        return daysInWeek;
     }
 
     public void setDaysInWeek(Short[] daysInWeek) {
-        mDaysInWeek = daysInWeek;
+        this.daysInWeek = daysInWeek;
     }
 
     public Short[] getDaysInMonth() {
-        return mDaysInMonth;
+        return daysInMonth;
     }
 
     public void setDaysInMonth(Short[] daysInMonth) {
-        mDaysInMonth = daysInMonth;
+        this.daysInMonth = daysInMonth;
     }
 
     public Short[] getDaysInYear() {
-        return mDaysInYear;
+        return daysInYear;
     }
 
     public void setDaysInYear(Short[] daysInYear) {
-        mDaysInYear = daysInYear;
+        this.daysInYear = daysInYear;
     }
 
     public Short[] getWeeksInMonth() {
-        return mWeeksInMonth;
+        return weeksInMonth;
     }
 
     public void setWeeksInMonth(Short[] weeksInMonth) {
-        mWeeksInMonth = weeksInMonth;
+        this.weeksInMonth = weeksInMonth;
     }
 
     public Short[] getMonthsInYear() {
-        return mMonthsInYear;
+        return monthsInYear;
     }
 
     public void setMonthsInYear(Short[] monthsInYear) {
-        mMonthsInYear = monthsInYear;
+        this.monthsInYear = monthsInYear;
     }
 
     public CalendarRepeatRule(JSONObject params) {

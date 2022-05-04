@@ -60,14 +60,14 @@ public class InterstitialSizes {
         ASPECT_RATIO_1920x1080("1920x1080"),
         ASPECT_RATIO_1920x1440("1920x1440");
 
-        private String mSize;
+        private String size;
 
         InterstitialSize(String size) {
-            mSize = size;
+            this.size = size;
         }
 
         public String getSize() {
-            return mSize;
+            return size;
         }
     }
 

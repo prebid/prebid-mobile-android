@@ -36,7 +36,7 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
 
     private static final String TAG = PrebidWebViewBanner.class.getSimpleName();
 
-    private final FetchPropertiesHandler.FetchPropertyCallback mExpandPropertiesCallback = new FetchPropertiesHandler.FetchPropertyCallback() {
+    private final FetchPropertiesHandler.FetchPropertyCallback expandPropertiesCallback = new FetchPropertiesHandler.FetchPropertyCallback() {
         @Override
         public void onResult(String propertyJson) {
             handleExpandPropertiesResult(propertyJson);
@@ -68,12 +68,12 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
          * properties and then the layout gets built based on these things.
          */
         //Fix MOBILE-2944 App crash navigating MRAID ad
-        final WebViewBase currentWebView = (mWebView != null) ? mWebView : mMraidWebView;
+        final WebViewBase currentWebView = (webView != null) ? webView : mraidWebView;
 
         if (currentWebView != null) {
             currentWebView.getMRAIDInterface()
                           .getJsExecutor()
-                          .executeGetExpandProperties(new FetchPropertiesHandler(mExpandPropertiesCallback));
+                          .executeGetExpandProperties(new FetchPropertiesHandler(expandPropertiesCallback));
         }
         else {
             LogUtil.warning(TAG, "Error getting expand properties");
@@ -83,35 +83,36 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
     @Override
     public void initTwoPartAndLoad(String url) {
 
-        LayoutParams layoutParams = new LayoutParams(
-            LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
         setLayoutParams(layoutParams);
         //A null context can crash with an exception in webView creation through WebViewBanner. Catch it
-        mMraidWebView = new WebViewBanner(mContext, this, this);
-        mMraidWebView.setJSName("twopart");
+        mraidWebView = new WebViewBanner(context, this, this);
+        mraidWebView.setJSName("twopart");
 
-        String script = JSLibraryManager.getInstance(mMraidWebView.getContext()).getMRAIDScript();
+        String script = JSLibraryManager.getInstance(mraidWebView.getContext()).getMRAIDScript();
         //inject mraid.js
-        mMraidWebView.setMraidAdAssetsLoadListener(mMraidWebView, script);
+        mraidWebView.setMraidAdAssetsLoadListener(mraidWebView, script);
 
-        mMraidWebView.loadUrl(url);
+        mraidWebView.loadUrl(url);
     }
 
     @Override
     public void loadHTML(String html, int width, int height) {
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+        );
 
         setLayoutParams(layoutParams);
-        mWidth = width;
-        mHeight = height;
+        this.width = width;
+        this.height = height;
         //A null context can crash with an exception in webView creation through WebViewBanner. Catch it
-        mWebView = new WebViewBanner(mContext, html, width, height, this, this);
-        mWebView.setJSName("1part");
-        mWebView.initContainsIFrame(mCreative.getCreativeModel().getHtml());
-        mWebView.setTargetUrl(mCreative.getCreativeModel().getTargetUrl());
-        mWebView.loadAd();
+        webView = new WebViewBanner(context, html, width, height, this, this);
+        webView.setJSName("1part");
+        webView.initContainsIFrame(creative.getCreativeModel().getHtml());
+        webView.setTargetUrl(creative.getCreativeModel().getTargetUrl());
+        webView.loadAd();
     }
 
     @Override
@@ -122,18 +123,20 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
             //This should never happen.
             LogUtil.error(TAG, "Failed to preload a banner ad. Webview is null.");
 
-            if (mWebViewDelegate != null) {
-                mWebViewDelegate.webViewFailedToLoad(new AdException(AdException.INTERNAL_ERROR, "Preloaded adview is null!"));
+            if (webViewDelegate != null) {
+                webViewDelegate.webViewFailedToLoad(new AdException(
+                        AdException.INTERNAL_ERROR,
+                        "Preloaded adview is null!"
+                ));
             }
 
             return;
         }
-        mCurrentWebViewBase = adBaseView;
-        if (mCurrentWebViewBase.mMRAIDBridgeName.equals("twopart")) {
+        currentWebViewBase = adBaseView;
+        if (currentWebViewBase.MRAIDBridgeName.equals("twopart")) {
             //SHould have expanded url here, as last param
-            mInterstitialManager.displayPrebidWebViewForMraid(mMraidWebView, true);
-        }
-        else {
+            interstitialManager.displayPrebidWebViewForMraid(mraidWebView, true);
+        } else {
             if (adBaseView.getParent() == null) {
 
                 if (getChildCount() >= 1) {
@@ -166,25 +169,28 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
          * This postInvalidate fixes the cosmetic issue that KitKat created with the white banner
          * fragment/remnant showing up at the bottom of the screen.
          */
-        if (mContext instanceof Activity) {
-            ((Activity) mContext).getWindow().getDecorView().findViewById(android.R.id.content).postInvalidate();
-            ((Activity) mContext).getWindow().getDecorView().findViewById(android.R.id.content).postInvalidateDelayed(100);
+        if (context instanceof Activity) {
+            ((Activity) context).getWindow().getDecorView().findViewById(android.R.id.content).postInvalidate();
+            ((Activity) context).getWindow()
+                                .getDecorView()
+                                .findViewById(android.R.id.content)
+                                .postInvalidateDelayed(100);
         }
 
-        if (mWebViewDelegate != null) {
-            mWebViewDelegate.webViewReadyToDisplay();
+        if (webViewDelegate != null) {
+            webViewDelegate.webViewReadyToDisplay();
         }
     }
 
     protected void swapWebViews() {
         if (getContext() != null) {
-            mFadeOutAnimation = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_out);
+            fadeOutAnimation = AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_out);
         }
         final WebViewBase frontAdView = (WebViewBase) getChildAt(0);
         WebViewBase backAdView = (WebViewBase) getChildAt(1);
 
         if (frontAdView != null) {
-            frontAdView.startAnimation(mFadeOutAnimation);
+            frontAdView.startAnimation(fadeOutAnimation);
             frontAdView.setVisibility(GONE);
         }
 
@@ -197,21 +203,20 @@ public class PrebidWebViewBanner extends PrebidWebViewBase
     private void handleExpandPropertiesResult(String expandProperties) {
         JSONObject jsonExpandProperties;
 
-        WebViewBase currentWebView = (mWebView != null)
-                                     ? mWebView
-                                     : mMraidWebView;
-        final MraidVariableContainer mraidVariableContainer = currentWebView.getMRAIDInterface().getMraidVariableContainer();
+        WebViewBase currentWebView = (webView != null) ? webView : mraidWebView;
+        final MraidVariableContainer mraidVariableContainer = currentWebView.getMRAIDInterface()
+                                                                            .getMraidVariableContainer();
         mraidVariableContainer.setExpandProperties(expandProperties);
 
         try {
             jsonExpandProperties = new JSONObject(expandProperties);
 
-            mDefinedWidthForExpand = jsonExpandProperties.optInt("width", 0);
-            mDefinedHeightForExpand = jsonExpandProperties.optInt("height", 0);
+            definedWidthForExpand = jsonExpandProperties.optInt("width", 0);
+            definedHeightForExpand = jsonExpandProperties.optInt("height", 0);
 
-            if (mInterstitialManager.getInterstitialDisplayProperties() != null) {
-                mInterstitialManager.getInterstitialDisplayProperties().expandWidth = mDefinedWidthForExpand;
-                mInterstitialManager.getInterstitialDisplayProperties().expandHeight = mDefinedHeightForExpand;
+            if (interstitialManager.getInterstitialDisplayProperties() != null) {
+                interstitialManager.getInterstitialDisplayProperties().expandWidth = definedWidthForExpand;
+                interstitialManager.getInterstitialDisplayProperties().expandHeight = definedHeightForExpand;
             }
         }
         catch (Exception e) {

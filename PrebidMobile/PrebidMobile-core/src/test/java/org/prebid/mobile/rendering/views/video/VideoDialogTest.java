@@ -42,37 +42,37 @@ import static org.mockito.Mockito.*;
 public class VideoDialogTest {
 
     @Mock
-    InterstitialManager mMockInterstitialManager;
+    InterstitialManager mockInterstitialManager;
 
-    private VideoDialog mVideoDialog;
+    private VideoDialog videoDialog;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
         Context context = Robolectric.buildActivity(Activity.class).create().get();
-        mVideoDialog = spy(new VideoDialog(context, mock(VideoCreativeView.class), mock(AdViewManager.class),
-                                           mMockInterstitialManager, mock(FrameLayout.class)));
+        videoDialog = spy(new VideoDialog(context, mock(VideoCreativeView.class), mock(AdViewManager.class),
+                mockInterstitialManager, mock(FrameLayout.class)));
     }
 
     @Test
     public void handleCloseClick_DismissDialog() {
-        mVideoDialog.handleCloseClick();
-        verify(mVideoDialog).dismiss();
+        videoDialog.handleCloseClick();
+        verify(videoDialog).dismiss();
     }
 
     // @Test
     // public void whenClose_NotifyVideoAdManager() {
-    //     mVideoDialog.close();
-    //     verify(mMockInterstitialManager).videoAdViewInterstitialAdClosed();
+    //     videoDialog.close();
+    //     verify(mockInterstitialManager).videoAdViewInterstitialAdClosed();
     // }
 
     @Test
     public void showBannerCreative_NullAdView() throws IllegalAccessException {
         InterstitialDisplayPropertiesInternal propertiesInternal = new InterstitialDisplayPropertiesInternal();
-        when(mMockInterstitialManager.getInterstitialDisplayProperties()).thenReturn(propertiesInternal);
-        mVideoDialog.showBannerCreative(mock(View.class));
-        Object adView = WhiteBox.field(VideoDialog.class, "mAdView").get(mVideoDialog);
+        when(mockInterstitialManager.getInterstitialDisplayProperties()).thenReturn(propertiesInternal);
+        videoDialog.showBannerCreative(mock(View.class));
+        Object adView = WhiteBox.field(VideoDialog.class, "adView").get(videoDialog);
         Assert.assertNull(adView);
     }
 }

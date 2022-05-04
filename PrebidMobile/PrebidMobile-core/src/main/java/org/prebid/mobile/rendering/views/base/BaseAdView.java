@@ -34,21 +34,25 @@ import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
  * This class provides common functionality for Interstitial and Banner ads.
  */
 public abstract class BaseAdView extends FrameLayout {
+
     private static final String TAG = BaseAdView.class.getSimpleName();
 
-    protected AdViewManager mAdViewManager;
-    protected InterstitialManager mInterstitialManager = new InterstitialManager();
+    protected AdViewManager adViewManager;
+    protected InterstitialManager interstitialManager = new InterstitialManager();
 
-    private EventForwardingLocalBroadcastReceiver mEventForwardingReceiver;
-    private final EventForwardingLocalBroadcastReceiver.EventForwardingBroadcastListener mBroadcastListener = this::handleBroadcastAction;
+    private EventForwardingLocalBroadcastReceiver eventForwardingReceiver;
+    private final EventForwardingLocalBroadcastReceiver.EventForwardingBroadcastListener broadcastListener = this::handleBroadcastAction;
 
-    private int mScreenVisibility;
+    private int screenVisibility;
 
     public BaseAdView(Context context) {
         super(context);
     }
 
-    public BaseAdView(Context context, AttributeSet attrs) {
+    public BaseAdView(
+            Context context,
+            AttributeSet attrs
+    ) {
         super(context, attrs);
     }
 
@@ -59,25 +63,25 @@ public abstract class BaseAdView extends FrameLayout {
     }
 
     public long getMediaDuration() {
-        if (mAdViewManager != null) {
-            return mAdViewManager.getMediaDuration();
+        if (adViewManager != null) {
+            return adViewManager.getMediaDuration();
         }
         return 0;
     }
 
     public long getMediaOffset() {
-        if (mAdViewManager != null) {
-            return mAdViewManager.getSkipOffset();
+        if (adViewManager != null) {
+            return adViewManager.getSkipOffset();
         }
         return AdUnitConfiguration.SKIP_OFFSET_NOT_ASSIGNED;
     }
 
     public void setAppContent(ContentObject contentObject) {
-        if (mAdViewManager == null) {
+        if (adViewManager == null) {
             LogUtil.error(TAG, "setContentUrl: Failed. AdViewManager is null. Can't set content object. ");
             return;
         }
-        mAdViewManager.getAdConfiguration().setAppContent(contentObject);
+        adViewManager.getAdConfiguration().setAppContent(contentObject);
     }
 
     /**
@@ -95,13 +99,13 @@ public abstract class BaseAdView extends FrameLayout {
     }
 
     protected void registerEventBroadcast() {
-        final int broadcastId = mAdViewManager.getAdConfiguration().getBroadcastId();
-        mEventForwardingReceiver = new EventForwardingLocalBroadcastReceiver(broadcastId, mBroadcastListener);
-        mEventForwardingReceiver.register(getContext(), mEventForwardingReceiver);
+        final int broadcastId = adViewManager.getAdConfiguration().getBroadcastId();
+        eventForwardingReceiver = new EventForwardingLocalBroadcastReceiver(broadcastId, broadcastListener);
+        eventForwardingReceiver.register(getContext(), eventForwardingReceiver);
     }
 
     protected void setScreenVisibility(int screenVisibility) {
-        mScreenVisibility = screenVisibility;
+        this.screenVisibility = screenVisibility;
     }
 
     protected void handleBroadcastAction(String action) {
@@ -110,22 +114,22 @@ public abstract class BaseAdView extends FrameLayout {
 
     protected void handleWindowFocusChange(boolean hasWindowFocus) {
         int visibility = (!hasWindowFocus ? View.INVISIBLE : View.VISIBLE);
-        if (Utils.hasScreenVisibilityChanged(mScreenVisibility, visibility) && mAdViewManager != null) {
-            mScreenVisibility = visibility;
-            mAdViewManager.setAdVisibility(mScreenVisibility);
+        if (Utils.hasScreenVisibilityChanged(screenVisibility, visibility) && adViewManager != null) {
+            screenVisibility = visibility;
+            adViewManager.setAdVisibility(screenVisibility);
         }
     }
 
     protected abstract void notifyErrorListeners(final AdException adException);
 
     public void destroy() {
-        if (mAdViewManager != null) {
-            mAdViewManager.destroy();
+        if (adViewManager != null) {
+            adViewManager.destroy();
         }
 
-        if (mEventForwardingReceiver != null) {
-            mEventForwardingReceiver.unregister(mEventForwardingReceiver);
-            mEventForwardingReceiver = null;
+        if (eventForwardingReceiver != null) {
+            eventForwardingReceiver.unregister(eventForwardingReceiver);
+            eventForwardingReceiver = null;
         }
     }
 }

@@ -46,31 +46,31 @@ import static org.mockito.Mockito.*;
 @Config(sdk = 19)
 public class MraidExpandTest {
 
-    private MraidExpand mMraidExpand;
+    private MraidExpand mraidExpand;
 
-    private Activity mTestActivity;
-    private WebViewBase mMockWebViewBase;
-    private BaseJSInterface mSpyBaseJsInterface;
-    private JsExecutor mSpyJsExecutor;
+    private Activity testActivity;
+    private WebViewBase mockWebViewBase;
+    private BaseJSInterface spyBaseJsInterface;
+    private JsExecutor spyJsExecutor;
 
     @Before
     public void setup() {
-        mTestActivity = Robolectric.buildActivity(Activity.class)
-                                   .setup()
-                                   .create()
-                                   .visible()
-                                   .resume()
-                                   .windowFocusChanged(true)
-                                   .get();
-        mSpyJsExecutor = spy(new JsExecutor(mMockWebViewBase, null, null));
+        testActivity = Robolectric.buildActivity(Activity.class)
+                                  .setup()
+                                  .create()
+                                  .visible()
+                                  .resume()
+                                  .windowFocusChanged(true)
+                                  .get();
+        spyJsExecutor = spy(new JsExecutor(mockWebViewBase, null, null));
 
-        mMockWebViewBase = mock(WebViewBase.class);
-        mSpyBaseJsInterface = Mockito.spy(new BaseJSInterface(mTestActivity, mMockWebViewBase, mSpyJsExecutor));
+        mockWebViewBase = mock(WebViewBase.class);
+        spyBaseJsInterface = Mockito.spy(new BaseJSInterface(testActivity, mockWebViewBase, spyJsExecutor));
 
-        when(mSpyBaseJsInterface.getJsExecutor()).thenReturn(mSpyJsExecutor);
-        when(mMockWebViewBase.getMRAIDInterface()).thenReturn(mSpyBaseJsInterface);
+        when(spyBaseJsInterface.getJsExecutor()).thenReturn(spyJsExecutor);
+        when(mockWebViewBase.getMRAIDInterface()).thenReturn(spyBaseJsInterface);
 
-        mMraidExpand = new MraidExpand(mTestActivity, mMockWebViewBase, mock(InterstitialManager.class));
+        mraidExpand = new MraidExpand(testActivity, mockWebViewBase, mock(InterstitialManager.class));
     }
 
     @Test
@@ -80,19 +80,19 @@ public class MraidExpandTest {
             RedirectUrlListener listener = invocation.getArgument(1);
             listener.onSuccess("test", "html");
             return null;
-        }).when(mSpyBaseJsInterface).followToOriginalUrl(anyString(), any(RedirectUrlListener.class));
+        }).when(spyBaseJsInterface).followToOriginalUrl(anyString(), any(RedirectUrlListener.class));
 
         PrebidWebViewBase mockPreloadedListener = mock(PrebidWebViewBase.class);
         HTMLCreative mockCreative = mock(HTMLCreative.class);
 
         when(mockPreloadedListener.getCreative()).thenReturn(mockCreative);
-        when(mMockWebViewBase.getPreloadedListener()).thenReturn(mockPreloadedListener);
+        when(mockWebViewBase.getPreloadedListener()).thenReturn(mockPreloadedListener);
 
         CompletedCallBack callBack = mock(CompletedCallBack.class);
-        final MraidVariableContainer mraidVariableContainer = mSpyBaseJsInterface.getMraidVariableContainer();
+        final MraidVariableContainer mraidVariableContainer = spyBaseJsInterface.getMraidVariableContainer();
         mraidVariableContainer.setCurrentState(JSInterface.STATE_DEFAULT);
 
-        MraidExpand spyExpand = spy(mMraidExpand);
+        MraidExpand spyExpand = spy(mraidExpand);
 
         doAnswer(invocation -> {
             CompletedCallBack completedCallBack = invocation.getArgument(1);
@@ -102,7 +102,7 @@ public class MraidExpandTest {
 
         spyExpand.expand("test", callBack);
 
-        verify(mSpyBaseJsInterface).followToOriginalUrl(anyString(), any(RedirectUrlListener.class));
+        verify(spyBaseJsInterface).followToOriginalUrl(anyString(), any(RedirectUrlListener.class));
         assertEquals(mraidVariableContainer.getUrlForLaunching(), "test");
         verify(callBack).expandDialogShown();
         verify(spyExpand).showExpandDialog(any(), any());
@@ -111,9 +111,9 @@ public class MraidExpandTest {
     @Test
     public void nullifyDialogTest() throws IllegalAccessException {
         AdBaseDialog mockDialog = mock(AdBaseDialog.class);
-        WhiteBox.field(MraidExpand.class, "mExpandedDialog").set(mMraidExpand, mockDialog);
+        WhiteBox.field(MraidExpand.class, "expandedDialog").set(mraidExpand, mockDialog);
 
-        mMraidExpand.nullifyDialog();
+        mraidExpand.nullifyDialog();
 
         verify(mockDialog).cleanup();
         verify(mockDialog).cancel();
@@ -121,7 +121,7 @@ public class MraidExpandTest {
 
     @Test
     public void setMraidExpandedTest() {
-        mMraidExpand.setMraidExpanded(true);
-        assertTrue(mMraidExpand.isMraidExpanded());
+        mraidExpand.setMraidExpanded(true);
+        assertTrue(mraidExpand.isMraidExpanded());
     }
 }

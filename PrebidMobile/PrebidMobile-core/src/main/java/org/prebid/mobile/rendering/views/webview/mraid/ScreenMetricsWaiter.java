@@ -31,78 +31,73 @@ public class ScreenMetricsWaiter {
 
     private final static String TAG = ScreenMetricsWaiter.class.getSimpleName();
 
-    @NonNull
-    private final Handler mHandler = new Handler(Looper.getMainLooper());
+    @NonNull private final Handler handler = new Handler(Looper.getMainLooper());
 
-    private LinkedList<WaitRequest> mWaitRequestQueue = new LinkedList<>();
+    private LinkedList<WaitRequest> waitRequestQueue = new LinkedList<>();
 
     void queueMetricsRequest(
         @NonNull
             Runnable successRunnable, boolean isAnswerRequired,
         @NonNull
             View... views) {
-        WaitRequest newWaitRequest = new WaitRequest(mHandler, successRunnable, isAnswerRequired, views);
-        if (mWaitRequestQueue.isEmpty()) {
+        WaitRequest newWaitRequest = new WaitRequest(handler, successRunnable, isAnswerRequired, views);
+        if (waitRequestQueue.isEmpty()) {
             newWaitRequest.start();
         }
-        mWaitRequestQueue.addLast(newWaitRequest);
-        LogUtil.debug(TAG, "New request queued. Queue size: " + mWaitRequestQueue.size());
+        waitRequestQueue.addLast(newWaitRequest);
+        LogUtil.debug(TAG, "New request queued. Queue size: " + waitRequestQueue.size());
     }
 
     void finishAndStartNextRequest() {
-        mWaitRequestQueue.removeFirst();
-        WaitRequest firstInQueueRequest = mWaitRequestQueue.peekFirst();
-        LogUtil.debug(TAG, "Request finished. Queue size: " + mWaitRequestQueue.size());
+        waitRequestQueue.removeFirst();
+        WaitRequest firstInQueueRequest = waitRequestQueue.peekFirst();
+        LogUtil.debug(TAG, "Request finished. Queue size: " + waitRequestQueue.size());
         if (firstInQueueRequest != null) {
             firstInQueueRequest.start();
         }
     }
 
     void cancelPendingRequests() {
-        WaitRequest waitRequest = mWaitRequestQueue.pollFirst();
+        WaitRequest waitRequest = waitRequestQueue.pollFirst();
         while (waitRequest != null) {
             waitRequest.cancel();
-            waitRequest = mWaitRequestQueue.pollFirst();
+            waitRequest = waitRequestQueue.pollFirst();
         }
     }
 
     static class WaitRequest {
-        @NonNull
-        private final View[] mViews;
-        @NonNull
-        private final Handler mHandler;
-        @Nullable
-        private Runnable mSuccessRunnable;
-        private boolean mIsAnswerRequired;
-        int mWaitCount;
+
+        @NonNull private final View[] views;
+        @NonNull private final Handler handler;
+        @Nullable private Runnable successRunnable;
+        private boolean isAnswerRequired;
+        int waitCount;
 
         private WaitRequest(
-            @NonNull
-                Handler handler,
-            @NonNull
-                Runnable successRunnable,
-            boolean isAnswerRequired,
-            @NonNull
-            final View[] views) {
-            mIsAnswerRequired = isAnswerRequired;
-            mHandler = handler;
-            mSuccessRunnable = successRunnable;
-            mViews = views;
+                @NonNull Handler handler,
+                @NonNull Runnable successRunnable,
+                boolean isAnswerRequired,
+                @NonNull final View[] views
+        ) {
+            this.isAnswerRequired = isAnswerRequired;
+            this.handler = handler;
+            this.successRunnable = successRunnable;
+            this.views = views;
         }
 
         private void countDown() {
-            mWaitCount--;
-            if (mWaitCount == 0 && mSuccessRunnable != null) {
-                mSuccessRunnable.run();
-                mSuccessRunnable = null;
+            waitCount--;
+            if (waitCount == 0 && successRunnable != null) {
+                successRunnable.run();
+                successRunnable = null;
             }
         }
 
-        private final Runnable mWaitingRunnable = new Runnable() {
+        private final Runnable waitingRunnable = new Runnable() {
             @Override
             public void run() {
 
-                for (final View view : mViews) {
+                for (final View view : views) {
                     boolean isTwoPart = false;
                     if (view instanceof PrebidWebViewBase && ((PrebidWebViewBase) view).getMraidWebView() != null) {
                         String jsName = ((PrebidWebViewBase) view).getMraidWebView().getJSName();
@@ -110,9 +105,12 @@ public class ScreenMetricsWaiter {
                     }
 
                     // Immediately count down for any views that already have a size
-                    if (view.getHeight() > 0 || view.getWidth() > 0 || mIsAnswerRequired || isTwoPart) {
+                    if (view.getHeight() > 0 || view.getWidth() > 0 || isAnswerRequired || isTwoPart) {
                         countDown();
-                        LogUtil.debug(TAG, "Get known metrics for: " + view.getClass().getSimpleName() + ", h: " + view.getHeight() + ", w: " + view.getWidth());
+                        LogUtil.debug(TAG,
+                                "Get known metrics for: " + view.getClass()
+                                                                .getSimpleName() + ", h: " + view.getHeight() + ", w: " + view.getWidth()
+                        );
                         continue;
                     }
 
@@ -135,13 +133,13 @@ public class ScreenMetricsWaiter {
         };
 
         void start() {
-            mWaitCount = mViews.length;
-            mHandler.post(mWaitingRunnable);
+            waitCount = views.length;
+            handler.post(waitingRunnable);
         }
 
         void cancel() {
-            mHandler.removeCallbacks(mWaitingRunnable);
-            mSuccessRunnable = null;
+            handler.removeCallbacks(waitingRunnable);
+            successRunnable = null;
         }
     }
 }

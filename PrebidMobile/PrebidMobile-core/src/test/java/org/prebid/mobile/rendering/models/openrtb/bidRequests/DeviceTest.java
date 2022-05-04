@@ -25,52 +25,52 @@ import static junit.framework.Assert.*;
 
 public class DeviceTest {
 
-    private Device mTestDevice;
+    private Device testDevice;
 
     @Before
     public void setUp() {
-        mTestDevice = new Device();
+        testDevice = new Device();
     }
 
     @Test
     public void getJsonObjectTest() throws Exception {
         Geo testGeo = new Geo();
 
-        mTestDevice.setGeo(testGeo);
-        assertEquals(testGeo, mTestDevice.getGeo());
+        testDevice.setGeo(testGeo);
+        assertEquals(testGeo, testDevice.getGeo());
 
-        mTestDevice.lmt = 1;
-        mTestDevice.devicetype = 1;
-        mTestDevice.make = "LG";
-        mTestDevice.model = "Nexus 5";
-        mTestDevice.os = "5.0";
-        mTestDevice.osv = "5";
-        mTestDevice.hwv = "5";
-        mTestDevice.flashver = "1";
-        mTestDevice.language = "en";
-        mTestDevice.carrier = "T-mobile";
-        mTestDevice.mccmnc = "321-444";
-        mTestDevice.ifa = "1111";
-        mTestDevice.didsha1 = "3414dsfd";
-        mTestDevice.didmd5 = "didmd5";
-        mTestDevice.dpidsha1 = "didsha1";
-        mTestDevice.dpidmd5 = "dpidmd5";
-        mTestDevice.h = 1221;
-        mTestDevice.w = 567;
-        mTestDevice.ppi = 11;
-        mTestDevice.js = 1;
-        mTestDevice.connectiontype = 1;
-        mTestDevice.pxratio = 22f;
-        mTestDevice.geo = testGeo;
-        JSONObject actualObj = mTestDevice.getJsonObject();
+        testDevice.lmt = 1;
+        testDevice.devicetype = 1;
+        testDevice.make = "LG";
+        testDevice.model = "Nexus 5";
+        testDevice.os = "5.0";
+        testDevice.osv = "5";
+        testDevice.hwv = "5";
+        testDevice.flashver = "1";
+        testDevice.language = "en";
+        testDevice.carrier = "T-mobile";
+        testDevice.mccmnc = "321-444";
+        testDevice.ifa = "1111";
+        testDevice.didsha1 = "3414dsfd";
+        testDevice.didmd5 = "didmd5";
+        testDevice.dpidsha1 = "didsha1";
+        testDevice.dpidmd5 = "dpidmd5";
+        testDevice.h = 1221;
+        testDevice.w = 567;
+        testDevice.ppi = 11;
+        testDevice.js = 1;
+        testDevice.connectiontype = 1;
+        testDevice.pxratio = 22f;
+        testDevice.geo = testGeo;
+        JSONObject actualObj = testDevice.getJsonObject();
         String expectedString = "{\"os\":\"5.0\",\"didmd5\":\"didmd5\",\"ifa\":\"1111\",\"hwv\":\"5\",\"h\":1221,\"ppi\":11,\"js\":1,\"language\":\"en\",\"devicetype\":1,\"pxratio\":22,\"geo\":{},\"lmt\":1,\"carrier\":\"T-mobile\",\"osv\":\"5\",\"dpidmd5\":\"dpidmd5\",\"mccmnc\":\"321-444\",\"flashver\":\"1\",\"didsha1\":\"3414dsfd\",\"w\":567,\"model\":\"Nexus 5\",\"connectiontype\":1,\"make\":\"LG\",\"dpidsha1\":\"didsha1\"}";
         assertEquals("got: " + actualObj.toString(), expectedString, actualObj.toString());
-        mTestDevice.getJsonObject();
+        testDevice.getJsonObject();
     }
 
     @Test
     public void checkGeoTest() {
-        Geo actualGeo = mTestDevice.getGeo();
+        Geo actualGeo = testDevice.getGeo();
         assertNotNull("Geo isn't null.", actualGeo);
 
         Geo geo = new Geo();
@@ -86,8 +86,8 @@ public class DeviceTest {
         geo.city = "Los Angeles";
         geo.zip = "90049";
         geo.utcoffset = 1;
-        mTestDevice.setGeo(geo);
-        assertSame("Set and received geo values must match.", geo, mTestDevice.getGeo());
+        testDevice.setGeo(geo);
+        assertSame("Set and received geo values must match.", geo, testDevice.getGeo());
 
     }
 }
