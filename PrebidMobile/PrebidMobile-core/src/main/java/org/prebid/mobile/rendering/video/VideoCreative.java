@@ -94,11 +94,7 @@ public class VideoCreative extends VideoCreativeProtocol
         if (videoCreativeView != null) {
             videoCreativeView.start(model.getAdConfiguration().getVideoInitialVolume());
 
-            if (model.getAdConfiguration().isMuted()) {
-                mute();
-            } else {
-                unmute();
-            }
+            setStartIsMutedValue(model.getAdConfiguration().isMuted());
 
             model.trackPlayerStateChange(InternalPlayerState.NORMAL);
             startViewabilityTracker();
@@ -211,6 +207,12 @@ public class VideoCreative extends VideoCreativeProtocol
     public void unmute() {
         if (videoCreativeView != null && videoCreativeView.getVolume() == 0) {
             videoCreativeView.unMute();
+        }
+    }
+
+    private void setStartIsMutedValue(boolean isMuted) {
+        if (videoCreativeView != null && videoCreativeView.getVolume() == 0) {
+            videoCreativeView.setStartIsMutedProperty(isMuted);
         }
     }
 
