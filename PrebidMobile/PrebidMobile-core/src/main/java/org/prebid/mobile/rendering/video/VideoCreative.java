@@ -211,8 +211,8 @@ public class VideoCreative extends VideoCreativeProtocol
     }
 
     private void setStartIsMutedValue(boolean isMuted) {
-        if (mVideoCreativeView != null && mVideoCreativeView.getVolume() == 0) {
-            mVideoCreativeView.setStartIsMutedProperty(isMuted);
+        if (videoCreativeView != null && videoCreativeView.getVolume() == 0) {
+            videoCreativeView.setStartIsMutedProperty(isMuted);
         }
     }
 

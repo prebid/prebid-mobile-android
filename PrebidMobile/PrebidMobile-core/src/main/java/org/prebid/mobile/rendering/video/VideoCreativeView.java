@@ -211,7 +211,7 @@ public class VideoCreativeView extends RelativeLayout {
     }
 
     private void addVolumeControlView() {
-        boolean notContainsVolumeControl = indexOfChild(mVolumeControlView) == -1;
+        boolean notContainsVolumeControl = indexOfChild(volumeControlView) == -1;
         if (notContainsVolumeControl) {
             LayoutParams layoutParams = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
             volumeControlView = new VolumeControlView(getContext(), isMuted ? VolumeControlView.VolumeState.MUTED : VolumeControlView.VolumeState.UN_MUTED);
