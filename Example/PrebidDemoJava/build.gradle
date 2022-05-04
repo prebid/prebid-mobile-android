@@ -47,10 +47,10 @@ android {
 
 dependencies {
 //    Source code
-//    implementation project(':PrebidMobile')
+    implementation project(':PrebidMobile')
 
     // For testing staging releases
-    implementation 'org.prebid:prebid-mobile-sdk:2.0.0'
+//    implementation 'org.prebid:prebid-mobile-sdk:2.0.0'
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.gms:play-services-ads:20.4.0'
