@@ -145,7 +145,7 @@ public class VideoViewTest {
     @Test
     public void loadAd_LoadBidTransaction() {
         final AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
-        final BidResponse bidResponse = new BidResponse("");
+        final BidResponse bidResponse = new BidResponse("", new AdUnitConfiguration());
 
         videoView.loadAd(adUnitConfiguration, bidResponse);
 

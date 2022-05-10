@@ -76,14 +76,21 @@ public class Prebid {
         return prebidObject;
     }
 
-    public static JSONObject getJsonObjectForApp(String sdkName, String sdkVersion) {
+    public static JSONObject getJsonObjectForApp(
+        String sdkName,
+        String sdkVersion
+    ) {
         JSONObject prebid = new JSONObject();
         Utils.addValue(prebid, "source", sdkName);
         Utils.addValue(prebid, "version", sdkVersion);
         return prebid;
     }
 
-    public static JSONObject getJsonObjectForBidRequest(String accountId, boolean isVideo) {
+    public static JSONObject getJsonObjectForBidRequest(
+        String accountId,
+        boolean isVideo,
+        boolean isOriginalAdUnit
+    ) {
         JSONObject prebid = getPrebidObject(accountId);
 
         JSONObject cache = new JSONObject();
@@ -92,7 +99,9 @@ public class Prebid {
             Utils.addValue(cache, "vastxml", new JSONObject());
         }
 
-        Utils.addValue(prebid, "cache", cache);
+        if (PrebidMobile.isUseCacheForReportingWithRenderingApi() || isOriginalAdUnit) {
+            Utils.addValue(prebid, "cache", cache);
+        }
         Utils.addValue(prebid, "targeting", new JSONObject());
 
         if (!TargetingParams.getAccessControlList().isEmpty()) {

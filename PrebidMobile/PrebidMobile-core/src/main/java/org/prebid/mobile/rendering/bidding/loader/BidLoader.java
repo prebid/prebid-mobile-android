@@ -57,7 +57,7 @@ public class BidLoader {
         @Override
         public void onResponse(BaseNetworkTask.GetUrlResult response) {
             currentlyLoading.set(false);
-            BidResponse bidResponse = new BidResponse(response.responseString);
+            BidResponse bidResponse = new BidResponse(response.responseString, adConfiguration);
             if (bidResponse.hasParseError()) {
                 failedToLoadBid(bidResponse.getParseError());
                 return;
