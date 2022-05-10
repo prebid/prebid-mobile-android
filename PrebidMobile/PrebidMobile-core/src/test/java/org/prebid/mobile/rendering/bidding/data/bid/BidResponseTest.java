@@ -16,7 +16,9 @@
 
 package org.prebid.mobile.rendering.bidding.data.bid;
 
+import org.junit.After;
 import org.junit.Test;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.BuildConfig;
@@ -28,6 +30,11 @@ import java.io.IOException;
 import static org.junit.Assert.*;
 
 public class BidResponseTest {
+
+    @After
+    public void tearDown() {
+        PrebidMobile.setUseCacheForReportingWithRenderingApi(false);
+    }
 
     @Test
     public void whenInstantiatedWithValidJson_NoParseError() throws IOException {
@@ -91,6 +98,76 @@ public class BidResponseTest {
             /* This field presents in both MobileSdkPassThrough objects */
             assertEquals((Integer) 11, mobileSdkPassThrough.maxVideoDuration);
         }
+    }
+
+    @Test
+    public void testWinningBidKeywords_withoutOneKeyword_parseError() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_not_all.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertTrue(subject.hasParseError());
+        assertNull(subject.getWinningBid());
+    }
+
+    @Test
+    public void testWinningBidKeywords_allKeywords_noParseError() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_without_cache_id.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertFalse(subject.hasParseError());
+        assertNotNull(subject.getWinningBid());
+    }
+
+    @Test
+    public void testWinningBidKeywords_originalAdUnit_withoutCacheId_parseError() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_without_cache_id.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setIsOriginalAdUnit(true);
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertTrue(subject.hasParseError());
+        assertNull(subject.getWinningBid());
+    }
+
+    @Test
+    public void testWinningBidKeywords_originalAdUnit_withCacheId_noParseError() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setIsOriginalAdUnit(true);
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertFalse(subject.hasParseError());
+        assertNotNull(subject.getWinningBid());
+    }
+
+    @Test
+    public void testWinningBidKeywords_useCacheInRenderingApi_withoutCacheId_parseError() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_without_cache_id.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        PrebidMobile.setUseCacheForReportingWithRenderingApi(true);
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertTrue(subject.hasParseError());
+        assertNull(subject.getWinningBid());
+    }
+
+    @Test
+    public void testWinningBidKeywords_useCacheInRenderingApi_withCacheId_noParseError() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        PrebidMobile.setUseCacheForReportingWithRenderingApi(true);
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertFalse(subject.hasParseError());
+        assertNotNull(subject.getWinningBid());
     }
 
 }
