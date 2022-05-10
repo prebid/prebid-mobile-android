@@ -225,7 +225,7 @@ public class BidResponse {
             return false;
         }
         HashMap<String, String> targeting = prebid.getTargeting();
-        boolean result = targeting.containsKey("hb_pb") && targeting.containsKey("hb_bidder");
+        boolean result = targeting.containsKey("hb_pb") && targeting.containsKey("hb_bidder") && targeting.containsKey("hb_size");
         if (PrebidMobile.isUseCacheForReportingWithRenderingApi() || isOriginalAdUnit) {
             result = result && targeting.containsKey("hb_cache_id");
         }
