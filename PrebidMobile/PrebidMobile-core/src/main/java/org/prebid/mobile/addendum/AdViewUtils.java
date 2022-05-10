@@ -18,15 +18,14 @@ package org.prebid.mobile.addendum;
 
 import android.annotation.TargetApi;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.Size;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.Size;
 import org.prebid.mobile.CacheManager;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidNativeAd;
@@ -34,11 +33,7 @@ import org.prebid.mobile.PrebidNativeAdListener;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,7 +47,6 @@ public final class AdViewUtils {
     private static final String GAM_VIEW_CLASS_2 = "com.google.android.gms.ads.admanager.AdManagerAdView";
     private static final String GAM_CUSTOM_TEMPLATE_AD_CLASS = "com.google.android.gms.ads.formats.NativeCustomTemplateAd";
     private static final String GAM_CUSTOM_TEMPLATE_AD_CLASS_2 = "com.google.android.gms.ads.nativead.NativeCustomFormatAd";
-    private static final String MOPUB_NATIVE_AD_CLASS = "com.mopub.nativeads.NativeAd";
 
     private AdViewUtils() { }
 
@@ -111,7 +105,7 @@ public final class AdViewUtils {
                     //case: wait when webView.getContentHeight() >= expected height from HTML
                     //webView does not contain getContentWidth()
                     if (webViewContentHeight < expectedHeight) {
-                        LogUtil.d("fixZoomIn" + " webViewContentHeight:" + webViewContentHeight);
+                        LogUtil.debug("fixZoomIn" + " webViewContentHeight:" + webViewContentHeight);
                         contentHeightQueue.add(webViewContentHeight);
                         if (contentHeightQueue.isFull()) {
 
@@ -139,7 +133,7 @@ public final class AdViewUtils {
         //case: regulate scale because WebView.getSettings().setLoadWithOverviewMode() does not work
         int scale = (int) (webViewHeight / webViewContentHeight * 100 + 1);
 
-        LogUtil.d("fixZoomIn WB Height:" + webViewHeight + " getContentHeight:" + webViewContentHeight + " scale:" + scale );
+        LogUtil.debug("fixZoomIn WB Height:" + webViewHeight + " getContentHeight:" + webViewContentHeight + " scale:" + scale);
         webView.setInitialScale(scale);
     }
 
@@ -151,7 +145,7 @@ public final class AdViewUtils {
     static void warnAndTriggerFailure(PbFindSizeError error, PbFindSizeListener handler) {
 
         String description = error.getDescription();
-        LogUtil.w(description);
+        LogUtil.warning(description);
 
         handler.failure(error);
     }
@@ -180,7 +174,7 @@ public final class AdViewUtils {
         int necessaryAndroidApi = Build.VERSION_CODES.KITKAT;
 
         if (currentAndroidApi >= necessaryAndroidApi) {
-            LogUtil.d("webViewList size:" + webViewList.size());
+            LogUtil.debug("webViewList size:" + webViewList.size());
 
             int lastIndex = webViewList.size() - 1;
             iterateWebViewListAsync(webViewList, lastIndex, handler);
@@ -372,7 +366,7 @@ public final class AdViewUtils {
         String[] sizeArr = size.split("x");
 
         if (sizeArr.length != 2) {
-            LogUtil.w(size + " has a wrong format");
+            LogUtil.warning(size + " has a wrong format");
             return null;
         }
 
@@ -384,14 +378,14 @@ public final class AdViewUtils {
         try {
             width = Integer.parseInt(widthString);
         } catch (NumberFormatException e) {
-            LogUtil.w(size + "can not be converted to Size");
+            LogUtil.warning(size + "can not be converted to Size");
             return null;
         }
 
         try {
             height = Integer.parseInt(heightString);
         } catch (NumberFormatException e) {
-            LogUtil.w(size + "can not be converted to Size");
+            LogUtil.warning(size + "can not be converted to Size");
             return null;
         }
 
@@ -407,16 +401,15 @@ public final class AdViewUtils {
     /**
      * This API can be used to find if the passed object contains info to retreive valid cached Native response or not,
      * and notifies using the {@link PrebidNativeAdListener}
-     * @param object   instances of Google and MoPub Native Ads
+     *
+     * @param object   instances of Google Native Ads
      * @param listener to notify the validity of passed object via @onPrebidNativeLoaded, #onPrebidNativeNotFound, #onPrebidNativeNotValid
-     * */
+     */
     public static void findNative(@NonNull Object object, @NonNull PrebidNativeAdListener listener) {
         String objectClassName = object.getClass().getCanonicalName();
         if (GAM_VIEW_CLASS.equals(objectClassName) || GAM_VIEW_CLASS_2.equals(objectClassName)) {
             View adView = (View) object;
             findNativeInGAMPublisherAdView(adView, listener);
-        } else if (MOPUB_NATIVE_AD_CLASS.equals(objectClassName)) {
-            findNativeInMoPubNativeAd(object, listener);
         } else if (implementsInterface(object, GAM_CUSTOM_TEMPLATE_AD_CLASS) || implementsInterface(object, GAM_CUSTOM_TEMPLATE_AD_CLASS_2)) {
             findNativeInGAMCustomTemplateAd(object, listener);
         } else {
@@ -426,7 +419,7 @@ public final class AdViewUtils {
 
     private static boolean implementsInterface(@NonNull Object object, @NonNull String interfaceName) {
         for (Class c : object.getClass().getInterfaces()) {
-            LogUtil.d("Prebid", c.getCanonicalName());
+            LogUtil.debug("Prebid", c.getCanonicalName());
             if (c.getCanonicalName().equals(interfaceName)) {
                 return true;
             }
@@ -441,26 +434,6 @@ public final class AdViewUtils {
             PrebidNativeAd ad = createPrebidNativeAd(cacheId, listener);
             if (ad != null) {
                 listener.onPrebidNativeLoaded(ad);
-            } else {
-                listener.onPrebidNativeNotValid();
-            }
-        } else {
-            listener.onPrebidNativeNotFound();
-        }
-    }
-
-    private static void findNativeInMoPubNativeAd(@NonNull Object object, @NonNull PrebidNativeAdListener listener) {
-        Object baseNativeAd = callMethodOnObject(object, "getBaseNativeAd");
-        LogUtil.d("Prebid", "" + baseNativeAd);
-        Boolean isPrebid = (Boolean) callMethodOnObject(baseNativeAd, "getExtra", "isPrebid");
-        if (isPrebid != null && isPrebid) {
-            String cacheId = (String) callMethodOnObject(baseNativeAd, "getExtra", "hb_cache_id_local");
-            if (CacheManager.isValid(cacheId)) {
-                PrebidNativeAd ad = createPrebidNativeAd(cacheId, listener);
-                if (ad != null) {
-                    listener.onPrebidNativeLoaded(ad);
-                    return;
-                }
             } else {
                 listener.onPrebidNativeNotValid();
             }

@@ -34,8 +34,7 @@ public class GamVideoTests extends BaseUiAutomatorTest {
 
     @Test
     public void testGamOutstreamNoBids() {
-        homePage.setUseMockServer(false)
-                .getBannerPageFactory()
+        homePage.getBannerPageFactory()
                 .goToGamBannerExample(getStringResource(R.string.demo_bidding_gam_video_outstream_no_bids))
                 .gamVideoViewShouldBePresent()
                 .checkCommonEvents();
@@ -55,7 +54,6 @@ public class GamVideoTests extends BaseUiAutomatorTest {
 
     @Test
     public void testGamVideoInterstitial320x480NoBids() throws InterruptedException {
-        homePage.setUseMockServer(false);
         verifyGamVideoInterstitialExample(R.string.demo_bidding_gam_interstitial_video_320_480_no_bids);
     }
 
@@ -71,7 +69,6 @@ public class GamVideoTests extends BaseUiAutomatorTest {
 
     @Test
     public void testGamVideoRewardedEndCard320x480NoBids() {
-        homePage.setUseMockServer(false);
         verifyGamVideoRewardedInterstitialExample(R.string.demo_bidding_gam_video_rewarded_end_card_320_480_no_bids);
     }
 
@@ -87,8 +84,7 @@ public class GamVideoTests extends BaseUiAutomatorTest {
 
     @Test
     public void testPrebidGamOutstreamAppEvent() {
-        homePage.setUseMockServer(false)
-                .getBannerPageFactory()
+        homePage.getBannerPageFactory()
                 .goToGamBannerExample(getStringResource(R.string.demo_bidding_gam_video_oustream_app_event))
                 .prebidViewShouldBePresent()
                 .checkCommonEvents();
@@ -97,8 +93,7 @@ public class GamVideoTests extends BaseUiAutomatorTest {
     @Test
     public void testPrebidGamRewardedVideo() throws InterruptedException {
         String exampleName = getStringResource(R.string.demo_bidding_gam_video_rewarded_end_card_320_480_metadata);
-        homePage.setUseMockServer(false)
-                .getInterstitialPageFactory()
+        homePage.getInterstitialPageFactory()
                 .goToGamInterstitialExample(exampleName)
                 .sdkEventShouldBePresent(AdBasePage.SdkEvent.onAdLoaded)
                 .sdkEventShouldNotBePresent(AdBasePage.SdkEvent.onAdFailed);

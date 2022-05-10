@@ -18,7 +18,8 @@ package org.prebid.mobile.eventhandlers;
 
 import android.app.Activity;
 import android.util.Log;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
@@ -26,17 +27,13 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 import com.google.android.gms.ads.admanager.AppEventListener;
-
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.eventhandlers.utils.GamUtils;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import static org.prebid.mobile.eventhandlers.global.Constants.APP_EVENT;
 
@@ -45,34 +42,33 @@ import static org.prebid.mobile.eventhandlers.global.Constants.APP_EVENT;
  * To achieve safe integration between various GAM SDK versions we have to wrap all PublisherAdView method execution in try / catch.
  * This class instance should be created via newInstance method, which will catch any potential exception on PublisherInterstitialAd / PublisherInterstitialAdWrapper instance creation
  */
-public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
-    implements AppEventListener {
+public class PublisherInterstitialAdWrapper extends FullScreenContentCallback implements AppEventListener {
 
     private static final String TAG = PublisherInterstitialAdWrapper.class.getSimpleName();
 
-    private AdManagerInterstitialAd mInterstitialAd;
+    private AdManagerInterstitialAd interstitialAd;
 
-    private final WeakReference<Activity> mActivityWeakReference;
-    private final String mAdUnitId;
-    private final GamAdEventListener mListener;
+    private final WeakReference<Activity> activityWeakReference;
+    private final String adUnitId;
+    private final GamAdEventListener listener;
 
-    private final AdManagerInterstitialAdLoadCallback mAdLoadCallback = new AdManagerInterstitialAdLoadCallback() {
+    private final AdManagerInterstitialAdLoadCallback adLoadCallback = new AdManagerInterstitialAdLoadCallback() {
         @Override
         public void onAdLoaded(
-            @NonNull
-                AdManagerInterstitialAd adManagerInterstitialAd) {
-            mListener.onEvent(AdEvent.LOADED);
+                @NonNull AdManagerInterstitialAd adManagerInterstitialAd
+        ) {
+            listener.onEvent(AdEvent.LOADED);
 
-            mInterstitialAd = adManagerInterstitialAd;
-            mInterstitialAd.setFullScreenContentCallback(PublisherInterstitialAdWrapper.this);
-            mInterstitialAd.setAppEventListener(PublisherInterstitialAdWrapper.this);
+            interstitialAd = adManagerInterstitialAd;
+            interstitialAd.setFullScreenContentCallback(PublisherInterstitialAdWrapper.this);
+            interstitialAd.setAppEventListener(PublisherInterstitialAdWrapper.this);
         }
 
         @Override
         public void onAdFailedToLoad(
             @NonNull
                 LoadAdError loadAdError) {
-            mInterstitialAd = null;
+            interstitialAd = null;
             notifyErrorListener(loadAdError.getCode());
         }
     };
@@ -82,10 +78,10 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
             throw new IllegalArgumentException("Activity can't be null.");
         }
 
-        mListener = eventListener;
-        mActivityWeakReference = new WeakReference<>(activity);
+        listener = eventListener;
+        activityWeakReference = new WeakReference<>(activity);
 
-        mAdUnitId = gamAdUnitId;
+        adUnitId = gamAdUnitId;
     }
 
     @Nullable
@@ -107,7 +103,7 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
         @NonNull
             String info) {
         if (APP_EVENT.equals(name)) {
-            mListener.onEvent(AdEvent.APP_EVENT_RECEIVED);
+            listener.onEvent(AdEvent.APP_EVENT_RECEIVED);
         }
     }
     //endregion ==================== GAM AppEventsListener Implementation
@@ -119,25 +115,25 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
         @NonNull
             AdError adError) {
 
-        mInterstitialAd = null;
+        interstitialAd = null;
         notifyErrorListener(adError.getCode());
     }
 
     @Override
     public void onAdShowedFullScreenContent() {
-        mListener.onEvent(AdEvent.DISPLAYED);
+        listener.onEvent(AdEvent.DISPLAYED);
     }
 
     @Override
     public void onAdDismissedFullScreenContent() {
-        mListener.onEvent(AdEvent.CLOSED);
+        listener.onEvent(AdEvent.CLOSED);
     }
 
     //endregion ==================== GAM FullScreenContentCallback Implementation
 
     public boolean isLoaded() {
         try {
-            return mInterstitialAd != null;
+            return interstitialAd != null;
         }
         catch (Throwable throwable) {
             LogUtil.error(TAG, Log.getStackTraceString(throwable));
@@ -146,20 +142,20 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
     }
 
     public void show() {
-        final Activity activity = mActivityWeakReference.get();
+        final Activity activity = activityWeakReference.get();
 
         if (activity == null) {
             LogUtil.error(TAG, "show: Failed. Activity is null.");
             return;
         }
 
-        if (mInterstitialAd == null) {
+        if (interstitialAd == null) {
             LogUtil.error(TAG, "show: Failure. Interstitial ad is null.");
             return;
         }
 
         try {
-            mInterstitialAd.show(activity);
+            interstitialAd.show(activity);
         }
         catch (Throwable throwable) {
             LogUtil.error(TAG, Log.getStackTraceString(throwable));
@@ -167,7 +163,7 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
     }
 
     public void loadAd(Bid bid) {
-        mInterstitialAd = null;
+        interstitialAd = null;
         try {
             AdManagerAdRequest adRequest = new AdManagerAdRequest.Builder().build();
             if (bid != null) {
@@ -175,7 +171,7 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
                 GamUtils.handleGamCustomTargetingUpdate(adRequest, targetingMap);
             }
 
-            AdManagerInterstitialAd.load(mActivityWeakReference.get(), mAdUnitId, adRequest, mAdLoadCallback);
+            AdManagerInterstitialAd.load(activityWeakReference.get(), adUnitId, adRequest, adLoadCallback);
         }
         catch (Throwable throwable) {
             LogUtil.error(TAG, Log.getStackTraceString(throwable));
@@ -186,6 +182,6 @@ public class PublisherInterstitialAdWrapper extends FullScreenContentCallback
         final AdEvent adEvent = AdEvent.FAILED;
         adEvent.setErrorCode(code);
 
-        mListener.onEvent(adEvent);
+        listener.onEvent(adEvent);
     }
 }

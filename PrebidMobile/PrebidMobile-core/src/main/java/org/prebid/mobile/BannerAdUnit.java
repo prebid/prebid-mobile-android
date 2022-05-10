@@ -17,25 +17,23 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
+import org.prebid.mobile.api.data.AdFormat;
 
 import java.util.HashSet;
 
 public class BannerAdUnit extends BannerBaseAdUnit {
 
-    private HashSet<AdSize> sizes;
-
     public BannerAdUnit(@NonNull String configId, int width, int height) {
-        super(configId, AdType.BANNER);
-        this.sizes = new HashSet<>();
-        this.sizes.add(new AdSize(width, height));
+        super(configId, AdFormat.BANNER);
+        configuration.addSize(new AdSize(width, height));
     }
 
     public void addAdditionalSize(int width, int height) {
-        sizes.add(new AdSize(width, height));
+        configuration.addSize(new AdSize(width, height));
     }
 
     HashSet<AdSize> getSizes() {
-        return this.sizes;
+        return configuration.getSizes();
     }
 
 }

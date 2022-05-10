@@ -35,13 +35,13 @@ import androidx.preference.PreferenceManager
 import androidx.test.espresso.IdlingResource
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
-import org.json.JSONException
-import org.prebid.mobile.rendering.networking.targeting.Targeting
+import org.prebid.mobile.ExternalUserId
+import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener
 import org.prebid.mobile.renderingtestapp.plugplay.utilities.consent.ConsentUpdateManager
-import org.prebid.mobile.renderingtestapp.utils.NativeConfigurationStore
 import org.prebid.mobile.renderingtestapp.utils.OpenRtbConfigs
 import org.prebid.mobile.renderingtestapp.utils.OpenRtbExtra
 import org.prebid.mobile.renderingtestapp.utils.PermissionHelper
@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
 
     private val TAG = MainActivity::class.java.simpleName
 
-    private lateinit var mProgress: ProgressDialog
+    private lateinit var progress: ProgressDialog
     private lateinit var bottomAppBar: BottomNavigationView
     private lateinit var titleText: TextView
 
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
 
     override fun onSDKInit() {
         Log.i(TAG, "Prebid rendering SDK initialized successfully")
-        mProgress.dismiss()
+        progress.dismiss()
     }
 
     fun getIdlingResource(): IdlingResource? {
@@ -114,11 +114,11 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
     }
 
     private fun initProgressDialog() {
-        mProgress = ProgressDialog(this)
-        mProgress.setTitle("Please wait")
-        mProgress.setMessage("Caching video ads")
-        mProgress.setCancelable(false)
-        mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        progress = ProgressDialog(this)
+        progress.setTitle("Please wait")
+        progress.setMessage("Caching video ads")
+        progress.setCancelable(false)
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER)
     }
 
     private fun initBarNavigation() {
@@ -143,10 +143,6 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
 
         if (intent.extras?.containsKey(EXTRA_EIDS) == true) {
             extractEidsExtras()
-        }
-
-        if (intent.extras?.containsKey(EXTRA_NATIVE) == true) {
-            extractNativeExtra()
         }
     }
 
@@ -207,10 +203,13 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
     private fun parseOpenRtbJson(openRtbJson: String?): OpenRtbExtra? {
         try {
             return Gson().fromJson<OpenRtbExtra>(openRtbJson, object : TypeToken<OpenRtbExtra>() {}.type)
-        }
-        catch (ex: Exception) {
+        } catch (ex: Exception) {
             Log.d(TAG, "Unable to parse provided OpenRTB list ${Log.getStackTraceString(ex)}")
-            Toast.makeText(this, "Unable to parse provided OpenRTB. Provided JSON might contain an error", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this,
+                "Unable to parse provided OpenRTB. Provided JSON might contain an error",
+                Toast.LENGTH_LONG
+            ).show()
         }
         return null
     }
@@ -226,20 +225,22 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
     private fun extractEidsExtras() {
         val eidsJsonString = intent.extras?.getString(EXTRA_EIDS)
         val eidsJsonArray = JSONArray(eidsJsonString)
-        Targeting.setEids(eidsJsonArray)
-    }
-
-    private fun extractNativeExtra() {
-        val nativeJsonString = intent.extras?.getString(EXTRA_NATIVE)
-        if (nativeJsonString != null) {
-            try {
-                NativeConfigurationStore.createNativeConfigFrom(nativeJsonString)
+        for (i in 0 until eidsJsonArray.length()) {
+            val jsonObject = eidsJsonArray.get(i)
+            if (jsonObject is JsonObject) {
+                val source = jsonObject.get("source").asString
+                val identifier = jsonObject.get("identifier").asString
+                if (source == null || identifier == null) {
+                    val aType = jsonObject.get("atype")
+                    TargetingParams.storeExternalUserId(
+                        if (aType == null) {
+                            ExternalUserId(source, identifier, null, null)
+                        } else {
+                            ExternalUserId(source, identifier, aType.asInt, null)
+                        }
+                    )
+                }
             }
-            catch (e: JSONException) {
-                e.printStackTrace()
-                Toast.makeText(this, "Failed to parse native JSON", Toast.LENGTH_SHORT).show()
-            }
-
         }
     }
 

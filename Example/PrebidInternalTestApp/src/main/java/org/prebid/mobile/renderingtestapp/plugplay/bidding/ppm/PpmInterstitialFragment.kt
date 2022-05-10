@@ -16,19 +16,23 @@
 
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 
-import org.prebid.mobile.rendering.bidding.data.AdSize
-import org.prebid.mobile.rendering.bidding.enums.AdUnitFormat
-import org.prebid.mobile.rendering.bidding.parallel.InterstitialAdUnit
+import org.prebid.mobile.api.data.AdUnitFormat
+import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
+import java.util.*
 
 open class PpmInterstitialFragment : BaseBidInterstitialFragment() {
     override fun initInterstitialAd(adUnitFormat: AdUnitFormat, adUnitId: String?,
                                     configId: String?, width: Int, height: Int) {
-        interstitialAdUnit = if (adUnitFormat == AdUnitFormat.VIDEO){
-            InterstitialAdUnit(requireContext(), configId, adUnitFormat)
+        interstitialAdUnit = if (adUnitFormat == AdUnitFormat.VIDEO) {
+            InterstitialAdUnit(
+                requireContext(),
+                configId,
+                EnumSet.of(adUnitFormat)
+            )
         }
         else {
-            InterstitialAdUnit(requireContext(), configId, AdSize(width, height))
+            InterstitialAdUnit(requireContext(), configId)
         }
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
     }

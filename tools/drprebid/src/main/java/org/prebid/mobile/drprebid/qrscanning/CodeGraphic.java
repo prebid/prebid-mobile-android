@@ -4,52 +4,47 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-
 import com.google.android.gms.vision.barcode.Barcode;
-
 import org.prebid.mobile.drprebid.qrscanning.camera.GraphicOverlay;
 
 public class CodeGraphic extends GraphicOverlay.Graphic {
-    private int mId;
 
-    private static final int COLOR_CHOICES[] = {
-            Color.BLUE,
-            Color.CYAN,
-            Color.GREEN
-    };
+    private int id;
 
-    private static int mCurrentColorIndex = 0;
+    private static final int COLOR_CHOICES[] = {Color.BLUE, Color.CYAN, Color.GREEN};
 
-    private Paint mRectPaint;
-    private Paint mTextPaint;
-    private volatile Barcode mBarcode;
+    private static int currentColorIndex = 0;
+
+    private Paint rectPaint;
+    private Paint textPaint;
+    private volatile Barcode barcode;
 
     CodeGraphic(GraphicOverlay overlay) {
         super(overlay);
 
-        mCurrentColorIndex = (mCurrentColorIndex + 1) % COLOR_CHOICES.length;
-        final int selectedColor = COLOR_CHOICES[mCurrentColorIndex];
+        currentColorIndex = (currentColorIndex + 1) % COLOR_CHOICES.length;
+        final int selectedColor = COLOR_CHOICES[currentColorIndex];
 
-        mRectPaint = new Paint();
-        mRectPaint.setColor(selectedColor);
-        mRectPaint.setStyle(Paint.Style.STROKE);
-        mRectPaint.setStrokeWidth(4.0f);
+        rectPaint = new Paint();
+        rectPaint.setColor(selectedColor);
+        rectPaint.setStyle(Paint.Style.STROKE);
+        rectPaint.setStrokeWidth(4.0f);
 
-        mTextPaint = new Paint();
-        mTextPaint.setColor(selectedColor);
-        mTextPaint.setTextSize(36.0f);
+        textPaint = new Paint();
+        textPaint.setColor(selectedColor);
+        textPaint.setTextSize(36.0f);
     }
 
     public int getId() {
-        return mId;
+        return id;
     }
 
     public void setId(int id) {
-        this.mId = id;
+        this.id = id;
     }
 
     public Barcode getBarcode() {
-        return mBarcode;
+        return barcode;
     }
 
     /**
@@ -57,7 +52,7 @@ public class CodeGraphic extends GraphicOverlay.Graphic {
      * relevant portions of the overlay to trigger a redraw.
      */
     void updateItem(Barcode barcode) {
-        mBarcode = barcode;
+        this.barcode = barcode;
         postInvalidate();
     }
 
@@ -66,7 +61,7 @@ public class CodeGraphic extends GraphicOverlay.Graphic {
      */
     @Override
     public void draw(Canvas canvas) {
-        Barcode barcode = mBarcode;
+        Barcode barcode = this.barcode;
         if (barcode == null) {
             return;
         }
@@ -77,9 +72,9 @@ public class CodeGraphic extends GraphicOverlay.Graphic {
         rect.top = translateY(rect.top);
         rect.right = translateX(rect.right);
         rect.bottom = translateY(rect.bottom);
-        canvas.drawRect(rect, mRectPaint);
+        canvas.drawRect(rect, rectPaint);
 
         // Draws a label at the bottom of the barcode indicate the barcode value that was detected.
-        canvas.drawText(barcode.rawValue, rect.left, rect.bottom, mTextPaint);
+        canvas.drawText(barcode.rawValue, rect.left, rect.bottom, textPaint);
     }
 }

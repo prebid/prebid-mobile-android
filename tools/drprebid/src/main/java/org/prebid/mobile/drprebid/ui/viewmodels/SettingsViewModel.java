@@ -3,72 +3,72 @@ package org.prebid.mobile.drprebid.ui.viewmodels;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import org.prebid.mobile.drprebid.model.AdSize;
 import org.prebid.mobile.drprebid.model.PrebidServer;
 
 public class SettingsViewModel extends ViewModel {
-    private final MutableLiveData<AdSize> mAdSize;
-    private final MutableLiveData<Float> mBidPrice;
-    private final MutableLiveData<String> mAdUnitId;
-    private final MutableLiveData<PrebidServer> mPrebidServer;
-    private final MutableLiveData<String> mAccountId;
-    private final MutableLiveData<String> mConfigId;
+
+    private final MutableLiveData<AdSize> adSize;
+    private final MutableLiveData<Float> bidPrice;
+    private final MutableLiveData<String> adUnitId;
+    private final MutableLiveData<PrebidServer> prebidServer;
+    private final MutableLiveData<String> accountId;
+    private final MutableLiveData<String> configId;
 
     public SettingsViewModel() {
-        mAdSize = new MutableLiveData<>();
-        mBidPrice = new MutableLiveData<>();
-        mAdUnitId = new MutableLiveData<>();
-        mPrebidServer = new MutableLiveData<>();
-        mAccountId = new MutableLiveData<>();
-        mConfigId = new MutableLiveData<>();
+        adSize = new MutableLiveData<>();
+        bidPrice = new MutableLiveData<>();
+        adUnitId = new MutableLiveData<>();
+        prebidServer = new MutableLiveData<>();
+        accountId = new MutableLiveData<>();
+        configId = new MutableLiveData<>();
     }
 
     public LiveData<AdSize> getAdSize() {
-        return mAdSize;
+        return adSize;
     }
 
     public void setAdSize(AdSize adSize) {
-        this.mAdSize.setValue(adSize);
+        this.adSize.setValue(adSize);
     }
 
     public LiveData<Float> getBidPrice() {
-        return mBidPrice;
+        return bidPrice;
     }
 
     public void setBidPrice(float bidPrice) {
-        this.mBidPrice.setValue(bidPrice);
+        this.bidPrice.setValue(bidPrice);
     }
 
     public LiveData<String> getAdUnitId() {
-        return mAdUnitId;
+        return adUnitId;
     }
 
     public void setAdUnitId(String adUnitId) {
-        this.mAdUnitId.setValue(adUnitId);
+        this.adUnitId.setValue(adUnitId);
     }
 
     public LiveData<PrebidServer> getPrebidServer() {
-        return mPrebidServer;
+        return prebidServer;
     }
 
     public void setPrebidServer(PrebidServer prebidServer) {
-        this.mPrebidServer.setValue(prebidServer);
+        this.prebidServer.setValue(prebidServer);
     }
 
     public LiveData<String> getAccountId() {
-        return mAccountId;
+        return accountId;
     }
 
     public void setAccountId(String accountId) {
-        this.mAccountId.setValue(accountId);
+        this.accountId.setValue(accountId);
     }
 
     public LiveData<String> getConfigId() {
-        return mConfigId;
+        return configId;
     }
 
     public void setConfigId(String configId) {
-        this.mConfigId.setValue(configId);
+        this.configId.setValue(configId);
     }
 }

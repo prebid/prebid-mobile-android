@@ -1,20 +1,15 @@
 package org.prebid.mobile.drprebid.ui.adapters;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.model.AdServerValidationResult;
 import org.prebid.mobile.drprebid.model.PrebidServerValidationResult;
 import org.prebid.mobile.drprebid.model.ResultItem;
 import org.prebid.mobile.drprebid.model.SdkValidationResult;
-import org.prebid.mobile.drprebid.ui.viewholders.AdServerValidationViewHolder;
-import org.prebid.mobile.drprebid.ui.viewholders.DividerViewHolder;
-import org.prebid.mobile.drprebid.ui.viewholders.PrebidServerValidationViewHolder;
-import org.prebid.mobile.drprebid.ui.viewholders.SdkValidationViewHolder;
-import org.prebid.mobile.drprebid.ui.viewholders.TestResultViewHolder;
+import org.prebid.mobile.drprebid.ui.viewholders.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +20,10 @@ public class TestResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final int VIEW_TYPE_PREBID_SERVER_RESULTS = 2;
     private static final int VIEW_TYPE_SDK_RESULTS = 3;
 
-    private final List<ResultItem> mItems;
+    private final List<ResultItem> items;
 
     public TestResultsAdapter() {
-        mItems = new ArrayList<>();
+        items = new ArrayList<>();
 
         setupItems();
     }
@@ -50,7 +45,7 @@ public class TestResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemViewType(int position) {
-        ResultItem item = mItems.get(position);
+        ResultItem item = items.get(position);
         if (item instanceof AdServerValidationResult) {
             return VIEW_TYPE_AD_SERVER_RESULTS;
         } else if (item instanceof PrebidServerValidationResult) {
@@ -70,12 +65,12 @@ public class TestResultsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return items.size();
     }
 
     private void setupItems() {
-        mItems.add(new AdServerValidationResult());
-        mItems.add(new PrebidServerValidationResult());
-        mItems.add(new SdkValidationResult());
+        items.add(new AdServerValidationResult());
+        items.add(new PrebidServerValidationResult());
+        items.add(new SdkValidationResult());
     }
 }

@@ -20,37 +20,39 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
-
+import androidx.annotation.NonNull;
+import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.eventhandlers.global.Constants;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
-import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.lang.ref.WeakReference;
 
-import androidx.annotation.NonNull;
-
 public class GamInterstitialEventHandler implements InterstitialEventHandler, GamAdEventListener {
+
     private static final String TAG = GamInterstitialEventHandler.class.getSimpleName();
 
     private static final long TIMEOUT_APP_EVENT_MS = 600;
 
-    private PublisherInterstitialAdWrapper mRequestInterstitial;
+    private PublisherInterstitialAdWrapper requestInterstitial;
 
-    private final WeakReference<Activity> mActivityWeakReference;
-    private final String mGamAdUnitId;
+    private final WeakReference<Activity> activityWeakReference;
+    private final String gamAdUnitId;
 
-    private InterstitialEventListener mInterstitialEventListener;
-    private Handler mAppEventHandler;
+    private InterstitialEventListener interstitialEventListener;
+    private Handler appEventHandler;
 
-    private boolean mIsExpectingAppEvent;
-    private boolean mDidNotifiedBidWin;
+    private boolean isExpectingAppEvent;
+    private boolean didNotifiedBidWin;
 
-    public GamInterstitialEventHandler(Activity activity, String gamAdUnitId) {
-        mActivityWeakReference = new WeakReference<>(activity);
-        mGamAdUnitId = gamAdUnitId;
+    public GamInterstitialEventHandler(
+            Activity activity,
+            String gamAdUnitId
+    ) {
+        activityWeakReference = new WeakReference<>(activity);
+        this.gamAdUnitId = gamAdUnitId;
     }
 
     //region ==================== GAM AppEventsListener Implementation
@@ -61,13 +63,13 @@ public class GamInterstitialEventHandler implements InterstitialEventHandler, Ga
                 handleAppEvent();
                 break;
             case CLOSED:
-                mInterstitialEventListener.onAdClosed();
+                interstitialEventListener.onAdClosed();
                 break;
             case FAILED:
                 handleAdFailure(adEvent.getErrorCode());
                 break;
             case DISPLAYED:
-                mInterstitialEventListener.onAdDisplayed();
+                interstitialEventListener.onAdDisplayed();
                 break;
             case LOADED:
                 primaryAdReceived();
@@ -79,11 +81,13 @@ public class GamInterstitialEventHandler implements InterstitialEventHandler, Ga
     //region ==================== EventHandler Implementation
     @Override
     public void show() {
-        if (mRequestInterstitial != null && mRequestInterstitial.isLoaded()) {
-            mRequestInterstitial.show();
-        }
-        else {
-            mInterstitialEventListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - failed to display ad."));
+        if (requestInterstitial != null && requestInterstitial.isLoaded()) {
+            requestInterstitial.show();
+        } else {
+            interstitialEventListener.onAdFailed(new AdException(
+                    AdException.THIRD_PARTY,
+                    "GAM SDK - failed to display ad."
+            ));
         }
     }
 
@@ -91,27 +95,27 @@ public class GamInterstitialEventHandler implements InterstitialEventHandler, Ga
     public void setInterstitialEventListener(
         @NonNull
             InterstitialEventListener interstitialEventListener) {
-        mInterstitialEventListener = interstitialEventListener;
+        this.interstitialEventListener = interstitialEventListener;
     }
 
     @SuppressLint("MissingPermission")
     @Override
     public void requestAdWithBid(Bid bid) {
-        mIsExpectingAppEvent = false;
-        mDidNotifiedBidWin = false;
+        isExpectingAppEvent = false;
+        didNotifiedBidWin = false;
 
         initPublisherInterstitialAd();
 
         if (bid != null && bid.getPrice() > 0) {
-            mIsExpectingAppEvent = true;
+            isExpectingAppEvent = true;
         }
 
-        if (mRequestInterstitial == null) {
+        if (requestInterstitial == null) {
             handleAdFailure(Constants.ERROR_CODE_INTERNAL_ERROR);
             return;
         }
 
-        mRequestInterstitial.loadAd(bid);
+        requestInterstitial.loadAd(bid);
     }
 
     @Override
@@ -126,75 +130,90 @@ public class GamInterstitialEventHandler implements InterstitialEventHandler, Ga
     //endregion ==================== EventHandler Implementation
 
     private void initPublisherInterstitialAd() {
-        if (mRequestInterstitial != null) {
-            mRequestInterstitial = null;
+        if (requestInterstitial != null) {
+            requestInterstitial = null;
         }
 
-        mRequestInterstitial = PublisherInterstitialAdWrapper.newInstance(mActivityWeakReference.get(), mGamAdUnitId, this);
+        requestInterstitial = PublisherInterstitialAdWrapper.newInstance(
+                activityWeakReference.get(),
+                gamAdUnitId,
+                this
+        );
     }
 
     private void primaryAdReceived() {
-        if (mIsExpectingAppEvent) {
-            if (mAppEventHandler != null) {
+        if (isExpectingAppEvent) {
+            if (appEventHandler != null) {
                 LogUtil.debug(TAG, "primaryAdReceived: AppEventTimer is not null. Skipping timer scheduling.");
                 return;
             }
 
             scheduleTimer();
-        }
-        else if (!mDidNotifiedBidWin) {
-            mInterstitialEventListener.onAdServerWin();
+        } else if (!didNotifiedBidWin) {
+            interstitialEventListener.onAdServerWin();
         }
     }
 
     private void handleAppEvent() {
-        if (!mIsExpectingAppEvent) {
+        if (!isExpectingAppEvent) {
             LogUtil.debug(TAG, "appEventDetected: Skipping event handling. App event is not expected");
             return;
         }
 
         cancelTimer();
-        mIsExpectingAppEvent = false;
-        mDidNotifiedBidWin = true;
-        mInterstitialEventListener.onPrebidSdkWin();
+        isExpectingAppEvent = false;
+        didNotifiedBidWin = true;
+        interstitialEventListener.onPrebidSdkWin();
     }
 
     private void scheduleTimer() {
         cancelTimer();
 
-        mAppEventHandler = new Handler(Looper.getMainLooper());
-        mAppEventHandler.postDelayed(this::handleAppEventTimeout, TIMEOUT_APP_EVENT_MS);
+        appEventHandler = new Handler(Looper.getMainLooper());
+        appEventHandler.postDelayed(this::handleAppEventTimeout, TIMEOUT_APP_EVENT_MS);
     }
 
     private void cancelTimer() {
-        if (mAppEventHandler != null) {
-            mAppEventHandler.removeCallbacksAndMessages(null);
+        if (appEventHandler != null) {
+            appEventHandler.removeCallbacksAndMessages(null);
         }
-        mAppEventHandler = null;
+        appEventHandler = null;
     }
 
     private void handleAppEventTimeout() {
         cancelTimer();
-        mIsExpectingAppEvent = false;
-        mInterstitialEventListener.onAdServerWin();
+        isExpectingAppEvent = false;
+        interstitialEventListener.onAdServerWin();
     }
 
     private void handleAdFailure(int errorCode) {
         switch (errorCode) {
             case Constants.ERROR_CODE_INTERNAL_ERROR:
-                mInterstitialEventListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK encountered an internal error."));
+                interstitialEventListener.onAdFailed(new AdException(
+                        AdException.THIRD_PARTY,
+                        "GAM SDK encountered an internal error."
+                ));
                 break;
             case Constants.ERROR_CODE_INVALID_REQUEST:
-                mInterstitialEventListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - invalid request error."));
+                interstitialEventListener.onAdFailed(new AdException(
+                        AdException.THIRD_PARTY,
+                        "GAM SDK - invalid request error."
+                ));
                 break;
             case Constants.ERROR_CODE_NETWORK_ERROR:
-                mInterstitialEventListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - network error."));
+                interstitialEventListener.onAdFailed(new AdException(
+                        AdException.THIRD_PARTY,
+                        "GAM SDK - network error."
+                ));
                 break;
             case Constants.ERROR_CODE_NO_FILL:
-                mInterstitialEventListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - no fill."));
+                interstitialEventListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - no fill."));
                 break;
             default:
-                mInterstitialEventListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - failed with errorCode: " + errorCode));
+                interstitialEventListener.onAdFailed(new AdException(
+                        AdException.THIRD_PARTY,
+                        "GAM SDK - failed with errorCode: " + errorCode
+                ));
         }
     }
 }

@@ -21,10 +21,10 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import org.prebid.mobile.AdSize
 import org.prebid.mobile.eventhandlers.GamBannerEventHandler
-import org.prebid.mobile.rendering.bidding.data.AdSize
-import org.prebid.mobile.rendering.bidding.enums.VideoPlacementType
-import org.prebid.mobile.rendering.bidding.parallel.BannerView
+import org.prebid.mobile.api.data.VideoPlacementType
+import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.renderingtestapp.utils.OpenRtbConfigs
 
 class FeedGamAdapter(context: Context,
@@ -38,9 +38,14 @@ class FeedGamAdapter(context: Context,
                 *getGamAdSizeArray(AdSize(width, height)))
 
         if (videoView == null) {
-            videoView = BannerView(container.context, configId, eventHandler)
+            videoView = BannerView(
+                container.context,
+                configId,
+                eventHandler
+            )
             videoView?.videoPlacementType = VideoPlacementType.IN_FEED
-            val layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            val layoutParams =
+                FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             layoutParams.gravity = Gravity.CENTER
             videoView?.layoutParams = layoutParams
 

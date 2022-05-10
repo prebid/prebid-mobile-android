@@ -26,8 +26,14 @@ import org.prebid.mobile.prebidkotlindemo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        private const val FIRST_AD_SERVER = "In-App"
+        private const val FIRST_AD_TYPE = "Video Banner"
+    }
+
     private var adType = ""
     private var adServer = ""
+    private var isFirstInit = true
 
     private lateinit var binding: ActivityMainBinding
 
@@ -36,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.btnShowAd.setOnClickListener { showAd() }
         initAdServerSpinner()
+        initDefaultServer()
     }
 
     private fun showAd() {
@@ -54,13 +61,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initAdServerSpinner() {
-        val primaryAdServers = ArrayList(AdTypesRepository.get().keys)
+        val repository = AdTypesRepository.get()
+        val primaryAdServers = ArrayList(repository.keys)
         val spinner = binding.spinnerAdServer
         spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, primaryAdServers)
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, pos: Int, l: Long) {
                 adServer = primaryAdServers[pos]
-                val types = AdTypesRepository.get()[adServer]?.map { it.name } ?: listOf()
+                val types = repository[adServer]?.map { it.name } ?: listOf()
                 binding.btnShowAd.isEnabled = types.isNotEmpty()
                 initAdTypeSpinner(ArrayList(types))
             }
@@ -76,9 +84,27 @@ class MainActivity : AppCompatActivity() {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, pos: Int, l: Long) {
                 binding.btnShowAd.isEnabled = true
                 adType = list[pos]
+                initDefaultAdType()
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>) {}
+        }
+    }
+
+    private fun initDefaultServer() {
+        val indexOfServer = AdTypesRepository.get().keys.indexOf(FIRST_AD_SERVER)
+        if (indexOfServer >= 0) {
+            binding.spinnerAdServer.setSelection(indexOfServer, false)
+        }
+    }
+
+    private fun initDefaultAdType() {
+        if (isFirstInit) {
+            isFirstInit = false
+            val adTypes = AdTypesRepository.get()[FIRST_AD_SERVER]
+            adTypes?.firstOrNull { it.name == FIRST_AD_TYPE }?.let {
+                binding.spinnerAdType.setSelection(adTypes.indexOf(it), false)
+            }
         }
     }
 

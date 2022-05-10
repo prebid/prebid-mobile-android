@@ -3,13 +3,12 @@ package org.prebid.mobile.drprebid.ui.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.webkit.WebView;
-
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import org.prebid.mobile.drprebid.R;
 
 import java.util.Locale;
@@ -18,14 +17,14 @@ public class InfoActivity extends AppCompatActivity {
     public static final String EXTRA_TITLE = "screen_title";
     public static final String EXTRA_HTML_CONTENT = "screen_html_content";
 
-    private WebView mWebView;
+    private WebView webView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
-        mWebView = findViewById(R.id.web_view);
+        webView = findViewById(R.id.web_view);
 
         Bundle extras = getIntent().getExtras();
 
@@ -51,7 +50,7 @@ public class InfoActivity extends AppCompatActivity {
             finish();
         } else {
             String url = String.format(Locale.ENGLISH, "file:///android_asset/%s", htmlFile);
-            mWebView.loadUrl(url);
+            webView.loadUrl(url);
         }
     }
 

@@ -6,67 +6,68 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class SdkValidationViewModel extends ViewModel {
-    private final MutableLiveData<Boolean> mAdUnitRegistered;
-    private final MutableLiveData<Boolean> mPrebidRequestSent;
-    private final MutableLiveData<Boolean> mPrebidResponseReceived;
-    private final MutableLiveData<Boolean> mCreativeContentCached;
-    private final MutableLiveData<Boolean> mAdServerRequestSent;
-    private final MutableLiveData<Boolean> mCreativeServed;
+
+    private final MutableLiveData<Boolean> adUnitRegistered;
+    private final MutableLiveData<Boolean> prebidRequestSent;
+    private final MutableLiveData<Boolean> prebidResponseReceived;
+    private final MutableLiveData<Boolean> creativeContentCached;
+    private final MutableLiveData<Boolean> adServerRequestSent;
+    private final MutableLiveData<Boolean> creativeServed;
 
     public SdkValidationViewModel() {
-        mAdUnitRegistered = new MutableLiveData<>();
-        mPrebidRequestSent = new MutableLiveData<>();
-        mPrebidResponseReceived = new MutableLiveData<>();
-        mCreativeContentCached = new MutableLiveData<>();
-        mAdServerRequestSent = new MutableLiveData<>();
-        mCreativeServed = new MutableLiveData<>();
+        adUnitRegistered = new MutableLiveData<>();
+        prebidRequestSent = new MutableLiveData<>();
+        prebidResponseReceived = new MutableLiveData<>();
+        creativeContentCached = new MutableLiveData<>();
+        adServerRequestSent = new MutableLiveData<>();
+        creativeServed = new MutableLiveData<>();
     }
 
     public LiveData<Boolean> getAdUnitRegistered() {
-        return mAdUnitRegistered;
+        return adUnitRegistered;
     }
 
     public void setAdUnitRegistered(boolean adUnitRegistered) {
-        mAdUnitRegistered.setValue(adUnitRegistered);
+        this.adUnitRegistered.setValue(adUnitRegistered);
     }
 
     public LiveData<Boolean> getPrebidRequestSent() {
-        return mPrebidRequestSent;
+        return prebidRequestSent;
     }
 
     public void setPrebidRequestSent(boolean prebidRequestSent) {
-        mPrebidRequestSent.setValue(prebidRequestSent);
+        this.prebidRequestSent.setValue(prebidRequestSent);
     }
 
     public LiveData<Boolean> getPrebidResponseReceived() {
-        return mPrebidResponseReceived;
+        return prebidResponseReceived;
     }
 
     public void setPrebidResponseReceived(boolean prebidResponseReceived) {
-        mPrebidResponseReceived.setValue(prebidResponseReceived);
+        this.prebidResponseReceived.setValue(prebidResponseReceived);
     }
 
     public LiveData<Boolean> getCreativeContentCached() {
-        return mCreativeContentCached;
+        return creativeContentCached;
     }
 
     public void setCreativeContentCached(boolean creativeContentCached) {
-        mCreativeContentCached.setValue(creativeContentCached);
+        this.creativeContentCached.setValue(creativeContentCached);
     }
 
     public LiveData<Boolean> getAdServerRequestSent() {
-        return mAdServerRequestSent;
+        return adServerRequestSent;
     }
 
     public void setAdServerRequestSent(boolean adServerRequestSent) {
-        mAdServerRequestSent.setValue(adServerRequestSent);
+        this.adServerRequestSent.setValue(adServerRequestSent);
     }
 
     public LiveData<Boolean> getCreativeServed() {
-        return mCreativeServed;
+        return creativeServed;
     }
 
     public void setCreativeServed(@Nullable Boolean creativeServed) {
-        mCreativeServed.setValue(creativeServed);
+        this.creativeServed.setValue(creativeServed);
     }
 }

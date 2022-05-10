@@ -23,9 +23,10 @@ import android.preference.PreferenceManager
 import android.webkit.WebView
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
+import com.applovin.sdk.AppLovinSdk
+import com.applovin.sdk.AppLovinSdkConfiguration
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.renderingtestapp.utils.DemoItemProvider
-import org.prebid.mobile.renderingtestapp.utils.MockServerUtils
 import org.prebid.mobile.renderingtestapp.utils.SourcePicker
 
 
@@ -41,33 +42,35 @@ class InternalTestApplication : MultiDexApplication() {
         super.onCreate()
         instance = this
 
-        PrebidRenderingSettings.setAccountId(getString(R.string.prebid_account_id_prod))
-        PrebidRenderingSettings.logLevel = PrebidRenderingSettings.LogLevel.DEBUG
+        PrebidMobile.setApplicationContext(this)
+        PrebidMobile.setPrebidServerAccountId(getString(R.string.prebid_account_id_prod))
+        PrebidMobile.logLevel = PrebidMobile.LogLevel.DEBUG
+        SourcePicker.setBidServerHost(SourcePicker.PBS_SERVER_DOMAIN)
 
         // Setup mock responses only in mock build
-        val isMock = BuildConfig.FLAVOR == "mock"
-        if (isMock) {
-            setupMockResponses()
-        }
 
-        SourcePicker.useMockServer = isMock
         DemoItemProvider.init(this)
 
         // Only uncomment while testing memory leaks
         checkKeepConsentSettingsFlag()
         WebView.setWebContentsDebuggingEnabled(true)
+
+        initApplovinMax()
     }
 
-    private fun setupMockResponses() {
-        MockServerUtils.clearLogs()
+    private fun initApplovinMax() {
+        AppLovinSdk.getInstance(this).mediationProvider = "max"
+        AppLovinSdk.getInstance(this).initializeSdk { configuration: AppLovinSdkConfiguration -> }
+        AppLovinSdk.getInstance(this).settings.setVerboseLogging(false);
     }
+
 
     private fun enableStrictMode() {
         StrictMode.setThreadPolicy(
-                StrictMode.ThreadPolicy.Builder()
-                        .detectAll()
-                        .penaltyLog()
-                        .build()
+            StrictMode.ThreadPolicy.Builder()
+                .detectAll()
+                .penaltyLog()
+                .build()
         )
         StrictMode.setVmPolicy(VmPolicy.Builder()
                 .detectLeakedSqlLiteObjects()

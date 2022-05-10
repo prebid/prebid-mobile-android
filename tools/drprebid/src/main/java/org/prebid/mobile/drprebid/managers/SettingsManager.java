@@ -2,30 +2,23 @@ package org.prebid.mobile.drprebid.managers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import org.prebid.mobile.drprebid.Constants;
-import org.prebid.mobile.drprebid.model.AdFormat;
-import org.prebid.mobile.drprebid.model.AdServer;
-import org.prebid.mobile.drprebid.model.AdServerSettings;
-import org.prebid.mobile.drprebid.model.AdSize;
-import org.prebid.mobile.drprebid.model.GeneralSettings;
-import org.prebid.mobile.drprebid.model.PrebidServer;
-import org.prebid.mobile.drprebid.model.PrebidServerSettings;
+import org.prebid.mobile.drprebid.model.*;
 
 public class SettingsManager {
     private static final String PREFERENCES_NAME = "dr_prebid_settings";
-    private final SharedPreferences mSharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
-    private static volatile SettingsManager sInstance;
+    private static volatile SettingsManager instance;
     private static final Object mutex = new Object();
 
     public static SettingsManager getInstance(final Context context) {
-        SettingsManager result = sInstance;
+        SettingsManager result = instance;
         if (result == null) {
             synchronized (mutex) {
-                result = sInstance;
+                result = instance;
                 if (result == null) {
-                    sInstance = result = new SettingsManager(context);
+                    instance = result = new SettingsManager(context);
                 }
             }
         }
@@ -34,13 +27,13 @@ public class SettingsManager {
     }
 
     private SettingsManager(Context context) {
-        mSharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
     public GeneralSettings getGeneralSettings() {
         GeneralSettings settings = new GeneralSettings();
 
-        switch (mSharedPreferences.getInt(Constants.Settings.AD_FORMAT, Constants.Settings.AdFormatCodes.BANNER)) {
+        switch (sharedPreferences.getInt(Constants.Settings.AD_FORMAT, Constants.Settings.AdFormatCodes.BANNER)) {
             case Constants.Settings.AdFormatCodes.BANNER:
                 settings.setAdFormat(AdFormat.BANNER);
                 break;
@@ -51,7 +44,7 @@ public class SettingsManager {
                 settings.setAdFormat(AdFormat.BANNER);
         }
 
-        switch (mSharedPreferences.getInt(Constants.Settings.AD_SIZE, Constants.Settings.AdSizeCodes.SIZE_300x250)) {
+        switch (sharedPreferences.getInt(Constants.Settings.AD_SIZE, Constants.Settings.AdSizeCodes.SIZE_300x250)) {
             case Constants.Settings.AdSizeCodes.SIZE_300x250:
                 settings.setAdSize(AdSize.BANNER_300x250);
                 break;
@@ -80,19 +73,15 @@ public class SettingsManager {
     public AdServerSettings getAdServerSettings() {
         AdServerSettings settings = new AdServerSettings();
 
-        switch (mSharedPreferences.getInt(Constants.Settings.AD_SERVER, Constants.Settings.AdServerCodes.GOOGLE_AD_MANAGER)) {
-            case Constants.Settings.AdServerCodes.GOOGLE_AD_MANAGER:
-                settings.setAdServer(AdServer.GOOGLE_AD_MANAGER);
-                break;
-            case Constants.Settings.AdServerCodes.MOPUB:
-                settings.setAdServer(AdServer.MOPUB);
-                break;
-            default:
-                settings.setAdServer(AdServer.MOPUB);
+        if (sharedPreferences.getInt(
+                Constants.Settings.AD_SERVER,
+                Constants.Settings.AdServerCodes.GOOGLE_AD_MANAGER
+        ) == Constants.Settings.AdServerCodes.GOOGLE_AD_MANAGER) {
+            settings.setAdServer(AdServer.GOOGLE_AD_MANAGER);
         }
 
-        settings.setBidPrice(mSharedPreferences.getFloat(Constants.Settings.BID_PRICE, 0.0f));
-        settings.setAdUnitId(mSharedPreferences.getString(Constants.Settings.AD_UNIT_ID, ""));
+        settings.setBidPrice(sharedPreferences.getFloat(Constants.Settings.BID_PRICE, 0.0f));
+        settings.setAdUnitId(sharedPreferences.getString(Constants.Settings.AD_UNIT_ID, ""));
 
         return settings;
     }
@@ -100,7 +89,10 @@ public class SettingsManager {
     public PrebidServerSettings getPrebidServerSettings() {
         PrebidServerSettings settings = new PrebidServerSettings();
 
-        switch (mSharedPreferences.getInt(Constants.Settings.PREBID_SERVER, Constants.Settings.PrebidServerCodes.APPNEXUS)) {
+        switch (sharedPreferences.getInt(
+                Constants.Settings.PREBID_SERVER,
+                Constants.Settings.PrebidServerCodes.APPNEXUS
+        )) {
             case Constants.Settings.PrebidServerCodes.APPNEXUS:
                 settings.setPrebidServer(PrebidServer.APPNEXUS);
                 settings.setCustomPrebidServerUrl("");
@@ -111,51 +103,54 @@ public class SettingsManager {
                 break;
             case Constants.Settings.PrebidServerCodes.CUSTOM:
                 settings.setPrebidServer(PrebidServer.CUSTOM);
-                settings.setCustomPrebidServerUrl(mSharedPreferences.getString(Constants.Settings.PREBID_SERVER_CUSTOM_URL, ""));
+                settings.setCustomPrebidServerUrl(sharedPreferences.getString(
+                        Constants.Settings.PREBID_SERVER_CUSTOM_URL,
+                        ""
+                ));
                 break;
             default:
                 settings.setPrebidServer(PrebidServer.APPNEXUS);
         }
 
-        settings.setAccountId(mSharedPreferences.getString(Constants.Settings.ACCOUNT_ID, ""));
-        settings.setConfigId(mSharedPreferences.getString(Constants.Settings.CONFIG_ID, ""));
+        settings.setAccountId(sharedPreferences.getString(Constants.Settings.ACCOUNT_ID, ""));
+        settings.setConfigId(sharedPreferences.getString(Constants.Settings.CONFIG_ID, ""));
 
         return settings;
     }
 
     public void setAdFormat(AdFormat adFormat) {
-        mSharedPreferences.edit().putInt(Constants.Settings.AD_FORMAT, adFormat.getCode()).apply();
+        sharedPreferences.edit().putInt(Constants.Settings.AD_FORMAT, adFormat.getCode()).apply();
     }
 
     public void setAdSize(AdSize adSize) {
-        mSharedPreferences.edit().putInt(Constants.Settings.AD_SIZE, adSize.getCode()).apply();
+        sharedPreferences.edit().putInt(Constants.Settings.AD_SIZE, adSize.getCode()).apply();
     }
 
     public void setAdServer(AdServer adServer) {
-        mSharedPreferences.edit().putInt(Constants.Settings.AD_SERVER, adServer.getCode()).apply();
+        sharedPreferences.edit().putInt(Constants.Settings.AD_SERVER, adServer.getCode()).apply();
     }
 
     public void setBidPrice(float bidPrice) {
-        mSharedPreferences.edit().putFloat(Constants.Settings.BID_PRICE, bidPrice).apply();
+        sharedPreferences.edit().putFloat(Constants.Settings.BID_PRICE, bidPrice).apply();
     }
 
     public void setAdUnitId(String adUnitId) {
-        mSharedPreferences.edit().putString(Constants.Settings.AD_UNIT_ID, adUnitId).apply();
+        sharedPreferences.edit().putString(Constants.Settings.AD_UNIT_ID, adUnitId).apply();
     }
 
     public void setPrebidServer(PrebidServer prebidServer) {
-        mSharedPreferences.edit().putInt(Constants.Settings.PREBID_SERVER, prebidServer.getCode()).apply();
+        sharedPreferences.edit().putInt(Constants.Settings.PREBID_SERVER, prebidServer.getCode()).apply();
     }
 
     public void setPrebidServerCustomUrl(String customUrl) {
-        mSharedPreferences.edit().putString(Constants.Settings.PREBID_SERVER_CUSTOM_URL, customUrl).apply();
+        sharedPreferences.edit().putString(Constants.Settings.PREBID_SERVER_CUSTOM_URL, customUrl).apply();
     }
 
     public void setAccountId(String accountId) {
-        mSharedPreferences.edit().putString(Constants.Settings.ACCOUNT_ID, accountId).apply();
+        sharedPreferences.edit().putString(Constants.Settings.ACCOUNT_ID, accountId).apply();
     }
 
     public void setConfigId(String configId) {
-        mSharedPreferences.edit().putString(Constants.Settings.CONFIG_ID, configId).apply();
+        sharedPreferences.edit().putString(Constants.Settings.CONFIG_ID, configId).apply();
     }
 }

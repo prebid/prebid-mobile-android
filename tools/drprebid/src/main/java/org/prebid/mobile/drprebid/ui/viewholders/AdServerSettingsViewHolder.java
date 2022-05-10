@@ -1,18 +1,17 @@
 package org.prebid.mobile.drprebid.ui.viewholders;
 
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
 import org.prebid.mobile.drprebid.Constants;
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.managers.SettingsManager;
@@ -27,63 +26,68 @@ import org.prebid.mobile.drprebid.util.HelpScreenUtil;
 import java.util.Locale;
 
 public class AdServerSettingsViewHolder extends RecyclerView.ViewHolder implements SettingsViewHolder, LifecycleOwner {
-    private RadioGroup mAdServerGroup;
-    private TextView mAdUnitIdView;
-    private TextView mBidPriceView;
-    private SettingsViewModel mSettingsViewModel;
+
+    private RadioGroup adServerGroup;
+    private TextView adUnitIdView;
+    private TextView bidPriceView;
+    private SettingsViewModel settingsViewModel;
 
     public AdServerSettingsViewHolder(@NonNull final View itemView) {
         super(itemView);
 
         itemView.findViewById(R.id.button_info).setOnClickListener(v -> {
             HelpScreen aboutScreen = HelpScreenUtil.getAdServerInfo(itemView.getContext());
-            Intent intent = InfoActivity.newIntent(itemView.getContext(), aboutScreen.getTitle(), aboutScreen.getHtmlAsset());
+            Intent intent = InfoActivity.newIntent(
+                    itemView.getContext(),
+                    aboutScreen.getTitle(),
+                    aboutScreen.getHtmlAsset()
+            );
             itemView.getContext().startActivity(intent);
         });
 
-        mBidPriceView = itemView.findViewById(R.id.view_bid_price);
-        mBidPriceView.setOnClickListener(v -> {
+        bidPriceView = itemView.findViewById(R.id.view_bid_price);
+        bidPriceView.setOnClickListener(v -> {
             FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
             InputDialog dialog = InputDialog.newInstance(itemView.getContext().getString(R.string.bid_price),
                     Constants.Params.TYPE_BID_PRICE,
-                    Constants.Params.FORMAT_FLOAT, false);
+                    Constants.Params.FORMAT_FLOAT,
+                    false
+            );
             dialog.show(fragmentManager, InputDialog.TAG);
         });
 
-        mAdUnitIdView = itemView.findViewById(R.id.view_ad_unit_id);
-        mAdUnitIdView.setOnClickListener(v -> {
+        adUnitIdView = itemView.findViewById(R.id.view_ad_unit_id);
+        adUnitIdView.setOnClickListener(v -> {
             FragmentManager fragmentManager = ((AppCompatActivity) itemView.getContext()).getSupportFragmentManager();
             InputDialog dialog = InputDialog.newInstance(itemView.getContext().getString(R.string.ad_unit_id),
                     Constants.Params.TYPE_AD_UNIT_ID,
-                    Constants.Params.FORMAT_TEXT, true);
+                    Constants.Params.FORMAT_TEXT,
+                    true
+            );
             dialog.show(fragmentManager, InputDialog.TAG);
         });
 
-        mAdServerGroup = itemView.findViewById(R.id.group_ad_server);
-        mAdServerGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            switch (checkedId) {
-                case R.id.radio_dfp:
-                    SettingsManager.getInstance(itemView.getContext()).setAdServer(AdServer.GOOGLE_AD_MANAGER);
-                    break;
-                case R.id.radio_mopub:
-                    SettingsManager.getInstance(itemView.getContext()).setAdServer(AdServer.MOPUB);
-                    break;
+        adServerGroup = itemView.findViewById(R.id.group_ad_server);
+        adServerGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.radio_dfp) {
+                SettingsManager.getInstance(itemView.getContext()).setAdServer(AdServer.GOOGLE_AD_MANAGER);
             }
         });
 
-        mSettingsViewModel = ViewModelProviders.of((AppCompatActivity) itemView.getContext()).get(SettingsViewModel.class);
+        settingsViewModel = ViewModelProviders.of((AppCompatActivity) itemView.getContext())
+                                              .get(SettingsViewModel.class);
 
-        mSettingsViewModel.getBidPrice().observe(this, bidPrice -> {
+        settingsViewModel.getBidPrice().observe(this, bidPrice -> {
             if (bidPrice != null) {
-                mBidPriceView.setText(String.format(Locale.ENGLISH, "$ %.2f", bidPrice));
+                bidPriceView.setText(String.format(Locale.ENGLISH, "$ %.2f", bidPrice));
             }
         });
 
-        mSettingsViewModel.getAdUnitId().observe(this, adUnitId -> {
+        settingsViewModel.getAdUnitId().observe(this, adUnitId -> {
             if (!TextUtils.isEmpty(adUnitId)) {
-                mAdUnitIdView.setText(adUnitId);
+                adUnitIdView.setText(adUnitId);
             } else {
-                mAdUnitIdView.setText(R.string.click_to_choose);
+                adUnitIdView.setText(R.string.click_to_choose);
             }
         });
     }
@@ -102,19 +106,13 @@ public class AdServerSettingsViewHolder extends RecyclerView.ViewHolder implemen
     private void fillValues() {
         AdServerSettings settings = SettingsManager.getInstance(itemView.getContext()).getAdServerSettings();
 
-        switch (settings.getAdServer()) {
-            case GOOGLE_AD_MANAGER:
-                mAdServerGroup.check(R.id.radio_dfp);
-                break;
-            case MOPUB:
-                mAdServerGroup.check(R.id.radio_mopub);
-                break;
-        }
+        adServerGroup.check(R.id.radio_dfp);
 
-        mBidPriceView.setText(String.format(Locale.ENGLISH, "$ %.2f", settings.getBidPrice()));
+
+        bidPriceView.setText(String.format(Locale.ENGLISH, "$ %.2f", settings.getBidPrice()));
 
         if (!TextUtils.isEmpty(settings.getAdUnitId())) {
-            mAdUnitIdView.setText(settings.getAdUnitId());
+            adUnitIdView.setText(settings.getAdUnitId());
         }
     }
 }

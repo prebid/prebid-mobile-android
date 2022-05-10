@@ -21,16 +21,14 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
-
+import androidx.annotation.NonNull;
+import org.prebid.mobile.AdSize;
+import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.eventhandlers.global.Constants;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.BannerEventHandler;
 import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener;
-import org.prebid.mobile.rendering.errors.AdException;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
-
-import androidx.annotation.NonNull;
 
 /**
  * This class is compatible with Prebid Rendering SDK v1.10.
@@ -41,33 +39,38 @@ import androidx.annotation.NonNull;
  * Prebid Rendering SDK via BannerEventListener.
  */
 public class GamBannerEventHandler implements BannerEventHandler, GamAdEventListener {
+
     private static final String TAG = GamBannerEventHandler.class.getSimpleName();
 
     private static final long TIMEOUT_APP_EVENT_MS = 600;
 
-    private final Context mApplicationContext;
-    private final AdSize[] mAdSizes;
-    private final String mGamAdUnitId;
+    private final Context applicationContext;
+    private final AdSize[] adSizes;
+    private final String gamAdUnitId;
 
-    private PublisherAdViewWrapper mRequestBanner;
-    private PublisherAdViewWrapper mProxyBanner;
-    private PublisherAdViewWrapper mEmbeddedBanner;
-    private PublisherAdViewWrapper mRecycledBanner;
+    private PublisherAdViewWrapper requestBanner;
+    private PublisherAdViewWrapper proxyBanner;
+    private PublisherAdViewWrapper embeddedBanner;
+    private PublisherAdViewWrapper recycledBanner;
 
-    private BannerEventListener mBannerEventListener;
-    private Handler mAppEventHandler;
+    private BannerEventListener bannerEventListener;
+    private Handler appEventHandler;
 
-    private boolean mIsExpectingAppEvent;
+    private boolean isExpectingAppEvent;
 
     /**
      * @param context     activity or application context.
      * @param gamAdUnitId GAM AdUnitId.
      * @param adSizes     ad sizes for banner.
      */
-    public GamBannerEventHandler(Context context, String gamAdUnitId, AdSize... adSizes) {
-        mApplicationContext = context.getApplicationContext();
-        mGamAdUnitId = gamAdUnitId;
-        mAdSizes = adSizes;
+    public GamBannerEventHandler(
+            Context context,
+            String gamAdUnitId,
+            AdSize... adSizes
+    ) {
+        applicationContext = context.getApplicationContext();
+        this.gamAdUnitId = gamAdUnitId;
+        this.adSizes = adSizes;
     }
 
     public static AdSize[] convertGamAdSize(com.google.android.gms.ads.AdSize... sizes) {
@@ -91,13 +94,13 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
                 handleAppEvent();
                 break;
             case CLOSED:
-                mBannerEventListener.onAdClosed();
+                bannerEventListener.onAdClosed();
                 break;
             case FAILED:
                 handleAdFailure(adEvent.getErrorCode());
                 break;
             case CLICKED:
-                mBannerEventListener.onAdClicked();
+                bannerEventListener.onAdClicked();
                 break;
             case LOADED:
                 primaryAdReceived();
@@ -109,55 +112,54 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
     //region ==================== EventHandler Implementation
     @Override
     public AdSize[] getAdSizeArray() {
-        if (mAdSizes == null) {
+        if (adSizes == null) {
             return new AdSize[0];
         }
 
-        return mAdSizes;
+        return adSizes;
     }
 
     @Override
     public void setBannerEventListener(
         @NonNull
             BannerEventListener bannerViewListener) {
-        mBannerEventListener = bannerViewListener;
+        bannerEventListener = bannerViewListener;
     }
 
     @SuppressLint("MissingPermission")
     @Override
     public void requestAdWithBid(Bid bid) {
-        mIsExpectingAppEvent = false;
+        isExpectingAppEvent = false;
 
-        if (mRequestBanner != null) {
+        if (requestBanner != null) {
             LogUtil.error(TAG, "requestAdWithBid: Failed. Request to primaryAdServer is in progress.");
             return;
         }
 
-        if (mRecycledBanner != null) {
-            mRequestBanner = mRecycledBanner;
-            mRecycledBanner = null;
-        }
-        else {
-            mRequestBanner = createPublisherAdView();
+        if (recycledBanner != null) {
+            requestBanner = recycledBanner;
+            recycledBanner = null;
+        } else {
+            requestBanner = createPublisherAdView();
         }
 
         if (bid != null && bid.getPrice() > 0) {
-            mIsExpectingAppEvent = true;
+            isExpectingAppEvent = true;
         }
 
-        if (mRequestBanner == null) {
+        if (requestBanner == null) {
             handleAdFailure(Constants.ERROR_CODE_INTERNAL_ERROR);
             return;
         }
 
-        mRequestBanner.setManualImpressionsEnabled(true);
-        mRequestBanner.loadAd(bid);
+        requestBanner.setManualImpressionsEnabled(true);
+        requestBanner.loadAd(bid);
     }
 
     @Override
     public void trackImpression() {
-        if (mProxyBanner != null) {
-            mProxyBanner.recordManualImpression();
+        if (proxyBanner != null) {
+            proxyBanner.recordManualImpression();
         }
     }
 
@@ -169,12 +171,12 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
     //endregion ==================== EventHandler Implementation
 
     private PublisherAdViewWrapper createPublisherAdView() {
-        return PublisherAdViewWrapper.newInstance(mApplicationContext, mGamAdUnitId, this, mAdSizes);
+        return PublisherAdViewWrapper.newInstance(applicationContext, gamAdUnitId, this, adSizes);
     }
 
     private void primaryAdReceived() {
-        if (mIsExpectingAppEvent) {
-            if (mAppEventHandler != null) {
+        if (isExpectingAppEvent) {
+            if (appEventHandler != null) {
                 LogUtil.debug(TAG, "primaryAdReceived: AppEventTimer is not null. Skipping timer scheduling.");
                 return;
             }
@@ -182,52 +184,52 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
             scheduleTimer();
         }
         // RequestBanner is null when appEvent was handled before ad was loaded
-        else if (mRequestBanner != null) {
-            PublisherAdViewWrapper gamBannerView = mRequestBanner;
-            mRequestBanner = null;
+        else if (requestBanner != null) {
+            PublisherAdViewWrapper gamBannerView = requestBanner;
+            requestBanner = null;
             recycleCurrentBanner();
-            mEmbeddedBanner = gamBannerView;
-            mBannerEventListener.onAdServerWin(getView(gamBannerView));
+            embeddedBanner = gamBannerView;
+            bannerEventListener.onAdServerWin(getView(gamBannerView));
         }
     }
 
     private void handleAppEvent() {
-        if (!mIsExpectingAppEvent) {
+        if (!isExpectingAppEvent) {
             LogUtil.debug(TAG, "appEventDetected: Skipping event handling. App event is not expected");
             return;
         }
 
         cancelTimer();
-        PublisherAdViewWrapper gamBannerView = mRequestBanner;
-        mRequestBanner = null;
-        mIsExpectingAppEvent = false;
+        PublisherAdViewWrapper gamBannerView = requestBanner;
+        requestBanner = null;
+        isExpectingAppEvent = false;
         recycleCurrentBanner();
-        mProxyBanner = gamBannerView;
-        mBannerEventListener.onPrebidSdkWin();
+        proxyBanner = gamBannerView;
+        bannerEventListener.onPrebidSdkWin();
     }
 
     private void scheduleTimer() {
         cancelTimer();
 
-        mAppEventHandler = new Handler(Looper.getMainLooper());
-        mAppEventHandler.postDelayed(this::handleAppEventTimeout, TIMEOUT_APP_EVENT_MS);
+        appEventHandler = new Handler(Looper.getMainLooper());
+        appEventHandler.postDelayed(this::handleAppEventTimeout, TIMEOUT_APP_EVENT_MS);
     }
 
     private void cancelTimer() {
-        if (mAppEventHandler != null) {
-            mAppEventHandler.removeCallbacksAndMessages(null);
+        if (appEventHandler != null) {
+            appEventHandler.removeCallbacksAndMessages(null);
         }
-        mAppEventHandler = null;
+        appEventHandler = null;
     }
 
     private void handleAppEventTimeout() {
         cancelTimer();
-        PublisherAdViewWrapper gamBannerView = mRequestBanner;
-        mRequestBanner = null;
+        PublisherAdViewWrapper gamBannerView = requestBanner;
+        requestBanner = null;
         recycleCurrentBanner();
-        mEmbeddedBanner = gamBannerView;
-        mIsExpectingAppEvent = false;
-        mBannerEventListener.onAdServerWin(getView(gamBannerView));
+        embeddedBanner = gamBannerView;
+        isExpectingAppEvent = false;
+        bannerEventListener.onAdServerWin(getView(gamBannerView));
     }
 
     private View getView(PublisherAdViewWrapper gamBannerView) {
@@ -235,51 +237,59 @@ public class GamBannerEventHandler implements BannerEventHandler, GamAdEventList
     }
 
     private void handleAdFailure(int errorCode) {
-        mRequestBanner = null;
+        requestBanner = null;
         recycleCurrentBanner();
 
         switch (errorCode) {
             case Constants.ERROR_CODE_INTERNAL_ERROR:
-                mBannerEventListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK encountered an internal error."));
+                bannerEventListener.onAdFailed(new AdException(
+                        AdException.THIRD_PARTY,
+                        "GAM SDK encountered an internal error."
+                ));
                 break;
             case Constants.ERROR_CODE_INVALID_REQUEST:
-                mBannerEventListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - invalid request error."));
+                bannerEventListener.onAdFailed(new AdException(
+                        AdException.THIRD_PARTY,
+                        "GAM SDK - invalid request error."
+                ));
                 break;
             case Constants.ERROR_CODE_NETWORK_ERROR:
-                mBannerEventListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - network error."));
+                bannerEventListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - network error."));
                 break;
             case Constants.ERROR_CODE_NO_FILL:
-                mBannerEventListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - no fill."));
+                bannerEventListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - no fill."));
                 break;
             default:
-                mBannerEventListener.onAdFailed(new AdException(AdException.THIRD_PARTY, "GAM SDK - failed with errorCode: " + errorCode));
+                bannerEventListener.onAdFailed(new AdException(
+                        AdException.THIRD_PARTY,
+                        "GAM SDK - failed with errorCode: " + errorCode
+                ));
         }
     }
 
     private void recycleCurrentBanner() {
-        if (mEmbeddedBanner != null) {
-            mRecycledBanner = mEmbeddedBanner;
-            mEmbeddedBanner = null;
-        }
-        else if (mProxyBanner != null) {
-            mRecycledBanner = mProxyBanner;
-            mProxyBanner = null;
-            mRecycledBanner.setManualImpressionsEnabled(false);
+        if (embeddedBanner != null) {
+            recycledBanner = embeddedBanner;
+            embeddedBanner = null;
+        } else if (proxyBanner != null) {
+            recycledBanner = proxyBanner;
+            proxyBanner = null;
+            recycledBanner.setManualImpressionsEnabled(false);
         }
     }
 
     private void destroyGamViews() {
-        if (mRequestBanner != null) {
-            mRequestBanner.destroy();
+        if (requestBanner != null) {
+            requestBanner.destroy();
         }
-        if (mProxyBanner != null) {
-            mProxyBanner.destroy();
+        if (proxyBanner != null) {
+            proxyBanner.destroy();
         }
-        if (mEmbeddedBanner != null) {
-            mEmbeddedBanner.destroy();
+        if (embeddedBanner != null) {
+            embeddedBanner.destroy();
         }
-        if (mRecycledBanner != null) {
-            mRecycledBanner.destroy();
+        if (recycledBanner != null) {
+            recycledBanner.destroy();
         }
     }
 }

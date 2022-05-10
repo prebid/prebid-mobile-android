@@ -56,31 +56,12 @@
                 tools:text="1.0.0" />
         </TableRow>
 
+
+
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="8dp">
-
-            <TextView
-                android:id="@+id/labelMopub"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/version_tag_mopub"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tvMopubVersion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                tools:text="1.0.0" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/labelGam"
@@ -97,6 +78,27 @@
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 tools:text="1.0.0" />
+        </TableRow>
+
+        <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <TextView
+                    android:id="@+id/labelOmsdk"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/version_tag_omsdk"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"/>
+
+            <TextView
+                    android:id="@+id/tvOmsdkVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    tools:text="1.0.0"/>
         </TableRow>
 
     </TableLayout>

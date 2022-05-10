@@ -40,15 +40,20 @@ public class Signals {
             return value;
         }
 
+        public int getValue() {
+            return value;
+        }
+
     }
+
     /**
      * OpenRTB - API Frameworks
      * <pre>
-    | Value | Description |
-    |-------|-------------|
-    | 1     | VPAID 1.0   |
-    | 2     | VPAID 2.0   |
-    | 3     | MRAID-1     |
+     | Value | Description |
+     |-------|-------------|
+     | 1     | VPAID 1.0   |
+     | 2     | VPAID 2.0   |
+     | 3     | MRAID-1     |
     | 4     | ORMMA       |
     | 5     | MRAID-2     |
     | 6     | MRAID-3     |

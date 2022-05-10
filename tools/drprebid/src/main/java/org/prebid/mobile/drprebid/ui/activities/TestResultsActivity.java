@@ -1,21 +1,15 @@
 package org.prebid.mobile.drprebid.ui.activities;
 
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.gms.ads.MobileAds;
-import com.mopub.common.MoPub;
-import com.mopub.common.SdkConfiguration;
-
 import org.prebid.mobile.drprebid.R;
 import org.prebid.mobile.drprebid.managers.SettingsManager;
-import org.prebid.mobile.drprebid.model.AdServer;
 import org.prebid.mobile.drprebid.model.AdServerSettings;
 import org.prebid.mobile.drprebid.ui.adapters.TestResultsAdapter;
 import org.prebid.mobile.drprebid.ui.viewmodels.AdServerValidationViewModel;
@@ -27,37 +21,31 @@ import org.prebid.mobile.drprebid.validation.SdkTest;
 
 public class TestResultsActivity extends AppCompatActivity {
 
-    private RecyclerView mListView;
+    private RecyclerView listView;
 
-    private AdServerValidationViewModel mAdServerValidationViewModel;
-    private PrebidServerValidationViewModel mDemandValidationViewModel;
-    private SdkValidationViewModel mSdkValidationViewModel;
+    private AdServerValidationViewModel adServerValidationViewModel;
+    private PrebidServerValidationViewModel demandValidationViewModel;
+    private SdkValidationViewModel sdkValidationViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_results);
 
-        mListView = findViewById(R.id.list_results);
+        listView = findViewById(R.id.list_results);
         setupResultsList();
 
-        mAdServerValidationViewModel = ViewModelProviders.of(this).get(AdServerValidationViewModel.class);
-        mDemandValidationViewModel = ViewModelProviders.of(this).get(PrebidServerValidationViewModel.class);
-        mSdkValidationViewModel = ViewModelProviders.of(this).get(SdkValidationViewModel.class);
+        adServerValidationViewModel = ViewModelProviders.of(this).get(AdServerValidationViewModel.class);
+        demandValidationViewModel = ViewModelProviders.of(this).get(PrebidServerValidationViewModel.class);
+        sdkValidationViewModel = ViewModelProviders.of(this).get(SdkValidationViewModel.class);
 
         AdServerSettings adServerSettings = SettingsManager.getInstance(this).getAdServerSettings();
 
-        if (adServerSettings.getAdServer() == AdServer.MOPUB) {
-            initMoPub(adServerSettings.getAdUnitId());
-        } else {
-            initGoogleAdsManager();
-        }
+        initGoogleAdsManager();
+
     }
 
-    private void initMoPub(String adUnitId) {
-        SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(adUnitId).build();
-        MoPub.initializeSdk(this, sdkConfiguration, this::runTests);
-    }
+
 
     private void initGoogleAdsManager() {
         MobileAds.initialize(this.getApplication());
@@ -67,9 +55,9 @@ public class TestResultsActivity extends AppCompatActivity {
     private void setupResultsList() {
         TestResultsAdapter adapter = new TestResultsAdapter();
 
-        mListView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        mListView.setItemAnimator(new DefaultItemAnimator());
-        mListView.setAdapter(adapter);
+        listView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        listView.setItemAnimator(new DefaultItemAnimator());
+        listView.setAdapter(adapter);
     }
 
     private void runTests() {
@@ -80,17 +68,17 @@ public class TestResultsActivity extends AppCompatActivity {
         AdServerTest adServerTest = new AdServerTest(this, new AdServerTest.Listener() {
             @Override
             public void onPrebidKeywordsFoundOnRequest() {
-                mAdServerValidationViewModel.setRequestSent(true);
+                adServerValidationViewModel.setRequestSent(true);
             }
 
             @Override
             public void onPrebidKeywordsNotFoundOnRequest() {
-                mAdServerValidationViewModel.setRequestSent(false);
+                adServerValidationViewModel.setRequestSent(false);
             }
 
             @Override
             public void adServerResponseContainsPrebidCreative(@Nullable Boolean contains) {
-                mAdServerValidationViewModel.setCreativeServed(contains);
+                adServerValidationViewModel.setCreativeServed(contains);
             }
 
             @Override
@@ -106,47 +94,47 @@ public class TestResultsActivity extends AppCompatActivity {
         RealTimeDemandTest demandValidator = new RealTimeDemandTest(this, results -> {
             int totalBids = results.getTotalBids();
 
-            mDemandValidationViewModel.setBidResponseReceivedCount(totalBids);
-            mDemandValidationViewModel.setAverageCpm(results.getAvgEcpm());
-            mDemandValidationViewModel.setAverageResponseTime(results.getAvgResponseTime());
+            demandValidationViewModel.setBidResponseReceivedCount(totalBids);
+            demandValidationViewModel.setAverageCpm(results.getAvgEcpm());
+            demandValidationViewModel.setAverageResponseTime(results.getAvgResponseTime());
 
             runSdkValidationTest();
         });
 
         demandValidator.startTest();
-        mDemandValidationViewModel.setBidRequestsSent(true);
+        demandValidationViewModel.setBidRequestsSent(true);
     }
 
     private void runSdkValidationTest() {
         SdkTest sdkTest = new SdkTest(this, new SdkTest.Listener() {
             @Override
             public void onAdUnitRegistered() {
-                mSdkValidationViewModel.setAdUnitRegistered(true);
+                sdkValidationViewModel.setAdUnitRegistered(true);
             }
 
             @Override
             public void requestToPrebidServerSent(boolean sent) {
-                mSdkValidationViewModel.setPrebidRequestSent(sent);
+                sdkValidationViewModel.setPrebidRequestSent(sent);
             }
 
             @Override
             public void responseFromPrebidServerReceived(boolean received) {
-                mSdkValidationViewModel.setPrebidResponseReceived(received);
+                sdkValidationViewModel.setPrebidResponseReceived(received);
             }
 
             @Override
             public void bidReceivedAndCached(boolean received) {
-                mSdkValidationViewModel.setCreativeContentCached(received);
+                sdkValidationViewModel.setCreativeContentCached(received);
             }
 
             @Override
             public void requestSentToAdServer(String request, String postBody) {
-                mSdkValidationViewModel.setAdServerRequestSent(true);
+                sdkValidationViewModel.setAdServerRequestSent(true);
             }
 
             @Override
             public void adServerResponseContainsPrebidCreative(@Nullable Boolean contains) {
-                mSdkValidationViewModel.setCreativeServed(contains);
+                sdkValidationViewModel.setCreativeServed(contains);
             }
 
             @Override

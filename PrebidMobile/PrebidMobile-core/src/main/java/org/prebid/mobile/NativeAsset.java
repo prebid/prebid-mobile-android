@@ -1,6 +1,9 @@
 package org.prebid.mobile;
 
-abstract class NativeAsset {
+import org.json.JSONObject;
+
+public abstract class NativeAsset {
+
     enum REQUEST_ASSET {
         TITLE,
         IMAGE,
@@ -17,8 +20,6 @@ abstract class NativeAsset {
         return type;
     }
 
-
-
-
+    public abstract JSONObject getJsonObject();
 
 }

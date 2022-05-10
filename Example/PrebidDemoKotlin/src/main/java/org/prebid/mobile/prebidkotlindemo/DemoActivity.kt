@@ -21,6 +21,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.preference.PreferenceManager
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.prebidkotlindemo.databinding.ActivityDemoBinding
 
 class DemoActivity : AppCompatActivity() {
@@ -55,6 +56,7 @@ class DemoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_demo)
 
+        AdTypesRepository.usePrebidServer()
         useFakeGDPR()
         parseArguments()
         initViews()
@@ -64,6 +66,7 @@ class DemoActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         currentAdType.onDestroy?.let { it() }
+        PrebidMobile.setStoredAuctionResponse(null)
     }
 
     private fun parseArguments() {

@@ -16,20 +16,23 @@
 
 package org.prebid.mobile;
 
+import androidx.annotation.WorkerThread;
+
 public interface PrebidNativeAdEventListener {
 
     /**
      * Callback method for Ad's click event
-     * */
+     */
     void onAdClicked();
 
     /**
      * Callback method for Ad's click event
-     * */
+     */
+    @WorkerThread
     void onAdImpression();
 
     /**
      * Callback method for Ad's click event
-     * */
+     */
     void onAdExpired();
 }

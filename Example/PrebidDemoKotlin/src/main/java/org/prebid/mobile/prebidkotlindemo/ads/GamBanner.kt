@@ -10,6 +10,7 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import org.prebid.mobile.AdUnit
 import org.prebid.mobile.BannerAdUnit
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
 
@@ -25,10 +26,12 @@ object GamBanner {
         width: Int,
         height: Int,
         adUnitId: String,
-        configId: String
+        configId: String,
+        storedAuctionResponse: String
     ) {
         val adView = AdManagerAdView(wrapper.context)
         adView.adUnitId = adUnitId
+        PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
 
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {

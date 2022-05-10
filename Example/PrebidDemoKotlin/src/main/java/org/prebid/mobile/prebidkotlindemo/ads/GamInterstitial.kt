@@ -10,6 +10,7 @@ import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
 import org.prebid.mobile.AdUnit
 import org.prebid.mobile.InterstitialAdUnit
+import org.prebid.mobile.PrebidMobile
 
 object GamInterstitial {
 
@@ -17,9 +18,17 @@ object GamInterstitial {
 
     private var adUnit: AdUnit? = null
 
-    fun create(activity: Activity, autoRefreshTime: Int, adUnitId: String, configId: String) {
+    fun create(
+        activity: Activity,
+        autoRefreshTime: Int,
+        adUnitId: String,
+        configId: String,
+        storedAuctionResponse: String
+    ) {
         val requestBuilder = AdManagerAdRequest.Builder()
         val request = requestBuilder.build()
+        PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
+
         adUnit = InterstitialAdUnit(configId)
         adUnit?.setAutoRefreshPeriodMillis(autoRefreshTime)
         adUnit?.fetchDemand(request) { resultCode ->
@@ -56,6 +65,7 @@ object GamInterstitial {
 
     fun destroy() {
         adUnit?.stopAutoRefresh()
+
         adUnit = null
     }
 

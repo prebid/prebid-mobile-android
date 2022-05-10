@@ -19,17 +19,15 @@ package org.prebid.mobile.eventhandlers;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
-
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.AdSize;
 import org.prebid.mobile.eventhandlers.global.Constants;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -38,53 +36,54 @@ import org.robolectric.annotation.Config;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class PublisherAdViewWrapperTest {
-    private PublisherAdViewWrapper mPublisherAdViewWrapper;
+    private PublisherAdViewWrapper publisherAdViewWrapper;
 
-    @Mock
-    GamAdEventListener mMockListener;
+    @Mock GamAdEventListener mockListener;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         Context context = Robolectric.buildActivity(Activity.class).create().get();
 
-        mPublisherAdViewWrapper = PublisherAdViewWrapper.newInstance(context, "124", mMockListener, new AdSize(300, 250));
+        publisherAdViewWrapper = PublisherAdViewWrapper.newInstance(context, "124", mockListener, new AdSize(300, 250));
     }
 
     @Test
     public void newInstance_WithNullContext_NullValueReturned() {
-        PublisherAdViewWrapper publisherAdViewWrapper = PublisherAdViewWrapper
-            .newInstance(null, "124", mMockListener, new AdSize(300, 250));
+        PublisherAdViewWrapper publisherAdViewWrapper = PublisherAdViewWrapper.newInstance(
+                null,
+                "124",
+                mockListener,
+                new AdSize(300, 250)
+        );
 
         assertNull(publisherAdViewWrapper);
     }
 
     @Test
     public void onAppEvent_WithValidNameAndExpectedAppEvent_NotifyAppEventListener() {
-        mPublisherAdViewWrapper.onAppEvent(Constants.APP_EVENT, "");
+        publisherAdViewWrapper.onAppEvent(Constants.APP_EVENT, "");
 
-        verify(mMockListener, times(1)).onEvent(AdEvent.APP_EVENT_RECEIVED);
+        verify(mockListener, times(1)).onEvent(AdEvent.APP_EVENT_RECEIVED);
     }
 
     @Test
     public void onAppEvent_WithInvalidNameAndExpectedAppEvent_DoNothing() {
-        mPublisherAdViewWrapper.onAppEvent("test", "");
+        publisherAdViewWrapper.onAppEvent("test", "");
 
-        verifyZeroInteractions(mMockListener);
+        verifyZeroInteractions(mockListener);
     }
 
     @Test
     public void onGamAdClosed_NotifyBannerEventCloseListener() {
-        mPublisherAdViewWrapper.onAdClosed();
+        publisherAdViewWrapper.onAdClosed();
 
-        verify(mMockListener, times(1)).onEvent(eq(AdEvent.CLOSED));
+        verify(mockListener, times(1)).onEvent(eq(AdEvent.CLOSED));
     }
 
     @Test
@@ -93,23 +92,23 @@ public class PublisherAdViewWrapperTest {
 
         for (int i = 0; i < wantedNumberOfInvocations; i++) {
             LoadAdError loadAdError = new LoadAdError(i, "", "", null, null);
-            mPublisherAdViewWrapper.onAdFailedToLoad(loadAdError);
+            publisherAdViewWrapper.onAdFailedToLoad(loadAdError);
         }
-        verify(mMockListener, times(wantedNumberOfInvocations)).onEvent(eq(AdEvent.FAILED));
+        verify(mockListener, times(wantedNumberOfInvocations)).onEvent(eq(AdEvent.FAILED));
     }
 
     @Test
     public void onGamAdOpened_NotifyBannerEventClickedListener() {
-        mPublisherAdViewWrapper.onAdOpened();
+        publisherAdViewWrapper.onAdOpened();
 
-        verify(mMockListener, times(1)).onEvent(AdEvent.CLICKED);
+        verify(mockListener, times(1)).onEvent(AdEvent.CLICKED);
     }
 
     @Test
     public void onGamAdLoadedAppEventExpected_NotifyLoadedListener() {
-        mPublisherAdViewWrapper.onAdLoaded();
+        publisherAdViewWrapper.onAdLoaded();
 
-        verify(mMockListener, times(1)).onEvent(AdEvent.LOADED);
+        verify(mockListener, times(1)).onEvent(AdEvent.LOADED);
     }
 
     @Test
@@ -117,9 +116,9 @@ public class PublisherAdViewWrapperTest {
         final Activity activity = Robolectric.buildActivity(Activity.class).create().get();
         AdManagerAdView publisherAdView = new AdManagerAdView(activity);
 
-        WhiteBox.field(PublisherAdViewWrapper.class, "mAdView").set(mPublisherAdViewWrapper, publisherAdView);
+        WhiteBox.field(PublisherAdViewWrapper.class, "adView").set(publisherAdViewWrapper, publisherAdView);
 
-        final View view = mPublisherAdViewWrapper.getView();
+        final View view = publisherAdViewWrapper.getView();
 
         assertEquals(publisherAdView, view);
     }

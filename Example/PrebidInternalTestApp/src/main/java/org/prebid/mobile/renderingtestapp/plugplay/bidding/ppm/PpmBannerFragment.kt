@@ -20,15 +20,16 @@ import android.os.Bundle
 import android.view.View
 import kotlinx.android.synthetic.main.events_bids.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
-import org.prebid.mobile.rendering.bidding.data.AdSize
-import org.prebid.mobile.rendering.bidding.listeners.BannerViewListener
-import org.prebid.mobile.rendering.bidding.parallel.BannerView
-import org.prebid.mobile.rendering.errors.AdException
+import org.prebid.mobile.AdSize
+import org.prebid.mobile.api.rendering.listeners.BannerViewListener
+import org.prebid.mobile.api.rendering.BannerView
+import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 
-open class PpmBannerFragment : AdFragment(), BannerViewListener {
+open class PpmBannerFragment : AdFragment(),
+    BannerViewListener {
     private val TAG = PpmBannerFragment::class.java.simpleName
 
     override val layoutRes = R.layout.fragment_bidding_banner
@@ -52,7 +53,11 @@ open class PpmBannerFragment : AdFragment(), BannerViewListener {
     }
 
     override fun initAd(): Any? {
-        bannerView = BannerView(requireContext(), configId, AdSize(width, height))
+        bannerView = BannerView(
+            requireContext(),
+            configId,
+            AdSize(width, height)
+        )
         bannerView?.setAutoRefreshDelay(refreshDelay)
         bannerView?.setBannerListener(this)
         viewContainer.addView(bannerView)

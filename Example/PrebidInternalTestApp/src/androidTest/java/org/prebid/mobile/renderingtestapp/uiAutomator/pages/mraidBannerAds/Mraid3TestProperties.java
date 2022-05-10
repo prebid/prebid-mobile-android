@@ -17,21 +17,17 @@
 package org.prebid.mobile.renderingtestapp.uiAutomator.pages.mraidBannerAds;
 
 import android.view.KeyEvent;
-
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.BySelector;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.Until;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class Mraid3TestProperties extends MraidBasicPage {
 
@@ -52,13 +48,13 @@ public class Mraid3TestProperties extends MraidBasicPage {
 
     public Mraid3TestProperties checkMraidEnv() throws JSONException {
         JSONObject envJson = new JSONObject();
-        envJson.put("version", PrebidRenderingSettings.MRAID_VERSION);
-        envJson.put("sdk", PrebidRenderingSettings.SDK_NAME);
-        envJson.put("sdkVersion", PrebidRenderingSettings.SDK_VERSION);
+        envJson.put("version", PrebidMobile.MRAID_VERSION);
+        envJson.put("sdk", PrebidMobile.SDK_NAME);
+        envJson.put("sdkVersion", PrebidMobile.SDK_VERSION);
         envJson.put("appId", AppInfoManager.getPackageName());
         envJson.put("ifa", AdIdManager.getAdId());
         envJson.put("limitAdTracking", AdIdManager.isLimitAdTrackingEnabled());
-        envJson.put("coppa", PrebidRenderingSettings.isCoppaEnabled);
+        envJson.put("coppa", PrebidMobile.isCoppaEnabled);
 
         String viewText = clearStringFromWhitespace(device.wait(Until.findObject(Locators.envContainer), TIMEOUT).getText());
         assertEquals(envJson.toString(), viewText);

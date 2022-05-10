@@ -20,17 +20,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.view.View;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
+import org.prebid.mobile.AdSize;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.bidding.listeners.BannerEventListener;
-import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -38,27 +37,22 @@ import org.robolectric.annotation.Config;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 21)
 public class GamBannerEventHandlerTest {
+
     private static final String GAM_AD_UNIT_ID = "12345678";
-    private static final AdSize GAM_AD_SIZE = new AdSize(350 ,50);
+    private static final AdSize GAM_AD_SIZE = new AdSize(350, 50);
 
-    private GamBannerEventHandler mBannerEventHandler;
+    private GamBannerEventHandler bannerEventHandler;
 
-    @Mock private BannerEventListener mMockBannerEventListener;
-    @Mock private Handler mMockAppEventHandler;
+    @Mock private BannerEventListener mockBannerEventListener;
+    @Mock private Handler mockAppEventHandler;
 
     @Before
     public void setup() {
@@ -66,25 +60,25 @@ public class GamBannerEventHandlerTest {
 
         Context context = Robolectric.buildActivity(Activity.class).get();
 
-        mBannerEventHandler = new GamBannerEventHandler(context, GAM_AD_UNIT_ID, GAM_AD_SIZE);
-        mBannerEventHandler.setBannerEventListener(mMockBannerEventListener);
+        bannerEventHandler = new GamBannerEventHandler(context, GAM_AD_UNIT_ID, GAM_AD_SIZE);
+        bannerEventHandler.setBannerEventListener(mockBannerEventListener);
     }
 
     @Test
     public void onAppEventWithValidNameAndExpectedAppEvent_HandleAppEvent() {
         changeExpectingAppEventStatus(true);
 
-        mBannerEventHandler.onEvent(AdEvent.APP_EVENT_RECEIVED);
+        bannerEventHandler.onEvent(AdEvent.APP_EVENT_RECEIVED);
 
-        verify(mMockBannerEventListener, times(1)).onPrebidSdkWin();
+        verify(mockBannerEventListener, times(1)).onPrebidSdkWin();
         assertFalse(getExpectingAppEventStatus());
     }
 
     @Test
     public void onGamAdClosed_NotifyBannerEventCloseListener() {
-        mBannerEventHandler.onEvent(AdEvent.CLOSED);
+        bannerEventHandler.onEvent(AdEvent.CLOSED);
 
-        verify(mMockBannerEventListener, times(1)).onAdClosed();
+        verify(mockBannerEventListener, times(1)).onAdClosed();
     }
 
     @Test
@@ -94,25 +88,25 @@ public class GamBannerEventHandlerTest {
         for (int i = 0; i < wantedNumberOfInvocations; i++) {
             final AdEvent adEvent = AdEvent.FAILED;
             adEvent.setErrorCode(i);
-            mBannerEventHandler.onEvent(adEvent);
+            bannerEventHandler.onEvent(adEvent);
         }
-        verify(mMockBannerEventListener, times(wantedNumberOfInvocations)).onAdFailed(any(AdException.class));
+        verify(mockBannerEventListener, times(wantedNumberOfInvocations)).onAdFailed(any(AdException.class));
     }
 
     @Test
     public void onGamAdOpened_NotifyBannerEventClickedListener() {
-        mBannerEventHandler.onEvent(AdEvent.CLICKED);
+        bannerEventHandler.onEvent(AdEvent.CLICKED);
 
-        verify(mMockBannerEventListener, times(1)).onAdClicked();
+        verify(mockBannerEventListener, times(1)).onAdClicked();
     }
 
     @Test
     public void onGamAdLoadedAppEventExpected_ScheduleAppEventHandler() {
         changeExpectingAppEventStatus(true);
 
-        mBannerEventHandler.onEvent(AdEvent.LOADED);
+        bannerEventHandler.onEvent(AdEvent.LOADED);
 
-        assertNotNull(WhiteBox.getInternalState(mBannerEventHandler, "mAppEventHandler"));
+        assertNotNull(WhiteBox.getInternalState(bannerEventHandler, "appEventHandler"));
     }
 
     @Test
@@ -123,28 +117,28 @@ public class GamBannerEventHandlerTest {
         final View mockView = mock(View.class);
         when(mockPublisherAdView.getView()).thenReturn(mockView);
 
-        WhiteBox.field(GamBannerEventHandler.class, "mRequestBanner").set(mBannerEventHandler, mockPublisherAdView);
+        WhiteBox.field(GamBannerEventHandler.class, "requestBanner").set(bannerEventHandler, mockPublisherAdView);
 
-        mBannerEventHandler.onEvent(AdEvent.LOADED);
+        bannerEventHandler.onEvent(AdEvent.LOADED);
 
-        verify(mMockBannerEventListener, times(1)).onAdServerWin(eq(mockView));
+        verify(mockBannerEventListener, times(1)).onAdServerWin(eq(mockView));
     }
 
     @Test
     public void onAppEventTimeout_NotifyBannerEventOnAdServerWin() throws Exception {
-        WhiteBox.method(GamBannerEventHandler.class, "handleAppEventTimeout").invoke(mBannerEventHandler);
+        WhiteBox.method(GamBannerEventHandler.class, "handleAppEventTimeout").invoke(bannerEventHandler);
 
-        verify(mMockBannerEventListener, times(1)).onAdServerWin(any(View.class));
+        verify(mockBannerEventListener, times(1)).onAdServerWin(any());
     }
 
     @Test
     public void destroy_CancelTimer() throws IllegalAccessException {
         // by default apEventHandler is null if not scheduled
-        WhiteBox.field(GamBannerEventHandler.class, "mAppEventHandler").set(mBannerEventHandler, mMockAppEventHandler);
+        WhiteBox.field(GamBannerEventHandler.class, "appEventHandler").set(bannerEventHandler, mockAppEventHandler);
 
-        mBannerEventHandler.destroy();
+        bannerEventHandler.destroy();
 
-        verify(mMockAppEventHandler, times(1)).removeCallbacksAndMessages(null);
+        verify(mockAppEventHandler, times(1)).removeCallbacksAndMessages(null);
     }
 
     @Test
@@ -155,25 +149,25 @@ public class GamBannerEventHandlerTest {
 
         when(mockBid.getPrebid()).thenReturn(mockPrebid);
         when(mockBid.getPrice()).thenReturn(0.2);
-        mBannerEventHandler.requestAdWithBid(mockBid);
+        bannerEventHandler.requestAdWithBid(mockBid);
         assertTrue(getExpectingAppEventStatus());
 
         when(mockBid.getPrice()).thenReturn(0.0);
-        mBannerEventHandler.requestAdWithBid(mockBid);
+        bannerEventHandler.requestAdWithBid(mockBid);
         assertFalse(getExpectingAppEventStatus());
 
-        mBannerEventHandler.requestAdWithBid(null);
+        bannerEventHandler.requestAdWithBid(null);
         assertFalse(getExpectingAppEventStatus());
     }
 
     @Test
     public void convertGamAdSize_ReturnPrebidSizesArray() {
         AdSize[] prebidSizes = GamBannerEventHandler.convertGamAdSize(com.google.android.gms.ads.AdSize.FLUID,
-                                                                      com.google.android.gms.ads.AdSize.BANNER);
-        assertEquals(com.google.android.gms.ads.AdSize.FLUID.getWidth(), prebidSizes[0].width);
-        assertEquals(com.google.android.gms.ads.AdSize.FLUID.getHeight(), prebidSizes[0].height);
-        assertEquals(com.google.android.gms.ads.AdSize.BANNER.getWidth(), prebidSizes[1].width);
-        assertEquals(com.google.android.gms.ads.AdSize.BANNER.getHeight(), prebidSizes[1].height);
+                com.google.android.gms.ads.AdSize.BANNER);
+        assertEquals(com.google.android.gms.ads.AdSize.FLUID.getWidth(), prebidSizes[0].getWidth());
+        assertEquals(com.google.android.gms.ads.AdSize.FLUID.getHeight(), prebidSizes[0].getHeight());
+        assertEquals(com.google.android.gms.ads.AdSize.BANNER.getWidth(), prebidSizes[1].getWidth());
+        assertEquals(com.google.android.gms.ads.AdSize.BANNER.getHeight(), prebidSizes[1].getHeight());
     }
 
     @Test
@@ -183,10 +177,10 @@ public class GamBannerEventHandlerTest {
     }
 
     private void changeExpectingAppEventStatus(boolean status) {
-        WhiteBox.setInternalState(mBannerEventHandler, "mIsExpectingAppEvent", status);
+        WhiteBox.setInternalState(bannerEventHandler, "isExpectingAppEvent", status);
     }
 
     private boolean getExpectingAppEventStatus() {
-        return WhiteBox.getInternalState(mBannerEventHandler, "mIsExpectingAppEvent");
+        return WhiteBox.getInternalState(bannerEventHandler, "isExpectingAppEvent");
     }
 }

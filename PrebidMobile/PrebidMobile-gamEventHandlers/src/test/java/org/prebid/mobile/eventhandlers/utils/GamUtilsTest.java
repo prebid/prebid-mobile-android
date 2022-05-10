@@ -16,36 +16,24 @@
 
 package org.prebid.mobile.eventhandlers.utils;
 
+import android.os.Bundle;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.rendering.bidding.data.FetchDemandResult;
-import org.prebid.mobile.rendering.bidding.data.NativeFetchDemandResult;
-import org.prebid.mobile.rendering.bidding.data.bid.Bid;
-import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.bidding.data.ntv.NativeAd;
-import org.prebid.mobile.rendering.bidding.data.ntv.NativeAdParser;
-import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
-import org.prebid.mobile.rendering.bidding.listeners.NativeAdCallback;
-import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.CacheManager;
+import org.prebid.mobile.NativeAdUnit;
+import org.prebid.mobile.PrebidNativeAd;
+import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.eq;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
@@ -93,104 +81,37 @@ public class GamUtilsTest {
     }
 
     @Test
-    public void findNativeAd_customTemplate_adIsNull_DoNothing() {
-        final NativeAdCallback mockCallback = mock(NativeAdCallback.class);
-        final NativeCustomFormatAd customTemplateAd = null;
-        GamUtils.findNativeAd(customTemplateAd, mockCallback);
+    public void nativeAdProvider_putExtrasWithCacheId_returnNativeAd() {
+        String cacheId = CacheManager.save(getNativeAdContent());
+        Bundle extras = new Bundle();
+        extras.putString(NativeAdUnit.BUNDLE_KEY_CACHE_ID, cacheId);
 
-        verifyZeroInteractions(mockCallback);
+        PrebidNativeAd prebidNativeAd = NativeAdProvider.getNativeAd(extras);
+        assertNotNull(prebidNativeAd);
     }
 
     @Test
-    public void findNativeAd_customTemplate_validAdNoBidResponse_InvokeCallbackWithNull() {
-        NativeAdCallback mockCallback = mock(NativeAdCallback.class);
-        NativeCustomFormatAd mockCustomTemplateAd = mock(NativeCustomFormatAd.class);
-
-        GamUtils.findNativeAd(mockCustomTemplateAd, mockCallback);
-
-        verify(mockCallback).onNativeAdReceived(eq(null));
-    }
-
-    @Test
-    public void findNativeAd_customTemplate_validAdWithBidResponse_InvokeCallbackWithNativeAd()
-    throws InvocationTargetException, IllegalAccessException {
-        final BidResponseCache instance = BidResponseCache.getInstance();
-        final BidResponse mockBidResponse = mock(BidResponse.class);
-        final Bid mockBid = mock(Bid.class);
-        final String adm = "";
-        final NativeAd expectedNativeAd = new NativeAdParser().parse(adm);
-
-        NativeAdCallback mockCallback = mock(NativeAdCallback.class);
-        NativeCustomFormatAd mockCustomTemplateAd = mock(NativeCustomFormatAd.class);
-        when(mockCustomTemplateAd.getText("hb_cache_id_local")).thenReturn("123");
-
-        when(mockBidResponse.getId()).thenReturn("123");
-        when(mockBid.getAdm()).thenReturn(adm);
-        when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
-
-        WhiteBox.method(BidResponseCache.class, "putBidResponse", BidResponse.class).invoke(instance, mockBidResponse);
-
-        GamUtils.findNativeAd(mockCustomTemplateAd, mockCallback);
-
-        verify(mockCallback).onNativeAdReceived(eq(expectedNativeAd));
-    }
-
-    @Test
-    public void findNativeAd_unifiedAd_adIsNull_DoNothing() {
-        final NativeAdCallback mockCallback = mock(NativeAdCallback.class);
-        final com.google.android.gms.ads.nativead.NativeAd ad = null;
-        GamUtils.findNativeAd(ad, mockCallback);
-
-        verifyZeroInteractions(mockCallback);
-    }
-
-    @Test
-    public void findNativeAd_unifiedAd_validAdNoBidResponse_InvokeCallbackWithNull() {
-        NativeAdCallback mockCallback = mock(NativeAdCallback.class);
-        com.google.android.gms.ads.nativead.NativeAd mockAd = mock(com.google.android.gms.ads.nativead.NativeAd.class);
-
-        GamUtils.findNativeAd(mockAd, mockCallback);
-
-        verify(mockCallback).onNativeAdReceived(eq(null));
-    }
-
-    @Test
-    public void findNativeAd_unifiedAd_validAdWithBidResponse_InvokeCallbackWithNativeAd()
-    throws InvocationTargetException, IllegalAccessException {
-        final BidResponseCache instance = BidResponseCache.getInstance();
-        final BidResponse mockBidResponse = mock(BidResponse.class);
-        final Bid mockBid = mock(Bid.class);
-        final String adm = "";
-        final NativeAd expectedNativeAd = new NativeAdParser().parse(adm);
-
-        NativeAdCallback mockCallback = mock(NativeAdCallback.class);
-        com.google.android.gms.ads.nativead.NativeAd mockAd = mock(com.google.android.gms.ads.nativead.NativeAd.class);
-        when(mockAd.getCallToAction()).thenReturn("123");
-
-        when(mockBidResponse.getId()).thenReturn("123");
-        when(mockBid.getAdm()).thenReturn(adm);
-        when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
-
-        WhiteBox.method(BidResponseCache.class, "putBidResponse", BidResponse.class).invoke(instance, mockBidResponse);
-
-        GamUtils.findNativeAd(mockAd, mockCallback);
-
-        verify(mockCallback).onNativeAdReceived(eq(expectedNativeAd));
+    public void nativeAdProvider_putEmptyExtras_returnNull() {
+        Bundle extras = new Bundle();
+        PrebidNativeAd prebidNativeAd = NativeAdProvider.getNativeAd(extras);
+        assertNull(prebidNativeAd);
     }
 
     @Test
     public void prepare_AddReservedKeys() {
-        BidResponse bidResponse = mock(BidResponse.class);
         final AdManagerAdRequest publisherAdRequest = new AdManagerAdRequest.Builder().build();
-        final NativeFetchDemandResult fetchDemandResult = new NativeFetchDemandResult(FetchDemandResult.SUCCESS, bidResponse);
-        final HashMap<String, String> keyWordsMap = new HashMap<>();
-        keyWordsMap.put("key", "value");
-        fetchDemandResult.setKeyWordsMap(keyWordsMap);
+        Bundle extras = new Bundle();
+        extras.putString("key1", "param1");
+        extras.putString("key2", "param2");
+        extras.putString("key3", "param3");
+        extras.putString(NativeAdUnit.BUNDLE_KEY_CACHE_ID, "param4");
 
-        GamUtils.prepare(publisherAdRequest, fetchDemandResult);
+        GamUtils.prepare(publisherAdRequest, extras);
 
-        assertEquals(1, GamUtils.RESERVED_KEYS.size());
-        assertEquals("[key]", GamUtils.RESERVED_KEYS.toString());
+        Bundle actualTargeting = publisherAdRequest.getCustomTargeting();
+
+        assertEquals(3, actualTargeting.size());
+        assertEquals("Bundle[{key1=param1, key2=param2, key3=param3}]", actualTargeting.toString());
     }
 
     @Test
@@ -216,4 +137,9 @@ public class GamUtilsTest {
         assertTrue(request.getCustomTargeting().containsKey("Key"));
         Assert.assertEquals("Value", request.getCustomTargeting().get("Key"));
     }
+
+    private String getNativeAdContent() {
+        return "{\"id\":\"test-bid-id-1\",\"impid\":\"2CA244FB-489F-486C-A314-D62079D49129\",\"price\":0.1,\"adm\":\"{ \\\"assets\\\": [{ \\\"required\\\": 1, \\\"title\\\": { \\\"text\\\": \\\"OpenX (Title)\\\" } }, { \\\"required\\\": 1, \\\"img\\\": { \\\"type\\\": 1, \\\"url\\\": \\\"https:\\/\\/www.saashub.com\\/images\\/app\\/service_logos\\/5\\/1df363c9a850\\/large.png?1525414023\\\" } }, { \\\"required\\\": 1, \\\"img\\\": { \\\"type\\\": 3, \\\"url\\\": \\\"https:\\/\\/ssl-i.cdn.openx.com\\/mobile\\/demo-creatives\\/mobile-demo-banner-640x100.png\\\" } }, { \\\"required\\\": 1, \\\"data\\\": { \\\"type\\\": 1, \\\"value\\\": \\\"OpenX (Brand)\\\" } }, { \\\"required\\\": 1, \\\"data\\\": { \\\"type\\\": 2, \\\"value\\\": \\\"Learn all about this awesome story of someone using out OpenX SDK.\\\" } }, { \\\"required\\\": 1, \\\"data\\\": { \\\"type\\\": 12, \\\"value\\\": \\\"Click here to visit our site!\\\" } } ], \\\"link\\\":{ \\\"url\\\": \\\"https:\\/\\/www.openx.com\\/\\\", \\\"clicktrackers\\\":[\\\"https:\\/\\/10.0.2.2:8000\\/events\\/click\\/root\\/url\\\"] }, \\\"eventtrackers\\\":[ { \\\"event\\\":1, \\\"method\\\":1, \\\"url\\\":\\\"https:\\/\\/10.0.2.2:8000\\/events\\/tracker\\/impression\\\" }, { \\\"event\\\":2, \\\"method\\\":1, \\\"url\\\":\\\"https:\\/\\/10.0.2.2:8000\\/events\\/tracker\\/mrc50\\\" }, { \\\"event\\\":3, \\\"method\\\":1, \\\"url\\\":\\\"https:\\/\\/10.0.2.2:8000\\/events\\/tracker\\/mrc100\\\" },{\\\"event\\\":555,\\\"method\\\":2,\\\"url\\\":\\\"http:\\/\\/10.0.2.2:8002\\/static\\/omid-validation-verification-script-v1-ios-video.js\\\",\\\"ext\\\":{\\\"vendorKey\\\":\\\"iabtechlab.com-omid\\\",\\\"verification_parameters\\\":\\\"iabtechlab-openx\\\"}} ] }\",\"adid\":\"test-ad-id-12345\",\"adomain\":[\"openx.com\"],\"crid\":\"test-creative-id-1\",\"w\":300,\"h\":250,\"ext\":{\"prebid\":{\"cache\":{\"key\":\"\",\"url\":\"\",\"bids\":{\"url\":\"10.0.2.2:8000\\/cache?uuid=native-default-example\",\"cacheId\":\"native-default-example\"}},\"targeting\":{\"hb_bidder\":\"openx\",\"hb_bidder_openx\":\"openx\",\"hb_cache_host\":\"10.0.2.2:8000\",\"hb_cache_host_openx\":\"10.0.2.2:8000\",\"hb_cache_id\":\"native-default-example\",\"hb_cache_id_openx\":\"native-default-example\",\"hb_cache_path\":\"\\/cache\",\"hb_cache_path_openx\":\"\\/cache\",\"hb_env\":\"mobile-app\",\"hb_env_openx\":\"mobile-app\",\"hb_pb\":\"0.10\",\"hb_pb_openx\":\"0.10\",\"hb_size\":\"300x250\",\"hb_size_openx\":\"300x250\"},\"type\":\"native\",\"video\":{\"duration\":0,\"primary_category\":\"\"}},\"bidder\":{\"ad_ox_cats\":[2],\"agency_id\":\"agency_10\",\"brand_id\":\"brand_10\",\"buyer_id\":\"buyer_10\",\"matching_ad_id\":{\"campaign_id\":1,\"creative_id\":3,\"placement_id\":2},\"next_highest_bid_price\":0.099}}}";
+    }
+
 }

@@ -24,21 +24,20 @@ import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 import android.webkit.WebView
+import com.applovin.sdk.AppLovinSdk
+import com.applovin.sdk.AppLovinSdkConfiguration
 import com.google.android.gms.ads.MobileAds
-import com.mopub.common.MoPub
-import com.mopub.common.SdkConfiguration
-import com.mopub.common.SdkInitializationListener
-import com.mopub.common.logging.MoPubLog
-import org.prebid.mobile.Host
+import com.google.android.gms.ads.RequestConfiguration
+
 import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.rendering.sdk.PrebidRenderingSettings
 
 class CustomApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        initMopubSDK()
         initPrebidSDK()
+        initAdMob()
+        initApplovinMax()
         if (BuildConfig.DEBUG) {
             activateKeepScreenOnFlag()
         }
@@ -47,24 +46,28 @@ class CustomApplication : Application() {
         }
     }
 
-    private fun initMopubSDK() {
-        val sdkConfiguration = SdkConfiguration.Builder("42b99af979cd474ea32f497c044b5d71")
-        sdkConfiguration.withLogLevel(MoPubLog.LogLevel.DEBUG)
-        MoPub.initializeSdk(this, sdkConfiguration.build()) {
-            Log.d("MoPub", "Initialized successfully!")
-        }
-    }
+
 
     private fun initPrebidSDK() {
-        PrebidMobile.setPrebidServerAccountId("bfa84af2-bd16-4d35-96ad-31c6bb888df0")
-        PrebidMobile.setPrebidServerHost(Host.APPNEXUS)
-        PrebidMobile.setShareGeoLocation(true)
+//        PrebidMobile.setPbsDebug(true)
         PrebidMobile.setApplicationContext(applicationContext)
+        PrebidMobile.setShareGeoLocation(true)
+    }
 
-        val host = org.prebid.mobile.rendering.bidding.enums.Host.CUSTOM
-        host.hostUrl = "https://prebid.openx.net/openrtb2/auction"
-        PrebidRenderingSettings.setBidServerHost(host)
-        PrebidRenderingSettings.setAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d")
+    private fun initAdMob() {
+        MobileAds.initialize(this) { status ->
+            Log.d("MobileAds", "Initialization complete.")
+        }
+        val configuration = RequestConfiguration.Builder().setTestDeviceIds(
+            listOf("38250D98D8E3A07A2C03CD3552013B29")
+        ).build()
+        MobileAds.setRequestConfiguration(configuration)
+    }
+
+    private fun initApplovinMax() {
+        AppLovinSdk.getInstance(this).mediationProvider = "max"
+        AppLovinSdk.getInstance(this).initializeSdk { configuration: AppLovinSdkConfiguration -> }
+        AppLovinSdk.getInstance(this).settings.setVerboseLogging(false)
     }
 
     private fun activateKeepScreenOnFlag() {

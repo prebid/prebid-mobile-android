@@ -33,11 +33,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <org.prebid.mobile.rendering.bidding.parallel.BannerView
+        <org.prebid.mobile.api.rendering.BannerView
             android:id="@+id/prebidBannerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:configId="@string/mock_config_id_banner_320x50"
+            app:configId="@string/imp_prebid_id_banner_320x50"
             app:refreshIntervalSec="5"
             app:adWidth="320"
             app:adHeight="50" />

@@ -18,7 +18,6 @@ package org.prebid.mobile.http;
 
 import android.os.Looper;
 import androidx.annotation.MainThread;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.BidLog;
@@ -27,12 +26,7 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.ResultCode;
 import org.prebid.mobile.tasksmanager.TasksManager;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -95,7 +89,7 @@ public abstract class HTTPPost {
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");
             JSONObject postData = getPostData();
             String postString = postData.toString();
-            LogUtil.d("Sending request for auction " + getAuctionId() + " with post data: " + postString);
+            LogUtil.debug("Sending request for auction " + getAuctionId() + " with post data: " + postString);
             wr.write(postString);
             wr.flush();
 
@@ -141,6 +135,10 @@ public abstract class HTTPPost {
                 BidLog.getInstance().setLastEntry(entry);
 
                 return new TaskResult<>(response);
+            } else if (httpResult == HttpURLConnection.HTTP_NO_CONTENT) {
+                entry.setResponse("");
+                BidLog.getInstance().setLastEntry(entry);
+                return new TaskResult<>(new JSONObject());
             } else if (httpResult >= HttpURLConnection.HTTP_BAD_REQUEST) {
                 StringBuilder builder = new StringBuilder();
                 InputStream is = conn.getErrorStream();
@@ -153,7 +151,7 @@ public abstract class HTTPPost {
                 is.close();
                 String result = builder.toString();
                 entry.setResponse(result);
-                LogUtil.d("Getting response for auction " + getAuctionId() + ": " + result);
+                LogUtil.debug("Getting response for auction " + getAuctionId() + ": " + result);
                 Pattern storedRequestNotFound = Pattern.compile("^Invalid request: Stored Request with ID=\".*\" not found.");
                 Pattern storedImpNotFound = Pattern.compile("^Invalid request: Stored Imp with ID=\".*\" not found.");
                 Pattern invalidBannerSize = Pattern.compile("^Invalid request: Request imp\\[\\d\\].banner.format\\[\\d\\] must define non-zero \"h\" and \"w\" properties.");

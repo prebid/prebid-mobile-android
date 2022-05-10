@@ -22,7 +22,6 @@ data class DemoItem(val label: String, val action: Int = -1, val tag: List<Tag> 
 
 enum class Tag(val tagName: String) {
     REMOTE("Remote"),
-    MOCK("Mock"),
 
     BANNER("Banner"),
     MRAID("MRAID"),
@@ -32,7 +31,8 @@ enum class Tag(val tagName: String) {
 
     IN_APP("In-App"),
     GAM("GAM"),
-    MOPUB("MoPub"),
+    ADMOB("AdMob"),
+    MAX("Max"),
 
     ALL("All")
 }

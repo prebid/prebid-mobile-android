@@ -18,16 +18,15 @@ package org.prebid.mobile.eventhandlers;
 
 import android.app.Activity;
 import android.os.Handler;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
-import org.prebid.mobile.rendering.errors.AdException;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -35,58 +34,54 @@ import org.robolectric.annotation.Config;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 21)
 public class GamRewardedEventHandlerTest {
+
     private static final String GAM_AD_UNIT_ID = "12345678";
 
-    private GamRewardedEventHandler mEventHandler;
-    private Activity mActivity;
+    private GamRewardedEventHandler eventHandler;
+    private Activity activity;
 
-    @Mock
-    private RewardedVideoEventListener mMockEventListener;
-    @Mock
-    private Handler mMockAppEventHandler;
+    @Mock private RewardedVideoEventListener mockEventListener;
+    @Mock private Handler mockAppEventHandler;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        mActivity = Robolectric.buildActivity(Activity.class).get();
+        activity = Robolectric.buildActivity(Activity.class).get();
 
-        mEventHandler = new GamRewardedEventHandler(mActivity, GAM_AD_UNIT_ID);
-        mEventHandler.setRewardedEventListener(mMockEventListener);
+        eventHandler = new GamRewardedEventHandler(activity, GAM_AD_UNIT_ID);
+        eventHandler.setRewardedEventListener(mockEventListener);
     }
 
     @Test
     public void onAdMetadataChangedWithMetadataContainsAdEvent_HandleAppEvent() throws Exception {
         changeExpectingAppEventStatus(true);
 
-        GamRewardedEventHandler spyEventHandler = spy(mEventHandler);
+        GamRewardedEventHandler spyEventHandler = spy(eventHandler);
 
         spyEventHandler.onEvent(AdEvent.APP_EVENT_RECEIVED);
 
-        final boolean isExpectingAppEvent = ((boolean) WhiteBox.field(GamRewardedEventHandler.class, "mIsExpectingAppEvent").get(spyEventHandler));
+        final boolean isExpectingAppEvent = ((boolean) WhiteBox.field(
+                GamRewardedEventHandler.class,
+                "isExpectingAppEvent"
+        ).get(spyEventHandler));
 
-        verify(mMockEventListener, times(1)).onPrebidSdkWin();
+        verify(mockEventListener, times(1)).onPrebidSdkWin();
         assertFalse(isExpectingAppEvent);
     }
 
     @Test
     public void onGamAdClosed_NotifyEventCloseListener() {
-        mEventHandler.onEvent(AdEvent.CLOSED);
+        eventHandler.onEvent(AdEvent.CLOSED);
 
-        verify(mMockEventListener, times(1)).onAdClosed();
+        verify(mockEventListener, times(1)).onAdClosed();
     }
 
     @Test
@@ -96,55 +91,53 @@ public class GamRewardedEventHandlerTest {
         for (int i = 0; i < wantedNumberOfInvocations; i++) {
             final AdEvent adEvent = AdEvent.FAILED;
             adEvent.setErrorCode(i);
-            mEventHandler.onEvent(adEvent);
+            eventHandler.onEvent(adEvent);
         }
-        verify(mMockEventListener, times(wantedNumberOfInvocations)).onAdFailed(any(AdException.class));
+        verify(mockEventListener, times(wantedNumberOfInvocations)).onAdFailed(any(AdException.class));
     }
 
     @Test
     public void onGamAdOpened_NotifyBannerEventDisplayListener() {
-        mEventHandler.onEvent(AdEvent.DISPLAYED);
+        eventHandler.onEvent(AdEvent.DISPLAYED);
 
-        verify(mMockEventListener, times(1)).onAdDisplayed();
+        verify(mockEventListener, times(1)).onAdDisplayed();
     }
 
     @Test
     public void onGamAdLoadedAppEventExpected_ScheduleAppEventHandler() {
         changeExpectingAppEventStatus(true);
 
-        mEventHandler.onEvent(AdEvent.LOADED);
+        eventHandler.onEvent(AdEvent.LOADED);
 
-        assertNotNull(WhiteBox.getInternalState(mEventHandler, "mAppEventHandler"));
+        assertNotNull(WhiteBox.getInternalState(eventHandler, "appEventHandler"));
     }
 
     @Test
     public void onGamAdLoadedAppEventNotExpectedAndRequestInterstitialNotNull_NotifyEventListenerOnAdServerWin()
     throws Exception {
         RewardedAdWrapper publisherInterstitialAd = mock(RewardedAdWrapper.class);
-        WhiteBox.field(GamRewardedEventHandler.class, "mRewardedAd")
-                .set(mEventHandler, publisherInterstitialAd);
+        WhiteBox.field(GamRewardedEventHandler.class, "rewardedAd").set(eventHandler, publisherInterstitialAd);
 
-        mEventHandler.onEvent(AdEvent.LOADED);
+        eventHandler.onEvent(AdEvent.LOADED);
 
-        verify(mMockEventListener, times(1)).onAdServerWin(any());
+        verify(mockEventListener, times(1)).onAdServerWin(any());
     }
 
     @Test
     public void onAppEventTimeout_NotifyBannerEventOnAdServerWin() throws Exception {
-        WhiteBox.method(GamRewardedEventHandler.class, "handleAppEventTimeout").invoke(mEventHandler);
+        WhiteBox.method(GamRewardedEventHandler.class, "handleAppEventTimeout").invoke(eventHandler);
 
-        verify(mMockEventListener, times(1)).onAdServerWin(any());
+        verify(mockEventListener, times(1)).onAdServerWin(any());
     }
 
     @Test
     public void destroy_CancelTimer() throws IllegalAccessException {
         // by default apEventHandler is null if not scheduled
-        WhiteBox.field(GamRewardedEventHandler.class, "mAppEventHandler")
-                .set(mEventHandler, mMockAppEventHandler);
+        WhiteBox.field(GamRewardedEventHandler.class, "appEventHandler").set(eventHandler, mockAppEventHandler);
 
-        mEventHandler.destroy();
+        eventHandler.destroy();
 
-        verify(mMockAppEventHandler, times(1)).removeCallbacksAndMessages(null);
+        verify(mockAppEventHandler, times(1)).removeCallbacksAndMessages(null);
     }
 
     @Test
@@ -155,29 +148,29 @@ public class GamRewardedEventHandlerTest {
 
         when(mockBid.getPrebid()).thenReturn(mockPrebid);
         when(mockBid.getPrice()).thenReturn(0.2);
-        mEventHandler.requestAdWithBid(mockBid);
+        eventHandler.requestAdWithBid(mockBid);
         assertTrue(getExpectingAppEventStatus());
 
         when(mockBid.getPrice()).thenReturn(0.0);
-        mEventHandler.requestAdWithBid(mockBid);
+        eventHandler.requestAdWithBid(mockBid);
         assertFalse(getExpectingAppEventStatus());
 
-        mEventHandler.requestAdWithBid(null);
+        eventHandler.requestAdWithBid(null);
         assertFalse(getExpectingAppEventStatus());
     }
 
     @Test
     public void showWhenEmbeddedInterstitialIsNull_NotifyEventErrorListener() {
-        mEventHandler.show();
+        eventHandler.show();
 
-        verify(mMockEventListener).onAdFailed(any(AdException.class));
+        verify(mockEventListener).onAdFailed(any(AdException.class));
     }
 
     private void changeExpectingAppEventStatus(boolean status) {
-        WhiteBox.setInternalState(mEventHandler, "mIsExpectingAppEvent", status);
+        WhiteBox.setInternalState(eventHandler, "isExpectingAppEvent", status);
     }
 
     private boolean getExpectingAppEventStatus() {
-        return WhiteBox.getInternalState(mEventHandler, "mIsExpectingAppEvent");
+        return WhiteBox.getInternalState(eventHandler, "isExpectingAppEvent");
     }
 }

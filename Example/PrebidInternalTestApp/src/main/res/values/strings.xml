@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~    Copyright 2018-2021 Prebid.org, Inc.
   ~
   ~    Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,21 +31,33 @@
 
     <string name="onAdLoaded">onAdLoaded called</string>
     <string name="onAdDisplayed">onAdDisplayed called</string>
+    <string name="onAdHidden">onAdHidden called</string>
     <string name="onAdFailed">onAdFailed called</string>
     <string name="onAdClicked">onAdClicked called</string>
     <string name="onAdClosed">onAdClosed called</string>
+    <string name="onAdLoadFailed">onAdLoadFailed called</string>
+    <string name="onAdDisplayFailed">onAdDisplayFailed called</string>
+    <string name="onAdExpanded">onAdExpanded called</string>
+    <string name="onAdCollapsed">onAdCollapsed called</string>
+    <string name="onRewardedVideoStarted">onRewardedVideoStarted called</string>
+    <string name="onRewardedVideoCompleted">onRewardedVideoCompleted called</string>
+    <string name="onUserRewarded">onUserRewarded called</string>
+    <string name="onAdRevenuePaid">onAdRevenuePaid called</string>
+    <string name="onNativeAdLoaded">onNativeAdLoaded called</string>
+    <string name="onNativeAdClicked">onNativeAdClicked called</string>
+    <string name="onNativeAdLoadFailed">onNativeAdLoadFailed called</string>
 
-    <string name="event_mopub_banner_loaded">onBannerLoaded</string>
-    <string name="event_mopub_banner_failed">onBannerFailed</string>
-    <string name="event_mopub_banner_clicked">onBannerClicked</string>
-    <string name="event_mopub_banner_expanded">onBannerExpanded</string>
-    <string name="event_mopub_banner_collapsed">onBannerCollapsed</string>
 
-    <string name="event_mopub_interstitial_loaded">onInterstitialLoaded</string>
-    <string name="event_mopub_interstitial_failed">onInterstitialFailed</string>
-    <string name="event_mopub_interstitial_displayed">onInterstitialShown</string>
-    <string name="event_mopub_interstitial_clicked">onInterstitialClicked</string>
-    <string name="event_mopub_interstitial_dismissed">onInterstitialDismissed</string>
+
+    <string name="event_admob_loaded">onAdLoaded</string>
+    <string name="event_admob_clicked">onAdClicked</string>
+    <string name="event_admob_opened">onAdOpened</string>
+    <string name="event_admob_impression">onAdImpression</string>
+    <string name="event_admob_closed">onAdClosed</string>
+    <string name="event_admob_failed">onAdFailed</string>
+    <string name="event_admob_interstitial_showed_full_screen">onAdShowedFullScreenContent</string>
+    <string name="event_admob_interstitial_failed_full_screen">onAdFailedToShowFullScreenContent</string>
+    <string name="event_admob_interstitial_dismissed_full_screen">onAdDismissedFullScreenContent</string>
 
     <!-- TCF V1 -->
     <string name="key_subject_to_gdpr">IABConsent_SubjectToGDPR</string>
@@ -69,7 +80,7 @@
     <!--In-App Titles-->
     <string name="demo_bidding_in_app_banner_320_50">Banner 320x50 (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_no_bids">Banner 320x50 [noBids] (In-App)</string>
-    <string name="demo_bidding_in_app_banner_320_50_mock_random_bid"> Banner 320x50 [Bid - RANDOM noBids, Ad - RESPECTIVE]</string>
+    <string name="demo_bidding_in_app_banner_320_50_imp_prebid_random_bid"> Banner 320x50 [Bid - RANDOM noBids, Ad - RESPECTIVE]</string>
     <string name="demo_bidding_in_app_banner_300_250">Banner 300x250 (In-App)</string>
     <string name="demo_bidding_in_app_banner_728_90">Banner 728x90 (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_scrollable">Banner 320x50 Scrollable (In-App)</string>
@@ -80,6 +91,7 @@
     <string name="demo_bidding_in_app_banners_and_interstitial">Banners and Interstitial (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_320_480">Display Interstitial 320x480 (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_320_480_no_bids">Display Interstitial 320x480 [noBids] (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_320_480_multiformat">Multiformat Interstitial 320x480 (In-App)</string>
     <string name="demo_bidding_in_app_banner_video_outstream">Video Outstream (In-App)</string>
     <string name="demo_bidding_in_app_banner_video_outstream_no_bids">Video Outstream [noBids] (In-App)</string>
     <string name="demo_bidding_in_app_banner_video_outstream_feed">Video Outstream Feed (In-App)</string>
@@ -88,11 +100,17 @@
     <string name="demo_bidding_in_app_interstitial_video_320_480_deeplink">Video Interstitial 320x480 Deeplink+ (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_video_320_480_skipoffset">Video Interstitial 320x480 SkipOffset (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_video_320_480_end_card">Video Interstitial 320x480 With End Card (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_video_320_480_close_button_area">Video Interstitial 320x480 With Close Button (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_video_320_480_end_card_sound_button">Video Interstitial 320x480 With End Card and Sound Button (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_video_320_480_end_card_skip_button">Video Interstitial 320x480 With End Card and Skip Button (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_video_320_480_mraid_end_card">Video Interstitial 320x480 with MRAID End Card (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_video_320_480_no_bids">Video Interstitial 320x480 (In-App) [noBids]</string>
+    <string name="demo_bidding_in_app_interstitial_video_320_480_with_ad_configuration">Video Interstitial 320x480 With Ad Configuration (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_video_320_480_end_card_with_ad_configuration">Video Interstitial 320x480 With End Card With Ad Configuration (In-App)</string>
     <string name="demo_bidding_in_app_video_rewarded_end_card_320_480">Video Rewarded 320x480 (In-App)</string>
     <string name="demo_bidding_in_app_video_rewarded_end_card_320_480_no_bids">Video Rewarded 320x480 with End Card (In-App) [noBids]</string>
     <string name="demo_bidding_in_app_video_rewarded_320_480">Video Rewarded 320x480 without End Card (In-App)</string>
+    <string name="demo_bidding_in_app_video_rewarded_320_480_with_ad_configuration">Video Rewarded 320x480 With Ad Configuration (In-App)</string>
     <string name="demo_bidding_in_app_mraid_expand">MRAID 2.0: Expand - 1 Part (In-App)</string>
     <string name="demo_bidding_in_app_mraid_expand_2">MRAID 2.0: Expand - 2 Part (In-App)</string>
     <string name="demo_bidding_in_app_mraid_resize">MRAID 2.0: Resize (In-App)</string>
@@ -126,6 +144,7 @@
     <string name="demo_bidding_gam_interstitial_320_480_app_event">Display Interstitial 320x480 (GAM) [OK, AppEvent]</string>
     <string name="demo_bidding_gam_interstitial_320_480_random">Display Interstitial 320x480 (GAM) [OK, Random]</string>
     <string name="demo_bidding_gam_interstitial_320_480_no_bids">Display Interstitial 320x480 (GAM) [noBids, GAM Ad]</string>
+    <string name="demo_bidding_gam_interstitial_320_480_multiformat">Multiformat Interstitial 320x480 (GAM) [OK, AppEvent]</string>
     <string name="demo_bidding_gam_interstitial_video_320_480_app_event">Video Interstitial 320x480 (GAM) [OK, AppEvent]</string>
     <string name="demo_bidding_gam_interstitial_video_320_480_random">Video Interstitial 320x480 (GAM) [OK, Random]</string>
     <string name="demo_bidding_gam_interstitial_video_320_480_no_bids">Video Interstitial 320x480 (GAM) [noBids, GAM Ad]</string>
@@ -147,45 +166,65 @@
     <string name="demo_bidding_gam_native_styles_mrect">Banner Native Styles (GAM) [MRect]</string>
     <string name="demo_bidding_gam_native_styles_fluid">Banner Native Styles (GAM) [Fluid]</string>
     <string name="demo_bidding_gam_native_styles_no_assets">Banner Native Styles No Assets (GAM) [MRect]</string>
-    <string name="demo_bidding_gam_native_custom_templates">Native Ad Custom Templates (GAM) [OK, OXANativeAd]</string>
+    <string name="demo_bidding_gam_native_custom_templates">Native Ad Custom Templates (GAM) [OK, NativeAd]</string>
     <string name="demo_bidding_gam_native_custom_templates_no_bids">Native Ad (GAM) [noBids, GADNativeCustomTemplateAd]</string>
-    <string name="demo_bidding_gam_native_unified_ads">Native Ad Unified Ad (GAM) [OK, OXANativeAd]</string>
+    <string name="demo_bidding_gam_native_unified_ads">Native Ad Unified Ad (GAM) [OK, NativeAd]</string>
     <string name="demo_bidding_gam_native_unified_ads_no_bids">Native Ad (GAM) [noBids, GADUnifiedNativeAd]</string>
     <string name="demo_bidding_gam_native_custom_templates_prebid_ok">Native Ad (GAM) [OK, GADNativeCustomTemplateAd]</string>
     <string name="demo_bidding_gam_native_unified_ads_prebid_ok">Native Ad (GAM) [OK, GADUnifiedNativeAd]</string>
-    <string name="demo_bidding_gam_native_feed">Native Ad Feed (GAM) [OK, OXANativeAd]</string>
+    <string name="demo_bidding_gam_native_feed">Native Ad Feed (GAM) [OK, NativeAd]</string>
 
 
-    <!--MoPub Titles-->
-    <string name="demo_bidding_mopub_banner_320_50_adapter">Banner 320x50 (MoPub) [OK, OXB Adapter]</string>
-    <string name="demo_bidding_mopub_banner_320_50_no_bids">Banner 320x50 (MoPub) [noBids, MoPub Ad]</string>
-    <string name="demo_bidding_mopub_banner_320_50_random">Banner 320x50 (MoPub) [OK, Random]</string>
-    <string name="demo_bidding_mopub_banner_300_250">Banner 300x250 (MoPub)</string>
-    <string name="demo_bidding_mopub_banner_728_90">Banner 728x90 (MoPub)</string>
-    <string name="demo_bidding_mopub_banner_multisize">Banner Multisize (MoPub)</string>
-    <string name="demo_bidding_mopub_interstitial_320_480_adapter">Display Interstitial 320x480 (MoPub) [OK, OXB Adapter]</string>
-    <string name="demo_bidding_mopub_interstitial_320_480_random">Display Interstitial 320x480 (MoPub) [OK, Random]</string>
-    <string name="demo_bidding_mopub_interstitial_320_480_no_bids">Display Interstitial 320x480 (MoPub) [noBids, MoPub Ad]</string>
-    <string name="demo_bidding_mopub_video_interstitial_320_480_adapter">Video Interstitial 320x480 (MoPub) [OK, OXB Adapter]</string>
-    <string name="demo_bidding_mopub_video_interstitial_320_480_no_bids">Video Interstitial 320x480 (MoPub) [noBids, MoPub Ad]</string>
-    <string name="demo_bidding_mopub_video_interstitial_320_480_random">Video Interstitial 320x480 (MoPub) [OK, Random]</string>
-    <string name="demo_bidding_mopub_rewarded_video_320_480_adapter">Video Rewarded 320x480 without End Card (MoPub) [OK, OXB Adapter]</string>
-    <string name="demo_bidding_mopub_rewarded_video_end_card_320_480_adapter">Video Rewarded 320x480 (MoPub) [OK, OXB Adapter]</string>
-    <string name="demo_bidding_mopub_rewarded_video_end_card_320_480_random">Video Rewarded 320x480 (MoPub) [OK, Random]</string>
-    <string name="demo_bidding_mopub_rewarded_video_end_card_320_480_no_bids">Video Rewarded 320x480 (MoPub) [noBids, MoPub Ad]</string>
-    <string name="demo_bidding_mopub_mraid_resize">MRAID 2.0: Resize (MoPub)</string>
-    <string name="demo_bidding_mopub_mraid_expand">MRAID 2.0: Expand - 1 Part (MoPub)</string>
-    <string name="demo_bidding_mopub_banner_320_50_vanilla">Banner 320x50 - Vanilla Prebid Order (MoPub)</string>
-    <string name="demo_bidding_mopub_interstitial_320_480_vanilla">Display Interstitial 320x480 - Vanilla Prebid Order (MoPub)</string>
-    <string name="demo_bidding_mopub_video_interstitial_320_480_vanilla">Video Interstitial 320x480 - Vanilla Prebid Order (MoPub)</string>
-    <string name="demo_bidding_mopub_banners_and_interstitial">Banners and Interstitial (MoPub) [OK, Adapter]</string>
-    <string name="demo_bidding_mopub_mraid_fullscreen_video">MRAID 2.0: Video Interstitial (MoPub)</string>
-    <string name="demo_bidding_mopub_native_styles">Banner Native Styles (MoPub)</string>
-    <string name="demo_bidding_mopub_native_styles_no_assets">Banner Native Styles No Assets (MoPub)</string>
-    <string name="demo_bidding_mopub_native_no_bids">Native Ad (MoPub) [noBids, MPNativeAd] </string>
-    <string name="demo_bidding_mopub_native_feed_no_bids">Native Ad Feed (MoPub) [noBids, MPNativeAd] </string>
-    <string name="demo_bidding_mopub_native_adapter">Native Ad (MoPub) [OK, OXANativeAdAdapter]</string>
-    <string name="demo_bidding_mopub_native_adapter_video">Native Ad Video (MoPub) [OK, OXANativeAdAdapter]</string>
+
+
+    <!--AdMob Titles-->
+    <string name="demo_bidding_admob_banner_320_50_adapter">Banner 320x50 (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_banner_320_50_ok_random">Banner 320x50 (AdMob) [OK, Random]</string>
+    <string name="demo_bidding_admob_banner_320_50_no_bids">Banner 320x50 (AdMob) [noBids, AdMob ad]</string>
+    <string name="demo_bidding_admob_banner_320_50_random_respectively">Banner 320x50 (AdMob) [Random, Respectively]</string>
+    <string name="demo_bidding_admob_banner_300_250_adapter">Banner 300x250 (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_banner_300_250_ok_random">Banner 300x250 (AdMob) [OK, Random]</string>
+    <string name="demo_bidding_admob_flexible_banner_ok_random">Banner Adaptive (AdMob) [OK, Random]</string>
+
+    <string name="demo_bidding_admob_interstitial_display_adapter">Display Interstitial 320x480 (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_interstitial_display_admob">Display Interstitial 320x480 (AdMob) [noBids, AdMob Ad]</string>
+    <string name="demo_bidding_admob_interstitial_display_random">Display Interstitial 320x480 (AdMob) [OK, Random]</string>
+    <string name="demo_bidding_admob_interstitial_adapter">Video Interstitial 320x480 (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_interstitial_admob">Video Interstitial 320x480 (AdMob) [noBids, AdMob ad]</string>
+    <string name="demo_bidding_admob_interstitial_random">Video Interstitial 320x480 (AdMob) [OK, Random]</string>
+    <string name="demo_bidding_admob_interstitial_multiformat">Multiformat Interstitial 320x480 (AdMob) [OK, OXB Adapter]</string>
+
+    <string name="demo_bidding_admob_rewarded_adapter">Video Rewarded 320x480 (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_rewarded_adapter_no_end_card">Video Rewarded 320x480 no EndCard (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_rewarded_admob">Video Rewarded 320x480 (AdMob) [noBids, AdMob ad]</string>
+    <string name="demo_bidding_admob_rewarded_random">Video Rewarded 320x480 (AdMob) [OK, Random]</string>
+
+    <string name="demo_bidding_admob_native_adapter">Native Ad (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_native_no_bids">Native Ad (AdMob) [noBids, AdMob ad]</string>
+
+    <!--MAX Titles-->
+    <string name="demo_bidding_max_banner_320_50_adapter">Banner 320x50 (MAX) [OK, Adapter]</string>
+    <string name="demo_bidding_max_banner_320_50_no_bids">Banner 320x50 (MAX) [noBids, MAX ad]</string>
+    <string name="demo_bidding_max_banner_320_50_random">Banner 320x50 (MAX) [Random, Respectively]</string>
+    <string name="demo_bidding_max_banner_300_250_adapter">Banner 300x250 (MAX) [OK, Adapter]</string>
+    <string name="demo_bidding_max_banner_300_250_no_bids">Banner 300x250 (MAX) [noBids, MAX ad]</string>
+    <string name="demo_bidding_max_banner_adaptive">Banner adaptive banners (MAX) [OK, Adapter]</string>
+
+    <string name="demo_bidding_max_interstitial_adapter">Display Interstitial 320x480 (MAX) [OK, Adapter]</string>
+    <string name="demo_bidding_max_interstitial_random">Display Interstitial 320x480 (MAX) [OK, Random]</string>
+    <string name="demo_bidding_max_interstitial_no_bids">Display Interstitial 320x480 (MAX) [noBids, MAX ad]</string>
+    <string name="demo_bidding_max_video_interstitial_adapter">Video Interstitial 320x480 (MAX) [OK, Adapter]</string>
+    <string name="demo_bidding_max_video_interstitial_random">Video Interstitial 320x480 (MAX) [OK, Random]</string>
+    <string name="demo_bidding_max_video_interstitial_no_bids">Video Interstitial 320x480 (MAX) [noBids, MAX ad]</string>
+    <string name="demo_bidding_max_interstitial_multiformat_adapter">Multiformat Interstitial 320x480 (MAX) [OK, Adapter]</string>
+
+    <string name="demo_bidding_max_rewarded_adapter">Video Rewarded 320x480 (MAX) [OK, Adapter]</string>
+    <string name="demo_bidding_max_rewarded_random">Video Rewarded 320x480 (MAX) [OK, Random]</string>
+    <string name="demo_bidding_max_rewarded_no_bids">Video Rewarded 320x480 (MAX) [noBids, MAX ad]</string>
+    <string name="demo_bidding_max_rewarded_adapter_no_end_card">Video Rewarded 320x480 no EndCard (MAX) [OK, Adapter]</string>
+
+    <string name="demo_bidding_max_native_adapter">Native Ad (MAX) [OK, Adapter]</string>
+    <string name="demo_bidding_max_native_no_bids">Native Ad (MAX) [noBids, MAX ad]</string>
 
     <!--GAM AdUnits-->
     <string name="adunit_gam_banner_320_50_app_event">/21808260008/prebid_oxb_320x50_banner</string>
@@ -215,25 +254,19 @@
     <string name="adunit_gam_native_unified">/21808260008/unified_native_ad_unit</string>
     <string name="adunit_gam_native_unified_static">/21808260008/unified_native_ad_unit_static</string>
 
-    <!--MoPub AdUnits-->
-    <string name="mopub_banner_bidding_ad_unit_id_adapter">093eef131ec7455b9bda52b7eb456c51</string>
-    <string name="mopub_banner_bidding_ad_unit_id_no_bids">9f98febf90ee4366a18bfd60d7bdf870</string>
-    <string name="mopub_banner_bidding_ad_unit_id_random">78df2f92b9ce4a5b9475739592e71253</string>
-    <string name="mopub_interstitial_bidding_ad_unit_id_ok">d6cc98e81ef44d648bd93c79d372c451</string>
-    <string name="mopub_interstitial_bidding_ad_unit_id_random">d2206fff8c44443c964e3340ccf3e13c</string>
-    <string name="mopub_interstitial_bidding_ad_unit_id_no_bids">6e096195c9874d8f9ac7bfa6ef4c5a16</string>
-    <string name="mopub_video_interstitial_bidding_adapter">ed260a9f4e594462924a4f107cc8f6c1</string>
-    <string name="mopub_video_interstitial_bidding_random">85d44de7fea24845819021ba5e103025</string>
-    <string name="mopub_video_interstitial_bidding_no_bids">062a5be1c0764e84b45244ecd58b237f</string>
-    <string name="mopub_rewarded_video_bidding_adapter">7c8fe21705a948c8a89dc6b496e8ad35</string>
-    <string name="mopub_rewarded_video_bidding_random">110021a0333c440f844b9115ae8e4589</string>
-    <string name="mopub_rewarded_video_bidding_no_bids">a63a0710520d4b6c8a7f434084801573</string>
-    <string name="mopub_banner_bidding_ad_unit_id_vanilla">cf040372c8a14975b7af007cd98d5167</string>
-    <string name="mopub_interstitial_bidding_ad_unit_id_vanilla">12da0f996d56430b836898245c763e2d</string>
-    <string name="mopub_video_interstitial_bidding_vanilla">7c26d57952e34585af09a5e780547225</string>
-    <string name="mopub_native_styles">fb6098c7083e49aa8a724ea74f1f3462</string>
-    <string name="mopub_native_adapter">2916ffe4c05443408cef74f815d6d668</string>
-    <string name="mopub_native_no_bids">27a0aca8ce2c41e19195ea9beeb05e67</string>
+
+    <!--AdMob AdUnits-->
+    <string name="admob_banner_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/3793078260</string>
+    <string name="admob_interstitial_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/6393291067</string>
+    <string name="admob_rewarded_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/1908212572</string>
+    <string name="admob_native_bidding_ad_unit_id_adapter">ca-app-pub-1875909575462531/9720985924</string>
+
+    <!-- Applovin MAX AdUnits -->
+    <string name="max_banner_ad_unit_id">2712409601eb0b64</string>
+    <string name="max_interstitial_ad_unit_id">3c61bf5180526594</string>
+    <string name="max_rewarded_ad_unit_id">4adc922f52679355</string>
+    <string name="max_native_ad_unit_id">fa4a9d137e6f3dff</string>
+    <string name="max_mrec_ad_unit_id">0b831dee5ef00774</string>
 
     <!--    Bidding configs-->
     <string name="prebid_account_id_prod">0689a263-318d-448b-a3d4-b02e8a709d9d</string>
@@ -248,38 +281,41 @@
     <string name="prebid_config_id_no_bids">28259226-68de-49f8-88d6-f0f2fab846e3</string>
     <string name="prebid_config_id_qa_native_styles">51fe68ba-aff2-401e-9e15-f3ed89d5c036</string>
 
-    <string name="mock_config_id_banner_320x50">mock-banner-320-50</string>
-    <string name="mock_config_id_banner_320x50_deeplink">mock-banner-deeplink</string>
-    <string name="mock_config_id_banner_320x50_vast">mock-banner-incorrect-vast</string>
-    <string name="mock_config_id_banner_300x250">mock-banner-300-250</string>
-    <string name="mock_config_id_banner_728x90">mock-banner-728-90</string>
-    <string name="mock_config_id_banner_multisize">mock-banner-multisize</string>
-    <string name="mock_config_id_interstitial_320_480">mock-display-interstitial-320-480</string>
+    <string name="imp_prebid_id_banner_320x50">imp-prebid-banner-320-50</string>
+    <string name="imp_prebid_id_banner_320x50_high_price">imp-prebid-banner-320-50-high-price</string>
+    <string name="imp_prebid_id_banner_320x50_deeplink">imp-prebid-banner-deeplink</string>
+    <string name="imp_prebid_id_banner_320x50_vast">imp-prebid-banner-incorrect-vast</string>
+    <string name="imp_prebid_id_banner_300x250">imp-prebid-banner-300-250</string>
+    <string name="imp_prebid_id_banner_300x250_high_price">imp-prebid-banner-300-250-high-price</string>
+    <string name="imp_prebid_id_banner_728x90">imp-prebid-banner-728-90</string>
+    <string name="imp_prebid_id_banner_multisize">imp-prebid-banner-multisize</string>
+    <string name="imp_prebid_id_interstitial_320_480">imp-prebid-display-interstitial-320-480</string>
 
-    <string name="mock_config_id_video_outstream">mock-video-outstream</string>
-    <string name="mock_config_id_video_outstream_end_card">mock-video-outstream-with-end-card</string>
-    <string name="mock_config_id_video_interstitial_320_480">mock-video-interstitial-320-480</string>
-    <string name="mock_config_id_video_interstitial_deeplink">mock-video-interstitial-320-480-deeplink</string>
-    <string name="mock_config_id_video_interstitial_skipoffset">mock-video-interstitial-320-480-skip-offset</string>
-    <string name="mock_config_id_video_interstitial_mraid_end_card">mock-video-interstitial-mraid-end-card</string>
-    <string name="mock_config_id_video_rewarded_end_card_320_480">mock-video-rewarded-320-480</string>
-    <string name="mock_config_id_video_rewarded_320_480">mock-video-rewarded-320-480-without-end-card</string>
-    <string name="mock_config_id_mraid_resize">mock-mraid-resize</string>
-    <string name="mock_config_id_mraid_resize_with_errors">mock-mraid-resize-with-errors</string>
-    <string name="mock_config_id_mraid_expand">mock-mraid-expand-1-part</string>
-    <string name="mock_config_id_mraid_expand_two_part">mock-mraid-expand-2-part</string>
-    <string name="mock_config_id_mraid_fullscreen">mock-mraid-fullscreen</string>
-    <string name="mock_config_id_mraid_video_interstitial">mock-mraid-video-interstitial</string>
-    <string name="mock_config_id_mraid_3_viewability_compliance">mock-mraid-viewability-compliance</string>
-    <string name="mock_config_id_mraid_3_resize_negative">mock-mraid-resize-negative-test</string>
-    <string name="mock_config_id_mraid_3_load_and_events">mock-mraid-load-and-events</string>
-    <string name="mock_config_id_mraid_ox_test_properties">mock-mraid-test-properties-3</string>
-    <string name="mock_config_id_mraid_ox_test_methods">mock-mraid-test-methods-3</string>
-    <string name="mock_config_id_mraid_ox_resize_expandable">mock-mraid-resize-expandable</string>
-    <string name="mock_config_id_native_styles">mock-banner-native-styles</string>
-    <string name="mock_config_id_native_links">mock-native-links</string>
-    <string name="mock_config_id_native_video">mock-native-video-with-end-card</string>
-    <string name="mock_config_id_no_bids">no_bids</string>
+    <string name="imp_prebid_id_video_outstream">imp-prebid-video-outstream</string>
+    <string name="imp_prebid_id_video_outstream_end_card">imp-prebid-video-outstream-with-end-card</string>
+    <string name="imp_prebid_id_video_interstitial_320_480">imp-prebid-video-interstitial-320-480</string>
+    <string name="imp_prebid_id_video_interstitial_320_480_with_end_card">imp-prebid-video-interstitial-320-480-with-end-card</string>
+    <string name="imp_prebid_id_video_interstitial_deeplink">imp-prebid-video-interstitial-320-480-deeplink</string>
+    <string name="imp_prebid_id_video_interstitial_skipoffset">imp-prebid-video-interstitial-320-480-skip-offset</string>
+    <string name="imp_prebid_id_video_interstitial_mraid_end_card">imp-prebid-video-interstitial-mraid-end-card</string>
+    <string name="imp_prebid_id_video_rewarded_end_card_320_480">imp-prebid-video-rewarded-320-480</string>
+    <string name="imp_prebid_id_video_rewarded_320_480">imp-prebid-video-rewarded-320-480-without-end-card</string>
+    <string name="imp_prebid_id_mraid_resize">imp-prebid-mraid-resize</string>
+    <string name="imp_prebid_id_mraid_resize_with_errors">imp-prebid-mraid-resize-with-errors</string>
+    <string name="imp_prebid_id_mraid_expand">imp-prebid-mraid-expand-1-part</string>
+    <string name="imp_prebid_id_mraid_expand_two_part">imp-prebid-mraid-expand-2-part</string>
+    <string name="imp_prebid_id_mraid_fullscreen">imp-prebid-mraid-fullscreen</string>
+    <string name="imp_prebid_id_mraid_video_interstitial">imp-prebid-mraid-video-interstitial</string>
+    <string name="imp_prebid_id_mraid_3_viewability_compliance">imp-prebid-mraid-viewability-compliance</string>
+    <string name="imp_prebid_id_mraid_3_resize_negative">imp-prebid-mraid-resize-negative-test</string>
+    <string name="imp_prebid_id_mraid_3_load_and_events">imp-prebid-mraid-load-and-events</string>
+    <string name="imp_prebid_id_mraid_ox_test_properties">imp-prebid-mraid-test-properties-3</string>
+    <string name="imp_prebid_id_mraid_ox_test_methods">imp-prebid-mraid-test-methods-3</string>
+    <string name="imp_prebid_id_mraid_ox_resize_expandable">imp-prebid-mraid-resize-expandable</string>
+    <string name="imp_prebid_id_native_styles">imp-prebid-banner-native-styles</string>
+    <string name="imp_prebid_id_native_links">imp-prebid-native-links</string>
+    <string name="imp_prebid_id_native_video">imp-prebid-native-video-with-end-card</string>
+    <string name="imp_prebid_id_no_bids">imp_prebid_no_bids</string>
 
     <!--  APP SETTINGS  -->
     <string name="key_show_progress_dialog">key_show_progress_dialog</string>
@@ -291,7 +327,6 @@
     <string name="loading">Loading…</string>
 
     <string name="label_auid">AdUnitId: %1$s</string>
-    <string name="text_switch_use_mock">Use Mock Server</string>
     <string name="text_switch_enable_gdpr">Enable GDPR</string>
 
     <string name="dialog_configurator_title">Configure the Ad</string>
@@ -304,19 +339,64 @@
     <string name="dialog_configurator_min_width_percentage">Min. Width Percentage</string>
 
     <string name="version_tag_prebid_rendering">Prebid Rendering:</string>
-    <string name="version_tag_mopub">MoPub:</string>
     <string name="version_tag_gam">GAM:</string>
+    <string name="version_tag_omsdk">OMSDK:</string>
 
     <string name="event_counter">%1$d ( %2$s )</string>
     <string name="event_counter_default">0 ( 0 )</string>
     <string name="event_counter_delimiter">-</string>
-    <string name="events_mopub_rewarded_loaded">onRewardedVideoLoadSuccess</string>
-    <string name="events_mopub_rewarded_failed">onRewardedVideoLoadFailure</string>
-    <string name="events_mopub_rewarded_started">onRewardedVideoStarted</string>
-    <string name="events_mopub_rewarded_playback_error">onRewardedVideoPlaybackError</string>
-    <string name="events_mopub_rewarded_clicked">onRewardedVideoClicked</string>
-    <string name="events_mopub_rewarded_collapsed">onRewardedVideoClosed</string>
-    <string name="events_mopub_rewarded_completed">onRewardedVideoCompleted</string>
+
     <string name="event_fetch_demand_failed">fetchDemand failed</string>
     <string name="event_fetch_demand_success">fetchDemand success</string>
+    <string name="stored_auction_response">storedAuctionResponse</string>
+
+    <!-- Stored auction responses   -->
+
+    <!--  Banner  -->
+    <string name="response_prebid_banner_320_50">response-prebid-banner-320-50</string>
+    <string name="response_prebid_banner_300_250">response-prebid-banner-300-250</string>
+    <string name="response_prebid_banner_728_90">response-prebid-banner-728-90</string>
+    <string name="response_prebid_banner_incorrect_vast">response-prebid-banner-incorrect-vast</string>
+    <string name="response_prebid_banner_deeplink">response-prebid-banner-deeplink</string>
+    <string name="response_prebid_banner_multisize">response-prebid-banner-multisize</string>
+
+    <!--  Display Interstitial  -->
+    <string name="response_prebid_display_interstitial_320_480">response-prebid-display-interstitial-320-480</string>
+
+    <!--  No Bids  -->
+    <string name="response_prebid_no_bids">response-prebid-no-bids</string>
+
+    <!--  Video Interstitial  -->
+    <string name="response_prebid_video_interstitial_320_480">response-prebid-video-interstitial-320-480</string>
+    <string name="response_prebid_video_interstitial_320_480_with_end_card">response-prebid-video-interstitial-320-480-with-end-card</string>
+    <string name="response_prebid_video_interstitial_deeplink">response-prebid-video-interstitial-320-480-deeplink</string>
+    <string name="response_prebid_video_interstitial_skipoffset">response-prebid-video-interstitial-320-480-skip-offset</string>
+    <string name="response_prebid_video_interstitial_ad_configuration">response-prebid-video-interstitial-320-480-with-ad-configuration</string>
+    <string name="response_prebid_video_interstitial_end_card_ad_configuration">response-prebid-video-interstitial-320-480-with-end-card-with-ad-configuration</string>
+    <!--  Video Outstream  -->
+    <string name="response_prebid_video_outstream">response-prebid-video-outstream</string>
+    <string name="response_prebid_video_outstream_end_card">response-prebid-video-outstream-with-end-card</string>
+    <!--  Video Rewarded  -->
+    <string name="response_prebid_video_rewarded_end_card_320_480">response-prebid-video-rewarded-320-480-without-end-card</string>
+    <string name="response_prebid_video_rewarded_320_480">response-prebid-video-rewarded-320-480</string>
+    <string name="response_prebid_video_rewarded_320_480_with_ad_configuration">response-prebid-video-rewarded-320-480-with-ad-configuration</string>
+
+    <!--  MRAID  -->
+    <string name="response_prebid_mraid_resize">response-prebid-mraid-resize</string>
+    <string name="response_prebid_mraid_resize_with_errors">response-prebid-mraid-resize-with-errors</string>
+    <string name="response_prebid_mraid_expand">response-prebid-mraid-expand-1-part</string>
+    <string name="response_prebid_mraid_expand_two_part">response-prebid-mraid-expand-2-part</string>
+    <string name="response_prebid_mraid_fullscreen">response-prebid-mraid-fullscreen</string>
+    <string name="response_prebid_mraid_video_interstitial">response-prebid-mraid-video-interstitial</string>
+    <string name="response_prebid_mraid_3_viewability_compliance">response-prebid-mraid-viewability-compliance</string>
+    <string name="response_prebid_mraid_3_resize_negative">response-prebid-mraid-resize-negative-test</string>
+    <string name="response_prebid_mraid_3_load_and_events">response-prebid-mraid-load-and-events</string>
+    <string name="response_prebid_mraid_ox_test_properties">response-prebid-mraid-test-properties-3</string>
+    <string name="response_prebid_mraid_ox_test_methods">response-prebid-mraid-test-methods-3</string>
+    <string name="response_prebid_mraid_ox_resize_expandable">response-prebid-mraid-resize-expandable</string>
+
+    <!--  Native  -->
+    <string name="response_prebid_native_styles">response-prebid-banner-native-styles</string>
+    <string name="response_prebid_native_links">response-prebid-native-links</string>
+    <string name="response_prebid_native_video">response-prebid-native-video-with-end-card</string>
 </resources>

@@ -16,41 +16,46 @@
 
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 
-// TODO: Uncomment when native module will be merged
-//import android.widget.Button
-//import kotlinx.android.synthetic.main.events_bids.*
-//import kotlinx.android.synthetic.main.lyt_native_ad_links.*
-//import org.prebid.mobile.rendering.bidding.data.ntv.NativeAd
-//import org.prebid.mobile.rendering.models.openrtb.bidRequests.assets.NativeAssetData
-//import org.prebid.mobile.renderingtestapp.R
-//
-//class PpmNativeLinksFragment : PpmNativeFragment() {
-//    override val layoutRes: Int = R.layout.fragment_native_links
-//
-//    override fun inflateViewContent(nativeAd: NativeAd?) {
-//        if (nativeAd == null) {
-//            btnAdFailed?.isEnabled = true
-//            return
-//        }
-//
-//        btnAdDisplayed?.isEnabled = true
-//        this.nativeAd = nativeAd
-//
-//        nativeAd.setNativeAdListener(this)
-//
-//        nativeAd.registerView(adContainer, btnNativeLinkRoot)
-//
-//        btnNativeLinkRoot.text = nativeAd.callToAction
-//        setupButton(nativeAd, btnNativeDeeplinkFallback, NativeAssetData.DataType.SPONSORED)
-//        setupButton(nativeAd, btnNativeDeeplinkOk, NativeAssetData.DataType.DESC)
-//        setupButton(nativeAd, btnNativeLinkUrl, NativeAssetData.DataType.RATING)
-//    }
-//
-//    private fun setupButton(nativeAd: NativeAd?, button: Button, dataType: NativeAssetData.DataType) {
-//        val nativeData = nativeAd?.getNativeAdDataList(dataType)?.firstOrNull()
-//        if (nativeData != null) {
-//            button.text = nativeData.value
-//            nativeAd.registerClickView(button, nativeData)
-//        }
-//    }
-//}
+import android.widget.Button
+import kotlinx.android.synthetic.main.events_bids.*
+import kotlinx.android.synthetic.main.lyt_native_ad_links.*
+import org.prebid.mobile.NativeData
+import org.prebid.mobile.PrebidNativeAd
+import org.prebid.mobile.renderingtestapp.R
+
+class PpmNativeLinksFragment : PpmNativeFragment() {
+
+    override val layoutRes: Int = R.layout.fragment_native_links
+
+    override fun inflateViewContent(nativeAd: PrebidNativeAd) {
+        btnAdDisplayed?.isEnabled = true
+
+        nativeAd.registerViewList(
+            adContainer,
+            listOf(
+                btnNativeLinkRoot,
+                btnNativeDeeplinkOk,
+                btnNativeDeeplinkFallback,
+                btnNativeLinkUrl
+            ),
+            createNativeListener()
+        )
+
+        btnNativeLinkRoot.text = nativeAd.callToAction
+        setupButton(nativeAd, btnNativeDeeplinkFallback, NativeData.Type.SPONSORED_BY)
+        setupButton(nativeAd, btnNativeDeeplinkOk, NativeData.Type.DESCRIPTION)
+        setupButton(nativeAd, btnNativeLinkUrl, NativeData.Type.RATING)
+    }
+
+    private fun setupButton(
+        nativeAd: PrebidNativeAd,
+        button: Button,
+        dataType: NativeData.Type
+    ) {
+        val nativeData = nativeAd.dataList.find { it.type == dataType }
+        if (nativeData != null) {
+            button.text = nativeData.value
+        }
+    }
+
+}

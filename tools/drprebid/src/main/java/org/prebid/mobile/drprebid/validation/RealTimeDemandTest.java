@@ -4,55 +4,47 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.prebid.mobile.AdUnit;
-import org.prebid.mobile.BannerAdUnit;
-import org.prebid.mobile.Host;
-import org.prebid.mobile.InterstitialAdUnit;
-import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.*;
 import org.prebid.mobile.drprebid.Constants;
 import org.prebid.mobile.drprebid.async.DemandTestResultTask;
 import org.prebid.mobile.drprebid.async.DemandTestTask;
 import org.prebid.mobile.drprebid.managers.DemandTestManager;
 import org.prebid.mobile.drprebid.managers.SettingsManager;
-import org.prebid.mobile.drprebid.model.AdFormat;
 import org.prebid.mobile.drprebid.model.AdSize;
-import org.prebid.mobile.drprebid.model.Bidder;
-import org.prebid.mobile.drprebid.model.DemandTestResults;
-import org.prebid.mobile.drprebid.model.GeneralSettings;
-import org.prebid.mobile.drprebid.model.PrebidServer;
-import org.prebid.mobile.drprebid.model.PrebidServerSettings;
+import org.prebid.mobile.drprebid.model.*;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RealTimeDemandTest {
+
     private static final String TAG = RealTimeDemandTest.class.getSimpleName();
     private static final int REQUEST_MAX = 100;
 
     public interface Listener {
+
         void onTestFinished(DemandTestResults results);
+
     }
 
-    private Listener mListener;
-    private Context mContext;
+    private Listener listener;
+    private Context context;
 
     private int testResponseCount = 0;
     private DemandTestResults testResults;
 
-    public RealTimeDemandTest(Context context, Listener listener) {
-        mContext = context;
-        mListener = listener;
+    public RealTimeDemandTest(
+            Context context,
+            Listener listener
+    ) {
+        this.context = context;
+        this.listener = listener;
     }
 
     public void startTest() {
-        GeneralSettings generalSettings = SettingsManager.getInstance(mContext).getGeneralSettings();
-        PrebidServerSettings prebidServerSettings = SettingsManager.getInstance(mContext).getPrebidServerSettings();
+        GeneralSettings generalSettings = SettingsManager.getInstance(context).getGeneralSettings();
+        PrebidServerSettings prebidServerSettings = SettingsManager.getInstance(context).getPrebidServerSettings();
 
         AdUnit adUnit = null;
         if (generalSettings.getAdFormat() == AdFormat.BANNER) {
@@ -84,7 +76,11 @@ public class RealTimeDemandTest {
                 hostUrl = Constants.EndpointUrls.APPNEXUS_PREBID_SERVER;
         }
 
-        DemandRequestBuilder builder = new DemandRequestBuilder(mContext, prebidServerSettings.getConfigId(), generalSettings.getAdSize());
+        DemandRequestBuilder builder = new DemandRequestBuilder(
+                context,
+                prebidServerSettings.getConfigId(),
+                generalSettings.getAdSize()
+        );
         String request = builder.buildRequest(adUnits, prebidServerSettings.getAccountId(), true);
 
         testResponseCount = 0;
@@ -190,7 +186,9 @@ public class RealTimeDemandTest {
                 if (ext.has("errors")) {
                     JSONObject bidderErrors = ext.getJSONObject("errors");
                     if (bidderErrors != null) {
-                        if (SettingsManager.getInstance(mContext).getPrebidServerSettings().getPrebidServer() == PrebidServer.RUBICON) {
+                        if (SettingsManager.getInstance(context)
+                                           .getPrebidServerSettings()
+                                           .getPrebidServer() == PrebidServer.RUBICON) {
                             Iterator<String> keyIterator = bidderErrors.keys();
                             while (keyIterator.hasNext()) {
                                 String key = keyIterator.next();
@@ -268,8 +266,8 @@ public class RealTimeDemandTest {
             }
 
             testResults.setAvgResponseTime(averageResponseTime);
-            if (mListener != null) {
-                mListener.onTestFinished(testResults);
+            if (listener != null) {
+                listener.onTestFinished(testResults);
             }
         }
     };

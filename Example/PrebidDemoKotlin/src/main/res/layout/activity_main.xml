@@ -3,20 +3,29 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="org.prebid.mobile.prebidkotlindemo.MainActivity">
+
+        <TextView
+            android:id="@+id/tvAppTitle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            tools:context="org.prebid.mobile.prebidkotlindemo.MainActivity">
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Kotlin"
+            android:textColor="#4086FF"
+            android:textSize="34sp" />
 
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="0dp">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="0dp">
 
             <TextView
-                    android:id="@+id/adServerText"
-                    android:layout_width="136dp"
+                android:id="@+id/adServerText"
+                android:layout_width="136dp"
                     android:layout_height="wrap_content"
                     android:minHeight="48dp"
                     android:gravity="center"

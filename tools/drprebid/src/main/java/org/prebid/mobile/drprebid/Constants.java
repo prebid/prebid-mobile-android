@@ -33,7 +33,6 @@ public final class Constants {
 
         public static final class AdServerCodes {
             public static final int GOOGLE_AD_MANAGER = 1;
-            public static final int MOPUB = 2;
         }
 
         public static final class PrebidServerCodes {
@@ -60,11 +59,8 @@ public final class Constants {
     }
 
     public static final class EndpointUrls {
-        public static final String APPNEXUS_PREBID_SERVER = "https://prebid.adnxs.com/pbs/v1/openrtb2/auction";
+        public static final String APPNEXUS_PREBID_SERVER = "https://ib.adnxs.com/openrtb2/prebid";
         public static final String RUBICON_PREBID_SERVER = "https://prebid-server.rubiconproject.com/openrtb2/auction";
     }
 
-    public static final class AdServer {
-        public static final String MOPUB_320x50_AD_UNIT_ID = "338919cc0e1247aa8a4932ae989c2a7f";
-    }
 }

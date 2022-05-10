@@ -1,72 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.prebid.mobile.app">
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.prebid.mobile.javademo">
+
     <!-- Required permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <!-- Optional permissions. Will pass Lat/Lon values when available. Choose either Coarse or Fine -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- Optional permissions. Used for MRAID 2.0 storePicture ads -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:name=".CustomApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <meta-data
-            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
-            android:value="true" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".XandrNativeInAppMoPubDemoActivity"/>
-        <activity android:name=".XandrNativeInAppGAMDemoActivity"/>
-        <activity android:name=".RubiconBannerGamDemoActivity" />
-        <activity android:name=".RubiconBannerMoPubDemoActivity" />
-        <activity android:name=".RubiconInterstitialGamDemoActivity" />
-        <activity android:name=".RubiconInterstitialMoPubDemoActivity" />
-        <activity android:name=".RubiconBannerVideoGamDemoActivity" />
-        <activity android:name=".RubiconInterstitialVideoGamDemoActivity" />
-        <activity android:name=".RubiconInterstitialVideoMoPubDemoActivity" />
-        <activity android:name=".RubiconRewardedVideoGamDemoActivity" />
-        <activity android:name=".RubiconRewardedVideoMoPubDemoActivity" />
-        <activity android:name=".RubiconInstreamVideoIMADemoActivity" />
-        <activity android:name=".XandrBannerGamDemoActivity" />
-        <activity android:name=".XandrBannerMoPubDemoActivity" />
-        <activity android:name=".XandrInterstitialGamDemoActivity" />
-        <activity android:name=".XandrInterstitialMoPubDemoActivity" />
-        <activity android:name=".XandrNativeInBannerGamDemoActivity" />
-        <activity android:name=".XandrNativeInBannerMoPubDemoActivity" />
-        <activity android:name=".XandrInstreamVideoGamActivity" />
-        <activity android:name=".TestActivity" />
-        <!--MoPub Activities-->
-        <activity
-            android:name="com.mopub.mobileads.MoPubActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
-        <activity
-            android:name="com.mopub.mobileads.MraidActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
-        <activity
-            android:name="com.mopub.mobileads.RewardedMraidActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
-        <activity
-            android:name="com.mopub.common.MoPubBrowser"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
-        <activity
-            android:name="com.mopub.mobileads.MraidVideoPlayerActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name=".activities.DemoActivity" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
+            android:value="true" />
+
     </application>
 
 </manifest>

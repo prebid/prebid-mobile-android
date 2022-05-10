@@ -19,24 +19,21 @@ package org.prebid.mobile.eventhandlers;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.admanager.AppEventListener;
-
+import org.prebid.mobile.AdSize;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.eventhandlers.global.Constants;
 import org.prebid.mobile.eventhandlers.utils.GamUtils;
-import org.prebid.mobile.rendering.bidding.data.AdSize;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
-import org.prebid.mobile.rendering.utils.logger.LogUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 /**
  * This class is responsible for wrapping usage of PublisherAdView from GAM SDK.
@@ -47,19 +44,23 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
 
     private static final String TAG = PublisherAdViewWrapper.class.getSimpleName();
 
-    private final AdManagerAdView mAdView;
-    private final GamAdEventListener mListener;
+    private final AdManagerAdView adView;
+    private final GamAdEventListener listener;
 
-    private PublisherAdViewWrapper(Context context, String gamAdUnit,
-                                   GamAdEventListener eventListener, AdSize... adSizes) {
-        mListener = eventListener;
+    private PublisherAdViewWrapper(
+            Context context,
+            String gamAdUnit,
+            GamAdEventListener eventListener,
+            AdSize... adSizes
+    ) {
+        listener = eventListener;
 
-        mAdView = new AdManagerAdView(context);
-        mAdView.setAdSizes(mapToGamAdSizes(adSizes));
-        mAdView.setAdUnitId(gamAdUnit);
-        mAdView.setAdListener(this);
-        mAdView.setAppEventListener(this);
-        mAdView.setAdListener(this);
+        adView = new AdManagerAdView(context);
+        adView.setAdSizes(mapToGamAdSizes(adSizes));
+        adView.setAdUnitId(gamAdUnit);
+        adView.setAdListener(this);
+        adView.setAppEventListener(this);
+        adView.setAdListener(this);
     }
 
     @Nullable
@@ -85,7 +86,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
         @NonNull
             String info) {
         if (Constants.APP_EVENT.equals(name)) {
-            mListener.onEvent(AdEvent.APP_EVENT_RECEIVED);
+            listener.onEvent(AdEvent.APP_EVENT_RECEIVED);
         }
     }
     //endregion ==================== GAM AppEventsListener Implementation
@@ -93,7 +94,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
     //region ==================== GAM AdEventListener Implementation
     @Override
     public void onAdClosed() {
-        mListener.onEvent(AdEvent.CLOSED);
+        listener.onEvent(AdEvent.CLOSED);
     }
 
     @Override
@@ -103,17 +104,17 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
         final AdEvent adEvent = AdEvent.FAILED;
         adEvent.setErrorCode(loadAdError.getCode());
 
-        mListener.onEvent(adEvent);
+        listener.onEvent(adEvent);
     }
 
     @Override
     public void onAdOpened() {
-        mListener.onEvent(AdEvent.CLICKED);
+        listener.onEvent(AdEvent.CLICKED);
     }
 
     @Override
     public void onAdLoaded() {
-        mListener.onEvent(AdEvent.LOADED);
+        listener.onEvent(AdEvent.LOADED);
     }
     //endregion ==================== GAM AdEventListener Implementation
 
@@ -126,7 +127,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
                 GamUtils.handleGamCustomTargetingUpdate(adRequest, targetingMap);
             }
 
-            mAdView.loadAd(adRequest);
+            adView.loadAd(adRequest);
         }
         catch (Throwable throwable) {
             LogUtil.error(TAG, Log.getStackTraceString(throwable));
@@ -135,7 +136,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
 
     public void setManualImpressionsEnabled(boolean enabled) {
         try {
-            mAdView.setManualImpressionsEnabled(enabled);
+            adView.setManualImpressionsEnabled(enabled);
         }
         catch (Throwable throwable) {
             LogUtil.error(TAG, Log.getStackTraceString(throwable));
@@ -144,7 +145,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
 
     public void recordManualImpression() {
         try {
-            mAdView.recordManualImpression();
+            adView.recordManualImpression();
         }
         catch (Throwable throwable) {
             LogUtil.error(TAG, Log.getStackTraceString(throwable));
@@ -153,7 +154,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
 
     public void destroy() {
         try {
-            mAdView.destroy();
+            adView.destroy();
         }
         catch (Throwable throwable) {
             LogUtil.error(TAG, Log.getStackTraceString(throwable));
@@ -161,7 +162,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
     }
 
     public View getView() {
-        return mAdView;
+        return adView;
     }
 
     private com.google.android.gms.ads.AdSize[] mapToGamAdSizes(AdSize[] adSizes) {
@@ -172,7 +173,7 @@ public class PublisherAdViewWrapper extends AdListener implements AppEventListen
         final com.google.android.gms.ads.AdSize[] gamAdSizeArray = new com.google.android.gms.ads.AdSize[adSizes.length];
         for (int i = 0; i < adSizes.length; i++) {
             final AdSize prebidAdSize = adSizes[i];
-            gamAdSizeArray[i] = new com.google.android.gms.ads.AdSize(prebidAdSize.width, prebidAdSize.height);
+            gamAdSizeArray[i] = new com.google.android.gms.ads.AdSize(prebidAdSize.getWidth(), prebidAdSize.getHeight());
         }
 
         return gamAdSizeArray;

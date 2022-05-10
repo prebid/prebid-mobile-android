@@ -1,17 +1,51 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
+import org.json.JSONObject;
+import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.configuration.NativeAdUnitConfiguration;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
+
+import java.util.HashMap;
 
 /**
  * For details of the configuration of native imps, please check this documentation:
  * https://www.iab.com/wp-content/uploads/2018/03/OpenRTB-Native-Ads-Specification-Final-1.2.pdf
  */
 public class NativeAdUnit extends AdUnit {
-    NativeRequestParams params;
+
+    public static final String BUNDLE_KEY_CACHE_ID = "NativeAdUnitCacheId";
+
+    private final NativeAdUnitConfiguration nativeConfiguration;
 
     public NativeAdUnit(@NonNull String configId) {
-        super(configId, AdType.NATIVE);
-        params = new NativeRequestParams();
+        super(configId, AdFormat.NATIVE);
+        nativeConfiguration = configuration.getNativeConfiguration();
+    }
+
+    @Override
+    protected BidRequesterListener createBidListener(OnCompleteListener originalListener) {
+        return new BidRequesterListener() {
+            @Override
+            public void onFetchCompleted(BidResponse response) {
+                HashMap<String, String> keywords = response.getTargeting();
+                Util.apply(keywords, adObject);
+
+                String cacheId = CacheManager.save(response.getWinningBidJson());
+                Util.saveCacheId(cacheId, adObject);
+
+                originalListener.onComplete(ResultCode.SUCCESS);
+            }
+
+            @Override
+            public void onError(AdException exception) {
+                Util.apply(null, adObject);
+                originalListener.onComplete(convertToResultCode(exception));
+            }
+        };
     }
 
     public enum CONTEXT_TYPE {
@@ -47,7 +81,7 @@ public class NativeAdUnit extends AdUnit {
     }
 
     public void setContextType(CONTEXT_TYPE type) {
-        params.setContextType(type);
+        nativeConfiguration.setContextType(type);
     }
 
     public enum CONTEXTSUBTYPE {
@@ -92,7 +126,7 @@ public class NativeAdUnit extends AdUnit {
     }
 
     public void setContextSubType(CONTEXTSUBTYPE type) {
-        params.setContextSubType(type);
+        nativeConfiguration.setContextSubtype(type);
     }
 
     public enum PLACEMENTTYPE {
@@ -130,39 +164,46 @@ public class NativeAdUnit extends AdUnit {
     }
 
     public void setPlacementType(PLACEMENTTYPE placementType) {
-        params.setPlacementType(placementType);
+        nativeConfiguration.setPlacementType(placementType);
     }
 
     public void setPlacementCount(int placementCount) {
-        params.setPlacementCount(placementCount);
+        nativeConfiguration.setPlacementCount(placementCount);
     }
 
     public void setSeq(int seq) {
-        params.setSeq(seq);
+        nativeConfiguration.setSeq(seq);
     }
 
     public void setAUrlSupport(boolean support) {
-        params.setAUrlSupport(support);
+        nativeConfiguration.setAUrlSupport(support);
     }
 
     public void setDUrlSupport(boolean support) {
-        params.setDUrlSupport(support);
+        nativeConfiguration.setDUrlSupport(support);
     }
 
     public void setPrivacy(boolean privacy) {
-        params.setPrivacy(privacy);
+        nativeConfiguration.setPrivacy(privacy);
     }
 
     public void setExt(Object jsonObject) {
-        params.setExt(jsonObject);
+        if (jsonObject instanceof JSONObject) {
+            nativeConfiguration.setExt((JSONObject) jsonObject);
+        }
     }
 
     public void addEventTracker(NativeEventTracker tracker) {
-        params.addEventTracker(tracker);
+        nativeConfiguration.addEventTracker(tracker);
     }
 
     public void addAsset(NativeAsset asset) {
-        params.addAsset(asset);
+        nativeConfiguration.addAsset(asset);
+    }
+
+    @VisibleForTesting
+    public NativeAdUnitConfiguration getNativeConfiguration() {
+        return nativeConfiguration;
     }
 
 }

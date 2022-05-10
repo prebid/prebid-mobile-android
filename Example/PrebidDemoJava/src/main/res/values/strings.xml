@@ -1,49 +1,7 @@
 <resources>
-    <string name="content_url"><![CDATA[https://storage.googleapis.com/gvabox/media/samples/stock.mp4]]></string>
-
-    <string name="app_name">API1.0Demo</string>
+    <string name="app_name">Prebid Java Demo</string>
     <string name="adTypeText">Ad Type</string>
-
-    <string name="adTypeBanner">Banner</string>
-    <string name="adTypeInterstitial">Interstitial</string>
-    <string name="adTypeBannerVideo">Banner Video</string>
-    <string name="adTypeInterstitialVideo">Interstitial Video</string>
-    <string name="adTypeInBannerNative">In Banner Native</string>
-    <string name="adTypeInAppNative">In App Native</string>
-    <string name="adTypeRewardedVideo">Rewarded Video</string>
-    <string name="adTypeInstreamVideo">Instream Video</string>
-
-    <string-array name="adTypeArray">
-        <item>@string/adTypeBanner</item>
-        <item>@string/adTypeInterstitial</item>
-        <item>@string/adTypeBannerVideo</item>
-        <item>@string/adTypeInterstitialVideo</item>
-        <item>@string/adTypeInBannerNative</item>
-        <item>@string/adTypeInAppNative</item>
-        <item>@string/adTypeRewardedVideo</item>
-        <item>@string/adTypeInstreamVideo</item>
-    </string-array>
-
     <string name="adServerText">Ad Server</string>
-
-    <string name="adServerAdManager">AdManager</string>
-    <string name="adServerMoPub">MoPub</string>
-
-    <string-array name="adServerArray">
-        <item>@string/adServerAdManager</item>
-        <item>@string/adServerMoPub</item>
-    </string-array>
-
-    <string name="adSizeText">Ad Size</string>
-    <string-array name="adSizeArray">
-        <item>300x250</item>
-        <item>320x50</item>
-    </string-array>
-    <string name="hostText">Host</string>
-    <string-array name="hostArray">
-        <item>Rubicon</item>
-        <item>Xandr</item>
-    </string-array>
     <string name="buttonText">Show Ad</string>
-    <string name="autoRefreshText">Refresh Millis</string>
+    <string name="autoRefreshText">Auto Refresh Seconds</string>
 </resources>
