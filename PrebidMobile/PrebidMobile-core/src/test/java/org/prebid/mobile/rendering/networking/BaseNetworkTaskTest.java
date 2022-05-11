@@ -20,15 +20,19 @@ import androidx.test.filters.Suppress;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+
 import org.hamcrest.MatcherAssert;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.PrebidMobile;
 import org.robolectric.RobolectricTestRunner;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import static junit.framework.Assert.*;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -94,6 +98,28 @@ public class BaseNetworkTaskTest {
 
         BaseNetworkTask.GetUrlParams paramsValid = new BaseNetworkTask.GetUrlParams();
         assertTrue(baseNetworkTask.validParams(paramsValid));
+    }
+
+    @Test
+    public void testCustomHeaders() throws InterruptedException {
+        server.enqueue(new MockResponse().setResponseCode(200).setBody("test body"));
+        HashMap<String, String> customHeaders = new HashMap<>();
+        customHeaders.put("TEST_HEADER_A", "HEADER_VALUE_1");
+        customHeaders.put("TEST_HEADER_B", "HEADER_VALUE_2");
+        PrebidMobile.setCustomHeaders(customHeaders);
+
+        BaseNetworkTask baseNetworkTask = new BaseNetworkTask(baseResponseHandler);
+
+        try {
+            baseNetworkTask.execute(params);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        RecordedRequest request = server.takeRequest();
+        Assert.assertEquals("HEADER_VALUE_1", request.getHeader("TEST_HEADER_A"));
+        Assert.assertEquals("HEADER_VALUE_2", request.getHeader("TEST_HEADER_B"));
     }
 
     @Test
