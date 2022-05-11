@@ -165,8 +165,10 @@ public class PrebidMobile {
     /**
      * HashMap containing a list of custom headers to add to requests
      */
-    public static void setCustomHeaders(HashMap<String, String> customHeaders) {
-        PrebidMobile.customHeaders = customHeaders;
+    public static void setCustomHeaders(@Nullable HashMap<String, String> customHeaders) {
+        if (customHeaders != null) {
+            PrebidMobile.customHeaders = customHeaders;
+        }
     }
 
     /**
@@ -174,6 +176,7 @@ public class PrebidMobile {
      *
      * @return externalUserIds as Array.
      */
+    @NonNull
     public static HashMap<String, String> getCustomHeaders() {
         return PrebidMobile.customHeaders;
     }
