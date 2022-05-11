@@ -250,10 +250,11 @@ public class MraidResize {
 
             // Require the entire ad to be on-screen.
             Rect bounds = screenMetrics.getRootViewRect();
-            int rectWid = bounds.width();//max allowed size
-            int rectHei = bounds.height();
+            int maxAllowedWidth = bounds.width();
+            int maxAllowedHeight = bounds.height();
 
-            if (resizeRect.width() > rectWid || resizeRect.height() > rectHei) {
+            // 2 - possible offset after px to dp conversion
+            if (resizeRect.width() - 2 > maxAllowedWidth || resizeRect.height() - 2 > maxAllowedHeight) {
                 sendError(widthDips, heightDips, offsetXDips, offsetYDips);
                 jsInterface.onError(
                     "Resize properties specified a size & offset that does not allow the ad to appear within the max allowed size",
