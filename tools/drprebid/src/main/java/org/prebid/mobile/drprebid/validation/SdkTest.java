@@ -121,16 +121,15 @@ public class SdkTest {
 
 
         if (generalSettings.getAdFormat() == AdFormat.BANNER) {
-            mGoogleBanner = new PublisherAdView(mContext);
+            googleBanner = new PublisherAdView(context);
             AdSize adSize = generalSettings.getAdSize();
-            mGoogleBanner.setAdSizes(new com.google.android.gms.ads.AdSize(adSize.getWidth(), adSize.getHeight()));
-            mGoogleBanner.setAdUnitId(adServerSettings.getAdUnitId());
-            mGoogleBanner.setAdListener(mGoogleBannerListener);
-
+            googleBanner.setAdSizes(new com.google.android.gms.ads.AdSize(adSize.getWidth(), adSize.getHeight()));
+            googleBanner.setAdUnitId(adServerSettings.getAdUnitId());
+            googleBanner.setAdListener(googleBannerListener);
         } else if (generalSettings.getAdFormat() == AdFormat.INTERSTITIAL) {
-            mGoogleInterstitial = new PublisherInterstitialAd(mContext);
-            mGoogleInterstitial.setAdUnitId(adServerSettings.getAdUnitId());
-            mGoogleInterstitial.setAdListener(mGoogleInterstitialListener);
+            googleInterstitial = new PublisherInterstitialAd(context);
+            googleInterstitial.setAdUnitId(adServerSettings.getAdUnitId());
+            googleInterstitial.setAdListener(googleInterstitialListener);
         }
 
         if (adUnit != null) {

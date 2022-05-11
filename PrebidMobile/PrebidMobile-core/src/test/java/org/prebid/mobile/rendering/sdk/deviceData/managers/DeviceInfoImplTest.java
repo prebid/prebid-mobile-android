@@ -148,7 +148,7 @@ public class DeviceInfoImplTest {
 
     @Test
     public void playVideoTest() {
-        deviceInfoImpl.playVideo("test");
+        deviceInfoImpl.playVideo("test", mockContext);
         verify(mockContext).startActivity(any(Intent.class));
     }
 
