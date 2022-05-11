@@ -81,7 +81,12 @@ public class UserConsentManager extends BaseManager {
         getConsentValues(preferences, PURPOSE_CONSENT);
     }
 
-    private Object getConsentValues(SharedPreferences preferences, String key) {
+    private Object getConsentValues(
+        SharedPreferences preferences,
+        @Nullable String key
+    ) {
+        if (key == null) return null;
+
         switch (key) {
             case SUBJECT_TO_GDPR:
                 return isSubjectToGdpr = preferences.getString(SUBJECT_TO_GDPR, null);
