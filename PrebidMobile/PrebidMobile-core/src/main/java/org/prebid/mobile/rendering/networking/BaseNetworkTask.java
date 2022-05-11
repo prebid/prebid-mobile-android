@@ -27,6 +27,7 @@ import org.prebid.mobile.rendering.utils.helpers.Utils;
 import java.io.*;
 import java.net.*;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Performs HTTP communication in the background, i.e. off the UI thread.
@@ -245,6 +246,7 @@ public class BaseNetworkTask
         connection.setRequestProperty(ACCEPT_LANGUAGE_HEADER, Locale.getDefault().toString());
         connection.setRequestProperty(ACCEPT_HEADER, ACCEPT_HEADER_VALUE);
         connection.setRequestProperty(CONTENT_TYPE_HEADER, CONTENT_TYPE_HEADER_VALUE);
+        this.setCustomHeadersIfAvailable(connection);
 
         connection.setReadTimeout(SOCKET_TIMEOUT);
         connection.setConnectTimeout(PrebidMobile.getTimeoutMillis());
@@ -268,6 +270,14 @@ public class BaseNetworkTask
 
         connection = openConnectionCheckRedirects(connection);
         return connection;
+    }
+
+    private void setCustomHeadersIfAvailable(URLConnection connection) {
+        if(!PrebidMobile.getCustomHeaders().isEmpty()) {
+            for (Map.Entry<String, String> customHeader: PrebidMobile.getCustomHeaders().entrySet()) {
+                connection.setRequestProperty(customHeader.getKey(), customHeader.getValue());
+            }
+        }
     }
 
     private URLConnection openConnectionCheckRedirects(URLConnection connection) throws Exception {
