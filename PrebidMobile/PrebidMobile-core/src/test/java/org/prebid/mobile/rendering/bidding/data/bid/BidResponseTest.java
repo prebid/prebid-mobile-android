@@ -147,15 +147,15 @@ public class BidResponseTest {
     }
 
     @Test
-    public void testWinningBidKeywords_useCacheInRenderingApi_withoutCacheId_parseError() throws IOException {
+    public void testWinningBidKeywords_useCacheInRenderingApi_withoutCacheId_noParseError() throws IOException {
         String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_without_cache_id.json");
 
         AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         PrebidMobile.setUseCacheForReportingWithRenderingApi(true);
         BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
 
-        assertTrue(subject.hasParseError());
-        assertNull(subject.getWinningBid());
+        assertFalse(subject.hasParseError());
+        assertNotNull(subject.getWinningBid());
     }
 
     @Test
