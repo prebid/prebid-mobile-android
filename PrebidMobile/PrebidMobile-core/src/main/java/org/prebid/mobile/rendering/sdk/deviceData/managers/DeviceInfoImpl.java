@@ -30,6 +30,7 @@ import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.WindowManager;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.LogUtil;
@@ -251,17 +252,21 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
      * @see DeviceInfoManager
      */
     @Override
-    public void playVideo(String url) {
-        if (getContext() != null) {
-            final Intent startBrowserActivity = new Intent(getContext(), AdBrowserActivity.class);
-            startBrowserActivity.putExtra(AdBrowserActivity.EXTRA_IS_VIDEO, true);
-            startBrowserActivity.putExtra(AdBrowserActivity.EXTRA_URL, url);
-            if (ExternalViewerUtils.isActivityCallable(getContext(), startBrowserActivity)) {
-                getContext().startActivity(startBrowserActivity);
+    public void playVideo(
+        String url,
+        Context context
+    ) {
+        if (context != null) {
+            final Intent intent = new Intent(context, AdBrowserActivity.class);
+            intent.putExtra(AdBrowserActivity.EXTRA_IS_VIDEO, true);
+            intent.putExtra(AdBrowserActivity.EXTRA_URL, url);
+            if (ExternalViewerUtils.isActivityCallable(context, intent)) {
+                ExternalViewerUtils.startActivity(context, intent);
+            } else {
+                ExternalViewerUtils.startExternalVideoPlayer(context, url);
             }
-            else {
-                ExternalViewerUtils.startExternalVideoPlayer(getContext(), url);
-            }
+        } else {
+            Log.e(TAG, "Can't play video as context is null");
         }
     }
 

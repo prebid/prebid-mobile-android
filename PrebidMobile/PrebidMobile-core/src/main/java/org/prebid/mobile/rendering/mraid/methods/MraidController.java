@@ -264,7 +264,7 @@ public class MraidController {
         //open up an expanded dialog(always fullscreen) & then play video on videoview in that expanded dialog
         displayMraidInInterstitial(adBaseView, true, mraidEvent, () -> {
             MraidPlayVideo mraidPlayVideo = new MraidPlayVideo();
-            mraidPlayVideo.playVideo(mraidEvent.mraidActionHelper);
+            mraidPlayVideo.playVideo(mraidEvent.mraidActionHelper, adBaseView.getContext());
         });
     }
 

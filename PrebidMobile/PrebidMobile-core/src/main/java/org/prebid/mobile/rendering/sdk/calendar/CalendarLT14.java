@@ -18,6 +18,7 @@ package org.prebid.mobile.rendering.sdk.calendar;
 
 import android.content.Context;
 import android.content.Intent;
+import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 
 final class CalendarLT14 implements ICalendar
 {
@@ -61,7 +62,6 @@ final class CalendarLT14 implements ICalendar
 			intent.putExtra("hasAlarm", 1);
 		}
 
-		context.startActivity(intent);
-
+		ExternalViewerUtils.startActivity(context, intent);
 	}
 }

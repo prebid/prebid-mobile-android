@@ -30,6 +30,7 @@ import android.widget.TableRow;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.core.R;
+import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
 final class BrowserControls extends TableLayout {
@@ -143,7 +144,7 @@ final class BrowserControls extends TableLayout {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         try {
-            getContext().startActivity(intent);
+            ExternalViewerUtils.startActivity(getContext(), intent);
         }
         catch (Exception e) {
             LogUtil.error(TAG, "Could not handle intent: " + url + " : " + Log.getStackTraceString(e));

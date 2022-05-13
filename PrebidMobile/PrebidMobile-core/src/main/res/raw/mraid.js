@@ -329,6 +329,14 @@ var printDebug = function(messageBuilder) {};
     			return;
     		}
 
+    		//Allow Offscreen
+    		if (typeof(properties.allowOffscreen) !== "boolean") {
+    			mraid.onError("allowOffscreen param of [" + properties.allowOffscreen + "] is unusable.", "setResizeProperties");
+    			return;
+    		}
+
+    		var allowOffscreen = properties.allowOffscreen
+
     		//Get max size
     		var maxSize = mraid.getMaxSize();
     		if (!maxSize || !maxSize.width || !maxSize.height) {
@@ -342,7 +350,7 @@ var printDebug = function(messageBuilder) {};
     			return;
     		}
 
-    		if (properties.width < 50 || properties.width > maxSize.width) {
+    		if (properties.width < 50 || (properties.width > maxSize.width && !allowOffscreen)) {
     			mraid.onError("width param of [" + properties.width + "] outside of acceptable range of 50 to " + maxSize.width, "setResizeProperties");
     			return;
     		}
@@ -353,7 +361,7 @@ var printDebug = function(messageBuilder) {};
     			return;
     		}
 
-    		if (properties.height < 50 || properties.height > maxSize.height) {
+    		if (properties.height < 50 || (properties.height > maxSize.height && !allowOffscreen)) {
     			mraid.onError("height param of [" + properties.height + "] outside of acceptable range of 50 to " + maxSize.height, "setResizeProperties");
     			return;
     		}
@@ -366,12 +374,6 @@ var printDebug = function(messageBuilder) {};
 
     		if (properties.offsetY == null || typeof properties.offsetY === 'undefined' || isNaN(properties.offsetY)) {
     			mraid.onError("offsetY param of [" + properties.offsetY + "] is unusable.", "setResizeProperties");
-    			return;
-    		}
-
-    		//Allow Offscreen
-    		if (typeof(properties.allowOffscreen) !== "boolean") {
-    			mraid.onError("allowOffscreen param of [" + properties.allowOffscreen + "] is unusable.", "setResizeProperties");
     			return;
     		}
 

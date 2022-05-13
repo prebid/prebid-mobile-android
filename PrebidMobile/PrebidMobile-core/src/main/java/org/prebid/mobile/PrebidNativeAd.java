@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -379,7 +380,7 @@ public class PrebidNativeAd {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         try {
-            context.startActivity(intent);
+            ExternalViewerUtils.startActivity(context, intent);
             return true;
         } catch (ActivityNotFoundException e) {
             return false;
