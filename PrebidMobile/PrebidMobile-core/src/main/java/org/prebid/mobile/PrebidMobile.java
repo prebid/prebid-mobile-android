@@ -82,6 +82,14 @@ public class PrebidMobile {
      * If true, the SDK sends "af=3,5", indicating support for MRAID
      */
     public static boolean sendMraidSupportParams = true;
+
+    /**
+     * Indicates whether the PBS should cache the bid for the rendering API.
+     * If the value is true the SDK will make the cache request in order to report
+     * the impression event respectively to the legacy analytic setup.
+     */
+    private static boolean useCacheForReportingWithRenderingApi = false;
+
     public static boolean isCoppaEnabled = false;
     public static boolean useExternalBrowser = false;
 
@@ -108,6 +116,14 @@ public class PrebidMobile {
     private static HashMap<String, String> customHeaders = new HashMap<>();
 
     private PrebidMobile() {
+    }
+
+    public static boolean isUseCacheForReportingWithRenderingApi() {
+        return useCacheForReportingWithRenderingApi;
+    }
+
+    public static void setUseCacheForReportingWithRenderingApi(boolean useCacheForReportingWithRenderingApi) {
+        PrebidMobile.useCacheForReportingWithRenderingApi = useCacheForReportingWithRenderingApi;
     }
 
     public static int getTimeoutMillis() {

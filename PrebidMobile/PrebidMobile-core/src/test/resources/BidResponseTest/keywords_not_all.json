@@ -23,9 +23,7 @@
               },
               "targeting": {
                 "hb_pb": "value1",
-                "hb_bidder": "value2",
-                "hb_cache_id": "value3",
-                "hb_size": "320x50"
+                "hb_bidder": "value2"
               },
               "type": "type"
             }
@@ -40,6 +38,7 @@
   "customdata": "custom",
   "nbr": 1,
   "ext": {
+    "prebid": {},
     "responsetimemillis": {
       "prebid": 63
     },
