@@ -202,7 +202,7 @@ object AdTypesRepository {
 
         "In-App + AdMob" to listOf(
             AdType(
-                "Banner",
+                "Banner 320x50",
                 onCreate = { activity, wrapper, autoRefreshTime ->
                     InAppAdMobBanner.create(
                         activity, wrapper, autoRefreshTime,
@@ -271,7 +271,7 @@ object AdTypesRepository {
 
         "In-App + Applovin MAX" to listOf(
             AdType(
-                "Banner",
+                "Banner 320x50",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     PrebidMobile.setStoredAuctionResponse("response-prebid-banner-320-50")
                     InAppMaxBanner.create(
