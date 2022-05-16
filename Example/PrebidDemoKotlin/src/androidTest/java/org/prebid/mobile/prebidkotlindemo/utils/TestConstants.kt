@@ -1,13 +1,11 @@
 package org.prebid.mobile.prebidkotlindemo.utils
 
-import org.prebid.mobile.prebidkotlindemo.ui.DisplayInterstitialTest
-
 object TestConstants {
     const val BANNER_320x50 = "Banner 320x50"
     const val DISPLAY_INTERSTITIAL = "Display Interstitial"
     const val VIDEO_INTERSTITIAL = "Video Interstitial"
     const val VIDEO_BANNER = "Video Interstitial"
-    const val VIDEO_REWARDED = "Video Rewarded"
+    const val VIDEO_REWARDED = "Rewarded Interstitial"
 
     const val IN_APP = "In-App"
     const val GAM = "Google Ad Manager"

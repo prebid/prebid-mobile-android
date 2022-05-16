@@ -16,7 +16,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @SdkSuppress(minSdkVersion = 18)
-abstract class BaseUiTest {
+abstract class BaseAdsTest {
     protected lateinit var device: UiDevice
     protected val packageName = "org.prebid.mobile.prebidkotlindemo"
     protected val timeout = 5000L

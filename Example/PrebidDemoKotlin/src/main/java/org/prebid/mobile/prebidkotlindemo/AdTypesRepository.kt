@@ -241,7 +241,7 @@ object AdTypesRepository {
                 onDestroy = { InAppAdMobInterstitial.destroy() }
             ),
             AdType(
-                "Rewarded",
+                "Rewarded Interstitial",
                 onCreate = { activity, _, _ ->
                     InAppAdMobRewarded.create(
                         activity,

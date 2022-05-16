@@ -7,7 +7,7 @@ import junit.framework.Assert.assertTrue
 import org.junit.Test
 import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 
-class DisplayInterstitialTest: BaseUiTest() {
+class DisplayInterstitialAdsTest: BaseAdsTest() {
     @Test
     fun inAppDisplayInterstitialShouldBeDisplayed(){
         testAd(TestConstants.IN_APP,TestConstants.DISPLAY_INTERSTITIAL)
@@ -36,7 +36,7 @@ class DisplayInterstitialTest: BaseUiTest() {
         if (findCloseButton == null){
             findCloseButton = device.wait(Until.findObject(gamCloseButton), timeout)
         }
-        assertTrue(findAd.isClickable)
+        assertNotNull(findAd)
         assertNotNull(findCloseButton)
 
     }
