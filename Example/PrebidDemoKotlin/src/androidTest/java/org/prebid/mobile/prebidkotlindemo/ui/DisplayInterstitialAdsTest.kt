@@ -36,6 +36,7 @@ class DisplayInterstitialAdsTest: BaseAdsTest() {
         if (findCloseButton == null){
             findCloseButton = device.wait(Until.findObject(gamCloseButton), timeout)
         }
+
         assertNotNull(findAd)
         assertNotNull(findCloseButton)
 

@@ -12,6 +12,17 @@ orbs:
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
+  android-test:
+    parameters:
+      system-image:
+        type: string
+    executor:
+      name: android/android-machine
+    steps:
+      - checkout
+      - android/start-emulator-and-run-tests:
+          test-command: ./gradlew PrebidDemoKotlin:connectedAndroidTest
+          system-image: << parameters.system-image >>
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
   build:
     # These next lines define the Android machine image executor.
@@ -24,7 +35,15 @@ jobs:
     steps:
       # Checkout the code as the first step.
       - checkout
-      
+      - run:
+          name: Build Java Demo App
+          command: ./gradlew PrebidDemoJava:build
+      - run:
+          name: Build Kotlin Demo App
+          command: ./gradlew PrebidDemoJava:build
+      - run:
+          name: Build Internal Test App
+          command: ./gradlew PrebidInternalTestApp:build
       # And finally run the release build
       - run:
           name: Build Frameworks
@@ -56,3 +75,11 @@ workflows:
     jobs:
       - build
       - test
+      - android-test:
+          matrix:
+            alias: android-test-all
+            parameters:
+              system-image:
+                - system-images;android-30;google_apis;x86
+                - system-images;android-26;google_apis;x86
+          name: android-test-<<matrix.system-image>>
