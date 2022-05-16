@@ -252,4 +252,14 @@ public class BidResponse {
         this.mobileSdkPassThrough = mobileSdkPassThrough;
     }
 
+    @Nullable
+    public String getImpressionEventUrl() {
+        Bid winningBid = getWinningBid();
+        if (winningBid != null) {
+            Prebid prebid = winningBid.getPrebid();
+            return prebid.getImpEventUrl();
+        }
+        return null;
+    }
+
 }

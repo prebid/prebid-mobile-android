@@ -20,6 +20,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.NativeAdUnit;
 import org.prebid.mobile.ParametersMatcher;
 import org.prebid.mobile.PrebidNativeAd;
+import org.prebid.mobile.rendering.bidding.events.EventsNotifier;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -72,6 +73,7 @@ public class PrebidNativeAdapter extends PrebidBaseAdapter implements CustomEven
             adMobListener.onAdFailedToLoad(new AdError(1004, error, "prebid"));
             return;
         }
+        EventsNotifier.notify(nativeAd.getWinEvent());
 
         PrebidNativeAdMapper mapper = new PrebidNativeAdMapper(nativeAd, adMobListener);
         configureMapper(mapper, nativeAd, context);

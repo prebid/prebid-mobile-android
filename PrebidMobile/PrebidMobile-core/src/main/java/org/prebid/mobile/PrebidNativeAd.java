@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.rendering.bidding.events.EventsNotifier;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 
 import java.util.ArrayList;
@@ -45,6 +46,8 @@ public class PrebidNativeAd {
     private View registeredView;
     private PrebidNativeAdEventListener listener;
     private ArrayList<ImpressionTracker> impressionTrackers;
+    private String winEvent;
+    private String impEvent;
 
 
     public static PrebidNativeAd create(String cacheId) {
@@ -143,6 +146,7 @@ public class PrebidNativeAd {
                         }
                     }
                 }
+                parseEvents(details, ad);
                 return ad;
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -150,6 +154,15 @@ public class PrebidNativeAd {
         }
         return null;
     }
+
+    private static void parseEvents(
+        JSONObject bidJson,
+        PrebidNativeAd ad
+    ) {
+        ad.winEvent = EventsNotifier.parseEvent("win", bidJson);
+        ad.impEvent = EventsNotifier.parseEvent("imp", bidJson);
+    }
+
 
     private PrebidNativeAd() {
     }
@@ -376,7 +389,10 @@ public class PrebidNativeAd {
         return false;
     }
 
-    private boolean openNativeIntent(String url, Context context) {
+    private boolean openNativeIntent(
+        String url,
+        Context context
+    ) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         try {
@@ -386,4 +402,13 @@ public class PrebidNativeAd {
             return false;
         }
     }
+
+    public String getWinEvent() {
+        return winEvent;
+    }
+
+    public String getImpEvent() {
+        return impEvent;
+    }
+
 }

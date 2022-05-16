@@ -17,7 +17,10 @@
 package org.prebid.mobile.rendering.bidding.data.bid;
 
 import android.text.TextUtils;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.PrebidMobile;
@@ -36,6 +39,8 @@ public class Prebid {
     private Cache cache;
     private HashMap<String, String> targeting = new HashMap<>();
     private String type;
+    private String winEventUrl;
+    private String impEventUrl;
 
     protected Prebid() {
     }
@@ -62,8 +67,17 @@ public class Prebid {
         }
         prebid.cache = Cache.fromJSONObject(jsonObject.optJSONObject("cache"));
         prebid.type = jsonObject.optString("type");
+        parseEvents(prebid, jsonObject.optJSONObject("events"));
         toHashMap(prebid.targeting, jsonObject.optJSONObject("targeting"));
         return prebid;
+    }
+
+    public String getWinEventUrl() {
+        return winEventUrl;
+    }
+
+    public String getImpEventUrl() {
+        return impEventUrl;
     }
 
     public static JSONObject getJsonObjectForImp(AdUnitConfiguration adUnitConfiguration) {
@@ -124,6 +138,19 @@ public class Prebid {
         return prebid;
     }
 
+
+    private static void parseEvents(
+        @NonNull Prebid prebid,
+        @Nullable JSONObject eventsJson
+    ) {
+        if (eventsJson == null) return;
+
+        try {
+            prebid.winEventUrl = eventsJson.getString("win");
+            prebid.impEventUrl = eventsJson.getString("imp");
+        } catch (JSONException ignored) {}
+    }
+
     private static JSONObject getPrebidObject(String configId) {
         JSONObject prebid = new JSONObject();
         StoredRequest storedRequest = new StoredRequest(configId);
@@ -173,4 +200,5 @@ public class Prebid {
             hashMap.put(key, jsonObject.optString(key));
         }
     }
+
 }

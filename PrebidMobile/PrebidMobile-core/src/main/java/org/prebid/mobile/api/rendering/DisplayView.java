@@ -25,6 +25,7 @@ import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
+import org.prebid.mobile.rendering.bidding.events.EventsNotifier;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.networking.WinNotifier;
@@ -39,6 +40,8 @@ public class DisplayView extends FrameLayout {
 
     private final static String TAG = DisplayView.class.getSimpleName();
     private static final String CONTENT_DESCRIPTION_AD_VIEW = "adView";
+
+    private String impressionEventUrl;
 
     private AdUnitConfiguration adUnitConfiguration;
     private DisplayViewListener displayViewListener;
@@ -152,6 +155,7 @@ public class DisplayView extends FrameLayout {
                 } else {
                     displayHtmlAd(response);
                 }
+                impressionEventUrl = response.getImpressionEventUrl();
             } catch (AdException e) {
                 notifyListenerError(e);
             }
@@ -233,6 +237,7 @@ public class DisplayView extends FrameLayout {
         if (displayViewListener != null) {
             displayViewListener.onAdDisplayed();
         }
+        EventsNotifier.notify(impressionEventUrl);
     }
 
     private void notifyListenerLoaded() {

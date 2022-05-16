@@ -23,6 +23,7 @@ import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.InterstitialView;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.events.EventsNotifier;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialViewListener;
 import org.prebid.mobile.rendering.models.AdDetails;
@@ -33,6 +34,8 @@ public class InterstitialController {
 
     private static final String TAG = InterstitialController.class.getSimpleName();
 
+    private String impressionEventUrl;
+
     private final InterstitialView bidInterstitialView;
     private final InterstitialControllerListener listener;
     private AdFormat adUnitIdentifierType;
@@ -40,8 +43,8 @@ public class InterstitialController {
     private final InterstitialViewListener interstitialViewListener = new InterstitialViewListener() {
         @Override
         public void onAdLoaded(
-                InterstitialView interstitialView,
-                AdDetails adDetails
+            InterstitialView interstitialView,
+            AdDetails adDetails
         ) {
             LogUtil.debug(TAG, "onAdLoaded");
             if (listener != null) {
@@ -66,6 +69,7 @@ public class InterstitialController {
             if (listener != null) {
                 listener.onInterstitialDisplayed();
             }
+            EventsNotifier.notify(impressionEventUrl);
         }
 
         @Override
@@ -106,6 +110,7 @@ public class InterstitialController {
         setRenderingControlSettings(adUnitConfiguration, bidResponse);
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(bidResponse, () -> {
+            impressionEventUrl = bidResponse.getImpressionEventUrl();
             adUnitIdentifierType = bidResponse.isVideo() ? AdFormat.VAST : AdFormat.INTERSTITIAL;
             adUnitConfiguration.setAdFormat(adUnitIdentifierType);
             bidInterstitialView.loadAd(adUnitConfiguration, bidResponse);

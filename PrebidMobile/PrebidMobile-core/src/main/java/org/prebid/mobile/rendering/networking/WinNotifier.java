@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.networking.tracking.ServerConnection;
 
 import java.util.Collections;
@@ -92,10 +93,12 @@ public class WinNotifier {
 
         String cacheIdUrl = getCacheUrlFromBid(bid, KEY_CACHE_ID);
         String uuidUrl = getCacheUrlFromBid(bid, KEY_UUID);
+        String winUrl = getWinUrl(bid);
 
         urlQueue.add(cacheIdUrl);
         urlQueue.add(uuidUrl);
         urlQueue.add(bid.getNurl());
+        urlQueue.add(winUrl);
         urlQueue.removeAll(Collections.singleton(null));
 
         sendNextWinRequest();
@@ -175,8 +178,14 @@ public class WinNotifier {
         }
     }
 
+    private String getWinUrl(@NonNull Bid bid) {
+        Prebid prebid = bid.getPrebid();
+        return prebid.getWinEventUrl();
+    }
+
     @VisibleForTesting
     void enableTestFlag() {
         isUnderTest = true;
     }
+
 }
