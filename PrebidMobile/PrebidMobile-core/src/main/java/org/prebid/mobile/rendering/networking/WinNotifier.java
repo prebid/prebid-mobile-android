@@ -180,7 +180,10 @@ public class WinNotifier {
 
     private String getWinUrl(@NonNull Bid bid) {
         Prebid prebid = bid.getPrebid();
-        return prebid.getWinEventUrl();
+        if (prebid != null) {
+            return prebid.getWinEventUrl();
+        }
+        return null;
     }
 
     @VisibleForTesting
