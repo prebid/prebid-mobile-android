@@ -70,7 +70,6 @@ workflows:
     jobs:
       - build:
           matrix:
-            alias: build-all
             parameters:
               buildName:
                 - Build Java Demo App
@@ -81,7 +80,7 @@ workflows:
                 - ./gradlew PrebidDemoJava:build
                 - ./gradlew PrebidDemoKotlin:build
                 - ./gradlew PrebidInternalTestApp:build
-          name: build-<<matrix.buildName>>
+          name: <<matrix.buildName>>
       - test
       - android-test:
           matrix:
