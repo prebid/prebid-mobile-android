@@ -17,10 +17,10 @@ class VideoRewardedAdsTest : BaseAdsTest() {
         testAd(TestConstants.GAM, TestConstants.DISPLAY_INTERSTITIAL)
     }*/
 
-    @Test
+   /* @Test
     fun inAppGamVideoRewardedShouldBeDisplayed() {
         testAd(TestConstants.IN_APP_GAM, TestConstants.VIDEO_REWARDED)
-    }
+    }*/
 
     @Test
     fun inAppAdMobVideoRewardedShouldBeDisplayed() {
