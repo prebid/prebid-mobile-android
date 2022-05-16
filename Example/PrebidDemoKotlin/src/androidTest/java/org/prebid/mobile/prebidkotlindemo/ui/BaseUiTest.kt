@@ -7,6 +7,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.*
+import junit.framework.Assert
+import junit.framework.Assert.assertNotNull
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.Assert.assertThat
 import org.junit.Before
@@ -14,15 +16,14 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @SdkSuppress(minSdkVersion = 18)
-open class BaseUiTest {
+abstract class BaseUiTest {
     protected lateinit var device: UiDevice
-    protected lateinit var adServerSpinner: UiObject
-    protected lateinit var adTypeSpinner: UiObject
-    protected lateinit var showAdButton: UiObject
     protected val packageName = "org.prebid.mobile.prebidkotlindemo"
     protected val timeout = 5000L
 
-
+    private lateinit var adServerSpinner: UiObject
+    private lateinit var adTypeSpinner: UiObject
+    private lateinit var showAdButton: UiObject
     @Before
     fun startMainActivityFromHomeScreen() {
         device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
@@ -45,9 +46,22 @@ open class BaseUiTest {
         )
         initMainScreenComponents()
     }
-    protected fun selectSpinnerValue(value:String){
+
+    protected fun testAd(adServer:String,adName:String){
+        adServerSpinner.click()
+        selectSpinnerValue(adServer)
+        adTypeSpinner.click()
+        selectSpinnerValue(adName)
+        showAdButton.click()
+
+        checkAd()
+    }
+    protected abstract fun checkAd()
+
+    private fun selectSpinnerValue(value:String){
         device.findObject(By.text(value)).click()
     }
+
     private fun initMainScreenComponents(){
         adServerSpinner = device.findObject(
             UiSelector().resourceId("$packageName:id/spinnerAdServer")

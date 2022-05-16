@@ -87,7 +87,7 @@ object AdTypesRepository {
                 onDestroy = { InAppBanner.destroy() }
             ),
             AdType(
-                "Interstitial",
+                "Display Interstitial",
                 onCreate = { context, _, _ ->
                     InAppInterstitial.create(
                         context,
@@ -149,7 +149,7 @@ object AdTypesRepository {
                 onDestroy = { InAppGamBanner.destroy() }
             ),
             AdType(
-                "Interstitial",
+                "Display Interstitial",
                 onCreate = { context, _, _ ->
                     InAppGamInterstitial.create(
                         context,

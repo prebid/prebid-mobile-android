@@ -1,41 +1,39 @@
 package org.prebid.mobile.prebidkotlindemo.ui
 
 import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
+import junit.framework.Assert
 import junit.framework.Assert.assertNotNull
 import junit.framework.Assert.assertTrue
 import org.junit.Test
+import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 
 class BannerTest : BaseUiTest() {
     @Test
     fun inAppBannerShouldBeDisplayed() {
-        testBanner("In-App")
+        testAd(TestConstants.IN_APP,TestConstants.BANNER_320x50)
     }
     @Test
     fun gamBannerShouldBeDisplayed() {
-        testBanner("Google Ad Manager")
+        testAd(TestConstants.GAM,TestConstants.BANNER_320x50)
     }
     @Test
     fun inAppGamBannerShouldBeDisplayed() {
-        testBanner("In-App + Google Ad Manager")
+        testAd(TestConstants.IN_APP_GAM,TestConstants.BANNER_320x50)
     }
     @Test
     fun inAppAdMobBannerShouldBeDisplayed() {
-        testBanner("In-App + AdMob")
+        testAd(TestConstants.IN_APP_ADMOB,TestConstants.BANNER_320x50)
     }
-    @Test
+    /*@Test
     fun inAppMaxBannerShouldBeDisplayed() {
-        testBanner("In-App + Applovin MAX")
+        testAd(TestConstants.IN_APP_MAX,TestConstants.BANNER_320x50)
+    }*/
+
+    override fun checkAd() {
+        val frameAdWrapperSelector = By.text("Pbs_banner_320x50")
+        val findAd = device.wait(Until.findObject(frameAdWrapperSelector), timeout)
+        assertTrue(findAd.isClickable)
     }
-    private fun testBanner(adServer:String){
-        adServerSpinner.click()
-        selectSpinnerValue(adServer)
-        adTypeSpinner.click()
-        selectSpinnerValue("Banner 320x50")
-        showAdButton.click()
-        val frameAdWrapperSelector = By.res(packageName, "frameAdWrapper")
-        val ad = device.wait(Until.findObject(frameAdWrapperSelector), timeout)
-        assertNotNull(ad)
-    }
+
 }
