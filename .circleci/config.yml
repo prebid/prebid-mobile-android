@@ -29,9 +29,9 @@ jobs:
     # See: https://circleci.com/docs/2.0/executor-types/
     parameters:
       buildName:
-        type: String
+        type: string
       buildCommand:
-        type: String
+        type: string
     executor:
       name: android/android-machine
 
