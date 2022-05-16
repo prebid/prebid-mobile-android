@@ -79,6 +79,7 @@
 
     <!--In-App Titles-->
     <string name="demo_bidding_in_app_banner_320_50">Banner 320x50 (In-App)</string>
+    <string name="demo_bidding_in_app_banner_320_50_events">Banner 320x50 Events (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_no_bids">Banner 320x50 [noBids] (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_imp_prebid_random_bid"> Banner 320x50 [Bid - RANDOM noBids, Ad - RESPECTIVE]</string>
     <string name="demo_bidding_in_app_banner_300_250">Banner 300x250 (In-App)</string>
@@ -129,12 +130,14 @@
     <string name="demo_bidding_in_app_native_styles_no_assets">Banner Native Styles No Assets (In-App)</string>
     <string name="demo_bidding_in_app_native_styles_no_creative">Banner Native Styles No Creative (In-App)</string>
     <string name="demo_bidding_in_app_native">Native Ad (In-App)</string>
+    <string name="demo_bidding_in_app_native_events">Native Ad Events (In-App)</string>
     <string name="demo_bidding_in_app_native_feed">Native Ad Feed (In-App)</string>
     <string name="demo_bidding_in_app_native_links">Native Ad Links (In-App)</string>
     <string name="demo_bidding_in_app_native_video">Native Ad Video (In-App)</string>
 
     <!--GAM Titles-->
     <string name="demo_bidding_gam_banner_320_50_app_event">Banner 320x50 (GAM) [OK, AppEvent]</string>
+    <string name="demo_bidding_gam_banner_320_50_app_event_with_events_url">Banner 320x50 Events (GAM) [OK, AppEvent]</string>
     <string name="demo_bidding_gam_banner_320_50_gam_ad">Banner 320x50 (GAM) [OK, GAM Ad]</string>
     <string name="demo_bidding_gam_banner_320_50_no_bids">Banner 320x50 (GAM) [noBids, GAM Ad]</string>
     <string name="demo_bidding_gam_banner_320_50_random">Banner 320x50 (GAM) [OK, Random]</string>
@@ -167,6 +170,7 @@
     <string name="demo_bidding_gam_native_styles_fluid">Banner Native Styles (GAM) [Fluid]</string>
     <string name="demo_bidding_gam_native_styles_no_assets">Banner Native Styles No Assets (GAM) [MRect]</string>
     <string name="demo_bidding_gam_native_custom_templates">Native Ad Custom Templates (GAM) [OK, NativeAd]</string>
+    <string name="demo_bidding_gam_native_custom_templates_events">Native Ad Custom Templates Events (GAM) [OK, NativeAd]</string>
     <string name="demo_bidding_gam_native_custom_templates_no_bids">Native Ad (GAM) [noBids, GADNativeCustomTemplateAd]</string>
     <string name="demo_bidding_gam_native_unified_ads">Native Ad Unified Ad (GAM) [OK, NativeAd]</string>
     <string name="demo_bidding_gam_native_unified_ads_no_bids">Native Ad (GAM) [noBids, GADUnifiedNativeAd]</string>
@@ -179,6 +183,7 @@
 
     <!--AdMob Titles-->
     <string name="demo_bidding_admob_banner_320_50_adapter">Banner 320x50 (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_banner_320_50_adapter_with_events">Banner 320x50 Events (AdMob) [OK, OXB Adapter]</string>
     <string name="demo_bidding_admob_banner_320_50_ok_random">Banner 320x50 (AdMob) [OK, Random]</string>
     <string name="demo_bidding_admob_banner_320_50_no_bids">Banner 320x50 (AdMob) [noBids, AdMob ad]</string>
     <string name="demo_bidding_admob_banner_320_50_random_respectively">Banner 320x50 (AdMob) [Random, Respectively]</string>
@@ -200,10 +205,12 @@
     <string name="demo_bidding_admob_rewarded_random">Video Rewarded 320x480 (AdMob) [OK, Random]</string>
 
     <string name="demo_bidding_admob_native_adapter">Native Ad (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_native_adapter_events">Native Ad Events (AdMob) [OK, OXB Adapter]</string>
     <string name="demo_bidding_admob_native_no_bids">Native Ad (AdMob) [noBids, AdMob ad]</string>
 
     <!--MAX Titles-->
     <string name="demo_bidding_max_banner_320_50_adapter">Banner 320x50 (MAX) [OK, Adapter]</string>
+    <string name="demo_bidding_max_banner_320_50_adapter_with_events">Banner 320x50 Events (MAX) [OK, Adapter]</string>
     <string name="demo_bidding_max_banner_320_50_no_bids">Banner 320x50 (MAX) [noBids, MAX ad]</string>
     <string name="demo_bidding_max_banner_320_50_random">Banner 320x50 (MAX) [Random, Respectively]</string>
     <string name="demo_bidding_max_banner_300_250_adapter">Banner 300x250 (MAX) [OK, Adapter]</string>
@@ -224,6 +231,7 @@
     <string name="demo_bidding_max_rewarded_adapter_no_end_card">Video Rewarded 320x480 no EndCard (MAX) [OK, Adapter]</string>
 
     <string name="demo_bidding_max_native_adapter">Native Ad (MAX) [OK, Adapter]</string>
+    <string name="demo_bidding_max_native_adapter_events">Native Ad Events (MAX) [OK, Adapter]</string>
     <string name="demo_bidding_max_native_no_bids">Native Ad (MAX) [noBids, MAX ad]</string>
 
     <!--GAM AdUnits-->
@@ -271,6 +279,7 @@
     <!--    Bidding configs-->
     <string name="prebid_account_id_prod">0689a263-318d-448b-a3d4-b02e8a709d9d</string>
     <string name="prebid_account_id_prod_no_bids">1768035c-74d3-4786-b056-13bd41f34bde</string>
+    <string name="prebid_account_id_prod_enabled_events">prebid-stored-request-enabled-events</string>
 
     <string name="prebid_config_id_banner_320x50">50699c03-0910-477c-b4a4-911dbe2b9d42</string>
     <string name="prebid_config_id_mraid_resize">758bef6c-a811-497e-8234-9a583daf92e0</string>

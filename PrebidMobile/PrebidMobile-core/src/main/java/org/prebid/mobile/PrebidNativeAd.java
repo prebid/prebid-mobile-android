@@ -36,6 +36,8 @@ public class PrebidNativeAd {
 
     private static final String TAG = "PrebidNativeAd";
 
+    private boolean impressionIsNotNotified = true;
+
     private final ArrayList<NativeTitle> titles = new ArrayList<>();
     private final ArrayList<NativeImage> images = new ArrayList<>();
     private final ArrayList<NativeData> dataList = new ArrayList<>();
@@ -296,6 +298,7 @@ public class PrebidNativeAd {
                         if (listener != null) {
                             listener.onAdImpression();
                         }
+                        notifyImpressionEvent();
                     }
                 });
                 impressionTrackers.add(impressionTracker);
@@ -339,6 +342,7 @@ public class PrebidNativeAd {
                         if (listener != null) {
                             listener.onAdImpression();
                         }
+                        notifyImpressionEvent();
                     }
                 });
                 impressionTrackers.add(impressionTracker);
@@ -409,6 +413,13 @@ public class PrebidNativeAd {
 
     public String getImpEvent() {
         return impEvent;
+    }
+
+    private void notifyImpressionEvent() {
+        if (impressionIsNotNotified) {
+            impressionIsNotNotified = false;
+            EventsNotifier.notify(impEvent);
+        }
     }
 
 }
