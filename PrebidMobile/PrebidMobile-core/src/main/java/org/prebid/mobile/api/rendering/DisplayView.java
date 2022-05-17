@@ -25,7 +25,6 @@ import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
-import org.prebid.mobile.rendering.bidding.events.EventsNotifier;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.networking.WinNotifier;
@@ -150,6 +149,7 @@ public class DisplayView extends FrameLayout {
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(response, () -> {
             try {
+                adUnitConfiguration.modifyUsingBidResponse(response);
                 if (response.isVideo()) {
                     displayVideoAd(response);
                 } else {
@@ -237,7 +237,6 @@ public class DisplayView extends FrameLayout {
         if (displayViewListener != null) {
             displayViewListener.onAdDisplayed();
         }
-        EventsNotifier.notify(impressionEventUrl);
     }
 
     private void notifyListenerLoaded() {

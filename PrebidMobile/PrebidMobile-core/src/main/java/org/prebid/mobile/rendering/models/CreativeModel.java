@@ -90,6 +90,10 @@ public class CreativeModel {
         this.trackingManager = trackingManager;
         this.adConfiguration = adConfiguration;
         this.omEventTracker = omEventTracker;
+
+        if (adConfiguration != null) {
+            setImpressionUrl(adConfiguration.getImpressionUrl());
+        }
     }
 
     //tracking firing here from Model always
