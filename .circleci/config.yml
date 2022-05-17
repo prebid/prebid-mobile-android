@@ -28,8 +28,6 @@ jobs:
     # These next lines define the Android machine image executor.
     # See: https://circleci.com/docs/2.0/executor-types/
     parameters:
-      buildName:
-        type: string
       buildCommand:
         type: string
     executor:
@@ -41,7 +39,6 @@ jobs:
       # Checkout the code as the first step.
       - checkout
       - run:
-          name: << parameters.buildName >>
           command: << parameters.buildCommand >>
           
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
@@ -69,18 +66,11 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - build:
-          matrix:
-            parameters:
-              buildName:
-                - Build Java Demo App
-                - Build Kotlin Demo App
-                - Build Internal Test App
-                - Build Frameworks
-              buildCommand:
-                - ./gradlew PrebidDemoJava:build
-                - ./gradlew PrebidDemoKotlin:build
-                - ./gradlew PrebidInternalTestApp:build
-          name: <<matrix.buildName>>
+         name: Build Java Demo 
+         buildCommand: ./gradlew PrebidDemoJava:build
+      - build:
+         name: Build Frameworks
+         buildCommand: scripts/buildPrebidMobile.sh
       - test
       - android-test:
           matrix:
@@ -90,3 +80,9 @@ workflows:
                 - system-images;android-30;google_apis;x86
                 - system-images;android-26;google_apis;x86
           name: android-test-<<matrix.system-image>>
+      - android-test:
+          name: Android 11
+          system-image: system-images;android-30;google_apis;x86
+      - android-test:
+          name: Android 8
+          system-image: system-images;android-26;google_apis;x86    
