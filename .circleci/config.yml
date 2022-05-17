@@ -20,7 +20,7 @@ jobs:
     steps:
       - checkout
       - android/create-avd:
-          avd-name: myavd
+          avd-name: test-avd
           install: true
           system-image: << parameters.system-image >>
       - android/start-emulator:
