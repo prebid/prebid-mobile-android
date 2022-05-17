@@ -21,7 +21,7 @@ jobs:
     steps:
       - checkout
       - android/start-emulator-and-run-tests:
-          post-emulator-launch-assemble-command: ./gradlew PrebidDemoKotlin:assembleDebugAndroidTest
+          post-emulator-launch-assemble-command: ./gradlew PrebidDemoKotlin:assembleAndroidTest
           test-command: ./gradlew PrebidDemoKotlin:connectedDebugAndroidTest
           system-image: << parameters.system-image >>
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
