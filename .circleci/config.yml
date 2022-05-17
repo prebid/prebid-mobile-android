@@ -12,7 +12,7 @@ orbs:
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   android-test:
-    working_directory: ~/Example/PrebidDemoKotlin
+
     parameters:
       system-image:
         type: string
@@ -21,7 +21,8 @@ jobs:
     steps:
       - checkout
       - android/start-emulator-and-run-tests:
-          test-command: scripts/testPrebidDemo.sh
+          post-emulator-launch-assemble-command: ./gradlew PrebidDemoKotlin:assembleDebugAndroidTest
+          test-command: ./gradlew PrebidDemoKotlin:connectedDebugAndroidTest
           system-image: << parameters.system-image >>
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
   build:

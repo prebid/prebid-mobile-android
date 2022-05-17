@@ -22,4 +22,4 @@ echoX "start building UI tests"
 
 # testing
 echoX "start UI tests"
-./gradlew PrebidDemoKotlin:connectedDebugAndroidTest
+# ./gradlew PrebidDemoJava:connectedSourceCodeDebugAndroidTest
