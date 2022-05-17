@@ -73,14 +73,6 @@ workflows:
          buildCommand: scripts/buildPrebidMobile.sh
       - test
       - android-test:
-          matrix:
-            alias: android-test-all
-            parameters:
-              system-image:
-                - system-images;android-30;google_apis;x86
-                - system-images;android-26;google_apis;x86
-          name: android-test-<<matrix.system-image>>
-      - android-test:
           name: Android 11
           system-image: system-images;android-30;google_apis;x86
       - android-test:
