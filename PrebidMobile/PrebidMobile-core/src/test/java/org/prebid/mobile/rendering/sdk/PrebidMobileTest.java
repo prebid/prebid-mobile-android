@@ -77,7 +77,7 @@ public class PrebidMobileTest {
     @Test
     public void testOnSDKInitWithoutVideoPreCache() throws Exception {
         //test if sdkinit is sent even if precache fails for any reason, as it is optional & should not avoid further sdk actions
-        WhiteBox.field(PrebidMobile.class, "isSdkInitialized").set(null, false);
+        WhiteBox.field(SdkInitializer.class, "isSdkInitialized").set(null, false);
         Context context = Robolectric.buildActivity(Activity.class).create().get();
         SdkInitListener mockSdkInitListener = mock(SdkInitListener.class);
 
