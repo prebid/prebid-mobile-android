@@ -20,7 +20,7 @@ class DisplayInterstitialAdsTest: BaseAdsTest() {
     override fun checkAd(adServer: String) {
         val closeButton = By.res(packageName, "iv_close_interstitial")
         val gamCloseButton = By.desc("Interstitial close button")
-        val ad = By.textContains("prebid")
+        val ad = By.clazz("android.view.View")
 
         val findAd = device.wait(Until.findObject(ad), timeout)
         assertNotNull(findAd)
