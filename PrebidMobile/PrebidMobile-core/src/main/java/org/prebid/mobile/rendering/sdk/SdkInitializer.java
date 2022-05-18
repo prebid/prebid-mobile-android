@@ -1,6 +1,6 @@
 package org.prebid.mobile.rendering.sdk;
 
-import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
@@ -31,7 +31,7 @@ public class SdkInitializer {
             return;
         }
 
-        if (context instanceof Activity) {
+        if (!(context instanceof Application)) {
             Context applicationContext = context.getApplicationContext();
             if (applicationContext != null) {
                 context = applicationContext;
