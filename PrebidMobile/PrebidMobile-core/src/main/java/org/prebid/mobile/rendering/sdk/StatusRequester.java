@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.api.exceptions.InitError;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
@@ -81,7 +82,7 @@ public class StatusRequester {
     ) {
         LogUtil.error(TAG, message);
         if (listener != null) {
-            listener.onSdkFailedToInit(new SdkInitializationListener.InitError(message));
+            listener.onSdkFailedToInit(new InitError(message));
         }
     }
 

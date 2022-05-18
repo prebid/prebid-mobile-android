@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.api.exceptions.InitError;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
@@ -30,7 +31,7 @@ public class SdkInitializer {
             String error = "Context must be not null!";
             LogUtil.error(error);
             if (listener != null) {
-                listener.onSdkFailedToInit(new SdkInitializationListener.InitError(error));
+                listener.onSdkFailedToInit(new InitError(error));
             }
             return;
         }

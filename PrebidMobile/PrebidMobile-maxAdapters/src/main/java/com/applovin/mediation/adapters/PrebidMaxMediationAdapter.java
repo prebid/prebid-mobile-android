@@ -18,6 +18,7 @@ import com.applovin.mediation.adapters.prebid.managers.MaxInterstitialManager;
 import com.applovin.mediation.adapters.prebid.managers.MaxNativeManager;
 import com.applovin.sdk.AppLovinSdk;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.api.exceptions.InitError;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 
 @Keep
