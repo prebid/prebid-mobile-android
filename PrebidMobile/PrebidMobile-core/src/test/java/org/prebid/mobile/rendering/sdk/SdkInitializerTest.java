@@ -37,6 +37,7 @@ public class SdkInitializerTest {
     public void setUp() throws Exception {
         server = new MockWebServer();
         context = Robolectric.buildActivity(Activity.class).create().get();
+        calledAlready = false;
     }
 
     @After
