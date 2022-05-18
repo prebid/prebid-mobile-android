@@ -75,6 +75,7 @@ public class RealTimeDemandTest {
                 PrebidMobile.setPrebidServerHost(Host.APPNEXUS);
                 hostUrl = Constants.EndpointUrls.APPNEXUS_PREBID_SERVER;
         }
+        PrebidMobile.initializeSdk(context, null);
 
         DemandRequestBuilder builder = new DemandRequestBuilder(
                 context,

@@ -1,5 +1,6 @@
 package org.prebid.mobile.rendering.sdk;
 
+import android.app.Activity;
 import android.content.Context;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
@@ -17,7 +18,7 @@ public class SdkInitializer {
     private static boolean isSdkInitialized = false;
 
     private static final AtomicInteger INIT_SDK_TASK_COUNT = new AtomicInteger();
-    private static final int MANDATORY_TASK_COUNT = 3;
+    private static final int MANDATORY_TASK_COUNT = 4;
 
     private static SdkInitializationListener sdkInitListener;
 
@@ -30,9 +31,18 @@ public class SdkInitializer {
             return;
         }
 
-        if (isSdkInitialized) {
+        if (context instanceof Activity) {
+            Context applicationContext = context.getApplicationContext();
+            if (applicationContext != null) {
+                context = applicationContext;
+            }
+        }
+
+        if (isSdkInitialized && ManagersResolver.getInstance().getContext() != null) {
             return;
         }
+        isSdkInitialized = false;
+
         LogUtil.debug(TAG, "Initializing Prebid Rendering SDK");
 
         sdkInitListener = listener;
@@ -44,6 +54,7 @@ public class SdkInitializer {
         AppInfoManager.init(context);
         initOpenMeasurementSDK(context);
         ManagersResolver.getInstance().prepare(context);
+        StatusRequester.makeRequest(listener);
     }
 
     private static void initializeLogging() {
@@ -63,8 +74,7 @@ public class SdkInitializer {
     public static void increaseTaskCount() {
         if (INIT_SDK_TASK_COUNT.incrementAndGet() >= MANDATORY_TASK_COUNT) {
             isSdkInitialized = true;
-            LogUtil.debug(TAG, "Prebid Rendering SDK " + PrebidMobile.SDK_VERSION + " Initialized");
-
+            LogUtil.debug(TAG, "Prebid SDK " + PrebidMobile.SDK_VERSION + " initialized");
             if (sdkInitListener != null) {
                 sdkInitListener.onSdkInit();
             }

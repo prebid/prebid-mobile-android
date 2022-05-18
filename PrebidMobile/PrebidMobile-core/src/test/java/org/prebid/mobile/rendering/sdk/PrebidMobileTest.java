@@ -19,6 +19,9 @@ package org.prebid.mobile.rendering.sdk;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,25 +33,38 @@ import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static android.os.Looper.getMainLooper;
+import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.*;
+import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 19)
 public class PrebidMobileTest {
+
+    private MockWebServer server;
 
     @Before
     public void setUp() throws Exception {
+        server = new MockWebServer();
 
         initAndroidVersion();
+    }
+
+    @After
+    public void tearDown() throws IOException {
+        server.shutdown();
+
+        PrebidMobile.setStoredAuctionResponse(null);
+        PrebidMobile.clearStoredBidResponses();
     }
 
     // Sets Build.VERSION.SDK_INT to LOLLIPOP(21) which prevents ProviderInstaller from execution
@@ -63,12 +79,6 @@ public class PrebidMobileTest {
         versionField.set(null, Build.VERSION_CODES.LOLLIPOP);
     }
 
-    @After
-    public void tearDown() throws Exception {
-        PrebidMobile.setStoredAuctionResponse(null);
-        PrebidMobile.clearStoredBidResponses();
-    }
-
     @Test
     public void testGetDeviceName() throws Exception {
         assertEquals("Unknown robolectric", AppInfoManager.getDeviceName());
@@ -78,10 +88,26 @@ public class PrebidMobileTest {
     public void testOnSDKInitWithoutVideoPreCache() throws Exception {
         //test if sdkinit is sent even if precache fails for any reason, as it is optional & should not avoid further sdk actions
         WhiteBox.field(SdkInitializer.class, "isSdkInitialized").set(null, false);
+
+        MockResponse mockResponse = new MockResponse();
+        mockResponse.setResponseCode(200);
+        mockResponse.setBody("{\n    \"application\": {\n        \"status\": \"ok\"\n    }\n}");
+        server.enqueue(mockResponse);
+        server.start();
+        HttpUrl url = server.url("/status");
+        server.setProtocolNegotiationEnabled(false);
+
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost(
+            url.toString().replace("/status", "/openrtb2/auction")
+        ));
+
         Context context = Robolectric.buildActivity(Activity.class).create().get();
         SdkInitListener mockSdkInitListener = mock(SdkInitListener.class);
-
         PrebidMobile.setApplicationContext(context, mockSdkInitListener);
+
+        sleep(300);
+        shadowOf(getMainLooper()).idle();
+        sleep(200);
         verify(mockSdkInitListener, times(1)).onSDKInit();
     }
 
@@ -126,4 +152,5 @@ public class PrebidMobileTest {
 
         assertTrue(PrebidMobile.getStoredBidResponses().isEmpty());
     }
+
 }

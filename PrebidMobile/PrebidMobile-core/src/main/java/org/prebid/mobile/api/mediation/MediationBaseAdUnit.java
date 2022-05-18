@@ -212,8 +212,7 @@ public abstract class MediationBaseAdUnit {
     }
 
     private void initSdk(Context context) {
-        PrebidMobile.setApplicationContext(context, () -> {
-        });
+        PrebidMobile.initializeSdk(context, null);
     }
 
     private void cancelRefresh() {

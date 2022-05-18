@@ -49,8 +49,8 @@ class CustomApplication : Application() {
 
 
     private fun initPrebidSDK() {
-//        PrebidMobile.setPbsDebug(true)
-        PrebidMobile.setApplicationContext(applicationContext)
+        AdTypesRepository.usePrebidServer()
+        PrebidMobile.initializeSdk(applicationContext, null)
         PrebidMobile.setShareGeoLocation(true)
     }
 

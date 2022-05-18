@@ -187,6 +187,15 @@ public class PrebidMobile {
         return PrebidMobile.customHeaders;
     }
 
+
+    /**
+     * Initializes the main SDK classes. Makes request to Prebid server to check its status.
+     * You have to set host url ({@link PrebidMobile#setPrebidServerHost(Host)}) before calling this method.
+     *
+     * @param context  any context (must be not null)
+     * @param listener initialization listener (can be null)
+     * @see <a href="https://docs.prebid.org/prebid-server/endpoints/pbs-endpoint-status.html">GET /status</a>
+     */
     public static void initializeSdk(
         @Nullable Context context,
         @Nullable SdkInitializationListener listener

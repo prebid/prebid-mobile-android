@@ -91,6 +91,7 @@ public class SdkTest {
                 Host.CUSTOM.setHostUrl(buildCustomServerEndpoint(prebidServerSettings.getCustomPrebidServerUrl()));
                 break;
         }
+        PrebidMobile.initializeSdk(context, null);
 
         if (listener != null) {
             listener.onAdUnitRegistered();
