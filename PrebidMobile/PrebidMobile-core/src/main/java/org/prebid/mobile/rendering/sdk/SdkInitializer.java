@@ -27,7 +27,11 @@ public class SdkInitializer {
         @Nullable SdkInitializationListener listener
     ) {
         if (context == null) {
-            LogUtil.error("Context must be not null!");
+            String error = "Context must be not null!";
+            LogUtil.error(error);
+            if (listener != null) {
+                listener.onSdkFailedToInit(new SdkInitializationListener.InitError(error));
+            }
             return;
         }
 
