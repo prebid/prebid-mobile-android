@@ -9,36 +9,44 @@ import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 
 class DisplayInterstitialAdsTest: BaseAdsTest() {
     @Test
-    fun inAppDisplayInterstitialShouldBeDisplayed(){
+    fun displayInterstitialAdsShouldBeDisplayed(){
         testAd(TestConstants.IN_APP,TestConstants.DISPLAY_INTERSTITIAL)
-    }
-    @Test
-    fun gamDisplayInterstitialShouldBeDisplayed(){
         testAd(TestConstants.GAM,TestConstants.DISPLAY_INTERSTITIAL)
-    }
-    @Test
-    fun inAppGamDisplayInterstitialShouldBeDisplayed(){
-        testAd(TestConstants.IN_APP_GAM,TestConstants.DISPLAY_INTERSTITIAL)
-    }
-    @Test
-    fun inAppAdMobDisplayInterstitialShouldBeDisplayed(){
         testAd(TestConstants.IN_APP_ADMOB,TestConstants.DISPLAY_INTERSTITIAL)
+        testAd(TestConstants.IN_APP_GAM,TestConstants.DISPLAY_INTERSTITIAL)
+        displayErrorMessages()
     }
 
-
-    override fun checkAd() {
+    override fun checkAd(adServer: String) {
         val closeButton = By.res(packageName, "iv_close_interstitial")
         val gamCloseButton = By.desc("Interstitial close button")
         val ad = By.textContains("prebid")
 
         val findAd = device.wait(Until.findObject(ad), timeout)
-        var findCloseButton = device.wait(Until.findObject(closeButton), timeout)
-        if (findCloseButton == null){
-            findCloseButton = device.wait(Until.findObject(gamCloseButton), timeout)
-        }
-
         assertNotNull(findAd)
+
+        val findCloseButton = if (adServer == TestConstants.GAM){
+            device.wait(Until.findObject(gamCloseButton), timeout)
+        } else {
+            device.wait(Until.findObject(closeButton), timeout)
+        }
         assertNotNull(findCloseButton)
 
     }
+
+    override fun teardownAd(adServer: String) {
+        val closeButton = By.res(packageName, "iv_close_interstitial")
+        val gamCloseButton = By.desc("Interstitial close button")
+
+        val findCloseButton = if (adServer == TestConstants.GAM){
+            device.wait(Until.findObject(gamCloseButton), timeout)
+        } else {
+            device.wait(Until.findObject(closeButton), timeout)
+        }
+
+        findCloseButton.click()
+        Thread.sleep(1000)
+        device.pressBack()
+    }
+
 }

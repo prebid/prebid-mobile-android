@@ -9,30 +9,22 @@ import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 
 class BannerAdsTest : BaseAdsTest() {
     @Test
-    fun inAppBannerShouldBeDisplayed() {
+    fun bannerAdsShouldBeDisplayed() {
         testAd(TestConstants.IN_APP,TestConstants.BANNER_320x50)
-    }
-    @Test
-    fun gamBannerShouldBeDisplayed() {
         testAd(TestConstants.GAM,TestConstants.BANNER_320x50)
-    }
-    @Test
-    fun inAppGamBannerShouldBeDisplayed() {
         testAd(TestConstants.IN_APP_GAM,TestConstants.BANNER_320x50)
-    }
-    @Test
-    fun inAppAdMobBannerShouldBeDisplayed() {
         testAd(TestConstants.IN_APP_ADMOB,TestConstants.BANNER_320x50)
+        displayErrorMessages()
     }
-    /*@Test
-    fun inAppMaxBannerShouldBeDisplayed() {
-        testAd(TestConstants.IN_APP_MAX,TestConstants.BANNER_320x50)
-    }*/
 
-    override fun checkAd() {
+    override fun checkAd(adServer: String) {
         val frameAdWrapperSelector = By.text("Pbs_banner_320x50")
         val findAd = device.wait(Until.findObject(frameAdWrapperSelector), timeout)
         assertNotNull(findAd)
+    }
+
+    override fun teardownAd(adServer: String) {
+        device.pressBack()
     }
 
 }

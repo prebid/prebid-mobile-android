@@ -7,37 +7,34 @@ import org.junit.Test
 import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 
 class VideoRewardedAdsTest : BaseAdsTest() {
+
     @Test
-    fun inAppVideoRewardedShouldBeDisplayed() {
+    fun videoRewardedAdsShouldBeDisplayed(){
         testAd(TestConstants.IN_APP, TestConstants.VIDEO_REWARDED)
-    }
-
-    /*@Test
-    fun gamVideoRewardedShouldBeDisplayed(){
-        testAd(TestConstants.GAM, TestConstants.DISPLAY_INTERSTITIAL)
-    }*/
-
-   /* @Test
-    fun inAppGamVideoRewardedShouldBeDisplayed() {
-        testAd(TestConstants.IN_APP_GAM, TestConstants.VIDEO_REWARDED)
-    }*/
-
-    @Test
-    fun inAppAdMobVideoRewardedShouldBeDisplayed() {
         testAd(TestConstants.IN_APP_ADMOB, TestConstants.VIDEO_REWARDED)
+        displayErrorMessages()
     }
 
-    override fun checkAd() {
+    override fun checkAd(adServer: String) {
         val ad = By.res(packageName, "exo_subtitles")
         val endCard = By.text("Pbs_intestitial_320x480")
         val closeButton = By.res(packageName, "iv_close_interstitial")
 
         val findAd = device.wait(Until.findObject(ad), timeout)
-        val findEndCard = device.wait(Until.findObject(endCard), timeout * 4)
-        val findCloseButton = device.wait(Until.findObject(closeButton), timeout)
-
         assertNotNull(findAd)
+
+        val findEndCard = device.wait(Until.findObject(endCard), timeout * 3)
         assertNotNull(findEndCard)
+
+        val findCloseButton = device.wait(Until.findObject(closeButton), timeout)
         assertNotNull(findCloseButton)
     }
+
+    override fun teardownAd(adServer: String) {
+        val closeButton = By.res(packageName, "iv_close_interstitial")
+        device.wait(Until.findObject(closeButton), timeout).click()
+        Thread.sleep(1000)
+        device.pressBack()
+    }
+
 }
