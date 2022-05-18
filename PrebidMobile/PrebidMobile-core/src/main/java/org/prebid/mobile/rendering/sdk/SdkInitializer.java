@@ -16,7 +16,7 @@ public class SdkInitializer {
 
     private static final String TAG = SdkInitializer.class.getSimpleName();
 
-    private static boolean isSdkInitialized = false;
+    protected static boolean isSdkInitialized = false;
 
     private static final AtomicInteger INIT_SDK_TASK_COUNT = new AtomicInteger();
     private static final int MANDATORY_TASK_COUNT = 4;
@@ -27,6 +27,7 @@ public class SdkInitializer {
         @Nullable Context context,
         @Nullable SdkInitializationListener listener
     ) {
+        sdkInitListener = listener;
         if (context == null) {
             String error = "Context must be not null!";
             LogUtil.error(error);
@@ -40,6 +41,8 @@ public class SdkInitializer {
             Context applicationContext = context.getApplicationContext();
             if (applicationContext != null) {
                 context = applicationContext;
+            } else {
+                LogUtil.warning(TAG, "Can't get application context, SDK will use context: " + context.getClass());
             }
         }
 
@@ -50,7 +53,6 @@ public class SdkInitializer {
 
         LogUtil.debug(TAG, "Initializing Prebid Rendering SDK");
 
-        sdkInitListener = listener;
         INIT_SDK_TASK_COUNT.set(0);
 
         if (PrebidMobile.logLevel != null) {

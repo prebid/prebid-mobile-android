@@ -38,14 +38,15 @@ public class SdkInitializerTest {
         server = new MockWebServer();
         context = Robolectric.buildActivity(Activity.class).create().get();
         calledAlready = false;
+        isSuccessful = null;
+        error = null;
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost(""));
+        SdkInitializer.isSdkInitialized = false;
     }
 
     @After
     public void tearDown() throws IOException {
         server.shutdown();
-        isSuccessful = null;
-        error = null;
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost(""));
     }
 
 
