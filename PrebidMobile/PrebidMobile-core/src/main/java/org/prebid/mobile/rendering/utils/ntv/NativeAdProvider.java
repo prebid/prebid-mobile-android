@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.NativeAdUnit;
 import org.prebid.mobile.PrebidNativeAd;
+import org.prebid.mobile.rendering.bidding.events.EventsNotifier;
 
 public class NativeAdProvider {
 
@@ -25,6 +26,7 @@ public class NativeAdProvider {
             LogUtil.error(TAG, "PrebidNativeAd is null");
             return null;
         }
+        EventsNotifier.notify(nativeAd.getWinEvent());
 
         return nativeAd;
     }
