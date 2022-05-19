@@ -37,7 +37,7 @@ import org.prebid.mobile.test.utils.WhiteBox;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 

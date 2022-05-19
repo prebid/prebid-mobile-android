@@ -26,7 +26,7 @@ import org.robolectric.annotation.Config;
 
 import java.util.ArrayList;
 
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)

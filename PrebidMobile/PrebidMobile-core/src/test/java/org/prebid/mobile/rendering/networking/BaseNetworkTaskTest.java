@@ -21,7 +21,6 @@ import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
-
 import org.hamcrest.MatcherAssert;
 import org.junit.After;
 import org.junit.Assert;
@@ -34,8 +33,8 @@ import org.robolectric.RobolectricTestRunner;
 import java.io.IOException;
 import java.util.HashMap;
 
-import static junit.framework.Assert.*;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.*;
 import static org.prebid.mobile.rendering.networking.BaseNetworkTask.REDIRECT_TASK;
 
 @RunWith(RobolectricTestRunner.class)

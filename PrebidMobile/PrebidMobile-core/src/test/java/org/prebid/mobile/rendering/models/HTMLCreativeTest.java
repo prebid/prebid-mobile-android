@@ -52,9 +52,7 @@ import org.robolectric.annotation.Config;
 import java.lang.ref.WeakReference;
 import java.util.EnumSet;
 
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)

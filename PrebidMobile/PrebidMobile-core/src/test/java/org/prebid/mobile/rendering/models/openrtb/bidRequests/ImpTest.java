@@ -22,7 +22,7 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Pmp;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class ImpTest {
     @Test

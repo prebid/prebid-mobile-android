@@ -22,11 +22,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.prebid.mobile.test.utils.ResourceUtils;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.*;
 
 public class ICalendarRepeatRuleTest {

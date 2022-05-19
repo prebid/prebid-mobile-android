@@ -24,7 +24,7 @@ import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)

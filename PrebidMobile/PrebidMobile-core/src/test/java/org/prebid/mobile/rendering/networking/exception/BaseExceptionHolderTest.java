@@ -18,8 +18,8 @@ package org.prebid.mobile.rendering.networking.exception;
 
 import org.junit.Test;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class BaseExceptionHolderTest {
 

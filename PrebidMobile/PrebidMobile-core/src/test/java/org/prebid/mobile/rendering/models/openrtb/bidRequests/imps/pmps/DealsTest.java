@@ -19,7 +19,7 @@ package org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.pmps;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by latha.shivanna on 11/2/17.
