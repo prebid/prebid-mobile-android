@@ -16,6 +16,8 @@
 
 package org.prebid.mobile.rendering.sdk.deviceData.listeners;
 
+@Deprecated
 public interface SdkInitListener {
+
     void onSDKInit();
 }

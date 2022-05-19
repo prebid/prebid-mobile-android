@@ -25,6 +25,7 @@ import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import com.applovin.sdk.AppLovinSdk
 import com.applovin.sdk.AppLovinSdkConfiguration
+import org.prebid.mobile.Host
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.renderingtestapp.utils.DemoItemProvider
 import org.prebid.mobile.renderingtestapp.utils.SourcePicker
@@ -42,7 +43,8 @@ class InternalTestApplication : MultiDexApplication() {
         super.onCreate()
         instance = this
 
-        PrebidMobile.setApplicationContext(this)
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
+        PrebidMobile.initializeSdk(this, null)
         PrebidMobile.setPrebidServerAccountId(getString(R.string.prebid_account_id_prod))
         PrebidMobile.logLevel = PrebidMobile.LogLevel.DEBUG
         SourcePicker.setBidServerHost(SourcePicker.PBS_SERVER_DOMAIN)

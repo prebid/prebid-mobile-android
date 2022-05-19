@@ -271,7 +271,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     private void initPrebidRenderingSdk() {
-        PrebidMobile.setApplicationContext(getContext(), () -> {});
+        PrebidMobile.initializeSdk(getContext(), null);
     }
 
     private void initBidLoader() {

@@ -430,7 +430,7 @@ public class BannerView extends FrameLayout {
     }
 
     private void initPrebidRenderingSdk() {
-        PrebidMobile.setApplicationContext(getContext());
+        PrebidMobile.initializeSdk(getContext(), null);
     }
 
     private void initBidLoader() {

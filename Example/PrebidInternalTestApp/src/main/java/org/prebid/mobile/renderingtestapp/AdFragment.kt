@@ -231,9 +231,9 @@ abstract class AdFragment : BaseFragment() {
         val hostUrl = PrebidMobile.getPrebidServerHost().hostUrl
         val host = Host.CUSTOM
         host.hostUrl = hostUrl
-        PrebidMobile.setApplicationContext(requireContext())
         PrebidMobile.setPrebidServerHost(host)
         PrebidMobile.setPrebidServerAccountId(PrebidMobile.getPrebidServerAccountId())
+        PrebidMobile.initializeSdk(requireContext(), null)
     }
 
 }

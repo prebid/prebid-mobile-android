@@ -18,6 +18,8 @@ import com.applovin.mediation.adapters.prebid.managers.MaxInterstitialManager;
 import com.applovin.mediation.adapters.prebid.managers.MaxNativeManager;
 import com.applovin.sdk.AppLovinSdk;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.api.exceptions.InitError;
+import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 
 @Keep
 public class PrebidMaxMediationAdapter extends MediationAdapterBase implements MaxAdViewAdapter, MaxInterstitialAdapter, MaxRewardedAdapter, MaxNativeAdAdapter {
@@ -44,8 +46,14 @@ public class PrebidMaxMediationAdapter extends MediationAdapterBase implements M
             onCompletionListener.onCompletion(InitializationStatus.INITIALIZED_SUCCESS, null);
         } else {
             onCompletionListener.onCompletion(InitializationStatus.INITIALIZING, null);
-            PrebidMobile.setApplicationContext(activity.getApplicationContext(), () -> {
-                onCompletionListener.onCompletion(InitializationStatus.INITIALIZED_SUCCESS, null);
+            PrebidMobile.initializeSdk(activity.getApplicationContext(), new SdkInitializationListener() {
+                @Override
+                public void onSdkInit() {
+                    onCompletionListener.onCompletion(InitializationStatus.INITIALIZED_SUCCESS, null);
+                }
+
+                @Override
+                public void onSdkFailedToInit(InitError error) {}
             });
         }
     }
