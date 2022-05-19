@@ -27,7 +27,6 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 
 import static junit.framework.Assert.assertTrue;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -64,7 +63,7 @@ public class CreativeModelTest {
         urls.add("www.impression.url");
         creativeModel.registerTrackingEvent(TrackingEvent.Events.IMPRESSION, urls);
         creativeModel.trackDisplayAdEvent(TrackingEvent.Events.IMPRESSION);
-        verify(mockTrackingManager, times(1)).fireEventTrackingImpressionURLs((ArrayList<String>) anyObject());
+        verify(mockTrackingManager, times(1)).fireEventTrackingImpressionURLs(any());
         verify(mockOmEventTracker, times(1)).trackOmHtmlAdEvent(TrackingEvent.Events.IMPRESSION);
     }
 
@@ -80,6 +79,6 @@ public class CreativeModelTest {
         urls.add("www.default.url");
         creativeModel.registerTrackingEvent(TrackingEvent.Events.DEFAULT, urls);
         creativeModel.trackDisplayAdEvent(TrackingEvent.Events.DEFAULT);
-        verify(mockTrackingManager, times(1)).fireEventTrackingURLs((ArrayList<String>) anyObject());
+        verify(mockTrackingManager, times(1)).fireEventTrackingURLs(any());
     }
 }

@@ -32,9 +32,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -104,8 +101,8 @@ public class ExoPlayerViewTest {
         exoPlayerView.setVideoUri(null);
         exoPlayerView.start(anyInt());
 
-        verifyZeroInteractions(mockSimpleExoPlayer);
-        verifyZeroInteractions(mockVideoCreative);
+        verifyNoInteractions(mockSimpleExoPlayer);
+        verifyNoInteractions(mockVideoCreative);
     }
 
     @Test
@@ -192,6 +189,6 @@ public class ExoPlayerViewTest {
         exoPlayerView.setVideoUri(null);
         exoPlayerView.resume();
 
-        verifyZeroInteractions(mockSimpleExoPlayer);
+        verifyNoInteractions(mockSimpleExoPlayer);
     }
 }

@@ -43,8 +43,6 @@ import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.prebid.mobile.api.rendering.VideoView.State.*;
 
@@ -139,7 +137,7 @@ public class VideoViewTest {
         changeVideoViewState(PLAYBACK_FINISHED);
         videoView.play();
 
-        verifyZeroInteractions(mockAdViewManager);
+        verifyNoInteractions(mockAdViewManager);
     }
 
     @Test
@@ -183,7 +181,7 @@ public class VideoViewTest {
     public void setAutoPlayEnabled_DoNothing() {
         videoView.setAutoPlay(true);
 
-        verifyZeroInteractions(mockVisibilityTracker);
+        verifyNoInteractions(mockVisibilityTracker);
     }
 
     @Test
@@ -212,7 +210,7 @@ public class VideoViewTest {
         changeVideoViewState(PLAYBACK_NOT_STARTED);
         videoView.pause();
 
-        verifyZeroInteractions(mockAdViewManager);
+        verifyNoInteractions(mockAdViewManager);
     }
 
     @Test
@@ -241,7 +239,7 @@ public class VideoViewTest {
         changeVideoViewState(PLAYBACK_FINISHED);
         videoView.resume();
 
-        verifyZeroInteractions(mockAdViewManager);
+        verifyNoInteractions(mockAdViewManager);
     }
 
     @Test
@@ -295,7 +293,7 @@ public class VideoViewTest {
         visibilityTrackerListener.onVisibilityChanged(INVISIBLE_RESULT);
         visibilityTrackerListener.onVisibilityChanged(VISIBLE_RESULT);
 
-        verifyZeroInteractions(mockAdViewManager);
+        verifyNoInteractions(mockAdViewManager);
     }
 
     @Test
@@ -307,7 +305,7 @@ public class VideoViewTest {
         changeVideoViewState(PAUSED_AUTO);
         videoView.handleWindowFocusChange(true);
 
-        verifyZeroInteractions(mockAdViewManager);
+        verifyNoInteractions(mockAdViewManager);
     }
 
     @Test
@@ -346,7 +344,7 @@ public class VideoViewTest {
         videoView.handleWindowFocusChange(true);
         videoView.handleWindowFocusChange(false);
 
-        verifyZeroInteractions(mockAdViewManager);
+        verifyNoInteractions(mockAdViewManager);
     }
 
     // region =============== AdViewManagerListener
@@ -368,7 +366,7 @@ public class VideoViewTest {
 
         verify(mockVideoViewListener).onLoaded(videoView, null);
         assertEquals(PLAYBACK_NOT_STARTED, getVideoViewState());
-        verifyZeroInteractions(mockVisibilityTracker);
+        verifyNoInteractions(mockVisibilityTracker);
     }
 
     @Test
@@ -395,7 +393,7 @@ public class VideoViewTest {
         adViewManagerListener.viewReadyForImmediateDisplay(mockView);
 
         verify(mockView, times(2)).setLayoutParams(any(FrameLayout.LayoutParams.class));
-        verifyZeroInteractions(mockVideoViewListener);
+        verifyNoInteractions(mockVideoViewListener);
     }
 
     @Test

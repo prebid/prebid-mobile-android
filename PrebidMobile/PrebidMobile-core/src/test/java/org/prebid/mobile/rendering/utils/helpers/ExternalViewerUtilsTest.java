@@ -38,8 +38,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -88,7 +86,7 @@ public class ExternalViewerUtilsTest {
     @Test
     public void whenStartExternalVideoPlayerAndUrlNull_DoNothing() {
         ExternalViewerUtils.startExternalVideoPlayer(mockContext, null);
-        verifyZeroInteractions(mockContext);
+        verifyNoInteractions(mockContext);
     }
 
     @Test

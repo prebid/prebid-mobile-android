@@ -25,7 +25,6 @@ import org.prebid.mobile.rendering.models.internal.InternalPlayerState;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.robolectric.annotation.Config;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(JUnit4.class)

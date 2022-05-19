@@ -29,7 +29,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -68,8 +68,8 @@ public class MraidEventHandlerNotifierRunnableTest {
             );
         mraidEventHandlerNotifierRunnable.run();
 
-        verifyZeroInteractions(mockHTMLCreative);
-        verifyZeroInteractions(mockJsExecutor);
+        verifyNoInteractions(mockHTMLCreative);
+        verifyNoInteractions(mockJsExecutor);
     }
 
     @Test
