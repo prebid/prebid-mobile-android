@@ -1,7 +1,6 @@
 package org.prebid.mobile.reflection;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.codehaus.plexus.util.ReflectionUtils;
 
 public class Reflection {
 
