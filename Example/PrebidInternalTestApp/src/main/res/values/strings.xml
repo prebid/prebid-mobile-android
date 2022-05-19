@@ -149,6 +149,8 @@
     <string name="demo_bidding_gam_interstitial_320_480_no_bids">Display Interstitial 320x480 (GAM) [noBids, GAM Ad]</string>
     <string name="demo_bidding_gam_interstitial_320_480_multiformat">Multiformat Interstitial 320x480 (GAM) [OK, AppEvent]</string>
     <string name="demo_bidding_gam_interstitial_video_320_480_app_event">Video Interstitial 320x480 (GAM) [OK, AppEvent]</string>
+    <string name="demo_bidding_gam_interstitial_video_320_480_app_event_configuration">Video Interstitial 320x480 With Ad Configuration (GAM) [OK, AppEvent]</string>
+    <string name="demo_bidding_gam_interstitial_video_320_480_app_event_endcard_configuration">Video Interstitial 320x480 With End Card And Ad Configuration (GAM) [OK, AppEvent]</string>
     <string name="demo_bidding_gam_interstitial_video_320_480_random">Video Interstitial 320x480 (GAM) [OK, Random]</string>
     <string name="demo_bidding_gam_interstitial_video_320_480_no_bids">Video Interstitial 320x480 (GAM) [noBids, GAM Ad]</string>
     <string name="demo_bidding_gam_video_outstream_no_bids">Video Outstream (GAM) [noBids, GAM Ad]</string>
@@ -157,6 +159,7 @@
     <string name="demo_bidding_gam_video_outstream_feed">Video Outstream Feed (GAM)</string>
     <string name="demo_bidding_gam_video_rewarded_320_480_metadata">Video Rewarded 320x480 without End Card (GAM) [OK, Metadata]</string>
     <string name="demo_bidding_gam_video_rewarded_end_card_320_480_metadata">Video Rewarded 320x480 (GAM) [OK, Metadata]</string>
+    <string name="demo_bidding_gam_video_rewarded_end_card_320_480_metadata_configuration">Video Rewarded 320x480 With End Card And Ad Configuration(GAM) [OK, Metadata]</string>
     <string name="demo_bidding_gam_video_rewarded_end_card_320_480_random">Video Rewarded 320x480 (GAM) [OK, Random]</string>
     <string name="demo_bidding_gam_video_rewarded_end_card_320_480_no_bids">Video Rewarded 320x480 (GAM) [noBids, GAM Ad]</string>
     <string name="demo_bidding_gam_mraid_resize">MRAID 2.0: Resize (GAM)</string>
@@ -195,11 +198,14 @@
     <string name="demo_bidding_admob_interstitial_display_admob">Display Interstitial 320x480 (AdMob) [noBids, AdMob Ad]</string>
     <string name="demo_bidding_admob_interstitial_display_random">Display Interstitial 320x480 (AdMob) [OK, Random]</string>
     <string name="demo_bidding_admob_interstitial_adapter">Video Interstitial 320x480 (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_interstitial_adapter_configuration">Video Interstitial With Ad Configuration 320x480 (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_interstitial_adapter_endcard_configuration">Video Interstitial With End Card And Ad Configuration 320x480 (AdMob) [OK, OXB Adapter]</string>
     <string name="demo_bidding_admob_interstitial_admob">Video Interstitial 320x480 (AdMob) [noBids, AdMob ad]</string>
     <string name="demo_bidding_admob_interstitial_random">Video Interstitial 320x480 (AdMob) [OK, Random]</string>
     <string name="demo_bidding_admob_interstitial_multiformat">Multiformat Interstitial 320x480 (AdMob) [OK, OXB Adapter]</string>
 
     <string name="demo_bidding_admob_rewarded_adapter">Video Rewarded 320x480 (AdMob) [OK, OXB Adapter]</string>
+    <string name="demo_bidding_admob_rewarded_adapter_configuration">Video Rewarded 320x480 With Ad Configuration (AdMob) [OK, OXB Adapter]</string>
     <string name="demo_bidding_admob_rewarded_adapter_no_end_card">Video Rewarded 320x480 no EndCard (AdMob) [OK, OXB Adapter]</string>
     <string name="demo_bidding_admob_rewarded_admob">Video Rewarded 320x480 (AdMob) [noBids, AdMob ad]</string>
     <string name="demo_bidding_admob_rewarded_random">Video Rewarded 320x480 (AdMob) [OK, Random]</string>
@@ -221,11 +227,14 @@
     <string name="demo_bidding_max_interstitial_random">Display Interstitial 320x480 (MAX) [OK, Random]</string>
     <string name="demo_bidding_max_interstitial_no_bids">Display Interstitial 320x480 (MAX) [noBids, MAX ad]</string>
     <string name="demo_bidding_max_video_interstitial_adapter">Video Interstitial 320x480 (MAX) [OK, Adapter]</string>
+    <string name="demo_bidding_max_video_interstitial_adapter_configuration">Video Interstitial 320x480 With Ad Configuration (MAX) [OK, Adapter]</string>
+    <string name="demo_bidding_max_video_interstitial_adapter_endcard_configuration">Video Interstitial 320x480 With End Card And Ad Configuration (MAX) [OK, Adapter]</string>
     <string name="demo_bidding_max_video_interstitial_random">Video Interstitial 320x480 (MAX) [OK, Random]</string>
     <string name="demo_bidding_max_video_interstitial_no_bids">Video Interstitial 320x480 (MAX) [noBids, MAX ad]</string>
     <string name="demo_bidding_max_interstitial_multiformat_adapter">Multiformat Interstitial 320x480 (MAX) [OK, Adapter]</string>
 
     <string name="demo_bidding_max_rewarded_adapter">Video Rewarded 320x480 (MAX) [OK, Adapter]</string>
+    <string name="demo_bidding_max_rewarded_adapter_endcard_configuration">Video Rewarded With End Card And Ad Configuration 320x480 (MAX) [OK, Adapter]</string>
     <string name="demo_bidding_max_rewarded_random">Video Rewarded 320x480 (MAX) [OK, Random]</string>
     <string name="demo_bidding_max_rewarded_no_bids">Video Rewarded 320x480 (MAX) [noBids, MAX ad]</string>
     <string name="demo_bidding_max_rewarded_adapter_no_end_card">Video Rewarded 320x480 no EndCard (MAX) [OK, Adapter]</string>
