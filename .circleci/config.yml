@@ -12,10 +12,6 @@ orbs:
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   android-test:
-
-    parameters:
-      system-image:
-        type: string
     executor:
       name: android/android-machine
     steps:
@@ -23,7 +19,7 @@ jobs:
       - android/start-emulator-and-run-tests:
           post-emulator-launch-assemble-command: ./gradlew PrebidDemoKotlin:assembleAndroidTest
           test-command: ./gradlew PrebidDemoKotlin:connectedDebugAndroidTest
-          system-image: << parameters.system-image >>
+          system-image: system-images;android-30;google_apis;x86
   # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
   build:
     # These next lines define the Android machine image executor.
@@ -73,7 +69,3 @@ workflows:
       - test
       - android-test:
           name: Smoke UI tests Android 11
-          system-image: system-images;android-30;google_apis;x86
-      - android-test:
-          name: Smoke UI tests Android 8
-          system-image: system-images;android-26;google_apis;x86    

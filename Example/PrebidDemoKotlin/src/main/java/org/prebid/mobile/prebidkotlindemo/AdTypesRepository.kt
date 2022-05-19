@@ -5,6 +5,7 @@ import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.prebidkotlindemo.ads.GamBanner
 import org.prebid.mobile.prebidkotlindemo.ads.GamInterstitial
+import org.prebid.mobile.prebidkotlindemo.ads.GamNative
 import org.prebid.mobile.prebidkotlindemo.ads.GamVideoInterstitial
 import org.prebid.mobile.prebidkotlindemo.ads.inapp.*
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobBanner
@@ -33,6 +34,14 @@ object AdTypesRepository {
                 },
                 onDestroy = { GamBanner.destroy() }
             ),
+            AdType("Banner Multisize", onCreate = { _, wrapper, autorefreshTime ->
+                GamBanner.create(
+                    wrapper, autorefreshTime, 320, 50,
+                    "/21808260008/prebid_demo_app_original_api_banner_multisize",
+                    "imp-prebid-banner-multisize",
+                    "response-prebid-banner-multisize"
+                )
+            }),
             AdType(
                 "Banner 300x250",
                 onCreate = { _, wrapper, autoRefreshTime ->
@@ -45,6 +54,19 @@ object AdTypesRepository {
                     )
                 },
                 onDestroy = { GamBanner.destroy() }
+            ),
+            AdType(
+                "Native Ad",
+                onCreate = { _, wrapper, autoRefreshTime ->
+                    GamNative.create(
+                        wrapper,
+                        "/21808260008/unified_native_ad_unit",
+                        "imp-prebid-banner-native-styles",
+                        autoRefreshTime,
+                        "response-prebid-banner-native-styles"
+                    )
+                },
+                onDestroy = { GamNative.destroy() }
             ),
             AdType(
                 "Display Interstitial",
@@ -87,13 +109,73 @@ object AdTypesRepository {
                 onDestroy = { InAppBanner.destroy() }
             ),
             AdType(
+                "Banner Multisize",
+                onCreate = { _, wrapper, autoRefreshTime ->
+                    InAppBanner.create(
+                        wrapper, autoRefreshTime / 1000,
+                        728, 90,
+                        "imp-prebid-banner-multisize",
+                        "response-prebid-banner-multisize"
+                    )
+                },
+                onDestroy = { InAppBanner.destroy() }
+            ),
+            AdType(
+                "Native Ad",
+                onCreate = { activity, wrapper, _ ->
+                    InAppNative.create(
+                        "imp-prebid-banner-native-styles",
+                        wrapper, activity,
+                        "response-prebid-banner-native-styles"
+                    )
+                },
+                onDestroy = { InAppNative.destroy() }
+            ),
+            AdType(
+                "MRAID Resize",
+                onCreate = { _, wrapper, autoRefreshTime ->
+                    InAppBanner.create(
+                        wrapper, autoRefreshTime / 1000,
+                        320, 50,
+                        "imp-prebid-mraid-resize",
+                        "response-prebid-mraid-resize"
+                    )
+                },
+                onDestroy = { GamBanner.destroy() }
+            ),
+            AdType(
+                "MRAID Expand 1-part",
+                onCreate = { _, wrapper, autoRefreshTime ->
+                    InAppBanner.create(
+                        wrapper, autoRefreshTime / 1000,
+                        320, 50,
+                        "imp-prebid-mraid-expand-1-part",
+                        "response-prebid-mraid-expand-1-part"
+                    )
+                },
+                onDestroy = { GamBanner.destroy() }
+            ),
+            AdType(
+                "MRAID Resize with errors",
+                onCreate = { _, wrapper, autoRefreshTime ->
+                    InAppBanner.create(
+                        wrapper, autoRefreshTime / 1000,
+                        300, 100,
+                        "imp-prebid-mraid-resize-with-errors",
+                        "response-prebid-mraid-resize-with-errors"
+                    )
+                },
+                onDestroy = { GamBanner.destroy() }
+            ),
+            AdType(
                 "Display Interstitial",
                 onCreate = { context, _, _ ->
                     InAppInterstitial.create(
                         context,
                         30, 30,
                         "imp-prebid-display-interstitial-320-480",
-                        "response-prebid-display-interstitial-320-480"
+                        "response-prebid-display-interstitial-320-480",
+                        EnumSet.of(AdUnitFormat.DISPLAY)
                     )
                 },
                 onDestroy = { InAppInterstitial.destroy() }
@@ -122,6 +204,33 @@ object AdTypesRepository {
                 onDestroy = { InAppVideoInterstitial.destroy() }
             ),
             AdType(
+                "Video Interstitial With End Card",
+                onCreate = { context, _, _ ->
+                    InAppVideoInterstitial.create(
+                        context,
+                        "imp-prebid-video-interstitial-320-480-with-end-card",
+                        "response-prebid-video-interstitial-320-480-with-end-card"
+                    )
+                },
+                onDestroy = { InAppVideoInterstitial.destroy() }
+            ),
+            AdType(
+                "Multiformat Interstitial",
+                onCreate = { context, _, _ ->
+                    val storedAuctionResponses = listOf(
+                        "response-prebid-video-interstitial-320-480",
+                        "response-prebid-display-interstitial-320-480"
+                    )
+                    InAppInterstitial.create(
+                        context, 30, 30,
+                        "imp-prebid-video-interstitial-320-480",
+                        storedAuctionResponses.random(),
+                        EnumSet.of(AdUnitFormat.VIDEO, AdUnitFormat.DISPLAY)
+                    )
+                },
+                onDestroy = { InAppVideoInterstitial.destroy() }
+            ),
+            AdType(
                 "Rewarded Interstitial",
                 onCreate = { context, _, _ ->
                     InAppRewardedInterstitial.create(
@@ -131,7 +240,7 @@ object AdTypesRepository {
                     )
                 },
                 onDestroy = { InAppRewardedInterstitial.destroy() }
-            )
+            ),
         ),
 
         "In-App + Google Ad Manager" to listOf(
@@ -147,6 +256,19 @@ object AdTypesRepository {
                     )
                 },
                 onDestroy = { InAppGamBanner.destroy() }
+            ),
+            AdType(
+                "Native Ad",
+                onCreate = { _, wrapper, _ ->
+                   InAppGamNative.create(
+                       wrapper,
+                       "/21808260008/apollo_custom_template_native_ad_unit",
+                       "imp-prebid-banner-native-styles",
+                       "11934135",
+                       "response-prebid-banner-native-styles"
+                   )
+                },
+                onDestroy = { InAppGamNative.destroy() }
             ),
             AdType(
                 "Display Interstitial",
@@ -234,7 +356,7 @@ object AdTypesRepository {
                         activity,
                         "ca-app-pub-1875909575462531/6393291067",
                         "imp-prebid-video-interstitial-320-480",
-                        EnumSet.of(AdUnitFormat.VIDEO),"" +
+                        EnumSet.of(AdUnitFormat.VIDEO), "" +
                                 "response-prebid-video-interstitial-320-480"
                     )
                 },
