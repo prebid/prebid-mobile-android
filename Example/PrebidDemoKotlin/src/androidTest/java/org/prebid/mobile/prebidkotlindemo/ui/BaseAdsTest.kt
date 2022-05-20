@@ -72,30 +72,28 @@ abstract class BaseAdsTest {
     }
 
     protected fun testAd(adServer: String, adName: String, retryCount: Int = 2) {
-        goToAd(adServer, adName)
-        try {
-            checkAd(adServer)
-            teardownAd(adServer)
-        } catch (error: AssertionFailedError) {
+        runCatching {
+            goToAd(adServer, adName)
+            checkAd(adServer,adName)
+        }.getOrElse { throwable ->
             if (retryCount != 0) {
                 device.pressBack()
                 testAd(adServer, adName, retryCount - 1)
             } else {
-                adsErrorMessagesQueue.add("$adServer - $adName ${error.stackTraceToString()}")
+                adsErrorMessagesQueue.add("$adServer - $adName ${throwable.stackTraceToString()}")
                 device.pressBack()
             }
         }
-
     }
     protected fun displayErrorMessages(){
         val failedTestsMessage = adsErrorMessagesQueue.joinToString(separator = System.lineSeparator())
         if (failedTestsMessage.isNotEmpty()){
+            adsErrorMessagesQueue.clear()
             throw AssertionError(failedTestsMessage)
         }
     }
 
-    protected abstract fun checkAd(adServer: String)
-    protected abstract fun teardownAd(adServer: String)
+    protected abstract fun checkAd(adServer: String,adName: String)
 
     private fun goToAd(adServer: String, adName: String) {
         adServerSpinner.click()
