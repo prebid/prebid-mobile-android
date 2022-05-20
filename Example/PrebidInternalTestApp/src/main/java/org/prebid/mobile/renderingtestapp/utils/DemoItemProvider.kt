@@ -954,6 +954,34 @@ class DemoItemProvider private constructor() {
             )
             demoList.add(
                 DemoItem(
+                    getString(R.string.demo_bidding_gam_interstitial_video_320_480_app_event_configuration),
+                    gamInterstitialAction,
+                    gamVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_interstitial_320_480,
+                        R.string.adunit_gam_interstitial_video_320_480_app_event,
+                        MIN_WIDTH_PERC,
+                        MIN_HEIGHT_PERC,
+                        R.string.response_prebid_video_interstitial_ad_configuration
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_interstitial_video_320_480_app_event_endcard_configuration),
+                    gamInterstitialAction,
+                    gamVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
+                        R.string.adunit_gam_interstitial_video_320_480_app_event,
+                        MIN_WIDTH_PERC,
+                        MIN_HEIGHT_PERC,
+                        R.string.response_prebid_video_interstitial_end_card_ad_configuration
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
                     getString(R.string.demo_bidding_gam_interstitial_320_480_multiformat),
                     gamInterstitialMultiformatAction,
                     gamVideoTagList,
@@ -1014,7 +1042,21 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_rewarded_end_card_320_480,
                         R.string.adunit_gam_video_rewarded_320_480_random,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,R.string.response_prebid_video_rewarded_320_480
+                        MIN_HEIGHT_PERC, R.string.response_prebid_video_rewarded_320_480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_video_rewarded_end_card_320_480_metadata_configuration),
+                    gamRewardedAction,
+                    gamVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_rewarded_end_card_320_480,
+                        R.string.adunit_gam_video_rewarded_320_480_metadata,
+                        MIN_WIDTH_PERC,
+                        MIN_HEIGHT_PERC,
+                        R.string.response_prebid_video_rewarded_320_480_with_ad_configuration
                     )
                 )
             )
@@ -1027,7 +1069,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_outstream,
                         R.string.adunit_gam_banner_300_250,
                         300,
-                        250,R.string.response_prebid_video_outstream
+                        250, R.string.response_prebid_video_outstream
                     )
                 )
             )
@@ -1334,6 +1376,34 @@ class DemoItemProvider private constructor() {
                     ).apply { putBoolean(AdMobInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_interstitial_adapter_configuration),
+                    adMobInterstitialAction,
+                    adMobVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_interstitial_320_480,
+                        R.string.admob_interstitial_bidding_ad_unit_id_adapter,
+                        320, 480,
+                        R.string.response_prebid_video_interstitial_ad_configuration
+                    ).apply { putBoolean(AdMobInterstitialFragment.ARG_IS_VIDEO, true) }
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_interstitial_adapter_endcard_configuration),
+                    adMobInterstitialAction,
+                    adMobVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
+                        R.string.admob_interstitial_bidding_ad_unit_id_adapter,
+                        320, 480,
+                        R.string.response_prebid_video_interstitial_end_card_ad_configuration
+                    ).apply { putBoolean(AdMobInterstitialFragment.ARG_IS_VIDEO, true) }
+                )
+            )
+
             demoList.add(
                 DemoItem(
                     getString(R.string.demo_bidding_admob_interstitial_multiformat),
@@ -1392,7 +1462,20 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_video_rewarded_end_card_320_480,
                         R.string.admob_rewarded_bidding_ad_unit_id_adapter,
-                        320, 480,R.string.response_prebid_video_rewarded_320_480
+                        320, 480, R.string.response_prebid_video_rewarded_320_480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_admob_rewarded_adapter_configuration),
+                    adMobRewardedAction,
+                    adMobVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_rewarded_end_card_320_480,
+                        R.string.admob_rewarded_bidding_ad_unit_id_adapter,
+                        320, 480,
+                        R.string.response_prebid_video_rewarded_320_480_with_ad_configuration
                     )
                 )
             )
@@ -1670,6 +1753,32 @@ class DemoItemProvider private constructor() {
             )
             demoList.add(
                 DemoItem(
+                    getString(R.string.demo_bidding_max_video_interstitial_adapter_configuration),
+                    maxInterstitialAction,
+                    maxVideoInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_interstitial_320_480,
+                        R.string.max_interstitial_ad_unit_id,
+                        320, 480,
+                        R.string.response_prebid_video_interstitial_ad_configuration
+                    ).apply { putBoolean(MaxInterstitialFragment.ARG_IS_VIDEO, true) }
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_video_interstitial_adapter_endcard_configuration),
+                    maxInterstitialAction,
+                    maxVideoInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
+                        R.string.max_interstitial_ad_unit_id,
+                        320, 480,
+                        R.string.response_prebid_video_interstitial_end_card_ad_configuration
+                    ).apply { putBoolean(MaxInterstitialFragment.ARG_IS_VIDEO, true) }
+                )
+            )
+            demoList.add(
+                DemoItem(
                     getString(R.string.demo_bidding_max_interstitial_multiformat_adapter),
                     maxMultiformatInterstitialAction,
                     maxVideoInterstitialTagList,
@@ -1734,6 +1843,19 @@ class DemoItemProvider private constructor() {
                         R.string.max_rewarded_ad_unit_id,
                         320, 480,
                         R.string.response_prebid_video_rewarded_end_card_320_480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_max_rewarded_adapter_endcard_configuration),
+                    maxRewardedAction,
+                    maxVideoInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_rewarded_end_card_320_480,
+                        R.string.max_rewarded_ad_unit_id,
+                        320, 480,
+                        R.string.response_prebid_video_rewarded_320_480_with_ad_configuration
                     )
                 )
             )

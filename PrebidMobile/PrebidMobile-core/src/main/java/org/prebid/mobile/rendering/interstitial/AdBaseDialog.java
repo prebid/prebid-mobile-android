@@ -339,7 +339,7 @@ public abstract class AdBaseDialog extends Dialog {
         }
 
         InterstitialDisplayPropertiesInternal properties = interstitialManager.getInterstitialDisplayProperties();
-        closeView = Utils.createCloseView(contextReference.get());
+        closeView = Utils.createCloseView(contextReference.get(), properties);
 
 
         if (closeView == null) {
