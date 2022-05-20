@@ -42,8 +42,8 @@ import java.util.Map;
 
 import static android.os.Looper.getMainLooper;
 import static java.lang.Thread.sleep;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.robolectric.Shadows.shadowOf;
 

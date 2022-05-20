@@ -20,7 +20,7 @@ import org.json.JSONObject;
 import org.junit.Test;
 import org.prebid.mobile.test.utils.ResourceUtils;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class GeoTest {
 

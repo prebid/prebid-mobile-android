@@ -34,7 +34,6 @@ import org.robolectric.annotation.Config;
 import java.lang.reflect.Field;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)

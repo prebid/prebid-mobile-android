@@ -27,7 +27,7 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK, manifest = Config.NONE)

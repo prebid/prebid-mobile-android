@@ -34,8 +34,6 @@ import org.robolectric.annotation.Config;
 import java.io.IOException;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.prebid.mobile.api.exceptions.AdException.INTERNAL_ERROR;
 import static org.prebid.mobile.rendering.video.vast.VASTErrorCodes.WRAPPER_LIMIT_REACH_ERROR;

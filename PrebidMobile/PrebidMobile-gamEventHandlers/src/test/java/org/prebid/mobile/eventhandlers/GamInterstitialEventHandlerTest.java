@@ -35,7 +35,6 @@ import org.robolectric.annotation.Config;
 import java.util.HashMap;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)

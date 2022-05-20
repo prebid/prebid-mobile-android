@@ -33,7 +33,7 @@ import org.robolectric.shadows.ShadowActivity;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)

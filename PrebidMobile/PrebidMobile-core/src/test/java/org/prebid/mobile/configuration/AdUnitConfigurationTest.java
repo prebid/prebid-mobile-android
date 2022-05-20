@@ -10,9 +10,7 @@ import org.robolectric.annotation.Config;
 
 import java.util.EnumSet;
 
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)

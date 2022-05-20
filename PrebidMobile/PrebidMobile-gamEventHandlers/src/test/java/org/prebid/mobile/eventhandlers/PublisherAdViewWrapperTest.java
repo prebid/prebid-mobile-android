@@ -35,7 +35,6 @@ import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -76,7 +75,7 @@ public class PublisherAdViewWrapperTest {
     public void onAppEvent_WithInvalidNameAndExpectedAppEvent_DoNothing() {
         publisherAdViewWrapper.onAppEvent("test", "");
 
-        verifyZeroInteractions(mockListener);
+        verifyNoInteractions(mockListener);
     }
 
     @Test

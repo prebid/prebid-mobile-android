@@ -40,8 +40,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.*;
 
@@ -102,19 +100,19 @@ public class RewardedAdUnitTest {
     public void loadAdWithInvalidInterstitialAdState_DoNothing() {
         changeInterstitialState(LOADING);
         rewardedAdUnit.loadAd();
-        verifyZeroInteractions(mockBidLoader);
+        verifyNoInteractions(mockBidLoader);
 
         changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_PREBID);
         rewardedAdUnit.loadAd();
-        verifyZeroInteractions(mockBidLoader);
+        verifyNoInteractions(mockBidLoader);
 
         changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM);
         rewardedAdUnit.loadAd();
-        verifyZeroInteractions(mockBidLoader);
+        verifyNoInteractions(mockBidLoader);
 
         changeInterstitialState(BaseInterstitialAdUnit.InterstitialAdUnitState.PREBID_LOADING);
         rewardedAdUnit.loadAd();
-        verifyZeroInteractions(mockBidLoader);
+        verifyNoInteractions(mockBidLoader);
     }
 
     @Test
