@@ -108,6 +108,8 @@
     <string name="demo_bidding_in_app_interstitial_video_320_480_no_bids">Video Interstitial 320x480 (In-App) [noBids]</string>
     <string name="demo_bidding_in_app_interstitial_video_320_480_with_ad_configuration">Video Interstitial 320x480 With Ad Configuration (In-App)</string>
     <string name="demo_bidding_in_app_interstitial_video_320_480_end_card_with_ad_configuration">Video Interstitial 320x480 With End Card With Ad Configuration (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_video_vertical_end_card">Video Interstitial Vertical With End Card (In-App)</string>
+    <string name="demo_bidding_in_app_interstitial_video_landscape_end_card">Video Interstitial Landscape With End Card (In-App)</string>
     <string name="demo_bidding_in_app_video_rewarded_end_card_320_480">Video Rewarded 320x480 (In-App)</string>
     <string name="demo_bidding_in_app_video_rewarded_end_card_320_480_no_bids">Video Rewarded 320x480 with End Card (In-App) [noBids]</string>
     <string name="demo_bidding_in_app_video_rewarded_320_480">Video Rewarded 320x480 without End Card (In-App)</string>
@@ -307,6 +309,7 @@
     <string name="imp_prebid_id_video_interstitial_deeplink">imp-prebid-video-interstitial-320-480-deeplink</string>
     <string name="imp_prebid_id_video_interstitial_skipoffset">imp-prebid-video-interstitial-320-480-skip-offset</string>
     <string name="imp_prebid_id_video_interstitial_mraid_end_card">imp-prebid-video-interstitial-mraid-end-card</string>
+    <string name="imp_prebid_id_video_interstitial_vertical">imp-prebid-video-interstitial-vertical</string>
     <string name="imp_prebid_id_video_rewarded_end_card_320_480">imp-prebid-video-rewarded-320-480</string>
     <string name="imp_prebid_id_video_rewarded_320_480">imp-prebid-video-rewarded-320-480-without-end-card</string>
     <string name="imp_prebid_id_mraid_resize">imp-prebid-mraid-resize</string>
@@ -382,6 +385,8 @@
     <string name="response_prebid_video_interstitial_skipoffset">response-prebid-video-interstitial-320-480-skip-offset</string>
     <string name="response_prebid_video_interstitial_ad_configuration">response-prebid-video-interstitial-320-480-with-ad-configuration</string>
     <string name="response_prebid_video_interstitial_end_card_ad_configuration">response-prebid-video-interstitial-320-480-with-end-card-with-ad-configuration</string>
+    <string name="response_prebid_video_interstitial_vertical">response-prebid-video-interstitial-vertical-with-end-card</string>
+    <string name="response_prebid_video_interstitial_landscape">response-prebid-video-interstitial-landscape-with-end-card</string>
     <!--  Video Outstream  -->
     <string name="response_prebid_video_outstream">response-prebid-video-outstream</string>
     <string name="response_prebid_video_outstream_end_card">response-prebid-video-outstream-with-end-card</string>

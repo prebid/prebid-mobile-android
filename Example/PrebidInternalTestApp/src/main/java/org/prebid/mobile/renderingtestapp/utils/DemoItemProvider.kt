@@ -547,6 +547,34 @@ class DemoItemProvider private constructor() {
             )
             demoList.add(
                 DemoItem(
+                    getString(R.string.demo_bidding_in_app_interstitial_video_vertical_end_card),
+                    ppmInterstitialAction,
+                    ppmVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_interstitial_vertical,
+                        null,
+                        MIN_WIDTH_PERC,
+                        MIN_HEIGHT_PERC,
+                        R.string.response_prebid_video_interstitial_vertical
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_in_app_interstitial_video_landscape_end_card),
+                    ppmInterstitialAction,
+                    ppmVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_interstitial_vertical,
+                        null,
+                        MIN_WIDTH_PERC,
+                        MIN_HEIGHT_PERC,
+                        R.string.response_prebid_video_interstitial_landscape
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
                     getString(R.string.demo_bidding_in_app_interstitial_320_480_multiformat),
                     ppmInterstitialMultiformatAction,
                     ppmInterstitialTagList,
