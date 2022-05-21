@@ -35,32 +35,32 @@ class MraidAdsTest:BaseAdsTest() {
         device.pressBack()
     }
     private fun checkMraidResizeWithErrors() {
-        val clickToggleScreen = By.res(packageName,"toggleOffscreenDiv")
+        val clickToggleScreen = By.res("toggleOffscreenDiv")
         val findClickToggleScreen = device.wait(Until.findObject(clickToggleScreen), timeout)
         assertNotNull(findClickToggleScreen)
         findClickToggleScreen.click()
 
-        val resizeLeft = By.res(packageName,"resizeLeftText")
+        val resizeLeft = By.res("resizeLeftText")
         val findResizeLeft = device.wait(Until.findObject(resizeLeft), timeout)
         assertNotNull(findResizeLeft)
         findResizeLeft.click()
 
-        val resizeRight = By.res(packageName,"resizeRightText")
+        val resizeRight = By.res("resizeRightText")
         val findResizeRight = device.wait(Until.findObject(resizeRight), timeout)
         assertNotNull(findResizeRight)
         findResizeRight.click()
 
-        val resizeUp = By.res(packageName,"resizeUpText")
+        val resizeUp = By.res("resizeUpText")
         val findResizeUp = device.wait(Until.findObject(resizeUp), timeout)
         assertNotNull(findResizeUp)
         findResizeUp.click()
 
-        val resizeDown = By.res(packageName,"resizeDownText")
+        val resizeDown = By.res("resizeDownText")
         val findResizeDown = device.wait(Until.findObject(resizeDown), timeout)
         assertNotNull(findResizeDown)
         findResizeDown.click()
 
-        val closeButton = By.res(packageName,"closeButtonDiv")
+        val closeButton = By.res("closeButtonDiv")
         val findCloseButton = device.wait(Until.findObject(closeButton),timeout)
         assertNotNull(findCloseButton)
         findCloseButton.click()
@@ -68,12 +68,12 @@ class MraidAdsTest:BaseAdsTest() {
         device.pressBack()
     }
     private fun checkMraidExpand() {
-        val clickToExpand = By.res(packageName,"expandbtn")
+        val clickToExpand = By.res("maindiv")
         val findClickToExpand = device.wait(Until.findObject(clickToExpand), timeout)
         assertNotNull(findClickToExpand)
         findClickToExpand.click()
 
-        val closeButton = By.res(packageName,"closediv")
+        val closeButton = By.res("closediv")
         val findCloseButton = device.wait(Until.findObject(closeButton), timeout)
         assertNotNull(findCloseButton)
         findCloseButton.click()

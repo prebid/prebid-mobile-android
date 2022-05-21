@@ -14,7 +14,6 @@ class BannerAdsTest : BaseAdsTest() {
         testAd(TestConstants.GAM,TestConstants.BANNER_320x50)
         testAd(TestConstants.IN_APP_GAM,TestConstants.BANNER_320x50)
         testAd(TestConstants.IN_APP_ADMOB,TestConstants.BANNER_320x50)
-        displayErrorMessages()
         testAd(TestConstants.IN_APP,TestConstants.BANNER_MULTISIZE)
         testAd(TestConstants.GAM,TestConstants.BANNER_MULTISIZE)
     }

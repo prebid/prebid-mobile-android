@@ -13,13 +13,11 @@ class DisplayInterstitialAdsTest : BaseAdsTest() {
         testAd(TestConstants.GAM, TestConstants.DISPLAY_INTERSTITIAL)
         testAd(TestConstants.IN_APP_ADMOB, TestConstants.DISPLAY_INTERSTITIAL)
         testAd(TestConstants.IN_APP_GAM, TestConstants.DISPLAY_INTERSTITIAL)
-        displayErrorMessages()
     }
 
     @Test
     fun multiformatInterstitialAdsShouldBeDisplayed() {
         testAd(TestConstants.IN_APP, TestConstants.MULTIFORMAT_INTERSTITIAL)
-        displayErrorMessages()
     }
 
     override fun checkAd(adServer: String, adName: String) {

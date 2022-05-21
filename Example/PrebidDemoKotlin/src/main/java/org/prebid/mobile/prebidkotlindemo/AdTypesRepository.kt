@@ -375,7 +375,7 @@ object AdTypesRepository {
                 onDestroy = { InAppAdMobRewarded.destroy() }
             ),
             AdType(
-                "Native",
+                "Native Ad",
                 onCreate = { _, wrapper, _ ->
                     // TODO: Problems with ids (current example's type is not Native)
                     InAppAdMobNative.create(

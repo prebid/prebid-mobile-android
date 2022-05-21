@@ -9,23 +9,16 @@ import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 
 class VideoAdsTest : BaseAdsTest() {
     @Test
-    fun videoInterstitialWithEndCardAdShouldBeDisplayed() {
+    fun videoAdsShouldBeDisplayed(){
         testAd(TestConstants.IN_APP, TestConstants.VIDEO_INTERSTITIAL_WITH_END_CARD)
-    }
 
-    @Test
-    fun videoRewardedAdsShouldBeDisplayed() {
-       /* testAd(TestConstants.GAM, TestConstants.VIDEO_REWARDED)
+        /* testAd(TestConstants.GAM, TestConstants.VIDEO_REWARDED)
         testAd(TestConstants.IN_APP_GAM, TestConstants.VIDEO_REWARDED)*/
-
         testAd(TestConstants.IN_APP, TestConstants.VIDEO_REWARDED)
         testAd(TestConstants.IN_APP_ADMOB, TestConstants.VIDEO_REWARDED)
-    }
 
-    @Test
-    fun videoBannerAdsShouldBeDisplayed() {
-        testAd(TestConstants.GAM,TestConstants.VIDEO_BANNER)
         testAd(TestConstants.IN_APP,TestConstants.VIDEO_BANNER)
+        testAd(TestConstants.IN_APP_GAM,TestConstants.VIDEO_BANNER)
     }
 
     override fun checkAd(adServer: String, adName: String) {

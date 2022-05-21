@@ -9,6 +9,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.*
 import junit.framework.AssertionFailedError
 import org.hamcrest.CoreMatchers.notNullValue
+import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.runner.RunWith
@@ -36,6 +37,10 @@ abstract class BaseAdsTest {
         )
         initMainScreenComponents()
 
+    }
+    @After
+    fun checkErrors(){
+        displayErrorMessages()
     }
 
     private fun initDevice() {
@@ -85,7 +90,7 @@ abstract class BaseAdsTest {
             }
         }
     }
-    protected fun displayErrorMessages(){
+    private fun displayErrorMessages(){
         val failedTestsMessage = adsErrorMessagesQueue.joinToString(separator = System.lineSeparator())
         if (failedTestsMessage.isNotEmpty()){
             adsErrorMessagesQueue.clear()
