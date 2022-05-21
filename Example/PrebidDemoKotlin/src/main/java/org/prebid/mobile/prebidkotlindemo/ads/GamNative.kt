@@ -18,7 +18,7 @@ object GamNative {
 
     fun create(
         wrapper: ViewGroup,
-        adUnitId: String?,
+        adUnitId: String,
         configId: String?,
         autoRefreshTime: Int,
         storedAuctionResponse: String
@@ -38,7 +38,7 @@ object GamNative {
         wrapper.addView(gamView)
         val builder = AdManagerAdRequest.Builder()
         nativeAdUnit!!.setAutoRefreshInterval(autoRefreshTime)
-        nativeAdUnit!!.fetchDemand(builder) { resultCode: ResultCode? ->
+        nativeAdUnit!!.fetchDemand(builder) {
             val request = builder.build()
             gamView.loadAd(request)
         }

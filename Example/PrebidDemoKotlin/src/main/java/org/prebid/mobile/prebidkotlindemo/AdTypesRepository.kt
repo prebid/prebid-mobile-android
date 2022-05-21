@@ -182,9 +182,9 @@ object AdTypesRepository {
             ),
             AdType(
                 "Video Banner",
-                onCreate = { _, wrapper, autoRefreshTime ->
+                onCreate = { _, wrapper, _ ->
                     InAppVideoBanner.create(
-                        wrapper, autoRefreshTime / 1000,
+                        wrapper,
                         300, 250,
                         "imp-prebid-video-outstream",
                         "response-prebid-video-outstream"

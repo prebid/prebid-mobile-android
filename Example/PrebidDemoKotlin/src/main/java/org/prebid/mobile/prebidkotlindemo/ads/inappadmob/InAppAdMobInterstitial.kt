@@ -46,7 +46,7 @@ object InAppAdMobInterstitial {
                 override fun onAdLoaded(interstitial: InterstitialAd) {
                     interstitialAd = interstitial
                     val mediationAdapter = interstitial.responseInfo.mediationAdapterClassName
-                    if (mediationAdapter.contains("prebid")) {
+                    if (mediationAdapter!!.contains("prebid")) {
                         interstitialAd?.show(activity)
                     }
 

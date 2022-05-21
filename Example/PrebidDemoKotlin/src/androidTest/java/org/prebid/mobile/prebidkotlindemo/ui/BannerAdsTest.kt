@@ -10,8 +10,8 @@ import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 class BannerAdsTest : BaseAdsTest() {
     @Test
     fun bannerAdsShouldBeDisplayed() {
-        testAd(TestConstants.IN_APP,TestConstants.BANNER_320x50)
         testAd(TestConstants.GAM,TestConstants.BANNER_320x50)
+        testAd(TestConstants.IN_APP,TestConstants.BANNER_320x50)
         testAd(TestConstants.IN_APP_GAM,TestConstants.BANNER_320x50)
         testAd(TestConstants.IN_APP_ADMOB,TestConstants.BANNER_320x50)
         testAd(TestConstants.IN_APP,TestConstants.BANNER_MULTISIZE)

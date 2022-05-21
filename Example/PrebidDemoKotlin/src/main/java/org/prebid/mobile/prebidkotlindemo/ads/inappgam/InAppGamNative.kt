@@ -131,7 +131,7 @@ object InAppGamNative {
             .forAdManagerAdView(onGamAdLoaded, AdSize.BANNER)
             .forNativeAd(onUnifiedAdLoaded)
             .forCustomFormatAd(customFormatId, onCustomAdLoaded,
-                { customAd: NativeCustomFormatAd?, s: String? -> })
+                { _: NativeCustomFormatAd?, _: String? -> })
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                     super.onAdFailedToLoad(loadAdError)
