@@ -4,19 +4,18 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Until
 import junit.framework.Assert
 import junit.framework.TestCase
+import junit.framework.TestCase.assertNotNull
 import org.junit.Test
 import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 
 class VideoAdsTest : BaseAdsTest() {
     @Test
     fun videoAdsShouldBeDisplayed(){
-        testAd(TestConstants.IN_APP, TestConstants.VIDEO_INTERSTITIAL_WITH_END_CARD)
-
-        /* testAd(TestConstants.GAM, TestConstants.VIDEO_REWARDED)
-        testAd(TestConstants.IN_APP_GAM, TestConstants.VIDEO_REWARDED)*/
+        testAd(TestConstants.GAM, TestConstants.VIDEO_REWARDED)
+        testAd(TestConstants.IN_APP_GAM, TestConstants.VIDEO_REWARDED)
         testAd(TestConstants.IN_APP, TestConstants.VIDEO_REWARDED)
         testAd(TestConstants.IN_APP_ADMOB, TestConstants.VIDEO_REWARDED)
-
+        testAd(TestConstants.IN_APP, TestConstants.VIDEO_INTERSTITIAL_WITH_END_CARD)
         testAd(TestConstants.IN_APP,TestConstants.VIDEO_BANNER)
         testAd(TestConstants.IN_APP_GAM,TestConstants.VIDEO_BANNER)
     }
@@ -24,7 +23,7 @@ class VideoAdsTest : BaseAdsTest() {
     override fun checkAd(adServer: String, adName: String) {
         when (adName) {
             TestConstants.VIDEO_BANNER -> checkVideoBannerAd()
-            TestConstants.VIDEO_REWARDED -> checkVideoRewardedAd()
+            TestConstants.VIDEO_REWARDED -> checkVideoRewardedAd(adServer)
             TestConstants.VIDEO_INTERSTITIAL_WITH_END_CARD -> checkVideoInterstitialAd()
         }
     }
@@ -36,17 +35,17 @@ class VideoAdsTest : BaseAdsTest() {
         val skipButton = By.res(packageName, "iv_skip")
 
         val findAd = device.wait(Until.findObject(ad), timeout)
-        TestCase.assertNotNull(findAd)
+        assertNotNull(findAd)
 
         val findSkipButton = device.wait(Until.findObject(skipButton), timeout * 3)
-        TestCase.assertNotNull(findSkipButton)
+        assertNotNull(findSkipButton)
         findSkipButton.click()
 
         val findEndCard = device.wait(Until.findObject(endCard), timeout)
-        TestCase.assertNotNull(findEndCard)
+        assertNotNull(findEndCard)
 
         val findCloseButton = device.wait(Until.findObject(closeButton), timeout)
-        TestCase.assertNotNull(findCloseButton)
+        assertNotNull(findCloseButton)
         findCloseButton.click()
         Thread.sleep(1000)
         device.pressBack()
@@ -57,26 +56,71 @@ class VideoAdsTest : BaseAdsTest() {
         val volumeButton = By.clazz("android.widget.ImageView")
 
         val findAd = device.wait(Until.findObject(ad), timeout)
-        Assert.assertNotNull(findAd)
+        assertNotNull(findAd)
         val findVolumeButton = device.wait(Until.findObject(volumeButton), timeout)
-        Assert.assertNotNull(findVolumeButton)
+        assertNotNull(findVolumeButton)
         device.pressBack()
     }
 
-    private fun checkVideoRewardedAd() {
+    private fun checkVideoRewardedAd(adServer: String) {
+        if (adServer == TestConstants.GAM){
+            checkOriginalApiVideoRewardedAd()
+        } else {
+            checkRenderingApiVideoRewarded()
+        }
+    }
+
+    private fun checkRenderingApiVideoRewarded() {
         val ad = By.res(packageName, "exo_subtitles")
         val endCard = By.text("Pbs_intestitial_320x480")
         val closeButton = By.res(packageName, "iv_close_interstitial")
 
         val findAd = device.wait(Until.findObject(ad), timeout)
-        Assert.assertNotNull(findAd)
+        assertNotNull(findAd)
 
         val findEndCard = device.wait(Until.findObject(endCard), timeout * 3)
-        Assert.assertNotNull(findEndCard)
+        assertNotNull(findEndCard)
 
         val findCloseButton = device.wait(Until.findObject(closeButton), timeout)
-        Assert.assertNotNull(findCloseButton)
+        assertNotNull(findCloseButton)
         findCloseButton.click()
+        Thread.sleep(1000)
+        device.pressBack()
+    }
+
+    private fun checkOriginalApiVideoRewardedAd() {
+        val ad = By.res("video_container")
+        val closeButton = By.clazz("android.widget.Button")
+        val endCard = By.clazz("android.widget.ImageView")
+        val rewardEndsText = By.textStartsWith("Reward in")
+        val learnMore = By.text("Learn More")
+        val skipButton = By.text("Skip")
+        val resumeButton = By.text("Resume")
+
+        val findAd = device.wait(Until.findObject(ad), timeout)
+        assertNotNull(findAd)
+
+        val findRewardEndsText = device.wait(Until.findObject(rewardEndsText), timeout)
+        assertNotNull(findRewardEndsText)
+
+        val findLearnMore = device.wait(Until.findObject(learnMore), timeout)
+        assertNotNull(findLearnMore)
+
+        val findCloseButton = device.wait(Until.findObject(closeButton), timeout)
+        assertNotNull(findCloseButton)
+        findCloseButton.click()
+
+        val findResumeButton = device.wait(Until.findObject(resumeButton),timeout)
+        assertNotNull(findResumeButton)
+
+        val findSkipButton = device.wait(Until.findObject(skipButton),timeout)
+        assertNotNull(findSkipButton)
+        findSkipButton.click()
+
+        val findEndCard = device.wait(Until.findObject(endCard),timeout)
+        assertNotNull(findEndCard)
+        findCloseButton.click()
+
         Thread.sleep(1000)
         device.pressBack()
     }

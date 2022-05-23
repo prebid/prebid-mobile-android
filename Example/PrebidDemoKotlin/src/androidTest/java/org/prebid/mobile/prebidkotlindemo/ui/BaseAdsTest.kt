@@ -13,6 +13,12 @@ import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.runner.RunWith
+import androidx.test.uiautomator.UiSelector
+
+import androidx.test.uiautomator.UiObject
+
+
+
 
 @RunWith(AndroidJUnit4::class)
 @SdkSuppress(minSdkVersion = 18)
@@ -62,6 +68,7 @@ abstract class BaseAdsTest {
             this?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         }
         context.startActivity(intent)
+
     }
 
     private fun initMainScreenComponents() {
@@ -82,15 +89,15 @@ abstract class BaseAdsTest {
             checkAd(adServer,adName)
         }.getOrElse { throwable ->
             if (retryCount != 0) {
-                device.pressBack()
+                restartApp()
                 testAd(adServer, adName, retryCount - 1)
             } else {
                 adsErrorMessagesQueue.add("$adServer - $adName ${throwable.stackTraceToString()}")
-                device.pressBack()
+                restartApp()
             }
         }
     }
-    private fun displayErrorMessages(){
+    private fun displayErrorMessages() {
         val failedTestsMessage = adsErrorMessagesQueue.joinToString(separator = System.lineSeparator())
         if (failedTestsMessage.isNotEmpty()){
             adsErrorMessagesQueue.clear()
@@ -110,6 +117,16 @@ abstract class BaseAdsTest {
 
     private fun selectSpinnerValue(value: String) {
         device.findObject(By.text(value)).click()
+    }
+    private fun restartApp(){
+        device.pressHome()
+        device.pressRecentApps()
+
+        val app = device.findObject(
+            UiSelector().description("Prebid Kotlin Demo")
+        )
+        app.swipeUp(100)
+        startActivity()
     }
 
 

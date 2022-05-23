@@ -3,10 +3,7 @@ package org.prebid.mobile.prebidkotlindemo
 import org.prebid.mobile.Host
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.api.data.AdUnitFormat
-import org.prebid.mobile.prebidkotlindemo.ads.GamBanner
-import org.prebid.mobile.prebidkotlindemo.ads.GamInterstitial
-import org.prebid.mobile.prebidkotlindemo.ads.GamNative
-import org.prebid.mobile.prebidkotlindemo.ads.GamVideoInterstitial
+import org.prebid.mobile.prebidkotlindemo.ads.*
 import org.prebid.mobile.prebidkotlindemo.ads.inapp.*
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobBanner
 import org.prebid.mobile.prebidkotlindemo.ads.inappadmob.InAppAdMobInterstitial
@@ -88,10 +85,21 @@ object AdTypesRepository {
                         activity,
                         "/21808260008/prebid-demo-app-original-api-video-interstitial",
                         "imp-prebid-video-interstitial-320-480",
-                        "response-prebid-video-interstitial-320-480"
+                        "response-prebid-video-interstitial-320-480-original-api"
                     )
                 },
                 onDestroy = { GamVideoInterstitial.destroy() }
+            ),AdType(
+                "Rewarded Interstitial",
+                onCreate = { activity, _, _ ->
+                    GamVideoRewarded.create(
+                        activity,
+                        "/21808260008/prebid-demo-app-original-api-video-interstitial",
+                        "imp-prebid-video-rewarded-320-480",
+                        "response-prebid-video-rewarded-320-480-original-api"
+                    )
+                },
+                onDestroy = { GamVideoRewarded.destroy() }
             )
         ),
 
@@ -313,7 +321,7 @@ object AdTypesRepository {
                 onCreate = { activity, _, _ ->
                     InAppGamRewardedInterstitial.create(
                         activity,
-                        "/21808260008/prebid_oxb_rewarded_video_test",
+                        "/21808260008/prebid-demo-app-original-api-video-interstitial",
                         "imp-prebid-video-rewarded-320-480",
                         "response-prebid-video-rewarded-320-480"
                     )

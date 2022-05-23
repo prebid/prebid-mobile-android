@@ -64,6 +64,9 @@ workflows:
          name: Build Java Demo 
          buildCommand: ./gradlew PrebidDemoJava:build
       - build:
+          name: Build Internal Test App
+          buildCommand: ./gradlew PrebidInternalTestApp:build
+      - build:
          name: Build Frameworks
          buildCommand: scripts/buildPrebidMobile.sh
       - test
