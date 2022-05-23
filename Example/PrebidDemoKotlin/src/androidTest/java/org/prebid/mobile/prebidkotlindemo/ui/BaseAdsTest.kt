@@ -24,7 +24,7 @@ import androidx.test.uiautomator.UiObject
 @SdkSuppress(minSdkVersion = 18)
 abstract class BaseAdsTest {
     protected val packageName = "org.prebid.mobile.prebidkotlindemo"
-    protected val timeout = 8000L
+    protected val timeout = 7000L
     protected lateinit var device: UiDevice
 
     private lateinit var adServerSpinner: UiObject
@@ -119,13 +119,8 @@ abstract class BaseAdsTest {
         device.findObject(By.text(value)).click()
     }
     private fun restartApp(){
+        Runtime.getRuntime().exec(arrayOf("am", "force-stop", packageName))
         device.pressHome()
-        device.pressRecentApps()
-
-        val app = device.findObject(
-            UiSelector().description("Prebid Kotlin Demo")
-        )
-        app.swipeUp(100)
         startActivity()
     }
 
