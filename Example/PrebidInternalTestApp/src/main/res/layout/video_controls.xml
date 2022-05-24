@@ -17,6 +17,7 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -38,12 +39,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:text="Resume"
         android:textColor="@color/action_bar_bkg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btnPause"
-        app:layout_constraintTop_toBottomOf="@+id/mediaView" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UnknownIdInLayout" />
 
     <Button
         android:id="@+id/btnMute"
@@ -77,12 +78,12 @@
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:text="Pause"
         android:textColor="@color/action_bar_bkg"
         app:layout_constraintEnd_toStartOf="@+id/btnResume"
         app:layout_constraintStart_toEndOf="@+id/btnPlay"
-        app:layout_constraintTop_toBottomOf="@+id/mediaView" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UnknownIdInLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>
