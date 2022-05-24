@@ -67,8 +67,9 @@ workflows:
           name: Build Internal Test App
           buildCommand: ./gradlew PrebidInternalTestApp:build
       - build:
-         name: Build Frameworks
+         name: Build PrebidMobile Frameworks
          buildCommand: scripts/buildPrebidMobile.sh
-      - test
+      - test:
+          name: Run Unit Tests - Prebid Mobile
       - android-test:
-          name: Smoke UI tests Android 11
+          name: Run Smoke UI Tests - Demo App Kotlin - Android 11
