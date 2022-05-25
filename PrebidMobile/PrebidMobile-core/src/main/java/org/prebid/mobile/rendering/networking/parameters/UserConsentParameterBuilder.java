@@ -44,13 +44,13 @@ public class UserConsentParameterBuilder extends ParameterBuilder {
     }
 
     private void appendGdprParameter(BidRequest bidRequest) {
-        Boolean subjectToGdpr = userConsentManager.getSubjectToGdprBoolean();
+        Boolean subjectToGdpr = userConsentManager.getAnySubjectToGdpr();
 
         if (subjectToGdpr != null) {
             int gdprValue = subjectToGdpr ? 1 : 0;
             bidRequest.getRegs().getExt().put(GDPR, gdprValue);
 
-            String userConsentString = userConsentManager.getGdprConsent();
+            String userConsentString = userConsentManager.getAnyGdprConsent();
             if (!Utils.isBlank(userConsentString)) {
                 bidRequest.getUser().getExt().put(CONSENT, userConsentString);
             }

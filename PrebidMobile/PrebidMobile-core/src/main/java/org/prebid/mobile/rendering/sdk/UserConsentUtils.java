@@ -29,48 +29,39 @@ public class UserConsentUtils {
     /* -------------------- GDPR -------------------- */
 
     @Nullable
-    public static Integer tryToGetCmpSdkIdForGdprTcf2() {
-        return getIfManagerExists("getCmpSdkIdForGdprTcf2", UserConsentManager::getCmpSdkIdForGdprTcf2);
+    public static Boolean tryToGetAnySubjectToGdpr() {
+        return getIfManagerExists("getAnySubjectToGdpr", UserConsentManager::getAnySubjectToGdpr);
     }
 
-    public static void tryToSetCmpSdkIdForGdprTcf2(@Nullable Integer id) {
-        doIfManagerExists("setCmpSdkIdForGdprTcf2", manager -> manager.setCmpSdkIdForGdprTcf2(id));
-    }
-
-    @Nullable
-    public static Boolean tryToGetSubjectToGdpr() {
-        return getIfManagerExists("getSubjectToGdpr", UserConsentManager::getSubjectToGdprBoolean);
-    }
-
-    public static void tryToSetSubjectToGdpr(@Nullable Boolean value) {
-        doIfManagerExists("setSubjectToGdpr", manager -> manager.setSubjectToGdpr(value));
+    public static void tryToSetPrebidSubjectToGdpr(@Nullable Boolean value) {
+        doIfManagerExists("setPrebidSubjectToGdpr", manager -> manager.setPrebidSubjectToGdpr(value));
     }
 
     @Nullable
-    public static String tryToGetGdprConsent() {
-        return getIfManagerExists("getConsentToGdpr", UserConsentManager::getGdprConsent);
+    public static String tryToGetAnyGdprConsent() {
+        return getIfManagerExists("getAnyGdprConsent", UserConsentManager::getAnyGdprConsent);
     }
 
-    public static void tryToSetGdprConsent(@Nullable String consent) {
-        doIfManagerExists("setConsentToGdpr", manager -> manager.setGdprConsent(consent));
-    }
-
-    @Nullable
-    public static String tryToGetGdprPurposeConsents() {
-        return getIfManagerExists("getPurposeConsents", UserConsentManager::getGdprPurposeConsents);
+    public static void tryToSetPrebidGdprConsent(@Nullable String consent) {
+        doIfManagerExists("setGdprConsent", manager -> manager.setPrebidGdprConsent(consent));
     }
 
     @Nullable
-    public static Boolean tryToGetGdprPurposeConsent(int index) {
-        return getIfManagerExists("getPurposeConsent", manager -> manager.getGdprPurposeConsent(index));
+    public static String tryToGetAnyGdprPurposeConsents() {
+        return getIfManagerExists("getPurposeConsents", UserConsentManager::getAnyGdprPurposeConsents);
     }
 
-    public static void tryToSetGdprPurposeConsents(@Nullable String consent) {
-        doIfManagerExists("setPurposeConsents", manager -> manager.setGdprPurposeConsents(consent));
+    public static void tryToSetPrebidGdprPurposeConsents(@Nullable String consent) {
+        doIfManagerExists("setPrebidPurposeConsents", manager -> manager.setPrebidGdprPurposeConsents(consent));
     }
 
-    public static Boolean tryToGetDeviceAccessConsent() {
-        return getIfManagerExists("setPurposeConsents", UserConsentManager::canAccessDeviceData);
+    @Nullable
+    public static Boolean tryToGetAnyGdprPurposeConsent(int index) {
+        return getIfManagerExists("getAnyGdprPurposeConsent", manager -> manager.getAnyGdprPurposeConsent(index));
+    }
+
+    public static Boolean tryToGetAnyDeviceAccessConsent() {
+        return getIfManagerExists("setPurposeConsents", UserConsentManager::canAccessAnyDeviceData);
     }
 
 

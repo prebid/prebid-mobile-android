@@ -37,4 +37,16 @@ public class UserConsentManagerReflection {
         return Reflection.getFieldOf(manager, "COPPA_SUBJECT_CUSTOM_KEY");
     }
 
+    public static String getConstGdprPrebidSubject(UserConsentManager manager) {
+        return Reflection.getFieldOf(manager, "GDPR_PREBID_SUBJECT");
+    }
+
+    public static String getConstGdprPrebidConsent(UserConsentManager manager) {
+        return Reflection.getFieldOf(manager, "GDPR_PREBID_CONSENT");
+    }
+
+    public static String getConstGdprPrebidPurposeConsent(UserConsentManager manager) {
+        return Reflection.getFieldOf(manager, "GDPR_PREBID_PURPOSE_CONSENT");
+    }
+
 }

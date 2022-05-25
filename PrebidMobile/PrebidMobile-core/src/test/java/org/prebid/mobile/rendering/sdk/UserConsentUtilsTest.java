@@ -73,56 +73,44 @@ public class UserConsentUtilsTest {
     }
 
     @Test
-    public void cmpSdkIdForGdprTcf2() {
-        UserConsentUtils.tryToSetCmpSdkIdForGdprTcf2(10);
-        assertNull(UserConsentUtils.tryToGetCmpSdkIdForGdprTcf2());
-
-        ManagersResolver.getInstance().prepare(context);
-
-        assertEquals(Integer.valueOf(-1), UserConsentUtils.tryToGetCmpSdkIdForGdprTcf2());
-
-        UserConsentUtils.tryToSetCmpSdkIdForGdprTcf2(11);
-        assertEquals(Integer.valueOf(11), UserConsentUtils.tryToGetCmpSdkIdForGdprTcf2());
-    }
-
-    @Test
     public void gdprConsent() {
-        UserConsentUtils.tryToSetGdprConsent("1");
-        assertNull(UserConsentUtils.tryToGetGdprConsent());
+        UserConsentUtils.tryToSetPrebidGdprConsent("1");
+        assertNull(UserConsentUtils.tryToGetAnyGdprConsent());
 
         ManagersResolver.getInstance().prepare(context);
 
-        assertNull(UserConsentUtils.tryToGetGdprConsent());
+        assertNull(UserConsentUtils.tryToGetAnyGdprConsent());
 
-        UserConsentUtils.tryToSetGdprConsent("1");
-        assertEquals("1", UserConsentUtils.tryToGetGdprConsent());
+        UserConsentUtils.tryToSetPrebidGdprConsent("1");
+        assertEquals("1", UserConsentUtils.tryToGetAnyGdprConsent());
     }
 
     @Test
     public void gdprPurposeConsents() {
-        UserConsentUtils.tryToSetGdprPurposeConsents("1");
-        assertNull(UserConsentUtils.tryToGetGdprPurposeConsents());
+        UserConsentUtils.tryToSetPrebidGdprPurposeConsents("1");
+        assertNull(UserConsentUtils.tryToGetAnyGdprPurposeConsents());
 
         ManagersResolver.getInstance().prepare(context);
 
-        assertNull(UserConsentUtils.tryToGetGdprPurposeConsents());
+        assertNull(UserConsentUtils.tryToGetAnyGdprPurposeConsents());
 
-        UserConsentUtils.tryToSetGdprPurposeConsents("1");
-        assertEquals("1", UserConsentUtils.tryToGetGdprPurposeConsents());
+        UserConsentUtils.tryToSetPrebidGdprPurposeConsents("1");
+        assertEquals("1", UserConsentUtils.tryToGetAnyGdprPurposeConsents());
     }
 
     @Test
     public void tryToGetDeviceAccessConsent() {
-        UserConsentUtils.tryToSetGdprPurposeConsents("1");
+        UserConsentUtils.tryToSetPrebidGdprPurposeConsents("1");
 
-        assertNull(UserConsentUtils.tryToGetDeviceAccessConsent());
+        assertNull(UserConsentUtils.tryToGetAnyDeviceAccessConsent());
 
         ManagersResolver.getInstance().prepare(context);
 
-        assertTrue(UserConsentUtils.tryToGetDeviceAccessConsent());
+        assertTrue(UserConsentUtils.tryToGetAnyDeviceAccessConsent());
 
-        UserConsentUtils.tryToSetGdprPurposeConsents("0");
-        assertFalse(UserConsentUtils.tryToGetDeviceAccessConsent());
+        UserConsentUtils.tryToSetPrebidSubjectToGdpr(true);
+        UserConsentUtils.tryToSetPrebidGdprPurposeConsents("0");
+        assertFalse(UserConsentUtils.tryToGetAnyDeviceAccessConsent());
     }
 
 }

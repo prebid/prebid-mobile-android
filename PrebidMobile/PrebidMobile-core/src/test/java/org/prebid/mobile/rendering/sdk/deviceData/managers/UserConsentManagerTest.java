@@ -65,6 +65,9 @@ public class UserConsentManagerTest {
             .remove(UserConsentManagerReflection.getConstGdpr2Subject(userConsentManager))
             .remove(UserConsentManagerReflection.getConstGdpr2Consent(userConsentManager))
             .remove(UserConsentManagerReflection.getConstGdpr2PurposeConsent(userConsentManager))
+            .remove(UserConsentManagerReflection.getConstGdprPrebidSubject(userConsentManager))
+            .remove(UserConsentManagerReflection.getConstGdprPrebidConsent(userConsentManager))
+            .remove(UserConsentManagerReflection.getConstGdprPrebidPurposeConsent(userConsentManager))
             .remove(UserConsentManagerReflection.getConstUsPrivacyString(userConsentManager))
             .remove(UserConsentManagerReflection.getConstCoppaCustomKey(userConsentManager))
             .apply();
@@ -98,6 +101,20 @@ public class UserConsentManagerTest {
         assertEquals(
             "IABTCF_PurposeConsents",
             UserConsentManagerReflection.getConstGdpr2PurposeConsent(userConsentManager)
+        );
+
+        // GDPR Prebid
+        assertEquals(
+            "Prebid_GDPR",
+            UserConsentManagerReflection.getConstGdprPrebidSubject(userConsentManager)
+        );
+        assertEquals(
+            "Prebid_GDPR_consent_strings",
+            UserConsentManagerReflection.getConstGdprPrebidConsent(userConsentManager)
+        );
+        assertEquals(
+            "Prebid_GDPR_PurposeConsents",
+            UserConsentManagerReflection.getConstGdprPrebidPurposeConsent(userConsentManager)
         );
 
         // CCPA
@@ -363,6 +380,55 @@ public class UserConsentManagerTest {
         assertNull(userConsentManager.getUsPrivacyString());
         assertFalse(sharedPreferences.contains(usPrivacyKey));
     }
+
+    @Test
+    public void getAnySubjectToGdpr_testPriority() {
+        userConsentManager.setPrebidSubjectToGdpr(true);
+        userConsentManager.setSubjectToGdpr(false);
+
+        assertEquals(Boolean.TRUE, userConsentManager.getAnySubjectToGdpr());
+
+        userConsentManager.setPrebidSubjectToGdpr(null);
+
+        assertEquals(Boolean.FALSE, userConsentManager.getAnySubjectToGdpr());
+
+        userConsentManager.setSubjectToGdpr(null);
+
+        assertNull(userConsentManager.getAnySubjectToGdpr());
+    }
+
+    @Test
+    public void getAnyGdprConsent_testPriority() {
+        userConsentManager.setPrebidGdprConsent("1");
+        userConsentManager.setGdprConsent("2");
+
+        assertEquals("1", userConsentManager.getAnyGdprConsent());
+
+        userConsentManager.setPrebidGdprConsent(null);
+
+        assertEquals("2", userConsentManager.getAnyGdprConsent());
+
+        userConsentManager.setGdprConsent(null);
+
+        assertNull(userConsentManager.getAnyGdprConsent());
+    }
+
+    @Test
+    public void getAnyGdprPurposeConsent_testPriority() {
+        userConsentManager.setPrebidGdprPurposeConsents("10");
+        userConsentManager.setGdprPurposeConsents("01");
+
+        assertEquals("10", userConsentManager.getAnyGdprPurposeConsents());
+
+        userConsentManager.setPrebidGdprPurposeConsents(null);
+
+        assertEquals("01", userConsentManager.getAnyGdprPurposeConsents());
+
+        userConsentManager.setGdprPurposeConsents(null);
+
+        assertNull(userConsentManager.getAnyGdprPurposeConsents());
+    }
+
 
     @Test
     public void getSubjectToGdprShouldUseTcfV2True_ReturnTcfV2GdprApplies() {

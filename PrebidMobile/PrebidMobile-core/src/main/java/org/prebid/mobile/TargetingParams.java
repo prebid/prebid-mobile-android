@@ -178,7 +178,10 @@ public class TargetingParams {
      * @param latitude  User latitude
      * @param longitude User longitude
      */
-    public static void setUserLatLng(Float latitude, Float longitude) {
+    public static void setUserLatLng(
+        Float latitude,
+        Float longitude
+    ) {
         if (latitude == null || longitude == null) {
             userLatLon = null;
             return;
@@ -194,7 +197,10 @@ public class TargetingParams {
      * This method obtains the user data keyword & value for global user targeting
      * if the key already exists the value will be appended to the list. No duplicates will be added
      */
-    public static void addUserData(String key, String value) {
+    public static void addUserData(
+        String key,
+        String value
+    ) {
         Util.addValue(userDataMap, key, value);
     }
 
@@ -202,7 +208,10 @@ public class TargetingParams {
      * This method obtains the user data keyword & values set for global user targeting
      * the values if the key already exist will be replaced with the new set of values
      */
-    public static void updateUserData(String key, Set<String> value) {
+    public static void updateUserData(
+        String key,
+        Set<String> value
+    ) {
         userDataMap.put(key, value);
     }
 
@@ -323,7 +332,6 @@ public class TargetingParams {
             StorageUtils.storeExternalUserId(externalUserId);
         } else {
             LogUtil.error("Targeting", "External User ID can't be set as null");
-
         }
     }
 
@@ -438,7 +446,10 @@ public class TargetingParams {
      * if the key already exists the value will be appended to the list. No duplicates will be added
      * (app.ext.data)
      */
-    public static void addContextData(String key, String value) {
+    public static void addContextData(
+        String key,
+        String value
+    ) {
         Util.addValue(contextDataDictionary, key, value);
     }
 
@@ -446,7 +457,10 @@ public class TargetingParams {
      * This method obtains the context data keyword & values set for global context targeting.
      * the values if the key already exist will be replaced with the new set of values
      */
-    public static void updateContextData(String key, Set<String> value) {
+    public static void updateContextData(
+        String key,
+        Set<String> value
+    ) {
         contextDataDictionary.put(key, value);
     }
 
@@ -576,100 +590,98 @@ public class TargetingParams {
     }
 
     /**
-     * Sets CMP SDK id (id must be >= 0, less than 0 is undefined).
-     * If you want to work with GDPR TCF 2.0, set this value. <br><br>
-     * <p>
-     * If you want to set GDPR TCF 2.0 subject and consent, call this method before <br>
-     * {@link TargetingParams#setSubjectToGDPR(Boolean)}, <br>
-     * {@link TargetingParams#setGDPRConsentString(String)} <br><br>
-     * <p>
-     * Must be called only after <br> {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}
-     */
-    public static void setCmpSdkIdForGdprTcf2(@Nullable Integer id) {
-        UserConsentUtils.tryToSetCmpSdkIdForGdprTcf2(id);
-    }
-
-    /**
-     * Sets subject to GDPR. If CMP SDK id value is set, it sets TCF 2.0 subject,
-     * otherwise it sets TCF 1.0 subject. Null resets all subjects to GDPR. <br><br>
+     * Sets subject to GDPR for Prebid. It uses custom key "Prebid_GDPR", not IAB. <br><br>
      * <p>
      * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
      */
     public static void setSubjectToGDPR(@Nullable Boolean value) {
-        UserConsentUtils.tryToSetSubjectToGdpr(value);
+        UserConsentUtils.tryToSetPrebidSubjectToGdpr(value);
     }
 
     /**
-     * Gets subject to GDPR. If CMP SDK id value is set, it returns TCF 2.0 subject,
-     * otherwise it returns TCF 1.0 subject. Returns null if corresponding subject is undefined. <br><br>
+     * Gets any given subject to GDPR in that order. <br>
+     * 1) Prebid subject to GDPR custom value, if present. <br>
+     * 2) IAB subject to GDPR TCF 2.0, if CMP SDK id value bigger
+     * or equals 0 and value present. <br>
+     * 3) IAB subject to GDPR TCF 1.0, if present. <br>
+     * Otherwise, null. <br><br>
      * <p>
      * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
      */
     @Nullable
     public static Boolean isSubjectToGDPR() {
-        return UserConsentUtils.tryToGetSubjectToGdpr();
+        return UserConsentUtils.tryToGetAnySubjectToGdpr();
     }
 
     /**
-     * Sets GDPR consent string. If CMP SDK id value is set, it sets TFC 2.0 consent,
-     * otherwise it sets TCF 1.0 consent. Null resets all GDPR consents. <br><br>
+     * Sets GDPR consent for Prebid. It uses custom key "Prebid_GDPR_consent_strings", not IAB. <br><br>
      * <p>
      * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
      */
     public static void setGDPRConsentString(@Nullable String consent) {
-        UserConsentUtils.tryToSetGdprConsent(consent);
+        UserConsentUtils.tryToSetPrebidGdprConsent(consent);
     }
 
     /**
-     * Gets GDPR consent string. If CMP SDK id value is set, it gets TFC 2.0 consent,
-     * otherwise it gets TCF 1.0 consent. Returns null if corresponding consent is undefined. <br><br>
+     * Gets any given GDPR consent in that order. <br>
+     * 1) Prebid GDPR consent custom value, if present. <br>
+     * 2) IAB GDPR consent TCF 2.0, if CMP SDK id value bigger
+     * or equals 0 and value present. <br>
+     * 3) IAB GDPR consent TCF 1.0, if present. <br>
+     * Otherwise, null. <br><br>
      * <p>
      * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
      */
     @Nullable
     public static String getGDPRConsentString() {
-        return UserConsentUtils.tryToGetGdprConsent();
+        return UserConsentUtils.tryToGetAnyGdprConsent();
     }
 
     /**
-     * Sets GDPR TCF 2.0 purpose consent (device access consent). Null resets purpose
-     * consents string. <br><br>
+     * Sets Prebid custom GDPR purpose consent (device access consent). <br><br>
      * <p>
      * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
      */
     public static void setPurposeConsents(@Nullable String purposeConsents) {
-        UserConsentUtils.tryToSetGdprPurposeConsents(purposeConsents);
+        UserConsentUtils.tryToSetPrebidGdprPurposeConsents(purposeConsents);
     }
 
     /**
-     * Gets GDPR TCF 2.0 purpose consent for set index. Returns null if purpose consent isn't set
-     * or index is out of bounds. <br><br>
+     * Gets any given purpose consent for set index in that order. <br>
+     * 1) Prebid GDPR purpose consent custom value, if present. <br>
+     * 2) IAB GDPR TCF 2.0 purpose consent. <br>
+     * Returns null if purpose consent isn't set or index is out of bounds. <br><br>
      * <p>
      * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
      */
     @Nullable
     public static Boolean getPurposeConsent(int index) {
-        return UserConsentUtils.tryToGetGdprPurposeConsent(index);
+        return UserConsentUtils.tryToGetAnyGdprPurposeConsent(index);
     }
 
     /**
-     * Gets GDPR TCF 2.0 purpose consents string. <br><br>
+     * Gets any given purpose consent for set index in that order. <br>
+     * 1) Prebid GDPR purpose consent custom value, if present. <br>
+     * 2) IAB GDPR TCF 2.0 purpose consent. <br>
+     * Otherwise, null.
      * <p>
      * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
      */
     @Nullable
     public static String getPurposeConsents() {
-        return UserConsentUtils.tryToGetGdprPurposeConsents();
+        return UserConsentUtils.tryToGetAnyGdprPurposeConsents();
     }
 
     /**
-     * Get the device access consent set by the publisher.<br><br>
+     * Gets the device access consent set by the publisher.<br><br>
+     * If custom Prebid subject and purpose consent set, gets device access from them.
+     * Otherwise from IAB standard.
      * <p>
      * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
      */
     @Nullable
     public static Boolean getDeviceAccessConsent() {
-        return UserConsentUtils.tryToGetDeviceAccessConsent();
+        return UserConsentUtils.tryToGetAnyDeviceAccessConsent();
     }
 
 

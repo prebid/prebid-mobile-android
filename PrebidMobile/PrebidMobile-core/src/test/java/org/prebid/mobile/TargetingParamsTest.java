@@ -186,12 +186,11 @@ public class TargetingParamsTest extends BaseSetup {
 
     @Test
     public void testGdprSubjectTCFv2() {
-        TargetingParams.setCmpSdkIdForGdprTcf2(1);
         //given
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor editor = pref.edit();
-        String key = UserConsentManagerReflection.getConstGdpr2Subject(new UserConsentManager());
-        editor.putInt(key, 1);
+        String key = "Prebid_GDPR";
+        editor.putString(key, "1");
         editor.apply();
 
         //when
