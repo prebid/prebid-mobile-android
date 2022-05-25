@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.networking.parameters;
 
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
+import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
@@ -25,11 +26,12 @@ public class UserConsentParameterBuilder extends ParameterBuilder {
     private static final String GDPR = "gdpr";
     private static final String US_PRIVACY = "us_privacy";
     private static final String CONSENT = "consent";
+    private static final String COPPA_SUBJECT = "coppa";
 
     private final UserConsentManager userConsentManager;
 
-    public UserConsentParameterBuilder(UserConsentManager userConsentManager) {
-        this.userConsentManager = userConsentManager;
+    public UserConsentParameterBuilder() {
+        this.userConsentManager = ManagersResolver.getInstance().getUserConsentManager();
     }
 
     @Override
@@ -38,16 +40,17 @@ public class UserConsentParameterBuilder extends ParameterBuilder {
 
         appendGdprParameter(bidRequest);
         appendCcpaParameter(bidRequest);
+        appendCoppaParameter(bidRequest);
     }
 
     private void appendGdprParameter(BidRequest bidRequest) {
-        String isSubjectToGdpr = userConsentManager.getSubjectToGdpr();
+        Boolean subjectToGdpr = userConsentManager.getSubjectToGdprBoolean();
 
-        if (!Utils.isBlank(isSubjectToGdpr)) {
-            Integer gdprValue = "1".equals(isSubjectToGdpr) ? 1 : 0;
+        if (subjectToGdpr != null) {
+            int gdprValue = subjectToGdpr ? 1 : 0;
             bidRequest.getRegs().getExt().put(GDPR, gdprValue);
 
-            String userConsentString = userConsentManager.getUserConsentString();
+            String userConsentString = userConsentManager.getGdprConsent();
             if (!Utils.isBlank(userConsentString)) {
                 bidRequest.getUser().getExt().put(CONSENT, userConsentString);
             }
@@ -61,4 +64,12 @@ public class UserConsentParameterBuilder extends ParameterBuilder {
             bidRequest.getRegs().getExt().put(US_PRIVACY, usPrivacyString);
         }
     }
+
+    private void appendCoppaParameter(BidRequest bidRequest) {
+        Boolean subjectToCoppa = userConsentManager.getSubjectToCoppa();
+        if (subjectToCoppa != null) {
+            bidRequest.getRegs().getExt().put(COPPA_SUBJECT, subjectToCoppa ? 1 : 0);
+        }
+    }
+
 }
