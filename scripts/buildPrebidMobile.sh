@@ -102,36 +102,36 @@ for n in ${!modules[@]}; do
   # clean existing build results, exclude test task, and assemble new release build
   (./gradlew -i --no-daemon ${modules[$n]}:assembleRelease >$LOGPATH/build.log 2>&1 || die "Build failed, check log in $LOGPATH/build.log")
 
-  # Make folder generated/temp/output
-  echoX "Packaging ${modules[$n]}"
-  mkdir $TEMPDIR
-  cd $TEMPDIR
-  mkdir output
-
-  AARPATH_ABSOLUTE="${projectPaths[$n]}/$AARPATH"
-
-  cd $AARPATH_ABSOLUTE
-  cp ${modules[$n]}-release.aar $OUTDIR/aar
-  unzip -q -o ${modules[$n]}-release.aar
-  cd $TEMPDIR/output
-
-  # Extracting the Contents of a JAR File
-  jar xf $AARPATH_ABSOLUTE/classes.jar
-  rm $AARPATH_ABSOLUTE/classes.jar
-
-  # Handle ProGuard rules from .aar into .jar
-  # rename proguard.txt to proguard.pro
-  mv $AARPATH_ABSOLUTE/proguard.{txt,pro}
-  mkdir -p $AARPATH_ABSOLUTE/META-INF
-  mkdir $AARPATH_ABSOLUTE/META-INF/proguard
-  mv $AARPATH_ABSOLUTE/proguard.pro $AARPATH_ABSOLUTE/META-INF/proguard
-  # move META-INF into a result direcotory
-  mv $AARPATH_ABSOLUTE/META-INF $TEMPDIR/output
-
-  rm -r $TEMPDIR/output/META-INF/com
-
-  # Creating a JAR File
   if [ "$1" != "-nojar" ]; then
+    # Make folder generated/temp/output
+    echoX "Packaging ${modules[$n]}"
+    mkdir $TEMPDIR
+    cd $TEMPDIR
+    mkdir output
+
+    AARPATH_ABSOLUTE="${projectPaths[$n]}/$AARPATH"
+
+    cd $AARPATH_ABSOLUTE
+    cp ${modules[$n]}-release.aar $OUTDIR/aar
+    unzip -q -o ${modules[$n]}-release.aar
+    cd $TEMPDIR/output
+
+    # Extracting the Contents of a JAR File
+    jar xf $AARPATH_ABSOLUTE/classes.jar
+    rm $AARPATH_ABSOLUTE/classes.jar
+
+    # Handle ProGuard rules from .aar into .jar
+    # rename proguard.txt to proguard.pro
+    mv $AARPATH_ABSOLUTE/proguard.{txt,pro}
+    mkdir -p $AARPATH_ABSOLUTE/META-INF
+    mkdir $AARPATH_ABSOLUTE/META-INF/proguard
+    mv $AARPATH_ABSOLUTE/proguard.pro $AARPATH_ABSOLUTE/META-INF/proguard
+    # move META-INF into a result direcotory
+    mv $AARPATH_ABSOLUTE/META-INF $TEMPDIR/output
+
+    rm -r $TEMPDIR/output/META-INF/com
+
+    # Creating a JAR File
     if [ "${modules[$n]}" == "PrebidMobile-maxAdapters" ]; then
       jar cf ${modules[$n]}.jar org* com* META-INF*
     else
@@ -154,30 +154,33 @@ for n in ${!modules[@]}; do
     # copy sources and javadoc into a result direcotory
     BUILD_LIBS_PATH_ABSOLUTE="${projectPaths[$n]}/$BUILD_LIBS_PATH"
     cp -a $BUILD_LIBS_PATH_ABSOLUTE/. $OUTDIR/
+    # clean tmp dir
+    rm -r $TEMPDIR
   fi
-  # clean tmp dir
-  rm -r $TEMPDIR
 done
 
-### omsdk
-echo -e "\n"
-echoX "Assembling omsdk"
 
-mkdir $TEMPDIR
-cd $TEMPDIR
-mkdir output
-cd output
-cp -a "$BASEDIR/PrebidMobile/omsdk-android/omsdk-android-1.3.17.aar" "$TEMPDIR/output"
-unzip -q -o omsdk-android-1.3.17.aar
-# Delete all files instead classes.jar
-find . ! -name 'classes.jar' -type f -exec rm -f {} +
-unzip -q -o classes.jar
-rm classes.jar
+if [ "$1" != "-nojar" ]; then
+  ### omsdk
+  echo -e "\n"
+  echoX "Assembling omsdk"
 
-jar cf omsdk.jar com*
-mv omsdk.jar $OUTDIR
-cd $LIBDIR
-rm -r $TEMPDIR
+  mkdir $TEMPDIR
+  cd $TEMPDIR
+  mkdir output
+  cd output
+  cp -a "$BASEDIR/PrebidMobile/omsdk-android/omsdk-android-1.3.17.aar" "$TEMPDIR/output"
+  unzip -q -o omsdk-android-1.3.17.aar
+  # Delete all files instead classes.jar
+  find . ! -name 'classes.jar' -type f -exec rm -f {} +
+  unzip -q -o classes.jar
+  rm classes.jar
+
+  jar cf omsdk.jar com*
+  mv omsdk.jar $OUTDIR
+  cd $LIBDIR
+  rm -r $TEMPDIR
+fi
 
 #######
 # End
