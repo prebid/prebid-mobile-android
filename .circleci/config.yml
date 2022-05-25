@@ -68,7 +68,7 @@ workflows:
           buildCommand: ./gradlew PrebidInternalTestApp:assembleRelease
       - build:
          name: Build PrebidMobile Frameworks
-         buildCommand: scripts/buildPrebidMobile.sh
+         buildCommand: scripts/buildPrebidMobile.sh -nojar
       - test:
           name: Run Unit Tests - Prebid Mobile
       - android-test:
