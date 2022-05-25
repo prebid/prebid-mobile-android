@@ -92,6 +92,7 @@ projectPaths=(
   "$BASEDIR/PrebidMobile/PrebidMobile-admobAdapters"
   "$BASEDIR/PrebidMobile/PrebidMobile-maxAdapters"
 )
+
 mkdir "$OUTDIR/aar"
 for n in ${!modules[@]}; do
 
@@ -102,35 +103,34 @@ for n in ${!modules[@]}; do
   (./gradlew -i --no-daemon ${modules[$n]}:assembleRelease >$LOGPATH/build.log 2>&1 || die "Build failed, check log in $LOGPATH/build.log")
 
   # Make folder generated/temp/output
+  echoX "Packaging ${modules[$n]}"
+  mkdir $TEMPDIR
+  cd $TEMPDIR
+  mkdir output
 
-    echoX "Packaging ${modules[$n]}"
-    mkdir $TEMPDIR
-    cd $TEMPDIR
-    mkdir output
+  AARPATH_ABSOLUTE="${projectPaths[$n]}/$AARPATH"
 
-    AARPATH_ABSOLUTE="${projectPaths[$n]}/$AARPATH"
+  cd $AARPATH_ABSOLUTE
+  cp ${modules[$n]}-release.aar $OUTDIR/aar
+  unzip -q -o ${modules[$n]}-release.aar
+  cd $TEMPDIR/output
 
-    cd $AARPATH_ABSOLUTE
-    cp ${modules[$n]}-release.aar $OUTDIR/aar
-    unzip -q -o ${modules[$n]}-release.aar
-    cd $TEMPDIR/output
+  # Extracting the Contents of a JAR File
+  jar xf $AARPATH_ABSOLUTE/classes.jar
+  rm $AARPATH_ABSOLUTE/classes.jar
 
-    # Extracting the Contents of a JAR File
-    jar xf $AARPATH_ABSOLUTE/classes.jar
-    rm $AARPATH_ABSOLUTE/classes.jar
+  # Handle ProGuard rules from .aar into .jar
+  # rename proguard.txt to proguard.pro
+  mv $AARPATH_ABSOLUTE/proguard.{txt,pro}
+  mkdir -p $AARPATH_ABSOLUTE/META-INF
+  mkdir $AARPATH_ABSOLUTE/META-INF/proguard
+  mv $AARPATH_ABSOLUTE/proguard.pro $AARPATH_ABSOLUTE/META-INF/proguard
+  # move META-INF into a result direcotory
+  mv $AARPATH_ABSOLUTE/META-INF $TEMPDIR/output
 
-    # Handle ProGuard rules from .aar into .jar
-    # rename proguard.txt to proguard.pro
-    mv $AARPATH_ABSOLUTE/proguard.{txt,pro}
-    mkdir -p $AARPATH_ABSOLUTE/META-INF
-    mkdir $AARPATH_ABSOLUTE/META-INF/proguard
-    mv $AARPATH_ABSOLUTE/proguard.pro $AARPATH_ABSOLUTE/META-INF/proguard
-    # move META-INF into a result direcotory
-    mv $AARPATH_ABSOLUTE/META-INF $TEMPDIR/output
+  rm -r $TEMPDIR/output/META-INF/com
 
-    rm -r $TEMPDIR/output/META-INF/com
-
-    # Creating a JAR File
+  # Creating a JAR File
   if [ "$1" != "-nojar" ]; then
     if [ "${modules[$n]}" == "PrebidMobile-maxAdapters" ]; then
       jar cf ${modules[$n]}.jar org* com* META-INF*
@@ -154,8 +154,8 @@ for n in ${!modules[@]}; do
     # copy sources and javadoc into a result direcotory
     BUILD_LIBS_PATH_ABSOLUTE="${projectPaths[$n]}/$BUILD_LIBS_PATH"
     cp -a $BUILD_LIBS_PATH_ABSOLUTE/. $OUTDIR/
-    # clean tmp dir
   fi
+  # clean tmp dir
   rm -r $TEMPDIR
 done
 
@@ -177,34 +177,6 @@ rm classes.jar
 jar cf omsdk.jar com*
 mv omsdk.jar $OUTDIR
 cd $LIBDIR
-rm -r $TEMPDIR
-
-# Prepare fat PrebidDemo library which can be used for LocalJar
-echo -e "\n"
-echoX "Preparing fat PrebidDemo library"
-cd $OUTDIR
-mkdir $TEMPDIR
-
-cd $TEMPDIR
-
-unzip -qq -uo $OUTDIR/omsdk.jar
-if [ "$1" != "-nojar" ]; then
-  unzip -qq -uo $OUTDIR/PrebidMobile.jar
-  unzip -qq -uo $OUTDIR/PrebidMobile-core.jar
-
-  # unzip second proguard
-  unzip -qq -B $OUTDIR/PrebidMobile.jar "META-INF/proguard/proguard.pro"
-
-  cat "$TEMPDIR/META-INF/proguard/proguard.pro~" >>"$TEMPDIR/META-INF/proguard/proguard.pro"
-  rm "$TEMPDIR/META-INF/proguard/proguard.pro~"
-
-  rm $TEMPDIR/org/prebid/mobile/core/BuildConfig.class
-  jar -cvf PrebidMobile.jar -C $TEMPDIR .
-
-  mkdir $FAT_PATH
-  mv PrebidMobile.jar $FAT_PATH
-fi
-
 rm -r $TEMPDIR
 
 #######
