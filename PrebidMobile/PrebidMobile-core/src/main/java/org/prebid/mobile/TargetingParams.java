@@ -22,7 +22,9 @@ import android.util.Pair;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.json.JSONArray;
+import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
+import org.prebid.mobile.rendering.sdk.UserConsentUtils;
 
 import java.util.*;
 
@@ -554,147 +556,120 @@ public class TargetingParams {
 
     /* -------------------- Consents -------------------- */
 
-    public static void setSubjectToCOPPA(boolean isCoppa) {
-        try {
-            StorageUtils.setPbCoppa(isCoppa);
-        } catch (PbContextNullException ex) {
-            LogUtil.error("Targeting", "Coppa was not updated", ex);
-        }
+    /**
+     * Sets subject to COPPA. Null to set undefined. <br><br>
+     * <p>
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     */
+    public static void setSubjectToCOPPA(@Nullable Boolean value) {
+        UserConsentUtils.tryToSetSubjectToCoppa(value);
     }
 
-    public static boolean isSubjectToCOPPA() {
-        try {
-            return StorageUtils.getPbCoppa();
-        } catch (PbContextNullException ex) {
-            LogUtil.error("Targeting", "Can't get COPPA", ex);
-            return false;
-        }
+    /**
+     * Gets subject to COPPA. Null is undefined. <br><br>
+     * <p>
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     */
+    @Nullable
+    public static Boolean isSubjectToCOPPA() {
+        return UserConsentUtils.tryToGetSubjectToCoppa();
     }
 
-    public static void setSubjectToGDPR(@Nullable Boolean consent) {
-        try {
-            StorageUtils.setPbGdprSubject(consent);
-        } catch (PbContextNullException ex) {
-            LogUtil.error("Targeting", "GDPR Subject was not updated", ex);
-        }
+    /**
+     * Sets CMP SDK id (id must be >= 0, less than 0 is undefined).
+     * If you want to work with GDPR TCF 2.0, set this value. <br><br>
+     * <p>
+     * If you want to set GDPR TCF 2.0 subject and consent, call this method before <br>
+     * {@link TargetingParams#setSubjectToGDPR(Boolean)}, <br>
+     * {@link TargetingParams#setGDPRConsentString(String)} <br><br>
+     * <p>
+     * Must be called only after <br> {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}
+     */
+    public static void setCmpSdkIdForGdprTcf2(@Nullable Integer id) {
+        UserConsentUtils.tryToSetCmpSdkIdForGdprTcf2(id);
     }
 
+    /**
+     * Sets subject to GDPR. If CMP SDK id value is set, it sets TCF 2.0 subject,
+     * otherwise it sets TCF 1.0 subject. Null resets all subjects to GDPR. <br><br>
+     * <p>
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     */
+    public static void setSubjectToGDPR(@Nullable Boolean value) {
+        UserConsentUtils.tryToSetSubjectToGdpr(value);
+    }
+
+    /**
+     * Gets subject to GDPR. If CMP SDK id value is set, it returns TCF 2.0 subject,
+     * otherwise it returns TCF 1.0 subject. Returns null if corresponding subject is undefined. <br><br>
+     * <p>
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     */
     @Nullable
     public static Boolean isSubjectToGDPR() {
-        Boolean gdprSubject = null;
-
-        try {
-            Boolean pbGdpr = StorageUtils.getPbGdprSubject();
-            if (pbGdpr != null) {
-                gdprSubject = pbGdpr;
-            } else {
-                Boolean iabGdpr = StorageUtils.getIabGdprSubject();
-                if (iabGdpr != null) {
-                    gdprSubject = iabGdpr;
-                }
-            }
-        } catch (PbContextNullException ex) {
-            LogUtil.error("Targeting", "Can't get GDPR subject", ex);
-        }
-
-        return gdprSubject;
+        return UserConsentUtils.tryToGetSubjectToGdpr();
     }
 
-    public static void setGDPRConsentString(@Nullable String string) {
-        try {
-            StorageUtils.setPbGdprConsent(string);
-        } catch (PbContextNullException ex) {
-            LogUtil.error("Targeting", "GDPR Consent was not updated", ex);
-        }
+    /**
+     * Sets GDPR consent string. If CMP SDK id value is set, it sets TFC 2.0 consent,
+     * otherwise it sets TCF 1.0 consent. Null resets all GDPR consents. <br><br>
+     * <p>
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     */
+    public static void setGDPRConsentString(@Nullable String consent) {
+        UserConsentUtils.tryToSetGdprConsent(consent);
     }
 
+    /**
+     * Gets GDPR consent string. If CMP SDK id value is set, it gets TFC 2.0 consent,
+     * otherwise it gets TCF 1.0 consent. Returns null if corresponding consent is undefined. <br><br>
+     * <p>
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     */
     @Nullable
     public static String getGDPRConsentString() {
-        String gdprConsent = null;
-        try {
-            // TCF consent string
-            String iabGdprConsent = StorageUtils.getIabGdprConsent();
-            if (!TextUtils.isEmpty(iabGdprConsent)) {
-                gdprConsent = iabGdprConsent;
-            } else {
-                // GDPR consent string
-                String pbGdprConsent = StorageUtils.getPbGdprConsent();
-                if (!TextUtils.isEmpty(pbGdprConsent)) {
-                    gdprConsent = pbGdprConsent;
-                }
-            }
-        } catch (PbContextNullException ex) {
-            LogUtil.error("Targeting", "can not get GDPR Consent", ex);
-        }
-
-        return gdprConsent;
+        return UserConsentUtils.tryToGetGdprConsent();
     }
 
     /**
-     * TCF 2.0 device access consent
+     * Sets GDPR TCF 2.0 purpose consent (device access consent). Null resets purpose
+     * consents string. <br><br>
+     * <p>
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
      */
     public static void setPurposeConsents(@Nullable String purposeConsents) {
-        try {
-            StorageUtils.setPbPurposeConsents(purposeConsents);
-        } catch (PbContextNullException ex) {
-            LogUtil.error("Targeting", "GDPR Device access Consent was not updated", ex);
-        }
-    }
-
-    public static Boolean getPurposeConsent(int index) {
-        Boolean purposeConsent = null;
-        String purposeConsents = getPurposeConsents();
-
-        if (purposeConsents != null) {
-            char purposeConsentChar = purposeConsents.charAt(index);
-            if (purposeConsentChar == '1') {
-                purposeConsent = true;
-            } else if (purposeConsentChar == '0') {
-                purposeConsent = false;
-            } else {
-                LogUtil.warning("invalid char:" + purposeConsent);
-            }
-        }
-        return purposeConsent;
-    }
-
-    public static String getPurposeConsents() {
-        String savedPurposeConsents = null;
-        try {
-            // TCF purpose consent
-            String iabPurposeConsentsString = StorageUtils.getIabPurposeConsents();
-            if (iabPurposeConsentsString != null) {
-                savedPurposeConsents = iabPurposeConsentsString;
-            } else {
-                // GDPR purpose consent
-                String pbPurposeConsentsString = StorageUtils.getPbPurposeConsents();
-                if (pbPurposeConsentsString != null) {
-                    savedPurposeConsents = pbPurposeConsentsString;
-                }
-            }
-        } catch (PbContextNullException ex) {
-            LogUtil.error("Targeting", "GDPR Device access Consent was not updated", ex);
-        }
-        return savedPurposeConsents;
+        UserConsentUtils.tryToSetGdprPurposeConsents(purposeConsents);
     }
 
     /**
-     * Get the device access Consent set by the publisher.
-     *
-     * @return A valid Base64 encode consent string as per
-     * https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework
-     * or null if not set
+     * Gets GDPR TCF 2.0 purpose consent for set index. Returns null if purpose consent isn't set
+     * or index is out of bounds. <br><br>
+     * <p>
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     */
+    @Nullable
+    public static Boolean getPurposeConsent(int index) {
+        return UserConsentUtils.tryToGetGdprPurposeConsent(index);
+    }
+
+    /**
+     * Gets GDPR TCF 2.0 purpose consents string. <br><br>
+     * <p>
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     */
+    @Nullable
+    public static String getPurposeConsents() {
+        return UserConsentUtils.tryToGetGdprPurposeConsents();
+    }
+
+    /**
+     * Get the device access consent set by the publisher.<br><br>
+     * <p>
+     * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
      */
     @Nullable
     public static Boolean getDeviceAccessConsent() {
-        Boolean deviceAccessConsent = null;
-        try {
-            int deviceAccessConsentIndex = 0;
-            deviceAccessConsent = getPurposeConsent(deviceAccessConsentIndex);
-        } catch (PbContextNullException ex) {
-            LogUtil.error("Targeting", "cannot get Device access Consent", ex);
-        }
-        return deviceAccessConsent;
+        return UserConsentUtils.tryToGetDeviceAccessConsent();
     }
 
 

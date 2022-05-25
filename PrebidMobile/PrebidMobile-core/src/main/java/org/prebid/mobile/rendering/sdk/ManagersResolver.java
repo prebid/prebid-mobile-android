@@ -18,6 +18,7 @@ package org.prebid.mobile.rendering.sdk;
 
 import android.content.Context;
 import android.util.Log;
+import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.*;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
@@ -133,9 +134,8 @@ public class ManagersResolver {
 
     /**
      * Obtains the UserConsent manager.
-     *
-     * @return UserConsentManager
      */
+    @Nullable
     public UserConsentManager getUserConsentManager() {
         return (UserConsentManager) getManager(ManagerType.USER_CONSENT_MANAGER);
     }
