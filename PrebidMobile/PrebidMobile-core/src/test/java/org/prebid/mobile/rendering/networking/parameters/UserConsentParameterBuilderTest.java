@@ -48,7 +48,7 @@ public class UserConsentParameterBuilderTest {
                 .putString("IABConsent_ConsentString", "foobar_consent_string")
                 .commit();
 
-        builder = new UserConsentParameterBuilder(ManagersResolver.getInstance().getUserConsentManager());
+        builder = new UserConsentParameterBuilder();
     }
 
     @Test

@@ -299,7 +299,7 @@ public class InterstitialVideoTest {
     }
 
     private boolean getUseSkipButton() {
-        return (boolean) Reflection.getField(spyInterstitialVideo, "useSkipButton");
+        return (boolean) Reflection.getFieldOf(spyInterstitialVideo, "useSkipButton");
     }
 
 
