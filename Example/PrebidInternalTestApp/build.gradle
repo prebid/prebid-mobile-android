@@ -68,9 +68,6 @@ android {
 
         }
 
-        mock {
-
-        }
     }
     testOptions {
         animationsDisabled = true

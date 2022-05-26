@@ -18,7 +18,7 @@ object GamBanner {
 
     private const val TAG = "GamBanner"
 
-    private var adUnit: AdUnit? = null
+    private var adUnit: BannerAdUnit? = null
 
     fun create(
         wrapper: ViewGroup,
@@ -31,6 +31,7 @@ object GamBanner {
     ) {
         val adView = AdManagerAdView(wrapper.context)
         adView.adUnitId = adUnitId
+
         PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
 
         adView.adListener = object : AdListener() {
@@ -49,11 +50,13 @@ object GamBanner {
             }
         }
         adView.setAdSizes(AdSize(width, height))
-
         wrapper.addView(adView)
 
         val request = AdManagerAdRequest.Builder().build()
         adUnit = BannerAdUnit(configId, width, height)
+        if (configId.contains("multisize")) {
+            adUnit?.addAdditionalSize(728, 90)
+        }
         adUnit?.setAutoRefreshPeriodMillis(autoRefreshTime)
         adUnit?.fetchDemand(request) { resultCode ->
             Log.d(TAG, "Result code: $resultCode")

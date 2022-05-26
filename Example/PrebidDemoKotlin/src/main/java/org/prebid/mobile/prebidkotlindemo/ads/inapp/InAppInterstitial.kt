@@ -3,9 +3,11 @@ package org.prebid.mobile.prebidkotlindemo.ads.inapp
 import android.content.Context
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.PrebidMobile
+import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
+import java.util.*
 
 object InAppInterstitial {
 
@@ -16,9 +18,10 @@ object InAppInterstitial {
         minPercentageWidth: Int,
         minPercentageHeight: Int,
         configId: String,
-        storedAuctionResponse: String
+        storedAuctionResponse: String,
+        adFormats: EnumSet<AdUnitFormat>
     ) {
-        adUnit = InterstitialAdUnit(context, configId)
+        adUnit = InterstitialAdUnit(context, configId,adFormats)
         PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
         adUnit?.setMinSizePercentage(AdSize(minPercentageWidth, minPercentageHeight))
         adUnit?.setInterstitialAdUnitListener(object :

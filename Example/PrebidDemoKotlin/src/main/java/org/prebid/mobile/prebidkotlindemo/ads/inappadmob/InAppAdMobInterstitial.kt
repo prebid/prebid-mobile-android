@@ -45,7 +45,11 @@ object InAppAdMobInterstitial {
             InterstitialAd.load(activity, adUnitId, request, object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(interstitial: InterstitialAd) {
                     interstitialAd = interstitial
-                    interstitialAd?.show(activity)
+                    val mediationAdapter = interstitial.responseInfo.mediationAdapterClassName
+                    if (mediationAdapter!!.contains("prebid")) {
+                        interstitialAd?.show(activity)
+                    }
+
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {
