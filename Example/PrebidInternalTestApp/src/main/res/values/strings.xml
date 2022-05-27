@@ -422,4 +422,5 @@
     <string name="response_prebid_native_styles">response-prebid-banner-native-styles</string>
     <string name="response_prebid_native_links">response-prebid-native-links</string>
     <string name="response_prebid_native_video">response-prebid-native-video-with-end-card</string>
+    <string name="enable_caching">Enable Caching</string>
 </resources>
