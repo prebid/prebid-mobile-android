@@ -86,7 +86,7 @@ public class InterstitialVideo extends AdBaseDialog {
             InterstitialManager interstitialManager,
             AdUnitConfiguration adConfiguration
     ) {
-        super(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen, interstitialManager);
+        super(context, interstitialManager);
 
         contextReference = new WeakReference<>(context);
         this.adConfiguration = adConfiguration;
@@ -226,14 +226,16 @@ public class InterstitialVideo extends AdBaseDialog {
         }
 
         lytCountDownCircle = (RelativeLayout) LayoutInflater.from(context)
-                                                            .inflate(R.layout.lyt_countdown_circle_overlay, null);
+            .inflate(R.layout.lyt_countdown_circle_overlay, null);
 
         //remove it from parent, if any, before adding it to the new view
         Views.removeFromParent(adViewContainer);
-        addContentView(adViewContainer,
-                new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.MATCH_PARENT
-                )
+        addContentView(
+            adViewContainer,
+            new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT
+            )
         );
         // interstitialManager.setCountDownTimerView(lytCountDownCircle);
         setOnKeyListener((dialog, keyCode, event) -> keyCode == KeyEvent.KEYCODE_BACK);

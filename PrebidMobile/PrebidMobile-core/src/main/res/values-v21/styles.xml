@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="FullScreenDialogTheme" parent="android:Theme.Material.NoActionBar.Fullscreen">
+        <!-- Display in cutout mode -->
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="o_mr1">always</item>
+
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:colorBackground">@android:color/black</item>
+
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>

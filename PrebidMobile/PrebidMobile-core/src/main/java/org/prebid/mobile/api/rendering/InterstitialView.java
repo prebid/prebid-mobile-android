@@ -19,6 +19,9 @@ package org.prebid.mobile.api.rendering;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -29,6 +32,7 @@ import org.prebid.mobile.rendering.interstitial.DialogEventListener;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
 import org.prebid.mobile.rendering.utils.constants.IntentActions;
+import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.rendering.views.base.BaseAdView;
@@ -209,11 +213,28 @@ public class InterstitialView extends BaseAdView {
         View countDownTimer = findViewById(R.id.rl_count_down);
         View actionButton = findViewById(R.id.tv_learn_more);
 
+        setBottomNavigationInset(countDownTimer);
+        setBottomNavigationInset(actionButton);
+
         obstructionArray[0] = new InternalFriendlyObstruction(closeInterstitial, InternalFriendlyObstruction.Purpose.CLOSE_AD, null);
         obstructionArray[1] = new InternalFriendlyObstruction(countDownTimer, InternalFriendlyObstruction.Purpose.OTHER, "CountDownTimer");
         obstructionArray[2] = new InternalFriendlyObstruction(actionButton, InternalFriendlyObstruction.Purpose.OTHER, "Action button");
 
         return obstructionArray;
+    }
+
+    private void setBottomNavigationInset(@Nullable View view) {
+        if (view != null) {
+            ViewGroup.LayoutParams params = view.getLayoutParams();
+            if (params instanceof FrameLayout.LayoutParams) {
+                int bottomInset = Utils.getBottomNavigationInset(view.getContext());
+                LayoutParams frameParams = (LayoutParams) params;
+                frameParams.bottomMargin += bottomInset;
+                view.setLayoutParams(frameParams);
+            } else {
+                LogUtil.error(TAG, "Can't set bottom cutout inset, LayoutParams isn't FrameLayout.LayoutParams type.");
+            }
+        }
     }
 
     private void handleDialogEvent(DialogEventListener.EventType eventType) {

@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Insets;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
@@ -475,17 +476,22 @@ public final class Utils {
         return view;
     }
 
-    private static final int MIN_BUTTON_SIZE_DP = 30;
+    private static final int MIN_BUTTON_SIZE_DP = 25;
 
     private static FrameLayout.LayoutParams calculateButtonSize(
             View view,
             double closeButtonArea
     ) {
         Context context = view.getContext();
+        int topCutoutInset = getTopCutoutInset(context);
+
         if (closeButtonArea < 0.05 || closeButtonArea > 1) {
-            return new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
             );
+            layoutParams.topMargin = topCutoutInset;
+            return layoutParams;
         }
 
         int screenSize = getSmallestScreenSideSize(context);
@@ -494,8 +500,48 @@ public final class Utils {
             buttonSize = convertDpToPx(MIN_BUTTON_SIZE_DP, context);
         }
         int padding = (int) (buttonSize * 0.2);
-        view.setPadding(padding, padding, padding, padding);
+        view.setPadding(padding, padding + topCutoutInset, padding, padding);
         return new FrameLayout.LayoutParams(buttonSize, buttonSize);
+    }
+
+    public static int getTopCutoutInset(Context context) {
+        WindowInsets windowInsets = getWindowInsets(context);
+        if (windowInsets != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            DisplayCutout displayCutout = windowInsets.getDisplayCutout();
+            if (displayCutout != null) {
+                return displayCutout.getSafeInsetTop();
+            }
+        }
+        return 0;
+    }
+
+    public static int getBottomNavigationInset(Context context) {
+        WindowInsets windowInsets = getWindowInsets(context);
+        if (windowInsets != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Insets insets = windowInsets.getInsets(WindowInsets.Type.systemBars());
+                return insets.bottom;
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                // noinspection deprecation
+                return windowInsets.getStableInsetBottom();
+            }
+        }
+        return 0;
+    }
+
+    @Nullable
+    private static WindowInsets getWindowInsets(@Nullable Context context) {
+        if (context != null) {
+            if (context instanceof Activity) {
+                Activity activity = (Activity) context;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    return activity.getWindow().getDecorView().getRootWindowInsets();
+                }
+            } else {
+                LogUtil.debug(TAG, "Can't get window insets, Context is not Activity type.");
+            }
+        }
+        return null;
     }
 
     public static View createSoundView(Context context) {
@@ -505,8 +551,9 @@ public final class Utils {
         }
 
         View view = LayoutInflater.from(context).inflate(R.layout.lyt_sound, null);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         );
         params.gravity = Gravity.END | Gravity.BOTTOM;
         view.setLayoutParams(params);
