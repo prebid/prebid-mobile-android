@@ -334,7 +334,6 @@ public class VideoCreative extends VideoCreativeProtocol
             final AdUnitConfiguration adConfiguration = model.getAdConfiguration();
             videoCreativeView = new VideoCreativeView(context, this);
             videoCreativeView.setBroadcastId(adConfiguration.getBroadcastId());
-            videoCreativeView.setIsRewarded(adConfiguration.isRewarded());
 
             // Get the preloaded video from device file storage
             videoUri = Uri.parse(context.getFilesDir() + (model.getMediaUrl()));
@@ -392,8 +391,10 @@ public class VideoCreative extends VideoCreativeProtocol
     }
 
     protected void showCallToAction() {
-        if (!model.getAdConfiguration()
-                  .isBuiltInVideo() && Utils.isNotBlank(model.getVastClickthroughUrl()) && !model.hasEndCard()) {
+        if (!model.getAdConfiguration().isBuiltInVideo()
+            && Utils.isNotBlank(model.getVastClickthroughUrl())
+            && !model.getAdConfiguration().isRewarded()
+        ) {
             videoCreativeView.showCallToAction();
         }
     }
