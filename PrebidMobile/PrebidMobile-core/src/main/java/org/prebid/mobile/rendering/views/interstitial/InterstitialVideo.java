@@ -37,6 +37,7 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.interstitial.AdBaseDialog;
 import org.prebid.mobile.rendering.models.InterstitialDisplayPropertiesInternal;
+import org.prebid.mobile.rendering.utils.helpers.InsetsUtils;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.views.base.BaseAdView;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
@@ -426,6 +427,7 @@ public class InterstitialVideo extends AdBaseDialog {
             Views.removeFromParent(lytCountDownCircle);
         }
         adViewContainer.addView(lytCountDownCircle);
+        InsetsUtils.addCutoutAndNavigationInsets(lytCountDownCircle);
     }
 
     @VisibleForTesting
