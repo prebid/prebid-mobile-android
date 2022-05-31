@@ -30,6 +30,7 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -56,6 +57,7 @@ public class InterstitialVideo extends AdBaseDialog {
 
     private boolean useSkipButton = false;
     private boolean hasEndCard = false;
+    private boolean isRewarded = false;
 
     //Leaving context here for testing
     //Reason:
@@ -75,7 +77,7 @@ public class InterstitialVideo extends AdBaseDialog {
     private boolean showCloseBtnOnComplete;
 
     private CountDownTimer countDownTimer;
-    private RelativeLayout lytCountDownCircle;
+    @Nullable private RelativeLayout lytCountDownCircle;
 
     private int remainingTimeInMs = -1;
     private boolean videoPaused = true;
@@ -90,6 +92,7 @@ public class InterstitialVideo extends AdBaseDialog {
 
         contextReference = new WeakReference<>(context);
         this.adConfiguration = adConfiguration;
+        isRewarded = adConfiguration.isRewarded();
         adViewContainer = adView;
         init();
     }
@@ -225,8 +228,10 @@ public class InterstitialVideo extends AdBaseDialog {
             return;
         }
 
-        lytCountDownCircle = (RelativeLayout) LayoutInflater.from(context)
-            .inflate(R.layout.lyt_countdown_circle_overlay, null);
+        if (isRewarded) {
+            lytCountDownCircle = (RelativeLayout) LayoutInflater.from(context)
+                .inflate(R.layout.lyt_countdown_circle_overlay, null);
+        }
 
         //remove it from parent, if any, before adding it to the new view
         Views.removeFromParent(adViewContainer);
@@ -346,7 +351,28 @@ public class InterstitialVideo extends AdBaseDialog {
         }
 
         // Show timer until close
-        showDurationTimer(delayInMs);
+        if (isRewarded) {
+            showDurationTimer(delayInMs);
+        } else {
+            startTimer(delayInMs);
+        }
+    }
+
+    protected void startTimer(long durationInMillis) {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+        countDownTimer = new CountDownTimer(durationInMillis, 100) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                int roundedMillis = Math.round((float) millisUntilFinished / 1000f);
+                remainingTimeInMs = (int) millisUntilFinished;
+            }
+
+            @Override
+            public void onFinish() {}
+        };
+        countDownTimer.start();
     }
 
     /**

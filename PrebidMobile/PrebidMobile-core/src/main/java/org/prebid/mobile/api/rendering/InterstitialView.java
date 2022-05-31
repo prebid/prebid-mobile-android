@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -226,11 +227,15 @@ public class InterstitialView extends BaseAdView {
     private void setBottomNavigationInset(@Nullable View view) {
         if (view != null) {
             ViewGroup.LayoutParams params = view.getLayoutParams();
+            int bottomInset = Utils.getBottomNavigationInset(view.getContext());
             if (params instanceof FrameLayout.LayoutParams) {
-                int bottomInset = Utils.getBottomNavigationInset(view.getContext());
-                LayoutParams frameParams = (LayoutParams) params;
+                FrameLayout.LayoutParams frameParams = (FrameLayout.LayoutParams) params;
                 frameParams.bottomMargin += bottomInset;
                 view.setLayoutParams(frameParams);
+            } else if (params instanceof RelativeLayout.LayoutParams) {
+                RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) params;
+                relativeParams.bottomMargin += bottomInset;
+                view.setLayoutParams(relativeParams);
             } else {
                 LogUtil.error(TAG, "Can't set bottom cutout inset, LayoutParams isn't FrameLayout.LayoutParams type.");
             }

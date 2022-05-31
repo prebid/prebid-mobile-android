@@ -53,15 +53,20 @@ public class VideoCreativeView extends RelativeLayout {
     private int broadcastId;
     private boolean isFirstRunOfCreative = true;
     private boolean isMuted = false;
+    private boolean isRewarded = false;
 
     public VideoCreativeView(
         Context context,
         VideoCreativeViewListener videoCreativeViewListener
 
-        ) throws AdException {
+    ) throws AdException {
         super(context);
         this.videoCreativeViewListener = videoCreativeViewListener;
         init();
+    }
+
+    public void setIsRewarded(boolean isRewarded) {
+        this.isRewarded = isRewarded;
     }
 
     public void setVideoUri(Uri videoUri) {
@@ -129,7 +134,9 @@ public class VideoCreativeView extends RelativeLayout {
     }
 
     public void showCallToAction() {
-        addCallToActionView();
+        if (!isRewarded) {
+            addCallToActionView();
+        }
     }
 
     public void hideCallToAction() {

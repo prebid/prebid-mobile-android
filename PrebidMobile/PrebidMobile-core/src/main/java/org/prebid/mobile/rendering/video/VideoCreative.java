@@ -334,6 +334,7 @@ public class VideoCreative extends VideoCreativeProtocol
             final AdUnitConfiguration adConfiguration = model.getAdConfiguration();
             videoCreativeView = new VideoCreativeView(context, this);
             videoCreativeView.setBroadcastId(adConfiguration.getBroadcastId());
+            videoCreativeView.setIsRewarded(adConfiguration.isRewarded());
 
             // Get the preloaded video from device file storage
             videoUri = Uri.parse(context.getFilesDir() + (model.getMediaUrl()));
