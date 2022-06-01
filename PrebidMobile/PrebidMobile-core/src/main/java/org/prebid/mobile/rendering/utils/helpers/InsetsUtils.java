@@ -122,6 +122,24 @@ public class InsetsUtils {
         return new CustomInsets(0, 0, 0, 0);
     }
 
+    public static void resetMargins(@Nullable View view) {
+        int defaultMargin = 16;
+        if (view != null) {
+            ViewGroup.LayoutParams params = view.getLayoutParams();
+            if (params instanceof FrameLayout.LayoutParams) {
+                FrameLayout.LayoutParams frameParams = (FrameLayout.LayoutParams) params;
+                frameParams.setMargins(defaultMargin, defaultMargin, defaultMargin, defaultMargin);
+                view.setLayoutParams(frameParams);
+            } else if (params instanceof RelativeLayout.LayoutParams) {
+                RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) params;
+                relativeParams.setMargins(defaultMargin, defaultMargin, defaultMargin, defaultMargin);
+                view.setLayoutParams(relativeParams);
+            } else {
+                LogUtil.debug(TAG, "Can't reset margins.");
+            }
+        }
+    }
+
     @Nullable
     private static WindowInsets getWindowInsets(@Nullable Context context) {
         if (context != null) {
