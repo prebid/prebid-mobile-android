@@ -25,6 +25,7 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.fragment_main.*
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.data.DemoItem
 import org.prebid.mobile.renderingtestapp.utils.BaseFragment
@@ -52,6 +53,7 @@ class HeaderBiddingFragment : BaseFragment() {
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         initViewModel()
         initGdprSwitch()
+        initCacheSwitch()
         initIntegrationsSegmentControl(view)
         initAdCategoriesSegmentControl(view)
         initListView()
@@ -151,6 +153,13 @@ class HeaderBiddingFragment : BaseFragment() {
         switchEnableGdpr.isChecked = viewModel.isSubjectToGdpr()
         switchEnableGdpr.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onGdprSwitchStateChanged(isChecked)
+        }
+    }
+
+    private fun initCacheSwitch() {
+        switchEnableCaching.isChecked = PrebidMobile.isUseCacheForReportingWithRenderingApi()
+        switchEnableCaching.setOnCheckedChangeListener { _, isChecked ->
+            PrebidMobile.setUseCacheForReportingWithRenderingApi(isChecked)
         }
     }
 
