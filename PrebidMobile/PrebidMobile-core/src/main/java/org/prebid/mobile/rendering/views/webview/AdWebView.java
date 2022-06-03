@@ -18,13 +18,10 @@ package org.prebid.mobile.rendering.views.webview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
 import android.webkit.WebView;
-import org.prebid.mobile.rendering.sdk.ManagersResolver;
-import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.views.webview.AdWebViewClient.AdAssetsLoadedListener;
 import org.prebid.mobile.rendering.views.webview.mraid.MraidWebViewClient;
@@ -32,7 +29,7 @@ import org.prebid.mobile.rendering.views.webview.mraid.MraidWebViewClient;
 public class AdWebView extends WebView {
 
     private static final String TAG = AdWebView.class.getSimpleName();
-    private Integer scale;
+    protected Integer scale;
     private AdWebViewClient adWebViewClient;
     protected int width, height;
     protected String domain;
@@ -89,11 +86,7 @@ public class AdWebView extends WebView {
             screenHeight = Utils.getScreenHeight(windowManager);
         }
 
-        int deviceWidth = Math.min(screenWidth, screenHeight);
-        int deviceHeight = Math.max(screenWidth, screenHeight);
-
-        float factor = calculateFactor(deviceWidth, deviceHeight, width);
-        setInitialScale(Math.round(factor));
+        calculateScaleForResize(screenWidth, screenHeight, width, height);
 
         initBaseWebSettings(webSettings);
         if (Utils.atLeastKitKat()) {
@@ -101,49 +94,51 @@ public class AdWebView extends WebView {
 
             webSettings.setUseWideViewPort(true);
             webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);
-        }
-        else {
+        } else {
             webSettings.setSupportZoom(true);
         }
     }
 
+    private void calculateScaleForResize(
+        int screenWidth,
+        int screenHeight,
+        int creativeWidth,
+        int creativeHeight
+    ) {
+        double screenRatio = ((double) screenWidth) / screenHeight;
+        double creativeRatio = ((double) creativeWidth) / creativeHeight;
+
+        double scaledScreenWidth = screenWidth / densityScalingFactor();
+        double scaledScreenHeight = screenHeight / densityScalingFactor();
+
+        double initialScale;
+        double factor;
+        boolean creativeRatioIsLess = creativeRatio <= screenRatio;
+
+        if (scaledScreenWidth >= creativeWidth && scaledScreenHeight >= creativeHeight) {
+            setInitialScale(100);
+        } else {
+            if (creativeRatioIsLess) {
+                initialScale = scaledScreenWidth / creativeWidth;
+                double newCreativeHeight = creativeHeight * initialScale;
+                factor = newCreativeHeight / scaledScreenHeight;
+            } else {
+                initialScale = scaledScreenHeight / creativeHeight;
+                double newCreativeWidth = creativeWidth * initialScale;
+                factor = newCreativeWidth / scaledScreenWidth;
+            }
+
+            setInitialScale((int) (initialScale / factor * 100));
+        }
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
-    private void initBaseWebSettings(WebSettings webSettings){
+    private void initBaseWebSettings(WebSettings webSettings) {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(false);
         webSettings.setPluginState(WebSettings.PluginState.OFF);
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        webSettings.setLoadWithOverviewMode(true);
-    }
-
-    private float calculateFactor(int deviceWidth, int deviceHeight, int creativeWidth) {
-        float factor = 100.0f;
-
-        DeviceInfoManager deviceManager = ManagersResolver.getInstance().getDeviceManager();
-
-        int orientation = deviceManager.getDeviceOrientation();
-
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (creativeWidth < deviceHeight) {
-                factor = factor * deviceWidth / creativeWidth;
-            }
-            else {
-                factor = factor * deviceHeight / creativeWidth + 1;
-            }
-        }
-        else {
-            if (creativeWidth < deviceWidth) {
-                factor = factor * deviceWidth / creativeWidth;
-            }
-            else {
-                factor = factor * deviceWidth / creativeWidth + 1;
-            }
-        }
-
-        if (factor > 100.0f * densityScalingFactor()) {
-            factor = (float) (100.0f * densityScalingFactor());
-        }
-        return factor;
+        webSettings.setUseWideViewPort(true);
     }
 
     public double densityScalingFactor() {
