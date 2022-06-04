@@ -47,6 +47,7 @@ public class CreativeFactory {
     private static final String TAG = CreativeFactory.class.getSimpleName();
     private static final long BANNER_TIMEOUT = 6 * 1000;
     private static final long VAST_TIMEOUT = 30 * 1000;
+    private static final long INTERSTITIAL_TIMEOUT = 30 * 1000;
 
     private AbstractCreative creative;
     private CreativeModel creativeModel;
@@ -141,7 +142,12 @@ public class CreativeFactory {
         } else {
             listener.onFailure(new AdException(AdException.INTERNAL_ERROR, "Tracking info not found"));
         }
-        markWorkStart(BANNER_TIMEOUT);
+
+        long creativeDownloadTimeout = BANNER_TIMEOUT;
+        if (creativeModel.getAdConfiguration().isAdType(AdFormat.INTERSTITIAL)) {
+            creativeDownloadTimeout = INTERSTITIAL_TIMEOUT;
+        }
+        markWorkStart(creativeDownloadTimeout);
         creative.load();
     }
 

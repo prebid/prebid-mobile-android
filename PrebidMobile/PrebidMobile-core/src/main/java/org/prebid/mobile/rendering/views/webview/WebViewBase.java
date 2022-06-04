@@ -335,7 +335,7 @@ public class WebViewBase extends AdWebView implements AdAssetsLoadedListener {
 
             if (Utils.atLeastKitKat()) {
                 LogUtil.debug(TAG, "Metatag is set correctly");
-                metaTag = new StringBuilder("<meta name='viewport' content='width=device-width' />");
+                metaTag = new StringBuilder("<meta name='viewport' content='width=device-width, initial-scale=" + scale + ", minimum-scale=0.01' />");
 
                 meta = metaTag.toString();
             }

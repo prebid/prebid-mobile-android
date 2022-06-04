@@ -472,20 +472,24 @@ public final class Utils {
         }
 
         view.setLayoutParams(params);
+        InsetsUtils.addCutoutAndNavigationInsets(view);
         return view;
     }
 
-    private static final int MIN_BUTTON_SIZE_DP = 30;
+    private static final int MIN_BUTTON_SIZE_DP = 25;
 
     private static FrameLayout.LayoutParams calculateButtonSize(
             View view,
             double closeButtonArea
     ) {
         Context context = view.getContext();
+
         if (closeButtonArea < 0.05 || closeButtonArea > 1) {
-            return new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
             );
+            return layoutParams;
         }
 
         int screenSize = getSmallestScreenSideSize(context);
@@ -505,8 +509,9 @@ public final class Utils {
         }
 
         View view = LayoutInflater.from(context).inflate(R.layout.lyt_sound, null);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         );
         params.gravity = Gravity.END | Gravity.BOTTOM;
         view.setLayoutParams(params);

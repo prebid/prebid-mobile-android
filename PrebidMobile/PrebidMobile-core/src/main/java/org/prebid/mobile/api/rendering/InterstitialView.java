@@ -17,6 +17,7 @@
 package org.prebid.mobile.api.rendering;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.util.Log;
 import android.view.View;
 import org.prebid.mobile.LogUtil;
@@ -29,10 +30,14 @@ import org.prebid.mobile.rendering.interstitial.DialogEventListener;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
 import org.prebid.mobile.rendering.utils.constants.IntentActions;
+import org.prebid.mobile.rendering.utils.helpers.InsetsUtils;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.rendering.views.base.BaseAdView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialVideo;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class InterstitialView extends BaseAdView {
 
@@ -40,6 +45,23 @@ public class InterstitialView extends BaseAdView {
 
     private InterstitialViewListener listener;
     protected InterstitialVideo interstitialVideo;
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        List<View> views = Arrays.asList(
+            findViewById(R.id.iv_close_interstitial),
+            findViewById(R.id.iv_skip),
+            findViewById(R.id.rl_count_down),
+            findViewById(R.id.tv_learn_more)
+        );
+
+        for (View view : views) {
+            InsetsUtils.resetMargins(view);
+            InsetsUtils.addCutoutAndNavigationInsets(view);
+        }
+    }
 
     //region ========== Listener Area
     private final AdViewManagerListener onAdViewManagerListener = new AdViewManagerListener() {

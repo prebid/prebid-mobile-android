@@ -95,16 +95,23 @@ public abstract class AdBaseDialog extends Dialog {
     };
     private DialogEventListener listener;
 
-    public AdBaseDialog(Context context, int theme, InterstitialManager interstitialManager) {
-        super(context, theme);
+    public AdBaseDialog(
+        Context context,
+        InterstitialManager interstitialManager
+    ) {
+        super(context, R.style.FullScreenDialogTheme);
         contextReference = new WeakReference<>(context);
         this.interstitialManager = interstitialManager;
 
         setOnShowListener(new OnDialogShowListener(this));
     }
 
-    public AdBaseDialog(Context context, WebViewBase webViewBaseLocal, InterstitialManager interstitialManager) {
-        super(context, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
+    public AdBaseDialog(
+        Context context,
+        WebViewBase webViewBaseLocal,
+        InterstitialManager interstitialManager
+    ) {
+        super(context, R.style.FullScreenDialogTheme);
 
         contextReference = new WeakReference<>(context);
         webViewBase = webViewBaseLocal;

@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.rendering.loading.FileDownloadTask;
 import org.prebid.mobile.rendering.networking.exception.BaseExceptionHolder;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
@@ -248,8 +249,10 @@ public class BaseNetworkTask
         connection.setRequestProperty(CONTENT_TYPE_HEADER, CONTENT_TYPE_HEADER_VALUE);
         this.setCustomHeadersIfAvailable(connection);
 
-        connection.setReadTimeout(SOCKET_TIMEOUT);
         connection.setConnectTimeout(PrebidMobile.getTimeoutMillis());
+        if (!(this instanceof FileDownloadTask)) {
+            connection.setReadTimeout(SOCKET_TIMEOUT);
+        }
 
         if ("POST".equals(param.requestType)) {
             // Send post request

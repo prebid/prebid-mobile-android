@@ -391,8 +391,10 @@ public class VideoCreative extends VideoCreativeProtocol
     }
 
     protected void showCallToAction() {
-        if (!model.getAdConfiguration()
-                  .isBuiltInVideo() && Utils.isNotBlank(model.getVastClickthroughUrl()) && !model.hasEndCard()) {
+        if (!model.getAdConfiguration().isBuiltInVideo()
+            && Utils.isNotBlank(model.getVastClickthroughUrl())
+            && !model.getAdConfiguration().isRewarded()
+        ) {
             videoCreativeView.showCallToAction();
         }
     }
