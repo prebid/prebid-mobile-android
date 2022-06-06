@@ -514,7 +514,9 @@ public final class Utils {
             ViewGroup.LayoutParams.WRAP_CONTENT
         );
         params.gravity = Gravity.END | Gravity.BOTTOM;
+        params.bottomMargin += 150;
         view.setLayoutParams(params);
+        InsetsUtils.addCutoutAndNavigationInsets(view);
         return view;
     }
 
