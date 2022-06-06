@@ -8,7 +8,7 @@ ext {
 
     artifactGroupId = "org.prebid"
     artifactFolder = "${buildDir}/generated-artifacts"
-    omSdkVersion = "1.3.17"
+    omSdkVersion = "1.3.34"
     omSdkModuleName = "omsdk-android"
 }
 
@@ -31,6 +31,6 @@ allprojects {
         mavenCentral()
         maven { url 'https://maven.google.com' }
         maven { url 'https://jitpack.io' }
-        maven { url "https://oss.sonatype.org/content/repositories/orgprebid-1083" }
+        maven { url "https://oss.sonatype.org/content/repositories/orgprebid-1084" }
     }
 }
