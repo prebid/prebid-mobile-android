@@ -16,7 +16,9 @@
 
 package org.prebid.mobile.rendering.views;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -334,7 +336,9 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
         }
 
         for (InternalFriendlyObstruction friendlyObstruction : friendlyObstructions) {
-            currentCreative.addOmFriendlyObstruction(friendlyObstruction);
+            if (friendlyObstruction != null) {
+                currentCreative.addOmFriendlyObstruction(friendlyObstruction);
+            }
         }
     }
 
@@ -444,7 +448,22 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
             return;
         }
         View closeButtonView = rootViewGroup.findViewById(R.id.iv_close_interstitial);
-        addObstructions(new InternalFriendlyObstruction(closeButtonView, InternalFriendlyObstruction.Purpose.CLOSE_AD, null));
+
+        InternalFriendlyObstruction[] obstructionArray = new InternalFriendlyObstruction[2];
+        obstructionArray[0] = new InternalFriendlyObstruction(closeButtonView, InternalFriendlyObstruction.Purpose.CLOSE_AD, null);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Context context = closeButtonView.getContext();
+            Activity activity = (Activity) context;
+            ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
+            View view = decorView.findViewById(android.R.id.navigationBarBackground);
+            InternalFriendlyObstruction obstruction = new InternalFriendlyObstruction(view, InternalFriendlyObstruction.Purpose.OTHER, "Bottom navigation");
+            obstructionArray[1] = obstruction;
+        } else {
+            obstructionArray[1] = null;
+        }
+
+        addObstructions(obstructionArray);
     }
 
     private void processTransaction(Transaction transaction) {

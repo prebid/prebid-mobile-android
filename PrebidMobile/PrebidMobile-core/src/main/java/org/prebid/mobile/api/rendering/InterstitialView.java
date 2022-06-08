@@ -225,15 +225,24 @@ public class InterstitialView extends BaseAdView {
     }
 
     protected InternalFriendlyObstruction[] formInterstitialObstructionsArray() {
-        InternalFriendlyObstruction[] obstructionArray = new InternalFriendlyObstruction[3];
+        InternalFriendlyObstruction[] obstructionArray = new InternalFriendlyObstruction[5];
 
         View closeInterstitial = findViewById(R.id.iv_close_interstitial);
+        View skipInterstitial = findViewById(R.id.iv_skip);
         View countDownTimer = findViewById(R.id.rl_count_down);
         View actionButton = findViewById(R.id.tv_learn_more);
 
         obstructionArray[0] = new InternalFriendlyObstruction(closeInterstitial, InternalFriendlyObstruction.Purpose.CLOSE_AD, null);
-        obstructionArray[1] = new InternalFriendlyObstruction(countDownTimer, InternalFriendlyObstruction.Purpose.OTHER, "CountDownTimer");
-        obstructionArray[2] = new InternalFriendlyObstruction(actionButton, InternalFriendlyObstruction.Purpose.OTHER, "Action button");
+        obstructionArray[1] = new InternalFriendlyObstruction(skipInterstitial, InternalFriendlyObstruction.Purpose.CLOSE_AD, null);
+        obstructionArray[2] = new InternalFriendlyObstruction(countDownTimer, InternalFriendlyObstruction.Purpose.OTHER, "CountDownTimer");
+        obstructionArray[3] = new InternalFriendlyObstruction(actionButton, InternalFriendlyObstruction.Purpose.OTHER, "Action button");
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            View bottomNavigation = findViewById(android.R.id.navigationBarBackground);
+            obstructionArray[4] = new InternalFriendlyObstruction(bottomNavigation, InternalFriendlyObstruction.Purpose.OTHER, "Bottom navigation bar");
+        } else {
+            obstructionArray[4] = null;
+        }
 
         return obstructionArray;
     }
