@@ -16,6 +16,7 @@
 
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 
+import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
@@ -29,7 +30,9 @@ open class PpmInterstitialFragment : BaseBidInterstitialFragment() {
                 requireContext(),
                 configId,
                 EnumSet.of(adUnitFormat)
-            )
+            ).apply {
+                setMinSizePercentage(AdSize(30, 30))
+            }
         }
         else {
             InterstitialAdUnit(requireContext(), configId)
