@@ -52,6 +52,8 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
 
     private static final String TAG = AdViewManager.class.getSimpleName();
 
+    private boolean builtInVideoFirstStart = true;
+
     private final InterstitialManager interstitialManager;
 
     private AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
@@ -220,7 +222,12 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
     }
 
     public boolean isAutoDisplayOnLoad() {
-        return adConfiguration.isAdType(AdFormat.BANNER) || adConfiguration.isBuiltInVideo();
+        boolean result = adConfiguration.isAdType(AdFormat.BANNER);
+        if (builtInVideoFirstStart) {
+            builtInVideoFirstStart = false;
+            result = result || adConfiguration.isBuiltInVideo();
+        }
+        return result;
     }
 
     public void destroy() {
