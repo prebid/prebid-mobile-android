@@ -8,7 +8,7 @@ ext {
 
     artifactGroupId = "org.prebid"
     artifactFolder = "${buildDir}/generated-artifacts"
-    omSdkVersion = "1.3.34"
+    omSdkVersion = "1.3.34.1"
     omSdkModuleName = "omsdk-android"
 }
 
