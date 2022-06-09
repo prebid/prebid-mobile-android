@@ -30,13 +30,12 @@ open class PpmInterstitialFragment : BaseBidInterstitialFragment() {
                 requireContext(),
                 configId,
                 EnumSet.of(adUnitFormat)
-            ).apply {
-                setMinSizePercentage(AdSize(30, 30))
-            }
+            )
         }
         else {
             InterstitialAdUnit(requireContext(), configId)
         }
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
+        interstitialAdUnit?.setMinSizePercentage(AdSize(30, 30))
     }
 }
