@@ -16,7 +16,6 @@
 
 package org.prebid.mobile.rendering.views;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
@@ -343,9 +342,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
         }
 
         for (InternalFriendlyObstruction friendlyObstruction : friendlyObstructions) {
-            if (friendlyObstruction != null) {
-                currentCreative.addOmFriendlyObstruction(friendlyObstruction);
-            }
+            currentCreative.addOmFriendlyObstruction(friendlyObstruction);
         }
     }
 
@@ -460,11 +457,9 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
         obstructionArray[0] = new InternalFriendlyObstruction(closeButtonView, InternalFriendlyObstruction.Purpose.CLOSE_AD, null);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Context context = closeButtonView.getContext();
-            Activity activity = (Activity) context;
-            ViewGroup decorView = (ViewGroup) activity.getWindow().getDecorView();
-            View view = decorView.findViewById(android.R.id.navigationBarBackground);
-            InternalFriendlyObstruction obstruction = new InternalFriendlyObstruction(view, InternalFriendlyObstruction.Purpose.OTHER, "Bottom navigation");
+            View dialogRoot = closeButtonView.getRootView();
+            View navigationBarView = dialogRoot.findViewById(android.R.id.navigationBarBackground);
+            InternalFriendlyObstruction obstruction = new InternalFriendlyObstruction(navigationBarView, InternalFriendlyObstruction.Purpose.OTHER, "Bottom navigation bar");
             obstructionArray[1] = obstruction;
         } else {
             obstructionArray[1] = null;

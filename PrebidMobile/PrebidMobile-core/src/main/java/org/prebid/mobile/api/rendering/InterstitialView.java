@@ -238,8 +238,9 @@ public class InterstitialView extends BaseAdView {
         obstructionArray[3] = new InternalFriendlyObstruction(actionButton, InternalFriendlyObstruction.Purpose.OTHER, "Action button");
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            View bottomNavigation = findViewById(android.R.id.navigationBarBackground);
-            obstructionArray[4] = new InternalFriendlyObstruction(bottomNavigation, InternalFriendlyObstruction.Purpose.OTHER, "Bottom navigation bar");
+            View dialogRoot = closeInterstitial.getRootView();
+            View navigationBar = dialogRoot.findViewById(android.R.id.navigationBarBackground);
+            obstructionArray[4] = new InternalFriendlyObstruction(navigationBar, InternalFriendlyObstruction.Purpose.OTHER, "Bottom navigation bar");
         } else {
             obstructionArray[4] = null;
         }
