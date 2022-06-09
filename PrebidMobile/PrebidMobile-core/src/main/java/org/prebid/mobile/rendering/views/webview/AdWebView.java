@@ -18,6 +18,7 @@ package org.prebid.mobile.rendering.views.webview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebSettings.LayoutAlgorithm;
@@ -86,7 +87,11 @@ public class AdWebView extends WebView {
             screenHeight = Utils.getScreenHeight(windowManager);
         }
 
-        calculateScaleForResize(screenWidth, screenHeight, width, height);
+        if (this instanceof WebViewInterstitial) {
+            calculateScaleForResize(screenWidth, screenHeight, width, height);
+        } else {
+            webSettings.setLoadWithOverviewMode(true);
+        }
 
         initBaseWebSettings(webSettings);
         if (Utils.atLeastKitKat()) {
@@ -128,7 +133,9 @@ public class AdWebView extends WebView {
                 factor = newCreativeWidth / scaledScreenWidth;
             }
 
-            setInitialScale((int) (initialScale / factor * 100));
+            int scaleInPercent = (int) (initialScale / factor * 100);
+            setInitialScale(scaleInPercent);
+            Log.d(TAG, "Using custom WebView scale: " + scaleInPercent);
         }
     }
 

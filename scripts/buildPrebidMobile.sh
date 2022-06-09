@@ -169,14 +169,14 @@ if [ "$1" != "-nojar" ]; then
   cd $TEMPDIR
   mkdir output
   cd output
-  cp -a "$BASEDIR/PrebidMobile/omsdk-android/omsdk-android-1.3.34.aar" "$TEMPDIR/output"
-  unzip -q -o omsdk-android-1.3.34.aar
+  cp -a "$BASEDIR/PrebidMobile/omsdk-android/omsdk-android-1.3.34.1.aar" "$TEMPDIR/output"
+  unzip -q -o omsdk-android-1.3.34.1.aar
   # Delete all files instead classes.jar
   find . ! -name 'classes.jar' -type f -exec rm -f {} +
   unzip -q -o classes.jar
   rm classes.jar
 
-  jar cf omsdk.jar com*
+  jar cf omsdk.jar com* a* b* c* d* e* f* g* h*
   mv omsdk.jar $OUTDIR
   cd $LIBDIR
   rm -r $TEMPDIR
