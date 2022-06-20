@@ -29,6 +29,7 @@ import com.iab.omid.library.prebidorg.adsession.media.MediaEvents;
 import com.iab.omid.library.prebidorg.adsession.media.Position;
 import com.iab.omid.library.prebidorg.adsession.media.VastProperties;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.rendering.models.TrackingEvent;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
