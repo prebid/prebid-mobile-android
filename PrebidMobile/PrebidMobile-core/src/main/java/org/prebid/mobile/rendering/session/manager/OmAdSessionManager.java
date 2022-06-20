@@ -401,9 +401,20 @@ public class OmAdSessionManager {
      */
     private void initPartner() {
         try {
-            partner = Partner.createPartner(PARTNER_NAME, PARTNER_VERSION);
-        }
-        catch (IllegalArgumentException e) {
+            String userDefinedPartnerName = TargetingParams.getOmidPartnerName();
+            String userDefinedPartnerVersion = TargetingParams.getOmidPartnerVersion();
+            String usedPartnerName = PARTNER_NAME;
+            String usedPartnerVersion = PARTNER_VERSION;
+
+            if (userDefinedPartnerName != null && !userDefinedPartnerName.isEmpty()) {
+                usedPartnerName = userDefinedPartnerName;
+            }
+            if (userDefinedPartnerVersion != null && !userDefinedPartnerVersion.isEmpty()) {
+                usedPartnerVersion = userDefinedPartnerVersion;
+            }
+
+            partner = Partner.createPartner(usedPartnerName, usedPartnerVersion);
+        } catch (IllegalArgumentException e) {
             LogUtil.error(TAG, "Failed to initPartner. Reason: " + Log.getStackTraceString(e));
         }
     }
