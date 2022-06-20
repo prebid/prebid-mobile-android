@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import edu.emory.mathcs.backport.java.util.Collections;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,12 +33,11 @@ import org.prebid.mobile.rendering.utils.url.ActionNotResolvedException;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -88,7 +86,7 @@ public class ExternalViewerUtilsTest {
     @Test
     public void whenStartExternalVideoPlayerAndUrlNull_DoNothing() {
         ExternalViewerUtils.startExternalVideoPlayer(mockContext, null);
-        verifyZeroInteractions(mockContext);
+        verifyNoInteractions(mockContext);
     }
 
     @Test

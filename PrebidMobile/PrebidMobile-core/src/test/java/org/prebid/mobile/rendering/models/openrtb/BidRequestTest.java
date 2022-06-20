@@ -22,7 +22,7 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.*;
 
 import java.util.ArrayList;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class BidRequestTest {
 

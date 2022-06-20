@@ -7,6 +7,7 @@ import org.prebid.mobile.*;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.data.Position;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.interstitial.InterstitialSizes;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
@@ -40,6 +41,7 @@ public class AdUnitConfiguration {
     private String configId;
     private String pbAdSlot;
     private String interstitialSize;
+    private String impressionUrl;
 
     private Position closeButtonPosition = Position.TOP_RIGHT;
     private Position skipButtonPosition = Position.TOP_RIGHT;
@@ -57,6 +59,12 @@ public class AdUnitConfiguration {
     private final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
     private final Set<String> contextKeywordsSet = new HashSet<>();
 
+
+    public void modifyUsingBidResponse(@Nullable BidResponse bidResponse) {
+        if (bidResponse != null) {
+            impressionUrl = bidResponse.getImpressionEventUrl();
+        }
+    }
 
     public void setConfigId(String configId) {
         this.configId = configId;
@@ -437,6 +445,11 @@ public class AdUnitConfiguration {
     public void setIsOriginalAdUnit(boolean originalAdUnit) {
         isOriginalAdUnit = originalAdUnit;
     }
+
+    public String getImpressionUrl() {
+        return impressionUrl;
+    }
+
 
     @Override
     public boolean equals(Object o) {

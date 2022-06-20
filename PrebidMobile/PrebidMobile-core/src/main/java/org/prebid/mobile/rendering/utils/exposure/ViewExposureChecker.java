@@ -63,7 +63,7 @@ public class ViewExposureChecker {
         boolean visitParent = visitParent(((ViewGroup) view.getParent()), view);
         boolean collapseBoundingBox = collapseBoundingBox();
 
-        LogUtil.debug(TAG, "exposure: visitParent " + visitParent + " collapseBox " + collapseBoundingBox);
+        LogUtil.verbose(TAG, "exposure: visitParent " + visitParent + " collapseBox " + collapseBoundingBox);
         boolean potentiallyExposed = visitParent && collapseBoundingBox;
         if (!potentiallyExposed) {
             return zeroExposure;
@@ -115,14 +115,21 @@ public class ViewExposureChecker {
         return pickedObstructionList;
     }
 
-    private boolean visitParent(ViewGroup parentView, View childView) {
+    /**
+     * Checks whether the parent view is visible
+     * and whether children are not covered by any obstruction.
+     */
+    private boolean visitParent(
+        ViewGroup parentView,
+        View childView
+    ) {
         if (parentView.getVisibility() != View.VISIBLE || isViewTransparent(parentView)) {
             return false;
         }
 
-        boolean clip = isClippedToBounds(parentView);
+        boolean childrenAreClippedToParent = isClippedToBounds(parentView);
 
-        if (clip) {
+        if (childrenAreClippedToParent) {
             Rect bounds = new Rect();
             parentView.getDrawingRect(bounds);
             Rect convertRect = convertRect(bounds, parentView, testedViewWeakReference.get());
@@ -152,8 +159,13 @@ public class ViewExposureChecker {
 
     // don't test child if it is viewGroup and transparent
     private boolean isFriendlyObstruction(View child) {
-        return (child instanceof ImageView && child.getId() == R.id.iv_close_interstitial)
-               || child.getId() == R.id.rl_count_down;
+        boolean result = (child instanceof ImageView && child.getId() == R.id.iv_close_interstitial)
+            || (child instanceof ImageView && child.getId() == R.id.iv_skip)
+            || child.getId() == R.id.rl_count_down;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            result = result || child.getId() == android.R.id.navigationBarBackground;
+        }
+        return result;
     }
 
     private void collectObstructionsFrom(View child) {
@@ -291,7 +303,8 @@ public class ViewExposureChecker {
             new Rect(trimmedRect.right,
                      valueRect.top,
                      valueRect.right,
-                     valueRect.top + valueRect.height())
+                valueRect.top + valueRect.height()
+            )
         };
 
         for (Rect rect : subRectArray) {
@@ -301,6 +314,11 @@ public class ViewExposureChecker {
         }
     }
 
+    /**
+     * Returns whether ViewGroup's children are clipped to their bounds.
+     * <p>
+     * {@link ViewGroup#getClipChildren()}
+     */
     private boolean isClippedToBounds(ViewGroup viewGroup) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             return viewGroup.getClipChildren();
@@ -308,7 +326,11 @@ public class ViewExposureChecker {
         return false;
     }
 
-    private Rect convertRect(Rect fromRect, View fromView, View toView) {
+    private Rect convertRect(
+        Rect fromRect,
+        View fromView,
+        View toView
+    ) {
         if (fromRect == null || fromView == null || toView == null) {
             LogUtil.debug(TAG, "convertRect: Failed. One of the provided param is null. Returning empty rect.");
             return new Rect();

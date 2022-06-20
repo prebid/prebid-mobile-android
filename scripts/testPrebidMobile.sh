@@ -18,7 +18,7 @@ echoX "clean previous build"
 ./gradlew clean
 
 echoX "start unit tests"
-./gradlew -q PrebidMobile-core:testReleaseUnitTest
-./gradlew -q PrebidMobile-gamEventHandlers:testReleaseUnitTest
-./gradlew -q PrebidMobile-admobAdapters:testReleaseUnitTest
-./gradlew -q PrebidMobile-maxAdapters:testReleaseUnitTest
+./gradlew -i PrebidMobile-core:testReleaseUnitTest
+./gradlew -i PrebidMobile-gamEventHandlers:testReleaseUnitTest
+./gradlew -i PrebidMobile-admobAdapters:testReleaseUnitTest
+./gradlew -i PrebidMobile-maxAdapters:testReleaseUnitTest

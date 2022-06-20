@@ -59,9 +59,6 @@ import org.robolectric.shadows.ShadowLocationManager;
 import java.lang.reflect.Field;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.*;
 import static org.robolectric.Shadows.shadowOf;

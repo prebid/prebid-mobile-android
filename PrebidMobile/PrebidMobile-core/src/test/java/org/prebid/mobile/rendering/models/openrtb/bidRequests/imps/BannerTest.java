@@ -19,7 +19,7 @@ package org.prebid.mobile.rendering.models.openrtb.bidRequests.imps;
 import org.json.JSONObject;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class BannerTest {
     @Test

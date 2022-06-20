@@ -19,6 +19,7 @@ package org.prebid.mobile.rendering.sdk.calendar;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.CalendarContract;
+import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 
 final class CalendarGTE14 implements ICalendar
 {
@@ -71,8 +72,7 @@ final class CalendarGTE14 implements ICalendar
 			intent.putExtra(CalendarContract.Events.HAS_ALARM, true);
 		}
 
-		context.startActivity(intent);
-
+		ExternalViewerUtils.startActivity(context, intent);
 	}
 
     private String createRule(CalendarRepeatRule rules)

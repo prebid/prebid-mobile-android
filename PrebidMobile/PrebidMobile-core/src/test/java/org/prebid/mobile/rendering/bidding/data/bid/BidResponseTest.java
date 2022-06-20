@@ -16,8 +16,11 @@
 
 package org.prebid.mobile.rendering.bidding.data.bid;
 
+import org.junit.After;
 import org.junit.Test;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.Position;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.test.utils.ResourceUtils;
@@ -28,10 +31,15 @@ import static org.junit.Assert.*;
 
 public class BidResponseTest {
 
+    @After
+    public void tearDown() {
+        PrebidMobile.setUseCacheForReportingWithRenderingApi(false);
+    }
+
     @Test
     public void whenInstantiatedWithValidJson_NoParseError() throws IOException {
         String responseString = ResourceUtils.convertResourceToString("bidding_response_obj.json");
-        BidResponse bidResponse = new BidResponse(responseString);
+        BidResponse bidResponse = new BidResponse(responseString, new AdUnitConfiguration());
         assertFalse(bidResponse.hasParseError());
         assertNotNull(bidResponse.getExt());
         assertNotNull(bidResponse.getSeatbids());
@@ -47,14 +55,14 @@ public class BidResponseTest {
     @Test
     public void whenInstantiatedWithInvalidJson_ParseError() throws IOException {
         String responseString = ResourceUtils.convertResourceToString("bidding_response_obj.json").replaceFirst(",", "");
-        BidResponse bidResponse = new BidResponse(responseString);
+        BidResponse bidResponse = new BidResponse(responseString, new AdUnitConfiguration());
         assertTrue(bidResponse.hasParseError());
     }
 
     @Test
     public void whenInstantiatedWithNoBids_NoBidsError() throws IOException {
         String responseString = ResourceUtils.convertResourceToString("bidding_response_no_bids_obj.json");
-        BidResponse bidResponse = new BidResponse(responseString);
+        BidResponse bidResponse = new BidResponse(responseString, new AdUnitConfiguration());
         assertTrue(bidResponse.hasParseError());
         assertEquals("Failed to parse bids. No winning bids were found.", bidResponse.getParseError());
         assertEquals("id", bidResponse.getId());
@@ -64,7 +72,7 @@ public class BidResponseTest {
     @Test
     public void whenInstantiatedWithoutWinningKeywords_NoBidsError() throws IOException {
         String responseString = ResourceUtils.convertResourceToString("bidding_response_no_winning_keywords_obj.json");
-        BidResponse bidResponse = new BidResponse(responseString);
+        BidResponse bidResponse = new BidResponse(responseString, new AdUnitConfiguration());
         assertTrue(bidResponse.hasParseError());
         assertEquals("Failed to parse bids. No winning bids were found.", bidResponse.getParseError());
         assertEquals("id", bidResponse.getId());
@@ -76,7 +84,7 @@ public class BidResponseTest {
         if (!BuildConfig.DEBUG) {
             String responseString = ResourceUtils.convertResourceToString("BidResponseTest/mobile_sdk_pass_through.json");
 
-            BidResponse subject = new BidResponse(responseString);
+            BidResponse subject = new BidResponse(responseString, new AdUnitConfiguration());
             MobileSdkPassThrough mobileSdkPassThrough = subject.getMobileSdkPassThrough();
 
             assertNotNull(mobileSdkPassThrough);
@@ -90,6 +98,76 @@ public class BidResponseTest {
             /* This field presents in both MobileSdkPassThrough objects */
             assertEquals((Integer) 11, mobileSdkPassThrough.maxVideoDuration);
         }
+    }
+
+    @Test
+    public void testWinningBidKeywords_withoutOneKeyword_parseError() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_not_all.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertTrue(subject.hasParseError());
+        assertNull(subject.getWinningBid());
+    }
+
+    @Test
+    public void testWinningBidKeywords_allKeywords_noParseError() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_without_cache_id.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertFalse(subject.hasParseError());
+        assertNotNull(subject.getWinningBid());
+    }
+
+    @Test
+    public void testWinningBidKeywords_originalAdUnit_withoutCacheId_parseError() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_without_cache_id.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setIsOriginalAdUnit(true);
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertTrue(subject.hasParseError());
+        assertNull(subject.getWinningBid());
+    }
+
+    @Test
+    public void testWinningBidKeywords_originalAdUnit_withCacheId_noParseError() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        adUnitConfiguration.setIsOriginalAdUnit(true);
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertFalse(subject.hasParseError());
+        assertNotNull(subject.getWinningBid());
+    }
+
+    @Test
+    public void testWinningBidKeywords_useCacheInRenderingApi_withoutCacheId_noParseError() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_without_cache_id.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        PrebidMobile.setUseCacheForReportingWithRenderingApi(true);
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertFalse(subject.hasParseError());
+        assertNotNull(subject.getWinningBid());
+    }
+
+    @Test
+    public void testWinningBidKeywords_useCacheInRenderingApi_withCacheId_noParseError() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_with_cache_id.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        PrebidMobile.setUseCacheForReportingWithRenderingApi(true);
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertFalse(subject.hasParseError());
+        assertNotNull(subject.getWinningBid());
     }
 
 }

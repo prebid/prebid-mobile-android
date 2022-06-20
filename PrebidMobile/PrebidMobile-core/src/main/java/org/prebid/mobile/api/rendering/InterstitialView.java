@@ -17,6 +17,7 @@
 package org.prebid.mobile.api.rendering;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.util.Log;
 import android.view.View;
 import org.prebid.mobile.LogUtil;
@@ -29,10 +30,14 @@ import org.prebid.mobile.rendering.interstitial.DialogEventListener;
 import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
 import org.prebid.mobile.rendering.utils.constants.IntentActions;
+import org.prebid.mobile.rendering.utils.helpers.InsetsUtils;
 import org.prebid.mobile.rendering.views.AdViewManager;
 import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.rendering.views.base.BaseAdView;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialVideo;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class InterstitialView extends BaseAdView {
 
@@ -40,6 +45,23 @@ public class InterstitialView extends BaseAdView {
 
     private InterstitialViewListener listener;
     protected InterstitialVideo interstitialVideo;
+
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        List<View> views = Arrays.asList(
+            findViewById(R.id.iv_close_interstitial),
+            findViewById(R.id.iv_skip),
+            findViewById(R.id.rl_count_down),
+            findViewById(R.id.tv_learn_more)
+        );
+
+        for (View view : views) {
+            InsetsUtils.resetMargins(view);
+            InsetsUtils.addCutoutAndNavigationInsets(view);
+        }
+    }
 
     //region ========== Listener Area
     private final AdViewManagerListener onAdViewManagerListener = new AdViewManagerListener() {
@@ -203,15 +225,25 @@ public class InterstitialView extends BaseAdView {
     }
 
     protected InternalFriendlyObstruction[] formInterstitialObstructionsArray() {
-        InternalFriendlyObstruction[] obstructionArray = new InternalFriendlyObstruction[3];
+        InternalFriendlyObstruction[] obstructionArray = new InternalFriendlyObstruction[5];
 
         View closeInterstitial = findViewById(R.id.iv_close_interstitial);
+        View skipInterstitial = findViewById(R.id.iv_skip);
         View countDownTimer = findViewById(R.id.rl_count_down);
         View actionButton = findViewById(R.id.tv_learn_more);
 
         obstructionArray[0] = new InternalFriendlyObstruction(closeInterstitial, InternalFriendlyObstruction.Purpose.CLOSE_AD, null);
-        obstructionArray[1] = new InternalFriendlyObstruction(countDownTimer, InternalFriendlyObstruction.Purpose.OTHER, "CountDownTimer");
-        obstructionArray[2] = new InternalFriendlyObstruction(actionButton, InternalFriendlyObstruction.Purpose.OTHER, "Action button");
+        obstructionArray[1] = new InternalFriendlyObstruction(skipInterstitial, InternalFriendlyObstruction.Purpose.CLOSE_AD, null);
+        obstructionArray[2] = new InternalFriendlyObstruction(countDownTimer, InternalFriendlyObstruction.Purpose.OTHER, "CountDownTimer");
+        obstructionArray[3] = new InternalFriendlyObstruction(actionButton, InternalFriendlyObstruction.Purpose.OTHER, "Action button");
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            View dialogRoot = closeInterstitial.getRootView();
+            View navigationBar = dialogRoot.findViewById(android.R.id.navigationBarBackground);
+            obstructionArray[4] = new InternalFriendlyObstruction(navigationBar, InternalFriendlyObstruction.Purpose.OTHER, "Bottom navigation bar");
+        } else {
+            obstructionArray[4] = null;
+        }
 
         return obstructionArray;
     }

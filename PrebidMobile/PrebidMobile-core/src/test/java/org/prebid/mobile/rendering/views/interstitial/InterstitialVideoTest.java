@@ -37,11 +37,8 @@ import org.prebid.mobile.test.utils.WhiteBox;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static junit.framework.Assert.assertFalse;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 public class InterstitialVideoTest {
@@ -302,7 +299,7 @@ public class InterstitialVideoTest {
     }
 
     private boolean getUseSkipButton() {
-        return (boolean) Reflection.getField(spyInterstitialVideo, "useSkipButton");
+        return (boolean) Reflection.getFieldOf(spyInterstitialVideo, "useSkipButton");
     }
 
 

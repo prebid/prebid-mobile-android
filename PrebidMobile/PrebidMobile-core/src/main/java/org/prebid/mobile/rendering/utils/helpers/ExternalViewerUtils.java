@@ -23,12 +23,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.util.Log;
 import android.webkit.URLUtil;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.rendering.listeners.OnBrowserActionResultListener;
 import org.prebid.mobile.rendering.listeners.OnBrowserActionResultListener.BrowserActionResult;
 import org.prebid.mobile.rendering.utils.url.ActionNotResolvedException;
@@ -41,6 +43,31 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 public class ExternalViewerUtils {
 
     public static final String TAG = ExternalViewerUtils.class.getSimpleName();
+
+    /**
+     * Starts new activity and checks if current context can run new activity.
+     * If it can't run, it adds flag FLAG_ACTIVITY_NEW_TASK.
+     */
+    public static void startActivity(
+        @Nullable Context context,
+        @Nullable Intent intent
+    ) {
+        if (context == null || intent == null) {
+            Log.e(TAG, "Can't start activity!");
+            return;
+        }
+
+        boolean contextCanNotRunNewActivity = !(context instanceof Activity);
+        if (contextCanNotRunNewActivity) {
+            Log.d(TAG, "Context is not Activity type. Intent flag FLAG_ACTIVITY_NEW_TASK added.");
+            boolean isRelease = !BuildConfig.DEBUG;
+            if (isRelease) {
+                intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+            }
+        }
+
+        context.startActivity(intent);
+    }
 
     public static boolean isBrowserActivityCallable(Context context) {
         if (context == null) {
@@ -69,7 +96,7 @@ public class ExternalViewerUtils {
         if (context != null && url != null) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(Uri.parse(url), "video/*");
-            context.startActivity(intent);
+            startActivity(context, intent);
         }
     }
 
@@ -105,7 +132,7 @@ public class ExternalViewerUtils {
         }
 
         if (!PrebidMobile.useExternalBrowser && isActivityCallable(context, intent)) {
-            context.startActivity(intent);
+            startActivity(context, intent);
             notifyBrowserActionSuccess(BrowserActionResult.INTERNAL_BROWSER, onBrowserActionResultListener);
         } else {
             startExternalBrowser(context, url);
@@ -119,12 +146,9 @@ public class ExternalViewerUtils {
             return;
         }
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        if (!(context instanceof Activity)) {
-            intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
-        }
         intent.setData(Uri.parse(url));
         if (URLUtil.isValidUrl(url) || isActivityCallable(context, intent)) {
-            context.startActivity(intent);
+            startActivity(context, intent);
         }
         else {
             LogUtil.error(TAG, "No activity available to handle action " + intent.toString());
@@ -143,7 +167,7 @@ public class ExternalViewerUtils {
         }
 
         try {
-            context.startActivity(intent);
+            startActivity(context, intent);
         }
         catch (ActivityNotFoundException e) {
             throw new ActionNotResolvedException(e);

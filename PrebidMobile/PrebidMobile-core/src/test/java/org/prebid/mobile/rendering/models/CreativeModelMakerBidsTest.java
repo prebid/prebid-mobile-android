@@ -38,8 +38,6 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -86,7 +84,7 @@ public class CreativeModelMakerBidsTest {
         configuration.setAdFormat(AdFormat.BANNER);
 
         String responseString = ResourceUtils.convertResourceToString("bidding_response_obj.json");
-        BidResponse bidResponse = new BidResponse(responseString);
+        BidResponse bidResponse = new BidResponse(responseString, new AdUnitConfiguration());
 
         ArgumentCaptor<CreativeModelsMaker.Result> resultArgumentCaptor = ArgumentCaptor.forClass(CreativeModelsMaker.Result.class);
 

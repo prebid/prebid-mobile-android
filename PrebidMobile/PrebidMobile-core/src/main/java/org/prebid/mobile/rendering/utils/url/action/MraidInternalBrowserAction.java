@@ -79,10 +79,8 @@ public class MraidInternalBrowserAction implements UrlAction {
                     LogUtil.debug(TAG, "Redirection succeeded");
 
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
                     try {
-                        context.getApplicationContext().startActivity(intent);
+                        ExternalViewerUtils.startActivity(context.getApplicationContext(), intent);
                     } catch (ActivityNotFoundException e) {
                         LogUtil.error(TAG, "Unable to open url " + url + ". Activity was not found");
                     }

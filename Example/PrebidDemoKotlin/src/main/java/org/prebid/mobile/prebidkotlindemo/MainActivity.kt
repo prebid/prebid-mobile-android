@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         val repository = AdTypesRepository.get()
         val primaryAdServers = ArrayList(repository.keys)
         val spinner = binding.spinnerAdServer
+
         spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, primaryAdServers)
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View, pos: Int, l: Long) {

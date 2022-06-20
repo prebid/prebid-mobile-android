@@ -24,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.utils.helpers.Dips;
@@ -57,6 +58,7 @@ public class BidResponse {
     private Ext ext;
 
     private boolean hasParseError = false;
+    private boolean isOriginalAdUnit;
     private String parseError;
     private String winningBidJson;
 
@@ -64,8 +66,12 @@ public class BidResponse {
 
     private MobileSdkPassThrough mobileSdkPassThrough;
 
-    public BidResponse(String json) {
+    public BidResponse(
+        String json,
+        AdUnitConfiguration adUnitConfiguration
+    ) {
         seatbids = new ArrayList<>();
+        isOriginalAdUnit = adUnitConfiguration.isOriginalAdUnit();
         parseJson(json);
     }
 
@@ -218,9 +224,11 @@ public class BidResponse {
             return false;
         }
         HashMap<String, String> targeting = prebid.getTargeting();
-        return targeting.containsKey("hb_pb")
-               && targeting.containsKey("hb_bidder")
-               && targeting.containsKey("hb_cache_id");
+        boolean result = targeting.containsKey("hb_pb") && targeting.containsKey("hb_bidder") && targeting.containsKey("hb_size");
+        if (isOriginalAdUnit) {
+            result = result && targeting.containsKey("hb_cache_id");
+        }
+        return result;
     }
 
     @NonNull
@@ -242,6 +250,16 @@ public class BidResponse {
 
     public void setMobileSdkPassThrough(@Nullable MobileSdkPassThrough mobileSdkPassThrough) {
         this.mobileSdkPassThrough = mobileSdkPassThrough;
+    }
+
+    @Nullable
+    public String getImpressionEventUrl() {
+        Bid winningBid = getWinningBid();
+        if (winningBid != null) {
+            Prebid prebid = winningBid.getPrebid();
+            return prebid.getImpEventUrl();
+        }
+        return null;
     }
 
 }

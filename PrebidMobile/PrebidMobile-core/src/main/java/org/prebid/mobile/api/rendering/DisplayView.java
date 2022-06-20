@@ -40,6 +40,8 @@ public class DisplayView extends FrameLayout {
     private final static String TAG = DisplayView.class.getSimpleName();
     private static final String CONTENT_DESCRIPTION_AD_VIEW = "adView";
 
+    private String impressionEventUrl;
+
     private AdUnitConfiguration adUnitConfiguration;
     private DisplayViewListener displayViewListener;
     private InterstitialManager interstitialManager;
@@ -147,11 +149,13 @@ public class DisplayView extends FrameLayout {
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(response, () -> {
             try {
+                adUnitConfiguration.modifyUsingBidResponse(response);
                 if (response.isVideo()) {
                     displayVideoAd(response);
                 } else {
                     displayHtmlAd(response);
                 }
+                impressionEventUrl = response.getImpressionEventUrl();
             } catch (AdException e) {
                 notifyListenerError(e);
             }

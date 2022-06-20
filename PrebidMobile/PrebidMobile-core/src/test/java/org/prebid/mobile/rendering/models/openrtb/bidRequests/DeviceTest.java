@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 
 public class DeviceTest {
 

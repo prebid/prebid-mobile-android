@@ -28,6 +28,7 @@ import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
 import org.prebid.mobile.rendering.models.ViewPool;
 import org.prebid.mobile.rendering.utils.helpers.Dips;
+import org.prebid.mobile.rendering.utils.helpers.InsetsUtils;
 import org.prebid.mobile.rendering.utils.url.UrlHandler;
 import org.prebid.mobile.rendering.utils.url.action.BrowserAction;
 import org.prebid.mobile.rendering.utils.url.action.DeepLinkAction;
@@ -58,7 +59,7 @@ public class VideoCreativeView extends RelativeLayout {
         Context context,
         VideoCreativeViewListener videoCreativeViewListener
 
-        ) throws AdException {
+    ) throws AdException {
         super(context);
         this.videoCreativeViewListener = videoCreativeViewListener;
         init();
@@ -208,6 +209,7 @@ public class VideoCreativeView extends RelativeLayout {
         layoutParams.setMargins(margin, margin, margin, margin);
 
         addView(callToActionView, layoutParams);
+        InsetsUtils.addCutoutAndNavigationInsets(callToActionView);
     }
 
     private void addVolumeControlView() {

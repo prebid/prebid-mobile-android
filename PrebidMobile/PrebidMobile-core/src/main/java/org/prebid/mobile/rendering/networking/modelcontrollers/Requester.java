@@ -45,8 +45,6 @@ public abstract class Requester {
 
     private static final String TAG = Requester.class.getSimpleName();
 
-    private final UserConsentManager userConsentManager;
-
     protected String requestName;
     protected WeakReference<Context> contextReference;
     protected AdUnitConfiguration adConfiguration;
@@ -63,7 +61,6 @@ public abstract class Requester {
         requestName = "";
         contextReference = new WeakReference<>(context);
         adConfiguration = config;
-        userConsentManager = ManagersResolver.getInstance().getUserConsentManager();
 
         /*
             IMPORTANT
@@ -97,7 +94,7 @@ public abstract class Requester {
         parameterBuilderArray.add(new AppInfoParameterBuilder(adConfiguration));
         parameterBuilderArray.add(new DeviceInfoParameterBuilder(adConfiguration));
         parameterBuilderArray.add(new NetworkParameterBuilder());
-        parameterBuilderArray.add(new UserConsentParameterBuilder(userConsentManager));
+        parameterBuilderArray.add(new UserConsentParameterBuilder());
         return parameterBuilderArray;
     }
 
@@ -117,6 +114,7 @@ public abstract class Requester {
             return;
         }
 
+        UserConsentManager userConsentManager = ManagersResolver.getInstance().getUserConsentManager();
         if (userConsentManager.canAccessDeviceData()) {
             AdIdManager.initAdId(context, new AdIdInitListener(this));
         } else {

@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.views;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,8 @@ import java.util.List;
 public class AdViewManager implements CreativeViewListener, TransactionManagerListener {
 
     private static final String TAG = AdViewManager.class.getSimpleName();
+
+    private boolean builtInVideoFirstStart = true;
 
     private final InterstitialManager interstitialManager;
 
@@ -218,7 +221,12 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
     }
 
     public boolean isAutoDisplayOnLoad() {
-        return adConfiguration.isAdType(AdFormat.BANNER) || adConfiguration.isBuiltInVideo();
+        boolean result = adConfiguration.isAdType(AdFormat.BANNER);
+        if (builtInVideoFirstStart) {
+            builtInVideoFirstStart = false;
+            result = result || adConfiguration.isBuiltInVideo();
+        }
+        return result;
     }
 
     public void destroy() {
@@ -444,7 +452,20 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
             return;
         }
         View closeButtonView = rootViewGroup.findViewById(R.id.iv_close_interstitial);
-        addObstructions(new InternalFriendlyObstruction(closeButtonView, InternalFriendlyObstruction.Purpose.CLOSE_AD, null));
+
+        InternalFriendlyObstruction[] obstructionArray = new InternalFriendlyObstruction[2];
+        obstructionArray[0] = new InternalFriendlyObstruction(closeButtonView, InternalFriendlyObstruction.Purpose.CLOSE_AD, null);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            View dialogRoot = closeButtonView.getRootView();
+            View navigationBarView = dialogRoot.findViewById(android.R.id.navigationBarBackground);
+            InternalFriendlyObstruction obstruction = new InternalFriendlyObstruction(navigationBarView, InternalFriendlyObstruction.Purpose.OTHER, "Bottom navigation bar");
+            obstructionArray[1] = obstruction;
+        } else {
+            obstructionArray[1] = null;
+        }
+
+        addObstructions(obstructionArray);
     }
 
     private void processTransaction(Transaction transaction) {

@@ -14,7 +14,7 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK, manifest = Config.NONE)

@@ -22,7 +22,7 @@ import org.prebid.mobile.test.utils.ResourceUtils;
 
 import java.io.File;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class ContentTest {
 

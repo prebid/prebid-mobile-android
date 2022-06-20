@@ -47,6 +47,7 @@ public class CreativeFactory {
     private static final String TAG = CreativeFactory.class.getSimpleName();
     private static final long BANNER_TIMEOUT = 6 * 1000;
     private static final long VAST_TIMEOUT = 30 * 1000;
+    private static final long INTERSTITIAL_TIMEOUT = 30 * 1000;
 
     private AbstractCreative creative;
     private CreativeModel creativeModel;
@@ -141,7 +142,12 @@ public class CreativeFactory {
         } else {
             listener.onFailure(new AdException(AdException.INTERNAL_ERROR, "Tracking info not found"));
         }
-        markWorkStart(BANNER_TIMEOUT);
+
+        long creativeDownloadTimeout = BANNER_TIMEOUT;
+        if (creativeModel.getAdConfiguration().isAdType(AdFormat.INTERSTITIAL)) {
+            creativeDownloadTimeout = INTERSTITIAL_TIMEOUT;
+        }
+        markWorkStart(creativeDownloadTimeout);
         creative.load();
     }
 
@@ -150,8 +156,8 @@ public class CreativeFactory {
         String mediaUrl = videoCreativeModel.getMediaUrl();
         if (Utils.isBlank(mediaUrl) || mediaUrl.equals("invalid media file")) {
             listener.onFailure(new AdException(
-                    AdException.INTERNAL_ERROR,
-                    VASTErrorCodes.NO_SUPPORTED_MEDIA_ERROR.toString()
+                AdException.INTERNAL_ERROR,
+                VASTErrorCodes.NO_SUPPORTED_MEDIA_ERROR.toString()
             ));
             return;
         }
@@ -160,14 +166,21 @@ public class CreativeFactory {
         for (VideoAdEvent.Event videoEvent : VideoAdEvent.Event.values()) {
             videoCreativeModel.registerVideoEvent(videoEvent, videoCreativeModel.getVideoEventUrls().get(videoEvent));
         }
+        ArrayList<String> impressions = new ArrayList<>(1);
+        impressions.add(creativeModel.getImpressionUrl());
+        videoCreativeModel.registerTrackingEvent(
+            TrackingEvent.Events.IMPRESSION,
+            impressions
+        );
 
         VideoCreative newCreative;
         try {
             if (creativeModel.getAdConfiguration().isRewarded()) {
-                newCreative = new RewardedVideoCreative(contextReference.get(),
-                        videoCreativeModel,
-                        omAdSessionManager,
-                        interstitialManager
+                newCreative = new RewardedVideoCreative(
+                    contextReference.get(),
+                    videoCreativeModel,
+                    omAdSessionManager,
+                    interstitialManager
                 );
             } else {
                 newCreative = new VideoCreative(contextReference.get(),

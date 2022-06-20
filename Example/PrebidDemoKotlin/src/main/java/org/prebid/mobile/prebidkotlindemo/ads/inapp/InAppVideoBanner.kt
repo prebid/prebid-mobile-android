@@ -17,7 +17,6 @@ object InAppVideoBanner {
 
     fun create(
         wrapper: ViewGroup,
-        autoRefreshTime: Int,
         width: Int,
         height: Int,
         configId: String,

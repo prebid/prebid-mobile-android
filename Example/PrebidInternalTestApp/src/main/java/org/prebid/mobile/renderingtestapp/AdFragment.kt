@@ -19,6 +19,7 @@ package org.prebid.mobile.renderingtestapp
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -38,7 +39,11 @@ import org.prebid.mobile.renderingtestapp.utils.OpenRtbConfigs
 abstract class AdFragment : BaseFragment() {
 
     companion object {
+        private val TAG = AdFragment::class.simpleName
+
         const val CONFIGURATOR_REQUEST_CODE = 0
+
+        const val ARGUMENT_ACCOUNT_ID = "ARGUMENT_ACCOUNT_ID"
     }
 
     var idlingResource = CountingIdlingResource(AdFragment::class.java.simpleName)
@@ -64,6 +69,10 @@ abstract class AdFragment : BaseFragment() {
             val title = it.getString(getString(R.string.key_title), getString(R.string.segment_title_in_app))
             setTitle(title)
             shouldSetNoBids()
+            it.getString(ARGUMENT_ACCOUNT_ID)?.let { accountId ->
+                Log.d(TAG, "Using custom account id: $accountId")
+                PrebidMobile.setPrebidServerAccountId(accountId)
+            }
         }
         if (ConfigurationViewSettings.isEnabled && configuratorMode() != null) {
             startAdConfigurator()
@@ -222,9 +231,9 @@ abstract class AdFragment : BaseFragment() {
         val hostUrl = PrebidMobile.getPrebidServerHost().hostUrl
         val host = Host.CUSTOM
         host.hostUrl = hostUrl
-        PrebidMobile.setApplicationContext(requireContext())
         PrebidMobile.setPrebidServerHost(host)
         PrebidMobile.setPrebidServerAccountId(PrebidMobile.getPrebidServerAccountId())
+        PrebidMobile.initializeSdk(requireContext(), null)
     }
 
 }

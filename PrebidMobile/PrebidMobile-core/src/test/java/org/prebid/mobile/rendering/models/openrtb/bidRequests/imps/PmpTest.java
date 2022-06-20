@@ -23,7 +23,7 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.pmps.Deals;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by latha.shivanna on 11/2/17.

@@ -19,17 +19,35 @@ package org.prebid.mobile;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import org.prebid.mobile.api.exceptions.InitError;
 import org.prebid.mobile.core.BuildConfig;
+import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.mraid.MraidEnv;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
+import org.prebid.mobile.rendering.sdk.SdkInitializer;
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener;
-import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
-import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class PrebidMobile {
+
+    public static boolean isCoppaEnabled = false;
+    public static boolean useExternalBrowser = false;
+
+    /**
+     * If true, the SDK sends "af=3,5", indicating support for MRAID
+     */
+    public static boolean sendMraidSupportParams = true;
+
+    /**
+     * Minimum refresh interval allowed. 30 seconds
+     */
+    public static final int AUTO_REFRESH_DELAY_MIN = 30_000;
+
+    /**
+     * Maximum refresh interval allowed. 120 seconds
+     */
+    public static final int AUTO_REFRESH_DELAY_MAX = 120_000;
 
     public static final String SCHEME_HTTPS = "https";
     public static final String SCHEME_HTTP = "http";
@@ -54,60 +72,49 @@ public class PrebidMobile {
     public static final String NATIVE_VERSION = "1.2";
 
     /**
-     * Maximum refresh interval allowed. 120 seconds
-     */
-    public static final int AUTO_REFRESH_DELAY_MAX = 120_000;
-
-    /**
-     * Minimum refresh interval allowed. 30 seconds
-     */
-    public static final int AUTO_REFRESH_DELAY_MIN = 30_000;
-
-    /**
      * Open measurement SDK version
      */
     public static final String OMSDK_VERSION = BuildConfig.OMSDK_VERSION;
 
-    private static final AtomicInteger INIT_SDK_TASK_COUNT = new AtomicInteger();
-    private static final int MANDATORY_TASK_COUNT = 3;
-
     /**
-     * Log levels for easy development
-     * Default - No sdks logs
-     * Refer - LogLevel
+     * Please use {@link PrebidMobile#setLogLevel(LogLevel)}, this field will become private in next releases.
      */
+    @Deprecated
     public static LogLevel logLevel = LogLevel.NONE;
 
-    /**
-     * If true, the SDK sends "af=3,5", indicating support for MRAID
-     */
-    public static boolean sendMraidSupportParams = true;
-    public static boolean isCoppaEnabled = false;
-    public static boolean useExternalBrowser = false;
 
-    private static SdkInitListener sdkInitListener;
-
-    private static boolean isSdkInitialized = false;
-    private static boolean useHttps = false;
-
-
-    private static final String TAG = PrebidMobile.class.getSimpleName();
-
-    static boolean timeoutMillisUpdated = false;
     private static boolean pbsDebug = false;
     private static boolean shareGeoLocation = false;
     private static boolean assignNativeAssetID = false;
+
+    /**
+     * Indicates whether the PBS should cache the bid for the rendering API.
+     * If the value is true the SDK will make the cache request in order to report
+     * the impression event respectively to the legacy analytic setup.
+     */
+    private static boolean useCacheForReportingWithRenderingApi = false;
+
     private static int timeoutMillis = 2_000;
+
+    private static final String TAG = PrebidMobile.class.getSimpleName();
 
     private static String accountId = "";
     private static String storedAuctionResponse = "";
 
     private static Host host = Host.CUSTOM;
+
     private static final Map<String, String> storedBidResponses = new LinkedHashMap<>();
     private static List<ExternalUserId> externalUserIds = new ArrayList<>();
     private static HashMap<String, String> customHeaders = new HashMap<>();
 
-    private PrebidMobile() {
+    private PrebidMobile() {}
+
+    public static boolean isUseCacheForReportingWithRenderingApi() {
+        return useCacheForReportingWithRenderingApi;
+    }
+
+    public static void setUseCacheForReportingWithRenderingApi(boolean useCacheForReportingWithRenderingApi) {
+        PrebidMobile.useCacheForReportingWithRenderingApi = useCacheForReportingWithRenderingApi;
     }
 
     public static int getTimeoutMillis() {
@@ -165,8 +172,10 @@ public class PrebidMobile {
     /**
      * HashMap containing a list of custom headers to add to requests
      */
-    public static void setCustomHeaders(HashMap<String, String> customHeaders) {
-        PrebidMobile.customHeaders = customHeaders;
+    public static void setCustomHeaders(@Nullable HashMap<String, String> customHeaders) {
+        if (customHeaders != null) {
+            PrebidMobile.customHeaders = customHeaders;
+        }
     }
 
     /**
@@ -174,34 +183,56 @@ public class PrebidMobile {
      *
      * @return externalUserIds as Array.
      */
+    @NonNull
     public static HashMap<String, String> getCustomHeaders() {
         return PrebidMobile.customHeaders;
     }
 
-    public static void setApplicationContext(@Nullable Context context) {
-        setApplicationContext(context, null);
+
+    /**
+     * Initializes the main SDK classes. Makes request to Prebid server to check its status.
+     * You have to set host url ({@link PrebidMobile#setPrebidServerHost(Host)}) before calling this method.
+     *
+     * @param context  any context (must be not null)
+     * @param listener initialization listener (can be null)
+     * @see <a href="https://docs.prebid.org/prebid-server/endpoints/pbs-endpoint-status.html">GET /status</a>
+     */
+    public static void initializeSdk(
+        @Nullable Context context,
+        @Nullable SdkInitializationListener listener
+    ) {
+        SdkInitializer.init(context, listener);
     }
 
-    public static void setApplicationContext(@Nullable Context context, @Nullable SdkInitListener listener) {
-        if (context == null) {
-            LogUtil.error("Context must be not null!");
-            return;
-        }
+    /**
+     * Please use {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     */
+    @Deprecated
+    public static void setApplicationContext(@Nullable Context context) {
+        SdkInitializer.init(context, null);
+    }
 
-        if (isSdkInitialized) {
-            return;
-        }
-        LogUtil.debug(TAG, "Initializing Prebid Rendering SDK");
+    /**
+     * Please use {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     */
+    @Deprecated
+    public static void setApplicationContext(
+        @Nullable Context context,
+        @Nullable SdkInitListener listener
+    ) {
+        SdkInitializer.init(context, new SdkInitializationListener() {
+            @Override
+            public void onSdkInit() {
+                if (listener != null) {
+                    listener.onSDKInit();
+                }
+            }
 
-        sdkInitListener = listener;
-        INIT_SDK_TASK_COUNT.set(0);
-
-        if (logLevel != null) {
-            initializeLogging();
-        }
-        AppInfoManager.init(context);
-        initOpenMeasurementSDK(context);
-        ManagersResolver.getInstance().prepare(context);
+            @Override
+            public void onSdkFailedToInit(InitError error) {
+                LogUtil.error(TAG, error.getError());
+            }
+        });
     }
 
     public static Context getApplicationContext() {
@@ -217,7 +248,10 @@ public class PrebidMobile {
         return storedAuctionResponse;
     }
 
-    public static void addStoredBidResponse(String bidder, String responseId) {
+    public static void addStoredBidResponse(
+        String bidder,
+        String responseId
+    ) {
         storedBidResponses.put(bidder, responseId);
     }
 
@@ -257,32 +291,15 @@ public class PrebidMobile {
      * Return 'true' if Prebid Rendering SDK is initialized completely
      */
     public static boolean isSdkInitialized() {
-        return isSdkInitialized;
+        return SdkInitializer.isIsSdkInitialized();
     }
 
-    private static void initOpenMeasurementSDK(Context context) {
-        OmAdSessionManager.activateOmSdk(context.getApplicationContext());
-        increaseTaskCount();
+    public static LogLevel getLogLevel() {
+        return PrebidMobile.logLevel;
     }
 
-    private static void initializeLogging() {
-        LogUtil.setLogLevel(logLevel.getValue());//set to the publisher set value
-        increaseTaskCount();
-    }
-
-    /**
-     * Notifies SDK initializer that one task was completed.
-     * Only for internal use!
-     */
-    public static void increaseTaskCount() {
-        if (INIT_SDK_TASK_COUNT.incrementAndGet() >= MANDATORY_TASK_COUNT) {
-            isSdkInitialized = true;
-            LogUtil.debug(TAG, "Prebid Rendering SDK " + SDK_VERSION + " Initialized");
-
-            if (sdkInitListener != null) {
-                sdkInitListener.onSDKInit();
-            }
-        }
+    public static void setLogLevel(LogLevel logLevel) {
+        PrebidMobile.logLevel = logLevel;
     }
 
 
@@ -294,7 +311,10 @@ public class PrebidMobile {
      * DEBUG - sdk logs with debug level only. Noisy level.
      */
     public enum LogLevel {
-        NONE(-1), DEBUG(3), WARN(5), ERROR(6);
+        NONE(-1),
+        DEBUG(3),
+        WARN(5),
+        ERROR(6);
 
         private final int value;
 

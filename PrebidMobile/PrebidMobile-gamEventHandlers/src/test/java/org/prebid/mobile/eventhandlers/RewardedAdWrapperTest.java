@@ -36,7 +36,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.prebid.mobile.eventhandlers.global.Constants.APP_EVENT;
 

@@ -18,6 +18,9 @@ import com.applovin.mediation.adapters.prebid.managers.MaxInterstitialManager;
 import com.applovin.mediation.adapters.prebid.managers.MaxNativeManager;
 import com.applovin.sdk.AppLovinSdk;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.api.exceptions.InitError;
+import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 
 @Keep
 public class PrebidMaxMediationAdapter extends MediationAdapterBase implements MaxAdViewAdapter, MaxInterstitialAdapter, MaxRewardedAdapter, MaxNativeAdAdapter {
@@ -40,12 +43,19 @@ public class PrebidMaxMediationAdapter extends MediationAdapterBase implements M
             Activity activity,
             OnCompletionListener onCompletionListener
     ) {
+        setConsents(parameters);
         if (PrebidMobile.isSdkInitialized()) {
             onCompletionListener.onCompletion(InitializationStatus.INITIALIZED_SUCCESS, null);
         } else {
             onCompletionListener.onCompletion(InitializationStatus.INITIALIZING, null);
-            PrebidMobile.setApplicationContext(activity.getApplicationContext(), () -> {
-                onCompletionListener.onCompletion(InitializationStatus.INITIALIZED_SUCCESS, null);
+            PrebidMobile.initializeSdk(activity.getApplicationContext(), new SdkInitializationListener() {
+                @Override
+                public void onSdkInit() {
+                    onCompletionListener.onCompletion(InitializationStatus.INITIALIZED_SUCCESS, null);
+                }
+
+                @Override
+                public void onSdkFailedToInit(InitError error) {}
             });
         }
     }
@@ -136,6 +146,16 @@ public class PrebidMaxMediationAdapter extends MediationAdapterBase implements M
     @Override
     public String getSdkVersion() {
         return PrebidMobile.SDK_VERSION;
+    }
+
+
+    private void setConsents(MaxAdapterInitializationParameters parameters) {
+        if (parameters != null) {
+            Boolean ageRestrictedUser = parameters.isAgeRestrictedUser();
+            if (ageRestrictedUser != null) {
+                TargetingParams.setSubjectToCOPPA(ageRestrictedUser);
+            }
+        }
     }
 
 }

@@ -110,10 +110,14 @@ public interface DeviceInfoManager {
     /**
      * Allow to play video inside internal player
      *
-     * @param url network URL to the video
+     * @param url     network URL to the video
+     * @param context
      * @throws IOException if there is
      */
-    void playVideo(String url);
+    void playVideo(
+        String url,
+        Context context
+    );
 
     /**
      * Check the state to have ability to save picture on device.

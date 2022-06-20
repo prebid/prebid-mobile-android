@@ -18,7 +18,6 @@ package org.prebid.mobile;
 
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +33,7 @@ import org.robolectric.annotation.Config;
 
 import java.util.*;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)

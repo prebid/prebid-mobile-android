@@ -49,13 +49,13 @@ class CustomApplication : Application() {
 
 
     private fun initPrebidSDK() {
-//        PrebidMobile.setPbsDebug(true)
-        PrebidMobile.setApplicationContext(applicationContext)
+        AdTypesRepository.usePrebidServer()
+        PrebidMobile.initializeSdk(applicationContext, null)
         PrebidMobile.setShareGeoLocation(true)
     }
 
     private fun initAdMob() {
-        MobileAds.initialize(this) { status ->
+        MobileAds.initialize(this) {
             Log.d("MobileAds", "Initialization complete.")
         }
         val configuration = RequestConfiguration.Builder().setTestDeviceIds(
@@ -66,7 +66,7 @@ class CustomApplication : Application() {
 
     private fun initApplovinMax() {
         AppLovinSdk.getInstance(this).mediationProvider = "max"
-        AppLovinSdk.getInstance(this).initializeSdk { configuration: AppLovinSdkConfiguration -> }
+        AppLovinSdk.getInstance(this).initializeSdk { }
         AppLovinSdk.getInstance(this).settings.setVerboseLogging(false)
     }
 

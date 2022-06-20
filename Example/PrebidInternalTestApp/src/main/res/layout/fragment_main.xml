@@ -22,6 +22,20 @@
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true">
 
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switchEnableCaching"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:padding="5dp"
+        android:text="@string/enable_caching"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/listDemos"
+        app:layout_constraintEnd_toStartOf="@+id/toggleConfigurationButton"
+        app:layout_constraintStart_toEndOf="@+id/switchEnableGdpr"
+        app:switchPadding="18dp" />
+
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="0dp"

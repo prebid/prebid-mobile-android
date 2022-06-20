@@ -75,6 +75,6 @@ public class PrebidTest {
         expected.put("cache", cache);
         expected.put("targeting", new JSONObject());
 
-        assertEquals(expected.toString(), Prebid.getJsonObjectForBidRequest("test", false).toString());
+        assertEquals(expected.toString(), Prebid.getJsonObjectForBidRequest("test", false, true).toString());
     }
 }

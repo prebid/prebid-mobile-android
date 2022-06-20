@@ -44,7 +44,7 @@ public class VideoDialog extends AdBaseDialog {
             InterstitialManager interstitialManager,
             FrameLayout adViewContainer
     ) {
-        super(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen, interstitialManager);
+        super(context, interstitialManager);
         this.adViewContainer = adViewContainer;
         this.adViewManager = adViewManager;
         this.adViewContainer.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,

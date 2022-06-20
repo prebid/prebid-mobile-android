@@ -53,8 +53,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -127,7 +125,7 @@ public class BannerViewTest {
         changePrimaryAdServerRequestStatus(true);
         bannerView.loadAd();
 
-        verifyZeroInteractions(mockBidLoader);
+        verifyNoInteractions(mockBidLoader);
     }
 
     @Test

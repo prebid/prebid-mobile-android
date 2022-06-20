@@ -24,7 +24,6 @@ import org.robolectric.annotation.Config;
 
 import java.util.Queue;
 
-import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)

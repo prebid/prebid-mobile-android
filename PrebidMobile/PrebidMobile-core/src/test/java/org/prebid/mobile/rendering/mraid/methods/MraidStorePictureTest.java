@@ -36,7 +36,6 @@ import org.robolectric.annotation.Config;
 
 import java.lang.reflect.Method;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)

@@ -44,8 +44,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
@@ -148,7 +146,7 @@ public class DeviceInfoImplTest {
 
     @Test
     public void playVideoTest() {
-        deviceInfoImpl.playVideo("test");
+        deviceInfoImpl.playVideo("test", mockContext);
         verify(mockContext).startActivity(any(Intent.class));
     }
 

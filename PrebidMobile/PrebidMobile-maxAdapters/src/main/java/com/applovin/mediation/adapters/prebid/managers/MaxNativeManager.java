@@ -16,6 +16,7 @@ import com.applovin.mediation.adapters.prebid.ParametersChecker;
 import com.applovin.mediation.adapters.prebid.PrebidMaxNativeAd;
 import com.applovin.mediation.nativeAds.MaxNativeAd;
 import org.prebid.mobile.PrebidNativeAd;
+import org.prebid.mobile.rendering.bidding.events.EventsNotifier;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -40,6 +41,8 @@ public class MaxNativeManager {
         if (prebidNativeAd == null) {
             return;
         }
+
+        EventsNotifier.notify(prebidNativeAd.getWinEvent());
 
         MaxNativeAd maxNativeAd = createMaxNativeAd(prebidNativeAd, activity, maxListener);
         maxListener.onNativeAdLoaded(maxNativeAd, new Bundle());

@@ -27,9 +27,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import androidx.annotation.DrawableRes;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.mraid.handler.FetchPropertiesHandler;
 import org.prebid.mobile.rendering.utils.helpers.Dips;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
@@ -242,17 +244,21 @@ public class MraidResize {
         int left = screenMetrics.getDefaultAdRect().left + offsetX;
         int top = screenMetrics.getDefaultAdRect().top + offsetY;
         Rect resizeRect = new Rect(left, top, left + width, top + height);//new requested size
+
         if (!allowOffscreen) {
+            changeCloseButtonIcon(android.R.color.transparent);
+
             // Require the entire ad to be on-screen.
             Rect bounds = screenMetrics.getRootViewRect();
-            int rectWid = bounds.width();//max allowed size
-            int rectHei = bounds.height();
+            int maxAllowedWidth = bounds.width();
+            int maxAllowedHeight = bounds.height();
 
-            if (resizeRect.width() > rectWid || resizeRect.height() > rectHei) {
+            // 2 - possible offset after px to dp conversion
+            if (resizeRect.width() - 2 > maxAllowedWidth || resizeRect.height() - 2 > maxAllowedHeight) {
                 sendError(widthDips, heightDips, offsetXDips, offsetYDips);
                 jsInterface.onError(
-                        "Resize properties specified a size & offset that does not allow the ad to appear within the max allowed size",
-                        JSInterface.ACTION_RESIZE
+                    "Resize properties specified a size & offset that does not allow the ad to appear within the max allowed size",
+                    JSInterface.ACTION_RESIZE
                 );
                 return null;
             }
@@ -261,33 +267,36 @@ public class MraidResize {
             int newLeft = clampInt(bounds.left, resizeRect.left, bounds.right - resizeRect.width());
             int newTop = clampInt(bounds.top, resizeRect.top, bounds.bottom - resizeRect.height());
             resizeRect.offsetTo(newLeft, newTop);
-        }
 
-        // The entire close region must always be visible.
-        Rect closeRect = new Rect();
+            // The entire close region must always be visible.
+            Rect closeRect = new Rect();
 
-        Pair<Integer, Integer> closeViewWidthHeightPair = getCloseViewWidthHeight();
-        Gravity.apply(GRAVITY_TOP_RIGHT, closeViewWidthHeightPair.first, closeViewWidthHeightPair.second, resizeRect, closeRect);
-        if (!screenMetrics.getRootViewRect().contains(closeRect)) {
-            sendError(widthDips, heightDips, offsetXDips, offsetYDips);
-            jsInterface.onError(
+            Pair<Integer, Integer> closeViewWidthHeightPair = getCloseViewWidthHeight();
+            Gravity.apply(GRAVITY_TOP_RIGHT, closeViewWidthHeightPair.first, closeViewWidthHeightPair.second, resizeRect, closeRect);
+            if (!screenMetrics.getRootViewRect().contains(closeRect)) {
+                sendError(widthDips, heightDips, offsetXDips, offsetYDips);
+                jsInterface.onError(
                     "Resize properties specified a size & offset that does not allow the close region to appear within the max allowed size",
                     JSInterface.ACTION_RESIZE
-            );
-            return null;
-        }
+                );
+                return null;
+            }
 
-        if (!resizeRect.contains(closeRect)) {
-            String err = "ResizeProperties specified a size ("
-                         + widthDips + ", " + height + ") and offset ("
-                         + offsetXDips + ", " + offsetYDips + ") that don't allow the close region to appear "
-                         + "within the resized ad.";
-            LogUtil.error(TAG, err);
-            jsInterface.onError(
+            if (!resizeRect.contains(closeRect)) {
+                String err = "ResizeProperties specified a size ("
+                    + widthDips + ", " + height + ") and offset ("
+                    + offsetXDips + ", " + offsetYDips + ") that don't allow the close region to appear "
+                    + "within the resized ad.";
+                LogUtil.error(TAG, err);
+                jsInterface.onError(
                     "Resize properties specified a size & offset that does not allow the close region to appear within the resized ad",
                     JSInterface.ACTION_RESIZE
-            );
-            return null;
+                );
+                return null;
+            }
+        } else {
+            changeCloseButtonIcon(R.drawable.prebid_ic_close_interstitial);
+            calculateMarginsToPlaceCloseButtonInScreen(resizeRect);
         }
 
         return resizeRect;
@@ -338,11 +347,78 @@ public class MraidResize {
 
     private boolean isContainerStateInvalid(String state) {
         return TextUtils.isEmpty(state)
-               || state.equals(JSInterface.STATE_LOADING)
-               || state.equals(JSInterface.STATE_HIDDEN);
+            || state.equals(JSInterface.STATE_LOADING)
+            || state.equals(JSInterface.STATE_HIDDEN);
     }
 
-    private int clampInt(int min, int target, int max) {
+    private int clampInt(
+        int min,
+        int target,
+        int max
+    ) {
         return Math.max(min, Math.min(target, max));
     }
+
+    private void setCloseButtonMargins(
+        int left,
+        int top,
+        int right,
+        int bottom
+    ) {
+        adBaseView.post(() -> {
+            ViewGroup.LayoutParams layoutParams = closeView.getLayoutParams();
+            if (layoutParams instanceof FrameLayout.LayoutParams) {
+                ((FrameLayout.LayoutParams) layoutParams).setMargins(
+                    left,
+                    top,
+                    right,
+                    bottom
+                );
+                closeView.setLayoutParams(layoutParams);
+            }
+        });
+    }
+
+    private void changeCloseButtonIcon(@DrawableRes int resource) {
+        adBaseView.post(() -> {
+            if (closeView instanceof ImageView) {
+                ((ImageView) closeView).setImageResource(resource);
+            } else {
+                Log.e(TAG, "Close button isn't ImageView");
+            }
+        });
+    }
+
+    /**
+     * Calculates margins for close button to place it in screen boundaries.
+     * Margins are applied only when close button is out of screen in offscreen mode.
+     */
+    private void calculateMarginsToPlaceCloseButtonInScreen(Rect resizeRect) {
+        Rect closeRect = new Rect();
+        Pair<Integer, Integer> closeViewWidthHeightPair = getCloseViewWidthHeight();
+        Gravity.apply(GRAVITY_TOP_RIGHT, closeViewWidthHeightPair.first, closeViewWidthHeightPair.second, resizeRect, closeRect);
+        if (!screenMetrics.getRootViewRect().contains(closeRect)) {
+            Rect deviceRect = screenMetrics.getRootViewRect();
+
+            int marginTop = 0;
+            if (deviceRect.top > resizeRect.top) {
+                marginTop = deviceRect.top - resizeRect.top;
+            }
+
+            int marginRight = 0;
+            if (resizeRect.right > deviceRect.right) {
+                marginRight = resizeRect.right - deviceRect.right;
+            }
+
+            setCloseButtonMargins(
+                0,
+                marginTop,
+                marginRight,
+                0
+            );
+        } else {
+            setCloseButtonMargins(0, 0, 0, 0);
+        }
+    }
+
 }

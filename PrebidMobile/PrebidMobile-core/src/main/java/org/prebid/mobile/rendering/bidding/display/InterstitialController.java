@@ -33,6 +33,8 @@ public class InterstitialController {
 
     private static final String TAG = InterstitialController.class.getSimpleName();
 
+    private String impressionEventUrl;
+
     private final InterstitialView bidInterstitialView;
     private final InterstitialControllerListener listener;
     private AdFormat adUnitIdentifierType;
@@ -40,8 +42,8 @@ public class InterstitialController {
     private final InterstitialViewListener interstitialViewListener = new InterstitialViewListener() {
         @Override
         public void onAdLoaded(
-                InterstitialView interstitialView,
-                AdDetails adDetails
+            InterstitialView interstitialView,
+            AdDetails adDetails
         ) {
             LogUtil.debug(TAG, "onAdLoaded");
             if (listener != null) {
@@ -103,9 +105,11 @@ public class InterstitialController {
     }
 
     public void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
+        adUnitConfiguration.modifyUsingBidResponse(bidResponse);
         setRenderingControlSettings(adUnitConfiguration, bidResponse);
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(bidResponse, () -> {
+            impressionEventUrl = bidResponse.getImpressionEventUrl();
             adUnitIdentifierType = bidResponse.isVideo() ? AdFormat.VAST : AdFormat.INTERSTITIAL;
             adUnitConfiguration.setAdFormat(adUnitIdentifierType);
             bidInterstitialView.loadAd(adUnitConfiguration, bidResponse);
