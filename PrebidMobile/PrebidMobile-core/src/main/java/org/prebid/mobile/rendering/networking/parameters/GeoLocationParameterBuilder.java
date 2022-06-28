@@ -16,10 +16,22 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
+import static org.prebid.mobile.PrebidMobile.getApplicationContext;
+
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.telephony.TelephonyManager;
+
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.geo.Geo;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.LocationInfoManager;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class GeoLocationParameterBuilder extends ParameterBuilder {
 
@@ -54,6 +66,40 @@ public class GeoLocationParameterBuilder extends ParameterBuilder {
             geo.lat = latitude.floatValue();
             geo.lon = longitude.floatValue();
             geo.type = LOCATION_SOURCE_GPS;
+            try {
+
+                geo.country = getTelephonyCountry(locationInfoManager.getContext());
+
+                if(geo.country.equals("")){
+                    Locale locale = getApplicationContext().getResources().getConfiguration().locale;
+                    geo.country = locale.getISO3Country();
+                }
+
+                if(geo.country.equals("")){
+                    Geocoder geoCoder = new Geocoder(locationInfoManager.getContext());
+                    List<Address> list = geoCoder.getFromLocation(locationInfoManager.getLatitude(), locationInfoManager.getLongitude(), 1);
+                    geo.country = list.get(0).getCountryCode();
+                }
+
+            }catch(Throwable thr){
+                LogUtil.debug("Error getting country code");
+            }
         }
+    }
+
+    private String getTelephonyCountry(Context ctx){
+        TelephonyManager tm = (TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE);
+
+        if(tm != null) {
+            String simCountry = tm.getSimCountryIso().toUpperCase();
+            String networkCountry = tm.getNetworkCountryIso().toUpperCase();
+
+            if (!simCountry.equals("")) {
+                return simCountry;
+            } else if (!networkCountry.equals("")) {
+                return networkCountry;
+            }
+        }
+        return "";
     }
 }
