@@ -58,7 +58,7 @@ android {
 
     buildTypes {
         debug {
-            minifyEnabled false
+            minifyEnabled true
         }
     }
 
@@ -67,7 +67,6 @@ android {
         prod {
 
         }
-
     }
     testOptions {
         animationsDisabled = true
