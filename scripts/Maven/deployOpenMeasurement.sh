@@ -29,7 +29,7 @@ rm -r "$DEPLOY_DIR_ABSOLUTE" || true
 mkdir "$DEPLOY_DIR_ABSOLUTE"
 
 cd ..
-sh ./buildPrebidMobile.sh
+bash ./buildPrebidMobile.sh
 cp -r ../generated/* "$DEPLOY_DIR_ABSOLUTE" || true
 
 mavenDeploy $"$BASE_DIR/PrebidMobile-open-measurement-pom.xml" $"$DEPLOY_DIR_ABSOLUTE/omsdk.jar" $"$BASE_DIR/stub.jar" $"$BASE_DIR/stub.jar"
