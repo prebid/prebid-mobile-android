@@ -10,14 +10,16 @@ android {
         targetSdkVersion rootProject.targetSDKVersion
         versionCode rootProject.prebidVersionCode
         versionName rootProject.prebidVersionName
-        consumerProguardFiles file('proguard-rules.pro')
     }
 
     buildTypes {
-        release {
-            minifyEnabled false
-//            minifyEnabled true
+        debug {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            consumerProguardFiles file('proguard-rules.pro')
+        }
+        release {
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            consumerProguardFiles file('proguard-rules.pro')
         }
     }
 

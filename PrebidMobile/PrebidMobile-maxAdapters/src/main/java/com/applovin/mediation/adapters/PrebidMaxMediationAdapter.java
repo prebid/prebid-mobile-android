@@ -1,7 +1,7 @@
 package com.applovin.mediation.adapters;
 
 import android.app.Activity;
-import androidx.annotation.Keep;
+
 import com.applovin.mediation.MaxAdFormat;
 import com.applovin.mediation.adapter.MaxAdViewAdapter;
 import com.applovin.mediation.adapter.MaxInterstitialAdapter;
@@ -17,12 +17,12 @@ import com.applovin.mediation.adapters.prebid.managers.MaxBannerManager;
 import com.applovin.mediation.adapters.prebid.managers.MaxInterstitialManager;
 import com.applovin.mediation.adapters.prebid.managers.MaxNativeManager;
 import com.applovin.sdk.AppLovinSdk;
+
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.api.exceptions.InitError;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 
-@Keep
 public class PrebidMaxMediationAdapter extends MediationAdapterBase implements MaxAdViewAdapter, MaxInterstitialAdapter, MaxRewardedAdapter, MaxNativeAdAdapter {
 
     public static final String TAG = PrebidMaxMediationAdapter.class.getSimpleName();

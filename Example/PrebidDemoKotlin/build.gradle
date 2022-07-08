@@ -15,9 +15,8 @@ android {
         multiDexEnabled true
     }
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
@@ -36,10 +35,10 @@ dependencies {
     implementation project(':PrebidMobile-maxAdapters')
 
     // For testing staging releases
-//    implementation 'org.prebid:prebid-mobile-sdk:2.0.1'
-//    implementation 'org.prebid:prebid-mobile-sdk-gam-event-handlers:2.0.1'
-//    implementation 'org.prebid:prebid-mobile-sdk-admob-adapters:2.0.1'
-//    implementation 'org.prebid:prebid-mobile-sdk-max-adapters:2.0.1'
+//    implementation 'org.prebid:prebid-mobile-sdk:2.0.2'
+//    implementation 'org.prebid:prebid-mobile-sdk-gam-event-handlers:2.0.2'
+//    implementation 'org.prebid:prebid-mobile-sdk-admob-adapters:2.0.2'
+//    implementation 'org.prebid:prebid-mobile-sdk-max-adapters:2.0.2'
 
     // Standard libraries
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
