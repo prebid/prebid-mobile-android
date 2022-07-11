@@ -36,7 +36,7 @@ rm -r "$DEPLOY_DIR_ABSOLUTE" || true
 mkdir "$DEPLOY_DIR_ABSOLUTE"
 
 cd ..
-sh ./buildPrebidMobile.sh
+bash ./buildPrebidMobile.sh
 
 cp -r ../generated/* "$DEPLOY_DIR_ABSOLUTE" || true
 

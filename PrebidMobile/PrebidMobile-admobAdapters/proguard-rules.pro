@@ -1,0 +1,1 @@
+-keep class org.prebid.mobile.admob.*Adapter

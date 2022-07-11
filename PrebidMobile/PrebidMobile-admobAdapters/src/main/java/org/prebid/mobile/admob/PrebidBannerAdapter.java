@@ -3,14 +3,16 @@ package org.prebid.mobile.admob;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
-import androidx.annotation.Keep;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.mediation.MediationAdRequest;
 import com.google.android.gms.ads.mediation.customevent.CustomEventBanner;
 import com.google.android.gms.ads.mediation.customevent.CustomEventBannerListener;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.ParametersMatcher;
 import org.prebid.mobile.api.data.AdFormat;
@@ -23,7 +25,6 @@ import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
 import java.util.HashMap;
 
-@Keep
 public class PrebidBannerAdapter extends PrebidBaseAdapter implements CustomEventBanner {
 
     private static final String TAG = "PrebidBannerAdapter";

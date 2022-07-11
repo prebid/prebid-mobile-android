@@ -36,8 +36,6 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
-//            minifyEnabled true
-//            proguardFiles 'proguard-rules.pro'
         }
     }
     buildFeatures {
@@ -50,7 +48,7 @@ dependencies {
     implementation project(':PrebidMobile')
 
     // For testing staging releases
-//    implementation 'org.prebid:prebid-mobile-sdk:2.0.1'
+//    implementation 'org.prebid:prebid-mobile-sdk:2.0.2'
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.gms:play-services-ads:20.4.0'
