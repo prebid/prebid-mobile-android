@@ -23,7 +23,9 @@ import android.location.LocationManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -41,6 +43,7 @@ public class GeoLocationParameterBuilderTest {
 
     @Before
     public void setUp() throws Exception {
+        PrebidMobile.setShareGeoLocation(true);
         Activity robolectricActivity = Robolectric.buildActivity(Activity.class).create().get();
         ShadowActivity shadowActivity = shadowOf(robolectricActivity);
         shadowActivity.grantPermissions("android.permission.ACCESS_FINE_LOCATION");
@@ -86,5 +89,16 @@ public class GeoLocationParameterBuilderTest {
         builder.appendBuilderParameters(adRequestInput);
 
         assertEquals("{\"lat\":1,\"lon\":-1,\"type\":1}", adRequestInput.getBidRequest().getDevice().getGeo().getJsonObject().toString());
+    }
+
+    @Test
+    public void testDoNotSendGeoWhenGeoFlagIsFalse() throws Exception {
+        PrebidMobile.setShareGeoLocation(false);
+
+        GeoLocationParameterBuilder builder = new GeoLocationParameterBuilder();
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        assertEquals(new Geo().getJsonObject().toString(), adRequestInput.getBidRequest().getDevice().getGeo().getJsonObject().toString());
     }
 }
