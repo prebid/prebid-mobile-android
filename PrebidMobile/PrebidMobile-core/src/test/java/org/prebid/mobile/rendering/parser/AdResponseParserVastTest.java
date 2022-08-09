@@ -268,15 +268,51 @@ public class AdResponseParserVastTest {
         assertEquals(1, tempVast.getVast().getAds().get(0).getWrapper()
                                 .getCreatives().get(0).getLinear().getTrackingEvents().size());
         assertEquals("creativeView", tempVast.getVast().getAds().get(0).getWrapper()
-                                             .getCreatives().get(0).getLinear().getTrackingEvents().get(0).getEvent());
+                .getCreatives().get(0).getLinear().getTrackingEvents().get(0).getEvent());
         assertEquals("http://myTrackingURL/wrapper/creativeView", tempVast.getVast().getAds().get(0).getWrapper()
-                                                                          .getCreatives().get(0).getLinear().getTrackingEvents().get(0).getValue());
+                .getCreatives().get(0).getLinear().getTrackingEvents().get(0).getValue());
 
         assertEquals("http://myTrackingURL/wrapper/click", tempVast.getVast().getAds().get(0).getWrapper()
-                                                                   .getCreatives().get(1).getLinear().getVideoClicks().getClickTrackings().get(0).getValue());
+                .getCreatives().get(1).getLinear().getVideoClicks().getClickTrackings().get(0).getValue());
 
         assertEquals(0, tempVast.getVast().getAds().get(0).getWrapper()
-                                .getCreatives().get(2).getNonLinearAds().getTrackingEvents().size());
+                .getCreatives().get(2).getNonLinearAds().getTrackingEvents().size());
+        assertEquals("samplexmlEncoded", tempVast.getVast().getAds().get(0).getWrapper().getCreatives().get(0).getLinear().getAdParameters().getXmlEncoded());
+        assertNull(tempVast.getVast().getAds().get(0).getWrapper().getCreatives().get(1).getLinear().getAdParameters());
+    }
+
+    @Test
+    public void testWrapperWithNoAds() throws Exception {
+        String vastXML = ResourceUtils.convertResourceToString(VAST_WRAPPER_LINEAR_NONLINEAR);
+        AdResponseParserVastHelper mainVast = new AdResponseParserVastHelper(vastXML);
+
+        AdResponseParserVastHelper tempVast = new AdResponseParserVastHelper(vastXML);
+
+        assertNotNull(mainVast.getVastUrl());
+        assertEquals("http://SecondaryAdServer.vast.tag", mainVast.getVastUrl());
+        assertNotNull(tempVast.getImpressionEvents(mainVast.getVast(), 0));
+        assertEquals("Acudeo Compatible", tempVast.getVast().getAds().get(0).getWrapper().getAdSystem().getValue());
+        assertEquals("http://SecondaryAdServer.vast.tag", tempVast.getVast().getAds().get(0).getWrapper().getVastUrl().getValue());
+        assertEquals("http://myErrorURL/wrapper/error", tempVast.getVast().getAds().get(0).getWrapper().getError()
+                .getValue());
+        assertEquals("http://myTrackingURL/wrapper/impression", tempVast.getVast().getAds().get(0).getWrapper()
+                .getImpressions().get(0).getValue());
+
+        assertEquals("602833", tempVast.getVast().getAds().get(0).getWrapper()
+                .getCreatives().get(0).getAdID());
+
+        assertEquals(1, tempVast.getVast().getAds().get(0).getWrapper()
+                .getCreatives().get(0).getLinear().getTrackingEvents().size());
+        assertEquals("creativeView", tempVast.getVast().getAds().get(0).getWrapper()
+                .getCreatives().get(0).getLinear().getTrackingEvents().get(0).getEvent());
+        assertEquals("http://myTrackingURL/wrapper/creativeView", tempVast.getVast().getAds().get(0).getWrapper()
+                .getCreatives().get(0).getLinear().getTrackingEvents().get(0).getValue());
+
+        assertEquals("http://myTrackingURL/wrapper/click", tempVast.getVast().getAds().get(0).getWrapper()
+                .getCreatives().get(1).getLinear().getVideoClicks().getClickTrackings().get(0).getValue());
+
+        assertEquals(0, tempVast.getVast().getAds().get(0).getWrapper()
+                .getCreatives().get(2).getNonLinearAds().getTrackingEvents().size());
         assertEquals("samplexmlEncoded", tempVast.getVast().getAds().get(0).getWrapper().getCreatives().get(0).getLinear().getAdParameters().getXmlEncoded());
         assertNull(tempVast.getVast().getAds().get(0).getWrapper().getCreatives().get(1).getLinear().getAdParameters());
     }
@@ -750,6 +786,7 @@ public class AdResponseParserVastTest {
         }
         assertNull(vastParserHelper.getVast().getAds());
         assertNull(error);
+        assertNull(vastParserHelper.getVastUrl());
     }
 
     @Test

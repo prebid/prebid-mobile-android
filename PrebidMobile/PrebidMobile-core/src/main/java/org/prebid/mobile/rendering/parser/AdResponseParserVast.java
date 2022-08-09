@@ -199,14 +199,14 @@ public class AdResponseParserVast extends AdResponseParserBase {
     }
 
     public String getVastUrl() {
+        if (vast.getAds() != null)
+            for (Ad ad : vast.getAds()) {
 
-        for (Ad ad : vast.getAds()) {
+                if (ad.getWrapper() != null && ad.getWrapper().getVastUrl() != null) {
 
-            if (ad.getWrapper() != null && ad.getWrapper().getVastUrl() != null) {
-
-                return ad.getWrapper().getVastUrl().getValue();
+                    return ad.getWrapper().getVastUrl().getValue();
+                }
             }
-        }
         return null;
     }
 
