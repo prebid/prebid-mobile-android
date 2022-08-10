@@ -29,6 +29,7 @@ import org.prebid.mobile.rendering.networking.ResponseHandler;
 import org.prebid.mobile.rendering.networking.modelcontrollers.AsyncVastLoader;
 import org.prebid.mobile.rendering.parser.AdResponseParserBase;
 import org.prebid.mobile.rendering.parser.AdResponseParserVast;
+import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.video.vast.VASTErrorCodes;
 
 public class VastParserExtractor {
@@ -82,7 +83,7 @@ public class VastParserExtractor {
     }
 
     private void performVastUnwrap(String vast) {
-        if (!vast.contains("VAST version")) {
+        if (!Utils.isVast(vast)) {
             final AdException adException = new AdException(AdException.INTERNAL_ERROR, VASTErrorCodes.VAST_SCHEMA_ERROR.toString());
             listener.onResult(createExtractorFailureResult(adException));
             return;
