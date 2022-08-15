@@ -112,13 +112,14 @@ public class ExoPlayerViewTest {
 
         verify(mockVideoCreative).onEvent(VideoAdEvent.Event.AD_CREATIVEVIEW);
         verify(mockVideoCreative).onEvent(VideoAdEvent.Event.AD_START);
-        verify(mockSimpleExoPlayer).prepare(any(MediaSource.class), anyBoolean(), anyBoolean());
+        verify(mockSimpleExoPlayer).setMediaSource(any(MediaSource.class), anyBoolean());
+        verify(mockSimpleExoPlayer).prepare();
     }
 
     @Test
     public void setVastVideoDuration() {
-        exoPlayerView.setVastVideoDuration(1000l);
-        verify(exoPlayerView).setVastVideoDuration(1000l);
+        exoPlayerView.setVastVideoDuration(1000L);
+        verify(exoPlayerView).setVastVideoDuration(1000L);
     }
 
     @Test
@@ -163,7 +164,7 @@ public class ExoPlayerViewTest {
         exoPlayerView.destroy();
         verify(mockAdViewProgressUpdateTask).cancel(true);
         verify(exoPlayerView, times(1)).destroy();
-        verify(mockSimpleExoPlayer).removeListener(any(Player.EventListener.class));
+        verify(mockSimpleExoPlayer).removeListener(any(Player.Listener.class));
         verify(exoPlayerView).setPlayer(null);
         verify(mockSimpleExoPlayer).release();
     }
@@ -181,7 +182,8 @@ public class ExoPlayerViewTest {
         exoPlayerView.setVideoUri(Uri.EMPTY);
         exoPlayerView.resume();
 
-        verify(mockSimpleExoPlayer).prepare(any(MediaSource.class), anyBoolean(), anyBoolean());
+        verify(mockSimpleExoPlayer).setMediaSource(any(MediaSource.class), anyBoolean());
+        verify(mockSimpleExoPlayer).prepare();
     }
 
     @Test
