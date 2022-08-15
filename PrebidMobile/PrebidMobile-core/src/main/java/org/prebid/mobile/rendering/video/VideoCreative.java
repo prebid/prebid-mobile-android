@@ -336,7 +336,7 @@ public class VideoCreative extends VideoCreativeProtocol
             videoCreativeView.setBroadcastId(adConfiguration.getBroadcastId());
 
             // Get the preloaded video from device file storage
-            videoUri = Uri.parse(context.getFilesDir() + (model.getMediaUrl()));
+            videoUri = Uri.fromFile(new File(context.getFilesDir() + (model.getMediaUrl())));
         }
 
         // Show call-to-action overlay right away if click through url is available & end card is not available
@@ -393,7 +393,6 @@ public class VideoCreative extends VideoCreativeProtocol
     protected void showCallToAction() {
         if (!model.getAdConfiguration().isBuiltInVideo()
             && Utils.isNotBlank(model.getVastClickthroughUrl())
-            && !model.getAdConfiguration().isRewarded()
         ) {
             videoCreativeView.showCallToAction();
         }

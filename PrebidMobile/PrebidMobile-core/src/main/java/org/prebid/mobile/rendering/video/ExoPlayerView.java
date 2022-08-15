@@ -19,16 +19,20 @@ package org.prebid.mobile.rendering.video;
 import android.content.Context;
 import android.net.Uri;
 import android.widget.RelativeLayout;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayerFactory;
+
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.listeners.VideoCreativeViewListener;
@@ -41,7 +45,7 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
 
     @NonNull private final VideoCreativeViewListener videoCreativeViewListener;
     private AdViewProgressUpdateTask adViewProgressUpdateTask;
-    private SimpleExoPlayer player;
+    private ExoPlayer player;
 
     private Uri videoUri;
 
@@ -55,10 +59,10 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
         this.videoCreativeViewListener = videoCreativeViewListener;
     }
 
-    private final Player.EventListener eventListener = new Player.EventListener() {
+    private final Player.Listener eventListener = new Player.Listener() {
 
         @Override
-        public void onPlayerError(ExoPlaybackException error) {
+        public void onPlayerError(PlaybackException error) {
             videoCreativeViewListener.onFailure(new AdException(
                     AdException.INTERNAL_ERROR,
                     VASTErrorCodes.MEDIA_DISPLAY_ERROR.toString()
@@ -66,10 +70,7 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
         }
 
         @Override
-        public void onPlayerStateChanged(
-                boolean playWhenReady,
-                int playbackState
-        ) {
+        public void onPlaybackStateChanged(int playbackState) {
             if (player == null) {
                 LogUtil.debug(TAG, "onPlayerStateChanged(): Skipping state handling. Player is null");
                 return;
@@ -184,13 +185,14 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
     @Override
     public void stop() {
         if (player != null) {
-            player.stop(true);
+            player.stop();
+            player.clearMediaItems();
         }
     }
 
     private void initLayout() {
         RelativeLayout.LayoutParams playerLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                                                                                         RelativeLayout.LayoutParams.MATCH_PARENT);
+                RelativeLayout.LayoutParams.MATCH_PARENT);
         playerLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         setLayoutParams(playerLayoutParams);
     }
@@ -200,9 +202,9 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
             LogUtil.debug(TAG, "Skipping initPlayer(): Player is already initialized.");
             return;
         }
-        player = ExoPlayerFactory.newSimpleInstance(getContext());
+        player = new SimpleExoPlayer.Builder(getContext()).build();
         player.addListener(eventListener);
-        setPlayer(player);
+        setPlayer(this.player);
         setUseController(false);
         player.setVolume(initialVolume);
     }
@@ -228,21 +230,23 @@ public class ExoPlayerView extends PlayerView implements VideoPlayerView {
 
     @VisibleForTesting
     void preparePlayer(boolean resetPosition) {
-        ExtractorMediaSource extractorMediaSource = buildMediaSource(videoUri);
+        ProgressiveMediaSource extractorMediaSource = buildMediaSource(videoUri);
         if (extractorMediaSource == null || player == null) {
             LogUtil.debug(TAG, "preparePlayer(): ExtractorMediaSource or SimpleExoPlayer is null. Skipping prepare.");
             return;
         }
-        player.prepare(extractorMediaSource, resetPosition, true);
+        player.setMediaSource(extractorMediaSource, resetPosition);
+        player.prepare();
     }
 
-    private ExtractorMediaSource buildMediaSource(Uri uri) {
+    private ProgressiveMediaSource buildMediaSource(Uri uri) {
         if (uri == null) {
             return null;
         }
-        return new ExtractorMediaSource.Factory(
-            new DefaultDataSourceFactory(getContext(), Util.getUserAgent(getContext(), "PrebidRenderingSDK")))
-            .createMediaSource(uri);
+        MediaItem mediaItem = new MediaItem.Builder().setUri(uri).build();
+        return new ProgressiveMediaSource.Factory(
+                new DefaultDataSourceFactory(getContext(), Util.getUserAgent(getContext(), "PrebidRenderingSDK")))
+                .createMediaSource(mediaItem);
     }
 
     private void killUpdateTask() {
