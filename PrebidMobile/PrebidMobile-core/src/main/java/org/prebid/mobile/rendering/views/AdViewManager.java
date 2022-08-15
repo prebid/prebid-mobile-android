@@ -21,6 +21,7 @@ import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -378,8 +379,7 @@ public class AdViewManager implements CreativeViewListener, TransactionManagerLi
     private void handleVideoCreativeComplete(AbstractCreative creative) {
         Transaction transaction = transactionManager.getCurrentTransaction();
         boolean isBuiltInVideo = creative.isBuiltInVideo();
-        if(hasEndCard())
-            closeInterstitial();
+        closeInterstitial();
 
         if (transactionManager.hasNextCreative() && adView != null) {
 

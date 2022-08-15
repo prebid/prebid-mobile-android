@@ -21,8 +21,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+
 import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -392,7 +394,8 @@ public class VideoCreative extends VideoCreativeProtocol
 
     protected void showCallToAction() {
         if (!model.getAdConfiguration().isBuiltInVideo()
-            && Utils.isNotBlank(model.getVastClickthroughUrl())
+                && Utils.isNotBlank(model.getVastClickthroughUrl())
+                && !model.getAdConfiguration().isRewarded()
         ) {
             videoCreativeView.showCallToAction();
         }
