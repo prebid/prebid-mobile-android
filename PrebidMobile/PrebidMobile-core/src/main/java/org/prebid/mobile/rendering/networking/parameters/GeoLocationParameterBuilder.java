@@ -16,6 +16,7 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
+import org.prebid.mobile.PrebidMobile;
 import static org.prebid.mobile.PrebidMobile.getApplicationContext;
 
 import android.content.Context;
@@ -45,7 +46,7 @@ public class GeoLocationParameterBuilder extends ParameterBuilder {
         // Strictly ignore publisher geo values
         adRequestInput.getBidRequest().getDevice().setGeo(null);
 
-        if (locationInfoManager != null) {
+        if (locationInfoManager != null && PrebidMobile.isShareGeoLocation()) {
             if (deviceManager != null && deviceManager.isPermissionGranted("android.permission.ACCESS_FINE_LOCATION")) {
                 setLocation(adRequestInput, locationInfoManager);
             }
