@@ -132,9 +132,21 @@ public class BasicParameterBuilder extends ParameterBuilder {
     }
 
     private void configureSource(Source source, String uuid) {
+        String userDefinedPartnerName = TargetingParams.getOmidPartnerName();
+        String userDefinedPartnerVersion = TargetingParams.getOmidPartnerVersion();
+        String usedPartnerName = OmAdSessionManager.PARTNER_NAME;
+        String usedPartnerVersion = OmAdSessionManager.PARTNER_VERSION;
+
+        if (userDefinedPartnerName != null && !userDefinedPartnerName.isEmpty()) {
+            usedPartnerName = userDefinedPartnerName;
+        }
+        if (userDefinedPartnerVersion != null && !userDefinedPartnerVersion.isEmpty()) {
+            usedPartnerVersion = userDefinedPartnerVersion;
+        }
+
         source.setTid(uuid);
-        source.getExt().put(KEY_OM_PARTNER_NAME, OmAdSessionManager.PARTNER_NAME);
-        source.getExt().put(KEY_OM_PARTNER_VERSION, OmAdSessionManager.PARTNER_VERSION);
+        source.getExt().put(KEY_OM_PARTNER_NAME, usedPartnerName);
+        source.getExt().put(KEY_OM_PARTNER_VERSION, usedPartnerVersion);
     }
 
     private void appendUserTargetingParameters(AdRequestInput adRequestInput) {

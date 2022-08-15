@@ -29,6 +29,7 @@ import com.iab.omid.library.prebidorg.adsession.media.MediaEvents;
 import com.iab.omid.library.prebidorg.adsession.media.Position;
 import com.iab.omid.library.prebidorg.adsession.media.VastProperties;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.rendering.models.TrackingEvent;
 import org.prebid.mobile.rendering.models.internal.InternalFriendlyObstruction;
@@ -401,9 +402,20 @@ public class OmAdSessionManager {
      */
     private void initPartner() {
         try {
-            partner = Partner.createPartner(PARTNER_NAME, PARTNER_VERSION);
-        }
-        catch (IllegalArgumentException e) {
+            String userDefinedPartnerName = TargetingParams.getOmidPartnerName();
+            String userDefinedPartnerVersion = TargetingParams.getOmidPartnerVersion();
+            String usedPartnerName = PARTNER_NAME;
+            String usedPartnerVersion = PARTNER_VERSION;
+
+            if (userDefinedPartnerName != null && !userDefinedPartnerName.isEmpty()) {
+                usedPartnerName = userDefinedPartnerName;
+            }
+            if (userDefinedPartnerVersion != null && !userDefinedPartnerVersion.isEmpty()) {
+                usedPartnerVersion = userDefinedPartnerVersion;
+            }
+
+            partner = Partner.createPartner(usedPartnerName, usedPartnerVersion);
+        } catch (IllegalArgumentException e) {
             LogUtil.error(TAG, "Failed to initPartner. Reason: " + Log.getStackTraceString(e));
         }
     }
