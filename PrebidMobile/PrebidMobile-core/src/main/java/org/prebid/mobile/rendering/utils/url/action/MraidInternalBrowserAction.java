@@ -20,7 +20,9 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+
 import androidx.annotation.VisibleForTesting;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.models.internal.MraidVariableContainer;
@@ -79,6 +81,7 @@ public class MraidInternalBrowserAction implements UrlAction {
                     LogUtil.debug(TAG, "Redirection succeeded");
 
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     try {
                         ExternalViewerUtils.startActivity(context.getApplicationContext(), intent);
                     } catch (ActivityNotFoundException e) {
