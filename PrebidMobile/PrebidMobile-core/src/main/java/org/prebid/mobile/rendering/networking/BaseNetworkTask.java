@@ -236,7 +236,11 @@ public class BaseNetworkTask
     }
 
     private URLConnection setHttpURLConnectionProperty(GetUrlParams param) throws Exception {
-        URL url = new URL(param.url);
+        String queryParams = "";
+        if (param.requestType.equals("GET") && param.queryParams != null) {
+            queryParams = "?" + param.queryParams;
+        }
+        URL url = new URL(param.url + queryParams);
         connection = url.openConnection();
         if (connection instanceof HttpURLConnection) {
             ((HttpURLConnection) connection).setRequestMethod(param.requestType);
