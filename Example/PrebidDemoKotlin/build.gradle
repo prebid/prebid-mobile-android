@@ -35,10 +35,10 @@ dependencies {
     implementation project(':PrebidMobile-maxAdapters')
 
     // For testing staging releases
-//    implementation 'org.prebid:prebid-mobile-sdk:2.0.2'
-//    implementation 'org.prebid:prebid-mobile-sdk-gam-event-handlers:2.0.2'
-//    implementation 'org.prebid:prebid-mobile-sdk-admob-adapters:2.0.2'
-//    implementation 'org.prebid:prebid-mobile-sdk-max-adapters:2.0.2'
+//    implementation "org.prebid:prebid-mobile-sdk:$prebidVersionName"
+//    implementation "org.prebid:prebid-mobile-sdk-gam-event-handlers:$prebidVersionName"
+//    implementation "org.prebid:prebid-mobile-sdk-admob-adapters:$prebidVersionName"
+//    implementation "org.prebid:prebid-mobile-sdk-max-adapters:$prebidVersionName"
 
     // Standard libraries
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
