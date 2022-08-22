@@ -17,6 +17,8 @@
 package org.prebid.mobile.rendering.networking.parameters;
 
 import android.os.Build;
+
+import org.json.JSONObject;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
@@ -74,6 +76,14 @@ public class DeviceInfoParameterBuilder extends ParameterBuilder {
             final AdSize minSizePercentage = adConfiguration.getMinSizePercentage();
             if (minSizePercentage != null) {
                 device.getExt().put("prebid", Prebid.getJsonObjectForDeviceMinSizePerc(minSizePercentage));
+            }
+
+            String oaid = AdIdManager.getOaId();
+            if (Utils.isNotBlank(oaid)) {
+                JSONObject jsonOAID = new JSONObject();
+                Utils.addValue(jsonOAID, "oaid", oaid);
+                Utils.addValue(jsonOAID, "limitTracking", AdIdManager.isOaidLimitAdTrackingEnabled()? 1 : 0);
+                device.getExt().put("data",jsonOAID);
             }
         }
     }
