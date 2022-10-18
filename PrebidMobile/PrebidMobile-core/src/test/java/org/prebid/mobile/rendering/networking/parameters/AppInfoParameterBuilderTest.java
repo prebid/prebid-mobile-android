@@ -65,9 +65,11 @@ public class AppInfoParameterBuilderTest {
 
         final String expectedStoreurl = "https://google.play.com";
         final String expectedPublisherName = "prebid";
+        final String expectedDomain = "test_domain";
 
         TargetingParams.setPublisherName(expectedPublisherName);
         TargetingParams.setStoreUrl(expectedStoreurl);
+        TargetingParams.setDomain(expectedDomain);
 
         builder.appendBuilderParameters(adRequestInput);
 
@@ -78,6 +80,7 @@ public class AppInfoParameterBuilderTest {
         expectedApp.storeurl = expectedStoreurl;
         expectedApp.getPublisher().id = PrebidMobile.getPrebidServerAccountId();
         expectedApp.getPublisher().name = expectedPublisherName;
+        expectedApp.domain = expectedDomain;
         expectedApp.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidMobile.SDK_VERSION));
         ContentObject expectedContentObject = new ContentObject();
         expectedContentObject.setUrl("test.com");
