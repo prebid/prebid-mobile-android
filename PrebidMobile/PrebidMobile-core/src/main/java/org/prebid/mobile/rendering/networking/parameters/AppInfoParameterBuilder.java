@@ -65,6 +65,11 @@ public class AppInfoParameterBuilder extends ParameterBuilder {
             app.getPublisher().name = publisherName;
         }
 
+        String domain = TargetingParams.getDomain();
+        if (Utils.isNotBlank(domain)) {
+            app.domain = domain;
+        }
+
         app.contentObject = adConfiguration.getAppContent();
 
         app.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidMobile.SDK_VERSION));
