@@ -39,6 +39,7 @@ import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
 import org.prebid.mobile.ExternalUserId
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener
 import org.prebid.mobile.renderingtestapp.plugplay.utilities.consent.ConsentUpdateManager
@@ -70,12 +71,23 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         setContentView(R.layout.activity_main)
-
+        addParametersFromCommandLine()
         initUi()
 
         handleLaunchOptions()
 
         PermissionHelper.requestPermission(this)
+    }
+
+    private fun addParametersFromCommandLine() {
+        val geo = intent.extras?.getBoolean("shareGeo")
+        val domain = intent.extras?.getString("targetingDomain")
+        geo?.let { shareGeo ->
+            PrebidMobile.setShareGeoLocation(shareGeo)
+        }
+        domain?.let { targetingDomain ->
+            TargetingParams.setDomain(targetingDomain)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
