@@ -27,6 +27,7 @@ import com.applovin.sdk.AppLovinSdk
 import com.applovin.sdk.AppLovinSdkConfiguration
 import org.prebid.mobile.Host
 import org.prebid.mobile.PrebidMobile
+import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.renderingtestapp.utils.DemoItemProvider
 import org.prebid.mobile.renderingtestapp.utils.SourcePicker
 
@@ -52,7 +53,6 @@ class InternalTestApplication : MultiDexApplication() {
         // Setup mock responses only in mock build
 
         DemoItemProvider.init(this)
-
         // Only uncomment while testing memory leaks
         checkKeepConsentSettingsFlag()
         WebView.setWebContentsDebuggingEnabled(true)
