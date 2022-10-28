@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "org.prebid.mobile.javademo"
-        minSdkVersion rootProject.minSDKVersion
+        minSdkVersion 19
         targetSdkVersion rootProject.targetSDKVersion
         versionCode rootProject.prebidVersionCode
         versionName rootProject.prebidVersionName
@@ -41,6 +41,9 @@ android {
     buildFeatures {
         dataBinding true
     }
+    packagingOptions {
+        exclude("META-INF/*.kotlin_module")
+    }
 }
 
 dependencies {
@@ -51,7 +54,7 @@ dependencies {
 //    implementation "org.prebid:prebid-mobile-sdk:$prebidVersionName"
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.gms:play-services-ads:20.4.0'
+    implementation 'com.google.android.gms:play-services-ads:21.3.0'
     implementation 'com.google.android.exoplayer:exoplayer:2.13.3'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.13.3'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.13.3'

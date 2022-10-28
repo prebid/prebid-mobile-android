@@ -66,7 +66,7 @@
         <dependency>
             <groupId>com.google.android.gms</groupId>
             <artifactId>play-services-base</artifactId>
-            <version>18.0.1</version>
+            <version>18.1.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -85,6 +85,12 @@
             <groupId>com.google.android.exoplayer</groupId>
             <artifactId>exoplayer-ui</artifactId>
             <version>2.13.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>androidx.localbroadcastmanager</groupId>
+            <artifactId>localbroadcastmanager</artifactId>
+            <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

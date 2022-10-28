@@ -29,7 +29,7 @@ object InAppAdMobInterstitial {
         val extras = Bundle()
         val request = AdRequest
             .Builder()
-            .addCustomEventExtrasBundle(PrebidInterstitialAdapter::class.java, extras)
+            .addNetworkExtrasBundle(PrebidInterstitialAdapter::class.java, extras)
             .build()
         val mediationUtils = AdMobMediationInterstitialUtils(extras)
         PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)

@@ -48,7 +48,7 @@ open class AdMobBannerFragment : AdFragment() {
 
     override fun initAd(): Any? {
         bannerView = AdView(requireActivity())
-        bannerView?.adSize = com.google.android.gms.ads.AdSize(width, height)
+        bannerView?.setAdSize(com.google.android.gms.ads.AdSize(width, height))
         bannerView?.adUnitId = adUnitId
         bannerView?.adListener = getListener()
         viewContainer.addView(bannerView)
@@ -56,7 +56,7 @@ open class AdMobBannerFragment : AdFragment() {
         adRequestExtras = Bundle()
         adRequest = AdRequest
             .Builder()
-            .addCustomEventExtrasBundle(PrebidBannerAdapter::class.java, adRequestExtras!!)
+            .addNetworkExtrasBundle(PrebidBannerAdapter::class.java, adRequestExtras!!)
             .build()
         val mediationUtils =
             AdMobMediationBannerUtils(adRequestExtras, bannerView)

@@ -35,7 +35,7 @@ object InAppAdMobBanner {
         PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
         /** Google recommends put activity for mediation ad networks */
         bannerView = AdView(activity)
-        bannerView?.adSize = AdSize.BANNER
+        bannerView?.setAdSize(AdSize.BANNER)
         bannerView?.adUnitId = adUnitId
         bannerView?.adListener = object : AdListener() {
             override fun onAdLoaded() {
@@ -54,7 +54,7 @@ object InAppAdMobBanner {
         val extras = Bundle()
         val request = AdRequest
             .Builder()
-            .addCustomEventExtrasBundle(PrebidBannerAdapter::class.java, extras)
+            .addNetworkExtrasBundle(PrebidBannerAdapter::class.java, extras)
             .build()
         val mediationUtils = AdMobMediationBannerUtils(extras, bannerView)
 
