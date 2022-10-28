@@ -190,7 +190,7 @@ public class TargetingParamsTest extends BaseSetup {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor editor = pref.edit();
         String key = "Prebid_GDPR";
-        editor.putString(key, "1");
+        editor.putBoolean(key, true);
         editor.apply();
 
         //when
