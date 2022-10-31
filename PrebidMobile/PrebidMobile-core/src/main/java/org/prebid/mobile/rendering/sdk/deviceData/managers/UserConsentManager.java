@@ -120,6 +120,7 @@ public class UserConsentManager extends BaseManager {
                         gdprPrebidSubject = null;
                     else
                         gdprPrebidSubject = preferences.getBoolean(GDPR_PREBID_SUBJECT, false) ? "1" : "0";
+                    preferences.edit().putString(GDPR_PREBID_SUBJECT,gdprPrebidSubject).apply();
                 }
             case GDPR_PREBID_CONSENT:
                 gdprPrebidConsent = preferences.getString(GDPR_PREBID_CONSENT, null);
