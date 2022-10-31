@@ -113,10 +113,14 @@ public class UserConsentManager extends BaseManager {
 
         switch (key) {
             case GDPR_PREBID_SUBJECT:
-                if (!preferences.contains(GDPR_PREBID_SUBJECT))
-                    gdprPrebidSubject = null;
-                else
-                    gdprPrebidSubject = preferences.getBoolean(GDPR_PREBID_SUBJECT, false)?"1":"0";
+                try {
+                    gdprPrebidSubject = preferences.getString(GDPR_PREBID_SUBJECT, null);
+                } catch (ClassCastException classCastException) {
+                    if (!preferences.contains(GDPR_PREBID_SUBJECT))
+                        gdprPrebidSubject = null;
+                    else
+                        gdprPrebidSubject = preferences.getBoolean(GDPR_PREBID_SUBJECT, false) ? "1" : "0";
+                }
             case GDPR_PREBID_CONSENT:
                 gdprPrebidConsent = preferences.getString(GDPR_PREBID_CONSENT, null);
             case GDPR_PREBID_PURPOSE_CONSENT:
@@ -249,7 +253,7 @@ public class UserConsentManager extends BaseManager {
         if (value != null) {
             sharedPreferences
                 .edit()
-                .putBoolean(GDPR_PREBID_SUBJECT, value)
+                .putString(GDPR_PREBID_SUBJECT, value ? "1" : "0")
                 .apply();
         } else {
             sharedPreferences

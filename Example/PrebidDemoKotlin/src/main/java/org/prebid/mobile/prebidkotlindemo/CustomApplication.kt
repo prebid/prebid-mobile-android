@@ -30,6 +30,7 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 
 import org.prebid.mobile.PrebidMobile
+import org.prebid.mobile.TargetingParams
 
 class CustomApplication : Application() {
 
@@ -38,6 +39,7 @@ class CustomApplication : Application() {
         initPrebidSDK()
         initAdMob()
         initApplovinMax()
+        TargetingParams.setSubjectToGDPR(true)
         if (BuildConfig.DEBUG) {
             activateKeepScreenOnFlag()
         }
