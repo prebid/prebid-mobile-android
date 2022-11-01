@@ -113,7 +113,19 @@ public class UserConsentManager extends BaseManager {
 
         switch (key) {
             case GDPR_PREBID_SUBJECT:
-                gdprPrebidSubject = preferences.getString(GDPR_PREBID_SUBJECT, null);
+                // If we couldn't retrieve value from string, it means that user migrated from 1.13.1 where we have boolean value.
+                Object subjectValue = preferences.getAll().get(GDPR_PREBID_SUBJECT);
+                if (subjectValue instanceof String){
+                    gdprPrebidSubject = preferences.getString(GDPR_PREBID_SUBJECT, null);
+                } else if (subjectValue instanceof Boolean){
+                    gdprPrebidSubject = preferences.getBoolean(GDPR_PREBID_SUBJECT, false) ? "1" : "0";
+                    preferences
+                            .edit()
+                            .putString(GDPR_PREBID_SUBJECT,gdprPrebidSubject)
+                            .apply();
+                } else {
+                    gdprPrebidSubject = null;
+                }
             case GDPR_PREBID_CONSENT:
                 gdprPrebidConsent = preferences.getString(GDPR_PREBID_CONSENT, null);
             case GDPR_PREBID_PURPOSE_CONSENT:
