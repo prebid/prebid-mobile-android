@@ -10,7 +10,10 @@
             </option>
             <option name="taskNames">
                 <list>
-                    <option value="assemble"/>
+                    <option value=":PrebidMobile:assemble"/>
+                    <option value=":PrebidDemoJava:assemble"/>
+                    <option value=":PrebidDemoKotlin:assemble"/>
+                    <option value=":PrebidInternalTestApp:assemble"/>
                 </list>
             </option>
             <option name="vmOptions"/>

@@ -12,8 +12,6 @@
                 <list>
                     <option value=":PrebidMobile-core:testReleaseUnitTest"/>
                     <option value=":PrebidMobile-gamEventHandlers:testReleaseUnitTest"/>
-                    <option value=":PrebidMobile-admobAdapters:testReleaseUnitTest"/>
-                    <option value=":PrebidMobile-maxAdapters:testReleaseUnitTest"/>
                 </list>
             </option>
             <option name="vmOptions"/>
