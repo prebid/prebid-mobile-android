@@ -1,12 +1,13 @@
 package org.prebid.mobile.admob;
 
-import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.mediation.*;
-import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.ParametersMatcher;
+
+import com.google.android.gms.ads.mediation.MediationAdLoadCallback;
+import com.google.android.gms.ads.mediation.MediationBannerAd;
+import com.google.android.gms.ads.mediation.MediationBannerAdCallback;
+import com.google.android.gms.ads.mediation.MediationBannerAdConfiguration;
+
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.DisplayView;
@@ -14,8 +15,6 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
-
-import java.util.HashMap;
 
 public class PrebidBannerAdapter extends PrebidBaseAdapter {
 
@@ -30,27 +29,18 @@ public class PrebidBannerAdapter extends PrebidBaseAdapter {
             @NonNull MediationBannerAdConfiguration configuration,
             @NonNull MediationAdLoadCallback<MediationBannerAd, MediationBannerAdCallback> adMobLoadListener
     ) {
-        Bundle extras = configuration.getMediationExtras();
-        String serverParameter = configuration.getServerParameters().getString(MediationConfiguration.CUSTOM_EVENT_SERVER_PARAMETER_FIELD);
-        String responseId = extras.getString(EXTRA_RESPONSE_ID);
+        String responseId = getResponseIdAndCheckParameters(
+                configuration,
+                EXTRA_RESPONSE_ID,
+                adMobLoadListener::onFailure
+        );
         if (responseId == null) {
-            String error = "Response id is null";
-            adMobLoadListener.onFailure(new AdError(1002, error, "prebid"));
             return;
         }
-
-        HashMap<String, String> prebidParameters = BidResponseCache.getInstance().getKeywords(responseId);
-        if (!ParametersMatcher.doParametersMatch(serverParameter, prebidParameters)) {
-            String error = "Parameters are different";
-            adMobLoadListener.onFailure(new AdError(1003, error, "prebid"));
-            return;
-        }
-        LogUtil.verbose(TAG, "Parameters are matched! (" + serverParameter + ")");
 
         BidResponse response = BidResponseCache.getInstance().popBidResponse(responseId);
         if (response == null) {
-            String error = "There's no response for the response id: " + responseId;
-            adMobLoadListener.onFailure(new AdError(1004, error, "prebid"));
+            adMobLoadListener.onFailure(AdErrors.noResponse(responseId));
             return;
         }
 
@@ -100,9 +90,7 @@ public class PrebidBannerAdapter extends PrebidBaseAdapter {
 
             @Override
             public void onAdFailed(AdException exception) {
-                String message = exception.getMessage();
-                if (message == null) message = "Failed to load DisplayView ad";
-                adMobLoadListener.onFailure(new AdError(1010, message, "prebid"));
+                adMobLoadListener.onFailure(AdErrors.failedToLoadAd(exception.getMessage()));
             }
 
         };

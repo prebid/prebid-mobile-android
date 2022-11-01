@@ -1,11 +1,13 @@
 package org.prebid.mobile.prebidkotlindemo.ads.inappadmob
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.google.android.gms.ads.*
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdLoader
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
 import org.prebid.mobile.*
@@ -46,7 +48,7 @@ object InAppAdMobNative {
         val extras = Bundle()
         val adRequest = AdRequest
             .Builder()
-            .addCustomEventExtrasBundle(PrebidNativeAdapter::class.java, extras)
+            .addNetworkExtrasBundle(PrebidNativeAdapter::class.java, extras)
             .build()
 
         val nativeAdUnit = NativeAdUnit(configId)
@@ -73,11 +75,7 @@ object InAppAdMobNative {
             tvHeadline.text = nativeAd.headline
             tvBody.text = nativeAd.body
             imgIco.setImageDrawable(nativeAd.icon?.drawable)
-            if (nativeAd.images.size > 0) {
-                val image = nativeAd.images[0]
-                val mediaContent = PrebidNativeAdMediaContent(image)
-                imgMedia.setMediaContent(mediaContent)
-            }
+            imgMedia.mediaContent = nativeAd.mediaContent
         }
 
         binding.viewNativeWrapper.apply {
@@ -136,33 +134,6 @@ object InAppAdMobNative {
         cta.isRequired = true
         cta.dataType = NativeDataAsset.DATA_TYPE.CTATEXT
         nativeAdUnit.addAsset(cta)
-    }
-
-    class PrebidNativeAdMediaContent(private val image: NativeAd.Image) : MediaContent {
-        override fun getAspectRatio(): Float {
-            return 320f / 250
-        }
-
-        override fun getDuration(): Float {
-            return 0f
-        }
-
-        override fun getCurrentTime(): Float {
-            return 0f
-        }
-
-        override fun getVideoController(): VideoController {
-            return VideoController()
-        }
-
-        override fun hasVideoContent(): Boolean {
-            return false
-        }
-
-        override fun setMainImage(drawable: Drawable?) {}
-        override fun getMainImage(): Drawable? {
-            return image.drawable
-        }
     }
 
 }

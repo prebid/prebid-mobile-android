@@ -27,8 +27,8 @@ import org.prebid.mobile.prebidkotlindemo.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        private const val FIRST_AD_SERVER = "In-App"
-        private const val FIRST_AD_TYPE = "Video Banner"
+        private const val FIRST_AD_SERVER = "In-App + AdMob"
+        private const val FIRST_AD_TYPE = ""
     }
 
     private var adType = ""

@@ -1,22 +1,18 @@
 package org.prebid.mobile.admob;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.gms.ads.AdError;
-import com.google.android.gms.ads.mediation.*;
-import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.ParametersMatcher;
+
+import com.google.android.gms.ads.mediation.MediationAdLoadCallback;
+import com.google.android.gms.ads.mediation.MediationInterstitialAd;
+import com.google.android.gms.ads.mediation.MediationInterstitialAdCallback;
+import com.google.android.gms.ads.mediation.MediationInterstitialAdConfiguration;
+
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 
-import java.util.HashMap;
-
-public class PrebidInterstitialAdapter extends PrebidBaseAdapter implements MediationInterstitialAd {
+public class PrebidInterstitialAdapter extends PrebidBaseAdapter {
 
     public static final String EXTRA_RESPONSE_ID = "PrebidInterstitialAdapterExtraId";
 
@@ -28,33 +24,23 @@ public class PrebidInterstitialAdapter extends PrebidBaseAdapter implements Medi
     @Override
     public void loadInterstitialAd(
             @NonNull MediationInterstitialAdConfiguration configuration,
-            @NonNull MediationAdLoadCallback<MediationInterstitialAd, MediationInterstitialAdCallback> loadListener
+            @NonNull MediationAdLoadCallback<MediationInterstitialAd, MediationInterstitialAdCallback> adMobLoadListener
     ) {
-        Bundle extras = configuration.getMediationExtras();
-        String serverParameter = configuration.getServerParameters().getString(MediationConfiguration.CUSTOM_EVENT_SERVER_PARAMETER_FIELD);
-        String responseId = extras.getString(EXTRA_RESPONSE_ID);
+        String responseId = getResponseIdAndCheckParameters(
+                configuration,
+                EXTRA_RESPONSE_ID,
+                adMobLoadListener::onFailure
+        );
         if (responseId == null) {
-            String error = "Response id is null";
-            loadListener.onFailure(new AdError(1002, error, "prebid"));
             return;
         }
-
-        HashMap<String, String> prebidParameters = BidResponseCache.getInstance().getKeywords(responseId);
-        if (!ParametersMatcher.doParametersMatch(serverParameter, prebidParameters)) {
-            String error = "Parameters are different";
-            loadListener.onFailure(new AdError(1003, error, "prebid"));
-            return;
-        }
-        LogUtil.verbose(TAG, "Parameters are matched! (" + serverParameter + ")");
 
         try {
-            InterstitialControllerListener listener = getListener(loadListener);
+            InterstitialControllerListener listener = getListener(adMobLoadListener);
             interstitialController = new InterstitialController(configuration.getContext(), listener);
             interstitialController.loadAd(responseId, false);
         } catch (AdException e) {
-            String error = "Exception in Prebid interstitial controller (" + e.getMessage() + ")";
-            Log.e(TAG, error);
-            loadListener.onFailure(new AdError(1004, error, "prebid"));
+            adMobLoadListener.onFailure(AdErrors.interstitialControllerError(e.getMessage()));
         }
     }
 
@@ -65,12 +51,17 @@ public class PrebidInterstitialAdapter extends PrebidBaseAdapter implements Medi
         return new InterstitialControllerListener() {
             @Override
             public void onInterstitialReadyForDisplay() {
-                adMobInterstitialListener = loadListener.onSuccess(PrebidInterstitialAdapter.this);
+                adMobInterstitialListener = loadListener.onSuccess(context -> {
+                    if (interstitialController != null) {
+                        interstitialController.show();
+                    }
+                });
             }
 
             @Override
             public void onInterstitialDisplayed() {
                 if (adMobInterstitialListener != null) {
+                    adMobInterstitialListener.reportAdImpression();
                     adMobInterstitialListener.onAdOpened();
                 }
             }
@@ -78,7 +69,6 @@ public class PrebidInterstitialAdapter extends PrebidBaseAdapter implements Medi
             @Override
             public void onInterstitialClicked() {
                 if (adMobInterstitialListener != null) {
-                    adMobInterstitialListener.onAdOpened();
                     adMobInterstitialListener.reportAdClicked();
                 }
             }
@@ -92,18 +82,9 @@ public class PrebidInterstitialAdapter extends PrebidBaseAdapter implements Medi
 
             @Override
             public void onInterstitialFailedToLoad(AdException exception) {
-                String error = "Failed to load ad: " + exception.getMessage();
-                Log.e(TAG, error);
-                loadListener.onFailure(new AdError(1005, error, "prebid"));
+                loadListener.onFailure(AdErrors.failedToLoadAd(exception.getMessage()));
             }
         };
-    }
-
-    @Override
-    public void showAd(@NonNull Context context) {
-        if (interstitialController != null) {
-            interstitialController.show();
-        }
     }
 
 }
