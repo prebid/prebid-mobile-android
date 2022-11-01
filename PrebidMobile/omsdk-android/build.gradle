@@ -1,3 +1,4 @@
-// In case of updating version don't forget to update buildPrebidMobile.sh script
+// In case of updating version don't forget to update const omSdkVersion in build.gradle (root)
+// and check buildPrebidMobile.sh script
 configurations.maybeCreate("default")
 artifacts.add("default", file("${omSdkModuleName}-${omSdkVersion}.aar"))
