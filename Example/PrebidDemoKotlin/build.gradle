@@ -46,7 +46,7 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.1.1'
 
     // Advertisement
-    implementation 'com.google.android.gms:play-services-ads:21.3.0'
+    implementation 'com.google.android.gms:play-services-ads:+'
     implementation "com.applovin:applovin-sdk:11.3.2"
     implementation "com.google.android.gms:play-services-ads-identifier:18.0.1" // For Applovin Max
 

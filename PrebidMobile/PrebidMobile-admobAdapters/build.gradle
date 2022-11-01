@@ -4,5 +4,5 @@ apply from: '../tests.gradle'
 
 dependencies {
     implementation project(":PrebidMobile")
-    implementation 'com.google.android.gms:play-services-ads:21.3.0'
+    implementation 'com.google.android.gms:play-services-ads:+'
 }

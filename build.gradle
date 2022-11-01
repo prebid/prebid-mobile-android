@@ -2,9 +2,9 @@ ext {
     prebidVersionName = "2.0.3"
     prebidVersionCode = 1
     minSDKVersion = 16
-    targetSDKVersion = 28
+    targetSDKVersion = 31
     compileSdkVersion = 31
-    buildToolsVersion = "28.0.3"
+    buildToolsVersion = "29.0.2"
 
     artifactGroupId = "org.prebid"
     artifactFolder = "${buildDir}/generated-artifacts"

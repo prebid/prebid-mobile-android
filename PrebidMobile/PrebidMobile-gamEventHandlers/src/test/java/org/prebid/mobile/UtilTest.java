@@ -16,24 +16,35 @@
 
 package org.prebid.mobile;
 
+import android.app.Activity;
+import android.os.Bundle;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.formats.NativeCustomTemplateAd;
+import okhttp3.mockwebserver.MockWebServer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.prebid.mobile.addendum.AdViewUtils;
-import org.prebid.mobile.testutils.BaseSetup;
-import org.prebid.mobile.testutils.MockPrebidServerResponses;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.httpclient.FakeHttp;
+import org.robolectric.util.Scheduler;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 import static org.junit.Assert.*;
+import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -460,5 +471,79 @@ public class UtilTest extends BaseSetup {
                 fail();
             }
         });
+    }
+}
+
+
+class BaseSetup {
+    public static final int testSDK = 21;
+
+    protected MockWebServer server;
+    protected Scheduler uiScheduler, bgScheduler;
+    protected Activity activity;
+
+    @Before
+    public void setup() {
+        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
+        activity = Robolectric.buildActivity(MockMainActivity.class).create().get();
+        shadowOf(activity).grantPermissions("android.permission.INTERNET");
+        shadowOf(activity).grantPermissions("android.permission.CHANGE_NETWORK_STATE");
+        shadowOf(activity).grantPermissions("android.permission.MODIFY_PHONE_STATE");
+        shadowOf(activity).grantPermissions("android.permission.ACCESS_NETWORK_STATE");
+        server = new MockWebServer();
+        try {
+            server.start();
+        } catch (IOException e) {
+            fail(e.getMessage());
+        }
+        FakeHttp.getFakeHttpLayer().interceptHttpRequests(true);
+        FakeHttp.getFakeHttpLayer().interceptResponseContent(true);
+        bgScheduler = Robolectric.getBackgroundThreadScheduler();
+        uiScheduler = Robolectric.getForegroundThreadScheduler();
+        Robolectric.flushBackgroundThreadScheduler();
+        Robolectric.flushForegroundThreadScheduler();
+        bgScheduler.pause();
+        uiScheduler.pause();
+    }
+
+    @After
+    public void tearDown() {
+        activity.finish();
+        try {
+            server.shutdown();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class MockMainActivity extends Activity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+}
+
+class MockPrebidServerResponses {
+    public static String validResponsePrebidNativeNativeBid() {
+        InputStream in = MockPrebidServerResponses.class.getClassLoader().getResourceAsStream("PrebidServerValidResponsePrebidNativeNativeBid.json");
+        return inputStreamToString(in);
+    }
+
+    public static String inputStreamToString(InputStream is) {
+        try {
+            StringBuilder builder = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+            }
+            reader.close();
+            is.close();
+            return builder.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }
