@@ -54,6 +54,21 @@ public class UserConsentManager extends BaseManager {
     // COPPA
     private static final String COPPA_SUBJECT_CUSTOM_KEY = "Prebid_COPPA";
 
+    private static final String[] GDPR_CONSENTS = new String[]{
+            GDPR_1_SUBJECT,
+            GDPR_1_CONSENT,
+            GDPR_2_CMP_SDK_ID,
+            GDPR_2_SUBJECT,
+            GDPR_2_CONSENT,
+            US_PRIVACY_STRING,
+            GDPR_2_PURPOSE_CONSENT,
+            COPPA_SUBJECT_CUSTOM_KEY,
+            GDPR_PREBID_SUBJECT,
+            GDPR_PREBID_CONSENT,
+            GDPR_PREBID_PURPOSE_CONSENT
+    };
+
+
     private Boolean isSubjectToCoppa;
 
     private String usPrivacyString;
@@ -92,26 +107,8 @@ public class UserConsentManager extends BaseManager {
     }
 
     private void initConsentValuesAtStart() {
-        tryUpdateConsentValue(GDPR_1_SUBJECT);
-        tryUpdateConsentValue(GDPR_1_CONSENT);
-        tryUpdateConsentValue(GDPR_2_CMP_SDK_ID);
-        tryUpdateConsentValue(GDPR_2_SUBJECT);
-        tryUpdateConsentValue(GDPR_2_CONSENT);
-        tryUpdateConsentValue(US_PRIVACY_STRING);
-        tryUpdateConsentValue(GDPR_2_PURPOSE_CONSENT);
-        tryUpdateConsentValue(COPPA_SUBJECT_CUSTOM_KEY);
-        tryUpdateConsentValue(GDPR_PREBID_SUBJECT);
-        tryUpdateConsentValue(GDPR_PREBID_CONSENT);
-        tryUpdateConsentValue(GDPR_PREBID_PURPOSE_CONSENT);
-    }
-    /**
-     * Update consent value might fail so it should be inside try catch
-     */
-    private void tryUpdateConsentValue(String consent) {
-        try {
+        for (String consent : GDPR_CONSENTS) {
             updateConsentValue(sharedPreferences, consent);
-        } catch (Exception e) {
-            LogUtil.error(String.format("Failed to update %s %s", consent, Log.getStackTraceString(e)));
         }
     }
 
@@ -123,49 +120,50 @@ public class UserConsentManager extends BaseManager {
             @Nullable String key
     ) {
         if (key == null) return;
-
-        switch (key) {
-            case GDPR_PREBID_SUBJECT:
-                // If we couldn't retrieve value from string, it means that user migrated from 1.13.1 where we have boolean value.
-                Object subjectValue = preferences.getAll().get(GDPR_PREBID_SUBJECT);
-//                if (subjectValue instanceof String){
-//                    gdprPrebidSubject = preferences.getString(GDPR_PREBID_SUBJECT, null);
-//                } else if (subjectValue instanceof Boolean){
-                gdprPrebidSubject = preferences.getBoolean(GDPR_PREBID_SUBJECT, false) ? "1" : "0";
-//                    preferences
-//                            .edit()
-//                            .putString(GDPR_PREBID_SUBJECT,gdprPrebidSubject)
-//                            .apply();
-//                } else {
-//                    gdprPrebidSubject = null;
-//                }
-            case GDPR_PREBID_CONSENT:
-//                gdprPrebidConsent = preferences.getString(GDPR_PREBID_CONSENT, null);
-                gdprPrebidConsent = preferences.getBoolean(GDPR_PREBID_SUBJECT, false) ? "1" : "0";
-            case GDPR_PREBID_PURPOSE_CONSENT:
-                gdprPrebidPurposeConsent = preferences.getString(GDPR_PREBID_PURPOSE_CONSENT, null);
-            case GDPR_1_SUBJECT:
-                gdprSubject = preferences.getString(GDPR_1_SUBJECT, null);
-            case GDPR_1_CONSENT:
-                gdprConsent = preferences.getString(GDPR_1_CONSENT, null);
-            case GDPR_2_CMP_SDK_ID:
-                gdpr2CmpSdkId = preferences.getInt(GDPR_2_CMP_SDK_ID, NOT_ASSIGNED);
-            case GDPR_2_SUBJECT:
-                gdpr2Subject = preferences.getInt(GDPR_2_SUBJECT, NOT_ASSIGNED);
-            case GDPR_2_CONSENT:
-                gdpr2Consent = preferences.getString(GDPR_2_CONSENT, null);
-            case US_PRIVACY_STRING:
-                usPrivacyString = preferences.getString(US_PRIVACY_STRING, null);
-            case GDPR_2_PURPOSE_CONSENT:
-                gdpr2PurposeConsent = preferences.getString(GDPR_2_PURPOSE_CONSENT, null);
-            case COPPA_SUBJECT_CUSTOM_KEY:
-                if (sharedPreferences.contains(COPPA_SUBJECT_CUSTOM_KEY)) {
-                    isSubjectToCoppa = sharedPreferences.getBoolean(COPPA_SUBJECT_CUSTOM_KEY, false);
-                } else {
-                    isSubjectToCoppa = null;
-                }
+        try {
+            switch (key) {
+                case GDPR_PREBID_SUBJECT:
+                    // If we couldn't retrieve value from string, it means that user migrated from 1.13.1 where we have boolean value.
+                    Object subjectValue = preferences.getAll().get(GDPR_PREBID_SUBJECT);
+                    if (subjectValue instanceof String) {
+                        gdprPrebidSubject = preferences.getString(GDPR_PREBID_SUBJECT, null);
+                    } else if (subjectValue instanceof Boolean) {
+                        gdprPrebidSubject = preferences.getBoolean(GDPR_PREBID_SUBJECT, false) ? "1" : "0";
+                        preferences
+                                .edit()
+                                .putString(GDPR_PREBID_SUBJECT, gdprPrebidSubject)
+                                .apply();
+                    } else {
+                        gdprPrebidSubject = null;
+                    }
+                case GDPR_PREBID_CONSENT:
+                    gdprPrebidConsent = preferences.getString(GDPR_PREBID_CONSENT, null);
+                case GDPR_PREBID_PURPOSE_CONSENT:
+                    gdprPrebidPurposeConsent = preferences.getString(GDPR_PREBID_PURPOSE_CONSENT, null);
+                case GDPR_1_SUBJECT:
+                    gdprSubject = preferences.getString(GDPR_1_SUBJECT, null);
+                case GDPR_1_CONSENT:
+                    gdprConsent = preferences.getString(GDPR_1_CONSENT, null);
+                case GDPR_2_CMP_SDK_ID:
+                    gdpr2CmpSdkId = preferences.getInt(GDPR_2_CMP_SDK_ID, NOT_ASSIGNED);
+                case GDPR_2_SUBJECT:
+                    gdpr2Subject = preferences.getInt(GDPR_2_SUBJECT, NOT_ASSIGNED);
+                case GDPR_2_CONSENT:
+                    gdpr2Consent = preferences.getString(GDPR_2_CONSENT, null);
+                case US_PRIVACY_STRING:
+                    usPrivacyString = preferences.getString(US_PRIVACY_STRING, null);
+                case GDPR_2_PURPOSE_CONSENT:
+                    gdpr2PurposeConsent = preferences.getString(GDPR_2_PURPOSE_CONSENT, null);
+                case COPPA_SUBJECT_CUSTOM_KEY:
+                    if (sharedPreferences.contains(COPPA_SUBJECT_CUSTOM_KEY)) {
+                        isSubjectToCoppa = sharedPreferences.getBoolean(COPPA_SUBJECT_CUSTOM_KEY, false);
+                    } else {
+                        isSubjectToCoppa = null;
+                    }
+            }
+        } catch (Exception e) {
+            LogUtil.error(String.format("Failed to update %s %s", key, Log.getStackTraceString(e)));
         }
-
     }
 
     @Nullable
