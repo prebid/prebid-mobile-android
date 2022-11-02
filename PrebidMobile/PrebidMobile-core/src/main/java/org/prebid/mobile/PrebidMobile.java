@@ -77,6 +77,11 @@ public class PrebidMobile {
     public static final String OMSDK_VERSION = BuildConfig.OMSDK_VERSION;
 
     /**
+     * Tested Google SDK version.
+     */
+    public static final String TESTED_GOOGLE_SDK_VERSION = "21.3.0";
+
+    /**
      * Please use {@link PrebidMobile#setLogLevel(LogLevel)}, this field will become private in next releases.
      */
     @Deprecated
