@@ -19,8 +19,11 @@ package org.prebid.mobile.rendering.sdk.deviceData.managers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.sdk.BaseManager;
 
@@ -80,7 +83,7 @@ public class UserConsentManager extends BaseManager {
 
         if (super.isInit() && context != null) {
             sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-            initConsentValuesAtStart(sharedPreferences);
+            initConsentValuesAtStart();
 
             onSharedPreferenceChangeListener = this::updateConsentValue;
 
@@ -88,26 +91,36 @@ public class UserConsentManager extends BaseManager {
         }
     }
 
-    private void initConsentValuesAtStart(SharedPreferences preferences) {
-        updateConsentValue(preferences, GDPR_1_SUBJECT);
-        updateConsentValue(preferences, GDPR_1_CONSENT);
-        updateConsentValue(preferences, GDPR_2_CMP_SDK_ID);
-        updateConsentValue(preferences, GDPR_2_SUBJECT);
-        updateConsentValue(preferences, GDPR_2_CONSENT);
-        updateConsentValue(preferences, US_PRIVACY_STRING);
-        updateConsentValue(preferences, GDPR_2_PURPOSE_CONSENT);
-        updateConsentValue(preferences, COPPA_SUBJECT_CUSTOM_KEY);
-        updateConsentValue(preferences, GDPR_PREBID_SUBJECT);
-        updateConsentValue(preferences, GDPR_PREBID_CONSENT);
-        updateConsentValue(preferences, GDPR_PREBID_PURPOSE_CONSENT);
+    private void initConsentValuesAtStart() {
+        tryUpdateConsentValue(GDPR_1_SUBJECT);
+        tryUpdateConsentValue(GDPR_1_CONSENT);
+        tryUpdateConsentValue(GDPR_2_CMP_SDK_ID);
+        tryUpdateConsentValue(GDPR_2_SUBJECT);
+        tryUpdateConsentValue(GDPR_2_CONSENT);
+        tryUpdateConsentValue(US_PRIVACY_STRING);
+        tryUpdateConsentValue(GDPR_2_PURPOSE_CONSENT);
+        tryUpdateConsentValue(COPPA_SUBJECT_CUSTOM_KEY);
+        tryUpdateConsentValue(GDPR_PREBID_SUBJECT);
+        tryUpdateConsentValue(GDPR_PREBID_CONSENT);
+        tryUpdateConsentValue(GDPR_PREBID_PURPOSE_CONSENT);
+    }
+    /**
+     * Update consent value might fail so it should be inside try catch
+     */
+    private void tryUpdateConsentValue(String consent) {
+        try {
+            updateConsentValue(sharedPreferences, consent);
+        } catch (Exception e) {
+            LogUtil.error(String.format("Failed to update %s %s", consent, Log.getStackTraceString(e)));
+        }
     }
 
     /**
      * Automatically updates consents values in the manager when they are changed.
      */
     private void updateConsentValue(
-        SharedPreferences preferences,
-        @Nullable String key
+            SharedPreferences preferences,
+            @Nullable String key
     ) {
         if (key == null) return;
 
@@ -115,19 +128,20 @@ public class UserConsentManager extends BaseManager {
             case GDPR_PREBID_SUBJECT:
                 // If we couldn't retrieve value from string, it means that user migrated from 1.13.1 where we have boolean value.
                 Object subjectValue = preferences.getAll().get(GDPR_PREBID_SUBJECT);
-                if (subjectValue instanceof String){
-                    gdprPrebidSubject = preferences.getString(GDPR_PREBID_SUBJECT, null);
-                } else if (subjectValue instanceof Boolean){
-                    gdprPrebidSubject = preferences.getBoolean(GDPR_PREBID_SUBJECT, false) ? "1" : "0";
-                    preferences
-                            .edit()
-                            .putString(GDPR_PREBID_SUBJECT,gdprPrebidSubject)
-                            .apply();
-                } else {
-                    gdprPrebidSubject = null;
-                }
+//                if (subjectValue instanceof String){
+//                    gdprPrebidSubject = preferences.getString(GDPR_PREBID_SUBJECT, null);
+//                } else if (subjectValue instanceof Boolean){
+                gdprPrebidSubject = preferences.getBoolean(GDPR_PREBID_SUBJECT, false) ? "1" : "0";
+//                    preferences
+//                            .edit()
+//                            .putString(GDPR_PREBID_SUBJECT,gdprPrebidSubject)
+//                            .apply();
+//                } else {
+//                    gdprPrebidSubject = null;
+//                }
             case GDPR_PREBID_CONSENT:
-                gdprPrebidConsent = preferences.getString(GDPR_PREBID_CONSENT, null);
+//                gdprPrebidConsent = preferences.getString(GDPR_PREBID_CONSENT, null);
+                gdprPrebidConsent = preferences.getBoolean(GDPR_PREBID_SUBJECT, false) ? "1" : "0";
             case GDPR_PREBID_PURPOSE_CONSENT:
                 gdprPrebidPurposeConsent = preferences.getString(GDPR_PREBID_PURPOSE_CONSENT, null);
             case GDPR_1_SUBJECT:
@@ -151,6 +165,7 @@ public class UserConsentManager extends BaseManager {
                     isSubjectToCoppa = null;
                 }
         }
+
     }
 
     @Nullable
@@ -161,14 +176,14 @@ public class UserConsentManager extends BaseManager {
     public void setSubjectToCoppa(@Nullable Boolean value) {
         if (value != null) {
             sharedPreferences
-                .edit()
-                .putBoolean(COPPA_SUBJECT_CUSTOM_KEY, value)
-                .apply();
+                    .edit()
+                    .putBoolean(COPPA_SUBJECT_CUSTOM_KEY, value)
+                    .apply();
         } else {
             sharedPreferences
-                .edit()
-                .remove(COPPA_SUBJECT_CUSTOM_KEY)
-                .apply();
+                    .edit()
+                    .remove(COPPA_SUBJECT_CUSTOM_KEY)
+                    .apply();
         }
     }
 
@@ -187,9 +202,9 @@ public class UserConsentManager extends BaseManager {
      */
     public void setCmpSdkIdForGdprTcf2(@Nullable Integer id) {
         sharedPreferences
-            .edit()
-            .putInt(GDPR_2_CMP_SDK_ID, id != null ? id : NOT_ASSIGNED)
-            .apply();
+                .edit()
+                .putInt(GDPR_2_CMP_SDK_ID, id != null ? id : NOT_ASSIGNED)
+                .apply();
     }
 
     @Nullable
@@ -233,20 +248,20 @@ public class UserConsentManager extends BaseManager {
     public void setSubjectToGdpr(@Nullable Boolean value) {
         if (value == null) {
             sharedPreferences
-                .edit()
-                .remove(GDPR_1_SUBJECT)
-                .remove(GDPR_2_SUBJECT)
-                .apply();
+                    .edit()
+                    .remove(GDPR_1_SUBJECT)
+                    .remove(GDPR_2_SUBJECT)
+                    .apply();
         } else if (!shouldUseTcfV2()) {
             sharedPreferences
-                .edit()
-                .putString(GDPR_1_SUBJECT, value ? "1" : "0")
-                .apply();
+                    .edit()
+                    .putString(GDPR_1_SUBJECT, value ? "1" : "0")
+                    .apply();
         } else {
             sharedPreferences
-                .edit()
-                .putInt(GDPR_2_SUBJECT, value ? 1 : 0)
-                .apply();
+                    .edit()
+                    .putInt(GDPR_2_SUBJECT, value ? 1 : 0)
+                    .apply();
         }
     }
 
@@ -257,14 +272,14 @@ public class UserConsentManager extends BaseManager {
     public void setPrebidSubjectToGdpr(@Nullable Boolean value) {
         if (value != null) {
             sharedPreferences
-                .edit()
-                .putString(GDPR_PREBID_SUBJECT, value ? "1" : "0")
-                .apply();
+                    .edit()
+                    .putString(GDPR_PREBID_SUBJECT, value ? "1" : "0")
+                    .apply();
         } else {
             sharedPreferences
-                .edit()
-                .remove(GDPR_PREBID_SUBJECT)
-                .apply();
+                    .edit()
+                    .remove(GDPR_PREBID_SUBJECT)
+                    .apply();
         }
     }
 
@@ -301,28 +316,28 @@ public class UserConsentManager extends BaseManager {
     public void setGdprConsent(@Nullable String consent) {
         if (consent == null) {
             sharedPreferences
-                .edit()
-                .remove(GDPR_1_CONSENT)
-                .remove(GDPR_2_CONSENT)
-                .apply();
+                    .edit()
+                    .remove(GDPR_1_CONSENT)
+                    .remove(GDPR_2_CONSENT)
+                    .apply();
         } else if (!shouldUseTcfV2()) {
             sharedPreferences
-                .edit()
-                .putString(GDPR_1_CONSENT, consent)
-                .apply();
+                    .edit()
+                    .putString(GDPR_1_CONSENT, consent)
+                    .apply();
         } else {
             sharedPreferences
-                .edit()
-                .putString(GDPR_2_CONSENT, consent)
-                .apply();
+                    .edit()
+                    .putString(GDPR_2_CONSENT, consent)
+                    .apply();
         }
     }
 
     public void setPrebidGdprConsent(@Nullable String consent) {
         sharedPreferences
-            .edit()
-            .putString(GDPR_PREBID_CONSENT, consent)
-            .apply();
+                .edit()
+                .putString(GDPR_PREBID_CONSENT, consent)
+                .apply();
     }
 
     @Nullable
@@ -354,8 +369,8 @@ public class UserConsentManager extends BaseManager {
     }
 
     private Boolean getPurposeConsent(
-        String consents,
-        int index
+            String consents,
+            int index
     ) {
         if (consents != null && consents.length() > index) {
             char consentChar = consents.charAt(index);
@@ -373,16 +388,16 @@ public class UserConsentManager extends BaseManager {
 
     public void setGdprPurposeConsents(@Nullable String consent) {
         sharedPreferences
-            .edit()
-            .putString(GDPR_2_PURPOSE_CONSENT, consent)
-            .apply();
+                .edit()
+                .putString(GDPR_2_PURPOSE_CONSENT, consent)
+                .apply();
     }
 
     public void setPrebidGdprPurposeConsents(@Nullable String consent) {
         sharedPreferences
-            .edit()
-            .putString(GDPR_PREBID_PURPOSE_CONSENT, consent)
-            .apply();
+                .edit()
+                .putString(GDPR_PREBID_PURPOSE_CONSENT, consent)
+                .apply();
     }
 
 
@@ -392,16 +407,16 @@ public class UserConsentManager extends BaseManager {
 
     public void setUsPrivacyString(@Nullable String value) {
         sharedPreferences
-            .edit()
-            .putString(US_PRIVACY_STRING, value)
-            .apply();
+                .edit()
+                .putString(US_PRIVACY_STRING, value)
+                .apply();
     }
 
     public boolean canAccessAnyDeviceData() {
         if (gdprPrebidSubject != null && gdprPrebidPurposeConsent != null && gdprPrebidPurposeConsent.length() > 0) {
             return checkDeviceDataAccess(
-                gdprPrebidSubject.equals("1"),
-                gdprPrebidPurposeConsent.charAt(0) == '1'
+                    gdprPrebidSubject.equals("1"),
+                    gdprPrebidPurposeConsent.charAt(0) == '1'
             );
         }
         return canAccessDeviceData();
@@ -425,8 +440,8 @@ public class UserConsentManager extends BaseManager {
     }
 
     private boolean checkDeviceDataAccess(
-        Boolean gdprApplies,
-        Boolean deviceAccessConsent
+            Boolean gdprApplies,
+            Boolean deviceAccessConsent
     ) {
         // deviceAccess undefined and gdprApplies undefined
         if (deviceAccessConsent == null && gdprApplies == null) {
