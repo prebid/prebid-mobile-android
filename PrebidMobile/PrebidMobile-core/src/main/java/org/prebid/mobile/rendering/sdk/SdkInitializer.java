@@ -10,6 +10,7 @@ import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SdkInitializer {
@@ -19,7 +20,7 @@ public class SdkInitializer {
     protected static boolean isSdkInitialized = false;
 
     private static final AtomicInteger INIT_SDK_TASK_COUNT = new AtomicInteger();
-    private static final int MANDATORY_TASK_COUNT = 3;
+    private static final int MANDATORY_TASK_COUNT = 4;
 
     protected static SdkInitializationListener sdkInitListener;
 
@@ -59,6 +60,8 @@ public class SdkInitializer {
             initializeLogging();
         }
 
+        checkGoogleAdsVersion();
+
         AppInfoManager.init(context);
         initOpenMeasurementSDK(context);
         ManagersResolver.getInstance().prepare(context);
@@ -91,6 +94,53 @@ public class SdkInitializer {
 
     public static boolean isIsSdkInitialized() {
         return isSdkInitialized;
+    }
+
+    private static void checkGoogleAdsVersion() {
+        try {
+            Class mobileAdsClass = Class.forName("com.google.android.gms.ads.MobileAds");
+            Method method = mobileAdsClass.getMethod("getVersion");
+            Object versionObject = method.invoke(null);
+
+            if (versionObject != null) {
+                String googleAdsVersion = versionObject.toString();
+                if (!googleAdsVersion.equals(PrebidMobile.TESTED_GOOGLE_SDK_VERSION)) {
+                    int[] prebidVersion = parseVersion(PrebidMobile.TESTED_GOOGLE_SDK_VERSION);
+                    int[] publisherVersion = parseVersion(googleAdsVersion);
+
+                    boolean prebidVersionBigger = false;
+                    boolean publisherVersionBigger = false;
+                    for (int i = 0; i < 3; i++) {
+                        if (prebidVersion[i] > publisherVersion[i]) {
+                            prebidVersionBigger = true;
+                            break;
+                        } else if (publisherVersion[i] > prebidVersion[i]) {
+                            publisherVersionBigger = true;
+                            break;
+                        }
+                    }
+
+                    if (prebidVersionBigger) {
+                        LogUtil.info("You should update GMA SDK version to " + PrebidMobile.TESTED_GOOGLE_SDK_VERSION + " version that was tested with Prebid SDK (current version " + googleAdsVersion + ")");
+                    } else if (publisherVersionBigger) {
+                        LogUtil.info("The current version of Prebid SDK is not validated with your version of GMA SDK " + googleAdsVersion + " (Prebid SDK tested on " + PrebidMobile.TESTED_GOOGLE_SDK_VERSION + "). Please update the Prebid SDK or post a ticket on the github.");
+                    }
+                }
+            }
+        } catch (Throwable any) {
+            LogUtil.verbose("Can't get current Google Ads Version!");
+        }
+    }
+
+    private static int[] parseVersion(String version) {
+        int[] versions = new int[]{0, 0, 0};
+        String[] versionStrings = version.split("\\.");
+        if (versionStrings.length >= 3) {
+            for (int i = 0; i < 3; i++) {
+                versions[i] = Integer.parseInt(versionStrings[i]);
+            }
+        }
+        return versions;
     }
 
 }
