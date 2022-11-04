@@ -2,6 +2,12 @@ apply from: '../android.gradle'
 apply from: '../publisher.gradle'
 apply from: '../tests.gradle'
 
+android {
+    defaultConfig {
+        minSdkVersion 19
+    }
+}
+
 dependencies {
     implementation project(":PrebidMobile")
     implementation 'com.google.android.gms:play-services-ads:+'
