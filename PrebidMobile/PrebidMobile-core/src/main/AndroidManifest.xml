@@ -12,11 +12,12 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
         <activity
-            android:name="org.prebid.mobile.rendering.views.browser.AdBrowserActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            android:launchMode="singleTop" />
+                android:exported="true"
+                android:name="org.prebid.mobile.rendering.views.browser.AdBrowserActivity"
+                android:configChanges="orientation|screenSize|keyboardHidden"
+                android:theme="@android:style/Theme.Translucent.NoTitleBar"
+                android:windowSoftInputMode="adjustPan|stateHidden"
+                android:launchMode="singleTop" />
     </application>
 
 </manifest>
