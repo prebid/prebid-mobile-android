@@ -18,17 +18,14 @@ package org.prebid.mobile.prebidkotlindemo
 
 import android.app.Activity
 import android.app.Application
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 import android.webkit.WebView
 import com.applovin.sdk.AppLovinSdk
-import com.applovin.sdk.AppLovinSdkConfiguration
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
-
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.TargetingParams
 
@@ -73,7 +70,6 @@ class CustomApplication : Application() {
     }
 
     private fun activateKeepScreenOnFlag() {
-        sendBroadcast(Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS))
         this.registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
                 activity.window.addFlags(FLAG_KEEP_SCREEN_ON)
