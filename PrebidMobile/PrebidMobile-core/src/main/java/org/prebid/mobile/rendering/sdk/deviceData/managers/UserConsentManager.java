@@ -136,30 +136,41 @@ public class UserConsentManager extends BaseManager {
                     } else {
                         gdprPrebidSubject = null;
                     }
+                    break;
                 case GDPR_PREBID_CONSENT:
                     gdprPrebidConsent = preferences.getString(GDPR_PREBID_CONSENT, null);
+                    break;
                 case GDPR_PREBID_PURPOSE_CONSENT:
                     gdprPrebidPurposeConsent = preferences.getString(GDPR_PREBID_PURPOSE_CONSENT, null);
+                    break;
                 case GDPR_1_SUBJECT:
                     gdprSubject = preferences.getString(GDPR_1_SUBJECT, null);
+                    break;
                 case GDPR_1_CONSENT:
                     gdprConsent = preferences.getString(GDPR_1_CONSENT, null);
+                    break;
                 case GDPR_2_CMP_SDK_ID:
                     gdpr2CmpSdkId = preferences.getInt(GDPR_2_CMP_SDK_ID, NOT_ASSIGNED);
+                    break;
                 case GDPR_2_SUBJECT:
                     gdpr2Subject = preferences.getInt(GDPR_2_SUBJECT, NOT_ASSIGNED);
+                    break;
                 case GDPR_2_CONSENT:
                     gdpr2Consent = preferences.getString(GDPR_2_CONSENT, null);
+                    break;
                 case US_PRIVACY_STRING:
                     usPrivacyString = preferences.getString(US_PRIVACY_STRING, null);
+                    break;
                 case GDPR_2_PURPOSE_CONSENT:
                     gdpr2PurposeConsent = preferences.getString(GDPR_2_PURPOSE_CONSENT, null);
+                    break;
                 case COPPA_SUBJECT_CUSTOM_KEY:
                     if (sharedPreferences.contains(COPPA_SUBJECT_CUSTOM_KEY)) {
                         isSubjectToCoppa = sharedPreferences.getBoolean(COPPA_SUBJECT_CUSTOM_KEY, false);
                     } else {
                         isSubjectToCoppa = null;
                     }
+                    break;
             }
         } catch (Exception e) {
             LogUtil.error(String.format("Failed to update %s %s", key, Log.getStackTraceString(e)));

@@ -73,31 +73,6 @@ public class SdkInitializerTest {
     }
 
     @Test
-    public void init_withoutHost_initializationFail() {
-        SdkInitializer.init(context, createListener());
-
-        assertFalse(isSuccessful);
-        assertFalse(PrebidMobile.isSdkInitialized());
-        assertEquals(error, "Please set host url (PrebidMobile.setPrebidServerHost) and only then run SDK initialization.");
-    }
-
-    @Test
-    public void init_statusResponseNotOk_initializationFail() throws IOException, InterruptedException {
-        String host = setResponseStatusAndGetMockServerHostUrl("fail");
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost(host));
-
-        SdkInitializer.init(context, createListener());
-
-        sleep(300);
-        shadowOf(getMainLooper()).idle();
-        sleep(200);
-
-        assertFalse(isSuccessful);
-        assertFalse(PrebidMobile.isSdkInitialized());
-        assertEquals(error, "Server status is not ok!");
-    }
-
-    @Test
     public void init_statusResponseIsOk_initializationIsSuccessful() throws IOException, InterruptedException {
         String host = setResponseStatusAndGetMockServerHostUrl("ok");
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(host));
