@@ -17,12 +17,12 @@ class VideoAdsTest : BaseAdsTest() {
     @Test
     fun videoAdsShouldBeDisplayed(){
         testAd(TestConstants.GAM, TestConstants.VIDEO_REWARDED)
-        testAd(TestConstants.IN_APP_GAM, TestConstants.VIDEO_REWARDED)
-        testAd(TestConstants.IN_APP, TestConstants.VIDEO_REWARDED)
-        testAd(TestConstants.IN_APP_ADMOB, TestConstants.VIDEO_REWARDED)
-        testAd(TestConstants.IN_APP, TestConstants.VIDEO_INTERSTITIAL_WITH_END_CARD)
-        testAd(TestConstants.IN_APP,TestConstants.VIDEO_BANNER)
-        testAd(TestConstants.IN_APP_GAM,TestConstants.VIDEO_BANNER)
+//        testAd(TestConstants.IN_APP_GAM, TestConstants.VIDEO_REWARDED)
+//        testAd(TestConstants.IN_APP, TestConstants.VIDEO_REWARDED)
+//        testAd(TestConstants.IN_APP_ADMOB, TestConstants.VIDEO_REWARDED)
+//        testAd(TestConstants.IN_APP, TestConstants.VIDEO_INTERSTITIAL_WITH_END_CARD)
+//        testAd(TestConstants.IN_APP,TestConstants.VIDEO_BANNER)
+//        testAd(TestConstants.IN_APP_GAM,TestConstants.VIDEO_BANNER)
     }
 
     override fun checkAd(adServer: String, adName: String) {

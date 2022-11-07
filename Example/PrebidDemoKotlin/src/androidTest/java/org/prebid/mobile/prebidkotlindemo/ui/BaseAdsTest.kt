@@ -116,6 +116,10 @@ abstract class BaseAdsTest {
     private fun restartApp(){
         Runtime.getRuntime().exec(arrayOf("am", "force-stop", packageName))
         device.pressHome()
+        if (device.pressRecentApps()) {
+            val app = device.findObject(UiSelector().className("android.view.View"))
+            app.swipeLeft(100);
+        }
         startActivity()
     }
 
