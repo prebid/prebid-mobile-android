@@ -7,24 +7,19 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.*
-import junit.framework.AssertionFailedError
 import org.hamcrest.CoreMatchers.notNullValue
 import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.runner.RunWith
-import androidx.test.uiautomator.UiSelector
-
-import androidx.test.uiautomator.UiObject
-
-
+import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 
 
 @RunWith(AndroidJUnit4::class)
 @SdkSuppress(minSdkVersion = 18)
 abstract class BaseAdsTest {
     protected val packageName = "org.prebid.mobile.prebidkotlindemo"
-    protected val timeout = 7000L
+    protected val timeout = TestConstants.WAITING_TIME
     protected lateinit var device: UiDevice
 
     private lateinit var adServerSpinner: UiObject

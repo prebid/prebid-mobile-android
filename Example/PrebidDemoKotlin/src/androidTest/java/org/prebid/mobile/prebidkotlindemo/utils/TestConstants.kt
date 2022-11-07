@@ -1,6 +1,10 @@
 package org.prebid.mobile.prebidkotlindemo.utils
 
 object TestConstants {
+
+    const val STEP_TIME = 100L
+    const val WAITING_TIME = 7000L
+
     /** Ad Types*/
     const val BANNER_320x50 = "Banner 320x50"
     const val BANNER_MULTISIZE = "Banner Multisize"
