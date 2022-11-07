@@ -307,6 +307,35 @@ public class PrebidMobile {
         PrebidMobile.logLevel = logLevel;
     }
 
+    /**
+     * Check Google Mobile Ads compatibility for original API.
+     * Show logs if version is not compatible.
+     *
+     * @param googleAdsVersion - MobileAds.getVersion().toString()
+     */
+    public static void checkGoogleMobileAdsCompatibility(@NonNull String googleAdsVersion) {
+        int[] prebidVersion = parseVersion(PrebidMobile.TESTED_GOOGLE_SDK_VERSION);
+        int[] publisherVersion = parseVersion(googleAdsVersion);
+
+        boolean prebidVersionBigger = false;
+        boolean publisherVersionBigger = false;
+        for (int i = 0; i < 3; i++) {
+            if (prebidVersion[i] > publisherVersion[i]) {
+                prebidVersionBigger = true;
+                break;
+            } else if (publisherVersion[i] > prebidVersion[i]) {
+                publisherVersionBigger = true;
+                break;
+            }
+        }
+
+        if (prebidVersionBigger) {
+            LogUtil.error("You should update GMA SDK version to " + PrebidMobile.TESTED_GOOGLE_SDK_VERSION + " version that was tested with Prebid SDK (current version " + googleAdsVersion + ")");
+        } else if (publisherVersionBigger) {
+            LogUtil.error("The current version of Prebid SDK is not validated with your version of GMA SDK " + googleAdsVersion + " (Prebid SDK tested on " + PrebidMobile.TESTED_GOOGLE_SDK_VERSION + "). Please update the Prebid SDK or post a ticket on the github.");
+        }
+    }
+
 
     /**
      * LogLevel for logging control.
@@ -330,6 +359,18 @@ public class PrebidMobile {
         public int getValue() {
             return value;
         }
+    }
+
+
+    private static int[] parseVersion(String version) {
+        int[] versions = new int[]{0, 0, 0};
+        String[] versionStrings = version.split("\\.");
+        if (versionStrings.length >= 3) {
+            for (int i = 0; i < 3; i++) {
+                versions[i] = Integer.parseInt(versionStrings[i]);
+            }
+        }
+        return versions;
     }
 
 }
