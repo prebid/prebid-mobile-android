@@ -24,11 +24,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.reflection.sdk.UserConsentManagerReflection;
+import org.prebid.mobile.rendering.sdk.ManagersResolver;
+import org.prebid.mobile.rendering.sdk.SdkInitializer;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
+import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -42,7 +46,12 @@ public class TargetingParamsTest extends BaseSetup {
     @Before
     public void setup() {
         super.setup();
-        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        // if prebid mobile is not initialized initialize it otherwise we initialize managers
+        if (!PrebidMobile.isSdkInitialized()) {
+            PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
+        } else {
+            ManagersResolver.getInstance().prepare(activity);
+        }
     }
 
     @Override
@@ -50,7 +59,6 @@ public class TargetingParamsTest extends BaseSetup {
         super.tearDown();
 
         TargetingParams.clearStoredExternalUserIds();
-
         TargetingParams.clearAccessControlList();
         TargetingParams.clearUserData();
         TargetingParams.clearContextData();
@@ -232,18 +240,17 @@ public class TargetingParamsTest extends BaseSetup {
 
         //then
         assertEquals(null, gdprConsent);
+
     }
 
     @Test
     public void testGdprConsentTCFv1() {
-
         //given
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor editor = pref.edit();
         String key = UserConsentManagerReflection.getConstGdpr1Consent(new UserConsentManager());
         editor.putString(key, "testconsent TCFv1");
         editor.apply();
-
         //when
         String gdprConsent = TargetingParams.getGDPRConsentString();
 
@@ -260,7 +267,6 @@ public class TargetingParamsTest extends BaseSetup {
         String key = UserConsentManagerReflection.getConstGdpr1Consent(new UserConsentManager());
         editor.putString(key, "testconsent TCFv1");
         editor.apply();
-
         //when
         String gdprConsent = TargetingParams.getGDPRConsentString();
 

@@ -19,7 +19,7 @@ public class SdkInitializer {
     protected static boolean isSdkInitialized = false;
 
     private static final AtomicInteger INIT_SDK_TASK_COUNT = new AtomicInteger();
-    private static final int MANDATORY_TASK_COUNT = 4;
+    private static final int MANDATORY_TASK_COUNT = 3;
 
     protected static SdkInitializationListener sdkInitListener;
 

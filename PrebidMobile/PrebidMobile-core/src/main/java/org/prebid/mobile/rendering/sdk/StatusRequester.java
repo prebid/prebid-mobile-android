@@ -40,11 +40,8 @@ public class StatusRequester {
                         JSONObject responseJson = new JSONObject(response.responseString);
                         JSONObject applicationJson = responseJson.optJSONObject("application");
                         if (applicationJson != null) {
-                            String status = applicationJson.optString("status");
-                            if (status.equalsIgnoreCase("ok")) {
-                                onSuccess();
-                                return;
-                            }
+                            onSuccess();
+                            return;
                         }
                     } catch (JSONException exception) {
                         onInitError("JsonException: " + exception.getMessage(), listener);
@@ -73,7 +70,7 @@ public class StatusRequester {
     }
 
     private static void onSuccess() {
-        SdkInitializer.increaseTaskCount();
+        LogUtil.debug("Server status code 200");
     }
 
     private static void onInitError(
