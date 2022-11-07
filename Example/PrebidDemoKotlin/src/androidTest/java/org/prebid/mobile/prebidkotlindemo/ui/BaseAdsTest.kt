@@ -2,6 +2,7 @@ package org.prebid.mobile.prebidkotlindemo.ui
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
@@ -12,7 +13,9 @@ import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.runner.RunWith
+import org.prebid.mobile.prebidkotlindemo.DemoActivity
 import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
+import java.io.IOException
 
 
 @RunWith(AndroidJUnit4::class)
@@ -21,6 +24,7 @@ abstract class BaseAdsTest {
     protected val packageName = "org.prebid.mobile.prebidkotlindemo"
     protected val timeout = TestConstants.WAITING_TIME
     protected lateinit var device: UiDevice
+    private lateinit var context: Context
 
     private lateinit var adServerSpinner: UiObject
     private lateinit var adTypeSpinner: UiObject
@@ -31,16 +35,11 @@ abstract class BaseAdsTest {
     @Before
     fun startMainActivityFromHomeScreen() {
         initDevice()
-        startActivity()
-        device.wait(
-            Until.hasObject(By.pkg(packageName).depth(0)),
-            timeout
-        )
-        initMainScreenComponents()
-
+        context = ApplicationProvider.getApplicationContext()
     }
+
     @After
-    fun checkErrors(){
+    fun checkErrors() {
         displayErrorMessages()
     }
 
@@ -55,72 +54,34 @@ abstract class BaseAdsTest {
         )
     }
 
-    private fun startActivity() {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        val intent = context.packageManager.getLaunchIntentForPackage(
-            packageName
-        ).apply {
-            this?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        }
-        context.startActivity(intent)
-
-    }
-
-    private fun initMainScreenComponents() {
-        adServerSpinner = device.findObject(
-            UiSelector().resourceId("$packageName:id/spinnerAdServer")
-        )
-        adTypeSpinner = device.findObject(
-            UiSelector().resourceId("$packageName:id/spinnerAdType")
-        )
-        showAdButton = device.findObject(
-            UiSelector().resourceId("$packageName:id/btnShowAd")
-        )
-    }
-
     protected fun testAd(adServer: String, adName: String, retryCount: Int = 2) {
         runCatching {
             goToAd(adServer, adName)
-            checkAd(adServer,adName)
+            checkAd(adServer, adName)
         }.getOrElse { throwable ->
             if (retryCount != 0) {
-                restartApp()
                 testAd(adServer, adName, retryCount - 1)
             } else {
                 adsErrorMessagesQueue.add("$adServer - $adName ${throwable.stackTraceToString()}")
-                restartApp()
             }
         }
     }
+
     private fun displayErrorMessages() {
-        val failedTestsMessage = adsErrorMessagesQueue.joinToString(separator = System.lineSeparator())
-        if (failedTestsMessage.isNotEmpty()){
+        val failedTestsMessage =
+            adsErrorMessagesQueue.joinToString(separator = System.lineSeparator())
+        if (failedTestsMessage.isNotEmpty()) {
             adsErrorMessagesQueue.clear()
             throw AssertionError(failedTestsMessage)
         }
     }
 
-    protected abstract fun checkAd(adServer: String,adName: String)
+    protected abstract fun checkAd(adServer: String, adName: String)
 
     private fun goToAd(adServer: String, adName: String) {
-        adServerSpinner.click()
-        selectSpinnerValue(adServer)
-        adTypeSpinner.click()
-        selectSpinnerValue(adName)
-        showAdButton.click()
+        val intent = DemoActivity.getIntent(context, adServer, adName, 30000).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        context.startActivity(intent)
     }
-
-    private fun selectSpinnerValue(value: String) {
-        device.findObject(By.text(value)).click()
-    }
-    private fun restartApp(){
-        Runtime.getRuntime().exec(arrayOf("am", "force-stop", packageName))
-        device.pressRecentApps()
-        val app = device.findObject(UiSelector().resourceId("com.android.launcher3:id/snapshot"))
-        app.swipeUp(100)
-        Thread.sleep(2000)
-        startActivity()
-    }
-
-
 }
