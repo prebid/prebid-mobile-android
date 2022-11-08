@@ -23,7 +23,7 @@ class AdMobInterstitialRandomFragment : AdMobInterstitialFragment() {
     override fun loadAd() {
         val request = AdRequest
             .Builder()
-            .addCustomEventExtrasBundle(PrebidInterstitialAdapter::class.java, extras!!)
+            .addNetworkExtrasBundle(PrebidInterstitialAdapter::class.java, extras!!)
             .build()
 
         adUnit?.fetchDemand { result ->

@@ -2,7 +2,6 @@ package org.prebid.mobile.javademo.utils;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -11,7 +10,6 @@ import static android.view.WindowManager.LayoutParams.*;
 public class ScreenUtils {
 
     public static void closeSystemWindowsAndKeepScreenOn(Application application) {
-        application.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
         application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(

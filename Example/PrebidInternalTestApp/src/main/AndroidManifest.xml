@@ -23,9 +23,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Optional permissions. Will pass Lat/Lon values when available. Choose either Coarse or Fine -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!-- Optional permissions. Used for MRAID 2.0 storePicture ads -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -37,9 +39,9 @@
         android:theme="@style/SdkDemoTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".MainActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustPan|stateHidden">
+                android:name=".MainActivity"
+                android:configChanges="orientation|screenSize|keyboardHidden"
+                android:windowSoftInputMode="adjustPan|stateHidden" android:exported="true">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

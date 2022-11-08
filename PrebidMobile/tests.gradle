@@ -17,7 +17,6 @@ dependencies {
     testImplementation 'com.squareup.okhttp3:okhttp:4.9.3'
 
     testImplementation 'org.apache.commons:commons-lang3:3.7'
-    testImplementation 'com.google.android.gms:play-services-ads:20.0.0'
     testImplementation 'org.json:json:20180813'
     testImplementation 'com.google.code.gson:gson:2.8.6'
 }

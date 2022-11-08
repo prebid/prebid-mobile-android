@@ -58,6 +58,7 @@ public class SdkInitializer {
         if (PrebidMobile.logLevel != null) {
             initializeLogging();
         }
+
         AppInfoManager.init(context);
         initOpenMeasurementSDK(context);
         ManagersResolver.getInstance().prepare(context);

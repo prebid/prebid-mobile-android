@@ -1,13 +1,17 @@
 package org.prebid.mobile.prebidkotlindemo.ui
 
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.BySelector
 import androidx.test.uiautomator.Until
-import junit.framework.Assert
-import junit.framework.TestCase
 import junit.framework.TestCase.assertNotNull
+import org.hamcrest.Matchers
 import org.junit.Test
 import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
+import java.util.regex.Pattern
 
 class VideoAdsTest : BaseAdsTest() {
     @Test
@@ -31,7 +35,7 @@ class VideoAdsTest : BaseAdsTest() {
 
     private fun checkVideoInterstitialAd() {
         val ad = By.res(packageName, "exo_subtitles")
-        val endCard = By.text("Pbs_intestitial_320x480")
+        val endCard = By.clazz(Pattern.compile(".*PrebidWebViewInterstitial"))
         val closeButton = By.res(packageName, "iv_close_interstitial")
         val skipButton = By.res(packageName, "iv_skip")
 
@@ -43,7 +47,9 @@ class VideoAdsTest : BaseAdsTest() {
         findSkipButton.click()
 
         val findEndCard = device.wait(Until.findObject(endCard), timeout)
-        assertNotNull(findEndCard)
+        if (findEndCard == null) {
+            searchInAllTrees("PrebidWebViewInterstitial")
+        }
 
         val findCloseButton = device.wait(Until.findObject(closeButton), timeout)
         assertNotNull(findCloseButton)
@@ -73,20 +79,27 @@ class VideoAdsTest : BaseAdsTest() {
             closeButton = By.clazz("android.widget.Button")
         } else {
             ad = By.res(packageName, "exo_subtitles")
-            endCard = By.text("Pbs_intestitial_320x480")
+            endCard = By.clazz(Pattern.compile(".*PrebidWebViewInterstitial"))
             closeButton = By.res(packageName, "iv_close_interstitial")
         }
         val findAd = device.wait(Until.findObject(ad), timeout)
         assertNotNull(findAd)
 
         val findEndCard = device.wait(Until.findObject(endCard), timeout * 3)
-        assertNotNull(findEndCard)
+        if (findEndCard == null) {
+            searchInAllTrees("PrebidWebViewInterstitial")
+        }
 
         val findCloseButton = device.wait(Until.findObject(closeButton), timeout)
         assertNotNull(findCloseButton)
         findCloseButton.click()
         Thread.sleep(1000)
         device.pressBack()
+    }
+
+    private fun searchInAllTrees(className: String) {
+        onView(withClassName(Matchers.containsString(className)))
+            .check(matches(isDisplayed()))
     }
 
 }

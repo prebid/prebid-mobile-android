@@ -25,7 +25,7 @@ class AdMobBannerFlexibleFragment : AdMobBannerFragment() {
         }
 
         bannerView = AdView(requireActivity())
-        bannerView?.adSize = GamAdSize.getLandscapeInlineAdaptiveBannerAdSize(requireContext(), GamAdSize.FULL_WIDTH)
+        bannerView?.setAdSize(GamAdSize.getLandscapeInlineAdaptiveBannerAdSize(requireContext(), GamAdSize.FULL_WIDTH))
         bannerView?.adUnitId = adUnitId
         bannerView?.adListener = getListener()
         viewContainer.addView(bannerView)
@@ -33,7 +33,7 @@ class AdMobBannerFlexibleFragment : AdMobBannerFragment() {
         adRequestExtras = Bundle()
         adRequest = AdRequest
             .Builder()
-            .addCustomEventExtrasBundle(PrebidBannerAdapter::class.java, adRequestExtras!!)
+            .addNetworkExtrasBundle(PrebidBannerAdapter::class.java, adRequestExtras!!)
             .build()
         val mediationUtils =
             AdMobMediationBannerUtils(adRequestExtras, bannerView)

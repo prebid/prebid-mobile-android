@@ -22,13 +22,15 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.google.android.gms.ads.MobileAds
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.prebidkotlindemo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        private const val FIRST_AD_SERVER = "In-App"
-        private const val FIRST_AD_TYPE = "Video Banner"
+        private const val FIRST_AD_SERVER = "In-App + AdMob"
+        private const val FIRST_AD_TYPE = ""
     }
 
     private var adType = ""
@@ -43,6 +45,8 @@ class MainActivity : AppCompatActivity() {
         binding.btnShowAd.setOnClickListener { showAd() }
         initAdServerSpinner()
         initDefaultServer()
+
+        PrebidMobile.checkGoogleMobileAdsCompatibility(MobileAds.getVersion().toString())
     }
 
     private fun showAd() {

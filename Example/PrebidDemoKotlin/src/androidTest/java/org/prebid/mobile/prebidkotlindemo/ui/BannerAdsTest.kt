@@ -3,7 +3,6 @@ package org.prebid.mobile.prebidkotlindemo.ui
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Until
 import junit.framework.Assert.assertNotNull
-import junit.framework.Assert.assertTrue
 import org.junit.Test
 import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 
@@ -19,7 +18,7 @@ class BannerAdsTest : BaseAdsTest() {
     }
 
     override fun checkAd(adServer: String,adName:String) {
-        val frameAdWrapperSelector = By.textContains("banner")
+        val frameAdWrapperSelector = By.hasChild(By.clazz("android.webkit.WebView"))
         val findAd = device.wait(Until.findObject(frameAdWrapperSelector), timeout)
         assertNotNull(findAd)
         device.pressBack()
