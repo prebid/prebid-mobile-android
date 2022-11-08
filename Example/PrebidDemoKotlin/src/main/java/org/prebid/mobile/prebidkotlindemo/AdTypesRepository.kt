@@ -15,7 +15,7 @@ import java.util.*
 
 object AdTypesRepository {
 
-    fun get() = mapOf(
+    fun  get() = mapOf(
         "Google Ad Manager" to listOf(
             AdType(
                 "Banner 320x50",

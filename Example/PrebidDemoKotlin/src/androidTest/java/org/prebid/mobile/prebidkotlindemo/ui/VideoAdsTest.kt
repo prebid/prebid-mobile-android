@@ -10,19 +10,34 @@ import androidx.test.uiautomator.Until
 import junit.framework.TestCase.assertNotNull
 import org.hamcrest.Matchers
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
 import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 import java.util.regex.Pattern
 
-class VideoAdsTest : BaseAdsTest() {
+@RunWith(Parameterized::class)
+class VideoAdsTest(
+    private val adServer: String,
+    private val adName: String
+) : BaseAdsTest() {
+
+    companion object {
+        @JvmStatic
+        @Parameterized.Parameters(name = "{0} {1}")
+        fun data() = listOf(
+            arrayOf(TestConstants.GAM, TestConstants.VIDEO_REWARDED),
+            arrayOf(TestConstants.IN_APP_GAM, TestConstants.VIDEO_REWARDED),
+            arrayOf(TestConstants.IN_APP, TestConstants.VIDEO_REWARDED),
+            arrayOf(TestConstants.IN_APP_ADMOB, TestConstants.VIDEO_REWARDED),
+            arrayOf(TestConstants.IN_APP, TestConstants.VIDEO_INTERSTITIAL_WITH_END_CARD),
+            arrayOf(TestConstants.IN_APP, TestConstants.VIDEO_BANNER),
+            arrayOf(TestConstants.IN_APP_GAM, TestConstants.VIDEO_BANNER)
+        )
+    }
+
     @Test
-    fun videoAdsShouldBeDisplayed(){
-        testAd(TestConstants.GAM, TestConstants.VIDEO_REWARDED)
-        testAd(TestConstants.IN_APP_GAM, TestConstants.VIDEO_REWARDED)
-        testAd(TestConstants.IN_APP, TestConstants.VIDEO_REWARDED)
-        testAd(TestConstants.IN_APP_ADMOB, TestConstants.VIDEO_REWARDED)
-        testAd(TestConstants.IN_APP, TestConstants.VIDEO_INTERSTITIAL_WITH_END_CARD)
-        testAd(TestConstants.IN_APP,TestConstants.VIDEO_BANNER)
-        testAd(TestConstants.IN_APP_GAM,TestConstants.VIDEO_BANNER)
+    fun videoAdsShouldBeDisplayed() {
+        testAd(adServer, adName)
     }
 
     override fun checkAd(adServer: String, adName: String) {
@@ -73,7 +88,7 @@ class VideoAdsTest : BaseAdsTest() {
         val ad: BySelector
         val endCard: BySelector
         val closeButton: BySelector
-        if (adServer == TestConstants.GAM){
+        if (adServer == TestConstants.GAM) {
             ad = By.res("video_container")
             endCard = By.text("recycling_300x250")
             closeButton = By.clazz("android.widget.Button")

@@ -5,15 +5,30 @@ import androidx.test.uiautomator.BySelector
 import androidx.test.uiautomator.Until
 import junit.framework.TestCase.assertNotNull
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.Parameterized
 import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 
-class NativeAdsTest : BaseAdsTest() {
+@RunWith(Parameterized::class)
+class NativeAdsTest(
+    private val adServer: String,
+    private val adName: String
+) : BaseAdsTest() {
+
+    companion object {
+        @JvmStatic
+        @Parameterized.Parameters(name = "{0} {1}")
+        fun data() = listOf(
+            arrayOf(TestConstants.GAM, TestConstants.NATIVE_AD),
+            arrayOf(TestConstants.IN_APP, TestConstants.NATIVE_AD),
+            arrayOf(TestConstants.IN_APP_GAM, TestConstants.NATIVE_AD),
+            arrayOf(TestConstants.IN_APP_ADMOB, TestConstants.NATIVE_AD)
+        )
+    }
+
     @Test
     fun nativeAdsShouldBeDisplayed() {
-        testAd(TestConstants.GAM,TestConstants.NATIVE_AD)
-        testAd(TestConstants.IN_APP, TestConstants.NATIVE_AD)
-        testAd(TestConstants.IN_APP_GAM, TestConstants.NATIVE_AD)
-        testAd(TestConstants.IN_APP_ADMOB, TestConstants.NATIVE_AD)
+        testAd(adServer, adName)
     }
 
     override fun checkAd(adServer: String, adName: String) {
@@ -31,10 +46,10 @@ class NativeAdsTest : BaseAdsTest() {
                     By.clazz("android.widget.LinearLayout")
                 )
                 .hasChild(
-                    By.res(packageName,"tvBody")
+                    By.res(packageName, "tvBody")
                 )
                 .hasChild(
-                    By.res(packageName,"imgMedia")
+                    By.res(packageName, "imgMedia")
                 )
             else -> By.clazz("android.widget.LinearLayout")
                 .hasChild(
