@@ -18,6 +18,8 @@ package org.prebid.mobile.prebidkotlindemo
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.preference.PreferenceManager
@@ -87,6 +89,7 @@ class DemoActivity : AppCompatActivity() {
 
         val allAdTypes = AdTypesRepository.get()
         val currentPrimaryAdServerTypes = allAdTypes[adPrimaryServerName]!!
+
         currentAdType = currentPrimaryAdServerTypes.find { it.name == adTypeName }!!
         currentAdType.onCreate(this, binding.frameAdWrapper, adAutoRefreshTime)
     }
