@@ -1,39 +1,30 @@
 package org.prebid.mobile.prebidkotlindemo.ui
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Until
 import junit.framework.Assert.assertNotNull
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.Parameterized
-import org.junit.runners.Suite
-import org.junit.runners.Suite.SuiteClasses
 import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
-@RunWith(Parameterized::class)
-class DisplayInterstitialAdsTest(
-    private val adServer: String,
-    private val adName: String
-)  : BaseAdsTest() {
 
-    companion object {
-        @JvmStatic
-        @Parameterized.Parameters(name = "{0} {1}")
-        fun data() = listOf(
-            arrayOf(TestConstants.IN_APP, TestConstants.DISPLAY_INTERSTITIAL),
-            arrayOf(TestConstants.GAM, TestConstants.DISPLAY_INTERSTITIAL),
-            arrayOf(TestConstants.IN_APP_ADMOB, TestConstants.DISPLAY_INTERSTITIAL),
-            arrayOf(TestConstants.IN_APP_GAM, TestConstants.DISPLAY_INTERSTITIAL)
-        )
-    }
+@RunWith(JUnitParamsRunner::class)
+class InterstitialAdsTest : BaseAdsTest() {
 
     @Test
-    fun displayInterstitialAdsShouldBeDisplayed() {
+    @Parameters(value = [
+        "${TestConstants.IN_APP}, ${TestConstants.DISPLAY_INTERSTITIAL}",
+        "${TestConstants.GAM}, ${TestConstants.DISPLAY_INTERSTITIAL}",
+        "${TestConstants.IN_APP_ADMOB}, ${TestConstants.DISPLAY_INTERSTITIAL}",
+        "${TestConstants.IN_APP_GAM}, ${TestConstants.DISPLAY_INTERSTITIAL}"
+    ])
+    fun displayInterstitialAdsShouldBeDisplayed(adServer: String, adName: String) {
         testAd(adServer, adName)
     }
 
     @Test
-    fun multiformatInterstitialAdsShouldBeDisplayed() {
+    fun multiformatInterstitialAdShouldBeDisplayed() {
         testAd(TestConstants.IN_APP, TestConstants.MULTIFORMAT_INTERSTITIAL)
     }
 
@@ -61,7 +52,6 @@ class DisplayInterstitialAdsTest(
         findCloseButton.click()
         Thread.sleep(1000)
         device.pressBack()
-
 
     }
 

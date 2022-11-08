@@ -8,6 +8,8 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.BySelector
 import androidx.test.uiautomator.Until
 import junit.framework.TestCase.assertNotNull
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.hamcrest.Matchers
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,28 +17,20 @@ import org.junit.runners.Parameterized
 import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 import java.util.regex.Pattern
 
-@RunWith(Parameterized::class)
-class VideoAdsTest(
-    private val adServer: String,
-    private val adName: String
-) : BaseAdsTest() {
-
-    companion object {
-        @JvmStatic
-        @Parameterized.Parameters(name = "{0} {1}")
-        fun data() = listOf(
-            arrayOf(TestConstants.GAM, TestConstants.VIDEO_REWARDED),
-            arrayOf(TestConstants.IN_APP_GAM, TestConstants.VIDEO_REWARDED),
-            arrayOf(TestConstants.IN_APP, TestConstants.VIDEO_REWARDED),
-            arrayOf(TestConstants.IN_APP_ADMOB, TestConstants.VIDEO_REWARDED),
-            arrayOf(TestConstants.IN_APP, TestConstants.VIDEO_INTERSTITIAL_WITH_END_CARD),
-            arrayOf(TestConstants.IN_APP, TestConstants.VIDEO_BANNER),
-            arrayOf(TestConstants.IN_APP_GAM, TestConstants.VIDEO_BANNER)
-        )
-    }
+@RunWith(JUnitParamsRunner::class)
+class VideoAdsTest : BaseAdsTest() {
 
     @Test
-    fun videoAdsShouldBeDisplayed() {
+    @Parameters(value = [
+        "${TestConstants.GAM}, ${TestConstants.VIDEO_REWARDED}",
+        "${TestConstants.IN_APP_GAM}, ${TestConstants.VIDEO_REWARDED}",
+        "${TestConstants.IN_APP}, ${TestConstants.VIDEO_REWARDED}",
+        "${TestConstants.IN_APP_ADMOB}, ${TestConstants.VIDEO_REWARDED}",
+        "${TestConstants.IN_APP}, ${TestConstants.VIDEO_INTERSTITIAL_WITH_END_CARD}",
+        "${TestConstants.IN_APP}, ${TestConstants.VIDEO_BANNER}",
+        "${TestConstants.IN_APP_GAM}, ${TestConstants.VIDEO_BANNER}",
+    ])
+    fun videoAdsShouldBeDisplayed(adServer: String, adName: String) {
         testAd(adServer, adName)
     }
 

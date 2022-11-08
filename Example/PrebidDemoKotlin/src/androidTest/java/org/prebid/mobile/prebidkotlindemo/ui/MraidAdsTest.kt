@@ -4,30 +4,24 @@ import android.os.Build
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Until
 import junit.framework.TestCase.assertNotNull
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.prebid.mobile.prebidkotlindemo.test.BuildConfig
 import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 
-@RunWith(Parameterized::class)
-class MraidAdsTest(
-    private val adServer: String,
-    private val adName: String
-) : BaseAdsTest() {
-
-    companion object {
-        @JvmStatic
-        @Parameterized.Parameters(name = "{0} {1}")
-        fun data() = listOf(
-            arrayOf(TestConstants.IN_APP, TestConstants.MRAID_RESIZE),
-//            arrayOf(TestConstants.IN_APP,TestConstants.MRAID_RESIZE_WITH_ERRORS),
-//            arrayOf(TestConstants.IN_APP,TestConstants.MRAID_EXPAND)
-        )
-    }
+@RunWith(JUnitParamsRunner::class)
+class MraidAdsTest : BaseAdsTest() {
 
     @Test
-    fun mraidAdsShouldBeDisplayed() {
+    @Parameters(value = [
+        "${TestConstants.IN_APP}, ${TestConstants.MRAID_RESIZE}",
+        "${TestConstants.IN_APP}, ${TestConstants.MRAID_RESIZE_WITH_ERRORS}",
+        "${TestConstants.IN_APP}, ${TestConstants.MRAID_EXPAND}"
+    ])
+    fun mraidAdsShouldBeDisplayed(adServer: String, adName: String) {
         testAd(adServer, adName)
     }
 

@@ -4,30 +4,24 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.BySelector
 import androidx.test.uiautomator.Until
 import junit.framework.TestCase.assertNotNull
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 
-@RunWith(Parameterized::class)
-class NativeAdsTest(
-    private val adServer: String,
-    private val adName: String
-) : BaseAdsTest() {
-
-    companion object {
-        @JvmStatic
-        @Parameterized.Parameters(name = "{0} {1}")
-        fun data() = listOf(
-            arrayOf(TestConstants.GAM, TestConstants.NATIVE_AD),
-            arrayOf(TestConstants.IN_APP, TestConstants.NATIVE_AD),
-            arrayOf(TestConstants.IN_APP_GAM, TestConstants.NATIVE_AD),
-            arrayOf(TestConstants.IN_APP_ADMOB, TestConstants.NATIVE_AD)
-        )
-    }
+@RunWith(JUnitParamsRunner::class)
+class NativeAdsTest : BaseAdsTest() {
 
     @Test
-    fun nativeAdsShouldBeDisplayed() {
+    @Parameters(value = [
+        "${TestConstants.GAM}, ${TestConstants.NATIVE_AD}",
+        "${TestConstants.IN_APP}, ${TestConstants.NATIVE_AD}",
+        "${TestConstants.IN_APP_GAM}, ${TestConstants.NATIVE_AD}",
+        "${TestConstants.IN_APP_ADMOB}, ${TestConstants.NATIVE_AD}"
+    ])
+    fun nativeAdsShouldBeDisplayed(adServer: String, adName: String) {
         testAd(adServer, adName)
     }
 
