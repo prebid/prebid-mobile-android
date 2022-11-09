@@ -53,6 +53,7 @@ abstract class BaseAdsTest {
     }
 
     private fun goToAd(adServer: String, adName: String) {
+        Runtime.getRuntime().exec(arrayOf("am", "force-stop", packageName))
         val intent = DemoActivity.getIntent(context, adServer, adName, 30000).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
