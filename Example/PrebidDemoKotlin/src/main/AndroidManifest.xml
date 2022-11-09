@@ -31,15 +31,21 @@
             android:name="applovin.sdk.key"
             android:value="1tLUnP4cVQqpHuHH2yMtfdESvvUhTB05NdbCoDTceDDNVnhd_T8kwIzXDN9iwbdULTboByF-TtNaiTmsoVbxZw" />
 
-        <activity android:name=".MainActivity" android:exported="true">
+        <activity
+            android:name=".activities.MainActivity"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DemoActivity" android:exported="true"/>
-
+        <activity
+            android:name=".activities.DemoActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:exported="true" />
 
 
     </application>

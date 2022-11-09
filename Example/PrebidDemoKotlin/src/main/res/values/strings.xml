@@ -2,9 +2,12 @@
 
     <string name="app_name">Prebid Kotlin Demo</string>
 
-    <string name="adServerText">Ad Server</string>
-    <string name="adTypeText">Ad Type</string>
-    <string name="buttonText">Show Ad</string>
-    <string name="autoRefreshText">Refresh Millis</string>
+    <string name="integration_kind">Integration Kind</string>
+    <string name="ad_format">Ad Format</string>
+    <string name="refresh_time_sec">Refresh Time Seconds</string>
+
+    <string name="search">Search</string>
+    <string name="settings">Settings</string>
+    <string name="settings_text">Demonstration of Prebid SDK customization in the Demo App will be introduced soon.</string>
 
 </resources>

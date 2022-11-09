@@ -1,4 +1,4 @@
-package org.prebid.mobile.prebidkotlindemo
+package org.prebid.mobile.prebidkotlindemo.testcases
 
 import org.prebid.mobile.Host
 import org.prebid.mobile.PrebidMobile
@@ -13,12 +13,12 @@ import org.prebid.mobile.prebidkotlindemo.ads.inappgam.*
 import org.prebid.mobile.prebidkotlindemo.ads.inappmax.*
 import java.util.*
 
-object AdTypesRepository {
+object TestCaseRepository {
 
-    fun  get() = mapOf(
-        "Google Ad Manager" to listOf(
-            AdType(
-                "Banner 320x50",
+    fun get() = mapOf(
+        "GAM (Original API)" to listOf(
+            TestCase(
+                "All",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     GamBanner.create(
                         wrapper, autoRefreshTime,
@@ -31,7 +31,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { GamBanner.destroy() }
             ),
-            AdType("Banner Multisize", onCreate = { _, wrapper, autorefreshTime ->
+            TestCase("Banner Multisize", onCreate = { _, wrapper, autorefreshTime ->
                 GamBanner.create(
                     wrapper, autorefreshTime, 320, 50,
                     "/21808260008/prebid_demo_app_original_api_banner_multisize",
@@ -39,7 +39,7 @@ object AdTypesRepository {
                     "response-prebid-banner-multisize"
                 )
             }),
-            AdType(
+            TestCase(
                 "Banner 300x250",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     GamBanner.create(
@@ -52,7 +52,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { GamBanner.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Native Ad",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     GamNative.create(
@@ -65,7 +65,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { GamNative.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Display Interstitial",
                 onCreate = { activity, _, autoRefreshTime ->
                     GamInterstitial.create(
@@ -78,7 +78,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { GamInterstitial.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Video Interstitial",
                 onCreate = { activity, _, _ ->
                     GamVideoInterstitial.create(
@@ -89,7 +89,7 @@ object AdTypesRepository {
                     )
                 },
                 onDestroy = { GamVideoInterstitial.destroy() }
-            ),AdType(
+            ), TestCase(
                 "Rewarded Interstitial",
                 onCreate = { activity, _, _ ->
                     GamVideoRewarded.create(
@@ -104,7 +104,7 @@ object AdTypesRepository {
         ),
 
         "In-App" to listOf(
-            AdType(
+            TestCase(
                 "Banner 320x50",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppBanner.create(
@@ -116,7 +116,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppBanner.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Banner Multisize",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppBanner.create(
@@ -128,7 +128,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppBanner.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Native Ad",
                 onCreate = { activity, wrapper, _ ->
                     InAppNative.create(
@@ -139,7 +139,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppNative.destroy() }
             ),
-            AdType(
+            TestCase(
                 "MRAID Resize",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppBanner.create(
@@ -151,7 +151,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { GamBanner.destroy() }
             ),
-            AdType(
+            TestCase(
                 "MRAID Expand 1-part",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppBanner.create(
@@ -163,7 +163,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { GamBanner.destroy() }
             ),
-            AdType(
+            TestCase(
                 "MRAID Resize with errors",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppBanner.create(
@@ -175,7 +175,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { GamBanner.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Display Interstitial",
                 onCreate = { context, _, _ ->
                     InAppInterstitial.create(
@@ -188,7 +188,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppInterstitial.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Video Banner",
                 onCreate = { _, wrapper, _ ->
                     InAppVideoBanner.create(
@@ -200,7 +200,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppVideoBanner.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Video Interstitial",
                 onCreate = { context, _, _ ->
                     InAppVideoInterstitial.create(
@@ -211,7 +211,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppVideoInterstitial.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Video Interstitial With End Card",
                 onCreate = { context, _, _ ->
                     InAppVideoInterstitial.create(
@@ -222,7 +222,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppVideoInterstitial.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Multiformat Interstitial",
                 onCreate = { context, _, _ ->
                     val storedAuctionResponses = listOf(
@@ -238,7 +238,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppVideoInterstitial.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Rewarded Interstitial",
                 onCreate = { context, _, _ ->
                     InAppRewardedInterstitial.create(
@@ -252,7 +252,7 @@ object AdTypesRepository {
         ),
 
         "In-App + Google Ad Manager" to listOf(
-            AdType(
+            TestCase(
                 "Banner 320x50",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppGamBanner.create(
@@ -265,20 +265,20 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppGamBanner.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Native Ad",
                 onCreate = { _, wrapper, _ ->
-                   InAppGamNative.create(
-                       wrapper,
-                       "/21808260008/apollo_custom_template_native_ad_unit",
-                       "imp-prebid-banner-native-styles",
-                       "11934135",
-                       "response-prebid-banner-native-styles"
-                   )
+                    InAppGamNative.create(
+                        wrapper,
+                        "/21808260008/apollo_custom_template_native_ad_unit",
+                        "imp-prebid-banner-native-styles",
+                        "11934135",
+                        "response-prebid-banner-native-styles"
+                    )
                 },
                 onDestroy = { InAppGamNative.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Display Interstitial",
                 onCreate = { context, _, _ ->
                     InAppGamInterstitial.create(
@@ -291,7 +291,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppGamInterstitial.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Video Banner",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     InAppGamVideoBanner.create(
@@ -304,7 +304,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppGamVideoBanner.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Video Interstitial",
                 onCreate = { activity, _, _ ->
                     InAppGamVideoInterstitial.create(
@@ -316,7 +316,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppGamVideoInterstitial.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Rewarded Interstitial",
                 onCreate = { activity, _, _ ->
                     InAppGamRewardedInterstitial.create(
@@ -331,7 +331,7 @@ object AdTypesRepository {
         ),
 
         "In-App + AdMob" to listOf(
-            AdType(
+            TestCase(
                 "Banner 320x50",
                 onCreate = { activity, wrapper, autoRefreshTime ->
                     InAppAdMobBanner.create(
@@ -344,7 +344,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppAdMobBanner.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Display Interstitial",
                 onCreate = { activity, _, _ ->
                     InAppAdMobInterstitial.create(
@@ -357,7 +357,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppAdMobInterstitial.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Video Interstitial",
                 onCreate = { activity, _, _ ->
                     InAppAdMobInterstitial.create(
@@ -370,7 +370,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppAdMobInterstitial.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Rewarded Interstitial",
                 onCreate = { activity, _, _ ->
                     InAppAdMobRewarded.create(
@@ -382,7 +382,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppAdMobRewarded.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Native Ad",
                 onCreate = { _, wrapper, _ ->
                     // TODO: Problems with ids (current example's type is not Native)
@@ -400,7 +400,7 @@ object AdTypesRepository {
         ),
 
         "In-App + Applovin MAX" to listOf(
-            AdType(
+            TestCase(
                 "Banner 320x50",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     PrebidMobile.setStoredAuctionResponse("response-prebid-banner-320-50")
@@ -412,7 +412,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppMaxBanner.destroy() }
             ),
-            AdType(
+            TestCase(
                 "MREC",
                 onCreate = { _, wrapper, autoRefreshTime ->
                     PrebidMobile.setStoredAuctionResponse("response-prebid-banner-300-250")
@@ -424,7 +424,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppMaxMrec.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Interstitial",
                 onCreate = { activity, _, _ ->
                     PrebidMobile.setStoredAuctionResponse("response-prebid-display-interstitial-320-480")
@@ -436,7 +436,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppMaxInterstitial.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Rewarded",
                 onCreate = { activity, _, _ ->
                     PrebidMobile.setStoredAuctionResponse("response-prebid-video-rewarded-320-480")
@@ -448,7 +448,7 @@ object AdTypesRepository {
                 },
                 onDestroy = { InAppMaxRewarded.destroy() }
             ),
-            AdType(
+            TestCase(
                 "Native",
                 onCreate = { activity, wrapper, _ ->
                     PrebidMobile.setStoredAuctionResponse("response-prebid-banner-native-styles")

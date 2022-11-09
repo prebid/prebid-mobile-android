@@ -16,18 +16,15 @@
 
 package org.prebid.mobile.prebidkotlindemo
 
-import android.app.Activity
 import android.app.Application
-import android.os.Build
-import android.os.Bundle
 import android.util.Log
-import android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-import android.webkit.WebView
 import com.applovin.sdk.AppLovinSdk
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.TargetingParams
+import org.prebid.mobile.prebidkotlindemo.testcases.TestCaseRepository
+import org.prebid.mobile.prebidkotlindemo.utils.Settings
 
 class CustomApplication : Application() {
 
@@ -37,18 +34,11 @@ class CustomApplication : Application() {
         initAdMob()
         initApplovinMax()
         TargetingParams.setSubjectToGDPR(true)
-        if (BuildConfig.DEBUG) {
-            activateKeepScreenOnFlag()
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(true)
-        }
+        Settings.init(this)
     }
 
-
-
     private fun initPrebidSDK() {
-        AdTypesRepository.usePrebidServer()
+        TestCaseRepository.usePrebidServer()
         PrebidMobile.initializeSdk(applicationContext, null)
         PrebidMobile.setShareGeoLocation(true)
     }
@@ -67,21 +57,6 @@ class CustomApplication : Application() {
         AppLovinSdk.getInstance(this).mediationProvider = "max"
         AppLovinSdk.getInstance(this).initializeSdk { }
         AppLovinSdk.getInstance(this).settings.setVerboseLogging(false)
-    }
-
-    private fun activateKeepScreenOnFlag() {
-        this.registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
-            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                activity.window.addFlags(FLAG_KEEP_SCREEN_ON)
-            }
-
-            override fun onActivityStarted(activity: Activity) {}
-            override fun onActivityResumed(activity: Activity) {}
-            override fun onActivityPaused(activity: Activity) {}
-            override fun onActivityStopped(activity: Activity) {}
-            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
-            override fun onActivityDestroyed(activity: Activity) {}
-        })
     }
 
 }

@@ -13,52 +13,49 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package org.prebid.mobile.prebidkotlindemo
+package org.prebid.mobile.prebidkotlindemo.activities
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.preference.PreferenceManager
 import org.prebid.mobile.PrebidMobile
+import org.prebid.mobile.prebidkotlindemo.R
 import org.prebid.mobile.prebidkotlindemo.databinding.ActivityDemoBinding
+import org.prebid.mobile.prebidkotlindemo.testcases.TestCase
+import org.prebid.mobile.prebidkotlindemo.testcases.TestCaseRepository
+import org.prebid.mobile.prebidkotlindemo.utils.Settings
 
 class DemoActivity : AppCompatActivity() {
 
     companion object {
         private const val ARGS_AD_SERVER_NAME = "adServer"
         private const val ARGS_AD_TYPE_NAME = "adType"
-        private const val ARGS_AD_REFRESH_TIME = "autoRefresh"
 
         fun getIntent(
             context: Context,
             adPrimaryServerName: String,
             adTypeName: String,
-            adAutoRefreshTime: Int
         ): Intent {
             return Intent(context, DemoActivity::class.java).apply {
                 putExtra(ARGS_AD_SERVER_NAME, adPrimaryServerName)
                 putExtra(ARGS_AD_TYPE_NAME, adTypeName)
-                putExtra(ARGS_AD_REFRESH_TIME, adAutoRefreshTime)
             }
         }
     }
 
     private var adPrimaryServerName = ""
     private var adTypeName = ""
-    private var adAutoRefreshTime = 0
 
     private lateinit var binding: ActivityDemoBinding
-    private lateinit var currentAdType: AdType
+    private lateinit var currentTestCase: TestCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_demo)
 
-        AdTypesRepository.usePrebidServer()
+        TestCaseRepository.usePrebidServer()
         useFakeGDPR()
         parseArguments()
         initViews()
@@ -67,7 +64,7 @@ class DemoActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        currentAdType.onDestroy?.let { it() }
+        currentTestCase.onDestroy?.let { it() }
         PrebidMobile.setStoredAuctionResponse(null)
     }
 
@@ -75,7 +72,6 @@ class DemoActivity : AppCompatActivity() {
         intent.apply {
             adPrimaryServerName = getStringExtra(ARGS_AD_SERVER_NAME) ?: ""
             adTypeName = getStringExtra(ARGS_AD_TYPE_NAME) ?: ""
-            adAutoRefreshTime = getIntExtra(ARGS_AD_REFRESH_TIME, 0)
         }
     }
 
@@ -87,20 +83,10 @@ class DemoActivity : AppCompatActivity() {
     private fun createBanner() {
         binding.frameAdWrapper.removeAllViews()
 
-        val allAdTypes = AdTypesRepository.get()
+        val allAdTypes = TestCaseRepository.get()
         val currentPrimaryAdServerTypes = allAdTypes[adPrimaryServerName]!!
 
-        currentAdType = currentPrimaryAdServerTypes.find { it.name == adTypeName }!!
-        currentAdType.onCreate(this, binding.frameAdWrapper, adAutoRefreshTime)
+        currentTestCase = currentPrimaryAdServerTypes.find { it.name == adTypeName }!!
+        currentTestCase.onCreate(this, binding.frameAdWrapper, Settings.get().refreshTimeSeconds)
     }
-
-    private fun useFakeGDPR() {
-        // Only for test cases!!!
-        PreferenceManager.getDefaultSharedPreferences(this).edit().apply {
-            putInt("IABTCF_gdprApplies", 0)
-            putInt("IABTCF_CmpSdkID", 123)
-            apply()
-        }
-    }
-
 }

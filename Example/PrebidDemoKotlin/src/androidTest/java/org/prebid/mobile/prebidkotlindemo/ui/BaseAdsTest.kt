@@ -12,7 +12,7 @@ import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
-import org.prebid.mobile.prebidkotlindemo.DemoActivity
+import org.prebid.mobile.prebidkotlindemo.activities.DemoActivity
 import org.prebid.mobile.prebidkotlindemo.utils.RetryRule
 import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 
@@ -54,7 +54,7 @@ abstract class BaseAdsTest {
 
     private fun goToAd(adServer: String, adName: String) {
         Runtime.getRuntime().exec(arrayOf("am", "force-stop", packageName))
-        val intent = DemoActivity.getIntent(context, adServer, adName, 30000).apply {
+        val intent = DemoActivity.getIntent(context, adServer, adName).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
         context.startActivity(intent)
