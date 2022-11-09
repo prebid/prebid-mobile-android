@@ -2,20 +2,19 @@ package org.prebid.mobile.prebidkotlindemo.ui
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.*
 import org.hamcrest.CoreMatchers.notNullValue
-import org.junit.After
 import org.junit.Assert.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.runner.RunWith
 import org.prebid.mobile.prebidkotlindemo.DemoActivity
+import org.prebid.mobile.prebidkotlindemo.utils.RetryRule
 import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
-import java.io.IOException
 
 
 @RunWith(AndroidJUnit4::class)
@@ -26,11 +25,8 @@ abstract class BaseAdsTest {
     protected lateinit var device: UiDevice
     private lateinit var context: Context
 
-    private lateinit var adServerSpinner: UiObject
-    private lateinit var adTypeSpinner: UiObject
-    private lateinit var showAdButton: UiObject
-
-    private val adsErrorMessagesQueue = ArrayDeque<String>()
+    @get:Rule
+    val retryRule = RetryRule(3)
 
     @Before
     fun startMainActivityFromHomeScreen() {
@@ -38,10 +34,12 @@ abstract class BaseAdsTest {
         context = ApplicationProvider.getApplicationContext()
     }
 
-    @After
-    fun checkErrors() {
-        displayErrorMessages()
+    fun testAd(adServer: String, adName: String) {
+        goToAd(adServer, adName)
+        checkAd(adServer, adName)
     }
+
+    protected abstract fun checkAd(adServer: String, adName: String)
 
     private fun initDevice() {
         device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
@@ -54,31 +52,8 @@ abstract class BaseAdsTest {
         )
     }
 
-    protected fun testAd(adServer: String, adName: String, retryCount: Int = 2) {
-        runCatching {
-            goToAd(adServer, adName)
-            checkAd(adServer, adName)
-        }.getOrElse { throwable ->
-            if (retryCount != 0) {
-                testAd(adServer, adName, retryCount - 1)
-            } else {
-                adsErrorMessagesQueue.add("$adServer - $adName ${throwable.stackTraceToString()}")
-            }
-        }
-    }
-
-    private fun displayErrorMessages() {
-        val failedTestsMessage =
-            adsErrorMessagesQueue.joinToString(separator = System.lineSeparator())
-        if (failedTestsMessage.isNotEmpty()) {
-            adsErrorMessagesQueue.clear()
-            throw AssertionError(failedTestsMessage)
-        }
-    }
-
-    protected abstract fun checkAd(adServer: String, adName: String)
-
     private fun goToAd(adServer: String, adName: String) {
+        Runtime.getRuntime().exec(arrayOf("am", "force-stop", packageName))
         val intent = DemoActivity.getIntent(context, adServer, adName, 30000).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
