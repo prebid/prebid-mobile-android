@@ -1,7 +1,14 @@
 package org.prebid.mobile.javademo.ads;
 
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.javademo.ads.gam.*;
+import org.prebid.mobile.javademo.ads.gam.GamBanner;
+import org.prebid.mobile.javademo.ads.gam.GamInterstitial;
+import org.prebid.mobile.javademo.ads.gam.GamNativeInApp;
+import org.prebid.mobile.javademo.ads.gam.GamNativeInBanner;
+import org.prebid.mobile.javademo.ads.gam.GamRewarded;
+import org.prebid.mobile.javademo.ads.gam.GamVideoBanner;
+import org.prebid.mobile.javademo.ads.gam.GamVideoInstream;
+import org.prebid.mobile.javademo.ads.gam.GamVideoInterstitial;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -204,6 +211,18 @@ public class AdTypesRepository {
                         );
                     },
                     GamNativeInBanner::destroy
+                ),
+                new AdType(
+                    "Video Instream",
+                    (activity, wrapper, autoRefreshTime) -> {
+                        PrebidMobile.setStoredAuctionResponse("response-prebid-video-instream");
+                        GamVideoInstream.create(
+                            wrapper,
+                            "/5300653/test_adunit_vast_pavliuchyk",
+                            "imp-prebid-video-instream"
+                        );
+                    },
+                    GamVideoInstream::destroy
                 )
             )
         );
