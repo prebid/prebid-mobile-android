@@ -25,7 +25,6 @@ import org.prebid.mobile.prebidkotlindemo.R
 import org.prebid.mobile.prebidkotlindemo.databinding.ActivityDemoBinding
 import org.prebid.mobile.prebidkotlindemo.testcases.TestCase
 import org.prebid.mobile.prebidkotlindemo.testcases.TestCaseRepository
-import org.prebid.mobile.prebidkotlindemo.utils.Settings
 
 class DemoActivity : AppCompatActivity() {
 
@@ -56,15 +55,13 @@ class DemoActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_demo)
 
         TestCaseRepository.usePrebidServer()
-        useFakeGDPR()
         parseArguments()
-        initViews()
         createBanner()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        currentTestCase.onDestroy?.let { it() }
+//        currentTestCase.onDestroy?.let { it() }
         PrebidMobile.setStoredAuctionResponse(null)
     }
 
@@ -75,18 +72,13 @@ class DemoActivity : AppCompatActivity() {
         }
     }
 
-    private fun initViews() {
-        binding.tvPrimaryAdServer.text = adPrimaryServerName
-        binding.tvAdType.text = adTypeName
-    }
-
     private fun createBanner() {
         binding.frameAdWrapper.removeAllViews()
 
-        val allAdTypes = TestCaseRepository.get()
-        val currentPrimaryAdServerTypes = allAdTypes[adPrimaryServerName]!!
-
-        currentTestCase = currentPrimaryAdServerTypes.find { it.name == adTypeName }!!
-        currentTestCase.onCreate(this, binding.frameAdWrapper, Settings.get().refreshTimeSeconds)
+//        val allAdTypes = TestCaseRepository.get()
+//        val currentPrimaryAdServerTypes = allAdTypes[adPrimaryServerName]!!
+//
+//        currentTestCase = currentPrimaryAdServerTypes.find { it.name == adTypeName }!!
+//        currentTestCase.onCreate(this, binding.frameAdWrapper, Settings.get().refreshTimeSeconds)
     }
 }

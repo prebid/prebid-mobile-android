@@ -4,11 +4,8 @@ import android.util.Log
 import android.view.ViewGroup
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import org.prebid.mobile.AdUnit
 import org.prebid.mobile.BannerAdUnit
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.addendum.AdViewUtils
@@ -54,6 +51,7 @@ object GamBanner {
 
         val request = AdManagerAdRequest.Builder().build()
         adUnit = BannerAdUnit(configId, width, height)
+        // TODO: ADD IT!!!!
         if (configId.contains("multisize")) {
             adUnit?.addAdditionalSize(728, 90)
         }

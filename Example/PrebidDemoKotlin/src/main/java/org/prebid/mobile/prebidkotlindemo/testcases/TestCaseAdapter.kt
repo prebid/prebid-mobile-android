@@ -6,9 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import org.prebid.mobile.prebidkotlindemo.databinding.ListItemAdTypeBinding
 
-class TestCaseAdapter : RecyclerView.Adapter<TestCaseAdapter.AdTypeViewHolder>() {
+class TestCaseAdapter(
+    private val onItemClicked: (TestCase) -> Unit
+) : RecyclerView.Adapter<TestCaseAdapter.AdTypeViewHolder>() {
 
-    private var list: ArrayList<TestCase> = arrayListOf()
+    private var list: List<TestCase> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdTypeViewHolder {
         val binding = ListItemAdTypeBinding.inflate(
@@ -16,7 +18,10 @@ class TestCaseAdapter : RecyclerView.Adapter<TestCaseAdapter.AdTypeViewHolder>()
             parent,
             false
         )
-        return AdTypeViewHolder(binding)
+
+        val viewHolder = AdTypeViewHolder(binding)
+        viewHolder.setOnItemClickedListener(onItemClicked)
+        return viewHolder
     }
 
     override fun onBindViewHolder(holder: AdTypeViewHolder, position: Int) {
@@ -27,7 +32,7 @@ class TestCaseAdapter : RecyclerView.Adapter<TestCaseAdapter.AdTypeViewHolder>()
 
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setList(list: ArrayList<TestCase>) {
+    fun setList(list: List<TestCase>) {
         this.list = list
         notifyDataSetChanged()
     }
@@ -37,8 +42,17 @@ class TestCaseAdapter : RecyclerView.Adapter<TestCaseAdapter.AdTypeViewHolder>()
         private val binding: ListItemAdTypeBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
+        private var lastTestCase: TestCase? = null
+
         fun bind(testCase: TestCase) {
-            binding.tvName.text = testCase.name
+            lastTestCase = testCase
+            binding.tvName.text = testCase.fullName
+        }
+
+        fun setOnItemClickedListener(onItemClicked: (TestCase) -> Unit) {
+            binding.root.setOnClickListener {
+                onItemClicked(lastTestCase ?: return@setOnClickListener)
+            }
         }
 
     }

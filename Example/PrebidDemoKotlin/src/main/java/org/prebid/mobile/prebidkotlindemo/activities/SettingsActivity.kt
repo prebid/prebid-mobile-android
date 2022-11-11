@@ -8,8 +8,8 @@ import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import org.prebid.mobile.prebidkotlindemo.R
 import org.prebid.mobile.prebidkotlindemo.databinding.ActivitySettingsBinding
-import org.prebid.mobile.prebidkotlindemo.utils.ActionBarUtils
 import org.prebid.mobile.prebidkotlindemo.utils.Settings
+import org.prebid.mobile.prebidkotlindemo.utils.ViewUtils
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -23,7 +23,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_settings)
-        ActionBarUtils.setTitle(getString(R.string.settings), this)
+        ViewUtils.setActionBarTitle(getString(R.string.settings), this)
 
         initViews()
     }

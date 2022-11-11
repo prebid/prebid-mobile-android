@@ -9,6 +9,7 @@
         tools:context="org.prebid.mobile.prebidkotlindemo.activities.MainActivity">
 
         <EditText
+            android:id="@+id/etSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/search"
@@ -35,7 +36,7 @@
                 android:text="@string/integration_kind" />
 
             <Spinner
-                android:id="@+id/spinnerAdServer"
+                android:id="@+id/spinnerIntegrationKind"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"

@@ -1,10 +1,14 @@
 package org.prebid.mobile.prebidkotlindemo.testcases
 
 import android.app.Activity
-import android.view.ViewGroup
 
 data class TestCase(
-    var name: String,
-    var onCreate: (activity: Activity, wrapper: ViewGroup, autoRefreshTime: Int) -> Unit,
-    var onDestroy: (() -> Unit)? = null
-)
+    val adFormat: AdFormat,
+    val integrationKind: IntegrationKind,
+    val description: String,
+    val activity: Class<out Activity>
+) {
+
+    val fullName = "${integrationKind.adServer} ${adFormat.description} $description"
+
+}
