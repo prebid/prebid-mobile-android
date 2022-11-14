@@ -49,7 +49,25 @@
 
         <!-- Test Case Activities -->
         <activity
-            android:name=".activities.ads.gam.original.GamBannerOriginalActivity"
+            android:name=".activities.ads.gam.original.GamOriginalApiDisplayBanner320x50Activity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiDisplayBanner300x250Activity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiDisplayBannerMultiSizeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiDisplayInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiVideoInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiVideoRewardedActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiNativeActivity"
             android:exported="true" />
 
 

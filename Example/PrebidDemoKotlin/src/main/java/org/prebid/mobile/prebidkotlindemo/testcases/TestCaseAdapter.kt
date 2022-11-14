@@ -42,16 +42,16 @@ class TestCaseAdapter(
         private val binding: ListItemAdTypeBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        private var lastTestCase: TestCase? = null
+        private var testCase: TestCase? = null
 
         fun bind(testCase: TestCase) {
-            lastTestCase = testCase
-            binding.tvName.text = testCase.fullName
+            this.testCase = testCase
+            binding.tvName.text = itemView.context.getString(testCase.titleStringRes)
         }
 
         fun setOnItemClickedListener(onItemClicked: (TestCase) -> Unit) {
             binding.root.setOnClickListener {
-                onItemClicked(lastTestCase ?: return@setOnClickListener)
+                onItemClicked(testCase ?: return@setOnClickListener)
             }
         }
 

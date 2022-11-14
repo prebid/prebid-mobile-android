@@ -1,63 +1,57 @@
-package org.prebid.mobile.prebidkotlindemo.ads
+package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original
 
-import android.util.Log
-import android.view.ViewGroup
-import com.google.android.gms.ads.AdListener
+import android.os.Bundle
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import org.prebid.mobile.*
-import org.prebid.mobile.NativeEventTracker.EVENT_TRACKING_METHOD
-import java.lang.Exception
-import java.util.ArrayList
+import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
+import org.prebid.mobile.prebidkotlindemo.utils.Settings
 
-object GamNative {
-    private const val TAG: String = "GamNative"
+class GamOriginalApiNativeActivity : BaseAdActivity() {
+
+    companion object {
+        const val AD_UNIT_ID = "/21808260008/unified_native_ad_unit"
+        const val CONFIG_ID = "imp-prebid-banner-native-styles"
+        const val STORED_RESPONSE = "response-prebid-banner-native-styles"
+    }
 
     private var nativeAdUnit: NativeAdUnit? = null
 
-    fun create(
-        wrapper: ViewGroup,
-        adUnitId: String,
-        configId: String?,
-        autoRefreshTime: Int,
-        storedAuctionResponse: String
-    ) {
-        nativeAdUnit = NativeAdUnit(configId!!)
-        PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
-        configureNativeAdUnit(nativeAdUnit!!)
-        val gamView = AdManagerAdView(wrapper.context)
-        gamView.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                Log.d(TAG, "On ad loaded")
-            }
-        }
-        gamView.adUnitId = adUnitId
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // The ID of Mocked Bid Response on PBS. Only for test cases.
+        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+
+        createAd()
+    }
+
+    private fun createAd() {
+        nativeAdUnit = configureNativeAdUnit()
+
+        val gamView = AdManagerAdView(this)
+        gamView.adUnitId = AD_UNIT_ID
         gamView.setAdSizes(AdSize.FLUID)
-        wrapper.removeAllViews()
-        wrapper.addView(gamView)
+
+        adWrapperView.addView(gamView)
+
         val builder = AdManagerAdRequest.Builder()
-        nativeAdUnit!!.setAutoRefreshInterval(autoRefreshTime)
-        nativeAdUnit!!.fetchDemand(builder) {
+        nativeAdUnit?.setAutoRefreshInterval(Settings.get().refreshTimeSeconds)
+        nativeAdUnit?.fetchDemand(builder) {
             val request = builder.build()
             gamView.loadAd(request)
         }
     }
 
-    fun destroy() {
-        if (nativeAdUnit != null) {
-            nativeAdUnit!!.stopAutoRefresh()
-            nativeAdUnit = null
-        }
-    }
-
-
-    private fun configureNativeAdUnit(adUnit: NativeAdUnit) {
+    private fun configureNativeAdUnit(): NativeAdUnit {
+        val adUnit = NativeAdUnit(CONFIG_ID)
         adUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC)
         adUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED)
         adUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL)
-        val methods = ArrayList<EVENT_TRACKING_METHOD>()
-        methods.add(EVENT_TRACKING_METHOD.IMAGE)
+        val methods = ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD>()
+        methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE)
         try {
             val tracker = NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods)
             adUnit.addEventTracker(tracker)
@@ -89,5 +83,13 @@ object GamNative {
         cta.isRequired = true
         cta.dataType = NativeDataAsset.DATA_TYPE.CTATEXT
         adUnit.addAsset(cta)
+        return adUnit
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        nativeAdUnit?.stopAutoRefresh()
+    }
+
 }

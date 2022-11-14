@@ -4,11 +4,11 @@ enum class AdFormat(
     val description: String
 ) {
 
-    BANNER_DISPLAY("Display Banner"),
-    BANNER_VIDEO("Video Banner"),
-    INTERSTITIAL_DISPLAY("Display Interstitial"),
-    INTERSTITIAL_VIDEO("Video Interstitial"),
-    REWARDED("Rewarded Video"),
+    DISPLAY_BANNER("Display Banner"),
+    VIDEO_BANNER("Video Banner"),
+    DISPLAY_INTERSTITIAL("Display Interstitial"),
+    VIDEO_INTERSTITIAL("Video Interstitial"),
+    VIDEO_REWARDED("Video Rewarded"),
     IN_STREAM_VIDEO("In-stream Video"),
     NATIVE("Native"),
 

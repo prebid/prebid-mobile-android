@@ -2,7 +2,8 @@ package org.prebid.mobile.prebidkotlindemo.testcases
 
 import org.prebid.mobile.Host
 import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original.GamBannerOriginalActivity
+import org.prebid.mobile.prebidkotlindemo.R
+import org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original.*
 
 object TestCaseRepository {
 
@@ -10,101 +11,50 @@ object TestCaseRepository {
 
     fun getList() = arrayListOf(
         TestCase(
-            AdFormat.BANNER_DISPLAY,
+            R.string.gam_original_display_banner_320x50,
+            AdFormat.DISPLAY_BANNER,
             IntegrationKind.GAM_ORIGINAL,
-            "320x480",
-            GamBannerOriginalActivity::class.java,
+            GamOriginalApiDisplayBanner320x50Activity::class.java,
+        ),
+        TestCase(
+            R.string.gam_original_display_banner_300x250,
+            AdFormat.DISPLAY_BANNER,
+            IntegrationKind.GAM_ORIGINAL,
+            GamOriginalApiDisplayBanner300x250Activity::class.java,
+        ),
+        TestCase(
+            R.string.gam_original_display_banner_multi_size,
+            AdFormat.DISPLAY_BANNER,
+            IntegrationKind.GAM_ORIGINAL,
+            GamOriginalApiDisplayBannerMultiSizeActivity::class.java,
+        ),
+        TestCase(
+            R.string.gam_original_display_interstitial,
+            AdFormat.DISPLAY_INTERSTITIAL,
+            IntegrationKind.GAM_ORIGINAL,
+            GamOriginalApiDisplayInterstitialActivity::class.java,
+        ),
+        TestCase(
+            R.string.gam_original_video_interstitial,
+            AdFormat.VIDEO_INTERSTITIAL,
+            IntegrationKind.GAM_ORIGINAL,
+            GamOriginalApiVideoInterstitialActivity::class.java,
+        ),
+        TestCase(
+            R.string.gam_original_video_rewarded,
+            AdFormat.VIDEO_REWARDED,
+            IntegrationKind.GAM_ORIGINAL,
+            GamOriginalApiVideoRewardedActivity::class.java,
+        ),
+        TestCase(
+            R.string.gam_original_native,
+            AdFormat.NATIVE,
+            IntegrationKind.GAM_ORIGINAL,
+            GamOriginalApiNativeActivity::class.java,
         ),
     )
 
 //    fun  get() = mapOf(
-//        "Google Ad Manager" to listOf(
-//            AdType(
-//                "Banner 320x50",
-//                onCreate = { _, wrapper, autoRefreshTime ->
-//                    GamBanner.create(
-//                        wrapper, autoRefreshTime,
-//                        320, 50,
-//                        // TODO: Problem with ids
-//                        "/21808260008/prebid_demo_app_original_api_banner",
-//                        "imp-prebid-banner-320-50",
-//                        "response-prebid-banner-320-50"
-//                    )
-//                },
-//                onDestroy = { GamBanner.destroy() }
-//            ),
-//            AdType("Banner Multisize", onCreate = { _, wrapper, autorefreshTime ->
-//                GamBanner.create(
-//                    wrapper, autorefreshTime, 320, 50,
-//                    "/21808260008/prebid_demo_app_original_api_banner_multisize",
-//                    "imp-prebid-banner-multisize",
-//                    "response-prebid-banner-multisize"
-//                )
-//            }),
-//            AdType(
-//                "Banner 300x250",
-//                onCreate = { _, wrapper, autoRefreshTime ->
-//                    GamBanner.create(
-//                        wrapper, autoRefreshTime,
-//                        300, 250,
-//                        "/21808260008/prebid_demo_app_original_api_banner_300x250_order",
-//                        "imp-prebid-banner-300-250",
-//                        "response-prebid-banner-300-250"
-//                    )
-//                },
-//                onDestroy = { GamBanner.destroy() }
-//            ),
-//            AdType(
-//                "Native Ad",
-//                onCreate = { _, wrapper, autoRefreshTime ->
-//                    GamNative.create(
-//                        wrapper,
-//                        "/21808260008/unified_native_ad_unit",
-//                        "imp-prebid-banner-native-styles",
-//                        autoRefreshTime,
-//                        "response-prebid-banner-native-styles"
-//                    )
-//                },
-//                onDestroy = { GamNative.destroy() }
-//            ),
-//            AdType(
-//                "Display Interstitial",
-//                onCreate = { activity, _, autoRefreshTime ->
-//                    GamInterstitial.create(
-//                        activity, autoRefreshTime,
-//                        // TODO: Problem with ids
-//                        "/21808260008/prebid-demo-app-original-api-display-interstitial",
-//                        "imp-prebid-display-interstitial-320-480",
-//                        "response-prebid-display-interstitial-320-480"
-//                    )
-//                },
-//                onDestroy = { GamInterstitial.destroy() }
-//            ),
-//            AdType(
-//                "Video Interstitial",
-//                onCreate = { activity, _, _ ->
-//                    GamVideoInterstitial.create(
-//                        activity,
-//                        "/21808260008/prebid-demo-app-original-api-video-interstitial",
-//                        "imp-prebid-video-interstitial-320-480",
-//                        "response-prebid-video-interstitial-320-480-original-api"
-//                    )
-//                },
-//                onDestroy = { GamVideoInterstitial.destroy() }
-//            ),AdType(
-//                "Rewarded Interstitial",
-//                onCreate = { activity, _, _ ->
-//                    GamVideoRewarded.create(
-//                        activity,
-//                        "/21808260008/prebid-demo-app-original-api-video-interstitial",
-//                        "imp-prebid-video-rewarded-320-480",
-//                        "response-prebid-video-rewarded-320-480-original-api"
-//                    )
-//                },
-//                onDestroy = { GamVideoRewarded.destroy() }
-//            )
-//        ),
-//
 //        "In-App" to listOf(
 //            AdType(
 //                "Banner 320x50",

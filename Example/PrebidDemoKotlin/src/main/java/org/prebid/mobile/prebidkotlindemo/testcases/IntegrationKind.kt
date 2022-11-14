@@ -8,6 +8,6 @@ enum class IntegrationKind(
     MAX_RENDERING("MAX"),
     AD_MOB_RENDERING("AdMob"),
     NO_AD_SERVER_RENDERING("In-App"),
-    GAM_ORIGINAL("GAM Original API");
+    GAM_ORIGINAL("GAM (Original API)");
 
 }

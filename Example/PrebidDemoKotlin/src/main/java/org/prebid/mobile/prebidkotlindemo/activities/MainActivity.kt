@@ -33,7 +33,6 @@ import org.prebid.mobile.prebidkotlindemo.R
 import org.prebid.mobile.prebidkotlindemo.databinding.ActivityMainBinding
 import org.prebid.mobile.prebidkotlindemo.testcases.*
 import org.prebid.mobile.prebidkotlindemo.utils.Settings
-import org.prebid.mobile.prebidkotlindemo.utils.ViewUtils
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,7 +46,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        ViewUtils.setActionBarTitle(getString(R.string.app_name), this)
 
         initSpinners()
         initSearch()
@@ -154,7 +152,11 @@ class MainActivity : AppCompatActivity() {
                 return@filter false
             }
 
-            if (searchRequest.isNotBlank() && !it.fullName.contains(searchRequest, ignoreCase = true)) {
+            if (searchRequest.isNotBlank() && !getString(it.titleStringRes).contains(
+                    searchRequest,
+                    ignoreCase = true
+                )
+            ) {
                 return@filter false
             }
 
