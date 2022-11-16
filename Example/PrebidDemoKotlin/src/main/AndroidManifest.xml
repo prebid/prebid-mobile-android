@@ -70,6 +70,25 @@
             android:name=".activities.ads.gam.original.GamOriginalApiNativeActivity"
             android:exported="true" />
 
+        <activity
+            android:name=".activities.ads.gam.rendering.GamRenderingApiDisplayBanner320x50Activity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.rendering.GamRenderingApiDisplayInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.rendering.GamRenderingApiVideoBannerActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.rendering.GamRenderingApiVideoInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.rendering.GamRenderingApiVideoRewardedActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.rendering.GamRenderingApiNativeActivity"
+            android:exported="true" />
+
 
     </application>
 

@@ -25,7 +25,6 @@ import org.prebid.mobile.AdUnit
 import org.prebid.mobile.InterstitialAdUnit
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
-import org.prebid.mobile.prebidkotlindemo.utils.Settings
 
 class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
 
@@ -52,7 +51,7 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
         val request = requestBuilder.build()
 
         adUnit = InterstitialAdUnit(CONFIG_ID)
-        adUnit?.setAutoRefreshInterval(Settings.get().refreshTimeSeconds)
+        adUnit?.setAutoRefreshInterval(refreshTimeSeconds)
         adUnit?.fetchDemand(request) {
             val adLoadCallback = object : AdManagerInterstitialAdLoadCallback() {
                 override fun onAdLoaded(adManagerInterstitialAd: AdManagerInterstitialAd) {

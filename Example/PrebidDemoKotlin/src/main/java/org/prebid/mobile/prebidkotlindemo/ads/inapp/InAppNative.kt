@@ -1,22 +1,16 @@
 package org.prebid.mobile.prebidkotlindemo.ads.inapp
 
 import android.app.Activity
-import android.os.Bundle
-import org.prebid.mobile.*
-import org.prebid.mobile.api.mediation.MediationNativeAdUnit
 import android.content.Intent
 import android.net.Uri
-
-import android.widget.TextView
-
+import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-
 import android.widget.LinearLayout
-
-import org.prebid.mobile.PrebidNativeAd
-import org.prebid.mobile.prebidkotlindemo.utils.DownloadImageTask
+import android.widget.TextView
+import org.prebid.mobile.*
+import org.prebid.mobile.api.mediation.MediationNativeAdUnit
 import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider
 
 
@@ -75,7 +69,7 @@ object InAppNative {
     }
 
     private fun ImageView.loadImage(imageUrl:String){
-        DownloadImageTask(this).execute(imageUrl)
+        TODO()
     }
 
     private fun configureNativeAdUnit(nativeAdUnit: MediationNativeAdUnit) {

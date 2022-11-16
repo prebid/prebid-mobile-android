@@ -25,7 +25,6 @@ import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
-import org.prebid.mobile.prebidkotlindemo.utils.Settings
 
 class GamOriginalApiDisplayBannerMultiSizeActivity : BaseAdActivity() {
 
@@ -70,7 +69,7 @@ class GamOriginalApiDisplayBannerMultiSizeActivity : BaseAdActivity() {
 
         val request = AdManagerAdRequest.Builder().build()
         adUnit = BannerAdUnit(CONFIG_ID, WIDTH, HEIGHT)
-        adUnit?.setAutoRefreshInterval(Settings.get().refreshTimeSeconds)
+        adUnit?.setAutoRefreshInterval(refreshTimeSeconds)
 
         // For multi-size request
         adUnit?.addAdditionalSize(728, 90)

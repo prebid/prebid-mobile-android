@@ -4,10 +4,10 @@ enum class IntegrationKind(
     val adServer: String
 ) {
 
-    GAM_RENDERING("GAM"),
-    MAX_RENDERING("MAX"),
-    AD_MOB_RENDERING("AdMob"),
-    NO_AD_SERVER_RENDERING("In-App"),
-    GAM_ORIGINAL("GAM (Original API)");
+    GAM_RENDERING("GAM (Rendering API)"),
+    GAM_ORIGINAL("GAM (Original API)"),
+    MAX("MAX"),
+    ADMOB("AdMob"),
+    NO_AD_SERVER("In-App");
 
 }

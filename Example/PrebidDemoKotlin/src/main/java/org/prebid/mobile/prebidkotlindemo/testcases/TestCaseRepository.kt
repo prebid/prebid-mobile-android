@@ -4,12 +4,14 @@ import org.prebid.mobile.Host
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.prebidkotlindemo.R
 import org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original.*
+import org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering.*
 
 object TestCaseRepository {
 
     lateinit var lastTestCase: TestCase
 
     fun getList() = arrayListOf(
+        /* GAM Original API */
         TestCase(
             R.string.gam_original_display_banner_320x50,
             AdFormat.DISPLAY_BANNER,
@@ -52,9 +54,62 @@ object TestCaseRepository {
             IntegrationKind.GAM_ORIGINAL,
             GamOriginalApiNativeActivity::class.java,
         ),
+
+        /* GAM Rendering API */
+        TestCase(
+            R.string.gam_rendering_display_banner_320x50,
+            AdFormat.DISPLAY_BANNER,
+            IntegrationKind.GAM_RENDERING,
+            GamRenderingApiDisplayBanner320x50Activity::class.java,
+        ),
+        TestCase(
+            R.string.gam_rendering_video_banner,
+            AdFormat.VIDEO_BANNER,
+            IntegrationKind.GAM_RENDERING,
+            GamRenderingApiVideoBannerActivity::class.java,
+        ),
+        TestCase(
+            R.string.gam_rendering_display_interstitial,
+            AdFormat.DISPLAY_INTERSTITIAL,
+            IntegrationKind.GAM_RENDERING,
+            GamRenderingApiDisplayInterstitialActivity::class.java,
+        ),
+        TestCase(
+            R.string.gam_rendering_video_interstitial,
+            AdFormat.VIDEO_INTERSTITIAL,
+            IntegrationKind.GAM_RENDERING,
+            GamRenderingApiVideoInterstitialActivity::class.java,
+        ),
+        TestCase(
+            R.string.gam_rendering_video_rewarded,
+            AdFormat.VIDEO_REWARDED,
+            IntegrationKind.GAM_RENDERING,
+            GamRenderingApiVideoRewardedActivity::class.java,
+        ),
+        TestCase(
+            R.string.gam_rendering_native,
+            AdFormat.NATIVE,
+            IntegrationKind.GAM_RENDERING,
+            GamRenderingApiNativeActivity::class.java,
+        ),
     )
 
-//    fun  get() = mapOf(
+//            AdType(
+//                "Native Ad",
+//                onCreate = { _, wrapper, _ ->
+//                    InAppGamNative.create(
+//                        wrapper,
+//                        "/21808260008/apollo_custom_template_native_ad_unit",
+//                        "imp-prebid-banner-native-styles",
+//                        "11934135",
+//                        "response-prebid-banner-native-styles"
+//                    )
+//                },
+//                onDestroy = { InAppGamNative.destroy() }
+//            ),
+//        ),
+
+
 //        "In-App" to listOf(
 //            AdType(
 //                "Banner 320x50",
@@ -201,85 +256,6 @@ object TestCaseRepository {
 //                },
 //                onDestroy = { InAppRewardedInterstitial.destroy() }
 //            ),
-//        ),
-//
-//        "In-App + Google Ad Manager" to listOf(
-//            AdType(
-//                "Banner 320x50",
-//                onCreate = { _, wrapper, autoRefreshTime ->
-//                    InAppGamBanner.create(
-//                        wrapper, autoRefreshTime / 1000,
-//                        320, 50,
-//                        "/21808260008/prebid_oxb_320x50_banner",
-//                        "imp-prebid-banner-320-50",
-//                        "response-prebid-banner-320-50"
-//                    )
-//                },
-//                onDestroy = { InAppGamBanner.destroy() }
-//            ),
-//            AdType(
-//                "Native Ad",
-//                onCreate = { _, wrapper, _ ->
-//                    InAppGamNative.create(
-//                        wrapper,
-//                        "/21808260008/apollo_custom_template_native_ad_unit",
-//                        "imp-prebid-banner-native-styles",
-//                        "11934135",
-//                        "response-prebid-banner-native-styles"
-//                    )
-//                },
-//                onDestroy = { InAppGamNative.destroy() }
-//            ),
-//            AdType(
-//                "Display Interstitial",
-//                onCreate = { context, _, _ ->
-//                    InAppGamInterstitial.create(
-//                        context,
-//                        30, 30,
-//                        "/21808260008/prebid_oxb_html_interstitial",
-//                        "imp-prebid-display-interstitial-320-480",
-//                        "response-prebid-display-interstitial-320-480"
-//                    )
-//                },
-//                onDestroy = { InAppGamInterstitial.destroy() }
-//            ),
-//            AdType(
-//                "Video Banner",
-//                onCreate = { _, wrapper, autoRefreshTime ->
-//                    InAppGamVideoBanner.create(
-//                        wrapper, autoRefreshTime / 1000,
-//                        300, 250,
-//                        "/21808260008/prebid_oxb_300x250_banner",
-//                        "imp-prebid-video-outstream",
-//                        "response-prebid-video-outstream"
-//                    )
-//                },
-//                onDestroy = { InAppGamVideoBanner.destroy() }
-//            ),
-//            AdType(
-//                "Video Interstitial",
-//                onCreate = { activity, _, _ ->
-//                    InAppGamVideoInterstitial.create(
-//                        activity,
-//                        "/21808260008/prebid-demo-app-original-api-video-interstitial",
-//                        "imp-prebid-video-interstitial-320-480",
-//                        "response-prebid-video-interstitial-320-480"
-//                    )
-//                },
-//                onDestroy = { InAppGamVideoInterstitial.destroy() }
-//            ),
-//            AdType(
-//                "Rewarded Interstitial",
-//                onCreate = { activity, _, _ ->
-//                    InAppGamRewardedInterstitial.create(
-//                        activity,
-//                        "/21808260008/prebid-demo-app-original-api-video-interstitial",
-//                        "imp-prebid-video-rewarded-320-480",
-//                        "response-prebid-video-rewarded-320-480"
-//                    )
-//                },
-//                onDestroy = { InAppGamRewardedInterstitial.destroy() }
-//            )
 //        ),
 //
 //        "In-App + AdMob" to listOf(

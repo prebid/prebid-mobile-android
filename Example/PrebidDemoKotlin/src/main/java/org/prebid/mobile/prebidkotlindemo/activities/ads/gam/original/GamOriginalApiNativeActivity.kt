@@ -6,7 +6,6 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import org.prebid.mobile.*
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
-import org.prebid.mobile.prebidkotlindemo.utils.Settings
 
 class GamOriginalApiNativeActivity : BaseAdActivity() {
 
@@ -38,7 +37,7 @@ class GamOriginalApiNativeActivity : BaseAdActivity() {
         adWrapperView.addView(gamView)
 
         val builder = AdManagerAdRequest.Builder()
-        nativeAdUnit?.setAutoRefreshInterval(Settings.get().refreshTimeSeconds)
+        nativeAdUnit?.setAutoRefreshInterval(refreshTimeSeconds)
         nativeAdUnit?.fetchDemand(builder) {
             val request = builder.build()
             gamView.loadAd(request)

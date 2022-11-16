@@ -18,4 +18,11 @@
     <string name="gam_original_video_rewarded">GAM (Original API) Video Rewarded</string>
     <string name="gam_original_native">GAM (Original API) Native</string>
 
+    <string name="gam_rendering_display_banner_320x50">GAM (Rendering API) Banner 320x50</string>
+    <string name="gam_rendering_display_interstitial">GAM (Rendering API) Display Interstitial</string>
+    <string name="gam_rendering_video_banner">GAM (Rendering API) Video Banner</string>
+    <string name="gam_rendering_video_interstitial">GAM (Rendering API) Video Interstitial</string>
+    <string name="gam_rendering_video_rewarded">GAM (Rendering API) Video Rewarded</string>
+    <string name="gam_rendering_native">GAM (Rendering API) Native</string>
+
 </resources>
