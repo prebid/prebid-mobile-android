@@ -47,7 +47,7 @@
             android:name=".activities.SettingsActivity"
             android:exported="true" />
 
-        <!-- Test Case Activities -->
+        <!-- GAM Original -->
         <activity
             android:name=".activities.ads.gam.original.GamOriginalApiDisplayBanner320x50Activity"
             android:exported="true" />
@@ -70,6 +70,7 @@
             android:name=".activities.ads.gam.original.GamOriginalApiNativeActivity"
             android:exported="true" />
 
+        <!-- GAM Rendering -->
         <activity
             android:name=".activities.ads.gam.rendering.GamRenderingApiDisplayBanner320x50Activity"
             android:exported="true" />
@@ -89,6 +90,43 @@
             android:name=".activities.ads.gam.rendering.GamRenderingApiNativeActivity"
             android:exported="true" />
 
+        <!-- In-App -->
+        <activity
+            android:name=".activities.ads.inapp.InAppDisplayBanner320x50Activity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppDisplayBannerMultiSizeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppDisplayBannerMraidResizeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppDisplayBannerMraidExpandActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppDisplayBannerMraidResizeWithErrorsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppVideoBannerActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppDisplayInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppVideoInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppVideoInterstitialWithEndCardActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppVideoInterstitialMultiFormatActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppVideoRewardedActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppNativeActivity"
+            android:exported="true" />
 
     </application>
 

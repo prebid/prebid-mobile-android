@@ -18,11 +18,24 @@
     <string name="gam_original_video_rewarded">GAM (Original API) Video Rewarded</string>
     <string name="gam_original_native">GAM (Original API) Native</string>
 
-    <string name="gam_rendering_display_banner_320x50">GAM (Rendering API) Banner 320x50</string>
+    <string name="gam_rendering_display_banner_320x50">GAM (Rendering API) Display Banner 320x50</string>
     <string name="gam_rendering_display_interstitial">GAM (Rendering API) Display Interstitial</string>
     <string name="gam_rendering_video_banner">GAM (Rendering API) Video Banner</string>
     <string name="gam_rendering_video_interstitial">GAM (Rendering API) Video Interstitial</string>
     <string name="gam_rendering_video_rewarded">GAM (Rendering API) Video Rewarded</string>
     <string name="gam_rendering_native">GAM (Rendering API) Native</string>
+
+    <string name="in_app_display_banner_320x50">In-App Display Banner 320x50</string>
+    <string name="in_app_display_banner_multi_size">In-App Display Banner Multi-size</string>
+    <string name="in_app_display_banner_mraid_resize">In-App Display Banner 320x50 MRAID Resize</string>
+    <string name="in_app_display_banner_mraid_expand">In-App Display Banner 320x50 MRAID Expand 1-Part</string>
+    <string name="in_app_display_banner_mraid_resize_errors">In-App Display Banner 320x50 MRAID Resize With Errors</string>
+    <string name="in_app_video_banner">In-App Video Banner</string>
+    <string name="in_app_display_interstitial">In-App Display Interstitial</string>
+    <string name="in_app_video_interstitial">In-App Video Interstitial</string>
+    <string name="in_app_video_interstitial_end_card">In-App Video Interstitial With End Card</string>
+    <string name="in_app_video_interstitial_multi_format">In-App Video Interstitial Multi-Format</string>
+    <string name="in_app_video_rewarded">In-App Video Rewarded</string>
+    <string name="in_app_native">In-App Native</string>
 
 </resources>

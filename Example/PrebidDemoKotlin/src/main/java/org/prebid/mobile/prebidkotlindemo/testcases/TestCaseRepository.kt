@@ -5,6 +5,7 @@ import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.prebidkotlindemo.R
 import org.prebid.mobile.prebidkotlindemo.activities.ads.gam.original.*
 import org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering.*
+import org.prebid.mobile.prebidkotlindemo.activities.ads.inapp.*
 
 object TestCaseRepository {
 
@@ -92,132 +93,77 @@ object TestCaseRepository {
             IntegrationKind.GAM_RENDERING,
             GamRenderingApiNativeActivity::class.java,
         ),
+
+        /* In-App (no ad server) */
+        TestCase(
+            R.string.in_app_display_banner_320x50,
+            AdFormat.DISPLAY_BANNER,
+            IntegrationKind.NO_AD_SERVER,
+            InAppDisplayBanner320x50Activity::class.java,
+        ),
+        TestCase(
+            R.string.in_app_display_banner_multi_size,
+            AdFormat.DISPLAY_BANNER,
+            IntegrationKind.NO_AD_SERVER,
+            InAppDisplayBannerMultiSizeActivity::class.java,
+        ),
+        TestCase(
+            R.string.in_app_display_banner_mraid_resize,
+            AdFormat.DISPLAY_BANNER,
+            IntegrationKind.NO_AD_SERVER,
+            InAppDisplayBannerMraidResizeActivity::class.java,
+        ),
+        TestCase(
+            R.string.in_app_display_banner_mraid_expand,
+            AdFormat.DISPLAY_BANNER,
+            IntegrationKind.NO_AD_SERVER,
+            InAppDisplayBannerMraidExpandActivity::class.java,
+        ),
+        TestCase(
+            R.string.in_app_video_banner,
+            AdFormat.VIDEO_BANNER,
+            IntegrationKind.NO_AD_SERVER,
+            InAppVideoBannerActivity::class.java,
+        ),
+        TestCase(
+            R.string.in_app_display_interstitial,
+            AdFormat.DISPLAY_INTERSTITIAL,
+            IntegrationKind.NO_AD_SERVER,
+            InAppDisplayInterstitialActivity::class.java,
+        ),
+        TestCase(
+            R.string.in_app_video_interstitial,
+            AdFormat.VIDEO_INTERSTITIAL,
+            IntegrationKind.NO_AD_SERVER,
+            InAppVideoInterstitialActivity::class.java,
+        ),
+        TestCase(
+            R.string.in_app_video_interstitial_end_card,
+            AdFormat.VIDEO_INTERSTITIAL,
+            IntegrationKind.NO_AD_SERVER,
+            InAppVideoInterstitialWithEndCardActivity::class.java,
+        ),
+        TestCase(
+            R.string.in_app_video_interstitial_multi_format,
+            AdFormat.VIDEO_INTERSTITIAL,
+            IntegrationKind.NO_AD_SERVER,
+            InAppVideoInterstitialMultiFormatActivity::class.java,
+        ),
+        TestCase(
+            R.string.in_app_video_rewarded,
+            AdFormat.VIDEO_REWARDED,
+            IntegrationKind.NO_AD_SERVER,
+            InAppVideoRewardedActivity::class.java,
+        ),
+        TestCase(
+            R.string.in_app_native,
+            AdFormat.NATIVE,
+            IntegrationKind.NO_AD_SERVER,
+            InAppNativeActivity::class.java,
+        ),
     )
 
-//            AdType(
-//                "Native Ad",
-//                onCreate = { _, wrapper, _ ->
-//                    InAppGamNative.create(
-//                        wrapper,
-//                        "/21808260008/apollo_custom_template_native_ad_unit",
-//                        "imp-prebid-banner-native-styles",
-//                        "11934135",
-//                        "response-prebid-banner-native-styles"
-//                    )
-//                },
-//                onDestroy = { InAppGamNative.destroy() }
-//            ),
-//        ),
-
-
 //        "In-App" to listOf(
-//            AdType(
-//                "Banner 320x50",
-//                onCreate = { _, wrapper, autoRefreshTime ->
-//                    InAppBanner.create(
-//                        wrapper, autoRefreshTime / 1000,
-//                        320, 50,
-//                        "imp-prebid-banner-320-50",
-//                        "response-prebid-banner-320-50"
-//                    )
-//                },
-//                onDestroy = { InAppBanner.destroy() }
-//            ),
-//            AdType(
-//                "Banner Multisize",
-//                onCreate = { _, wrapper, autoRefreshTime ->
-//                    InAppBanner.create(
-//                        wrapper, autoRefreshTime / 1000,
-//                        728, 90,
-//                        "imp-prebid-banner-multisize",
-//                        "response-prebid-banner-multisize"
-//                    )
-//                },
-//                onDestroy = { InAppBanner.destroy() }
-//            ),
-//            AdType(
-//                "Native Ad",
-//                onCreate = { activity, wrapper, _ ->
-//                    InAppNative.create(
-//                        "imp-prebid-banner-native-styles",
-//                        wrapper, activity,
-//                        "response-prebid-banner-native-styles"
-//                    )
-//                },
-//                onDestroy = { InAppNative.destroy() }
-//            ),
-//            AdType(
-//                "MRAID Resize",
-//                onCreate = { _, wrapper, autoRefreshTime ->
-//                    InAppBanner.create(
-//                        wrapper, autoRefreshTime / 1000,
-//                        320, 50,
-//                        "imp-prebid-mraid-resize",
-//                        "response-prebid-mraid-resize"
-//                    )
-//                },
-//                onDestroy = { GamBanner.destroy() }
-//            ),
-//            AdType(
-//                "MRAID Expand 1-part",
-//                onCreate = { _, wrapper, autoRefreshTime ->
-//                    InAppBanner.create(
-//                        wrapper, autoRefreshTime / 1000,
-//                        320, 50,
-//                        "imp-prebid-mraid-expand-1-part",
-//                        "response-prebid-mraid-expand-1-part"
-//                    )
-//                },
-//                onDestroy = { GamBanner.destroy() }
-//            ),
-//            AdType(
-//                "MRAID Resize with errors",
-//                onCreate = { _, wrapper, autoRefreshTime ->
-//                    InAppBanner.create(
-//                        wrapper, autoRefreshTime / 1000,
-//                        300, 100,
-//                        "imp-prebid-mraid-resize-with-errors",
-//                        "response-prebid-mraid-resize-with-errors"
-//                    )
-//                },
-//                onDestroy = { GamBanner.destroy() }
-//            ),
-//            AdType(
-//                "Display Interstitial",
-//                onCreate = { context, _, _ ->
-//                    InAppInterstitial.create(
-//                        context,
-//                        30, 30,
-//                        "imp-prebid-display-interstitial-320-480",
-//                        "response-prebid-display-interstitial-320-480",
-//                        EnumSet.of(AdUnitFormat.DISPLAY)
-//                    )
-//                },
-//                onDestroy = { InAppInterstitial.destroy() }
-//            ),
-//            AdType(
-//                "Video Banner",
-//                onCreate = { _, wrapper, _ ->
-//                    InAppVideoBanner.create(
-//                        wrapper,
-//                        300, 250,
-//                        "imp-prebid-video-outstream",
-//                        "response-prebid-video-outstream"
-//                    )
-//                },
-//                onDestroy = { InAppVideoBanner.destroy() }
-//            ),
-//            AdType(
-//                "Video Interstitial",
-//                onCreate = { context, _, _ ->
-//                    InAppVideoInterstitial.create(
-//                        context,
-//                        "imp-prebid-video-interstitial-320-480",
-//                        "response-prebid-video-interstitial-320-480"
-//                    )
-//                },
-//                onDestroy = { InAppVideoInterstitial.destroy() }
-//            ),
 //            AdType(
 //                "Video Interstitial With End Card",
 //                onCreate = { context, _, _ ->
@@ -244,17 +190,6 @@ object TestCaseRepository {
 //                    )
 //                },
 //                onDestroy = { InAppVideoInterstitial.destroy() }
-//            ),
-//            AdType(
-//                "Rewarded Interstitial",
-//                onCreate = { context, _, _ ->
-//                    InAppRewardedInterstitial.create(
-//                        context,
-//                        "imp-prebid-video-rewarded-320-480",
-//                        "response-prebid-video-rewarded-320-480"
-//                    )
-//                },
-//                onDestroy = { InAppRewardedInterstitial.destroy() }
 //            ),
 //        ),
 //
