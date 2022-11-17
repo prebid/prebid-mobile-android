@@ -12,7 +12,6 @@ import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
-import org.prebid.mobile.prebidkotlindemo.activities.DemoActivity
 import org.prebid.mobile.prebidkotlindemo.utils.RetryRule
 import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 

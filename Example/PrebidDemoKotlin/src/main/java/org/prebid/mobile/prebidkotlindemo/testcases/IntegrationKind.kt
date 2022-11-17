@@ -6,8 +6,8 @@ enum class IntegrationKind(
 
     GAM_RENDERING("GAM (Rendering API)"),
     GAM_ORIGINAL("GAM (Original API)"),
-    MAX("MAX"),
+    NO_AD_SERVER("In-App (No Ad Server)"),
     ADMOB("AdMob"),
-    NO_AD_SERVER("In-App (No Ad Server)");
+    MAX("AppLovin MAX");
 
 }

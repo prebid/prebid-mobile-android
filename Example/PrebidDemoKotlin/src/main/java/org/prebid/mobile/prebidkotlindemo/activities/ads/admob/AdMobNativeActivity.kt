@@ -1,4 +1,19 @@
-package org.prebid.mobile.prebidkotlindemo.ads.inappadmob
+/*
+ *    Copyright 2018-2019 Prebid.org, Inc.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+package org.prebid.mobile.prebidkotlindemo.activities.ads.admob
 
 import android.os.Bundle
 import android.util.Log
@@ -12,34 +27,42 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
 import org.prebid.mobile.*
 import org.prebid.mobile.admob.PrebidNativeAdapter
+import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 import org.prebid.mobile.prebidkotlindemo.databinding.ViewNativeAdAdMobBinding
 
+class AdMobNativeActivity : BaseAdActivity() {
 
-object InAppAdMobNative {
-
-    const val TAG = "InAppAdMobNative"
+    companion object {
+        const val AD_UNIT_ID = "ca-app-pub-1875909575462531/9720985924"
+        const val CONFIG_ID = "imp-prebid-banner-native-styles"
+        const val STORED_RESPONSE = "response-prebid-banner-native-styles"
+    }
 
     private var nativeAd: NativeAd? = null
 
-    fun create(
-        wrapper: ViewGroup,
-        adUnitId: String,
-        configId: String,
-        storedAuctionResponse: String
-    ) {
-        PrebidMobile.setStoredAuctionResponse(storedAuctionResponse)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // The ID of Mocked Bid Response on PBS. Only for test cases.
+        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
+
+        createAd()
+    }
+
+    private fun createAd() {
         val nativeAdOptions = NativeAdOptions
             .Builder()
             .build()
         val adLoader = AdLoader
-            .Builder(wrapper.context, adUnitId)
+            .Builder(this, AD_UNIT_ID)
             .forNativeAd { ad: NativeAd ->
                 nativeAd = ad
-                createCustomView(wrapper, nativeAd!!)
+                createCustomView(adWrapperView, nativeAd!!)
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.e(TAG, "Error: ${adError.message}")
+                    Log.e("AdMobNative", "Error: ${adError.message}")
                 }
             })
             .withNativeAdOptions(nativeAdOptions)
@@ -51,20 +74,14 @@ object InAppAdMobNative {
             .addNetworkExtrasBundle(PrebidNativeAdapter::class.java, extras)
             .build()
 
-        val nativeAdUnit = NativeAdUnit(configId)
+        val nativeAdUnit = NativeAdUnit(CONFIG_ID)
         configureNativeAdUnit(nativeAdUnit)
         nativeAdUnit.fetchDemand(extras) { resultCode ->
-            Log.d(TAG, "Fetch demand result: $resultCode")
+            Log.d("AdMobNative", "Fetch demand result: $resultCode")
 
             /** For mediation use loadAd() not loadAds() */
             adLoader.loadAd(adRequest)
         }
-
-    }
-
-    fun destroy() {
-        nativeAd?.destroy()
-        nativeAd = null
     }
 
     private fun createCustomView(wrapper: ViewGroup, nativeAd: NativeAd) {
@@ -134,6 +151,12 @@ object InAppAdMobNative {
         cta.isRequired = true
         cta.dataType = NativeDataAsset.DATA_TYPE.CTATEXT
         nativeAdUnit.addAsset(cta)
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        nativeAd?.destroy()
     }
 
 }

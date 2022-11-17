@@ -38,4 +38,16 @@
     <string name="in_app_video_rewarded">In-App Video Rewarded</string>
     <string name="in_app_native">In-App Native</string>
 
+    <string name="ad_mob_display_banner_320x50">AdMob Display Banner 320x50</string>
+    <string name="ad_mob_display_interstitial">AdMob Display Interstitial</string>
+    <string name="ad_mob_video_interstitial">AdMob Video Interstitial</string>
+    <string name="ad_mob_video_rewarded">AdMob Video Rewarded</string>
+    <string name="ad_mob_native">AdMob Native</string>
+
+    <string name="app_lovin_max_display_banner_320x50">AppLovin MAX Display Banner 320x50</string>
+    <string name="app_lovin_max_display_banner_300x250">AppLovin MAX Display Banner 300x250</string>
+    <string name="app_lovin_max_display_interstitial">AppLovin MAX Display Interstitial</string>
+    <string name="app_lovin_max_video_rewarded">AppLovin MAX Video Rewarded</string>
+    <string name="app_lovin_max_native">AppLovin MAX Native</string>
+
 </resources>
