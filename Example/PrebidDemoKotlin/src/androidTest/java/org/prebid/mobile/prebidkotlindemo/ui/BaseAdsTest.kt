@@ -2,6 +2,7 @@ package org.prebid.mobile.prebidkotlindemo.ui
 
 import android.content.Context
 import android.content.Intent
+import androidx.annotation.StringRes
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SdkSuppress
@@ -12,15 +13,16 @@ import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
+import org.prebid.mobile.prebidkotlindemo.testcases.TestCase
+import org.prebid.mobile.prebidkotlindemo.testcases.TestCaseRepository
 import org.prebid.mobile.prebidkotlindemo.utils.RetryRule
-import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
 
 
 @RunWith(AndroidJUnit4::class)
 @SdkSuppress(minSdkVersion = 18)
 abstract class BaseAdsTest {
     protected val packageName = "org.prebid.mobile.prebidkotlindemo"
-    protected val timeout = TestConstants.WAITING_TIME
+    protected val timeout = 8000L
     protected lateinit var device: UiDevice
     private lateinit var context: Context
 
@@ -33,12 +35,15 @@ abstract class BaseAdsTest {
         context = ApplicationProvider.getApplicationContext()
     }
 
-    fun testAd(adServer: String, adName: String) {
-        goToAd(adServer, adName)
-        checkAd(adServer, adName)
+    fun testAd(@StringRes stringResId: Int) {
+        val testCase = TestCaseRepository.getList().first { it.titleStringRes == stringResId }
+        TestCaseRepository.lastTestCase = testCase
+
+        goToAd(testCase)
+        checkAd(testCase)
     }
 
-    protected abstract fun checkAd(adServer: String, adName: String)
+    protected abstract fun checkAd(testCase: TestCase)
 
     private fun initDevice() {
         device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
@@ -51,11 +56,13 @@ abstract class BaseAdsTest {
         )
     }
 
-    private fun goToAd(adServer: String, adName: String) {
-        Runtime.getRuntime().exec(arrayOf("am", "force-stop", packageName))
-        val intent = DemoActivity.getIntent(context, adServer, adName).apply {
+    private fun goToAd(testCase: TestCase) {
+//        Runtime.getRuntime().exec(arrayOf("am", "force-stop", packageName))
+
+        val intent = Intent(context, testCase.activity).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
         context.startActivity(intent)
     }
+
 }

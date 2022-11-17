@@ -120,6 +120,12 @@ object TestCaseRepository {
             InAppDisplayBannerMraidExpandActivity::class.java,
         ),
         TestCase(
+            R.string.in_app_display_banner_mraid_resize_errors,
+            AdFormat.DISPLAY_BANNER,
+            IntegrationKind.NO_AD_SERVER,
+            InAppDisplayBannerMraidResizeWithErrorsActivity::class.java,
+        ),
+        TestCase(
             R.string.in_app_video_banner,
             AdFormat.VIDEO_BANNER,
             IntegrationKind.NO_AD_SERVER,
