@@ -75,17 +75,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-//    private fun showAd() {
-////        val intent = DemoActivity.getIntent(this, integrationKind, adFormat)
-////        startActivity(intent)
-//
-//
-//        // TODO:
-//        TestCaseRepository.usePrebidServer()
-//        // TestCaseRepository.lastTestCase = ...
-//
-//    }
-
     private fun initSpinners() {
         binding.spinnerIntegrationKind.apply {
             adapter = ArrayAdapter(
