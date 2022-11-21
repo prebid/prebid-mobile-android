@@ -31,16 +31,133 @@
             android:name="applovin.sdk.key"
             android:value="1tLUnP4cVQqpHuHH2yMtfdESvvUhTB05NdbCoDTceDDNVnhd_T8kwIzXDN9iwbdULTboByF-TtNaiTmsoVbxZw" />
 
-        <activity android:name=".MainActivity" android:exported="true">
+        <activity
+            android:name=".activities.MainActivity"
+            android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DemoActivity" android:exported="true"/>
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:exported="true" />
 
+        <!-- GAM Original -->
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiDisplayBanner320x50Activity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiDisplayBanner300x250Activity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiDisplayBannerMultiSizeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiDisplayInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiVideoInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiVideoRewardedActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiNativeActivity"
+            android:exported="true" />
 
+        <!-- GAM Rendering -->
+        <activity
+            android:name=".activities.ads.gam.rendering.GamRenderingApiDisplayBanner320x50Activity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.rendering.GamRenderingApiDisplayInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.rendering.GamRenderingApiVideoBannerActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.rendering.GamRenderingApiVideoInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.rendering.GamRenderingApiVideoRewardedActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.rendering.GamRenderingApiNativeActivity"
+            android:exported="true" />
+
+        <!-- In-App -->
+        <activity
+            android:name=".activities.ads.inapp.InAppDisplayBanner320x50Activity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppDisplayBannerMultiSizeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppDisplayBannerMraidResizeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppDisplayBannerMraidExpandActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppDisplayBannerMraidResizeWithErrorsActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppVideoBannerActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppDisplayInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppVideoInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppVideoInterstitialWithEndCardActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppVideoInterstitialMultiFormatActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppVideoRewardedActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.inapp.InAppNativeActivity"
+            android:exported="true" />
+
+        <!-- AdMob -->
+        <activity
+            android:name=".activities.ads.admob.AdMobDisplayBanner320x50Activity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.admob.AdMobDisplayInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.admob.AdMobVideoInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.admob.AdMobVideoRewardedActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.admob.AdMobNativeActivity"
+            android:exported="true" />
+
+        <!-- AppLovin MAX -->
+        <activity
+            android:name=".activities.ads.applovin.AppLovinMaxDisplayBanner320x50Activity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.applovin.AppLovinMaxDisplayBanner300x250Activity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.applovin.AppLovinMaxDisplayInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.applovin.AppLovinMaxVideoRewardedActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.applovin.AppLovinMaxNativeActivity"
+            android:exported="true" />
 
     </application>
 

@@ -1,35 +1,42 @@
 package org.prebid.mobile.prebidkotlindemo.ui
 
 import android.os.Build
+import androidx.annotation.StringRes
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Until
 import junit.framework.TestCase.assertNotNull
-import junitparams.JUnitParamsRunner
-import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
-import org.prebid.mobile.prebidkotlindemo.test.BuildConfig
-import org.prebid.mobile.prebidkotlindemo.utils.TestConstants
+import org.prebid.mobile.prebidkotlindemo.R
+import org.prebid.mobile.prebidkotlindemo.testcases.TestCase
 
-@RunWith(JUnitParamsRunner::class)
-class MraidAdsTest : BaseAdsTest() {
+@RunWith(Parameterized::class)
+class MraidAdsTest(
+    @StringRes private val testCaseTitleId: Int,
+    private val testCaseName: String
+) : BaseAdsTest() {
 
-    @Test
-    @Parameters(value = [
-        "${TestConstants.IN_APP}, ${TestConstants.MRAID_RESIZE}",
-        "${TestConstants.IN_APP}, ${TestConstants.MRAID_RESIZE_WITH_ERRORS}",
-        "${TestConstants.IN_APP}, ${TestConstants.MRAID_EXPAND}"
-    ])
-    fun mraidAdsShouldBeDisplayed(adServer: String, adName: String) {
-        testAd(adServer, adName)
+    companion object {
+        @JvmStatic
+        @Parameterized.Parameters(name = "{1}")
+        fun arguments() = listOf(
+            arrayOf(R.string.in_app_display_banner_mraid_resize, "In-App MRAID Resize"),
+            arrayOf(R.string.in_app_display_banner_mraid_resize_errors, "In-App MRAID Resize With Errors"),
+            arrayOf(R.string.in_app_display_banner_mraid_expand, "In-App MRAID Expand"),
+        )
     }
 
-    override fun checkAd(adServer: String, adName: String) {
-        when (adName) {
-            TestConstants.MRAID_EXPAND -> checkMraidExpand()
-            TestConstants.MRAID_RESIZE -> checkMraidResize()
-            TestConstants.MRAID_RESIZE_WITH_ERRORS -> checkMraidResizeWithErrors()
+    @Test
+    fun mraidAdsShouldBeDisplayed() {
+        testAd(testCaseTitleId)
+    }
+
+    override fun checkAd(testCase: TestCase) {
+        when (testCase.titleStringRes) {
+            R.string.in_app_display_banner_mraid_resize -> checkMraidResize()
+            R.string.in_app_display_banner_mraid_resize_errors -> checkMraidResizeWithErrors()
+            R.string.in_app_display_banner_mraid_expand -> checkMraidExpand()
         }
     }
 
