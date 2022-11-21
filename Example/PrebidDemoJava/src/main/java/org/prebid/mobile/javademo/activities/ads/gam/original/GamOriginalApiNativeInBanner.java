@@ -1,61 +1,61 @@
-package org.prebid.mobile.javademo.ads.gam;
+package org.prebid.mobile.javademo.activities.ads.gam.original;
 
-import android.util.Log;
-import android.view.ViewGroup;
-import com.google.android.gms.ads.AdListener;
+import android.os.Bundle;
+
+import androidx.annotation.Nullable;
+
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
-import org.prebid.mobile.*;
+
+import org.prebid.mobile.NativeAdUnit;
+import org.prebid.mobile.NativeDataAsset;
+import org.prebid.mobile.NativeEventTracker;
+import org.prebid.mobile.NativeImageAsset;
+import org.prebid.mobile.NativeTitleAsset;
+import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.javademo.activities.BaseAdActivity;
 
 import java.util.ArrayList;
 
-public class GamNativeInBanner {
+public class GamOriginalApiNativeInBanner extends BaseAdActivity {
 
-    private static final String TAG = GamNativeInBanner.class.getSimpleName();
+    private static final String AD_UNIT_ID = "/21808260008/unified_native_ad_unit";
+    private static final String CONFIG_ID = "imp-prebid-banner-native-styles";
+    private static final String STORED_RESPONSE = "response-prebid-banner-native-styles";
 
     private static NativeAdUnit nativeAdUnit;
 
-    public static void create(
-        ViewGroup wrapper,
-        String adUnitId,
-        String configId,
-        int autoRefreshTime
-    ) {
-        nativeAdUnit = new NativeAdUnit(configId);
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // The ID of Mocked Bid Response on PBS. Only for test cases.
+        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE);
+
+        createAd();
+    }
+
+    private void createAd() {
+        nativeAdUnit = new NativeAdUnit(CONFIG_ID);
         configureNativeAdUnit(nativeAdUnit);
 
-        final AdManagerAdView gamView = new AdManagerAdView(wrapper.getContext());
-        gamView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                Log.d(TAG, "On ad loaded");
-            }
-        });
-        gamView.setAdUnitId(adUnitId);
+        final AdManagerAdView gamView = new AdManagerAdView(this);
+        gamView.setAdUnitId(AD_UNIT_ID);
         gamView.setAdSizes(AdSize.FLUID);
 
-        wrapper.removeAllViews();
-        wrapper.addView(gamView);
+        getAdWrapperView().addView(gamView);
 
         final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
 
-        nativeAdUnit.setAutoRefreshInterval(autoRefreshTime);
+        nativeAdUnit.setAutoRefreshInterval(getRefreshTimeSeconds());
         nativeAdUnit.fetchDemand(builder, resultCode -> {
             AdManagerAdRequest request = builder.build();
             gamView.loadAd(request);
         });
     }
 
-    public static void destroy() {
-        if (nativeAdUnit != null) {
-            nativeAdUnit.stopAutoRefresh();
-            nativeAdUnit = null;
-        }
-    }
-
-
-    private static void configureNativeAdUnit(NativeAdUnit adUnit) {
+    private void configureNativeAdUnit(NativeAdUnit adUnit) {
         adUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
         adUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
         adUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
@@ -95,4 +95,11 @@ public class GamNativeInBanner {
         adUnit.addAsset(cta);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (nativeAdUnit != null) {
+            nativeAdUnit.stopAutoRefresh();
+        }
+    }
 }

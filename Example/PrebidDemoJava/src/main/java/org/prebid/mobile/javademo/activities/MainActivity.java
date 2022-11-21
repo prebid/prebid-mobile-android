@@ -18,164 +18,196 @@ package org.prebid.mobile.javademo.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import org.prebid.mobile.ExternalUserId;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.javademo.R;
-import org.prebid.mobile.javademo.ads.AdType;
-import org.prebid.mobile.javademo.ads.AdTypesRepository;
 import org.prebid.mobile.javademo.databinding.ActivityMainBinding;
+import org.prebid.mobile.javademo.testcases.AdFormat;
+import org.prebid.mobile.javademo.testcases.IntegrationKind;
+import org.prebid.mobile.javademo.testcases.TestCase;
+import org.prebid.mobile.javademo.testcases.TestCaseAdapter;
+import org.prebid.mobile.javademo.testcases.TestCaseRepository;
+import org.prebid.mobile.javademo.utils.Settings;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    /**
-     * These START fields help to set start values for selectors.
-     */
-    private static final String START_AD_SERVER = "Google Ad Manager (AWS)";
-    private static final String START_AD_TYPE = "";
-
-    private boolean isFirstInit = true;
-    private String adType = "";
-    private String adServer = "";
+    private IntegrationKind integrationKind;
+    private AdFormat adFormat;
+    private String searchRequest;
 
     private ActivityMainBinding binding;
+    private TestCaseAdapter testCaseAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        binding.btnShowAd.setOnClickListener((view) -> showAd());
-        initPrebidExternalUserIds();
-        initAdServerSpinner();
-        initStartServer();
+
+        initSpinners();
+        initSearch();
+        initList();
     }
 
-    public void showAd() {
-        int autoRefreshTime = getAutoRefreshTime();
-        Intent intent = DemoActivity.getIntent(this, adServer, adType, autoRefreshTime);
-        startActivity(intent);
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        PrebidMobile.setStoredAuctionResponse(null);
     }
 
-    private int getAutoRefreshTime() {
-        String refreshTimeString = binding.etAutoRefresh.getText().toString();
-        try {
-            return Integer.parseInt(refreshTimeString);
-        } catch (Exception ignored) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.settings) {
+            startActivity(SettingsActivity.getIntent(this));
+            return true;
         }
-        return 0;
+        return false;
     }
 
-
-    private void initPrebidExternalUserIds() {
-        ArrayList<ExternalUserId> externalUserIdArray = new ArrayList<>();
-        externalUserIdArray.add(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{
-            put("rtiPartner", "TDID");
-        }}));
-        externalUserIdArray.add(new ExternalUserId("netid.de", "999888777", null, null));
-        externalUserIdArray.add(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
-        externalUserIdArray.add(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
-        externalUserIdArray.add(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{
-            put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");
-        }}));
-        PrebidMobile.setExternalUserIds(externalUserIdArray);
-    }
-
-    private void initAdServerSpinner() {
-        Map<String, List<AdType>> repository = AdTypesRepository.get();
-        ArrayList<String> primaryAdServers = new ArrayList<>(repository.keySet());
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-            this,
-            android.R.layout.simple_spinner_dropdown_item,
-            primaryAdServers
+    private void initSpinners() {
+        Spinner kindSpinner = binding.spinnerIntegrationKind;
+        IntegrationKind[] kinds = IntegrationKind.values();
+        ArrayList<String> kindTitles = new ArrayList<>(kinds.length);
+        kindTitles.add(0, "All");
+        for (IntegrationKind kind : kinds) {
+            kindTitles.add(kind.getAdServer());
+        }
+        kindSpinner.setAdapter(
+            new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                kindTitles
+            )
         );
-
-        Spinner spinner = binding.spinnerAdServer;
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        kindSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(
-                AdapterView<?> parent,
-                View view,
-                int position,
-                long id
-            ) {
-                adServer = primaryAdServers.get(position);
-                List<AdType> adTypes = repository.get(adServer);
-                ArrayList<String> stringTypes = new ArrayList<>(5);
-                for (AdType adType : adTypes) {
-                    stringTypes.add(adType.getName());
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    integrationKind = null;
+                } else {
+                    integrationKind = IntegrationKind.values()[position - 1];
                 }
-                initAdTypeSpinner(stringTypes);
+                Settings.get().setLastIntegrationKindId(position);
+                updateList();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        kindSpinner.setSelection(Settings.get().getLastIntegrationKindId());
+
+
+        Spinner formatSpinner = binding.spinnerAdType;
+        AdFormat[] formats = AdFormat.values();
+        ArrayList<String> formatTitles = new ArrayList<>(formats.length);
+        formatTitles.add(0, "All");
+        for (AdFormat format : formats) {
+            formatTitles.add(format.getDescription());
+        }
+        formatSpinner.setAdapter(
+            new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                formatTitles
+            )
+        );
+        formatSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    adFormat = null;
+                } else {
+                    adFormat = AdFormat.values()[position - 1];
+                }
+                Settings.get().setLastAdFormatId(position);
+                updateList();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+        formatSpinner.setSelection(Settings.get().getLastAdFormatId());
+    }
+
+    private void initSearch() {
+        binding.etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                searchRequest = s.toString();
+                updateList();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
         });
     }
 
-    private void initAdTypeSpinner(ArrayList<String> list) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, list);
-
-        Spinner spinner = binding.spinnerAdType;
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(
-                AdapterView<?> parent,
-                View view,
-                int position,
-                long id
-            ) {
-                adType = list.get(position);
-                initStartAdType();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
+    private void initList() {
+        RecyclerView rv = binding.rvAdTypes;
+        testCaseAdapter = new TestCaseAdapter(this::showAd);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setAdapter(testCaseAdapter);
     }
 
-    private void initStartServer() {
-        ArrayList<String> keySet = new ArrayList<>(AdTypesRepository.get().keySet());
-        int indexOfServer = -1;
-        for (int i = 0; i < keySet.size(); i++) {
-            String key = keySet.get(i);
-            if (key.equalsIgnoreCase(START_AD_SERVER)) {
-                indexOfServer = i;
+    private void updateList() {
+        ArrayList<TestCase> list = TestCaseRepository.getList();
+        ArrayList<TestCase> filteredList = new ArrayList<>(list.size());
+
+        for (TestCase testCase : list) {
+            boolean ignore = false;
+            if (integrationKind != null && integrationKind != testCase.getIntegrationKind()) {
+                ignore = true;
+            }
+
+            if (adFormat != null && adFormat != testCase.getAdFormat()) {
+                ignore = true;
+            }
+
+            if (searchRequest != null && !searchRequest.isEmpty() && !getString(testCase.getTitleStringRes()).toLowerCase().contains(searchRequest.toLowerCase())) {
+                ignore = true;
+            }
+
+            if (!ignore) {
+                filteredList.add(testCase);
             }
         }
 
-        if (indexOfServer >= 0) {
-            binding.spinnerAdServer.setSelection(indexOfServer, false);
-        }
+        testCaseAdapter.setList(filteredList);
     }
 
-    private void initStartAdType() {
-        if (isFirstInit) {
-            isFirstInit = false;
-
-            try {
-                List<AdType> adTypes = AdTypesRepository.get().get(START_AD_SERVER);
-                if (adTypes != null) {
-                    for (int i = 0; i < adTypes.size(); i++) {
-                        AdType adType = adTypes.get(i);
-                        if (adType.getName().equalsIgnoreCase(START_AD_TYPE)) {
-                            binding.spinnerAdType.setSelection(i, false);
-                        }
-                    }
-                }
-            } catch (Exception ignored) {}
-        }
+    private void showAd(TestCase testCase) {
+        TestCaseRepository.lastTestCase = testCase;
+        startActivity(new Intent(this, testCase.getActivity()));
     }
 
 }

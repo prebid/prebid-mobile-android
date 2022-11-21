@@ -6,16 +6,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="org.prebid.mobile.javademo.activities.MainActivity">
+        tools:context="org.prebid.mobile.prebidkotlindemo.activities.MainActivity">
 
-        <TextView
-            android:id="@+id/tvAppTitle"
+        <EditText
+            android:id="@+id/etSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Java"
-            android:textColor="#ff4081"
-            android:textSize="34sp" />
+            android:hint="@string/search"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,24 +25,24 @@
             android:padding="0dp">
 
             <TextView
-                android:id="@+id/tvAdServer"
+                android:id="@+id/tvIntegrationKind"
                 android:layout_width="136dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:minHeight="48dp"
+                android:gravity="center"
                 android:padding="8dp"
-                android:text="@string/adServerText"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:text="@string/integration_kind" />
 
             <Spinner
-                android:id="@+id/spinnerAdServer"
+                android:id="@+id/spinnerIntegrationKind"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:gravity="center"
-                android:minWidth="128dp"
-                android:minHeight="48dp" />
+                android:minHeight="48dp"
+                android:minWidth="128dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -51,15 +52,15 @@
             android:padding="0dp">
 
             <TextView
-                android:id="@+id/tvAdType"
+                android:id="@+id/tvAdFormat"
                 android:layout_width="136dp"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:minHeight="48dp"
+                android:gravity="center"
                 android:padding="8dp"
-                android:text="@string/adTypeText"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:text="@string/ad_format" />
 
             <Spinner
                 android:id="@+id/spinnerAdType"
@@ -67,46 +68,22 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:gravity="center"
-                android:minWidth="128dp"
-                android:minHeight="48dp" />
+                android:minHeight="48dp"
+                android:minWidth="128dp" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/groupAutoRefresh"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="0dp">
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="0dp"
+            android:background="@color/gray" />
 
-            <TextView
-                android:id="@+id/tvAutoRefresh"
-                android:layout_width="136dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:minHeight="48dp"
-                android:padding="8dp"
-                android:text="@string/autoRefreshText"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/etAutoRefresh"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:gravity="center"
-                android:inputType="number"
-                android:minWidth="128dp"
-                android:minHeight="48dp"
-                android:text="30" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btnShowAd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/buttonText" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAdTypes"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 

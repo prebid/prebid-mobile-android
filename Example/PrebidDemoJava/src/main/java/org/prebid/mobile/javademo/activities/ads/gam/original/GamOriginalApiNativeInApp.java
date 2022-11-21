@@ -1,13 +1,16 @@
-package org.prebid.mobile.javademo.ads.gam;
+package org.prebid.mobile.javademo.activities.ads.gam.original;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdSize;
@@ -17,58 +20,56 @@ import com.google.android.gms.ads.admanager.AdManagerAdView;
 import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd;
-import org.prebid.mobile.*;
+
+import org.prebid.mobile.NativeAdUnit;
+import org.prebid.mobile.NativeDataAsset;
+import org.prebid.mobile.NativeEventTracker;
+import org.prebid.mobile.NativeImageAsset;
+import org.prebid.mobile.NativeTitleAsset;
+import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.PrebidNativeAd;
+import org.prebid.mobile.PrebidNativeAdEventListener;
+import org.prebid.mobile.PrebidNativeAdListener;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.javademo.R;
-import org.prebid.mobile.javademo.utils.DownloadImageTask;
+import org.prebid.mobile.javademo.activities.BaseAdActivity;
+import org.prebid.mobile.javademo.utils.ImageUtils;
 
 import java.util.ArrayList;
 
-public class GamNativeInApp {
+public class GamOriginalApiNativeInApp extends BaseAdActivity {
 
-    private static final String TAG = GamNativeInApp.class.getSimpleName();
+    private static final String AD_UNIT_ID = "/21808260008/apollo_custom_template_native_ad_unit";
+    private static final String CONFIG_ID = "imp-prebid-banner-native-styles";
+    private static final String STORED_RESPONSE = "response-prebid-banner-native-styles";
+    private static final String CUSTOM_FORMAT_ID = "11934135";
+    private static final String TAG = "GamOriginalNative";
 
-    private static AdManagerAdView adView;
-    private static NativeAd unifiedNativeAd;
-    private static NativeAdUnit adUnit;
-    private static AdLoader adLoader;
+    private AdManagerAdView adView;
+    private NativeAd unifiedNativeAd;
+    private NativeAdUnit adUnit;
+    private AdLoader adLoader;
 
-    public static void create(
-        ViewGroup wrapper,
-        String adUnitId,
-        String configId,
-        String customFormatId
-    ) {
-        adUnit = new NativeAdUnit(configId);
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // The ID of Mocked Bid Response on PBS. Only for test cases.
+        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE);
+
+        createAd();
+    }
+
+    private void createAd() {
+        adUnit = new NativeAdUnit(CONFIG_ID);
         configureNativeAdUnit(adUnit);
 
         final AdManagerAdRequest adRequest = new AdManagerAdRequest.Builder().build();
-        adLoader = createAdLoader(wrapper, adUnitId, customFormatId);
-        adUnit.fetchDemand(adRequest, resultCode -> {
-            if (resultCode != ResultCode.SUCCESS) {
-                Toast.makeText(wrapper.getContext(), "Native Ad Unit: " + resultCode.name(), Toast.LENGTH_SHORT).show();
-            }
-            adLoader.loadAd(adRequest);
-        });
+        adLoader = createAdLoader(getAdWrapperView());
+        adUnit.fetchDemand(adRequest, resultCode -> adLoader.loadAd(adRequest));
     }
 
-    public static void destroy() {
-        if (adView != null) {
-            adView.destroy();
-            adView = null;
-        }
-        if (unifiedNativeAd != null) {
-            unifiedNativeAd.destroy();
-            unifiedNativeAd = null;
-        }
-        if (adUnit != null) {
-            adUnit.stopAutoRefresh();
-            adUnit = null;
-        }
-        adLoader = null;
-    }
-
-    private static void inflatePrebidNativeAd(
+    private void inflatePrebidNativeAd(
         final PrebidNativeAd ad,
         ViewGroup wrapper
     ) {
@@ -76,25 +77,26 @@ public class GamNativeInApp {
         ad.registerView(nativeContainer, new PrebidNativeAdEventListener() {
             @Override
             public void onAdClicked() {
-                Toast.makeText(wrapper.getContext(), "onAdClicked", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdImpression() {
-                Toast.makeText(wrapper.getContext(), "onAdImpression", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onAdExpired() {
-                Toast.makeText(wrapper.getContext(), "onAdExpired", Toast.LENGTH_SHORT).show();
             }
         });
         ImageView icon = nativeContainer.findViewById(R.id.imgIcon);
-        loadImage(icon, ad.getIconUrl());
+
+        ImageUtils.download(ad.getIconUrl(), icon);
+
         TextView title = nativeContainer.findViewById(R.id.tvTitle);
         title.setText(ad.getTitle());
         ImageView image = nativeContainer.findViewById(R.id.imgImage);
-        loadImage(image, ad.getImageUrl());
+
+        ImageUtils.download(ad.getImageUrl(), image);
+
         TextView description = nativeContainer.findViewById(R.id.tvDesc);
         description.setText(ad.getDescription());
         Button cta = nativeContainer.findViewById(R.id.btnCta);
@@ -102,10 +104,8 @@ public class GamNativeInApp {
         wrapper.addView(nativeContainer);
     }
 
-    private static AdLoader createAdLoader(
-        ViewGroup wrapper,
-        String adUnitId,
-        String customFormatId
+    private AdLoader createAdLoader(
+        ViewGroup wrapper
     ) {
         OnAdManagerAdViewLoadedListener onGamAdLoaded = adManagerAdView -> {
             Log.d(TAG, "Gam loaded");
@@ -115,7 +115,7 @@ public class GamNativeInApp {
 
         NativeAd.OnNativeAdLoadedListener onUnifiedAdLoaded = unifiedNativeAd -> {
             Log.d(TAG, "Unified native loaded");
-            GamNativeInApp.unifiedNativeAd = unifiedNativeAd;
+            this.unifiedNativeAd = unifiedNativeAd;
         };
 
         NativeCustomFormatAd.OnCustomFormatAdLoadedListener onCustomAdLoaded = nativeCustomTemplateAd -> {
@@ -129,32 +129,31 @@ public class GamNativeInApp {
                 @Override
                 public void onPrebidNativeNotFound() {
                     Log.e(TAG, "onPrebidNativeNotFound");
-                    // inflate nativeCustomTemplateAd
                 }
 
                 @Override
                 public void onPrebidNativeNotValid() {
-                    Log.e(TAG, "onPrebidNativeNotFound");
-                    // show your own content
+                    Log.e(TAG, "onPrebidNativeNotValid");
                 }
             });
         };
 
-        return new AdLoader.Builder(wrapper.getContext(), adUnitId)
+        return new AdLoader.Builder(wrapper.getContext(), AD_UNIT_ID)
             .forAdManagerAdView(onGamAdLoaded, AdSize.BANNER)
             .forNativeAd(onUnifiedAdLoaded)
-            .forCustomFormatAd(customFormatId, onCustomAdLoaded, (customAd, s) -> {})
+            .forCustomFormatAd(CUSTOM_FORMAT_ID, onCustomAdLoaded, (customAd, s) -> {
+            })
             .withAdListener(new AdListener() {
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                     super.onAdFailedToLoad(loadAdError);
-                    Toast.makeText(wrapper.getContext(), "DFP onAdFailedToLoad", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "DFP onAdFailedToLoad");
                 }
             })
             .build();
     }
 
-    private static void configureNativeAdUnit(NativeAdUnit adUnit) {
+    private void configureNativeAdUnit(NativeAdUnit adUnit) {
         adUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC);
         adUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED);
         adUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL);
@@ -196,11 +195,17 @@ public class GamNativeInApp {
         adUnit.addAsset(cta);
     }
 
-    private static void loadImage(
-        ImageView image,
-        String url
-    ) {
-        new DownloadImageTask(image).execute(url);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (adView != null) {
+            adView.destroy();
+        }
+        if (adUnit != null) {
+            adUnit.stopAutoRefresh();
+        }
+        if (unifiedNativeAd != null) {
+            unifiedNativeAd.destroy();
+        }
     }
-
 }
