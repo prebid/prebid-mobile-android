@@ -17,6 +17,7 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
+
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.rendering.models.AdPosition;
 
@@ -26,6 +27,13 @@ public class RewardedVideoAdUnit extends VideoBaseAdUnit {
         super(configId, AdFormat.VAST);
         configuration.setRewarded(true);
         configuration.setAdPosition(AdPosition.FULLSCREEN);
+    }
+
+    public RewardedVideoAdUnit(@NonNull String configId, int minWidthPerc, int minHeightPerc) {
+        super(configId, AdFormat.VAST);
+        configuration.setRewarded(true);
+        configuration.setAdPosition(AdPosition.FULLSCREEN);
+        configuration.setMinSizePercentage(new AdSize(minWidthPerc, minHeightPerc));
     }
 
 }
