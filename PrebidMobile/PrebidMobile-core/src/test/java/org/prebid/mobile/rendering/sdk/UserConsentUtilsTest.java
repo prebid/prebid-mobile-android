@@ -1,9 +1,16 @@
 package org.prebid.mobile.rendering.sdk;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,9 +22,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 import java.util.Hashtable;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
 
 @RunWith(RobolectricTestRunner.class)
 public class UserConsentUtilsTest {
@@ -42,14 +46,10 @@ public class UserConsentUtilsTest {
         UserConsentManager userConsentManager = new UserConsentManager();
         sharedPreferences
             .edit()
-            .remove(UserConsentManagerReflection.getConstGdpr1Subject(userConsentManager))
-            .remove(UserConsentManagerReflection.getConstGdpr1Consent(userConsentManager))
-            .remove(UserConsentManagerReflection.getConstGdpr2CmpSdkId(userConsentManager))
             .remove(UserConsentManagerReflection.getConstGdpr2Subject(userConsentManager))
             .remove(UserConsentManagerReflection.getConstGdpr2Consent(userConsentManager))
             .remove(UserConsentManagerReflection.getConstGdpr2PurposeConsent(userConsentManager))
             .remove(UserConsentManagerReflection.getConstUsPrivacyString(userConsentManager))
-            .remove(UserConsentManagerReflection.getConstCoppaCustomKey(userConsentManager))
             .apply();
 
         Reflection.setVariableTo(
@@ -75,42 +75,42 @@ public class UserConsentUtilsTest {
     @Test
     public void gdprConsent() {
         UserConsentUtils.tryToSetPrebidGdprConsent("1");
-        assertNull(UserConsentUtils.tryToGetAnyGdprConsent());
+        assertNull(UserConsentUtils.tryToGetGdprConsent());
 
         ManagersResolver.getInstance().prepare(context);
 
-        assertNull(UserConsentUtils.tryToGetAnyGdprConsent());
+        assertNull(UserConsentUtils.tryToGetGdprConsent());
 
         UserConsentUtils.tryToSetPrebidGdprConsent("1");
-        assertEquals("1", UserConsentUtils.tryToGetAnyGdprConsent());
+        assertEquals("1", UserConsentUtils.tryToGetGdprConsent());
     }
 
     @Test
     public void gdprPurposeConsents() {
         UserConsentUtils.tryToSetPrebidGdprPurposeConsents("1");
-        assertNull(UserConsentUtils.tryToGetAnyGdprPurposeConsents());
+        assertNull(UserConsentUtils.tryToGetGdprPurposeConsents());
 
         ManagersResolver.getInstance().prepare(context);
 
-        assertNull(UserConsentUtils.tryToGetAnyGdprPurposeConsents());
+        assertNull(UserConsentUtils.tryToGetGdprPurposeConsents());
 
         UserConsentUtils.tryToSetPrebidGdprPurposeConsents("1");
-        assertEquals("1", UserConsentUtils.tryToGetAnyGdprPurposeConsents());
+        assertEquals("1", UserConsentUtils.tryToGetGdprPurposeConsents());
     }
 
     @Test
     public void tryToGetDeviceAccessConsent() {
         UserConsentUtils.tryToSetPrebidGdprPurposeConsents("1");
 
-        assertNull(UserConsentUtils.tryToGetAnyDeviceAccessConsent());
+        assertNull(UserConsentUtils.tryToGetDeviceAccessConsent());
 
         ManagersResolver.getInstance().prepare(context);
 
-        assertTrue(UserConsentUtils.tryToGetAnyDeviceAccessConsent());
+        assertTrue(UserConsentUtils.tryToGetDeviceAccessConsent());
 
         UserConsentUtils.tryToSetPrebidSubjectToGdpr(true);
         UserConsentUtils.tryToSetPrebidGdprPurposeConsents("0");
-        assertFalse(UserConsentUtils.tryToGetAnyDeviceAccessConsent());
+        assertFalse(UserConsentUtils.tryToGetDeviceAccessConsent());
     }
 
 }

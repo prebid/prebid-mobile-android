@@ -19,14 +19,21 @@ package org.prebid.mobile;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Pair;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.sdk.UserConsentUtils;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * TargetingParams class sets the Targeting parameters like yob, gender, location
@@ -590,7 +597,7 @@ public class TargetingParams {
     }
 
     /**
-     * Sets subject to GDPR for Prebid. It uses custom key "Prebid_GDPR", not IAB. <br><br>
+     * Sets subject to GDPR for Prebid. It uses custom static field, not IAB. <br><br>
      * <p>
      * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
      */
@@ -601,20 +608,18 @@ public class TargetingParams {
     /**
      * Gets any given subject to GDPR in that order. <br>
      * 1) Prebid subject to GDPR custom value, if present. <br>
-     * 2) IAB subject to GDPR TCF 2.0, if CMP SDK id value bigger
-     * or equals 0 and value present. <br>
-     * 3) IAB subject to GDPR TCF 1.0, if present. <br>
+     * 2) IAB subject to GDPR TCF 2.0. <br>
      * Otherwise, null. <br><br>
      * <p>
      * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
      */
     @Nullable
     public static Boolean isSubjectToGDPR() {
-        return UserConsentUtils.tryToGetAnySubjectToGdpr();
+        return UserConsentUtils.tryToGetSubjectToGdpr();
     }
 
     /**
-     * Sets GDPR consent for Prebid. It uses custom key "Prebid_GDPR_consent_strings", not IAB. <br><br>
+     * Sets GDPR consent for Prebid. It uses custom static field, not IAB. <br><br>
      * <p>
      * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
      */
@@ -625,20 +630,18 @@ public class TargetingParams {
     /**
      * Gets any given GDPR consent in that order. <br>
      * 1) Prebid GDPR consent custom value, if present. <br>
-     * 2) IAB GDPR consent TCF 2.0, if CMP SDK id value bigger
-     * or equals 0 and value present. <br>
-     * 3) IAB GDPR consent TCF 1.0, if present. <br>
+     * 2) IAB GDPR consent TCF 2.0. <br>
      * Otherwise, null. <br><br>
      * <p>
      * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
      */
     @Nullable
     public static String getGDPRConsentString() {
-        return UserConsentUtils.tryToGetAnyGdprConsent();
+        return UserConsentUtils.tryToGetGdprConsent();
     }
 
     /**
-     * Sets Prebid custom GDPR purpose consent (device access consent). <br><br>
+     * Sets Prebid custom GDPR purpose consents (device access consent). <br><br>
      * <p>
      * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
      */
@@ -656,7 +659,7 @@ public class TargetingParams {
      */
     @Nullable
     public static Boolean getPurposeConsent(int index) {
-        return UserConsentUtils.tryToGetAnyGdprPurposeConsent(index);
+        return UserConsentUtils.tryToGetGdprPurposeConsent(index);
     }
 
     /**
@@ -669,19 +672,19 @@ public class TargetingParams {
      */
     @Nullable
     public static String getPurposeConsents() {
-        return UserConsentUtils.tryToGetAnyGdprPurposeConsents();
+        return UserConsentUtils.tryToGetGdprPurposeConsents();
     }
 
     /**
      * Gets the device access consent set by the publisher.<br><br>
      * If custom Prebid subject and purpose consent set, gets device access from them.
-     * Otherwise from IAB standard.
+     * Otherwise, from IAB standard.
      * <p>
      * Must be called only after {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
      */
     @Nullable
     public static Boolean getDeviceAccessConsent() {
-        return UserConsentUtils.tryToGetAnyDeviceAccessConsent();
+        return UserConsentUtils.tryToGetDeviceAccessConsent();
     }
 
 

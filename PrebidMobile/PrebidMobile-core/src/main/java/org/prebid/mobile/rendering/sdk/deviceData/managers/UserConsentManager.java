@@ -22,75 +22,55 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.sdk.BaseManager;
 
+/**
+ * UserConsent manager. It is initialized during SDK initialization.
+ * It uses Prebid values (for Prebid SDK only) and "real" values
+ * according to the standards.
+ */
 public class UserConsentManager extends BaseManager {
 
-    private static final String TAG = UserConsentManager.class.getSimpleName();
+    /* TCF v2 */
+    public static final String GDPR_2_SUBJECT_KEY = "IABTCF_gdprApplies";
+    public static final String GDPR_2_CONSENT_KEY = "IABTCF_TCString";
+    public static final String GDPR_2_PURPOSE_CONSENT_KEY = "IABTCF_PurposeConsents";
 
+    @Nullable
+    private static Boolean prebidGdpr2Subject;
+    @Nullable
+    private static String prebidGdpr2Consent;
+    @Nullable
+    private static String prebidGdpr2PurposeConsents;
+
+    private int realGdpr2Subject = NOT_ASSIGNED;
+    private String realGdpr2Consent;
+    private String realGdpr2PurposeConsents;
+
+    /* CCPA */
+    public static final String US_PRIVACY_KEY = "IABUSPrivacy_String";
+    @Nullable
+    private static String prebidUsPrivacyString;
+    private String realUsPrivacyString;
+
+    /* COPPA */
+    @Nullable
+    private static Boolean prebidCoppaSubject;
+
+
+    /* Other */
     static final int NOT_ASSIGNED = -1;
 
-    // TCF v1 constants
-    private static final String GDPR_1_SUBJECT = "IABConsent_SubjectToGDPR";
-    private static final String GDPR_1_CONSENT = "IABConsent_ConsentString";
-
-    // TCF v2 constants
-    private static final String GDPR_2_CMP_SDK_ID = "IABTCF_CmpSdkID";
-    private static final String GDPR_2_SUBJECT = "IABTCF_gdprApplies";
-    private static final String GDPR_2_CONSENT = "IABTCF_TCString";
-    private static final String GDPR_2_PURPOSE_CONSENT = "IABTCF_PurposeConsents";
-
-    // Prebid custom GDPR keys
-    private static final String GDPR_PREBID_SUBJECT = "Prebid_GDPR";
-    private static final String GDPR_PREBID_CONSENT = "Prebid_GDPR_consent_strings";
-    private static final String GDPR_PREBID_PURPOSE_CONSENT = "Prebid_GDPR_PurposeConsents";
-
-    // CCPA
-    private static final String US_PRIVACY_STRING = "IABUSPrivacy_String";
-
-    // COPPA
-    private static final String COPPA_SUBJECT_CUSTOM_KEY = "Prebid_COPPA";
-
     private static final String[] GDPR_CONSENTS = new String[]{
-        GDPR_1_SUBJECT,
-        GDPR_1_CONSENT,
-        GDPR_2_CMP_SDK_ID,
-        GDPR_2_SUBJECT,
-        GDPR_2_CONSENT,
-        US_PRIVACY_STRING,
-        GDPR_2_PURPOSE_CONSENT,
-        COPPA_SUBJECT_CUSTOM_KEY,
-        GDPR_PREBID_SUBJECT,
-        GDPR_PREBID_CONSENT,
-        GDPR_PREBID_PURPOSE_CONSENT
+        GDPR_2_SUBJECT_KEY,
+        GDPR_2_CONSENT_KEY,
+        GDPR_2_PURPOSE_CONSENT_KEY,
+        US_PRIVACY_KEY,
     };
 
-
-    private Boolean isSubjectToCoppa;
-
-    private String usPrivacyString;
-
-    private String gdprPrebidSubject;
-    private String gdprPrebidConsent;
-    private String gdprPrebidPurposeConsent;
-
-    private String gdprSubject;
-    private String gdprConsent;
-
-    private String gdpr2Consent;
-    private int gdpr2Subject = NOT_ASSIGNED;
-    private String gdpr2PurposeConsent;
-
-    /**
-     * The unsigned integer ID of CMP SDK. Less than 0 values should be considered invalid.
-     */
-    private int gdpr2CmpSdkId = NOT_ASSIGNED;
-
     private SharedPreferences sharedPreferences;
-    private SharedPreferences.OnSharedPreferenceChangeListener onSharedPreferenceChangeListener;
 
     @Override
     public void init(Context context) {
@@ -99,10 +79,7 @@ public class UserConsentManager extends BaseManager {
         if (super.isInit() && context != null) {
             sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
             initConsentValuesAtStart();
-
-            onSharedPreferenceChangeListener = this::updateConsentValue;
-
-            sharedPreferences.registerOnSharedPreferenceChangeListener(onSharedPreferenceChangeListener);
+            sharedPreferences.registerOnSharedPreferenceChangeListener(this::updateConsentValue);
         }
     }
 
@@ -122,54 +99,17 @@ public class UserConsentManager extends BaseManager {
         if (key == null) return;
         try {
             switch (key) {
-                case GDPR_PREBID_SUBJECT:
-                    // If we couldn't retrieve value from string, it means that user migrated from 1.13.1 where we have boolean value.
-                    Object subjectValue = preferences.getAll().get(GDPR_PREBID_SUBJECT);
-                    if (subjectValue instanceof String) {
-                        gdprPrebidSubject = preferences.getString(GDPR_PREBID_SUBJECT, null);
-                    } else if (subjectValue instanceof Boolean) {
-                        gdprPrebidSubject = preferences.getBoolean(GDPR_PREBID_SUBJECT, false) ? "1" : "0";
-                        preferences
-                            .edit()
-                            .putString(GDPR_PREBID_SUBJECT, gdprPrebidSubject)
-                            .apply();
-                    } else {
-                        gdprPrebidSubject = null;
-                    }
+                case GDPR_2_SUBJECT_KEY:
+                    realGdpr2Subject = preferences.getInt(GDPR_2_SUBJECT_KEY, NOT_ASSIGNED);
                     break;
-                case GDPR_PREBID_CONSENT:
-                    gdprPrebidConsent = preferences.getString(GDPR_PREBID_CONSENT, null);
+                case GDPR_2_CONSENT_KEY:
+                    realGdpr2Consent = preferences.getString(GDPR_2_CONSENT_KEY, null);
                     break;
-                case GDPR_PREBID_PURPOSE_CONSENT:
-                    gdprPrebidPurposeConsent = preferences.getString(GDPR_PREBID_PURPOSE_CONSENT, null);
+                case US_PRIVACY_KEY:
+                    realUsPrivacyString = preferences.getString(US_PRIVACY_KEY, null);
                     break;
-                case GDPR_1_SUBJECT:
-                    gdprSubject = preferences.getString(GDPR_1_SUBJECT, null);
-                    break;
-                case GDPR_1_CONSENT:
-                    gdprConsent = preferences.getString(GDPR_1_CONSENT, null);
-                    break;
-                case GDPR_2_CMP_SDK_ID:
-                    gdpr2CmpSdkId = preferences.getInt(GDPR_2_CMP_SDK_ID, NOT_ASSIGNED);
-                    break;
-                case GDPR_2_SUBJECT:
-                    gdpr2Subject = preferences.getInt(GDPR_2_SUBJECT, NOT_ASSIGNED);
-                    break;
-                case GDPR_2_CONSENT:
-                    gdpr2Consent = preferences.getString(GDPR_2_CONSENT, null);
-                    break;
-                case US_PRIVACY_STRING:
-                    usPrivacyString = preferences.getString(US_PRIVACY_STRING, null);
-                    break;
-                case GDPR_2_PURPOSE_CONSENT:
-                    gdpr2PurposeConsent = preferences.getString(GDPR_2_PURPOSE_CONSENT, null);
-                    break;
-                case COPPA_SUBJECT_CUSTOM_KEY:
-                    if (sharedPreferences.contains(COPPA_SUBJECT_CUSTOM_KEY)) {
-                        isSubjectToCoppa = sharedPreferences.getBoolean(COPPA_SUBJECT_CUSTOM_KEY, false);
-                    } else {
-                        isSubjectToCoppa = null;
-                    }
+                case GDPR_2_PURPOSE_CONSENT_KEY:
+                    realGdpr2PurposeConsents = preferences.getString(GDPR_2_PURPOSE_CONSENT_KEY, null);
                     break;
             }
         } catch (Exception e) {
@@ -177,207 +117,66 @@ public class UserConsentManager extends BaseManager {
         }
     }
 
+
     @Nullable
     public Boolean getSubjectToCoppa() {
-        return isSubjectToCoppa;
+        return prebidCoppaSubject;
     }
 
     public void setSubjectToCoppa(@Nullable Boolean value) {
-        if (value != null) {
-            sharedPreferences
-                .edit()
-                .putBoolean(COPPA_SUBJECT_CUSTOM_KEY, value)
-                .apply();
-        } else {
-            sharedPreferences
-                .edit()
-                .remove(COPPA_SUBJECT_CUSTOM_KEY)
-                .apply();
-        }
+        prebidCoppaSubject = value;
     }
 
     @Nullable
-    public Integer getCmpSdkIdForGdprTcf2() {
-        return gdpr2CmpSdkId;
-    }
-
-    /**
-     * Sets CMP SDK id (id must be >= 0, less than 0 is undefined).
-     * To work with GDPR TCF 2.0, set this value. <br><br>
-     * <p>
-     * If you want to set GDPR TCF 2.0 subject and consent, call this method before <br>
-     * {@link #setSubjectToGdpr(Boolean)}, <br>
-     * {@link #setGdprConsent(String)} <br>
-     */
-    public void setCmpSdkIdForGdprTcf2(@Nullable Integer id) {
-        sharedPreferences
-            .edit()
-            .putInt(GDPR_2_CMP_SDK_ID, id != null ? id : NOT_ASSIGNED)
-            .apply();
-    }
-
-    @Nullable
-    public Boolean getAnySubjectToGdpr() {
-        if (gdprPrebidSubject != null) {
-            if (gdprPrebidSubject.equals("1")) {
-                return true;
-            } else if (gdprPrebidSubject.equals("0")) {
-                return false;
-            }
+    public Boolean getSubjectToGdpr() {
+        if (prebidGdpr2Subject != null) {
+            return prebidGdpr2Subject;
         }
 
-        return getSubjectToGdprBoolean();
+        return getRealSubjectToGdprBoolean();
     }
 
-    @Nullable
-    public String getSubjectToGdpr() {
-        if (shouldUseTcfV2()) {
-            return getSubjectToGdprTcf2();
-        }
-
-        return gdprSubject;
-    }
-
-    public Boolean getSubjectToGdprBoolean() {
-        String subject = getSubjectToGdpr();
-        if (subject != null) {
-            if (subject.equals("0")) {
-                return false;
-            } else if (subject.equals("1")) {
-                return true;
-            }
+    protected Boolean getRealSubjectToGdprBoolean() {
+        if (realGdpr2Subject == 0) {
+            return false;
+        } else if (realGdpr2Subject == 1) {
+            return true;
         }
         return null;
     }
 
-    /**
-     * Sets subject to GDPR. If CMP SDK id value is set, it sets TCF 2.0 subject,
-     * otherwise it sets TCF 1.0 subject. Null resets all subjects to GDPR. <br><br>
-     */
     public void setSubjectToGdpr(@Nullable Boolean value) {
-        if (value == null) {
-            sharedPreferences
-                .edit()
-                .remove(GDPR_1_SUBJECT)
-                .remove(GDPR_2_SUBJECT)
-                .apply();
-        } else if (!shouldUseTcfV2()) {
-            sharedPreferences
-                .edit()
-                .putString(GDPR_1_SUBJECT, value ? "1" : "0")
-                .apply();
-        } else {
-            sharedPreferences
-                .edit()
-                .putInt(GDPR_2_SUBJECT, value ? 1 : 0)
-                .apply();
-        }
+        prebidGdpr2Subject = value;
     }
 
-    /**
-     * Gets subject to GDPR. If CMP SDK id value is set, it returns TCF 2.0 subject,
-     * otherwise it returns TCF 1.0 subject. Returns null if corresponding subject is undefined. <br><br>
-     */
-    public void setPrebidSubjectToGdpr(@Nullable Boolean value) {
-        if (value != null) {
-            sharedPreferences
-                .edit()
-                .putString(GDPR_PREBID_SUBJECT, value ? "1" : "0")
-                .apply();
-        } else {
-            sharedPreferences
-                .edit()
-                .remove(GDPR_PREBID_SUBJECT)
-                .apply();
-        }
-    }
-
-    @Nullable
-    public String getAnyGdprConsent() {
-        if (gdprPrebidConsent != null) {
-            return gdprPrebidConsent;
-        }
-
-        if (shouldUseTcfV2()) {
-            return gdpr2Consent;
-        }
-
-        return gdprConsent;
-    }
-
-    /**
-     * Gets GDPR consent string. If CMP SDK id value is set, it gets TFC 2.0 consent,
-     * otherwise it gets TCF 1.0 consent. Returns null if corresponding consent is undefined. <br><br>
-     */
     @Nullable
     public String getGdprConsent() {
-        if (shouldUseTcfV2()) {
-            return gdpr2Consent;
+        if (prebidGdpr2Consent != null) {
+            return prebidGdpr2Consent;
         }
 
-        return gdprConsent;
+        return realGdpr2Consent;
     }
 
-    /**
-     * Sets GDPR consent string. If CMP SDK id value is set, it sets TFC 2.0 consent,
-     * otherwise it sets TCF 1.0 consent. Null resets all GDPR consents. <br><br>
-     */
     public void setGdprConsent(@Nullable String consent) {
-        if (consent == null) {
-            sharedPreferences
-                .edit()
-                .remove(GDPR_1_CONSENT)
-                .remove(GDPR_2_CONSENT)
-                .apply();
-        } else if (!shouldUseTcfV2()) {
-            sharedPreferences
-                .edit()
-                .putString(GDPR_1_CONSENT, consent)
-                .apply();
-        } else {
-            sharedPreferences
-                .edit()
-                .putString(GDPR_2_CONSENT, consent)
-                .apply();
-        }
-    }
-
-    public void setPrebidGdprConsent(@Nullable String consent) {
-        sharedPreferences
-            .edit()
-            .putString(GDPR_PREBID_CONSENT, consent)
-            .apply();
-    }
-
-    @Nullable
-    public String getAnyGdprPurposeConsents() {
-        if (gdprPrebidPurposeConsent != null) {
-            return gdprPrebidPurposeConsent;
-        }
-
-        return gdpr2PurposeConsent;
+        prebidGdpr2Consent = consent;
     }
 
     @Nullable
     public String getGdprPurposeConsents() {
-        return gdpr2PurposeConsent;
-    }
-
-    @Nullable
-    public Boolean getAnyGdprPurposeConsent(int index) {
-        if (gdprPrebidPurposeConsent != null) {
-            return getPurposeConsent(gdprPrebidPurposeConsent, index);
+        if (prebidGdpr2PurposeConsents != null) {
+            return prebidGdpr2PurposeConsents;
         }
-        return getGdprPurposeConsent(index);
+
+        return realGdpr2PurposeConsents;
     }
 
     @Nullable
     public Boolean getGdprPurposeConsent(int index) {
-        String consents = gdpr2PurposeConsent;
-        return getPurposeConsent(consents, index);
+        return getGdprPurposeConsent(getGdprPurposeConsents(), index);
     }
 
-    private Boolean getPurposeConsent(
+    private Boolean getGdprPurposeConsent(
         String consents,
         int index
     ) {
@@ -391,45 +190,26 @@ public class UserConsentManager extends BaseManager {
                 LogUtil.warning("Can't get GDPR purpose consent, unsupported char: " + consentChar);
             }
         }
-
         return null;
     }
 
     public void setGdprPurposeConsents(@Nullable String consent) {
-        sharedPreferences
-            .edit()
-            .putString(GDPR_2_PURPOSE_CONSENT, consent)
-            .apply();
+        prebidGdpr2PurposeConsents = consent;
     }
 
-    public void setPrebidGdprPurposeConsents(@Nullable String consent) {
-        sharedPreferences
-            .edit()
-            .putString(GDPR_PREBID_PURPOSE_CONSENT, consent)
-            .apply();
-    }
-
-
+    @Nullable
     public String getUsPrivacyString() {
-        return usPrivacyString;
+        if (prebidUsPrivacyString != null) {
+            return prebidUsPrivacyString;
+        }
+
+        return realUsPrivacyString;
     }
 
     public void setUsPrivacyString(@Nullable String value) {
-        sharedPreferences
-            .edit()
-            .putString(US_PRIVACY_STRING, value)
-            .apply();
+        prebidUsPrivacyString = value;
     }
 
-    public boolean canAccessAnyDeviceData() {
-        if (gdprPrebidSubject != null && gdprPrebidPurposeConsent != null && gdprPrebidPurposeConsent.length() > 0) {
-            return checkDeviceDataAccess(
-                gdprPrebidSubject.equals("1"),
-                gdprPrebidPurposeConsent.charAt(0) == '1'
-            );
-        }
-        return canAccessDeviceData();
-    }
 
     /**
      * Truth table. Fetches advertising identifier based TCF 2.0 Purpose1 value.
@@ -443,8 +223,15 @@ public class UserConsentManager extends BaseManager {
     public boolean canAccessDeviceData() {
         final int deviceConsentIndex = 0;
 
-        Boolean gdprApplies = getSubjectToGdprBoolean();
-        Boolean deviceAccessConsent = getGdprPurposeConsent(deviceConsentIndex);
+        if (prebidGdpr2Subject != null && prebidGdpr2PurposeConsents != null && prebidGdpr2PurposeConsents.length() > 0) {
+            return checkDeviceDataAccess(
+                prebidGdpr2Subject.equals(Boolean.TRUE),
+                prebidGdpr2PurposeConsents.charAt(deviceConsentIndex) == '1'
+            );
+        }
+
+        Boolean gdprApplies = getRealSubjectToGdprBoolean();
+        Boolean deviceAccessConsent = getGdprPurposeConsent(realGdpr2PurposeConsents, deviceConsentIndex);
         return checkDeviceDataAccess(gdprApplies, deviceAccessConsent);
     }
 
@@ -452,35 +239,15 @@ public class UserConsentManager extends BaseManager {
         Boolean gdprApplies,
         Boolean deviceAccessConsent
     ) {
-        // deviceAccess undefined and gdprApplies undefined
         if (deviceAccessConsent == null && gdprApplies == null) {
             return true;
         }
 
-        // deviceAccess undefined and gdprApplies false
         if (deviceAccessConsent == null && Boolean.FALSE.equals(gdprApplies)) {
             return true;
         }
 
-        // deviceAccess true
         return Boolean.TRUE.equals(deviceAccessConsent);
-    }
-
-    /**
-     * @return true if {@link #gdpr2CmpSdkId} is grater or equal than 0, false otherwise.
-     */
-    @VisibleForTesting
-    boolean shouldUseTcfV2() {
-        return gdpr2CmpSdkId >= 0;
-    }
-
-    @VisibleForTesting
-    String getSubjectToGdprTcf2() {
-        if (gdpr2Subject == NOT_ASSIGNED) {
-            return null;
-        }
-
-        return String.valueOf(gdpr2Subject);
     }
 
 }
