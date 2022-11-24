@@ -33,7 +33,6 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        val settings = Settings.get()
         binding.etRefreshTime.setText(settings.refreshTimeSeconds.toString())
     }
 

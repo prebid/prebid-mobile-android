@@ -1,66 +1,72 @@
-package org.prebid.mobile.javademo.ads.gam;
+package org.prebid.mobile.javademo.activities.ads.gam.original;
 
-import android.util.Log;
-import android.view.ViewGroup;
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
+
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.VideoAdUnit;
 import org.prebid.mobile.VideoBaseAdUnit;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.addendum.PbFindSizeError;
+import org.prebid.mobile.javademo.activities.BaseAdActivity;
 
 import java.util.Collections;
 
-public class GamVideoBanner {
+public class GamOriginalApiVideoBanner extends BaseAdActivity {
 
-    private static final String TAG = GamVideoBanner.class.getSimpleName();
+    private static final String AD_UNIT_ID = "/21808260008/prebid_oxb_outstream_video_reandom";
+    private static final String CONFIG_ID = "imp-prebid-video-outstream";
+    private static final String STORED_RESPONSE = "response-prebid-video-outstream";
+    private static final int WIDTH = 300;
+    private static final int HEIGHT = 250;
 
-    private static VideoAdUnit adUnit;
+    private VideoAdUnit adUnit;
 
-    public static void create(
-        ViewGroup wrapper,
-        String adUnitId,
-        String configId,
-        int autoRefreshTime
-    ) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // The ID of Mocked Bid Response on PBS. Only for test cases.
+        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE);
+
+        createAd();
+    }
+
+    private void createAd() {
         VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
         parameters.setMimes(Collections.singletonList("video/mp4"));
         parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
         parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));
         parameters.setPlacement(Signals.Placement.InBanner);
 
-        adUnit = new VideoAdUnit(configId, 300, 250);
+        adUnit = new VideoAdUnit(CONFIG_ID, WIDTH, HEIGHT);
         adUnit.setParameters(parameters);
 
-        final AdManagerAdView gamView = new AdManagerAdView(wrapper.getContext());
-        gamView.setAdUnitId(adUnitId);
-        gamView.setAdSizes(new AdSize(300, 250));
+        final AdManagerAdView gamView = new AdManagerAdView(this);
+        gamView.setAdUnitId(AD_UNIT_ID);
+        gamView.setAdSizes(new AdSize(WIDTH, HEIGHT));
         gamView.setAdListener(createListener(gamView));
 
-        wrapper.removeAllViews();
-        wrapper.addView(gamView);
+        getAdWrapperView().addView(gamView);
 
         final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
 
-        adUnit.setAutoRefreshInterval(autoRefreshTime);
+        adUnit.setAutoRefreshInterval(getRefreshTimeSeconds());
         adUnit.fetchDemand(builder, resultCode -> {
             AdManagerAdRequest request = builder.build();
             gamView.loadAd(request);
         });
     }
 
-    public static void destroy() {
-        if (adUnit != null) {
-            adUnit.stopAutoRefresh();
-            adUnit = null;
-        }
-    }
-
-    private static AdListener createListener(AdManagerAdView gamView) {
+    private AdListener createListener(AdManagerAdView gamView) {
         return new AdListener() {
             @Override
             public void onAdLoaded() {
@@ -75,11 +81,18 @@ public class GamVideoBanner {
 
                     @Override
                     public void failure(@NonNull PbFindSizeError error) {
-                        Log.d(TAG, "Can't find prebid creative size: " + error);
                     }
                 });
             }
         };
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (adUnit != null) {
+            adUnit.stopAutoRefresh();
+        }
+    }
 }
