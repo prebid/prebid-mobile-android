@@ -18,12 +18,15 @@ package org.prebid.mobile.rendering.bidding.data.bid;
 
 import android.content.Context;
 import android.util.Pair;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
@@ -151,7 +154,7 @@ public class BidResponse {
             Bid winningBid = getWinningBid();
             if (winningBid == null) {
                 hasParseError = true;
-                parseError = "Failed to parse bids. No winning bids were found.";
+                parseError = FetchDemandResult.NO_BIDS_MESSAGE;
                 LogUtil.info(TAG, parseError);
             } else {
                 bidMobilePassThrough = winningBid.getMobileSdkPassThrough();
