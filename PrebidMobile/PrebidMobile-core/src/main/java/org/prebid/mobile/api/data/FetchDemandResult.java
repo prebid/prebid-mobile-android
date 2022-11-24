@@ -77,7 +77,7 @@ public enum FetchDemandResult {
         Matcher interstitialSizeMatcher = invalidInterstitialSize.matcher(msg);
         Matcher impMatcher = storedImpNotFound.matcher(msg);
 
-        if (msg.contains("No bids")) {
+        if (msg.contains("No bids") || msg.contains("No winning bids")) {
             return NO_BIDS;
         }
         if (msg.contains("Timeout")) {
