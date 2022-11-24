@@ -67,6 +67,8 @@ public enum FetchDemandResult {
      */
     SERVER_ERROR;
 
+    public static final String NO_BIDS_MESSAGE = "Failed to parse bids. No winning bids were found.";
+
     public static FetchDemandResult parseErrorMessage(String msg) {
         Pattern storedRequestNotFound = Pattern.compile("^Invalid request: Stored Request with ID=\".*\" not found.");
         Pattern storedImpNotFound = Pattern.compile("^Invalid request: Stored Imp with ID=\".*\" not found.");
@@ -77,7 +79,7 @@ public enum FetchDemandResult {
         Matcher interstitialSizeMatcher = invalidInterstitialSize.matcher(msg);
         Matcher impMatcher = storedImpNotFound.matcher(msg);
 
-        if (msg.contains("No bids")) {
+        if (msg.contains("No bids") || msg.equals(NO_BIDS_MESSAGE)) {
             return NO_BIDS;
         }
         if (msg.contains("Timeout")) {
