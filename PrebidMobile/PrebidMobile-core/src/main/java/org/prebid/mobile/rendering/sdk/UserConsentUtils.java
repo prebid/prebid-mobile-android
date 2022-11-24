@@ -1,7 +1,9 @@
 package org.prebid.mobile.rendering.sdk;
 
 import android.content.Context;
+
 import androidx.annotation.Nullable;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
@@ -29,39 +31,39 @@ public class UserConsentUtils {
     /* -------------------- GDPR -------------------- */
 
     @Nullable
-    public static Boolean tryToGetAnySubjectToGdpr() {
-        return getIfManagerExists("getAnySubjectToGdpr", UserConsentManager::getAnySubjectToGdpr);
+    public static Boolean tryToGetSubjectToGdpr() {
+        return getIfManagerExists("getSubjectToGdpr", UserConsentManager::getSubjectToGdpr);
     }
 
     public static void tryToSetPrebidSubjectToGdpr(@Nullable Boolean value) {
-        doIfManagerExists("setPrebidSubjectToGdpr", manager -> manager.setPrebidSubjectToGdpr(value));
+        doIfManagerExists("setPrebidSubjectToGdpr", manager -> manager.setSubjectToGdpr(value));
     }
 
     @Nullable
-    public static String tryToGetAnyGdprConsent() {
-        return getIfManagerExists("getAnyGdprConsent", UserConsentManager::getAnyGdprConsent);
+    public static String tryToGetGdprConsent() {
+        return getIfManagerExists("getGdprConsent", UserConsentManager::getGdprConsent);
     }
 
     public static void tryToSetPrebidGdprConsent(@Nullable String consent) {
-        doIfManagerExists("setGdprConsent", manager -> manager.setPrebidGdprConsent(consent));
+        doIfManagerExists("setGdprConsent", manager -> manager.setGdprConsent(consent));
     }
 
     @Nullable
-    public static String tryToGetAnyGdprPurposeConsents() {
-        return getIfManagerExists("getPurposeConsents", UserConsentManager::getAnyGdprPurposeConsents);
+    public static String tryToGetGdprPurposeConsents() {
+        return getIfManagerExists("getPurposeConsents", UserConsentManager::getGdprPurposeConsents);
     }
 
     public static void tryToSetPrebidGdprPurposeConsents(@Nullable String consent) {
-        doIfManagerExists("setPrebidPurposeConsents", manager -> manager.setPrebidGdprPurposeConsents(consent));
+        doIfManagerExists("setPrebidPurposeConsents", manager -> manager.setGdprPurposeConsents(consent));
     }
 
     @Nullable
-    public static Boolean tryToGetAnyGdprPurposeConsent(int index) {
-        return getIfManagerExists("getAnyGdprPurposeConsent", manager -> manager.getAnyGdprPurposeConsent(index));
+    public static Boolean tryToGetGdprPurposeConsent(int index) {
+        return getIfManagerExists("getGdprPurposeConsent", manager -> manager.getGdprPurposeConsent(index));
     }
 
-    public static Boolean tryToGetAnyDeviceAccessConsent() {
-        return getIfManagerExists("setPurposeConsents", UserConsentManager::canAccessAnyDeviceData);
+    public static Boolean tryToGetDeviceAccessConsent() {
+        return getIfManagerExists("setPurposeConsents", UserConsentManager::canAccessDeviceData);
     }
 
 

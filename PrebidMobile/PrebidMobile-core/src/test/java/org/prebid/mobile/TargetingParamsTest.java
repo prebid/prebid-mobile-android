@@ -16,8 +16,15 @@
 
 package org.prebid.mobile;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,19 +32,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.reflection.sdk.UserConsentManagerReflection;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
-import org.prebid.mobile.rendering.sdk.SdkInitializer;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
-import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
-import java.lang.reflect.Field;
-import java.util.*;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -51,6 +57,9 @@ public class TargetingParamsTest extends BaseSetup {
             PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
         } else {
             ManagersResolver.getInstance().prepare(activity);
+
+            UserConsentManager userConsentManager = ManagersResolver.getInstance().getUserConsentManager();
+            UserConsentManagerReflection.resetAllFields(userConsentManager);
         }
     }
 
@@ -133,7 +142,7 @@ public class TargetingParamsTest extends BaseSetup {
     }
 
     @Test
-    public void testCOPPAFlagWithoutContext() throws Exception {
+    public void testCOPPAFlagWithoutContext() {
         //given
         PrebidMobile.setApplicationContext(null);
 
@@ -165,7 +174,6 @@ public class TargetingParamsTest extends BaseSetup {
 
         //given
         TargetingParams.setSubjectToGDPR(null);
-        editor.remove(UserConsentManagerReflection.getConstGdpr1Subject(new UserConsentManager()));
         editor.remove(UserConsentManagerReflection.getConstGdpr2Subject(new UserConsentManager()));
         editor.apply();
 
@@ -177,28 +185,12 @@ public class TargetingParamsTest extends BaseSetup {
     }
 
     @Test
-    public void testGdprSubjectTCFv1() {
-        //given
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
-        SharedPreferences.Editor editor = pref.edit();
-        String key = UserConsentManagerReflection.getConstGdpr1Subject(new UserConsentManager());
-        editor.putString(key, "1");
-        editor.apply();
-
-        //when
-        Boolean gdprSubject = TargetingParams.isSubjectToGDPR();
-
-        //then
-        assertEquals(Boolean.TRUE, gdprSubject);
-    }
-
-    @Test
     public void testGdprSubjectTCFv2() {
         //given
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor editor = pref.edit();
-        String key = "Prebid_GDPR";
-        editor.putString(key, "1");
+        String key = "IABTCF_gdprApplies";
+        editor.putInt(key, 1);
         editor.apply();
 
         //when
@@ -229,9 +221,7 @@ public class TargetingParamsTest extends BaseSetup {
 
         //given
         TargetingParams.setGDPRConsentString(null);
-        String key = UserConsentManagerReflection.getConstGdpr1Consent(new UserConsentManager());
-        editor.remove(key);
-        key = UserConsentManagerReflection.getConstGdpr2Consent(new UserConsentManager());
+        String key = UserConsentManagerReflection.getConstGdpr2Consent(new UserConsentManager());
         editor.remove(key);
         editor.apply();
 
@@ -244,27 +234,12 @@ public class TargetingParamsTest extends BaseSetup {
     }
 
     @Test
-    public void testGdprConsentTCFv1() {
-        //given
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
-        SharedPreferences.Editor editor = pref.edit();
-        String key = UserConsentManagerReflection.getConstGdpr1Consent(new UserConsentManager());
-        editor.putString(key, "testconsent TCFv1");
-        editor.apply();
-        //when
-        String gdprConsent = TargetingParams.getGDPRConsentString();
-
-        //then
-        assertEquals("testconsent TCFv1", gdprConsent);
-    }
-
-    @Test
     public void testGdprConsentTCFv2() {
 
         //given
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor editor = pref.edit();
-        String key = UserConsentManagerReflection.getConstGdpr1Consent(new UserConsentManager());
+        String key = UserConsentManagerReflection.getConstGdpr2Consent(new UserConsentManager());
         editor.putString(key, "testconsent TCFv1");
         editor.apply();
         //when
