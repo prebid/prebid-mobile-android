@@ -144,4 +144,20 @@ public class UserConsentParameterBuilderTest {
             adRequestInput.getBidRequest().getJsonObject().toString()
         );
     }
+
+    @Test
+    public void gppString_AppendToUserConsentValues() throws JSONException {
+        sharedPreferences.edit().putString(UserConsentManager.GPP_STRING_KEY, "testString").commit();
+
+        AdRequestInput adRequestInput = new AdRequestInput();
+
+        builder.appendBuilderParameters(adRequestInput);
+
+        String expectedJSON = "{\"regs\":{\"gpp\":\"testString\"}}";
+        assertEquals(
+            "Wrong values are set on pub Imp for the given adType",
+            expectedJSON,
+            adRequestInput.getBidRequest().getJsonObject().toString()
+        );
+    }
 }

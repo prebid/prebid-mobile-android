@@ -41,6 +41,7 @@ public class UserConsentParameterBuilder extends ParameterBuilder {
         appendGdprParameter(bidRequest);
         appendCcpaParameter(bidRequest);
         appendCoppaParameter(bidRequest);
+        appendGppParameter(bidRequest);
     }
 
     private void appendGdprParameter(BidRequest bidRequest) {
@@ -69,6 +70,13 @@ public class UserConsentParameterBuilder extends ParameterBuilder {
         Boolean subjectToCoppa = userConsentManager.getSubjectToCoppa();
         if (subjectToCoppa != null) {
             bidRequest.getRegs().getExt().put(COPPA_SUBJECT, subjectToCoppa ? 1 : 0);
+        }
+    }
+
+    private void appendGppParameter(BidRequest bidRequest) {
+        String gppString = userConsentManager.getRealGppString();
+        if (gppString != null) {
+            bidRequest.getRegs().setGppString(gppString);
         }
     }
 

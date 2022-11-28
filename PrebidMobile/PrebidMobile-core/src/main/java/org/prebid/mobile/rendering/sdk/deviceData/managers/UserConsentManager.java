@@ -59,6 +59,11 @@ public class UserConsentManager extends BaseManager {
     @Nullable
     private static Boolean prebidCoppaSubject;
 
+    /* GPP */
+    public static final String GPP_STRING_KEY = "IABGPP_GppString";
+    @Nullable
+    private String realGppString;
+
 
     /* Other */
     static final int NOT_ASSIGNED = -1;
@@ -68,6 +73,7 @@ public class UserConsentManager extends BaseManager {
         GDPR_2_CONSENT_KEY,
         GDPR_2_PURPOSE_CONSENT_KEY,
         US_PRIVACY_KEY,
+        GPP_STRING_KEY,
     };
 
     private SharedPreferences sharedPreferences;
@@ -110,6 +116,9 @@ public class UserConsentManager extends BaseManager {
                     break;
                 case GDPR_2_PURPOSE_CONSENT_KEY:
                     realGdpr2PurposeConsents = preferences.getString(GDPR_2_PURPOSE_CONSENT_KEY, null);
+                    break;
+                case GPP_STRING_KEY:
+                    realGppString = preferences.getString(GPP_STRING_KEY, null);
                     break;
             }
         } catch (Exception e) {
@@ -208,6 +217,11 @@ public class UserConsentManager extends BaseManager {
 
     public void setUsPrivacyString(@Nullable String value) {
         prebidUsPrivacyString = value;
+    }
+
+    @Nullable
+    public String getRealGppString() {
+        return realGppString;
     }
 
 
