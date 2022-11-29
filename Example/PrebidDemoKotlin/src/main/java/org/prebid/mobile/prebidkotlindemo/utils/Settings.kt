@@ -34,7 +34,7 @@ class Settings private constructor(
         }
 
     var lastIntegrationKindId: Int
-        get() = preferences.getInt(KEY_LAST_INTEGRATION_KIND, 0)
+        get() = preferences.getInt(KEY_LAST_INTEGRATION_KIND, 1)
         set(value) {
             preferences.edit().putInt(KEY_LAST_INTEGRATION_KIND, value).apply()
         }

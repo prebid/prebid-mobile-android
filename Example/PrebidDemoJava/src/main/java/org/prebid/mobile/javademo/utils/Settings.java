@@ -44,7 +44,7 @@ public class Settings {
     }
 
     public int getLastIntegrationKindId() {
-        return preferences.getInt(KEY_LAST_INTEGRATION_KIND_ID, 0);
+        return preferences.getInt(KEY_LAST_INTEGRATION_KIND_ID, 1);
     }
 
     public void setLastIntegrationKindId(int id) {
