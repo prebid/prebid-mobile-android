@@ -32,6 +32,12 @@ object TestCaseRepository {
             GamOriginalApiDisplayBannerMultiSizeActivity::class.java,
         ),
         TestCase(
+            R.string.gam_original_video_banner,
+            AdFormat.VIDEO_BANNER,
+            IntegrationKind.GAM_ORIGINAL,
+            GamOriginalApiVideoBannerActivity::class.java,
+        ),
+        TestCase(
             R.string.gam_original_display_interstitial,
             AdFormat.DISPLAY_INTERSTITIAL,
             IntegrationKind.GAM_ORIGINAL,
