@@ -17,8 +17,7 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
         const val STORED_RESPONSE = "response-prebid-video-interstitial-320-480-original-api"
     }
 
-    private var adUnit: AdUnit? = null
-
+    private var adUnit: VideoInterstitialAdUnit? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,29 +29,23 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
+
+        // 1. Create VideoInterstitialAdUnit
+        adUnit = VideoInterstitialAdUnit(CONFIG_ID)
+
+        // 2. Configure video ad unit
+        adUnit?.parameters = configureVideoParameters()
+
+        // 3. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()
-
-        val videoInterstitialAdUnit = VideoInterstitialAdUnit(CONFIG_ID)
-        videoInterstitialAdUnit.parameters = configureVideoParameters()
-        adUnit = videoInterstitialAdUnit
         adUnit?.fetchDemand(request) {
-            val adLoadCallback = object : AdManagerInterstitialAdLoadCallback() {
-                override fun onAdLoaded(interstitialAd: AdManagerInterstitialAd) {
-                    super.onAdLoaded(interstitialAd)
-                    interstitialAd.show(this@GamOriginalApiVideoInterstitialActivity)
-                }
 
-                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                    super.onAdFailedToLoad(loadAdError)
-                    Log.e("GAM", "Ad failed to load: $loadAdError")
-                }
-            }
-
+            // 4. Load a GAM ad
             AdManagerInterstitialAd.load(
                 this@GamOriginalApiVideoInterstitialActivity,
                 AD_UNIT_ID,
                 request,
-                adLoadCallback
+                createAdListener()
             )
         }
     }
@@ -60,10 +53,12 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
     private fun configureVideoParameters(): VideoBaseAdUnit.Parameters {
         return VideoBaseAdUnit.Parameters().apply {
             placement = Signals.Placement.Interstitial
+
             api = listOf(
                 Signals.Api.VPAID_1,
                 Signals.Api.VPAID_2
             )
+
             maxBitrate = 1500
             minBitrate = 300
             maxDuration = 30
@@ -73,6 +68,22 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
             protocols = listOf(
                 Signals.Protocols.VAST_2_0
             )
+        }
+    }
+
+    private fun createAdListener(): AdManagerInterstitialAdLoadCallback {
+        return object : AdManagerInterstitialAdLoadCallback() {
+            override fun onAdLoaded(interstitialAd: AdManagerInterstitialAd) {
+                super.onAdLoaded(interstitialAd)
+
+                // 5. Display an interstitial ad
+                interstitialAd.show(this@GamOriginalApiVideoInterstitialActivity)
+            }
+
+            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                super.onAdFailedToLoad(loadAdError)
+                Log.e("GAM", "Ad failed to load: $loadAdError")
+            }
         }
     }
 

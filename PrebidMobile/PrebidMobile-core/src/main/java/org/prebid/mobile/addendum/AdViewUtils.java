@@ -178,12 +178,9 @@ public final class AdViewUtils {
 
             int lastIndex = webViewList.size() - 1;
             iterateWebViewListAsync(webViewList, lastIndex, handler);
-
-
         } else {
             warnAndTriggerFailure(PbFindSizeErrorFactory.getUnsupportedAndroidIpiError(currentAndroidApi, necessaryAndroidApi), handler);
         }
-
     }
 
     /**

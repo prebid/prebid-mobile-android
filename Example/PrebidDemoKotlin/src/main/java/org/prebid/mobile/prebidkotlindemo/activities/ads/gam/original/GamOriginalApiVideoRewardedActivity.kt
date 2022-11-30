@@ -33,26 +33,22 @@ class GamOriginalApiVideoRewardedActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        val builder = AdManagerAdRequest.Builder()
+        // 1. Create RewardedVideoAdUnit
         adUnit = RewardedVideoAdUnit(CONFIG_ID)
+
+        // 2. Configure Video parameters
         adUnit?.parameters = configureVideoParameters()
-        adUnit?.fetchDemand(builder) {
-            val request = builder.build()
+
+        // 3. Make a bid request to Prebid Server
+        val request = AdManagerAdRequest.Builder().build()
+        adUnit?.fetchDemand(request) {
+
+            // 4. Load a GAM Rewarded Ad
             RewardedAd.load(
                 this,
                 AD_UNIT_ID,
                 request,
-                object : RewardedAdLoadCallback() {
-                    override fun onAdLoaded(rewardedAd: RewardedAd) {
-                        rewardedAd.show(
-                            this@GamOriginalApiVideoRewardedActivity
-                        ) { }
-                    }
-
-                    override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                        Log.e("GAM", "Ad failed to load: $loadAdError")
-                    }
-                }
+                createListener()
             )
         }
     }
@@ -62,6 +58,22 @@ class GamOriginalApiVideoRewardedActivity : BaseAdActivity() {
             mimes = listOf("video/mp4")
             protocols = listOf(Signals.Protocols.VAST_2_0)
             playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOff)
+        }
+    }
+
+    private fun createListener(): RewardedAdLoadCallback {
+        return object : RewardedAdLoadCallback() {
+            override fun onAdLoaded(rewardedAd: RewardedAd) {
+
+                // 5. Display rewarded ad
+                rewardedAd.show(
+                    this@GamOriginalApiVideoRewardedActivity
+                ) { }
+            }
+
+            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                Log.e("GAM", "Ad failed to load: $loadAdError")
+            }
         }
     }
 

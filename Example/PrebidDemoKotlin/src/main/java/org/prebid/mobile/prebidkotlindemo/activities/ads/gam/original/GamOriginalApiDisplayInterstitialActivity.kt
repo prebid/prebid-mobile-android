@@ -47,32 +47,42 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        val requestBuilder = AdManagerAdRequest.Builder()
-        val request = requestBuilder.build()
+        // 1. Create InterstitialAdUnit
+        adUnit = InterstitialAdUnit(CONFIG_ID, 80, 60)
 
-        adUnit = InterstitialAdUnit(CONFIG_ID)
-        adUnit?.setAutoRefreshInterval(refreshTimeSeconds)
+        // 2. Make a bid request to Prebid Server
+        val request = AdManagerAdRequest.Builder().build()
         adUnit?.fetchDemand(request) {
-            val adLoadCallback = object : AdManagerInterstitialAdLoadCallback() {
-                override fun onAdLoaded(adManagerInterstitialAd: AdManagerInterstitialAd) {
-                    super.onAdLoaded(adManagerInterstitialAd)
-                    adManagerInterstitialAd.show(this@GamOriginalApiDisplayInterstitialActivity)
-                }
 
-                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                    super.onAdFailedToLoad(loadAdError)
-                    Log.e("GAM", "Ad failed to load: $loadAdError")
-                }
-            }
-            AdManagerInterstitialAd.load(this, AD_UNIT_ID, request, adLoadCallback)
+            // 3. Load a GAM interstitial ad
+            AdManagerInterstitialAd.load(
+                this,
+                AD_UNIT_ID,
+                request,
+                createListener())
         }
     }
 
+    private fun createListener(): AdManagerInterstitialAdLoadCallback {
+        return object : AdManagerInterstitialAdLoadCallback() {
+
+            override fun onAdLoaded(adManagerInterstitialAd: AdManagerInterstitialAd) {
+                super.onAdLoaded(adManagerInterstitialAd)
+
+                // 4.  Present the interstitial ad
+                adManagerInterstitialAd.show(this@GamOriginalApiDisplayInterstitialActivity)
+            }
+
+            override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                super.onAdFailedToLoad(loadAdError)
+                Log.e("GAM", "Ad failed to load: $loadAdError")
+            }
+        }
+    }
 
     override fun onDestroy() {
         super.onDestroy()
 
         adUnit?.stopAutoRefresh()
     }
-
 }
