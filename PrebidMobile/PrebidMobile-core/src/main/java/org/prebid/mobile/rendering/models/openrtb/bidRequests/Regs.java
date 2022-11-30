@@ -27,11 +27,14 @@ public class Regs extends BaseBid {
     private Ext ext = null;
     @Nullable
     private String gppString;
+    @Nullable
+    private String gppSid;
 
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
 
         toJSON(jsonObject, "gpp", gppString);
+        toJSON(jsonObject, "gpp_sid", gppSid);
         toJSON(jsonObject, "coppa", this.coppa);
         toJSON(jsonObject, "ext", (ext != null) ? ext.getJsonObject() : null);
         return jsonObject;
@@ -46,6 +49,10 @@ public class Regs extends BaseBid {
 
     public void setGppString(@Nullable String gppString) {
         this.gppString = gppString;
+    }
+
+    public void setGppSid(@Nullable String gppSid) {
+        this.gppSid = gppSid;
     }
 
 }

@@ -78,6 +78,11 @@ public class UserConsentParameterBuilder extends ParameterBuilder {
         if (gppString != null) {
             bidRequest.getRegs().setGppString(gppString);
         }
+
+        String gppSid = userConsentManager.getRealGppSid();
+        if (gppSid != null) {
+            bidRequest.getRegs().setGppSid(gppSid);
+        }
     }
 
 }
