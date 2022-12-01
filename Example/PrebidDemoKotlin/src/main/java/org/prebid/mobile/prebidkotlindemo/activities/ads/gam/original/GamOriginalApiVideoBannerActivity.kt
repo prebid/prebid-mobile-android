@@ -28,7 +28,6 @@ class GamOriginalApiVideoBannerActivity : BaseAdActivity() {
 
     private var adUnit: VideoAdUnit? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -39,19 +38,13 @@ class GamOriginalApiVideoBannerActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        val parameters = VideoBaseAdUnit.Parameters()
-        parameters.mimes = listOf("video/mp4")
-        parameters.protocols = listOf(Protocols.VAST_2_0)
-        parameters.playbackMethod = listOf(PlaybackMethod.AutoPlaySoundOff)
-        parameters.placement = Signals.Placement.InBanner
+        // 1. Create VideoAdUnit
+        adUnit = VideoAdUnit(CONFIG_ID, WIDTH, HEIGHT)
 
-        adUnit = VideoAdUnit(
-            CONFIG_ID,
-            WIDTH,
-            HEIGHT
-        )
-        adUnit?.parameters = parameters
+        // 2. Configure video ad unit
+        adUnit?.parameters = configureVideoParameters()
 
+        // 3. Create AdManagerAdView
         val gamView = AdManagerAdView(this)
         gamView.adUnitId = AD_UNIT_ID
         gamView.setAdSizes(AdSize(WIDTH, HEIGHT))
@@ -59,23 +52,42 @@ class GamOriginalApiVideoBannerActivity : BaseAdActivity() {
 
         adWrapperView.addView(gamView)
 
-        val builder = AdManagerAdRequest.Builder()
+        // 4. Make an ad request
+        val request = AdManagerAdRequest.Builder().build()
+        adUnit?.fetchDemand(request) {
 
-        adUnit?.setAutoRefreshInterval(refreshTimeSeconds)
-        adUnit?.fetchDemand(builder) {
-            val request = builder.build()
+            // 5. Load an GAM ad
             gamView.loadAd(request)
+        }
+    }
+
+    private fun configureVideoParameters(): VideoBaseAdUnit.Parameters {
+        return VideoBaseAdUnit.Parameters().apply {
+
+            api = listOf(
+                Signals.Api.VPAID_1,
+                Signals.Api.VPAID_2
+            )
+
+            maxBitrate = 1500
+            minBitrate = 300
+            maxDuration = 30
+            minDuration = 5
+            mimes = listOf("video/x-flv", "video/mp4")
+            playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOn)
+            protocols = listOf(
+                Signals.Protocols.VAST_2_0
+            )
         }
     }
 
     private fun createListener(gamView: AdManagerAdView): AdListener {
         return object : AdListener() {
             override fun onAdLoaded() {
+
+                // 6. Adjust ad view size
                 AdViewUtils.findPrebidCreativeSize(gamView, object : PbFindSizeListener {
-                    override fun success(
-                        width: Int,
-                        height: Int
-                    ) {
+                    override fun success(width: Int, height: Int) {
                         gamView.setAdSizes(AdSize(width, height))
                     }
 
@@ -84,7 +96,6 @@ class GamOriginalApiVideoBannerActivity : BaseAdActivity() {
             }
         }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()
