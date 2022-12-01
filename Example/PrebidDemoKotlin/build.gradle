@@ -26,6 +26,10 @@ android {
     buildFeatures {
         dataBinding true
     }
+    // Fix for Exoplayer Problem
+    packagingOptions {
+        exclude("META-INF/*.kotlin_module")
+    }
 }
 
 dependencies {
@@ -56,6 +60,12 @@ dependencies {
 
     // Multidex
     implementation 'androidx.multidex:multidex:2.0.1'
+
+    // Video Player
+    implementation 'com.google.android.exoplayer:exoplayer:2.15.1'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.15.1'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.15.1'
+    implementation 'com.google.android.exoplayer:extension-ima:2.15.1'
 
     // Tests
     testImplementation 'junit:junit:4.13.2'

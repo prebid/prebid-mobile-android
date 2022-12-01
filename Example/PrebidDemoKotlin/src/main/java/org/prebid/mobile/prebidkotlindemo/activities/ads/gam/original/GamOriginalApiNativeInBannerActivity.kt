@@ -7,7 +7,7 @@ import com.google.android.gms.ads.admanager.AdManagerAdView
 import org.prebid.mobile.*
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
-class GamOriginalApiNativeActivity : BaseAdActivity() {
+class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/unified_native_ad_unit"
