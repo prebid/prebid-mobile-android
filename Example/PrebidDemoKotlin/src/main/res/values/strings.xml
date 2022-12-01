@@ -16,7 +16,9 @@
     <string name="gam_original_display_interstitial">GAM (Original API) Display Interstitial</string>
     <string name="gam_original_video_interstitial">GAM (Original API) Video Interstitial</string>
     <string name="gam_original_video_rewarded">GAM (Original API) Video Rewarded</string>
-    <string name="gam_original_native">GAM (Original API) Native</string>
+    <string name="gam_original_video_in_stream">GAM (Original API) Video In-Stream</string>
+    <string name="gam_original_native_in_app">GAM (Original API) Native In-App</string>
+    <string name="gam_original_native_in_banner">GAM (Original API) Native In-Banner</string>
 
     <string name="gam_rendering_display_banner_320x50">GAM (Rendering API) Display Banner 320x50</string>
     <string name="gam_rendering_display_interstitial">GAM (Rendering API) Display Interstitial</string>

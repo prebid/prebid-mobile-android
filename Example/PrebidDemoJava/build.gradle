@@ -41,6 +41,7 @@ android {
     buildFeatures {
         dataBinding true
     }
+    // Fix for Exoplayer Problem
     packagingOptions {
         exclude("META-INF/*.kotlin_module")
     }

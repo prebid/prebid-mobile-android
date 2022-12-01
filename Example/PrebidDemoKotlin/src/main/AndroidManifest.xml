@@ -61,10 +61,16 @@
             android:name=".activities.ads.gam.original.GamOriginalApiVideoInterstitialActivity"
             android:exported="true" />
         <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiInStreamActivity"
+            android:exported="true" />
+        <activity
             android:name=".activities.ads.gam.original.GamOriginalApiVideoRewardedActivity"
             android:exported="true" />
         <activity
-            android:name=".activities.ads.gam.original.GamOriginalApiNativeActivity"
+            android:name=".activities.ads.gam.original.GamOriginalApiNativeInBannerActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiNativeInAppActivity"
             android:exported="true" />
 
         <!-- GAM Rendering -->

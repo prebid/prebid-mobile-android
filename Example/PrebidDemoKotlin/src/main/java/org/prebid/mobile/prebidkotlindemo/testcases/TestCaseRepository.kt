@@ -50,10 +50,22 @@ object TestCaseRepository {
             GamOriginalApiVideoRewardedActivity::class.java,
         ),
         TestCase(
-            R.string.gam_original_native,
+            R.string.gam_original_video_in_stream,
+            AdFormat.IN_STREAM_VIDEO,
+            IntegrationKind.GAM_ORIGINAL,
+            GamOriginalApiInStreamActivity::class.java,
+        ),
+        TestCase(
+            R.string.gam_original_native_in_app,
             AdFormat.NATIVE,
             IntegrationKind.GAM_ORIGINAL,
-            GamOriginalApiNativeActivity::class.java,
+            GamOriginalApiNativeInAppActivity::class.java,
+        ),
+        TestCase(
+            R.string.gam_original_native_in_banner,
+            AdFormat.NATIVE,
+            IntegrationKind.GAM_ORIGINAL,
+            GamOriginalApiNativeInBannerActivity::class.java,
         ),
 
         /* GAM Rendering API */
