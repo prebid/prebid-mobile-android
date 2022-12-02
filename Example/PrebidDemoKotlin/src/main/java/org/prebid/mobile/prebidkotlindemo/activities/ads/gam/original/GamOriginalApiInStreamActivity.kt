@@ -67,42 +67,67 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
+        // 1. Create VideoAdUnit
+        adUnit = VideoAdUnit(CONFIG_ID, WIDTH, HEIGHT)
+
+        // 2. Configure video parameters
+        adUnit?.parameters = configureVideoParameters()
+
+        // 3. Init player view
         playerView = PlayerView(this)
         val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 600)
         adWrapperView.addView(playerView, params)
 
-        val parameters = VideoBaseAdUnit.Parameters()
-        parameters.mimes = listOf("video/mp4")
-        parameters.protocols = listOf(Protocols.VAST_2_0)
-        parameters.playbackMethod = listOf(PlaybackMethod.AutoPlaySoundOff)
-        parameters.placement = Signals.Placement.InStream
-
-        adUnit = VideoAdUnit(CONFIG_ID, 640, 480)
-        adUnit?.parameters = parameters
+        // 4. Make a bid request to Prebid Server
         adUnit?.fetchDemand { _: ResultCode?, keysMap: Map<String?, String?>? ->
+
+            // 5. Prepare the creative URI
             val sizes = HashSet<AdSize>()
-            sizes.add(AdSize(640, 480))
-            adsUri = Uri.parse(
-                Util.generateInstreamUriForGam(
-                    AD_UNIT_ID,
-                    sizes,
-                    keysMap
-                )
+            sizes.add(AdSize(WIDTH, HEIGHT))
+            val prebidURL =  Util.generateInstreamUriForGam(
+                AD_UNIT_ID,
+                sizes,
+                keysMap
             )
-            val imaBuilder = ImaAdsLoader.Builder(this)
-            adsLoader = imaBuilder.build()
+
+            adsUri = Uri.parse(prebidURL)
+
+            // 6. Init player
             initializePlayer()
         }
     }
 
+    private fun configureVideoParameters(): VideoBaseAdUnit.Parameters {
+        return VideoBaseAdUnit.Parameters().apply {
+            placement = Signals.Placement.InStream
+
+            api = listOf(
+                Signals.Api.VPAID_1,
+                Signals.Api.VPAID_2
+            )
+
+            maxBitrate = 1500
+            minBitrate = 300
+            maxDuration = 30
+            minDuration = 5
+            mimes = listOf("video/x-flv", "video/mp4")
+            playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOn)
+            protocols = listOf(
+                Signals.Protocols.VAST_2_0
+            )
+        }
+    }
+
     private fun initializePlayer() {
+
+        adsLoader = ImaAdsLoader.Builder(this).build()
+
         val playerBuilder = SimpleExoPlayer.Builder(this)
         player = playerBuilder.build()
         playerView!!.player = player
         adsLoader!!.setPlayer(player)
 
         val uri = Uri.parse("https://storage.googleapis.com/gvabox/media/samples/stock.mp4")
-        // Uri uri = Uri.parse("<![CDATA[https://storage.googleapis.com/gvabox/media/samples/stock.mp4]]>");
 
         val mediaItem = MediaItem.fromUri(uri)
         val dataSourceFactory: DataSource.Factory = DefaultDataSourceFactory(this, getString(R.string.app_name))
