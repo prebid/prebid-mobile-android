@@ -25,6 +25,8 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.customrenderer.AdRenderer;
+import org.prebid.mobile.api.rendering.customrenderer.InterstitialControllerInterface;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -33,8 +35,10 @@ import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerList
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
+import org.prebid.mobile.rendering.utils.helpers.CustomRendererUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -48,7 +52,7 @@ public abstract class BaseInterstitialAdUnit {
 
     private BidLoader bidLoader;
     private BidResponse bidResponse;
-    private InterstitialController interstitialController;
+    private InterstitialControllerInterface interstitialController;
     private InterstitialAdUnitState interstitialAdUnitState = READY_FOR_LOAD;
 
     private final WeakReference<Context> weakContext;
@@ -246,10 +250,18 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     protected void loadPrebidAd() {
+        List<String> renderers = bidResponse.getCustomRenderers();
+        if (renderers != null && renderers.size() > 0) {
+            AdRenderer customRenderer = CustomRendererUtils.retrieveCustomRendererBySingleton(renderers);
+            if (customRenderer != null) {
+                interstitialController = customRenderer.getInterstitialController(getContext(), controllerListener);
+            }
+        }
+
         if (interstitialController == null) {
             notifyErrorListener(new AdException(
-                AdException.INTERNAL_ERROR,
-                "InterstitialController is not defined. Unable to process bid."
+                    AdException.INTERNAL_ERROR,
+                    "InterstitialController is not defined. Unable to process bid."
             ));
             return;
         }
