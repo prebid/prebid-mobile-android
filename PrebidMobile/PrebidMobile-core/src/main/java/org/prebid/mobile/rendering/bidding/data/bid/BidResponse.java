@@ -35,12 +35,14 @@ import org.prebid.mobile.rendering.utils.helpers.Dips;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 public class BidResponse {
     private final static String TAG = BidResponse.class.getSimpleName();
     public static final String KEY_CACHE_ID = "hb_cache_id_local";
+    public static final String RENDERERS_KEY = "hb_custom_renderers";
 
     // ID of the bid request to which this is a response
     private String id;
@@ -221,6 +223,40 @@ public class BidResponse {
             return Utils.isVast(bid.getAdm());
         }
         return false;
+    }
+
+    public boolean hasCustomRenderers() {
+        boolean hasRenderers = false;
+
+        Bid bid = getWinningBid();
+        if (bid != null) {
+            String renderersList = bid.getPrebid().getTargeting().get(RENDERERS_KEY);
+            if (renderersList != null && !renderersList.isEmpty()) {
+                hasRenderers = true;
+            }
+        }
+
+        return hasRenderers;
+    }
+
+    public List<String> getCustomRenderers() {
+        Bid bid = getWinningBid();
+        if (bid != null) {
+            String renderersList = bid.getPrebid().getTargeting().get(RENDERERS_KEY);
+            if(renderersList == null || renderersList.isEmpty()){
+                return null;
+            }
+
+            try {
+                String[] sanitizedList = renderersList.replaceAll("[\\[\\](){}\"]", "").split(",");
+                return Arrays.asList(sanitizedList);
+
+            } catch (Exception e){
+                LogUtil.debug(TAG, "No custom render");
+                return null;
+            }
+        }
+        return null;
     }
 
     private boolean hasWinningKeywords(Prebid prebid) {
