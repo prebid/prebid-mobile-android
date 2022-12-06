@@ -30,6 +30,7 @@ import tv.teads.sdk.InReadAdPlacement;
 import tv.teads.sdk.TeadsSDK;
 import tv.teads.sdk.renderer.InReadAdView;
 
+// TODO temp for tests purposes
 public class TeadsRenderer implements CustomBannerRenderer, CustomInterstitialRenderer {
 
     private FrameLayout frameLayout;
@@ -41,12 +42,11 @@ public class TeadsRenderer implements CustomBannerRenderer, CustomInterstitialRe
                                  @NonNull BidResponse response) {
         frameLayout = new FrameLayout(context);
 
-        /* todo expected behaviors
+        /*
           1 - pass rich to third party sdk to load and return an ad view
           2 - sync displayViewListener to the third party sdk ad life cycle listener
          */
 
-        // todo test ad view returning
         InReadAdView inReadAdView = new InReadAdView(context);
         inReadAdView.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
         getAdd(inReadAdView, listener);
@@ -60,7 +60,6 @@ public class TeadsRenderer implements CustomBannerRenderer, CustomInterstitialRe
             @Override
             public void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
                 Toast.makeText(context, "Load Interstitial Ad", Toast.LENGTH_LONG).show();
-                // todo I think here it is not a matter of returning a view because another view is put over all others
                 listener.onInterstitialReadyForDisplay();
             }
 
