@@ -12,7 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.api.rendering.customrenderer.AdRenderer;
+import org.prebid.mobile.api.rendering.customrenderer.CustomBannerRenderer;
+import org.prebid.mobile.api.rendering.customrenderer.CustomInterstitialRenderer;
 import org.prebid.mobile.api.rendering.customrenderer.InterstitialControllerInterface;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -29,7 +30,7 @@ import tv.teads.sdk.InReadAdPlacement;
 import tv.teads.sdk.TeadsSDK;
 import tv.teads.sdk.renderer.InReadAdView;
 
-public class TeadsRenderer implements AdRenderer {
+public class TeadsRenderer implements CustomBannerRenderer, CustomInterstitialRenderer {
 
     private FrameLayout frameLayout;
 
@@ -58,14 +59,14 @@ public class TeadsRenderer implements AdRenderer {
         return new InterstitialControllerInterface() {
             @Override
             public void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
-                Toast.makeText(context, "load ad", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Load Interstitial Ad", Toast.LENGTH_LONG).show();
                 // todo I think here it is not a matter of returning a view because another view is put over all others
                 listener.onInterstitialReadyForDisplay();
             }
 
             @Override
             public void show() {
-                Toast.makeText(context, "show ad", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Show Interstitial Ad", Toast.LENGTH_LONG).show();
                 listener.onInterstitialDisplayed();
             }
 

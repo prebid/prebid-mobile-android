@@ -4,9 +4,10 @@ import java.util.HashMap;
 
 public class CustomRendererStore {
 
-    private static CustomRendererStore instance = new CustomRendererStore();
+    private static final CustomRendererStore instance = new CustomRendererStore();
 
-    public HashMap<String, AdRenderer> customRenderers = new HashMap<>();
+    public HashMap<String, CustomBannerRenderer> customBannerRenderers = new HashMap<>();
+    public HashMap<String, CustomInterstitialRenderer> customInterstitialRenderers = new HashMap<>();
 
     private CustomRendererStore() {
     }
