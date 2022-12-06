@@ -1,4 +1,4 @@
-package org.prebid.mobile.rendering.views;
+package org.prebid.mobile.api.rendering;
 
 import android.content.Context;
 import android.view.View;
@@ -8,8 +8,6 @@ import androidx.annotation.NonNull;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.api.rendering.DisplayView;
-import org.prebid.mobile.api.rendering.VideoView;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache;
@@ -18,6 +16,8 @@ import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 import org.prebid.mobile.rendering.utils.broadcast.local.EventForwardingLocalBroadcastReceiver;
 import org.prebid.mobile.rendering.utils.constants.IntentActions;
+import org.prebid.mobile.rendering.views.AdViewManager;
+import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.video.VideoViewListener;
 

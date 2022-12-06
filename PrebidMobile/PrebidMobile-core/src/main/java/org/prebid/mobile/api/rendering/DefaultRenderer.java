@@ -1,4 +1,4 @@
-package org.prebid.mobile.rendering.views;
+package org.prebid.mobile.api.rendering;
 
 import android.content.Context;
 import android.view.View;
