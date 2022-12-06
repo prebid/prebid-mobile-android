@@ -81,7 +81,10 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
 
         PermissionHelper.requestPermission(this)
 
-        CustomRendererStore.getInstance().customRenderers["teads"] = TeadsRenderer() // todo should not be pushed
+        // todo should not be pushed
+        val teadsRenderer = TeadsRenderer()
+        CustomRendererStore.getInstance().customBannerRenderers["teads"] = teadsRenderer
+        CustomRendererStore.getInstance().customInterstitialRenderers["teads"] = teadsRenderer
     }
 
     private fun addParametersFromCommandLine() {

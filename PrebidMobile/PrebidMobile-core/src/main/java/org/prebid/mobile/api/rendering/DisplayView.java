@@ -22,7 +22,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 
-import org.prebid.mobile.api.rendering.customrenderer.AdRenderer;
+import org.prebid.mobile.api.rendering.customrenderer.CustomBannerRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
@@ -32,7 +32,7 @@ import org.prebid.mobile.rendering.utils.helpers.CustomRendererUtils;
 import java.util.List;
 
 public class DisplayView extends FrameLayout {
-    private View rendererAdView;
+    private View adView;
     private AdUnitConfiguration adUnitConfiguration;
     private DisplayViewListener displayViewListener;
 
@@ -49,23 +49,21 @@ public class DisplayView extends FrameLayout {
 
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(bidResponse, () -> {
-            AdRenderer adRenderer = getCustomRenderer(bidResponse);
-
-            if (adRenderer != null) {
+            CustomBannerRenderer customBannerRenderer = getCustomRenderer(bidResponse);
+            if (customBannerRenderer != null) {
                 adUnitConfiguration.modifyUsingBidResponse(bidResponse);
+                adView = customBannerRenderer.getBannerAdView(context, displayViewListener, adUnitConfiguration, bidResponse);
             } else {
-                adRenderer = new DefaultRenderer();
+                adView = new DefaultDisplayView(context, displayViewListener, adUnitConfiguration, bidResponse);
             }
-
-            rendererAdView = adRenderer.getBannerAdView(context, displayViewListener, adUnitConfiguration, bidResponse);
-            addView(rendererAdView);
+            addView(adView);
         });
     }
 
-    private AdRenderer getCustomRenderer(@NonNull BidResponse response) {
+    private CustomBannerRenderer getCustomRenderer(@NonNull BidResponse response) {
         List<String> renderers = response.getCustomRenderers();
         if (renderers != null && renderers.size() > 0) {
-            return CustomRendererUtils.retrieveCustomRendererBySingleton(renderers);
+            return CustomRendererUtils.getBannerRendererBySingleton(renderers);
         } else {
             return null;
         }

@@ -25,7 +25,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.api.rendering.customrenderer.AdRenderer;
+import org.prebid.mobile.api.rendering.customrenderer.CustomInterstitialRenderer;
 import org.prebid.mobile.api.rendering.customrenderer.InterstitialControllerInterface;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -252,7 +252,7 @@ public abstract class BaseInterstitialAdUnit {
     protected void loadPrebidAd() {
         List<String> renderers = bidResponse.getCustomRenderers();
         if (renderers != null && renderers.size() > 0) {
-            AdRenderer customRenderer = CustomRendererUtils.retrieveCustomRendererBySingleton(renderers);
+            CustomInterstitialRenderer customRenderer = CustomRendererUtils.getInterstitialRendererBySingleton(renderers);
             if (customRenderer != null) {
                 interstitialController = customRenderer.getInterstitialController(getContext(), controllerListener);
             }
