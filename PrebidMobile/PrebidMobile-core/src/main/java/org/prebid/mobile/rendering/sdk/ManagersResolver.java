@@ -17,10 +17,16 @@
 package org.prebid.mobile.rendering.sdk;
 
 import android.content.Context;
-import android.util.Log;
+
 import androidx.annotation.Nullable;
-import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.rendering.sdk.deviceData.managers.*;
+
+import org.prebid.mobile.rendering.sdk.deviceData.managers.ConnectionInfoManager;
+import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoImpl;
+import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
+import org.prebid.mobile.rendering.sdk.deviceData.managers.LastKnownLocationInfoManager;
+import org.prebid.mobile.rendering.sdk.deviceData.managers.LocationInfoManager;
+import org.prebid.mobile.rendering.sdk.deviceData.managers.NetworkConnectionInfoManager;
+import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
 import java.lang.ref.WeakReference;
@@ -47,6 +53,10 @@ public class ManagersResolver {
         }
 
         return null;
+    }
+
+    protected void clearContext() {
+        contextReference = null;
     }
 
     /**
@@ -172,17 +182,9 @@ public class ManagersResolver {
      * Prepare managers for current context.
      */
     public void prepare(Context context) {
-        try {
-            if (!isReady(context)) {
-                dispose();
-                registerManagers(context);
-            }
-        }
-        catch (Exception e) {
-            LogUtil.error(TAG, "Failed to register managers: " + Log.getStackTraceString(e));
-        }
-        finally {
-            SdkInitializer.increaseTaskCount();
+        if (!isReady(context)) {
+            dispose();
+            registerManagers(context);
         }
     }
 
