@@ -28,7 +28,6 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 import org.prebid.mobile.rendering.utils.helpers.CustomRendererUtils;
-import org.prebid.mobile.rendering.views.DefaultRenderer;
 
 import java.util.List;
 
