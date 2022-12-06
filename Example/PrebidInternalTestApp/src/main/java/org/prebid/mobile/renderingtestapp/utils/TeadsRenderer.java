@@ -133,4 +133,18 @@ public class TeadsRenderer implements CustomBannerRenderer, CustomInterstitialRe
         });
     }
 
+    @Override
+    public String getName() {
+        return "Teads";
+    }
+
+    @Override
+    public String getVersion() {
+        return "1.0.0";
+    }
+
+    @Override
+    public String getToken() {
+        return null;
+    }
 }

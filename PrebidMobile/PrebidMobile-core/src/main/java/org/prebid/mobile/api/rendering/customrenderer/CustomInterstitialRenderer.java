@@ -4,7 +4,7 @@ import android.content.Context;
 
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 
-public interface CustomInterstitialRenderer {
+public interface CustomInterstitialRenderer extends BaseCustomRenderer {
 
     InterstitialControllerInterface getInterstitialController(
             Context context,
