@@ -9,7 +9,7 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
-public interface CustomBannerRenderer {
+public interface CustomBannerRenderer extends BaseCustomRenderer {
 
     View getBannerAdView(
             @NonNull Context context,
