@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
 
         PermissionHelper.requestPermission(this)
 
-        // todo should not be pushed
+        // todo should not be merged
         val teadsRenderer = TeadsRenderer()
         CustomRendererStore.getInstance().customBannerRenderers["teads"] = teadsRenderer
         CustomRendererStore.getInstance().customInterstitialRenderers["teads"] = teadsRenderer

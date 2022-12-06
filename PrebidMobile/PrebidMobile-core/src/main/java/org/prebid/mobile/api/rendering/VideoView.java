@@ -136,7 +136,7 @@ public class VideoView extends BaseAdView {
         init();
     }
 
-    public void loadAd( // todo how it was working before as not public?
+    void loadAd(
         AdUnitConfiguration adUnitConfiguration,
         BidResponse bidResponse
     ) {
