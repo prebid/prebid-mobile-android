@@ -245,6 +245,41 @@
     <string name="demo_bidding_max_native_adapter_events">Native Ad Events (MAX) [OK, Adapter]</string>
     <string name="demo_bidding_max_native_no_bids">Native Ad (MAX) [noBids, MAX ad]</string>
 
+    <!--Custom Renderer Titles-->
+    <string name="demo_bidding_custom_renderer_banner_320_50">Banner 320x50 (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_banner_320_50_events">Banner 320x50 Events (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_banner_320_50_no_bids">Banner 320x50 [noBids] (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_banner_320_50_imp_prebid_random_bid"> Banner 320x50 [Bid - RANDOM noBids, Ad - RESPECTIVE]</string>
+    <string name="demo_bidding_custom_renderer_banner_300_250">Banner 300x250 (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_banner_728_90">Banner 728x90 (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_banner_320_50_scrollable">Banner 320x50 Scrollable (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_banner_320_50_vast">Banner 320x50 (Custom Renderer) [Incorrect VAST]</string>
+    <string name="demo_bidding_custom_renderer_banner_320_50_deeplink">Banner 320x50 (Custom Renderer) [DeepLink+]</string>
+    <string name="demo_bidding_custom_renderer_banner_layout">Banner 320x50 Layout (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_banner_multisize">Banner Multisize (Custom Renderer)</string>
+
+    <string name="demo_bidding_custom_renderer_banners_and_interstitial">Banners and Interstitial (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_interstitial_320_480">Display Interstitial 320x480 (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_interstitial_320_480_no_bids">Display Interstitial 320x480 [noBids] (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_interstitial_320_480_multiformat">Multiformat Interstitial 320x480 (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_banner_video_outstream">Video Outstream (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_banner_video_outstream_no_bids">Video Outstream [noBids] (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_banner_video_outstream_feed">Video Outstream Feed (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_banner_video_outstream_end_card">Video Outstream with End Card (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_interstitial_video_320_480">Video Interstitial 320x480 (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_interstitial_video_320_480_deeplink">Video Interstitial 320x480 Deeplink+ (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_interstitial_video_320_480_skipoffset">Video Interstitial 320x480 SkipOffset (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_interstitial_video_320_480_end_card">Video Interstitial 320x480 With End Card (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_interstitial_video_320_480_close_button_area">Video Interstitial 320x480 With Close Button (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_interstitial_video_320_480_end_card_sound_button">Video Interstitial 320x480 With End Card and Sound Button (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_interstitial_video_320_480_end_card_skip_button">Video Interstitial 320x480 With End Card and Skip Button (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_interstitial_video_320_480_mraid_end_card">Video Interstitial 320x480 with MRAID End Card (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_interstitial_video_320_480_no_bids">Video Interstitial 320x480 (Custom Renderer) [noBids]</string>
+    <string name="demo_bidding_custom_renderer_interstitial_video_320_480_with_ad_configuration">Video Interstitial 320x480 With Ad Configuration (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_interstitial_video_320_480_end_card_with_ad_configuration">Video Interstitial 320x480 With End Card With Ad Configuration (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_interstitial_video_vertical_end_card">Video Interstitial Vertical With End Card (Custom Renderer)</string>
+    <string name="demo_bidding_custom_renderer_interstitial_video_landscape_end_card">Video Interstitial Landscape With End Card (Custom Renderer)</string>
+
     <!--GAM AdUnits-->
     <string name="adunit_gam_banner_320_50_app_event">/21808260008/prebid_oxb_320x50_banner</string>
     <string name="adunit_gam_banner_320_50_gam_ad">/21808260008/prebid_oxb_320x50_banner_static</string>

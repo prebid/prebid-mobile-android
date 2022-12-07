@@ -89,6 +89,7 @@ class DemoItemProvider private constructor() {
             addGamPbsExamples()
             addAdMobPbsExamples()
             addApplovinMaxPbsExamples()
+            addCustomRendererPbsExamples()
         }
 
         private fun addInAppPbsExamples() {
@@ -1933,6 +1934,350 @@ class DemoItemProvider private constructor() {
                     }
                 )
             )
+        }
+
+        private fun addCustomRendererPbsExamples() {
+            val ppmBannerTagList = listOf(Tag.ALL, Tag.CUSTOM_RENDERER, Tag.BANNER, Tag.REMOTE)
+            val ppmInterstitialTagList = listOf(Tag.ALL, Tag.CUSTOM_RENDERER, Tag.INTERSTITIAL, Tag.REMOTE)
+            val ppmVideoTagList = listOf(Tag.ALL, Tag.CUSTOM_RENDERER, Tag.VIDEO, Tag.REMOTE)
+
+            // Custom Renderer Banner
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_banner_320_50),
+//                    ppmBannerAction,
+//                    ppmBannerTagList,
+//                    createBannerBundle(R.string.imp_prebid_id_banner_320x50, null, 320, 50,R.string.response_prebid_banner_320_50)
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_banner_320_50_imp_prebid_random_bid),
+//                    ppmBannerAction,
+//                    ppmBannerTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_banner_320x50,
+//                        null,
+//                        320,
+//                        50,
+//                        R.string.response_prebid_banner_320_50
+//                    )
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_banner_320_50_no_bids),
+//                    ppmBannerAction,
+//                    ppmBannerTagList,
+//                    createBannerBundle(R.string.imp_prebid_id_no_bids, null, 320, 50, R.string.response_prebid_no_bids)
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_banner_320_50_events),
+//                    ppmBannerAction,
+//                    ppmBannerTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_banner_320x50,
+//                        null,
+//                        320,
+//                        50,
+//                        R.string.response_prebid_banner_320_50
+//                    ).apply {
+//                        putString(
+//                            AdFragment.ARGUMENT_ACCOUNT_ID,
+//                            getString(R.string.prebid_account_id_prod_enabled_events)
+//                        )
+//                    }
+//                )
+//            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_custom_renderer_banner_300_250),
+                    ppmBannerAction,
+                    ppmBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_300x250,
+                        null,
+                        300,
+                        250,
+                        R.string.response_prebid_banner_300_250
+                    )
+                )
+            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_banner_728_90),
+//                    ppmBannerAction,
+//                    ppmBannerTagList,
+//                    createBannerBundle(R.string.imp_prebid_id_banner_728x90, null, 728, 90, R.string.response_prebid_banner_728_90)
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_banner_320_50_vast),
+//                    ppmBannerAction,
+//                    ppmBannerTagList,
+//                    createBannerBundle(R.string.imp_prebid_id_banner_320x50_vast, null, 320, 50,R.string.response_prebid_banner_incorrect_vast)
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_banner_320_50_scrollable),
+//                    R.id.action_header_bidding_to_in_app_banner_scrollable,
+//                    ppmBannerTagList,
+//                    createBannerBundle(R.string.imp_prebid_id_banner_320x50, null, 320, 50,R.string.response_prebid_banner_320_50)
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_banner_320_50_deeplink),
+//                    ppmBannerAction,
+//                    ppmBannerTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_banner_320x50_deeplink,
+//                        null,
+//                        320,
+//                        50,
+//                        R.string.response_prebid_banner_deeplink
+//                    )
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_banner_layout),
+//                    R.id.action_header_bidding_to_in_app_banner_in_layout,
+//                    ppmBannerTagList,
+//                    createBannerBundle(null, null, 320, 50)
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_banner_multisize),
+//                    R.id.action_header_bidding_to_in_app_multisize_banner,
+//                    ppmBannerTagList,
+//                    createBannerBundle(R.string.imp_prebid_id_banner_multisize, null, 320, 50,R.string.response_prebid_banner_multisize)
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_banners_and_interstitial),
+//                    R.id.action_header_bidding_to_in_app_banners_and_interstitial,
+//                    ppmBannerTagList,
+//                    createBannerBundle(null, null, 0, 0)
+//                )
+//            )
+//
+            // Custom Renderer Interstitial
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_custom_renderer_interstitial_320_480),
+                    ppmInterstitialAction,
+                    ppmInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_interstitial_320_480,
+                        null,
+                        MIN_WIDTH_PERC,
+                        MIN_HEIGHT_PERC,
+                        R.string.response_prebid_display_interstitial_320_480
+                    )
+                )
+            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_interstitial_320_480_no_bids),
+//                    ppmInterstitialAction,
+//                    ppmInterstitialTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_no_bids,
+//                        null,
+//                        MIN_WIDTH_PERC,
+//                        MIN_HEIGHT_PERC,
+//                        R.string.response_prebid_no_bids
+//                    )
+//                )
+//            )
+//
+//            /// In-App Video
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_interstitial_video_320_480),
+//                    ppmInterstitialAction,
+//                    ppmVideoTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_video_interstitial_320_480,
+//                        null,
+//                        MIN_WIDTH_PERC,
+//                        MIN_HEIGHT_PERC,
+//                        R.string.response_prebid_video_interstitial_320_480
+//                    )
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_interstitial_video_320_480_no_bids),
+//                    ppmInterstitialAction,
+//                    ppmVideoTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_no_bids,
+//                        null,
+//                        MIN_WIDTH_PERC,
+//                        MIN_HEIGHT_PERC,R.string.response_prebid_no_bids
+//                    )
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_interstitial_video_320_480_skipoffset),
+//                    ppmInterstitialAction,
+//                    ppmVideoTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_video_interstitial_skipoffset,
+//                        null,
+//                        MIN_WIDTH_PERC,
+//                        MIN_HEIGHT_PERC,
+//                        R.string.response_prebid_video_interstitial_skipoffset
+//                    )
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_interstitial_video_320_480_deeplink),
+//                    ppmInterstitialAction,
+//                    ppmVideoTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_video_interstitial_deeplink,
+//                        null,
+//                        MIN_WIDTH_PERC,
+//                        MIN_HEIGHT_PERC,
+//                        R.string.response_prebid_video_interstitial_deeplink
+//                    )
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_interstitial_video_320_480_end_card),
+//                    ppmInterstitialAction,
+//                    ppmVideoTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
+//                        null,
+//                        MIN_WIDTH_PERC,
+//                        MIN_HEIGHT_PERC,
+//                        R.string.response_prebid_video_interstitial_320_480_with_end_card
+//                    )
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_interstitial_video_320_480_close_button_area),
+//                    ppmInterstitialCloseButtonAreaAction,
+//                    ppmVideoTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_video_interstitial_320_480,
+//                        null,
+//                        MIN_WIDTH_PERC,
+//                        MIN_HEIGHT_PERC,
+//                        R.string.response_prebid_video_interstitial_320_480
+//                    )
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_interstitial_video_320_480_end_card_sound_button),
+//                    ppmInterstitialSoundButtonAction,
+//                    ppmVideoTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
+//                        null,
+//                        MIN_WIDTH_PERC,
+//                        MIN_HEIGHT_PERC,
+//                        R.string.response_prebid_video_interstitial_320_480_with_end_card
+//                    )
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_interstitial_video_320_480_end_card_skip_button),
+//                    ppmInterstitialSkipButtonAction,
+//                    ppmVideoTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
+//                        null,
+//                        MIN_WIDTH_PERC,
+//                        MIN_HEIGHT_PERC,
+//                        R.string.response_prebid_video_interstitial_320_480_with_end_card
+//                    )
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_interstitial_video_320_480_with_ad_configuration),
+//                    ppmInterstitialAction,
+//                    ppmVideoTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_video_interstitial_320_480,
+//                        null,
+//                        320, 480,
+//                        R.string.response_prebid_video_interstitial_ad_configuration
+//                    )
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_interstitial_video_320_480_end_card_with_ad_configuration),
+//                    ppmInterstitialAction,
+//                    ppmVideoTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
+//                        null,
+//                        320, 480,
+//                        R.string.response_prebid_video_interstitial_end_card_ad_configuration
+//                    )
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_interstitial_video_vertical_end_card),
+//                    ppmInterstitialAction,
+//                    ppmVideoTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_video_interstitial_vertical,
+//                        null,
+//                        MIN_WIDTH_PERC,
+//                        MIN_HEIGHT_PERC,
+//                        R.string.response_prebid_video_interstitial_vertical
+//                    )
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_interstitial_video_landscape_end_card),
+//                    ppmInterstitialAction,
+//                    ppmVideoTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_video_interstitial_vertical,
+//                        null,
+//                        MIN_WIDTH_PERC,
+//                        MIN_HEIGHT_PERC,
+//                        R.string.response_prebid_video_interstitial_landscape
+//                    )
+//                )
+//            )
+//            demoList.add(
+//                DemoItem(
+//                    getString(R.string.demo_bidding_custom_renderer_interstitial_320_480_multiformat),
+//                    ppmInterstitialMultiformatAction,
+//                    ppmInterstitialTagList,
+//                    createBannerBundle(
+//                        R.string.imp_prebid_id_video_interstitial_320_480,
+//                        null,
+//                        MIN_WIDTH_PERC,
+//                        MIN_HEIGHT_PERC,
+//                        R.string.response_prebid_video_interstitial_320_480
+//                    )
+//                )
+//            )
         }
 
         private fun createBannerBundle(
