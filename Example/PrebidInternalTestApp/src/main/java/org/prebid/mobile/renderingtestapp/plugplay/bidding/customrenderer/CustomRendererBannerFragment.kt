@@ -106,5 +106,6 @@ open class CustomRendererBannerFragment : AdFragment(),
     override fun onDestroyView() {
         super.onDestroyView()
         bannerView?.destroy()
+        CustomRendererStore.getInstance().customBannerRenderers.clear()
     }
 }
