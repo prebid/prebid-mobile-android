@@ -70,6 +70,8 @@ public class UserConsentManagerTest {
             .remove(UserConsentManagerReflection.getConstGdpr2Consent(userConsentManager))
             .remove(UserConsentManagerReflection.getConstGdpr2PurposeConsent(userConsentManager))
             .remove(UserConsentManagerReflection.getConstUsPrivacyString(userConsentManager))
+            .remove(UserConsentManager.GPP_STRING_KEY)
+            .remove(UserConsentManager.GPP_SID_KEY)
             .apply();
 
         UserConsentManagerReflection.resetAllFields(userConsentManager);
@@ -95,6 +97,16 @@ public class UserConsentManagerTest {
         assertEquals(
             "IABUSPrivacy_String",
             UserConsentManagerReflection.getConstUsPrivacyString(userConsentManager)
+        );
+
+        // GPP
+        assertEquals(
+            "IABGPP_HDR_GppString",
+            UserConsentManager.GPP_STRING_KEY
+        );
+        assertEquals(
+            "IABGPP_GppSID",
+            UserConsentManager.GPP_SID_KEY
         );
     }
 
@@ -302,6 +314,22 @@ public class UserConsentManagerTest {
 
         assertNull(userConsentManager.getGdprPurposeConsent(1));
         assertNull(userConsentManager.getGdprPurposeConsent(0));
+    }
+
+    @Test
+    public void getGppString() {
+        String realGppString = userConsentManager.getRealGppString();
+        assertNull(realGppString);
+        String realGppSid = userConsentManager.getRealGppSid();
+        assertNull(realGppSid);
+
+        sharedPreferences
+            .edit()
+            .putString(UserConsentManager.GPP_STRING_KEY, "testString")
+            .putString(UserConsentManager.GPP_SID_KEY, "testSid")
+            .apply();
+        assertEquals("testString", userConsentManager.getRealGppString());
+        assertEquals("testSid", userConsentManager.getRealGppSid());
     }
 
 
