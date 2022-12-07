@@ -31,7 +31,7 @@ import tv.teads.sdk.TeadsSDK;
 import tv.teads.sdk.renderer.InReadAdView;
 
 // TODO temp for tests purposes
-public class TeadsRenderer implements CustomBannerRenderer, CustomInterstitialRenderer {
+public class ThirdPartyRenderer implements CustomBannerRenderer, CustomInterstitialRenderer {
 
     private FrameLayout frameLayout;
 

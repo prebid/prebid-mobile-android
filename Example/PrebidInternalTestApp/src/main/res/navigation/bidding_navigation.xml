@@ -436,6 +436,24 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@+id/headerBiddingFragment" />
 
+        <!--Custom Renderer actions-->
+        <action
+            android:id="@+id/action_header_bidding_to_custom_renderer_banner"
+            app:destination="@id/navigation_custom_renderer_banner"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_custom_renderer_interstitial"
+            app:destination="@id/navigation_custom_renderer_interstitial"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
 
     </fragment>
 
@@ -631,5 +649,16 @@
     <fragment
         android:id="@+id/navigation_max_native"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.max.MaxNativeFragment" />
+
+    <!--Custom Renderer fragments-->
+    <fragment
+        android:id="@+id/navigation_custom_renderer_banner"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.customrenderer.CustomRendererBannerFragment"
+        android:label="Custom Renderer Banner" />
+
+    <fragment
+        android:id="@+id/navigation_custom_renderer_interstitial"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.customrenderer.CustomRendererInterstitialFragment"
+        android:label="Custom Renderer Interstitial" />
 
 </navigation>
