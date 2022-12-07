@@ -46,4 +46,9 @@ open class CustomRendererInterstitialFragment : BaseBidInterstitialFragment() {
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
         interstitialAdUnit?.setMinSizePercentage(AdSize(30, 30))
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        CustomRendererStore.getInstance().customInterstitialRenderers.clear()
+    }
 }
