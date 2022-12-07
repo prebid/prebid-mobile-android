@@ -457,6 +457,24 @@
             android:id="@+id/action_header_bidding_to_gam_original_native_banner"
             app:destination="@id/gamOriginalNativeBannerFragment" />
 
+        <!--Custom Renderer actions-->
+        <action
+            android:id="@+id/action_header_bidding_to_custom_renderer_banner"
+            app:destination="@id/navigation_custom_renderer_banner"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
+            android:id="@+id/action_header_bidding_to_custom_renderer_interstitial"
+            app:destination="@id/navigation_custom_renderer_interstitial"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
 
     </fragment>
 
@@ -680,5 +698,16 @@
         android:id="@+id/gamOriginalNativeBannerFragment"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalNativeBannerFragment"
         android:label="GamOriginalNativeBannerFragment" />
+
+    <!--Custom Renderer fragments-->
+    <fragment
+        android:id="@+id/navigation_custom_renderer_banner"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.customrenderer.CustomRendererBannerFragment"
+        android:label="Custom Renderer Banner" />
+
+    <fragment
+        android:id="@+id/navigation_custom_renderer_interstitial"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.customrenderer.CustomRendererInterstitialFragment"
+        android:label="Custom Renderer Interstitial" />
 
 </navigation>
