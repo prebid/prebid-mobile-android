@@ -2,6 +2,7 @@ package org.prebid.mobile.rendering.sdk;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
@@ -16,22 +17,26 @@ public class StatusRequester {
 
     private static final String TAG = StatusRequester.class.getSimpleName();
 
-    public static void makeRequest(@Nullable SdkInitializationListener listener) {
+    @Nullable
+    private static SdkInitializationListener listener;
+
+    public static void makeRequest(@Nullable SdkInitializationListener initializationListener) {
+        listener = initializationListener;
+
         String url = PrebidMobile.getPrebidServerHost().getHostUrl();
         if (url.contains("/openrtb2/auction")) {
             String statusUrl = url.replace("/openrtb2/auction", "/status");
             ServerConnection.fireWithResult(
                 statusUrl,
-                getResponseHandler(listener)
+                getResponseHandler()
             );
-        } else if (url.isEmpty()) {
-            onInitError("Please set host url (PrebidMobile.setPrebidServerHost) and only then run SDK initialization.", listener);
         } else {
-            onInitError("Error, url doesn't contain /openrtb2/auction part", listener);
+            LogUtil.info("SDK doesn't support host urls without `/openrtb2/auction` part for now");
+            onSuccess();
         }
     }
 
-    private static ResponseHandler getResponseHandler(@Nullable SdkInitializationListener listener) {
+    private static ResponseHandler getResponseHandler() {
         return new ResponseHandler() {
             @Override
             public void onResponse(BaseNetworkTask.GetUrlResult response) {
@@ -44,11 +49,11 @@ public class StatusRequester {
                             return;
                         }
                     } catch (JSONException exception) {
-                        onInitError("JsonException: " + exception.getMessage(), listener);
+                        onInitializationError("Wrong `/status` response: " + exception.getMessage());
                         return;
                     }
                 }
-                onInitError("Server status is not ok!", listener);
+                onInitializationError("Server status is not ok!");
             }
 
             @Override
@@ -56,7 +61,7 @@ public class StatusRequester {
                 String msg,
                 long responseTime
             ) {
-                onInitError("Exception: " + msg, listener);
+                onInitializationError("Prebid Server is not responding: " + msg);
             }
 
             @Override
@@ -64,22 +69,22 @@ public class StatusRequester {
                 Exception exception,
                 long responseTime
             ) {
-                onInitError("Exception: " + exception.getMessage(), listener);
+                onInitializationError("Prebid Server is not responding: " + exception.getMessage());
             }
         };
     }
 
     private static void onSuccess() {
-        LogUtil.debug("Server status code 200");
+        LogUtil.debug(TAG, "Prebid SDK " + PrebidMobile.SDK_VERSION + " initialized");
+        if (listener != null) {
+            SdkInitializer.postOnMainThread(() -> listener.onSdkInit());
+        }
     }
 
-    private static void onInitError(
-        @NonNull String message,
-        @Nullable SdkInitializationListener listener
-    ) {
+    private static void onInitializationError(@NonNull String message) {
         LogUtil.error(TAG, message);
         if (listener != null) {
-            listener.onSdkFailedToInit(new InitError(message));
+            SdkInitializer.postOnMainThread(() -> listener.onSdkFailedToInit(new InitError(message)));
         }
     }
 

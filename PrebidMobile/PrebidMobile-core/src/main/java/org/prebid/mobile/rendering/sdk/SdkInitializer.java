@@ -2,6 +2,8 @@ package org.prebid.mobile.rendering.sdk;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -29,7 +31,7 @@ public class SdkInitializer {
             String error = "Context must be not null!";
             LogUtil.error(error);
             if (listener != null) {
-                listener.onSdkFailedToInit(new InitError(error));
+                postOnMainThread(() -> listener.onSdkFailedToInit(new InitError(error)));
             }
             return;
         }
@@ -56,24 +58,26 @@ public class SdkInitializer {
             AppInfoManager.init(context);
             OmAdSessionManager.activateOmSdk(context);
             ManagersResolver.getInstance().prepare(context);
-            StatusRequester.makeRequest(listener);
+            isSdkInitialized = true;
         } catch (Throwable throwable) {
             if (sdkInitListener != null) {
-                sdkInitListener.onSdkFailedToInit(new InitError(throwable.getMessage() + "\n" + Log.getStackTraceString(throwable)));
+                postOnMainThread(() -> sdkInitListener.onSdkFailedToInit(
+                    new InitError("Exception during initialization: " + throwable.getMessage() + "\n" + Log.getStackTraceString(throwable))
+                ));
             }
             ManagersResolver.getInstance().clearContext();
             return;
         }
 
-        LogUtil.debug(TAG, "Prebid SDK " + PrebidMobile.SDK_VERSION + " initialized");
-        isSdkInitialized = true;
-        if (sdkInitListener != null) {
-            sdkInitListener.onSdkInit();
-        }
+        StatusRequester.makeRequest(listener);
     }
 
     public static boolean isIsSdkInitialized() {
         return isSdkInitialized;
+    }
+
+    protected static void postOnMainThread(Runnable runnable) {
+        new Handler(Looper.getMainLooper()).post(runnable);
     }
 
 }
