@@ -109,6 +109,46 @@ class DemoItemProvider private constructor() {
                     )
                 )
             )
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_banner_300_250_original),
+                    gamBannerOriginalAction,
+                    gamBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_300x250,
+                        R.string.adunit_gam_banner_300_250_original,
+                        300,
+                        250,R.string.response_prebid_banner_300_250
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_banner_728_90_original),
+                    gamBannerOriginalAction,
+                    gamBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_728x90,
+                        R.string.adunit_gam_banner_728_90_original,
+                        728,
+                        90,R.string.response_prebid_banner_728_90
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_banner_multisize_original),
+                    gamBannerOriginalAction,
+                    gamBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_multisize,
+                        R.string.adunit_gam_banner_multisize_original,
+                        320,
+                        50,R.string.response_prebid_banner_multisize
+                    )
+                )
+            )
         }
 
         private fun addInAppPbsExamples() {
