@@ -93,6 +93,9 @@ open class GamOriginalBannerFragment : AdFragment() {
         viewContainer.addView(adView)
 
         adUnit = BannerAdUnit(configId, width, height)
+        if (configId.contains("multisize")) {
+            adUnit?.addAdditionalSize(728,90)
+        }
         adUnit?.setAutoRefreshInterval(refreshDelay)
 
         return adView
