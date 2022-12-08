@@ -438,6 +438,9 @@
         <action
             android:id="@+id/action_header_bidding_to_gamOriginalBannerFragment"
             app:destination="@id/gamOriginalBannerFragment" />
+        <action
+            android:id="@+id/action_header_bidding_to_gamOriginalInterstitialFragment"
+            app:destination="@id/gamOriginalInterstitialFragment" />
 
 
     </fragment>
@@ -638,5 +641,9 @@
         android:id="@+id/gamOriginalBannerFragment"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalBannerFragment"
         android:label="GamOriginalBannerFragment" />
+    <fragment
+        android:id="@+id/gamOriginalInterstitialFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalInterstitialFragment"
+        android:label="GamOriginalInterstitialFragment" />
 
 </navigation>

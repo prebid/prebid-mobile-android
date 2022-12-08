@@ -50,6 +50,7 @@ class DemoItemProvider private constructor() {
         private const val gamBannerAction = R.id.action_header_bidding_to_gam_banner
         private const val gamBannerOriginalAction = R.id.action_header_bidding_to_gamOriginalBannerFragment
         private const val gamInterstitialAction = R.id.action_header_bidding_to_gam_interstitial
+        private const val gamInterstitialOriginalAction = R.id.action_header_bidding_to_gamOriginalInterstitialFragment
         private const val gamInterstitialMultiformatAction = R.id.action_header_bidding_to_gam_interstitial_multiformat
         private const val gamRewardedAction = R.id.action_header_bidding_to_gam_video_rewarded
 
@@ -146,6 +147,19 @@ class DemoItemProvider private constructor() {
                         R.string.adunit_gam_banner_multisize_original,
                         320,
                         50,R.string.response_prebid_banner_multisize
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_interstitial_320_480_original),
+                    gamInterstitialOriginalAction,
+                    gamBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_interstitial_320_480,
+                        R.string.adunit_gam_interstitial_320_480_original,
+                        320,
+                        480,R.string.response_prebid_display_interstitial_320_480
                     )
                 )
             )
