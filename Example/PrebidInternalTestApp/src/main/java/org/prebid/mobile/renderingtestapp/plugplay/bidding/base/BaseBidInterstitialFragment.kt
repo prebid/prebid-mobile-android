@@ -27,7 +27,7 @@ import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
-import org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamInterstitialFragment
+import org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering.GamInterstitialFragment
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 
 abstract class BaseBidInterstitialFragment : AdFragment(),

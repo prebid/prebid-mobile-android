@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam
+package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering
 
 import org.prebid.mobile.AdSize
 

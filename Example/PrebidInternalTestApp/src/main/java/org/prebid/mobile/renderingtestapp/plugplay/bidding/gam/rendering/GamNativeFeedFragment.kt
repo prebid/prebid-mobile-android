@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam
+package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering
 
 import android.os.Bundle
 import com.google.android.gms.ads.AdLoader
