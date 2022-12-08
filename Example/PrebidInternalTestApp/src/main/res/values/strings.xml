@@ -139,6 +139,7 @@
 
     <!--GAM Titles-->
     <string name="demo_bidding_gam_banner_320_50_app_event">Banner 320x50 (GAM) [OK, AppEvent]</string>
+    <string name="demo_bidding_gam_banner_320_50_original">Banner 320x50 (GAM Original) [OK, PUC]</string>
     <string name="demo_bidding_gam_banner_320_50_app_event_with_events_url">Banner 320x50 Events (GAM) [OK, AppEvent]</string>
     <string name="demo_bidding_gam_banner_320_50_gam_ad">Banner 320x50 (GAM) [OK, GAM Ad]</string>
     <string name="demo_bidding_gam_banner_320_50_no_bids">Banner 320x50 (GAM) [noBids, GAM Ad]</string>
@@ -247,6 +248,7 @@
 
     <!--GAM AdUnits-->
     <string name="adunit_gam_banner_320_50_app_event">/21808260008/prebid_oxb_320x50_banner</string>
+    <string name="adunit_gam_banner_320_50_original">/21808260008/prebid_demo_app_original_api_banner</string>
     <string name="adunit_gam_banner_320_50_gam_ad">/21808260008/prebid_oxb_320x50_banner_static</string>
     <string name="adunit_gam_banner_320_50_no_bids">/21808260008/prebid_oxb_320x50_banner_static</string>
     <string name="adunit_gam_banner_320_50_random">/21808260008/prebid_oxb_320x50_banner_random</string>

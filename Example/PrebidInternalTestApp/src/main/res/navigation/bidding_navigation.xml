@@ -435,6 +435,9 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@+id/headerBiddingFragment" />
+        <action
+            android:id="@+id/action_header_bidding_to_gamOriginalBannerFragment"
+            app:destination="@id/gamOriginalBannerFragment" />
 
 
     </fragment>
@@ -631,5 +634,9 @@
     <fragment
         android:id="@+id/navigation_max_native"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.max.MaxNativeFragment" />
+    <fragment
+        android:id="@+id/gamOriginalBannerFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalBannerFragment"
+        android:label="GamOriginalBannerFragment" />
 
 </navigation>

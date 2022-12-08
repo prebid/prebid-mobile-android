@@ -48,6 +48,7 @@ class DemoItemProvider private constructor() {
         private const val ppmRewardedAction = R.id.action_header_bidding_to_in_app_video_rewarded
 
         private const val gamBannerAction = R.id.action_header_bidding_to_gam_banner
+        private const val gamBannerOriginalAction = R.id.action_header_bidding_to_gamOriginalBannerFragment
         private const val gamInterstitialAction = R.id.action_header_bidding_to_gam_interstitial
         private const val gamInterstitialMultiformatAction = R.id.action_header_bidding_to_gam_interstitial_multiformat
         private const val gamRewardedAction = R.id.action_header_bidding_to_gam_video_rewarded
@@ -85,10 +86,29 @@ class DemoItemProvider private constructor() {
         }
 
         private fun formPbsDemoList() {
+            addGamOriginalExamples()
             addInAppPbsExamples()
             addGamPbsExamples()
             addAdMobPbsExamples()
             addApplovinMaxPbsExamples()
+        }
+
+        private fun addGamOriginalExamples() {
+            val gamBannerTagList = listOf(Tag.ALL, Tag.GAM, Tag.BANNER, Tag.REMOTE)
+
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_banner_320_50_original),
+                    gamBannerOriginalAction,
+                    gamBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_320x50,
+                        R.string.adunit_gam_banner_320_50_original,
+                        320,
+                        50,R.string.response_prebid_banner_320_50
+                    )
+                )
+            )
         }
 
         private fun addInAppPbsExamples() {
