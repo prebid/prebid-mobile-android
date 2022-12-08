@@ -59,7 +59,7 @@ android {
 
 repositories{
     maven {
-        url  "https://teads.jfrog.io/artifactory/SDKAndroid-maven-prod" // todo should not be merged
+        url  "https://teads.jfrog.io/artifactory/SDKAndroid-maven-prod" // TODO should not be merged
     }
 }
 
@@ -93,7 +93,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:+'
     implementation "com.applovin:applovin-sdk:11.3.2"
     implementation "com.google.android.gms:play-services-ads-identifier:18.0.1" // For Applovin Max
-    implementation("tv.teads.sdk.android:sdk:5.0.21@aar") { transitive = true } // todo should not be merged
+    implementation("tv.teads.sdk.android:sdk:5.0.21@aar") { transitive = true } // TODO should not be merged
 
 
     // Navigation component

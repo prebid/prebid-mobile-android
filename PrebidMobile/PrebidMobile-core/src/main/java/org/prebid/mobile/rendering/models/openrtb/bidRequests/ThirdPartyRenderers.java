@@ -14,16 +14,25 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile.api.rendering.customrenderer;
+package org.prebid.mobile.rendering.models.openrtb.bidRequests;
 
-import org.prebid.mobile.configuration.AdUnitConfiguration;
-import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public interface InterstitialControllerInterface {
+import java.util.List;
 
-    void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse);
+public class ThirdPartyRenderers extends BaseBid {
 
-    void show();
+    private List<String> renderers = null;
 
-    void destroy();
+    public ThirdPartyRenderers(List<String> renderers) {
+        this.renderers = renderers;
+    }
+
+    public JSONObject getJsonObject() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+
+        toJSON(jsonObject, "third_party_renderers", this.renderers);
+        return jsonObject;
+    }
 }

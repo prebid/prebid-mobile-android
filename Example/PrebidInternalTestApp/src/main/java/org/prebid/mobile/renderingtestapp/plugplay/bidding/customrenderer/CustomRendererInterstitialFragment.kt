@@ -28,7 +28,7 @@ open class CustomRendererInterstitialFragment : BaseBidInterstitialFragment() {
 
     init {
         val thirdPartyRenderer = ThirdPartyRenderer()
-        CustomRendererStore.getInstance().customInterstitialRenderers["third_party_renderer"] = thirdPartyRenderer
+        CustomRendererStore.getInstance().customInterstitialRenderers["toto"] = thirdPartyRenderer
     }
 
     override fun initInterstitialAd(adUnitFormat: AdUnitFormat, adUnitId: String?,

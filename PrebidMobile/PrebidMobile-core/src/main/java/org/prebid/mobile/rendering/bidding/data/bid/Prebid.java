@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static org.prebid.mobile.api.rendering.customrenderer.CustomRendererStore.CUSTOM_RENDERERS_KEY;
 import static org.prebid.mobile.rendering.utils.helpers.Utils.addValue;
 
 public class Prebid {
@@ -69,7 +70,7 @@ public class Prebid {
         prebid.type = jsonObject.optString("type");
         parseEvents(prebid, jsonObject.optJSONObject("events"));
         toHashMap(prebid.targeting, jsonObject.optJSONObject("targeting"));
-        prebid.targeting.put(BidResponse.RENDERERS_KEY,"[third_party_renderer]"); // todo bid response mock should not be merged, btw is targeting the right field?
+        prebid.targeting.put(CUSTOM_RENDERERS_KEY,"[toto]"); // TODO mock should not be merged / the right field should be defined
         return prebid;
     }
 

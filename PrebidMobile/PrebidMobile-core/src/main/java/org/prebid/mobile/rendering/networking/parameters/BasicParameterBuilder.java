@@ -23,12 +23,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.*;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.rendering.customrenderer.CustomRendererStore;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Imp;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.ThirdPartyRenderers;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.User;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
@@ -131,6 +133,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
         if (PrebidMobile.isCoppaEnabled) {
             bidRequest.getRegs().coppa = 1;
         }
+        bidRequest.setThirdPartyRenderers(getCustomRenderers());
     }
 
     private void configureSource(Source source, String uuid) {
@@ -400,5 +403,13 @@ public class BasicParameterBuilder extends ParameterBuilder {
         else {
             return null;
         }
+    }
+
+    private ThirdPartyRenderers getCustomRenderers() {
+        Set<String> combinedKeys = new HashSet<>();
+        combinedKeys.addAll(CustomRendererStore.getInstance().customBannerRenderers.keySet());
+        combinedKeys.addAll(CustomRendererStore.getInstance().customInterstitialRenderers.keySet());
+        List<String> renderers = new ArrayList<>(combinedKeys);
+        return new ThirdPartyRenderers(renderers);
     }
 }

@@ -40,7 +40,7 @@ open class CustomRendererBannerFragment : AdFragment(),
 
     init {
         val thirdPartyRenderer = ThirdPartyRenderer()
-        CustomRendererStore.getInstance().customBannerRenderers["third_party_renderer"] = thirdPartyRenderer
+        CustomRendererStore.getInstance().customBannerRenderers["toto"] = thirdPartyRenderer
     }
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
