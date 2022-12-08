@@ -436,26 +436,8 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@+id/headerBiddingFragment" />
         <action
-            android:id="@+id/action_header_bidding_to_gam_original_banner"
+            android:id="@+id/action_header_bidding_to_gamOriginalBannerFragment"
             app:destination="@id/gamOriginalBannerFragment" />
-        <action
-            android:id="@+id/action_header_bidding_to_gam_original_interstitial"
-            app:destination="@id/gamOriginalInterstitialFragment" />
-        <action
-            android:id="@+id/action_header_bidding_to_gam_video_outstream_original"
-            app:destination="@id/gamVideoOutstreamOriginalFragment" />
-        <action
-            android:id="@+id/action_header_bidding_to_gam_original_rewarded_video"
-            app:destination="@id/gamOriginalRewardedVideoFragment" />
-        <action
-            android:id="@+id/action_header_bidding_to_gam_original_instream"
-            app:destination="@id/gamOriginalInstreamFragment" />
-        <action
-            android:id="@+id/action_header_bidding_to_gam_original_native_in_app"
-            app:destination="@id/gamOriginalNativeInAppFragment" />
-        <action
-            android:id="@+id/action_header_bidding_to_gam_original_native_banner"
-            app:destination="@id/gamOriginalNativeBannerFragment" />
 
 
     </fragment>
@@ -541,50 +523,50 @@
     <!--GAM fragments-->
     <fragment
         android:id="@+id/navigation_gam_banner"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering.GamBannerFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamBannerFragment"
         android:label="GAM Banner" />
 
     <fragment
         android:id="@+id/navigation_gam_multisize_banner"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering.GamMultisizeBannerFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamMultisizeBannerFragment"
         android:label="GAM Multisize Banner" />
 
     <fragment
         android:id="@+id/navigation_gam_banners_and_interstitial"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering.GamBannersAndInterstitialFragment" />
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamBannersAndInterstitialFragment" />
 
     <fragment
         android:id="@+id/navigation_gam_interstitial"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering.GamInterstitialFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamInterstitialFragment"
         android:label="GAM Interstitial" />
 
     <fragment
         android:id="@+id/navigation_gam_interstitial_multiformat"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering.GamInterstitialMultiformatFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamInterstitialMultiformatFragment"
         android:label="GAM Interstitial" />
 
     <fragment
         android:id="@+id/navigation_gam_video_rewarded"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering.GamRewardedVideoFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamRewardedVideoFragment"
         android:label="GAM Video Rewarded" />
 
     <fragment
         android:id="@+id/navigation_gam_video_300_250"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering.GamOutstreamFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamOutstreamFragment"
         android:label="Video Outstream (GAM)" />
 
     <fragment
         android:id="@+id/navigation_gam_video_300_250_feed"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering.GamOustreamFeedFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamOustreamFeedFragment"
         android:label="Video Outstream Feed (GAM)" />
 
     <fragment
         android:id="@+id/navigation_gam_native"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering.GamNativeFragment" />
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeFragment" />
 
     <fragment
         android:id="@+id/navigation_gam_native_feed"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering.GamNativeFeedFragment" />
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeFeedFragment" />
 
 
     <!-- AdMob fragments -->
@@ -656,29 +638,5 @@
         android:id="@+id/gamOriginalBannerFragment"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalBannerFragment"
         android:label="GamOriginalBannerFragment" />
-    <fragment
-        android:id="@+id/gamOriginalInterstitialFragment"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalInterstitialFragment"
-        android:label="GamOriginalInterstitialFragment" />
-    <fragment
-        android:id="@+id/gamVideoOutstreamOriginalFragment"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalOutstreamFragment"
-        android:label="GamVideoOutstreamOriginalFragment" />
-    <fragment
-        android:id="@+id/gamOriginalRewardedVideoFragment"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalRewardedVideoFragment"
-        android:label="GamOriginalRewardedVideoFragment" />
-    <fragment
-        android:id="@+id/gamOriginalInstreamFragment"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalInstreamFragment"
-        android:label="GamOriginalInstreamFragment" />
-    <fragment
-        android:id="@+id/gamOriginalNativeInAppFragment"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalNativeInAppFragment"
-        android:label="GamOriginalNativeInAppFragment" />
-    <fragment
-        android:id="@+id/gamOriginalNativeBannerFragment"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalNativeBannerFragment"
-        android:label="GamOriginalNativeBannerFragment" />
 
 </navigation>
