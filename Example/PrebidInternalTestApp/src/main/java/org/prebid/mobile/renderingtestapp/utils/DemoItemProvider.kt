@@ -23,7 +23,7 @@ import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.data.DemoItem
 import org.prebid.mobile.renderingtestapp.data.Tag
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.admob.AdMobInterstitialFragment
-import org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.GamNativeFragment
+import org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering.GamNativeFragment
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.max.MaxInterstitialFragment
 
 class DemoItemProvider private constructor() {
@@ -96,6 +96,9 @@ class DemoItemProvider private constructor() {
 
         private fun addGamOriginalExamples() {
             val gamBannerTagList = listOf(Tag.ALL, Tag.GAM, Tag.BANNER, Tag.REMOTE)
+            val gamInterstitialTagList = listOf(Tag.ALL, Tag.GAM, Tag.INTERSTITIAL, Tag.REMOTE)
+            val gamVideoTagList = listOf(Tag.ALL, Tag.GAM, Tag.VIDEO, Tag.REMOTE)
+            val gamNativeTagList = listOf(Tag.ALL, Tag.GAM, Tag.NATIVE, Tag.REMOTE)
 
             demoList.add(
                 DemoItem(
@@ -154,12 +157,26 @@ class DemoItemProvider private constructor() {
                 DemoItem(
                     getString(R.string.demo_bidding_gam_interstitial_320_480_original),
                     gamInterstitialOriginalAction,
-                    gamBannerTagList,
+                    gamInterstitialTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_interstitial_320_480,
                         R.string.adunit_gam_interstitial_320_480_original,
                         320,
                         480,R.string.response_prebid_display_interstitial_320_480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_video_oustream_original),
+                    R.id.action_header_bidding_to_gamOriginalBannerFragment,
+                    gamVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_outstream,
+                        R.string.adunit_gam_video_300_250,
+                        300,
+                        250,
+                        R.string.response_prebid_video_outstream
                     )
                 )
             )
