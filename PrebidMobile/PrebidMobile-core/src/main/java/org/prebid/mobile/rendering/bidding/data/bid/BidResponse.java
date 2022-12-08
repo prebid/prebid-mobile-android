@@ -16,6 +16,8 @@
 
 package org.prebid.mobile.rendering.bidding.data.bid;
 
+import static org.prebid.mobile.api.rendering.customrenderer.CustomRendererStore.CUSTOM_RENDERERS_KEY;
+
 import android.content.Context;
 import android.util.Pair;
 
@@ -41,7 +43,6 @@ import java.util.List;
 public class BidResponse {
     private final static String TAG = BidResponse.class.getSimpleName();
     public static final String KEY_CACHE_ID = "hb_cache_id_local";
-    public static final String RENDERERS_KEY = "hb_custom_renderers";
 
     // ID of the bid request to which this is a response
     private String id;
@@ -224,30 +225,16 @@ public class BidResponse {
         return false;
     }
 
-    public boolean hasCustomRenderers() {
-        boolean hasRenderers = false;
-
-        Bid bid = getWinningBid();
-        if (bid != null) {
-            String renderersList = bid.getPrebid().getTargeting().get(RENDERERS_KEY);
-            if (renderersList != null && !renderersList.isEmpty()) {
-                hasRenderers = true;
-            }
-        }
-
-        return hasRenderers;
-    }
-
     public List<String> getCustomRenderers() {
         Bid bid = getWinningBid();
         if (bid != null) {
-            String renderersList = bid.getPrebid().getTargeting().get(RENDERERS_KEY);
+            String renderersList = bid.getPrebid().getTargeting().get(CUSTOM_RENDERERS_KEY);
             if(renderersList == null || renderersList.isEmpty()){
                 return null;
             }
 
             try {
-                String[] sanitizedList = renderersList.replaceAll("[\\[\\](){}\"]", "").split(",");
+                String[] sanitizedList = renderersList.replaceAll("[\\[\\](){}\"]", "").split(","); // TODO not sure about this regex
                 return Arrays.asList(sanitizedList);
 
             } catch (Exception e){
