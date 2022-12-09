@@ -273,6 +273,8 @@
     <string name="adunit_gam_interstitial_320_480_random">/21808260008/prebid_oxb_html_interstitial_random</string>
     <string name="adunit_gam_interstitial_320_480_no_bids">/21808260008/prebid_oxb_320x480_html_interstitial_static</string>
     <string name="adunit_gam_video_300_250">/21808260008/prebid_oxb_outsream_video</string>
+    <string name="adunit_gam_video_300_250_original">/21808260008/prebid-demo-original-api-video-banner</string>
+    <string name="adunit_gam_video_instream">/5300653/test_adunit_vast_pavliuchyk</string>
     <string name="adunit_gam_video_300_250_random">/21808260008/prebid_oxb_outstream_video_reandom</string>
     <string name="adunit_gam_interstitial_video_320_480_app_event">/21808260008/prebid_oxb_interstitial_video</string>
     <string name="adunit_gam_interstitial_video_320_480_original">/21808260008/prebid-demo-app-original-api-video-interstitial</string>
@@ -415,8 +417,10 @@
     <string name="response_prebid_video_interstitial_end_card_ad_configuration">response-prebid-video-interstitial-320-480-with-end-card-with-ad-configuration</string>
     <string name="response_prebid_video_interstitial_vertical">response-prebid-video-interstitial-vertical-with-end-card</string>
     <string name="response_prebid_video_interstitial_landscape">response-prebid-video-interstitial-landscape-with-end-card</string>
+    <string name="response_prebid_video_sample">sample_video_response</string>
     <!--  Video Outstream  -->
     <string name="response_prebid_video_outstream">response-prebid-video-outstream</string>
+    <string name="response_prebid_video_outstream_original">response-prebid-video-outstream-original-api</string>
     <string name="response_prebid_video_outstream_end_card">response-prebid-video-outstream-with-end-card</string>
     <!--  Video Rewarded  -->
     <string name="response_prebid_video_rewarded_end_card_320_480">response-prebid-video-rewarded-320-480-without-end-card</string>

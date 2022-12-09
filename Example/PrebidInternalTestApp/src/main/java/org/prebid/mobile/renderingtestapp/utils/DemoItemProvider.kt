@@ -172,10 +172,24 @@ class DemoItemProvider private constructor() {
                     gamVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_video_outstream,
-                        R.string.adunit_gam_video_300_250,
+                        R.string.adunit_gam_video_300_250_original,
                         300,
                         250,
-                        R.string.response_prebid_video_outstream
+                        R.string.response_prebid_video_outstream_original
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_video_instream_original),
+                    R.id.action_header_bidding_to_gam_original_instream,
+                    gamVideoTagList,
+                    createBannerBundle(
+                        null,
+                        R.string.adunit_gam_video_instream,
+                        640,
+                        480,
+                        R.string.response_prebid_video_sample
                     )
                 )
             )

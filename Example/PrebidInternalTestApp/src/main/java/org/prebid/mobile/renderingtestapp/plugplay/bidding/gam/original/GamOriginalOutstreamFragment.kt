@@ -25,6 +25,9 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import kotlinx.android.synthetic.main.events_bids.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
+import kotlinx.android.synthetic.main.fragment_bidding_banner.btnLoad
+import kotlinx.android.synthetic.main.fragment_bidding_banner.viewContainer
+import kotlinx.android.synthetic.main.fragment_bidding_banner_video.*
 import org.prebid.mobile.Signals
 import org.prebid.mobile.VideoAdUnit
 import org.prebid.mobile.VideoBaseAdUnit
@@ -35,9 +38,11 @@ import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 
 class GamOriginalOutstreamFragment : AdFragment() {
+
     private var adUnit: VideoAdUnit? = null
     private var gamView: AdManagerAdView? = null
     private val TAG = GamOriginalOutstreamFragment::class.simpleName
+
     override fun initAd(): Any? {
         val parameters = VideoBaseAdUnit.Parameters()
         parameters.mimes = listOf("video/mp4")
@@ -88,8 +93,7 @@ class GamOriginalOutstreamFragment : AdFragment() {
                 btnLoad?.isEnabled = true
             }
         }
-
-        view?.findViewById<RelativeLayout>(R.id.viewContainer)?.addView(gamView)
+        viewContainer.addView(gamView)
         adUnit?.setAutoRefreshInterval(refreshDelay)
         return gamView
     }
