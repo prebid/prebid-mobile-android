@@ -50,7 +50,6 @@ class DemoItemProvider private constructor() {
         private const val gamBannerAction = R.id.action_header_bidding_to_gam_banner
         private const val gamBannerOriginalAction = R.id.action_header_bidding_to_gamOriginalBannerFragment
         private const val gamInterstitialAction = R.id.action_header_bidding_to_gam_interstitial
-        private const val gamInterstitialOriginalAction = R.id.action_header_bidding_to_gamOriginalInterstitialFragment
         private const val gamInterstitialMultiformatAction = R.id.action_header_bidding_to_gam_interstitial_multiformat
         private const val gamRewardedAction = R.id.action_header_bidding_to_gam_video_rewarded
 
@@ -156,7 +155,7 @@ class DemoItemProvider private constructor() {
             demoList.add(
                 DemoItem(
                     getString(R.string.demo_bidding_gam_interstitial_320_480_original),
-                    gamInterstitialOriginalAction,
+                    R.id.action_header_bidding_to_gamOriginalInterstitialFragment,
                     gamInterstitialTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_interstitial_320_480,
@@ -169,7 +168,7 @@ class DemoItemProvider private constructor() {
             demoList.add(
                 DemoItem(
                     getString(R.string.demo_bidding_gam_video_oustream_original),
-                    R.id.action_header_bidding_to_gamOriginalBannerFragment,
+                    R.id.action_header_bidding_to_gamVideoOutstreamOriginalFragment,
                     gamVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_video_outstream,
@@ -180,6 +179,21 @@ class DemoItemProvider private constructor() {
                     )
                 )
             )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_interstitial_video_320_480_original),
+                    R.id.action_header_bidding_to_gamOriginalInterstitialFragment,
+                    gamVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_interstitial_320_480,
+                        R.string.adunit_gam_interstitial_video_320_480_original,
+                        320,
+                        480,
+                        R.string.response_prebid_video_interstitial_320_480_original
+                    )
+                )
+            )
+
         }
 
         private fun addInAppPbsExamples() {

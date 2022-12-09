@@ -407,6 +407,7 @@
 
     <!--  Video Interstitial  -->
     <string name="response_prebid_video_interstitial_320_480">response-prebid-video-interstitial-320-480</string>
+    <string name="response_prebid_video_interstitial_320_480_original">response-prebid-video-interstitial-320-480-original-api</string>
     <string name="response_prebid_video_interstitial_320_480_with_end_card">response-prebid-video-interstitial-320-480-with-end-card</string>
     <string name="response_prebid_video_interstitial_deeplink">response-prebid-video-interstitial-320-480-deeplink</string>
     <string name="response_prebid_video_interstitial_skipoffset">response-prebid-video-interstitial-320-480-skip-offset</string>

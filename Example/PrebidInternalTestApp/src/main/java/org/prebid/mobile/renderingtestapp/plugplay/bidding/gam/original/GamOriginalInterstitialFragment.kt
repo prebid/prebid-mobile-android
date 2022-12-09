@@ -16,37 +16,77 @@
 
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original
 
+import android.os.Bundle
 import android.util.Log
+import android.view.View
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
 import kotlinx.android.synthetic.main.events_bids.*
 import kotlinx.android.synthetic.main.fragment_bidding_interstitial.*
-import org.prebid.mobile.AdSize
-import org.prebid.mobile.InterstitialAdUnit
+import org.prebid.mobile.*
 import org.prebid.mobile.api.data.AdUnitFormat
-import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
-import java.util.*
 
 open class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
-    var adUnit: InterstitialAdUnit? = null
-    private val TAG = GamOriginalBannerFragment::class.simpleName
-    override fun initInterstitialAd(adUnitFormat: AdUnitFormat, adUnitId: String?, configId: String?, width: Int, height: Int) {
-        val requestBuilder = AdManagerAdRequest.Builder()
-        val request = requestBuilder.build()
+    private var adUnit: AdUnit? = null
+    private val TAG = GamOriginalInterstitialFragment::class.simpleName
+    private var displayAdCallback: (() -> Unit)? = null
 
-        adUnit = InterstitialAdUnit(configId!!, 30, 30)
-        adUnit?.setAutoRefreshInterval(refreshDelay)
+    override fun initUi(view: View, savedInstanceState: Bundle?) {
+        super.initUi(view, savedInstanceState)
+        btnLoad.setOnClickListener {
+            handleOriginalInterstitialClick()
+        }
+    }
+
+    override fun initInterstitialAd(
+        adUnitFormat: AdUnitFormat,
+        adUnitId: String?,
+        configId: String?,
+        width: Int,
+        height: Int
+    ) {
+        adUnit = if (adUnitFormat == AdUnitFormat.VIDEO) {
+            VideoInterstitialAdUnit(configId!!).apply {
+                parameters = configureVideoParameters()
+            }
+        } else {
+            InterstitialAdUnit(configId!!, 30, 30)
+        }
+        createAd()
+    }
+
+    private fun handleOriginalInterstitialClick() {
+        when (btnLoad?.text) {
+            getString(R.string.text_load) -> {
+                btnLoad?.isEnabled = false
+                resetEventButtons()
+                createAd()
+            }
+            getString(R.string.text_show) -> {
+                btnLoad?.text = getString(R.string.text_load)
+                displayAdCallback?.invoke()
+            }
+        }
+    }
+
+    private fun createAd() {
+        val request = AdManagerAdRequest.Builder().build()
+        if (adUnit is InterstitialAdUnit) {
+            adUnit?.setAutoRefreshInterval(refreshDelay)
+        }
         adUnit?.fetchDemand(request) {
             val adLoadCallback = object : AdManagerInterstitialAdLoadCallback() {
                 override fun onAdLoaded(adManagerInterstitialAd: AdManagerInterstitialAd) {
                     super.onAdLoaded(adManagerInterstitialAd)
-                    adManagerInterstitialAd.show(requireActivity())
                     Log.d(TAG, "onAdLoaded() called")
                     btnAdLoaded?.isEnabled = true
+                    displayAdCallback = {
+                        adManagerInterstitialAd.show(requireActivity())
+                    }
                     btnLoad?.setText(R.string.text_show)
                     btnLoad?.isEnabled = true
                 }
@@ -58,7 +98,32 @@ open class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
                     btnLoad?.isEnabled = true
                 }
             }
-            AdManagerInterstitialAd.load(requireContext(), adUnitId!!, request, adLoadCallback)
+
+            AdManagerInterstitialAd.load(
+                requireContext(),
+                adUnitId,
+                request,
+                adLoadCallback
+            )
+        }
+    }
+
+    private fun configureVideoParameters(): VideoBaseAdUnit.Parameters {
+        return VideoBaseAdUnit.Parameters().apply {
+            placement = Signals.Placement.Interstitial
+            api = listOf(
+                Signals.Api.VPAID_1,
+                Signals.Api.VPAID_2
+            )
+            maxBitrate = 1500
+            minBitrate = 300
+            maxDuration = 30
+            minDuration = 5
+            mimes = listOf("video/x-flv", "video/mp4")
+            playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOn)
+            protocols = listOf(
+                Signals.Protocols.VAST_2_0
+            )
         }
     }
 }
