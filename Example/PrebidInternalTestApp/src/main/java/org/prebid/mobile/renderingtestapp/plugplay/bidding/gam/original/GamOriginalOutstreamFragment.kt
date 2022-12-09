@@ -34,10 +34,10 @@ import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 
-class GamVideoOutstreamOriginalFragment : AdFragment() {
+class GamOriginalOutstreamFragment : AdFragment() {
     private var adUnit: VideoAdUnit? = null
     private var gamView: AdManagerAdView? = null
-    private val TAG = GamVideoOutstreamOriginalFragment::class.simpleName
+    private val TAG = GamOriginalOutstreamFragment::class.simpleName
     override fun initAd(): Any? {
         val parameters = VideoBaseAdUnit.Parameters()
         parameters.mimes = listOf("video/mp4")

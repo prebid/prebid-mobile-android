@@ -48,7 +48,7 @@ class DemoItemProvider private constructor() {
         private const val ppmRewardedAction = R.id.action_header_bidding_to_in_app_video_rewarded
 
         private const val gamBannerAction = R.id.action_header_bidding_to_gam_banner
-        private const val gamBannerOriginalAction = R.id.action_header_bidding_to_gamOriginalBannerFragment
+        private const val gamBannerOriginalAction = R.id.action_header_bidding_to_gam_original_banner
         private const val gamInterstitialAction = R.id.action_header_bidding_to_gam_interstitial
         private const val gamInterstitialMultiformatAction = R.id.action_header_bidding_to_gam_interstitial_multiformat
         private const val gamRewardedAction = R.id.action_header_bidding_to_gam_video_rewarded
@@ -94,10 +94,10 @@ class DemoItemProvider private constructor() {
         }
 
         private fun addGamOriginalExamples() {
-            val gamBannerTagList = listOf(Tag.ALL, Tag.GAM, Tag.BANNER, Tag.REMOTE)
-            val gamInterstitialTagList = listOf(Tag.ALL, Tag.GAM, Tag.INTERSTITIAL, Tag.REMOTE)
-            val gamVideoTagList = listOf(Tag.ALL, Tag.GAM, Tag.VIDEO, Tag.REMOTE)
-            val gamNativeTagList = listOf(Tag.ALL, Tag.GAM, Tag.NATIVE, Tag.REMOTE)
+            val gamBannerTagList = listOf(Tag.ALL, Tag.ORIGINAL, Tag.BANNER, Tag.REMOTE)
+            val gamInterstitialTagList = listOf(Tag.ALL, Tag.ORIGINAL, Tag.INTERSTITIAL, Tag.REMOTE)
+            val gamVideoTagList = listOf(Tag.ALL, Tag.ORIGINAL, Tag.VIDEO, Tag.REMOTE)
+            val gamNativeTagList = listOf(Tag.ALL, Tag.ORIGINAL, Tag.NATIVE, Tag.REMOTE)
 
             demoList.add(
                 DemoItem(
@@ -155,7 +155,7 @@ class DemoItemProvider private constructor() {
             demoList.add(
                 DemoItem(
                     getString(R.string.demo_bidding_gam_interstitial_320_480_original),
-                    R.id.action_header_bidding_to_gamOriginalInterstitialFragment,
+                    R.id.action_header_bidding_to_gam_original_interstitial,
                     gamInterstitialTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_interstitial_320_480,
@@ -168,7 +168,7 @@ class DemoItemProvider private constructor() {
             demoList.add(
                 DemoItem(
                     getString(R.string.demo_bidding_gam_video_oustream_original),
-                    R.id.action_header_bidding_to_gamVideoOutstreamOriginalFragment,
+                    R.id.action_header_bidding_to_gam_video_outstream_original,
                     gamVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_video_outstream,
@@ -182,7 +182,7 @@ class DemoItemProvider private constructor() {
             demoList.add(
                 DemoItem(
                     getString(R.string.demo_bidding_gam_interstitial_video_320_480_original),
-                    R.id.action_header_bidding_to_gamOriginalInterstitialFragment,
+                    R.id.action_header_bidding_to_gam_original_interstitial,
                     gamVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_video_interstitial_320_480,
@@ -190,6 +190,19 @@ class DemoItemProvider private constructor() {
                         320,
                         480,
                         R.string.response_prebid_video_interstitial_320_480_original
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_video_rewarded_end_card_320_480_original),
+                    R.id.action_header_bidding_to_gam_original_rewarded_video,
+                    gamVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_rewarded_320_480,
+                        R.string.adunit_gam_interstitial_video_320_480_original,
+                        MIN_WIDTH_PERC,
+                        MIN_HEIGHT_PERC, R.string.response_prebid_video_rewarded_320_480_original
                     )
                 )
             )

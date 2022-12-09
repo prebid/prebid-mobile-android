@@ -421,6 +421,7 @@
     <!--  Video Rewarded  -->
     <string name="response_prebid_video_rewarded_end_card_320_480">response-prebid-video-rewarded-320-480-without-end-card</string>
     <string name="response_prebid_video_rewarded_320_480">response-prebid-video-rewarded-320-480</string>
+    <string name="response_prebid_video_rewarded_320_480_original">response-prebid-video-rewarded-320-480-original-api</string>
     <string name="response_prebid_video_rewarded_320_480_with_ad_configuration">response-prebid-video-rewarded-320-480-with-ad-configuration</string>
 
     <!--  MRAID  -->

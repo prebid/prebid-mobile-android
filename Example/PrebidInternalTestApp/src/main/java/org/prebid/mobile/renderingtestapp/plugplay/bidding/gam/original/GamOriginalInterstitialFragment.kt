@@ -59,20 +59,6 @@ open class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
         createAd()
     }
 
-    private fun handleOriginalInterstitialClick() {
-        when (btnLoad?.text) {
-            getString(R.string.text_load) -> {
-                btnLoad?.isEnabled = false
-                resetEventButtons()
-                createAd()
-            }
-            getString(R.string.text_show) -> {
-                btnLoad?.text = getString(R.string.text_load)
-                displayAdCallback?.invoke()
-            }
-        }
-    }
-
     private fun createAd() {
         val request = AdManagerAdRequest.Builder().build()
         if (adUnit is InterstitialAdUnit) {
@@ -105,6 +91,20 @@ open class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
                 request,
                 adLoadCallback
             )
+        }
+    }
+
+    private fun handleOriginalInterstitialClick() {
+        when (btnLoad?.text) {
+            getString(R.string.text_load) -> {
+                btnLoad?.isEnabled = false
+                resetEventButtons()
+                createAd()
+            }
+            getString(R.string.text_show) -> {
+                btnLoad?.text = getString(R.string.text_load)
+                displayAdCallback?.invoke()
+            }
         }
     }
 

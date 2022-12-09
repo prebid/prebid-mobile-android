@@ -436,14 +436,17 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
             app:popUpTo="@+id/headerBiddingFragment" />
         <action
-            android:id="@+id/action_header_bidding_to_gamOriginalBannerFragment"
+            android:id="@+id/action_header_bidding_to_gam_original_banner"
             app:destination="@id/gamOriginalBannerFragment" />
         <action
-            android:id="@+id/action_header_bidding_to_gamOriginalInterstitialFragment"
+            android:id="@+id/action_header_bidding_to_gam_original_interstitial"
             app:destination="@id/gamOriginalInterstitialFragment" />
         <action
-            android:id="@+id/action_header_bidding_to_gamVideoOutstreamOriginalFragment"
+            android:id="@+id/action_header_bidding_to_gam_video_outstream_original"
             app:destination="@id/gamVideoOutstreamOriginalFragment" />
+        <action
+            android:id="@+id/action_header_bidding_to_gam_original_rewarded_video"
+            app:destination="@id/gamOriginalRewardedVideoFragment" />
 
 
     </fragment>
@@ -650,7 +653,11 @@
         android:label="GamOriginalInterstitialFragment" />
     <fragment
         android:id="@+id/gamVideoOutstreamOriginalFragment"
-        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamVideoOutstreamOriginalFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalOutstreamFragment"
         android:label="GamVideoOutstreamOriginalFragment" />
+    <fragment
+        android:id="@+id/gamOriginalRewardedVideoFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalRewardedVideoFragment"
+        android:label="GamOriginalRewardedVideoFragment" />
 
 </navigation>

@@ -31,6 +31,7 @@ enum class Tag(val tagName: String) {
 
     IN_APP("In-App"),
     GAM("GAM"),
+    ORIGINAL("Original"),
     ADMOB("AdMob"),
     MAX("Max"),
 
