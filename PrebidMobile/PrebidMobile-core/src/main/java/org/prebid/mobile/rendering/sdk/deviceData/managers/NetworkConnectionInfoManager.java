@@ -22,33 +22,28 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
 import org.prebid.mobile.rendering.networking.parameters.UserParameters;
 import org.prebid.mobile.rendering.sdk.BaseManager;
 
 public final class NetworkConnectionInfoManager extends BaseManager implements ConnectionInfoManager {
     private ConnectivityManager connectivityManager;
 
-    /**
-     * @see ConnectionInfoManager
-     */
-    @Override
-    public void init(Context context) {
-        super.init(context);
-        if (super.isInit() && getContext() != null) {
+    public NetworkConnectionInfoManager(Context context) {
+        super(context);
+
+        if (getContext() != null) {
             connectivityManager = (ConnectivityManager) getContext().getApplicationContext()
-                                                                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
         }
     }
 
-    /**
-     * @see ConnectionInfoManager
-     */
     @SuppressLint("MissingPermission")
     @Override
     public UserParameters.ConnectionType getConnectionType() {
         NetworkInfo info = null;
         UserParameters.ConnectionType result = UserParameters.ConnectionType.OFFLINE;
-        if (isInit() && getContext() != null) {
+        if (getContext() != null) {
             if (connectivityManager != null) {
                 if (getContext().checkCallingOrSelfPermission(Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_GRANTED) {
                     info = connectivityManager.getActiveNetworkInfo();

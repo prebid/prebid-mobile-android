@@ -16,7 +16,6 @@
 
 package org.prebid.mobile.rendering.sdk.deviceData.managers;
 
-import org.prebid.mobile.rendering.sdk.Manager;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 
 /**
@@ -24,7 +23,7 @@ import org.prebid.mobile.rendering.sdk.ManagersResolver;
  *
  * @see ManagersResolver
  */
-public interface LocationInfoManager extends Manager {
+public interface LocationInfoManager {
     /**
      * Get the latitude.
      *

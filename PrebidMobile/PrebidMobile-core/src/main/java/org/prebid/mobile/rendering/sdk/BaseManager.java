@@ -18,58 +18,27 @@ package org.prebid.mobile.rendering.sdk;
 
 import android.content.Context;
 
+import androidx.annotation.Nullable;
+
 import java.lang.ref.WeakReference;
 
-public class BaseManager implements Manager {
+public class BaseManager {
 
+	@Nullable
 	private WeakReference<Context> contextReference;
-	private boolean isInit;
 
-	/**
-	 * Check initialization of manager.
-	 *
-	 * @return true, if manager was initialized
-	 */
-	@Override
-	public boolean isInit() {
-		return isInit;
-	}
-
-	/**
-	 * Initialize manager.
-	 * 
-	 * @param context
-	 *            the context for which manager will be initialized.
-	 */
-	@Override
-	public void init(Context context)
-	{
+	public BaseManager(Context context) {
 		if (context != null) {
 			contextReference = new WeakReference<>(context);
-			isInit = true;
 		}
 	}
 
-	/**
-	 * Get the context for which manager was initialized.
-	 * 
-	 * @return the context
-	 */
-	@Override
-	public Context getContext() {
+	@Nullable
+	protected Context getContext() {
 		if (contextReference != null) {
 			return contextReference.get();
 		}
 		return null;
 	}
 
-	/**
-	 * Dispose manager and release all necessary resources.
-	 * 
-	 */
-	@Override
-	public void dispose() {
-		isInit = false;
-		contextReference = null;
-	}
 }

@@ -73,17 +73,16 @@ public class UserConsentManager extends BaseManager {
         US_PRIVACY_KEY,
     };
 
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
-    @Override
-    public void init(Context context) {
-        super.init(context);
+    public UserConsentManager(Context context) {
+        super(context);
 
-        if (super.isInit() && context != null) {
-            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-            initConsentValuesAtStart();
-            sharedPreferences.registerOnSharedPreferenceChangeListener(this::updateConsentValue);
-        }
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        initConsentValuesAtStart();
+
+        SharedPreferences.OnSharedPreferenceChangeListener preferencesListener = this::updateConsentValue;
+        sharedPreferences.registerOnSharedPreferenceChangeListener(preferencesListener);
     }
 
     private void initConsentValuesAtStart() {
