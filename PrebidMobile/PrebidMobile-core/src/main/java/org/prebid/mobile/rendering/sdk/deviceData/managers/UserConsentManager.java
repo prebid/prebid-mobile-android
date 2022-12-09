@@ -75,13 +75,21 @@ public class UserConsentManager extends BaseManager {
 
     private final SharedPreferences sharedPreferences;
 
+    /**
+     * We should keep strong reference to this listener.
+     *
+     * @see SharedPreferences#registerOnSharedPreferenceChangeListener(SharedPreferences.OnSharedPreferenceChangeListener)
+     */
+    @SuppressWarnings("FieldCanBeLocal")
+    private SharedPreferences.OnSharedPreferenceChangeListener preferencesListener;
+
     public UserConsentManager(Context context) {
         super(context);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         initConsentValuesAtStart();
 
-        SharedPreferences.OnSharedPreferenceChangeListener preferencesListener = this::updateConsentValue;
+        preferencesListener = this::updateConsentValue;
         sharedPreferences.registerOnSharedPreferenceChangeListener(preferencesListener);
     }
 
