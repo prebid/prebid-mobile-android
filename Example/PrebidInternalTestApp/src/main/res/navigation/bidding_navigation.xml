@@ -447,6 +447,9 @@
         <action
             android:id="@+id/action_header_bidding_to_gam_original_rewarded_video"
             app:destination="@id/gamOriginalRewardedVideoFragment" />
+        <action
+            android:id="@+id/action_header_bidding_to_gam_original_instream"
+            app:destination="@id/gamOriginalInstreamFragment" />
 
 
     </fragment>
@@ -659,5 +662,9 @@
         android:id="@+id/gamOriginalRewardedVideoFragment"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalRewardedVideoFragment"
         android:label="GamOriginalRewardedVideoFragment" />
+    <fragment
+        android:id="@+id/gamOriginalInstreamFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalInstreamFragment"
+        android:label="GamOriginalInstreamFragment" />
 
 </navigation>
