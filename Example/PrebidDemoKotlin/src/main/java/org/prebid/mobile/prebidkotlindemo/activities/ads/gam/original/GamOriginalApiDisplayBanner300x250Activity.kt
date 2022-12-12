@@ -21,10 +21,13 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import org.prebid.mobile.BannerAdUnit
+import org.prebid.mobile.BannerBaseAdUnit
 import org.prebid.mobile.PrebidMobile
+import org.prebid.mobile.Signals
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
+
 
 class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
 
@@ -49,12 +52,44 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
     }
 
     private fun createAd() {
+
+        // 1. Create BannerAdUnit
+        adUnit = BannerAdUnit(CONFIG_ID, WIDTH, HEIGHT)
+        adUnit?.setAutoRefreshInterval(refreshTimeSeconds)
+
+        // 2. Configure banner parameters
+        val parameters = BannerBaseAdUnit.Parameters()
+        parameters.api = listOf(Signals.Api.MRAID_3, Signals.Api.OMID_1)
+
+        // 3. Create AdManagerAdView
         val adView = AdManagerAdView(this)
         adView.adUnitId = AD_UNIT_ID
         adView.setAdSizes(AdSize(WIDTH, HEIGHT))
-        adView.adListener = object : AdListener() {
+        adView.adListener = createGAMListener(adView)
+
+        // Add GMA SDK banner view to the app UI
+        adWrapperView.addView(adView)
+
+        // 4. Make a bid request to Prebid Server
+        val request = AdManagerAdRequest.Builder().build()
+        adUnit?.fetchDemand(request) {
+
+            // 5. Load GAM Ad
+            adView.loadAd(request)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        adUnit?.stopAutoRefresh()
+    }
+
+    private fun createGAMListener(adView: AdManagerAdView): AdListener {
+        return object : AdListener() {
             override fun onAdLoaded() {
                 super.onAdLoaded()
+
+                // 6. Update ad view
                 AdViewUtils.findPrebidCreativeSize(adView, object : AdViewUtils.PbFindSizeListener {
                     override fun success(width: Int, height: Int) {
                         adView.setAdSizes(AdSize(width, height))
@@ -62,23 +97,8 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
 
                     override fun failure(error: PbFindSizeError) {}
                 })
-
             }
         }
-        adWrapperView.addView(adView)
-
-        val request = AdManagerAdRequest.Builder().build()
-        adUnit = BannerAdUnit(CONFIG_ID, WIDTH, HEIGHT)
-        adUnit?.setAutoRefreshInterval(refreshTimeSeconds)
-        adUnit?.fetchDemand(request) {
-            adView.loadAd(request)
-        }
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        adUnit?.stopAutoRefresh()
     }
 
 }
