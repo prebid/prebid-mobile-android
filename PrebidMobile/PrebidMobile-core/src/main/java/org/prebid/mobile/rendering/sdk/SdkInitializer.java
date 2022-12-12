@@ -19,64 +19,65 @@ public class SdkInitializer {
 
     private static final String TAG = SdkInitializer.class.getSimpleName();
 
-    protected static boolean isSdkInitialized = false;
-    protected static SdkInitializationListener sdkInitListener;
-
     public static void init(
         @Nullable Context context,
         @Nullable SdkInitializationListener listener
     ) {
-        sdkInitListener = listener;
-        if (context == null) {
-            String error = "Context must be not null!";
-            LogUtil.error(error);
-            if (listener != null) {
-                postOnMainThread(() -> listener.onSdkFailedToInit(new InitError(error)));
-            }
+        if (PrebidContextHolder.getContext() != null) {
             return;
         }
 
-        if (!(context instanceof Application)) {
-            Context applicationContext = context.getApplicationContext();
-            if (applicationContext != null) {
-                context = applicationContext;
-            } else {
-                LogUtil.warning(TAG, "Can't get application context, SDK will use context: " + context.getClass());
-            }
-        }
-
-        if (isSdkInitialized && ManagersResolver.getInstance().getContext() != null) {
+        Context applicationContext = getApplicationContext(context);
+        if (applicationContext == null) {
+            onInitializationFailed("Context must be not null!", listener);
             return;
         }
-        isSdkInitialized = false;
+
+        LogUtil.debug(TAG, "Initializing Prebid Rendering SDK");
+        PrebidContextHolder.setContext(applicationContext);
+
+        if (PrebidMobile.logLevel != null) {
+            LogUtil.setLogLevel(PrebidMobile.getLogLevel().getValue());
+        }
 
         try {
-            LogUtil.debug(TAG, "Initializing Prebid Rendering SDK");
-            if (PrebidMobile.logLevel != null) {
-                LogUtil.setLogLevel(PrebidMobile.getLogLevel().getValue());
-            }
-            AppInfoManager.init(context);
-            OmAdSessionManager.activateOmSdk(context);
-            ManagersResolver.getInstance().prepare(context);
-            isSdkInitialized = true;
+            AppInfoManager.init(applicationContext);
+
+            OmAdSessionManager.activateOmSdk(applicationContext);
+
+            ManagersResolver.getInstance().prepare(applicationContext);
         } catch (Throwable throwable) {
-            if (sdkInitListener != null) {
-                postOnMainThread(() -> sdkInitListener.onSdkFailedToInit(
-                    new InitError("Exception during initialization: " + throwable.getMessage() + "\n" + Log.getStackTraceString(throwable))
-                ));
-            }
-            ManagersResolver.getInstance().clearContext();
+            onInitializationFailed("Exception during initialization: " + throwable.getMessage() + "\n" + Log.getStackTraceString(throwable), listener);
             return;
         }
 
         StatusRequester.makeRequest(listener);
     }
 
-    public static boolean isIsSdkInitialized() {
-        return isSdkInitialized;
+    @Nullable
+    private static Context getApplicationContext(
+        @Nullable Context context
+    ) {
+        if (context instanceof Application) {
+            return context;
+        } else if (context != null) {
+            return context.getApplicationContext();
+        }
+        return null;
     }
 
-    protected static void postOnMainThread(Runnable runnable) {
+    private static void onInitializationFailed(
+        String error,
+        @Nullable SdkInitializationListener listener
+    ) {
+        LogUtil.error(error);
+        if (listener != null) {
+            postOnMainThread(() -> listener.onSdkFailedToInit(new InitError(error)));
+        }
+        PrebidContextHolder.clearContext();
+    }
+
+    private static void postOnMainThread(Runnable runnable) {
         new Handler(Looper.getMainLooper()).post(runnable);
     }
 

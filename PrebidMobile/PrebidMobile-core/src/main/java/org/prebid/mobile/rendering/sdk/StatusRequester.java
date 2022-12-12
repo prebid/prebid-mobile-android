@@ -1,5 +1,8 @@
 package org.prebid.mobile.rendering.sdk;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -32,7 +35,7 @@ public class StatusRequester {
             );
         } else {
             LogUtil.info("SDK doesn't support host urls without `/openrtb2/auction` part for now");
-            onSuccess();
+            postOnMainThread(StatusRequester::onInitializationCompleted);
         }
     }
 
@@ -45,15 +48,15 @@ public class StatusRequester {
                         JSONObject responseJson = new JSONObject(response.responseString);
                         JSONObject applicationJson = responseJson.optJSONObject("application");
                         if (applicationJson != null) {
-                            onSuccess();
+                            onInitializationCompleted();
                             return;
                         }
                     } catch (JSONException exception) {
-                        onInitializationError("Wrong `/status` response: " + exception.getMessage());
+                        onInitializationFailed("Wrong `/status` response: " + exception.getMessage());
                         return;
                     }
                 }
-                onInitializationError("Server status is not ok!");
+                onInitializationFailed("Server status is not ok!");
             }
 
             @Override
@@ -61,7 +64,7 @@ public class StatusRequester {
                 String msg,
                 long responseTime
             ) {
-                onInitializationError("Prebid Server is not responding: " + msg);
+                onInitializationFailed("Prebid Server is not responding: " + msg);
             }
 
             @Override
@@ -69,23 +72,27 @@ public class StatusRequester {
                 Exception exception,
                 long responseTime
             ) {
-                onInitializationError("Prebid Server is not responding: " + exception.getMessage());
+                onInitializationFailed("Prebid Server is not responding: " + exception.getMessage());
             }
         };
     }
 
-    private static void onSuccess() {
+    private static void onInitializationCompleted() {
         LogUtil.debug(TAG, "Prebid SDK " + PrebidMobile.SDK_VERSION + " initialized");
         if (listener != null) {
-            SdkInitializer.postOnMainThread(() -> listener.onSdkInit());
+            listener.onSdkInit();
         }
     }
 
-    private static void onInitializationError(@NonNull String message) {
+    private static void onInitializationFailed(@NonNull String message) {
         LogUtil.error(TAG, message);
         if (listener != null) {
-            SdkInitializer.postOnMainThread(() -> listener.onSdkFailedToInit(new InitError(message)));
+            listener.onSdkFailedToInit(new InitError(message));
         }
+    }
+
+    private static void postOnMainThread(Runnable runnable) {
+        new Handler(Looper.getMainLooper()).post(runnable);
     }
 
 }

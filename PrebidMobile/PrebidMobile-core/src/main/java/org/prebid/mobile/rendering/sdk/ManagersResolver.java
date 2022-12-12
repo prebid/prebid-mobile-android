@@ -27,15 +27,11 @@ import org.prebid.mobile.rendering.sdk.deviceData.managers.NetworkConnectionInfo
 import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
-import java.lang.ref.WeakReference;
-
 /**
  * Managers resolver supply ability to obtain a registered manager and use it
  * respectively.
  */
 public class ManagersResolver {
-
-    private WeakReference<Context> contextReference;
 
     private DeviceInfoManager deviceManager;
     private LocationInfoManager locationManager;
@@ -58,28 +54,10 @@ public class ManagersResolver {
     }
 
 
-    private void setContext(Context context) {
-        contextReference = new WeakReference<>(context);
-    }
-
-    public Context getContext() {
-        if (contextReference != null) {
-            return contextReference.get();
-        }
-
-        return null;
-    }
-
-    protected void clearContext() {
-        contextReference = null;
-    }
-
-
     /**
      * Prepare managers.
      */
     public void prepare(Context context) {
-        setContext(context);
         //Try with application context or activity context
         //MOB-2205 [Research] on how we can eliminate activity context from Native ads.
         Utils.DENSITY = context.getResources().getDisplayMetrics().density;
