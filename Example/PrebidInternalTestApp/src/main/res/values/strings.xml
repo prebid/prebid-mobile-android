@@ -188,7 +188,7 @@
     <string name="demo_bidding_gam_native_custom_templates_no_bids">Native Ad (GAM) [noBids, GADNativeCustomTemplateAd]</string>
     <string name="demo_bidding_gam_native_unified_ads">Native Ad Unified Ad (GAM) [OK, NativeAd]</string>
     <string name="demo_bidding_gam_native_banner_original">Native Banner (GAM Original) [OK, PUC]</string>
-    <string name="demo_bidding_gam_native_in_app">Native In-App (GAM Original) [OK, PUC]</string>
+    <string name="demo_bidding_gam_native_in_app_original">Native In-App (GAM Original) [OK, PUC]</string>
     <string name="demo_bidding_gam_native_unified_ads_no_bids">Native Ad (GAM) [noBids, GADUnifiedNativeAd]</string>
     <string name="demo_bidding_gam_native_custom_templates_prebid_ok">Native Ad (GAM) [OK, GADNativeCustomTemplateAd]</string>
     <string name="demo_bidding_gam_native_unified_ads_prebid_ok">Native Ad (GAM) [OK, GADUnifiedNativeAd]</string>
