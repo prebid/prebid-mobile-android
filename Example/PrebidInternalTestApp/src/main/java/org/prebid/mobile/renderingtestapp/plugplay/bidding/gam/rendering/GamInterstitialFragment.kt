@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam
+package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering
 
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.data.AdUnitFormat
@@ -23,22 +23,27 @@ import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
 import java.util.*
 
-open class GamInterstitialMultiformatFragment : BaseBidInterstitialFragment() {
-    override fun initInterstitialAd(
-        adUnitFormat: AdUnitFormat,
-        adUnitId: String?,
-        configId: String?,
-        width: Int,
-        height: Int
-    ) {
+open class GamInterstitialFragment : BaseBidInterstitialFragment() {
+    override fun initInterstitialAd(adUnitFormat: AdUnitFormat, adUnitId: String?, configId: String?, width: Int, height: Int) {
         val interstitialEventHandler = GamInterstitialEventHandler(requireActivity(), adUnitId)
-        interstitialAdUnit = InterstitialAdUnit(
-            requireContext(),
-            configId,
-            EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO),
-            interstitialEventHandler
-        )
+        interstitialAdUnit = if (adUnitFormat == AdUnitFormat.VIDEO) {
+            InterstitialAdUnit(
+                requireContext(),
+                configId,
+                EnumSet.of(adUnitFormat),
+                interstitialEventHandler
+            )
+        }
+        else {
+            InterstitialAdUnit(
+                requireContext(),
+                configId,
+                interstitialEventHandler
+            ).apply {
+                setMinSizePercentage(AdSize(width, height))
+            }
+        }
+
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
-        interstitialAdUnit?.setMinSizePercentage(AdSize(30, 30))
     }
 }

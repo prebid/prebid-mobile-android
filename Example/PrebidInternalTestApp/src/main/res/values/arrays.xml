@@ -28,6 +28,7 @@
     <string-array name="segments_integration">
         <item>@string/segment_title_in_app</item>
         <item>@string/segment_title_gam</item>
+        <item>@string/segment_title_gam_original</item>
         <item>@string/segment_title_admob</item>
         <item>@string/segment_title_max</item>
         <item>@string/segment_title_all</item>
@@ -40,6 +41,7 @@
     <string name="segment_title_native">Native</string>
     <string name="segment_title_all">All</string>
     <string name="segment_title_gam">GAM</string>
+    <string name="segment_title_gam_original">Original</string>
     <string name="segment_title_admob">AdMob</string>
     <string name="segment_title_max">Max</string>
     <string name="segment_title_in_app">In-App</string>

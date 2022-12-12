@@ -22,6 +22,7 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import org.prebid.mobile.BannerAdUnit
 import org.prebid.mobile.PrebidMobile
+import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
@@ -44,7 +45,7 @@ class GamOriginalApiDisplayBanner320x50Activity : BaseAdActivity() {
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
         PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
-
+        TargetingParams.setSubjectToGDPR(true)
         createAd()
     }
 
