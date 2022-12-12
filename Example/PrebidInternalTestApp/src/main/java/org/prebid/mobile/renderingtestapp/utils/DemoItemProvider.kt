@@ -220,6 +220,18 @@ class DemoItemProvider private constructor() {
                     )
                 )
             )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_native_in_app_original),
+                    R.id.action_header_bidding_to_gam_original_native_in_app,
+                    gamNativeTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_native_styles,
+                        storedResponse = R.string.response_prebid_native_styles,
+                        adUnitIdRes = R.string.adunit_gam_native_custom_template
+                    )
+                )
+            )
 
         }
 
