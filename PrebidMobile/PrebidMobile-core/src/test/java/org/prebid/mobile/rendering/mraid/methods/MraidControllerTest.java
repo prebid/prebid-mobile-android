@@ -16,10 +16,20 @@
 
 package org.prebid.mobile.rendering.mraid.methods;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
-import org.junit.After;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,10 +59,6 @@ import org.robolectric.shadows.ShadowLooper;
 
 import java.lang.reflect.Field;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Mockito.*;
-
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
 public class MraidControllerTest {
@@ -68,11 +74,6 @@ public class MraidControllerTest {
         mraidController = spy(new MraidController(mockInterstitialManager));
         context = Robolectric.buildActivity(Activity.class).create().get();
         ManagersResolver.getInstance().prepare(context);
-    }
-
-    @After
-    public void cleanup() {
-        ManagersResolver.getInstance().dispose();
     }
 
     @Test

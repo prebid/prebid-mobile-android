@@ -33,7 +33,7 @@ public class SdkInitializer {
             return;
         }
 
-        LogUtil.debug(TAG, "Initializing Prebid Rendering SDK");
+        LogUtil.debug(TAG, "Initializing Prebid SDK");
         PrebidContextHolder.setContext(applicationContext);
 
         if (PrebidMobile.logLevel != null) {

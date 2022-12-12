@@ -16,12 +16,19 @@
 
 package org.prebid.mobile.rendering.sdk;
 
+import static android.os.Looper.getMainLooper;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.robolectric.Shadows.shadowOf;
+import static java.lang.Thread.sleep;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
-import okhttp3.HttpUrl;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +37,6 @@ import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
-import org.prebid.mobile.test.utils.WhiteBox;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
@@ -40,12 +46,9 @@ import java.lang.reflect.Modifier;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static android.os.Looper.getMainLooper;
-import static java.lang.Thread.sleep;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
-import static org.robolectric.Shadows.shadowOf;
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 
 @RunWith(RobolectricTestRunner.class)
 public class PrebidMobileTest {
@@ -86,8 +89,8 @@ public class PrebidMobileTest {
 
     @Test
     public void testOnSDKInitWithoutVideoPreCache() throws Exception {
+        PrebidContextHolder.clearContext();
         //test if sdkinit is sent even if precache fails for any reason, as it is optional & should not avoid further sdk actions
-        WhiteBox.field(SdkInitializer.class, "isSdkInitialized").set(null, false);
 
         MockResponse mockResponse = new MockResponse();
         mockResponse.setResponseCode(200);

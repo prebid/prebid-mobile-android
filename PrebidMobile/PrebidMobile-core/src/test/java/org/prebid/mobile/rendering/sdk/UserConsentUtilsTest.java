@@ -15,13 +15,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.reflection.Reflection;
+import org.prebid.mobile.reflection.sdk.ManagersResolverReflection;
 import org.prebid.mobile.reflection.sdk.UserConsentManagerReflection;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-
-import java.util.Hashtable;
 
 @RunWith(RobolectricTestRunner.class)
 public class UserConsentUtilsTest {
@@ -33,8 +31,10 @@ public class UserConsentUtilsTest {
     public void setUp() throws Exception {
         context = Robolectric.buildActivity(Activity.class).create().get();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-
         resetAllPreferences();
+
+        ManagersResolver resolver = ManagersResolver.getInstance();
+        ManagersResolverReflection.resetManagers(resolver);
     }
 
     @After
@@ -43,7 +43,7 @@ public class UserConsentUtilsTest {
     }
 
     private void resetAllPreferences() {
-        UserConsentManager userConsentManager = new UserConsentManager();
+        UserConsentManager userConsentManager = new UserConsentManager(context);
         sharedPreferences
             .edit()
             .remove(UserConsentManagerReflection.getConstGdpr2Subject(userConsentManager))
@@ -51,12 +51,6 @@ public class UserConsentUtilsTest {
             .remove(UserConsentManagerReflection.getConstGdpr2PurposeConsent(userConsentManager))
             .remove(UserConsentManagerReflection.getConstUsPrivacyString(userConsentManager))
             .apply();
-
-        Reflection.setVariableTo(
-            ManagersResolver.getInstance(),
-            "registeredManagers",
-            new Hashtable<ManagersResolver.ManagerType, Manager>()
-        );
     }
 
     @Test

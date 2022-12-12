@@ -1,10 +1,17 @@
 package org.prebid.mobile.rendering.sdk;
 
+import static android.os.Looper.getMainLooper;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.robolectric.Shadows.shadowOf;
+import static java.lang.Thread.sleep;
+
 import android.app.Activity;
 import android.content.Context;
-import okhttp3.HttpUrl;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,10 +25,9 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.io.IOException;
 
-import static android.os.Looper.getMainLooper;
-import static java.lang.Thread.sleep;
-import static org.junit.Assert.*;
-import static org.robolectric.Shadows.shadowOf;
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 
 @RunWith(RobolectricTestRunner.class)
 public class SdkInitializerTest {
@@ -51,8 +57,7 @@ public class SdkInitializerTest {
         isSuccessful = null;
         error = null;
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(""));
-        SdkInitializer.isSdkInitialized = false;
-        SdkInitializer.sdkInitListener = null;
+        PrebidContextHolder.clearContext();
     }
 
 

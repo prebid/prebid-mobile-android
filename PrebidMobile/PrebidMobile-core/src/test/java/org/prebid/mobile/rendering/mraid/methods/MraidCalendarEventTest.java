@@ -16,13 +16,21 @@
 
 package org.prebid.mobile.rendering.mraid.methods;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.robolectric.Shadows.shadowOf;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.provider.CalendarContract;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.reflection.sdk.ManagersResolverReflection;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.views.webview.mraid.BaseJSInterface;
 import org.prebid.mobile.test.utils.ResourceUtils;
@@ -30,10 +38,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowActivity;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -47,7 +51,9 @@ public class MraidCalendarEventTest {
     public void setUp() throws Exception {
         testActivity = Robolectric.buildActivity(Activity.class).create().get();
         calendarParameters = ResourceUtils.convertResourceToString(calendarFile);
-        ManagersResolver.getInstance().prepare(testActivity);
+        ManagersResolver resolver = ManagersResolver.getInstance();
+        ManagersResolverReflection.resetManagers(resolver);
+        resolver.prepare(testActivity);
     }
 
     @After

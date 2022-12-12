@@ -52,8 +52,7 @@ public class UserConsentManagerTest {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
 
-        userConsentManager = new UserConsentManager();
-        userConsentManager.init(activity);
+        userConsentManager = new UserConsentManager(activity);
 
         resetAllPreferences();
     }
