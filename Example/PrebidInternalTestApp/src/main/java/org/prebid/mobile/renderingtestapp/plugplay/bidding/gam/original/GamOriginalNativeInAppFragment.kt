@@ -35,7 +35,6 @@ class GamOriginalNativeInAppFragment : PpmNativeFragment() {
         private const val TAG = "GamOriginalNativeInApp"
         private const val CUSTOM_FORMAT_ID = "11934135"
     }
-
     private var adView: AdManagerAdView? = null
     private var unifiedNativeAd: NativeAd? = null
     private var adUnit: NativeAdUnit? = null

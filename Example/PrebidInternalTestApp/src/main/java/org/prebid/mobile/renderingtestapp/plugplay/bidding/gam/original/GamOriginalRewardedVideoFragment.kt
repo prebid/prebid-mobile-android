@@ -32,9 +32,12 @@ import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidRewardedFragment
 
 class GamOriginalRewardedVideoFragment : BaseBidRewardedFragment() {
+    companion object {
+        private const val TAG = "GamOriginalRewardedVideo"
+    }
     private var adUnit: RewardedVideoAdUnit? = null
     private var displayAdCallback: (() -> Unit)? = null
-    private val TAG = GamOriginalRewardedVideoFragment::class.simpleName
+
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
         btnLoad?.setOnClickListener {

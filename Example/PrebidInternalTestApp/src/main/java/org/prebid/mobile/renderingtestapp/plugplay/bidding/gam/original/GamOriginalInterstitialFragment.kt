@@ -30,9 +30,11 @@ import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
 
-open class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
+class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
+    companion object {
+        private const val TAG = "GamOriginalInterstitial"
+    }
     private var adUnit: AdUnit? = null
-    private val TAG = GamOriginalInterstitialFragment::class.simpleName
     private var displayAdCallback: (() -> Unit)? = null
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {

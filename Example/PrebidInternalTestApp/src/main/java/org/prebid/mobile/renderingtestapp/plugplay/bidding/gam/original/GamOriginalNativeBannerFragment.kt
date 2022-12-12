@@ -21,11 +21,9 @@ import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 
 class GamOriginalNativeBannerFragment : AdFragment() {
-
     companion object {
         private const val TAG = "GamOriginalNativeBanner"
     }
-
     override val layoutRes: Int = R.layout.fragment_bidding_banner_native
     private var nativeAdUnit: NativeAdUnit? = null
 
