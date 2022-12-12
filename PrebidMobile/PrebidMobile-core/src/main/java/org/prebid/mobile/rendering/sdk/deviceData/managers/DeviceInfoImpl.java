@@ -16,6 +16,11 @@
 
 package org.prebid.mobile.rendering.sdk.deviceData.managers;
 
+import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
+import static android.content.pm.ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
+
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.ContentResolver;
@@ -32,7 +37,9 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.WindowManager;
+
 import androidx.annotation.VisibleForTesting;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.sdk.BaseManager;
 import org.prebid.mobile.rendering.sdk.calendar.CalendarEventWrapper;
@@ -41,11 +48,16 @@ import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.views.browser.AdBrowserActivity;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-
-import static android.content.pm.ActivityInfo.*;
 
 public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
 
@@ -56,18 +68,15 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
     private KeyguardManager keyguardManager;
     private PackageManager packageManager;
 
-    /**
-     * @see DeviceInfoManager
-     */
-    @Override
-    public void init(Context context) {
-        super.init(context);
-        if (super.isInit() && getContext() != null) {
-            telephonyManager = (TelephonyManager) getContext().getSystemService(Context.TELEPHONY_SERVICE);
-            windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
-            powerManager = (PowerManager) getContext().getSystemService(Context.POWER_SERVICE);
-            keyguardManager = (KeyguardManager) getContext().getSystemService(Context.KEYGUARD_SERVICE);
-            packageManager = getContext().getPackageManager();
+    public DeviceInfoImpl(Context context) {
+        super(context);
+
+        if (context != null) {
+            telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+            packageManager = context.getPackageManager();
 
             hasTelephony();
         }
@@ -86,14 +95,11 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
         return packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
     }
 
-    /**
-     * @see DeviceInfoManager
-     */
     @Override
     public String getMccMnc() {
         String operatorISO;
-        if (isInit() && telephonyManager != null) {
-            //This API does not need permission check for PHONE_STATE.
+        if (telephonyManager != null) {
+            // This API does not need permission check for PHONE_STATE.
             operatorISO = telephonyManager.getNetworkOperator();
 
             String MCC;
@@ -110,21 +116,18 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
     @Override
     public String getCarrier() {
         String networkOperatorName = null;
-        if (isInit() && telephonyManager != null) {
+        if (telephonyManager != null) {
             //This API does not need permission check for PHONE_STATE.
             networkOperatorName = telephonyManager.getNetworkOperatorName();
         }
         return networkOperatorName;
     }
 
-    /**
-     * @see DeviceInfoManager
-     */
     @Override
     public boolean isPermissionGranted(String permission) {
         boolean isPermissionGranted = false;
-        if (isInit() && getContext() != null) {
-            isPermissionGranted = isInit() && getContext().checkCallingOrSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
+        if (getContext() != null) {
+            isPermissionGranted = getContext().checkCallingOrSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
         }
         return isPermissionGranted;
     }
@@ -135,47 +138,25 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
     @Override
     public int getDeviceOrientation() {
         int deviceOrientation = Configuration.ORIENTATION_UNDEFINED;
-        if (isInit() && getContext() != null) {
-            Configuration config = isInit() ? getContext().getResources().getConfiguration() : null;
+        if (getContext() != null) {
+            Configuration config = getContext().getResources().getConfiguration();
             deviceOrientation = config != null
-                                ? config.orientation
-                                : Configuration.ORIENTATION_UNDEFINED;
+                ? config.orientation
+                : Configuration.ORIENTATION_UNDEFINED;
         }
         return deviceOrientation;
     }
 
-    /**
-     * @see DeviceInfoManager
-     */
-    @Override
-    public void dispose() {
-        super.dispose();
-
-        telephonyManager = null;
-        keyguardManager = null;
-        powerManager = null;
-        windowManager = null;
-    }
-
-    /**
-     * @see DeviceInfoManager
-     */
     @Override
     public int getScreenWidth() {
         return Utils.getScreenWidth(windowManager);
     }
 
-    /**
-     * @see DeviceInfoManager
-     */
     @Override
     public int getScreenHeight() {
         return Utils.getScreenHeight(windowManager);
     }
 
-    /**
-     * @see DeviceInfoManager
-     */
     @Override
     public boolean isScreenOn() {
         if (powerManager != null) {
@@ -184,9 +165,6 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
         return false;
     }
 
-    /**
-     * @see DeviceInfoManager
-     */
     @Override
     public boolean isScreenLocked() {
         if (keyguardManager != null) {
@@ -209,9 +187,6 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
                || requestedOrientation == SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
     }
 
-    /**
-     * @see DeviceInfoManager
-     */
     @Override
     public void createCalendarEvent(final CalendarEventWrapper event) {
         if (event != null && getContext() != null) {
@@ -219,9 +194,6 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
         }
     }
 
-    /**
-     * @see DeviceInfoManager
-     */
     @Override
     public void storePicture(String url) throws Exception {
         if (!Utils.isExternalStorageAvailable()) {
@@ -248,9 +220,6 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
         writeToFile(outputStream, urlConnection.getInputStream());
     }
 
-    /**
-     * @see DeviceInfoManager
-     */
     @Override
     public void playVideo(
         String url,
@@ -270,9 +239,7 @@ public class DeviceInfoImpl extends BaseManager implements DeviceInfoManager {
         }
     }
 
-    /**
-     * @see DeviceInfoManager
-     */
+
     @Override
     public boolean canStorePicture() {
         return true;

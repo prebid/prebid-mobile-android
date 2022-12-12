@@ -16,31 +16,28 @@
 
 package org.prebid.mobile.rendering.sdk.deviceData.managers;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.location.Location;
-import android.location.LocationListener;
-import org.prebid.mobile.rendering.sdk.BaseManager;
-
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+
+import org.prebid.mobile.rendering.sdk.BaseManager;
+
 public final class LastKnownLocationInfoManager extends BaseManager implements LocationInfoManager {
 
-    private static String TAG = LastKnownLocationInfoManager.class.getSimpleName();
     private android.location.LocationManager locManager;
     private Location location;
 
     private static final int TWO_MINUTES = 1000 * 60 * 2;
 
-    /**
-     * @see LocationListener
-     */
-    @Override
-    public void init(Context context) {
-        super.init(context);
-        if (super.isInit() && getContext() != null) {
+    public LastKnownLocationInfoManager(Context context) {
+        super(context);
+
+        if (getContext() != null) {
             resetLocation();
         }
     }
@@ -50,7 +47,7 @@ public final class LastKnownLocationInfoManager extends BaseManager implements L
     public void resetLocation() {
         Location gpsLastKnownLocation = null;
         Location ntwLastKnownLocation = null;
-        if (super.isInit() && getContext() != null) {
+        if (getContext() != null) {
             locManager = (android.location.LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
             if (isLocationPermissionGranted() && locManager != null) {
@@ -165,17 +162,6 @@ public final class LastKnownLocationInfoManager extends BaseManager implements L
     @Override
     public boolean isLocationAvailable() {
         return location != null;
-    }
-
-    /**
-     * @see LocationListener
-     */
-    @SuppressLint("MissingPermission")
-    @Override
-    public void dispose() {
-        super.dispose();
-        locManager = null;
-        location = null;
     }
 
     private boolean isLocationPermissionGranted() {

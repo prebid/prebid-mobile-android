@@ -16,7 +16,6 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
-import org.prebid.mobile.PrebidMobile;
 import static org.prebid.mobile.PrebidMobile.getApplicationContext;
 
 import android.content.Context;
@@ -25,12 +24,12 @@ import android.location.Geocoder;
 import android.telephony.TelephonyManager;
 
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.geo.Geo;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.DeviceInfoManager;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.LocationInfoManager;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -69,7 +68,7 @@ public class GeoLocationParameterBuilder extends ParameterBuilder {
             geo.type = LOCATION_SOURCE_GPS;
             try {
 
-                geo.country = getTelephonyCountry(locationInfoManager.getContext());
+                geo.country = getTelephonyCountry(PrebidMobile.getApplicationContext());
 
                 if(geo.country.equals("")){
                     Locale locale = getApplicationContext().getResources().getConfiguration().locale;
@@ -77,7 +76,7 @@ public class GeoLocationParameterBuilder extends ParameterBuilder {
                 }
 
                 if(geo.country.equals("")){
-                    Geocoder geoCoder = new Geocoder(locationInfoManager.getContext());
+                    Geocoder geoCoder = new Geocoder(PrebidMobile.getApplicationContext());
                     List<Address> list = geoCoder.getFromLocation(locationInfoManager.getLatitude(), locationInfoManager.getLongitude(), 1);
                     geo.country = list.get(0).getCountryCode();
                 }

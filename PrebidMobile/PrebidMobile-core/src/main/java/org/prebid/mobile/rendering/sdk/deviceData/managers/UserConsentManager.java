@@ -46,13 +46,16 @@ public class UserConsentManager extends BaseManager {
     private static String prebidGdpr2PurposeConsents;
 
     private int realGdpr2Subject = NOT_ASSIGNED;
+    @Nullable
     private String realGdpr2Consent;
+    @Nullable
     private String realGdpr2PurposeConsents;
 
     /* CCPA */
     public static final String US_PRIVACY_KEY = "IABUSPrivacy_String";
     @Nullable
     private static String prebidUsPrivacyString;
+    @Nullable
     private String realUsPrivacyString;
 
     /* COPPA */
@@ -80,17 +83,24 @@ public class UserConsentManager extends BaseManager {
         GPP_SID_KEY,
     };
 
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
-    @Override
-    public void init(Context context) {
-        super.init(context);
+    /**
+     * We should keep strong reference to this listener.
+     *
+     * @see SharedPreferences#registerOnSharedPreferenceChangeListener(SharedPreferences.OnSharedPreferenceChangeListener)
+     */
+    @SuppressWarnings("FieldCanBeLocal")
+    private SharedPreferences.OnSharedPreferenceChangeListener preferencesListener;
 
-        if (super.isInit() && context != null) {
-            sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-            initConsentValuesAtStart();
-            sharedPreferences.registerOnSharedPreferenceChangeListener(this::updateConsentValue);
-        }
+    public UserConsentManager(Context context) {
+        super(context);
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        initConsentValuesAtStart();
+
+        preferencesListener = this::updateConsentValue;
+        sharedPreferences.registerOnSharedPreferenceChangeListener(preferencesListener);
     }
 
     private void initConsentValuesAtStart() {
@@ -152,6 +162,7 @@ public class UserConsentManager extends BaseManager {
         return getRealSubjectToGdprBoolean();
     }
 
+    @Nullable
     protected Boolean getRealSubjectToGdprBoolean() {
         if (realGdpr2Subject == 0) {
             return false;
@@ -192,8 +203,9 @@ public class UserConsentManager extends BaseManager {
         return getGdprPurposeConsent(getGdprPurposeConsents(), index);
     }
 
+    @Nullable
     private Boolean getGdprPurposeConsent(
-        String consents,
+        @Nullable String consents,
         int index
     ) {
         if (consents != null && consents.length() > index) {
@@ -262,8 +274,8 @@ public class UserConsentManager extends BaseManager {
     }
 
     private boolean checkDeviceDataAccess(
-        Boolean gdprApplies,
-        Boolean deviceAccessConsent
+        @Nullable Boolean gdprApplies,
+        @Nullable Boolean deviceAccessConsent
     ) {
         if (deviceAccessConsent == null && gdprApplies == null) {
             return true;

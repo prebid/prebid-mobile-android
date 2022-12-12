@@ -17,16 +17,21 @@
 package org.prebid.mobile.javademo;
 
 import android.app.Application;
+import android.util.Log;
 
 import org.prebid.mobile.ExternalUserId;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.api.exceptions.InitError;
 import org.prebid.mobile.javademo.utils.Settings;
+import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CustomApplication extends Application {
+
+    private static final String TAG = "PrebidCustomApplication";
 
     @Override
     public void onCreate() {
@@ -45,7 +50,17 @@ public class CustomApplication extends Application {
                 "https://prebid-server-test-j.prebid.org/openrtb2/auction"
             )
         );
-        PrebidMobile.initializeSdk(getApplicationContext(), null);
+        PrebidMobile.initializeSdk(getApplicationContext(), new SdkInitializationListener() {
+            @Override
+            public void onSdkInit() {
+                Log.d(TAG, "SDK initialized successfully!");
+            }
+
+            @Override
+            public void onSdkFailedToInit(InitError error) {
+                Log.e(TAG, "SDK initialization error: " + error.getError());
+            }
+        });
     }
 
     private void initPrebidExternalUserIds() {

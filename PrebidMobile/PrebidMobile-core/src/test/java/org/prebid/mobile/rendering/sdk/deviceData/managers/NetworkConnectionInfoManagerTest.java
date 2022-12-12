@@ -16,21 +16,22 @@
 
 package org.prebid.mobile.rendering.sdk.deviceData.managers;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.rendering.networking.parameters.UserParameters;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -42,13 +43,12 @@ public class NetworkConnectionInfoManagerTest {
 
     @Before
     public void setUp() throws Exception {
-        networkConnectionManager = new NetworkConnectionInfoManager();
         mockContext = mock(Context.class);
         connectivityManager = mock(ConnectivityManager.class);
         when(mockContext.getApplicationContext()).thenReturn(mockContext);
         when(mockContext.getSystemService(Context.CONNECTIVITY_SERVICE)).thenReturn(connectivityManager);
 
-        networkConnectionManager.init(mockContext);
+        networkConnectionManager = new NetworkConnectionInfoManager(mockContext);
     }
 
     @Test

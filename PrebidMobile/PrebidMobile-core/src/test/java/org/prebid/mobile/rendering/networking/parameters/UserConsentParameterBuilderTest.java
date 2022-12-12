@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.reflection.sdk.ManagersResolverReflection;
 import org.prebid.mobile.reflection.sdk.UserConsentManagerReflection;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
@@ -42,7 +43,9 @@ public class UserConsentParameterBuilderTest {
     @Before
     public void setUp() throws Exception {
         Activity robolectricActivity = Robolectric.buildActivity(Activity.class).create().get();
-        ManagersResolver.getInstance().prepare(robolectricActivity);
+        ManagersResolver resolver = ManagersResolver.getInstance();
+        ManagersResolverReflection.resetManagers(resolver);
+        resolver.prepare(robolectricActivity);
         UserConsentManager userConsentManager = ManagersResolver.getInstance().getUserConsentManager();
         UserConsentManagerReflection.resetAllFields(userConsentManager);
 

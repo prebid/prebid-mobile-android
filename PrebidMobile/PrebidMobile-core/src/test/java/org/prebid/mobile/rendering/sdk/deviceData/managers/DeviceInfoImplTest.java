@@ -16,6 +16,18 @@
 
 package org.prebid.mobile.rendering.sdk.deviceData.managers;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
@@ -29,6 +41,7 @@ import android.os.PowerManager;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,9 +55,6 @@ import org.robolectric.shadows.ShadowEnvironment;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 public class DeviceInfoImplTest {
@@ -66,7 +76,6 @@ public class DeviceInfoImplTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        deviceInfoImpl = new DeviceInfoImpl();
 
         when(mockContext.getSystemService(Context.TELEPHONY_SERVICE)).thenReturn(mockTelephonyManger);
         when(mockContext.getSystemService(Context.WINDOW_SERVICE)).thenReturn(mockWindowManager);
@@ -74,7 +83,7 @@ public class DeviceInfoImplTest {
         when(mockContext.getSystemService(Context.KEYGUARD_SERVICE)).thenReturn(mockKeyguardManager);
         when(mockContext.getPackageManager()).thenReturn(mockPackageManager);
 
-        deviceInfoImpl.init(mockContext);
+        deviceInfoImpl = new DeviceInfoImpl(mockContext);
     }
 
     @Test

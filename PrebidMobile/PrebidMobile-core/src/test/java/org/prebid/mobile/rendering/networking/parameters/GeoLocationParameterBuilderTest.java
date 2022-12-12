@@ -16,14 +16,19 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
+import static org.junit.Assert.assertEquals;
+import static org.robolectric.Shadows.shadowOf;
+
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.reflection.sdk.ManagersResolverReflection;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
@@ -31,9 +36,6 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowLocationManager;
-
-import static org.junit.Assert.assertEquals;
-import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 public class GeoLocationParameterBuilderTest {
@@ -55,7 +57,9 @@ public class GeoLocationParameterBuilderTest {
         location.setLongitude(LONGITUDE);
         shadowLocationManager.setLastKnownLocation("gps", location);
 
-        ManagersResolver.getInstance().prepare(robolectricActivity);
+        ManagersResolver resolver = ManagersResolver.getInstance();
+        ManagersResolverReflection.resetManagers(resolver);
+        resolver.prepare(robolectricActivity);
     }
 
     @Test

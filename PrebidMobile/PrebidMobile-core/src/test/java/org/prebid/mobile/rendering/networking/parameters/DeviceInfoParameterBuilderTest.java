@@ -16,11 +16,15 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
+import static org.prebid.mobile.test.utils.ResourceUtils.assertJsonEquals;
+
 import android.app.Activity;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.reflection.sdk.ManagersResolverReflection;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Device;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
@@ -32,8 +36,6 @@ import org.robolectric.annotation.Config;
 
 import java.util.Locale;
 
-import static org.prebid.mobile.test.utils.ResourceUtils.assertJsonEquals;
-
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19, qualifiers = "w1920dp-h1080dp")
 public class DeviceInfoParameterBuilderTest {
@@ -43,7 +45,9 @@ public class DeviceInfoParameterBuilderTest {
 
     @Before
     public void setUp() throws Exception {
-        ManagersResolver.getInstance().prepare(Robolectric.buildActivity(Activity.class).create().get());
+        ManagersResolver resolver = ManagersResolver.getInstance();
+        ManagersResolverReflection.resetManagers(resolver);
+        resolver.prepare(Robolectric.buildActivity(Activity.class).create().get());
     }
 
     @Test

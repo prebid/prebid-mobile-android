@@ -17,17 +17,23 @@
 package org.prebid.mobile;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.prebid.mobile.api.exceptions.InitError;
 import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.mraid.MraidEnv;
-import org.prebid.mobile.rendering.sdk.ManagersResolver;
+import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.sdk.SdkInitializer;
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PrebidMobile {
 
@@ -241,7 +247,7 @@ public class PrebidMobile {
     }
 
     public static Context getApplicationContext() {
-        return ManagersResolver.getInstance().getContext();
+        return PrebidContextHolder.getContext();
     }
 
     public static void setStoredAuctionResponse(@Nullable String storedAuctionResponse) {
@@ -296,7 +302,7 @@ public class PrebidMobile {
      * Return 'true' if Prebid Rendering SDK is initialized completely
      */
     public static boolean isSdkInitialized() {
-        return SdkInitializer.isIsSdkInitialized();
+        return PrebidContextHolder.getContext() != null;
     }
 
     public static LogLevel getLogLevel() {

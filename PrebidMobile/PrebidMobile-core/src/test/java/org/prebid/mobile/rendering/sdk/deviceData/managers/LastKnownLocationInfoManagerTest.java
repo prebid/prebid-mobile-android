@@ -16,18 +16,19 @@
 
 package org.prebid.mobile.rendering.sdk.deviceData.managers;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import android.content.Context;
 import android.location.Location;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -42,8 +43,7 @@ public class LastKnownLocationInfoManagerTest {
     public void setUp() {
         context = mock(Context.class);
 
-        locationImpl = new LastKnownLocationInfoManager();
-        locationImpl.init(context);
+        locationImpl = new LastKnownLocationInfoManager(context);
     }
 
     @Test

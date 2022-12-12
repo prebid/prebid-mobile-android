@@ -16,12 +16,37 @@
 
 package org.prebid.mobile.rendering.views.webview.mraid;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.DEVICE_ORIENTATION;
+import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.DEVICE_ORIENTATION_LOCKED;
+import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.LOCATION_ACCURACY;
+import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.LOCATION_ERROR;
+import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.LOCATION_LASTFIX;
+import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.LOCATION_LAT;
+import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.LOCATION_LON;
+import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.LOCATION_TYPE;
+import static org.robolectric.Shadows.shadowOf;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Looper;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.After;
@@ -31,6 +56,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.reflection.Reflection;
+import org.prebid.mobile.reflection.sdk.ManagersResolverReflection;
 import org.prebid.mobile.rendering.models.CreativeModel;
 import org.prebid.mobile.rendering.models.HTMLCreative;
 import org.prebid.mobile.rendering.models.internal.MraidEvent;
@@ -57,11 +84,6 @@ import org.robolectric.shadows.ShadowActivity;
 import org.robolectric.shadows.ShadowLocationManager;
 
 import java.lang.reflect.Field;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.prebid.mobile.rendering.views.webview.mraid.JSInterface.*;
-import static org.robolectric.Shadows.shadowOf;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -107,7 +129,8 @@ public class BaseJSInterfaceTest {
 
     @After
     public void cleanup() {
-        ManagersResolver.getInstance().dispose();
+        ManagersResolver manager = ManagersResolver.getInstance();
+        ManagersResolverReflection.resetManagers(manager);
     }
 
     @Test
@@ -308,10 +331,14 @@ public class BaseJSInterfaceTest {
 
     @Test
     public void getScreenSizeTest() {
+        ManagersResolver manager = ManagersResolver.getInstance();
+        manager.prepare(testActivity);
+        Reflection.setVariableTo(manager.getDeviceManager(), "windowManager", null);
+
         String size = spyBaseJSInterface.getScreenSize();
         assertEquals("{\"width\":0,\"height\":0}", size);
 
-        ManagersResolver.getInstance().prepare(testActivity);
+        manager.prepare(testActivity);
 
         size = spyBaseJSInterface.getScreenSize();
 
@@ -428,7 +455,6 @@ public class BaseJSInterfaceTest {
         location.setAccuracy(3F);
         location.setTime(System.currentTimeMillis() - 4000);
         shadowLocationManager.setLastKnownLocation("gps", location);
-        ManagersResolver.getInstance().dispose();
         ManagersResolver.getInstance().prepare(testActivity);
 
         JSONObject locationJson = new JSONObject();

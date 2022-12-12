@@ -30,6 +30,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.reflection.sdk.ManagersResolverReflection;
 import org.prebid.mobile.reflection.sdk.UserConsentManagerReflection;
 import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.prebid.mobile.rendering.sdk.deviceData.managers.UserConsentManager;
@@ -52,15 +53,14 @@ public class TargetingParamsTest extends BaseSetup {
     @Before
     public void setup() {
         super.setup();
-        // if prebid mobile is not initialized initialize it otherwise we initialize managers
-        if (!PrebidMobile.isSdkInitialized()) {
-            PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
-        } else {
-            ManagersResolver.getInstance().prepare(activity);
 
-            UserConsentManager userConsentManager = ManagersResolver.getInstance().getUserConsentManager();
-            UserConsentManagerReflection.resetAllFields(userConsentManager);
-        }
+        ManagersResolver resolver = ManagersResolver.getInstance();
+        ManagersResolverReflection.resetManagers(resolver);
+
+        PrebidMobile.initializeSdk(activity, null);
+        ManagersResolver.getInstance().prepare(activity);
+        UserConsentManager userConsentManager = resolver.getUserConsentManager();
+        UserConsentManagerReflection.resetAllFields(userConsentManager);
     }
 
     @Override
@@ -174,7 +174,7 @@ public class TargetingParamsTest extends BaseSetup {
 
         //given
         TargetingParams.setSubjectToGDPR(null);
-        editor.remove(UserConsentManagerReflection.getConstGdpr2Subject(new UserConsentManager()));
+        editor.remove(UserConsentManager.GDPR_2_SUBJECT_KEY);
         editor.apply();
 
         //when
@@ -189,8 +189,7 @@ public class TargetingParamsTest extends BaseSetup {
         //given
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor editor = pref.edit();
-        String key = "IABTCF_gdprApplies";
-        editor.putInt(key, 1);
+        editor.putInt(UserConsentManager.GDPR_2_SUBJECT_KEY, 1);
         editor.apply();
 
         //when
@@ -205,8 +204,7 @@ public class TargetingParamsTest extends BaseSetup {
     public void testGDPRConsentPBString() {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor editor = pref.edit();
-        String key = UserConsentManagerReflection.getConstGdpr2Subject(new UserConsentManager());
-        editor.remove(key);
+        editor.remove(UserConsentManager.GDPR_2_SUBJECT_KEY);
         editor.apply();
 
         PrebidMobile.setApplicationContext(activity.getApplicationContext());
@@ -221,8 +219,7 @@ public class TargetingParamsTest extends BaseSetup {
 
         //given
         TargetingParams.setGDPRConsentString(null);
-        String key = UserConsentManagerReflection.getConstGdpr2Consent(new UserConsentManager());
-        editor.remove(key);
+        editor.remove(UserConsentManager.GDPR_2_CONSENT_KEY);
         editor.apply();
 
         //when
@@ -235,12 +232,10 @@ public class TargetingParamsTest extends BaseSetup {
 
     @Test
     public void testGdprConsentTCFv2() {
-
         //given
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor editor = pref.edit();
-        String key = UserConsentManagerReflection.getConstGdpr2Consent(new UserConsentManager());
-        editor.putString(key, "testconsent TCFv1");
+        editor.putString(UserConsentManager.GDPR_2_CONSENT_KEY, "testconsent TCFv1");
         editor.apply();
         //when
         String gdprConsent = TargetingParams.getGDPRConsentString();
@@ -269,8 +264,7 @@ public class TargetingParamsTest extends BaseSetup {
 
         //given
         TargetingParams.setPurposeConsents(null);
-        String key = UserConsentManagerReflection.getConstGdpr2PurposeConsent(new UserConsentManager());
-        editor.remove(key);
+        editor.remove(UserConsentManager.GDPR_2_PURPOSE_CONSENT_KEY);
         editor.apply();
 
         //when
@@ -285,8 +279,7 @@ public class TargetingParamsTest extends BaseSetup {
         //given
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(activity);
         SharedPreferences.Editor editor = pref.edit();
-        String key = UserConsentManagerReflection.getConstGdpr2PurposeConsent(new UserConsentManager());
-        editor.putString(key, "test PurposeConsents TCFv2");
+        editor.putString(UserConsentManager.GDPR_2_PURPOSE_CONSENT_KEY, "test PurposeConsents TCFv2");
         editor.apply();
 
         //when

@@ -2,7 +2,12 @@ package org.prebid.mobile.rendering.sdk;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+
 import androidx.annotation.Nullable;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.exceptions.InitError;
@@ -10,87 +15,70 @@ import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class SdkInitializer {
 
     private static final String TAG = SdkInitializer.class.getSimpleName();
-
-    protected static boolean isSdkInitialized = false;
-
-    private static final AtomicInteger INIT_SDK_TASK_COUNT = new AtomicInteger();
-    private static final int MANDATORY_TASK_COUNT = 3;
-
-    protected static SdkInitializationListener sdkInitListener;
 
     public static void init(
         @Nullable Context context,
         @Nullable SdkInitializationListener listener
     ) {
-        sdkInitListener = listener;
-        if (context == null) {
-            String error = "Context must be not null!";
-            LogUtil.error(error);
-            if (listener != null) {
-                listener.onSdkFailedToInit(new InitError(error));
-            }
+        if (PrebidContextHolder.getContext() != null) {
             return;
         }
 
-        if (!(context instanceof Application)) {
-            Context applicationContext = context.getApplicationContext();
-            if (applicationContext != null) {
-                context = applicationContext;
-            } else {
-                LogUtil.warning(TAG, "Can't get application context, SDK will use context: " + context.getClass());
-            }
-        }
-
-        if (isSdkInitialized && ManagersResolver.getInstance().getContext() != null) {
+        Context applicationContext = getApplicationContext(context);
+        if (applicationContext == null) {
+            onInitializationFailed("Context must be not null!", listener);
             return;
         }
-        isSdkInitialized = false;
 
-        LogUtil.debug(TAG, "Initializing Prebid Rendering SDK");
-
-        INIT_SDK_TASK_COUNT.set(0);
+        LogUtil.debug(TAG, "Initializing Prebid SDK");
+        PrebidContextHolder.setContext(applicationContext);
 
         if (PrebidMobile.logLevel != null) {
-            initializeLogging();
+            LogUtil.setLogLevel(PrebidMobile.getLogLevel().getValue());
         }
 
-        AppInfoManager.init(context);
-        initOpenMeasurementSDK(context);
-        ManagersResolver.getInstance().prepare(context);
+        try {
+            AppInfoManager.init(applicationContext);
+
+            OmAdSessionManager.activateOmSdk(applicationContext);
+
+            ManagersResolver.getInstance().prepare(applicationContext);
+        } catch (Throwable throwable) {
+            onInitializationFailed("Exception during initialization: " + throwable.getMessage() + "\n" + Log.getStackTraceString(throwable), listener);
+            return;
+        }
+
         StatusRequester.makeRequest(listener);
     }
 
-    private static void initializeLogging() {
-        LogUtil.setLogLevel(PrebidMobile.getLogLevel().getValue());
-        increaseTaskCount();
-    }
-
-    private static void initOpenMeasurementSDK(Context context) {
-        OmAdSessionManager.activateOmSdk(context.getApplicationContext());
-        increaseTaskCount();
-    }
-
-    /**
-     * Notifies SDK initializer that one task was completed.
-     * Only for internal use!
-     */
-    public static void increaseTaskCount() {
-        if (INIT_SDK_TASK_COUNT.incrementAndGet() >= MANDATORY_TASK_COUNT) {
-            isSdkInitialized = true;
-            LogUtil.debug(TAG, "Prebid SDK " + PrebidMobile.SDK_VERSION + " initialized");
-            if (sdkInitListener != null) {
-                sdkInitListener.onSdkInit();
-            }
+    @Nullable
+    private static Context getApplicationContext(
+        @Nullable Context context
+    ) {
+        if (context instanceof Application) {
+            return context;
+        } else if (context != null) {
+            return context.getApplicationContext();
         }
+        return null;
     }
 
-    public static boolean isIsSdkInitialized() {
-        return isSdkInitialized;
+    private static void onInitializationFailed(
+        String error,
+        @Nullable SdkInitializationListener listener
+    ) {
+        LogUtil.error(error);
+        if (listener != null) {
+            postOnMainThread(() -> listener.onSdkFailedToInit(new InitError(error)));
+        }
+        PrebidContextHolder.clearContext();
+    }
+
+    private static void postOnMainThread(Runnable runnable) {
+        new Handler(Looper.getMainLooper()).post(runnable);
     }
 
 }
