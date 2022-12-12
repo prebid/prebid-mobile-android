@@ -118,15 +118,4 @@ open class GamOriginalBannerFragment : AdFragment() {
         adUnit?.stopAutoRefresh()
     }
 
-    protected open fun initBanner(configId: String?, eventHandler: GamBannerEventHandler): BannerView {
-        return BannerView(
-            requireContext(),
-            configId,
-            eventHandler
-        )
-    }
-
-    protected open fun getGamAdSizeArray(initialSize: AdSize) = arrayOf(initialSize)
-
-    protected open fun getAdditionalPrebidBannerSizeArray() = emptyArray<AdSize>()
 }

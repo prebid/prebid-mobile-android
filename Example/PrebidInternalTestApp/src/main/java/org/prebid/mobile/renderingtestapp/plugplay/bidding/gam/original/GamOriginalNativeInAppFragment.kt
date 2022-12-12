@@ -25,6 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.prebid.mobile.*
 import org.prebid.mobile.addendum.AdViewUtils
+import org.prebid.mobile.eventhandlers.utils.GamUtils
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeFragment
 import org.prebid.mobile.renderingtestapp.utils.loadImage
@@ -57,15 +58,12 @@ class GamOriginalNativeInAppFragment : PpmNativeFragment() {
         adUnit?.fetchDemand(adRequest) { resultCode ->
             if (resultCode != ResultCode.SUCCESS) {
                 btnFetchDemandResultFailure.isEnabled = true
-                adLoader!!.loadAd(
-                    adRequest
-                )
+                adLoader!!.loadAd(adRequest)
                 return@fetchDemand
             }
+            GamUtils.prepare(adRequest,extras)
             btnFetchDemandResultSuccess?.isEnabled = true
-            adLoader!!.loadAd(
-                adRequest
-            )
+            adLoader!!.loadAd(adRequest)
         }
     }
 
