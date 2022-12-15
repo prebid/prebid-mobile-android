@@ -187,7 +187,7 @@ class DemoItemProvider private constructor() {
                     R.id.action_header_bidding_to_gam_original_instream,
                     gamVideoTagList,
                     createBannerBundle(
-                        null,
+                        R.string.imp_prebid_id_video_instream,
                         R.string.adunit_gam_video_instream,
                         640,
                         480,

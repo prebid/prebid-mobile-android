@@ -2,7 +2,6 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original
 
 import android.net.Uri
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.ima.ImaAdsLoader
@@ -14,7 +13,6 @@ import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import kotlinx.android.synthetic.main.fragment_bidding_banner_video.*
-import kotlinx.android.synthetic.main.lyt_native_ad.*
 import org.prebid.mobile.*
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
@@ -27,6 +25,8 @@ class GamOriginalInstreamFragment : AdFragment() {
     private var adsUri: Uri? = null
     private var adsLoader: ImaAdsLoader? = null
     private var playerView: PlayerView? = null
+
+    override val layoutRes: Int = R.layout.fragment_bidding_banner_video
 
     override fun initAd(): Any? {
         PrebidMobile.setPrebidServerAccountId("1001")
@@ -48,7 +48,7 @@ class GamOriginalInstreamFragment : AdFragment() {
                     keysMap
                 )
             )
-            val imaBuilder = ImaAdsLoader.Builder(requireContext())
+            val imaBuilder = ImaAdsLoader.Builder(requireActivity())
             adsLoader = imaBuilder.build()
             initializePlayer()
         }
@@ -57,8 +57,6 @@ class GamOriginalInstreamFragment : AdFragment() {
     override fun configuratorMode(): AdConfiguratorDialogFragment.AdConfiguratorMode? {
         return AdConfiguratorDialogFragment.AdConfiguratorMode.BANNER
     }
-
-    override val layoutRes: Int = R.layout.fragment_bidding_banner_video
 
     private fun createAd() {
         playerView = PlayerView(requireContext())
@@ -96,5 +94,15 @@ class GamOriginalInstreamFragment : AdFragment() {
         player?.setMediaSource(adsMediaSource)
         player?.playWhenReady = true
         player?.prepare()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        adUnit?.stopAutoRefresh()
+        adsLoader?.setPlayer(null)
+        adsLoader?.release()
+        player?.release()
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
+        PrebidMobile.setPrebidServerAccountId(getString(R.string.prebid_account_id_prod))
     }
 }
