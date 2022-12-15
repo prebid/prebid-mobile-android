@@ -24,8 +24,16 @@ class GamOriginalNativeBannerFragment : AdFragment() {
     companion object {
         private const val TAG = "GamOriginalNativeBanner"
     }
-    override val layoutRes: Int = R.layout.fragment_bidding_banner_native
+    override val layoutRes: Int = R.layout.fragment_bidding_banner
     private var nativeAdUnit: NativeAdUnit? = null
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        btnLoad.setOnClickListener {
+            resetEventButtons()
+            loadAd()
+        }
+    }
 
     override fun initAd(): Any? {
         nativeAdUnit = configureNativeAdUnit()
@@ -75,19 +83,12 @@ class GamOriginalNativeBannerFragment : AdFragment() {
             }
 
         }
-        banner_container.addView(gamView)
+        viewContainer.addView(gamView)
 
         val builder = AdManagerAdRequest.Builder()
         nativeAdUnit?.setAutoRefreshInterval(refreshDelay)
         nativeAdUnit?.fetchDemand(builder) { resultCode ->
             val request = builder.build()
-//            if (resultCode != ResultCode.SUCCESS) {
-//                btnFetchDemandResultFailure.isEnabled = true
-//                gamView.loadAd(request)
-//                return@fetchDemand
-//            }
-//            GamUtils.prepare(request, Bundle())
-//            btnFetchDemandResultSuccess?.isEnabled = true
             gamView.loadAd(request)
         }
     }
