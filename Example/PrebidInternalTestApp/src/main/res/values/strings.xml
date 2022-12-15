@@ -151,7 +151,7 @@
     <string name="demo_bidding_gam_banner_multisize">Banner Multisize (GAM)</string>
     <string name="demo_bidding_gam_banner_multisize_original">Banner Multisize (GAM Original) [OK, PUC]</string>
     <string name="demo_bidding_gam_interstitial_320_480_app_event">Display Interstitial 320x480 (GAM) [OK, AppEvent]</string>
-    <string name="demo_bidding_gam_interstitial_320_480_original">Display Interstitial 320x480 (GAM, Original) [OK, PUC]</string>
+    <string name="demo_bidding_gam_interstitial_320_480_original">Display Interstitial 320x480 (GAM Original) [OK, PUC]</string>
     <string name="demo_bidding_gam_interstitial_320_480_random">Display Interstitial 320x480 (GAM) [OK, Random]</string>
     <string name="demo_bidding_gam_interstitial_320_480_no_bids">Display Interstitial 320x480 (GAM) [noBids, GAM Ad]</string>
     <string name="demo_bidding_gam_interstitial_320_480_multiformat">Multiformat Interstitial 320x480 (GAM) [OK, AppEvent]</string>
@@ -332,6 +332,7 @@
     <string name="imp_prebid_id_interstitial_320_480">imp-prebid-display-interstitial-320-480</string>
 
     <string name="imp_prebid_id_video_outstream">imp-prebid-video-outstream</string>
+    <string name="imp_prebid_id_video_instream">1001-1</string>
     <string name="imp_prebid_id_video_outstream_end_card">imp-prebid-video-outstream-with-end-card</string>
     <string name="imp_prebid_id_video_interstitial_320_480">imp-prebid-video-interstitial-320-480</string>
     <string name="imp_prebid_id_video_interstitial_320_480_with_end_card">imp-prebid-video-interstitial-320-480-with-end-card</string>
