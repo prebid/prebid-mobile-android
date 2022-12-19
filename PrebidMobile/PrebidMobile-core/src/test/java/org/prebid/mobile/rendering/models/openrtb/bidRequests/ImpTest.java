@@ -16,15 +16,17 @@
 
 package org.prebid.mobile.rendering.models.openrtb.bidRequests;
 
+import static org.junit.Assert.assertEquals;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Pmp;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
 
-import static org.junit.Assert.assertEquals;
-
 public class ImpTest {
+
     @Test
     public void getJsonObject() throws Exception {
         Imp imp = new Imp();
@@ -45,4 +47,17 @@ public class ImpTest {
         assertEquals("got: " + actualObj.toString(), expectedString, actualObj.toString());
         imp.getJsonObject();
     }
+
+    @Test
+    public void impObjectWithFullVideo() throws JSONException {
+        Imp imp = new Imp();
+
+        imp.video = new Video();
+
+        JSONObject actualObj = imp.getJsonObject();
+        String expectedString = "{\"video\":{}}";
+        assertEquals(expectedString, actualObj.toString());
+        imp.getJsonObject();
+    }
+
 }

@@ -24,9 +24,7 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import kotlinx.android.synthetic.main.events_bids.*
 import kotlinx.android.synthetic.main.fragment_bidding_banner.*
-import org.prebid.mobile.Signals
 import org.prebid.mobile.VideoAdUnit
-import org.prebid.mobile.VideoBaseAdUnit
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
 import org.prebid.mobile.renderingtestapp.AdFragment
@@ -41,18 +39,11 @@ class GamOriginalOutstreamFragment : AdFragment() {
     private var gamView: AdManagerAdView? = null
 
     override fun initAd(): Any? {
-        val parameters = VideoBaseAdUnit.Parameters()
-        parameters.mimes = listOf("video/mp4")
-        parameters.protocols = listOf(Signals.Protocols.VAST_2_0)
-        parameters.playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOff)
-        parameters.placement = Signals.Placement.InBanner
-
         adUnit = VideoAdUnit(
             configId,
             width,
             height
         )
-        adUnit?.parameters = parameters
 
         gamView = AdManagerAdView(requireContext())
         gamView?.adUnitId = adUnitId
