@@ -16,9 +16,20 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.KEY_OM_PARTNER_NAME;
+import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.KEY_OM_PARTNER_VERSION;
+import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.VIDEO_INTERSTITIAL_PLAYBACK_END;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +37,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.prebid.mobile.*;
+import org.prebid.mobile.AdSize;
+import org.prebid.mobile.DataObject;
+import org.prebid.mobile.ExternalUserId;
+import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.Signals;
+import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.VideoBaseAdUnit;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -49,13 +66,11 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.EnumSet;
 import java.util.List;
-
-import static org.junit.Assert.*;
-import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19, qualifiers = "w1920dp-h1080dp")
@@ -466,10 +481,196 @@ public class BasicParameterBuilderTest {
         assertNull(firstImp.video);
     }
 
+    @Test
+    public void testOriginalApiVideoParameters_empty() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsOriginalAdUnit(true);
+        configuration.setAdFormat(AdFormat.VAST);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+            configuration,
+            context.getResources(),
+            browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+        BidRequest bidRequest = adRequestInput.getBidRequest();
+        Imp imp = bidRequest.getImp().iterator().next();
+
+        Video video = imp.getVideo();
+        assertNotNull(video);
+        assertNotNull(video.w);
+        assertNotNull(video.h);
+        assertEquals(new Integer(5), video.placement);
+
+        assertNull(video.mimes);
+        assertNull(video.minduration);
+        assertNull(video.maxduration);
+        assertNull(video.protocols);
+        assertNull(video.api);
+        assertNull(video.linearity);
+        assertNull(video.minbitrate);
+        assertNull(video.maxbitrate);
+        assertNull(video.playbackmethod);
+        assertNull(video.delivery);
+        assertNull(video.pos);
+        assertNull(video.playbackend);
+        assertNull(video.startDelay);
+    }
+
+    @Test
+    public void testOriginalApiVideoParameters_full() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsOriginalAdUnit(true);
+        configuration.setAdFormat(AdFormat.VAST);
+        configuration.setVideoParameters(createFullVideoParameters());
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+            configuration,
+            context.getResources(),
+            browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+        BidRequest bidRequest = adRequestInput.getBidRequest();
+        Imp imp = bidRequest.getImp().iterator().next();
+
+        Video video = imp.getVideo();
+        assertNotNull(video);
+        assertNotNull(video.w);
+        assertNotNull(video.h);
+        assertEquals(new Integer(5), video.placement);
+
+        assertEquals(new Integer(101), video.minduration);
+        assertEquals(new Integer(102), video.maxduration);
+        assertEquals(new Integer(201), video.minbitrate);
+        assertEquals(new Integer(202), video.maxbitrate);
+        assertEquals(new Integer(0), video.startDelay);
+        assertArrayEquals(new String[]{"Mime1", "Mime2"}, video.mimes);
+        assertArrayEquals(new int[]{11, 12}, video.protocols);
+        assertArrayEquals(new int[]{21, 22}, video.api);
+        assertArrayEquals(new int[]{31, 32}, video.playbackmethod);
+
+        assertNull(video.linearity);
+        assertNull(video.delivery);
+        assertNull(video.pos);
+        assertNull(video.playbackend);
+    }
+
+    @Test
+    public void testRenderingApiVideoParameters_empty() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsOriginalAdUnit(false);
+        configuration.setAdFormat(AdFormat.VAST);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+            configuration,
+            context.getResources(),
+            browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+        BidRequest bidRequest = adRequestInput.getBidRequest();
+        Imp imp = bidRequest.getImp().iterator().next();
+
+        Video video = imp.getVideo();
+        assertNotNull(video);
+        assertNotNull(video.w);
+        assertNotNull(video.h);
+        assertEquals(new Integer(5), video.placement);
+        assertEquals(new Integer(1), video.linearity);
+        assertEquals(new Integer(2), video.playbackend);
+        assertArrayEquals(new String[]{"video/mp4", "video/3gpp", "video/webm", "video/mkv"}, video.mimes);
+        assertArrayEquals(new int[]{2, 5}, video.protocols);
+        assertArrayEquals(new int[]{3}, video.delivery);
+
+        assertNull(video.minduration);
+        assertNull(video.maxduration);
+        assertNull(video.api);
+        assertNull(video.minbitrate);
+        assertNull(video.maxbitrate);
+        assertNull(video.playbackmethod);
+        assertNull(video.pos);
+        assertNull(video.startDelay);
+    }
+
+
+    @Test
+    public void testRenderingApiVideoParameters_full() {
+        AdUnitConfiguration configuration = new AdUnitConfiguration();
+        configuration.setIsOriginalAdUnit(false);
+        configuration.setAdFormat(AdFormat.VAST);
+        configuration.setVideoParameters(createFullVideoParameters());
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(
+            configuration,
+            context.getResources(),
+            browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+        BidRequest bidRequest = adRequestInput.getBidRequest();
+        Imp imp = bidRequest.getImp().iterator().next();
+
+        Video video = imp.getVideo();
+        assertNotNull(video);
+        assertNotNull(video.w);
+        assertNotNull(video.h);
+        assertEquals(new Integer(5), video.placement);
+
+        assertEquals(new Integer(1), video.linearity);
+        assertEquals(new Integer(2), video.playbackend);
+        assertArrayEquals(new int[]{3}, video.delivery);
+        assertArrayEquals(new String[]{"video/mp4", "video/3gpp", "video/webm", "video/mkv"}, video.mimes);
+        assertArrayEquals(new int[]{2, 5}, video.protocols);
+
+        assertNull(video.minduration);
+        assertNull(video.maxduration);
+        assertNull(video.api);
+        assertNull(video.minbitrate);
+        assertNull(video.maxbitrate);
+        assertNull(video.playbackmethod);
+        assertNull(video.pos);
+        assertNull(video.startDelay);
+    }
+
+
+    private VideoBaseAdUnit.Parameters createFullVideoParameters() {
+        VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
+
+        parameters.setMinDuration(101);
+        parameters.setMaxDuration(102);
+        parameters.setMinBitrate(201);
+        parameters.setMaxBitrate(202);
+        parameters.setPlacement(Signals.Placement.InBanner);
+        parameters.setStartDelay(Signals.StartDelay.PreRoll);
+
+        ArrayList<String> mimes = new ArrayList<>(2);
+        mimes.add("Mime1");
+        mimes.add("Mime2");
+        parameters.setMimes(mimes);
+
+        ArrayList<Signals.Protocols> protocols = new ArrayList<>(2);
+        protocols.add(new Signals.Protocols(11));
+        protocols.add(new Signals.Protocols(12));
+        parameters.setProtocols(protocols);
+
+        ArrayList<Signals.Api> api = new ArrayList<>(2);
+        api.add(new Signals.Api(21));
+        api.add(new Signals.Api(22));
+        parameters.setApi(api);
+
+        ArrayList<Signals.PlaybackMethod> playbackMethods = new ArrayList<>(2);
+        playbackMethods.add(new Signals.PlaybackMethod(31));
+        playbackMethods.add(new Signals.PlaybackMethod(32));
+        parameters.setPlaybackMethod(playbackMethods);
+
+        return parameters;
+    }
 
     private BidRequest getExpectedBidRequest(
-            AdUnitConfiguration adConfiguration,
-            String uuid
+        AdUnitConfiguration adConfiguration,
+        String uuid
     ) {
         BidRequest bidRequest = new BidRequest();
         bidRequest.setId(uuid);

@@ -16,18 +16,26 @@
 
 package org.prebid.mobile.rendering.models.openrtb.bidRequests.imps;
 
+import static org.junit.Assert.assertEquals;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder;
 
-import static org.junit.Assert.assertEquals;
-
 public class VideoTest {
+
+    @Test
+    public void emptyVideoObject() throws JSONException {
+        Video video = new Video();
+        JSONObject json = video.getJsonObject();
+        String expected = "{}";
+        assertEquals(expected, json.toString());
+    }
+
     @Test
     public void getJsonObject() throws Exception {
-
         Video video = new Video();
-
         video.mimes = BasicParameterBuilder.SUPPORTED_VIDEO_MIME_TYPES;
         video.minduration = 1;
         video.maxduration = 100;
@@ -48,4 +56,5 @@ public class VideoTest {
         assertEquals("got: " + actualObj.toString(), expectedString, actualObj.toString());
         video.getJsonObject();
     }
+
 }

@@ -26,8 +26,6 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import kotlinx.android.synthetic.main.events_bids.*
 import kotlinx.android.synthetic.main.fragment_bidding_interstitial.*
 import org.prebid.mobile.RewardedVideoAdUnit
-import org.prebid.mobile.Signals
-import org.prebid.mobile.VideoBaseAdUnit
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidRewardedFragment
 
@@ -52,7 +50,6 @@ class GamOriginalRewardedVideoFragment : BaseBidRewardedFragment() {
     private fun createAd() {
         val builder = AdManagerAdRequest.Builder()
         adUnit = RewardedVideoAdUnit(configId)
-        adUnit?.parameters = configureVideoParameters()
         adUnit?.fetchDemand(builder) {
             val request = builder.build()
             RewardedAd.load(
@@ -93,14 +90,6 @@ class GamOriginalRewardedVideoFragment : BaseBidRewardedFragment() {
                 btnLoad?.text = getString(R.string.text_load)
                 displayAdCallback?.invoke()
             }
-        }
-    }
-
-    private fun configureVideoParameters(): VideoBaseAdUnit.Parameters {
-        return VideoBaseAdUnit.Parameters().apply {
-            mimes = listOf("video/mp4")
-            protocols = listOf(Signals.Protocols.VAST_2_0)
-            playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOff)
         }
     }
 

@@ -25,7 +25,9 @@ import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
 import kotlinx.android.synthetic.main.events_bids.*
 import kotlinx.android.synthetic.main.fragment_bidding_interstitial.*
-import org.prebid.mobile.*
+import org.prebid.mobile.AdUnit
+import org.prebid.mobile.InterstitialAdUnit
+import org.prebid.mobile.VideoInterstitialAdUnit
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
@@ -52,9 +54,7 @@ class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
         height: Int
     ) {
         adUnit = if (adUnitFormat == AdUnitFormat.VIDEO) {
-            VideoInterstitialAdUnit(configId!!).apply {
-                parameters = configureVideoParameters()
-            }
+            VideoInterstitialAdUnit(configId!!)
         } else {
             InterstitialAdUnit(configId!!, 30, 30)
         }
@@ -110,22 +110,4 @@ class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
         }
     }
 
-    private fun configureVideoParameters(): VideoBaseAdUnit.Parameters {
-        return VideoBaseAdUnit.Parameters().apply {
-            placement = Signals.Placement.Interstitial
-            api = listOf(
-                Signals.Api.VPAID_1,
-                Signals.Api.VPAID_2
-            )
-            maxBitrate = 1500
-            minBitrate = 300
-            maxDuration = 30
-            minDuration = 5
-            mimes = listOf("video/x-flv", "video/mp4")
-            playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOn)
-            protocols = listOf(
-                Signals.Protocols.VAST_2_0
-            )
-        }
-    }
 }
