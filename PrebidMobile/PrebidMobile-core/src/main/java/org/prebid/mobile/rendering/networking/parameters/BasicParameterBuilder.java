@@ -357,8 +357,8 @@ public class BasicParameterBuilder extends ParameterBuilder {
     }
 
     private void setDisplayManager(Imp imp) {
-        imp.displaymanager = DISPLAY_MANAGER_VALUE;
-        imp.displaymanagerver = SDK_VERSION;
+        imp.displaymanager = adConfiguration.isOriginalAdUnit() ? null : DISPLAY_MANAGER_VALUE;
+        imp.displaymanagerver = adConfiguration.isOriginalAdUnit() ? null : SDK_VERSION;
     }
 
     private int[] getApiFrameworks() {
