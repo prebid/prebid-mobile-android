@@ -547,12 +547,12 @@ public class BasicParameterBuilderTest {
         assertEquals(new Integer(201), video.minbitrate);
         assertEquals(new Integer(202), video.maxbitrate);
         assertEquals(new Integer(0), video.startDelay);
+        assertEquals(new Integer(1), video.linearity);
         assertArrayEquals(new String[]{"Mime1", "Mime2"}, video.mimes);
         assertArrayEquals(new int[]{11, 12}, video.protocols);
         assertArrayEquals(new int[]{21, 22}, video.api);
         assertArrayEquals(new int[]{31, 32}, video.playbackmethod);
 
-        assertNull(video.linearity);
         assertNull(video.pos);
         assertNull(video.playbackend);
     }
@@ -643,6 +643,7 @@ public class BasicParameterBuilderTest {
         parameters.setMinBitrate(201);
         parameters.setMaxBitrate(202);
         parameters.setPlacement(Signals.Placement.InBanner);
+        parameters.setLinearity(1);
         parameters.setStartDelay(Signals.StartDelay.PreRoll);
 
         ArrayList<String> mimes = new ArrayList<>(2);

@@ -187,6 +187,7 @@ public class AdUnitSuccessorTest {
         parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0, Signals.Protocols.VAST_3_0));
         parameters.setStartDelay(Signals.StartDelay.PreRoll);
         parameters.setPlacement(Signals.Placement.InBanner);
+        parameters.setLinearity(1);
 
         videoBaseAdUnit.setParameters(parameters);
 
@@ -203,6 +204,7 @@ public class AdUnitSuccessorTest {
         List<Signals.Protocols> protocols = testedVideoParameters.getProtocols();
         Signals.StartDelay startDelay = testedVideoParameters.getStartDelay();
         Signals.Placement placement = testedVideoParameters.getPlacement();
+        Integer linearity = testedVideoParameters.getLinearity();
 
         //then
         assertEquals(2, api.size());
@@ -219,5 +221,6 @@ public class AdUnitSuccessorTest {
         assertTrue(protocols.contains(new Signals.Protocols(2)) && protocols.contains(new Signals.Protocols(3)));
         assertEquals(new Signals.StartDelay(0), startDelay);
         assertEquals(new Signals.Placement(2), placement);
+        assertEquals(new Integer(1), linearity);
     }
 }
