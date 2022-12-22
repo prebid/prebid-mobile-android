@@ -35,6 +35,7 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
+import org.prebid.mobile.rendering.video.vast.Ad;
 
 import java.util.*;
 
@@ -210,7 +211,11 @@ public class BasicParameterBuilder extends ParameterBuilder {
                 video.minbitrate = videoParameters.getMinBitrate();
                 video.maxbitrate = videoParameters.getMaxBitrate();
                 video.linearity = videoParameters.getLinearity();
-
+                if (videoParameters.getPlacement() != null) {
+                    video.placement = videoParameters.getPlacement().getValue();
+                } else if (adConfiguration.getPlacementTypeValue() != PlacementType.IN_BANNER.getValue()){
+                    video.placement = PlacementType.INTERSTITIAL.getValue();
+                }
                 if (videoParameters.getStartDelay() != null) {
                     video.startDelay = videoParameters.getStartDelay().getValue();
                 }
@@ -247,7 +252,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
                     video.mimes = mimesArray;
                 }
 
-
                 List<Signals.Protocols> protocolsObjects = videoParameters.getProtocols();
                 if (protocolsObjects != null && protocolsObjects.size() > 0) {
                     int size = protocolsObjects.size();
@@ -257,6 +261,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
                     }
                     video.protocols = protocolsArray;
                 }
+
             }
         } else {
             //Common values for all video reqs
@@ -270,25 +275,27 @@ public class BasicParameterBuilder extends ParameterBuilder {
             if (adConfiguration.isAdPositionValid()) {
                 video.pos = adConfiguration.getAdPositionValue();
             }
+
+            if (!adConfiguration.isPlacementTypeValid()) {
+                video.placement = PlacementType.INTERSTITIAL.getValue();
+            } else {
+                video.placement = adConfiguration.getPlacementTypeValue();
+            }
         }
 
-        video.delivery = new int[]{VIDEO_DELIVERY_DOWNLOAD};
-
-        if (!adConfiguration.isPlacementTypeValid()) {
-            video.placement = PlacementType.INTERSTITIAL.getValue();
-            if (resources != null) {
-                Configuration deviceConfiguration = resources.getConfiguration();
-                video.w = deviceConfiguration.screenWidthDp;
-                video.h = deviceConfiguration.screenHeightDp;
-            }
-        } else {
-            video.placement = adConfiguration.getPlacementTypeValue();
+        HashSet<AdSize> adSizes = adConfiguration.getSizes();
+        if (!adSizes.isEmpty()) {
             for (AdSize size : adConfiguration.getSizes()) {
                 video.w = size.getWidth();
                 video.h = size.getHeight();
                 break;
             }
+        } else if (resources != null) {
+            Configuration deviceConfiguration = resources.getConfiguration();
+            video.w = deviceConfiguration.screenWidthDp;
+            video.h = deviceConfiguration.screenHeightDp;
         }
+        video.delivery = new int[]{VIDEO_DELIVERY_DOWNLOAD};
 
         imp.video = video;
     }

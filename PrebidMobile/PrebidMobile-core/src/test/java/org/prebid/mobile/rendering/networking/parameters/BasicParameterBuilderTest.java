@@ -501,8 +501,9 @@ public class BasicParameterBuilderTest {
         assertNotNull(video);
         assertNotNull(video.w);
         assertNotNull(video.h);
-        assertEquals(new Integer(5), video.placement);
+        assertNotNull(video.delivery);
 
+        assertNull(video.placement);
         assertNull(video.mimes);
         assertNull(video.minduration);
         assertNull(video.maxduration);
@@ -512,7 +513,6 @@ public class BasicParameterBuilderTest {
         assertNull(video.minbitrate);
         assertNull(video.maxbitrate);
         assertNull(video.playbackmethod);
-        assertNull(video.delivery);
         assertNull(video.pos);
         assertNull(video.playbackend);
         assertNull(video.startDelay);
@@ -539,7 +539,8 @@ public class BasicParameterBuilderTest {
         assertNotNull(video);
         assertNotNull(video.w);
         assertNotNull(video.h);
-        assertEquals(new Integer(5), video.placement);
+        assertNotNull(video.delivery);
+        assertEquals(new Integer(2), video.placement);
 
         assertEquals(new Integer(101), video.minduration);
         assertEquals(new Integer(102), video.maxduration);
@@ -552,7 +553,6 @@ public class BasicParameterBuilderTest {
         assertArrayEquals(new int[]{31, 32}, video.playbackmethod);
 
         assertNull(video.linearity);
-        assertNull(video.delivery);
         assertNull(video.pos);
         assertNull(video.playbackend);
     }

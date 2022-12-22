@@ -18,6 +18,7 @@ package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.rendering.models.PlacementType;
 
 import java.util.HashSet;
 
@@ -26,6 +27,7 @@ public class VideoAdUnit extends VideoBaseAdUnit {
     public VideoAdUnit(@NonNull String configId, int width, int height) {
         super(configId, AdFormat.VAST);
         configuration.addSize(new AdSize(width, height));
+        configuration.setPlacementType(PlacementType.IN_BANNER);
     }
 
     AdSize getAdSize() {
