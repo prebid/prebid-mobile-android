@@ -106,6 +106,12 @@ public abstract class VideoBaseAdUnit extends AdUnit {
         @Nullable
         private Signals.Placement placement;
 
+        /**
+         Placement type for the impression.
+         */
+        @Nullable
+        private Integer linearity;
+
         //Getters and setters
         @Nullable
         public List<Signals.Api> getApi() {
@@ -195,6 +201,15 @@ public abstract class VideoBaseAdUnit extends AdUnit {
 
         public void setPlacement(@Nullable Signals.Placement placement) {
             this.placement = placement;
+        }
+
+        @Nullable
+        public Integer getLinearity() {
+            return linearity;
+        }
+
+        public void setLinearity(@Nullable Integer linearity) {
+            this.linearity = linearity;
         }
     }
 

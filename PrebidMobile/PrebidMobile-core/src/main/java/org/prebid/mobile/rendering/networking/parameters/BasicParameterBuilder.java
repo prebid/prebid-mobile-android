@@ -209,6 +209,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
                 video.minbitrate = videoParameters.getMinBitrate();
                 video.maxbitrate = videoParameters.getMaxBitrate();
+                video.linearity = videoParameters.getLinearity();
 
                 if (videoParameters.getStartDelay() != null) {
                     video.startDelay = videoParameters.getStartDelay().getValue();
@@ -265,12 +266,13 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
             //Interstitial video specific values
             video.playbackend = VIDEO_INTERSTITIAL_PLAYBACK_END;//On Leaving Viewport or when Terminated by User
-            video.delivery = new int[]{VIDEO_DELIVERY_DOWNLOAD};
 
             if (adConfiguration.isAdPositionValid()) {
                 video.pos = adConfiguration.getAdPositionValue();
             }
         }
+
+        video.delivery = new int[]{VIDEO_DELIVERY_DOWNLOAD};
 
         if (!adConfiguration.isPlacementTypeValid()) {
             video.placement = PlacementType.INTERSTITIAL.getValue();
