@@ -22,15 +22,13 @@ import static org.prebid.mobile.api.exceptions.AdException.THIRD_PARTY;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.api.rendering.customrenderer.CustomBannerRenderer;
-import org.prebid.mobile.api.rendering.customrenderer.CustomInterstitialRenderer;
-import org.prebid.mobile.api.rendering.customrenderer.InterstitialControllerInterface;
+import org.prebid.mobile.api.rendering.customrenderer.PrebidMobileInterstitialControllerInterface;
+import org.prebid.mobile.api.rendering.customrenderer.PrebidMobilePluginCustomRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
@@ -47,16 +45,30 @@ import tv.teads.sdk.TeadsSDK;
 import tv.teads.sdk.renderer.InReadAdView;
 
 // TODO temp for tests purposes, should not be merged
-public class ThirdPartyRenderer implements CustomBannerRenderer, CustomInterstitialRenderer {
-
-    private FrameLayout frameLayout;
+public class TotoCustomRenderer implements PrebidMobilePluginCustomRenderer {
 
     @Override
-    public View getBannerAdView( @NonNull Context context,
-                                 DisplayViewListener listener,
-                                 @NonNull AdUnitConfiguration adUnitConfiguration,
-                                 @NonNull BidResponse response) {
-        frameLayout = new FrameLayout(context);
+    public String getName() {
+        return "Toto";
+    }
+
+    @Override
+    public String getVersion() {
+        return "1.0.0";
+    }
+
+    @Override
+    public String getToken() {
+        return null;
+    }
+
+    @Override
+    public View createBannerAdView(
+            @NonNull Context context,
+            @NonNull DisplayViewListener listener,
+            @NonNull AdUnitConfiguration adUnitConfiguration,
+            @NonNull BidResponse response
+    ) {
 
         InReadAdView inReadAdView = new InReadAdView(context);
         inReadAdView.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
@@ -66,8 +78,13 @@ public class ThirdPartyRenderer implements CustomBannerRenderer, CustomInterstit
     }
 
     @Override
-    public InterstitialControllerInterface getInterstitialController(Context context, InterstitialControllerListener listener) {
-        return new InterstitialControllerInterface() {
+    public PrebidMobileInterstitialControllerInterface createInterstitialController(
+            @NonNull Context context,
+            @NonNull InterstitialControllerListener listener,
+            @NonNull AdUnitConfiguration adUnitConfiguration,
+            @NonNull BidResponse response
+    ) {
+        return new PrebidMobileInterstitialControllerInterface() {
             @Override
             public void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
                 Toast.makeText(context, "Load Interstitial Ad", Toast.LENGTH_LONG).show();
@@ -140,20 +157,5 @@ public class ThirdPartyRenderer implements CustomBannerRenderer, CustomInterstit
             @Override
             public void onAdCollapsedFromFullscreen() {}
         });
-    }
-
-    @Override
-    public String getName() {
-        return "Teads";
-    }
-
-    @Override
-    public String getVersion() {
-        return "1.0.0";
-    }
-
-    @Override
-    public String getToken() {
-        return null;
     }
 }

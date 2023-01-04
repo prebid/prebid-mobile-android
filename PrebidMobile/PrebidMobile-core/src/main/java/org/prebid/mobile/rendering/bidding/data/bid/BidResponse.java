@@ -16,7 +16,7 @@
 
 package org.prebid.mobile.rendering.bidding.data.bid;
 
-import static org.prebid.mobile.api.rendering.customrenderer.CustomRendererStore.CUSTOM_RENDERERS_KEY;
+import static org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer.CUSTOM_RENDERER_KEY;
 
 import android.content.Context;
 import android.util.Pair;
@@ -37,7 +37,6 @@ import org.prebid.mobile.rendering.utils.helpers.Dips;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -66,6 +65,7 @@ public class BidResponse {
 
     private boolean hasParseError = false;
     private boolean usesCache;
+    private AdUnitConfiguration adUnitConfiguration;
     private String parseError;
     private String winningBidJson;
 
@@ -79,6 +79,7 @@ public class BidResponse {
     ) {
         seatbids = new ArrayList<>();
         usesCache = adUnitConfiguration.isOriginalAdUnit() || PrebidMobile.isUseCacheForReportingWithRenderingApi();
+        this.adUnitConfiguration = adUnitConfiguration;
         parseJson(json);
     }
 
@@ -123,6 +124,10 @@ public class BidResponse {
 
     public String getWinningBidJson() {
         return winningBidJson;
+    }
+
+    public AdUnitConfiguration getAdUnitConfiguration() {
+        return adUnitConfiguration;
     }
 
     private void parseJson(String json) {
@@ -226,22 +231,10 @@ public class BidResponse {
         return false;
     }
 
-    public List<String> getCustomRenderers() {
+    public String gePreferredCustomRenderer() {
         Bid bid = getWinningBid();
         if (bid != null) {
-            String renderersList = bid.getPrebid().getTargeting().get(CUSTOM_RENDERERS_KEY);
-            if(renderersList == null || renderersList.isEmpty()){
-                return null;
-            }
-
-            try {
-                String[] sanitizedList = renderersList.replaceAll("[\\[\\](){}\"]", "").split(","); // TODO not sure about this regex
-                return Arrays.asList(sanitizedList);
-
-            } catch (Exception e){
-                LogUtil.debug(TAG, "No custom render");
-                return null;
-            }
+            return bid.getPrebid().getTargeting().get(CUSTOM_RENDERER_KEY);
         }
         return null;
     }

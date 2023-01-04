@@ -37,7 +37,7 @@ import org.prebid.mobile.rendering.views.AdViewManagerListener;
 import org.prebid.mobile.rendering.views.interstitial.InterstitialManager;
 import org.prebid.mobile.rendering.views.video.VideoViewListener;
 
-public class DefaultDisplayView extends FrameLayout {
+public class PrebidDisplayView extends FrameLayout {
 
     private final static String TAG = DisplayView.class.getSimpleName();
     private static final String CONTENT_DESCRIPTION_AD_VIEW = "adView";
@@ -130,7 +130,7 @@ public class DefaultDisplayView extends FrameLayout {
             notifyListenerClose();
         }
     };
-    public DefaultDisplayView(
+    public PrebidDisplayView(
             @NonNull
                     Context context,
             DisplayViewListener listener,
@@ -158,7 +158,7 @@ public class DefaultDisplayView extends FrameLayout {
             }
         });
     }
-    public DefaultDisplayView(
+    public PrebidDisplayView(
             @NonNull
                     Context context,
             DisplayViewListener listener,

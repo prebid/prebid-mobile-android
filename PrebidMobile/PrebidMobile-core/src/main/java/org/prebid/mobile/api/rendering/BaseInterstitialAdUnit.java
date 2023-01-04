@@ -25,8 +25,9 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.api.rendering.customrenderer.CustomInterstitialRenderer;
-import org.prebid.mobile.api.rendering.customrenderer.InterstitialControllerInterface;
+import org.prebid.mobile.api.rendering.customrenderer.PrebidMobileInterstitialControllerInterface;
+import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer;
+import org.prebid.mobile.api.rendering.customrenderer.PrebidMobilePluginCustomRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -35,7 +36,6 @@ import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerList
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
-import org.prebid.mobile.rendering.utils.helpers.CustomRendererUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -52,7 +52,7 @@ public abstract class BaseInterstitialAdUnit {
 
     private BidLoader bidLoader;
     private BidResponse bidResponse;
-    private InterstitialControllerInterface interstitialController;
+    private PrebidMobileInterstitialControllerInterface interstitialController;
     private InterstitialAdUnitState interstitialAdUnitState = READY_FOR_LOAD;
 
     private final WeakReference<Context> weakContext;
@@ -238,6 +238,8 @@ public abstract class BaseInterstitialAdUnit {
         if (interstitialController != null) {
             interstitialController.destroy();
         }
+
+        PluginRegisterCustomRenderer.getInstance().prebidMobilePluginCustomRenderer.remove(adUnitConfig);
     }
 
     protected void init(AdUnitConfiguration adUnitConfiguration) {
@@ -250,23 +252,19 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     protected void loadPrebidAd() {
-        List<String> renderers = bidResponse.getCustomRenderers();
-        if (renderers != null && renderers.size() > 0) {
-            CustomInterstitialRenderer customRenderer = CustomRendererUtils.getInterstitialRendererBySingleton(renderers);
-            if (customRenderer != null) {
-                interstitialController = customRenderer.getInterstitialController(getContext(), controllerListener);
-            }
+        PrebidMobilePluginCustomRenderer plugin = PluginRegisterCustomRenderer.getInstance().getPluginForPreferredRenderer(bidResponse);
+        if (plugin != null) {
+            interstitialController = plugin.createInterstitialController(getContext(), controllerListener, adUnitConfig, bidResponse);
         }
-
         if (interstitialController == null) {
             notifyErrorListener(new AdException(
                     AdException.INTERNAL_ERROR,
                     "InterstitialController is not defined. Unable to process bid."
             ));
             return;
+        } else {
+            interstitialController.loadAd(adUnitConfig, bidResponse);
         }
-
-        interstitialController.loadAd(adUnitConfig, bidResponse);
     }
 
     @Nullable
@@ -323,6 +321,9 @@ public abstract class BaseInterstitialAdUnit {
         adUnitConfig.setAppContent(content);
     }
 
+    public void setCustomRenderers(List<PrebidMobilePluginCustomRenderer> prebidMobilePluginCustomRenderers) {
+        PluginRegisterCustomRenderer.getInstance().prebidMobilePluginCustomRenderer.put(adUnitConfig, prebidMobilePluginCustomRenderers);
+    }
 
     private BidRequesterListener createBidRequesterListener() {
         return new BidRequesterListener() {
