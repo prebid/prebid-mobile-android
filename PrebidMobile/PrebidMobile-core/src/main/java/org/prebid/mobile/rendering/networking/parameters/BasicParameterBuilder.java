@@ -23,7 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.*;
 import org.prebid.mobile.api.data.AdFormat;
-import org.prebid.mobile.api.rendering.customrenderer.CustomRendererStore;
+import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.PlacementType;
@@ -394,10 +394,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
     }
 
     private ThirdPartyRenderers getCustomRenderers() {
-        Set<String> combinedKeys = new HashSet<>();
-        combinedKeys.addAll(CustomRendererStore.getInstance().customBannerRenderers.keySet());
-        combinedKeys.addAll(CustomRendererStore.getInstance().customInterstitialRenderers.keySet());
-        List<String> renderers = new ArrayList<>(combinedKeys);
-        return new ThirdPartyRenderers(renderers);
+        List<String> customRenderers = PluginRegisterCustomRenderer.getInstance().getRTBListOfCustomRenderersFor(adConfiguration);
+        return new ThirdPartyRenderers(customRenderers);
     }
 }

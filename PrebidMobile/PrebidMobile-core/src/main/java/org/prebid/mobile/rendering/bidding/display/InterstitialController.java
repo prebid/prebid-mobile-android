@@ -21,7 +21,7 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.InterstitialView;
-import org.prebid.mobile.api.rendering.customrenderer.InterstitialControllerInterface;
+import org.prebid.mobile.api.rendering.customrenderer.PrebidMobileInterstitialControllerInterface;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
@@ -30,7 +30,7 @@ import org.prebid.mobile.rendering.models.AdDetails;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
 import org.prebid.mobile.rendering.networking.WinNotifier;
 
-public class InterstitialController implements InterstitialControllerInterface {
+public class InterstitialController implements PrebidMobileInterstitialControllerInterface {
 
     private static final String TAG = InterstitialController.class.getSimpleName();
 

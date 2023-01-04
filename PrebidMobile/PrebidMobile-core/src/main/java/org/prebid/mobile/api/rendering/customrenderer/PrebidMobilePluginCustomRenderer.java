@@ -20,16 +20,31 @@ import android.content.Context;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
-public interface CustomBannerRenderer extends BaseCustomRenderer {
+// TODO add the comments also as Yurii put in the class diagram?
+public interface PrebidMobilePluginCustomRenderer {
 
-    View getBannerAdView(
+    String getName();
+    String getVersion();
+    @Nullable
+    String getToken();
+
+    View createBannerAdView(
             @NonNull Context context,
-            DisplayViewListener listener,
+            @NonNull DisplayViewListener listener,
+            @NonNull AdUnitConfiguration adUnitConfiguration,
+            @NonNull BidResponse response
+    );
+
+    PrebidMobileInterstitialControllerInterface createInterstitialController(
+            @NonNull Context context,
+            @NonNull InterstitialControllerListener listener,
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse response
     );

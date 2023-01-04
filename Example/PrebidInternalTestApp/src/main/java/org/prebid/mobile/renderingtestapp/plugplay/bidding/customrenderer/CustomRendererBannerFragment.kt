@@ -24,11 +24,10 @@ import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener
 import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.api.exceptions.AdException
-import org.prebid.mobile.api.rendering.customrenderer.CustomRendererStore
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
-import org.prebid.mobile.renderingtestapp.utils.ThirdPartyRenderer
+import org.prebid.mobile.renderingtestapp.utils.TotoCustomRenderer
 
 open class CustomRendererBannerFragment : AdFragment(),
     BannerViewListener {
@@ -37,11 +36,6 @@ open class CustomRendererBannerFragment : AdFragment(),
     override val layoutRes = R.layout.fragment_bidding_banner
 
     protected var bannerView: BannerView? = null
-
-    init {
-        val thirdPartyRenderer = ThirdPartyRenderer()
-        CustomRendererStore.getInstance().customBannerRenderers["toto"] = thirdPartyRenderer
-    }
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
@@ -68,6 +62,10 @@ open class CustomRendererBannerFragment : AdFragment(),
         bannerView?.setAutoRefreshDelay(refreshDelay)
         bannerView?.setBannerListener(this)
         viewContainer.addView(bannerView)
+
+        val totoCustomRenderers = listOf(TotoCustomRenderer())
+        bannerView?.setCustomRenderers(totoCustomRenderers)
+
         return bannerView
     }
 
@@ -106,6 +104,5 @@ open class CustomRendererBannerFragment : AdFragment(),
     override fun onDestroyView() {
         super.onDestroyView()
         bannerView?.destroy()
-        CustomRendererStore.getInstance().customBannerRenderers.clear()
     }
 }
