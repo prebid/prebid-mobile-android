@@ -54,6 +54,7 @@ import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -284,7 +285,7 @@ public class BannerView extends FrameLayout {
 
         screenStateReceiver.unregister();
 
-        PluginRegisterCustomRenderer.getInstance().prebidMobilePluginCustomRenderer.remove(adUnitConfig);
+        PluginRegisterCustomRenderer.getInstance().unregisterPlugin(adUnitConfig);
     }
 
     //region ==================== getters and setters
@@ -431,6 +432,9 @@ public class BannerView extends FrameLayout {
         initPrebidRenderingSdk();
         initAdConfiguration();
         initBidLoader();
+        initAdConfiguration();
+        initPrebidMobileCustomRenderer();
+
         screenStateReceiver.register(getContext());
     }
 
@@ -460,6 +464,12 @@ public class BannerView extends FrameLayout {
         eventHandler.setBannerEventListener(bannerEventListener);
         adUnitConfig.setAdFormat(AdFormat.BANNER);
         adUnitConfig.addSizes(eventHandler.getAdSizeArray());
+    }
+
+    private void initPrebidMobileCustomRenderer() {
+        List<PrebidMobilePluginCustomRenderer> renderers = new ArrayList<>();
+        renderers.add(new PrebidCustomRenderer());
+        setCustomRenderers(renderers);
     }
 
     private void displayPrebidView() {
@@ -520,7 +530,7 @@ public class BannerView extends FrameLayout {
     }
 
     public void setCustomRenderers(List<PrebidMobilePluginCustomRenderer> prebidMobilePluginCustomRenderers) {
-        PluginRegisterCustomRenderer.getInstance().prebidMobilePluginCustomRenderer.put(adUnitConfig, prebidMobilePluginCustomRenderers);
+        PluginRegisterCustomRenderer.getInstance().registerPlugin(adUnitConfig, prebidMobilePluginCustomRenderers);
     }
 
     //region ==================== HelperMethods for Unit Tests. Should be used only in tests

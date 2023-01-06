@@ -29,28 +29,39 @@ public class PluginRegisterCustomRenderer {
 
     private static final PluginRegisterCustomRenderer instance = new PluginRegisterCustomRenderer();
 
-    public HashMap<AdUnitConfiguration, List<PrebidMobilePluginCustomRenderer>> prebidMobilePluginCustomRenderer = new HashMap<>();
+    private final HashMap<AdUnitConfiguration, List<PrebidMobilePluginCustomRenderer>> customRenderers = new HashMap<>();
+
+    public void registerPlugin(
+            AdUnitConfiguration adUnitConfiguration,
+            List<PrebidMobilePluginCustomRenderer> prebidMobilePluginCustomRenderers
+    ) {
+        customRenderers.put(adUnitConfiguration, prebidMobilePluginCustomRenderers);
+    }
+
+    public void unregisterPlugin(AdUnitConfiguration adUnitConfiguration) {
+        customRenderers.remove(adUnitConfiguration);
+    }
 
     public List<String> getRTBListOfCustomRenderersFor(AdUnitConfiguration adUnitConfiguration) {
-        List<PrebidMobilePluginCustomRenderer> customRenderers = prebidMobilePluginCustomRenderer.get(adUnitConfiguration);
-        if (customRenderers != null && customRenderers.size() > 0) {
-            List<String> rendererNames = new ArrayList<>();
-            for (int i = 0; i < customRenderers.size(); i++) {
-                String name = customRenderers.get(i).getName();
-                rendererNames.add(name);
+        List<PrebidMobilePluginCustomRenderer> plugins = customRenderers.get(adUnitConfiguration);
+        if (plugins != null && plugins.size() > 0) {
+            List<String> customRendererNames = new ArrayList<>();
+            for (int i = 0; i < plugins.size(); i++) {
+                String name = plugins.get(i).getName();
+                customRendererNames.add(name);
             }
-            return rendererNames;
+            return customRendererNames;
         } else {
             return  null;
         }
     }
 
     public PrebidMobilePluginCustomRenderer getPluginForPreferredRenderer(BidResponse bidResponse) {
-        List<PrebidMobilePluginCustomRenderer> customRenderers = prebidMobilePluginCustomRenderer.get(bidResponse.getAdUnitConfiguration());
-        String preferredRenderer = bidResponse.gePreferredCustomRenderer();
-        if (customRenderers != null && customRenderers.size() > 0) {
-            for (int i = 0; i < customRenderers.size(); i++) {
-                PrebidMobilePluginCustomRenderer plugin = customRenderers.get(i);
+        List<PrebidMobilePluginCustomRenderer> plugins = customRenderers.get(bidResponse.getAdUnitConfiguration());
+        String preferredRenderer = bidResponse.gePreferredCustomRendererName();
+        if (plugins != null && plugins.size() > 0) {
+            for (int i = 0; i < plugins.size(); i++) {
+                PrebidMobilePluginCustomRenderer plugin = plugins.get(i);
                 if (plugin.getName().equals(preferredRenderer)) {
                     return plugin;
                 }

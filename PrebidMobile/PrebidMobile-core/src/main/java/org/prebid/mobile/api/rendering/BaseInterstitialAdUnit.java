@@ -31,13 +31,13 @@ import org.prebid.mobile.api.rendering.customrenderer.PrebidMobilePluginCustomRe
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -239,7 +239,7 @@ public abstract class BaseInterstitialAdUnit {
             interstitialController.destroy();
         }
 
-        PluginRegisterCustomRenderer.getInstance().prebidMobilePluginCustomRenderer.remove(adUnitConfig);
+        PluginRegisterCustomRenderer.getInstance().unregisterPlugin(adUnitConfig);
     }
 
     protected void init(AdUnitConfiguration adUnitConfiguration) {
@@ -248,7 +248,7 @@ public abstract class BaseInterstitialAdUnit {
 
         initPrebidRenderingSdk();
         initBidLoader();
-        initInterstitialController();
+        initPrebidMobileCustomRenderer();
     }
 
     protected void loadPrebidAd() {
@@ -288,12 +288,10 @@ public abstract class BaseInterstitialAdUnit {
         bidLoader = new BidLoader(getContext(), adUnitConfig, bidRequesterListener);
     }
 
-    private void initInterstitialController() {
-        try {
-            interstitialController = new InterstitialController(getContext(), controllerListener);
-        } catch (AdException e) {
-            notifyErrorListener(e);
-        }
+    private void initPrebidMobileCustomRenderer() {
+        List<PrebidMobilePluginCustomRenderer> renderers = new ArrayList<>();
+        renderers.add(new PrebidCustomRenderer());
+        setCustomRenderers(renderers);
     }
 
     private Bid getWinnerBid() {
@@ -322,7 +320,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     public void setCustomRenderers(List<PrebidMobilePluginCustomRenderer> prebidMobilePluginCustomRenderers) {
-        PluginRegisterCustomRenderer.getInstance().prebidMobilePluginCustomRenderer.put(adUnitConfig, prebidMobilePluginCustomRenderers);
+        PluginRegisterCustomRenderer.getInstance().registerPlugin(adUnitConfig, prebidMobilePluginCustomRenderers);
     }
 
     private BidRequesterListener createBidRequesterListener() {
