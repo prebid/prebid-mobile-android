@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile.api.rendering.customrenderer;
+package org.prebid.mobile.api.rendering;
 
 import android.content.Context;
 import android.view.View;
@@ -22,32 +22,57 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.customrenderer.PrebidMobileInterstitialControllerInterface;
+import org.prebid.mobile.api.rendering.customrenderer.PrebidMobilePluginCustomRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
-// TODO add the comments also as Yurii put in the class diagram?
-public interface PrebidMobilePluginCustomRenderer {
+public class PrebidCustomRenderer implements PrebidMobilePluginCustomRenderer {
 
-    String getName();
-    String getVersion();
+    @Override
+    public String getName() {
+        return "PrebidMobile";
+    }
+
+    @Override
+    public String getVersion() {
+        return BuildConfig.VERSION;
+    }
+
     @Nullable
-    String getToken();
+    @Override
+    public String getToken() {
+        return null;
+    }
 
-    // TODO what is the good reason to check here if the it's supported for a specific ad unit config
-
-    View createBannerAdView(
+    @Override
+    public View createBannerAdView(
             @NonNull Context context,
             @NonNull DisplayViewListener displayViewListener,
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse bidResponse
-    );
+    ) {
+        return new PrebidDisplayView(context, displayViewListener, adUnitConfiguration, bidResponse);
+    }
 
-    PrebidMobileInterstitialControllerInterface createInterstitialController(
+    @Override
+    public PrebidMobileInterstitialControllerInterface createInterstitialController(
             @NonNull Context context,
             @NonNull InterstitialControllerListener interstitialControllerListener,
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse bidResponse
-    );
+    ) {
+        try {
+            return new InterstitialController(context, interstitialControllerListener);
+        } catch (AdException e) {
+            LogUtil.error("message:" + e.getMessage());
+            return null;
+        }
+    }
 }

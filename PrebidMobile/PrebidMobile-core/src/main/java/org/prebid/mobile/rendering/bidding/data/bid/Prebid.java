@@ -70,7 +70,9 @@ public class Prebid {
         prebid.type = jsonObject.optString("type");
         parseEvents(prebid, jsonObject.optJSONObject("events"));
         toHashMap(prebid.targeting, jsonObject.optJSONObject("targeting"));
-        prebid.targeting.put(CUSTOM_RENDERER_KEY, "Toto"); // TODO mock should not be merged / the right field should be defined
+//        prebid.targeting.put(CUSTOM_RENDERER_KEY, "Toto"); // TODO mock should not be merged / the right field should be defined
+        // TODO this is tricky, if we will use custom renderer as default rendering can we still rely in a key on the prebid response?
+        prebid.targeting.put(CUSTOM_RENDERER_KEY, "PrebidMobile");
         return prebid;
     }
 

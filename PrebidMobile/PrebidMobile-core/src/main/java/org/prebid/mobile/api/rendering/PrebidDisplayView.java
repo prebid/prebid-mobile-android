@@ -93,8 +93,7 @@ public class PrebidDisplayView extends FrameLayout {
     private final VideoViewListener videoViewListener = new VideoViewListener() {
         @Override
         public void onLoaded(
-                @NonNull
-                        VideoView videoAdView,
+                @NonNull VideoView videoAdView,
                 AdDetails adDetails
         ) {
             videoAdView.setContentDescription(CONTENT_DESCRIPTION_AD_VIEW);
@@ -102,42 +101,35 @@ public class PrebidDisplayView extends FrameLayout {
         }
         @Override
         public void onLoadFailed(
-                @NonNull
-                        VideoView videoAdView,
+                @NonNull VideoView videoAdView,
                 AdException error
         ) {
             notifyListenerError(error);
         }
         @Override
         public void onDisplayed(
-                @NonNull
-                        VideoView videoAdView
+                @NonNull VideoView videoAdView
         ) {
             notifyListenerDisplayed();
         }
         @Override
         public void onClickThroughOpened(
-                @NonNull
-                        VideoView videoAdView
+                @NonNull VideoView videoAdView
         ) {
             notifyListenerClicked();
         }
         @Override
         public void onClickThroughClosed(
-                @NonNull
-                        VideoView videoAdView
+                @NonNull VideoView videoAdView
         ) {
             notifyListenerClose();
         }
     };
     public PrebidDisplayView(
-            @NonNull
-                    Context context,
+            @NonNull Context context,
             DisplayViewListener listener,
-            @NonNull
-                    AdUnitConfiguration adUnitConfiguration,
-            @NonNull
-                    BidResponse response
+            @NonNull AdUnitConfiguration adUnitConfiguration,
+            @NonNull BidResponse response
     ) {
         super(context);
         interstitialManager = new InterstitialManager();
@@ -159,13 +151,10 @@ public class PrebidDisplayView extends FrameLayout {
         });
     }
     public PrebidDisplayView(
-            @NonNull
-                    Context context,
+            @NonNull Context context,
             DisplayViewListener listener,
-            @NonNull
-                    AdUnitConfiguration adUnitConfiguration,
-            @NonNull
-                    String responseId
+            @NonNull AdUnitConfiguration adUnitConfiguration,
+            @NonNull String responseId
     ) throws AdException {
         this(context, listener, adUnitConfiguration, getBidResponseFromCache(responseId));
     }

@@ -228,7 +228,7 @@ public class BidResponse {
         return false;
     }
 
-    public String gePreferredCustomRenderer() {
+    public String gePreferredCustomRendererName() {
         Bid bid = getWinningBid();
         if (bid != null) {
             return bid.getPrebid().getTargeting().get(CUSTOM_RENDERER_KEY);

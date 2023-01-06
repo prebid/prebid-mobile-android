@@ -65,14 +65,14 @@ public class TotoCustomRenderer implements PrebidMobilePluginCustomRenderer {
     @Override
     public View createBannerAdView(
             @NonNull Context context,
-            @NonNull DisplayViewListener listener,
+            @NonNull DisplayViewListener displayViewListener,
             @NonNull AdUnitConfiguration adUnitConfiguration,
-            @NonNull BidResponse response
+            @NonNull BidResponse bidResponse
     ) {
 
         InReadAdView inReadAdView = new InReadAdView(context);
         inReadAdView.setLayoutParams(new ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT));
-        getAdd(inReadAdView, listener);
+        getAdd(inReadAdView, displayViewListener);
 
         return inReadAdView;
     }
@@ -80,7 +80,7 @@ public class TotoCustomRenderer implements PrebidMobilePluginCustomRenderer {
     @Override
     public PrebidMobileInterstitialControllerInterface createInterstitialController(
             @NonNull Context context,
-            @NonNull InterstitialControllerListener listener,
+            @NonNull InterstitialControllerListener interstitialControllerListener,
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse response
     ) {
@@ -88,13 +88,13 @@ public class TotoCustomRenderer implements PrebidMobilePluginCustomRenderer {
             @Override
             public void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
                 Toast.makeText(context, "Load Interstitial Ad", Toast.LENGTH_LONG).show();
-                listener.onInterstitialReadyForDisplay();
+                interstitialControllerListener.onInterstitialReadyForDisplay();
             }
 
             @Override
             public void show() {
                 Toast.makeText(context, "Show Interstitial Ad", Toast.LENGTH_LONG).show();
-                listener.onInterstitialDisplayed();
+                interstitialControllerListener.onInterstitialDisplayed();
             }
 
             @Override
