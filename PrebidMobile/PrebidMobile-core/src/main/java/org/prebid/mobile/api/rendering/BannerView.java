@@ -433,7 +433,6 @@ public class BannerView extends FrameLayout {
         initAdConfiguration();
         initBidLoader();
         initAdConfiguration();
-        initPrebidMobileCustomRenderer();
 
         screenStateReceiver.register(getContext());
     }
@@ -464,12 +463,6 @@ public class BannerView extends FrameLayout {
         eventHandler.setBannerEventListener(bannerEventListener);
         adUnitConfig.setAdFormat(AdFormat.BANNER);
         adUnitConfig.addSizes(eventHandler.getAdSizeArray());
-    }
-
-    private void initPrebidMobileCustomRenderer() {
-        List<PrebidMobilePluginCustomRenderer> renderers = new ArrayList<>();
-        renderers.add(new PrebidCustomRenderer());
-        setCustomRenderers(renderers);
     }
 
     private void displayPrebidView() {

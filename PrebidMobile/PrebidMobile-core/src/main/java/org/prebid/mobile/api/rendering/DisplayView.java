@@ -51,10 +51,8 @@ public class DisplayView extends FrameLayout {
             if (plugin != null) {
                 adUnitConfiguration.modifyUsingBidResponse(bidResponse);
                 adView = plugin.createBannerAdView(context, displayViewListener, adUnitConfiguration, bidResponse);
-            } else {
-                adView = new PrebidDisplayView(context, displayViewListener, adUnitConfiguration, bidResponse);
+                addView(adView);
             }
-            addView(adView);
         });
     }
 

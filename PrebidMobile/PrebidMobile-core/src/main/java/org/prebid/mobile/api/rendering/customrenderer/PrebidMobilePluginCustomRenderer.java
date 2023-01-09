@@ -27,7 +27,6 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
-// TODO add the comments also as Yurii put in the class diagram?
 public interface PrebidMobilePluginCustomRenderer {
 
     String getName();
@@ -35,8 +34,8 @@ public interface PrebidMobilePluginCustomRenderer {
     @Nullable
     String getToken();
 
-    // TODO what is the good reason to check here if the it's supported for a specific ad unit config
-
+    // Creates and returns Banner View for a given Bid Response
+    // Returns nil in the case of an internal error
     View createBannerAdView(
             @NonNull Context context,
             @NonNull DisplayViewListener displayViewListener,
@@ -44,6 +43,8 @@ public interface PrebidMobilePluginCustomRenderer {
             @NonNull BidResponse bidResponse
     );
 
+    // Creates and returns an instance of a custom class which implements PrebidMobileInterstitialControllerInterface for a given bid response
+    // Returns nil in the case of an internal error
     PrebidMobileInterstitialControllerInterface createInterstitialController(
             @NonNull Context context,
             @NonNull InterstitialControllerListener interstitialControllerListener,
