@@ -33,7 +33,7 @@ import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
-public class PrebidCustomRenderer implements PrebidMobilePluginCustomRenderer {
+public class PrebidRenderer implements PrebidMobilePluginCustomRenderer {
 
     @Override
     public String getName() {

@@ -19,8 +19,8 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.customrenderer
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
-import org.prebid.mobile.api.rendering.PrebidCustomRenderer
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
+import org.prebid.mobile.renderingtestapp.utils.TotoCustomRenderer
 import java.util.*
 
 open class CustomRendererInterstitialFragment : BaseBidInterstitialFragment() {
@@ -40,7 +40,7 @@ open class CustomRendererInterstitialFragment : BaseBidInterstitialFragment() {
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
         interstitialAdUnit?.setMinSizePercentage(AdSize(30, 30))
 
-        val prebidCustomRenderers = listOf(PrebidCustomRenderer())
-        interstitialAdUnit?.setCustomRenderers(prebidCustomRenderers)
+        val customRenderer = listOf(TotoCustomRenderer())
+        interstitialAdUnit?.setCustomRenderers(customRenderer)
     }
 }

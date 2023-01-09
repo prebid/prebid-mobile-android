@@ -16,6 +16,7 @@
 
 package org.prebid.mobile.api.rendering.customrenderer;
 
+import org.prebid.mobile.api.rendering.PrebidRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
@@ -30,6 +31,7 @@ public class PluginRegisterCustomRenderer {
     private static final PluginRegisterCustomRenderer instance = new PluginRegisterCustomRenderer();
 
     private final HashMap<AdUnitConfiguration, List<PrebidMobilePluginCustomRenderer>> customRenderers = new HashMap<>();
+    private final PrebidRenderer prebidRenderer = new PrebidRenderer();
 
     public void registerPlugin(
             AdUnitConfiguration adUnitConfiguration,
@@ -42,6 +44,7 @@ public class PluginRegisterCustomRenderer {
         customRenderers.remove(adUnitConfiguration);
     }
 
+    // Returns the list of available renderers for the given ad unit for RT request
     public List<String> getRTBListOfCustomRenderersFor(AdUnitConfiguration adUnitConfiguration) {
         List<PrebidMobilePluginCustomRenderer> plugins = customRenderers.get(adUnitConfiguration);
         if (plugins != null && plugins.size() > 0) {
@@ -56,6 +59,8 @@ public class PluginRegisterCustomRenderer {
         }
     }
 
+    // Returns the registered renderer according to the preferred renderer name in the bid response
+    // If no preferred rendered is found, it returns PrebidRenderer to perform default behavior
     public PrebidMobilePluginCustomRenderer getPluginForPreferredRenderer(BidResponse bidResponse) {
         List<PrebidMobilePluginCustomRenderer> plugins = customRenderers.get(bidResponse.getAdUnitConfiguration());
         String preferredRenderer = bidResponse.gePreferredCustomRendererName();
@@ -67,7 +72,8 @@ public class PluginRegisterCustomRenderer {
                 }
             }
         }
-        return null;
+
+        return prebidRenderer;
     }
 
     private PluginRegisterCustomRenderer() {
