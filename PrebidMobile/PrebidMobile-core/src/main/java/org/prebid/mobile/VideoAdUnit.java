@@ -18,6 +18,7 @@ package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.rendering.models.PlacementType;
 
 import java.util.HashSet;
 

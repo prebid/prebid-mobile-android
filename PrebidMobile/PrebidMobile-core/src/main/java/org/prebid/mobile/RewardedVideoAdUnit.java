@@ -19,6 +19,7 @@ package org.prebid.mobile;
 import androidx.annotation.NonNull;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.rendering.models.AdPosition;
+import org.prebid.mobile.rendering.models.PlacementType;
 
 public class RewardedVideoAdUnit extends VideoBaseAdUnit {
 
@@ -26,6 +27,7 @@ public class RewardedVideoAdUnit extends VideoBaseAdUnit {
         super(configId, AdFormat.VAST);
         configuration.setRewarded(true);
         configuration.setAdPosition(AdPosition.FULLSCREEN);
+        configuration.setPlacementType(PlacementType.INTERSTITIAL);
     }
 
 }

@@ -19,6 +19,7 @@ package org.prebid.mobile;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.rendering.models.PlacementType;
 
 import java.util.List;
 
@@ -105,6 +106,12 @@ public abstract class VideoBaseAdUnit extends AdUnit {
          */
         @Nullable
         private Signals.Placement placement;
+
+        /**
+         Placement type for the impression.
+         */
+        @Nullable
+        private Integer linearity;
 
         //Getters and setters
         @Nullable
@@ -195,6 +202,15 @@ public abstract class VideoBaseAdUnit extends AdUnit {
 
         public void setPlacement(@Nullable Signals.Placement placement) {
             this.placement = placement;
+        }
+
+        @Nullable
+        public Integer getLinearity() {
+            return linearity;
+        }
+
+        public void setLinearity(@Nullable Integer linearity) {
+            this.linearity = linearity;
         }
     }
 
