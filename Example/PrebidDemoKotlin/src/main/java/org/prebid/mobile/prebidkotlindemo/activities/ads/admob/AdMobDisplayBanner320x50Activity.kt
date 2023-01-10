@@ -81,7 +81,7 @@ class AdMobDisplayBanner320x50Activity : BaseAdActivity() {
             mediationUtils
         )
         adUnit?.setRefreshInterval(refreshTimeSeconds / 1000)
-        adUnit?.fetchDemand { result ->
+        adUnit?.fetchDemand { _ ->
             bannerView?.loadAd(request)
         }
     }

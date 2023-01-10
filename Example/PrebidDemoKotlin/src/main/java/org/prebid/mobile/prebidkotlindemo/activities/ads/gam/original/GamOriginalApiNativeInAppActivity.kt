@@ -67,7 +67,7 @@ class GamOriginalApiNativeInAppActivity : BaseAdActivity() {
 
     private fun createAd() {
         // 1. Create NativeAdUnit
-        adUnit = NativeAdUnit(CONFIG_ID);
+        adUnit = NativeAdUnit(CONFIG_ID)
         adUnit?.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC)
         adUnit?.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED)
         adUnit?.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL)
@@ -150,7 +150,7 @@ class GamOriginalApiNativeInAppActivity : BaseAdActivity() {
             .forNativeAd(onUnifiedAdLoaded)
             .forCustomFormatAd(
                 CUSTOM_FORMAT_ID, onCustomAdLoaded
-            ) { customAd: NativeCustomFormatAd?, s: String? -> }
+            ) { _: NativeCustomFormatAd?, _: String? -> }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                     super.onAdFailedToLoad(loadAdError)

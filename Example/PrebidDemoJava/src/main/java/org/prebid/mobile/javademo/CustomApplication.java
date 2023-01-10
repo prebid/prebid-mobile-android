@@ -65,13 +65,13 @@ public class CustomApplication extends Application {
 
     private void initPrebidExternalUserIds() {
         ArrayList<ExternalUserId> externalUserIdArray = new ArrayList<>();
-        externalUserIdArray.add(new ExternalUserId("adserver.org", "111111111111", null, new HashMap() {{
+        externalUserIdArray.add(new ExternalUserId("adserver.org", "111111111111", null, new HashMap<String, Object>() {{
             put("rtiPartner", "TDID");
         }}));
         externalUserIdArray.add(new ExternalUserId("netid.de", "999888777", null, null));
         externalUserIdArray.add(new ExternalUserId("criteo.com", "_fl7bV96WjZsbiUyQnJlQ3g4ckh5a1N", null, null));
         externalUserIdArray.add(new ExternalUserId("liveramp.com", "AjfowMv4ZHZQJFM8TpiUnYEyA81Vdgg", null, null));
-        externalUserIdArray.add(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap() {{
+        externalUserIdArray.add(new ExternalUserId("sharedid.org", "111111111111", 1, new HashMap<String, Object>() {{
             put("third", "01ERJWE5FS4RAZKG6SKQ3ZYSKV");
         }}));
         PrebidMobile.setExternalUserIds(externalUserIdArray);

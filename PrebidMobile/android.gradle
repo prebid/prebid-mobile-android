@@ -2,14 +2,14 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 android {
-    compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
+    setCompileSdkVersion(rootProject.prebidSdkCompileVersion)
+    setBuildToolsVersion(rootProject.prebidSdkBuildToolsVersion)
 
     defaultConfig {
-        minSdkVersion rootProject.minSDKVersion
-        targetSdkVersion rootProject.targetSDKVersion
-        versionCode rootProject.prebidVersionCode
-        versionName rootProject.prebidVersionName
+        minSdkVersion rootProject.prebidSdkMinVersion
+        targetSdkVersion rootProject.prebidSdkTargetVersion
+        versionCode 1
+        versionName rootProject.prebidSdkVersionName
     }
 
     buildTypes {
@@ -48,10 +48,5 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/INDEX.LIST'
         exclude 'META-INF/LICENSE'
-    }
-
-    dexOptions {
-        preDexLibraries = false
-        javaMaxHeapSize "2g"
     }
 }

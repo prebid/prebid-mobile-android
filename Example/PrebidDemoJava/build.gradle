@@ -1,42 +1,21 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion rootProject.buildToolsVersion
-
+    setCompileSdkVersion(32)
+    setBuildToolsVersion("30.0.3")
     defaultConfig {
-        applicationId "org.prebid.mobile.javademo"
         minSdkVersion 19
-        targetSdkVersion rootProject.targetSDKVersion
-        versionCode rootProject.prebidVersionCode
-        versionName rootProject.prebidVersionName
-
+        targetSdkVersion 32
+        versionCode 1
+        versionName "1.0.0"
+        applicationId "org.prebid.mobile.javademo"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
-    flavorDimensions "version"
-    productFlavors {
-        sourceCode {
-            dimension "version"
-        }
-        localJar {
-            dimension "version"
-        }
-        maven {
-            dimension "version"
-        }
-    }
-    lintOptions {
-        abortOnError false
-    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-    }
-    buildTypes {
-        debug {
-            minifyEnabled false
-        }
     }
     buildFeatures {
         dataBinding true
