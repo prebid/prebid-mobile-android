@@ -27,7 +27,6 @@ public class VideoAdUnit extends VideoBaseAdUnit {
     public VideoAdUnit(@NonNull String configId, int width, int height) {
         super(configId, AdFormat.VAST);
         configuration.addSize(new AdSize(width, height));
-        configuration.setPlacementType(PlacementType.IN_BANNER);
     }
 
     AdSize getAdSize() {

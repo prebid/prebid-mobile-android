@@ -25,6 +25,7 @@ import org.prebid.mobile.*;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
+import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Imp;
@@ -201,7 +202,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
     private void setVideoImpValues(Imp imp) {
         Video video = new Video();
-
         if (adConfiguration.isOriginalAdUnit()) {
             VideoBaseAdUnit.Parameters videoParameters = adConfiguration.getVideoParameters();
             if (videoParameters != null) {
@@ -213,9 +213,10 @@ public class BasicParameterBuilder extends ParameterBuilder {
                 video.linearity = videoParameters.getLinearity();
                 if (videoParameters.getPlacement() != null) {
                     video.placement = videoParameters.getPlacement().getValue();
-                } else if (adConfiguration.getPlacementTypeValue() != PlacementType.IN_BANNER.getValue()){
-                    video.placement = PlacementType.INTERSTITIAL.getValue();
+                } else if (adConfiguration.isPlacementTypeValid()){
+                    video.placement = adConfiguration.getPlacementTypeValue();
                 }
+
                 if (videoParameters.getStartDelay() != null) {
                     video.startDelay = videoParameters.getStartDelay().getValue();
                 }
@@ -261,7 +262,9 @@ public class BasicParameterBuilder extends ParameterBuilder {
                     }
                     video.protocols = protocolsArray;
                 }
-
+            }
+            if (video.placement == null && adConfiguration.isPlacementTypeValid()) {
+                video.placement = adConfiguration.getPlacementTypeValue();
             }
         } else {
             //Common values for all video reqs

@@ -26,6 +26,7 @@ public class VideoInterstitialAdUnit extends VideoBaseAdUnit {
     public VideoInterstitialAdUnit(@NonNull String configId) {
         super(configId, AdFormat.VAST);
         configuration.setAdPosition(AdPosition.FULLSCREEN);
+        configuration.setPlacementType(PlacementType.INTERSTITIAL);
     }
 
 }
