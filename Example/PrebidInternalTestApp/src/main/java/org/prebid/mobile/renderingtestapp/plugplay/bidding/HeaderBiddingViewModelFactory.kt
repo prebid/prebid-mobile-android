@@ -25,7 +25,8 @@ class HeaderBiddingViewModelFactory(
     private val adCategories: Array<String>,
     private val gdprHelper: GdprHelper
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(HeaderBiddingViewModel::class.java)) {
             return HeaderBiddingViewModel(integrationCategories, adCategories, gdprHelper) as T
         }
