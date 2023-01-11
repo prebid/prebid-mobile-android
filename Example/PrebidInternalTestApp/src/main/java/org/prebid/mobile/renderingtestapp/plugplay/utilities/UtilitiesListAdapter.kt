@@ -19,8 +19,9 @@ package org.prebid.mobile.renderingtestapp.plugplay.utilities
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.simple_list_item.view.*
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.data.SimpleListItem
 
@@ -46,8 +47,9 @@ class UtilitiesListAdapter(private val handleItemClick: (action: Int) -> Unit) :
 
     class UtilitiesListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindView(simpleListItem: SimpleListItem, handleItemClick: (action: Int) -> Unit) {
-            itemView.lbl_text.text = simpleListItem.title
-            itemView.listitem_demo.setOnClickListener { handleItemClick(simpleListItem.action) }
+            itemView.findViewById<TextView>(R.id.lbl_text).text = simpleListItem.title
+            itemView.findViewById<RelativeLayout>(R.id.listitem_demo)
+                .setOnClickListener { handleItemClick(simpleListItem.action) }
         }
     }
 }

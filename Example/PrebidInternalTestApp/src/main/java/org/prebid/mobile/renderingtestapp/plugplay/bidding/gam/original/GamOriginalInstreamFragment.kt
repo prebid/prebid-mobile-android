@@ -2,6 +2,7 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original
 
 import android.net.Uri
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.ima.ImaAdsLoader
@@ -12,7 +13,6 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import kotlinx.android.synthetic.main.fragment_bidding_banner_video.*
 import org.prebid.mobile.*
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
@@ -61,7 +61,7 @@ class GamOriginalInstreamFragment : AdFragment() {
     private fun createAd() {
         playerView = PlayerView(requireContext())
         val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 600)
-        viewContainer.addView(playerView, params)
+        findView<RelativeLayout>(R.id.viewContainer)?.addView(playerView, params)
 
         val parameters = VideoBaseAdUnit.Parameters()
         parameters.mimes = listOf("video/mp4")

@@ -20,9 +20,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import kotlinx.android.synthetic.main.fragment_native.*
-import kotlinx.android.synthetic.main.lyt_native_ad.*
-import kotlinx.android.synthetic.main.lyt_native_in_app_events.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import org.prebid.mobile.PrebidNativeAd
 import org.prebid.mobile.PrebidNativeAdEventListener
 import org.prebid.mobile.api.data.FetchDemandResult
@@ -32,6 +33,7 @@ import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.loadImage
+import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 open class PpmNativeFragment : AdFragment() {
 
@@ -45,7 +47,11 @@ open class PpmNativeFragment : AdFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (layoutRes == R.layout.fragment_native) {
-            layoutInflater.inflate(getEventButtonViewId(), contentFragmentNative, true)
+            layoutInflater.inflate(
+                getEventButtonViewId(),
+                findView<ConstraintLayout>(R.id.contentFragmentNative)!!,
+                true
+            )
         }
     }
 
@@ -60,18 +66,18 @@ open class PpmNativeFragment : AdFragment() {
     override fun loadAd() {
         nativeAdUnit?.fetchDemand {
             if (it != FetchDemandResult.SUCCESS) {
-                btnFetchDemandResultFailure?.isEnabled = true
+                findView<EventCounterView>(R.id.btnFetchDemandResultFailure)?.isEnabled = true
                 return@fetchDemand
             }
-            btnFetchDemandResultSuccess?.isEnabled = true
+            findView<EventCounterView>(R.id.btnFetchDemandResultSuccess)?.isEnabled = true
 
             val nativeAd = NativeAdProvider.getNativeAd(extras)
             if (nativeAd == null) {
-                btnGetNativeAdResultFailure?.isEnabled = true
+                findView<EventCounterView>(R.id.btnGetNativeAdResultFailure)?.isEnabled = true
                 return@fetchDemand
             }
 
-            btnGetNativeAdResultSuccess?.isEnabled = true
+            findView<EventCounterView>(R.id.btnGetNativeAdResultSuccess)?.isEnabled = true
             inflateViewContent(nativeAd)
         }
     }
@@ -87,45 +93,45 @@ open class PpmNativeFragment : AdFragment() {
 
     protected open fun inflateViewContent(nativeAd: PrebidNativeAd) {
         nativeAd.registerViewList(
-            adContainer,
+            findView(R.id.adContainer),
             listOf(
-                tvNativeTitle,
-                tvNativeBody,
-                tvNativeBrand,
-                btnNativeAction,
-                ivNativeMain,
-                ivNativeIcon
+                findView<View>(R.id.tvNativeTitle),
+                findView<View>(R.id.tvNativeBody),
+                findView<View>(R.id.tvNativeBrand),
+                findView<View>(R.id.btnNativeAction),
+                findView<View>(R.id.ivNativeMain),
+                findView<View>(R.id.ivNativeIcon)
             ),
             createNativeListener()
         )
 
-        tvNativeTitle?.text = nativeAd.title
-        tvNativeBody?.text = nativeAd.description
-        tvNativeBrand?.text = nativeAd.sponsoredBy
-        btnNativeAction?.text = nativeAd.callToAction
+        findView<TextView>(R.id.tvNativeTitle)?.text = nativeAd.title
+        findView<TextView>(R.id.tvNativeBody)?.text = nativeAd.description
+        findView<TextView>(R.id.tvNativeBrand)?.text = nativeAd.sponsoredBy
+        findView<Button>(R.id.btnNativeAction)?.text = nativeAd.callToAction
 
         if (nativeAd.imageUrl.isNotBlank()) {
-            loadImage(ivNativeMain, nativeAd.imageUrl)
+            loadImage(findView<ImageView>(R.id.ivNativeMain)!!, nativeAd.imageUrl)
         }
         if (nativeAd.iconUrl.isNotBlank()) {
-            loadImage(ivNativeIcon, nativeAd.iconUrl)
+            loadImage(findView<ImageView>(R.id.ivNativeIcon)!!, nativeAd.iconUrl)
         }
     }
 
     protected fun createNativeListener(): PrebidNativeAdEventListener {
         return object : PrebidNativeAdEventListener {
             override fun onAdClicked() {
-                btnAdClicked?.isEnabled = true
+                findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
             }
 
             override fun onAdImpression() {
                 doInMainThread {
-                    btnAdImpression?.isEnabled = true
+                    findView<EventCounterView>(R.id.btnAdImpression)?.isEnabled = true
                 }
             }
 
             override fun onAdExpired() {
-                btnAdExpired?.isEnabled = true
+                findView<EventCounterView>(R.id.btnAdExpired)?.isEnabled = true
             }
         }
     }

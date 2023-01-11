@@ -24,7 +24,6 @@ import org.prebid.mobile.renderingtestapp.data.Tag
 import org.prebid.mobile.renderingtestapp.utils.ConfigurationViewSettings
 import org.prebid.mobile.renderingtestapp.utils.DemoItemProvider
 import org.prebid.mobile.renderingtestapp.utils.GdprHelper
-import org.prebid.mobile.renderingtestapp.utils.SourcePicker
 
 class HeaderBiddingViewModel(
         private val integrationCategories: Array<String>,
@@ -63,7 +62,7 @@ class HeaderBiddingViewModel(
 
     fun onSearchTextChanged(newQuery: String?) {
         if (newQuery != null) {
-            searchQuery = newQuery.toLowerCase()
+            searchQuery = newQuery.lowercase()
             updateDemoList()
         }
     }
@@ -132,6 +131,6 @@ class HeaderBiddingViewModel(
     }
 
     private fun containsSearchQuery(data: String): Boolean {
-        return data.toLowerCase().contains(searchQuery)
+        return data.lowercase().contains(searchQuery)
     }
 }

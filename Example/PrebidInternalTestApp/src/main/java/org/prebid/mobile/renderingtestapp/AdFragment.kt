@@ -28,13 +28,13 @@ import android.widget.FrameLayout
 import android.widget.ProgressBar
 import androidx.preference.PreferenceManager
 import androidx.test.espresso.idling.CountingIdlingResource
-import kotlinx.android.synthetic.main.events_bids.*
 import org.prebid.mobile.*
 import org.prebid.mobile.api.mediation.MediationNativeAdUnit
 import org.prebid.mobile.renderingtestapp.plugplay.config.*
 import org.prebid.mobile.renderingtestapp.utils.BaseFragment
 import org.prebid.mobile.renderingtestapp.utils.ConfigurationViewSettings
 import org.prebid.mobile.renderingtestapp.utils.OpenRtbConfigs
+import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 abstract class AdFragment : BaseFragment() {
 
@@ -94,11 +94,11 @@ abstract class AdFragment : BaseFragment() {
     }
 
     protected fun resetEventButtons() {
-        btnAdFailed?.isEnabled = false
-        btnAdLoaded?.isEnabled = false
-        btnAdClicked?.isEnabled = false
-        btnAdDisplayed?.isEnabled = false
-        btnAdClosed?.isEnabled = false
+        findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = false
+        findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = false
+        findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = false
+        findView<EventCounterView>(R.id.btnAdDisplayed)?.isEnabled = false
+        findView<EventCounterView>(R.id.btnAdClosed)?.isEnabled = false
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

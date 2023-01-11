@@ -2,14 +2,15 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.admob
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.RelativeLayout
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.admob.AdMobMediationBannerUtils
 import org.prebid.mobile.admob.PrebidBannerAdapter
 import org.prebid.mobile.api.mediation.MediationBannerAdUnit
+import org.prebid.mobile.renderingtestapp.R
 import com.google.android.gms.ads.AdSize as GamAdSize
 
 
@@ -28,7 +29,7 @@ class AdMobBannerFlexibleFragment : AdMobBannerFragment() {
         bannerView?.setAdSize(GamAdSize.getLandscapeInlineAdaptiveBannerAdSize(requireContext(), GamAdSize.FULL_WIDTH))
         bannerView?.adUnitId = adUnitId
         bannerView?.adListener = getListener()
-        viewContainer.addView(bannerView)
+        findView<RelativeLayout>(R.id.viewContainer)?.addView(bannerView)
 
         adRequestExtras = Bundle()
         adRequest = AdRequest

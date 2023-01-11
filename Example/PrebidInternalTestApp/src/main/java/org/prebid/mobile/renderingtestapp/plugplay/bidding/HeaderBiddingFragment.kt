@@ -19,12 +19,14 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding
 import android.os.Bundle
 import android.view.View
 import android.widget.SearchView
+import android.widget.ToggleButton
+import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
-import kotlinx.android.synthetic.main.fragment_main.*
+import androidx.recyclerview.widget.RecyclerView
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.data.DemoItem
@@ -71,7 +73,7 @@ class HeaderBiddingFragment : BaseFragment() {
             ViewModelProviders.of(this, viewModelFactory)[HeaderBiddingViewModel::class.java]
         viewModel.navigateToDemoExample.observe(this, Observer {
             it?.let {
-                searchDemos.clearFocus()
+                findView<SearchView>(R.id.searchDemos)?.clearFocus()
                 it.bundle?.putString(getString(R.string.key_title), it.label)
                 findNavController().navigate(it.action, it.bundle)
                 viewModel.onDemoItemNavigated()
@@ -112,30 +114,30 @@ class HeaderBiddingFragment : BaseFragment() {
     }
 
     private fun initSegmentControlBase(rootView: View, viewId: Int, categories: Array<String>): SegmentedControl<String> {
-        val segmentedControl = rootView.findViewById<SegmentedControl<String>>(viewId)
-        segmentedControl?.setAdapter(SegmentAdapterReImpl())
-        segmentedControl?.addSegments(categories)
-        segmentedControl?.setColumnCount(categories.size)
-        segmentedControl?.notifyConfigIsChanged()
+        val segmentedControl = findView<SegmentedControl<String>>(viewId)!!
+        segmentedControl.setAdapter(SegmentAdapterReImpl())
+        segmentedControl.addSegments(categories)
+        segmentedControl.setColumnCount(categories.size)
+        segmentedControl.notifyConfigIsChanged()
 
         return segmentedControl
     }
 
     private fun initListView() {
-        listDemos.adapter = DemoListAdapter(object : DemoItemClickListener {
+        findView<RecyclerView>(R.id.listDemos)?.adapter = DemoListAdapter(object : DemoItemClickListener {
             override fun onClick(item: DemoItem) {
                 viewModel.onDemoItemClicked(item)
             }
         })
         viewModel.demoItems.observe(this, Observer {
             if (it != null) {
-                (listDemos.adapter as DemoListAdapter).submitList(it)
+                (findView<RecyclerView>(R.id.listDemos)?.adapter as DemoListAdapter?)?.submitList(it)
             }
         })
     }
 
     private fun initSearchView() {
-        searchDemos.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        findView<SearchView>(R.id.searchDemos)?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
@@ -150,24 +152,27 @@ class HeaderBiddingFragment : BaseFragment() {
 
 
     private fun initGdprSwitch() {
-        switchEnableGdpr.isChecked = viewModel.isSubjectToGdpr()
-        switchEnableGdpr.setOnCheckedChangeListener { _, isChecked ->
+        val switch = findView<SwitchCompat>(R.id.switchEnableGdpr) ?: return
+        switch.isChecked = viewModel.isSubjectToGdpr()
+        switch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onGdprSwitchStateChanged(isChecked)
         }
     }
 
     private fun initCacheSwitch() {
-        switchEnableCaching.isChecked = PrebidMobile.isUseCacheForReportingWithRenderingApi()
-        switchEnableCaching.setOnCheckedChangeListener { _, isChecked ->
+        val switch = findView<SwitchCompat>(R.id.switchEnableCaching) ?: return
+        switch.isChecked = PrebidMobile.isUseCacheForReportingWithRenderingApi()
+        switch.setOnCheckedChangeListener { _, isChecked ->
             PrebidMobile.setUseCacheForReportingWithRenderingApi(isChecked)
         }
     }
 
     private fun initConfigurationToggleButton() {
+        val button = findView<ToggleButton>(R.id.toggleConfigurationButton) ?: return
         viewModel.configurationState.observe(this) { isChecked ->
-            toggleConfigurationButton?.isChecked = isChecked
+            button.isChecked = isChecked
         }
-        toggleConfigurationButton?.setOnCheckedChangeListener { _, isChecked ->
+        button.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onConfigurationToggleChanged(isChecked)
         }
     }

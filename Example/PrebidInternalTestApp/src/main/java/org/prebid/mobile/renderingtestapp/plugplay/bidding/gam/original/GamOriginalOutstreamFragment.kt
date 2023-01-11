@@ -17,19 +17,20 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original
 
 import android.util.Log
+import android.widget.Button
+import android.widget.RelativeLayout
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import kotlinx.android.synthetic.main.events_bids.*
-import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import org.prebid.mobile.VideoAdUnit
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 class GamOriginalOutstreamFragment : AdFragment() {
     companion object {
@@ -63,25 +64,25 @@ class GamOriginalOutstreamFragment : AdFragment() {
                 })
                 Log.d(TAG, "onAdLoaded() called")
                 resetEventButtons()
-                btnAdLoaded?.isEnabled = true
-                btnLoad?.isEnabled = true
+                findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = true
+                findView<Button>(R.id.btnLoad)?.isEnabled = true
             }
 
             override fun onAdClicked() {
                 super.onAdClicked()
                 Log.d(TAG, "onAdClicked() called")
-                btnAdClicked?.isEnabled = true
+                findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
             }
 
             override fun onAdFailedToLoad(p0: LoadAdError) {
                 super.onAdFailedToLoad(p0)
                 Log.d(TAG, "onAdFailed() called with throwable = [${p0.message}]")
                 resetEventButtons()
-                btnAdFailed?.isEnabled = true
-                btnLoad?.isEnabled = true
+                findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = true
+                findView<Button>(R.id.btnLoad)?.isEnabled = true
             }
         }
-        viewContainer.addView(gamView)
+        findView<RelativeLayout>(R.id.viewContainer)?.addView(gamView)
         adUnit?.setAutoRefreshInterval(refreshDelay)
         return gamView
     }

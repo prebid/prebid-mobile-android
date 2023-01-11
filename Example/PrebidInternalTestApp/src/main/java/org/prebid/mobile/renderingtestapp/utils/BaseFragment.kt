@@ -21,16 +21,24 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import org.prebid.mobile.renderingtestapp.MainActivity
 
 abstract class BaseFragment : Fragment() {
-    private val TAG = BaseFragment::class.java.simpleName
+
+    companion object {
+        private val TAG = BaseFragment::class.java.simpleName
+    }
+
     abstract val layoutRes: Int
+
     private var title: String = ""
+    private lateinit var rootView: View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(layoutRes, container, false)
+        rootView = inflater.inflate(layoutRes, container, false)
+        return rootView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,4 +56,9 @@ abstract class BaseFragment : Fragment() {
     }
 
     protected fun getTitle() = title
+
+    protected fun <T : View?> findView(@IdRes idRes: Int): T? {
+        return rootView.findViewById(idRes)
+    }
+
 }

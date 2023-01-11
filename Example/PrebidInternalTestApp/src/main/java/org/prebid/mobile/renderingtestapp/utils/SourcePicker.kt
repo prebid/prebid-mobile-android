@@ -30,18 +30,17 @@ object SourcePicker {
 
 
     fun enableQaEndpoint(enable: Boolean) {
-            var host = ""
-            var accountId = ""
-            if (enable) {
-                host = QA_SERVER_DOMAIN
-                accountId = QA_ACCOUNT_ID
-            }
-            else {
-                host = PBS_SERVER_DOMAIN
-                accountId = PROD_ACCOUNT_ID
-            }
-            setBidServerHost(host)
-            PrebidMobile.setPrebidServerAccountId(accountId)
+        var host: String
+        var accountId: String
+        if (enable) {
+            host = QA_SERVER_DOMAIN
+            accountId = QA_ACCOUNT_ID
+        } else {
+            host = PBS_SERVER_DOMAIN
+            accountId = PROD_ACCOUNT_ID
+        }
+        setBidServerHost(host)
+        PrebidMobile.setPrebidServerAccountId(accountId)
     }
 
     fun setBidServerHost(hostUrl: String) {

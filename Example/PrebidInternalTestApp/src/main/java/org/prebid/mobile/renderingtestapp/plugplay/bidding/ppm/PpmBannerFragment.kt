@@ -18,15 +18,17 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 
 import android.os.Bundle
 import android.view.View
-import kotlinx.android.synthetic.main.events_bids.*
-import kotlinx.android.synthetic.main.fragment_bidding_banner.*
+import android.widget.Button
+import android.widget.RelativeLayout
+import android.widget.TextView
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.api.rendering.listeners.BannerViewListener
-import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.api.exceptions.AdException
+import org.prebid.mobile.api.rendering.BannerView
+import org.prebid.mobile.api.rendering.listeners.BannerViewListener
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 open class PpmBannerFragment : AdFragment(),
     BannerViewListener {
@@ -38,17 +40,17 @@ open class PpmBannerFragment : AdFragment(),
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-        adIdLabel?.text = getString(R.string.label_auid, configId)
-        btnLoad.setOnClickListener {
+        findView<TextView>(R.id.adIdLabel)?.text = getString(R.string.label_auid, configId)
+        findView<Button>(R.id.btnLoad)?.setOnClickListener {
             resetEventButtons()
             it.isEnabled = false
             loadAd()
         }
 
-        btnStopRefresh?.setOnClickListener {
+        findView<Button>(R.id.btnStopRefresh)?.setOnClickListener {
             bannerView?.stopRefresh()
             resetEventButtons()
-            btnLoad?.isEnabled = true
+            findView<Button>(R.id.btnLoad)?.isEnabled = true
         }
     }
 
@@ -60,7 +62,7 @@ open class PpmBannerFragment : AdFragment(),
         )
         bannerView?.setAutoRefreshDelay(refreshDelay)
         bannerView?.setBannerListener(this)
-        viewContainer.addView(bannerView)
+        findView<RelativeLayout>(R.id.viewContainer)?.addView(bannerView)
         return bannerView
     }
 
@@ -74,26 +76,26 @@ open class PpmBannerFragment : AdFragment(),
 
     override fun onAdFailed(bannerView: BannerView?, exception: AdException?) {
         resetEventButtons()
-        btnAdFailed?.isEnabled = true
-        btnLoad?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = true
+        findView<Button>(R.id.btnLoad)?.isEnabled = true
     }
 
     override fun onAdLoaded(bannerView: BannerView?) {
         resetEventButtons()
-        btnAdLoaded?.isEnabled = true
-        btnLoad?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = true
+        findView<Button>(R.id.btnLoad)?.isEnabled = true
     }
 
     override fun onAdClicked(bannerView: BannerView?) {
-        btnAdClicked?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
     }
 
     override fun onAdClosed(bannerView: BannerView?) {
-        btnAdClosed?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdClosed)?.isEnabled = true
     }
 
     override fun onAdDisplayed(bannerView: BannerView?) {
-        btnAdDisplayed?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdDisplayed)?.isEnabled = true
     }
 
     override fun onDestroyView() {

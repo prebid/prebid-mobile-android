@@ -16,11 +16,11 @@
 
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 
-import kotlinx.android.synthetic.main.fragment_bidding_banner.*
+import android.widget.RelativeLayout
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.data.VideoPlacementType
-import org.prebid.mobile.api.rendering.listeners.BannerViewListener
 import org.prebid.mobile.api.rendering.BannerView
+import org.prebid.mobile.api.rendering.listeners.BannerViewListener
 import org.prebid.mobile.renderingtestapp.R
 
 open class PpmVideoFragment : PpmBannerFragment(),
@@ -35,7 +35,7 @@ open class PpmVideoFragment : PpmBannerFragment(),
         )
         bannerView?.videoPlacementType = VideoPlacementType.IN_BANNER
         bannerView?.setBannerListener(this)
-        viewContainer.addView(bannerView)
+        findView<RelativeLayout>(R.id.viewContainer)?.addView(bannerView)
         return bannerView
     }
 }

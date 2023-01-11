@@ -20,7 +20,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_utilities_list.*
+import androidx.recyclerview.widget.RecyclerView
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.data.SimpleListItem
 import org.prebid.mobile.renderingtestapp.utils.BaseFragment
@@ -36,8 +36,9 @@ class UtilitiesListFragment : BaseFragment() {
         val utilitiesListAdapter = UtilitiesListAdapter { findNavController().navigate(it) }
         utilitiesListAdapter.setUtilitiesList(createUtilitiesList())
 
-        rvUtilities.layoutManager = LinearLayoutManager(context)
-        rvUtilities.adapter = utilitiesListAdapter
+        val recyclerView = findView<RecyclerView>(R.id.rvUtilities)!!
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = utilitiesListAdapter
     }
 
     private fun createUtilitiesList(): List<SimpleListItem> {

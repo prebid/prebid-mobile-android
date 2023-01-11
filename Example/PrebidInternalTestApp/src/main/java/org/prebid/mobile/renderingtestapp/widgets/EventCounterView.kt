@@ -19,8 +19,9 @@ package org.prebid.mobile.renderingtestapp.widgets
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.widget.Button
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import kotlinx.android.synthetic.main.view_event_counter.view.*
 import org.prebid.mobile.renderingtestapp.R
 
 class EventCounterView : ConstraintLayout {
@@ -54,13 +55,13 @@ class EventCounterView : ConstraintLayout {
         else {
             delta = 0
         }
-        btnEvent.isEnabled = enabled
+        findViewById<TextView>(R.id.btnEvent).isEnabled = enabled
         updateCounter()
         super.setEnabled(enabled)
     }
 
     fun setText(text: String) {
-        btnEvent.text = text
+        findViewById<Button>(R.id.btnEvent).text = text
     }
 
     private fun updateCounter() {
@@ -70,7 +71,7 @@ class EventCounterView : ConstraintLayout {
         else {
             delta.toString()
         }
-        tvCounter.text = context.getString(R.string.event_counter, eventCount, deltaText)
+        findViewById<TextView>(R.id.tvCounter).text = context.getString(R.string.event_counter, eventCount, deltaText)
     }
 
     private fun reflectAttrs(attrs: AttributeSet) {
@@ -78,6 +79,6 @@ class EventCounterView : ConstraintLayout {
                 .theme
                 .obtainStyledAttributes(attrs, R.styleable.EventCounterView, 0, 0)
         val eventText = typedArray.getText(R.styleable.EventCounterView_android_text)
-        btnEvent.text = eventText
+        findViewById<TextView>(R.id.btnEvent).text = eventText
     }
 }

@@ -18,8 +18,8 @@ package org.prebid.mobile.renderingtestapp.plugplay.utilities.version
 
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import com.google.android.gms.ads.MobileAds
-import kotlinx.android.synthetic.main.fragments_version_info.*
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.utils.BaseFragment
@@ -29,9 +29,9 @@ class VersionInfoFragment : BaseFragment() {
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         MobileAds.initialize(requireContext())
-        tvPrebidRenderingVersion.text = PrebidMobile.SDK_VERSION
 
-        tvGamVersion.text = MobileAds.getVersionString()
-        tvOmsdkVersion.text = PrebidMobile.OMSDK_VERSION
+        findView<TextView>(R.id.tvPrebidRenderingVersion)?.text = PrebidMobile.SDK_VERSION
+        findView<TextView>(R.id.tvGamVersion)?.text = MobileAds.getVersion().toString()
+        findView<TextView>(R.id.tvOmsdkVersion)?.text = PrebidMobile.OMSDK_VERSION
     }
 }

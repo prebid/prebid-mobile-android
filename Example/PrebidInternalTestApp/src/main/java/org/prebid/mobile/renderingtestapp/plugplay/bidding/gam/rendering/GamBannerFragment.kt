@@ -19,8 +19,9 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import kotlinx.android.synthetic.main.events_bids.*
-import kotlinx.android.synthetic.main.fragment_bidding_banner.*
+import android.widget.Button
+import android.widget.RelativeLayout
+import android.widget.TextView
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.BannerView
@@ -29,6 +30,7 @@ import org.prebid.mobile.eventhandlers.GamBannerEventHandler
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 open class GamBannerFragment : AdFragment(),
     BannerViewListener {
@@ -40,8 +42,8 @@ open class GamBannerFragment : AdFragment(),
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-        adIdLabel.text = getString(R.string.label_auid, configId)
-        btnLoad?.setOnClickListener {
+        findView<TextView>(R.id.adIdLabel)?.text = getString(R.string.label_auid, configId)
+        findView<Button>(R.id.btnLoad)?.setOnClickListener {
             resetEventButtons()
             loadAd()
         }
@@ -55,7 +57,7 @@ open class GamBannerFragment : AdFragment(),
         bannerView?.addAdditionalSizes(*getAdditionalPrebidBannerSizeArray())
         bannerView?.setAutoRefreshDelay(refreshDelay)
         bannerView?.setBannerListener(this)
-        viewContainer.addView(bannerView)
+        findView<RelativeLayout>(R.id.viewContainer)?.addView(bannerView)
         return bannerView
     }
 
@@ -75,30 +77,30 @@ open class GamBannerFragment : AdFragment(),
     override fun onAdFailed(view: BannerView?, exception: AdException?) {
         Log.d(TAG, "onAdFailed() called with: view = [$view], throwable = [$exception]")
         resetEventButtons()
-        btnAdFailed?.isEnabled = true
-        btnLoad?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = true
+        findView<Button>(R.id.btnLoad)?.isEnabled = true
     }
 
     override fun onAdDisplayed(bannerView: BannerView?) {
-        btnAdDisplayed?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdDisplayed)?.isEnabled = true
         Log.d(TAG, "onAdDisplayed() called with: bannerView = [$bannerView]")
     }
 
     override fun onAdLoaded(bannerView: BannerView?) {
         Log.d(TAG, "onAdLoaded() called with: view = [$view]")
         resetEventButtons()
-        btnAdLoaded?.isEnabled = true
-        btnLoad?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = true
+        findView<Button>(R.id.btnLoad)?.isEnabled = true
     }
 
     override fun onAdClicked(view: BannerView?) {
         Log.d(TAG, "onAdClicked() called with: view = [$view]")
-        btnAdClicked?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
     }
 
     override fun onAdClosed(view: BannerView?) {
         Log.d(TAG, "onAdClosed() called with: view = [$view]")
-        btnAdClosed?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdClosed)?.isEnabled = true
     }
 
     protected open fun initBanner(configId: String?, eventHandler: GamBannerEventHandler): BannerView {

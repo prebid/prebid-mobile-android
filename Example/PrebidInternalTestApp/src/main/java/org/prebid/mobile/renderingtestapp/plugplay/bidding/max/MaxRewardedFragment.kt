@@ -3,18 +3,19 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.max
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import com.applovin.mediation.MaxAd
 import com.applovin.mediation.MaxError
 import com.applovin.mediation.MaxReward
 import com.applovin.mediation.MaxRewardedAdListener
 import com.applovin.mediation.adapters.prebid.utils.MaxMediationRewardedUtils
 import com.applovin.mediation.ads.MaxRewardedAd
-import kotlinx.android.synthetic.main.events_max_rewarded.*
-import kotlinx.android.synthetic.main.fragment_bidding_rewarded_applovin_max.*
 import org.prebid.mobile.api.mediation.MediationRewardedVideoAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 open class MaxRewardedFragment : AdFragment() {
 
@@ -32,8 +33,8 @@ open class MaxRewardedFragment : AdFragment() {
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
 
-        adIdLabel.text = getString(R.string.label_auid, configId)
-        btnLoad.setOnClickListener {
+        findView<TextView>(R.id.adIdLabel)?.text = getString(R.string.label_auid, configId)
+        findView<Button>(R.id.btnLoad)?.setOnClickListener {
             handleLoadButtonClick()
         }
     }
@@ -67,25 +68,25 @@ open class MaxRewardedFragment : AdFragment() {
     }
 
     private fun resetAdEvents() {
-        btnAdLoaded?.isEnabled = false
-        btnAdClicked?.isEnabled = false
-        btnAdLoadFailed?.isEnabled = false
-        btnAdDisplayFailed?.isEnabled = false
-        btnAdDisplayed?.isEnabled = false
-        btnAdHidden?.isEnabled = false
-        btnRewardedVideoStarted?.isEnabled = false
-        btnRewardedVideoCompleted?.isEnabled = false
-        btnUserRewarded?.isEnabled = false
+        findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = false
+        findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = false
+        findView<EventCounterView>(R.id.btnAdLoadFailed)?.isEnabled = false
+        findView<EventCounterView>(R.id.btnAdDisplayFailed)?.isEnabled = false
+        findView<EventCounterView>(R.id.btnAdDisplayed)?.isEnabled = false
+        findView<EventCounterView>(R.id.btnAdHidden)?.isEnabled = false
+        findView<EventCounterView>(R.id.btnRewardedVideoStarted)?.isEnabled = false
+        findView<EventCounterView>(R.id.btnRewardedVideoCompleted)?.isEnabled = false
+        findView<EventCounterView>(R.id.btnUserRewarded)?.isEnabled = false
     }
 
     private fun handleLoadButtonClick() {
-        if (btnLoad?.text == getString(R.string.text_show)) {
+        if (findView<Button>(R.id.btnLoad)?.text == getString(R.string.text_show)) {
             maxRewardedAd?.showAd()
-            btnLoad?.text = getString(R.string.text_retry)
-        } else if (btnLoad.text == getString(R.string.text_retry)) {
+            findView<Button>(R.id.btnLoad)?.text = getString(R.string.text_retry)
+        } else if (findView<Button>(R.id.btnLoad)?.text == getString(R.string.text_retry)) {
             resetAdEvents()
-            btnLoad?.isEnabled = false
-            btnLoad?.text = "Loading..."
+            findView<Button>(R.id.btnLoad)?.isEnabled = false
+            findView<Button>(R.id.btnLoad)?.text = "Loading..."
             loadAd()
         }
     }
@@ -93,46 +94,46 @@ open class MaxRewardedFragment : AdFragment() {
     private fun createListener(): MaxRewardedAdListener {
         return object : MaxRewardedAdListener {
             override fun onAdLoaded(ad: MaxAd?) {
-                btnAdLoaded?.isEnabled = true
-                btnLoad?.isEnabled = true
-                btnLoad?.text = getString(R.string.text_show)
+                findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = true
+                findView<Button>(R.id.btnLoad)?.isEnabled = true
+                findView<Button>(R.id.btnLoad)?.text = getString(R.string.text_show)
             }
 
             override fun onAdClicked(ad: MaxAd?) {
-                btnAdClicked?.isEnabled = true
+                findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
             }
 
             override fun onAdDisplayed(ad: MaxAd?) {
-                btnAdDisplayed?.isEnabled = true
+                findView<EventCounterView>(R.id.btnAdDisplayed)?.isEnabled = true
             }
 
             override fun onAdHidden(ad: MaxAd?) {
-                btnAdHidden?.isEnabled = true
+                findView<EventCounterView>(R.id.btnAdHidden)?.isEnabled = true
             }
 
             override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {
-                btnAdLoadFailed?.isEnabled = true
+                findView<EventCounterView>(R.id.btnAdLoadFailed)?.isEnabled = true
 
-                btnLoad.isEnabled = true
+                findView<Button>(R.id.btnLoad)?.isEnabled = true
                 Log.d(TAG, "onAdLoadFailed(): ${error?.message}")
             }
 
             override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {
-                btnAdDisplayFailed?.isEnabled = true
+                findView<EventCounterView>(R.id.btnAdDisplayFailed)?.isEnabled = true
 
                 Log.d(TAG, "onAdDisplayFailed(): ${error?.message}")
             }
 
             override fun onRewardedVideoStarted(ad: MaxAd?) {
-                btnRewardedVideoStarted?.isEnabled = true
+                findView<EventCounterView>(R.id.btnRewardedVideoStarted)?.isEnabled = true
             }
 
             override fun onRewardedVideoCompleted(ad: MaxAd?) {
-                btnRewardedVideoCompleted?.isEnabled = true
+                findView<EventCounterView>(R.id.btnRewardedVideoCompleted)?.isEnabled = true
             }
 
             override fun onUserRewarded(ad: MaxAd?, reward: MaxReward?) {
-                btnUserRewarded?.isEnabled = true
+                findView<EventCounterView>(R.id.btnUserRewarded)?.isEnabled = true
             }
         }
     }

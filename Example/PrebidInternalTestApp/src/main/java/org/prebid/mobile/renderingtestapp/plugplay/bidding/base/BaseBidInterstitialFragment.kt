@@ -19,8 +19,7 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.base
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import kotlinx.android.synthetic.main.events_bids.*
-import kotlinx.android.synthetic.main.fragment_bidding_interstitial.*
+import android.widget.Button
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
@@ -29,6 +28,7 @@ import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering.GamInterstitialFragment
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 abstract class BaseBidInterstitialFragment : AdFragment(),
     InterstitialAdUnitListener {
@@ -40,7 +40,7 @@ abstract class BaseBidInterstitialFragment : AdFragment(),
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
 
-        btnLoad?.setOnClickListener {
+        findView<Button>(R.id.btnLoad)?.setOnClickListener {
             handleLoadInterstitialClick()
         }
     }
@@ -69,41 +69,42 @@ abstract class BaseBidInterstitialFragment : AdFragment(),
 
     override fun onAdFailed(interstitial: InterstitialAdUnit?, exception: AdException?) {
         Log.d(TAG, "onAdFailed() called with: interstitial = [$interstitial], exception = [$exception]")
-        btnAdFailed?.isEnabled = true
-        btnLoad?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = true
+        findView<Button>(R.id.btnLoad)?.isEnabled = true
     }
 
     override fun onAdDisplayed(interstitialAdUnit: InterstitialAdUnit?) {
         Log.d(TAG, "onAdDisplayed() called with: interstitialAdUnit = [$interstitialAdUnit]")
-        btnAdDisplayed?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdDisplayed)?.isEnabled = true
     }
 
     override fun onAdClosed(interstitial: InterstitialAdUnit?) {
         Log.d(TAG, "onAdClosed() called with: interstitial = [$interstitial]")
-        btnAdClosed?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdClosed)?.isEnabled = true
     }
 
     override fun onAdClicked(interstitial: InterstitialAdUnit?) {
         Log.d(TAG, "onAdClicked() called with: interstitial = [$interstitial]")
-        btnAdClicked?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
     }
 
     override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
         Log.d(TAG, "onAdLoaded() called with: interstitialAdUnit = [$interstitialAdUnit]")
-        btnAdLoaded?.isEnabled = true
-        btnLoad?.setText(R.string.text_show)
-        btnLoad?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = true
+        findView<Button>(R.id.btnLoad)?.setText(R.string.text_show)
+        findView<Button>(R.id.btnLoad)?.isEnabled = true
     }
 
     private fun handleLoadInterstitialClick() {
-        when (btnLoad?.text) {
+        when (findView<Button>(R.id.btnLoad)?.text) {
             getString(R.string.text_load) -> {
-                btnLoad?.isEnabled = false
+                findView<Button>(R.id.btnLoad)?.isEnabled = false
                 resetEventButtons()
                 loadAd()
             }
+
             getString(R.string.text_show) -> {
-                btnLoad?.text = getString(R.string.text_load)
+                findView<Button>(R.id.btnLoad)?.text = getString(R.string.text_load)
                 interstitialAdUnit?.show()
             }
         }

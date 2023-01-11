@@ -20,9 +20,10 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import kotlinx.android.synthetic.main.lyt_native_ad.view.*
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.PrebidNativeAd
 import org.prebid.mobile.PrebidNativeAdEventListener
@@ -72,23 +73,23 @@ class NativeFeedAdapter(
             nativeAd.registerViewList(
                 it,
                 listOf(
-                    it.tvNativeTitle,
-                    it.tvNativeBody,
-                    it.tvNativeBrand,
-                    it.btnNativeAction,
-                    it.ivNativeIcon,
-                    it.ivNativeMain
+                    it.findViewById(R.id.tvNativeTitle),
+                    it.findViewById(R.id.tvNativeBody),
+                    it.findViewById(R.id.tvNativeBrand),
+                    it.findViewById(R.id.btnNativeAction),
+                    it.findViewById(R.id.ivNativeIcon),
+                    it.findViewById(R.id.ivNativeMain)
                 ),
                 createListener()
             )
 
-            it.tvNativeTitle?.text = nativeAd.title
-            it.tvNativeBody?.text = nativeAd.description
-            it.tvNativeBrand?.text = nativeAd.sponsoredBy
-            it.btnNativeAction?.text = nativeAd.callToAction
+            it.findViewById<TextView>(R.id.tvNativeTitle)?.text = nativeAd.title
+            it.findViewById<TextView>(R.id.tvNativeBody)?.text = nativeAd.description
+            it.findViewById<TextView>(R.id.tvNativeBrand)?.text = nativeAd.sponsoredBy
+            it.findViewById<Button>(R.id.btnNativeAction)?.text = nativeAd.callToAction
 
-            loadImage(it.ivNativeMain, nativeAd.imageUrl)
-            loadImage(it.ivNativeIcon, nativeAd.iconUrl)
+            loadImage(it.findViewById(R.id.ivNativeMain), nativeAd.imageUrl)
+            loadImage(it.findViewById(R.id.ivNativeIcon), nativeAd.iconUrl)
         }
     }
 

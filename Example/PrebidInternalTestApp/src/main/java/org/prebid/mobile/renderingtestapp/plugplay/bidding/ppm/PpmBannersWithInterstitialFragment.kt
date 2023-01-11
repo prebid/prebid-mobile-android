@@ -18,13 +18,14 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 
 import android.util.Log
 import android.widget.Button
-import kotlinx.android.synthetic.main.fragment_interstitial_html_with_banners.*
+import android.widget.FrameLayout
+import android.widget.TextView
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.api.rendering.listeners.BannerViewListener
-import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
+import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
-import org.prebid.mobile.api.exceptions.AdException
+import org.prebid.mobile.api.rendering.listeners.BannerViewListener
+import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBannersWithInterstitialFragment
 import org.prebid.mobile.renderingtestapp.utils.getAdDescription
@@ -36,20 +37,22 @@ open class PpmBannersWithInterstitialFragment : BaseBannersWithInterstitialFragm
     protected lateinit var bannerViewBottom: BannerView
 
     override fun loadInterstitial() {
-        tvInterstitialAdUnitDescription.text = "Interstitial Config ID: $interstitialConfigId"
+        findView<TextView>(R.id.tvInterstitialAdUnitDescription)?.text = "Interstitial Config ID: $interstitialConfigId"
         interstitialAdUnit = initInterstitialAdUnit(interstitialConfigId)
         interstitialAdUnit.loadAd()
     }
 
     override fun loadBanners() {
-        bannerViewTop = initBannerView(bannerConfigId, REFRESH_BANNER_TOP_SEC, btnTopBannerAdShown)
-        bannerViewBottom = initBannerView(bannerConfigId, REFRESH_BANNER_BOTTOM_SEC, btnBottomBannerAdShown)
+        bannerViewTop =
+            initBannerView(bannerConfigId, REFRESH_BANNER_TOP_SEC, findView<Button>(R.id.btnTopBannerAdShown))
+        bannerViewBottom =
+            initBannerView(bannerConfigId, REFRESH_BANNER_BOTTOM_SEC, findView<Button>(R.id.btnBottomBannerAdShown))
 
         bannerViewTop.loadAd()
         bannerViewBottom.loadAd()
 
-        viewContainerTop?.addView(bannerViewTop)
-        viewContainerBottom?.addView(bannerViewBottom)
+        findView<FrameLayout>(R.id.viewContainerTop)?.addView(bannerViewTop)
+        findView<FrameLayout>(R.id.viewContainerBottom)?.addView(bannerViewBottom)
     }
 
     override fun onDestroyView() {
@@ -114,9 +117,9 @@ open class PpmBannersWithInterstitialFragment : BaseBannersWithInterstitialFragm
         return object : InterstitialAdUnitListener {
             override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
                 Log.d(TAG, "Interstitial: onAdLoaded()")
-                btnLoad?.isEnabled = true
-                btnLoad?.text = getString(R.string.text_show)
-                btnLoad?.setOnClickListener { interstitialAdUnit?.show() }
+                findView<Button>(R.id.btnLoad)?.isEnabled = true
+                findView<Button>(R.id.btnLoad)?.text = getString(R.string.text_show)
+                findView<Button>(R.id.btnLoad)?.setOnClickListener { interstitialAdUnit?.show() }
             }
 
             override fun onAdDisplayed(interstitialAdUnit: InterstitialAdUnit?) {
