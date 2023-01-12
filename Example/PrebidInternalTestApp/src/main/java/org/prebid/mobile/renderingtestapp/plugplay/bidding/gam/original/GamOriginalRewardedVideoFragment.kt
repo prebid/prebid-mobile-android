@@ -19,26 +19,26 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import kotlinx.android.synthetic.main.events_bids.*
-import kotlinx.android.synthetic.main.fragment_bidding_interstitial.*
 import org.prebid.mobile.RewardedVideoAdUnit
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidRewardedFragment
+import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 class GamOriginalRewardedVideoFragment : BaseBidRewardedFragment() {
     companion object {
-        private const val TAG = "GamOriginalRewardedVideo"
+        private const val TAG = "GamOriginalRewarded"
     }
     private var adUnit: RewardedVideoAdUnit? = null
     private var displayAdCallback: (() -> Unit)? = null
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-        btnLoad?.setOnClickListener {
+        binding.btnLoad.setOnClickListener {
             handleLoadOriginalInterstitialClick()
         }
     }
@@ -64,15 +64,15 @@ class GamOriginalRewardedVideoFragment : BaseBidRewardedFragment() {
                             ) { }
                         }
                         Log.d(TAG, "onAdLoaded() called with: reward = [${rewardedAd.rewardItem}]")
-                        btnAdLoaded?.isEnabled = true
-                        btnLoad?.setText(R.string.text_show)
-                        btnLoad?.isEnabled = true
+                        events.loaded(true)
+                        binding.btnLoad.setText(R.string.text_show)
+                        binding.btnLoad.isEnabled = true
                     }
 
                     override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                         Log.d(TAG, "onAdFailed() called with: exception = [$loadAdError]")
-                        btnAdFailed?.isEnabled = true
-                        btnLoad?.isEnabled = true
+                        events.failed(true)
+                        binding.btnLoad.isEnabled = true
                     }
                 }
             )
@@ -80,14 +80,15 @@ class GamOriginalRewardedVideoFragment : BaseBidRewardedFragment() {
     }
 
     private fun handleLoadOriginalInterstitialClick() {
-        when (btnLoad?.text) {
+        when (binding.btnLoad.text) {
             getString(R.string.text_load) -> {
-                btnLoad?.isEnabled = false
+                binding.btnLoad.isEnabled = false
                 resetEventButtons()
                 createAd()
             }
+
             getString(R.string.text_show) -> {
-                btnLoad?.text = getString(R.string.text_load)
+                binding.btnLoad.text = getString(R.string.text_load)
                 displayAdCallback?.invoke()
             }
         }

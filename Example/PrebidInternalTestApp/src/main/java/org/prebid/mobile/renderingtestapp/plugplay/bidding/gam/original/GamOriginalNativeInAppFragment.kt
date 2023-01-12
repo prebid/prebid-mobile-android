@@ -3,6 +3,10 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdSize
@@ -12,14 +16,6 @@ import com.google.android.gms.ads.admanager.AdManagerAdView
 import com.google.android.gms.ads.formats.OnAdManagerAdViewLoadedListener
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd
-import kotlinx.android.synthetic.main.lyt_native_ad.*
-import kotlinx.android.synthetic.main.lyt_native_gam_events.*
-import kotlinx.android.synthetic.main.lyt_native_gam_events.btnAdClicked
-import kotlinx.android.synthetic.main.lyt_native_gam_events.btnAdImpression
-import kotlinx.android.synthetic.main.lyt_native_gam_events.btnFetchDemandResultFailure
-import kotlinx.android.synthetic.main.lyt_native_gam_events.btnFetchDemandResultSuccess
-import kotlinx.android.synthetic.main.lyt_native_in_app_events.*
-import kotlinx.android.synthetic.main.view_native_ad.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,12 +25,15 @@ import org.prebid.mobile.eventhandlers.utils.GamUtils
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeFragment
 import org.prebid.mobile.renderingtestapp.utils.loadImage
+import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 class GamOriginalNativeInAppFragment : PpmNativeFragment() {
+
     companion object {
         private const val TAG = "GamOriginalNativeInApp"
         private const val CUSTOM_FORMAT_ID = "11934135"
     }
+
     private var adView: AdManagerAdView? = null
     private var unifiedNativeAd: NativeAd? = null
     private var adUnit: NativeAdUnit? = null
@@ -53,15 +52,15 @@ class GamOriginalNativeInAppFragment : PpmNativeFragment() {
         adUnit = configureNativeAdUnit()
 
         val adRequest = AdManagerAdRequest.Builder().build()
-        adLoader = createAdLoader(adContainer)
+        adLoader = createAdLoader(binding.adContainer)
         adUnit?.fetchDemand(adRequest) { resultCode ->
             if (resultCode != ResultCode.SUCCESS) {
-                btnFetchDemandResultFailure.isEnabled = true
+                events.fetchDemandFailure(true)
                 adLoader!!.loadAd(adRequest)
                 return@fetchDemand
             }
-            GamUtils.prepare(adRequest,extras)
-            btnFetchDemandResultSuccess?.isEnabled = true
+            GamUtils.prepare(adRequest, extras)
+            events.fetchDemandSuccess(true)
             adLoader!!.loadAd(adRequest)
         }
     }
@@ -75,32 +74,32 @@ class GamOriginalNativeInAppFragment : PpmNativeFragment() {
             override fun onAdClicked() {
                 Log.d(TAG, "onAdClicked called: ")
                 onMainThread {
-                    btnAdClicked?.isEnabled = true
+                    events.clicked(true)
                 }
             }
 
             override fun onAdImpression() {
                 Log.d(TAG, "onAdImpression called: ")
                 onMainThread {
-                    btnAdImpression?.isEnabled = true
+                    events.impression(true)
                 }
             }
 
             override fun onAdExpired() {
                 Log.d(TAG, "onAdExpired called: ")
                 onMainThread {
-                    btnAdExpired?.isEnabled = true
+                    events.expired(true)
                 }
             }
         })
 
-        loadImage(ivNativeIcon, ad.iconUrl)
-        tvNativeTitle.text = ad.title
-        loadImage(ivNativeMain, ad.imageUrl)
-        tvNativeBody.text = ad.description
-        btnNativeAction.text = ad.callToAction
-        btnNativeAction.isEnabled = true
-        adContainer.addView(nativeContainer)
+        loadImage(binding.ivNativeIcon!!, ad.iconUrl)
+        binding.tvNativeTitle.text = ad.title
+        loadImage(binding.ivNativeMain!!, ad.imageUrl)
+        binding.tvNativeBody.text = ad.description
+        binding.btnNativeAction.text = ad.callToAction
+        binding.btnNativeAction.isEnabled = true
+        binding.adContainer.addView(nativeContainer)
     }
 
     private fun createAdLoader(
@@ -122,7 +121,7 @@ class GamOriginalNativeInAppFragment : PpmNativeFragment() {
                     override fun onPrebidNativeLoaded(ad: PrebidNativeAd) {
                         inflatePrebidNativeAd(ad, wrapper)
                         Log.d(TAG, "onPrebidNativeLoaded: ")
-                        btnGetNativeAdResultSuccess?.isEnabled = true
+                        events.getNativeAdResultSuccess(true)
                     }
 
                     override fun onPrebidNativeNotFound() {
@@ -139,8 +138,8 @@ class GamOriginalNativeInAppFragment : PpmNativeFragment() {
             .forNativeAd(onUnifiedAdLoaded)
             .forCustomFormatAd(
                 CUSTOM_FORMAT_ID, onCustomAdLoaded
-            ) { customAd: NativeCustomFormatAd?, s: String? ->
-                btnCustomAdRequestSuccess?.isEnabled = true
+            ) { _: NativeCustomFormatAd?, _: String? ->
+                events.customAdRequestSuccess(true)
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
@@ -152,7 +151,7 @@ class GamOriginalNativeInAppFragment : PpmNativeFragment() {
     }
 
     private fun configureNativeAdUnit(): NativeAdUnit {
-        val adUnit = NativeAdUnit(configId);
+        val adUnit = NativeAdUnit(configId)
         adUnit.setContextType(NativeAdUnit.CONTEXT_TYPE.SOCIAL_CENTRIC)
         adUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED)
         adUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL)
@@ -190,7 +189,7 @@ class GamOriginalNativeInAppFragment : PpmNativeFragment() {
         cta.isRequired = true
         cta.dataType = NativeDataAsset.DATA_TYPE.CTATEXT
         adUnit.addAsset(cta)
-        return adUnit;
+        return adUnit
     }
 
     override fun onDestroy() {

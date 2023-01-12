@@ -3,21 +3,24 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.admob
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import kotlinx.android.synthetic.main.events_admob_rewarded.*
-import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import org.prebid.mobile.admob.AdMobMediationInterstitialUtils
 import org.prebid.mobile.admob.PrebidInterstitialAdapter
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.mediation.MediationInterstitialAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentAdmobRewardedBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
+import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 import java.util.*
 
 open class AdMobInterstitialFragment : AdFragment() {
@@ -32,13 +35,19 @@ open class AdMobInterstitialFragment : AdFragment() {
     protected var adUnit: MediationInterstitialAdUnit? = null
     protected var isVideo = false
 
+    protected val binding: FragmentAdmobRewardedBinding
+        get() = getBinding()
+    protected lateinit var events: Events
+
     override val layoutRes = R.layout.fragment_admob_rewarded
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
 
-        adIdLabel.text = getString(R.string.label_auid, configId)
-        btnLoad.setOnClickListener {
+        events = Events(view)
+
+        binding.adIdLabel.text = getString(R.string.label_auid, configId)
+        binding.btnLoad.setOnClickListener {
             handleLoadButtonClick()
         }
     }
@@ -73,16 +82,16 @@ open class AdMobInterstitialFragment : AdFragment() {
 
             InterstitialAd.load(requireContext(), adUnitId, request, object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
-                    btnAdLoaded?.isEnabled = true
-                    btnLoad?.isEnabled = true
-                    btnLoad?.text = getString(R.string.text_show)
+                    events.loaded(true)
+                    binding.btnLoad.isEnabled = true
+                    binding.btnLoad.text = getString(R.string.text_show)
 
                     interstitialAd = ad
                     interstitialAd?.fullScreenContentCallback = createFullScreenContentCallback()
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    btnAdFailed?.isEnabled = true
+                    events.failed(true)
                     Log.e(TAG, adError.message)
                     interstitialAd = null
                 }
@@ -103,23 +112,24 @@ open class AdMobInterstitialFragment : AdFragment() {
     }
 
     private fun resetAdEvents() {
-        btnAdLoaded?.isEnabled = false
-        btnAdShowed?.isEnabled = false
-        btnAdImpression?.isEnabled = false
-        btnAdDismissed?.isEnabled = false
-        btnAdFailedFullScreen?.isEnabled = false
-        btnAdFailed?.isEnabled = false
-        btnAdClicked?.isEnabled = false
+        events.loaded(false)
+        events.showed(false)
+        events.impression(false)
+        events.dismissed(false)
+        events.failedFullScreen(false)
+        events.failed(false)
+        events.clicked(false)
     }
 
     private fun handleLoadButtonClick() {
-        if (btnLoad?.text == getString(R.string.text_show)) {
+        val loadButton = binding.btnLoad ?: return
+        if (loadButton.text == getString(R.string.text_show)) {
             interstitialAd?.show(requireActivity())
-            btnLoad?.text = getString(R.string.text_retry)
-        } else if (btnLoad.text == getString(R.string.text_retry)) {
+            loadButton.text = getString(R.string.text_retry)
+        } else if (loadButton.text == getString(R.string.text_retry)) {
             resetAdEvents()
-            btnLoad?.isEnabled = false
-            btnLoad?.text = "Loading..."
+            loadButton.isEnabled = false
+            loadButton.text = "Loading..."
             loadAd()
         }
     }
@@ -127,26 +137,38 @@ open class AdMobInterstitialFragment : AdFragment() {
     protected fun createFullScreenContentCallback(): FullScreenContentCallback {
         return object : FullScreenContentCallback() {
             override fun onAdClicked() {
-                btnAdClicked?.isEnabled = true
+                events.clicked(true)
             }
 
             override fun onAdImpression() {
-                btnAdImpression?.isEnabled = true
+                events.impression(true)
             }
 
             override fun onAdShowedFullScreenContent() {
-                btnAdShowed?.isEnabled = true
+                events.showed(true)
             }
 
             override fun onAdDismissedFullScreenContent() {
-                btnAdDismissed?.isEnabled = true
+                events.dismissed(true)
             }
 
             override fun onAdFailedToShowFullScreenContent(p0: AdError) {
-                btnAdFailedFullScreen?.isEnabled = true
+                events.failedFullScreen(true)
             }
         }
     }
 
+    protected class Events(parentView: View) : BaseEvents(parentView) {
+
+        fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
+        fun impression(b: Boolean) = enable(R.id.btnAdImpression, b)
+        fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
+        fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+
+        fun showed(b: Boolean) = enable(R.id.btnAdShowed, b)
+        fun dismissed(b: Boolean) = enable(R.id.btnAdDismissed, b)
+        fun failedFullScreen(b: Boolean) = enable(R.id.btnAdFailedFullScreen, b)
+
+    }
 
 }

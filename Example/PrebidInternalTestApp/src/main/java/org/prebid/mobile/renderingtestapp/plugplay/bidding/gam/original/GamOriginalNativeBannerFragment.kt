@@ -3,33 +3,40 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.RelativeLayout
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import kotlinx.android.synthetic.main.events_bids.*
-import kotlinx.android.synthetic.main.fragment_bidding_banner.*
-import kotlinx.android.synthetic.main.fragment_native.*
-import kotlinx.android.synthetic.main.lyt_native_ad.*
 import org.prebid.mobile.*
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
-import org.prebid.mobile.eventhandlers.utils.GamUtils
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
+import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 class GamOriginalNativeBannerFragment : AdFragment() {
+
     companion object {
         private const val TAG = "GamOriginalNativeBanner"
     }
-    override val layoutRes: Int = R.layout.fragment_bidding_banner
+
     private var nativeAdUnit: NativeAdUnit? = null
+    override val layoutRes: Int = R.layout.fragment_bidding_banner
+
+    private val binding: FragmentBiddingBannerBinding
+        get() = getBinding()
+    private lateinit var events: Events
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        btnLoad.setOnClickListener {
+        events = Events(view)
+        binding.btnLoad.setOnClickListener {
             resetEventButtons()
             loadAd()
         }
@@ -64,30 +71,30 @@ class GamOriginalNativeBannerFragment : AdFragment() {
                 })
                 Log.d(TAG, "onAdLoaded() called")
                 resetEventButtons()
-                btnAdLoaded?.isEnabled = true
-                btnLoad?.isEnabled = true
+                events.loaded(true)
+                binding.btnLoad.isEnabled = true
             }
 
             override fun onAdFailedToLoad(p0: LoadAdError) {
                 super.onAdFailedToLoad(p0)
                 Log.d(TAG, "onAdFailed() called with throwable = [${p0.message}]")
                 resetEventButtons()
-                btnAdFailed?.isEnabled = true
-                btnLoad?.isEnabled = true
+                events.failed(true)
+                binding.btnLoad.isEnabled = true
             }
 
             override fun onAdClicked() {
                 super.onAdClicked()
                 Log.d(TAG, "onAdClicked() called")
-                btnAdClicked?.isEnabled = true
+                events.clicked(true)
             }
 
         }
-        viewContainer.addView(gamView)
+        binding.viewContainer.addView(gamView)
 
         val builder = AdManagerAdRequest.Builder()
         nativeAdUnit?.setAutoRefreshInterval(refreshDelay)
-        nativeAdUnit?.fetchDemand(builder) { resultCode ->
+        nativeAdUnit?.fetchDemand(builder) {
             val request = builder.build()
             gamView.loadAd(request)
         }
@@ -139,4 +146,13 @@ class GamOriginalNativeBannerFragment : AdFragment() {
         super.onDestroy()
         nativeAdUnit?.stopAutoRefresh()
     }
+
+    private class Events(parentView: View) : BaseEvents(parentView) {
+
+        fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
+        fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
+        fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+
+    }
+
 }

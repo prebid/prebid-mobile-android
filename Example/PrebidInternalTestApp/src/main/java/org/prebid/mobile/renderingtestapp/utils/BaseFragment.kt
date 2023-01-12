@@ -21,16 +21,27 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.IdRes
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import org.prebid.mobile.renderingtestapp.MainActivity
 
 abstract class BaseFragment : Fragment() {
-    private val TAG = BaseFragment::class.java.simpleName
+
+    companion object {
+        private val TAG = BaseFragment::class.java.simpleName
+    }
+
     abstract val layoutRes: Int
+
     private var title: String = ""
 
+    protected lateinit var baseBinding: ViewDataBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(layoutRes, container, false)
+        baseBinding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
+        return baseBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,4 +59,10 @@ abstract class BaseFragment : Fragment() {
     }
 
     protected fun getTitle() = title
+
+    protected fun <T : ViewDataBinding> getBinding(): T {
+        @Suppress("UNCHECKED_CAST")
+        return baseBinding as T
+    }
+
 }

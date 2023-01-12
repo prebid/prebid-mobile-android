@@ -21,12 +21,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.nativead.NativeCustomFormatAd
-import kotlinx.android.synthetic.main.lyt_native_ad.view.*
 import org.prebid.mobile.NativeData
 import org.prebid.mobile.PrebidNativeAd
 import org.prebid.mobile.PrebidNativeAdEventListener
@@ -94,18 +95,19 @@ class NativeGamFeedAdapter(
         val listener = createListener()
         nativeAd.registerViewList(
             nativeAdLayout,
-            listOf(nativeAdLayout?.btnNativeAction),
+            listOf(nativeAdLayout?.findViewById(R.id.btnNativeAction)),
             listener
         )
 
         nativeAdLayout?.apply {
-            this.tvNativeTitle?.text = nativeAd.title
-            this.tvNativeBody?.text = nativeAd.description
-            this.tvNativeBrand?.text = nativeAd.dataList.find { it.type == NativeData.Type.SPONSORED_BY }?.value
-            this.btnNativeAction?.text = nativeAd.callToAction
+            this.findViewById<TextView>(R.id.tvNativeTitle)?.text = nativeAd.title
+            this.findViewById<TextView>(R.id.tvNativeBody)?.text = nativeAd.description
+            this.findViewById<TextView>(R.id.tvNativeBrand)?.text =
+                nativeAd.dataList.find { it.type == NativeData.Type.SPONSORED_BY }?.value
+            this.findViewById<Button>(R.id.btnNativeAction)?.text = nativeAd.callToAction
 
-            loadImage(this.ivNativeMain, nativeAd.imageUrl)
-            loadImage(this.ivNativeIcon, nativeAd.iconUrl)
+            loadImage(this.findViewById(R.id.ivNativeMain), nativeAd.imageUrl)
+            loadImage(this.findViewById(R.id.ivNativeIcon), nativeAd.iconUrl)
 
         }
     }

@@ -7,18 +7,22 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
-import kotlinx.android.synthetic.main.events_admob.*
-
-import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.admob.AdMobMediationBannerUtils
 import org.prebid.mobile.admob.PrebidBannerAdapter
 import org.prebid.mobile.api.mediation.MediationBannerAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerAdmobBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 
 open class AdMobBannerFragment : AdFragment() {
+
+    /*
+
+
+    * */
 
     companion object {
         private const val TAG = "AdMobBannerFragment"
@@ -29,20 +33,26 @@ open class AdMobBannerFragment : AdFragment() {
     protected var bannerView: AdView? = null
     protected var adRequestExtras: Bundle? = null
 
+    protected val binding: FragmentBiddingBannerAdmobBinding
+        get() = getBinding()
+    private lateinit var events: Events
+
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
 
-        adIdLabel.text = getString(R.string.label_auid, configId)
-        btnLoad?.setOnClickListener {
+        events = Events(view)
+
+        binding.adIdLabel.text = getString(R.string.label_auid, configId)
+        binding.btnLoad.setOnClickListener {
             resetAdEvents()
             it.isEnabled = false
             loadAd()
         }
 
-        btnStopRefresh?.setOnClickListener {
+        binding.btnStopRefresh.setOnClickListener {
             adUnit?.stopRefresh()
             resetEventButtons()
-            btnLoad?.isEnabled = true
+            binding.btnLoad.isEnabled = true
         }
     }
 
@@ -51,7 +61,7 @@ open class AdMobBannerFragment : AdFragment() {
         bannerView?.setAdSize(com.google.android.gms.ads.AdSize(width, height))
         bannerView?.adUnitId = adUnitId
         bannerView?.adListener = getListener()
-        viewContainer.addView(bannerView)
+        binding.viewContainer.addView(bannerView)
 
         adRequestExtras = Bundle()
         adRequest = AdRequest
@@ -86,8 +96,8 @@ open class AdMobBannerFragment : AdFragment() {
     override val layoutRes = R.layout.fragment_bidding_banner_admob
 
     private fun resetAdEvents() {
-        btnAdFailed?.isEnabled = false
-        btnAdClicked?.isEnabled = false
+        events.failed(false)
+        events.clicked(false)
     }
 
     override fun onDestroyView() {
@@ -100,36 +110,47 @@ open class AdMobBannerFragment : AdFragment() {
         override fun onAdLoaded() {
             Log.d(TAG, "onAdLoaded")
             resetAdEvents()
-            btnLoad?.isEnabled = true
-            btnAdLoaded?.isEnabled = true
+            binding.btnLoad.isEnabled = true
+            events.loaded(true)
         }
 
         override fun onAdClicked() {
             Log.d(TAG, "onAdClicked")
-            btnAdClicked?.isEnabled = true
+            events.clicked(true)
         }
 
         override fun onAdOpened() {
             Log.d(TAG, "onAdOpened")
-            btnAdOpened?.isEnabled = true
+            events.opened(true)
         }
 
         override fun onAdImpression() {
             Log.d(TAG, "onAdImpression")
-            btnAdImpression?.isEnabled = true
+            events.impression(true)
         }
 
         override fun onAdClosed() {
             Log.d(TAG, "onAdClosed")
-            btnAdClosed?.isEnabled = true
+            events.closed(true)
         }
 
         override fun onAdFailedToLoad(p0: LoadAdError) {
             Log.d(TAG, "onAdFailedToLoad - ${p0.message}")
             resetAdEvents()
-            btnLoad?.isEnabled = true
-            btnAdFailed?.isEnabled = true
+            binding.btnLoad.isEnabled = true
+            events.failed(true)
         }
+
+    }
+
+    private class Events(parentView: View) : BaseEvents(parentView) {
+
+        fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
+        fun impression(b: Boolean) = enable(R.id.btnAdImpression, b)
+        fun opened(b: Boolean) = enable(R.id.btnAdOpened, b)
+        fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
+        fun closed(b: Boolean) = enable(R.id.btnAdClosed, b)
+        fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
 
     }
 

@@ -19,18 +19,18 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
-import kotlinx.android.synthetic.main.events_bids.*
-import kotlinx.android.synthetic.main.fragment_bidding_interstitial.*
 import org.prebid.mobile.AdUnit
 import org.prebid.mobile.InterstitialAdUnit
 import org.prebid.mobile.VideoInterstitialAdUnit
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
+import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
     companion object {
@@ -41,7 +41,7 @@ class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-        btnLoad.setOnClickListener {
+        binding.btnLoad.setOnClickListener {
             handleOriginalInterstitialClick()
         }
     }
@@ -71,19 +71,19 @@ class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
                 override fun onAdLoaded(adManagerInterstitialAd: AdManagerInterstitialAd) {
                     super.onAdLoaded(adManagerInterstitialAd)
                     Log.d(TAG, "onAdLoaded() called")
-                    btnAdLoaded?.isEnabled = true
+                    events.loaded(true)
                     displayAdCallback = {
                         adManagerInterstitialAd.show(requireActivity())
                     }
-                    btnLoad?.setText(R.string.text_show)
-                    btnLoad?.isEnabled = true
+                    binding.btnLoad.setText(R.string.text_show)
+                    binding.btnLoad.isEnabled = true
                 }
 
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                     super.onAdFailedToLoad(loadAdError)
                     Log.d(TAG, "onAdFailed() called with: exception = [$loadAdError]")
-                    btnAdFailed?.isEnabled = true
-                    btnLoad?.isEnabled = true
+                    events.failed(true)
+                    binding.btnLoad.isEnabled = true
                 }
             }
 
@@ -97,14 +97,15 @@ class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
     }
 
     private fun handleOriginalInterstitialClick() {
-        when (btnLoad?.text) {
+        when (binding.btnLoad.text) {
             getString(R.string.text_load) -> {
-                btnLoad?.isEnabled = false
+                binding.btnLoad.isEnabled = false
                 resetEventButtons()
                 createAd()
             }
+
             getString(R.string.text_show) -> {
-                btnLoad?.text = getString(R.string.text_load)
+                binding.btnLoad.text = getString(R.string.text_load)
                 displayAdCallback?.invoke()
             }
         }

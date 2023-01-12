@@ -16,35 +16,36 @@
 
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 
+import android.view.View
 import android.widget.Button
-import kotlinx.android.synthetic.main.events_bids.*
-import kotlinx.android.synthetic.main.lyt_native_ad_links.*
+import androidx.annotation.IdRes
 import org.prebid.mobile.NativeData
 import org.prebid.mobile.PrebidNativeAd
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 class PpmNativeLinksFragment : PpmNativeFragment() {
 
     override val layoutRes: Int = R.layout.fragment_native_links
 
     override fun inflateViewContent(nativeAd: PrebidNativeAd) {
-        btnAdDisplayed?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdDisplayed).isEnabled = true
 
         nativeAd.registerViewList(
-            adContainer,
+            findView(R.id.adContainer),
             listOf(
-                btnNativeLinkRoot,
-                btnNativeDeeplinkOk,
-                btnNativeDeeplinkFallback,
-                btnNativeLinkUrl
+                findView(R.id.btnNativeLinkRoot),
+                findView(R.id.btnNativeDeeplinkOk),
+                findView(R.id.btnNativeDeeplinkFallback),
+                findView(R.id.btnNativeLinkUrl)
             ),
             createNativeListener()
         )
 
-        btnNativeLinkRoot.text = nativeAd.callToAction
-        setupButton(nativeAd, btnNativeDeeplinkFallback, NativeData.Type.SPONSORED_BY)
-        setupButton(nativeAd, btnNativeDeeplinkOk, NativeData.Type.DESCRIPTION)
-        setupButton(nativeAd, btnNativeLinkUrl, NativeData.Type.RATING)
+        findView<Button>(R.id.btnNativeLinkRoot).text = nativeAd.callToAction
+        setupButton(nativeAd, findView(R.id.btnNativeDeeplinkFallback), NativeData.Type.SPONSORED_BY)
+        setupButton(nativeAd, findView(R.id.btnNativeDeeplinkOk), NativeData.Type.DESCRIPTION)
+        setupButton(nativeAd, findView(R.id.btnNativeLinkUrl), NativeData.Type.RATING)
     }
 
     private fun setupButton(
@@ -56,6 +57,10 @@ class PpmNativeLinksFragment : PpmNativeFragment() {
         if (nativeData != null) {
             button.text = nativeData.value
         }
+    }
+
+    private fun <T : View> findView(@IdRes idRes: Int): T {
+        return binding.root.findViewById(idRes)
     }
 
 }

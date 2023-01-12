@@ -1,15 +1,15 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.admob
 
 import android.util.Log
+import android.widget.Button
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import kotlinx.android.synthetic.main.events_admob_rewarded.*
-import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import org.prebid.mobile.admob.PrebidRewardedAdapter
 import org.prebid.mobile.rendering.bidding.display.BidResponseCache
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 import kotlin.random.Random
 
 class AdMobRewardedRandomFragment : AdMobRewardedFragment() {
@@ -33,16 +33,16 @@ class AdMobRewardedRandomFragment : AdMobRewardedFragment() {
 
             RewardedAd.load(requireContext(), adUnitId, request, object : RewardedAdLoadCallback() {
                 override fun onAdLoaded(ad: RewardedAd) {
-                    btnAdLoaded?.isEnabled = true
-                    btnLoad?.isEnabled = true
-                    btnLoad?.text = getString(R.string.text_show)
+                    events.loaded(true)
+                    binding.btnLoad.isEnabled = true
+                    binding.btnLoad.text = getString(R.string.text_show)
 
                     rewardedAd = ad
                     rewardedAd?.fullScreenContentCallback = createFullScreenContentCallback()
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    btnAdFailed?.isEnabled = true
+                    events.failed(true)
                     Log.e(TAG, adError.message)
                     rewardedAd = null
                 }

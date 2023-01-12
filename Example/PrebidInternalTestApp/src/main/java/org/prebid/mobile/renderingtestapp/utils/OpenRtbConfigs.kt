@@ -107,7 +107,7 @@ object OpenRtbConfigs {
         }
     }
 
-    private fun callMethodOnObject(target: Any, methodName: String?, vararg params: Any): Any? {
+    private fun callMethodOnObject(target: Any, methodName: String, vararg params: Any): Any? {
         try {
             val len = params.size
             val classes: Array<Class<*>?> = arrayOfNulls(len)
@@ -116,8 +116,7 @@ object OpenRtbConfigs {
             }
             val method = target.javaClass.getMethod(methodName, *classes)
             return method.invoke(target, *params)
-        }
-        catch (e: NullPointerException) {
+        } catch (e: NullPointerException) {
             e.printStackTrace()
         }
         catch (e: NoSuchMethodException) {

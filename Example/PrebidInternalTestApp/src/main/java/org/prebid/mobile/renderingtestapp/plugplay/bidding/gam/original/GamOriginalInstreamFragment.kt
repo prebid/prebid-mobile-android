@@ -1,7 +1,9 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original
 
 import android.net.Uri
+import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.ima.ImaAdsLoader
@@ -12,11 +14,12 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import kotlinx.android.synthetic.main.fragment_bidding_banner_video.*
 import org.prebid.mobile.*
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerVideoBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 
 class GamOriginalInstreamFragment : AdFragment() {
 
@@ -25,6 +28,9 @@ class GamOriginalInstreamFragment : AdFragment() {
     private var adsUri: Uri? = null
     private var adsLoader: ImaAdsLoader? = null
     private var playerView: PlayerView? = null
+
+    private val binding: FragmentBiddingBannerVideoBinding
+        get() = getBinding()
 
     override val layoutRes: Int = R.layout.fragment_bidding_banner_video
 
@@ -61,7 +67,7 @@ class GamOriginalInstreamFragment : AdFragment() {
     private fun createAd() {
         playerView = PlayerView(requireContext())
         val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 600)
-        viewContainer.addView(playerView, params)
+        binding.viewContainer.addView(playerView, params)
 
         val parameters = VideoBaseAdUnit.Parameters()
         parameters.mimes = listOf("video/mp4")
@@ -105,4 +111,5 @@ class GamOriginalInstreamFragment : AdFragment() {
         PrebidMobile.setPrebidServerHost(Host.createCustomHost("https://prebid-server-test-j.prebid.org/openrtb2/auction"))
         PrebidMobile.setPrebidServerAccountId(getString(R.string.prebid_account_id_prod))
     }
+
 }

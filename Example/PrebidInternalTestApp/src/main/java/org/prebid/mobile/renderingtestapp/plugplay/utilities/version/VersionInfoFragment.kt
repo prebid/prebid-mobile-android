@@ -18,20 +18,25 @@ package org.prebid.mobile.renderingtestapp.plugplay.utilities.version
 
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import com.google.android.gms.ads.MobileAds
-import kotlinx.android.synthetic.main.fragments_version_info.*
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentsVersionInfoBinding
 import org.prebid.mobile.renderingtestapp.utils.BaseFragment
 
 class VersionInfoFragment : BaseFragment() {
+
     override val layoutRes: Int = R.layout.fragments_version_info
+    private val binding: FragmentsVersionInfoBinding
+        get() = getBinding()
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         MobileAds.initialize(requireContext())
-        tvPrebidRenderingVersion.text = PrebidMobile.SDK_VERSION
 
-        tvGamVersion.text = MobileAds.getVersionString()
-        tvOmsdkVersion.text = PrebidMobile.OMSDK_VERSION
+        binding.tvPrebidRenderingVersion.text = PrebidMobile.SDK_VERSION
+        binding.tvGamVersion.text = MobileAds.getVersion().toString()
+        binding.tvOmsdkVersion.text = PrebidMobile.OMSDK_VERSION
     }
+
 }

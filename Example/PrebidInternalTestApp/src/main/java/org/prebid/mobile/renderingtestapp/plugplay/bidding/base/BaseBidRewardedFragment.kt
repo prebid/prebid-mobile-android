@@ -19,14 +19,16 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.base
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import kotlinx.android.synthetic.main.events_bids.*
-import kotlinx.android.synthetic.main.fragment_bidding_interstitial.*
+import android.widget.Button
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.RewardedAdUnit
 import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingInterstitialBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
+import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 abstract class BaseBidRewardedFragment : AdFragment() {
 
@@ -35,9 +37,14 @@ abstract class BaseBidRewardedFragment : AdFragment() {
     override val layoutRes = R.layout.fragment_bidding_interstitial
     protected var rewardedAdUnit: RewardedAdUnit? = null
 
+    protected val binding: FragmentBiddingInterstitialBinding
+        get() = getBinding()
+    protected lateinit var events: Events
+
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-        btnLoad?.setOnClickListener {
+        events = Events(view)
+        binding.btnLoad.setOnClickListener {
             handleLoadInterstitialClick()
         }
     }
@@ -63,14 +70,15 @@ abstract class BaseBidRewardedFragment : AdFragment() {
     }
 
     private fun handleLoadInterstitialClick() {
-        when (btnLoad?.text) {
+        when (binding.btnLoad.text) {
             getString(R.string.text_load) -> {
-                btnLoad?.isEnabled = false
+                binding.btnLoad.isEnabled = false
                 resetEventButtons()
                 loadAd()
             }
+
             getString(R.string.text_show) -> {
-                btnLoad?.text = getString(R.string.text_load)
+                binding.btnLoad.text = getString(R.string.text_load)
                 rewardedAdUnit?.show()
             }
         }
@@ -81,30 +89,30 @@ abstract class BaseBidRewardedFragment : AdFragment() {
 
         override fun onAdLoaded(rewardedAdUnit: RewardedAdUnit?) {
             Log.d(TAG, "onAdLoaded() called with: reward = [${rewardedAdUnit?.userReward}]")
-            btnAdLoaded?.isEnabled = true
-            btnLoad?.setText(R.string.text_show)
-            btnLoad?.isEnabled = true
+            events.loaded(true)
+            binding.btnLoad.setText(R.string.text_show)
+            binding.btnLoad.isEnabled = true
         }
 
         override fun onAdDisplayed(rewardedAdUnit: RewardedAdUnit?) {
             Log.d(TAG, "onAdDisplayed() called with: rewardedAdUnit = [$rewardedAdUnit]")
-            btnAdDisplayed?.isEnabled = true
+            events.displayed(true)
         }
 
         override fun onAdFailed(rewardedAdUnit: RewardedAdUnit?, exception: AdException?) {
             Log.d(TAG, "onAdFailed() called with: rewardedAdUnit = [$rewardedAdUnit], exception = [$exception]")
-            btnAdFailed?.isEnabled = true
-            btnLoad?.isEnabled = true
+            events.failed(true)
+            binding.btnLoad.isEnabled = true
         }
 
         override fun onAdClicked(rewardedAdUnit: RewardedAdUnit?) {
             Log.d(TAG, "onAdClicked() called with: rewardedAdUnit = [$rewardedAdUnit]")
-            btnAdClicked?.isEnabled = true
+            events.clicked(true)
         }
 
         override fun onAdClosed(rewardedAdUnit: RewardedAdUnit?) {
             Log.d(TAG, "onAdClosed() called with: rewardedAdUnit = [$rewardedAdUnit]")
-            btnAdClosed?.isEnabled = true
+            events.closed(true)
         }
 
         override fun onUserEarnedReward(rewardedAdUnit: RewardedAdUnit?) {
@@ -112,4 +120,17 @@ abstract class BaseBidRewardedFragment : AdFragment() {
         }
 
     }
+
+    protected class Events(parentView: View) : BaseEvents(parentView) {
+
+        fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
+        fun impression(b: Boolean) = enable(R.id.btnAdImpression, b)
+        fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
+        fun closed(b: Boolean) = enable(R.id.btnAdClosed, b)
+        fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+
+        fun displayed(b: Boolean) = enable(R.id.btnAdDisplayed, b)
+
+    }
+
 }
