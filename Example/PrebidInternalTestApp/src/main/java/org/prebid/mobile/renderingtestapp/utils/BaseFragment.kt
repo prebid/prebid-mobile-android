@@ -22,6 +22,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IdRes
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import org.prebid.mobile.renderingtestapp.MainActivity
 
@@ -34,10 +36,13 @@ abstract class BaseFragment : Fragment() {
     abstract val layoutRes: Int
 
     private var title: String = ""
+
+    private lateinit var baseBinding: ViewDataBinding
     private lateinit var rootView: View
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(layoutRes, container, false)
+        baseBinding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
+        rootView = baseBinding.root
         return rootView
     }
 
@@ -59,6 +64,11 @@ abstract class BaseFragment : Fragment() {
 
     protected fun <T : View?> findView(@IdRes idRes: Int): T? {
         return rootView.findViewById(idRes)
+    }
+
+    protected fun <T : ViewDataBinding> getBinding(): T {
+        @Suppress("UNCHECKED_CAST")
+        return baseBinding as T
     }
 
 }
