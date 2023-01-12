@@ -15,18 +15,20 @@
   ~    limitations under the License.
   -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@color/grey_background"
-    >
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ListView
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:divider="@null"
-        android:dividerHeight="32dp"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="@color/grey_background">
 
-</FrameLayout>
+        <ListView
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:divider="@null"
+            android:dividerHeight="32dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+</layout>

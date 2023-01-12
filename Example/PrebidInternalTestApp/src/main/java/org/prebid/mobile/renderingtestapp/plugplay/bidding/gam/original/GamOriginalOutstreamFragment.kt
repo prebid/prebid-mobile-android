@@ -17,6 +17,7 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original
 
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.RelativeLayout
 import com.google.android.gms.ads.AdListener
@@ -29,17 +30,25 @@ import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerVideoBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 class GamOriginalOutstreamFragment : AdFragment() {
     companion object {
         private const val TAG = "GamOriginalOutstream"
     }
+
     private var adUnit: VideoAdUnit? = null
     private var gamView: AdManagerAdView? = null
 
+    private val binding: FragmentBiddingBannerVideoBinding
+        get() = getBinding()
+    private lateinit var events: Events
+
     override fun initAd(): Any? {
+        events = Events(view!!)
         adUnit = VideoAdUnit(
             configId,
             width,
@@ -64,25 +73,25 @@ class GamOriginalOutstreamFragment : AdFragment() {
                 })
                 Log.d(TAG, "onAdLoaded() called")
                 resetEventButtons()
-                findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = true
-                findView<Button>(R.id.btnLoad)?.isEnabled = true
+                events.loaded(true)
+                binding.btnLoad.isEnabled = true
             }
 
             override fun onAdClicked() {
                 super.onAdClicked()
                 Log.d(TAG, "onAdClicked() called")
-                findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
+                events.clicked(true)
             }
 
             override fun onAdFailedToLoad(p0: LoadAdError) {
                 super.onAdFailedToLoad(p0)
                 Log.d(TAG, "onAdFailed() called with throwable = [${p0.message}]")
                 resetEventButtons()
-                findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = true
-                findView<Button>(R.id.btnLoad)?.isEnabled = true
+                events.failed(true)
+                binding.btnLoad.isEnabled = true
             }
         }
-        findView<RelativeLayout>(R.id.viewContainer)?.addView(gamView)
+        binding.viewContainer.addView(gamView)
         adUnit?.setAutoRefreshInterval(refreshDelay)
         return gamView
     }
@@ -100,4 +109,14 @@ class GamOriginalOutstreamFragment : AdFragment() {
     }
 
     override val layoutRes: Int = R.layout.fragment_bidding_banner_video
+
+
+    private class Events(parentView: View) : BaseEvents(parentView) {
+
+        fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
+        fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
+        fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+
+    }
+
 }

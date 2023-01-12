@@ -17,8 +17,10 @@ import org.prebid.mobile.admob.PrebidNativeAdapter
 import org.prebid.mobile.api.mediation.MediationNativeAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentAdmobNativeBinding
 import org.prebid.mobile.renderingtestapp.databinding.ViewNativeAdBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 class AdMobNativeFragment : AdFragment() {
@@ -32,13 +34,19 @@ class AdMobNativeFragment : AdFragment() {
     protected var adUnit: MediationNativeAdUnit? = null
     protected var adLoader: AdLoader? = null
 
+    private val binding: FragmentAdmobNativeBinding
+        get() = getBinding()
+    private lateinit var events: Events
+
     override val layoutRes = R.layout.fragment_admob_native
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
 
-        findView<TextView>(R.id.adIdLabel)?.text = getString(R.string.label_auid, configId)
-        findView<Button>(R.id.btnLoad)?.setOnClickListener {
+        events = Events(view)
+
+        binding.adIdLabel.text = getString(R.string.label_auid, configId)
+        binding.btnLoad.setOnClickListener {
             resetAdEvents()
             it.isEnabled = false
             loadAd()
@@ -54,30 +62,30 @@ class AdMobNativeFragment : AdFragment() {
         adLoader = AdLoader
             .Builder(requireContext(), adUnitId)
             .forNativeAd { ad: NativeAd ->
-                findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = true
-                findView<Button>(R.id.btnLoad)?.isEnabled = true
+                events.loaded(true)
+                binding.btnLoad.isEnabled = true
                 nativeAd = ad
-                findView<ViewGroup>(R.id.viewContainer)?.let {
+                binding.viewContainer.let {
                     createCustomView(it, nativeAd!!)
                 }
             }
             .withAdListener(object : AdListener() {
 
                 override fun onAdImpression() {
-                    findView<EventCounterView>(R.id.btnAdShowed)?.isEnabled = true
+                    events.showed(true)
                 }
 
                 override fun onAdOpened() {
-                    findView<EventCounterView>(R.id.btnAdOpened)?.isEnabled = true
+                    events.opened(true)
                 }
 
                 override fun onAdClicked() {
-                    findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
+                    events.clicked(true)
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = true
-                    findView<Button>(R.id.btnLoad)?.isEnabled = true
+                    events.failed(true)
+                    binding.btnLoad.isEnabled = true
                     Log.e(TAG, "Error: ${adError.message}")
                 }
 
@@ -113,10 +121,10 @@ class AdMobNativeFragment : AdFragment() {
     }
 
     private fun resetAdEvents() {
-        findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdShowed)?.isEnabled = false
+        events.loaded(false)
+        events.failed(false)
+        events.clicked(false)
+        events.showed(false)
     }
 
     private fun createCustomView(wrapper: ViewGroup, nativeAd: NativeAd) {
@@ -141,6 +149,17 @@ class AdMobNativeFragment : AdFragment() {
         }
 
         wrapper.addView(binding.root)
+    }
+
+    private class Events(parentView: View) : BaseEvents(parentView) {
+
+        fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
+        fun opened(b: Boolean) = enable(R.id.btnAdOpened, b)
+        fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
+        fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+
+        fun showed(b: Boolean) = enable(R.id.btnAdShowed, b)
+
     }
 
 }

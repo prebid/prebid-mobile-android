@@ -23,6 +23,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.IdRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import org.prebid.mobile.PrebidNativeAd
 import org.prebid.mobile.PrebidNativeAdEventListener
@@ -31,7 +32,9 @@ import org.prebid.mobile.api.mediation.MediationNativeAdUnit
 import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentNativeBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.utils.loadImage
 import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
@@ -43,13 +46,18 @@ open class PpmNativeFragment : AdFragment() {
     protected var nativeAdUnit: MediationNativeAdUnit? = null
     protected var extras = Bundle()
 
+    protected val binding: FragmentNativeBinding
+        get() = getBinding()
+    protected lateinit var events: Events
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        events = Events(view)
 
         if (layoutRes == R.layout.fragment_native) {
             layoutInflater.inflate(
                 getEventButtonViewId(),
-                findView<ConstraintLayout>(R.id.contentFragmentNative)!!,
+                binding.contentFragmentNative!!,
                 true
             )
         }
@@ -66,18 +74,18 @@ open class PpmNativeFragment : AdFragment() {
     override fun loadAd() {
         nativeAdUnit?.fetchDemand {
             if (it != FetchDemandResult.SUCCESS) {
-                findView<EventCounterView>(R.id.btnFetchDemandResultFailure)?.isEnabled = true
+                events.fetchDemandFailure(true)
                 return@fetchDemand
             }
-            findView<EventCounterView>(R.id.btnFetchDemandResultSuccess)?.isEnabled = true
+            events.fetchDemandSuccess(true)
 
             val nativeAd = NativeAdProvider.getNativeAd(extras)
             if (nativeAd == null) {
-                findView<EventCounterView>(R.id.btnGetNativeAdResultFailure)?.isEnabled = true
+                events.getNativeAdResultFailure(true)
                 return@fetchDemand
             }
 
-            findView<EventCounterView>(R.id.btnGetNativeAdResultSuccess)?.isEnabled = true
+            events.getNativeAdResultSuccess(true)
             inflateViewContent(nativeAd)
         }
     }
@@ -93,45 +101,45 @@ open class PpmNativeFragment : AdFragment() {
 
     protected open fun inflateViewContent(nativeAd: PrebidNativeAd) {
         nativeAd.registerViewList(
-            findView(R.id.adContainer),
+            binding.adContainer,
             listOf(
-                findView<View>(R.id.tvNativeTitle),
-                findView<View>(R.id.tvNativeBody),
-                findView<View>(R.id.tvNativeBrand),
-                findView<View>(R.id.btnNativeAction),
-                findView<View>(R.id.ivNativeMain),
-                findView<View>(R.id.ivNativeIcon)
+                binding.tvNativeTitle,
+                binding.tvNativeBody,
+                binding.tvNativeBrand,
+                binding.btnNativeAction,
+                binding.ivNativeMain,
+                binding.ivNativeIcon
             ),
             createNativeListener()
         )
 
-        findView<TextView>(R.id.tvNativeTitle)?.text = nativeAd.title
-        findView<TextView>(R.id.tvNativeBody)?.text = nativeAd.description
-        findView<TextView>(R.id.tvNativeBrand)?.text = nativeAd.sponsoredBy
-        findView<Button>(R.id.btnNativeAction)?.text = nativeAd.callToAction
+        binding.tvNativeTitle.text = nativeAd.title
+        binding.tvNativeBody.text = nativeAd.description
+        binding.tvNativeBrand.text = nativeAd.sponsoredBy
+        binding.btnNativeAction.text = nativeAd.callToAction
 
         if (nativeAd.imageUrl.isNotBlank()) {
-            loadImage(findView<ImageView>(R.id.ivNativeMain)!!, nativeAd.imageUrl)
+            loadImage(binding.ivNativeMain, nativeAd.imageUrl)
         }
         if (nativeAd.iconUrl.isNotBlank()) {
-            loadImage(findView<ImageView>(R.id.ivNativeIcon)!!, nativeAd.iconUrl)
+            loadImage(binding.ivNativeIcon, nativeAd.iconUrl)
         }
     }
 
     protected fun createNativeListener(): PrebidNativeAdEventListener {
         return object : PrebidNativeAdEventListener {
             override fun onAdClicked() {
-                findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
+                events.clicked(true)
             }
 
             override fun onAdImpression() {
                 doInMainThread {
-                    findView<EventCounterView>(R.id.btnAdImpression)?.isEnabled = true
+                    events.impression(true)
                 }
             }
 
             override fun onAdExpired() {
-                findView<EventCounterView>(R.id.btnAdExpired)?.isEnabled = true
+                events.expired(true)
             }
         }
     }
@@ -139,6 +147,29 @@ open class PpmNativeFragment : AdFragment() {
     private fun doInMainThread(function: () -> Unit) {
         val handler = Handler(Looper.getMainLooper())
         handler.postAtFrontOfQueue(function)
+    }
+
+    protected class Events(parentView: View) : BaseEvents(parentView) {
+
+        fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
+        fun impression(b: Boolean) = enable(R.id.btnAdImpression, b)
+        fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
+        fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+
+        fun displayed(b: Boolean) = enable(R.id.btnAdDismissed, b)
+
+        fun nativeAdLoaded(b: Boolean) = enable(R.id.btnNativeAdLoaded, b)
+        fun expired(b: Boolean) = enable(R.id.btnAdExpired, b)
+        fun fetchDemandFailure(b: Boolean) = enable(R.id.btnFetchDemandResultFailure, b)
+        fun fetchDemandSuccess(b: Boolean) = enable(R.id.btnFetchDemandResultSuccess, b)
+        fun getNativeAdResultFailure(b: Boolean) = enable(R.id.btnGetNativeAdResultFailure, b)
+        fun getNativeAdResultSuccess(b: Boolean) = enable(R.id.btnGetNativeAdResultSuccess, b)
+        fun customAdRequestSuccess(b: Boolean) = enable(R.id.btnCustomAdRequestSuccess, b)
+        fun unifiedRequestSuccess(b: Boolean) = enable(R.id.btnUnifiedRequestSuccess, b)
+        fun primaryAdWinUnified(b: Boolean) = enable(R.id.btnPrimaryAdWinUnified, b)
+        fun primaryAdWinCustom(b: Boolean) = enable(R.id.btnPrimaryAdWinCustom, b)
+        fun primaryAdRequestFailure(b: Boolean) = enable(R.id.btnPrimaryAdRequestFailure, b)
+
     }
 
 }

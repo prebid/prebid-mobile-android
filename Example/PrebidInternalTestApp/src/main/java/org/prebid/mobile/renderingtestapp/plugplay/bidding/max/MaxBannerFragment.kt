@@ -18,7 +18,9 @@ import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.mediation.MediationBannerAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerApplovinMaxBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 open class MaxBannerFragment : AdFragment() {
@@ -32,22 +34,26 @@ open class MaxBannerFragment : AdFragment() {
 
     override val layoutRes = R.layout.fragment_bidding_banner_applovin_max
 
+    protected val binding: FragmentBiddingBannerApplovinMaxBinding
+        get() = getBinding()
+    protected lateinit var events: Events
+
     override fun configuratorMode() = AdConfiguratorDialogFragment.AdConfiguratorMode.BANNER
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-
-        findView<TextView>(R.id.adIdLabel)?.text = getString(R.string.label_auid, configId)
-        findView<Button>(R.id.btnLoad)?.setOnClickListener {
+        events = Events(view)
+        binding.adIdLabel.text = getString(R.string.label_auid, configId)
+        binding.btnLoad.setOnClickListener {
             resetAdEvents()
             it.isEnabled = false
             loadAd()
         }
 
-        findView<Button>(R.id.btnStopRefresh)?.setOnClickListener {
+        binding.btnStopRefresh.setOnClickListener {
             adUnit?.stopRefresh()
             resetEventButtons()
-            findView<Button>(R.id.btnLoad)?.isEnabled = true
+            binding.btnLoad.isEnabled = true
         }
     }
 
@@ -62,7 +68,7 @@ open class MaxBannerFragment : AdFragment() {
             AppLovinSdkUtils.dpToPx(requireContext(), width),
             AppLovinSdkUtils.dpToPx(requireContext(), height)
         )
-        findView<RelativeLayout>(R.id.viewContainer)?.addView(adView)
+        binding.viewContainer.addView(adView)
 
         val mediationUtils =
             MaxMediationBannerUtils(adView)
@@ -90,51 +96,67 @@ open class MaxBannerFragment : AdFragment() {
     }
 
     private fun resetAdEvents() {
-        findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdLoadFailed)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdDisplayFailed)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdExpanded)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdCollapsed)?.isEnabled = false
+        events.loaded(false)
+        events.clicked(false)
+        events.loadFailed(false)
+        events.displayFailed(false)
+        events.expanded(false)
+        events.collapsed(false)
     }
 
     protected fun createListener(): MaxAdViewAdListener {
         return object : MaxAdViewAdListener {
             override fun onAdLoaded(ad: MaxAd?) {
 
-                findView<Button>(R.id.btnLoad)?.isEnabled = true
-                findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = true
+                binding.btnLoad.isEnabled = true
+                events.loaded(true)
             }
 
             override fun onAdClicked(ad: MaxAd?) {
-                findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
+                events.clicked(true)
             }
 
             override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {
-                findView<EventCounterView>(R.id.btnAdLoadFailed)?.isEnabled = true
+                events.loadFailed(true)
 
-                findView<Button>(R.id.btnLoad)?.isEnabled = true
+                binding.btnLoad.isEnabled = true
                 Log.d(TAG, "onAdLoadFailed(): ${error?.message}")
             }
 
             override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {
-                findView<EventCounterView>(R.id.btnAdDisplayFailed)?.isEnabled = true
+                events.displayFailed(true)
 
                 Log.d(TAG, "onAdDisplayFailed(): ${error?.message}")
             }
 
             override fun onAdExpanded(ad: MaxAd?) {
-                findView<EventCounterView>(R.id.btnAdExpanded)?.isEnabled = true
+                events.expanded(true)
             }
 
             override fun onAdCollapsed(ad: MaxAd?) {
-                findView<EventCounterView>(R.id.btnAdCollapsed)?.isEnabled = true
+                events.collapsed(true)
             }
 
             // Deprecated according to documentation
             override fun onAdDisplayed(ad: MaxAd?) {}
             override fun onAdHidden(ad: MaxAd?) {}
         }
+    }
+
+
+    protected class Events(parentView: View) : BaseEvents(parentView) {
+
+        fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
+        fun impression(b: Boolean) = enable(R.id.btnAdImpression, b)
+        fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
+        fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+
+        fun displayed(b: Boolean) = enable(R.id.btnAdDisplayed, b)
+        fun expanded(b: Boolean) = enable(R.id.btnAdExpanded, b)
+        fun collapsed(b: Boolean) = enable(R.id.btnAdCollapsed, b)
+        fun loadFailed(b: Boolean) = enable(R.id.btnAdLoadFailed, b)
+        fun displayFailed(b: Boolean) = enable(R.id.btnAdDisplayFailed, b)
+
     }
 
 }

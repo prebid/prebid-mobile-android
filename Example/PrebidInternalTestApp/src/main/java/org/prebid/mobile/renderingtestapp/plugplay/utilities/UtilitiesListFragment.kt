@@ -23,10 +23,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.data.SimpleListItem
+import org.prebid.mobile.renderingtestapp.databinding.FragmentUtilitiesListBinding
 import org.prebid.mobile.renderingtestapp.utils.BaseFragment
 
 class UtilitiesListFragment : BaseFragment() {
+
     override val layoutRes = R.layout.fragment_utilities_list
+    private val binding: FragmentUtilitiesListBinding
+        get() = getBinding()
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         initRecyclerView()
@@ -36,7 +40,7 @@ class UtilitiesListFragment : BaseFragment() {
         val utilitiesListAdapter = UtilitiesListAdapter { findNavController().navigate(it) }
         utilitiesListAdapter.setUtilitiesList(createUtilitiesList())
 
-        val recyclerView = findView<RecyclerView>(R.id.rvUtilities)!!
+        val recyclerView = binding.rvUtilities
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = utilitiesListAdapter
     }

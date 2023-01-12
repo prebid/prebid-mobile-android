@@ -37,13 +37,11 @@ abstract class BaseFragment : Fragment() {
 
     private var title: String = ""
 
-    private lateinit var baseBinding: ViewDataBinding
-    private lateinit var rootView: View
+    protected lateinit var baseBinding: ViewDataBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         baseBinding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
-        rootView = baseBinding.root
-        return rootView
+        return baseBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,10 +59,6 @@ abstract class BaseFragment : Fragment() {
     }
 
     protected fun getTitle() = title
-
-    protected fun <T : View?> findView(@IdRes idRes: Int): T? {
-        return rootView.findViewById(idRes)
-    }
 
     protected fun <T : ViewDataBinding> getBinding(): T {
         @Suppress("UNCHECKED_CAST")

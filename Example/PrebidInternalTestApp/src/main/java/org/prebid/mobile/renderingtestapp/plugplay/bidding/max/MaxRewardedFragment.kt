@@ -14,7 +14,9 @@ import com.applovin.mediation.ads.MaxRewardedAd
 import org.prebid.mobile.api.mediation.MediationRewardedVideoAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingRewardedApplovinMaxBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 open class MaxRewardedFragment : AdFragment() {
@@ -30,11 +32,15 @@ open class MaxRewardedFragment : AdFragment() {
 
     override fun configuratorMode() = AdConfiguratorDialogFragment.AdConfiguratorMode.INTERSTITIAL
 
+    private val binding: FragmentBiddingRewardedApplovinMaxBinding
+        get() = getBinding()
+    private lateinit var events: Events
+
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-
-        findView<TextView>(R.id.adIdLabel)?.text = getString(R.string.label_auid, configId)
-        findView<Button>(R.id.btnLoad)?.setOnClickListener {
+        events = Events(view)
+        binding.adIdLabel.text = getString(R.string.label_auid, configId)
+        binding.btnLoad.setOnClickListener {
             handleLoadButtonClick()
         }
     }
@@ -68,25 +74,25 @@ open class MaxRewardedFragment : AdFragment() {
     }
 
     private fun resetAdEvents() {
-        findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdLoadFailed)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdDisplayFailed)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdDisplayed)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdHidden)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnRewardedVideoStarted)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnRewardedVideoCompleted)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnUserRewarded)?.isEnabled = false
+        events.loaded(false)
+        events.clicked(false)
+        events.loadFailed(false)
+        events.displayFailed(false)
+        events.displayed(false)
+        events.hidden(false)
+        events.rewardedVideoStarted(false)
+        events.rewardedVideoCompleted(false)
+        events.userRewarded(false)
     }
 
     private fun handleLoadButtonClick() {
-        if (findView<Button>(R.id.btnLoad)?.text == getString(R.string.text_show)) {
+        if (binding.btnLoad.text == getString(R.string.text_show)) {
             maxRewardedAd?.showAd()
-            findView<Button>(R.id.btnLoad)?.text = getString(R.string.text_retry)
-        } else if (findView<Button>(R.id.btnLoad)?.text == getString(R.string.text_retry)) {
+            binding.btnLoad.text = getString(R.string.text_retry)
+        } else if (binding.btnLoad.text == getString(R.string.text_retry)) {
             resetAdEvents()
-            findView<Button>(R.id.btnLoad)?.isEnabled = false
-            findView<Button>(R.id.btnLoad)?.text = "Loading..."
+            binding.btnLoad.isEnabled = false
+            binding.btnLoad.text = "Loading..."
             loadAd()
         }
     }
@@ -94,48 +100,65 @@ open class MaxRewardedFragment : AdFragment() {
     private fun createListener(): MaxRewardedAdListener {
         return object : MaxRewardedAdListener {
             override fun onAdLoaded(ad: MaxAd?) {
-                findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = true
-                findView<Button>(R.id.btnLoad)?.isEnabled = true
-                findView<Button>(R.id.btnLoad)?.text = getString(R.string.text_show)
+                events.loaded(true)
+                binding.btnLoad.isEnabled = true
+                binding.btnLoad.text = getString(R.string.text_show)
             }
 
             override fun onAdClicked(ad: MaxAd?) {
-                findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
+                events.clicked(true)
             }
 
             override fun onAdDisplayed(ad: MaxAd?) {
-                findView<EventCounterView>(R.id.btnAdDisplayed)?.isEnabled = true
+                events.displayed(true)
             }
 
             override fun onAdHidden(ad: MaxAd?) {
-                findView<EventCounterView>(R.id.btnAdHidden)?.isEnabled = true
+                events.hidden(true)
             }
 
             override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {
-                findView<EventCounterView>(R.id.btnAdLoadFailed)?.isEnabled = true
+                events.loadFailed(true)
 
-                findView<Button>(R.id.btnLoad)?.isEnabled = true
+                binding.btnLoad.isEnabled = true
                 Log.d(TAG, "onAdLoadFailed(): ${error?.message}")
             }
 
             override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {
-                findView<EventCounterView>(R.id.btnAdDisplayFailed)?.isEnabled = true
+                events.displayFailed(true)
 
                 Log.d(TAG, "onAdDisplayFailed(): ${error?.message}")
             }
 
             override fun onRewardedVideoStarted(ad: MaxAd?) {
-                findView<EventCounterView>(R.id.btnRewardedVideoStarted)?.isEnabled = true
+                events.rewardedVideoStarted(true)
             }
 
             override fun onRewardedVideoCompleted(ad: MaxAd?) {
-                findView<EventCounterView>(R.id.btnRewardedVideoCompleted)?.isEnabled = true
+                events.rewardedVideoCompleted(true)
             }
 
             override fun onUserRewarded(ad: MaxAd?, reward: MaxReward?) {
-                findView<EventCounterView>(R.id.btnUserRewarded)?.isEnabled = true
+                events.userRewarded(true)
             }
         }
+    }
+
+    protected class Events(parentView: View) : BaseEvents(parentView) {
+
+        fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
+        fun impression(b: Boolean) = enable(R.id.btnAdImpression, b)
+        fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
+        fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+        fun userRewarded(b: Boolean) = enable(R.id.btnUserRewarded, b)
+
+        fun displayed(b: Boolean) = enable(R.id.btnAdDisplayed, b)
+        fun hidden(b: Boolean) = enable(R.id.btnAdHidden, b)
+        fun loadFailed(b: Boolean) = enable(R.id.btnAdLoadFailed, b)
+        fun displayFailed(b: Boolean) = enable(R.id.btnAdDisplayFailed, b)
+        fun rewardedVideoStarted(b: Boolean) = enable(R.id.btnRewardedVideoStarted, b)
+        fun rewardedVideoCompleted(b: Boolean) = enable(R.id.btnRewardedVideoCompleted, b)
+
     }
 
 }

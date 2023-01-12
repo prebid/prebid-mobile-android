@@ -68,12 +68,12 @@ class GamNativeFragment(
 
         nativeAdUnit?.fetchDemand { result ->
             if (result != FetchDemandResult.SUCCESS) {
-                findView<EventCounterView>(R.id.btnFetchDemandResultFailure)?.isEnabled = true
+                events.fetchDemandFailure(true)
                 loadGam(publisherAdRequest)
                 return@fetchDemand
             }
 
-            findView<EventCounterView>(R.id.btnFetchDemandResultSuccess)?.isEnabled = true
+            events.fetchDemandSuccess(true)
             GamUtils.prepare(publisherAdRequest, extras)
             loadGam(publisherAdRequest)
         }
@@ -96,7 +96,7 @@ class GamNativeFragment(
     private fun createNativeAdLoader(): AdLoader = AdLoader
         .Builder(requireContext(), adUnitId)
         .forNativeAd { unifiedAd ->
-            findView<EventCounterView>(R.id.btnUnifiedRequestSuccess)?.isEnabled = true
+            events.unifiedRequestSuccess(true)
             handleNativeAd(unifiedAd)
         }
         .withAdListener(getGamAdListener())
@@ -107,7 +107,7 @@ class GamNativeFragment(
         .forCustomFormatAd(
             customFormatId,
             { formatAd ->
-                findView<EventCounterView>(R.id.btnCustomAdRequestSuccess)?.isEnabled = true
+                events.customAdRequestSuccess(true)
                 handleCustomFormatAd(formatAd)
             },
             null
@@ -121,11 +121,11 @@ class GamNativeFragment(
         if (GamUtils.didPrebidWin(nativeAd)) {
             val prebidNativeAd = NativeAdProvider.getNativeAd(extras)
             if (prebidNativeAd != null) {
-                findView<EventCounterView>(R.id.btnNativeAdLoaded)?.isEnabled = true
+                events.nativeAdLoaded(true)
                 inflateViewContent(prebidNativeAd)
             }
         } else {
-            findView<EventCounterView>(R.id.btnPrimaryAdWinUnified)?.isEnabled = true
+            events.primaryAdWinUnified(true)
             inflateNativeAd(nativeAd)
         }
     }
@@ -136,11 +136,11 @@ class GamNativeFragment(
         if (GamUtils.didPrebidWin(customFormatAd)) {
             val nativeAd = NativeAdProvider.getNativeAd(extras)
             if (nativeAd != null) {
-                findView<EventCounterView>(R.id.btnNativeAdLoaded)?.isEnabled = true
+                events.nativeAdLoaded(true)
                 inflateViewContent(nativeAd)
             }
         } else {
-            findView<EventCounterView>(R.id.btnPrimaryAdWinCustom)?.isEnabled = true
+            events.primaryAdWinCustom(true)
             inflateGamCustomFormat(customFormatAd)
         }
     }
@@ -154,17 +154,17 @@ class GamNativeFragment(
         val iconUrl = customFormatAd.getText("iconUrl")?.toString() ?: ""
         val imageUrl = customFormatAd.getText("imgUrl")?.toString() ?: ""
 
-        findView<TextView>(R.id.tvNativeTitle)?.text = title
-        findView<TextView>(R.id.tvNativeBody)?.text = text
-        findView<TextView>(R.id.tvNativeBrand)?.text = sponsoredBy
-        findView<Button>(R.id.btnNativeAction)?.text = cta
+        binding.tvNativeTitle.text = title
+        binding.tvNativeBody.text = text
+        binding.tvNativeBrand.text = sponsoredBy
+        binding.btnNativeAction.text = cta
 
-        loadImage(findView<ImageView>(R.id.ivNativeMain)!!, imageUrl)
-        loadImage(findView<ImageView>(R.id.ivNativeIcon)!!, iconUrl)
+        loadImage(binding.ivNativeMain, imageUrl)
+        loadImage(binding.ivNativeIcon, iconUrl)
 
-        findView<Button>(R.id.btnNativeAction)?.setOnClickListener {
+        binding.btnNativeAction.setOnClickListener {
             customFormatAd.performClick("cta")
-            findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
+            events.clicked(true)
         }
 
         customFormatAd.recordImpression()
@@ -228,23 +228,23 @@ class GamNativeFragment(
         // native ad view with this native ad.
         adView.setNativeAd(nativeAd)
 
-        findView<RelativeLayout>(R.id.adContainer)?.removeAllViews()
-        findView<RelativeLayout>(R.id.adContainer)?.addView(adView)
+        binding.adContainer.removeAllViews()
+        binding.adContainer.addView(adView)
     }
 
     private fun isCustomFormatExample() = !TextUtils.isEmpty(customFormatId)
 
     private fun getGamAdListener() = object : AdListener() {
         override fun onAdFailedToLoad(p0: LoadAdError) {
-            findView<EventCounterView>(R.id.btnPrimaryAdRequestFailure)?.isEnabled = true
+            events.primaryAdRequestFailure(true)
         }
 
         override fun onAdClicked() {
-            findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
+            events.clicked(true)
         }
 
         override fun onAdImpression() {
-            findView<EventCounterView>(R.id.btnAdImpression)?.isEnabled = true
+            events.impression(true)
         }
     }
 

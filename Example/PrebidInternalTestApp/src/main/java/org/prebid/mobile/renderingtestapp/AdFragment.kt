@@ -94,11 +94,11 @@ abstract class AdFragment : BaseFragment() {
     }
 
     protected fun resetEventButtons() {
-        findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdDisplayed)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdClosed)?.isEnabled = false
+        baseBinding.root.findViewById<EventCounterView>(R.id.btnAdFailed)?.isEnabled = false
+        baseBinding.root.findViewById<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = false
+        baseBinding.root.findViewById<EventCounterView>(R.id.btnAdClicked)?.isEnabled = false
+        baseBinding.root.findViewById<EventCounterView>(R.id.btnAdDisplayed)?.isEnabled = false
+        baseBinding.root.findViewById<EventCounterView>(R.id.btnAdClosed)?.isEnabled = false
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -122,11 +122,11 @@ abstract class AdFragment : BaseFragment() {
         nativeAdUnit.setPlacementType(NativeAdUnit.PLACEMENTTYPE.CONTENT_FEED)
         nativeAdUnit.setContextSubType(NativeAdUnit.CONTEXTSUBTYPE.GENERAL_SOCIAL)
 
-        val methods: ArrayList<org.prebid.mobile.NativeEventTracker.EVENT_TRACKING_METHOD> = ArrayList()
-        methods.add(org.prebid.mobile.NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE)
-        methods.add(org.prebid.mobile.NativeEventTracker.EVENT_TRACKING_METHOD.JS)
+        val methods: ArrayList<NativeEventTracker.EVENT_TRACKING_METHOD> = ArrayList()
+        methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.IMAGE)
+        methods.add(NativeEventTracker.EVENT_TRACKING_METHOD.JS)
         try {
-            val tracker = NativeEventTracker(org.prebid.mobile.NativeEventTracker.EVENT_TYPE.IMPRESSION, methods)
+            val tracker = NativeEventTracker(NativeEventTracker.EVENT_TYPE.IMPRESSION, methods)
             nativeAdUnit.addEventTracker(tracker)
         } catch (e: Exception) {
             e.printStackTrace()

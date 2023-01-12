@@ -33,16 +33,16 @@ class AdMobRewardedRandomFragment : AdMobRewardedFragment() {
 
             RewardedAd.load(requireContext(), adUnitId, request, object : RewardedAdLoadCallback() {
                 override fun onAdLoaded(ad: RewardedAd) {
-                    findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = true
-                    findView<Button>(R.id.btnLoad)?.isEnabled = true
-                    findView<Button>(R.id.btnLoad)?.text = getString(R.string.text_show)
+                    events.loaded(true)
+                    binding.btnLoad.isEnabled = true
+                    binding.btnLoad.text = getString(R.string.text_show)
 
                     rewardedAd = ad
                     rewardedAd?.fullScreenContentCallback = createFullScreenContentCallback()
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = true
+                    events.failed(true)
                     Log.e(TAG, adError.message)
                     rewardedAd = null
                 }

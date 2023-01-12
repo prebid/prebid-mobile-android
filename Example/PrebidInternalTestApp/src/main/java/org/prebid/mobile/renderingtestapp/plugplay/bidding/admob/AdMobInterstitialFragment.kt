@@ -17,7 +17,9 @@ import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.mediation.MediationInterstitialAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentAdmobRewardedBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 import java.util.*
 
@@ -33,13 +35,19 @@ open class AdMobInterstitialFragment : AdFragment() {
     protected var adUnit: MediationInterstitialAdUnit? = null
     protected var isVideo = false
 
+    protected val binding: FragmentAdmobRewardedBinding
+        get() = getBinding()
+    protected lateinit var events: Events
+
     override val layoutRes = R.layout.fragment_admob_rewarded
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
 
-        findView<TextView>(R.id.adIdLabel)?.text = getString(R.string.label_auid, configId)
-        findView<Button>(R.id.btnLoad)?.setOnClickListener {
+        events = Events(view)
+
+        binding.adIdLabel.text = getString(R.string.label_auid, configId)
+        binding.btnLoad.setOnClickListener {
             handleLoadButtonClick()
         }
     }
@@ -74,16 +82,16 @@ open class AdMobInterstitialFragment : AdFragment() {
 
             InterstitialAd.load(requireContext(), adUnitId, request, object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
-                    findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = true
-                    findView<Button>(R.id.btnLoad)?.isEnabled = true
-                    findView<Button>(R.id.btnLoad)?.text = getString(R.string.text_show)
+                    events.loaded(true)
+                    binding.btnLoad.isEnabled = true
+                    binding.btnLoad.text = getString(R.string.text_show)
 
                     interstitialAd = ad
                     interstitialAd?.fullScreenContentCallback = createFullScreenContentCallback()
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = true
+                    events.failed(true)
                     Log.e(TAG, adError.message)
                     interstitialAd = null
                 }
@@ -104,17 +112,17 @@ open class AdMobInterstitialFragment : AdFragment() {
     }
 
     private fun resetAdEvents() {
-        findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdShowed)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdImpression)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdDismissed)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdFailedFullScreen)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = false
+        events.loaded(false)
+        events.showed(false)
+        events.impression(false)
+        events.dismissed(false)
+        events.failedFullScreen(false)
+        events.failed(false)
+        events.clicked(false)
     }
 
     private fun handleLoadButtonClick() {
-        val loadButton = findView<Button>(R.id.btnLoad) ?: return
+        val loadButton = binding.btnLoad ?: return
         if (loadButton.text == getString(R.string.text_show)) {
             interstitialAd?.show(requireActivity())
             loadButton.text = getString(R.string.text_retry)
@@ -129,26 +137,38 @@ open class AdMobInterstitialFragment : AdFragment() {
     protected fun createFullScreenContentCallback(): FullScreenContentCallback {
         return object : FullScreenContentCallback() {
             override fun onAdClicked() {
-                findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
+                events.clicked(true)
             }
 
             override fun onAdImpression() {
-                findView<EventCounterView>(R.id.btnAdImpression)?.isEnabled = true
+                events.impression(true)
             }
 
             override fun onAdShowedFullScreenContent() {
-                findView<EventCounterView>(R.id.btnAdShowed)?.isEnabled = true
+                events.showed(true)
             }
 
             override fun onAdDismissedFullScreenContent() {
-                findView<EventCounterView>(R.id.btnAdDismissed)?.isEnabled = true
+                events.dismissed(true)
             }
 
             override fun onAdFailedToShowFullScreenContent(p0: AdError) {
-                findView<EventCounterView>(R.id.btnAdFailedFullScreen)?.isEnabled = true
+                events.failedFullScreen(true)
             }
         }
     }
 
+    protected class Events(parentView: View) : BaseEvents(parentView) {
+
+        fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
+        fun impression(b: Boolean) = enable(R.id.btnAdImpression, b)
+        fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
+        fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+
+        fun showed(b: Boolean) = enable(R.id.btnAdShowed, b)
+        fun dismissed(b: Boolean) = enable(R.id.btnAdDismissed, b)
+        fun failedFullScreen(b: Boolean) = enable(R.id.btnAdFailedFullScreen, b)
+
+    }
 
 }

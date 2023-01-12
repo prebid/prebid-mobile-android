@@ -29,7 +29,9 @@ import org.prebid.mobile.api.rendering.listeners.BannerViewListener
 import org.prebid.mobile.eventhandlers.GamBannerEventHandler
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 open class GamBannerFragment : AdFragment(),
@@ -39,11 +41,15 @@ open class GamBannerFragment : AdFragment(),
     override val layoutRes = R.layout.fragment_bidding_banner
 
     protected var bannerView: BannerView? = null
+    protected val binding: FragmentBiddingBannerBinding
+        get() = getBinding()
+    protected lateinit var events: Events
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-        findView<TextView>(R.id.adIdLabel)?.text = getString(R.string.label_auid, configId)
-        findView<Button>(R.id.btnLoad)?.setOnClickListener {
+        events = Events(view)
+        binding.adIdLabel.text = getString(R.string.label_auid, configId)
+        binding.btnLoad.setOnClickListener {
             resetEventButtons()
             loadAd()
         }
@@ -57,7 +63,7 @@ open class GamBannerFragment : AdFragment(),
         bannerView?.addAdditionalSizes(*getAdditionalPrebidBannerSizeArray())
         bannerView?.setAutoRefreshDelay(refreshDelay)
         bannerView?.setBannerListener(this)
-        findView<RelativeLayout>(R.id.viewContainer)?.addView(bannerView)
+        binding.viewContainer.addView(bannerView)
         return bannerView
     }
 
@@ -77,30 +83,30 @@ open class GamBannerFragment : AdFragment(),
     override fun onAdFailed(view: BannerView?, exception: AdException?) {
         Log.d(TAG, "onAdFailed() called with: view = [$view], throwable = [$exception]")
         resetEventButtons()
-        findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = true
-        findView<Button>(R.id.btnLoad)?.isEnabled = true
+        events.failed(true)
+        binding.btnLoad.isEnabled = true
     }
 
     override fun onAdDisplayed(bannerView: BannerView?) {
-        findView<EventCounterView>(R.id.btnAdDisplayed)?.isEnabled = true
+        events.displayed(true)
         Log.d(TAG, "onAdDisplayed() called with: bannerView = [$bannerView]")
     }
 
     override fun onAdLoaded(bannerView: BannerView?) {
         Log.d(TAG, "onAdLoaded() called with: view = [$view]")
         resetEventButtons()
-        findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = true
-        findView<Button>(R.id.btnLoad)?.isEnabled = true
+        events.loaded(true)
+        binding.btnLoad.isEnabled = true
     }
 
     override fun onAdClicked(view: BannerView?) {
         Log.d(TAG, "onAdClicked() called with: view = [$view]")
-        findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
+        events.clicked(true)
     }
 
     override fun onAdClosed(view: BannerView?) {
         Log.d(TAG, "onAdClosed() called with: view = [$view]")
-        findView<EventCounterView>(R.id.btnAdClosed)?.isEnabled = true
+        events.closed(true)
     }
 
     protected open fun initBanner(configId: String?, eventHandler: GamBannerEventHandler): BannerView {
@@ -114,4 +120,16 @@ open class GamBannerFragment : AdFragment(),
     protected open fun getGamAdSizeArray(initialSize: AdSize) = arrayOf(initialSize)
 
     protected open fun getAdditionalPrebidBannerSizeArray() = emptyArray<AdSize>()
+
+    protected class Events(parentView: View) : BaseEvents(parentView) {
+
+        fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
+        fun impression(b: Boolean) = enable(R.id.btnAdImpression, b)
+        fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
+        fun closed(b: Boolean) = enable(R.id.btnAdClosed, b)
+        fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+        fun displayed(b: Boolean) = enable(R.id.btnAdDisplayed, b)
+
+    }
+
 }

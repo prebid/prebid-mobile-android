@@ -18,7 +18,9 @@ import com.applovin.mediation.nativeAds.MaxNativeAdViewBinder
 import org.prebid.mobile.*
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingNativeApplovinMaxBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 open class MaxNativeFragment : AdFragment() {
@@ -34,11 +36,16 @@ open class MaxNativeFragment : AdFragment() {
 
     override fun configuratorMode() = AdConfiguratorDialogFragment.AdConfiguratorMode.BANNER
 
+    private val binding: FragmentBiddingNativeApplovinMaxBinding
+        get() = getBinding()
+    private lateinit var events: Events
+
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
 
-        findView<TextView>(R.id.adIdLabel)?.text = getString(R.string.label_auid, configId)
-        findView<Button>(R.id.btnLoad)?.setOnClickListener {
+        events = Events(view)
+        binding.adIdLabel.text = getString(R.string.label_auid, configId)
+        binding.btnLoad.setOnClickListener {
             resetAdEvents()
             it.isEnabled = false
             loadAd()
@@ -47,7 +54,7 @@ open class MaxNativeFragment : AdFragment() {
 
     override fun initAd(): Any? {
         nativeAdLoader = MaxNativeAdLoader(adUnitId, requireActivity())
-        nativeAdLoader.setNativeAdListener(createNativeAdListener(findView<RelativeLayout>(R.id.viewContainer)!!))
+        nativeAdLoader.setNativeAdListener(createNativeAdListener(binding.viewContainer!!))
         nativeAdLoader.setRevenueListener(createRevenueListener())
 
         nativeAdUnit = NativeAdUnit(configId)
@@ -132,10 +139,10 @@ open class MaxNativeFragment : AdFragment() {
     }
 
     private fun resetAdEvents() {
-        findView<EventCounterView>(R.id.btnNativeAdLoaded)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnNativeAdClicked)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnNativeAdLoadFailed)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdRevenuePaid)?.isEnabled = false
+        events.nativeAdLoaded(false)
+        events.nativeAdClicked(false)
+        events.nativeAdLoadFailed(false)
+        events.revenuePaid(false)
     }
 
     private fun createNativeAdListener(wrapper: ViewGroup): MaxNativeAdListener {
@@ -144,17 +151,17 @@ open class MaxNativeFragment : AdFragment() {
                 wrapper.removeAllViews()
                 wrapper.addView(nativeAdView)
 
-                findView<EventCounterView>(R.id.btnNativeAdLoaded)?.isEnabled = true
-                findView<Button>(R.id.btnLoad)?.isEnabled = true
+                events.nativeAdLoaded(true)
+                binding.btnLoad.isEnabled = true
             }
 
             override fun onNativeAdClicked(p0: MaxAd?) {
-                findView<EventCounterView>(R.id.btnNativeAdClicked)?.isEnabled = true
+                events.nativeAdClicked(true)
             }
 
             override fun onNativeAdLoadFailed(p0: String?, p1: MaxError?) {
-                findView<EventCounterView>(R.id.btnNativeAdLoadFailed)?.isEnabled = true
-                findView<Button>(R.id.btnLoad)?.isEnabled = true
+                events.nativeAdLoadFailed(true)
+                binding.btnLoad.isEnabled = true
 
                 Log.e(TAG, "On native ad load failed: ${p1?.message}")
             }
@@ -163,8 +170,23 @@ open class MaxNativeFragment : AdFragment() {
 
     private fun createRevenueListener(): MaxAdRevenueListener {
         return MaxAdRevenueListener {
-            findView<EventCounterView>(R.id.btnAdRevenuePaid)?.isEnabled = true
+            events.revenuePaid(true)
         }
+    }
+
+    protected class Events(parentView: View) : BaseEvents(parentView) {
+
+        fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
+        fun impression(b: Boolean) = enable(R.id.btnAdImpression, b)
+        fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
+        fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+
+        fun displayed(b: Boolean) = enable(R.id.btnAdDisplayed, b)
+        fun nativeAdLoaded(b: Boolean) = enable(R.id.btnNativeAdLoaded, b)
+        fun nativeAdClicked(b: Boolean) = enable(R.id.btnNativeAdClicked, b)
+        fun nativeAdLoadFailed(b: Boolean) = enable(R.id.btnNativeAdLoadFailed, b)
+        fun revenuePaid(b: Boolean) = enable(R.id.btnAdRevenuePaid, b)
+
     }
 
 }

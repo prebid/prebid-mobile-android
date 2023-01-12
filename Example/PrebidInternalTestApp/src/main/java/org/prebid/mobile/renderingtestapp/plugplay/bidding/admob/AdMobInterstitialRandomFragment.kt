@@ -33,16 +33,16 @@ class AdMobInterstitialRandomFragment : AdMobInterstitialFragment() {
 
             InterstitialAd.load(requireContext(), adUnitId, request, object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
-                    findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = true
-                    findView<Button>(R.id.btnLoad)?.isEnabled = true
-                    findView<Button>(R.id.btnLoad)?.text = getString(R.string.text_show)
+                    events.loaded(true)
+                    binding.btnLoad.isEnabled = true
+                    binding.btnLoad.text = getString(R.string.text_show)
 
                     interstitialAd = ad
                     interstitialAd?.fullScreenContentCallback = createFullScreenContentCallback()
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = true
+                    events.failed(true)
                     Log.e(TAG, adError.message)
                     interstitialAd = null
                 }

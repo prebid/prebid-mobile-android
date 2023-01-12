@@ -28,10 +28,12 @@ import org.prebid.mobile.renderingtestapp.utils.loadImage
 import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 class GamOriginalNativeInAppFragment : PpmNativeFragment() {
+
     companion object {
         private const val TAG = "GamOriginalNativeInApp"
         private const val CUSTOM_FORMAT_ID = "11934135"
     }
+
     private var adView: AdManagerAdView? = null
     private var unifiedNativeAd: NativeAd? = null
     private var adUnit: NativeAdUnit? = null
@@ -50,15 +52,15 @@ class GamOriginalNativeInAppFragment : PpmNativeFragment() {
         adUnit = configureNativeAdUnit()
 
         val adRequest = AdManagerAdRequest.Builder().build()
-        adLoader = createAdLoader(findView<ViewGroup>(R.id.adContainer)!!)
+        adLoader = createAdLoader(binding.adContainer)
         adUnit?.fetchDemand(adRequest) { resultCode ->
             if (resultCode != ResultCode.SUCCESS) {
-                findView<EventCounterView>(R.id.btnFetchDemandResultFailure)?.isEnabled = true
+                events.fetchDemandFailure(true)
                 adLoader!!.loadAd(adRequest)
                 return@fetchDemand
             }
-            GamUtils.prepare(adRequest,extras)
-            findView<EventCounterView>(R.id.btnFetchDemandResultSuccess)?.isEnabled = true
+            GamUtils.prepare(adRequest, extras)
+            events.fetchDemandSuccess(true)
             adLoader!!.loadAd(adRequest)
         }
     }
@@ -72,32 +74,32 @@ class GamOriginalNativeInAppFragment : PpmNativeFragment() {
             override fun onAdClicked() {
                 Log.d(TAG, "onAdClicked called: ")
                 onMainThread {
-                    findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
+                    events.clicked(true)
                 }
             }
 
             override fun onAdImpression() {
                 Log.d(TAG, "onAdImpression called: ")
                 onMainThread {
-                    findView<EventCounterView>(R.id.btnAdImpression)?.isEnabled = true
+                    events.impression(true)
                 }
             }
 
             override fun onAdExpired() {
                 Log.d(TAG, "onAdExpired called: ")
                 onMainThread {
-                    findView<EventCounterView>(R.id.btnAdExpired)?.isEnabled = true
+                    events.expired(true)
                 }
             }
         })
 
-        loadImage(findView<ImageView>(R.id.ivNativeIcon)!!, ad.iconUrl)
-        findView<TextView>(R.id.tvNativeTitle)?.text = ad.title
-        loadImage(findView<ImageView>(R.id.ivNativeMain)!!, ad.imageUrl)
-        findView<TextView>(R.id.tvNativeBody)?.text = ad.description
-        findView<Button>(R.id.btnNativeAction)?.text = ad.callToAction
-        findView<Button>(R.id.btnNativeAction)?.isEnabled = true
-        findView<RelativeLayout>(R.id.adContainer)?.addView(nativeContainer)
+        loadImage(binding.ivNativeIcon!!, ad.iconUrl)
+        binding.tvNativeTitle.text = ad.title
+        loadImage(binding.ivNativeMain!!, ad.imageUrl)
+        binding.tvNativeBody.text = ad.description
+        binding.btnNativeAction.text = ad.callToAction
+        binding.btnNativeAction.isEnabled = true
+        binding.adContainer.addView(nativeContainer)
     }
 
     private fun createAdLoader(
@@ -119,7 +121,7 @@ class GamOriginalNativeInAppFragment : PpmNativeFragment() {
                     override fun onPrebidNativeLoaded(ad: PrebidNativeAd) {
                         inflatePrebidNativeAd(ad, wrapper)
                         Log.d(TAG, "onPrebidNativeLoaded: ")
-                        findView<EventCounterView>(R.id.btnGetNativeAdResultSuccess)?.isEnabled = true
+                        events.getNativeAdResultSuccess(true)
                     }
 
                     override fun onPrebidNativeNotFound() {
@@ -137,7 +139,7 @@ class GamOriginalNativeInAppFragment : PpmNativeFragment() {
             .forCustomFormatAd(
                 CUSTOM_FORMAT_ID, onCustomAdLoaded
             ) { _: NativeCustomFormatAd?, _: String? ->
-                findView<EventCounterView>(R.id.btnCustomAdRequestSuccess)?.isEnabled = true
+                events.customAdRequestSuccess(true)
             }
             .withAdListener(object : AdListener() {
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {

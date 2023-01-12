@@ -29,7 +29,7 @@ class AdMobBannerFlexibleFragment : AdMobBannerFragment() {
         bannerView?.setAdSize(GamAdSize.getLandscapeInlineAdaptiveBannerAdSize(requireContext(), GamAdSize.FULL_WIDTH))
         bannerView?.adUnitId = adUnitId
         bannerView?.adListener = getListener()
-        findView<RelativeLayout>(R.id.viewContainer)?.addView(bannerView)
+        binding.viewContainer.addView(bannerView)
 
         adRequestExtras = Bundle()
         adRequest = AdRequest

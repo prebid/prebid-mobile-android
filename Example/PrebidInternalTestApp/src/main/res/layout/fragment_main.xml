@@ -15,131 +15,134 @@
   ~    limitations under the License.
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/switchEnableCaching"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:padding="5dp"
-        android:text="@string/enable_caching"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/listDemos"
-        app:layout_constraintEnd_toStartOf="@+id/toggleConfigurationButton"
-        app:layout_constraintStart_toEndOf="@+id/switchEnableGdpr"
-        app:switchPadding="18dp" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true">
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="6dp"
-        android:background="@color/button_disabled"
-        app:layout_constraintBottom_toTopOf="@+id/integrationsSegmentedControl"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <SearchView
-            android:id="@+id/searchDemos"
-            android:layout_width="match_parent"
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchEnableCaching"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:background="@drawable/search_background"
-            android:iconifiedByDefault="false"
-            android:queryBackground="@android:color/transparent" />
-    </FrameLayout>
+            android:layout_marginBottom="8dp"
+            android:padding="5dp"
+            android:text="@string/enable_caching"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/listDemos"
+            app:layout_constraintEnd_toStartOf="@+id/toggleConfigurationButton"
+            app:layout_constraintStart_toEndOf="@+id/switchEnableGdpr"
+            app:switchPadding="18dp" />
+
+        <FrameLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:background="@color/button_disabled"
+            app:layout_constraintBottom_toTopOf="@+id/integrationsSegmentedControl"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <SearchView
+                android:id="@+id/searchDemos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/search_background"
+                android:iconifiedByDefault="false"
+                android:queryBackground="@android:color/transparent" />
+        </FrameLayout>
 
 
-    <ToggleButton
-        android:id="@+id/toggleConfigurationButton"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/selector_toggle_background"
-        android:gravity="center"
-        android:includeFontPadding="false"
-        android:textOff=""
-        android:textOn=""
-        android:textSize="0sp"
-        app:layout_constraintBottom_toBottomOf="@+id/switchEnableGdpr"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/switchEnableGdpr" />
+        <ToggleButton
+            android:id="@+id/toggleConfigurationButton"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/selector_toggle_background"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:textOff=""
+            android:textOn=""
+            android:textSize="0sp"
+            app:layout_constraintBottom_toBottomOf="@+id/switchEnableGdpr"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/switchEnableGdpr" />
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/switchEnableGdpr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
-        android:padding="5dp"
-        android:text="@string/text_switch_enable_gdpr"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/listDemos"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/adCategoriesSegmentedControl"
-        app:switchPadding="18dp" />
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchEnableGdpr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:padding="5dp"
+            android:text="@string/text_switch_enable_gdpr"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/listDemos"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/adCategoriesSegmentedControl"
+            app:switchPadding="18dp" />
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listDemos"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switchEnableGdpr" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listDemos"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/switchEnableGdpr" />
 
-    <segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl
-        android:id="@+id/adCategoriesSegmentedControl"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="14dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
-        android:layout_marginStart="6dp"
-        app:columnCount="6"
-        app:distributeEvenly="true"
-        app:layout_constraintBottom_toTopOf="@+id/switchEnableGdpr"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/integrationsSegmentedControl"
-        app:radius="6dp"
-        app:selectedBackgroundColor="@color/action_bar_bkg"
-        app:textVerticalPadding="6dp">
+        <segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl
+            android:id="@+id/adCategoriesSegmentedControl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginStart="6dp"
+            app:columnCount="6"
+            app:distributeEvenly="true"
+            app:layout_constraintBottom_toTopOf="@+id/switchEnableGdpr"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/integrationsSegmentedControl"
+            app:radius="6dp"
+            app:selectedBackgroundColor="@color/action_bar_bkg"
+            app:textVerticalPadding="6dp">
 
-    </segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl>
+        </segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl>
 
-    <segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl
-        android:id="@+id/integrationsSegmentedControl"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
-        android:layout_marginStart="6dp"
-        app:columnCount="6"
-        app:distributeEvenly="true"
-        app:layout_constraintBottom_toTopOf="@+id/adCategoriesSegmentedControl"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/frameLayout"
-        app:radius="6dp"
-        app:selectedBackgroundColor="@color/action_bar_bkg"
-        app:textVerticalPadding="6dp">
+        <segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl
+            android:id="@+id/integrationsSegmentedControl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginStart="6dp"
+            app:columnCount="6"
+            app:distributeEvenly="true"
+            app:layout_constraintBottom_toTopOf="@+id/adCategoriesSegmentedControl"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/frameLayout"
+            app:radius="6dp"
+            app:selectedBackgroundColor="@color/action_bar_bkg"
+            app:textVerticalPadding="6dp">
 
-    </segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </segmented_control.widget.custom.android.com.segmentedcontrol.SegmentedControl>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

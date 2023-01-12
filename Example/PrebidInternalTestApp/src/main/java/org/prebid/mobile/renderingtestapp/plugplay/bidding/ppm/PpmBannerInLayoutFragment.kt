@@ -23,7 +23,7 @@ class PpmBannerInLayoutFragment : PpmBannerFragment() {
     override val layoutRes = R.layout.fragment_bidding_banner_in_layout
 
     override fun initAd(): Any? {
-        bannerView = findView(R.id.prebidBannerView)
+        bannerView = binding.root.findViewById(R.id.prebidBannerView)
         bannerView?.setBannerListener(this)
         return bannerView
     }

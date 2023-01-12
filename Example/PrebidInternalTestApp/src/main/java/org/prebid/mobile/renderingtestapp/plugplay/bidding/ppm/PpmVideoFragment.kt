@@ -35,7 +35,7 @@ open class PpmVideoFragment : PpmBannerFragment(),
         )
         bannerView?.videoPlacementType = VideoPlacementType.IN_BANNER
         bannerView?.setBannerListener(this)
-        findView<RelativeLayout>(R.id.viewContainer)?.addView(bannerView)
+        binding.viewContainer.addView(bannerView)
         return bannerView
     }
 }

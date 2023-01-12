@@ -15,91 +15,93 @@
   ~    limitations under the License.
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <TableLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:stretchColumns="*"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
-        <TableRow
+        <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp">
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:stretchColumns="*"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/labelPrebid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/version_tag_prebid_rendering"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp">
 
-            <TextView
-                android:id="@+id/tvPrebidRenderingVersion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                tools:text="1.0.0" />
-        </TableRow>
+                <TextView
+                    android:id="@+id/labelPrebid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/version_tag_prebid_rendering"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tvPrebidRenderingVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    tools:text="1.0.0" />
+            </TableRow>
 
 
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="8dp">
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="8dp">
+                <TextView
+                    android:id="@+id/labelGam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/version_tag_gam"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/labelGam"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/version_tag_gam"
-                android:textColor="@android:color/black"
-                android:textSize="18sp" />
+                <TextView
+                    android:id="@+id/tvGamVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    tools:text="1.0.0" />
+            </TableRow>
 
-            <TextView
-                android:id="@+id/tvGamVersion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                tools:text="1.0.0" />
-        </TableRow>
-
-        <TableRow
+            <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            <TextView
+                <TextView
                     android:id="@+id/labelOmsdk"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/version_tag_omsdk"
                     android:textColor="@android:color/black"
-                    android:textSize="18sp"/>
+                    android:textSize="18sp" />
 
-            <TextView
+                <TextView
                     android:id="@+id/tvOmsdkVersion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
-                    tools:text="1.0.0"/>
-        </TableRow>
+                    tools:text="1.0.0" />
+            </TableRow>
 
-    </TableLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </TableLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

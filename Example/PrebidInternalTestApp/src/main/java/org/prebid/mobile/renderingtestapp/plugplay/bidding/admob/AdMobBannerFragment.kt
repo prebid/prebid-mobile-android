@@ -15,9 +15,14 @@ import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerAdmobBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
-import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 
 open class AdMobBannerFragment : AdFragment() {
+
+    /*
+
+
+    * */
 
     companion object {
         private const val TAG = "AdMobBannerFragment"
@@ -28,7 +33,8 @@ open class AdMobBannerFragment : AdFragment() {
     protected var bannerView: AdView? = null
     protected var adRequestExtras: Bundle? = null
 
-    private var binding = getBinding<FragmentBiddingBannerAdmobBinding>()
+    protected val binding: FragmentBiddingBannerAdmobBinding
+        get() = getBinding()
     private lateinit var events: Events
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
@@ -90,8 +96,8 @@ open class AdMobBannerFragment : AdFragment() {
     override val layoutRes = R.layout.fragment_bidding_banner_admob
 
     private fun resetAdEvents() {
-        events.failed.isEnabled = false
-        events.clicked.isEnabled = false
+        events.failed(false)
+        events.clicked(false)
     }
 
     override fun onDestroyView() {
@@ -105,46 +111,46 @@ open class AdMobBannerFragment : AdFragment() {
             Log.d(TAG, "onAdLoaded")
             resetAdEvents()
             binding.btnLoad.isEnabled = true
-            events.loaded.isEnabled = true
+            events.loaded(true)
         }
 
         override fun onAdClicked() {
             Log.d(TAG, "onAdClicked")
-            events.clicked.isEnabled = true
+            events.clicked(true)
         }
 
         override fun onAdOpened() {
             Log.d(TAG, "onAdOpened")
-            events.opened.isEnabled = true
+            events.opened(true)
         }
 
         override fun onAdImpression() {
             Log.d(TAG, "onAdImpression")
-            events.impression.isEnabled = true
+            events.impression(true)
         }
 
         override fun onAdClosed() {
             Log.d(TAG, "onAdClosed")
-            events.closed.isEnabled = true
+            events.closed(true)
         }
 
         override fun onAdFailedToLoad(p0: LoadAdError) {
             Log.d(TAG, "onAdFailedToLoad - ${p0.message}")
             resetAdEvents()
             binding.btnLoad.isEnabled = true
-            events.failed.isEnabled = true
+            events.failed(true)
         }
 
     }
 
-    private class Events(parent: View) {
+    private class Events(parentView: View) : BaseEvents(parentView) {
 
-        val loaded: EventCounterView = parent.findViewById(R.id.btnAdLoaded)
-        val impression: EventCounterView = parent.findViewById(R.id.btnAdImpression)
-        val opened: EventCounterView = parent.findViewById(R.id.btnAdOpened)
-        val clicked: EventCounterView = parent.findViewById(R.id.btnAdClicked)
-        val closed: EventCounterView = parent.findViewById(R.id.btnAdClosed)
-        val failed: EventCounterView = parent.findViewById(R.id.btnAdFailed)
+        fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
+        fun impression(b: Boolean) = enable(R.id.btnAdImpression, b)
+        fun opened(b: Boolean) = enable(R.id.btnAdOpened, b)
+        fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
+        fun closed(b: Boolean) = enable(R.id.btnAdClosed, b)
+        fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
 
     }
 

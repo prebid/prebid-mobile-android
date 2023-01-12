@@ -16,7 +16,9 @@ import org.prebid.mobile.admob.PrebidRewardedAdapter
 import org.prebid.mobile.api.mediation.MediationRewardedVideoAdUnit
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentAdmobRewardedBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 open class AdMobRewardedFragment : AdFragment() {
@@ -29,13 +31,19 @@ open class AdMobRewardedFragment : AdFragment() {
     protected var rewardedAd: RewardedAd? = null
     protected var adUnit: MediationRewardedVideoAdUnit? = null
 
+    protected val binding: FragmentAdmobRewardedBinding
+        get() = getBinding()
+    protected lateinit var events: Events
+
     override val layoutRes = R.layout.fragment_admob_rewarded
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
 
-        findView<TextView>(R.id.adIdLabel)?.text = getString(R.string.label_auid, configId)
-        findView<Button>(R.id.btnLoad)?.setOnClickListener {
+        events = Events(view)
+
+        binding.adIdLabel.text = getString(R.string.label_auid, configId)
+        binding.btnLoad.setOnClickListener {
             handleLoadButtonClick()
         }
     }
@@ -62,16 +70,16 @@ open class AdMobRewardedFragment : AdFragment() {
 
             RewardedAd.load(requireContext(), adUnitId, request, object : RewardedAdLoadCallback() {
                 override fun onAdLoaded(ad: RewardedAd) {
-                    findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = true
-                    findView<Button>(R.id.btnLoad)?.isEnabled = true
-                    findView<Button>(R.id.btnLoad)?.text = getString(R.string.text_show)
+                    events.loaded(true)
+                    binding.btnLoad.isEnabled = true
+                    binding.btnLoad.text = getString(R.string.text_show)
 
                     rewardedAd = ad
                     rewardedAd?.fullScreenContentCallback = createFullScreenContentCallback()
                 }
 
                 override fun onAdFailedToLoad(adError: LoadAdError) {
-                    findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = true
+                    events.failed(true)
                     Log.e(TAG, adError.message)
                     rewardedAd = null
                 }
@@ -92,27 +100,27 @@ open class AdMobRewardedFragment : AdFragment() {
     }
 
     private fun resetAdEvents() {
-        findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdShowed)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdImpression)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdDismissed)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdFailedFullScreen)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = false
-        findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = false
+        events.loaded(false)
+        events.showed(false)
+        events.impression(false)
+        events.dismissed(false)
+        events.failedFullScreen(false)
+        events.failed(false)
+        events.clicked(false)
     }
 
     private fun handleLoadButtonClick() {
-        if (findView<Button>(R.id.btnLoad)?.text == getString(R.string.text_show)) {
+        if (binding.btnLoad.text == getString(R.string.text_show)) {
             rewardedAd?.show(requireActivity()) { rewardItem ->
                 val rewardAmount = rewardItem.amount
                 val rewardType = rewardItem.type
                 Log.d(TAG, "User earned the reward ($rewardAmount, $rewardType)")
             }
-            findView<Button>(R.id.btnLoad)?.text = getString(R.string.text_retry)
-        } else if (findView<Button>(R.id.btnLoad)?.text == getString(R.string.text_retry)) {
+            binding.btnLoad.text = getString(R.string.text_retry)
+        } else if (binding.btnLoad.text == getString(R.string.text_retry)) {
             resetAdEvents()
-            findView<Button>(R.id.btnLoad)?.isEnabled = false
-            findView<Button>(R.id.btnLoad)?.text = "Loading..."
+            binding.btnLoad.isEnabled = false
+            binding.btnLoad.text = "Loading..."
             loadAd()
         }
     }
@@ -120,25 +128,38 @@ open class AdMobRewardedFragment : AdFragment() {
     protected fun createFullScreenContentCallback(): FullScreenContentCallback {
         return object : FullScreenContentCallback() {
             override fun onAdClicked() {
-                findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
+                events.clicked(true)
             }
 
             override fun onAdImpression() {
-                findView<EventCounterView>(R.id.btnAdImpression)?.isEnabled = true
+                events.impression(true)
             }
 
             override fun onAdShowedFullScreenContent() {
-                findView<EventCounterView>(R.id.btnAdShowed)?.isEnabled = true
+                events.showed(true)
             }
 
             override fun onAdDismissedFullScreenContent() {
-                findView<EventCounterView>(R.id.btnAdDismissed)?.isEnabled = true
+                events.dismissed(true)
             }
 
             override fun onAdFailedToShowFullScreenContent(p0: AdError) {
-                findView<EventCounterView>(R.id.btnAdFailedFullScreen)?.isEnabled = true
+                events.failedFullScreen(true)
             }
         }
+    }
+
+    protected class Events(parentView: View) : BaseEvents(parentView) {
+
+        fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
+        fun impression(b: Boolean) = enable(R.id.btnAdImpression, b)
+        fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
+        fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+
+        fun showed(b: Boolean) = enable(R.id.btnAdShowed, b)
+        fun dismissed(b: Boolean) = enable(R.id.btnAdDismissed, b)
+        fun failedFullScreen(b: Boolean) = enable(R.id.btnAdFailedFullScreen, b)
+
     }
 
 }

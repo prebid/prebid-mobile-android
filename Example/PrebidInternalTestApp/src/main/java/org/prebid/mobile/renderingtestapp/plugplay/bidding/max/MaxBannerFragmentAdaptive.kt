@@ -22,7 +22,7 @@ class MaxBannerFragmentAdaptive : MaxBannerFragment() {
         val heightPx = AppLovinSdkUtils.dpToPx(requireContext(), heightDp)
         adView?.layoutParams = FrameLayout.LayoutParams(widthPx, heightPx)
         adView?.setExtraParameter("adaptive_banner", "true")
-        findView<RelativeLayout>(R.id.viewContainer)?.addView(adView)
+        binding.viewContainer.addView(adView)
 
         val mediationUtils = MaxMediationBannerUtils(adView)
         adUnit = MediationBannerAdUnit(

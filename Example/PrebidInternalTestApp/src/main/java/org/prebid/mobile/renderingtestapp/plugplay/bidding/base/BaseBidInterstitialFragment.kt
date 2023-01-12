@@ -26,8 +26,10 @@ import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingInterstitialBinding
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.rendering.GamInterstitialFragment
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 abstract class BaseBidInterstitialFragment : AdFragment(),
@@ -37,10 +39,15 @@ abstract class BaseBidInterstitialFragment : AdFragment(),
     override val layoutRes = R.layout.fragment_bidding_interstitial
     protected var interstitialAdUnit: InterstitialAdUnit? = null
 
+    protected val binding: FragmentBiddingInterstitialBinding
+        get() = getBinding()
+    protected lateinit var events: Events
+
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
 
-        findView<Button>(R.id.btnLoad)?.setOnClickListener {
+        events = Events(view)
+        binding.btnLoad.setOnClickListener {
             handleLoadInterstitialClick()
         }
     }
@@ -69,53 +76,67 @@ abstract class BaseBidInterstitialFragment : AdFragment(),
 
     override fun onAdFailed(interstitial: InterstitialAdUnit?, exception: AdException?) {
         Log.d(TAG, "onAdFailed() called with: interstitial = [$interstitial], exception = [$exception]")
-        findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = true
-        findView<Button>(R.id.btnLoad)?.isEnabled = true
+        events.failed(true)
+        binding.btnLoad.isEnabled = true
     }
 
     override fun onAdDisplayed(interstitialAdUnit: InterstitialAdUnit?) {
         Log.d(TAG, "onAdDisplayed() called with: interstitialAdUnit = [$interstitialAdUnit]")
-        findView<EventCounterView>(R.id.btnAdDisplayed)?.isEnabled = true
+        events.displayed(true)
     }
 
     override fun onAdClosed(interstitial: InterstitialAdUnit?) {
         Log.d(TAG, "onAdClosed() called with: interstitial = [$interstitial]")
-        findView<EventCounterView>(R.id.btnAdClosed)?.isEnabled = true
+        events.closed(true)
     }
 
     override fun onAdClicked(interstitial: InterstitialAdUnit?) {
         Log.d(TAG, "onAdClicked() called with: interstitial = [$interstitial]")
-        findView<EventCounterView>(R.id.btnAdClicked)?.isEnabled = true
+        events.clicked(true)
     }
 
     override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
         Log.d(TAG, "onAdLoaded() called with: interstitialAdUnit = [$interstitialAdUnit]")
-        findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = true
-        findView<Button>(R.id.btnLoad)?.setText(R.string.text_show)
-        findView<Button>(R.id.btnLoad)?.isEnabled = true
+        events.loaded(true)
+        binding.btnLoad.setText(R.string.text_show)
+        binding.btnLoad.isEnabled = true
     }
 
     private fun handleLoadInterstitialClick() {
-        when (findView<Button>(R.id.btnLoad)?.text) {
+        when (binding.btnLoad.text) {
             getString(R.string.text_load) -> {
-                findView<Button>(R.id.btnLoad)?.isEnabled = false
+                binding.btnLoad.isEnabled = false
                 resetEventButtons()
                 loadAd()
             }
 
             getString(R.string.text_show) -> {
-                findView<Button>(R.id.btnLoad)?.text = getString(R.string.text_load)
+                binding.btnLoad.text = getString(R.string.text_load)
                 interstitialAdUnit?.show()
             }
         }
     }
 
     private fun getAdUnitIdentifierTypeBasedOnTitle(title: String): AdUnitFormat {
-        return if (title.contains("Video Interstitial", ignoreCase = true) && !title.contains("MRAID 2.0", ignoreCase = true)) {
+        return if (title.contains("Video Interstitial", ignoreCase = true) && !title.contains(
+                "MRAID 2.0",
+                ignoreCase = true
+            )
+        ) {
             AdUnitFormat.VIDEO
-        }
-        else {
+        } else {
             AdUnitFormat.DISPLAY
         }
     }
+
+    protected class Events(parentView: View) : BaseEvents(parentView) {
+
+        fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
+        fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
+        fun closed(b: Boolean) = enable(R.id.btnAdClosed, b)
+        fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+        fun displayed(b: Boolean) = enable(R.id.btnAdDisplayed, b)
+
+    }
+
 }

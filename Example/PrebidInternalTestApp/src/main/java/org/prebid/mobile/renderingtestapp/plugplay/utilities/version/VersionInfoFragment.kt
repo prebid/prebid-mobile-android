@@ -22,16 +22,21 @@ import android.widget.TextView
 import com.google.android.gms.ads.MobileAds
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentsVersionInfoBinding
 import org.prebid.mobile.renderingtestapp.utils.BaseFragment
 
 class VersionInfoFragment : BaseFragment() {
+
     override val layoutRes: Int = R.layout.fragments_version_info
+    private val binding: FragmentsVersionInfoBinding
+        get() = getBinding()
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         MobileAds.initialize(requireContext())
 
-        findView<TextView>(R.id.tvPrebidRenderingVersion)?.text = PrebidMobile.SDK_VERSION
-        findView<TextView>(R.id.tvGamVersion)?.text = MobileAds.getVersion().toString()
-        findView<TextView>(R.id.tvOmsdkVersion)?.text = PrebidMobile.OMSDK_VERSION
+        binding.tvPrebidRenderingVersion.text = PrebidMobile.SDK_VERSION
+        binding.tvGamVersion.text = MobileAds.getVersion().toString()
+        binding.tvOmsdkVersion.text = PrebidMobile.OMSDK_VERSION
     }
+
 }

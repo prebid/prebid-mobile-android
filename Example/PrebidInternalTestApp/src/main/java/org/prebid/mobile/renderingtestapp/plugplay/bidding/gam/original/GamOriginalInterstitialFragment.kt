@@ -41,7 +41,7 @@ class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-        findView<Button>(R.id.btnLoad)?.setOnClickListener {
+        binding.btnLoad.setOnClickListener {
             handleOriginalInterstitialClick()
         }
     }
@@ -71,19 +71,19 @@ class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
                 override fun onAdLoaded(adManagerInterstitialAd: AdManagerInterstitialAd) {
                     super.onAdLoaded(adManagerInterstitialAd)
                     Log.d(TAG, "onAdLoaded() called")
-                    findView<EventCounterView>(R.id.btnAdLoaded)?.isEnabled = true
+                    events.loaded(true)
                     displayAdCallback = {
                         adManagerInterstitialAd.show(requireActivity())
                     }
-                    findView<Button>(R.id.btnLoad)?.setText(R.string.text_show)
-                    findView<Button>(R.id.btnLoad)?.isEnabled = true
+                    binding.btnLoad.setText(R.string.text_show)
+                    binding.btnLoad.isEnabled = true
                 }
 
                 override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                     super.onAdFailedToLoad(loadAdError)
                     Log.d(TAG, "onAdFailed() called with: exception = [$loadAdError]")
-                    findView<EventCounterView>(R.id.btnAdFailed)?.isEnabled = true
-                    findView<Button>(R.id.btnLoad)?.isEnabled = true
+                    events.failed(true)
+                    binding.btnLoad.isEnabled = true
                 }
             }
 
@@ -97,15 +97,15 @@ class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
     }
 
     private fun handleOriginalInterstitialClick() {
-        when (findView<Button>(R.id.btnLoad)?.text) {
+        when (binding.btnLoad.text) {
             getString(R.string.text_load) -> {
-                findView<Button>(R.id.btnLoad)?.isEnabled = false
+                binding.btnLoad.isEnabled = false
                 resetEventButtons()
                 createAd()
             }
 
             getString(R.string.text_show) -> {
-                findView<Button>(R.id.btnLoad)?.text = getString(R.string.text_load)
+                binding.btnLoad.text = getString(R.string.text_load)
                 displayAdCallback?.invoke()
             }
         }

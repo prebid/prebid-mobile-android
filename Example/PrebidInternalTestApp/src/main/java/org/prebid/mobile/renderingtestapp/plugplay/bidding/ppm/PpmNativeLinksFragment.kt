@@ -16,7 +16,9 @@
 
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 
+import android.view.View
 import android.widget.Button
+import androidx.annotation.IdRes
 import org.prebid.mobile.NativeData
 import org.prebid.mobile.PrebidNativeAd
 import org.prebid.mobile.renderingtestapp.R
@@ -27,7 +29,7 @@ class PpmNativeLinksFragment : PpmNativeFragment() {
     override val layoutRes: Int = R.layout.fragment_native_links
 
     override fun inflateViewContent(nativeAd: PrebidNativeAd) {
-        findView<EventCounterView>(R.id.btnAdDisplayed)?.isEnabled = true
+        findView<EventCounterView>(R.id.btnAdDisplayed).isEnabled = true
 
         nativeAd.registerViewList(
             findView(R.id.adContainer),
@@ -40,10 +42,10 @@ class PpmNativeLinksFragment : PpmNativeFragment() {
             createNativeListener()
         )
 
-        findView<Button>(R.id.btnNativeLinkRoot)?.text = nativeAd.callToAction
-        setupButton(nativeAd, findView<Button>(R.id.btnNativeDeeplinkFallback)!!, NativeData.Type.SPONSORED_BY)
-        setupButton(nativeAd, findView<Button>(R.id.btnNativeDeeplinkOk)!!, NativeData.Type.DESCRIPTION)
-        setupButton(nativeAd, findView<Button>(R.id.btnNativeLinkUrl)!!, NativeData.Type.RATING)
+        findView<Button>(R.id.btnNativeLinkRoot).text = nativeAd.callToAction
+        setupButton(nativeAd, findView(R.id.btnNativeDeeplinkFallback), NativeData.Type.SPONSORED_BY)
+        setupButton(nativeAd, findView(R.id.btnNativeDeeplinkOk), NativeData.Type.DESCRIPTION)
+        setupButton(nativeAd, findView(R.id.btnNativeLinkUrl), NativeData.Type.RATING)
     }
 
     private fun setupButton(
@@ -55,6 +57,10 @@ class PpmNativeLinksFragment : PpmNativeFragment() {
         if (nativeData != null) {
             button.text = nativeData.value
         }
+    }
+
+    private fun <T : View> findView(@IdRes idRes: Int): T {
+        return binding.root.findViewById(idRes)
     }
 
 }
