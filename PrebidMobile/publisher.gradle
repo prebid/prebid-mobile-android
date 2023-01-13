@@ -2,7 +2,7 @@ task javadoc(type: Javadoc, dependsOn: assemble) {
     source = android.sourceSets.main.java.srcDirs
     source += file('build/generated/source/buildConfig/release/org/prebid/mobile/core/BuildConfig.java').path
 
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator)) + configurations.implementation
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 
     options.addBooleanOption('-ignore-source-errors', true)
     options.addStringOption('Xdoclint:none', '-quiet')
