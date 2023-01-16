@@ -1,5 +1,5 @@
 ext {
-    prebidSdkVersionName = "2.0.6"
+    prebidSdkVersionName = "2.0.7"
     prebidSdkMinVersion = 16
     prebidSdkTargetVersion = 32
     prebidSdkCompileVersion = 32
@@ -30,6 +30,6 @@ allprojects {
         mavenCentral()
         maven { url 'https://maven.google.com' }
         maven { url 'https://jitpack.io' }
-        maven { url "https://oss.sonatype.org/content/repositories/orgprebid-1093" }
+        maven { url "https://oss.sonatype.org/content/repositories/orgprebid-1079" }
     }
 }
