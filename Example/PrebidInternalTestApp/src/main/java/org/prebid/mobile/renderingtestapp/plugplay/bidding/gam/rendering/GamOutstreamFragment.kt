@@ -38,9 +38,9 @@ class GamOutstreamFragment : AdFragment(), BannerViewListener {
     override val layoutRes: Int = R.layout.fragment_bidding_banner_video
 
     protected var bannerView: BannerView? = null
+    protected lateinit var events: Events
     protected val binding: FragmentBiddingBannerVideoBinding
         get() = getBinding()
-    protected lateinit var events: Events
 
 
     fun initBanner(configId: String?, eventHandler: GamBannerEventHandler): BannerView {

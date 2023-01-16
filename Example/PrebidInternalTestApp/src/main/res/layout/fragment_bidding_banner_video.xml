@@ -62,6 +62,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/adIdLabel" />
 
+            <Button
+                android:id="@+id/btnStopRefresh"
+                style="@style/AdEventButton"
+                android:layout_marginTop="16dp"
+                android:enabled="true"
+                android:minHeight="0dp"
+                android:text="@string/text_stop_refresh"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnLoad" />
+
             <include
                 android:id="@+id/include"
                 layout="@layout/events_bids"
@@ -70,7 +81,7 @@
                 android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnLoad" />
+                app:layout_constraintTop_toBottomOf="@+id/btnStopRefresh" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
