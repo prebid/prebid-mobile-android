@@ -61,14 +61,15 @@ public class GamOriginalApiVideoInStream extends BaseAdActivity {
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 600);
         getAdWrapperView().addView(playerView, params);
 
+        adUnit = new VideoAdUnit(CONFIG_ID, 640, 480);
+
         VideoAdUnit.Parameters parameters = new VideoAdUnit.Parameters();
         parameters.setMimes(Collections.singletonList("video/mp4"));
         parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
         parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));
         parameters.setPlacement(Signals.Placement.InStream);
-
-        adUnit = new VideoAdUnit(CONFIG_ID, 640, 480);
         adUnit.setParameters(parameters);
+
         adUnit.fetchDemand((resultCode, keysMap) -> {
             HashSet<org.prebid.mobile.AdSize> sizes = new HashSet<>();
             sizes.add(new org.prebid.mobile.AdSize(640, 480));

@@ -52,7 +52,6 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
     }
 
     private fun createAd() {
-
         // 1. Create BannerAdUnit
         adUnit = BannerAdUnit(CONFIG_ID, WIDTH, HEIGHT)
         adUnit?.setAutoRefreshInterval(refreshTimeSeconds)
@@ -60,6 +59,7 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
         // 2. Configure banner parameters
         val parameters = BannerBaseAdUnit.Parameters()
         parameters.api = listOf(Signals.Api.MRAID_3, Signals.Api.OMID_1)
+        adUnit?.parameters = parameters
 
         // 3. Create AdManagerAdView
         val adView = AdManagerAdView(this)

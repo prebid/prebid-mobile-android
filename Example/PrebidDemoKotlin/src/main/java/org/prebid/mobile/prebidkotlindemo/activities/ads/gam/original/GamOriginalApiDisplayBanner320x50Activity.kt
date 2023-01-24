@@ -20,9 +20,7 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import org.prebid.mobile.BannerAdUnit
-import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.TargetingParams
+import org.prebid.mobile.*
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
@@ -70,6 +68,11 @@ class GamOriginalApiDisplayBanner320x50Activity : BaseAdActivity() {
 
         val request = AdManagerAdRequest.Builder().build()
         adUnit = BannerAdUnit(CONFIG_ID, WIDTH, HEIGHT)
+
+        val parameters = BannerBaseAdUnit.Parameters()
+        parameters.api = listOf(Signals.Api.MRAID_3, Signals.Api.OMID_1)
+        adUnit?.parameters = parameters
+
         adUnit?.setAutoRefreshInterval(refreshTimeSeconds)
         adUnit?.fetchDemand(request) {
             adView.loadAd(request)

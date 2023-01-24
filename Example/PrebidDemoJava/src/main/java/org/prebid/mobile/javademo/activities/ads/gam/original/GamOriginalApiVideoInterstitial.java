@@ -39,14 +39,14 @@ public class GamOriginalApiVideoInterstitial extends BaseAdActivity {
     }
 
     private void createAd() {
+        adUnit = new VideoInterstitialAdUnit(CONFIG_ID);
+        adUnit.setAutoRefreshInterval(Settings.get().getRefreshTimeSeconds());
+
         VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
         parameters.setMimes(Collections.singletonList("video/mp4"));
         parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
         parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));
-
-        adUnit = new VideoInterstitialAdUnit(CONFIG_ID);
         adUnit.setParameters(parameters);
-        adUnit.setAutoRefreshInterval(Settings.get().getRefreshTimeSeconds());
 
         final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
 
