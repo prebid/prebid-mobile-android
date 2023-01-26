@@ -43,6 +43,7 @@ import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener
 import org.prebid.mobile.renderingtestapp.plugplay.utilities.consent.ConsentUpdateManager
+import org.prebid.mobile.renderingtestapp.utils.GppHelper
 import org.prebid.mobile.renderingtestapp.utils.OpenRtbConfigs
 import org.prebid.mobile.renderingtestapp.utils.OpenRtbExtra
 import org.prebid.mobile.renderingtestapp.utils.PermissionHelper
@@ -82,11 +83,20 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
     private fun addParametersFromCommandLine() {
         val geo = intent.extras?.getBoolean("shareGeo")
         val domain = intent.extras?.getString("targetingDomain")
+        val gppString = intent.extras?.getString("gppString")
+        val gppSid = intent.extras?.getString("gppSid")
+        val gppHelper = GppHelper(PreferenceManager.getDefaultSharedPreferences(this))
         geo?.let { shareGeo ->
             PrebidMobile.setShareGeoLocation(shareGeo)
         }
         domain?.let { targetingDomain ->
             TargetingParams.setDomain(targetingDomain)
+        }
+        gppString?.let { gppStringValue ->
+            gppHelper.addGppStringTestValue(gppStringValue)
+        }
+        gppSid?.let { gppSidValue ->
+            gppHelper.addGppSidTestValue(gppSidValue)
         }
     }
 
