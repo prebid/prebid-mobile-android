@@ -41,13 +41,13 @@ public class GamOriginalApiVideoBanner extends BaseAdActivity {
     }
 
     private void createAd() {
+        adUnit = new VideoAdUnit(CONFIG_ID, WIDTH, HEIGHT);
+
         VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
         parameters.setMimes(Collections.singletonList("video/mp4"));
         parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
         parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));
         parameters.setPlacement(Signals.Placement.InBanner);
-
-        adUnit = new VideoAdUnit(CONFIG_ID, WIDTH, HEIGHT);
         adUnit.setParameters(parameters);
 
         final AdManagerAdView gamView = new AdManagerAdView(this);

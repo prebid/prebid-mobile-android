@@ -41,9 +41,10 @@ public class GamOriginalApiDisplayBanner320x50 extends BaseAdActivity {
     }
 
     private void createAd() {
+        adUnit = new BannerAdUnit(CONFIG_ID, WIDTH, HEIGHT);
+
         BannerBaseAdUnit.Parameters parameters = new BannerBaseAdUnit.Parameters();
         parameters.setApi(Collections.singletonList(Signals.Api.MRAID_2));
-        adUnit = new BannerAdUnit(CONFIG_ID, WIDTH, HEIGHT);
         adUnit.setParameters(parameters);
 
         /* For GAM less than version 20 use PublisherAdView */

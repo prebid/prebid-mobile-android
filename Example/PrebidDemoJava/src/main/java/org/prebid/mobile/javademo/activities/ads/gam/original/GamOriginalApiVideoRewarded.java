@@ -38,14 +38,15 @@ public class GamOriginalApiVideoRewarded extends BaseAdActivity {
     }
 
     private void createAd() {
+        adUnit = new RewardedVideoAdUnit(CONFIG_ID);
+
         VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
         parameters.setMimes(Collections.singletonList("video/mp4"));
         parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
         parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));
+        adUnit.setParameters(parameters);
 
         final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
-        adUnit = new RewardedVideoAdUnit(CONFIG_ID);
-        adUnit.setParameters(parameters);
         adUnit.fetchDemand(builder, resultCode -> {
             AdManagerAdRequest request = builder.build();
             RewardedAd.load(this, AD_UNIT_ID, request, createListener());
