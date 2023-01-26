@@ -8,6 +8,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.BySelector
 import androidx.test.uiautomator.Until
+import junit.framework.Assert.assertNull
 import junit.framework.TestCase.assertNotNull
 import org.hamcrest.Matchers
 import org.junit.Test
@@ -92,15 +93,12 @@ class VideoAdsTest(
 
     private fun checkVideoRewardedAd(testCase: TestCase) {
         val ad: BySelector
-        val endCard: BySelector
+        val endCard: BySelector?
         val closeButton: BySelector
         if (testCase.integrationKind == IntegrationKind.GAM_ORIGINAL) {
             ad = By.res("video_container")
-            endCard = ad
-                .hasChild(By.clazz("android.view.View"))
-                .hasChild(By.clazz("android.view.View"))
-                .hasChild(By.clazz("android.widget.Image"))
             closeButton = By.clazz("android.widget.Button")
+            endCard = null
         } else {
             ad = By.res(packageName, "exo_subtitles")
             endCard = By.clazz(Pattern.compile(".*PrebidWebViewInterstitial"))
@@ -109,9 +107,11 @@ class VideoAdsTest(
         val findAd = device.wait(Until.findObject(ad), timeout)
         assertNotNull(findAd)
 
-        val findEndCard = device.wait(Until.findObject(endCard), timeout * 3)
-        if (findEndCard == null && testCase.integrationKind != IntegrationKind.GAM_ORIGINAL) {
-            searchInAllTrees("PrebidWebViewInterstitial")
+        if (testCase.integrationKind != IntegrationKind.GAM_ORIGINAL) {
+            val findEndCard = device.wait(Until.findObject(endCard), timeout * 3)
+            if (findEndCard == null) {
+                searchInAllTrees("PrebidWebViewInterstitial")
+            }
         }
 
         val findCloseButton = device.wait(Until.findObject(closeButton), timeout)
