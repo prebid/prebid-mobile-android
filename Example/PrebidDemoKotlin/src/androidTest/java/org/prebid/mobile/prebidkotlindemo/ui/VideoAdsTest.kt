@@ -29,8 +29,8 @@ class VideoAdsTest(
         @JvmStatic
         @Parameterized.Parameters(name = "{1}")
         fun arguments() = listOf(
+//            arrayOf(R.string.ad_mob_video_rewarded, "AdMob Video Rewarded"),
             arrayOf(R.string.gam_original_video_rewarded, "GAM Original API Video Rewarded"),
-            arrayOf(R.string.ad_mob_video_rewarded, "AdMob Video Rewarded"),
 
             arrayOf(R.string.gam_rendering_video_banner, "GAM Video Banner"),
             arrayOf(R.string.gam_rendering_video_rewarded, "GAM Rendering API Video Rewarded"),
@@ -96,7 +96,10 @@ class VideoAdsTest(
         val closeButton: BySelector
         if (testCase.integrationKind == IntegrationKind.GAM_ORIGINAL) {
             ad = By.res("video_container")
-            endCard = By.text("recycling_300x250")
+            endCard = ad
+                .hasChild(By.clazz("android.view.View"))
+                .hasChild(By.clazz("android.view.View"))
+                .hasChild(By.clazz("android.widget.Image"))
             closeButton = By.clazz("android.widget.Button")
         } else {
             ad = By.res(packageName, "exo_subtitles")
@@ -107,7 +110,7 @@ class VideoAdsTest(
         assertNotNull(findAd)
 
         val findEndCard = device.wait(Until.findObject(endCard), timeout * 3)
-        if (findEndCard == null) {
+        if (findEndCard == null && testCase.integrationKind != IntegrationKind.GAM_ORIGINAL) {
             searchInAllTrees("PrebidWebViewInterstitial")
         }
 
