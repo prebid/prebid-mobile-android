@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
@@ -61,7 +62,7 @@ public class BidResponse {
     private Ext ext;
 
     private boolean hasParseError = false;
-    private boolean isOriginalAdUnit;
+    private boolean usesCache;
     private String parseError;
     private String winningBidJson;
 
@@ -74,7 +75,7 @@ public class BidResponse {
         AdUnitConfiguration adUnitConfiguration
     ) {
         seatbids = new ArrayList<>();
-        isOriginalAdUnit = adUnitConfiguration.isOriginalAdUnit();
+        usesCache = adUnitConfiguration.isOriginalAdUnit() || PrebidMobile.isUseCacheForReportingWithRenderingApi();
         parseJson(json);
     }
 
@@ -227,8 +228,8 @@ public class BidResponse {
             return false;
         }
         HashMap<String, String> targeting = prebid.getTargeting();
-        boolean result = targeting.containsKey("hb_pb") && targeting.containsKey("hb_bidder") && targeting.containsKey("hb_size");
-        if (isOriginalAdUnit) {
+        boolean result = targeting.containsKey("hb_pb") && targeting.containsKey("hb_bidder");
+        if (usesCache) {
             result = result && targeting.containsKey("hb_cache_id");
         }
         return result;

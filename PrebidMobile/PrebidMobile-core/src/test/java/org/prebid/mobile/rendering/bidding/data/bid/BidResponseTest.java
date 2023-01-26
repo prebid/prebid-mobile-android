@@ -16,6 +16,12 @@
 
 package org.prebid.mobile.rendering.bidding.data.bid;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.After;
 import org.junit.Test;
 import org.prebid.mobile.PrebidMobile;
@@ -26,8 +32,6 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrou
 import org.prebid.mobile.test.utils.ResourceUtils;
 
 import java.io.IOException;
-
-import static org.junit.Assert.*;
 
 public class BidResponseTest {
 
@@ -112,6 +116,17 @@ public class BidResponseTest {
     }
 
     @Test
+    public void testWinningBidKeywords_empty_parseError() throws IOException {
+        String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_empty.json");
+
+        AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
+        BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
+
+        assertTrue(subject.hasParseError());
+        assertNull(subject.getWinningBid());
+    }
+
+    @Test
     public void testWinningBidKeywords_allKeywords_noParseError() throws IOException {
         String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_without_cache_id.json");
 
@@ -151,7 +166,6 @@ public class BidResponseTest {
         String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_all_without_cache_id.json");
 
         AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
-        PrebidMobile.setUseCacheForReportingWithRenderingApi(true);
         BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
 
         assertFalse(subject.hasParseError());
