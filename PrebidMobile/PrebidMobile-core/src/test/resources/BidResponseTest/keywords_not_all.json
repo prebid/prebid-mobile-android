@@ -22,8 +22,7 @@
                 }
               },
               "targeting": {
-                "hb_pb": "value1",
-                "hb_bidder": "value2"
+                "hb_pb": "value1"
               },
               "type": "type"
             }
