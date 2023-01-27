@@ -165,14 +165,62 @@ public class UserConsentParameterBuilderTest {
     }
 
     @Test
-    public void gppSid_AppendToUserConsentValues() throws JSONException {
-        sharedPreferences.edit().putString(UserConsentManager.GPP_SID_KEY, "testSid").commit();
+    public void gppSid_OneVersion() throws JSONException {
+        sharedPreferences.edit().putString(UserConsentManager.GPP_SID_KEY, "2").commit();
 
         AdRequestInput adRequestInput = new AdRequestInput();
 
         builder.appendBuilderParameters(adRequestInput);
 
-        String expectedJSON = "{\"regs\":{\"gpp_sid\":\"testSid\"}}";
+        String expectedJSON = "{\"regs\":{\"gpp_sid\":[2]}}";
+        assertEquals(
+            "Generated JSON is wrong!",
+            expectedJSON,
+            adRequestInput.getBidRequest().getJsonObject().toString()
+        );
+    }
+
+    @Test
+    public void gppSid_TwoVersions() throws JSONException {
+        sharedPreferences.edit().putString(UserConsentManager.GPP_SID_KEY, "2_3").commit();
+
+        AdRequestInput adRequestInput = new AdRequestInput();
+
+        builder.appendBuilderParameters(adRequestInput);
+
+        String expectedJSON = "{\"regs\":{\"gpp_sid\":[2,3]}}";
+        assertEquals(
+            "Generated JSON is wrong!",
+            expectedJSON,
+            adRequestInput.getBidRequest().getJsonObject().toString()
+        );
+    }
+
+    @Test
+    public void gppSid_BlankValue() throws JSONException {
+        sharedPreferences.edit().putString(UserConsentManager.GPP_SID_KEY, " ").commit();
+
+        AdRequestInput adRequestInput = new AdRequestInput();
+
+        builder.appendBuilderParameters(adRequestInput);
+
+        String expectedJSON = "{\"regs\":{}}";
+        assertEquals(
+            "Generated JSON is wrong!",
+            expectedJSON,
+            adRequestInput.getBidRequest().getJsonObject().toString()
+        );
+    }
+
+    @Test
+    public void gppSid_WrongValue() throws JSONException {
+        sharedPreferences.edit().putString(UserConsentManager.GPP_SID_KEY, "testValue").commit();
+
+        AdRequestInput adRequestInput = new AdRequestInput();
+
+        builder.appendBuilderParameters(adRequestInput);
+
+        String expectedJSON = "{\"regs\":{}}";
         assertEquals(
             "Generated JSON is wrong!",
             expectedJSON,
@@ -184,14 +232,14 @@ public class UserConsentParameterBuilderTest {
     public void gppAll_AppendToUserConsentValues() throws JSONException {
         sharedPreferences
             .edit()
-            .putString(UserConsentManager.GPP_SID_KEY, "testSid")
+            .putString(UserConsentManager.GPP_SID_KEY, "2_3")
             .putString(UserConsentManager.GPP_STRING_KEY, "testString")
             .commit();
 
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
-        String expectedJSON = "{\"regs\":{\"gpp\":\"testString\",\"gpp_sid\":\"testSid\"}}";
+        String expectedJSON = "{\"regs\":{\"gpp\":\"testString\",\"gpp_sid\":[2,3]}}";
         assertEquals(
             "Generated JSON is wrong!",
             expectedJSON,
