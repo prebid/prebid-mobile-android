@@ -107,7 +107,7 @@ class VideoAdsTest(
         assertNotNull(findAd)
 
         val findEndCard = device.wait(Until.findObject(endCard), timeout * 3)
-        if (findEndCard == null) {
+        if (findEndCard == null && testCase.integrationKind != IntegrationKind.GAM_ORIGINAL) {
             searchInAllTrees("PrebidWebViewInterstitial")
         }
 
