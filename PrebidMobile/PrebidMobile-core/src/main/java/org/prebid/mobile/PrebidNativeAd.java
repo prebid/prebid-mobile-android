@@ -22,7 +22,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +45,7 @@ public class PrebidNativeAd {
     private final ArrayList<NativeImage> images = new ArrayList<>();
     private final ArrayList<NativeData> dataList = new ArrayList<>();
     private String clickUrl;
+    @Nullable
     private ArrayList<String> imp_trackers;
     private VisibilityDetector visibilityDetector;
     private boolean expired;
@@ -290,19 +294,22 @@ public class PrebidNativeAd {
                 return false;
             }
 
-            impressionTrackers = new ArrayList<ImpressionTracker>(imp_trackers.size());
-            for (String url : imp_trackers) {
-                ImpressionTracker impressionTracker = ImpressionTracker.create(url, visibilityDetector, view.getContext(), new ImpressionTrackerListener() {
-                    @Override
-                    public void onImpressionTrackerFired() {
-                        if (listener != null) {
-                            listener.onAdImpression();
+            if (imp_trackers != null) {
+                impressionTrackers = new ArrayList<ImpressionTracker>(imp_trackers.size());
+                for (String url : imp_trackers) {
+                    ImpressionTracker impressionTracker = ImpressionTracker.create(url, visibilityDetector, view.getContext(), new ImpressionTrackerListener() {
+                        @Override
+                        public void onImpressionTrackerFired() {
+                            if (listener != null) {
+                                listener.onAdImpression();
+                            }
+                            notifyImpressionEvent();
                         }
-                        notifyImpressionEvent();
-                    }
-                });
-                impressionTrackers.add(impressionTracker);
+                    });
+                    impressionTrackers.add(impressionTracker);
+                }
             }
+
             this.registeredView = view;
 
             view.setOnClickListener(new View.OnClickListener() {
@@ -334,19 +341,22 @@ public class PrebidNativeAd {
                 return false;
             }
 
-            impressionTrackers = new ArrayList<ImpressionTracker>(imp_trackers.size());
-            for (String url : imp_trackers) {
-                ImpressionTracker impressionTracker = ImpressionTracker.create(url, visibilityDetector, container.getContext(), new ImpressionTrackerListener() {
-                    @Override
-                    public void onImpressionTrackerFired() {
-                        if (listener != null) {
-                            listener.onAdImpression();
+            if (imp_trackers != null) {
+                impressionTrackers = new ArrayList<ImpressionTracker>(imp_trackers.size());
+                for (String url : imp_trackers) {
+                    ImpressionTracker impressionTracker = ImpressionTracker.create(url, visibilityDetector, container.getContext(), new ImpressionTrackerListener() {
+                        @Override
+                        public void onImpressionTrackerFired() {
+                            if (listener != null) {
+                                listener.onAdImpression();
+                            }
+                            notifyImpressionEvent();
                         }
-                        notifyImpressionEvent();
-                    }
-                });
-                impressionTrackers.add(impressionTracker);
+                    });
+                    impressionTrackers.add(impressionTracker);
+                }
             }
+
             this.registeredView = container;
 
             container.setOnClickListener(new View.OnClickListener() {
