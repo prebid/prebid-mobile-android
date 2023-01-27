@@ -289,6 +289,7 @@
     <string name="adunit_gam_native_mrect">/21808260008/prebid_native_fixed</string>
     <string name="adunit_gam_native_fluid">/21808260008/prebid_native</string>
     <string name="adunit_gam_native_custom_template">/21808260008/apollo_custom_template_native_ad_unit</string>
+    <string name="adunit_gam_native_styles">/21808260008/prebid-demo-original-native-styles</string>
     <string name="adunit_gam_native_unified">/21808260008/unified_native_ad_unit</string>
     <string name="adunit_gam_native_unified_static">/21808260008/unified_native_ad_unit_static</string>
 

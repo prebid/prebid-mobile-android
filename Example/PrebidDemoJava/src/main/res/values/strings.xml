@@ -16,7 +16,7 @@
     <string name="gam_original_video_interstitial">GAM (Original API) Video Interstitial</string>
     <string name="gam_original_video_rewarded">GAM (Original API) Video Rewarded</string>
     <string name="gam_original_native_in_app">GAM (Original API) Native In-App</string>
-    <string name="gam_original_native_in_banner">GAM (Original API) Native In-Banner</string>
+    <string name="gam_original_native_styles">GAM (Original API) Native Styles</string>
     <string name="gam_original_in_stream">GAM (Original API) In-Stream (Rubicon)</string>
 
 </resources>

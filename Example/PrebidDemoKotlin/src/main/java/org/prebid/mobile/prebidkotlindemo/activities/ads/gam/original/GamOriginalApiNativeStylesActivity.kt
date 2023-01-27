@@ -7,10 +7,10 @@ import com.google.android.gms.ads.admanager.AdManagerAdView
 import org.prebid.mobile.*
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
-class GamOriginalApiNativeInBannerActivity : BaseAdActivity() {
+class GamOriginalApiNativeStylesActivity : BaseAdActivity() {
 
     companion object {
-        const val AD_UNIT_ID = "/21808260008/unified_native_ad_unit"
+        const val AD_UNIT_ID = "/21808260008/prebid-demo-original-native-styles"
         const val CONFIG_ID = "imp-prebid-banner-native-styles"
         const val STORED_RESPONSE = "response-prebid-banner-native-styles"
     }

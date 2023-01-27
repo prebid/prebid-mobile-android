@@ -22,7 +22,7 @@ class NativeAdsTest(
         @JvmStatic
         @Parameterized.Parameters(name = "{1}")
         fun arguments() = listOf(
-            arrayOf(R.string.gam_original_native_in_banner, "GAM Original API Native"),
+            arrayOf(R.string.gam_original_native_styles, "GAM Original API Native"),
             arrayOf(R.string.gam_rendering_native, "GAM Rendering API Native"),
             arrayOf(R.string.in_app_native, "In-App Native"),
             arrayOf(R.string.ad_mob_native, "AdMob Native"),

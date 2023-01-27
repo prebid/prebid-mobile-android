@@ -68,10 +68,10 @@ object TestCaseRepository {
             GamOriginalApiNativeInAppActivity::class.java,
         ),
         TestCase(
-            R.string.gam_original_native_in_banner,
+            R.string.gam_original_native_styles,
             AdFormat.NATIVE,
             IntegrationKind.GAM_ORIGINAL,
-            GamOriginalApiNativeInBannerActivity::class.java,
+            GamOriginalApiNativeStylesActivity::class.java,
         ),
 
         /* GAM Rendering API */
