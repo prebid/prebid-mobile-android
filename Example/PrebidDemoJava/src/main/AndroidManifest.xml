@@ -62,7 +62,7 @@
             android:name=".activities.ads.gam.original.GamOriginalApiNativeInApp"
             android:exported="true" />
         <activity
-            android:name=".activities.ads.gam.original.GamOriginalApiNativeInBanner"
+            android:name=".activities.ads.gam.original.GamOriginalApiNativeStyles"
             android:exported="true" />
         <activity
             android:name=".activities.ads.gam.original.GamOriginalApiVideoInStream"

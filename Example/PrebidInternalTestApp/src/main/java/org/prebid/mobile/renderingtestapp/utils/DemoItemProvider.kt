@@ -242,7 +242,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_native_styles,
                         storedResponse = R.string.response_prebid_native_styles,
-                        adUnitIdRes = R.string.adunit_gam_native_unified
+                        adUnitIdRes = R.string.adunit_gam_native_styles
                     )
                 )
             )
