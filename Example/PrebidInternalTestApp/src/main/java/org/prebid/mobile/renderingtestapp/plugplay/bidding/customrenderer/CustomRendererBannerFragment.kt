@@ -18,14 +18,13 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.customrenderer
 
 import android.os.Bundle
 import android.view.View
-import kotlinx.android.synthetic.main.events_bids.*
-import kotlinx.android.synthetic.main.fragment_bidding_banner.*
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener
 import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
+import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.TotoCustomRenderer
 
@@ -37,19 +36,22 @@ open class CustomRendererBannerFragment : AdFragment(),
 
     protected var bannerView: BannerView? = null
 
+    private val binding: FragmentBiddingBannerBinding
+        get() = getBinding()
+
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
-        adIdLabel?.text = getString(R.string.label_auid, configId)
-        btnLoad.setOnClickListener {
+        binding.adIdLabel.text = getString(R.string.label_auid, configId)
+        binding.btnLoad.setOnClickListener {
             resetEventButtons()
             it.isEnabled = false
             loadAd()
         }
 
-        btnStopRefresh?.setOnClickListener {
+        binding.btnStopRefresh.setOnClickListener {
             bannerView?.stopRefresh()
             resetEventButtons()
-            btnLoad?.isEnabled = true
+            binding.btnLoad.isEnabled = true
         }
     }
 
@@ -61,7 +63,7 @@ open class CustomRendererBannerFragment : AdFragment(),
         )
         bannerView?.setAutoRefreshDelay(refreshDelay)
         bannerView?.setBannerListener(this)
-        viewContainer.addView(bannerView)
+        binding.viewContainer.addView(bannerView)
 
         val totoCustomRenderers = listOf(TotoCustomRenderer())
         bannerView?.setCustomRenderers(totoCustomRenderers)
@@ -79,26 +81,26 @@ open class CustomRendererBannerFragment : AdFragment(),
 
     override fun onAdFailed(bannerView: BannerView?, exception: AdException?) {
         resetEventButtons()
-        btnAdFailed?.isEnabled = true
-        btnLoad?.isEnabled = true
+//        binding.btnAdFailed?.isEnabled = true
+        binding.btnLoad.isEnabled = true
     }
 
     override fun onAdLoaded(bannerView: BannerView?) {
         resetEventButtons()
-        btnAdLoaded?.isEnabled = true
-        btnLoad?.isEnabled = true
+//        binding.btnAdLoaded?.isEnabled = true
+        binding.btnLoad?.isEnabled = true
     }
 
     override fun onAdClicked(bannerView: BannerView?) {
-        btnAdClicked?.isEnabled = true
+//        binding.btnAdClicked?.isEnabled = true
     }
 
     override fun onAdClosed(bannerView: BannerView?) {
-        btnAdClosed?.isEnabled = true
+//        binding.btnAdClosed?.isEnabled = true
     }
 
     override fun onAdDisplayed(bannerView: BannerView?) {
-        btnAdDisplayed?.isEnabled = true
+//        binding.btnAdDisplayed?.isEnabled = true
     }
 
     override fun onDestroyView() {
