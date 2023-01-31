@@ -39,8 +39,5 @@ open class CustomRendererInterstitialFragment : BaseBidInterstitialFragment() {
         }
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
         interstitialAdUnit?.setMinSizePercentage(AdSize(30, 30))
-
-        val customRenderer = listOf(TotoCustomRenderer())
-        interstitialAdUnit?.setCustomRenderers(customRenderer)
     }
 }

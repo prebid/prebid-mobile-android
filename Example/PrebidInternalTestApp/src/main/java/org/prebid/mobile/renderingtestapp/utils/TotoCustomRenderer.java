@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.customrenderer.PrebidMobileInterstitialControllerInterface;
 import org.prebid.mobile.api.rendering.customrenderer.PrebidMobilePluginCustomRenderer;
@@ -102,6 +103,12 @@ public class TotoCustomRenderer implements PrebidMobilePluginCustomRenderer {
 
             }
         };
+    }
+
+    @Override
+    public boolean isSupportRenderingFor(AdUnitConfiguration adUnitConfiguration) {
+        return adUnitConfiguration.isAdType(AdFormat.BANNER) ||
+                adUnitConfiguration.isAdType(AdFormat.INTERSTITIAL);
     }
 
     private void getAdd(InReadAdView inReadAdView, DisplayViewListener displayViewListener) {

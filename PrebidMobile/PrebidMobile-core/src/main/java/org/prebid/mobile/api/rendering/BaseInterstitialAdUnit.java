@@ -37,7 +37,6 @@ import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -237,8 +236,6 @@ public abstract class BaseInterstitialAdUnit {
         if (interstitialController != null) {
             interstitialController.destroy();
         }
-
-        PluginRegisterCustomRenderer.getInstance().unregisterPlugin(adUnitConfig);
     }
 
     protected void init(AdUnitConfiguration adUnitConfiguration) {
@@ -309,10 +306,6 @@ public abstract class BaseInterstitialAdUnit {
 
     public void addContent(ContentObject content) {
         adUnitConfig.setAppContent(content);
-    }
-
-    public void setCustomRenderers(List<PrebidMobilePluginCustomRenderer> prebidMobilePluginCustomRenderers) {
-        PluginRegisterCustomRenderer.getInstance().registerPlugin(adUnitConfig, prebidMobilePluginCustomRenderers);
     }
 
     private BidRequesterListener createBidRequesterListener() {

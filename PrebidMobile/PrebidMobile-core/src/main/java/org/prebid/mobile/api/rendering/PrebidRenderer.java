@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.customrenderer.PrebidMobileInterstitialControllerInterface;
 import org.prebid.mobile.api.rendering.customrenderer.PrebidMobilePluginCustomRenderer;
@@ -74,5 +75,13 @@ public class PrebidRenderer implements PrebidMobilePluginCustomRenderer {
             LogUtil.error("message:" + e.getMessage());
             return null;
         }
+    }
+
+    @Override
+    public boolean isSupportRenderingFor(AdUnitConfiguration adUnitConfiguration) {
+        return adUnitConfiguration.isAdType(AdFormat.BANNER) ||
+                adUnitConfiguration.isAdType(AdFormat.INTERSTITIAL) ||
+                adUnitConfiguration.isAdType(AdFormat.NATIVE) ||
+                adUnitConfiguration.isAdType(AdFormat.VAST);
     }
 }

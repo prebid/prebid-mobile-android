@@ -51,4 +51,7 @@ public interface PrebidMobilePluginCustomRenderer {
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse bidResponse
     );
+
+    // Returns true only if the given ad unit could be renderer by the plugin
+    boolean isSupportRenderingFor(AdUnitConfiguration adUnitConfiguration);
 }

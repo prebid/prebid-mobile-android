@@ -21,7 +21,6 @@ import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class PluginRegisterCustomRenderer {
@@ -30,50 +29,48 @@ public class PluginRegisterCustomRenderer {
 
     private static final PluginRegisterCustomRenderer instance = new PluginRegisterCustomRenderer();
 
-    private final HashMap<AdUnitConfiguration, List<PrebidMobilePluginCustomRenderer>> customRenderers = new HashMap<>();
-    private final PrebidRenderer prebidRenderer = new PrebidRenderer();
+    private final List<PrebidMobilePluginCustomRenderer> plugins = new ArrayList();
 
-    public void registerPlugin(
-            AdUnitConfiguration adUnitConfiguration,
-            List<PrebidMobilePluginCustomRenderer> prebidMobilePluginCustomRenderers
-    ) {
-        customRenderers.put(adUnitConfiguration, prebidMobilePluginCustomRenderers);
+    private final PrebidRenderer defaultPrebidRenderer = new PrebidRenderer();
+
+    public void registerPlugin(PrebidMobilePluginCustomRenderer prebidMobilePluginCustomRenderers) {
+        plugins.add(prebidMobilePluginCustomRenderers);
     }
 
-    public void unregisterPlugin(AdUnitConfiguration adUnitConfiguration) {
-        customRenderers.remove(adUnitConfiguration);
+    public void unregisterPlugin(PrebidMobilePluginCustomRenderer prebidMobilePluginCustomRenderer) {
+        plugins.remove(prebidMobilePluginCustomRenderer);
     }
 
     // Returns the list of available renderers for the given ad unit for RT request
     public List<String> getRTBListOfCustomRenderersFor(AdUnitConfiguration adUnitConfiguration) {
-        List<PrebidMobilePluginCustomRenderer> plugins = customRenderers.get(adUnitConfiguration);
-        if (plugins != null && plugins.size() > 0) {
-            List<String> customRendererNames = new ArrayList<>();
+        List<String> compliantPlugins = new ArrayList<>();
+        if (plugins.size() > 0) {
             for (int i = 0; i < plugins.size(); i++) {
-                String name = plugins.get(i).getName();
-                customRendererNames.add(name);
-            }
-            return customRendererNames;
-        } else {
-            return  null;
-        }
-    }
-
-    // Returns the registered renderer according to the preferred renderer name in the bid response
-    // If no preferred rendered is found, it returns PrebidRenderer to perform default behavior
-    public PrebidMobilePluginCustomRenderer getPluginForPreferredRenderer(BidResponse bidResponse) {
-        List<PrebidMobilePluginCustomRenderer> plugins = customRenderers.get(bidResponse.getAdUnitConfiguration());
-        String preferredRenderer = bidResponse.gePreferredCustomRendererName();
-        if (plugins != null && plugins.size() > 0) {
-            for (int i = 0; i < plugins.size(); i++) {
-                PrebidMobilePluginCustomRenderer plugin = plugins.get(i);
-                if (plugin.getName().equals(preferredRenderer)) {
-                    return plugin;
+                if (plugins.get(i).isSupportRenderingFor(adUnitConfiguration)) {
+                    compliantPlugins.add(plugins.get(i).getName());
                 }
             }
         }
+        return compliantPlugins;
+    }
 
-        return prebidRenderer;
+    // Returns the registered renderer according to the preferred renderer name in the bid response
+    // If no preferred renderer is found, it returns PrebidRenderer to perform default behavior
+    public PrebidMobilePluginCustomRenderer getPluginForPreferredRenderer(BidResponse bidResponse) {
+        String preferredRendererName = bidResponse.gePreferredCustomRendererName();
+        PrebidMobilePluginCustomRenderer preferredPlugin = null;
+        if (plugins.size() > 0) {
+            for (int i = 0; i < plugins.size(); i++) {
+                if (plugins.get(i).getName().equals(preferredRendererName)) {
+                    preferredPlugin = plugins.get(i);
+                }
+            }
+        }
+        if (preferredPlugin != null) {
+            return preferredPlugin;
+        } else {
+            return defaultPrebidRenderer; // Return default
+        }
     }
 
     private PluginRegisterCustomRenderer() {

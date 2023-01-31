@@ -65,7 +65,6 @@ public class BidResponse {
 
     private boolean hasParseError = false;
     private boolean usesCache;
-    private AdUnitConfiguration adUnitConfiguration;
     private String parseError;
     private String winningBidJson;
 
@@ -79,7 +78,6 @@ public class BidResponse {
     ) {
         seatbids = new ArrayList<>();
         usesCache = adUnitConfiguration.isOriginalAdUnit() || PrebidMobile.isUseCacheForReportingWithRenderingApi();
-        this.adUnitConfiguration = adUnitConfiguration;
         parseJson(json);
     }
 
@@ -124,10 +122,6 @@ public class BidResponse {
 
     public String getWinningBidJson() {
         return winningBidJson;
-    }
-
-    public AdUnitConfiguration getAdUnitConfiguration() {
-        return adUnitConfiguration;
     }
 
     private void parseJson(String json) {

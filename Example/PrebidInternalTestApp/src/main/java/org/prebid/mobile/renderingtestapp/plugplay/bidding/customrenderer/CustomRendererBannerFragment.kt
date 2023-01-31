@@ -26,7 +26,6 @@ import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
-import org.prebid.mobile.renderingtestapp.utils.TotoCustomRenderer
 
 open class CustomRendererBannerFragment : AdFragment(),
     BannerViewListener {
@@ -64,9 +63,6 @@ open class CustomRendererBannerFragment : AdFragment(),
         bannerView?.setAutoRefreshDelay(refreshDelay)
         bannerView?.setBannerListener(this)
         binding.viewContainer.addView(bannerView)
-
-        val totoCustomRenderers = listOf(TotoCustomRenderer())
-        bannerView?.setCustomRenderers(totoCustomRenderers)
 
         return bannerView
     }

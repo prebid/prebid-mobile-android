@@ -33,8 +33,6 @@ import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.BannerAdPosition;
 import org.prebid.mobile.api.data.VideoPlacementType;
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer;
-import org.prebid.mobile.api.rendering.customrenderer.PrebidMobilePluginCustomRenderer;
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.R;
@@ -54,8 +52,6 @@ import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -284,8 +280,6 @@ public class BannerView extends FrameLayout {
         }
 
         screenStateReceiver.unregister();
-
-        PluginRegisterCustomRenderer.getInstance().unregisterPlugin(adUnitConfig);
     }
 
     //region ==================== getters and setters
@@ -520,10 +514,6 @@ public class BannerView extends FrameLayout {
 
     public BidResponse getBidResponse() {
         return bidResponse;
-    }
-
-    public void setCustomRenderers(List<PrebidMobilePluginCustomRenderer> prebidMobilePluginCustomRenderers) {
-        PluginRegisterCustomRenderer.getInstance().registerPlugin(adUnitConfig, prebidMobilePluginCustomRenderers);
     }
 
     //region ==================== HelperMethods for Unit Tests. Should be used only in tests

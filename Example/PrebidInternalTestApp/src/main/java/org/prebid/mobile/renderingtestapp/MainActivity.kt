@@ -41,12 +41,15 @@ import org.json.JSONArray
 import org.prebid.mobile.ExternalUserId
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.TargetingParams
+import org.prebid.mobile.api.rendering.PrebidRenderer
+import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener
 import org.prebid.mobile.renderingtestapp.plugplay.utilities.consent.ConsentUpdateManager
 import org.prebid.mobile.renderingtestapp.utils.GppHelper
 import org.prebid.mobile.renderingtestapp.utils.OpenRtbConfigs
 import org.prebid.mobile.renderingtestapp.utils.OpenRtbExtra
 import org.prebid.mobile.renderingtestapp.utils.PermissionHelper
+import org.prebid.mobile.renderingtestapp.utils.TotoCustomRenderer
 
 class MainActivity : AppCompatActivity(), SdkInitListener {
 
@@ -74,6 +77,7 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
         setContentView(R.layout.activity_main)
         addParametersFromCommandLine()
         initUi()
+        initCustomRendererPlugin()
 
         handleLaunchOptions()
 
@@ -152,6 +156,10 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
         val navController = findNavController(R.id.nav_host_fragment)
         setupToolbarNavigation(toolbar, navController)
         setupBottomBar(navController)
+    }
+
+    private fun initCustomRendererPlugin() {
+        PluginRegisterCustomRenderer.getInstance().registerPlugin(TotoCustomRenderer())
     }
 
     private fun handleLaunchOptions() {
