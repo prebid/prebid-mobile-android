@@ -16,6 +16,8 @@
 
 package org.prebid.mobile.api.rendering;
 
+import static org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer.PREBID_MOBILE_RENDERER_NAME;
+
 import android.content.Context;
 import android.view.View;
 
@@ -38,7 +40,7 @@ public class PrebidRenderer implements PrebidMobilePluginCustomRenderer {
 
     @Override
     public String getName() {
-        return "PrebidMobile";
+        return PREBID_MOBILE_RENDERER_NAME;
     }
 
     @Override

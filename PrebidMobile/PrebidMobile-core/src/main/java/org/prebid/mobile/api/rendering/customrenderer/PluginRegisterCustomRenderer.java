@@ -16,39 +16,44 @@
 
 package org.prebid.mobile.api.rendering.customrenderer;
 
-import org.prebid.mobile.api.rendering.PrebidRenderer;
+import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PluginRegisterCustomRenderer {
 
+    public static final String TAG = "PluginRegister";
     public static final String CUSTOM_RENDERER_KEY = "plugin_custom_renderer_key";
+    public static final String PREBID_MOBILE_RENDERER_NAME = "PrebidRenderer";
 
     private static final PluginRegisterCustomRenderer instance = new PluginRegisterCustomRenderer();
 
-    private final List<PrebidMobilePluginCustomRenderer> plugins = new ArrayList();
-
-    private final PrebidRenderer defaultPrebidRenderer = new PrebidRenderer();
+    private final HashMap<String, PrebidMobilePluginCustomRenderer> plugins = new HashMap<>();
 
     public void registerPlugin(PrebidMobilePluginCustomRenderer prebidMobilePluginCustomRenderers) {
-        plugins.add(prebidMobilePluginCustomRenderers);
+        String rendererName = prebidMobilePluginCustomRenderers.getName();
+        if (plugins.containsKey(rendererName)) {
+            LogUtil.debug(TAG, "New custom renderer with name" + rendererName + "will replace the previous one with same name");
+        }
+        plugins.put(prebidMobilePluginCustomRenderers.getName(), prebidMobilePluginCustomRenderers);
     }
 
     public void unregisterPlugin(PrebidMobilePluginCustomRenderer prebidMobilePluginCustomRenderer) {
-        plugins.remove(prebidMobilePluginCustomRenderer);
+        plugins.remove(prebidMobilePluginCustomRenderer.getName());
     }
 
     // Returns the list of available renderers for the given ad unit for RT request
     public List<String> getRTBListOfCustomRenderersFor(AdUnitConfiguration adUnitConfiguration) {
         List<String> compliantPlugins = new ArrayList<>();
-        if (plugins.size() > 0) {
-            for (int i = 0; i < plugins.size(); i++) {
-                if (plugins.get(i).isSupportRenderingFor(adUnitConfiguration)) {
-                    compliantPlugins.add(plugins.get(i).getName());
-                }
+        for (Map.Entry<String, PrebidMobilePluginCustomRenderer> entry : plugins.entrySet()) {
+            PrebidMobilePluginCustomRenderer renderer = entry.getValue();
+            if (renderer.isSupportRenderingFor(adUnitConfiguration)) {
+                compliantPlugins.add(renderer.getName());
             }
         }
         return compliantPlugins;
@@ -58,18 +63,11 @@ public class PluginRegisterCustomRenderer {
     // If no preferred renderer is found, it returns PrebidRenderer to perform default behavior
     public PrebidMobilePluginCustomRenderer getPluginForPreferredRenderer(BidResponse bidResponse) {
         String preferredRendererName = bidResponse.gePreferredCustomRendererName();
-        PrebidMobilePluginCustomRenderer preferredPlugin = null;
-        if (plugins.size() > 0) {
-            for (int i = 0; i < plugins.size(); i++) {
-                if (plugins.get(i).getName().equals(preferredRendererName)) {
-                    preferredPlugin = plugins.get(i);
-                }
-            }
-        }
+        PrebidMobilePluginCustomRenderer preferredPlugin = plugins.get(preferredRendererName);
         if (preferredPlugin != null) {
             return preferredPlugin;
         } else {
-            return defaultPrebidRenderer; // Return default
+            return plugins.get(PREBID_MOBILE_RENDERER_NAME);
         }
     }
 
