@@ -64,7 +64,7 @@ public class PluginRegisterCustomRenderer {
     public PrebidMobilePluginCustomRenderer getPluginForPreferredRenderer(BidResponse bidResponse) {
         String preferredRendererName = bidResponse.gePreferredCustomRendererName();
         PrebidMobilePluginCustomRenderer preferredPlugin = plugins.get(preferredRendererName);
-        if (preferredPlugin != null) {
+        if (preferredPlugin != null && preferredPlugin.isSupportRenderingFor(bidResponse.getAdUnitConfiguration())) {
             return preferredPlugin;
         } else {
             return plugins.get(PREBID_MOBILE_RENDERER_NAME);

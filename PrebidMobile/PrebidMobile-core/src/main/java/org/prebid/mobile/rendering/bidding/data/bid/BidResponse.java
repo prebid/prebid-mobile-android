@@ -67,6 +67,7 @@ public class BidResponse {
     private boolean usesCache;
     private String parseError;
     private String winningBidJson;
+    private AdUnitConfiguration adUnitConfiguration;
 
     private long creationTime;
 
@@ -78,6 +79,8 @@ public class BidResponse {
     ) {
         seatbids = new ArrayList<>();
         usesCache = adUnitConfiguration.isOriginalAdUnit() || PrebidMobile.isUseCacheForReportingWithRenderingApi();
+        this.adUnitConfiguration = adUnitConfiguration;
+
         parseJson(json);
     }
 
@@ -231,6 +234,10 @@ public class BidResponse {
             return bid.getPrebid().getTargeting().get(CUSTOM_RENDERER_KEY);
         }
         return null;
+    }
+
+    public AdUnitConfiguration getAdUnitConfiguration() {
+        return adUnitConfiguration;
     }
 
     private boolean hasWinningKeywords(Prebid prebid) {
