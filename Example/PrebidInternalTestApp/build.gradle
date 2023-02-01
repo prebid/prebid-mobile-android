@@ -57,12 +57,6 @@ android {
     }
 }
 
-repositories{
-    maven {
-        url  "https://teads.jfrog.io/artifactory/SDKAndroid-maven-prod" // TODO should not be merged
-    }
-}
-
 dependencies {
     def nav_version = "2.3.1"
     def lifecycle_version = "2.2.0"
@@ -93,8 +87,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:+'
     implementation "com.applovin:applovin-sdk:11.3.2"
     implementation "com.google.android.gms:play-services-ads-identifier:18.0.1" // For Applovin Max
-    implementation("tv.teads.sdk.android:sdk:5.0.21@aar") { transitive = true } // TODO should not be merged
-
 
     // Navigation component
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"

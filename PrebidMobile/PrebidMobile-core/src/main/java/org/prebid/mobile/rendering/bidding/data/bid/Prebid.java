@@ -72,7 +72,6 @@ public class Prebid {
         toHashMap(prebid.targeting, jsonObject.optJSONObject("targeting"));
 
         prebid.targeting.put(CUSTOM_RENDERER_KEY, "Toto"); // TODO mock should not be merged / the right field should be defined
-//        prebid.targeting.put(CUSTOM_RENDERER_KEY, "PrebidMobile"); // TODO mock should not be merged / the right field should be defined
         return prebid;
     }
 
