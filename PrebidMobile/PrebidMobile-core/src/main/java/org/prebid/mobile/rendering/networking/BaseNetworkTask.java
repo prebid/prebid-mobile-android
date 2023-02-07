@@ -17,7 +17,9 @@
 package org.prebid.mobile.rendering.networking;
 
 import android.os.AsyncTask;
+
 import androidx.annotation.Nullable;
+
 import org.apache.http.conn.ConnectTimeoutException;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
@@ -25,8 +27,16 @@ import org.prebid.mobile.rendering.loading.FileDownloadTask;
 import org.prebid.mobile.rendering.networking.exception.BaseExceptionHolder;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Locale;
 import java.util.Map;
 
@@ -52,6 +62,7 @@ public class BaseNetworkTask
     protected static final String CONTENT_TYPE_HEADER = "Content-Type";
     protected static final String CONTENT_TYPE_HEADER_VALUE = "application/json";
 
+    public boolean isStatusRequest = false;
     protected GetUrlResult result;
 
     private long start;
@@ -138,7 +149,7 @@ public class BaseNetworkTask
             responseCode = ((HttpURLConnection) connection).getResponseCode();
         }
 
-        if (Utils.isNotBlank(param.name) && !DOWNLOAD_TASK.equals(param.name) && !REDIRECT_TASK.equals(param.name)) {
+        if (Utils.isNotBlank(param.name) && !DOWNLOAD_TASK.equals(param.name) && !REDIRECT_TASK.equals(param.name) && !isStatusRequest) {
             result = parseHttpURLResponse(responseCode);
         }
         result = customParser(responseCode, connection);

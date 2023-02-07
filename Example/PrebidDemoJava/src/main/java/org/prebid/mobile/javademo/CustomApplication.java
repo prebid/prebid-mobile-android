@@ -44,6 +44,7 @@ public class CustomApplication extends Application {
     private void initPrebid() {
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d");
+        PrebidMobile.setCustomStatusEndpoint("https://prebid-server-test-j.prebid.org/status");
         PrebidMobile.setPrebidServerHost(
             Host.createCustomHost(
                 "https://prebid-server-test-j.prebid.org/openrtb2/auction"

@@ -41,7 +41,7 @@ public class StatusRequester {
             }
         }
 
-        ServerConnection.fireWithResult(
+        ServerConnection.fireStatusRequest(
             statusUrl,
             getResponseHandler()
         );
