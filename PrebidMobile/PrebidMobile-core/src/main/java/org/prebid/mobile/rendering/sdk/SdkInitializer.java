@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.api.exceptions.InitError;
+import org.prebid.mobile.api.data.InitializationStatus;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
@@ -72,7 +72,11 @@ public class SdkInitializer {
     ) {
         LogUtil.error(error);
         if (listener != null) {
-            postOnMainThread(() -> listener.onSdkFailedToInit(new InitError(error)));
+            postOnMainThread(() -> {
+                InitializationStatus status = InitializationStatus.FAILED;
+                status.setDescription(error);
+                listener.onInitializationComplete(status);
+            });
         }
         PrebidContextHolder.clearContext();
     }

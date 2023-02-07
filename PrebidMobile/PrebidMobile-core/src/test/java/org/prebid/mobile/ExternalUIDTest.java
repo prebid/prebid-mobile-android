@@ -16,6 +16,8 @@
 
 package org.prebid.mobile;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
@@ -27,8 +29,6 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static org.junit.Assert.assertTrue;
-
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK, manifest = Config.NONE)
 public class ExternalUIDTest extends BaseSetup {
@@ -39,7 +39,7 @@ public class ExternalUIDTest extends BaseSetup {
     @Override
     public void setup() {
         super.setup();
-        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
     }
 
     @Override

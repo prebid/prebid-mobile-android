@@ -18,6 +18,20 @@ public class Reflection {
         }
     }
 
+    public static void setStaticVariableTo(
+        Class classType,
+        String fieldName,
+        Object objectToPut
+    ) {
+        try {
+            Field field = classType.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(null, objectToPut);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new NullPointerException("Can't set static field using reflection: " + fieldName + " " + classType);
+        }
+    }
+
     public static <T> T getStaticFieldOf(
         Class classType,
         String fieldName

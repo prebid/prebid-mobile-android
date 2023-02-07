@@ -114,7 +114,7 @@ public class TargetingParamsTest extends BaseSetup {
     @Test
     public void testBundleName() throws Exception {
         FieldUtils.writeStaticField(TargetingParams.class, "bundleName", null, true);
-        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
         assertEquals("org.prebid.mobile.core.test", TargetingParams.getBundleName());
         TargetingParams.setBundleName("org.prebid.mobile");
         assertEquals("org.prebid.mobile", TargetingParams.getBundleName());
@@ -134,7 +134,7 @@ public class TargetingParamsTest extends BaseSetup {
 
     @Test
     public void testCOPPAFlag() throws Exception {
-        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
         TargetingParams.setSubjectToCOPPA(true);
         assertEquals(true, TargetingParams.isSubjectToCOPPA());
         TargetingParams.setSubjectToCOPPA(false);
@@ -144,7 +144,7 @@ public class TargetingParamsTest extends BaseSetup {
     @Test
     public void testCOPPAFlagWithoutContext() {
         //given
-        PrebidMobile.setApplicationContext(null);
+        PrebidMobile.initializeSdk(null, null);
 
         //when
         Boolean result = TargetingParams.isSubjectToCOPPA();
@@ -153,12 +153,12 @@ public class TargetingParamsTest extends BaseSetup {
         assertNull(result);
 
         //defer
-        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
     }
 
     @Test
     public void testGDPRFlag() throws Exception {
-        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
         TargetingParams.setSubjectToGDPR(true);
         assertEquals(Boolean.TRUE, TargetingParams.isSubjectToGDPR());
         TargetingParams.setSubjectToGDPR(false);
@@ -207,7 +207,7 @@ public class TargetingParamsTest extends BaseSetup {
         editor.remove(UserConsentManager.GDPR_2_SUBJECT_KEY);
         editor.apply();
 
-        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
         TargetingParams.setGDPRConsentString("testString");
         assertEquals("testString", TargetingParams.getGDPRConsentString());
     }

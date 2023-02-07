@@ -19,6 +19,7 @@ package org.prebid.mobile.rendering.sdk;
 import static android.os.Looper.getMainLooper;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -35,7 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener;
+import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -105,13 +106,13 @@ public class PrebidMobileTest {
         ));
 
         Context context = Robolectric.buildActivity(Activity.class).create().get();
-        SdkInitListener mockSdkInitListener = mock(SdkInitListener.class);
-        PrebidMobile.setApplicationContext(context, mockSdkInitListener);
+        SdkInitializationListener mockSdkInitListener = mock(SdkInitializationListener.class);
+        PrebidMobile.initializeSdk(context, mockSdkInitListener);
 
         sleep(300);
         shadowOf(getMainLooper()).idle();
         sleep(200);
-        verify(mockSdkInitListener, times(1)).onSDKInit();
+        verify(mockSdkInitListener, times(1)).onInitializationComplete(any());
     }
 
     @Test
