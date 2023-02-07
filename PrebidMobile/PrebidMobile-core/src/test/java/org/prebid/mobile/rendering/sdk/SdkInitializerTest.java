@@ -123,7 +123,7 @@ public class SdkInitializerTest {
 
         assertTrue(isSuccessful);
         assertTrue(PrebidMobile.isSdkInitialized());
-        assertEquals("Prebid Server is not responding: Code 404. null", error);
+        assertEquals("Server status is not ok!", error);
         assertTrue(serverWarning);
     }
 
@@ -169,7 +169,7 @@ public class SdkInitializerTest {
 
         assertTrue(isSuccessful);
         assertTrue(PrebidMobile.isSdkInitialized());
-        assertEquals("Prebid Server is not responding: Code 404. null", error);
+        assertEquals("Server status is not ok!", error);
         assertTrue(serverWarning);
     }
 
