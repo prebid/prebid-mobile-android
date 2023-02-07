@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.InitializationStatus;
+import org.prebid.mobile.api.exceptions.InitError;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.networking.BaseNetworkTask;
 import org.prebid.mobile.rendering.networking.ResponseHandler;
@@ -80,6 +81,8 @@ public class StatusRequester {
         LogUtil.debug(TAG, "Prebid SDK " + PrebidMobile.SDK_VERSION + " initialized");
         if (listener != null) {
             listener.onInitializationComplete(InitializationStatus.SUCCEEDED);
+
+            listener.onSdkInit();
         }
     }
 
@@ -89,6 +92,8 @@ public class StatusRequester {
             InitializationStatus status = InitializationStatus.SERVER_STATUS_WARNING;
             status.setDescription(message);
             listener.onInitializationComplete(status);
+
+            listener.onSdkFailedToInit(new InitError(message));
         }
     }
 
