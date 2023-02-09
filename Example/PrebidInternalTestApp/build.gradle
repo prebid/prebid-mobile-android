@@ -88,6 +88,7 @@ dependencies {
     implementation "com.applovin:applovin-sdk:11.3.2"
     implementation "com.google.android.gms:play-services-ads-identifier:18.0.1" // For Applovin Max
 
+
     // Navigation component
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"

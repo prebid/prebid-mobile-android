@@ -41,7 +41,6 @@ import org.json.JSONArray
 import org.prebid.mobile.ExternalUserId
 import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.TargetingParams
-import org.prebid.mobile.api.rendering.PrebidRenderer
 import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener
 import org.prebid.mobile.renderingtestapp.plugplay.utilities.consent.ConsentUpdateManager
@@ -49,7 +48,7 @@ import org.prebid.mobile.renderingtestapp.utils.GppHelper
 import org.prebid.mobile.renderingtestapp.utils.OpenRtbConfigs
 import org.prebid.mobile.renderingtestapp.utils.OpenRtbExtra
 import org.prebid.mobile.renderingtestapp.utils.PermissionHelper
-import org.prebid.mobile.renderingtestapp.utils.TotoCustomRenderer
+import org.prebid.mobile.renderingtestapp.utils.SampleCustomRenderer
 
 class MainActivity : AppCompatActivity(), SdkInitListener {
 
@@ -159,7 +158,7 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
     }
 
     private fun initCustomRendererPlugin() {
-        PluginRegisterCustomRenderer.getInstance().registerPlugin(TotoCustomRenderer())
+        PluginRegisterCustomRenderer.getInstance().registerPlugin(SampleCustomRenderer())
     }
 
     private fun handleLaunchOptions() {

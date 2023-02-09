@@ -19,13 +19,14 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.customrenderer
 import android.os.Bundle
 import android.view.View
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.api.rendering.listeners.BannerViewListener
-import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.api.exceptions.AdException
+import org.prebid.mobile.api.rendering.BannerView
+import org.prebid.mobile.api.rendering.listeners.BannerViewListener
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 
 open class CustomRendererBannerFragment : AdFragment(),
     BannerViewListener {
@@ -35,11 +36,13 @@ open class CustomRendererBannerFragment : AdFragment(),
 
     protected var bannerView: BannerView? = null
 
-    private val binding: FragmentBiddingBannerBinding
-        get() = getBinding()
+    private val binding: FragmentBiddingBannerBinding get() = getBinding()
+
+    protected lateinit var events: Events
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
+        events = Events(view)
         binding.adIdLabel.text = getString(R.string.label_auid, configId)
         binding.btnLoad.setOnClickListener {
             resetEventButtons()
@@ -77,30 +80,39 @@ open class CustomRendererBannerFragment : AdFragment(),
 
     override fun onAdFailed(bannerView: BannerView?, exception: AdException?) {
         resetEventButtons()
-//        binding.btnAdFailed?.isEnabled = true
+        events.failed(true)
         binding.btnLoad.isEnabled = true
     }
 
     override fun onAdLoaded(bannerView: BannerView?) {
         resetEventButtons()
-//        binding.btnAdLoaded?.isEnabled = true
-        binding.btnLoad?.isEnabled = true
+        events.loaded(true)
+        binding.btnLoad.isEnabled = true
     }
 
     override fun onAdClicked(bannerView: BannerView?) {
-//        binding.btnAdClicked?.isEnabled = true
+        events.clicked(true)
     }
 
     override fun onAdClosed(bannerView: BannerView?) {
-//        binding.btnAdClosed?.isEnabled = true
+        events.closed(true)
     }
 
     override fun onAdDisplayed(bannerView: BannerView?) {
-//        binding.btnAdDisplayed?.isEnabled = true
+        events.displayed(true)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         bannerView?.destroy()
+    }
+
+    protected class Events(parentView: View) : BaseEvents(parentView) {
+        fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
+        fun impression(b: Boolean) = enable(R.id.btnAdImpression, b)
+        fun clicked(b: Boolean) = enable(R.id.btnAdClicked, b)
+        fun closed(b: Boolean) = enable(R.id.btnAdClosed, b)
+        fun failed(b: Boolean) = enable(R.id.btnAdFailed, b)
+        fun displayed(b: Boolean) = enable(R.id.btnAdDisplayed, b)
     }
 }

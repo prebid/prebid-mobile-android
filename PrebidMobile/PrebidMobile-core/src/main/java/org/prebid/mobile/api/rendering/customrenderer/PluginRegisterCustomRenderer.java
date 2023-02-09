@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class PluginRegisterCustomRenderer {
 
-    public static final String TAG = "PluginRegister";
+    public static final String TAG = "PluginRegisterCustomRenderer";
     public static final String CUSTOM_RENDERER_KEY = "plugin_custom_renderer_key";
     public static final String PREBID_MOBILE_RENDERER_NAME = "PrebidRenderer";
 

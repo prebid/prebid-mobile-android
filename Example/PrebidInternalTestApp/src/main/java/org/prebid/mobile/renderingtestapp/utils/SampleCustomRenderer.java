@@ -16,9 +16,14 @@
 
 package org.prebid.mobile.renderingtestapp.utils;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,12 +36,11 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
-// TODO temp for tests purposes, should not be merged
-public class TotoCustomRenderer implements PrebidMobilePluginCustomRenderer {
+public class SampleCustomRenderer implements PrebidMobilePluginCustomRenderer {
 
     @Override
     public String getName() {
-        return "Toto";
+        return "SampleCustomRenderer";
     }
 
     @Override
@@ -56,10 +60,38 @@ public class TotoCustomRenderer implements PrebidMobilePluginCustomRenderer {
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse bidResponse
     ) {
+        FrameLayout frameLayout = new FrameLayout(context);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+        );
+        frameLayout.setLayoutParams(layoutParams);
+        frameLayout.setBackgroundColor(Color.parseColor("#D3D3D3"));
+        frameLayout.setOnClickListener(view -> { displayViewListener.onAdClicked(); });
+        TextView textView = new TextView(context);
+        textView.setText(bidResponse.getWinningBidJson());
+        textView.setGravity(Gravity.CENTER);
 
-        Toast.makeText(context, "Load Banner Ad", Toast.LENGTH_LONG).show();
-        return new FrameLayout(context);
+        ImageButton closeButton = new ImageButton(context);
+        closeButton.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+        closeButton.setBackgroundColor(Color.parseColor("#000000"));
+        FrameLayout.LayoutParams closeButtonParams = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                Gravity.TOP | Gravity.END
+        );
+        closeButtonParams.setMargins(0, 20, 20, 0);
+        closeButton.setLayoutParams(closeButtonParams);
+        closeButton.setOnClickListener(view -> {
+          displayViewListener.onAdClosed();
+          frameLayout.setVisibility(View.GONE);
+        });
 
+        frameLayout.addView(textView);
+        frameLayout.addView(closeButton);
+
+        displayViewListener.onAdDisplayed();
+        return frameLayout;
     }
 
     @Override
@@ -69,6 +101,17 @@ public class TotoCustomRenderer implements PrebidMobilePluginCustomRenderer {
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse response
     ) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Interstitial");
+        builder.setMessage(response.getWinningBidJson());
+        builder.setPositiveButton("Ok", (dialog, which) -> {
+            interstitialControllerListener.onInterstitialClicked();
+        });
+        builder.setNegativeButton("Close", (dialog, which) -> dialog.dismiss());
+        builder.setOnDismissListener(dialog -> interstitialControllerListener.onInterstitialClosed());
+        builder.setCancelable(false);
+        AlertDialog alertDialog = builder.create();
+
         return new PrebidMobileInterstitialControllerInterface() {
             @Override
             public void loadAd(AdUnitConfiguration adUnitConfiguration, BidResponse bidResponse) {
@@ -78,7 +121,7 @@ public class TotoCustomRenderer implements PrebidMobilePluginCustomRenderer {
 
             @Override
             public void show() {
-                Toast.makeText(context, "Show Interstitial Ad", Toast.LENGTH_LONG).show();
+                alertDialog.show();
                 interstitialControllerListener.onInterstitialDisplayed();
             }
 
@@ -91,6 +134,7 @@ public class TotoCustomRenderer implements PrebidMobilePluginCustomRenderer {
 
     @Override
     public boolean isSupportRenderingFor(AdUnitConfiguration adUnitConfiguration) {
-        return adUnitConfiguration.isAdType(AdFormat.INTERSTITIAL);
+        return adUnitConfiguration.isAdType(AdFormat.BANNER)
+        || adUnitConfiguration.isAdType(AdFormat.INTERSTITIAL);
     }
 }
