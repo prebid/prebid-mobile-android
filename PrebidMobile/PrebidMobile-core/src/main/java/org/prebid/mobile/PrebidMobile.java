@@ -19,6 +19,7 @@ package org.prebid.mobile;
 import android.content.Context;
 import android.util.Log;
 import android.util.Patterns;
+import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -206,17 +207,16 @@ public class PrebidMobile {
 
     /**
      * Initializes the main SDK classes and makes request to Prebid server to check its status.
-     * Status request is needed to understand whether server works and responds.
-     * You have to set host url ({@link PrebidMobile#setPrebidServerHost(Host)}) and
-     * /status endpoint url ({@link PrebidMobile#setCustomStatusEndpoint(String)}) before calling this method.
+     * You have to set host url ({@link PrebidMobile#setPrebidServerHost(Host)}) before calling this method.
+     * If you use custom /status endpoint set it with ({@link PrebidMobile#setCustomStatusEndpoint(String)}) before starting initialization.
      * <p>
      * Calls SdkInitializationListener callback with enum initialization status parameter:
      * <p>
-     * SUCCEEDED - initialization and status request were successful.
+     * SUCCEEDED - Prebid SDK is initialized successfully and ready to work.
      * <p>
-     * SERVER_STATUS_WARNING - initialization was successful but the status request was failed.
+     * FAILED - Prebid SDK is failed to initialize and is not able to work.
      * <p>
-     * FAILED - initialization failed.
+     * SERVER_STATUS_WARNING - Prebid SDK failed to check the PBS status. The SDK is initialized and able to work, though.
      * <p>
      * To get the description of the problem you can call {@link InitializationStatus#getDescription()}
      *
@@ -334,12 +334,19 @@ public class PrebidMobile {
      * @see <a href="https://docs.prebid.org/prebid-server/endpoints/pbs-endpoint-status.html">GET /status</a>
      */
     public static void setCustomStatusEndpoint(String url) {
-        if (url != null) {
-            if (url.toLowerCase().startsWith("http") && Patterns.WEB_URL.matcher(url).matches()) {
-                customStatusEndpoint = url;
-            } else {
-                Log.e(TAG, "Can't set custom /status endpoint, it is not valid.");
-            }
+        if (url == null) {
+            return;
+        }
+
+        if (!Patterns.WEB_URL.matcher(url).matches()) {
+            Log.e(TAG, "Can't set custom /status endpoint, it is not valid.");
+            return;
+        }
+
+        if (url.startsWith("http")) {
+            customStatusEndpoint = url;
+        } else {
+            customStatusEndpoint = URLUtil.guessUrl(url).replace("http", "https");
         }
     }
 

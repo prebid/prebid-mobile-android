@@ -51,8 +51,7 @@ public class StatusRequester {
         return new ResponseHandler() {
             @Override
             public void onResponse(BaseNetworkTask.GetUrlResult response) {
-                int statusCode = response.statusCode;
-                if (statusCode >= 200 && statusCode < 300) {
+                if (response.isOkStatusCode()) {
                     onInitializationCompleted();
                     return;
                 }

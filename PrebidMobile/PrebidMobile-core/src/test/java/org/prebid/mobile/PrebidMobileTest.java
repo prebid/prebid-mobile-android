@@ -85,10 +85,31 @@ public class PrebidMobileTest extends BaseSetup {
     }
 
     @Test
+    public void setCustomStatusEndpoint_ipAddress() {
+        PrebidMobile.setCustomStatusEndpoint("192.168.0.106");
+
+        assertEquals("https://192.168.0.106/", getInnerCustomEndpointValue());
+    }
+
+    @Test
     public void setCustomStatusEndpoint_valueWithoutHttp() {
         PrebidMobile.setCustomStatusEndpoint("site.com");
 
-        assertNull(getInnerCustomEndpointValue());
+        assertEquals("https://site.com/", getInnerCustomEndpointValue());
+    }
+
+    @Test
+    public void setCustomStatusEndpoint_valueWithoutHttpWithThreeW() {
+        PrebidMobile.setCustomStatusEndpoint("www.site.com");
+
+        assertEquals("https://www.site.com/", getInnerCustomEndpointValue());
+    }
+
+    @Test
+    public void setCustomStatusEndpoint_valueWithoutHttpWithThreeWAndPath() {
+        PrebidMobile.setCustomStatusEndpoint("www.site.com/status");
+
+        assertEquals("https://www.site.com/status", getInnerCustomEndpointValue());
     }
 
     @Test

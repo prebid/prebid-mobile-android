@@ -37,12 +37,11 @@ public class ServerConnection {
 
     public static void fireStatusRequest(String url, ResponseHandler responseHandler) {
         BaseNetworkTask networkTask = new BaseNetworkTask(responseHandler);
-        networkTask.isStatusRequest = true;
         BaseNetworkTask.GetUrlParams params = new BaseNetworkTask.GetUrlParams();
         params.url = url;
         params.requestType = "GET";
         params.userAgent = AppInfoManager.getUserAgent();
-        params.name = "recordevents";
+        params.name = BaseNetworkTask.STATUS_TASK;
 
         networkTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
     }
