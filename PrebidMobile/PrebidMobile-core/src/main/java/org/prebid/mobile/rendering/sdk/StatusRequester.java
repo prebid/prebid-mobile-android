@@ -35,7 +35,7 @@ public class StatusRequester {
             if (url.contains("/openrtb2/auction")) {
                 statusUrl = url.replace("/openrtb2/auction", "/status");
             } else {
-                LogUtil.info("SDK doesn't support host urls without `/openrtb2/auction`. Please set /status endpoint url using PrebidMobile.setCustomStatusEndpoint().");
+                LogUtil.info("Prebid SDK can't build the /status endpoint. Please, provide the custom /status endpoint using PrebidMobile.setCustomStatusEndpoint().");
                 postOnMainThread(StatusRequester::onInitializationCompleted);
                 return;
             }
