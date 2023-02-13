@@ -16,16 +16,26 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
+import static org.prebid.mobile.PrebidMobile.SDK_VERSION;
+
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.text.TextUtils;
 import android.util.Pair;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.prebid.mobile.*;
+import org.prebid.mobile.AdSize;
+import org.prebid.mobile.BannerBaseAdUnit;
+import org.prebid.mobile.DataObject;
+import org.prebid.mobile.ExternalUserId;
+import org.prebid.mobile.PrebidMobile;
+import org.prebid.mobile.Signals;
+import org.prebid.mobile.TargetingParams;
+import org.prebid.mobile.VideoBaseAdUnit;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
-import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Imp;
@@ -36,11 +46,14 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Video;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.source.Source;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
-import org.prebid.mobile.rendering.video.vast.Ad;
 
-import java.util.*;
-
-import static org.prebid.mobile.PrebidMobile.SDK_VERSION;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 public class BasicParameterBuilder extends ParameterBuilder {
 
@@ -357,11 +370,14 @@ public class BasicParameterBuilder extends ParameterBuilder {
         final Map<String, Set<String>> contextDataDictionary = adConfiguration.getContextDataDictionary();
         JSONObject data = Utils.toJson(contextDataDictionary);
         Utils.addValue(data, "adslot", adConfiguration.getPbAdSlot());
-        JSONObject context = new JSONObject();
-
         if (data.length() > 0) {
-            Utils.addValue(context, "data", data);
-            imp.getExt().put("context", context);
+            imp.getExt().put("data", data);
+        }
+
+        final Set<String> contextKeywords = adConfiguration.getContextKeywordsSet();
+        if (contextKeywords.size() > 0) {
+            String string = TextUtils.join(",", contextKeywords);
+            imp.getExt().put("keywords", string);
         }
 
         // TODO: 15.12.2020 uncomment when Prebid server will be able to process Ext content not related to bidders

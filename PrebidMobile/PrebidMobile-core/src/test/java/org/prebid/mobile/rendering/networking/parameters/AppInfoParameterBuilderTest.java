@@ -16,6 +16,9 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -32,9 +35,6 @@ import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.utils.helpers.AdIdManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
 import org.robolectric.RobolectricTestRunner;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class AppInfoParameterBuilderTest {
@@ -93,8 +93,7 @@ public class AppInfoParameterBuilderTest {
     }
 
     @Test
-    public void whenAppendParametersAndTargetingContextDataNotEmpty_ContextDataAddedToAppExt()
-    throws JSONException {
+    public void whenAppendParametersAndTargetingContextDataNotEmpty_ContextDataAddedToAppExt() throws JSONException {
         TargetingParams.addContextData("context", "contextData");
 
         AppInfoParameterBuilder builder = new AppInfoParameterBuilder(new AdUnitConfiguration());
@@ -107,4 +106,23 @@ public class AppInfoParameterBuilderTest {
         assertTrue(appDataJson.has("context"));
         assertEquals("contextData", appDataJson.getJSONArray("context").get(0));
     }
+
+    @Test
+    public void whenAppendParametersAndTargetingContextKeywordNotEmpty_ContextKeywordAddedToAppExt() throws JSONException {
+        TargetingParams.addContextKeyword("contextKeyword1");
+        TargetingParams.addContextKeyword("contextKeyword2");
+
+        AppInfoParameterBuilder builder = new AppInfoParameterBuilder(new AdUnitConfiguration());
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        App app = adRequestInput.getBidRequest().getApp();
+
+        assertEquals("contextKeyword1,contextKeyword2", app.keywords);
+
+        JSONObject appJson = app.getJsonObject();
+        assertTrue(appJson.has("keywords"));
+        assertEquals("contextKeyword1,contextKeyword2", appJson.getString("keywords"));
+    }
+
 }
