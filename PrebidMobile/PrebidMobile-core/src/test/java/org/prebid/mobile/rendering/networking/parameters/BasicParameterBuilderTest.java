@@ -301,11 +301,11 @@ public class BasicParameterBuilderTest {
         adConfiguration.setAdFormat(AdFormat.BANNER);
         adConfiguration.addSize(new AdSize(320, 50));
 
-        adConfiguration.addContextKeyword("adUnitContextKeyword1");
-        adConfiguration.addContextKeyword("adUnitContextKeyword2");
+        adConfiguration.addExtKeyword("adUnitContextKeyword1");
+        adConfiguration.addExtKeyword("adUnitContextKeyword2");
 
-        adConfiguration.addContextData("adUnitContextDataKey1", "adUnitContextDataValue1");
-        adConfiguration.addContextData("adUnitContextDataKey2", "adUnitContextDataValue2");
+        adConfiguration.addExtData("adUnitContextDataKey1", "adUnitContextDataValue1");
+        adConfiguration.addExtData("adUnitContextDataKey2", "adUnitContextDataValue2");
 
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
             context.getResources(),
@@ -474,7 +474,7 @@ public class BasicParameterBuilderTest {
     public void whenAppendParametersAndAdConfigContextDataNotEmpty_ContextDataAddedToImpExt()
     throws JSONException {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.addContextData("context", "contextData");
+        adConfiguration.addExtData("context", "contextData");
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, context.getResources(), false);
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
@@ -782,7 +782,7 @@ public class BasicParameterBuilderTest {
 
     private void appendImpExtParameters(Imp imp, AdUnitConfiguration config) {
         try {
-            Map<String, Set<String>> contextDataDictionary = config.getContextDataDictionary();
+            Map<String, Set<String>> contextDataDictionary = config.getExtDataDictionary();
             if (contextDataDictionary.size() > 0) {
                 JSONObject dataJson = new JSONObject();
                 for (String key : contextDataDictionary.keySet()) {
@@ -791,7 +791,7 @@ public class BasicParameterBuilderTest {
                 imp.getExt().put("data", dataJson);
             }
 
-            Set<String> contextKeywordsSet = config.getContextKeywordsSet();
+            Set<String> contextKeywordsSet = config.getExtKeywordsSet();
             if (contextKeywordsSet.size() > 0) {
                 String join = stringsToCommaSeparatedString(contextKeywordsSet);
                 imp.getExt().put("keywords", join);

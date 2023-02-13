@@ -3,7 +3,13 @@ package org.prebid.mobile.configuration;
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.prebid.mobile.*;
+
+import org.prebid.mobile.AdSize;
+import org.prebid.mobile.BannerBaseAdUnit;
+import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.DataObject;
+import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.VideoBaseAdUnit;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.data.Position;
@@ -14,7 +20,13 @@ import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.video.ExoPlayerView;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
 public class AdUnitConfiguration {
@@ -105,7 +117,7 @@ public class AdUnitConfiguration {
         userDataObjects.clear();
     }
 
-    public void addContextData(
+    public void addExtData(
         String key,
         String value
     ) {
@@ -116,7 +128,7 @@ public class AdUnitConfiguration {
         }
     }
 
-    public void addContextData(
+    public void addExtData(
         String key,
         Set<String> value
     ) {
@@ -125,43 +137,43 @@ public class AdUnitConfiguration {
         }
     }
 
-    public void removeContextData(String key) {
+    public void removeExtData(String key) {
         contextDataDictionary.remove(key);
     }
 
     @NonNull
-    public Map<String, Set<String>> getContextDataDictionary() {
+    public Map<String, Set<String>> getExtDataDictionary() {
         return contextDataDictionary;
     }
 
-    public void clearContextData() {
+    public void clearExtData() {
         contextDataDictionary.clear();
     }
 
-    public void addContextKeyword(String keyword) {
+    public void addExtKeyword(String keyword) {
         if (keyword != null) {
             contextKeywordsSet.add(keyword);
         }
     }
 
-    public void addContextKeywords(Set<String> keywords) {
+    public void addExtKeywords(Set<String> keywords) {
         if (keywords != null) {
             contextKeywordsSet.addAll(keywords);
         }
     }
 
-    public void removeContextKeyword(String key) {
+    public void removeExtKeyword(String key) {
         if (key != null) {
             contextKeywordsSet.remove(key);
         }
     }
 
     @NonNull
-    public Set<String> getContextKeywordsSet() {
+    public Set<String> getExtKeywordsSet() {
         return contextKeywordsSet;
     }
 
-    public void clearContextKeywords() {
+    public void clearExtKeywords() {
         contextKeywordsSet.clear();
     }
 
