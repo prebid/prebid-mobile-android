@@ -5,10 +5,7 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.Signals
-import org.prebid.mobile.Signals.PlaybackMethod
-import org.prebid.mobile.Signals.Protocols
 import org.prebid.mobile.VideoAdUnit
 import org.prebid.mobile.VideoBaseAdUnit
 import org.prebid.mobile.addendum.AdViewUtils
@@ -19,9 +16,8 @@ import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 class GamOriginalApiVideoBannerActivity : BaseAdActivity() {
 
     companion object {
-        const val AD_UNIT_ID = "/21808260008/prebid_oxb_outstream_video_reandom"
-        const val CONFIG_ID = "imp-prebid-video-outstream"
-        const val STORED_RESPONSE = "response-prebid-video-outstream"
+        const val AD_UNIT_ID = "/21808260008/prebid-demo-original-api-video-banner"
+        const val CONFIG_ID = "imp-prebid-video-outstream-original-api"
         const val WIDTH = 300
         const val HEIGHT = 250
     }
@@ -30,9 +26,6 @@ class GamOriginalApiVideoBannerActivity : BaseAdActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

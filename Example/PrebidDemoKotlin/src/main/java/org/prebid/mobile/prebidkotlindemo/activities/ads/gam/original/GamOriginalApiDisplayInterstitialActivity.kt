@@ -23,7 +23,6 @@ import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
 import org.prebid.mobile.AdUnit
 import org.prebid.mobile.InterstitialAdUnit
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
@@ -31,7 +30,6 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-display-interstitial"
         const val CONFIG_ID = "imp-prebid-display-interstitial-320-480"
-        const val STORED_RESPONSE = "response-prebid-display-interstitial-320-480"
     }
 
     private var adUnit: AdUnit? = null
@@ -39,9 +37,6 @@ class GamOriginalApiDisplayInterstitialActivity : BaseAdActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

@@ -27,7 +27,7 @@ import java.util.*
 class InAppVideoInterstitialMultiFormatActivity : BaseAdActivity() {
 
     companion object {
-        const val CONFIG_ID = "imp-prebid-video-interstitial-320-480"
+        const val CONFIG_ID = "imp-prebid-display-interstitial-320-480-random"
     }
 
     private var adUnit: InterstitialAdUnit? = null
@@ -41,7 +41,7 @@ class InAppVideoInterstitialMultiFormatActivity : BaseAdActivity() {
             "response-prebid-video-interstitial-320-480",
             "response-prebid-display-interstitial-320-480"
         )
-        PrebidMobile.setStoredAuctionResponse(storedAuctionResponses.random())
+        PrebidMobile.setStoredAuctionResponse(storedAuctionResponses.shuffled().first())
 
         createAd()
     }

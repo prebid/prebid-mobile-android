@@ -29,8 +29,6 @@ import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DataSpec
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import org.prebid.mobile.*
-import org.prebid.mobile.Signals.PlaybackMethod
-import org.prebid.mobile.Signals.Protocols
 import org.prebid.mobile.prebidkotlindemo.R
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
@@ -159,6 +157,7 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
                 "https://prebid-server-test-j.prebid.org/openrtb2/auction"
             )
         )
+        PrebidMobile.setStoredAuctionResponse(null)
     }
 
 }

@@ -22,7 +22,6 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.admob.AdMobMediationBannerUtils
 import org.prebid.mobile.admob.PrebidBannerAdapter
 import org.prebid.mobile.api.mediation.MediationBannerAdUnit
@@ -33,7 +32,6 @@ class AdMobDisplayBanner320x50Activity : BaseAdActivity() {
     companion object {
         const val AD_UNIT_ID = "ca-app-pub-1875909575462531/3793078260"
         const val CONFIG_ID = "imp-prebid-banner-320-50"
-        const val STORED_RESPONSE = "response-prebid-banner-320-50"
         const val WIDTH = 320
         const val HEIGHT = 50
     }
@@ -44,9 +42,6 @@ class AdMobDisplayBanner320x50Activity : BaseAdActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

@@ -12,7 +12,6 @@ class GamOriginalApiNativeStylesActivity : BaseAdActivity() {
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid-demo-original-native-styles"
         const val CONFIG_ID = "imp-prebid-banner-native-styles"
-        const val STORED_RESPONSE = "response-prebid-banner-native-styles"
     }
 
     private var nativeAdUnit: NativeAdUnit? = null
@@ -20,9 +19,6 @@ class GamOriginalApiNativeStylesActivity : BaseAdActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

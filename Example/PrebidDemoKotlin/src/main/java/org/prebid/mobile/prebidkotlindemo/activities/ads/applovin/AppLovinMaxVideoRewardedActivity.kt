@@ -22,7 +22,6 @@ import com.applovin.mediation.MaxReward
 import com.applovin.mediation.MaxRewardedAdListener
 import com.applovin.mediation.adapters.prebid.utils.MaxMediationRewardedUtils
 import com.applovin.mediation.ads.MaxRewardedAd
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.api.mediation.MediationRewardedVideoAdUnit
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
@@ -31,7 +30,6 @@ class AppLovinMaxVideoRewardedActivity : BaseAdActivity() {
     companion object {
         const val AD_UNIT_ID = "897f2fc59d617715"
         const val CONFIG_ID = "imp-prebid-video-rewarded-320-480"
-        const val STORED_RESPONSE = "response-prebid-video-rewarded-320-480"
     }
 
     private var maxRewardedAd: MaxRewardedAd? = null
@@ -40,9 +38,6 @@ class AppLovinMaxVideoRewardedActivity : BaseAdActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

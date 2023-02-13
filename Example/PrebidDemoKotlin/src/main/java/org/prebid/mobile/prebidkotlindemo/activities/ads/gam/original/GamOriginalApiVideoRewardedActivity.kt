@@ -6,7 +6,6 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.RewardedVideoAdUnit
 import org.prebid.mobile.Signals
 import org.prebid.mobile.VideoBaseAdUnit
@@ -16,8 +15,7 @@ class GamOriginalApiVideoRewardedActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-video-interstitial"
-        const val CONFIG_ID = "imp-prebid-video-rewarded-320-480"
-        const val STORED_RESPONSE = "response-prebid-video-rewarded-320-480-original-api"
+        const val CONFIG_ID = "imp-prebid-video-rewarded-320-480-original-api"
     }
 
     private var adUnit: RewardedVideoAdUnit? = null
@@ -25,9 +23,6 @@ class GamOriginalApiVideoRewardedActivity : BaseAdActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

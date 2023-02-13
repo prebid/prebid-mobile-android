@@ -26,7 +26,6 @@ import org.prebid.mobile.NativeDataAsset;
 import org.prebid.mobile.NativeEventTracker;
 import org.prebid.mobile.NativeImageAsset;
 import org.prebid.mobile.NativeTitleAsset;
-import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.PrebidNativeAdEventListener;
 import org.prebid.mobile.PrebidNativeAdListener;
@@ -41,7 +40,6 @@ public class GamOriginalApiNativeInApp extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/apollo_custom_template_native_ad_unit";
     private static final String CONFIG_ID = "imp-prebid-banner-native-styles";
-    private static final String STORED_RESPONSE = "response-prebid-banner-native-styles";
     private static final String CUSTOM_FORMAT_ID = "11934135";
     private static final String TAG = "GamOriginalNative";
 
@@ -53,9 +51,6 @@ public class GamOriginalApiNativeInApp extends BaseAdActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE);
 
         createAd();
     }
