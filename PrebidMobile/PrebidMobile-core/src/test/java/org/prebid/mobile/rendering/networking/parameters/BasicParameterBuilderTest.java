@@ -93,7 +93,7 @@ public class BasicParameterBuilderTest {
     @Before
     public void setUp() throws Exception {
         context = Robolectric.buildActivity(Activity.class).create().get();
-        org.prebid.mobile.PrebidMobile.setApplicationContext(context);
+        org.prebid.mobile.PrebidMobile.initializeSdk(context, null);
         ManagersResolver.getInstance().prepare(context);
     }
 

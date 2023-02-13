@@ -16,26 +16,40 @@
 
 package org.prebid.mobile;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.reflection.Reflection;
+import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.testutils.BaseSetup;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.*;
-
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
 public class PrebidMobileTest extends BaseSetup {
+
+    @Before
+    public void clean() {
+        Reflection.setStaticVariableTo(PrebidMobile.class, "customStatusEndpoint", null);
+    }
+
+
     @Test
     public void testPrebidMobileSettings() {
         PrebidMobile.setPrebidServerAccountId("123456");
         assertEquals("123456", PrebidMobile.getPrebidServerAccountId());
         PrebidMobile.setTimeoutMillis(2500);
         assertEquals(2500, PrebidMobile.getTimeoutMillis());
-        PrebidMobile.setApplicationContext(activity.getApplicationContext());
+        PrebidMobile.initializeSdk(activity.getApplicationContext(), null);
         assertNotNull(PrebidMobile.getApplicationContext());
         PrebidMobile.setShareGeoLocation(true);
         assertTrue(PrebidMobile.isShareGeoLocation());
@@ -62,4 +76,58 @@ public class PrebidMobileTest extends BaseSetup {
         assertFalse(PrebidMobile.getCustomHeaders().isEmpty());
         assertEquals(2, PrebidMobile.getCustomHeaders().size());
     }
+
+    @Test
+    public void setCustomStatusEndpoint_nullValue() {
+        PrebidMobile.setCustomStatusEndpoint(null);
+
+        assertNull(getInnerCustomEndpointValue());
+    }
+
+    @Test
+    public void setCustomStatusEndpoint_ipAddress() {
+        PrebidMobile.setCustomStatusEndpoint("192.168.0.106");
+
+        assertEquals("https://192.168.0.106/", getInnerCustomEndpointValue());
+    }
+
+    @Test
+    public void setCustomStatusEndpoint_valueWithoutHttp() {
+        PrebidMobile.setCustomStatusEndpoint("site.com");
+
+        assertEquals("https://site.com/", getInnerCustomEndpointValue());
+    }
+
+    @Test
+    public void setCustomStatusEndpoint_valueWithoutHttpWithThreeW() {
+        PrebidMobile.setCustomStatusEndpoint("www.site.com");
+
+        assertEquals("https://www.site.com/", getInnerCustomEndpointValue());
+    }
+
+    @Test
+    public void setCustomStatusEndpoint_valueWithoutHttpWithThreeWAndPath() {
+        PrebidMobile.setCustomStatusEndpoint("www.site.com/status");
+
+        assertEquals("https://www.site.com/status", getInnerCustomEndpointValue());
+    }
+
+    @Test
+    public void setCustomStatusEndpoint_goodValue() {
+        PrebidMobile.setCustomStatusEndpoint("http://site.com/status");
+
+        assertEquals("http://site.com/status", getInnerCustomEndpointValue());
+    }
+
+    @Test
+    public void setCustomStatusEndpoint_goodValueSecure() {
+        PrebidMobile.setCustomStatusEndpoint("https://site.com/status?test=1");
+
+        assertEquals("https://site.com/status?test=1", getInnerCustomEndpointValue());
+    }
+
+    private String getInnerCustomEndpointValue() {
+        return PrebidMobileReflection.getCustomStatusEndpoint();
+    }
+
 }
