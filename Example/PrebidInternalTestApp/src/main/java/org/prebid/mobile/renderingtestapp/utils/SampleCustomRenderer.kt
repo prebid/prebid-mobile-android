@@ -79,6 +79,7 @@ class SampleCustomRenderer : PrebidMobilePluginCustomRenderer {
         bidResponse: BidResponse
     ): PrebidMobileInterstitialControllerInterface {
         val alertDialog = AlertDialog.Builder(context)
+            .setPositiveButton("Click") { dialog: DialogInterface, _: Int -> interstitialControllerListener.onInterstitialClicked() }
             .setNegativeButton("Close") { dialog: DialogInterface, _: Int -> dialog.dismiss() }
             .setOnDismissListener { interstitialControllerListener.onInterstitialClosed() }
             .setTitle("Interstitial")
@@ -156,3 +157,4 @@ class SampleCustomRenderer : PrebidMobilePluginCustomRenderer {
         return frameLayout
     }
 }
+

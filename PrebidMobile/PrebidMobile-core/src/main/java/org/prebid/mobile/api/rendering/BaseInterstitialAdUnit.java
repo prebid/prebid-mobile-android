@@ -256,7 +256,6 @@ public abstract class BaseInterstitialAdUnit {
                     AdException.INTERNAL_ERROR,
                     "InterstitialController is not defined. Unable to process bid."
             ));
-            return;
         } else {
             interstitialController.loadAd(adUnitConfig, bidResponse);
         }
