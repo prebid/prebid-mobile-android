@@ -12,9 +12,11 @@ import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
 import org.json.JSONObject
 import org.prebid.mobile.*
+import org.prebid.mobile.api.mediation.MediationBaseAdUnit
 import org.prebid.mobile.api.mediation.MediationNativeAdUnit
 import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.api.rendering.BaseInterstitialAdUnit
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext
 import org.prebid.mobile.renderingtestapp.plugplay.utilities.consent.ConsentUpdateManager
 
 object CommandLineArgumentParser {
@@ -90,11 +92,11 @@ object CommandLineArgumentParser {
         extras.getString("ADD_ADUNIT_KEYWORD")?.let {
             adUnitSpecificData.extKeywords = it
         }
-        /* Example: "albumName" */
+        /* Example: "extValue" */
         extras.getString("ADD_APP_CONTENT_DATA_EXT")?.let {
             adUnitSpecificData.appContentData = parseAppContentData(it)
         }
-        /* Example: "dataName" */
+        /* Example: "extValue" */
         extras.getString("ADD_USER_DATA_EXT")?.let {
             adUnitSpecificData.userData = parseUserData(it)
         }
@@ -175,6 +177,32 @@ object CommandLineArgumentParser {
         val userData = adUnitSpecificData.userData
         if (userData != null) {
             interstitial.addUserData(userData)
+        }
+    }
+
+    fun addAdUnitSpecificData(mediationAdUnit: MediationBaseAdUnit) {
+        val extData = adUnitSpecificData.extData
+        if (extData != null) {
+            for (key in extData.keys) {
+                for (value in extData[key]!!) {
+                    mediationAdUnit.addExtData(key, value)
+                }
+            }
+        }
+
+        val extKeywords = adUnitSpecificData.extKeywords
+        if (extKeywords != null) {
+            mediationAdUnit.addExtKeyword(extKeywords)
+        }
+
+        val appContentData = adUnitSpecificData.appContentData
+        if (appContentData != null) {
+            mediationAdUnit.appContent = appContentData
+        }
+
+        val userData = adUnitSpecificData.userData
+        if (userData != null) {
+            mediationAdUnit.addUserData(userData)
         }
     }
 
@@ -266,15 +294,21 @@ object CommandLineArgumentParser {
         }
     }
 
-    private fun parseAppContentData(albumValue: String): ContentObject {
+    private fun parseAppContentData(value: String): ContentObject {
         return ContentObject().apply {
-            this.album = albumValue
+            val dataObject = DataObject()
+            val ext = Ext()
+            ext.put("key", value)
+            dataObject.setExt(ext)
+            addData(dataObject)
         }
     }
 
-    private fun parseUserData(name: String): DataObject {
+    private fun parseUserData(value: String): DataObject {
         return DataObject().apply {
-            this.name = name
+            val ext = Ext()
+            ext.put("key", value)
+            setExt(ext)
         }
     }
 

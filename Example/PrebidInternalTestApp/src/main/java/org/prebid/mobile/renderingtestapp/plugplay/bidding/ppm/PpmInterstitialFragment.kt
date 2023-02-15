@@ -20,6 +20,7 @@ import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
+import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 import java.util.*
 
 open class PpmInterstitialFragment : BaseBidInterstitialFragment() {
@@ -31,11 +32,13 @@ open class PpmInterstitialFragment : BaseBidInterstitialFragment() {
                 configId,
                 EnumSet.of(adUnitFormat)
             )
-        }
-        else {
+        } else {
             InterstitialAdUnit(requireContext(), configId)
         }
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
         interstitialAdUnit?.setMinSizePercentage(AdSize(30, 30))
+        interstitialAdUnit?.let {
+            CommandLineArgumentParser.addAdUnitSpecificData(it)
+        }
     }
 }
