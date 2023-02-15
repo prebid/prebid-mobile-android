@@ -92,11 +92,11 @@ object CommandLineArgumentParser {
         extras.getString("ADD_ADUNIT_KEYWORD")?.let {
             adUnitSpecificData.extKeywords = it
         }
-        /* Example: "extValue" */
+        /* Example: "key value" */
         extras.getString("ADD_APP_CONTENT_DATA_EXT")?.let {
             adUnitSpecificData.appContentData = parseAppContentData(it)
         }
-        /* Example: "extValue" */
+        /* Example: "key value" */
         extras.getString("ADD_USER_DATA_EXT")?.let {
             adUnitSpecificData.userData = parseUserData(it)
         }
@@ -298,7 +298,14 @@ object CommandLineArgumentParser {
         return ContentObject().apply {
             val dataObject = DataObject()
             val ext = Ext()
-            ext.put("key", value)
+
+            val split = value.split(" ")
+            if (split.size >= 2) {
+                ext.put(split[0], split[1])
+            } else {
+                ext.put("key", value)
+            }
+
             dataObject.setExt(ext)
             addData(dataObject)
         }
@@ -307,7 +314,14 @@ object CommandLineArgumentParser {
     private fun parseUserData(value: String): DataObject {
         return DataObject().apply {
             val ext = Ext()
-            ext.put("key", value)
+
+            val split = value.split(" ")
+            if (split.size == 2) {
+                ext.put(split[0], split[1])
+            } else {
+                ext.put("key", value)
+            }
+
             setExt(ext)
         }
     }
