@@ -75,14 +75,14 @@ public class AppInfoParameterBuilder extends ParameterBuilder {
         app.contentObject = adConfiguration.getAppContent();
 
         app.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidMobile.SDK_VERSION));
-        final Map<String, Set<String>> contextDataDictionary = TargetingParams.getContextDataDictionary();
-        if (!contextDataDictionary.isEmpty()) {
-            app.getExt().put("data", Utils.toJson(contextDataDictionary));
+        final Map<String, Set<String>> extDataDictionary = TargetingParams.getExtDataDictionary();
+        if (!extDataDictionary.isEmpty()) {
+            app.getExt().put("data", Utils.toJson(extDataDictionary));
         }
 
-        Set<String> contextKeywords = TargetingParams.getContextKeywordsSet();
-        if (contextKeywords.size() > 0) {
-            app.keywords = TextUtils.join(",", contextKeywords);
+        Set<String> extKeywords = TargetingParams.getExtKeywordsSet();
+        if (extKeywords.size() > 0) {
+            app.keywords = TextUtils.join(",", extKeywords);
         }
     }
 }

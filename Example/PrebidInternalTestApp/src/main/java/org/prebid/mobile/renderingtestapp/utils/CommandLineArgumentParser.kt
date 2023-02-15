@@ -77,7 +77,7 @@ object CommandLineArgumentParser {
         }
         /* Example: "appKeyword" */
         extras.getString("ADD_APP_KEYWORD")?.let {
-            TargetingParams.addContextKeyword(it)
+            TargetingParams.addExtKeyword(it)
         }
         /* Example: "userKeyword" */
         extras.getString("ADD_USER_KEYWORD")?.let {
@@ -289,7 +289,7 @@ object CommandLineArgumentParser {
         val map = parseJsonToMapOfStringsAndStringLists(json)
         map.forEach {
             for (value in it.value) {
-                TargetingParams.addContextData(it.key, value)
+                TargetingParams.addExtData(it.key, value)
             }
         }
     }

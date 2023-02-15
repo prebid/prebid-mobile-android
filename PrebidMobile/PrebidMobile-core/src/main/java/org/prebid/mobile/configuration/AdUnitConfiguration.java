@@ -68,8 +68,8 @@ public class AdUnitConfiguration {
     private final EnumSet<AdFormat> adFormats = EnumSet.noneOf(AdFormat.class);
     private final HashSet<AdSize> adSizes = new HashSet<>();
     private final ArrayList<DataObject> userDataObjects = new ArrayList<>();
-    private final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
-    private final Set<String> contextKeywordsSet = new HashSet<>();
+    private final Map<String, Set<String>> extDataDictionary = new HashMap<>();
+    private final Set<String> extKeywordsSet = new HashSet<>();
 
 
     public void modifyUsingBidResponse(@Nullable BidResponse bidResponse) {
@@ -125,15 +125,15 @@ public class AdUnitConfiguration {
             return;
         }
 
-        if (contextDataDictionary.containsKey(key)) {
-            Set<String> existingSet = contextDataDictionary.get(key);
+        if (extDataDictionary.containsKey(key)) {
+            Set<String> existingSet = extDataDictionary.get(key);
             if (existingSet != null) {
                 existingSet.add(value);
             }
         } else {
             HashSet<String> hashSet = new HashSet<>();
             hashSet.add(value);
-            contextDataDictionary.put(key, hashSet);
+            extDataDictionary.put(key, hashSet);
         }
     }
 
@@ -142,48 +142,48 @@ public class AdUnitConfiguration {
         Set<String> value
     ) {
         if (key != null && value != null) {
-            contextDataDictionary.put(key, value);
+            extDataDictionary.put(key, value);
         }
     }
 
     public void removeExtData(String key) {
-        contextDataDictionary.remove(key);
+        extDataDictionary.remove(key);
     }
 
     @NonNull
     public Map<String, Set<String>> getExtDataDictionary() {
-        return contextDataDictionary;
+        return extDataDictionary;
     }
 
     public void clearExtData() {
-        contextDataDictionary.clear();
+        extDataDictionary.clear();
     }
 
     public void addExtKeyword(String keyword) {
         if (keyword != null) {
-            contextKeywordsSet.add(keyword);
+            extKeywordsSet.add(keyword);
         }
     }
 
     public void addExtKeywords(Set<String> keywords) {
         if (keywords != null) {
-            contextKeywordsSet.addAll(keywords);
+            extKeywordsSet.addAll(keywords);
         }
     }
 
     public void removeExtKeyword(String key) {
         if (key != null) {
-            contextKeywordsSet.remove(key);
+            extKeywordsSet.remove(key);
         }
     }
 
     @NonNull
     public Set<String> getExtKeywordsSet() {
-        return contextKeywordsSet;
+        return extKeywordsSet;
     }
 
     public void clearExtKeywords() {
-        contextKeywordsSet.clear();
+        extKeywordsSet.clear();
     }
 
     public void setMinSizePercentage(@Nullable AdSize minSizePercentage) {

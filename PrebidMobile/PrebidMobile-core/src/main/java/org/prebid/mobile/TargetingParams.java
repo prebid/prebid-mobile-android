@@ -65,8 +65,8 @@ public class TargetingParams {
     private static final Map<String, Set<String>> userDataMap = new HashMap<>();
     private static final Set<String> accessControlList = new HashSet<>();
     private static final Set<String> userKeywordsSet = new HashSet<>();
-    private static final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
-    private static final Set<String> contextKeywordsSet = new HashSet<>();
+    private static final Map<String, Set<String>> extDataDictionary = new HashMap<>();
+    private static final Set<String> extKeywordsSet = new HashSet<>();
 
     private TargetingParams() {
     }
@@ -461,7 +461,7 @@ public class TargetingParams {
         String key,
         String value
     ) {
-        Util.addValue(contextDataDictionary, key, value);
+        Util.addValue(extDataDictionary, key, value);
     }
 
     /**
@@ -474,7 +474,7 @@ public class TargetingParams {
         String key,
         Set<String> value
     ) {
-        contextDataDictionary.put(key, value);
+        extDataDictionary.put(key, value);
     }
 
     /**
@@ -483,7 +483,7 @@ public class TargetingParams {
      */
     @Deprecated
     public static void removeContextData(String key) {
-        contextDataDictionary.remove(key);
+        extDataDictionary.remove(key);
     }
 
     /**
@@ -493,7 +493,7 @@ public class TargetingParams {
      */
     @Deprecated
     public static void clearContextData() {
-        contextDataDictionary.clear();
+        extDataDictionary.clear();
     }
 
     /**
@@ -501,7 +501,7 @@ public class TargetingParams {
      */
     @Deprecated
     public static Map<String, Set<String>> getContextDataDictionary() {
-        return contextDataDictionary;
+        return extDataDictionary;
     }
 
     /**
@@ -512,7 +512,7 @@ public class TargetingParams {
      */
     @Deprecated
     public static void addContextKeyword(String keyword) {
-        contextKeywordsSet.add(keyword);
+        extKeywordsSet.add(keyword);
     }
 
     /**
@@ -522,7 +522,7 @@ public class TargetingParams {
      */
     @Deprecated
     public static void addContextKeywords(Set<String> keywords) {
-        contextKeywordsSet.addAll(keywords);
+        extKeywordsSet.addAll(keywords);
     }
 
     /**
@@ -531,7 +531,7 @@ public class TargetingParams {
      */
     @Deprecated
     public static void removeContextKeyword(String keyword) {
-        contextKeywordsSet.remove(keyword);
+        extKeywordsSet.remove(keyword);
     }
 
     /**
@@ -541,7 +541,7 @@ public class TargetingParams {
      */
     @Deprecated
     public static void clearContextKeywords() {
-        contextKeywordsSet.clear();
+        extKeywordsSet.clear();
     }
 
     /**
@@ -549,7 +549,7 @@ public class TargetingParams {
      */
     @Deprecated
     public static Set<String> getContextKeywordsSet() {
-        return contextKeywordsSet;
+        return extKeywordsSet;
     }
 
 
@@ -562,7 +562,7 @@ public class TargetingParams {
         String key,
         String value
     ) {
-        Util.addValue(contextDataDictionary, key, value);
+        Util.addValue(extDataDictionary, key, value);
     }
 
     /**
@@ -573,25 +573,25 @@ public class TargetingParams {
         String key,
         Set<String> value
     ) {
-        contextDataDictionary.put(key, value);
+        extDataDictionary.put(key, value);
     }
 
     /**
      * This method allows to remove specific context data keyword & values set from global context targeting
      */
     public static void removeExtData(String key) {
-        contextDataDictionary.remove(key);
+        extDataDictionary.remove(key);
     }
 
     /**
      * This method allows to remove all context data set from global context targeting
      */
     public static void clearExtData() {
-        contextDataDictionary.clear();
+        extDataDictionary.clear();
     }
 
     public static Map<String, Set<String>> getExtDataDictionary() {
-        return contextDataDictionary;
+        return extDataDictionary;
     }
 
     /**
@@ -600,7 +600,7 @@ public class TargetingParams {
      * (imp[].ext.context.keywords)
      */
     public static void addExtKeyword(String keyword) {
-        contextKeywordsSet.add(keyword);
+        extKeywordsSet.add(keyword);
     }
 
     /**
@@ -608,25 +608,25 @@ public class TargetingParams {
      * Adds the elements of the given set to the set.
      */
     public static void addExtKeywords(Set<String> keywords) {
-        contextKeywordsSet.addAll(keywords);
+        extKeywordsSet.addAll(keywords);
     }
 
     /**
      * This method allows to remove specific context keyword from adunit context targeting
      */
     public static void removeExtKeyword(String keyword) {
-        contextKeywordsSet.remove(keyword);
+        extKeywordsSet.remove(keyword);
     }
 
     /**
      * This method allows to remove all keywords from the set of adunit context targeting
      */
     public static void clearExtKeywords() {
-        contextKeywordsSet.clear();
+        extKeywordsSet.clear();
     }
 
     public static Set<String> getExtKeywordsSet() {
-        return contextKeywordsSet;
+        return extKeywordsSet;
     }
 
 

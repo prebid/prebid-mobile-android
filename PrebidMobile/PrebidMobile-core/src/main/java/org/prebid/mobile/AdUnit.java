@@ -260,7 +260,8 @@ public abstract class AdUnit {
     /**
      * This method obtains the context keyword set for adunit context targeting
      * Adds the elements of the given set to the set.
-     * @deprecated Use addContextKeywords
+     *
+     * @deprecated Use addExtKeywords
      */
     @Deprecated
     public void addContextKeywords(Set<String> keywords) {
@@ -269,7 +270,7 @@ public abstract class AdUnit {
 
     /**
      * This method allows to remove specific context keyword from adunit context targeting
-     * @deprecated Use removeContextKeyword
+     * @deprecated Use removeExtKeyword
      */
     @Deprecated
     public void removeContextKeyword(String keyword) {
@@ -279,7 +280,7 @@ public abstract class AdUnit {
     /**
      * This method allows to remove all keywords from the set of adunit context targeting
      *
-     * @deprecated Use clearContextKeywords
+     * @deprecated Use clearExtKeywords
      */
     @Deprecated
     public void clearContextKeywords() {
