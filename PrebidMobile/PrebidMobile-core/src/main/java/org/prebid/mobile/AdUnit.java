@@ -16,15 +16,20 @@
 
 package org.prebid.mobile;
 
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
+import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
+
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
+
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -34,10 +39,12 @@ import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.tasksmanager.TasksManager;
 
-import java.util.*;
-
-import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MAX;
-import static org.prebid.mobile.PrebidMobile.AUTO_REFRESH_DELAY_MIN;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class AdUnit {
 
@@ -162,76 +169,161 @@ public abstract class AdUnit {
 
     }
 
-    // MARK: - adunit context data aka inventory data (imp[].ext.context.data)
+    // MARK: - adunit context data aka inventory data (imp[].ext.data)
 
     /**
      * This method obtains the context data keyword & value for adunit context targeting
      * if the key already exists the value will be appended to the list. No duplicates will be added
      */
+    @Deprecated
     public void addContextData(String key, String value) {
-        configuration.addContextData(key, value);
+        configuration.addExtData(key, value);
     }
 
     /**
      * This method obtains the context data keyword & values for adunit context targeting
      * the values if the key already exist will be replaced with the new set of values
      */
+    @Deprecated
     public void updateContextData(String key, Set<String> value) {
-        configuration.addContextData(key, value);
+        configuration.addExtData(key, value);
     }
 
     /**
      * This method allows to remove specific context data keyword & values set from adunit context targeting
      */
+    @Deprecated
     public void removeContextData(String key) {
-        configuration.removeContextData(key);
+        configuration.removeExtData(key);
     }
 
     /**
      * This method allows to remove all context data set from adunit context targeting
      */
+    @Deprecated
     public void clearContextData() {
-        configuration.clearContextData();
+        configuration.clearExtData();
     }
 
+    @Deprecated
     Map<String, Set<String>> getContextDataDictionary() {
-        return configuration.getContextDataDictionary();
+        return configuration.getExtDataDictionary();
     }
 
-    // MARK: - adunit context keywords (imp[].ext.context.keywords)
+    /**
+     * This method obtains the context data keyword & value for adunit context targeting
+     * if the key already exists the value will be appended to the list. No duplicates will be added
+     */
+    public void addExtData(String key, String value) {
+        configuration.addExtData(key, value);
+    }
+
+    /**
+     * This method obtains the context data keyword & values for adunit context targeting
+     * the values if the key already exist will be replaced with the new set of values
+     */
+    public void updateExtData(String key, Set<String> value) {
+        configuration.addExtData(key, value);
+    }
+
+    /**
+     * This method allows to remove specific context data keyword & values set from adunit context targeting
+     */
+    public void removeExtData(String key) {
+        configuration.removeExtData(key);
+    }
+
+    /**
+     * This method allows to remove all context data set from adunit context targeting
+     */
+    public void clearExtData() {
+        configuration.clearExtData();
+    }
+
+    Map<String, Set<String>> getExtDataDictionary() {
+        return configuration.getExtDataDictionary();
+    }
+
+    // MARK: - adunit context keywords (imp[].ext.keywords)
+
+    /**
+     * This method obtains the context keyword for adunit context targeting
+     * Inserts the given element in the set if it is not already present.
+     *
+     * @deprecated Use addExtKeyword
+     */
+    @Deprecated
+    public void addContextKeyword(String keyword) {
+        configuration.addExtKeyword(keyword);
+    }
+
+    /**
+     * This method obtains the context keyword set for adunit context targeting
+     * Adds the elements of the given set to the set.
+     *
+     * @deprecated Use addExtKeywords
+     */
+    @Deprecated
+    public void addContextKeywords(Set<String> keywords) {
+        configuration.addExtKeywords(keywords);
+    }
+
+    /**
+     * This method allows to remove specific context keyword from adunit context targeting
+     * @deprecated Use removeExtKeyword
+     */
+    @Deprecated
+    public void removeContextKeyword(String keyword) {
+        configuration.removeExtKeyword(keyword);
+    }
+
+    /**
+     * This method allows to remove all keywords from the set of adunit context targeting
+     *
+     * @deprecated Use clearExtKeywords
+     */
+    @Deprecated
+    public void clearContextKeywords() {
+        configuration.clearExtKeywords();
+    }
+
+    @Deprecated
+    Set<String> getContextKeywordsSet() {
+        return configuration.getExtKeywordsSet();
+    }
 
     /**
      * This method obtains the context keyword for adunit context targeting
      * Inserts the given element in the set if it is not already present.
      */
-    public void addContextKeyword(String keyword) {
-        configuration.addContextKeyword(keyword);
+    public void addExtKeyword(String keyword) {
+        configuration.addExtKeyword(keyword);
     }
 
     /**
      * This method obtains the context keyword set for adunit context targeting
      * Adds the elements of the given set to the set.
      */
-    public void addContextKeywords(Set<String> keywords) {
-        configuration.addContextKeywords(keywords);
+    public void addExtKeywords(Set<String> keywords) {
+        configuration.addExtKeywords(keywords);
     }
 
     /**
      * This method allows to remove specific context keyword from adunit context targeting
      */
-    public void removeContextKeyword(String keyword) {
-        configuration.removeContextKeyword(keyword);
+    public void removeExtKeyword(String keyword) {
+        configuration.removeExtKeyword(keyword);
     }
 
     /**
      * This method allows to remove all keywords from the set of adunit context targeting
      */
-    public void clearContextKeywords() {
-        configuration.clearContextKeywords();
+    public void clearExtKeywords() {
+        configuration.clearExtKeywords();
     }
 
-    Set<String> getContextKeywordsSet() {
-        return configuration.getContextKeywordsSet();
+    Set<String> getExtKeywordsSet() {
+        return configuration.getExtKeywordsSet();
     }
 
     /**

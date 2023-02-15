@@ -2,9 +2,11 @@ package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 
 import java.util.ArrayList;
 
@@ -28,6 +30,9 @@ public class DataObject {
     @NonNull
     private ArrayList<SegmentObject> segments = new ArrayList<>();
 
+    @Nullable
+    private Ext ext;
+
     public JSONObject getJsonObject() {
         JSONObject result = new JSONObject();
 
@@ -41,6 +46,10 @@ public class DataObject {
                     segmentsJson.put(segment.getJsonObject());
                 }
                 result.put("segment", segmentsJson);
+            }
+
+            if (ext != null) {
+                result.putOpt("ext", ext.getJsonObject());
             }
         } catch (JSONException exception) {
             LogUtil.error("DataObject", "Can't create json data content object.");
@@ -78,6 +87,10 @@ public class DataObject {
 
     public void setSegments(@NonNull ArrayList<SegmentObject> segments) {
         this.segments = segments;
+    }
+
+    public void setExt(Ext ext) {
+        this.ext = ext;
     }
 
     @Override

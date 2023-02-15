@@ -71,6 +71,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19, qualifiers = "w1920dp-h1080dp")
@@ -283,7 +285,7 @@ public class BasicParameterBuilderTest {
 
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
                 context.getResources(),
-                browserActivityAvailable
+            browserActivityAvailable
         );
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
@@ -291,6 +293,48 @@ public class BasicParameterBuilderTest {
         User actualUser = adRequestInput.getBidRequest().getUser();
         User expectedUser = getExpectedUser();
         assertEquals(expectedUser.getJsonObject().toString(), actualUser.getJsonObject().toString());
+    }
+
+    @Test
+    public void appendContextKeywordsAndData() throws JSONException {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        adConfiguration.setAdFormat(AdFormat.BANNER);
+        adConfiguration.addSize(new AdSize(320, 50));
+
+        adConfiguration.addExtKeyword("adUnitContextKeyword1");
+        adConfiguration.addExtKeyword("adUnitContextKeyword2");
+
+        adConfiguration.addExtData("adUnitContextDataKey1", "adUnitContextDataValue1");
+        adConfiguration.addExtData("adUnitContextDataKey2", "adUnitContextDataValue2");
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration,
+            context.getResources(),
+            browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        BidRequest actualRequest = adRequestInput.getBidRequest();
+        BidRequest expectedRequest = getExpectedBidRequest(adConfiguration, actualRequest.getId());
+        assertEquals(expectedRequest.getJsonObject().toString(), actualRequest.getJsonObject().toString());
+    }
+
+    @Test
+    public void appendTargetingContextKeywords() throws JSONException {
+        AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
+        adConfiguration.setAdFormat(AdFormat.BANNER);
+        adConfiguration.addSize(new AdSize(320, 50));
+
+        TargetingParams.addContextKeyword("contextKeyword1");
+        TargetingParams.addContextKeyword("contextKeyword2");
+
+        AppInfoParameterBuilder builder = new AppInfoParameterBuilder(adConfiguration);
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        JSONObject appJson = adRequestInput.getBidRequest().getApp().getJsonObject();
+        assertTrue(appJson.has("keywords"));
+        assertEquals("contextKeyword1,contextKeyword2", appJson.getString("keywords"));
     }
 
     @Test
@@ -430,16 +474,19 @@ public class BasicParameterBuilderTest {
     public void whenAppendParametersAndAdConfigContextDataNotEmpty_ContextDataAddedToImpExt()
     throws JSONException {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
-        adConfiguration.addContextData("context", "contextData");
+        adConfiguration.addExtData("context", "contextData");
         BasicParameterBuilder builder = new BasicParameterBuilder(adConfiguration, context.getResources(), false);
         AdRequestInput adRequestInput = new AdRequestInput();
         builder.appendBuilderParameters(adRequestInput);
 
         org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext impExt = adRequestInput.getBidRequest().getImp().get(0).getExt();
-        assertTrue(impExt.getMap().containsKey("context"));
-        JSONObject contextDataJson = ((JSONObject) impExt.getMap().get("context")).getJSONObject("data");
-        assertTrue(contextDataJson.has("context"));
-        assertEquals("contextData", contextDataJson.getJSONArray("context").get(0));
+
+        Map<String, Object> impExtMap = impExt.getMap();
+        assertTrue(impExtMap.containsKey("data"));
+
+        JSONObject dataJson = (JSONObject) impExtMap.get("data");
+        assertTrue(dataJson.has("context"));
+        assertEquals("contextData", dataJson.getJSONArray("context").get(0));
     }
 
     @Test
@@ -723,15 +770,54 @@ public class BasicParameterBuilderTest {
 
         final String pbAdSlot = adConfiguration.getPbAdSlot();
         if (pbAdSlot != null) {
-            JSONObject context = new JSONObject();
             JSONObject data = new JSONObject();
             Utils.addValue(data, "adslot", pbAdSlot);
-            Utils.addValue(context, "data", data);
-
-            imp.getExt().put("context", context);
+            imp.getExt().put("data", data);
         }
 
+        appendImpExtParameters(imp, adConfiguration);
+
         return imp;
+    }
+
+    private void appendImpExtParameters(Imp imp, AdUnitConfiguration config) {
+        try {
+            Map<String, Set<String>> contextDataDictionary = config.getExtDataDictionary();
+            if (contextDataDictionary.size() > 0) {
+                JSONObject dataJson = new JSONObject();
+                for (String key : contextDataDictionary.keySet()) {
+                    dataJson.put(key, new JSONArray(contextDataDictionary.get(key)));
+                }
+                imp.getExt().put("data", dataJson);
+            }
+
+            Set<String> contextKeywordsSet = config.getExtKeywordsSet();
+            if (contextKeywordsSet.size() > 0) {
+                String join = stringsToCommaSeparatedString(contextKeywordsSet);
+                imp.getExt().put("keywords", join);
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String stringsToCommaSeparatedString(Set<String> strings) {
+        if (strings.size() == 0) {
+            return "";
+        }
+
+        int index = 0;
+        StringBuilder builder = new StringBuilder();
+        for (String string : strings) {
+            if (index != 0) {
+                builder.append(",");
+            }
+
+            builder.append(string);
+            index++;
+        }
+
+        return builder.toString();
     }
 
     private Banner getExpectedBannerImpValues(Imp imp, AdUnitConfiguration adConfiguration) {

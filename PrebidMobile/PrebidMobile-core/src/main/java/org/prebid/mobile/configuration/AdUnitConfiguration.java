@@ -3,7 +3,13 @@ package org.prebid.mobile.configuration;
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.prebid.mobile.*;
+
+import org.prebid.mobile.AdSize;
+import org.prebid.mobile.BannerBaseAdUnit;
+import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.DataObject;
+import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.VideoBaseAdUnit;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.data.Position;
@@ -14,7 +20,13 @@ import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.utils.helpers.Utils;
 import org.prebid.mobile.rendering.video.ExoPlayerView;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 
 public class AdUnitConfiguration {
@@ -56,8 +68,8 @@ public class AdUnitConfiguration {
     private final EnumSet<AdFormat> adFormats = EnumSet.noneOf(AdFormat.class);
     private final HashSet<AdSize> adSizes = new HashSet<>();
     private final ArrayList<DataObject> userDataObjects = new ArrayList<>();
-    private final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
-    private final Set<String> contextKeywordsSet = new HashSet<>();
+    private final Map<String, Set<String>> extDataDictionary = new HashMap<>();
+    private final Set<String> extKeywordsSet = new HashSet<>();
 
 
     public void modifyUsingBidResponse(@Nullable BidResponse bidResponse) {
@@ -105,64 +117,73 @@ public class AdUnitConfiguration {
         userDataObjects.clear();
     }
 
-    public void addContextData(
+    public void addExtData(
         String key,
         String value
     ) {
-        if (key != null && value != null) {
+        if (key == null || value == null) {
+            return;
+        }
+
+        if (extDataDictionary.containsKey(key)) {
+            Set<String> existingSet = extDataDictionary.get(key);
+            if (existingSet != null) {
+                existingSet.add(value);
+            }
+        } else {
             HashSet<String> hashSet = new HashSet<>();
             hashSet.add(value);
-            contextDataDictionary.put(key, hashSet);
+            extDataDictionary.put(key, hashSet);
         }
     }
 
-    public void addContextData(
+    public void addExtData(
         String key,
         Set<String> value
     ) {
         if (key != null && value != null) {
-            contextDataDictionary.put(key, value);
+            extDataDictionary.put(key, value);
         }
     }
 
-    public void removeContextData(String key) {
-        contextDataDictionary.remove(key);
+    public void removeExtData(String key) {
+        extDataDictionary.remove(key);
     }
 
     @NonNull
-    public Map<String, Set<String>> getContextDataDictionary() {
-        return contextDataDictionary;
+    public Map<String, Set<String>> getExtDataDictionary() {
+        return extDataDictionary;
     }
 
-    public void clearContextData() {
-        contextDataDictionary.clear();
+    public void clearExtData() {
+        extDataDictionary.clear();
     }
 
-    public void addContextKeyword(String keyword) {
+    public void addExtKeyword(String keyword) {
         if (keyword != null) {
-            contextKeywordsSet.add(keyword);
+            extKeywordsSet.add(keyword);
         }
     }
 
-    public void addContextKeywords(Set<String> keywords) {
+    public void addExtKeywords(Set<String> keywords) {
         if (keywords != null) {
-            contextKeywordsSet.addAll(keywords);
+            extKeywordsSet.addAll(keywords);
         }
     }
 
-    public void removeContextKeyword(String key) {
+    public void removeExtKeyword(String key) {
         if (key != null) {
-            contextKeywordsSet.remove(key);
+            extKeywordsSet.remove(key);
         }
     }
 
     @NonNull
-    public Set<String> getContextKeywordsSet() {
-        return contextKeywordsSet;
+    public Set<String> getExtKeywordsSet() {
+        return extKeywordsSet;
     }
 
-    public void clearContextKeywords() {
-        contextKeywordsSet.clear();
+    public void clearExtKeywords() {
+        extKeywordsSet.clear();
     }
 
     public void setMinSizePercentage(@Nullable AdSize minSizePercentage) {

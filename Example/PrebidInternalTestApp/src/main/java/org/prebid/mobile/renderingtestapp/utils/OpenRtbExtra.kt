@@ -33,8 +33,8 @@ data class OpenRtbExtra(
         @SerializedName("publisherName") val publisherName: String?,
         @SerializedName("accessControl") val accessControl: List<String>?,
         @SerializedName("userData") val userData: Map<String, List<String>>?,
-        @SerializedName("appContextData") val appContextData: Map<String, List<String>>?,
-        @SerializedName("impContextData") val impContextData: Map<String, List<String>>?
+        @SerializedName("appContextData") val appExtData: Map<String, List<String>>?,
+        @SerializedName("impContextData") val impExtData: Map<String, List<String>>?
 ) {
     data class Geo(
             @SerializedName("lat") val lat: Float,
