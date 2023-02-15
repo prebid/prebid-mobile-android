@@ -121,7 +121,16 @@ public class AdUnitConfiguration {
         String key,
         String value
     ) {
-        if (key != null && value != null) {
+        if (key == null || value == null) {
+            return;
+        }
+
+        if (contextDataDictionary.containsKey(key)) {
+            Set<String> existingSet = contextDataDictionary.get(key);
+            if (existingSet != null) {
+                existingSet.add(value);
+            }
+        } else {
             HashSet<String> hashSet = new HashSet<>();
             hashSet.add(value);
             contextDataDictionary.put(key, hashSet);

@@ -29,6 +29,7 @@ import androidx.annotation.VisibleForTesting;
 
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.DataObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.AdFormat;
@@ -54,6 +55,7 @@ import org.prebid.mobile.rendering.utils.broadcast.ScreenStateReceiver;
 import org.prebid.mobile.rendering.utils.helpers.VisibilityChecker;
 import org.prebid.mobile.rendering.views.webview.mraid.Views;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -486,9 +488,27 @@ public class BannerView extends FrameLayout {
         return adUnitConfig.getPbAdSlot();
     }
 
+    @Deprecated
     public void addContent(ContentObject content) {
         adUnitConfig.setAppContent(content);
     }
+
+    public void setAppContent(ContentObject content) {
+        adUnitConfig.setAppContent(content);
+    }
+
+    public void addUserData(DataObject dataObject) {
+        adUnitConfig.addUserData(dataObject);
+    }
+
+    public ArrayList<DataObject> getUserData() {
+        return adUnitConfig.getUserData();
+    }
+
+    public void clearUserData() {
+        adUnitConfig.clearUserData();
+    }
+
     //endregion ==================== getters and setters
 
     private void reflectAttrs(AttributeSet attrs) {

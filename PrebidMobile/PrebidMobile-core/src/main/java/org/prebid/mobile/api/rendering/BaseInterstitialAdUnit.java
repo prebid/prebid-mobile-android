@@ -28,6 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.DataObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.Position;
@@ -42,6 +43,7 @@ import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -253,6 +255,26 @@ public abstract class BaseInterstitialAdUnit {
 
     public void clearExtKeywords() {
         adUnitConfig.clearExtKeywords();
+    }
+
+    public void setAppContent(ContentObject content) {
+        adUnitConfig.setAppContent(content);
+    }
+
+    public ContentObject getAppContent() {
+        return adUnitConfig.getAppContent();
+    }
+
+    public void addUserData(DataObject dataObject) {
+        adUnitConfig.addUserData(dataObject);
+    }
+
+    public ArrayList<DataObject> getUserData() {
+        return adUnitConfig.getUserData();
+    }
+
+    public void clearUserData() {
+        adUnitConfig.clearUserData();
     }
 
 

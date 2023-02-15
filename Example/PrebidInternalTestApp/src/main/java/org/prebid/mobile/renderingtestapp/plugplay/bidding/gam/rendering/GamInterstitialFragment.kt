@@ -21,6 +21,7 @@ import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.eventhandlers.GamInterstitialEventHandler
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
+import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 import java.util.*
 
 open class GamInterstitialFragment : BaseBidInterstitialFragment() {
@@ -45,5 +46,8 @@ open class GamInterstitialFragment : BaseBidInterstitialFragment() {
         }
 
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
+        interstitialAdUnit?.let {
+            CommandLineArgumentParser.addAdUnitSpecificData(it)
+        }
     }
 }

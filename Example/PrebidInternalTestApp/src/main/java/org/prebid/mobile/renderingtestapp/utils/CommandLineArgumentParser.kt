@@ -12,6 +12,9 @@ import com.google.gson.reflect.TypeToken
 import org.json.JSONArray
 import org.json.JSONObject
 import org.prebid.mobile.*
+import org.prebid.mobile.api.mediation.MediationNativeAdUnit
+import org.prebid.mobile.api.rendering.BannerView
+import org.prebid.mobile.api.rendering.BaseInterstitialAdUnit
 import org.prebid.mobile.renderingtestapp.plugplay.utilities.consent.ConsentUpdateManager
 
 object CommandLineArgumentParser {
@@ -21,7 +24,7 @@ object CommandLineArgumentParser {
     class AdUnitSpecificData(
         var extKeywords: String? = null,
         var extData: Map<String, List<String>>? = null,
-        var appContentData: Map<String, List<String>>? = null,
+        var appContentData: ContentObject? = null,
         var userData: DataObject? = null,
     )
 
@@ -58,34 +61,42 @@ object CommandLineArgumentParser {
         }
 
         /* Global data */
+        /* Example: arrayOf("value1", "value2") */
         extras.getStringArray("BIDDER_ACCESS_CONTROL_LIST")?.forEach {
             TargetingParams.addBidderToAccessControlList(it)
         }
+        /* Example: {"key1": ["value1"],"key2": ["value2"]} */
         extras.getString("ADD_USER_EXT_DATA")?.let {
             parseUserExtData(it)
         }
+        /* Example: {"key1": ["value1"],"key2": ["value2"]} */
         extras.getString("ADD_APP_EXT")?.let {
             parseAppExtData(it)
         }
+        /* Example: "appKeyword" */
         extras.getString("ADD_APP_KEYWORD")?.let {
             TargetingParams.addContextKeyword(it)
         }
+        /* Example: "userKeyword" */
         extras.getString("ADD_USER_KEYWORD")?.let {
             TargetingParams.addUserKeyword(it)
         }
 
-        /* Ad unit specific data */
+        /* Example: {"key1": ["value1"],"key2": ["value2"]} */
         extras.getString("ADD_ADUNIT_CONTEXT")?.let {
             adUnitSpecificData.extData = parseJsonToMapOfStringsAndStringLists(it)
         }
+        /* Example: "keywords1,keywords2" */
         extras.getString("ADD_ADUNIT_KEYWORD")?.let {
             adUnitSpecificData.extKeywords = it
         }
+        /* Example: "albumName" */
         extras.getString("ADD_APP_CONTENT_DATA_EXT")?.let {
-// TODO:            adUnitSpecificData.appContentData = parseJsonToMapOfStringsAndStringLists(it)
+            adUnitSpecificData.appContentData = parseAppContentData(it)
         }
+        /* Example: "dataName" */
         extras.getString("ADD_USER_DATA_EXT")?.let {
-// TODO:           adUnitSpecificData.userData =
+            adUnitSpecificData.userData = parseUserData(it)
         }
     }
 
@@ -94,7 +105,7 @@ object CommandLineArgumentParser {
         if (extData != null) {
             for (key in extData.keys) {
                 for (value in extData[key]!!) {
-                    adUnit.addContextData(key, value)
+                    adUnit.addExtData(key, value)
                 }
             }
         }
@@ -104,8 +115,93 @@ object CommandLineArgumentParser {
             adUnit.addExtKeyword(extKeywords)
         }
 
-        // TODO: app content data
-        // TODO: user data
+        val appContentData = adUnitSpecificData.appContentData
+        if (appContentData != null) {
+            adUnit.appContent = appContentData
+        }
+
+        val userData = adUnitSpecificData.userData
+        if (userData != null) {
+            adUnit.addUserData(userData)
+        }
+    }
+
+    fun addAdUnitSpecificData(bannerView: BannerView) {
+        val extData = adUnitSpecificData.extData
+        if (extData != null) {
+            for (key in extData.keys) {
+                for (value in extData[key]!!) {
+                    bannerView.addExtData(key, value)
+                }
+            }
+        }
+
+        val extKeywords = adUnitSpecificData.extKeywords
+        if (extKeywords != null) {
+            bannerView.addExtKeyword(extKeywords)
+        }
+
+        val appContentData = adUnitSpecificData.appContentData
+        if (appContentData != null) {
+            bannerView.setAppContent(appContentData)
+        }
+
+        val userData = adUnitSpecificData.userData
+        if (userData != null) {
+            bannerView.addUserData(userData)
+        }
+    }
+
+    fun addAdUnitSpecificData(interstitial: BaseInterstitialAdUnit) {
+        val extData = adUnitSpecificData.extData
+        if (extData != null) {
+            for (key in extData.keys) {
+                for (value in extData[key]!!) {
+                    interstitial.addExtData(key, value)
+                }
+            }
+        }
+
+        val extKeywords = adUnitSpecificData.extKeywords
+        if (extKeywords != null) {
+            interstitial.addExtKeyword(extKeywords)
+        }
+
+        val appContentData = adUnitSpecificData.appContentData
+        if (appContentData != null) {
+            interstitial.appContent = appContentData
+        }
+
+        val userData = adUnitSpecificData.userData
+        if (userData != null) {
+            interstitial.addUserData(userData)
+        }
+    }
+
+    fun addAdUnitSpecificData(nativeAdUnit: MediationNativeAdUnit) {
+        val extData = adUnitSpecificData.extData
+        if (extData != null) {
+            for (key in extData.keys) {
+                for (value in extData[key]!!) {
+                    nativeAdUnit.addExtData(key, value)
+                }
+            }
+        }
+
+        val extKeywords = adUnitSpecificData.extKeywords
+        if (extKeywords != null) {
+            nativeAdUnit.addExtKeyword(extKeywords)
+        }
+
+        val appContentData = adUnitSpecificData.appContentData
+        if (appContentData != null) {
+            nativeAdUnit.appContent = appContentData
+        }
+
+        val userData = adUnitSpecificData.userData
+        if (userData != null) {
+            nativeAdUnit.addUserData(userData)
+        }
     }
 
 
@@ -167,6 +263,18 @@ object CommandLineArgumentParser {
             for (value in it.value) {
                 TargetingParams.addContextData(it.key, value)
             }
+        }
+    }
+
+    private fun parseAppContentData(albumValue: String): ContentObject {
+        return ContentObject().apply {
+            this.album = albumValue
+        }
+    }
+
+    private fun parseUserData(name: String): DataObject {
+        return DataObject().apply {
+            this.name = name
         }
     }
 
