@@ -13,23 +13,18 @@ import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 
 import org.prebid.mobile.AdUnit;
 import org.prebid.mobile.InterstitialAdUnit;
-import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.javademo.activities.BaseAdActivity;
 
 public class GamOriginalApiDisplayInterstitial extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-display-interstitial";
     private static final String CONFIG_ID = "imp-prebid-display-interstitial-320-480";
-    private static final String STORED_RESPONSE = "response-prebid-display-interstitial-320-480";
 
     private AdUnit adUnit;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE);
 
         createAd();
     }

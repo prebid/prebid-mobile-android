@@ -54,11 +54,6 @@ class MainActivity : AppCompatActivity() {
         PrebidMobile.checkGoogleMobileAdsCompatibility(MobileAds.getVersion().toString())
     }
 
-    override fun onRestart() {
-        super.onRestart()
-        PrebidMobile.setStoredAuctionResponse(null)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.main_menu, menu)

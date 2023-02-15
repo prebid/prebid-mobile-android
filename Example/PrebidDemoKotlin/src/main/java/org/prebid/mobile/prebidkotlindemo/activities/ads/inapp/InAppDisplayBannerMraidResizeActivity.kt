@@ -17,7 +17,6 @@ package org.prebid.mobile.prebidkotlindemo.activities.ads.inapp
 
 import android.os.Bundle
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
@@ -25,7 +24,6 @@ class InAppDisplayBannerMraidResizeActivity : BaseAdActivity() {
 
     companion object {
         const val CONFIG_ID = "imp-prebid-mraid-resize"
-        const val STORED_RESPONSE = "response-prebid-mraid-resize"
         const val WIDTH = 320
         const val HEIGHT = 50
     }
@@ -35,9 +33,6 @@ class InAppDisplayBannerMraidResizeActivity : BaseAdActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

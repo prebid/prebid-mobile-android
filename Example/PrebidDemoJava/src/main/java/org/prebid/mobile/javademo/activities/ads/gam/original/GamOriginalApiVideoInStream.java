@@ -128,5 +128,6 @@ public class GamOriginalApiVideoInStream extends BaseAdActivity {
                 "https://prebid-server-test-j.prebid.org/openrtb2/auction"
             )
         );
+        PrebidMobile.setStoredAuctionResponse(null);
     }
 }

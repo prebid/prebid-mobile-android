@@ -21,7 +21,6 @@ import com.applovin.mediation.MaxAdListener
 import com.applovin.mediation.MaxError
 import com.applovin.mediation.adapters.prebid.utils.MaxMediationInterstitialUtils
 import com.applovin.mediation.ads.MaxInterstitialAd
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.mediation.MediationInterstitialAdUnit
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
@@ -32,7 +31,6 @@ class AppLovinMaxDisplayInterstitialActivity : BaseAdActivity() {
     companion object {
         const val AD_UNIT_ID = "393697e649678807"
         const val CONFIG_ID = "imp-prebid-display-interstitial-320-480"
-        const val STORED_RESPONSE = "response-prebid-display-interstitial-320-480"
     }
 
     private var maxInterstitialAd: MaxInterstitialAd? = null
@@ -41,9 +39,6 @@ class AppLovinMaxDisplayInterstitialActivity : BaseAdActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

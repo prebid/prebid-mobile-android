@@ -11,7 +11,6 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 
-import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.VideoBaseAdUnit;
 import org.prebid.mobile.VideoInterstitialAdUnit;
@@ -23,17 +22,13 @@ import java.util.Collections;
 public class GamOriginalApiVideoInterstitial extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-video-interstitial";
-    private static final String CONFIG_ID = "imp-prebid-video-interstitial-320-480";
-    private static final String STORED_RESPONSE = "response-prebid-video-interstitial-320-480-original-api";
+    private static final String CONFIG_ID = "imp-prebid-video-interstitial-320-480-original-api";
 
     private VideoInterstitialAdUnit adUnit;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE);
 
         createAd();
     }

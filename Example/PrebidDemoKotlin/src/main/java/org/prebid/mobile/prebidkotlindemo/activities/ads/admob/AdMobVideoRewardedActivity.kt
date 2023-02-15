@@ -21,7 +21,6 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.admob.AdMobMediationRewardedUtils
 import org.prebid.mobile.admob.PrebidRewardedAdapter
 import org.prebid.mobile.api.mediation.MediationRewardedVideoAdUnit
@@ -32,7 +31,6 @@ class AdMobVideoRewardedActivity : BaseAdActivity() {
     companion object {
         const val AD_UNIT_ID = "ca-app-pub-1875909575462531/1908212572"
         const val CONFIG_ID = "imp-prebid-video-rewarded-320-480"
-        const val STORED_RESPONSE = "response-prebid-video-rewarded-320-480"
     }
 
     private var rewardedAd: RewardedAd? = null
@@ -41,9 +39,6 @@ class AdMobVideoRewardedActivity : BaseAdActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

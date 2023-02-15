@@ -18,7 +18,6 @@ package org.prebid.mobile.prebidkotlindemo.activities.ads.inapp
 import android.os.Bundle
 import android.util.Log
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.api.data.VideoPlacementType
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.BannerView
@@ -29,7 +28,6 @@ class InAppVideoBannerActivity : BaseAdActivity() {
 
     companion object {
         const val CONFIG_ID = "imp-prebid-video-outstream"
-        const val STORED_RESPONSE = "response-prebid-video-outstream"
         const val WIDTH = 300
         const val HEIGHT = 250
     }
@@ -39,9 +37,6 @@ class InAppVideoBannerActivity : BaseAdActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

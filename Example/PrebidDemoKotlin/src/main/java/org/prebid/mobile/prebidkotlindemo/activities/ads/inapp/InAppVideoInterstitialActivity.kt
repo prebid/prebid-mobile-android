@@ -16,7 +16,6 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.inapp
 
 import android.os.Bundle
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
@@ -28,7 +27,6 @@ class InAppVideoInterstitialActivity : BaseAdActivity() {
 
     companion object {
         const val CONFIG_ID = "imp-prebid-video-interstitial-320-480"
-        const val STORED_RESPONSE = "response-prebid-video-interstitial-320-480"
     }
 
     private var adUnit: InterstitialAdUnit? = null
@@ -36,9 +34,6 @@ class InAppVideoInterstitialActivity : BaseAdActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

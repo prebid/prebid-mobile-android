@@ -33,7 +33,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.javademo.R;
 import org.prebid.mobile.javademo.databinding.ActivityMainBinding;
 import org.prebid.mobile.javademo.testcases.AdFormat;
@@ -62,12 +61,6 @@ public class MainActivity extends AppCompatActivity {
         initSpinners();
         initSearch();
         initList();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        PrebidMobile.setStoredAuctionResponse(null);
     }
 
     @Override

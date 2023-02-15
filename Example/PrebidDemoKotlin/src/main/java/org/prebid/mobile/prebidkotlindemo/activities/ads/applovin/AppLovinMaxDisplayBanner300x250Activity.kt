@@ -27,7 +27,6 @@ import com.applovin.mediation.adapters.prebid.utils.MaxMediationBannerUtils
 import com.applovin.mediation.ads.MaxAdView
 import com.applovin.sdk.AppLovinSdkUtils
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.api.mediation.MediationBannerAdUnit
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
@@ -36,7 +35,6 @@ class AppLovinMaxDisplayBanner300x250Activity : BaseAdActivity() {
     companion object {
         const val AD_UNIT_ID = "550e6c2fe979a641"
         const val CONFIG_ID = "imp-prebid-banner-300-250"
-        const val STORED_RESPONSE = "response-prebid-banner-300-250"
         const val WIDTH = 300
         const val HEIGHT = 250
     }
@@ -47,9 +45,6 @@ class AppLovinMaxDisplayBanner300x250Activity : BaseAdActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }
