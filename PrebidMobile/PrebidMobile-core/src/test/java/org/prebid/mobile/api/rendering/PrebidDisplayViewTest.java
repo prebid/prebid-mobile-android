@@ -27,6 +27,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -43,9 +44,9 @@ import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
-public class DisplayViewTest {
+public class PrebidDisplayViewTest {
 
-    private DisplayView displayView;
+    private PrebidDisplayView prebidDisplayView;
     private Context context;
     private AdUnitConfiguration adUnitConfiguration;
     @Mock private BidResponse bidResponse;
@@ -54,7 +55,7 @@ public class DisplayViewTest {
 
     @Before
     public void setup() throws Exception {
-        MockitoAnnotations.initMocks(DisplayViewTest.this);
+        MockitoAnnotations.initMocks(PrebidDisplayViewTest.this);
 
         context = Robolectric.buildActivity(Activity.class).create().get();
 
@@ -66,13 +67,15 @@ public class DisplayViewTest {
         when(mockBid.getAdm()).thenReturn("adm");
         when(mockResponse.getWinningBid()).thenReturn(mockBid);
 
-        displayView = new DisplayView(context, mockDisplayViewListener, adUnitConfiguration, mockResponse);
+        PluginRegisterCustomRenderer.getInstance().registerPlugin(new PrebidRenderer());
+
+        prebidDisplayView = new PrebidDisplayView(context, mockDisplayViewListener, adUnitConfiguration, mockResponse);
         reset(mockDisplayViewListener);
     }
 
     @Test
     public void whenDisplayAd_LoadBidTransaction() {
-        Assert.assertNotNull(WhiteBox.getInternalState(displayView, "adViewManager"));
+        Assert.assertNotNull(WhiteBox.getInternalState(prebidDisplayView, "adViewManager"));
     }
 
     @Test
@@ -124,7 +127,7 @@ public class DisplayViewTest {
     }
 
     private AdViewManagerListener getAdViewManagerListener() throws IllegalAccessException {
-        return (AdViewManagerListener) WhiteBox.field(DisplayView.class, "adViewManagerListener").get(displayView);
+        return (AdViewManagerListener) WhiteBox.field(PrebidDisplayView.class, "adViewManagerListener").get(prebidDisplayView);
     }
 
 }
