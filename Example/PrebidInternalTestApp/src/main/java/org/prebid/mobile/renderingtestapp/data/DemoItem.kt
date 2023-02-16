@@ -28,13 +28,13 @@ enum class Tag(val tagName: String) {
     VIDEO("Video"),
     INTERSTITIAL("Interstitial"),
     NATIVE("Native"),
-    CUSTOM_RENDERER("Custom Renderer"),
 
     IN_APP("In-App"),
     GAM("GAM"),
     ORIGINAL("Original"),
     ADMOB("AdMob"),
     MAX("Max"),
+    CUSTOM_RENDERER("Custom-Renderer"),
 
     ALL("All")
 }
