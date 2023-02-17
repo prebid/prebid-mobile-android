@@ -71,7 +71,9 @@ public class Prebid {
         parseEvents(prebid, jsonObject.optJSONObject("events"));
         toHashMap(prebid.targeting, jsonObject.optJSONObject("targeting"));
 
-        prebid.targeting.put(CUSTOM_RENDERER_KEY, "SampleCustomRenderer"); // TODO mock should not be merged / the right field should be defined
+        // TODO mock should not be merged / the right field should be defined
+        // TODO breaks temporarily the test PrebidTest.whenFromJSONObjectAndJSONObjectPassed_ReturnParsedPrebid
+        prebid.targeting.put(CUSTOM_RENDERER_KEY, "SampleCustomRenderer");
         return prebid;
     }
 

@@ -27,7 +27,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -66,8 +65,6 @@ public class PrebidDisplayViewTest {
         Bid mockBid = mock(Bid.class);
         when(mockBid.getAdm()).thenReturn("adm");
         when(mockResponse.getWinningBid()).thenReturn(mockBid);
-
-        PluginRegisterCustomRenderer.getInstance().registerPlugin(new PrebidRenderer());
 
         prebidDisplayView = new PrebidDisplayView(context, mockDisplayViewListener, adUnitConfiguration, mockResponse);
         reset(mockDisplayViewListener);

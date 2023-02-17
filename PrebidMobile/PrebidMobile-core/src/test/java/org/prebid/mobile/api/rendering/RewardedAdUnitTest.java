@@ -24,6 +24,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer;
+import org.prebid.mobile.api.rendering.customrenderer.PrebidMobilePluginCustomRenderer;
 import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -36,6 +38,7 @@ import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.test.utils.WhiteBox;
+import org.prebid.mobile.testutils.MockPrebidMobilePluginCustomRenderer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
@@ -244,6 +247,8 @@ public class RewardedAdUnitTest {
         final Bid mockBid = mock(Bid.class);
         final RewardedVideoEventListener spyEventListener = spy(getEventListener());
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
+        PrebidMobilePluginCustomRenderer prebidRenderer = MockPrebidMobilePluginCustomRenderer.getMockPrebidRenderer(mockInterstitialController, null, true);
+        PluginRegisterCustomRenderer.getInstance().registerPlugin(prebidRenderer);
 
         WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
         WhiteBox.setInternalState(rewardedAdUnit, "interstitialController", mockInterstitialController);

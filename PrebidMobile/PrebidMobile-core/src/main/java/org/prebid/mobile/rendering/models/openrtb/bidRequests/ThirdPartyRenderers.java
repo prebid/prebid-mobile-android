@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+// TODO since we insert prebid renderer as non third party, this class might be renamed
 public class ThirdPartyRenderers extends BaseBid {
 
     private List<String> renderers = null;
