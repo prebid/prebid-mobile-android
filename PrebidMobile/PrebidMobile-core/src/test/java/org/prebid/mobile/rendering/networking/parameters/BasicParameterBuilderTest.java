@@ -18,6 +18,7 @@ package org.prebid.mobile.rendering.networking.parameters;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -110,12 +111,102 @@ public class BasicParameterBuilderTest {
         TargetingParams.setUserId(null);
         TargetingParams.setUserCustomData(null);
         TargetingParams.setYearOfBirth(0);
+        TargetingParams.setOmidPartnerName(null);
+        TargetingParams.setOmidPartnerVersion(null);
 
         PrebidMobile.sendMraidSupportParams = true;
         PrebidMobile.useExternalBrowser = false;
         PrebidMobile.isCoppaEnabled = false;
         PrebidMobile.clearStoredBidResponses();
         PrebidMobile.setStoredAuctionResponse(null);
+    }
+
+    @Test
+    public void sourceOmidValues_originalApi_customValues() throws JSONException {
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setAdFormat(AdFormat.BANNER);
+        config.setIsOriginalAdUnit(true);
+
+        TargetingParams.setOmidPartnerName("testOmidValue");
+        TargetingParams.setOmidPartnerVersion("testOmidVersion");
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(config,
+            context.getResources(),
+            browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        Source source = adRequestInput.getBidRequest().getSource();
+        assertEquals(adRequestInput.getBidRequest().getId(), source.getTid());
+
+        JSONObject sourceExtJson = source.getJsonObject().getJSONObject("ext");
+        assertEquals("testOmidValue", sourceExtJson.getString("omidpn"));
+        assertEquals("testOmidVersion", sourceExtJson.getString("omidpv"));
+    }
+
+    @Test
+    public void sourceOmidValues_originalApi_emptyValues() throws JSONException {
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setAdFormat(AdFormat.BANNER);
+        config.setIsOriginalAdUnit(true);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(config,
+            context.getResources(),
+            browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        Source source = adRequestInput.getBidRequest().getSource();
+        assertEquals(adRequestInput.getBidRequest().getId(), source.getTid());
+
+        assertFalse(source.getJsonObject().has("ext"));
+    }
+
+    @Test
+    public void sourceOmidValues_renderingApi_customValues() throws JSONException {
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setAdFormat(AdFormat.BANNER);
+        config.setIsOriginalAdUnit(false);
+
+        TargetingParams.setOmidPartnerName("testOmidValue");
+        TargetingParams.setOmidPartnerVersion("testOmidVersion");
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(config,
+            context.getResources(),
+            browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        Source source = adRequestInput.getBidRequest().getSource();
+        assertEquals(adRequestInput.getBidRequest().getId(), source.getTid());
+
+        JSONObject sourceExtJson = source.getJsonObject().getJSONObject("ext");
+        assertEquals("testOmidValue", sourceExtJson.getString("omidpn"));
+        assertEquals("testOmidVersion", sourceExtJson.getString("omidpv"));
+    }
+
+    @Test
+    public void sourceOmidValues_renderingApi_defaultValues() throws JSONException {
+        AdUnitConfiguration config = new AdUnitConfiguration();
+        config.setAdFormat(AdFormat.BANNER);
+        config.setIsOriginalAdUnit(false);
+
+        BasicParameterBuilder builder = new BasicParameterBuilder(config,
+            context.getResources(),
+            browserActivityAvailable
+        );
+        AdRequestInput adRequestInput = new AdRequestInput();
+        builder.appendBuilderParameters(adRequestInput);
+
+        Source source = adRequestInput.getBidRequest().getSource();
+        assertEquals(adRequestInput.getBidRequest().getId(), source.getTid());
+
+        JSONObject sourceExtJson = source.getJsonObject().getJSONObject("ext");
+        assertEquals("Prebid", sourceExtJson.getString("omidpn"));
+        assertEquals(PrebidMobile.SDK_VERSION, sourceExtJson.getString("omidpv"));
     }
 
     @Test
