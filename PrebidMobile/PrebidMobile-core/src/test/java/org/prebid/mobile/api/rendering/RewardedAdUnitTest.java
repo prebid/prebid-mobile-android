@@ -38,7 +38,7 @@ import org.prebid.mobile.rendering.bidding.listeners.RewardedVideoEventListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.test.utils.WhiteBox;
-import org.prebid.mobile.testutils.MockPrebidMobilePluginCustomRenderer;
+import org.prebid.mobile.testutils.FakePrebidMobilePluginCustomRenderer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
@@ -247,7 +247,7 @@ public class RewardedAdUnitTest {
         final Bid mockBid = mock(Bid.class);
         final RewardedVideoEventListener spyEventListener = spy(getEventListener());
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
-        PrebidMobilePluginCustomRenderer prebidRenderer = MockPrebidMobilePluginCustomRenderer.getMockPrebidRenderer(mockInterstitialController, null, true);
+        PrebidMobilePluginCustomRenderer prebidRenderer = FakePrebidMobilePluginCustomRenderer.getFakePrebidRenderer(mockInterstitialController, null, true);
         PluginRegisterCustomRenderer.getInstance().registerPlugin(prebidRenderer);
 
         WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);

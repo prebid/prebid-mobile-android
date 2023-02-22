@@ -34,7 +34,7 @@ enum class Tag(val tagName: String) {
     ORIGINAL("Original"),
     ADMOB("AdMob"),
     MAX("Max"),
-    CUSTOM_RENDERER("Custom-Renderer"),
+    CUSTOM_RENDERER("Custom-Renderer"), // TODO custom renderer is not a new kind of integration, change it
 
     ALL("All")
 }

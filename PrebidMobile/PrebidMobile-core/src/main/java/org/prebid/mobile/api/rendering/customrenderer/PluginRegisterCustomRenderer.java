@@ -16,6 +16,8 @@
 
 package org.prebid.mobile.api.rendering.customrenderer;
 
+import androidx.annotation.VisibleForTesting;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -33,7 +35,8 @@ public class PluginRegisterCustomRenderer {
 
     private static final PluginRegisterCustomRenderer instance = new PluginRegisterCustomRenderer();
 
-    private final HashMap<String, PrebidMobilePluginCustomRenderer> plugins = new HashMap<>();
+    @VisibleForTesting
+    public final HashMap<String, PrebidMobilePluginCustomRenderer> plugins = new HashMap<>();
 
     public void registerPlugin(PrebidMobilePluginCustomRenderer prebidMobilePluginCustomRenderers) {
         String rendererName = prebidMobilePluginCustomRenderers.getName();
