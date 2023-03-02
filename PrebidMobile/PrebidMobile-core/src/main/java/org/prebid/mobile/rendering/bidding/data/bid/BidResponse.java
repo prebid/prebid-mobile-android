@@ -27,7 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.MobileSdkPassThrough;
@@ -118,6 +117,7 @@ public class BidResponse {
         return nbr;
     }
 
+    @Nullable
     public String getWinningBidJson() {
         return winningBidJson;
     }
@@ -153,11 +153,7 @@ public class BidResponse {
 
             MobileSdkPassThrough bidMobilePassThrough = null;
             Bid winningBid = getWinningBid();
-            if (winningBid == null) {
-                hasParseError = true;
-                parseError = FetchDemandResult.NO_BIDS_MESSAGE;
-                LogUtil.info(TAG, parseError);
-            } else {
+            if (winningBid != null) {
                 bidMobilePassThrough = winningBid.getMobileSdkPassThrough();
             }
 
@@ -221,6 +217,10 @@ public class BidResponse {
             return Utils.isVast(bid.getAdm());
         }
         return false;
+    }
+
+    public boolean withNoBids() {
+        return getWinningBid() == null;
     }
 
     private boolean hasWinningKeywords(Prebid prebid) {
