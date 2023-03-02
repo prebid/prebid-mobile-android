@@ -10,6 +10,7 @@ import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiNati
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiNativeStyles;
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiVideoBanner;
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiVideoInStream;
+import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiVideoInStreamRubicon;
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiVideoInterstitial;
 import org.prebid.mobile.javademo.activities.ads.gam.original.GamOriginalApiVideoRewarded;
 
@@ -74,6 +75,12 @@ public class TestCaseRepository {
                 AdFormat.IN_STREAM_VIDEO,
                 IntegrationKind.GAM_ORIGINAL,
                 GamOriginalApiVideoInStream.class
+            ),
+            new TestCase(
+                R.string.gam_original_in_stream_rubicon,
+                AdFormat.IN_STREAM_VIDEO,
+                IntegrationKind.GAM_ORIGINAL,
+                GamOriginalApiVideoInStreamRubicon.class
             )
         );
         return result;

@@ -17,6 +17,7 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 
+import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.Util;
@@ -27,11 +28,11 @@ import org.prebid.mobile.javademo.activities.BaseAdActivity;
 import java.util.Collections;
 import java.util.HashSet;
 
-public class GamOriginalApiVideoInStream extends BaseAdActivity {
+public class GamOriginalApiVideoInStreamRubicon extends BaseAdActivity {
 
-    private static final String AD_UNIT_ID = "/21808260008/prebid_demo_app_original_api_in_stream";
-    private static final String CONFIG_ID = "imp-prebid-video-instream";
-    private static final String STORED_RESPONSE = "response-prebid-video-instream";
+    private static final String AD_UNIT_ID = "/5300653/test_adunit_vast_pavliuchyk";
+    private static final String CONFIG_ID = "1001-1";
+    private static final String STORED_RESPONSE = "sample_video_response";
     private static final int WIDTH = 640;
     private static final int HEIGHT = 480;
 
@@ -47,6 +48,12 @@ public class GamOriginalApiVideoInStream extends BaseAdActivity {
 
         // The ID of Mocked Bid Response on PBS. Only for test cases.
         PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE);
+
+        // This example uses Rubicon Server TODO: Rewrite to AWS Server
+        PrebidMobile.setPrebidServerAccountId("1001");
+        PrebidMobile.setPrebidServerHost(
+            Host.createCustomHost("https://prebid-server.rubiconproject.com/openrtb2/auction")
+        );
 
         createAd();
     }
@@ -114,6 +121,14 @@ public class GamOriginalApiVideoInStream extends BaseAdActivity {
         if (player != null) {
             player.release();
         }
-    }
 
+        // TODO: Return to AWS Server
+        PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d");
+        PrebidMobile.setPrebidServerHost(
+            Host.createCustomHost(
+                "https://prebid-server-test-j.prebid.org/openrtb2/auction"
+            )
+        );
+        PrebidMobile.setStoredAuctionResponse(null);
+    }
 }
