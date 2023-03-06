@@ -30,7 +30,7 @@ import java.util.HashSet;
 
 public class GamOriginalApiVideoInStreamRubicon extends BaseAdActivity {
 
-    private static final String AD_UNIT_ID = "/5300653/test_adunit_vast_pavliuchyk";
+    private static final String AD_UNIT_ID = "/21808260008/prebid_demo_app_original_api_in_stream_rubicon";
     private static final String CONFIG_ID = "1001-1";
     private static final String STORED_RESPONSE = "sample_video_response";
     private static final int WIDTH = 640;

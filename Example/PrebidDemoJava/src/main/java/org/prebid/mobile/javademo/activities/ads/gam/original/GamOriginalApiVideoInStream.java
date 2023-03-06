@@ -29,7 +29,8 @@ import java.util.HashSet;
 
 public class GamOriginalApiVideoInStream extends BaseAdActivity {
 
-    private static final String AD_UNIT_ID = "/21808260008/prebid_demo_app_original_api_in_stream";
+    private static final String AD_UNIT_ID = "/21808260008/prebid_demo_app_original_api_in_stream"; // Without bidder name
+    //    private static final String AD_UNIT_ID = "/21808260008/prebid_demo_app_original_api_in_stream_example"; // With bidder name
     private static final String CONFIG_ID = "imp-prebid-video-instream";
     private static final String STORED_RESPONSE = "response-prebid-video-instream";
     private static final int WIDTH = 640;
