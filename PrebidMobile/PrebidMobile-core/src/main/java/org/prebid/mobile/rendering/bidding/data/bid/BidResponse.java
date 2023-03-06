@@ -219,10 +219,6 @@ public class BidResponse {
         return false;
     }
 
-    public boolean withNoBids() {
-        return getWinningBid() == null;
-    }
-
     private boolean hasWinningKeywords(Prebid prebid) {
         if (prebid == null || prebid.getTargeting().isEmpty()) {
             return false;
