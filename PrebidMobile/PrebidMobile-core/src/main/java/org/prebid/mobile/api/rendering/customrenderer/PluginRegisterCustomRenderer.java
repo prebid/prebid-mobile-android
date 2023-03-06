@@ -29,7 +29,6 @@ import java.util.Map;
 
 public class PluginRegisterCustomRenderer {
 
-    public static final String TAG = "PluginRegisterCustomRenderer";
     public static final String CUSTOM_RENDERER_KEY = "plugin_custom_renderer_key";
     public static final String PREBID_MOBILE_RENDERER_NAME = "PrebidRenderer";
 
@@ -41,7 +40,7 @@ public class PluginRegisterCustomRenderer {
     public void registerPlugin(PrebidMobilePluginCustomRenderer prebidMobilePluginCustomRenderers) {
         String rendererName = prebidMobilePluginCustomRenderers.getName();
         if (plugins.containsKey(rendererName)) {
-            LogUtil.debug(TAG, "New custom renderer with name" + rendererName + "will replace the previous one with same name");
+            LogUtil.debug("PluginRegister", "New custom renderer with name" + rendererName + "will replace the previous one with same name");
         }
         plugins.put(prebidMobilePluginCustomRenderers.getName(), prebidMobilePluginCustomRenderers);
     }

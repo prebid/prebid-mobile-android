@@ -8,7 +8,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.mockito.Mockito;
 import org.prebid.mobile.api.rendering.customrenderer.PrebidMobileInterstitialControllerInterface;
 import org.prebid.mobile.api.rendering.customrenderer.PrebidMobilePluginCustomRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -23,43 +22,41 @@ public class FakePrebidMobilePluginCustomRenderer {
             View mockBannerAdView,
             Boolean isSupportRenderingFor
     ) {
-        return Mockito.spy(
-                new PrebidMobilePluginCustomRenderer() {
-                    @Override
-                    public String getName() { return PREBID_MOBILE_RENDERER_NAME; }
+        return new PrebidMobilePluginCustomRenderer() {
+            @Override
+            public String getName() { return PREBID_MOBILE_RENDERER_NAME; }
 
-                    @Override
-                    public String getVersion() { return null; }
+            @Override
+            public String getVersion() { return null; }
 
-                    @Nullable
-                    @Override
-                    public String getToken() { return null; }
+            @Nullable
+            @Override
+            public String getToken() { return null; }
 
-                    @Override
-                    public View createBannerAdView(
-                            @NonNull Context context,
-                            @NonNull DisplayViewListener displayViewListener,
-                            @NonNull AdUnitConfiguration adUnitConfiguration,
-                            @NonNull BidResponse bidResponse
-                    ) {
-                        return mockBannerAdView;
-                    }
+            @Override
+            public View createBannerAdView(
+                    @NonNull Context context,
+                    @NonNull DisplayViewListener displayViewListener,
+                    @NonNull AdUnitConfiguration adUnitConfiguration,
+                    @NonNull BidResponse bidResponse
+            ) {
+                return mockBannerAdView;
+            }
 
-                    @Override
-                    public PrebidMobileInterstitialControllerInterface createInterstitialController(
-                            @NonNull Context context,
-                            @NonNull InterstitialControllerListener interstitialControllerListener,
-                            @NonNull AdUnitConfiguration adUnitConfiguration,
-                            @NonNull BidResponse bidResponse
-                    ) {
-                        return mockInterstitialController;
-                    }
+            @Override
+            public PrebidMobileInterstitialControllerInterface createInterstitialController(
+                    @NonNull Context context,
+                    @NonNull InterstitialControllerListener interstitialControllerListener,
+                    @NonNull AdUnitConfiguration adUnitConfiguration,
+                    @NonNull BidResponse bidResponse
+            ) {
+                return mockInterstitialController;
+            }
 
-                    @Override
-                    public boolean isSupportRenderingFor(AdUnitConfiguration adUnitConfiguration) {
-                        return isSupportRenderingFor;
-                    }
-                }
-        );
+            @Override
+            public boolean isSupportRenderingFor(AdUnitConfiguration adUnitConfiguration) {
+                return isSupportRenderingFor;
+            }
+        };
     }
 }
