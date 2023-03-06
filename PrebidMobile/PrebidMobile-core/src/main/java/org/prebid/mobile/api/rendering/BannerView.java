@@ -426,7 +426,6 @@ public class BannerView extends FrameLayout {
         initPrebidRenderingSdk();
         initAdConfiguration();
         initBidLoader();
-
         screenStateReceiver.register(getContext());
     }
 
