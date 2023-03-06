@@ -20,7 +20,9 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import org.prebid.mobile.*
+import org.prebid.mobile.BannerAdUnit
+import org.prebid.mobile.BannerBaseAdUnit
+import org.prebid.mobile.Signals
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
@@ -30,7 +32,6 @@ class GamOriginalApiDisplayBanner320x50Activity : BaseAdActivity() {
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid_demo_app_original_api_banner"
         const val CONFIG_ID = "imp-prebid-banner-320-50"
-        const val STORED_RESPONSE = "response-prebid-banner-320-50"
         const val WIDTH = 320
         const val HEIGHT = 50
     }
@@ -41,9 +42,6 @@ class GamOriginalApiDisplayBanner320x50Activity : BaseAdActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
-        TargetingParams.setSubjectToGDPR(true)
         createAd()
     }
 

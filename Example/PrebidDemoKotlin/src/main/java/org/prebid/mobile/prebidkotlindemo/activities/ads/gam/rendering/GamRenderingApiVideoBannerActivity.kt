@@ -17,7 +17,6 @@ package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
 import org.prebid.mobile.AdSize
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.api.data.VideoPlacementType
 import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.eventhandlers.GamBannerEventHandler
@@ -28,7 +27,6 @@ class GamRenderingApiVideoBannerActivity : BaseAdActivity() {
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid_oxb_300x250_banner"
         const val CONFIG_ID = "imp-prebid-video-outstream"
-        const val STORED_RESPONSE = "response-prebid-video-outstream"
         const val WIDTH = 300
         const val HEIGHT = 250
     }
@@ -38,9 +36,6 @@ class GamRenderingApiVideoBannerActivity : BaseAdActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

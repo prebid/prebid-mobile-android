@@ -22,7 +22,6 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import org.prebid.mobile.BannerAdUnit
 import org.prebid.mobile.BannerBaseAdUnit
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.Signals
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
@@ -33,7 +32,6 @@ class GamOriginalApiDisplayBannerMultiSizeActivity : BaseAdActivity() {
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid_demo_app_original_api_banner_multisize"
         const val CONFIG_ID = "imp-prebid-banner-multisize"
-        const val STORED_RESPONSE = "response-prebid-banner-multisize"
         const val WIDTH = 320
         const val HEIGHT = 50
     }
@@ -43,9 +41,6 @@ class GamOriginalApiDisplayBannerMultiSizeActivity : BaseAdActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

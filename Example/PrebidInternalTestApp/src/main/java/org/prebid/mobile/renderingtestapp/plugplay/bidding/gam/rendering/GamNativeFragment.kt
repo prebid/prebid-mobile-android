@@ -22,7 +22,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
@@ -37,8 +36,8 @@ import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmNativeFragment
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
+import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 import org.prebid.mobile.renderingtestapp.utils.loadImage
-import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
 
 class GamNativeFragment(
     override val layoutRes: Int = R.layout.fragment_native
@@ -66,6 +65,9 @@ class GamNativeFragment(
         val builder = AdManagerAdRequest.Builder()
         val publisherAdRequest = builder.build()
 
+        nativeAdUnit?.let {
+            CommandLineArgumentParser.addAdUnitSpecificData(it)
+        }
         nativeAdUnit?.fetchDemand { result ->
             if (result != FetchDemandResult.SUCCESS) {
                 events.fetchDemandFailure(true)

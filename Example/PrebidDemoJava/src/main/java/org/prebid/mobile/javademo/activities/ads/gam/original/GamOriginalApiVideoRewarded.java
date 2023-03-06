@@ -11,7 +11,6 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
-import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.RewardedVideoAdUnit;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.VideoBaseAdUnit;
@@ -21,18 +20,14 @@ import java.util.Collections;
 
 public class GamOriginalApiVideoRewarded extends BaseAdActivity {
 
-    private static final String AD_UNIT_ID = "/21808260008/prebid_oxb_rewarded_video_static";
-    private static final String CONFIG_ID = "imp-prebid-video-rewarded-320-480-without-end-card";
-    private static final String STORED_RESPONSE = "response-prebid-video-rewarded-320-480-without-end-card";
+    private static final String AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-video-interstitial";
+    private static final String CONFIG_ID = "imp-prebid-video-rewarded-320-480-original-api";
 
     private RewardedVideoAdUnit adUnit;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE);
 
         createAd();
     }

@@ -18,9 +18,16 @@ package org.prebid.mobile.api.mediation;
 
 import android.content.Context;
 import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.prebid.mobile.*;
+
+import org.prebid.mobile.AdSize;
+import org.prebid.mobile.ContentObject;
+import org.prebid.mobile.DataObject;
+import org.prebid.mobile.Host;
+import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.FetchDemandResult;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.mediation.listeners.OnFetchCompleteListener;
@@ -100,51 +107,139 @@ public abstract class MediationBaseAdUnit {
         bidLoader.load();
     }
 
+    /**
+     * @deprecated use addExtData
+     */
+    @Deprecated
     public void addContextData(
         String key,
         String value
     ) {
-        adUnitConfig.addContextData(key, value);
+        adUnitConfig.addExtData(key, value);
     }
 
+    /**
+     * @deprecated use updateExtData
+     */
+    @Deprecated
     public void updateContextData(
         String key,
         Set<String> value
     ) {
-        adUnitConfig.addContextData(key, value);
+        adUnitConfig.addExtData(key, value);
     }
 
+    /**
+     * @deprecated use removeExtData
+     */
+    @Deprecated
     public void removeContextData(String key) {
-        adUnitConfig.removeContextData(key);
+        adUnitConfig.removeExtData(key);
     }
 
+    /**
+     * @deprecated use clearExtData
+     */
+    @Deprecated
     public void clearContextData() {
-        adUnitConfig.clearContextData();
+        adUnitConfig.clearExtData();
     }
 
+    /**
+     * @deprecated use getExtDataDictionary
+     */
+    @Deprecated
     public Map<String, Set<String>> getContextDataDictionary() {
-        return adUnitConfig.getContextDataDictionary();
+        return adUnitConfig.getExtDataDictionary();
     }
 
+    /**
+     * @deprecated use addExtKeyword
+     */
+    @Deprecated
     public void addContextKeyword(String keyword) {
-        adUnitConfig.addContextKeyword(keyword);
+        adUnitConfig.addExtKeyword(keyword);
     }
 
+    /**
+     * @deprecated use addExtKeywords
+     */
+    @Deprecated
     public void addContextKeywords(Set<String> keywords) {
-        adUnitConfig.addContextKeywords(keywords);
+        adUnitConfig.addExtKeywords(keywords);
     }
 
+    /**
+     * @deprecated use removeExtKeyword
+     */
+    @Deprecated
     public void removeContextKeyword(String keyword) {
-        adUnitConfig.removeContextKeyword(keyword);
+        adUnitConfig.removeExtKeyword(keyword);
     }
 
+    /**
+     * @deprecated use getExtKeywordsSet
+     */
+    @Deprecated
     public Set<String> getContextKeywordsSet() {
-        return adUnitConfig.getContextKeywordsSet();
+        return adUnitConfig.getExtKeywordsSet();
     }
 
+    /**
+     * @deprecated use clearExtKeywords
+     */
+    @Deprecated
     public void clearContextKeywords() {
-        adUnitConfig.clearContextKeywords();
+        adUnitConfig.clearExtKeywords();
     }
+
+
+    public void addExtData(
+        String key,
+        String value
+    ) {
+        adUnitConfig.addExtData(key, value);
+    }
+
+    public void updateExtData(
+        String key,
+        Set<String> value
+    ) {
+        adUnitConfig.addExtData(key, value);
+    }
+
+    public void removeExtData(String key) {
+        adUnitConfig.removeExtData(key);
+    }
+
+    public void clearExtData() {
+        adUnitConfig.clearExtData();
+    }
+
+    public Map<String, Set<String>> getExtDataDictionary() {
+        return adUnitConfig.getExtDataDictionary();
+    }
+
+    public void addExtKeyword(String keyword) {
+        adUnitConfig.addExtKeyword(keyword);
+    }
+
+    public void addExtKeywords(Set<String> keywords) {
+        adUnitConfig.addExtKeywords(keywords);
+    }
+
+    public void removeExtKeyword(String keyword) {
+        adUnitConfig.removeExtKeyword(keyword);
+    }
+
+    public Set<String> getExtKeywordsSet() {
+        return adUnitConfig.getExtKeywordsSet();
+    }
+
+    public void clearExtKeywords() {
+        adUnitConfig.clearExtKeywords();
+    }
+
 
     public void setPbAdSlot(String adSlot) {
         adUnitConfig.setPbAdSlot(adSlot);

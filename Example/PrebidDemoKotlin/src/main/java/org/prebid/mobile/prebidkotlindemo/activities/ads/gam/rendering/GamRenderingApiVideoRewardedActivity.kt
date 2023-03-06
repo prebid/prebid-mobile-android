@@ -16,7 +16,6 @@
 package org.prebid.mobile.prebidkotlindemo.activities.ads.gam.rendering
 
 import android.os.Bundle
-import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.RewardedAdUnit
 import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener
@@ -28,7 +27,6 @@ class GamRenderingApiVideoRewardedActivity : BaseAdActivity() {
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-video-interstitial"
         const val CONFIG_ID = "imp-prebid-video-rewarded-320-480"
-        const val STORED_RESPONSE = "response-prebid-video-rewarded-320-480"
     }
 
     private var adUnit: RewardedAdUnit? = null
@@ -36,9 +34,6 @@ class GamRenderingApiVideoRewardedActivity : BaseAdActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

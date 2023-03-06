@@ -19,8 +19,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.api.exceptions.InitError;
 import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer;
+import org.prebid.mobile.api.data.InitializationStatus;
+import org.prebid.mobile.reflection.Reflection;
+import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -36,6 +38,7 @@ public class SdkInitializerTest {
 
     private boolean calledAlready = false;
     private Boolean isSuccessful;
+    private Boolean serverWarning;
     private String error;
 
     private MockWebServer server;
@@ -58,7 +61,9 @@ public class SdkInitializerTest {
         calledAlready = false;
         isSuccessful = null;
         error = null;
+        serverWarning = null;
         PrebidMobile.setPrebidServerHost(Host.createCustomHost(""));
+        Reflection.setStaticVariableTo(PrebidMobile.class, "customStatusEndpoint", null);
         PrebidContextHolder.clearContext();
     }
 
@@ -81,8 +86,53 @@ public class SdkInitializerTest {
 
     @Test
     public void init_statusResponseIsOk_initializationIsSuccessful() throws IOException, InterruptedException {
-        String host = setResponseStatusAndGetMockServerHostUrl("ok");
-        PrebidMobile.setPrebidServerHost(Host.createCustomHost(host));
+        setStatusResponse(200, "Good");
+
+        SdkInitializer.init(context, createListener());
+
+        sleep(300);
+        shadowOf(getMainLooper()).idle();
+        sleep(200);
+
+        assertTrue(isSuccessful);
+        assertTrue(PrebidMobile.isSdkInitialized());
+        assertNull(error);
+    }
+
+    @Test
+    public void init_statusResponseIsEmpty_initializationIsSuccessful() throws IOException, InterruptedException {
+        setStatusResponse(204, "");
+
+        SdkInitializer.init(context, createListener());
+
+        sleep(300);
+        shadowOf(getMainLooper()).idle();
+        sleep(200);
+
+        assertTrue(isSuccessful);
+        assertTrue(PrebidMobile.isSdkInitialized());
+    }
+
+    @Test
+    public void init_statusResponseIsBad_statusWarning() throws InterruptedException {
+        setStatusResponse(404, "");
+
+        SdkInitializer.init(context, createListener());
+
+        sleep(300);
+        shadowOf(getMainLooper()).idle();
+        sleep(200);
+
+        assertTrue(isSuccessful);
+        assertTrue(PrebidMobile.isSdkInitialized());
+        assertEquals("Server status is not ok!", error);
+        assertTrue(serverWarning);
+    }
+
+
+    @Test
+    public void init_customStatusResponseIsOk_initializationIsSuccessful() throws IOException, InterruptedException {
+        setCustomStatusResponse(200, "Good");
 
         SdkInitializer.init(context, createListener());
 
@@ -96,41 +146,82 @@ public class SdkInitializerTest {
         assertNull(error);
     }
 
+    @Test
+    public void init_customStatusResponseIsEmpty_initializationIsSuccessful() throws IOException, InterruptedException {
+        setCustomStatusResponse(204, "");
+
+        SdkInitializer.init(context, createListener());
+
+        sleep(300);
+        shadowOf(getMainLooper()).idle();
+        sleep(200);
+
+        assertTrue(isSuccessful);
+        assertTrue(PrebidMobile.isSdkInitialized());
+    }
+
+    @Test
+    public void init_customStatusResponseIsBad_statusWarning() throws InterruptedException {
+        setCustomStatusResponse(404, "");
+
+        SdkInitializer.init(context, createListener());
+
+        sleep(300);
+        shadowOf(getMainLooper()).idle();
+        sleep(200);
+
+        assertTrue(isSuccessful);
+        assertTrue(PrebidMobile.isSdkInitialized());
+        assertEquals("Server status is not ok!", error);
+        assertTrue(serverWarning);
+    }
+
 
     private SdkInitializationListener createListener() {
-        return new SdkInitializationListener() {
+        return status -> {
+            if (calledAlready) fail();
 
-            @Override
-            public void onSdkInit() {
-                if (calledAlready) fail();
-
+            if (status == InitializationStatus.SUCCEEDED) {
                 isSuccessful = true;
-
-                calledAlready = true;
-            }
-
-            @Override
-            public void onSdkFailedToInit(InitError initError) {
-                if (calledAlready) fail();
-
+            } else if (status == InitializationStatus.SERVER_STATUS_WARNING) {
+                isSuccessful = true;
+                serverWarning = true;
+                error = status.getDescription();
+            } else {
                 isSuccessful = false;
-                error = initError.getError();
-
-                calledAlready = true;
+                error = status.getDescription();
             }
+
+            calledAlready = true;
         };
     }
 
-    private String setResponseStatusAndGetMockServerHostUrl(String status) throws IOException {
+    private void setStatusResponse(int code, String body) {
+        String host = createStatusResponse(code, body).replace("/status", "/openrtb2/auction");
+        PrebidMobile.setPrebidServerHost(Host.createCustomHost(host));
+    }
+
+    private void setCustomStatusResponse(int code, String body) {
+        String url = createStatusResponse(code, body);
+        PrebidMobileReflection.setCustomStatusEndpoint(url);
+    }
+
+    private String createStatusResponse(int code, String body) {
         MockResponse mockResponse = new MockResponse();
-        mockResponse.setResponseCode(200);
-        mockResponse.setBody("{\n    \"application\": {\n        \"status\": \"" + status + "\"\n    }\n}");
+        mockResponse.setResponseCode(code);
+        mockResponse.setBody(body);
         server.enqueue(mockResponse);
-        server.start();
+
+        try {
+            server.start();
+        } catch (IOException exception) {
+            throw new NullPointerException(exception.getMessage());
+        }
+
+
         HttpUrl url = server.url("/status");
         server.setProtocolNegotiationEnabled(false);
-
-        return url.toString().replace("/status", "/openrtb2/auction");
+        return url.toString();
     }
 
 }

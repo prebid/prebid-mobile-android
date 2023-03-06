@@ -23,7 +23,7 @@ import java.lang.reflect.InvocationTargetException
 
 object OpenRtbConfigs {
 
-    var impContextData: Map<String, List<String>>? = null
+    var impExtData: Map<String, List<String>>? = null
 
     fun setTargeting(openRtbExtra: OpenRtbExtra) {
         if (openRtbExtra.age != 0) {
@@ -78,30 +78,30 @@ object OpenRtbConfigs {
                 }
             }
         }
-        if (openRtbExtra.appContextData?.isNotEmpty() == true) {
-            for (key in openRtbExtra.appContextData.keys) {
-                val dataList = openRtbExtra.appContextData[key]
+        if (openRtbExtra.appExtData?.isNotEmpty() == true) {
+            for (key in openRtbExtra.appExtData.keys) {
+                val dataList = openRtbExtra.appExtData[key]
                 if (dataList != null) {
                     for (data in dataList) {
-                        TargetingParams.addContextData(key, data)
+                        TargetingParams.addExtData(key, data)
                     }
                 }
             }
         }
-        if (openRtbExtra.impContextData?.isNotEmpty() == true) {
-            impContextData = openRtbExtra.impContextData
+        if (openRtbExtra.impExtData?.isNotEmpty() == true) {
+            impExtData = openRtbExtra.impExtData
         }
     }
 
-    fun setImpContextDataTo(adView: Any?) {
-        if (adView == null || impContextData == null || impContextData?.isEmpty() == true) {
+    fun setImpExtDataTo(adView: Any?) {
+        if (adView == null || impExtData == null || impExtData?.isEmpty() == true) {
             return
         }
-        for (key in impContextData!!.keys) {
-            val dataList = impContextData!![key]
+        for (key in impExtData!!.keys) {
+            val dataList = impExtData!![key]
             if (dataList != null) {
                 for (data in dataList) {
-                    callMethodOnObject(adView, "addContextData", key, data)
+                    callMethodOnObject(adView, "addExtData", key, data)
                 }
             }
         }

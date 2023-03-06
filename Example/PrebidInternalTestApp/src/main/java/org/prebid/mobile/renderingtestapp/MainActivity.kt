@@ -22,7 +22,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
@@ -31,22 +30,12 @@ import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import androidx.preference.PreferenceManager
 import androidx.test.espresso.IdlingResource
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-import com.google.gson.reflect.TypeToken
-import org.json.JSONArray
-import org.prebid.mobile.ExternalUserId
-import org.prebid.mobile.PrebidMobile
-import org.prebid.mobile.TargetingParams
 import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener
 import org.prebid.mobile.renderingtestapp.plugplay.utilities.consent.ConsentUpdateManager
-import org.prebid.mobile.renderingtestapp.utils.GppHelper
-import org.prebid.mobile.renderingtestapp.utils.OpenRtbConfigs
-import org.prebid.mobile.renderingtestapp.utils.OpenRtbExtra
+import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 import org.prebid.mobile.renderingtestapp.utils.PermissionHelper
 import org.prebid.mobile.renderingtestapp.utils.SampleCustomRenderer
 
@@ -54,12 +43,6 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
 
     companion object {
         const val CURRENT_AD_TYPE = "CURRENT_AD_TYPE"
-        const val MRAID_AD_NUMBER = "ad_number"
-
-        const val EXTRA_OPEN_RTB = "EXTRA_OPEN_RTB"
-        const val EXTRA_CONSENT_V1 = "EXTRA_CONSENT_V1"
-        const val EXTRA_EIDS = "EXTRA_EIDS"
-        const val EXTRA_NATIVE = "EXTRA_NATIVE"
     }
 
     private val TAG = MainActivity::class.java.simpleName
@@ -74,33 +57,13 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         setContentView(R.layout.activity_main)
-        addParametersFromCommandLine()
+
+        CommandLineArgumentParser.parse(intent, this)
+
         initUi()
         initCustomRendererPlugin()
 
-        handleLaunchOptions()
-
         PermissionHelper.requestPermission(this)
-    }
-
-    private fun addParametersFromCommandLine() {
-        val geo = intent.extras?.getBoolean("shareGeo")
-        val domain = intent.extras?.getString("targetingDomain")
-        val gppString = intent.extras?.getString("gppString")
-        val gppSid = intent.extras?.getString("gppSid")
-        val gppHelper = GppHelper(PreferenceManager.getDefaultSharedPreferences(this))
-        geo?.let { shareGeo ->
-            PrebidMobile.setShareGeoLocation(shareGeo)
-        }
-        domain?.let { targetingDomain ->
-            TargetingParams.setDomain(targetingDomain)
-        }
-        gppString?.let { gppStringValue ->
-            gppHelper.addGppStringTestValue(gppStringValue)
-        }
-        gppSid?.let { gppSidValue ->
-            gppHelper.addGppSidTestValue(gppSidValue)
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -161,21 +124,6 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
         PluginRegisterCustomRenderer.getInstance().registerPlugin(SampleCustomRenderer())
     }
 
-    private fun handleLaunchOptions() {
-        if (intent.extras?.containsKey(EXTRA_OPEN_RTB) == true) {
-            extractOpenRtbExtra()
-        }
-
-        if (intent.extras?.containsKey(EXTRA_CONSENT_V1) == true) {
-            handleConsentExtra()
-        }
-
-        if (intent.extras?.containsKey(EXTRA_EIDS) == true) {
-            extractEidsExtras()
-        }
-    }
-
-
     private fun setupToolbarNavigation(toolbar: Toolbar, navController: NavController) {
 
         val topLevelDestinationIdSet = setOf(R.id.mainUtilitiesFragment, R.id.headerBiddingFragment)
@@ -229,54 +177,4 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
         titleText.text = title
     }
 
-    private fun parseOpenRtbJson(openRtbJson: String?): OpenRtbExtra? {
-        try {
-            return Gson().fromJson<OpenRtbExtra>(openRtbJson, object : TypeToken<OpenRtbExtra>() {}.type)
-        } catch (ex: Exception) {
-            Log.d(TAG, "Unable to parse provided OpenRTB list ${Log.getStackTraceString(ex)}")
-            Toast.makeText(
-                this,
-                "Unable to parse provided OpenRTB. Provided JSON might contain an error",
-                Toast.LENGTH_LONG
-            ).show()
-        }
-        return null
-    }
-
-    private fun extractOpenRtbExtra() {
-        val openRtbListJson = intent.extras?.getString(EXTRA_OPEN_RTB)
-        val openRtbExtrasList = parseOpenRtbJson(openRtbListJson)
-        if (openRtbExtrasList != null) {
-            OpenRtbConfigs.setTargeting(openRtbExtrasList)
-        }
-    }
-
-    private fun extractEidsExtras() {
-        val eidsJsonString = intent.extras?.getString(EXTRA_EIDS)
-        val eidsJsonArray = JSONArray(eidsJsonString)
-        for (i in 0 until eidsJsonArray.length()) {
-            val jsonObject = eidsJsonArray.get(i)
-            if (jsonObject is JsonObject) {
-                val source = jsonObject.get("source").asString
-                val identifier = jsonObject.get("identifier").asString
-                if (source == null || identifier == null) {
-                    val aType = jsonObject.get("atype")
-                    TargetingParams.storeExternalUserId(
-                        if (aType == null) {
-                            ExternalUserId(source, identifier, null, null)
-                        } else {
-                            ExternalUserId(source, identifier, aType.asInt, null)
-                        }
-                    )
-                }
-            }
-        }
-    }
-
-    private fun handleConsentExtra() {
-        consentUpdateManager = ConsentUpdateManager(PreferenceManager.getDefaultSharedPreferences(this))
-
-        val configurationJson = intent.extras?.getString(EXTRA_CONSENT_V1)
-        consentUpdateManager?.updateConsentConfiguration(configurationJson)
-    }
 }

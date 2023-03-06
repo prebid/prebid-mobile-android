@@ -166,7 +166,7 @@ abstract class AdFragment : BaseFragment() {
 
     private fun startAd() {
         adView = initAd()
-        setImpContextData()
+        setImpExtData()
         loadAd()
     }
 
@@ -214,8 +214,7 @@ abstract class AdFragment : BaseFragment() {
     private fun setNoBidsAccountId(enable: Boolean) {
         if (enable) {
             PrebidMobile.setPrebidServerAccountId(getString(R.string.prebid_account_id_prod_no_bids))
-        }
-        else {
+        } else {
             PrebidMobile.setPrebidServerAccountId(getString(R.string.prebid_account_id_prod))
         }
     }
@@ -223,8 +222,8 @@ abstract class AdFragment : BaseFragment() {
     private fun isNoBids(): Boolean = configId == getString(R.string.prebid_config_id_no_bids)
 
 
-    private fun setImpContextData() {
-        OpenRtbConfigs.setImpContextDataTo(adView)
+    private fun setImpExtData() {
+        OpenRtbConfigs.setImpExtDataTo(adView)
     }
 
     protected fun configureOriginalPrebid() {

@@ -5,8 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
@@ -21,7 +19,7 @@ import org.prebid.mobile.renderingtestapp.databinding.FragmentAdmobNativeBinding
 import org.prebid.mobile.renderingtestapp.databinding.ViewNativeAdBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
+import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 
 class AdMobNativeFragment : AdFragment() {
 
@@ -96,6 +94,7 @@ class AdMobNativeFragment : AdFragment() {
         extras = Bundle()
         adUnit = MediationNativeAdUnit(configId, extras!!)
         configureNativeAdUnit(adUnit!!)
+        adUnit?.let { CommandLineArgumentParser.addAdUnitSpecificData(it) }
         return adUnit
     }
 

@@ -13,7 +13,6 @@ import org.prebid.mobile.NativeDataAsset;
 import org.prebid.mobile.NativeEventTracker;
 import org.prebid.mobile.NativeImageAsset;
 import org.prebid.mobile.NativeTitleAsset;
-import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.javademo.activities.BaseAdActivity;
 
 import java.util.ArrayList;
@@ -22,16 +21,12 @@ public class GamOriginalApiNativeStyles extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/prebid-demo-original-native-styles";
     private static final String CONFIG_ID = "imp-prebid-banner-native-styles";
-    private static final String STORED_RESPONSE = "response-prebid-banner-native-styles";
 
     private static NativeAdUnit nativeAdUnit;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE);
 
         createAd();
     }

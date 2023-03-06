@@ -113,7 +113,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_320x50,
                         R.string.adunit_gam_banner_320_50_original,
                         320,
-                        50, R.string.response_prebid_banner_320_50
+                        50
                     )
                 )
             )
@@ -127,7 +127,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_300x250,
                         R.string.adunit_gam_banner_300_250_original,
                         300,
-                        250, R.string.response_prebid_banner_300_250
+                        250
                     )
                 )
             )
@@ -140,7 +140,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_728x90,
                         R.string.adunit_gam_banner_728_90_original,
                         728,
-                        90, R.string.response_prebid_banner_728_90
+                        90
                     )
                 )
             )
@@ -153,7 +153,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_multisize,
                         R.string.adunit_gam_banner_multisize_original,
                         320,
-                        50, R.string.response_prebid_banner_multisize
+                        50
                     )
                 )
             )
@@ -166,7 +166,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_interstitial_320_480,
                         R.string.adunit_gam_interstitial_320_480_original,
                         320,
-                        480, R.string.response_prebid_display_interstitial_320_480
+                        480
                     )
                 )
             )
@@ -176,11 +176,10 @@ class DemoItemProvider private constructor() {
                     R.id.action_header_bidding_to_gam_video_outstream_original,
                     gamVideoTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_outstream,
+                        R.string.imp_prebid_id_video_outstream_original_api,
                         R.string.adunit_gam_video_300_250_original,
                         300,
-                        250,
-                        R.string.response_prebid_video_outstream_original
+                        250
                     )
                 )
             )
@@ -193,8 +192,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_instream,
                         R.string.adunit_gam_video_instream,
                         640,
-                        480,
-                        R.string.response_prebid_video_sample
+                        480
                     )
                 )
             )
@@ -204,11 +202,10 @@ class DemoItemProvider private constructor() {
                     R.id.action_header_bidding_to_gam_original_interstitial,
                     gamVideoTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_interstitial_320_480,
+                        R.string.imp_prebid_id_video_interstitial_320_480_original_api,
                         R.string.adunit_gam_interstitial_video_320_480_original,
                         320,
-                        480,
-                        R.string.response_prebid_video_interstitial_320_480_original
+                        480
                     )
                 )
             )
@@ -218,10 +215,10 @@ class DemoItemProvider private constructor() {
                     R.id.action_header_bidding_to_gam_original_rewarded_video,
                     gamVideoTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_rewarded_320_480,
+                        R.string.imp_prebid_id_video_rewarded_end_card_320_480_original_api,
                         R.string.adunit_gam_interstitial_video_320_480_original,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC, R.string.response_prebid_video_rewarded_320_480_original
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -232,7 +229,6 @@ class DemoItemProvider private constructor() {
                     gamNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_native_styles,
-                        storedResponse = R.string.response_prebid_native_styles,
                         adUnitIdRes = R.string.adunit_gam_native_custom_template
                     )
                 )
@@ -244,7 +240,6 @@ class DemoItemProvider private constructor() {
                     gamNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_native_styles,
-                        storedResponse = R.string.response_prebid_native_styles,
                         adUnitIdRes = R.string.adunit_gam_native_styles
                     )
                 )
@@ -268,8 +263,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_320x50,
                         null,
                         320,
-                        50,
-                        R.string.response_prebid_banner_320_50
+                        50
                     )
                 )
             )
@@ -282,8 +276,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_320x50,
                         null,
                         320,
-                        50,
-                        R.string.response_prebid_banner_320_50
+                        50
                     )
                 )
             )
@@ -296,8 +289,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_no_bids,
                         null,
                         320,
-                        50,
-                        R.string.response_prebid_no_bids
+                        50
                     )
                 )
             )
@@ -310,8 +302,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_320x50,
                         null,
                         320,
-                        50,
-                        R.string.response_prebid_banner_320_50
+                        50
                     ).apply {
                         putString(
                             AdFragment.ARGUMENT_ACCOUNT_ID,
@@ -329,8 +320,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_300x250,
                         null,
                         300,
-                        250,
-                        R.string.response_prebid_banner_300_250
+                        250
                     )
                 )
             )
@@ -343,8 +333,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_728x90,
                         null,
                         728,
-                        90,
-                        R.string.response_prebid_banner_728_90
+                        90
                     )
                 )
             )
@@ -357,8 +346,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_320x50_vast,
                         null,
                         320,
-                        50,
-                        R.string.response_prebid_banner_incorrect_vast
+                        50
                     )
                 )
             )
@@ -371,8 +359,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_320x50,
                         null,
                         320,
-                        50,
-                        R.string.response_prebid_banner_320_50
+                        50
                     )
                 )
             )
@@ -385,8 +372,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_320x50_deeplink,
                         null,
                         320,
-                        50,
-                        R.string.response_prebid_banner_deeplink
+                        50
                     )
                 )
             )
@@ -407,8 +393,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_multisize,
                         null,
                         320,
-                        50,
-                        R.string.response_prebid_banner_multisize
+                        50
                     )
                 )
             )
@@ -429,8 +414,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_expand,
                         null,
                         320,
-                        50,
-                        R.string.response_prebid_mraid_expand
+                        50
                     )
                 )
             )
@@ -443,8 +427,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_expand_two_part,
                         null,
                         320,
-                        50,
-                        R.string.response_prebid_mraid_expand_two_part
+                        50
                     )
                 )
             )
@@ -457,8 +440,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_resize,
                         null,
                         320,
-                        50,
-                        R.string.response_prebid_mraid_resize
+                        50
                     )
                 )
             )
@@ -471,7 +453,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_resize_with_errors,
                         null,
                         300,
-                        100, R.string.response_prebid_mraid_resize_with_errors
+                        100
                     )
                 )
             )
@@ -484,8 +466,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_fullscreen,
                         null,
                         320,
-                        480,
-                        R.string.response_prebid_mraid_fullscreen
+                        480
                     )
                 )
             )
@@ -498,7 +479,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_video_interstitial,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC, R.string.response_prebid_mraid_video_interstitial
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -511,7 +492,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_3_viewability_compliance,
                         null,
                         320,
-                        480, R.string.response_prebid_mraid_3_viewability_compliance
+                        480
                     )
                 )
             )
@@ -524,7 +505,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_3_resize_negative,
                         null,
                         320,
-                        480, R.string.response_prebid_mraid_3_resize_negative
+                        480
                     )
                 )
             )
@@ -537,7 +518,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_3_load_and_events,
                         null,
                         320,
-                        50, R.string.response_prebid_mraid_3_load_and_events
+                        50
                     )
                 )
             )
@@ -550,7 +531,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_ox_test_properties,
                         null,
                         320,
-                        50, R.string.response_prebid_mraid_ox_test_properties
+                        50
                     )
                 )
             )
@@ -563,8 +544,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_ox_test_methods,
                         null,
                         320,
-                        50,
-                        R.string.response_prebid_mraid_ox_test_methods
+                        50
                     )
                 )
             )
@@ -577,8 +557,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_resize,
                         null,
                         320,
-                        50,
-                        R.string.response_prebid_mraid_resize
+                        50
                     )
                 )
             )
@@ -591,7 +570,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_ox_resize_expandable,
                         null,
                         320,
-                        50, R.string.response_prebid_mraid_ox_resize_expandable
+                        50
                     )
                 )
             )
@@ -606,8 +585,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_interstitial_320_480,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_display_interstitial_320_480
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -620,8 +598,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_no_bids,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_no_bids
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -636,8 +613,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_interstitial_320_480,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_interstitial_320_480
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -650,7 +626,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_no_bids,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC, R.string.response_prebid_no_bids
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -663,8 +639,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_interstitial_skipoffset,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_interstitial_skipoffset
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -677,8 +652,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_interstitial_deeplink,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_interstitial_deeplink
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -691,8 +665,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_interstitial_320_480_with_end_card
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -705,8 +678,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_interstitial_320_480,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_interstitial_320_480
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -719,8 +691,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_interstitial_320_480_with_end_card
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -733,8 +704,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_interstitial_320_480_with_end_card
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -757,10 +727,9 @@ class DemoItemProvider private constructor() {
                     ppmInterstitialAction,
                     ppmVideoTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_interstitial_320_480,
+                        R.string.imp_prebid_id_video_interstitial_320_480_with_ad_configuration,
                         null,
-                        320, 480,
-                        R.string.response_prebid_video_interstitial_ad_configuration
+                        320, 480
                     )
                 )
             )
@@ -770,10 +739,9 @@ class DemoItemProvider private constructor() {
                     ppmInterstitialAction,
                     ppmVideoTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
+                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card_with_ad_configuration,
                         null,
-                        320, 480,
-                        R.string.response_prebid_video_interstitial_end_card_ad_configuration
+                        320, 480
                     )
                 )
             )
@@ -786,8 +754,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_interstitial_vertical,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_interstitial_vertical
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -800,8 +767,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_interstitial_vertical,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_interstitial_landscape
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -811,11 +777,10 @@ class DemoItemProvider private constructor() {
                     ppmInterstitialMultiformatAction,
                     ppmInterstitialTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_interstitial_320_480,
+                        R.string.imp_prebid_id_video_interstitial_320_480_random,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_interstitial_320_480
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -829,7 +794,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_rewarded_320_480,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC, R.string.response_prebid_video_rewarded_end_card_320_480
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -842,7 +807,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_no_bids,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC, R.string.response_prebid_no_bids
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -855,7 +820,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_rewarded_end_card_320_480,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC, R.string.response_prebid_video_rewarded_320_480
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -865,11 +830,10 @@ class DemoItemProvider private constructor() {
                     ppmRewardedAction,
                     ppmVideoTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_rewarded_end_card_320_480,
+                        R.string.imp_prebid_id_video_rewarded_end_card_320_480_with_ad_configuration,
                         null,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_rewarded_320_480_with_ad_configuration
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -884,8 +848,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_outstream,
                         null,
                         300,
-                        250,
-                        R.string.response_prebid_video_outstream
+                        250
                     )
                 )
             )
@@ -898,8 +861,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_no_bids,
                         null,
                         300,
-                        250,
-                        R.string.prebid_config_id_no_bids
+                        250
                     )
                 )
             )
@@ -912,8 +874,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_outstream,
                         null,
                         300,
-                        250,
-                        R.string.response_prebid_video_outstream
+                        250
                     )
                 )
             )
@@ -926,7 +887,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_outstream_end_card,
                         null,
                         300,
-                        250, R.string.response_prebid_video_outstream_end_card
+                        250
                     )
                 )
             )
@@ -938,8 +899,7 @@ class DemoItemProvider private constructor() {
                     R.id.action_header_bidding_to_in_app_native,
                     ppmNativeTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_native_styles,
-                        storedResponse = R.string.response_prebid_native_styles
+                        R.string.imp_prebid_id_native_styles
                     )
                 )
             )
@@ -949,8 +909,7 @@ class DemoItemProvider private constructor() {
                     R.id.action_header_bidding_to_in_app_native_feed,
                     ppmNativeTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_native_styles,
-                        storedResponse = R.string.response_prebid_native_styles
+                        R.string.imp_prebid_id_native_styles
                     )
                 )
             )
@@ -960,8 +919,7 @@ class DemoItemProvider private constructor() {
                     R.id.action_header_bidding_to_in_app_native_links,
                     ppmNativeTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_native_links,
-                        storedResponse = R.string.response_prebid_native_links
+                        R.string.imp_prebid_id_native_links
                     )
                 )
             )
@@ -971,8 +929,7 @@ class DemoItemProvider private constructor() {
                     R.id.action_header_bidding_to_in_app_native,
                     ppmNativeTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_native_styles,
-                        storedResponse = R.string.response_prebid_native_styles
+                        R.string.imp_prebid_id_native_styles
                     ).apply {
                         putString(
                             AdFragment.ARGUMENT_ACCOUNT_ID,
@@ -1000,7 +957,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_320x50,
                         R.string.adunit_gam_banner_320_50_app_event,
                         320,
-                        50, R.string.response_prebid_banner_320_50
+                        50
                     )
                 )
             )
@@ -1013,8 +970,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_no_bids,
                         null,
                         320,
-                        50,
-                        R.string.response_prebid_no_bids
+                        50
                     )
                 )
             )
@@ -1027,7 +983,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_320x50,
                         R.string.adunit_gam_banner_320_50_gam_ad,
                         320,
-                        50, R.string.response_prebid_banner_320_50
+                        50
                     )
                 )
             )
@@ -1040,7 +996,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_320x50,
                         R.string.adunit_gam_banner_320_50_random,
                         320,
-                        50, R.string.response_prebid_banner_320_50
+                        50
                     )
                 )
             )
@@ -1053,7 +1009,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_320x50,
                         R.string.adunit_gam_banner_320_50_app_event,
                         320,
-                        50, R.string.response_prebid_banner_320_50
+                        50
                     ).apply {
                         putString(
                             AdFragment.ARGUMENT_ACCOUNT_ID,
@@ -1071,7 +1027,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_300x250,
                         R.string.adunit_gam_banner_300_250,
                         300,
-                        250, R.string.response_prebid_banner_300_250
+                        250
                     )
                 )
             )
@@ -1084,7 +1040,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_728x90,
                         R.string.adunit_gam_banner_728_90,
                         728,
-                        90, R.string.response_prebid_banner_728_90
+                        90
                     )
                 )
             )
@@ -1097,7 +1053,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_banner_multisize,
                         R.string.adunit_gam_banner_multisize,
                         320,
-                        50, R.string.response_prebid_banner_multisize
+                        50
                     )
                 )
             )
@@ -1118,7 +1074,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_expand,
                         R.string.adunit_gam_banner_320_50_app_event,
                         320,
-                        50, R.string.response_prebid_mraid_expand
+                        50
                     )
                 )
             )
@@ -1131,7 +1087,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_resize,
                         R.string.adunit_gam_banner_320_50_app_event,
                         320,
-                        50, R.string.response_prebid_mraid_resize
+                        50
                     )
                 )
             )
@@ -1144,7 +1100,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_mraid_video_interstitial,
                         R.string.adunit_gam_interstitial_320_480_app_event,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC, R.string.response_prebid_mraid_video_interstitial
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -1159,8 +1115,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_interstitial_320_480,
                         R.string.adunit_gam_interstitial_320_480_app_event,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_display_interstitial_320_480
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -1173,8 +1128,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_interstitial_320_480,
                         R.string.adunit_gam_interstitial_320_480_random,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_display_interstitial_320_480
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -1188,8 +1142,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_no_bids,
                         R.string.adunit_gam_interstitial_320_480_no_bids,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_no_bids
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -1204,8 +1157,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_interstitial_320_480,
                         R.string.adunit_gam_interstitial_video_320_480_app_event,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_interstitial_320_480
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -1218,8 +1170,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_interstitial_320_480,
                         R.string.adunit_gam_interstitial_video_320_480_random,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_interstitial_320_480
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -1232,7 +1183,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_no_bids,
                         R.string.adunit_gam_interstitial_video_320_480_no_bids,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC, R.string.response_prebid_no_bids
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -1245,8 +1196,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_interstitial_320_480,
                         R.string.adunit_gam_interstitial_video_320_480_app_event,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_interstitial_ad_configuration
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -1256,11 +1206,10 @@ class DemoItemProvider private constructor() {
                     gamInterstitialAction,
                     gamVideoTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
+                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card_with_ad_configuration,
                         R.string.adunit_gam_interstitial_video_320_480_app_event,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_interstitial_end_card_ad_configuration
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -1270,11 +1219,10 @@ class DemoItemProvider private constructor() {
                     gamInterstitialMultiformatAction,
                     gamVideoTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_interstitial_320_480,
+                        R.string.imp_prebid_id_video_interstitial_320_480_random,
                         R.string.adunit_gam_interstitial_video_320_480_app_event,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_interstitial_320_480
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -1287,7 +1235,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_rewarded_320_480,
                         R.string.adunit_gam_video_rewarded_320_480_metadata,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC, R.string.response_prebid_video_rewarded_end_card_320_480
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -1300,7 +1248,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_rewarded_end_card_320_480,
                         R.string.adunit_gam_video_rewarded_320_480_metadata,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC, R.string.response_prebid_video_rewarded_320_480
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -1313,7 +1261,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_no_bids,
                         R.string.adunit_gam_video_rewarded_320_480,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC, R.string.response_prebid_no_bids
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -1326,7 +1274,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_rewarded_end_card_320_480,
                         R.string.adunit_gam_video_rewarded_320_480_random,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC, R.string.response_prebid_video_rewarded_320_480
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -1336,11 +1284,10 @@ class DemoItemProvider private constructor() {
                     gamRewardedAction,
                     gamVideoTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_rewarded_end_card_320_480,
+                        R.string.imp_prebid_id_video_rewarded_end_card_320_480_with_ad_configuration,
                         R.string.adunit_gam_video_rewarded_320_480_metadata,
                         MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_video_rewarded_320_480_with_ad_configuration
+                        MIN_HEIGHT_PERC
                     )
                 )
             )
@@ -1353,7 +1300,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_outstream,
                         R.string.adunit_gam_banner_300_250,
                         300,
-                        250, R.string.response_prebid_video_outstream
+                        250
                     )
                 )
             )
@@ -1366,7 +1313,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_no_bids,
                         R.string.adunit_gam_video_300_250,
                         300,
-                        250, R.string.response_prebid_no_bids
+                        250
                     )
                 )
             )
@@ -1379,7 +1326,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_outstream,
                         R.string.adunit_gam_video_300_250_random,
                         300,
-                        250, R.string.response_prebid_video_outstream
+                        250
                     )
                 )
             )
@@ -1392,7 +1339,7 @@ class DemoItemProvider private constructor() {
                         R.string.imp_prebid_id_video_outstream,
                         R.string.adunit_gam_video_300_250_random,
                         300,
-                        250, R.string.response_prebid_video_outstream
+                        250
                     )
                 )
             )
@@ -1400,8 +1347,7 @@ class DemoItemProvider private constructor() {
             // Native
             var gamNativeBundle = createBannerBundle(
                 R.string.imp_prebid_id_native_styles,
-                R.string.adunit_gam_native_custom_template,
-                storedResponse = R.string.response_prebid_native_styles
+                R.string.adunit_gam_native_custom_template
             )
             gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11934135")
             demoList.add(
@@ -1415,8 +1361,7 @@ class DemoItemProvider private constructor() {
 
             gamNativeBundle = createBannerBundle(
                 R.string.imp_prebid_id_native_styles,
-                R.string.adunit_gam_native_custom_template,
-                storedResponse = R.string.response_prebid_native_styles
+                R.string.adunit_gam_native_custom_template
             )
             gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11982639")
             demoList.add(
@@ -1435,8 +1380,7 @@ class DemoItemProvider private constructor() {
                     gamNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_native_styles,
-                        R.string.adunit_gam_native_custom_template,
-                        storedResponse = R.string.response_prebid_native_styles
+                        R.string.adunit_gam_native_custom_template
                     ).apply {
                         putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11934135")
                         putString(
@@ -1449,8 +1393,7 @@ class DemoItemProvider private constructor() {
 
             gamNativeBundle = createBannerBundle(
                 R.string.imp_prebid_id_no_bids,
-                R.string.adunit_gam_native_custom_template,
-                storedResponse = R.string.response_prebid_no_bids
+                R.string.adunit_gam_native_custom_template
             )
             gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11982639")
             demoList.add(
@@ -1469,8 +1412,7 @@ class DemoItemProvider private constructor() {
                     gamNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_native_styles,
-                        R.string.adunit_gam_native_unified,
-                        storedResponse = R.string.response_prebid_native_styles
+                        R.string.adunit_gam_native_unified
                     )
                 )
             )
@@ -1481,8 +1423,7 @@ class DemoItemProvider private constructor() {
                     gamNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_native_styles,
-                        R.string.adunit_gam_native_unified_static,
-                        storedResponse = R.string.response_prebid_native_styles
+                        R.string.adunit_gam_native_unified_static
                     )
                 )
             )
@@ -1493,16 +1434,14 @@ class DemoItemProvider private constructor() {
                     gamNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_no_bids,
-                        R.string.adunit_gam_native_unified_static,
-                        storedResponse = R.string.response_prebid_no_bids
+                        R.string.adunit_gam_native_unified_static
                     )
                 )
             )
 
             gamNativeBundle = createBannerBundle(
                 R.string.imp_prebid_id_native_styles,
-                R.string.adunit_gam_native_custom_template,
-                storedResponse = R.string.response_prebid_native_styles
+                R.string.adunit_gam_native_custom_template
             )
             gamNativeBundle.putString(GamNativeFragment.ARG_CUSTOM_FORMAT_ID, "11934135")
             demoList.add(
@@ -1528,8 +1467,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_320x50_high_price,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        320, 50,
-                        R.string.response_prebid_banner_320_50
+                        320, 50
                     )
                 )
             )
@@ -1541,8 +1479,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_320x50,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        320, 50,
-                        R.string.response_prebid_banner_320_50
+                        320, 50
                     )
                 )
             )
@@ -1554,8 +1491,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_no_bids,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        320, 50,
-                        R.string.response_prebid_no_bids
+                        320, 50
                     )
                 )
             )
@@ -1567,8 +1503,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_320x50_high_price,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        320, 50,
-                        R.string.response_prebid_banner_320_50
+                        320, 50
                     )
                 )
             )
@@ -1580,8 +1515,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_320x50_high_price,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        320, 50,
-                        R.string.response_prebid_banner_320_50
+                        320, 50
                     ).apply {
                         putString(
                             AdFragment.ARGUMENT_ACCOUNT_ID,
@@ -1598,8 +1532,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_300x250_high_price,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        300, 250,
-                        R.string.response_prebid_banner_300_250
+                        300, 250
                     )
                 )
             )
@@ -1611,8 +1544,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_300x250,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        300, 250,
-                        R.string.response_prebid_banner_300_250
+                        300, 250
                     )
                 )
             )
@@ -1624,8 +1556,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_multisize,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
-                        320, 50,
-                        R.string.response_prebid_banner_multisize
+                        320, 50
                     )
                 )
             )
@@ -1638,7 +1569,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_video_interstitial_320_480,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
-                        320, 480, R.string.response_prebid_video_interstitial_320_480
+                        320, 480
                     ).apply { putBoolean(AdMobInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
@@ -1651,7 +1582,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_no_bids,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
-                        320, 480, R.string.response_prebid_video_interstitial_320_480
+                        320, 480
                     ).apply { putBoolean(AdMobInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
@@ -1663,7 +1594,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_video_interstitial_320_480,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
-                        320, 480, R.string.response_prebid_video_interstitial_320_480
+                        320, 480
                     ).apply { putBoolean(AdMobInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
@@ -1676,8 +1607,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_video_interstitial_320_480,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
-                        320, 480,
-                        R.string.response_prebid_video_interstitial_ad_configuration
+                        320, 480
                     ).apply { putBoolean(AdMobInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
@@ -1687,10 +1617,9 @@ class DemoItemProvider private constructor() {
                     adMobInterstitialAction,
                     adMobVideoTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
+                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card_with_ad_configuration,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
-                        320, 480,
-                        R.string.response_prebid_video_interstitial_end_card_ad_configuration
+                        320, 480
                     ).apply { putBoolean(AdMobInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
@@ -1701,10 +1630,9 @@ class DemoItemProvider private constructor() {
                     adMobInterstitialMultiformatAction,
                     adMobVideoTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_interstitial_320_480,
+                        R.string.imp_prebid_id_video_interstitial_320_480_random,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
-                        320, 480,
-                        R.string.response_prebid_video_interstitial_320_480
+                        320, 480
                     )
                 )
             )
@@ -1717,7 +1645,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_video_rewarded_end_card_320_480,
                         R.string.admob_rewarded_bidding_ad_unit_id_adapter,
-                        320, 480, R.string.response_prebid_video_rewarded_320_480
+                        320, 480
                     )
                 )
             )
@@ -1729,7 +1657,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_no_bids,
                         R.string.admob_rewarded_bidding_ad_unit_id_adapter,
-                        320, 480, R.string.response_prebid_no_bids
+                        320, 480
                     )
                 )
             )
@@ -1741,7 +1669,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_video_rewarded_320_480,
                         R.string.admob_rewarded_bidding_ad_unit_id_adapter,
-                        320, 480, R.string.response_prebid_video_rewarded_end_card_320_480
+                        320, 480
                     )
                 )
             )
@@ -1753,7 +1681,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_video_rewarded_end_card_320_480,
                         R.string.admob_rewarded_bidding_ad_unit_id_adapter,
-                        320, 480, R.string.response_prebid_video_rewarded_320_480
+                        320, 480
                     )
                 )
             )
@@ -1765,8 +1693,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_video_rewarded_end_card_320_480,
                         R.string.admob_rewarded_bidding_ad_unit_id_adapter,
-                        320, 480,
-                        R.string.response_prebid_video_rewarded_320_480_with_ad_configuration
+                        320, 480
                     )
                 )
             )
@@ -1779,8 +1706,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_interstitial_320_480,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
-                        320, 480,
-                        R.string.response_prebid_display_interstitial_320_480
+                        320, 480
                     )
                 )
             )
@@ -1792,8 +1718,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_no_bids,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
-                        320, 480,
-                        R.string.response_prebid_no_bids
+                        320, 480
                     )
                 )
             )
@@ -1805,8 +1730,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_interstitial_320_480,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
-                        320, 480,
-                        R.string.response_prebid_display_interstitial_320_480
+                        320, 480
                     )
                 )
             )
@@ -1818,8 +1742,7 @@ class DemoItemProvider private constructor() {
                     adMobNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_native_styles,
-                        R.string.admob_native_bidding_ad_unit_id_adapter,
-                        storedResponse = R.string.response_prebid_native_styles
+                        R.string.admob_native_bidding_ad_unit_id_adapter
                     )
                 )
             )
@@ -1830,8 +1753,7 @@ class DemoItemProvider private constructor() {
                     adMobNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_no_bids,
-                        R.string.admob_native_bidding_ad_unit_id_adapter,
-                        storedResponse = R.string.response_prebid_no_bids
+                        R.string.admob_native_bidding_ad_unit_id_adapter
                     )
                 )
             )
@@ -1842,8 +1764,7 @@ class DemoItemProvider private constructor() {
                     adMobNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_native_styles,
-                        R.string.admob_native_bidding_ad_unit_id_adapter,
-                        storedResponse = R.string.response_prebid_native_styles
+                        R.string.admob_native_bidding_ad_unit_id_adapter
                     ).apply {
                         putString(
                             AdFragment.ARGUMENT_ACCOUNT_ID,
@@ -1868,8 +1789,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_320x50,
                         R.string.max_banner_ad_unit_id,
-                        320, 50,
-                        R.string.response_prebid_banner_320_50
+                        320, 50
                     )
                 )
             )
@@ -1881,8 +1801,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_no_bids,
                         R.string.max_banner_ad_unit_id,
-                        320, 50,
-                        R.string.response_prebid_no_bids
+                        320, 50
                     )
                 )
             )
@@ -1894,8 +1813,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_320x50,
                         R.string.max_banner_ad_unit_id,
-                        320, 50,
-                        R.string.response_prebid_banner_320_50
+                        320, 50
                     )
                 )
             )
@@ -1907,8 +1825,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_320x50,
                         R.string.max_banner_ad_unit_id,
-                        320, 50,
-                        R.string.response_prebid_banner_320_50
+                        320, 50
                     ).apply {
                         putString(
                             AdFragment.ARGUMENT_ACCOUNT_ID,
@@ -1925,8 +1842,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_300x250,
                         R.string.max_mrec_ad_unit_id,
-                        300, 250,
-                        R.string.response_prebid_banner_300_250
+                        300, 250
                     )
                 )
             )
@@ -1938,8 +1854,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_no_bids,
                         R.string.max_mrec_ad_unit_id,
-                        300, 250,
-                        R.string.response_prebid_no_bids
+                        300, 250
                     )
                 )
             )
@@ -1951,8 +1866,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_banner_320x50,
                         R.string.max_banner_ad_unit_id,
-                        320, 50,
-                        R.string.response_prebid_banner_320_50
+                        320, 50
                     )
                 )
             )
@@ -1973,8 +1887,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_interstitial_320_480,
                         R.string.max_interstitial_ad_unit_id,
-                        320, 480,
-                        R.string.response_prebid_display_interstitial_320_480
+                        320, 480
                     )
                 )
             )
@@ -1986,8 +1899,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_no_bids,
                         R.string.max_interstitial_ad_unit_id,
-                        320, 480,
-                        R.string.response_prebid_no_bids
+                        320, 480
                     )
                 )
             )
@@ -1999,8 +1911,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_interstitial_320_480,
                         R.string.max_interstitial_ad_unit_id,
-                        320, 480,
-                        R.string.response_prebid_display_interstitial_320_480
+                        320, 480
                     )
                 )
             )
@@ -2013,8 +1924,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_video_interstitial_320_480,
                         R.string.max_interstitial_ad_unit_id,
-                        320, 480,
-                        R.string.response_prebid_video_interstitial_320_480
+                        320, 480
                     ).apply { putBoolean(MaxInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
@@ -2026,8 +1936,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_no_bids,
                         R.string.max_interstitial_ad_unit_id,
-                        320, 480,
-                        R.string.response_prebid_no_bids
+                        320, 480
                     ).apply { putBoolean(MaxInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
@@ -2039,8 +1948,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_video_interstitial_320_480,
                         R.string.max_interstitial_ad_unit_id,
-                        320, 480,
-                        R.string.response_prebid_video_interstitial_320_480
+                        320, 480
                     ).apply { putBoolean(MaxInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
@@ -2052,8 +1960,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_video_interstitial_320_480,
                         R.string.max_interstitial_ad_unit_id,
-                        320, 480,
-                        R.string.response_prebid_video_interstitial_ad_configuration
+                        320, 480
                     ).apply { putBoolean(MaxInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
@@ -2063,10 +1970,9 @@ class DemoItemProvider private constructor() {
                     maxInterstitialAction,
                     maxVideoInterstitialTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card,
+                        R.string.imp_prebid_id_video_interstitial_320_480_with_end_card_with_ad_configuration,
                         R.string.max_interstitial_ad_unit_id,
-                        320, 480,
-                        R.string.response_prebid_video_interstitial_end_card_ad_configuration
+                        320, 480
                     ).apply { putBoolean(MaxInterstitialFragment.ARG_IS_VIDEO, true) }
                 )
             )
@@ -2076,10 +1982,9 @@ class DemoItemProvider private constructor() {
                     maxMultiformatInterstitialAction,
                     maxVideoInterstitialTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_interstitial_320_480,
+                        R.string.imp_prebid_id_video_interstitial_320_480_random,
                         R.string.max_interstitial_ad_unit_id,
-                        320, 480,
-                        R.string.response_prebid_video_interstitial_320_480
+                        320, 480
                     )
                 )
             )
@@ -2095,8 +2000,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_video_rewarded_320_480,
                         R.string.max_rewarded_ad_unit_id,
-                        320, 480,
-                        R.string.response_prebid_video_rewarded_320_480
+                        320, 480
                     )
                 )
             )
@@ -2108,8 +2012,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_no_bids,
                         R.string.max_rewarded_ad_unit_id,
-                        320, 480,
-                        R.string.response_prebid_no_bids
+                        320, 480
                     )
                 )
             )
@@ -2121,8 +2024,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_video_rewarded_320_480,
                         R.string.max_rewarded_ad_unit_id,
-                        320, 480,
-                        R.string.response_prebid_video_rewarded_320_480
+                        320, 480
                     )
                 )
             )
@@ -2134,8 +2036,7 @@ class DemoItemProvider private constructor() {
                     createBannerBundle(
                         R.string.imp_prebid_id_video_rewarded_end_card_320_480,
                         R.string.max_rewarded_ad_unit_id,
-                        320, 480,
-                        R.string.response_prebid_video_rewarded_end_card_320_480
+                        320, 480
                     )
                 )
             )
@@ -2145,10 +2046,9 @@ class DemoItemProvider private constructor() {
                     maxRewardedAction,
                     maxVideoInterstitialTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_rewarded_end_card_320_480,
+                        R.string.imp_prebid_id_video_rewarded_end_card_320_480_with_ad_configuration,
                         R.string.max_rewarded_ad_unit_id,
-                        320, 480,
-                        R.string.response_prebid_video_rewarded_320_480_with_ad_configuration
+                        320, 480
                     )
                 )
             )
@@ -2164,8 +2064,7 @@ class DemoItemProvider private constructor() {
                     maxNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_native_styles,
-                        R.string.max_native_ad_unit_id,
-                        storedResponse = R.string.response_prebid_native_styles
+                        R.string.max_native_ad_unit_id
                     )
                 )
             )
@@ -2176,8 +2075,7 @@ class DemoItemProvider private constructor() {
                     maxNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_no_bids,
-                        R.string.max_native_ad_unit_id,
-                        storedResponse = R.string.response_prebid_no_bids
+                        R.string.max_native_ad_unit_id
                     )
                 )
             )
@@ -2188,8 +2086,7 @@ class DemoItemProvider private constructor() {
                     maxNativeTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_native_styles,
-                        R.string.max_native_ad_unit_id,
-                        storedResponse = R.string.response_prebid_native_styles
+                        R.string.max_native_ad_unit_id
                     ).apply {
                         putString(
                             AdFragment.ARGUMENT_ACCOUNT_ID,
@@ -2241,8 +2138,7 @@ class DemoItemProvider private constructor() {
             configIdRes: Int?,
             adUnitIdRes: Int? = null,
             width: Int = 0,
-            height: Int = 0,
-            storedResponse: Int? = null
+            height: Int = 0
         ): Bundle {
             return Bundle().apply {
                 if (configIdRes != null) {
@@ -2250,12 +2146,6 @@ class DemoItemProvider private constructor() {
                 }
                 if (adUnitIdRes != null) {
                     putString(getString(R.string.key_ad_unit), getString(adUnitIdRes))
-                }
-                if (storedResponse != null) {
-                    putString(
-                        getString(R.string.stored_auction_response),
-                        getString(storedResponse)
-                    )
                 }
                 putInt(getString(R.string.key_width), width)
                 putInt(getString(R.string.key_height), height)

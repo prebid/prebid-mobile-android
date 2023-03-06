@@ -17,17 +17,19 @@
 package org.prebid.mobile;
 
 import android.content.Context;
+import android.util.Log;
+import android.util.Patterns;
+import android.webkit.URLUtil;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.prebid.mobile.api.exceptions.InitError;
+import org.prebid.mobile.api.data.InitializationStatus;
 import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.mraid.MraidEnv;
 import org.prebid.mobile.rendering.sdk.PrebidContextHolder;
 import org.prebid.mobile.rendering.sdk.SdkInitializer;
-import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,7 +87,7 @@ public class PrebidMobile {
     /**
      * Tested Google SDK version.
      */
-    public static final String TESTED_GOOGLE_SDK_VERSION = "21.4.0";
+    public static final String TESTED_GOOGLE_SDK_VERSION = "21.5.0";
 
     /**
      * Please use {@link PrebidMobile#setLogLevel(LogLevel)}, this field will become private in next releases.
@@ -111,6 +113,8 @@ public class PrebidMobile {
 
     private static String accountId = "";
     private static String storedAuctionResponse = "";
+    @Nullable
+    private static String customStatusEndpoint;
 
     private static Host host = Host.CUSTOM;
 
@@ -118,7 +122,8 @@ public class PrebidMobile {
     private static List<ExternalUserId> externalUserIds = new ArrayList<>();
     private static HashMap<String, String> customHeaders = new HashMap<>();
 
-    private PrebidMobile() {}
+    private PrebidMobile() {
+    }
 
     public static boolean isUseCacheForReportingWithRenderingApi() {
         return useCacheForReportingWithRenderingApi;
@@ -201,49 +206,29 @@ public class PrebidMobile {
 
 
     /**
-     * Initializes the main SDK classes. Makes request to Prebid server to check its status.
+     * Initializes the main SDK classes and makes request to Prebid server to check its status.
      * You have to set host url ({@link PrebidMobile#setPrebidServerHost(Host)}) before calling this method.
+     * If you use custom /status endpoint set it with ({@link PrebidMobile#setCustomStatusEndpoint(String)}) before starting initialization.
+     * <p>
+     * Calls SdkInitializationListener callback with enum initialization status parameter:
+     * <p>
+     * SUCCEEDED - Prebid SDK is initialized successfully and ready to work.
+     * <p>
+     * FAILED - Prebid SDK is failed to initialize and is not able to work.
+     * <p>
+     * SERVER_STATUS_WARNING - Prebid SDK failed to check the PBS status. The SDK is initialized and able to work, though.
+     * <p>
+     * To get the description of the problem you can call {@link InitializationStatus#getDescription()}
      *
      * @param context  any context (must be not null)
-     * @param listener initialization listener (can be null)
-     * @see <a href="https://docs.prebid.org/prebid-server/endpoints/pbs-endpoint-status.html">GET /status</a>
+     * @param listener initialization listener (can be null).
+     *                 <p>
      */
     public static void initializeSdk(
         @Nullable Context context,
         @Nullable SdkInitializationListener listener
     ) {
         SdkInitializer.init(context, listener);
-    }
-
-    /**
-     * Please use {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
-     */
-    @Deprecated
-    public static void setApplicationContext(@Nullable Context context) {
-        SdkInitializer.init(context, null);
-    }
-
-    /**
-     * Please use {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
-     */
-    @Deprecated
-    public static void setApplicationContext(
-        @Nullable Context context,
-        @Nullable SdkInitListener listener
-    ) {
-        SdkInitializer.init(context, new SdkInitializationListener() {
-            @Override
-            public void onSdkInit() {
-                if (listener != null) {
-                    listener.onSDKInit();
-                }
-            }
-
-            @Override
-            public void onSdkFailedToInit(InitError error) {
-                LogUtil.error(TAG, error.getError());
-            }
-        });
     }
 
     public static Context getApplicationContext() {
@@ -340,6 +325,34 @@ public class PrebidMobile {
         } else if (publisherVersionBigger) {
             LogUtil.error("The current version of Prebid SDK is not validated with your version of GMA SDK " + googleAdsVersion + " (Prebid SDK tested on " + PrebidMobile.TESTED_GOOGLE_SDK_VERSION + "). Please update the Prebid SDK or post a ticket on the github.");
         }
+    }
+
+    /**
+     * Sets full valid URL for the /status endpoint of the PBS.
+     * Request to /status is sent when you call {@link PrebidMobile#initializeSdk(Context, SdkInitializationListener)}.
+     *
+     * @see <a href="https://docs.prebid.org/prebid-server/endpoints/pbs-endpoint-status.html">GET /status</a>
+     */
+    public static void setCustomStatusEndpoint(String url) {
+        if (url == null) {
+            return;
+        }
+
+        if (!Patterns.WEB_URL.matcher(url).matches()) {
+            Log.e(TAG, "Can't set custom /status endpoint, it is not valid.");
+            return;
+        }
+
+        if (url.startsWith("http")) {
+            customStatusEndpoint = url;
+        } else {
+            customStatusEndpoint = URLUtil.guessUrl(url).replace("http", "https");
+        }
+    }
+
+    @Nullable
+    public static String getCustomStatusEndpoint() {
+        return customStatusEndpoint;
     }
 
 

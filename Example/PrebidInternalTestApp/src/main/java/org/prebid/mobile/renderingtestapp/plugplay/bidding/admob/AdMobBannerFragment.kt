@@ -16,13 +16,9 @@ import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerAdmobBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
+import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 
 open class AdMobBannerFragment : AdFragment() {
-
-    /*
-
-
-    * */
 
     companion object {
         private const val TAG = "AdMobBannerFragment"
@@ -79,6 +75,7 @@ open class AdMobBannerFragment : AdFragment() {
             mediationUtils
         )
         adUnit?.setRefreshInterval(refreshDelay)
+        adUnit?.let { CommandLineArgumentParser.addAdUnitSpecificData(it) }
         return adUnit
     }
 

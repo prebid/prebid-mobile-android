@@ -22,9 +22,8 @@ import android.util.Log;
 import org.prebid.mobile.ExternalUserId;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.api.exceptions.InitError;
+import org.prebid.mobile.api.data.InitializationStatus;
 import org.prebid.mobile.javademo.utils.Settings;
-import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,20 +44,17 @@ public class CustomApplication extends Application {
     private void initPrebid() {
         PrebidMobile.setShareGeoLocation(true);
         PrebidMobile.setPrebidServerAccountId("0689a263-318d-448b-a3d4-b02e8a709d9d");
+        PrebidMobile.setCustomStatusEndpoint("https://prebid-server-test-j.prebid.org/status");
         PrebidMobile.setPrebidServerHost(
             Host.createCustomHost(
                 "https://prebid-server-test-j.prebid.org/openrtb2/auction"
             )
         );
-        PrebidMobile.initializeSdk(getApplicationContext(), new SdkInitializationListener() {
-            @Override
-            public void onSdkInit() {
+        PrebidMobile.initializeSdk(getApplicationContext(), status -> {
+            if (status == InitializationStatus.SUCCEEDED) {
                 Log.d(TAG, "SDK initialized successfully!");
-            }
-
-            @Override
-            public void onSdkFailedToInit(InitError error) {
-                Log.e(TAG, "SDK initialization error: " + error.getError());
+            } else {
+                Log.e(TAG, "SDK initialization error: " + status.getDescription());
             }
         });
     }

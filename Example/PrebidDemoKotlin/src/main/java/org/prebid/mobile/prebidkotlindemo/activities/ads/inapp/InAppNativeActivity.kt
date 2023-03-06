@@ -33,7 +33,6 @@ class InAppNativeActivity : BaseAdActivity() {
 
     companion object {
         const val CONFIG_ID = "imp-prebid-banner-native-styles"
-        const val STORED_RESPONSE = "response-prebid-banner-native-styles"
     }
 
     private var nativeAdUnit: MediationNativeAdUnit? = null
@@ -41,9 +40,6 @@ class InAppNativeActivity : BaseAdActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE)
 
         createAd()
     }

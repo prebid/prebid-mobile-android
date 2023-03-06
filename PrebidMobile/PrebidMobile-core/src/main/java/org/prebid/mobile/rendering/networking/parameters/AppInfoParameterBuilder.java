@@ -16,6 +16,8 @@
 
 package org.prebid.mobile.rendering.networking.parameters;
 
+import android.text.TextUtils;
+
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -73,9 +75,14 @@ public class AppInfoParameterBuilder extends ParameterBuilder {
         app.contentObject = adConfiguration.getAppContent();
 
         app.getExt().put("prebid", Prebid.getJsonObjectForApp(BasicParameterBuilder.DISPLAY_MANAGER_VALUE, PrebidMobile.SDK_VERSION));
-        final Map<String, Set<String>> contextDataDictionary = TargetingParams.getContextDataDictionary();
-        if (!contextDataDictionary.isEmpty()) {
-            app.getExt().put("data", Utils.toJson(contextDataDictionary));
+        final Map<String, Set<String>> extDataDictionary = TargetingParams.getExtDataDictionary();
+        if (!extDataDictionary.isEmpty()) {
+            app.getExt().put("data", Utils.toJson(extDataDictionary));
+        }
+
+        Set<String> extKeywords = TargetingParams.getExtKeywordsSet();
+        if (extKeywords.size() > 0) {
+            app.keywords = TextUtils.join(",", extKeywords);
         }
     }
 }

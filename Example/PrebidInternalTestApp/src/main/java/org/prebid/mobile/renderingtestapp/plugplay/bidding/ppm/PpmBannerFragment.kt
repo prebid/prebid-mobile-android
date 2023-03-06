@@ -18,9 +18,6 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.RelativeLayout
-import android.widget.TextView
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.BannerView
@@ -30,7 +27,7 @@ import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
+import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 
 open class PpmBannerFragment : AdFragment(), BannerViewListener {
     private val TAG = PpmBannerFragment::class.java.simpleName
@@ -69,6 +66,7 @@ open class PpmBannerFragment : AdFragment(), BannerViewListener {
         )
         bannerView?.setAutoRefreshDelay(refreshDelay)
         bannerView?.setBannerListener(this)
+        bannerView?.let { CommandLineArgumentParser.addAdUnitSpecificData(it) }
         binding.viewContainer.addView(bannerView)
         return bannerView
     }

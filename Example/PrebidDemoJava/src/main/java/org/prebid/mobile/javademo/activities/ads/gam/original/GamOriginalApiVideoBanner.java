@@ -10,7 +10,6 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 
-import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.VideoAdUnit;
 import org.prebid.mobile.VideoBaseAdUnit;
@@ -22,9 +21,8 @@ import java.util.Collections;
 
 public class GamOriginalApiVideoBanner extends BaseAdActivity {
 
-    private static final String AD_UNIT_ID = "/21808260008/prebid_oxb_outstream_video_reandom";
-    private static final String CONFIG_ID = "imp-prebid-video-outstream";
-    private static final String STORED_RESPONSE = "response-prebid-video-outstream";
+    private static final String AD_UNIT_ID = "/21808260008/prebid-demo-original-api-video-banner";
+    private static final String CONFIG_ID = "imp-prebid-video-outstream-original-api";
     private static final int WIDTH = 300;
     private static final int HEIGHT = 250;
 
@@ -33,9 +31,6 @@ public class GamOriginalApiVideoBanner extends BaseAdActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // The ID of Mocked Bid Response on PBS. Only for test cases.
-        PrebidMobile.setStoredAuctionResponse(STORED_RESPONSE);
 
         createAd();
     }

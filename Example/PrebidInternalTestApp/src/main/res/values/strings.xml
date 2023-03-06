@@ -25,6 +25,7 @@
     <string name="text_show">Show</string>
     <string name="text_retry">Retry</string>
     <string name="text_stop_refresh">Stop refresh</string>
+    <string name="enable_caching">Enable Caching</string>
 
     <string name="title_preload_failed">Preload failed</string>
     <string name="title_examples">Examples</string>
@@ -338,16 +339,24 @@
     <string name="imp_prebid_id_interstitial_320_480">imp-prebid-display-interstitial-320-480</string>
 
     <string name="imp_prebid_id_video_outstream">imp-prebid-video-outstream</string>
+    <string name="imp_prebid_id_video_outstream_original_api">imp-prebid-video-outstream-original-api</string>
     <string name="imp_prebid_id_video_instream">1001-1</string>
     <string name="imp_prebid_id_video_outstream_end_card">imp-prebid-video-outstream-with-end-card</string>
     <string name="imp_prebid_id_video_interstitial_320_480">imp-prebid-video-interstitial-320-480</string>
+    <string name="imp_prebid_id_video_interstitial_320_480_with_ad_configuration">imp-prebid-video-interstitial-320-480-with-ad-configuration</string>
+    <string name="imp_prebid_id_video_interstitial_320_480_random">imp-prebid-video-interstitial-320-480-random</string>
+    <string name="imp_prebid_id_video_interstitial_320_480_original_api">imp-prebid-video-interstitial-320-480-original-api</string>
     <string name="imp_prebid_id_video_interstitial_320_480_with_end_card">imp-prebid-video-interstitial-320-480-with-end-card</string>
+    <string name="imp_prebid_id_video_interstitial_320_480_with_end_card_with_ad_configuration">imp-prebid-video-interstitial-320-480-with-end-card-with-ad-configuration</string>
     <string name="imp_prebid_id_video_interstitial_deeplink">imp-prebid-video-interstitial-320-480-deeplink</string>
     <string name="imp_prebid_id_video_interstitial_skipoffset">imp-prebid-video-interstitial-320-480-skip-offset</string>
     <string name="imp_prebid_id_video_interstitial_mraid_end_card">imp-prebid-video-interstitial-mraid-end-card</string>
-    <string name="imp_prebid_id_video_interstitial_vertical">imp-prebid-video-interstitial-vertical</string>
+    <string name="imp_prebid_id_video_interstitial_vertical">imp-prebid-video-interstitial-vertical-with-end-card</string>
     <string name="imp_prebid_id_video_rewarded_end_card_320_480">imp-prebid-video-rewarded-320-480</string>
+    <string name="imp_prebid_id_video_rewarded_end_card_320_480_with_ad_configuration">imp-prebid-video-rewarded-320-480-with-end-card-with-ad-configuration</string>
+    <string name="imp_prebid_id_video_rewarded_end_card_320_480_original_api">imp-prebid-video-rewarded-320-480-original-api</string>
     <string name="imp_prebid_id_video_rewarded_320_480">imp-prebid-video-rewarded-320-480-without-end-card</string>
+    <string name="imp_prebid_id_video_rewarded_320_480_with_ad_configuration">imp-prebid-video-rewarded-320-480-with-ad-configuration</string>
     <string name="imp_prebid_id_mraid_resize">imp-prebid-mraid-resize</string>
     <string name="imp_prebid_id_mraid_resize_with_errors">imp-prebid-mraid-resize-with-errors</string>
     <string name="imp_prebid_id_mraid_expand">imp-prebid-mraid-expand-1-part</string>
@@ -398,60 +407,4 @@
     <string name="event_fetch_demand_success">fetchDemand success</string>
     <string name="stored_auction_response">storedAuctionResponse</string>
 
-    <!-- Stored auction responses   -->
-
-    <!--  Banner  -->
-    <string name="response_prebid_banner_320_50">response-prebid-banner-320-50</string>
-    <string name="response_prebid_banner_300_250">response-prebid-banner-300-250</string>
-    <string name="response_prebid_banner_728_90">response-prebid-banner-728-90</string>
-    <string name="response_prebid_banner_incorrect_vast">response-prebid-banner-incorrect-vast</string>
-    <string name="response_prebid_banner_deeplink">response-prebid-banner-deeplink</string>
-    <string name="response_prebid_banner_multisize">response-prebid-banner-multisize</string>
-
-    <!--  Display Interstitial  -->
-    <string name="response_prebid_display_interstitial_320_480">response-prebid-display-interstitial-320-480</string>
-
-    <!--  No Bids  -->
-    <string name="response_prebid_no_bids">response-prebid-no-bids</string>
-
-    <!--  Video Interstitial  -->
-    <string name="response_prebid_video_interstitial_320_480">response-prebid-video-interstitial-320-480</string>
-    <string name="response_prebid_video_interstitial_320_480_original">response-prebid-video-interstitial-320-480-original-api</string>
-    <string name="response_prebid_video_interstitial_320_480_with_end_card">response-prebid-video-interstitial-320-480-with-end-card</string>
-    <string name="response_prebid_video_interstitial_deeplink">response-prebid-video-interstitial-320-480-deeplink</string>
-    <string name="response_prebid_video_interstitial_skipoffset">response-prebid-video-interstitial-320-480-skip-offset</string>
-    <string name="response_prebid_video_interstitial_ad_configuration">response-prebid-video-interstitial-320-480-with-ad-configuration</string>
-    <string name="response_prebid_video_interstitial_end_card_ad_configuration">response-prebid-video-interstitial-320-480-with-end-card-with-ad-configuration</string>
-    <string name="response_prebid_video_interstitial_vertical">response-prebid-video-interstitial-vertical-with-end-card</string>
-    <string name="response_prebid_video_interstitial_landscape">response-prebid-video-interstitial-landscape-with-end-card</string>
-    <string name="response_prebid_video_sample">sample_video_response</string>
-    <!--  Video Outstream  -->
-    <string name="response_prebid_video_outstream">response-prebid-video-outstream</string>
-    <string name="response_prebid_video_outstream_original">response-prebid-video-outstream-original-api</string>
-    <string name="response_prebid_video_outstream_end_card">response-prebid-video-outstream-with-end-card</string>
-    <!--  Video Rewarded  -->
-    <string name="response_prebid_video_rewarded_end_card_320_480">response-prebid-video-rewarded-320-480-without-end-card</string>
-    <string name="response_prebid_video_rewarded_320_480">response-prebid-video-rewarded-320-480</string>
-    <string name="response_prebid_video_rewarded_320_480_original">response-prebid-video-rewarded-320-480-original-api</string>
-    <string name="response_prebid_video_rewarded_320_480_with_ad_configuration">response-prebid-video-rewarded-320-480-with-ad-configuration</string>
-
-    <!--  MRAID  -->
-    <string name="response_prebid_mraid_resize">response-prebid-mraid-resize</string>
-    <string name="response_prebid_mraid_resize_with_errors">response-prebid-mraid-resize-with-errors</string>
-    <string name="response_prebid_mraid_expand">response-prebid-mraid-expand-1-part</string>
-    <string name="response_prebid_mraid_expand_two_part">response-prebid-mraid-expand-2-part</string>
-    <string name="response_prebid_mraid_fullscreen">response-prebid-mraid-fullscreen</string>
-    <string name="response_prebid_mraid_video_interstitial">response-prebid-mraid-video-interstitial</string>
-    <string name="response_prebid_mraid_3_viewability_compliance">response-prebid-mraid-viewability-compliance</string>
-    <string name="response_prebid_mraid_3_resize_negative">response-prebid-mraid-resize-negative-test</string>
-    <string name="response_prebid_mraid_3_load_and_events">response-prebid-mraid-load-and-events</string>
-    <string name="response_prebid_mraid_ox_test_properties">response-prebid-mraid-test-properties-3</string>
-    <string name="response_prebid_mraid_ox_test_methods">response-prebid-mraid-test-methods-3</string>
-    <string name="response_prebid_mraid_ox_resize_expandable">response-prebid-mraid-resize-expandable</string>
-
-    <!--  Native  -->
-    <string name="response_prebid_native_styles">response-prebid-banner-native-styles</string>
-    <string name="response_prebid_native_links">response-prebid-native-links</string>
-    <string name="response_prebid_native_video">response-prebid-native-video-with-end-card</string>
-    <string name="enable_caching">Enable Caching</string>
 </resources>

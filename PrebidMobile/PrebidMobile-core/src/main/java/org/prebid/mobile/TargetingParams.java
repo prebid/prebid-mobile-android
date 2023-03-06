@@ -65,8 +65,8 @@ public class TargetingParams {
     private static final Map<String, Set<String>> userDataMap = new HashMap<>();
     private static final Set<String> accessControlList = new HashSet<>();
     private static final Set<String> userKeywordsSet = new HashSet<>();
-    private static final Map<String, Set<String>> contextDataDictionary = new HashMap<>();
-    private static final Set<String> contextKeywordsSet = new HashSet<>();
+    private static final Map<String, Set<String>> extDataDictionary = new HashMap<>();
+    private static final Set<String> extKeywordsSet = new HashSet<>();
 
     private TargetingParams() {
     }
@@ -448,45 +448,150 @@ public class TargetingParams {
         TargetingParams.bundleName = bundleName;
     }
 
+
+    /**
+     * This method obtains the context data keyword & value context for global context targeting
+     * if the key already exists the value will be appended to the list. No duplicates will be added
+     * (app.ext.data)
+     *
+     * @deprecated use addExtData
+     */
+    @Deprecated
+    public static void addContextData(
+        String key,
+        String value
+    ) {
+        Util.addValue(extDataDictionary, key, value);
+    }
+
+    /**
+     * This method obtains the context data keyword & values set for global context targeting.
+     * the values if the key already exist will be replaced with the new set of values
+     * @deprecated use updateExtData
+     */
+    @Deprecated
+    public static void updateContextData(
+        String key,
+        Set<String> value
+    ) {
+        extDataDictionary.put(key, value);
+    }
+
+    /**
+     * This method allows to remove specific context data keyword & values set from global context targeting
+     * @deprecated use removeExtData
+     */
+    @Deprecated
+    public static void removeContextData(String key) {
+        extDataDictionary.remove(key);
+    }
+
+    /**
+     * This method allows to remove all context data set from global context targeting
+     *
+     * @deprecated use clearExtData
+     */
+    @Deprecated
+    public static void clearContextData() {
+        extDataDictionary.clear();
+    }
+
+    /**
+     * @deprecated use getExtDataDictionary
+     */
+    @Deprecated
+    public static Map<String, Set<String>> getContextDataDictionary() {
+        return extDataDictionary;
+    }
+
+    /**
+     * This method obtains the context keyword for adunit context targeting
+     * Inserts the given element in the set if it is not already present.
+     * (imp[].ext.context.keywords)
+     * @deprecated use addExtKeyword
+     */
+    @Deprecated
+    public static void addContextKeyword(String keyword) {
+        extKeywordsSet.add(keyword);
+    }
+
+    /**
+     * This method obtains the context keyword set for adunit context targeting
+     * Adds the elements of the given set to the set.
+     * @deprecated use addExtKeywords
+     */
+    @Deprecated
+    public static void addContextKeywords(Set<String> keywords) {
+        extKeywordsSet.addAll(keywords);
+    }
+
+    /**
+     * This method allows to remove specific context keyword from adunit context targeting
+     * @deprecated use removeExtKeyword
+     */
+    @Deprecated
+    public static void removeContextKeyword(String keyword) {
+        extKeywordsSet.remove(keyword);
+    }
+
+    /**
+     * This method allows to remove all keywords from the set of adunit context targeting
+     *
+     * @deprecated use clearExtKeywords
+     */
+    @Deprecated
+    public static void clearContextKeywords() {
+        extKeywordsSet.clear();
+    }
+
+    /**
+     * @deprecated use getExtKeywordsSet
+     */
+    @Deprecated
+    public static Set<String> getContextKeywordsSet() {
+        return extKeywordsSet;
+    }
+
+
     /**
      * This method obtains the context data keyword & value context for global context targeting
      * if the key already exists the value will be appended to the list. No duplicates will be added
      * (app.ext.data)
      */
-    public static void addContextData(
+    public static void addExtData(
         String key,
         String value
     ) {
-        Util.addValue(contextDataDictionary, key, value);
+        Util.addValue(extDataDictionary, key, value);
     }
 
     /**
      * This method obtains the context data keyword & values set for global context targeting.
      * the values if the key already exist will be replaced with the new set of values
      */
-    public static void updateContextData(
+    public static void updateExtData(
         String key,
         Set<String> value
     ) {
-        contextDataDictionary.put(key, value);
+        extDataDictionary.put(key, value);
     }
 
     /**
      * This method allows to remove specific context data keyword & values set from global context targeting
      */
-    public static void removeContextData(String key) {
-        contextDataDictionary.remove(key);
+    public static void removeExtData(String key) {
+        extDataDictionary.remove(key);
     }
 
     /**
      * This method allows to remove all context data set from global context targeting
      */
-    public static void clearContextData() {
-        contextDataDictionary.clear();
+    public static void clearExtData() {
+        extDataDictionary.clear();
     }
 
-    public static Map<String, Set<String>> getContextDataDictionary() {
-        return contextDataDictionary;
+    public static Map<String, Set<String>> getExtDataDictionary() {
+        return extDataDictionary;
     }
 
     /**
@@ -494,34 +599,34 @@ public class TargetingParams {
      * Inserts the given element in the set if it is not already present.
      * (imp[].ext.context.keywords)
      */
-    public static void addContextKeyword(String keyword) {
-        contextKeywordsSet.add(keyword);
+    public static void addExtKeyword(String keyword) {
+        extKeywordsSet.add(keyword);
     }
 
     /**
      * This method obtains the context keyword set for adunit context targeting
      * Adds the elements of the given set to the set.
      */
-    public static void addContextKeywords(Set<String> keywords) {
-        contextKeywordsSet.addAll(keywords);
+    public static void addExtKeywords(Set<String> keywords) {
+        extKeywordsSet.addAll(keywords);
     }
 
     /**
      * This method allows to remove specific context keyword from adunit context targeting
      */
-    public static void removeContextKeyword(String keyword) {
-        contextKeywordsSet.remove(keyword);
+    public static void removeExtKeyword(String keyword) {
+        extKeywordsSet.remove(keyword);
     }
 
     /**
      * This method allows to remove all keywords from the set of adunit context targeting
      */
-    public static void clearContextKeywords() {
-        contextKeywordsSet.clear();
+    public static void clearExtKeywords() {
+        extKeywordsSet.clear();
     }
 
-    public static Set<String> getContextKeywordsSet() {
-        return contextKeywordsSet;
+    public static Set<String> getExtKeywordsSet() {
+        return extKeywordsSet;
     }
 
 
