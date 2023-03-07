@@ -16,8 +16,17 @@
 
 package org.prebid.mobile.rendering.networking.modelcontrollers;
 
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import android.app.Activity;
 import android.content.Context;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,9 +40,6 @@ import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -79,7 +85,7 @@ public class BidRequesterTest {
     }
 
     @Test
-    public void whenFetchAdIdFailedOrSucceed_MakeRequest() {
+    public void whenFetchAdIdSuccessful_MakeRequest() {
         BidRequester mockRequester = mock(BidRequester.class);
         Requester.AdIdInitListener adIdInitListener = new Requester.AdIdInitListener(mockRequester);
 
@@ -87,8 +93,22 @@ public class BidRequesterTest {
         adIdInitListener.adIdFetchCompletion();
         verify(mockRequester, times(1)).makeAdRequest();
 
+        // The second call doesn't have to be called!
+        adIdInitListener.adIdFetchFailure();
+        verify(mockRequester, times(1)).makeAdRequest();
+    }
+
+    @Test
+    public void whenFetchAdIdFailed_MakeRequest() {
+        BidRequester mockRequester = mock(BidRequester.class);
+        Requester.AdIdInitListener adIdInitListener = new Requester.AdIdInitListener(mockRequester);
+
         // Fetch failure
         adIdInitListener.adIdFetchFailure();
-        verify(mockRequester, times(2)).makeAdRequest();
+        verify(mockRequester, times(1)).makeAdRequest();
+
+        // The second call doesn't have to be called!
+        adIdInitListener.adIdFetchCompletion();
+        verify(mockRequester, times(1)).makeAdRequest();
     }
 }
