@@ -20,10 +20,13 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
+
 import androidx.annotation.VisibleForTesting;
+
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.rendering.listeners.AdIdFetchListener;
 
@@ -57,8 +60,8 @@ public class AdIdManager {
                 //continue with adIdFetchFailure() where we will just log this as warning
                 Handler handler = new Handler();
                 handler.postDelayed(() -> {
-                    if (getAdIdInfoTask.getStatus() == AsyncTask.Status.RUNNING) {
-                        LogUtil.debug(TAG, "Cancelling FetchAdIdInfoTask");
+                    if (getAdIdInfoTask.getStatus() != AsyncTask.Status.FINISHED) {
+                        LogUtil.debug(TAG, "Canceling advertising id fetching");
                         getAdIdInfoTask.cancel(true);
                         listener.adIdFetchFailure();
                     }
