@@ -25,7 +25,8 @@
     <string name="text_show">Show</string>
     <string name="text_retry">Retry</string>
     <string name="text_stop_refresh">Stop refresh</string>
-    <string name="enable_caching">Enable Caching</string>
+    <string name="enable_caching">Caching</string>
+    <string name="enable_custom_renderer">CustomRenderer</string>
 
     <string name="title_preload_failed">Preload failed</string>
     <string name="title_examples">Examples</string>
@@ -379,7 +380,7 @@
     <string name="loading">Loading…</string>
 
     <string name="label_auid">AdUnitId: %1$s</string>
-    <string name="text_switch_enable_gdpr">Enable GDPR</string>
+    <string name="text_switch_enable_gdpr">GDPR</string>
 
     <string name="dialog_configurator_title">Configure the Ad</string>
     <string name="dialog_configurator_load">Load the ad</string>

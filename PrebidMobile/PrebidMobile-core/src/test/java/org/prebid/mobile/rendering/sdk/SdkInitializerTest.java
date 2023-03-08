@@ -142,7 +142,7 @@ public class SdkInitializerTest {
 
         assertTrue(isSuccessful);
         assertTrue(PrebidMobile.isSdkInitialized());
-        assertTrue(PrebidMobilePluginRegister.getInstance().plugins.containsKey(PREBID_MOBILE_RENDERER_NAME));
+        assertTrue(PrebidMobilePluginRegister.getInstance().containsPlugin(PREBID_MOBILE_RENDERER_NAME));
         assertNull(error);
     }
 

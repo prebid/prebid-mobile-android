@@ -32,12 +32,10 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.test.espresso.IdlingResource
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener
 import org.prebid.mobile.renderingtestapp.plugplay.utilities.consent.ConsentUpdateManager
 import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 import org.prebid.mobile.renderingtestapp.utils.PermissionHelper
-import org.prebid.mobile.renderingtestapp.utils.SampleCustomRenderer
 
 class MainActivity : AppCompatActivity(), SdkInitListener {
 
@@ -61,7 +59,6 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
         CommandLineArgumentParser.parse(intent, this)
 
         initUi()
-        initCustomRendererPlugin()
 
         PermissionHelper.requestPermission(this)
     }
@@ -118,10 +115,6 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
         val navController = findNavController(R.id.nav_host_fragment)
         setupToolbarNavigation(toolbar, navController)
         setupBottomBar(navController)
-    }
-
-    private fun initCustomRendererPlugin() {
-        PrebidMobilePluginRegister.getInstance().registerPlugin(SampleCustomRenderer())
     }
 
     private fun setupToolbarNavigation(toolbar: Toolbar, navController: NavController) {

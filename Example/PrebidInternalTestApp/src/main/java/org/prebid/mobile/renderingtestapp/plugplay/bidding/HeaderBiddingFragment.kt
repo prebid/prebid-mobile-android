@@ -60,6 +60,7 @@ class HeaderBiddingFragment : BaseFragment() {
         initViewModel()
         initGdprSwitch()
         initCacheSwitch()
+        initCustomRendererSwitch()
         initIntegrationsSegmentControl(view)
         initAdCategoriesSegmentControl(view)
         initListView()
@@ -160,6 +161,14 @@ class HeaderBiddingFragment : BaseFragment() {
         switch.isChecked = viewModel.isSubjectToGdpr()
         switch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onGdprSwitchStateChanged(isChecked)
+        }
+    }
+
+    private fun initCustomRendererSwitch() {
+        val switch = binding.switchEnableCustomRenderer
+        switch.isChecked = viewModel.isCustomRendererEnabled()
+        switch.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onCustomRendererStateChanged(isChecked)
         }
     }
 

@@ -34,8 +34,7 @@ public class PrebidMobilePluginRegister {
 
     private static final PrebidMobilePluginRegister instance = new PrebidMobilePluginRegister();
 
-    @VisibleForTesting
-    public final HashMap<String, PrebidMobilePluginRenderer> plugins = new HashMap<>();
+    private final HashMap<String, PrebidMobilePluginRenderer> plugins = new HashMap<>();
 
     public void registerPlugin(PrebidMobilePluginRenderer prebidMobilePluginRenderers) {
         String rendererName = prebidMobilePluginRenderers.getName();
@@ -47,6 +46,14 @@ public class PrebidMobilePluginRegister {
 
     public void unregisterPlugin(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
         plugins.remove(prebidMobilePluginRenderer.getName());
+    }
+
+    public Boolean containsPlugin(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
+        return plugins.containsKey(prebidMobilePluginRenderer.getName());
+    }
+
+    public Boolean containsPlugin(String prebidMobilePluginRendererName) {
+        return plugins.containsKey(prebidMobilePluginRendererName);
     }
 
     // Returns the list of available renderers for the given ad unit for RT request

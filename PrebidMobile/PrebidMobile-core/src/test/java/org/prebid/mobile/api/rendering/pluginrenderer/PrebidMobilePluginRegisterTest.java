@@ -10,6 +10,7 @@ import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginR
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 
@@ -134,5 +135,60 @@ public class PrebidMobilePluginRegisterTest {
 
         // Then
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void containsPlugin_withPluginInstance_returnsTrue() {
+        // Given
+        when(mockPlugin.getName()).thenReturn("MockPlugin");
+
+        // When
+        instance.registerPlugin(mockPlugin);
+        Boolean result = instance.containsPlugin(mockPlugin);
+
+        // Then
+        assertTrue(result);
+    }
+
+    @Test
+    public void containsPlugin_withPluginInstance_returnsFalse() {
+        // Given
+        when(mockPlugin.getName()).thenReturn("MockPlugin");
+        PrebidMobilePluginRenderer otherMockPlugin = Mockito.mock(PrebidMobilePluginRenderer.class);
+
+        // When
+        instance.registerPlugin(mockPlugin);
+        Boolean result = instance.containsPlugin(otherMockPlugin);
+
+        // Then
+        assertFalse(result);
+    }
+
+    @Test
+    public void containsPlugin_withPluginName_returnsTrue() {
+        // Given
+        String pluginName = "MockPlugin";
+        when(mockPlugin.getName()).thenReturn(pluginName);
+
+        // When
+        instance.registerPlugin(mockPlugin);
+        Boolean result = instance.containsPlugin(pluginName);
+
+        // Then
+        assertTrue(result);
+    }
+
+    @Test
+    public void containsPlugin_withPluginName_returnsFalse() {
+        // Given
+        String pluginName = "MockPlugin";
+        when(mockPlugin.getName()).thenReturn(pluginName);
+
+        // When
+        instance.registerPlugin(mockPlugin);
+        Boolean result = instance.containsPlugin("OtherPluginName");
+
+        // Then
+        assertFalse(result);
     }
 }
