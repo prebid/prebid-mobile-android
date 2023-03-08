@@ -33,9 +33,9 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.api.rendering.customrenderer.PrebidMobileInterstitialControllerInterface;
-import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer;
-import org.prebid.mobile.api.rendering.customrenderer.PrebidMobilePluginCustomRenderer;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobileInterstitialControllerInterface;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
@@ -361,7 +361,7 @@ public abstract class BaseInterstitialAdUnit {
     }
 
     protected void loadPrebidAd() {
-        PrebidMobilePluginCustomRenderer plugin = PluginRegisterCustomRenderer.getInstance().getPluginForPreferredRenderer(bidResponse);
+        PrebidMobilePluginRenderer plugin = PrebidMobilePluginRegister.getInstance().getPluginForPreferredRenderer(bidResponse);
         if (plugin != null) {
             interstitialController = plugin.createInterstitialController(getContext(), controllerListener, adUnitConfig, bidResponse);
         }

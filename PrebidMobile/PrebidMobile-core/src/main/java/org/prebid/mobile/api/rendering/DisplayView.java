@@ -22,8 +22,8 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 
-import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer;
-import org.prebid.mobile.api.rendering.customrenderer.PrebidMobilePluginCustomRenderer;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
@@ -47,7 +47,7 @@ public class DisplayView extends FrameLayout {
 
         WinNotifier winNotifier = new WinNotifier();
         winNotifier.notifyWin(bidResponse, () -> {
-            PrebidMobilePluginCustomRenderer plugin = PluginRegisterCustomRenderer.getInstance().getPluginForPreferredRenderer(bidResponse);
+            PrebidMobilePluginRenderer plugin = PrebidMobilePluginRegister.getInstance().getPluginForPreferredRenderer(bidResponse);
             if (plugin != null) {
                 adUnitConfiguration.modifyUsingBidResponse(bidResponse);
                 adView = plugin.createBannerAdView(context, displayViewListener, adUnitConfiguration, bidResponse);

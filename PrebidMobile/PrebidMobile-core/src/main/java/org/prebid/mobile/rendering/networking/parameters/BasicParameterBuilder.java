@@ -34,13 +34,13 @@ import org.prebid.mobile.Signals;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.VideoBaseAdUnit;
 import org.prebid.mobile.api.data.AdFormat;
-import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Imp;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.ThirdPartyRenderers;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRenderers;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.User;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
@@ -146,7 +146,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
         if (PrebidMobile.isCoppaEnabled) {
             bidRequest.getRegs().coppa = 1;
         }
-        bidRequest.setThirdPartyRenderers(getCustomRenderers());
+        bidRequest.setPluginRenderers(getPluginRenderers());
     }
 
     private void configureSource(Source source, String uuid) {
@@ -423,8 +423,8 @@ public class BasicParameterBuilder extends ParameterBuilder {
         }
     }
 
-    private ThirdPartyRenderers getCustomRenderers() {
-        List<String> customRenderers = PluginRegisterCustomRenderer.getInstance().getRTBListOfCustomRenderersFor(adConfiguration);
-        return new ThirdPartyRenderers(customRenderers);
+    private PluginRenderers getPluginRenderers() {
+        List<String> customRenderers = PrebidMobilePluginRegister.getInstance().getRTBListOfRenderersFor(adConfiguration);
+        return new PluginRenderers(customRenderers);
     }
 }

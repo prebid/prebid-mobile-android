@@ -6,7 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer.PREBID_MOBILE_RENDERER_NAME;
+import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
 import static org.robolectric.Shadows.shadowOf;
 import static java.lang.Thread.sleep;
 
@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.prebid.mobile.Host;
 import org.prebid.mobile.PrebidMobile;
-import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.api.data.InitializationStatus;
 import org.prebid.mobile.reflection.Reflection;
 import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
@@ -142,7 +142,7 @@ public class SdkInitializerTest {
 
         assertTrue(isSuccessful);
         assertTrue(PrebidMobile.isSdkInitialized());
-        assertTrue(PluginRegisterCustomRenderer.getInstance().plugins.containsKey(PREBID_MOBILE_RENDERER_NAME));
+        assertTrue(PrebidMobilePluginRegister.getInstance().plugins.containsKey(PREBID_MOBILE_RENDERER_NAME));
         assertNull(error);
     }
 

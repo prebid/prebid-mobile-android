@@ -26,8 +26,8 @@ import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer;
-import org.prebid.mobile.api.rendering.customrenderer.PrebidMobilePluginCustomRenderer;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -40,7 +40,7 @@ import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.test.utils.WhiteBox;
-import org.prebid.mobile.testutils.FakePrebidMobilePluginCustomRenderer;
+import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
@@ -255,8 +255,8 @@ public class InterstitialAdUnitTest {
         final Bid mockBid = mock(Bid.class);
         final InterstitialEventListener spyEventListener = spy(getEventListener());
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
-        PrebidMobilePluginCustomRenderer prebidRenderer = FakePrebidMobilePluginCustomRenderer.getFakePrebidRenderer(mockInterstitialController, null, true);
-        PluginRegisterCustomRenderer.getInstance().registerPlugin(prebidRenderer);
+        PrebidMobilePluginRenderer fakePrebidRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(mockInterstitialController, null, true);
+        PrebidMobilePluginRegister.getInstance().registerPlugin(fakePrebidRenderer);
 
         WhiteBox.setInternalState(interstitialAdUnit, "bidResponse", mockBidResponse);
         WhiteBox.setInternalState(interstitialAdUnit, "interstitialController", mockInterstitialController);

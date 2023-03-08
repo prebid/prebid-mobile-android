@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer.PREBID_MOBILE_RENDERER_NAME;
+import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,7 +18,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.api.data.AdFormat;
-import org.prebid.mobile.api.rendering.customrenderer.PrebidMobileInterstitialControllerInterface;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobileInterstitialControllerInterface;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;

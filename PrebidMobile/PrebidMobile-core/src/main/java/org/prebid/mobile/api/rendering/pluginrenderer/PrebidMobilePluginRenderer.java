@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile.api.rendering.customrenderer;
+package org.prebid.mobile.api.rendering.pluginrenderer;
 
 import android.content.Context;
 import android.view.View;
@@ -27,7 +27,7 @@ import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
-public interface PrebidMobilePluginCustomRenderer {
+public interface PrebidMobilePluginRenderer {
 
     String getName();
     String getVersion();
@@ -43,7 +43,7 @@ public interface PrebidMobilePluginCustomRenderer {
             @NonNull BidResponse bidResponse
     );
 
-    // Creates and returns an instance of a custom class which implements PrebidMobileInterstitialControllerInterface for a given bid response
+    // Creates and returns an implementation of PrebidMobileInterstitialControllerInterface for a given bid response
     // Returns nil in the case of an internal error
     PrebidMobileInterstitialControllerInterface createInterstitialController(
             @NonNull Context context,

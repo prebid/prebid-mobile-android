@@ -21,19 +21,18 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-// TODO since we insert prebid renderer as non third party, this class might be renamed
-public class ThirdPartyRenderers extends BaseBid {
+public class PluginRenderers extends BaseBid {
 
     private List<String> renderers = null;
 
-    public ThirdPartyRenderers(List<String> renderers) {
+    public PluginRenderers(List<String> renderers) {
         this.renderers = renderers;
     }
 
     public JSONObject getJsonObject() throws JSONException {
         JSONObject jsonObject = new JSONObject();
 
-        toJSON(jsonObject, "third_party_renderers", this.renderers);
+        toJSON(jsonObject, "plugin_renderers", this.renderers);
         return jsonObject;
     }
 }

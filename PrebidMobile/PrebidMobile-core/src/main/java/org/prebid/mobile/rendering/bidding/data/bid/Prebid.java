@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer.CUSTOM_RENDERER_KEY;
+import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PLUGIN_RENDERER_KEY;
 import static org.prebid.mobile.rendering.utils.helpers.Utils.addValue;
 
 public class Prebid {
@@ -73,7 +73,7 @@ public class Prebid {
 
         // TODO mock should not be merged / the right field should be defined
         // TODO breaks temporarily the test PrebidTest.whenFromJSONObjectAndJSONObjectPassed_ReturnParsedPrebid
-        prebid.targeting.put(CUSTOM_RENDERER_KEY, "SampleCustomRenderer");
+        prebid.targeting.put(PLUGIN_RENDERER_KEY, "SampleCustomRenderer");
         return prebid;
     }
 

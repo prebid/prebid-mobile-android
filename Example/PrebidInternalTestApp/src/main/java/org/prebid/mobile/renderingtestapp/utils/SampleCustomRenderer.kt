@@ -28,14 +28,14 @@ import android.widget.FrameLayout
 import android.widget.ImageButton
 import org.prebid.mobile.api.data.AdFormat
 import org.prebid.mobile.api.exceptions.AdException
-import org.prebid.mobile.api.rendering.customrenderer.PrebidMobileInterstitialControllerInterface
-import org.prebid.mobile.api.rendering.customrenderer.PrebidMobilePluginCustomRenderer
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobileInterstitialControllerInterface
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer
 import org.prebid.mobile.configuration.AdUnitConfiguration
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener
 
-class SampleCustomRenderer : PrebidMobilePluginCustomRenderer {
+class SampleCustomRenderer : PrebidMobilePluginRenderer {
     override fun getName(): String = "SampleCustomRenderer"
 
     override fun getVersion(): String = "1.0.0"

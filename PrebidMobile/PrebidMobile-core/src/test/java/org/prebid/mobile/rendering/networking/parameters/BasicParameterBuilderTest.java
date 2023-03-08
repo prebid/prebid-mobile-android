@@ -23,7 +23,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer.PREBID_MOBILE_RENDERER_NAME;
+import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
 import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.KEY_OM_PARTNER_NAME;
 import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.KEY_OM_PARTNER_VERSION;
 import static org.prebid.mobile.rendering.networking.parameters.BasicParameterBuilder.VIDEO_INTERSTITIAL_PLAYBACK_END;
@@ -55,7 +55,7 @@ import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Ext;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Imp;
-import org.prebid.mobile.rendering.models.openrtb.bidRequests.ThirdPartyRenderers;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRenderers;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.User;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
@@ -833,8 +833,8 @@ public class BasicParameterBuilderTest {
 
         List<String> renderers = new ArrayList<>();
         renderers.add(PREBID_MOBILE_RENDERER_NAME);
-        ThirdPartyRenderers thirdPartyRenderers = new ThirdPartyRenderers(renderers);
-        bidRequest.setThirdPartyRenderers(thirdPartyRenderers);
+        PluginRenderers pluginRenderers = new PluginRenderers(renderers);
+        bidRequest.setPluginRenderers(pluginRenderers);
 
         bidRequest.getUser();
 

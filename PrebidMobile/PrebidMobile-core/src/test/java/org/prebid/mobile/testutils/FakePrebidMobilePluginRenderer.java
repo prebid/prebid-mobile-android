@@ -1,6 +1,6 @@
 package org.prebid.mobile.testutils;
 
-import static org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer.PREBID_MOBILE_RENDERER_NAME;
+import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
 
 import android.content.Context;
 import android.view.View;
@@ -8,21 +8,21 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.prebid.mobile.api.rendering.customrenderer.PrebidMobileInterstitialControllerInterface;
-import org.prebid.mobile.api.rendering.customrenderer.PrebidMobilePluginCustomRenderer;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobileInterstitialControllerInterface;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 
-public class FakePrebidMobilePluginCustomRenderer {
-    public static PrebidMobilePluginCustomRenderer getFakePrebidRenderer(
+public class FakePrebidMobilePluginRenderer {
+    public static PrebidMobilePluginRenderer getFakePrebidRenderer(
             InterstitialController mockInterstitialController,
             View mockBannerAdView,
             Boolean isSupportRenderingFor
     ) {
-        return new PrebidMobilePluginCustomRenderer() {
+        return new PrebidMobilePluginRenderer() {
             @Override
             public String getName() { return PREBID_MOBILE_RENDERER_NAME; }
 

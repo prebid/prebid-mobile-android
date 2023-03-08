@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile.api.rendering.customrenderer;
+package org.prebid.mobile.api.rendering.pluginrenderer;
 
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;

@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package org.prebid.mobile.api.rendering.customrenderer;
+package org.prebid.mobile.api.rendering.pluginrenderer;
 
 import androidx.annotation.VisibleForTesting;
 
@@ -27,33 +27,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PluginRegisterCustomRenderer {
+public class PrebidMobilePluginRegister {
 
-    public static final String CUSTOM_RENDERER_KEY = "plugin_custom_renderer_key";
+    public static final String PLUGIN_RENDERER_KEY = "plugin_renderer_key";
     public static final String PREBID_MOBILE_RENDERER_NAME = "PrebidRenderer";
 
-    private static final PluginRegisterCustomRenderer instance = new PluginRegisterCustomRenderer();
+    private static final PrebidMobilePluginRegister instance = new PrebidMobilePluginRegister();
 
     @VisibleForTesting
-    public final HashMap<String, PrebidMobilePluginCustomRenderer> plugins = new HashMap<>();
+    public final HashMap<String, PrebidMobilePluginRenderer> plugins = new HashMap<>();
 
-    public void registerPlugin(PrebidMobilePluginCustomRenderer prebidMobilePluginCustomRenderers) {
-        String rendererName = prebidMobilePluginCustomRenderers.getName();
+    public void registerPlugin(PrebidMobilePluginRenderer prebidMobilePluginRenderers) {
+        String rendererName = prebidMobilePluginRenderers.getName();
         if (plugins.containsKey(rendererName)) {
-            LogUtil.debug("PluginRegister", "New custom renderer with name" + rendererName + "will replace the previous one with same name");
+            LogUtil.debug("PluginRegister", "New plugin renderer with name" + rendererName + "will replace the previous one with same name");
         }
-        plugins.put(prebidMobilePluginCustomRenderers.getName(), prebidMobilePluginCustomRenderers);
+        plugins.put(prebidMobilePluginRenderers.getName(), prebidMobilePluginRenderers);
     }
 
-    public void unregisterPlugin(PrebidMobilePluginCustomRenderer prebidMobilePluginCustomRenderer) {
-        plugins.remove(prebidMobilePluginCustomRenderer.getName());
+    public void unregisterPlugin(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
+        plugins.remove(prebidMobilePluginRenderer.getName());
     }
 
     // Returns the list of available renderers for the given ad unit for RT request
-    public List<String> getRTBListOfCustomRenderersFor(AdUnitConfiguration adUnitConfiguration) {
+    public List<String> getRTBListOfRenderersFor(AdUnitConfiguration adUnitConfiguration) {
         List<String> compliantPlugins = new ArrayList<>();
-        for (Map.Entry<String, PrebidMobilePluginCustomRenderer> entry : plugins.entrySet()) {
-            PrebidMobilePluginCustomRenderer renderer = entry.getValue();
+        for (Map.Entry<String, PrebidMobilePluginRenderer> entry : plugins.entrySet()) {
+            PrebidMobilePluginRenderer renderer = entry.getValue();
             if (renderer.isSupportRenderingFor(adUnitConfiguration)) {
                 compliantPlugins.add(renderer.getName());
             }
@@ -63,9 +63,9 @@ public class PluginRegisterCustomRenderer {
 
     // Returns the registered renderer according to the preferred renderer name in the bid response
     // If no preferred renderer is found, it returns PrebidRenderer to perform default behavior
-    public PrebidMobilePluginCustomRenderer getPluginForPreferredRenderer(BidResponse bidResponse) {
-        String preferredRendererName = bidResponse.gePreferredCustomRendererName();
-        PrebidMobilePluginCustomRenderer preferredPlugin = plugins.get(preferredRendererName);
+    public PrebidMobilePluginRenderer getPluginForPreferredRenderer(BidResponse bidResponse) {
+        String preferredRendererName = bidResponse.gePreferredPluginRendererName();
+        PrebidMobilePluginRenderer preferredPlugin = plugins.get(preferredRendererName);
         if (preferredPlugin != null && preferredPlugin.isSupportRenderingFor(bidResponse.getAdUnitConfiguration())) {
             return preferredPlugin;
         } else {
@@ -73,10 +73,10 @@ public class PluginRegisterCustomRenderer {
         }
     }
 
-    private PluginRegisterCustomRenderer() {
+    private PrebidMobilePluginRegister() {
     }
 
-    public static PluginRegisterCustomRenderer getInstance() {
+    public static PrebidMobilePluginRegister getInstance() {
         return instance;
     }
 }

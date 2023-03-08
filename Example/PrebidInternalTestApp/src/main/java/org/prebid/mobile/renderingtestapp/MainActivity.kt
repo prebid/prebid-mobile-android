@@ -32,7 +32,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.test.espresso.IdlingResource
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister
 import org.prebid.mobile.rendering.sdk.deviceData.listeners.SdkInitListener
 import org.prebid.mobile.renderingtestapp.plugplay.utilities.consent.ConsentUpdateManager
 import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
     }
 
     private fun initCustomRendererPlugin() {
-        PluginRegisterCustomRenderer.getInstance().registerPlugin(SampleCustomRenderer())
+        PrebidMobilePluginRegister.getInstance().registerPlugin(SampleCustomRenderer())
     }
 
     private fun setupToolbarNavigation(toolbar: Toolbar, navController: NavController) {

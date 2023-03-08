@@ -16,7 +16,7 @@
 
 package org.prebid.mobile.rendering.bidding.data.bid;
 
-import static org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer.CUSTOM_RENDERER_KEY;
+import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PLUGIN_RENDERER_KEY;
 
 import android.content.Context;
 import android.util.Pair;
@@ -228,10 +228,10 @@ public class BidResponse {
         return false;
     }
 
-    public String gePreferredCustomRendererName() {
+    public String gePreferredPluginRendererName() {
         Bid bid = getWinningBid();
         if (bid != null) {
-            return bid.getPrebid().getTargeting().get(CUSTOM_RENDERER_KEY);
+            return bid.getPrebid().getTargeting().get(PLUGIN_RENDERER_KEY);
         }
         return null;
     }

@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer.PREBID_MOBILE_RENDERER_NAME;
+import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME;
 
 import android.app.Activity;
 import android.content.Context;
@@ -18,13 +18,13 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.prebid.mobile.api.data.AdFormat;
-import org.prebid.mobile.api.rendering.customrenderer.PluginRegisterCustomRenderer;
-import org.prebid.mobile.api.rendering.customrenderer.PrebidMobilePluginCustomRenderer;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
-import org.prebid.mobile.testutils.FakePrebidMobilePluginCustomRenderer;
+import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
@@ -36,7 +36,7 @@ public class DisplayViewTest {
     private DisplayView displayView;
     private Context context;
     private BidResponse mockResponse;
-    private PrebidMobilePluginCustomRenderer fakePrebidMobilePluginCustomRenderer;
+    private PrebidMobilePluginRenderer fakePrebidMobilePluginRenderer;
     @Spy
     private AdUnitConfiguration adUnitConfiguration;
     @Mock
@@ -53,14 +53,14 @@ public class DisplayViewTest {
 
         adUnitConfiguration.setAdFormat(AdFormat.BANNER);
 
-        fakePrebidMobilePluginCustomRenderer = Mockito.spy(FakePrebidMobilePluginCustomRenderer.getFakePrebidRenderer(null, mockBannerView, true));
-        PluginRegisterCustomRenderer.getInstance().registerPlugin(fakePrebidMobilePluginCustomRenderer);
+        fakePrebidMobilePluginRenderer = Mockito.spy(FakePrebidMobilePluginRenderer.getFakePrebidRenderer(null, mockBannerView, true));
+        PrebidMobilePluginRegister.getInstance().registerPlugin(fakePrebidMobilePluginRenderer);
 
         mockResponse = mock(BidResponse.class);
         Bid mockBid = mock(Bid.class);
         when(mockBid.getAdm()).thenReturn("adm");
         when(mockResponse.getWinningBid()).thenReturn(mockBid);
-        when(mockResponse.gePreferredCustomRendererName()).thenReturn(PREBID_MOBILE_RENDERER_NAME);
+        when(mockResponse.gePreferredPluginRendererName()).thenReturn(PREBID_MOBILE_RENDERER_NAME);
 
         displayView = new DisplayView(context, mockDisplayViewListener, adUnitConfiguration, mockResponse);
     }
@@ -68,7 +68,7 @@ public class DisplayViewTest {
     @Test
     public void onDisplayViewWinNotification_returnBannerAdView() {
         verify(adUnitConfiguration).modifyUsingBidResponse(mockResponse);
-        verify(fakePrebidMobilePluginCustomRenderer).createBannerAdView(context, mockDisplayViewListener, adUnitConfiguration, mockResponse);
+        verify(fakePrebidMobilePluginRenderer).createBannerAdView(context, mockDisplayViewListener, adUnitConfiguration, mockResponse);
         // bannerAdView added to view hierarchy
         assertEquals(1, displayView.getChildCount());
     }
