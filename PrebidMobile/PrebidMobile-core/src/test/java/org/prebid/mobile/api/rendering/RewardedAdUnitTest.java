@@ -23,8 +23,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.exceptions.AdException;
-import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.api.rendering.listeners.RewardedAdUnitListener;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -248,7 +248,7 @@ public class RewardedAdUnitTest {
         final RewardedVideoEventListener spyEventListener = spy(getEventListener());
         when(mockBidResponse.getWinningBid()).thenReturn(mockBid);
         PrebidMobilePluginRenderer fakePrebidRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(mockInterstitialController, null, true);
-        PrebidMobilePluginRegister.getInstance().registerPlugin(fakePrebidRenderer);
+        PrebidMobile.registerPluginRenderer(fakePrebidRenderer);
 
         WhiteBox.setInternalState(rewardedAdUnit, "bidResponse", mockBidResponse);
         WhiteBox.setInternalState(rewardedAdUnit, "interstitialController", mockInterstitialController);

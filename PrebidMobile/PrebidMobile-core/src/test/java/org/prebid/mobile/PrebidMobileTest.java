@@ -25,9 +25,11 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.reflection.Reflection;
 import org.prebid.mobile.reflection.sdk.PrebidMobileReflection;
 import org.prebid.mobile.testutils.BaseSetup;
+import org.prebid.mobile.testutils.FakePrebidMobilePluginRenderer;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
@@ -130,4 +132,41 @@ public class PrebidMobileTest extends BaseSetup {
         return PrebidMobileReflection.getCustomStatusEndpoint();
     }
 
+    @Test
+    public void registerPluginRenderer_registerProperly() {
+        // Given
+        PrebidMobilePluginRenderer fakePrebidMobilePluginRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(
+                null,
+                null,
+                true
+        );
+
+        // When
+        PrebidMobile.registerPluginRenderer(fakePrebidMobilePluginRenderer);
+
+        // Then
+        assertTrue(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
+    }
+
+    @Test
+    public void registerPluginRenderer_unregisterProperly() {
+        // Given
+        PrebidMobilePluginRenderer fakePrebidMobilePluginRenderer = FakePrebidMobilePluginRenderer.getFakePrebidRenderer(
+                null,
+                null,
+                true
+        );
+
+        // When
+        PrebidMobile.registerPluginRenderer(fakePrebidMobilePluginRenderer);
+
+        // Then
+        assertTrue(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
+
+        // When
+        PrebidMobile.unregisterPluginRenderer(fakePrebidMobilePluginRenderer);
+
+        // Then
+        assertFalse(PrebidMobile.containsPluginRenderer(fakePrebidMobilePluginRenderer));
+    }
 }

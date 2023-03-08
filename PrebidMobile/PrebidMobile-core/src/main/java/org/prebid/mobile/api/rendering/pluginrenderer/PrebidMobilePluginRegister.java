@@ -52,6 +52,7 @@ public class PrebidMobilePluginRegister {
         return plugins.containsKey(prebidMobilePluginRenderer.getName());
     }
 
+    @VisibleForTesting
     public Boolean containsPlugin(String prebidMobilePluginRendererName) {
         return plugins.containsKey(prebidMobilePluginRendererName);
     }

@@ -13,7 +13,6 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.InitializationStatus;
 import org.prebid.mobile.api.exceptions.InitError;
 import org.prebid.mobile.api.rendering.PrebidRenderer;
-import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.session.manager.OmAdSessionManager;
 import org.prebid.mobile.rendering.utils.helpers.AppInfoManager;
@@ -43,7 +42,7 @@ public class SdkInitializer {
             LogUtil.setLogLevel(PrebidMobile.getLogLevel().getValue());
         }
 
-        PrebidMobilePluginRegister.getInstance().registerPlugin(new PrebidRenderer());
+        PrebidMobile.registerPluginRenderer(new PrebidRenderer());
 
         try {
             AppInfoManager.init(applicationContext);

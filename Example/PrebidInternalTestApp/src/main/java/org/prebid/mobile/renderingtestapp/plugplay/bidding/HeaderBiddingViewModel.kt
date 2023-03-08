@@ -19,7 +19,7 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister
+import org.prebid.mobile.PrebidMobile
 import org.prebid.mobile.renderingtestapp.data.DemoItem
 import org.prebid.mobile.renderingtestapp.data.Tag
 import org.prebid.mobile.renderingtestapp.utils.ConfigurationViewSettings
@@ -90,14 +90,14 @@ class HeaderBiddingViewModel(
     }
 
     fun isCustomRendererEnabled(): Boolean {
-        return PrebidMobilePluginRegister.getInstance().containsPlugin(sampleCustomRenderer)
+        return PrebidMobile.containsPluginRenderer(sampleCustomRenderer);
     }
 
     fun onCustomRendererStateChanged(isChecked: Boolean) {
         if (isChecked) {
-            PrebidMobilePluginRegister.getInstance().registerPlugin(sampleCustomRenderer)
+            PrebidMobile.registerPluginRenderer(sampleCustomRenderer)
         } else {
-            PrebidMobilePluginRegister.getInstance().unregisterPlugin(sampleCustomRenderer)
+            PrebidMobile.unregisterPluginRenderer(sampleCustomRenderer)
         }
     }
 
