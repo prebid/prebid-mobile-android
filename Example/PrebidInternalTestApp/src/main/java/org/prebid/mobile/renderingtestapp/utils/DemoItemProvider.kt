@@ -69,8 +69,6 @@ class DemoItemProvider private constructor() {
         private const val adMobRewardedRandomAction =
             R.id.action_header_bidding_to_admob_rewarded_random
         private const val adMobNativeAction = R.id.action_header_bidding_to_admob_native
-        private const val customRendererBannerAction = R.id.action_header_bidding_to_custom_renderer_banner
-        private const val customRendererInterstitialAction = R.id.action_header_bidding_to_custom_renderer_interstitial
 
         fun init(context: Context) {
             if (demoList.isNotEmpty()) {
@@ -95,7 +93,6 @@ class DemoItemProvider private constructor() {
             addGamPbsExamples()
             addAdMobPbsExamples()
             addApplovinMaxPbsExamples()
-            addCustomRendererPbsExamples()
         }
 
         private fun addGamOriginalExamples() {
@@ -2093,43 +2090,6 @@ class DemoItemProvider private constructor() {
                             getString(R.string.prebid_account_id_prod_enabled_events)
                         )
                     }
-                )
-            )
-        }
-
-        private fun addCustomRendererPbsExamples() {
-            val ppmBannerTagList = listOf(Tag.ALL, Tag.CUSTOM_RENDERER, Tag.BANNER, Tag.REMOTE)
-            val ppmInterstitialTagList = listOf(Tag.ALL, Tag.CUSTOM_RENDERER, Tag.INTERSTITIAL, Tag.REMOTE)
-
-            // Custom Renderer Banner
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_custom_renderer_banner_300_250),
-                    customRendererBannerAction,
-                    ppmBannerTagList,
-                    createBannerBundle(
-                        R.string.imp_prebid_id_banner_300x250,
-                        null,
-                        300,
-                        250,
-                        R.string.response_prebid_banner_300_250
-                    )
-                )
-            )
-
-            // Custom Renderer Interstitial
-            demoList.add(
-                DemoItem(
-                    getString(R.string.demo_bidding_custom_renderer_interstitial_320_480),
-                    customRendererInterstitialAction,
-                    ppmInterstitialTagList,
-                    createBannerBundle(
-                        R.string.imp_prebid_id_interstitial_320_480,
-                        null,
-                        MIN_WIDTH_PERC,
-                        MIN_HEIGHT_PERC,
-                        R.string.response_prebid_display_interstitial_320_480
-                    )
                 )
             )
         }
