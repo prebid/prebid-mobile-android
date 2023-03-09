@@ -117,6 +117,7 @@ class MainActivity : AppCompatActivity(), SdkInitListener {
         setupBottomBar(navController)
     }
 
+
     private fun setupToolbarNavigation(toolbar: Toolbar, navController: NavController) {
 
         val topLevelDestinationIdSet = setOf(R.id.mainUtilitiesFragment, R.id.headerBiddingFragment)
