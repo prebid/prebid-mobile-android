@@ -2,12 +2,14 @@ package com.applovin.mediation.adapters.prebid.managers;
 
 import android.app.Activity;
 import android.util.Log;
+
 import com.applovin.mediation.MaxAdFormat;
 import com.applovin.mediation.adapter.MaxAdapterError;
 import com.applovin.mediation.adapter.listeners.MaxAdViewAdapterListener;
 import com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters;
 import com.applovin.mediation.adapters.prebid.ListenersCreator;
 import com.applovin.mediation.adapters.prebid.ParametersChecker;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.rendering.DisplayView;
@@ -49,7 +51,9 @@ public class MaxBannerManager {
     }
 
     public void destroy() {
-        adView.destroy();
+        if (adView != null) {
+            adView.destroy();
+        }
         adView = null;
     }
 
