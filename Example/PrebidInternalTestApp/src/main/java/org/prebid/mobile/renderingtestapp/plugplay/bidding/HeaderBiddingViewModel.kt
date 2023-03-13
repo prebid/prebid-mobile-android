@@ -93,11 +93,17 @@ class HeaderBiddingViewModel(
         return PrebidMobile.containsPluginRenderer(sampleCustomRenderer);
     }
 
-    fun onCustomRendererStateChanged(isChecked: Boolean) {
+    fun onCustomRendererStateChanged(
+        isChecked: Boolean,
+        defaultAccountId: String,
+        customRendererAccountId: String
+    ) {
         if (isChecked) {
             PrebidMobile.registerPluginRenderer(sampleCustomRenderer)
+            PrebidMobile.setPrebidServerAccountId(customRendererAccountId)
         } else {
             PrebidMobile.unregisterPluginRenderer(sampleCustomRenderer)
+            PrebidMobile.setPrebidServerAccountId(defaultAccountId)
         }
     }
 

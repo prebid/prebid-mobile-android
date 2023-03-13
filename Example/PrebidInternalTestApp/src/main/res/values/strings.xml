@@ -312,6 +312,7 @@
     <!--    Bidding configs-->
     <string name="prebid_account_id_prod">0689a263-318d-448b-a3d4-b02e8a709d9d</string>
     <string name="prebid_account_id_prod_no_bids">1768035c-74d3-4786-b056-13bd41f34bde</string>
+    <string name="prebid_account_id_prod_plugin_renderer">prebid-stored-request-custom-rendering-test</string>
     <string name="prebid_account_id_prod_enabled_events">prebid-stored-request-enabled-events</string>
 
     <string name="prebid_config_id_banner_320x50">50699c03-0910-477c-b4a4-911dbe2b9d42</string>
