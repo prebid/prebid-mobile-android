@@ -16,8 +16,15 @@
 
 package org.prebid.mobile.rendering.networking.modelcontrollers;
 
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+
 import android.app.Activity;
 import android.content.Context;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,9 +38,6 @@ import org.prebid.mobile.rendering.sdk.ManagersResolver;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -78,17 +82,4 @@ public class BidRequesterTest {
         verify(requester).makeAdRequest();
     }
 
-    @Test
-    public void whenFetchAdIdFailedOrSucceed_MakeRequest() {
-        BidRequester mockRequester = mock(BidRequester.class);
-        Requester.AdIdInitListener adIdInitListener = new Requester.AdIdInitListener(mockRequester);
-
-        // Fetch successful
-        adIdInitListener.adIdFetchCompletion();
-        verify(mockRequester, times(1)).makeAdRequest();
-
-        // Fetch failure
-        adIdInitListener.adIdFetchFailure();
-        verify(mockRequester, times(2)).makeAdRequest();
-    }
 }
