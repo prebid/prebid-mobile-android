@@ -21,6 +21,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.webkit.URLUtil;
 
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -224,6 +225,7 @@ public class PrebidMobile {
      * @param listener initialization listener (can be null).
      *                 <p>
      */
+    @MainThread
     public static void initializeSdk(
         @Nullable Context context,
         @Nullable SdkInitializationListener listener

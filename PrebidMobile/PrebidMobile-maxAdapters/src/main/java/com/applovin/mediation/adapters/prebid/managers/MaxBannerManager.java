@@ -3,6 +3,8 @@ package com.applovin.mediation.adapters.prebid.managers;
 import android.app.Activity;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 import com.applovin.mediation.MaxAdFormat;
 import com.applovin.mediation.adapter.MaxAdapterError;
 import com.applovin.mediation.adapter.listeners.MaxAdViewAdapterListener;
@@ -21,7 +23,9 @@ public class MaxBannerManager {
 
     private static final String TAG = MaxBannerManager.class.getSimpleName();
 
+    @Nullable
     private DisplayView adView;
+    @Nullable
     private MaxAdViewAdapterListener maxListener;
 
     public void loadAd(
@@ -46,7 +50,7 @@ public class MaxBannerManager {
             default:
                 String error = "Unknown type of MAX ad!";
                 Log.e(TAG, error);
-                maxListener.onAdViewAdLoadFailed(new MaxAdapterError(1005, error));
+                onError(1005, error);
         }
     }
 
@@ -65,8 +69,13 @@ public class MaxBannerManager {
     ) {
         AdUnitConfiguration adConfiguration = new AdUnitConfiguration();
         adConfiguration.setAdFormat(AdFormat.BANNER);
-        DisplayViewListener listener = ListenersCreator.createBannerListener(maxListener,
-                () -> maxListener.onAdViewAdLoaded(adView)
+        DisplayViewListener listener = ListenersCreator.createBannerListener(
+                maxListener,
+                () -> {
+                    if (maxListener != null) {
+                        maxListener.onAdViewAdLoaded(adView);
+                    }
+                }
         );
 
         if (activity != null) {
@@ -75,8 +84,7 @@ public class MaxBannerManager {
                 adView = new DisplayView(activity, listener, adConfiguration, response);
             });
         } else {
-            String error = "Activity is null";
-            maxListener.onAdViewAdLoadFailed(new MaxAdapterError(1005, error));
+            onError(1005, "Activity is null");
         }
     }
 
@@ -86,7 +94,9 @@ public class MaxBannerManager {
     ) {
         if (maxListener != null) {
             maxListener.onAdViewAdLoadFailed(new MaxAdapterError(code, error));
-        } else Log.e(TAG, "Max banner listener must be not null!");
+        } else {
+            Log.e(TAG, "Max banner listener is null: " + error);
+        }
     }
 
 }

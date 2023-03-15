@@ -2,12 +2,16 @@ package com.applovin.mediation.adapters.prebid.managers;
 
 import android.app.Activity;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
+
 import com.applovin.mediation.adapter.MaxAdapterError;
 import com.applovin.mediation.adapter.listeners.MaxInterstitialAdapterListener;
 import com.applovin.mediation.adapter.listeners.MaxRewardedAdapterListener;
 import com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters;
 import com.applovin.mediation.adapters.prebid.ListenersCreator;
 import com.applovin.mediation.adapters.prebid.ParametersChecker;
+
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
@@ -18,7 +22,9 @@ public class MaxInterstitialManager {
 
     private boolean isRewarded = false;
 
+    @Nullable
     private Object maxListener;
+    @Nullable
     private InterstitialController interstitialController;
 
     public void loadAd(
@@ -26,7 +32,9 @@ public class MaxInterstitialManager {
             Activity activity,
             MaxInterstitialAdapterListener maxListener
     ) {
-        this.maxListener = maxListener; isRewarded = false; loadAd(parameters, activity);
+        this.maxListener = maxListener;
+        isRewarded = false;
+        loadAd(parameters, activity);
     }
 
     public void loadAd(
@@ -34,7 +42,9 @@ public class MaxInterstitialManager {
             Activity activity,
             MaxRewardedAdapterListener maxListener
     ) {
-        this.maxListener = maxListener; isRewarded = true; loadAd(parameters, activity);
+        this.maxListener = maxListener;
+        isRewarded = true;
+        loadAd(parameters, activity);
     }
 
     private void loadAd(
@@ -63,9 +73,15 @@ public class MaxInterstitialManager {
         if (interstitialController == null) {
             MaxAdapterError error = new MaxAdapterError(2010, "InterstitialController is null");
             if (isRewarded) {
-                getRewardedListener().onRewardedAdDisplayFailed(error);
+                MaxRewardedAdapterListener listener = getRewardedListener();
+                if (listener != null) {
+                    listener.onRewardedAdDisplayFailed(error);
+                }
             } else {
-                getInterstitialListener().onInterstitialAdDisplayFailed(error);
+                MaxInterstitialAdapterListener listener = getInterstitialListener();
+                if (listener != null) {
+                    listener.onInterstitialAdDisplayFailed(error);
+                }
             }
             return;
         }
@@ -73,7 +89,9 @@ public class MaxInterstitialManager {
     }
 
     public void destroy() {
-        interstitialController.destroy();
+        if (interstitialController != null) {
+            interstitialController.destroy();
+        }
     }
 
 
