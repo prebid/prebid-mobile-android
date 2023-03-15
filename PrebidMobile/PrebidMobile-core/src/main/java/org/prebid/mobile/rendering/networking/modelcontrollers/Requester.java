@@ -20,9 +20,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -128,7 +125,19 @@ public abstract class Requester {
 
         UserConsentManager userConsentManager = ManagersResolver.getInstance().getUserConsentManager();
         if (userConsentManager.canAccessDeviceData()) {
-            AdIdManager.initAdId(context, new AdIdInitListener(this));
+            AdIdManager.initAdId(context, new AdIdFetchListener() {
+                @Override
+                public void adIdFetchCompletion() {
+                    LogUtil.info(TAG, "Advertising id was received");
+                    makeAdRequest();
+                }
+
+                @Override
+                public void adIdFetchFailure() {
+                    LogUtil.warning(TAG, "Can't get advertising id");
+                    makeAdRequest();
+                }
+            });
         } else {
             AdIdManager.setAdId(null);
             makeAdRequest();
@@ -185,34 +194,4 @@ public abstract class Requester {
         this.networkTask = networkTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
     }
 
-
-    protected static class AdIdInitListener implements AdIdFetchListener {
-
-        @Nullable
-        private Requester requester;
-
-        public AdIdInitListener(@NonNull Requester requester) {
-            this.requester = requester;
-        }
-
-        @Override
-        public void adIdFetchCompletion() {
-            LogUtil.info(TAG, "Advertising id was received");
-            makeAdRequest();
-        }
-
-        @Override
-        public void adIdFetchFailure() {
-            LogUtil.warning(TAG, "Can't get advertising id");
-            makeAdRequest();
-        }
-
-        private void makeAdRequest() {
-            if (requester != null) {
-                requester.makeAdRequest();
-            }
-            requester = null;
-        }
-
-    }
 }
