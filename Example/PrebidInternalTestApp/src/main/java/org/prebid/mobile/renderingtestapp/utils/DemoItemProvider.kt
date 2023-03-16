@@ -1462,7 +1462,7 @@ class DemoItemProvider private constructor() {
                     adMobBannerAction,
                     adMobBannerTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_banner_320x50_high_price,
+                        R.string.imp_prebid_id_banner_320x50,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
                         320, 50
                     )
@@ -1498,7 +1498,7 @@ class DemoItemProvider private constructor() {
                     adMobRandomBannerAction,
                     adMobBannerTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_banner_320x50_high_price,
+                        R.string.imp_prebid_id_banner_320x50,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
                         320, 50
                     )
@@ -1510,7 +1510,7 @@ class DemoItemProvider private constructor() {
                     adMobBannerAction,
                     adMobBannerTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_banner_320x50_high_price,
+                        R.string.imp_prebid_id_banner_320x50,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
                         320, 50
                     ).apply {
