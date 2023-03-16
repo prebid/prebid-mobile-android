@@ -332,13 +332,13 @@
     <string name="imp_prebid_id_banner_multisize">imp-prebid-banner-multisize</string>
     <string name="imp_prebid_id_interstitial_320_480">imp-prebid-display-interstitial-320-480</string>
 
+    <string name="imp_prebid_dynamic">Imp id set in another place</string>
     <string name="imp_prebid_id_video_outstream">imp-prebid-video-outstream</string>
     <string name="imp_prebid_id_video_outstream_original_api">imp-prebid-video-outstream-original-api</string>
     <string name="imp_prebid_id_video_instream">1001-1</string>
     <string name="imp_prebid_id_video_outstream_end_card">imp-prebid-video-outstream-with-end-card</string>
     <string name="imp_prebid_id_video_interstitial_320_480">imp-prebid-video-interstitial-320-480</string>
     <string name="imp_prebid_id_video_interstitial_320_480_with_ad_configuration">imp-prebid-video-interstitial-320-480-with-ad-configuration</string>
-    <string name="imp_prebid_id_video_interstitial_320_480_random">imp-prebid-video-interstitial-320-480-random</string>
     <string name="imp_prebid_id_video_interstitial_320_480_original_api">imp-prebid-video-interstitial-320-480-original-api</string>
     <string name="imp_prebid_id_video_interstitial_320_480_with_end_card">imp-prebid-video-interstitial-320-480-with-end-card</string>
     <string name="imp_prebid_id_video_interstitial_320_480_with_end_card_with_ad_configuration">imp-prebid-video-interstitial-320-480-with-end-card-with-ad-configuration</string>
