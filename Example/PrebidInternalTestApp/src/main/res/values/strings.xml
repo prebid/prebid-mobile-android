@@ -327,7 +327,6 @@
     <string name="imp_prebid_id_banner_320x50_vast">imp-prebid-banner-incorrect-vast</string>
     <string name="imp_prebid_id_banner_300x250">imp-prebid-banner-300-250</string>
     <string name="adimp_prebid_id_banner_300x250">imp-prebid-banner-300-250</string>
-    <string name="imp_prebid_id_banner_300x250_high_price">imp-prebid-banner-300-250-high-price</string>
     <string name="imp_prebid_id_banner_728x90">imp-prebid-banner-728-90</string>
     <string name="imp_prebid_id_banner_multisize">imp-prebid-banner-multisize</string>
     <string name="imp_prebid_id_interstitial_320_480">imp-prebid-display-interstitial-320-480</string>

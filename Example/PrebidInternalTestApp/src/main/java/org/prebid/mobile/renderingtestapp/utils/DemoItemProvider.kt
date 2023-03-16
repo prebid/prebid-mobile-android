@@ -1527,7 +1527,7 @@ class DemoItemProvider private constructor() {
                     adMobBannerAction,
                     adMobBannerTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_banner_300x250_high_price,
+                        R.string.imp_prebid_id_banner_300x250,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
                         300, 250
                     )
