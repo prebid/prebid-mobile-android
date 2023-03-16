@@ -4,6 +4,7 @@ import com.applovin.mediation.adapters.prebid.utils.MaxMediationInterstitialUtil
 import com.applovin.mediation.ads.MaxInterstitialAd
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.mediation.MediationInterstitialAdUnit
+import org.prebid.mobile.renderingtestapp.R
 import java.util.*
 
 class MaxInterstitialFragmentMultiformat : MaxInterstitialFragment() {
@@ -12,13 +13,17 @@ class MaxInterstitialFragmentMultiformat : MaxInterstitialFragment() {
         maxInterstitialAd = MaxInterstitialAd(adUnitId, activity)
         maxInterstitialAd?.setListener(createListener())
 
+        val context = requireContext()
         val mediationUtils =
             MaxMediationInterstitialUtils(
                 maxInterstitialAd
             )
         adUnit = MediationInterstitialAdUnit(
             activity,
-            configId,
+            listOf(
+                context.getString(R.string.imp_prebid_id_interstitial_320_480),
+                context.getString(R.string.imp_prebid_id_video_interstitial_320_480)
+            ).shuffled().first(),
             EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO),
             mediationUtils
         )

@@ -774,7 +774,7 @@ class DemoItemProvider private constructor() {
                     ppmInterstitialMultiformatAction,
                     ppmInterstitialTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_interstitial_320_480_random,
+                        R.string.imp_prebid_dynamic,
                         null,
                         MIN_WIDTH_PERC,
                         MIN_HEIGHT_PERC
@@ -1216,7 +1216,7 @@ class DemoItemProvider private constructor() {
                     gamInterstitialMultiformatAction,
                     gamVideoTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_interstitial_320_480_random,
+                        R.string.imp_prebid_dynamic,
                         R.string.adunit_gam_interstitial_video_320_480_app_event,
                         MIN_WIDTH_PERC,
                         MIN_HEIGHT_PERC
@@ -1462,7 +1462,7 @@ class DemoItemProvider private constructor() {
                     adMobBannerAction,
                     adMobBannerTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_banner_320x50_high_price,
+                        R.string.imp_prebid_id_banner_320x50,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
                         320, 50
                     )
@@ -1498,7 +1498,7 @@ class DemoItemProvider private constructor() {
                     adMobRandomBannerAction,
                     adMobBannerTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_banner_320x50_high_price,
+                        R.string.imp_prebid_id_banner_320x50,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
                         320, 50
                     )
@@ -1510,7 +1510,7 @@ class DemoItemProvider private constructor() {
                     adMobBannerAction,
                     adMobBannerTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_banner_320x50_high_price,
+                        R.string.imp_prebid_id_banner_320x50,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
                         320, 50
                     ).apply {
@@ -1527,7 +1527,7 @@ class DemoItemProvider private constructor() {
                     adMobBannerAction,
                     adMobBannerTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_banner_300x250_high_price,
+                        R.string.imp_prebid_id_banner_300x250,
                         R.string.admob_banner_bidding_ad_unit_id_adapter,
                         300, 250
                     )
@@ -1627,7 +1627,7 @@ class DemoItemProvider private constructor() {
                     adMobInterstitialMultiformatAction,
                     adMobVideoTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_interstitial_320_480_random,
+                        R.string.imp_prebid_dynamic,
                         R.string.admob_interstitial_bidding_ad_unit_id_adapter,
                         320, 480
                     )
@@ -1979,7 +1979,7 @@ class DemoItemProvider private constructor() {
                     maxMultiformatInterstitialAction,
                     maxVideoInterstitialTagList,
                     createBannerBundle(
-                        R.string.imp_prebid_id_video_interstitial_320_480_random,
+                        R.string.imp_prebid_dynamic,
                         R.string.max_interstitial_ad_unit_id,
                         320, 480
                     )
