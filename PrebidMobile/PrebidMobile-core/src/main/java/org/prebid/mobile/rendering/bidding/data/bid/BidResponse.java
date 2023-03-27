@@ -228,7 +228,7 @@ public class BidResponse {
         return false;
     }
 
-    public String gePreferredPluginRendererName() {
+    public String getPreferredPluginRendererName() {
         Bid bid = getWinningBid();
         if (bid != null) {
             return bid.getPrebid().getTargeting().get(PLUGIN_RENDERER_KEY);

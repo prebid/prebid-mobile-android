@@ -72,7 +72,7 @@ public class PrebidMobilePluginRegister {
     // Returns the registered renderer according to the preferred renderer name in the bid response
     // If no preferred renderer is found, it returns PrebidRenderer to perform default behavior
     public PrebidMobilePluginRenderer getPluginForPreferredRenderer(BidResponse bidResponse) {
-        String preferredRendererName = bidResponse.gePreferredPluginRendererName();
+        String preferredRendererName = bidResponse.getPreferredPluginRendererName();
         PrebidMobilePluginRenderer preferredPlugin = plugins.get(preferredRendererName);
         if (preferredPlugin != null && preferredPlugin.isSupportRenderingFor(bidResponse.getAdUnitConfiguration())) {
             return preferredPlugin;

@@ -97,7 +97,7 @@ public class PrebidMobilePluginRegisterTest {
         // Given
         when(mockPlugin.getName()).thenReturn("MockPlugin");
         when(mockPlugin.isSupportRenderingFor(any())).thenReturn(true);
-        when(mockBidResponse.gePreferredPluginRendererName()).thenReturn("MockPlugin");
+        when(mockBidResponse.getPreferredPluginRendererName()).thenReturn("MockPlugin");
 
         // When
         instance.registerPlugin(mockPlugin);
@@ -112,7 +112,7 @@ public class PrebidMobilePluginRegisterTest {
         // Given
         when(mockPlugin.getName()).thenReturn("MockPlugin");
         when(mockPlugin.isSupportRenderingFor(any())).thenReturn(true);
-        when(mockBidResponse.gePreferredPluginRendererName()).thenReturn("NoMatchingPluginName");
+        when(mockBidResponse.getPreferredPluginRendererName()).thenReturn("NoMatchingPluginName");
 
         // When
         instance.registerPlugin(mockPlugin);

@@ -60,7 +60,7 @@ public class DisplayViewTest {
         Bid mockBid = mock(Bid.class);
         when(mockBid.getAdm()).thenReturn("adm");
         when(mockResponse.getWinningBid()).thenReturn(mockBid);
-        when(mockResponse.gePreferredPluginRendererName()).thenReturn(PREBID_MOBILE_RENDERER_NAME);
+        when(mockResponse.getPreferredPluginRendererName()).thenReturn(PREBID_MOBILE_RENDERER_NAME);
 
         displayView = new DisplayView(context, mockDisplayViewListener, adUnitConfiguration, mockResponse);
     }
