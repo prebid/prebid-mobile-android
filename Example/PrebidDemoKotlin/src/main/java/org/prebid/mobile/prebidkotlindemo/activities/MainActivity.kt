@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
                 }
             )
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(adapterView: AdapterView<*>, view: View, position: Int, l: Long) {
+                override fun onItemSelected(adapterView: AdapterView<*>, view: View?, position: Int, l: Long) {
                     integrationKind = if (position == 0) null else IntegrationKind.values()[position - 1]
                     Settings.get().lastIntegrationKindId = position
                     updateList()
@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
                 }
             )
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(adapterView: AdapterView<*>, view: View, position: Int, l: Long) {
+                override fun onItemSelected(adapterView: AdapterView<*>, view: View?, position: Int, l: Long) {
                     adFormat = if (position == 0) null else AdFormat.values()[position - 1]
                     Settings.get().lastAdFormatId = position
                     updateList()
