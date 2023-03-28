@@ -146,7 +146,10 @@ public class BasicParameterBuilder extends ParameterBuilder {
         if (PrebidMobile.isCoppaEnabled) {
             bidRequest.getRegs().coppa = 1;
         }
-        bidRequest.setPluginRenderers(getPluginRenderers());
+
+        if (!adConfiguration.isOriginalAdUnit()) {
+            bidRequest.setPluginRenderers(getPluginRenderers());
+        }
     }
 
     private void configureSource(Source source, String uuid) {
