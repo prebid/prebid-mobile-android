@@ -9,7 +9,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
 import org.prebid.mobile.prebidkotlindemo.R
 import org.prebid.mobile.prebidkotlindemo.testcases.TestCase
-
+ // todo just a test
 @RunWith(Parameterized::class)
 class BannerAdsTest(
     @StringRes private val testCaseTitleId: Int,
