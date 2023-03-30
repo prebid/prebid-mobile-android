@@ -44,6 +44,7 @@ public class BidResponseTest {
     public void whenInstantiatedWithValidJson_NoParseError() throws IOException {
         String responseString = ResourceUtils.convertResourceToString("bidding_response_obj.json");
         BidResponse bidResponse = new BidResponse(responseString, new AdUnitConfiguration());
+
         assertFalse(bidResponse.hasParseError());
         assertNotNull(bidResponse.getExt());
         assertNotNull(bidResponse.getSeatbids());
@@ -64,21 +65,23 @@ public class BidResponseTest {
     }
 
     @Test
-    public void whenInstantiatedWithNoBids_NoBidsError() throws IOException {
+    public void whenInstantiatedWithNoBids_NoBids() throws IOException {
         String responseString = ResourceUtils.convertResourceToString("bidding_response_no_bids_obj.json");
         BidResponse bidResponse = new BidResponse(responseString, new AdUnitConfiguration());
-        assertTrue(bidResponse.hasParseError());
-        assertEquals("Failed to parse bids. No winning bids were found.", bidResponse.getParseError());
+
+        assertFalse(bidResponse.hasParseError());
+        assertNull(bidResponse.getParseError());
         assertEquals("id", bidResponse.getId());
         assertNotNull(bidResponse.getExt());
     }
 
     @Test
-    public void whenInstantiatedWithoutWinningKeywords_NoBidsError() throws IOException {
+    public void whenInstantiatedWithoutWinningKeywords_NoBids() throws IOException {
         String responseString = ResourceUtils.convertResourceToString("bidding_response_no_winning_keywords_obj.json");
         BidResponse bidResponse = new BidResponse(responseString, new AdUnitConfiguration());
-        assertTrue(bidResponse.hasParseError());
-        assertEquals("Failed to parse bids. No winning bids were found.", bidResponse.getParseError());
+
+        assertFalse(bidResponse.hasParseError());
+        assertNull(bidResponse.getParseError());
         assertEquals("id", bidResponse.getId());
         assertNotNull(bidResponse.getExt());
     }
@@ -105,24 +108,26 @@ public class BidResponseTest {
     }
 
     @Test
-    public void testWinningBidKeywords_withoutOneKeyword_parseError() throws IOException {
+    public void testWinningBidKeywords_withoutOneKeyword_noBids() throws IOException {
         String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_not_all.json");
 
         AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
 
-        assertTrue(subject.hasParseError());
         assertNull(subject.getWinningBid());
+        assertFalse(subject.hasParseError());
+        assertNull(subject.getParseError());
     }
 
     @Test
-    public void testWinningBidKeywords_empty_parseError() throws IOException {
+    public void testWinningBidKeywords_empty_noBids() throws IOException {
         String responseString = ResourceUtils.convertResourceToString("BidResponseTest/keywords_empty.json");
 
         AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
 
-        assertTrue(subject.hasParseError());
+        assertFalse(subject.hasParseError());
+        assertNull(subject.getParseError());
         assertNull(subject.getWinningBid());
     }
 
@@ -145,7 +150,7 @@ public class BidResponseTest {
         adUnitConfiguration.setIsOriginalAdUnit(true);
         BidResponse subject = new BidResponse(responseString, adUnitConfiguration);
 
-        assertTrue(subject.hasParseError());
+        assertFalse(subject.hasParseError());
         assertNull(subject.getWinningBid());
     }
 

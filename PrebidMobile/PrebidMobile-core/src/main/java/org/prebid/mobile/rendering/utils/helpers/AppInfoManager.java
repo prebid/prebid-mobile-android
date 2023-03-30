@@ -22,11 +22,15 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.WebView;
+
 import androidx.annotation.VisibleForTesting;
+
 import com.google.android.gms.security.ProviderInstaller;
+
 import org.prebid.mobile.LogUtil;
 
 public class AppInfoManager {
@@ -102,7 +106,13 @@ public class AppInfoManager {
         //((Activity) context).runOnUiThread(new Runnable()
         //MOB-2205 [Research] on how we can eliminate activity context from Native ads.
         try {
-            sUserAgent = new WebView(context).getSettings().getUserAgentString();
+            sUserAgent = "";
+
+            boolean isMainThread = Looper.myLooper() == Looper.getMainLooper();
+            if (isMainThread) {
+                sUserAgent = new WebView(context).getSettings().getUserAgentString();
+            }
+
             if (TextUtils.isEmpty(sUserAgent) || sUserAgent.contains("UNAVAILABLE")) {
                 sUserAgent = "Mozilla/5.0 (Linux; U; Android " + android.os.Build.VERSION.RELEASE + ";" + " " + getDeviceName() + ")";
             }

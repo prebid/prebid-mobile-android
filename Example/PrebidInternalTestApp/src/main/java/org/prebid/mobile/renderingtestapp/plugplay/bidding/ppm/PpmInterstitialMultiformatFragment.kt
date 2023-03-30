@@ -19,16 +19,26 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 import org.prebid.mobile.AdSize
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
+import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
 import java.util.*
 
 open class PpmInterstitialMultiformatFragment : BaseBidInterstitialFragment() {
+
     override fun initInterstitialAd(
         adUnitFormat: AdUnitFormat, adUnitId: String?,
         configId: String?, width: Int, height: Int
     ) {
+        val context = requireContext()
         interstitialAdUnit =
-            InterstitialAdUnit(requireContext(), configId, EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO))
+            InterstitialAdUnit(
+                requireContext(),
+                listOf(
+                    context.getString(R.string.imp_prebid_id_interstitial_320_480),
+                    context.getString(R.string.imp_prebid_id_video_interstitial_320_480)
+                ).shuffled().first(),
+                EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO)
+            )
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
         interstitialAdUnit?.setMinSizePercentage(AdSize(30, 30))
     }

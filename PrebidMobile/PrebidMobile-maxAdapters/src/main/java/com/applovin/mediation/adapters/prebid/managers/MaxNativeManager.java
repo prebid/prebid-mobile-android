@@ -8,13 +8,16 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+
 import androidx.annotation.Nullable;
+
 import com.applovin.mediation.adapter.MaxAdapterError;
 import com.applovin.mediation.adapter.listeners.MaxNativeAdAdapterListener;
 import com.applovin.mediation.adapter.parameters.MaxAdapterResponseParameters;
 import com.applovin.mediation.adapters.prebid.ParametersChecker;
 import com.applovin.mediation.adapters.prebid.PrebidMaxNativeAd;
 import com.applovin.mediation.nativeAds.MaxNativeAd;
+
 import org.prebid.mobile.PrebidNativeAd;
 import org.prebid.mobile.rendering.bidding.events.EventsNotifier;
 
@@ -26,6 +29,7 @@ public class MaxNativeManager {
 
     private static final String TAG = MaxNativeManager.class.getSimpleName();
 
+    @Nullable
     private MaxNativeAdAdapterListener maxListener;
     private HttpURLConnection connection;
     private InputStream inputStream;
@@ -109,7 +113,9 @@ public class MaxNativeManager {
     ) {
         if (maxListener != null) {
             maxListener.onNativeAdLoadFailed(new MaxAdapterError(code, error));
-        } else Log.e(TAG, "Max interstitial listener must be not null!");
+        } else {
+            Log.e(TAG, "Max native listener is null: " + error);
+        }
     }
 
 }

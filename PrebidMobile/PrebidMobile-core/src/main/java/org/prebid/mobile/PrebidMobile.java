@@ -21,6 +21,7 @@ import android.util.Log;
 import android.util.Patterns;
 import android.webkit.URLUtil;
 
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -89,7 +90,7 @@ public class PrebidMobile {
     /**
      * Tested Google SDK version.
      */
-    public static final String TESTED_GOOGLE_SDK_VERSION = "21.5.0";
+    public static final String TESTED_GOOGLE_SDK_VERSION = "22.0.0";
 
     /**
      * Please use {@link PrebidMobile#setLogLevel(LogLevel)}, this field will become private in next releases.
@@ -226,6 +227,7 @@ public class PrebidMobile {
      * @param listener initialization listener (can be null).
      *                 <p>
      */
+    @MainThread
     public static void initializeSdk(
         @Nullable Context context,
         @Nullable SdkInitializationListener listener

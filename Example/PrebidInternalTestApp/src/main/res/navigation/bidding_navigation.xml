@@ -316,7 +316,7 @@
             app:popUpTo="@+id/headerBiddingFragment" />
         <action
             android:id="@+id/action_header_bidding_to_admob_interstitial_multiformat"
-            app:destination="@+id/navigation_admob_interstitial"
+            app:destination="@+id/navigation_admob_interstitial_multiformat"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
