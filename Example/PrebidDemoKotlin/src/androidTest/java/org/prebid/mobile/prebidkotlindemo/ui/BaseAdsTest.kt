@@ -60,7 +60,8 @@ abstract class BaseAdsTest {
 //        Runtime.getRuntime().exec(arrayOf("am", "force-stop", packageName))
 
         val intent = Intent(context, testCase.activity).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(intent)
     }
