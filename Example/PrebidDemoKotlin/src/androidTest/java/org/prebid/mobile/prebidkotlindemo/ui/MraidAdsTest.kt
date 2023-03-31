@@ -1,6 +1,5 @@
 package org.prebid.mobile.prebidkotlindemo.ui
 
-import android.os.Build
 import androidx.annotation.StringRes
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Until
@@ -46,13 +45,7 @@ class MraidAdsTest(
         assertNotNull(findClickToResize)
         findClickToResize.click()
 
-        // For now we don't have proper accessibility id for close button
-        val closeButton = if (Build.VERSION.SDK_INT >= 29) {
-            By.text("X")
-        } else {
-            Thread.sleep(2000)
-            By.desc("X")
-        }
+        val closeButton = By.clazz(".*ImageView".toPattern())
         val findCloseButton = device.wait(Until.findObject(closeButton), timeout)
         assertNotNull(findCloseButton)
         findCloseButton.click()

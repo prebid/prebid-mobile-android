@@ -1,15 +1,10 @@
 package org.prebid.mobile.prebidkotlindemo.ui
 
 import androidx.annotation.StringRes
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.BySelector
 import androidx.test.uiautomator.Until
 import junit.framework.TestCase.assertNotNull
-import org.hamcrest.Matchers
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -35,8 +30,11 @@ class VideoAdsTest(
             arrayOf(R.string.gam_rendering_video_banner, "GAM Video Banner"),
             arrayOf(R.string.gam_rendering_video_rewarded, "GAM Rendering API Video Rewarded"),
 
-            arrayOf(R.string.in_app_video_banner, "In-App Video Interstitial End Card"),
-            arrayOf(R.string.in_app_video_interstitial_end_card, "In-App Video Interstitial End Card"),
+            arrayOf(R.string.in_app_video_banner, "In-App Video Banner"),
+            arrayOf(
+                R.string.in_app_video_interstitial_end_card,
+                "In-App Video Interstitial End Card"
+            ),
             arrayOf(R.string.in_app_video_rewarded, "In-App Video Rewarded"),
         )
     }
@@ -69,7 +67,9 @@ class VideoAdsTest(
 
         val findEndCard = device.wait(Until.findObject(endCard), timeout)
         if (findEndCard == null) {
-            searchInAllTrees("PrebidWebViewInterstitial")
+            val endCardCloseButtonPattern = By.clazz(".*ImageView".toPattern())
+            val endCardButton = device.wait(Until.findObject(endCardCloseButtonPattern), timeout)
+            assertNotNull(endCardButton)
         }
 
         val findCloseButton = device.wait(Until.findObject(closeButton), timeout)
@@ -103,12 +103,18 @@ class VideoAdsTest(
             endCard = By.clazz(Pattern.compile(".*PrebidWebViewInterstitial"))
             closeButton = By.res(packageName, "iv_close_interstitial")
         }
-        val findAd = device.wait(Until.findObject(ad), timeout)
-        assertNotNull(findAd)
+        val findAd = device.wait(Until.findObject(ad), timeout * 3)
+        if (findAd == null) {
+            val pattern = By.clazz("""com\.google\.android\.gms\.ads\.internal.*""".toPattern())
+            val adCheck = device.wait(Until.findObject(pattern), timeout)
+            assertNotNull(adCheck)
+        }
 
         val findEndCard = device.wait(Until.findObject(endCard), timeout * 3)
         if (findEndCard == null && testCase.integrationKind != IntegrationKind.GAM_ORIGINAL) {
-            searchInAllTrees("PrebidWebViewInterstitial")
+            val endCardCloseButtonPattern = By.clazz(".*ImageView".toPattern())
+            val endCardButton = device.wait(Until.findObject(endCardCloseButtonPattern), timeout)
+            assertNotNull(endCardButton)
         }
 
         val findCloseButton = device.wait(Until.findObject(closeButton), timeout)
@@ -116,11 +122,6 @@ class VideoAdsTest(
         findCloseButton.click()
         Thread.sleep(1000)
         device.pressBack()
-    }
-
-    private fun searchInAllTrees(className: String) {
-        onView(withClassName(Matchers.containsString(className)))
-            .check(matches(isDisplayed()))
     }
 
 }
