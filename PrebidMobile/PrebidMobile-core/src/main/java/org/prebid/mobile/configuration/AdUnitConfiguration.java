@@ -322,6 +322,10 @@ public class AdUnitConfiguration {
     public void setAdFormats(@Nullable EnumSet<AdFormat> formats) {
         if (formats == null) return;
 
+        if (formats.contains(AdFormat.NATIVE)) {
+            nativeConfiguration = new NativeAdUnitConfiguration();
+        }
+
         adFormats.clear();
         adFormats.addAll(formats);
     }
