@@ -90,7 +90,9 @@ class HeaderBiddingViewModel(
     }
 
     fun isCustomRendererEnabled(): Boolean {
-        return PrebidMobile.containsPluginRenderer(sampleCustomRenderer);
+        // TODO not ready, wait for rendering delegation full release
+//        return PrebidMobile.containsPluginRenderer(sampleCustomRenderer);
+        return false
     }
 
     fun onCustomRendererStateChanged(
@@ -98,13 +100,14 @@ class HeaderBiddingViewModel(
         defaultAccountId: String,
         customRendererAccountId: String
     ) {
-        if (isChecked) {
-            PrebidMobile.registerPluginRenderer(sampleCustomRenderer)
-            PrebidMobile.setPrebidServerAccountId(customRendererAccountId)
-        } else {
-            PrebidMobile.unregisterPluginRenderer(sampleCustomRenderer)
-            PrebidMobile.setPrebidServerAccountId(defaultAccountId)
-        }
+        // TODO not ready, wait for rendering delegation full release
+//        if (isChecked) {
+//            PrebidMobile.registerPluginRenderer(sampleCustomRenderer)
+//            PrebidMobile.setPrebidServerAccountId(customRendererAccountId)
+//        } else {
+//            PrebidMobile.unregisterPluginRenderer(sampleCustomRenderer)
+//            PrebidMobile.setPrebidServerAccountId(defaultAccountId)
+//        }
     }
 
     fun onDemoItemClicked(item: DemoItem) {
