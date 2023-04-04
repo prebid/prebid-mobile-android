@@ -309,18 +309,23 @@ public class AdUnitConfiguration {
     /**
      * Clears previous ad formats and adds AdFormats corresponding to AdUnitFormat types.
      */
-    public void setAdFormats(@Nullable EnumSet<AdUnitFormat> adUnitFormats) {
+    public void setAdUnitFormats(@Nullable EnumSet<AdUnitFormat> adUnitFormats) {
         if (adUnitFormats == null) return;
 
         adFormats.clear();
-
-        if (adUnitFormats.contains(AdUnitFormat.DISPLAY)) {
-            adFormats.add(AdFormat.INTERSTITIAL);
-        }
-        if (adUnitFormats.contains(AdUnitFormat.VIDEO)) {
-            adFormats.add(AdFormat.VAST);
-        }
+        adFormats.addAll(AdFormat.fromSet(adUnitFormats, true));
     }
+
+    /**
+     * Clears previous ad formats and adds AdFormats corresponding to AdUnitFormat types.
+     */
+    public void setAdFormats(@Nullable EnumSet<AdFormat> formats) {
+        if (formats == null) return;
+
+        adFormats.clear();
+        adFormats.addAll(formats);
+    }
+
 
     public void setSkipDelay(int seconds) {
         this.skipDelay = seconds;

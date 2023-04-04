@@ -583,7 +583,7 @@ public class BasicParameterBuilderTest {
     @Test
     public void testMultiFormatAdUnit_bannerAndVideoObjectsAreNotNull() {
         AdUnitConfiguration configuration = new AdUnitConfiguration();
-        configuration.setAdFormats(EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO));
+        configuration.setAdUnitFormats(EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO));
 
         BasicParameterBuilder builder = new BasicParameterBuilder(configuration, null, false);
 

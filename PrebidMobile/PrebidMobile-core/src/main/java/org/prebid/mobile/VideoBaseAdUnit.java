@@ -21,9 +21,11 @@ import androidx.annotation.Nullable;
 
 import org.prebid.mobile.api.data.AdFormat;
 
+import java.util.EnumSet;
+
 public abstract class VideoBaseAdUnit extends AdUnit {
 
-    VideoBaseAdUnit(@NonNull String configId, @NonNull AdFormat adType) {
+    VideoBaseAdUnit(@NonNull String configId, @NonNull EnumSet<AdFormat> adType) {
         super(configId, adType);
     }
 

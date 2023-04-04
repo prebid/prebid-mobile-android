@@ -21,9 +21,14 @@ import androidx.annotation.Nullable;
 
 import org.prebid.mobile.api.data.AdFormat;
 
-public abstract class BannerBaseAdUnit extends AdUnit {
+import java.util.EnumSet;
 
-    BannerBaseAdUnit(@NonNull String configId, @NonNull AdFormat adType) {
+/**
+ * Contains Banner and Video parameters.
+ */
+public abstract class ParameterizedAdUnit extends AdUnit {
+
+    ParameterizedAdUnit(@NonNull String configId, @NonNull EnumSet<AdFormat> adType) {
         super(configId, adType);
     }
 
@@ -36,5 +41,13 @@ public abstract class BannerBaseAdUnit extends AdUnit {
         configuration.setBannerParameters(parameters);
     }
 
+    @Nullable
+    public VideoParameters getVideoParameters() {
+        return configuration.getVideoParameters();
+    }
+
+    public void setVideoParameters(@Nullable VideoParameters parameters) {
+        configuration.setVideoParameters(parameters);
+    }
 
 }

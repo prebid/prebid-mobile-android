@@ -16,6 +16,9 @@
 
 package org.prebid.mobile.api.data;
 
+/**
+ * Public ad unit format. Can be set up by a publisher.
+ */
 public enum AdUnitFormat {
     DISPLAY,
     VIDEO
