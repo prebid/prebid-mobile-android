@@ -43,7 +43,7 @@ public class GamOriginalApiVideoBanner extends BaseAdActivity {
         parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
         parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));
         parameters.setPlacement(Signals.Placement.InBanner);
-        adUnit.setParameters(parameters);
+        adUnit.setVideoParameters(parameters);
 
         final AdManagerAdView gamView = new AdManagerAdView(this);
         gamView.setAdUnitId(AD_UNIT_ID);

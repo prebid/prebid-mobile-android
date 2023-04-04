@@ -97,10 +97,10 @@ public class AdUnitSuccessorTest {
         BannerParameters parameters = new BannerParameters();
         parameters.setApi(Arrays.asList(Signals.Api.VPAID_1, Signals.Api.VPAID_2));
 
-        bannerAdUnit.setParameters(parameters);
+        bannerAdUnit.setBannerParameters(parameters);
 
         //when
-        BannerParameters testedBannerParameters = bannerAdUnit.getParameters();
+        BannerParameters testedBannerParameters = bannerAdUnit.getBannerParameters();
         List<Signals.Api> api = testedBannerParameters.getApi();
 
         //then
@@ -189,10 +189,10 @@ public class AdUnitSuccessorTest {
         parameters.setPlacement(Signals.Placement.InBanner);
         parameters.setLinearity(1);
 
-        videoBaseAdUnit.setParameters(parameters);
+        videoBaseAdUnit.setVideoParameters(parameters);
 
         //when
-        VideoParameters testedVideoParameters = videoBaseAdUnit.getParameters();
+        VideoParameters testedVideoParameters = videoBaseAdUnit.getVideoParameters();
 
         List<Signals.Api> api = testedVideoParameters.getApi();
         Integer maxBitrate = testedVideoParameters.getMaxBitrate();

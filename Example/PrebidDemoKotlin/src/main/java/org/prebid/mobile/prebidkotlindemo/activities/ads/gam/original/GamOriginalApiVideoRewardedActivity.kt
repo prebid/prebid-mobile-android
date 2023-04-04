@@ -32,7 +32,7 @@ class GamOriginalApiVideoRewardedActivity : BaseAdActivity() {
         adUnit = RewardedVideoAdUnit(CONFIG_ID)
 
         // 2. Configure Video parameters
-        adUnit?.parameters = configureVideoParameters()
+        adUnit?.videoParameters = configureVideoParameters()
 
         // 3. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()

@@ -39,7 +39,7 @@ public class GamOriginalApiVideoRewarded extends BaseAdActivity {
         parameters.setMimes(Collections.singletonList("video/mp4"));
         parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
         parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));
-        adUnit.setParameters(parameters);
+        adUnit.setVideoParameters(parameters);
 
         final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
         adUnit.fetchDemand(builder, resultCode -> {

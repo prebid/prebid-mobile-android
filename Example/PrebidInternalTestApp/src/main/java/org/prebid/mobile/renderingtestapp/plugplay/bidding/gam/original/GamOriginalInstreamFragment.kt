@@ -73,7 +73,7 @@ class GamOriginalInstreamFragment : AdFragment() {
         parameters.placement = Signals.Placement.InStream
 
         adUnit = VideoAdUnit(configId, width, height)
-        adUnit?.parameters = parameters
+        adUnit?.videoParameters = parameters
     }
 
     private fun initializePlayer() {

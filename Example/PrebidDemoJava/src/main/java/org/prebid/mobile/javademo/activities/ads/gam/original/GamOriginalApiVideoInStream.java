@@ -69,7 +69,7 @@ public class GamOriginalApiVideoInStream extends BaseAdActivity {
         parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
         parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));
         parameters.setPlacement(Signals.Placement.InStream);
-        adUnit.setParameters(parameters);
+        adUnit.setVideoParameters(parameters);
 
         adUnit.fetchDemand((resultCode, keysMap) -> {
             HashSet<org.prebid.mobile.AdSize> sizes = new HashSet<>();

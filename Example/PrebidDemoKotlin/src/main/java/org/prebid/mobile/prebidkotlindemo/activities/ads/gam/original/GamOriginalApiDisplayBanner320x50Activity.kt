@@ -69,7 +69,7 @@ class GamOriginalApiDisplayBanner320x50Activity : BaseAdActivity() {
 
         val parameters = BannerParameters()
         parameters.api = listOf(Signals.Api.MRAID_3, Signals.Api.OMID_1)
-        adUnit?.parameters = parameters
+        adUnit?.bannerParameters = parameters
 
         adUnit?.setAutoRefreshInterval(refreshTimeSeconds)
         adUnit?.fetchDemand(request) {

@@ -31,7 +31,7 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
         adUnit = VideoInterstitialAdUnit(CONFIG_ID)
 
         // 2. Configure video ad unit
-        adUnit?.parameters = configureVideoParameters()
+        adUnit?.videoParameters = configureVideoParameters()
 
         // 3. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()

@@ -35,7 +35,7 @@ class GamOriginalApiVideoBannerActivity : BaseAdActivity() {
         adUnit = VideoAdUnit(CONFIG_ID, WIDTH, HEIGHT)
 
         // 2. Configure video ad unit
-        adUnit?.parameters = configureVideoParameters()
+        adUnit?.videoParameters = configureVideoParameters()
 
         // 3. Create AdManagerAdView
         val gamView = AdManagerAdView(this)

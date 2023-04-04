@@ -28,11 +28,11 @@ public abstract class VideoBaseAdUnit extends AdUnit {
     }
 
     @Nullable
-    public VideoParameters getParameters() {
+    public VideoParameters getVideoParameters() {
         return configuration.getVideoParameters();
     }
 
-    public void setParameters(@Nullable VideoParameters parameters) {
+    public void setVideoParameters(@Nullable VideoParameters parameters) {
         configuration.setVideoParameters(parameters);
     }
 

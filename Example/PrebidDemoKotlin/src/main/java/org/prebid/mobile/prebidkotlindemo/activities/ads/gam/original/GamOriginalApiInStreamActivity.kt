@@ -69,7 +69,7 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
         adUnit = VideoAdUnit(CONFIG_ID, WIDTH, HEIGHT)
 
         // 2. Configure video parameters
-        adUnit?.parameters = configureVideoParameters()
+        adUnit?.videoParameters = configureVideoParameters()
 
         // 3. Init player view
         playerView = PlayerView(this)
