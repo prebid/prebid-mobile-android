@@ -11,7 +11,7 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 
 import org.prebid.mobile.BannerAdUnit;
-import org.prebid.mobile.BannerBaseAdUnit;
+import org.prebid.mobile.BannerParameters;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.addendum.PbFindSizeError;
@@ -38,7 +38,7 @@ public class GamOriginalApiDisplayBanner300x250 extends BaseAdActivity {
     private void createAd() {
         adUnit = new BannerAdUnit(CONFIG_ID, WIDTH, HEIGHT);
 
-        BannerBaseAdUnit.Parameters parameters = new BannerBaseAdUnit.Parameters();
+        BannerParameters parameters = new BannerParameters();
         parameters.setApi(Collections.singletonList(Signals.Api.MRAID_2));
         adUnit.setParameters(parameters);
 

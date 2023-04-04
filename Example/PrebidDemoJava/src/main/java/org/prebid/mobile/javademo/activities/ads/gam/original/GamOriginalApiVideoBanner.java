@@ -12,7 +12,7 @@ import com.google.android.gms.ads.admanager.AdManagerAdView;
 
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.VideoAdUnit;
-import org.prebid.mobile.VideoBaseAdUnit;
+import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.addendum.PbFindSizeError;
 import org.prebid.mobile.javademo.activities.BaseAdActivity;
@@ -38,7 +38,7 @@ public class GamOriginalApiVideoBanner extends BaseAdActivity {
     private void createAd() {
         adUnit = new VideoAdUnit(CONFIG_ID, WIDTH, HEIGHT);
 
-        VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
+        VideoParameters parameters = new VideoParameters();
         parameters.setMimes(Collections.singletonList("video/mp4"));
         parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
         parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));

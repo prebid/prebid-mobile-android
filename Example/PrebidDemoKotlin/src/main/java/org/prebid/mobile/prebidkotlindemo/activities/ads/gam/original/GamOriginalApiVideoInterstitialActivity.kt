@@ -7,8 +7,8 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
 import org.prebid.mobile.Signals
-import org.prebid.mobile.VideoBaseAdUnit
 import org.prebid.mobile.VideoInterstitialAdUnit
+import org.prebid.mobile.VideoParameters
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
@@ -47,8 +47,8 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
         }
     }
 
-    private fun configureVideoParameters(): VideoBaseAdUnit.Parameters {
-        return VideoBaseAdUnit.Parameters().apply {
+    private fun configureVideoParameters(): VideoParameters {
+        return VideoParameters().apply {
             placement = Signals.Placement.Interstitial
 
             api = listOf(

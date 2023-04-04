@@ -44,7 +44,7 @@ import org.prebid.mobile.ExternalUserId;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.TargetingParams;
-import org.prebid.mobile.VideoBaseAdUnit;
+import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -773,8 +773,8 @@ public class BasicParameterBuilderTest {
     }
 
 
-    private VideoBaseAdUnit.Parameters createFullVideoParameters() {
-        VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
+    private VideoParameters createFullVideoParameters() {
+        VideoParameters parameters = new VideoParameters();
 
         parameters.setMinDuration(101);
         parameters.setMaxDuration(102);

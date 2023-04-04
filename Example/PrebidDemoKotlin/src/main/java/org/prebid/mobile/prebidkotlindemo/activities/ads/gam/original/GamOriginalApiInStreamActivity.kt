@@ -95,8 +95,8 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
         }
     }
 
-    private fun configureVideoParameters(): VideoBaseAdUnit.Parameters {
-        return VideoBaseAdUnit.Parameters().apply {
+    private fun configureVideoParameters(): VideoParameters {
+        return VideoParameters().apply {
             placement = Signals.Placement.InStream
 
             api = listOf(

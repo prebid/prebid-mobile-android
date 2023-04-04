@@ -1,9 +1,7 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original
 
 import android.net.Uri
-import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ext.ima.ImaAdsLoader
@@ -19,7 +17,6 @@ import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerVideoBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
-import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 
 class GamOriginalInstreamFragment : AdFragment() {
 
@@ -69,7 +66,7 @@ class GamOriginalInstreamFragment : AdFragment() {
         val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 600)
         binding.viewContainer.addView(playerView, params)
 
-        val parameters = VideoBaseAdUnit.Parameters()
+        val parameters = VideoParameters()
         parameters.mimes = listOf("video/mp4")
         parameters.protocols = listOf(Signals.Protocols.VAST_2_0)
         parameters.playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOff)

@@ -7,7 +7,7 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
 import org.prebid.mobile.Signals
 import org.prebid.mobile.VideoAdUnit
-import org.prebid.mobile.VideoBaseAdUnit
+import org.prebid.mobile.VideoParameters
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.AdViewUtils.PbFindSizeListener
 import org.prebid.mobile.addendum.PbFindSizeError
@@ -54,8 +54,8 @@ class GamOriginalApiVideoBannerActivity : BaseAdActivity() {
         }
     }
 
-    private fun configureVideoParameters(): VideoBaseAdUnit.Parameters {
-        return VideoBaseAdUnit.Parameters().apply {
+    private fun configureVideoParameters(): VideoParameters {
+        return VideoParameters().apply {
 
             api = listOf(
                 Signals.Api.VPAID_1,

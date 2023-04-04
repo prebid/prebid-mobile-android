@@ -22,6 +22,7 @@ import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.Util;
 import org.prebid.mobile.VideoAdUnit;
+import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.javademo.R;
 import org.prebid.mobile.javademo.activities.BaseAdActivity;
 
@@ -63,7 +64,7 @@ public class GamOriginalApiVideoInStream extends BaseAdActivity {
 
         adUnit = new VideoAdUnit(CONFIG_ID, 640, 480);
 
-        VideoAdUnit.Parameters parameters = new VideoAdUnit.Parameters();
+        VideoParameters parameters = new VideoParameters();
         parameters.setMimes(Collections.singletonList("video/mp4"));
         parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
         parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));

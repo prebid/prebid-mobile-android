@@ -26,13 +26,13 @@ import android.util.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.prebid.mobile.AdSize;
-import org.prebid.mobile.BannerBaseAdUnit;
+import org.prebid.mobile.BannerParameters;
 import org.prebid.mobile.DataObject;
 import org.prebid.mobile.ExternalUserId;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.TargetingParams;
-import org.prebid.mobile.VideoBaseAdUnit;
+import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
@@ -218,7 +218,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
     private void setVideoImpValues(Imp imp) {
         Video video = new Video();
         if (adConfiguration.isOriginalAdUnit()) {
-            VideoBaseAdUnit.Parameters videoParameters = adConfiguration.getVideoParameters();
+            VideoParameters videoParameters = adConfiguration.getVideoParameters();
             if (videoParameters != null) {
                 video.minduration = videoParameters.getMinDuration();
                 video.maxduration = videoParameters.getMaxDuration();
@@ -321,7 +321,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
     private void setBannerImpValues(Imp imp) {
         Banner banner = new Banner();
         if (adConfiguration.isOriginalAdUnit()) {
-            BannerBaseAdUnit.Parameters parameters = adConfiguration.getBannerParameters();
+            BannerParameters parameters = adConfiguration.getBannerParameters();
             if (parameters != null && parameters.getApi() != null && parameters.getApi().size() > 0) {
                 List<Signals.Api> apiObjects = parameters.getApi();
                 int[] api = new int[apiObjects.size()];

@@ -17,6 +17,10 @@
 
 package org.prebid.mobile;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,10 +37,6 @@ import org.robolectric.annotation.Config;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -94,13 +94,13 @@ public class AdUnitSuccessorTest {
         //given
         BannerAdUnit bannerAdUnit = new BannerAdUnit(testConfigId, width, height);
 
-        BannerAdUnit.Parameters parameters = new BannerAdUnit.Parameters();
+        BannerParameters parameters = new BannerParameters();
         parameters.setApi(Arrays.asList(Signals.Api.VPAID_1, Signals.Api.VPAID_2));
 
         bannerAdUnit.setParameters(parameters);
 
         //when
-        BannerAdUnit.Parameters testedBannerParameters = bannerAdUnit.getParameters();
+        BannerParameters testedBannerParameters = bannerAdUnit.getParameters();
         List<Signals.Api> api = testedBannerParameters.getApi();
 
         //then
@@ -175,7 +175,7 @@ public class AdUnitSuccessorTest {
 
     private void setupAndCheckVideoParametersHelper(VideoBaseAdUnit videoBaseAdUnit) {
 
-        VideoAdUnit.Parameters parameters = new VideoAdUnit.Parameters();
+        VideoParameters parameters = new VideoParameters();
 
         parameters.setApi(Arrays.asList(Signals.Api.VPAID_1, Signals.Api.VPAID_2));
         parameters.setMaxBitrate(1500);
@@ -192,7 +192,7 @@ public class AdUnitSuccessorTest {
         videoBaseAdUnit.setParameters(parameters);
 
         //when
-        VideoAdUnit.Parameters testedVideoParameters = videoBaseAdUnit.getParameters();
+        VideoParameters testedVideoParameters = videoBaseAdUnit.getParameters();
 
         List<Signals.Api> api = testedVideoParameters.getApi();
         Integer maxBitrate = testedVideoParameters.getMaxBitrate();

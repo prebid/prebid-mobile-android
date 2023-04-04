@@ -12,8 +12,8 @@ import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 
 import org.prebid.mobile.Signals;
-import org.prebid.mobile.VideoBaseAdUnit;
 import org.prebid.mobile.VideoInterstitialAdUnit;
+import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.javademo.activities.BaseAdActivity;
 import org.prebid.mobile.javademo.utils.Settings;
 
@@ -37,7 +37,7 @@ public class GamOriginalApiVideoInterstitial extends BaseAdActivity {
         adUnit = new VideoInterstitialAdUnit(CONFIG_ID);
         adUnit.setAutoRefreshInterval(Settings.get().getRefreshTimeSeconds());
 
-        VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
+        VideoParameters parameters = new VideoParameters();
         parameters.setMimes(Collections.singletonList("video/mp4"));
         parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
         parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));

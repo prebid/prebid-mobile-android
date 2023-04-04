@@ -8,7 +8,7 @@ import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import org.prebid.mobile.RewardedVideoAdUnit
 import org.prebid.mobile.Signals
-import org.prebid.mobile.VideoBaseAdUnit
+import org.prebid.mobile.VideoParameters
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 
 class GamOriginalApiVideoRewardedActivity : BaseAdActivity() {
@@ -48,8 +48,8 @@ class GamOriginalApiVideoRewardedActivity : BaseAdActivity() {
         }
     }
 
-    private fun configureVideoParameters(): VideoBaseAdUnit.Parameters {
-        return VideoBaseAdUnit.Parameters().apply {
+    private fun configureVideoParameters(): VideoParameters {
+        return VideoParameters().apply {
             mimes = listOf("video/mp4")
             protocols = listOf(Signals.Protocols.VAST_2_0)
             playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOff)

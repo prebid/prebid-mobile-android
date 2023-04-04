@@ -18,9 +18,8 @@ package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.prebid.mobile.api.data.AdFormat;
 
-import java.util.List;
+import org.prebid.mobile.api.data.AdFormat;
 
 public abstract class BannerBaseAdUnit extends AdUnit {
 
@@ -29,33 +28,13 @@ public abstract class BannerBaseAdUnit extends AdUnit {
     }
 
     @Nullable
-    public Parameters getParameters() {
+    public BannerParameters getParameters() {
         return configuration.getBannerParameters();
     }
 
-    public void setParameters(@Nullable Parameters parameters) {
+    public void setParameters(@Nullable BannerParameters parameters) {
         configuration.setBannerParameters(parameters);
     }
 
-    /**
-     * Describes an <a href="https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf">OpenRTB</a> banner object
-     */
-    public static class Parameters {
-
-        /**
-         List of supported API frameworks for this impression. If an API is not explicitly listed, it is assumed not to be supported.
-         */
-        @Nullable
-        private List<Signals.Api> api;
-
-        @Nullable
-        public List<Signals.Api> getApi() {
-            return api;
-        }
-
-        public void setApi(@Nullable List<Signals.Api> api) {
-            this.api = api;
-        }
-    }
 
 }
