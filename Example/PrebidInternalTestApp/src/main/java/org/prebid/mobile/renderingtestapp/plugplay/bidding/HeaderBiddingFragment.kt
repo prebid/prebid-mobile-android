@@ -173,6 +173,8 @@ class HeaderBiddingFragment : BaseFragment() {
                 defaultAccountId =  defaultAccountId
             )
         }
+        // TODO not ready, wait for rendering delegation full release
+        switch.isEnabled = false
     }
 
     private fun initCacheSwitch() {
