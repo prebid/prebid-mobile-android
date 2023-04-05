@@ -16,6 +16,8 @@
 
 package org.prebid.mobile.rendering.bidding.data.bid;
 
+import static org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister.PLUGIN_RENDERER_KEY;
+
 import android.content.Context;
 import android.util.Pair;
 
@@ -64,6 +66,7 @@ public class BidResponse {
     private boolean usesCache;
     private String parseError;
     private String winningBidJson;
+    private AdUnitConfiguration adUnitConfiguration;
 
     private long creationTime;
 
@@ -75,6 +78,8 @@ public class BidResponse {
     ) {
         seatbids = new ArrayList<>();
         usesCache = adUnitConfiguration.isOriginalAdUnit() || PrebidMobile.isUseCacheForReportingWithRenderingApi();
+        this.adUnitConfiguration = adUnitConfiguration;
+
         parseJson(json);
     }
 
@@ -217,6 +222,18 @@ public class BidResponse {
             return Utils.isVast(bid.getAdm());
         }
         return false;
+    }
+
+    public String getPreferredPluginRendererName() {
+        Bid bid = getWinningBid();
+        if (bid != null) {
+            return bid.getPrebid().getTargeting().get(PLUGIN_RENDERER_KEY);
+        }
+        return null;
+    }
+
+    public AdUnitConfiguration getAdUnitConfiguration() {
+        return adUnitConfiguration;
     }
 
     private boolean hasWinningKeywords(Prebid prebid) {

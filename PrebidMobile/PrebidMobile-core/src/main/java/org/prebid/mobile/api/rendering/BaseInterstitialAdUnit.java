@@ -33,10 +33,11 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.api.data.Position;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
-import org.prebid.mobile.rendering.bidding.display.InterstitialController;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener;
 import org.prebid.mobile.rendering.bidding.listeners.BidRequesterListener;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
@@ -55,7 +56,7 @@ public abstract class BaseInterstitialAdUnit {
 
     private BidLoader bidLoader;
     private BidResponse bidResponse;
-    private InterstitialController interstitialController;
+    private PrebidMobileInterstitialControllerInterface interstitialController;
     private InterstitialAdUnitState interstitialAdUnitState = READY_FOR_LOAD;
 
     private final WeakReference<Context> weakContext;
@@ -356,19 +357,21 @@ public abstract class BaseInterstitialAdUnit {
 
         initPrebidRenderingSdk();
         initBidLoader();
-        initInterstitialController();
     }
 
     protected void loadPrebidAd() {
+        PrebidMobilePluginRenderer plugin = PrebidMobilePluginRegister.getInstance().getPluginForPreferredRenderer(bidResponse);
+        if (plugin != null) {
+            interstitialController = plugin.createInterstitialController(getContext(), controllerListener, adUnitConfig, bidResponse);
+        }
         if (interstitialController == null) {
             notifyErrorListener(new AdException(
-                AdException.INTERNAL_ERROR,
-                "InterstitialController is not defined. Unable to process bid."
+                    AdException.INTERNAL_ERROR,
+                    "InterstitialController is not defined. Unable to process bid."
             ));
-            return;
+        } else {
+            interstitialController.loadAd(adUnitConfig, bidResponse);
         }
-
-        interstitialController.loadAd(adUnitConfig, bidResponse);
     }
 
     @Nullable
@@ -390,14 +393,6 @@ public abstract class BaseInterstitialAdUnit {
 
     private void initBidLoader() {
         bidLoader = new BidLoader(getContext(), adUnitConfig, bidRequesterListener);
-    }
-
-    private void initInterstitialController() {
-        try {
-            interstitialController = new InterstitialController(getContext(), controllerListener);
-        } catch (AdException e) {
-            notifyErrorListener(e);
-        }
     }
 
     private Bid getWinnerBid() {
@@ -424,7 +419,6 @@ public abstract class BaseInterstitialAdUnit {
     public void addContent(ContentObject content) {
         adUnitConfig.setAppContent(content);
     }
-
 
     private BidRequesterListener createBidRequesterListener() {
         return new BidRequesterListener() {

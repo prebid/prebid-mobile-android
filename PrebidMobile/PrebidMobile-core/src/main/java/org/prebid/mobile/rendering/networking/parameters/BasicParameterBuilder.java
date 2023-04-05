@@ -34,11 +34,13 @@ import org.prebid.mobile.Signals;
 import org.prebid.mobile.TargetingParams;
 import org.prebid.mobile.VideoBaseAdUnit;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Prebid;
 import org.prebid.mobile.rendering.models.PlacementType;
 import org.prebid.mobile.rendering.models.openrtb.BidRequest;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.Imp;
+import org.prebid.mobile.rendering.models.openrtb.bidRequests.PluginRenderers;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.User;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.devices.Geo;
 import org.prebid.mobile.rendering.models.openrtb.bidRequests.imps.Banner;
@@ -143,6 +145,10 @@ public class BasicParameterBuilder extends ParameterBuilder {
         //if coppaEnabled - set 1, else No coppa is sent
         if (PrebidMobile.isCoppaEnabled) {
             bidRequest.getRegs().coppa = 1;
+        }
+
+        if (!adConfiguration.isOriginalAdUnit()) {
+            bidRequest.setPluginRenderers(getPluginRenderers());
         }
     }
 
@@ -418,5 +424,10 @@ public class BasicParameterBuilder extends ParameterBuilder {
         else {
             return null;
         }
+    }
+
+    private PluginRenderers getPluginRenderers() {
+        List<String> customRenderers = PrebidMobilePluginRegister.getInstance().getRTBListOfRenderersFor(adConfiguration);
+        return new PluginRenderers(customRenderers);
     }
 }

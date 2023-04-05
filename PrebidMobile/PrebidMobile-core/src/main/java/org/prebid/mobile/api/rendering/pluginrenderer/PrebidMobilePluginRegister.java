@@ -1,0 +1,90 @@
+/*
+ *    Copyright 2018-2021 Prebid.org, Inc.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+package org.prebid.mobile.api.rendering.pluginrenderer;
+
+import androidx.annotation.VisibleForTesting;
+
+import org.prebid.mobile.LogUtil;
+import org.prebid.mobile.configuration.AdUnitConfiguration;
+import org.prebid.mobile.rendering.bidding.data.bid.BidResponse;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class PrebidMobilePluginRegister {
+
+    public static final String PLUGIN_RENDERER_KEY = "plugin_renderer_key";
+    public static final String PREBID_MOBILE_RENDERER_NAME = "PrebidRenderer";
+
+    private static final PrebidMobilePluginRegister instance = new PrebidMobilePluginRegister();
+
+    private final HashMap<String, PrebidMobilePluginRenderer> plugins = new HashMap<>();
+
+    public void registerPlugin(PrebidMobilePluginRenderer prebidMobilePluginRenderers) {
+        String rendererName = prebidMobilePluginRenderers.getName();
+        if (plugins.containsKey(rendererName)) {
+            LogUtil.debug("PluginRegister", "New plugin renderer with name" + rendererName + "will replace the previous one with same name");
+        }
+        plugins.put(prebidMobilePluginRenderers.getName(), prebidMobilePluginRenderers);
+    }
+
+    public void unregisterPlugin(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
+        plugins.remove(prebidMobilePluginRenderer.getName());
+    }
+
+    public Boolean containsPlugin(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
+        return plugins.containsKey(prebidMobilePluginRenderer.getName());
+    }
+
+    @VisibleForTesting
+    public Boolean containsPlugin(String prebidMobilePluginRendererName) {
+        return plugins.containsKey(prebidMobilePluginRendererName);
+    }
+
+    // Returns the list of available renderers for the given ad unit for RT request
+    public List<String> getRTBListOfRenderersFor(AdUnitConfiguration adUnitConfiguration) {
+        List<String> compliantPlugins = new ArrayList<>();
+        for (Map.Entry<String, PrebidMobilePluginRenderer> entry : plugins.entrySet()) {
+            PrebidMobilePluginRenderer renderer = entry.getValue();
+            if (renderer.isSupportRenderingFor(adUnitConfiguration)) {
+                compliantPlugins.add(renderer.getName());
+            }
+        }
+        return compliantPlugins;
+    }
+
+    // Returns the registered renderer according to the preferred renderer name in the bid response
+    // If no preferred renderer is found, it returns PrebidRenderer to perform default behavior
+    public PrebidMobilePluginRenderer getPluginForPreferredRenderer(BidResponse bidResponse) {
+        String preferredRendererName = bidResponse.getPreferredPluginRendererName();
+        PrebidMobilePluginRenderer preferredPlugin = plugins.get(preferredRendererName);
+        if (preferredPlugin != null && preferredPlugin.isSupportRenderingFor(bidResponse.getAdUnitConfiguration())) {
+            return preferredPlugin;
+        } else {
+            return plugins.get(PREBID_MOBILE_RENDERER_NAME);
+        }
+    }
+
+    private PrebidMobilePluginRegister() {
+    }
+
+    public static PrebidMobilePluginRegister getInstance() {
+        return instance;
+    }
+}

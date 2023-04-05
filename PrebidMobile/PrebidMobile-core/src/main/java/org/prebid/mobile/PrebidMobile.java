@@ -26,6 +26,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.prebid.mobile.api.data.InitializationStatus;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.core.BuildConfig;
 import org.prebid.mobile.rendering.listeners.SdkInitializationListener;
 import org.prebid.mobile.rendering.mraid.MraidEnv;
@@ -357,6 +359,18 @@ public class PrebidMobile {
         return customStatusEndpoint;
     }
 
+    // TODO not ready, wait for rendering delegation full release
+    private static void registerPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
+        PrebidMobilePluginRegister.getInstance().registerPlugin(prebidMobilePluginRenderer);
+    }
+
+    private static void unregisterPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
+        PrebidMobilePluginRegister.getInstance().unregisterPlugin(prebidMobilePluginRenderer);
+    }
+
+    private static Boolean containsPluginRenderer(PrebidMobilePluginRenderer prebidMobilePluginRenderer) {
+        return PrebidMobilePluginRegister.getInstance().containsPlugin(prebidMobilePluginRenderer);
+    }
 
     /**
      * LogLevel for logging control.

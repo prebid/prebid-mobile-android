@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.models.openrtb;
 
 import android.text.TextUtils;
+
 import androidx.annotation.VisibleForTesting;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,6 +37,7 @@ public class BidRequest extends BaseBid {
     private Regs regs = null;
     private User user = null;
     private Source source = null;
+    private PluginRenderers pluginRenderers = null;
 
     private Ext ext = null;
 
@@ -61,6 +63,7 @@ public class BidRequest extends BaseBid {
         toJSON(jsonObject, "source", source != null ? source.getJsonObject() : null);
         toJSON(jsonObject, "ext", ext != null ? ext.getJsonObject() : null);
         toJSON(jsonObject, "test", PrebidMobile.getPbsDebug() ? 1 : null);
+        toJSON(jsonObject, "data", pluginRenderers != null ? pluginRenderers.getJsonObject() : null);
 
         return jsonObject;
     }
@@ -154,5 +157,13 @@ public class BidRequest extends BaseBid {
             ext = new Ext();
         }
         return ext;
+    }
+
+    public void setPluginRenderers(PluginRenderers pluginRenderers) {
+        this.pluginRenderers = pluginRenderers;
+    }
+
+    public PluginRenderers getPluginRenderers() {
+        return pluginRenderers;
     }
 }

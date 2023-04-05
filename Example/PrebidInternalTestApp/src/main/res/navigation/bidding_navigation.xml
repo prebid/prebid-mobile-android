@@ -457,7 +457,6 @@
             android:id="@+id/action_header_bidding_to_gam_original_native_banner"
             app:destination="@id/gamOriginalNativeBannerFragment" />
 
-
     </fragment>
 
     <include app:graph="@navigation/utilities_navigation" />

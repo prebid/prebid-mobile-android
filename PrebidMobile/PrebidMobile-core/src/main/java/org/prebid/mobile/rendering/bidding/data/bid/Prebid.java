@@ -69,6 +69,7 @@ public class Prebid {
         prebid.type = jsonObject.optString("type");
         parseEvents(prebid, jsonObject.optJSONObject("events"));
         toHashMap(prebid.targeting, jsonObject.optJSONObject("targeting"));
+
         return prebid;
     }
 
