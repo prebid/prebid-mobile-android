@@ -16,9 +16,13 @@
 
 package org.prebid.mobile.rendering.bidding.data.bid;
 
+import static org.prebid.mobile.rendering.utils.helpers.Utils.addValue;
+
 import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,8 +35,6 @@ import org.prebid.mobile.rendering.utils.helpers.Utils;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import static org.prebid.mobile.rendering.utils.helpers.Utils.addValue;
 
 public class Prebid {
 
@@ -101,9 +103,9 @@ public class Prebid {
     }
 
     public static JSONObject getJsonObjectForBidRequest(
-        String accountId,
-        boolean isVideo,
-        boolean isOriginalAdUnit
+            String accountId,
+            boolean isVideo,
+            AdUnitConfiguration config
     ) {
         JSONObject prebid = getPrebidObject(accountId);
 
@@ -113,10 +115,15 @@ public class Prebid {
             Utils.addValue(cache, "vastxml", new JSONObject());
         }
 
-        if (PrebidMobile.isUseCacheForReportingWithRenderingApi() || isOriginalAdUnit) {
+        if (PrebidMobile.isUseCacheForReportingWithRenderingApi() || config.isOriginalAdUnit()) {
             Utils.addValue(prebid, "cache", cache);
         }
-        Utils.addValue(prebid, "targeting", new JSONObject());
+
+        JSONObject targeting = new JSONObject();
+        if (config.isOriginalAdUnit() && config.getAdFormats().size() > 1) {
+            Utils.addValue(targeting, "includeformat", "true");
+        }
+        Utils.addValue(prebid, "targeting", targeting);
 
         if (!TargetingParams.getAccessControlList().isEmpty()) {
             JSONObject data = new JSONObject();
