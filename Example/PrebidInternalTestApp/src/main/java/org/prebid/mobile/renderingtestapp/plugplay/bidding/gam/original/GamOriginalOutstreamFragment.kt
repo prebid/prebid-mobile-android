@@ -23,23 +23,21 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
-import org.prebid.mobile.BannerAdUnit
+import org.prebid.mobile.VideoAdUnit
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
-import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerVideoBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import java.util.*
 
 class GamOriginalOutstreamFragment : AdFragment() {
     companion object {
         private const val TAG = "GamOriginalOutstream"
     }
 
-    private var adUnit: BannerAdUnit? = null
+    private var adUnit: VideoAdUnit? = null
     private var gamView: AdManagerAdView? = null
 
     private val binding: FragmentBiddingBannerVideoBinding
@@ -48,11 +46,10 @@ class GamOriginalOutstreamFragment : AdFragment() {
 
     override fun initAd(): Any? {
         events = Events(view!!)
-        adUnit = BannerAdUnit(
+        adUnit = VideoAdUnit(
             configId,
             width,
-            height,
-            EnumSet.of(AdUnitFormat.VIDEO)
+            height
         )
 
         gamView = AdManagerAdView(requireContext())

@@ -20,7 +20,7 @@ import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFr
 
 class GamOriginalInstreamFragment : AdFragment() {
 
-    private var adUnit: InStreamVideoAdUnit? = null
+    private var adUnit: VideoAdUnit? = null
     private var player: SimpleExoPlayer? = null
     private var adsUri: Uri? = null
     private var adsLoader: ImaAdsLoader? = null
@@ -72,7 +72,7 @@ class GamOriginalInstreamFragment : AdFragment() {
         parameters.playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOff)
         parameters.placement = Signals.Placement.InStream
 
-        adUnit = InStreamVideoAdUnit(configId, width, height)
+        adUnit = VideoAdUnit(configId, width, height)
         adUnit?.videoParameters = parameters
     }
 
