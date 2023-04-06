@@ -10,14 +10,16 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerAdView;
 
+import org.prebid.mobile.BannerAdUnit;
 import org.prebid.mobile.Signals;
-import org.prebid.mobile.VideoAdUnit;
 import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.addendum.AdViewUtils;
 import org.prebid.mobile.addendum.PbFindSizeError;
+import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.javademo.activities.BaseAdActivity;
 
 import java.util.Collections;
+import java.util.EnumSet;
 
 public class GamOriginalApiVideoBanner extends BaseAdActivity {
 
@@ -26,7 +28,7 @@ public class GamOriginalApiVideoBanner extends BaseAdActivity {
     private static final int WIDTH = 300;
     private static final int HEIGHT = 250;
 
-    private VideoAdUnit adUnit;
+    private BannerAdUnit adUnit;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,7 +38,7 @@ public class GamOriginalApiVideoBanner extends BaseAdActivity {
     }
 
     private void createAd() {
-        adUnit = new VideoAdUnit(CONFIG_ID, WIDTH, HEIGHT);
+        adUnit = new BannerAdUnit(CONFIG_ID, WIDTH, HEIGHT, EnumSet.of(AdUnitFormat.VIDEO));
 
         VideoParameters parameters = new VideoParameters();
         parameters.setMimes(Collections.singletonList("video/mp4"));

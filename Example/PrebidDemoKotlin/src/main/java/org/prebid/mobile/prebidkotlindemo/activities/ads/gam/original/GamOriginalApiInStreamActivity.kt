@@ -42,7 +42,7 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
         const val HEIGHT = 480
     }
 
-    private var adUnit: VideoAdUnit? = null
+    private var adUnit: InStreamVideoAdUnit? = null
     private var player: SimpleExoPlayer? = null
     private var adsUri: Uri? = null
     private var adsLoader: ImaAdsLoader? = null
@@ -65,8 +65,8 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        // 1. Create VideoAdUnit
-        adUnit = VideoAdUnit(CONFIG_ID, WIDTH, HEIGHT)
+        // 1. Create InStreamVideoAdUnit
+        adUnit = InStreamVideoAdUnit(CONFIG_ID, WIDTH, HEIGHT)
 
         // 2. Configure video parameters
         adUnit?.videoParameters = configureVideoParameters()

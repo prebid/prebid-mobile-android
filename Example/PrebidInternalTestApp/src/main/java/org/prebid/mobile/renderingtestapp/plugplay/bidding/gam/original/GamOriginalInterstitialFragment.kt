@@ -19,18 +19,16 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
 import org.prebid.mobile.AdUnit
 import org.prebid.mobile.InterstitialAdUnit
-import org.prebid.mobile.VideoInterstitialAdUnit
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
-import org.prebid.mobile.renderingtestapp.widgets.EventCounterView
+import java.util.*
 
 class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
     companion object {
@@ -54,7 +52,7 @@ class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
         height: Int
     ) {
         adUnit = if (adUnitFormat == AdUnitFormat.VIDEO) {
-            VideoInterstitialAdUnit(configId!!)
+            InterstitialAdUnit(configId!!, EnumSet.of(AdUnitFormat.VIDEO))
         } else {
             InterstitialAdUnit(configId!!, 30, 30)
         }

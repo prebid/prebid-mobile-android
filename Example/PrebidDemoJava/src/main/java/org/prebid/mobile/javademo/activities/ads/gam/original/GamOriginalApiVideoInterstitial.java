@@ -11,20 +11,22 @@ import com.google.android.gms.ads.admanager.AdManagerAdRequest;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 
+import org.prebid.mobile.InterstitialAdUnit;
 import org.prebid.mobile.Signals;
-import org.prebid.mobile.VideoInterstitialAdUnit;
 import org.prebid.mobile.VideoParameters;
+import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.javademo.activities.BaseAdActivity;
 import org.prebid.mobile.javademo.utils.Settings;
 
 import java.util.Collections;
+import java.util.EnumSet;
 
 public class GamOriginalApiVideoInterstitial extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-video-interstitial";
     private static final String CONFIG_ID = "imp-prebid-video-interstitial-320-480-original-api";
 
-    private VideoInterstitialAdUnit adUnit;
+    private InterstitialAdUnit adUnit;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,7 +36,7 @@ public class GamOriginalApiVideoInterstitial extends BaseAdActivity {
     }
 
     private void createAd() {
-        adUnit = new VideoInterstitialAdUnit(CONFIG_ID);
+        adUnit = new InterstitialAdUnit(CONFIG_ID, EnumSet.of(AdUnitFormat.VIDEO));
         adUnit.setAutoRefreshInterval(Settings.get().getRefreshTimeSeconds());
 
         VideoParameters parameters = new VideoParameters();
