@@ -16,7 +16,6 @@
 
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original
 
-import android.os.Bundle
 import android.util.Log
 import android.view.View
 import com.google.android.gms.ads.AdListener
@@ -27,55 +26,47 @@ import com.google.android.gms.ads.admanager.AdManagerAdView
 import org.prebid.mobile.BannerAdUnit
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
+import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.AdFragment
 import org.prebid.mobile.renderingtestapp.R
-import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerBinding
+import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerVideoBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
-import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
+import java.util.*
 
-open class GamOriginalBannerFragment : AdFragment() {
+class GamOriginalOutstreamNewApiFragment : AdFragment() {
     companion object {
-        private const val TAG = "GamOriginalBanner"
+        private const val TAG = "GamOriginalOutstream"
     }
 
     private var adUnit: BannerAdUnit? = null
-    private var adView: AdManagerAdView? = null
+    private var gamView: AdManagerAdView? = null
 
-    override val layoutRes = R.layout.fragment_bidding_banner
-
-    private val binding: FragmentBiddingBannerBinding
+    private val binding: FragmentBiddingBannerVideoBinding
         get() = getBinding()
     private lateinit var events: Events
 
-    open fun createAdUnit(): BannerAdUnit {
-        val adUnit = BannerAdUnit(configId, width, height)
-        if (configId.contains("multisize")) {
-            adUnit?.addAdditionalSize(728, 90)
-        }
-        return adUnit
-    }
+    override fun initAd(): Any? {
+        events = Events(view!!)
+        adUnit = BannerAdUnit(
+            configId,
+            width,
+            height,
+            EnumSet.of(AdUnitFormat.VIDEO)
+        )
 
-    override fun initUi(view: View, savedInstanceState: Bundle?) {
-        super.initUi(view, savedInstanceState)
-        events = Events(view)
-        binding.adIdLabel.text = getString(R.string.label_auid, configId)
-        binding.btnLoad.setOnClickListener {
-            resetEventButtons()
-            loadAd()
-        }
-    }
-
-    override fun initAd(): Any {
-        val adView = AdManagerAdView(requireContext())
-        adView.adUnitId = adUnitId
-        adView.setAdSizes(AdSize(width, height))
-        adView.adListener = object : AdListener() {
+        gamView = AdManagerAdView(requireContext())
+        gamView?.adUnitId = adUnitId
+        gamView?.setAdSizes(AdSize(width, height))
+        gamView?.adListener = object : AdListener() {
             override fun onAdLoaded() {
-                super.onAdLoaded()
-                AdViewUtils.findPrebidCreativeSize(adView, object : AdViewUtils.PbFindSizeListener {
-                    override fun success(width: Int, height: Int) {
-                        adView.setAdSizes(AdSize(width, height))
+                AdViewUtils.findPrebidCreativeSize(gamView, object :
+                    AdViewUtils.PbFindSizeListener {
+                    override fun success(
+                        width: Int,
+                        height: Int
+                    ) {
+                        gamView?.setAdSizes(AdSize(width, height))
                     }
 
                     override fun failure(error: PbFindSizeError) {}
@@ -86,6 +77,12 @@ open class GamOriginalBannerFragment : AdFragment() {
                 binding.btnLoad.isEnabled = true
             }
 
+            override fun onAdClicked() {
+                super.onAdClicked()
+                Log.d(TAG, "onAdClicked() called")
+                events.clicked(true)
+            }
+
             override fun onAdFailedToLoad(p0: LoadAdError) {
                 super.onAdFailedToLoad(p0)
                 Log.d(TAG, "onAdFailed() called with throwable = [${p0.message}]")
@@ -93,28 +90,17 @@ open class GamOriginalBannerFragment : AdFragment() {
                 events.failed(true)
                 binding.btnLoad.isEnabled = true
             }
-
-            override fun onAdClicked() {
-                super.onAdClicked()
-                Log.d(TAG, "onAdClicked() called")
-                events.clicked(true)
-            }
-
         }
-        this.adView = adView
-        binding.viewContainer.addView(adView)
-
-        adUnit = createAdUnit()
+        binding.viewContainer.addView(gamView)
         adUnit?.setAutoRefreshInterval(refreshDelay)
-        CommandLineArgumentParser.addAdUnitSpecificData(adUnit!!)
-
-        return adView
+        return gamView
     }
 
     override fun loadAd() {
-        val request = AdManagerAdRequest.Builder().build()
-        adUnit?.fetchDemand(request) {
-            adView?.loadAd(request)
+        val builder = AdManagerAdRequest.Builder()
+        adUnit?.fetchDemand(builder) {
+            val request = builder.build()
+            gamView?.loadAd(request)
         }
     }
 
@@ -122,11 +108,8 @@ open class GamOriginalBannerFragment : AdFragment() {
         return AdConfiguratorDialogFragment.AdConfiguratorMode.BANNER
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        adView?.destroy()
-        adUnit?.stopAutoRefresh()
-    }
+    override val layoutRes: Int = R.layout.fragment_bidding_banner_video
+
 
     private class Events(parentView: View) : BaseEvents(parentView) {
 

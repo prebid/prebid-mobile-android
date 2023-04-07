@@ -30,12 +30,21 @@ import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
 
-class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
+open class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
     companion object {
         private const val TAG = "GamOriginalInterstitial"
     }
+
     private var adUnit: AdUnit? = null
     private var displayAdCallback: (() -> Unit)? = null
+
+    open fun createAdUnit(adUnitFormat: AdUnitFormat): AdUnit {
+        return if (adUnitFormat == AdUnitFormat.VIDEO) {
+            VideoInterstitialAdUnit(configId)
+        } else {
+            InterstitialAdUnit(configId, 30, 30)
+        }
+    }
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
@@ -51,11 +60,7 @@ class GamOriginalInterstitialFragment : BaseBidInterstitialFragment() {
         width: Int,
         height: Int
     ) {
-        adUnit = if (adUnitFormat == AdUnitFormat.VIDEO) {
-            VideoInterstitialAdUnit(configId!!)
-        } else {
-            InterstitialAdUnit(configId!!, 30, 30)
-        }
+        adUnit = createAdUnit(adUnitFormat)
         createAd()
     }
 
