@@ -38,6 +38,12 @@ object TestCaseRepository {
             GamOriginalApiVideoBannerActivity::class.java,
         ),
         TestCase(
+            R.string.gam_original_multiformat_banner,
+            AdFormat.VIDEO_BANNER,
+            IntegrationKind.GAM_ORIGINAL,
+            GamOriginalApiMultiformatBannerActivity::class.java,
+        ),
+        TestCase(
             R.string.gam_original_display_interstitial,
             AdFormat.DISPLAY_INTERSTITIAL,
             IntegrationKind.GAM_ORIGINAL,
@@ -48,6 +54,12 @@ object TestCaseRepository {
             AdFormat.VIDEO_INTERSTITIAL,
             IntegrationKind.GAM_ORIGINAL,
             GamOriginalApiVideoInterstitialActivity::class.java,
+        ),
+        TestCase(
+            R.string.gam_original_multiformat_interstitial,
+            AdFormat.VIDEO_INTERSTITIAL,
+            IntegrationKind.GAM_ORIGINAL,
+            GamOriginalApiMultiformatInterstitialActivity::class.java,
         ),
         TestCase(
             R.string.gam_original_video_rewarded,
