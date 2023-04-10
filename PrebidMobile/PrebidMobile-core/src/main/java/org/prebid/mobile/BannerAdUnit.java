@@ -24,7 +24,7 @@ import org.prebid.mobile.api.data.AdUnitFormat;
 import java.util.EnumSet;
 import java.util.HashSet;
 
-public class BannerAdUnit extends ParameterizedAdUnit {
+public class BannerAdUnit extends BannerBaseAdUnit {
 
     public BannerAdUnit(@NonNull String configId, int width, int height) {
         super(configId, EnumSet.of(AdFormat.BANNER));

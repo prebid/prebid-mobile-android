@@ -26,7 +26,7 @@ import org.prebid.mobile.rendering.models.PlacementType;
 
 import java.util.EnumSet;
 
-public class InterstitialAdUnit extends ParameterizedAdUnit {
+public class InterstitialAdUnit extends BannerBaseAdUnit {
 
     public InterstitialAdUnit(@NonNull String configId) {
         super(configId, EnumSet.of(AdFormat.INTERSTITIAL));

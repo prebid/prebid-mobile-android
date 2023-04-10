@@ -224,7 +224,7 @@ public class AdUnitSuccessorTest {
         assertEquals(new Integer(1), linearity);
     }
 
-    private void setupAndCheckVideoParametersHelper(ParameterizedAdUnit videoBaseAdUnit) {
+    private void setupAndCheckVideoParametersHelper(BannerBaseAdUnit videoBaseAdUnit) {
 
         VideoParameters parameters = new VideoParameters();
 
