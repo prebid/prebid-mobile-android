@@ -175,14 +175,13 @@ public class AdUnitSuccessorTest {
     }
 
     private void setupAndCheckVideoParametersHelper(VideoBaseAdUnit videoBaseAdUnit) {
-        VideoParameters parameters = new VideoParameters();
+        VideoParameters parameters = new VideoParameters(Arrays.asList("video/x-flv", "video/mp4"));
 
         parameters.setApi(Arrays.asList(Signals.Api.VPAID_1, Signals.Api.VPAID_2));
         parameters.setMaxBitrate(1500);
         parameters.setMinBitrate(300);
         parameters.setMaxDuration(30);
         parameters.setMinDuration(5);
-        parameters.setMimes(Arrays.asList("video/x-flv", "video/mp4"));
         parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOn, Signals.PlaybackMethod.ClickToPlay));
         parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0, Signals.Protocols.VAST_3_0));
         parameters.setStartDelay(Signals.StartDelay.PreRoll);
@@ -226,14 +225,13 @@ public class AdUnitSuccessorTest {
 
     private void setupAndCheckVideoParametersHelper(BannerBaseAdUnit videoBaseAdUnit) {
 
-        VideoParameters parameters = new VideoParameters();
+        VideoParameters parameters = new VideoParameters(Arrays.asList("video/x-flv", "video/mp4"));
 
         parameters.setApi(Arrays.asList(Signals.Api.VPAID_1, Signals.Api.VPAID_2));
         parameters.setMaxBitrate(1500);
         parameters.setMinBitrate(300);
         parameters.setMaxDuration(30);
         parameters.setMinDuration(5);
-        parameters.setMimes(Arrays.asList("video/x-flv", "video/mp4"));
         parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOn, Signals.PlaybackMethod.ClickToPlay));
         parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0, Signals.Protocols.VAST_3_0));
         parameters.setStartDelay(Signals.StartDelay.PreRoll);

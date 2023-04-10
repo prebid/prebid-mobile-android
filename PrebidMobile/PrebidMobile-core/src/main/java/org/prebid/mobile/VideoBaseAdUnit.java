@@ -45,12 +45,11 @@ public abstract class VideoBaseAdUnit extends AdUnit {
     @Deprecated
     public void setParameters(Parameters parameters) {
         if (parameters != null) {
-            VideoParameters newParameters = new VideoParameters();
+            VideoParameters newParameters = new VideoParameters(parameters.getMimes());
             newParameters.setApi(parameters.getApi());
             newParameters.setLinearity(parameters.getLinearity());
             newParameters.setMaxBitrate(parameters.getMaxBitrate());
             newParameters.setMinBitrate(parameters.getMinBitrate());
-            newParameters.setMimes(parameters.getMimes());
             newParameters.setMaxDuration(parameters.getMaxDuration());
             newParameters.setMinDuration(parameters.getMinDuration());
             newParameters.setPlacement(parameters.getPlacement());
@@ -67,7 +66,7 @@ public abstract class VideoBaseAdUnit extends AdUnit {
     @Deprecated
     @Nullable
     public Parameters getParameters() {
-        VideoParameters newParameters = new VideoParameters();
+        VideoParameters newParameters = configuration.getVideoParameters();
         if (newParameters != null) {
             Parameters oldParameters = new Parameters();
 

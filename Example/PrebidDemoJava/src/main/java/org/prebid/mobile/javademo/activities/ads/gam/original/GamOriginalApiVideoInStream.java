@@ -64,8 +64,7 @@ public class GamOriginalApiVideoInStream extends BaseAdActivity {
 
         adUnit = new InStreamVideoAdUnit(CONFIG_ID, 640, 480);
 
-        VideoParameters parameters = new VideoParameters();
-        parameters.setMimes(Collections.singletonList("video/mp4"));
+        VideoParameters parameters = new VideoParameters(Collections.singletonList("video/mp4"));
         parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
         parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));
         parameters.setPlacement(Signals.Placement.InStream);

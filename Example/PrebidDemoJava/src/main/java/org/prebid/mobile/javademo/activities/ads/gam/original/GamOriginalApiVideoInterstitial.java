@@ -39,8 +39,7 @@ public class GamOriginalApiVideoInterstitial extends BaseAdActivity {
         adUnit = new InterstitialAdUnit(CONFIG_ID, EnumSet.of(AdUnitFormat.VIDEO));
         adUnit.setAutoRefreshInterval(Settings.get().getRefreshTimeSeconds());
 
-        VideoParameters parameters = new VideoParameters();
-        parameters.setMimes(Collections.singletonList("video/mp4"));
+        VideoParameters parameters = new VideoParameters(Collections.singletonList("video/mp4"));
         parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
         parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));
         adUnit.setVideoParameters(parameters);

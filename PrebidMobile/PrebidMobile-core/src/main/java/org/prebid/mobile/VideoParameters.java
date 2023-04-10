@@ -11,6 +11,15 @@ import java.util.List;
 public class VideoParameters {
 
     /**
+     * @param mimes - supported content MIME types (required parameter)
+     *              "video/mp4"
+     *              "video/x-ms-wmv"
+     */
+    public VideoParameters(List<String> mimes) {
+        this.mimes = mimes;
+    }
+
+    /**
      * List of supported API frameworks for this impression. If an API is not explicitly listed, it is assumed not to be supported.
      */
     @Nullable
@@ -47,7 +56,6 @@ public class VideoParameters {
      * "video/mp4"
      * "video/x-ms-wmv"
      */
-    @Nullable
     private List<String> mimes;
 
     /**
@@ -129,10 +137,6 @@ public class VideoParameters {
     @Nullable
     public List<String> getMimes() {
         return mimes;
-    }
-
-    public void setMimes(@Nullable List<String> mimes) {
-        this.mimes = mimes;
     }
 
     @Nullable

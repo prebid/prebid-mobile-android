@@ -49,8 +49,7 @@ class GamOriginalApiVideoRewardedActivity : BaseAdActivity() {
     }
 
     private fun configureVideoParameters(): VideoParameters {
-        return VideoParameters().apply {
-            mimes = listOf("video/mp4")
+        return VideoParameters(listOf("video/mp4")).apply {
             protocols = listOf(Signals.Protocols.VAST_2_0)
             playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOff)
         }

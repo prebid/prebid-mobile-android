@@ -13,9 +13,7 @@ class GamOriginalBannerRandomMultiformatFragment : GamOriginalBannerFragment() {
         val configId =
             if (Random.nextBoolean()) getString(R.string.imp_prebid_id_banner_300x250) else getString(R.string.imp_prebid_id_video_outstream_original_api)
         val adUnit = BannerAdUnit(configId, width, height, EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO))
-        adUnit.videoParameters = VideoParameters().apply {
-            this.mimes = listOf("video/mp4")
-        }
+        adUnit.videoParameters = VideoParameters(listOf("video/mp4"))
         return adUnit
     }
 

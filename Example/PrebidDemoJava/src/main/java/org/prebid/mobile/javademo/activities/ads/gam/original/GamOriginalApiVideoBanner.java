@@ -40,8 +40,7 @@ public class GamOriginalApiVideoBanner extends BaseAdActivity {
     private void createAd() {
         adUnit = new BannerAdUnit(CONFIG_ID, WIDTH, HEIGHT, EnumSet.of(AdUnitFormat.VIDEO));
 
-        VideoParameters parameters = new VideoParameters();
-        parameters.setMimes(Collections.singletonList("video/mp4"));
+        VideoParameters parameters = new VideoParameters(Collections.singletonList("video/mp4"));
         parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
         parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));
         parameters.setPlacement(Signals.Placement.InBanner);

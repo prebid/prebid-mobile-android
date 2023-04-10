@@ -50,7 +50,7 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
     }
 
     private fun configureVideoParameters(): VideoParameters {
-        return VideoParameters().apply {
+        return VideoParameters(listOf("video/x-flv", "video/mp4")).apply {
             placement = Signals.Placement.Interstitial
 
             api = listOf(
@@ -62,7 +62,6 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
             minBitrate = 300
             maxDuration = 30
             minDuration = 5
-            mimes = listOf("video/x-flv", "video/mp4")
             playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOn)
             protocols = listOf(
                 Signals.Protocols.VAST_2_0

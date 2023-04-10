@@ -774,7 +774,10 @@ public class BasicParameterBuilderTest {
 
 
     private VideoParameters createFullVideoParameters() {
-        VideoParameters parameters = new VideoParameters();
+        ArrayList<String> mimes = new ArrayList<>(2);
+        mimes.add("Mime1");
+        mimes.add("Mime2");
+        VideoParameters parameters = new VideoParameters(mimes);
 
         parameters.setMinDuration(101);
         parameters.setMaxDuration(102);
@@ -783,11 +786,6 @@ public class BasicParameterBuilderTest {
         parameters.setPlacement(Signals.Placement.InBanner);
         parameters.setLinearity(1);
         parameters.setStartDelay(Signals.StartDelay.PreRoll);
-
-        ArrayList<String> mimes = new ArrayList<>(2);
-        mimes.add("Mime1");
-        mimes.add("Mime2");
-        parameters.setMimes(mimes);
 
         ArrayList<Signals.Protocols> protocols = new ArrayList<>(2);
         protocols.add(new Signals.Protocols(11));
