@@ -47,7 +47,7 @@ class InAppVideoInterstitialMultiFormatActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        adUnit = InterstitialAdUnit(this, CONFIG_ID, EnumSet.of(AdUnitFormat.VIDEO, AdUnitFormat.DISPLAY))
+        adUnit = InterstitialAdUnit(this, CONFIG_ID, EnumSet.of(AdUnitFormat.VIDEO, AdUnitFormat.BANNER))
         adUnit?.setInterstitialAdUnitListener(object : InterstitialAdUnitListener {
             override fun onAdLoaded(interstitialAdUnit: InterstitialAdUnit?) {
                 adUnit?.show()

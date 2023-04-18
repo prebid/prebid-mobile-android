@@ -48,7 +48,7 @@ public class GamOriginalApiMultiformatBanner extends BaseAdActivity {
             configId = CONFIG_ID_VIDEO;
         }
 
-        adUnit = new BannerAdUnit(configId, WIDTH, HEIGHT, EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO));
+        adUnit = new BannerAdUnit(configId, WIDTH, HEIGHT, EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
         adUnit.setVideoParameters(new VideoParameters(Collections.singletonList("video/mp4")));
 
         BannerParameters parameters = new BannerParameters();

@@ -58,7 +58,7 @@ class GamOriginalApiMultiformatBannerActivity : BaseAdActivity() {
         }
 
         // 1. Create BannerAdUnit
-        adUnit = BannerAdUnit(configId, WIDTH, HEIGHT, EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO))
+        adUnit = BannerAdUnit(configId, WIDTH, HEIGHT, EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO))
         adUnit?.setAutoRefreshInterval(refreshTimeSeconds)
 
         // 2. Configure parameters

@@ -61,7 +61,7 @@ class AppLovinMaxDisplayInterstitialActivity : BaseAdActivity() {
         adUnit = MediationInterstitialAdUnit(
             this,
             CONFIG_ID,
-            EnumSet.of(AdUnitFormat.DISPLAY),
+            EnumSet.of(AdUnitFormat.BANNER),
             mediationUtils
         )
         adUnit?.fetchDemand {

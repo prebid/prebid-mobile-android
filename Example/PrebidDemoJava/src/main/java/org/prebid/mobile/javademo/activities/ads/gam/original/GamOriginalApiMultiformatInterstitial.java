@@ -42,7 +42,7 @@ public class GamOriginalApiMultiformatInterstitial extends BaseAdActivity {
         } else {
             configId = CONFIG_ID_VIDEO;
         }
-        adUnit = new InterstitialAdUnit(configId, EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO));
+        adUnit = new InterstitialAdUnit(configId, EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
         adUnit.setVideoParameters(new VideoParameters(Collections.singletonList("video/mp4")));
         adUnit.setAutoRefreshInterval(getRefreshTimeSeconds());
 
