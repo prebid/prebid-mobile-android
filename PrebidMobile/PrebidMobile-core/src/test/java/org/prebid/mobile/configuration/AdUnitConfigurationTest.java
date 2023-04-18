@@ -1,5 +1,9 @@
 package org.prebid.mobile.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,8 +13,6 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.EnumSet;
-
-import static org.junit.Assert.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 19)
@@ -91,21 +93,43 @@ public class AdUnitConfigurationTest {
 
     @Test
     public void setAdFormats_addCorrespondingElements() {
-        subject.setAdFormats(null);
+        subject.setAdUnitFormats(null);
 
         assertEquals(0, subject.getAdFormats().size());
 
-        subject.setAdFormats(EnumSet.of(AdUnitFormat.DISPLAY));
+        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.DISPLAY));
 
         assertEquals(1, subject.getAdFormats().size());
         assertEquals(EnumSet.of(AdFormat.INTERSTITIAL), subject.getAdFormats());
 
-        subject.setAdFormats(EnumSet.of(AdUnitFormat.VIDEO));
+        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.VIDEO));
 
         assertEquals(1, subject.getAdFormats().size());
         assertEquals(EnumSet.of(AdFormat.VAST), subject.getAdFormats());
 
-        subject.setAdFormats(EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO));
+        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO));
+
+        assertEquals(2, subject.getAdFormats().size());
+        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST), subject.getAdFormats());
+    }
+
+    @Test
+    public void setAdFormatsNewApi_addCorrespondingElements() {
+        subject.setAdUnitFormats(null);
+
+        assertEquals(0, subject.getAdFormats().size());
+
+        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER));
+
+        assertEquals(1, subject.getAdFormats().size());
+        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL), subject.getAdFormats());
+
+        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.VIDEO));
+
+        assertEquals(1, subject.getAdFormats().size());
+        assertEquals(EnumSet.of(AdFormat.VAST), subject.getAdFormats());
+
+        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
 
         assertEquals(2, subject.getAdFormats().size());
         assertEquals(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST), subject.getAdFormats());

@@ -47,6 +47,9 @@
             android:name=".activities.ads.gam.original.GamOriginalApiDisplayBanner300x250"
             android:exported="true" />
         <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiMultiformatBanner"
+            android:exported="true" />
+        <activity
             android:name=".activities.ads.gam.original.GamOriginalApiVideoBanner"
             android:exported="true" />
         <activity
@@ -54,6 +57,9 @@
             android:exported="true" />
         <activity
             android:name=".activities.ads.gam.original.GamOriginalApiVideoInterstitial"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiMultiformatInterstitial"
             android:exported="true" />
         <activity
             android:name=".activities.ads.gam.original.GamOriginalApiVideoRewarded"

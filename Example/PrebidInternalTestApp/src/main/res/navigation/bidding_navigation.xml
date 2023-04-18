@@ -439,17 +439,29 @@
             android:id="@+id/action_header_bidding_to_gam_original_banner"
             app:destination="@id/gamOriginalBannerFragment" />
         <action
+            android:id="@+id/action_header_bidding_to_gam_original_banner_multiformat"
+            app:destination="@id/gamOriginalBannerFragmentMultiformat" />
+        <action
             android:id="@+id/action_header_bidding_to_gam_original_interstitial"
             app:destination="@id/gamOriginalInterstitialFragment" />
         <action
+            android:id="@+id/action_header_bidding_to_gam_original_interstitial_multiformat"
+            app:destination="@id/gamOriginalInterstitialFragmentMultiformat" />
+        <action
             android:id="@+id/action_header_bidding_to_gam_video_outstream_original"
             app:destination="@id/gamVideoOutstreamOriginalFragment" />
+        <action
+            android:id="@+id/action_header_bidding_to_gam_video_outstream_original_new_api"
+            app:destination="@id/gamVideoOutstreamOriginalFragmentNewApi" />
         <action
             android:id="@+id/action_header_bidding_to_gam_original_rewarded_video"
             app:destination="@id/gamOriginalRewardedVideoFragment" />
         <action
             android:id="@+id/action_header_bidding_to_gam_original_instream"
             app:destination="@id/gamOriginalInstreamFragment" />
+        <action
+            android:id="@+id/action_header_bidding_to_gam_original_instream_new_api"
+            app:destination="@id/gamOriginalInstreamFragmentNewApi" />
         <action
             android:id="@+id/action_header_bidding_to_gam_original_native_in_app"
             app:destination="@id/gamOriginalNativeInAppFragment" />
@@ -656,12 +668,24 @@
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalBannerFragment"
         android:label="GamOriginalBannerFragment" />
     <fragment
+        android:id="@+id/gamOriginalBannerFragmentMultiformat"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalBannerRandomMultiformatFragment"
+        android:label="GamOriginalBannerFragment" />
+    <fragment
         android:id="@+id/gamOriginalInterstitialFragment"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalInterstitialFragment"
         android:label="GamOriginalInterstitialFragment" />
     <fragment
+        android:id="@+id/gamOriginalInterstitialFragmentMultiformat"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalInterstitialRandomMultiformatFragment"
+        android:label="GamOriginalInterstitialFragment" />
+    <fragment
         android:id="@+id/gamVideoOutstreamOriginalFragment"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalOutstreamFragment"
+        android:label="GamVideoOutstreamOriginalFragment" />
+    <fragment
+        android:id="@+id/gamVideoOutstreamOriginalFragmentNewApi"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalOutstreamNewApiFragment"
         android:label="GamVideoOutstreamOriginalFragment" />
     <fragment
         android:id="@+id/gamOriginalRewardedVideoFragment"
@@ -670,6 +694,10 @@
     <fragment
         android:id="@+id/gamOriginalInstreamFragment"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalInstreamFragment"
+        android:label="GamOriginalInstreamFragment" />
+    <fragment
+        android:id="@+id/gamOriginalInstreamFragmentNewApi"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalInstreamNewApiFragment"
         android:label="GamOriginalInstreamFragment" />
     <fragment
         android:id="@+id/gamOriginalNativeInAppFragment"

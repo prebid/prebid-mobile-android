@@ -50,6 +50,8 @@ class DemoItemProvider private constructor() {
         private const val gamBannerAction = R.id.action_header_bidding_to_gam_banner
         private const val gamBannerOriginalAction =
             R.id.action_header_bidding_to_gam_original_banner
+        private const val gamBannerOriginalMultiformatAction =
+            R.id.action_header_bidding_to_gam_original_banner_multiformat
         private const val gamInterstitialAction = R.id.action_header_bidding_to_gam_interstitial
         private const val gamInterstitialMultiformatAction =
             R.id.action_header_bidding_to_gam_interstitial_multiformat
@@ -156,6 +158,20 @@ class DemoItemProvider private constructor() {
             )
             demoList.add(
                 DemoItem(
+                    getString(R.string.demo_bidding_gam_banner_300_250_multiformat),
+                    gamBannerOriginalMultiformatAction,
+                    gamBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_dynamic,
+                        R.string.adunit_gam_banner_multiformat_original,
+                        300,
+                        250
+                    )
+                )
+            )
+
+            demoList.add(
+                DemoItem(
                     getString(R.string.demo_bidding_gam_interstitial_320_480_original),
                     R.id.action_header_bidding_to_gam_original_interstitial,
                     gamInterstitialTagList,
@@ -167,6 +183,20 @@ class DemoItemProvider private constructor() {
                     )
                 )
             )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_interstitial_320_480_original_multiformat),
+                    R.id.action_header_bidding_to_gam_original_interstitial_multiformat,
+                    gamInterstitialTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_dynamic,
+                        R.string.adunit_gam_interstitial_320_480_original_multiformat,
+                        320,
+                        480
+                    )
+                )
+            )
+
             demoList.add(
                 DemoItem(
                     getString(R.string.demo_bidding_gam_video_oustream_original),
@@ -182,8 +212,34 @@ class DemoItemProvider private constructor() {
             )
             demoList.add(
                 DemoItem(
+                    getString(R.string.demo_bidding_gam_video_oustream_original_new_api),
+                    R.id.action_header_bidding_to_gam_video_outstream_original_new_api,
+                    gamVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_outstream_original_api,
+                        R.string.adunit_gam_video_300_250_original,
+                        300,
+                        250
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
                     getString(R.string.demo_bidding_gam_video_instream_original),
                     R.id.action_header_bidding_to_gam_original_instream,
+                    gamVideoTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_video_instream,
+                        R.string.adunit_gam_video_instream,
+                        640,
+                        480
+                    )
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_video_instream_original_new_api),
+                    R.id.action_header_bidding_to_gam_original_instream_new_api,
                     gamVideoTagList,
                     createBannerBundle(
                         R.string.imp_prebid_id_video_instream,

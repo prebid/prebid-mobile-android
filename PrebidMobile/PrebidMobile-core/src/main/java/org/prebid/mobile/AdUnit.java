@@ -41,6 +41,7 @@ import org.prebid.mobile.tasksmanager.TasksManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -55,9 +56,9 @@ public abstract class AdUnit {
     @Nullable
     protected Object adObject;
 
-    AdUnit(@NonNull String configId, @NonNull AdFormat adType) {
+    AdUnit(@NonNull String configId, @NonNull EnumSet<AdFormat> adTypes) {
         configuration.setConfigId(configId);
-        configuration.setAdFormat(adType);
+        configuration.setAdFormats(adTypes);
         configuration.setIsOriginalAdUnit(true);
     }
 

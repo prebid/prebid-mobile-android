@@ -23,16 +23,20 @@ import com.google.android.gms.ads.admanager.AdManagerAdView
 import org.prebid.mobile.BannerAdUnit
 import org.prebid.mobile.BannerParameters
 import org.prebid.mobile.Signals
+import org.prebid.mobile.VideoParameters
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.PbFindSizeError
+import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
+import java.util.*
 
 
-class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
+class GamOriginalApiMultiformatBannerActivity : BaseAdActivity() {
 
     companion object {
-        const val AD_UNIT_ID = "/21808260008/prebid_demo_app_original_api_banner_300x250_order"
-        const val CONFIG_ID = "imp-prebid-banner-300-250"
+        const val AD_UNIT_ID = "/21808260008/prebid-demo-original-banner-multiformat"
+        const val CONFIG_ID_BANNER = "imp-prebid-banner-300-250"
+        const val CONFIG_ID_VIDEO = "imp-prebid-video-outstream-original-api"
         const val WIDTH = 300
         const val HEIGHT = 250
     }
@@ -47,14 +51,21 @@ class GamOriginalApiDisplayBanner300x250Activity : BaseAdActivity() {
     }
 
     private fun createAd() {
+        val configId = if (Random().nextBoolean()) {
+            CONFIG_ID_BANNER
+        } else {
+            CONFIG_ID_VIDEO
+        }
+
         // 1. Create BannerAdUnit
-        adUnit = BannerAdUnit(CONFIG_ID, WIDTH, HEIGHT)
+        adUnit = BannerAdUnit(configId, WIDTH, HEIGHT, EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO))
         adUnit?.setAutoRefreshInterval(refreshTimeSeconds)
 
-        // 2. Configure banner parameters
+        // 2. Configure parameters
         val parameters = BannerParameters()
         parameters.api = listOf(Signals.Api.MRAID_3, Signals.Api.OMID_1)
         adUnit?.bannerParameters = parameters
+        adUnit?.videoParameters = VideoParameters(listOf("video/mp4"))
 
         // 3. Create AdManagerAdView
         val adView = AdManagerAdView(this)

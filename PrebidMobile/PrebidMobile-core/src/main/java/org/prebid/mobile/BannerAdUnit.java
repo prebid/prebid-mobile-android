@@ -17,14 +17,30 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
-import org.prebid.mobile.api.data.AdFormat;
 
+import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.AdUnitFormat;
+
+import java.util.EnumSet;
 import java.util.HashSet;
 
 public class BannerAdUnit extends BannerBaseAdUnit {
 
     public BannerAdUnit(@NonNull String configId, int width, int height) {
-        super(configId, AdFormat.BANNER);
+        super(configId, EnumSet.of(AdFormat.BANNER));
+        configuration.addSize(new AdSize(width, height));
+    }
+
+    /**
+     * Constructor for multi-format or video banner request.
+     *
+     * @param adUnitFormats <p>
+     *                      for multi-format request `EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO);`
+     *                      <p>
+     *                      for video banner `EnumSet.of(AdUnitFormat.VIDEO);`
+     */
+    public BannerAdUnit(@NonNull String configId, int width, int height, EnumSet<AdUnitFormat> adUnitFormats) {
+        super(configId, AdFormat.fromSet(adUnitFormats, false));
         configuration.addSize(new AdSize(width, height));
     }
 

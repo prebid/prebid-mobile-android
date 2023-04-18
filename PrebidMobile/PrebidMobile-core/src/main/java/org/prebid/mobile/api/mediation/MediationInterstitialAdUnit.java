@@ -17,8 +17,10 @@
 package org.prebid.mobile.api.mediation;
 
 import android.content.Context;
+
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
+
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
@@ -55,7 +57,7 @@ public class MediationInterstitialAdUnit extends MediationBaseFullScreenAdUnit {
         PrebidMediationDelegate mediationDelegate
     ) {
         super(context, configId, null, mediationDelegate);
-        adUnitConfig.setAdFormats(adUnitFormats);
+        adUnitConfig.setAdUnitFormats(adUnitFormats);
     }
 
     @Override

@@ -18,32 +18,75 @@ package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.prebid.mobile.api.data.AdFormat;
 
+import java.util.EnumSet;
 import java.util.List;
 
+/**
+ * Contains Banner and Video parameters.
+ */
 public abstract class BannerBaseAdUnit extends AdUnit {
 
-    BannerBaseAdUnit(@NonNull String configId, @NonNull AdFormat adType) {
+    BannerBaseAdUnit(@NonNull String configId, @NonNull EnumSet<AdFormat> adType) {
         super(configId, adType);
     }
 
     @Nullable
-    public Parameters getParameters() {
+    public BannerParameters getBannerParameters() {
         return configuration.getBannerParameters();
     }
 
-    public void setParameters(@Nullable Parameters parameters) {
+    public void setBannerParameters(@Nullable BannerParameters parameters) {
         configuration.setBannerParameters(parameters);
+    }
+
+    @Nullable
+    public VideoParameters getVideoParameters() {
+        return configuration.getVideoParameters();
+    }
+
+    public void setVideoParameters(@Nullable VideoParameters parameters) {
+        configuration.setVideoParameters(parameters);
+    }
+
+    /**
+     * @deprecated use `setBannerParameters()`.
+     */
+    @Deprecated
+    public void setParameters(@Nullable Parameters parameters) {
+        if (parameters != null) {
+            BannerParameters newParameters = new BannerParameters();
+            newParameters.setApi(parameters.getApi());
+            configuration.setBannerParameters(newParameters);
+        }
+    }
+
+    /**
+     * @deprecated use `getBannerParameters()`
+     */
+    @Deprecated
+    @Nullable
+    public Parameters getParameters() {
+        BannerParameters newParameters = configuration.getBannerParameters();
+        if (newParameters != null) {
+            Parameters oldParameters = new Parameters();
+            oldParameters.setApi(newParameters.getApi());
+            return oldParameters;
+        }
+
+        return null;
     }
 
     /**
      * Describes an <a href="https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf">OpenRTB</a> banner object
      */
+    @Deprecated
     public static class Parameters {
 
         /**
-         List of supported API frameworks for this impression. If an API is not explicitly listed, it is assumed not to be supported.
+         * List of supported API frameworks for this impression. If an API is not explicitly listed, it is assumed not to be supported.
          */
         @Nullable
         private List<Signals.Api> api;

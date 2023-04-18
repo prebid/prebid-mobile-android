@@ -17,21 +17,23 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
+
 import org.prebid.mobile.api.data.AdFormat;
-import org.prebid.mobile.rendering.models.PlacementType;
 
-import java.util.HashSet;
+import java.util.EnumSet;
 
+/**
+ * @deprecated - For outstream video ads use {@link BannerAdUnit} with adUnitFormat parameter:
+ * {@code EnumSet.of(AdUnitFormat.VIDEO); }
+ * <br>
+ * - For instream video ads use {@link InStreamVideoAdUnit}.
+ */
+@Deprecated
 public class VideoAdUnit extends VideoBaseAdUnit {
 
     public VideoAdUnit(@NonNull String configId, int width, int height) {
-        super(configId, AdFormat.VAST);
+        super(configId, EnumSet.of(AdFormat.VAST));
         configuration.addSize(new AdSize(width, height));
-    }
-
-    AdSize getAdSize() {
-        HashSet<AdSize> sizes = configuration.getSizes();
-        return sizes.iterator().next();
     }
 
 }

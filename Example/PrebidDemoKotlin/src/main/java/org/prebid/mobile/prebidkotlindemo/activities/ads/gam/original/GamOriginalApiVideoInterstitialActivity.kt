@@ -6,10 +6,12 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAd
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback
+import org.prebid.mobile.InterstitialAdUnit
 import org.prebid.mobile.Signals
-import org.prebid.mobile.VideoBaseAdUnit
-import org.prebid.mobile.VideoInterstitialAdUnit
+import org.prebid.mobile.VideoParameters
+import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
+import java.util.*
 
 class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
 
@@ -18,7 +20,7 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
         const val CONFIG_ID = "imp-prebid-video-interstitial-320-480-original-api"
     }
 
-    private var adUnit: VideoInterstitialAdUnit? = null
+    private var adUnit: InterstitialAdUnit? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,11 +29,11 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        // 1. Create VideoInterstitialAdUnit
-        adUnit = VideoInterstitialAdUnit(CONFIG_ID)
+        // 1. Create InterstitialAdUnit
+        adUnit = InterstitialAdUnit(CONFIG_ID, EnumSet.of(AdUnitFormat.VIDEO))
 
         // 2. Configure video ad unit
-        adUnit?.parameters = configureVideoParameters()
+        adUnit?.videoParameters = configureVideoParameters()
 
         // 3. Make a bid request to Prebid Server
         val request = AdManagerAdRequest.Builder().build()
@@ -47,8 +49,8 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
         }
     }
 
-    private fun configureVideoParameters(): VideoBaseAdUnit.Parameters {
-        return VideoBaseAdUnit.Parameters().apply {
+    private fun configureVideoParameters(): VideoParameters {
+        return VideoParameters(listOf("video/x-flv", "video/mp4")).apply {
             placement = Signals.Placement.Interstitial
 
             api = listOf(
@@ -60,7 +62,6 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
             minBitrate = 300
             maxDuration = 30
             minDuration = 5
-            mimes = listOf("video/x-flv", "video/mp4")
             playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOn)
             protocols = listOf(
                 Signals.Protocols.VAST_2_0

@@ -5,11 +5,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.prebid.mobile.AdSize;
-import org.prebid.mobile.BannerBaseAdUnit;
+import org.prebid.mobile.BannerParameters;
 import org.prebid.mobile.ContentObject;
 import org.prebid.mobile.DataObject;
 import org.prebid.mobile.LogUtil;
-import org.prebid.mobile.VideoBaseAdUnit;
+import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.data.Position;
@@ -61,8 +61,8 @@ public class AdUnitConfiguration {
     private PlacementType placementType;
     private AdPosition adPosition;
     private ContentObject appContent;
-    private BannerBaseAdUnit.Parameters bannerParameters;
-    private VideoBaseAdUnit.Parameters videoParameters;
+    private BannerParameters bannerParameters;
+    private VideoParameters videoParameters;
     private NativeAdUnitConfiguration nativeConfiguration;
 
     private final EnumSet<AdFormat> adFormats = EnumSet.noneOf(AdFormat.class);
@@ -216,19 +216,19 @@ public class AdUnitConfiguration {
         return adSizes;
     }
 
-    public void setBannerParameters(BannerBaseAdUnit.Parameters parameters) {
+    public void setBannerParameters(BannerParameters parameters) {
         bannerParameters = parameters;
     }
 
-    public BannerBaseAdUnit.Parameters getBannerParameters() {
+    public BannerParameters getBannerParameters() {
         return bannerParameters;
     }
 
-    public void setVideoParameters(VideoBaseAdUnit.Parameters parameters) {
+    public void setVideoParameters(VideoParameters parameters) {
         videoParameters = parameters;
     }
 
-    public VideoBaseAdUnit.Parameters getVideoParameters() {
+    public VideoParameters getVideoParameters() {
         return videoParameters;
     }
 
@@ -309,18 +309,27 @@ public class AdUnitConfiguration {
     /**
      * Clears previous ad formats and adds AdFormats corresponding to AdUnitFormat types.
      */
-    public void setAdFormats(@Nullable EnumSet<AdUnitFormat> adUnitFormats) {
+    public void setAdUnitFormats(@Nullable EnumSet<AdUnitFormat> adUnitFormats) {
         if (adUnitFormats == null) return;
 
         adFormats.clear();
-
-        if (adUnitFormats.contains(AdUnitFormat.DISPLAY)) {
-            adFormats.add(AdFormat.INTERSTITIAL);
-        }
-        if (adUnitFormats.contains(AdUnitFormat.VIDEO)) {
-            adFormats.add(AdFormat.VAST);
-        }
+        adFormats.addAll(AdFormat.fromSet(adUnitFormats, true));
     }
+
+    /**
+     * Clears previous ad formats and adds AdFormats corresponding to AdUnitFormat types.
+     */
+    public void setAdFormats(@Nullable EnumSet<AdFormat> formats) {
+        if (formats == null) return;
+
+        if (formats.contains(AdFormat.NATIVE)) {
+            nativeConfiguration = new NativeAdUnitConfiguration();
+        }
+
+        adFormats.clear();
+        adFormats.addAll(formats);
+    }
+
 
     public void setSkipDelay(int seconds) {
         this.skipDelay = seconds;

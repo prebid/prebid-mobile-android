@@ -34,7 +34,7 @@ import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFr
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
 
-class GamOriginalBannerFragment : AdFragment() {
+open class GamOriginalBannerFragment : AdFragment() {
     companion object {
         private const val TAG = "GamOriginalBanner"
     }
@@ -47,6 +47,14 @@ class GamOriginalBannerFragment : AdFragment() {
     private val binding: FragmentBiddingBannerBinding
         get() = getBinding()
     private lateinit var events: Events
+
+    open fun createAdUnit(): BannerAdUnit {
+        val adUnit = BannerAdUnit(configId, width, height)
+        if (configId.contains("multisize")) {
+            adUnit?.addAdditionalSize(728, 90)
+        }
+        return adUnit
+    }
 
     override fun initUi(view: View, savedInstanceState: Bundle?) {
         super.initUi(view, savedInstanceState)
@@ -96,10 +104,7 @@ class GamOriginalBannerFragment : AdFragment() {
         this.adView = adView
         binding.viewContainer.addView(adView)
 
-        adUnit = BannerAdUnit(configId, width, height)
-        if (configId.contains("multisize")) {
-            adUnit?.addAdditionalSize(728,90)
-        }
+        adUnit = createAdUnit()
         adUnit?.setAutoRefreshInterval(refreshDelay)
         CommandLineArgumentParser.addAdUnitSpecificData(adUnit!!)
 

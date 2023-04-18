@@ -16,15 +16,20 @@
 
 package org.prebid.mobile;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.rendering.models.AdPosition;
+import org.prebid.mobile.rendering.models.PlacementType;
+
+import java.util.EnumSet;
 
 public class InterstitialAdUnit extends BannerBaseAdUnit {
 
     public InterstitialAdUnit(@NonNull String configId) {
-        super(configId, AdFormat.INTERSTITIAL);
+        super(configId, EnumSet.of(AdFormat.INTERSTITIAL));
         configuration.setAdPosition(AdPosition.FULLSCREEN);
     }
 
@@ -33,9 +38,25 @@ public class InterstitialAdUnit extends BannerBaseAdUnit {
         configuration.setMinSizePercentage(new AdSize(minWidthPerc, minHeightPerc));
     }
 
-    @Nullable
-    AdSize getMinSizePerc() {
-        return configuration.getMinSizePercentage();
+    /**
+     * Constructor for multi-format request.
+     *
+     * @param adUnitFormats for example `EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO);`
+     */
+    public InterstitialAdUnit(@NonNull String configId, EnumSet<AdUnitFormat> adUnitFormats) {
+        super(configId, AdFormat.fromSet(adUnitFormats, true));
+
+        if (adUnitFormats.contains(AdUnitFormat.VIDEO)) {
+            configuration.setAdPosition(AdPosition.FULLSCREEN);
+            configuration.setPlacementType(PlacementType.INTERSTITIAL);
+        }
+    }
+
+    public void setMinSizePercentage(
+            @IntRange(from = 0, to = 100) int width,
+            @IntRange(from = 0, to = 100) int height
+    ) {
+        configuration.setMinSizePercentage(new AdSize(width, height));
     }
 
 }

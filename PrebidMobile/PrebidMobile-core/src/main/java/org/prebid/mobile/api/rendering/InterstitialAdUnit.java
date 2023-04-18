@@ -16,9 +16,14 @@
 
 package org.prebid.mobile.api.rendering;
 
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
+import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
+
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import org.prebid.mobile.AdSize;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdUnitFormat;
@@ -31,9 +36,6 @@ import org.prebid.mobile.rendering.bidding.interfaces.StandaloneInterstitialEven
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 
 import java.util.EnumSet;
-
-import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_FOR_LOAD;
-import static org.prebid.mobile.api.rendering.BaseInterstitialAdUnit.InterstitialAdUnitState.READY_TO_DISPLAY_GAM;
 
 public class InterstitialAdUnit extends BaseInterstitialAdUnit {
 
@@ -109,7 +111,7 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
 
         AdUnitConfiguration adUnitConfiguration = new AdUnitConfiguration();
         adUnitConfiguration.setConfigId(configId);
-        adUnitConfiguration.setAdFormats(adUnitFormats);
+        adUnitConfiguration.setAdUnitFormats(adUnitFormats);
         init(adUnitConfiguration);
     }
 

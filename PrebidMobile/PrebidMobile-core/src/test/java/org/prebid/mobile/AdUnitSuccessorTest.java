@@ -17,12 +17,17 @@
 
 package org.prebid.mobile;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.prebid.mobile.api.data.AdFormat;
+import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.reflection.AdUnitReflection;
 import org.prebid.mobile.rendering.bidding.loader.BidLoader;
@@ -33,10 +38,6 @@ import org.robolectric.annotation.Config;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = BaseSetup.testSDK)
@@ -94,13 +95,13 @@ public class AdUnitSuccessorTest {
         //given
         BannerAdUnit bannerAdUnit = new BannerAdUnit(testConfigId, width, height);
 
-        BannerAdUnit.Parameters parameters = new BannerAdUnit.Parameters();
+        BannerParameters parameters = new BannerParameters();
         parameters.setApi(Arrays.asList(Signals.Api.VPAID_1, Signals.Api.VPAID_2));
 
-        bannerAdUnit.setParameters(parameters);
+        bannerAdUnit.setBannerParameters(parameters);
 
         //when
-        BannerAdUnit.Parameters testedBannerParameters = bannerAdUnit.getParameters();
+        BannerParameters testedBannerParameters = bannerAdUnit.getBannerParameters();
         List<Signals.Api> api = testedBannerParameters.getApi();
 
         //then
@@ -130,7 +131,7 @@ public class AdUnitSuccessorTest {
 
     @Test
     public void testVideoAdUnitCreation() {
-        VideoAdUnit adUnit = new VideoAdUnit(testConfigId, width, height);
+        BannerAdUnit adUnit = new BannerAdUnit(testConfigId, width, height, EnumSet.of(AdUnitFormat.VIDEO));
         AdUnitConfiguration configuration = (AdUnitConfiguration) adUnit.getConfiguration();
 
         AdSize size = configuration.getSizes().iterator().next();
@@ -142,7 +143,7 @@ public class AdUnitSuccessorTest {
 
     @Test
     public void testVideoInterstitialAdUnitCreation() {
-        VideoInterstitialAdUnit adUnit = new VideoInterstitialAdUnit(testConfigId);
+        InterstitialAdUnit adUnit = new InterstitialAdUnit(testConfigId, EnumSet.of(AdUnitFormat.VIDEO));
         AdUnitConfiguration configuration = (AdUnitConfiguration) adUnit.getConfiguration();
 
         assertEquals(testConfigId, configuration.getConfigId());
@@ -159,40 +160,88 @@ public class AdUnitSuccessorTest {
 
     @Test
     public void testVideoParametersCreation() {
+        BannerAdUnit videoAdUnit = new BannerAdUnit(testConfigId, width, height, EnumSet.of(AdUnitFormat.VIDEO));
+        setupAndCheckVideoParametersHelper(videoAdUnit);
 
+        InterstitialAdUnit videoInterstitialAdUnit = new InterstitialAdUnit(testConfigId, EnumSet.of(AdUnitFormat.VIDEO));
+        setupAndCheckVideoParametersHelper(videoInterstitialAdUnit);
+    }
+
+    @Test
+    public void testRewardedVideoParametersCreation() {
         //given
-        VideoAdUnit videoAdUnit = new VideoAdUnit(testConfigId, width, height);
-        VideoInterstitialAdUnit videoInterstitialAdUnit = new VideoInterstitialAdUnit(testConfigId);
         RewardedVideoAdUnit rewardedVideoAdUnit = new RewardedVideoAdUnit(testConfigId);
-
-        List<VideoBaseAdUnit> videoBaseAdUnitList = Arrays.asList(videoAdUnit, videoInterstitialAdUnit, rewardedVideoAdUnit);
-
-        for (VideoBaseAdUnit videoBaseAdUnit : videoBaseAdUnitList) {
-            setupAndCheckVideoParametersHelper(videoBaseAdUnit);
-        }
-
+        setupAndCheckVideoParametersHelper(rewardedVideoAdUnit);
     }
 
     private void setupAndCheckVideoParametersHelper(VideoBaseAdUnit videoBaseAdUnit) {
-
-        VideoAdUnit.Parameters parameters = new VideoAdUnit.Parameters();
+        VideoParameters parameters = new VideoParameters(Arrays.asList("video/x-flv", "video/mp4"));
 
         parameters.setApi(Arrays.asList(Signals.Api.VPAID_1, Signals.Api.VPAID_2));
         parameters.setMaxBitrate(1500);
         parameters.setMinBitrate(300);
         parameters.setMaxDuration(30);
         parameters.setMinDuration(5);
-        parameters.setMimes(Arrays.asList("video/x-flv", "video/mp4"));
         parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOn, Signals.PlaybackMethod.ClickToPlay));
         parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0, Signals.Protocols.VAST_3_0));
         parameters.setStartDelay(Signals.StartDelay.PreRoll);
         parameters.setPlacement(Signals.Placement.InBanner);
         parameters.setLinearity(1);
 
-        videoBaseAdUnit.setParameters(parameters);
+        videoBaseAdUnit.setVideoParameters(parameters);
 
         //when
-        VideoAdUnit.Parameters testedVideoParameters = videoBaseAdUnit.getParameters();
+        VideoParameters testedVideoParameters = videoBaseAdUnit.getVideoParameters();
+
+        List<Signals.Api> api = testedVideoParameters.getApi();
+        Integer maxBitrate = testedVideoParameters.getMaxBitrate();
+        Integer minBitrate = testedVideoParameters.getMinBitrate();
+        Integer maxDuration = testedVideoParameters.getMaxDuration();
+        Integer minDuration = testedVideoParameters.getMinDuration();
+        List<String> mimes = testedVideoParameters.getMimes();
+        List<Signals.PlaybackMethod> playbackMethod = testedVideoParameters.getPlaybackMethod();
+        List<Signals.Protocols> protocols = testedVideoParameters.getProtocols();
+        Signals.StartDelay startDelay = testedVideoParameters.getStartDelay();
+        Signals.Placement placement = testedVideoParameters.getPlacement();
+        Integer linearity = testedVideoParameters.getLinearity();
+
+        //then
+        assertEquals(2, api.size());
+        assertTrue(api.contains(new Signals.Api(1)) && api.contains(new Signals.Api(2)));
+        assertEquals(new Integer(1500), maxBitrate);
+        assertEquals(new Integer(300), minBitrate);
+        assertEquals(new Integer(30), maxDuration);
+        assertEquals(new Integer(5), minDuration);
+        assertEquals(2, mimes.size());
+        assertTrue(mimes.contains("video/x-flv") && mimes.contains("video/mp4"));
+        assertEquals(2, playbackMethod.size());
+        assertTrue(playbackMethod.contains(new Signals.PlaybackMethod(1)) && playbackMethod.contains(new Signals.PlaybackMethod(3)));
+        assertEquals(2, protocols.size());
+        assertTrue(protocols.contains(new Signals.Protocols(2)) && protocols.contains(new Signals.Protocols(3)));
+        assertEquals(new Signals.StartDelay(0), startDelay);
+        assertEquals(new Signals.Placement(2), placement);
+        assertEquals(new Integer(1), linearity);
+    }
+
+    private void setupAndCheckVideoParametersHelper(BannerBaseAdUnit videoBaseAdUnit) {
+
+        VideoParameters parameters = new VideoParameters(Arrays.asList("video/x-flv", "video/mp4"));
+
+        parameters.setApi(Arrays.asList(Signals.Api.VPAID_1, Signals.Api.VPAID_2));
+        parameters.setMaxBitrate(1500);
+        parameters.setMinBitrate(300);
+        parameters.setMaxDuration(30);
+        parameters.setMinDuration(5);
+        parameters.setPlaybackMethod(Arrays.asList(Signals.PlaybackMethod.AutoPlaySoundOn, Signals.PlaybackMethod.ClickToPlay));
+        parameters.setProtocols(Arrays.asList(Signals.Protocols.VAST_2_0, Signals.Protocols.VAST_3_0));
+        parameters.setStartDelay(Signals.StartDelay.PreRoll);
+        parameters.setPlacement(Signals.Placement.InBanner);
+        parameters.setLinearity(1);
+
+        videoBaseAdUnit.setVideoParameters(parameters);
+
+        //when
+        VideoParameters testedVideoParameters = videoBaseAdUnit.getVideoParameters();
 
         List<Signals.Api> api = testedVideoParameters.getApi();
         Integer maxBitrate = testedVideoParameters.getMaxBitrate();

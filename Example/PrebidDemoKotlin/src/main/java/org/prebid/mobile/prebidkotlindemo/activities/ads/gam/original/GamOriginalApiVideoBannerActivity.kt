@@ -5,13 +5,15 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.admanager.AdManagerAdRequest
 import com.google.android.gms.ads.admanager.AdManagerAdView
+import org.prebid.mobile.BannerAdUnit
 import org.prebid.mobile.Signals
-import org.prebid.mobile.VideoAdUnit
-import org.prebid.mobile.VideoBaseAdUnit
+import org.prebid.mobile.VideoParameters
 import org.prebid.mobile.addendum.AdViewUtils
 import org.prebid.mobile.addendum.AdViewUtils.PbFindSizeListener
 import org.prebid.mobile.addendum.PbFindSizeError
+import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
+import java.util.*
 
 class GamOriginalApiVideoBannerActivity : BaseAdActivity() {
 
@@ -22,7 +24,7 @@ class GamOriginalApiVideoBannerActivity : BaseAdActivity() {
         const val HEIGHT = 250
     }
 
-    private var adUnit: VideoAdUnit? = null
+    private var adUnit: BannerAdUnit? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,11 +33,11 @@ class GamOriginalApiVideoBannerActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        // 1. Create VideoAdUnit
-        adUnit = VideoAdUnit(CONFIG_ID, WIDTH, HEIGHT)
+        // 1. Create BannerAdUnit
+        adUnit = BannerAdUnit(CONFIG_ID, WIDTH, HEIGHT, EnumSet.of(AdUnitFormat.VIDEO))
 
         // 2. Configure video ad unit
-        adUnit?.parameters = configureVideoParameters()
+        adUnit?.videoParameters = configureVideoParameters()
 
         // 3. Create AdManagerAdView
         val gamView = AdManagerAdView(this)
@@ -54,8 +56,8 @@ class GamOriginalApiVideoBannerActivity : BaseAdActivity() {
         }
     }
 
-    private fun configureVideoParameters(): VideoBaseAdUnit.Parameters {
-        return VideoBaseAdUnit.Parameters().apply {
+    private fun configureVideoParameters(): VideoParameters {
+        return VideoParameters(listOf("video/x-flv", "video/mp4")).apply {
 
             api = listOf(
                 Signals.Api.VPAID_1,
@@ -66,7 +68,6 @@ class GamOriginalApiVideoBannerActivity : BaseAdActivity() {
             minBitrate = 300
             maxDuration = 30
             minDuration = 5
-            mimes = listOf("video/x-flv", "video/mp4")
             playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOn)
             protocols = listOf(
                 Signals.Protocols.VAST_2_0

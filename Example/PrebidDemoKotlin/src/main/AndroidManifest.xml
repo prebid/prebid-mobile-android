@@ -58,10 +58,16 @@
             android:name=".activities.ads.gam.original.GamOriginalApiVideoBannerActivity"
             android:exported="true" />
         <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiMultiformatBannerActivity"
+            android:exported="true" />
+        <activity
             android:name=".activities.ads.gam.original.GamOriginalApiDisplayInterstitialActivity"
             android:exported="true" />
         <activity
             android:name=".activities.ads.gam.original.GamOriginalApiVideoInterstitialActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.ads.gam.original.GamOriginalApiMultiformatInterstitialActivity"
             android:exported="true" />
         <activity
             android:name=".activities.ads.gam.original.GamOriginalApiInStreamActivity"

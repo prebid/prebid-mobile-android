@@ -18,65 +18,116 @@ package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import org.prebid.mobile.api.data.AdFormat;
-import org.prebid.mobile.rendering.models.PlacementType;
 
+import org.prebid.mobile.api.data.AdFormat;
+
+import java.util.EnumSet;
 import java.util.List;
 
 public abstract class VideoBaseAdUnit extends AdUnit {
 
-    VideoBaseAdUnit(@NonNull String configId, @NonNull AdFormat adType) {
+    VideoBaseAdUnit(@NonNull String configId, @NonNull EnumSet<AdFormat> adType) {
         super(configId, adType);
     }
 
     @Nullable
-    public Parameters getParameters() {
+    public VideoParameters getVideoParameters() {
         return configuration.getVideoParameters();
     }
 
-    public void setParameters(@Nullable Parameters parameters) {
+    public void setVideoParameters(@Nullable VideoParameters parameters) {
         configuration.setVideoParameters(parameters);
+    }
+
+    /**
+     * @deprecated use `setVideoParameters()`
+     */
+    @Deprecated
+    public void setParameters(Parameters parameters) {
+        if (parameters != null) {
+            VideoParameters newParameters = new VideoParameters(parameters.getMimes());
+            newParameters.setApi(parameters.getApi());
+            newParameters.setLinearity(parameters.getLinearity());
+            newParameters.setMaxBitrate(parameters.getMaxBitrate());
+            newParameters.setMinBitrate(parameters.getMinBitrate());
+            newParameters.setMaxDuration(parameters.getMaxDuration());
+            newParameters.setMinDuration(parameters.getMinDuration());
+            newParameters.setPlacement(parameters.getPlacement());
+            newParameters.setPlaybackMethod(parameters.getPlaybackMethod());
+            newParameters.setProtocols(parameters.getProtocols());
+            newParameters.setStartDelay(parameters.getStartDelay());
+            configuration.setVideoParameters(newParameters);
+        }
+    }
+
+    /**
+     * @deprecated use `getVideoParameters()`
+     */
+    @Deprecated
+    @Nullable
+    public Parameters getParameters() {
+        VideoParameters newParameters = configuration.getVideoParameters();
+        if (newParameters != null) {
+            Parameters oldParameters = new Parameters();
+
+            oldParameters.setApi(newParameters.getApi());
+            oldParameters.setLinearity(newParameters.getLinearity());
+            oldParameters.setMaxBitrate(newParameters.getMaxBitrate());
+            oldParameters.setMinBitrate(newParameters.getMinBitrate());
+            oldParameters.setMimes(newParameters.getMimes());
+            oldParameters.setMaxDuration(newParameters.getMaxDuration());
+            oldParameters.setMinDuration(newParameters.getMinDuration());
+            oldParameters.setPlacement(newParameters.getPlacement());
+            oldParameters.setPlaybackMethod(newParameters.getPlaybackMethod());
+            oldParameters.setProtocols(newParameters.getProtocols());
+            oldParameters.setStartDelay(newParameters.getStartDelay());
+
+            return oldParameters;
+        }
+
+        return null;
     }
 
     /**
      * Describes an <a href="https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf">OpenRTB</a> video object
      */
+    @Deprecated
     public static class Parameters {
 
         /**
-         List of supported API frameworks for this impression. If an API is not explicitly listed, it is assumed not to be supported.
+         * List of supported API frameworks for this impression. If an API is not explicitly listed, it is assumed not to be supported.
          */
         @Nullable
         private List<Signals.Api> api;
 
         /**
-         Maximum bit rate in Kbps.
+         * Maximum bit rate in Kbps.
          */
         @Nullable
         private Integer maxBitrate;
 
         /**
-         Maximum bit rate in Kbps.
+         * Maximum bit rate in Kbps.
          */
         @Nullable
         private Integer minBitrate;
 
         /**
-         Maximum video ad duration in seconds.
+         * Maximum video ad duration in seconds.
          */
         @Nullable
         private Integer maxDuration;
 
         /**
-         Minimum video ad duration in seconds.
+         * Minimum video ad duration in seconds.
          */
         @Nullable
         private Integer minDuration;
 
         /**
-         Content MIME types supported
-
-         # Example #
+         * Content MIME types supported
+         * <p>
+         * # Example #
          * "video/mp4"
          * "video/x-ms-wmv"
          */
@@ -84,31 +135,31 @@ public abstract class VideoBaseAdUnit extends AdUnit {
         private List<String> mimes;
 
         /**
-         Allowed playback methods. If none specified, assume all are allowed.
+         * Allowed playback methods. If none specified, assume all are allowed.
          */
         @Nullable
         private List<Signals.PlaybackMethod> playbackMethod;
 
         /**
-         Array of supported video bid response protocols.
+         * Array of supported video bid response protocols.
          */
         @Nullable
         private List<Signals.Protocols> protocols;
 
         /**
-         Indicates the start delay in seconds for pre-roll, mid-roll, or post-roll ad placements.
+         * Indicates the start delay in seconds for pre-roll, mid-roll, or post-roll ad placements.
          */
         @Nullable
         private Signals.StartDelay startDelay;
 
         /**
-         Placement type for the impression.
+         * Placement type for the impression.
          */
         @Nullable
         private Signals.Placement placement;
 
         /**
-         Placement type for the impression.
+         * Placement type for the impression.
          */
         @Nullable
         private Integer linearity;

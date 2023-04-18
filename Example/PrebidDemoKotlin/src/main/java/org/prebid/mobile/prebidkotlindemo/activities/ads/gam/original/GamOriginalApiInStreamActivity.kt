@@ -42,7 +42,7 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
         const val HEIGHT = 480
     }
 
-    private var adUnit: VideoAdUnit? = null
+    private var adUnit: InStreamVideoAdUnit? = null
     private var player: SimpleExoPlayer? = null
     private var adsUri: Uri? = null
     private var adsLoader: ImaAdsLoader? = null
@@ -65,11 +65,11 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
     }
 
     private fun createAd() {
-        // 1. Create VideoAdUnit
-        adUnit = VideoAdUnit(CONFIG_ID, WIDTH, HEIGHT)
+        // 1. Create InStreamVideoAdUnit
+        adUnit = InStreamVideoAdUnit(CONFIG_ID, WIDTH, HEIGHT)
 
         // 2. Configure video parameters
-        adUnit?.parameters = configureVideoParameters()
+        adUnit?.videoParameters = configureVideoParameters()
 
         // 3. Init player view
         playerView = PlayerView(this)
@@ -95,8 +95,8 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
         }
     }
 
-    private fun configureVideoParameters(): VideoBaseAdUnit.Parameters {
-        return VideoBaseAdUnit.Parameters().apply {
+    private fun configureVideoParameters(): VideoParameters {
+        return VideoParameters(listOf("video/x-flv", "video/mp4")).apply {
             placement = Signals.Placement.InStream
 
             api = listOf(
@@ -108,7 +108,6 @@ class GamOriginalApiInStreamActivity : BaseAdActivity() {
             minBitrate = 300
             maxDuration = 30
             minDuration = 5
-            mimes = listOf("video/x-flv", "video/mp4")
             playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOn)
             protocols = listOf(
                 Signals.Protocols.VAST_2_0

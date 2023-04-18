@@ -12,19 +12,19 @@ import com.google.android.gms.ads.admanager.AdManagerInterstitialAd;
 import com.google.android.gms.ads.admanager.AdManagerInterstitialAdLoadCallback;
 
 import org.prebid.mobile.InterstitialAdUnit;
-import org.prebid.mobile.Signals;
 import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.javademo.activities.BaseAdActivity;
-import org.prebid.mobile.javademo.utils.Settings;
 
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.Random;
 
-public class GamOriginalApiVideoInterstitial extends BaseAdActivity {
+public class GamOriginalApiMultiformatInterstitial extends BaseAdActivity {
 
-    private static final String AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-video-interstitial";
-    private static final String CONFIG_ID = "imp-prebid-video-interstitial-320-480-original-api";
+    private static final String AD_UNIT_ID = "/21808260008/prebid-demo-intestitial-multiformat";
+    private static final String CONFIG_ID_BANNER = "imp-prebid-display-interstitial-320-480";
+    private static final String CONFIG_ID_VIDEO = "imp-prebid-video-interstitial-320-480-original-api";
 
     private InterstitialAdUnit adUnit;
 
@@ -36,19 +36,19 @@ public class GamOriginalApiVideoInterstitial extends BaseAdActivity {
     }
 
     private void createAd() {
-        adUnit = new InterstitialAdUnit(CONFIG_ID, EnumSet.of(AdUnitFormat.VIDEO));
-        adUnit.setAutoRefreshInterval(Settings.get().getRefreshTimeSeconds());
-
-        VideoParameters parameters = new VideoParameters(Collections.singletonList("video/mp4"));
-        parameters.setProtocols(Collections.singletonList(Signals.Protocols.VAST_2_0));
-        parameters.setPlaybackMethod(Collections.singletonList(Signals.PlaybackMethod.AutoPlaySoundOff));
-        adUnit.setVideoParameters(parameters);
+        String configId;
+        if (new Random().nextBoolean()) {
+            configId = CONFIG_ID_BANNER;
+        } else {
+            configId = CONFIG_ID_VIDEO;
+        }
+        adUnit = new InterstitialAdUnit(configId, EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
+        adUnit.setVideoParameters(new VideoParameters(Collections.singletonList("video/mp4")));
+        adUnit.setAutoRefreshInterval(getRefreshTimeSeconds());
 
         final AdManagerAdRequest.Builder builder = new AdManagerAdRequest.Builder();
-
         adUnit.fetchDemand(builder, resultCode -> {
             AdManagerAdRequest request = builder.build();
-
             AdManagerInterstitialAd.load(this, AD_UNIT_ID, request, createListener());
         });
     }
@@ -57,7 +57,7 @@ public class GamOriginalApiVideoInterstitial extends BaseAdActivity {
         return new AdManagerInterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull AdManagerInterstitialAd interstitialManager) {
-                interstitialManager.show(GamOriginalApiVideoInterstitial.this);
+                interstitialManager.show(GamOriginalApiMultiformatInterstitial.this);
             }
 
             @Override
@@ -70,6 +70,7 @@ public class GamOriginalApiVideoInterstitial extends BaseAdActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         if (adUnit != null) {
             adUnit.stopAutoRefresh();
         }

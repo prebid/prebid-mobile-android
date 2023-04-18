@@ -18,9 +18,9 @@ import org.prebid.mobile.renderingtestapp.R
 import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerVideoBinding
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 
-class GamOriginalInstreamFragment : AdFragment() {
+class GamOriginalInstreamNewApiFragment : AdFragment() {
 
-    private var adUnit: VideoAdUnit? = null
+    private var adUnit: InStreamVideoAdUnit? = null
     private var player: SimpleExoPlayer? = null
     private var adsUri: Uri? = null
     private var adsLoader: ImaAdsLoader? = null
@@ -66,14 +66,13 @@ class GamOriginalInstreamFragment : AdFragment() {
         val params = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 600)
         binding.viewContainer.addView(playerView, params)
 
-        val parameters = VideoBaseAdUnit.Parameters()
+        val parameters = VideoParameters(listOf("video/mp4"))
         parameters.protocols = listOf(Signals.Protocols.VAST_2_0)
         parameters.playbackMethod = listOf(Signals.PlaybackMethod.AutoPlaySoundOff)
         parameters.placement = Signals.Placement.InStream
-        parameters.mimes = listOf("video/mp4")
 
-        adUnit = VideoAdUnit(configId, width, height)
-        adUnit?.parameters = parameters
+        adUnit = InStreamVideoAdUnit(configId, width, height)
+        adUnit?.videoParameters = parameters
     }
 
     private fun initializePlayer() {
@@ -86,7 +85,8 @@ class GamOriginalInstreamFragment : AdFragment() {
         // Uri uri = Uri.parse("<![CDATA[https://storage.googleapis.com/gvabox/media/samples/stock.mp4]]>");
 
         val mediaItem = MediaItem.fromUri(uri)
-        val dataSourceFactory: DataSource.Factory = DefaultDataSourceFactory(requireContext(), getString(R.string.app_name))
+        val dataSourceFactory: DataSource.Factory =
+            DefaultDataSourceFactory(requireContext(), getString(R.string.app_name))
         val mediaSourceFactory = ProgressiveMediaSource.Factory(dataSourceFactory)
         val mediaSource: MediaSource = mediaSourceFactory.createMediaSource(mediaItem)
         val dataSpec = DataSpec(adsUri!!)

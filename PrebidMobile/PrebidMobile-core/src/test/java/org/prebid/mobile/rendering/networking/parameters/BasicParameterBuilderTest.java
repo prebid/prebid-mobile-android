@@ -45,7 +45,7 @@ import org.prebid.mobile.ExternalUserId;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.Signals;
 import org.prebid.mobile.TargetingParams;
-import org.prebid.mobile.VideoBaseAdUnit;
+import org.prebid.mobile.VideoParameters;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
@@ -585,7 +585,7 @@ public class BasicParameterBuilderTest {
     @Test
     public void testMultiFormatAdUnit_bannerAndVideoObjectsAreNotNull() {
         AdUnitConfiguration configuration = new AdUnitConfiguration();
-        configuration.setAdFormats(EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO));
+        configuration.setAdUnitFormats(EnumSet.of(AdUnitFormat.DISPLAY, AdUnitFormat.VIDEO));
 
         BasicParameterBuilder builder = new BasicParameterBuilder(configuration, null, false);
 
@@ -775,8 +775,11 @@ public class BasicParameterBuilderTest {
     }
 
 
-    private VideoBaseAdUnit.Parameters createFullVideoParameters() {
-        VideoBaseAdUnit.Parameters parameters = new VideoBaseAdUnit.Parameters();
+    private VideoParameters createFullVideoParameters() {
+        ArrayList<String> mimes = new ArrayList<>(2);
+        mimes.add("Mime1");
+        mimes.add("Mime2");
+        VideoParameters parameters = new VideoParameters(mimes);
 
         parameters.setMinDuration(101);
         parameters.setMaxDuration(102);
@@ -785,11 +788,6 @@ public class BasicParameterBuilderTest {
         parameters.setPlacement(Signals.Placement.InBanner);
         parameters.setLinearity(1);
         parameters.setStartDelay(Signals.StartDelay.PreRoll);
-
-        ArrayList<String> mimes = new ArrayList<>(2);
-        mimes.add("Mime1");
-        mimes.add("Mime2");
-        parameters.setMimes(mimes);
 
         ArrayList<Signals.Protocols> protocols = new ArrayList<>(2);
         protocols.add(new Signals.Protocols(11));
@@ -816,8 +814,10 @@ public class BasicParameterBuilderTest {
         BidRequest bidRequest = new BidRequest();
         bidRequest.setId(uuid);
         boolean isVideo = adConfiguration.isAdType(AdFormat.VAST);
-        bidRequest.getExt()
-            .put("prebid", Prebid.getJsonObjectForBidRequest(PrebidMobile.getPrebidServerAccountId(), isVideo, false));
+        bidRequest.getExt().put(
+                "prebid",
+                Prebid.getJsonObjectForBidRequest(PrebidMobile.getPrebidServerAccountId(), isVideo, adConfiguration)
+        );
         //if coppaEnabled - set 1, else No coppa is sent
         if (PrebidMobile.isCoppaEnabled) {
             bidRequest.getRegs().coppa = 1;

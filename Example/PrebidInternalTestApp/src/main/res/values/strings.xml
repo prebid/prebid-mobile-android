@@ -147,6 +147,8 @@
     <string name="demo_bidding_gam_banner_320_50_no_bids">Banner 320x50 (GAM) [noBids, GAM Ad]</string>
     <string name="demo_bidding_gam_banner_320_50_random">Banner 320x50 (GAM) [OK, Random]</string>
     <string name="demo_bidding_gam_banner_300_250">Banner 300x250 (GAM)</string>
+    <string name="demo_bidding_gam_banner_300_250_multiformat">Banner 300x250 Multiformat (GAM) [OK, PUC]</string>
+    <string name="demo_bidding_gam_banner_300_250_multiformat_old">Banner 300x250 Multiformat With Old Ad Unit (GAM) [OK, PUC]</string>
     <string name="demo_bidding_gam_banner_300_250_original">Banner 300x250 (GAM Original) [OK, PUC]</string>
     <string name="demo_bidding_gam_banner_728_90">Banner 728x90 (GAM)</string>
     <string name="demo_bidding_gam_banner_728_90_original">Banner 728x90 (GAM Original) [OK, PUC]</string>
@@ -154,6 +156,7 @@
     <string name="demo_bidding_gam_banner_multisize_original">Banner Multisize (GAM Original) [OK, PUC]</string>
     <string name="demo_bidding_gam_interstitial_320_480_app_event">Display Interstitial 320x480 (GAM) [OK, AppEvent]</string>
     <string name="demo_bidding_gam_interstitial_320_480_original">Display Interstitial 320x480 (GAM Original) [OK, PUC]</string>
+    <string name="demo_bidding_gam_interstitial_320_480_original_multiformat">Interstitial Multiformat 320x480 (GAM Original) [OK, PUC]</string>
     <string name="demo_bidding_gam_interstitial_320_480_random">Display Interstitial 320x480 (GAM) [OK, Random]</string>
     <string name="demo_bidding_gam_interstitial_320_480_no_bids">Display Interstitial 320x480 (GAM) [noBids, GAM Ad]</string>
     <string name="demo_bidding_gam_interstitial_320_480_multiformat">Multiformat Interstitial 320x480 (GAM) [OK, AppEvent]</string>
@@ -166,7 +169,9 @@
     <string name="demo_bidding_gam_video_outstream_no_bids">Video Outstream (GAM) [noBids, GAM Ad]</string>
     <string name="demo_bidding_gam_video_oustream_app_event">Video Outstream (GAM) [OK, AppEvent]</string>
     <string name="demo_bidding_gam_video_oustream_original">Video Outstream (GAM Original) [OK, PUC]</string>
+    <string name="demo_bidding_gam_video_oustream_original_new_api">Video Outstream New API (GAM Original) [OK, PUC]</string>
     <string name="demo_bidding_gam_video_instream_original">Instream Video (GAM Original) [OK, PUC]</string>
+    <string name="demo_bidding_gam_video_instream_original_new_api">Instream Video New API (GAM Original) [OK, PUC]</string>
     <string name="demo_bidding_gam_video_outstream_random">Video Outstream (GAM) [OK, Random]</string>
     <string name="demo_bidding_gam_video_outstream_feed">Video Outstream Feed (GAM)</string>
     <string name="demo_bidding_gam_video_rewarded_320_480_metadata">Video Rewarded 320x480 without End Card (GAM) [OK, Metadata]</string>
@@ -270,8 +275,10 @@
     <string name="adunit_gam_banner_728_90_original">/21808260008/prebid_demo_app_original_api_banner_728x90</string>
     <string name="adunit_gam_banner_multisize">/21808260008/prebid_oxb_multisize_banner</string>
     <string name="adunit_gam_banner_multisize_original">/21808260008/prebid_demo_app_original_api_banner_multisize</string>
+    <string name="adunit_gam_banner_multiformat_original">/21808260008/prebid-demo-original-banner-multiformat</string>
     <string name="adunit_gam_interstitial_320_480_app_event">/21808260008/prebid_oxb_html_interstitial</string>
     <string name="adunit_gam_interstitial_320_480_original">/21808260008/prebid-demo-app-original-api-display-interstitial</string>
+    <string name="adunit_gam_interstitial_320_480_original_multiformat">/21808260008/prebid-demo-intestitial-multiformat</string>
     <string name="adunit_gam_interstitial_320_480_random">/21808260008/prebid_oxb_html_interstitial_random</string>
     <string name="adunit_gam_interstitial_320_480_no_bids">/21808260008/prebid_oxb_320x480_html_interstitial_static</string>
     <string name="adunit_gam_video_300_250">/21808260008/prebid_oxb_outsream_video</string>

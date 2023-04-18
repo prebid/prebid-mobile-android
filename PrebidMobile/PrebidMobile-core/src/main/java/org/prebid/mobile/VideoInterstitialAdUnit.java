@@ -17,14 +17,22 @@
 package org.prebid.mobile;
 
 import androidx.annotation.NonNull;
+
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.rendering.models.AdPosition;
 import org.prebid.mobile.rendering.models.PlacementType;
 
+import java.util.EnumSet;
+
+/**
+ * @deprecated Use {@link InterstitialAdUnit} constructor with adUnitFormats parameter:
+ * {@code EnumSet.of(AdUnitFormat.VIDEO);}
+ */
+@Deprecated
 public class VideoInterstitialAdUnit extends VideoBaseAdUnit {
 
     public VideoInterstitialAdUnit(@NonNull String configId) {
-        super(configId, AdFormat.VAST);
+        super(configId, EnumSet.of(AdFormat.VAST));
         configuration.setAdPosition(AdPosition.FULLSCREEN);
         configuration.setPlacementType(PlacementType.INTERSTITIAL);
     }
