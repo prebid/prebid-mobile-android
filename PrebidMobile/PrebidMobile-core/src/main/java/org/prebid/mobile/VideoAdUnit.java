@@ -23,9 +23,10 @@ import org.prebid.mobile.api.data.AdFormat;
 import java.util.EnumSet;
 
 /**
- * @deprecated - For video ads (out stream) use BannerAdUnit with adUnitFormat:
- * `EnumSet.of(AdUnitFormat.VIDEO);`
- * - For in-stream video ads use InStreamVideoAdUnit.
+ * @deprecated - For outstream video ads use {@link BannerAdUnit} with adUnitFormat parameter:
+ * {@code EnumSet.of(AdUnitFormat.VIDEO); }
+ * <br>
+ * - For instream video ads use {@link InStreamVideoAdUnit}.
  */
 @Deprecated
 public class VideoAdUnit extends VideoBaseAdUnit {

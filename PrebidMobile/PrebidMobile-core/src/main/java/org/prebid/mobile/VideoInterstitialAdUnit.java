@@ -25,8 +25,8 @@ import org.prebid.mobile.rendering.models.PlacementType;
 import java.util.EnumSet;
 
 /**
- * @deprecated Use InterstitialAdUnit constructor with adUnitFormats parameter:
- * `EnumSet.of(AdUnitFormat.VIDEO);`
+ * @deprecated Use {@link InterstitialAdUnit} constructor with adUnitFormats parameter:
+ * {@code EnumSet.of(AdUnitFormat.VIDEO);}
  */
 @Deprecated
 public class VideoInterstitialAdUnit extends VideoBaseAdUnit {
