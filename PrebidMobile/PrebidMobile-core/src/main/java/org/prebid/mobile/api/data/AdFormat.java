@@ -20,7 +20,7 @@ public enum AdFormat {
 
         EnumSet<AdFormat> result = EnumSet.noneOf(AdFormat.class);
         for (AdUnitFormat format : adUnitFormats) {
-            if (format == AdUnitFormat.DISPLAY) {
+            if (format == AdUnitFormat.DISPLAY || format == AdUnitFormat.BANNER) {
                 if (isInterstitial) {
                     result.add(AdFormat.INTERSTITIAL);
                 } else {

@@ -113,4 +113,26 @@ public class AdUnitConfigurationTest {
         assertEquals(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST), subject.getAdFormats());
     }
 
+    @Test
+    public void setAdFormatsNewApi_addCorrespondingElements() {
+        subject.setAdUnitFormats(null);
+
+        assertEquals(0, subject.getAdFormats().size());
+
+        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER));
+
+        assertEquals(1, subject.getAdFormats().size());
+        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL), subject.getAdFormats());
+
+        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.VIDEO));
+
+        assertEquals(1, subject.getAdFormats().size());
+        assertEquals(EnumSet.of(AdFormat.VAST), subject.getAdFormats());
+
+        subject.setAdUnitFormats(EnumSet.of(AdUnitFormat.BANNER, AdUnitFormat.VIDEO));
+
+        assertEquals(2, subject.getAdFormats().size());
+        assertEquals(EnumSet.of(AdFormat.INTERSTITIAL, AdFormat.VAST), subject.getAdFormats());
+    }
+
 }
