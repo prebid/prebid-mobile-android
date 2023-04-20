@@ -21,6 +21,7 @@ import static org.prebid.mobile.PrebidMobile.SDK_VERSION;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 
 import org.json.JSONArray;
@@ -146,8 +147,7 @@ public class BasicParameterBuilder extends ParameterBuilder {
         if (PrebidMobile.isCoppaEnabled) {
             bidRequest.getRegs().coppa = 1;
         }
-
-        if (!adConfiguration.isOriginalAdUnit()) {
+        if (!adConfiguration.isOriginalAdUnit() && !isDefaultRenderer()) {
             bidRequest.setPluginRenderers(getPluginRenderers());
         }
     }
@@ -429,5 +429,10 @@ public class BasicParameterBuilder extends ParameterBuilder {
     private PluginRenderers getPluginRenderers() {
         List<String> customRenderers = PrebidMobilePluginRegister.getInstance().getRTBListOfRenderersFor(adConfiguration);
         return new PluginRenderers(customRenderers);
+    }
+
+    private boolean isDefaultRenderer() {
+        List<String> renderers = getPluginRenderers().getRenderers();
+        return renderers.size() == 1 && renderers.get(0).equals("PrebidRenderer");
     }
 }
