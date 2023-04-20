@@ -433,6 +433,6 @@ public class BasicParameterBuilder extends ParameterBuilder {
 
     private boolean isDefaultRenderer() {
         List<String> renderers = getPluginRenderers().getRenderers();
-        return renderers.size() == 1 && renderers.get(0).equals("PrebidRenderer");
+        return renderers.size() == 1 && renderers.get(0).equals(PrebidMobilePluginRegister.PREBID_MOBILE_RENDERER_NAME);
     }
 }
