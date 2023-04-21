@@ -161,7 +161,7 @@ class HeaderBiddingViewModel(
 
     // By listening the interface you could read from which ad unit came such events
     override fun onVideoEvent(
-        videoAdEvent: VideoAdEvent,
+        videoAdEvent: VideoAdEvent.Event,
         adUnitConfiguration: AdUnitConfiguration
     ) {
         LogUtil.debug("sampleCustomRenderer $videoAdEvent ${adUnitConfiguration.configId}")

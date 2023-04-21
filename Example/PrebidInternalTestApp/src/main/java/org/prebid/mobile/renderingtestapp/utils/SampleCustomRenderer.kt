@@ -35,6 +35,7 @@ import org.prebid.mobile.configuration.AdUnitConfiguration
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerListener
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener
+import org.prebid.mobile.rendering.video.VideoAdEvent
 
 class SampleCustomRenderer : PrebidMobilePluginRenderer {
 
@@ -78,7 +79,7 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
         })
 
         // Propagate events whenever necessary
-        pluginExtraEventHandler?.onSlinking(adUnitConfiguration)
+        pluginExtraEventHandler?.onVideoEvent(VideoAdEvent.Event.AD_RESUME, adUnitConfiguration)
 
         return bannerView
     }
