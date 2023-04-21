@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -46,11 +47,19 @@ public class PrebidDisplayView extends FrameLayout {
 
     private AdUnitConfiguration adUnitConfiguration;
 
+    @Nullable
     private DisplayViewListener displayViewListener;
+
+    @Nullable
     private InterstitialManager interstitialManager;
+
+    @Nullable
     private AdViewManager adViewManager;
+
+    @Nullable
     private VideoView videoView;
 
+    @Nullable
     private EventForwardingLocalBroadcastReceiver eventForwardingReceiver;
     private final EventForwardingLocalBroadcastReceiver.EventForwardingBroadcastListener broadcastListener = this::handleBroadcastAction;
 
@@ -127,7 +136,7 @@ public class PrebidDisplayView extends FrameLayout {
     };
     public PrebidDisplayView(
             @NonNull Context context,
-            DisplayViewListener listener,
+            @Nullable DisplayViewListener listener,
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse response
     ) {
@@ -150,6 +159,7 @@ public class PrebidDisplayView extends FrameLayout {
             }
         });
     }
+
     public PrebidDisplayView(
             @NonNull Context context,
             DisplayViewListener listener,
@@ -158,6 +168,14 @@ public class PrebidDisplayView extends FrameLayout {
     ) throws AdException {
         this(context, listener, adUnitConfiguration, getBidResponseFromCache(responseId));
     }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+        destroy();
+    }
+
     public void destroy() {
         adUnitConfiguration = null;
         displayViewListener = null;
@@ -174,6 +192,7 @@ public class PrebidDisplayView extends FrameLayout {
             eventForwardingReceiver = null;
         }
     }
+
     private void displayHtmlAd(BidResponse response) throws AdException {
         adViewManager = new AdViewManager(getContext(), adViewManagerListener, this, interstitialManager);
         adViewManager.loadBidTransaction(adUnitConfiguration, response);
