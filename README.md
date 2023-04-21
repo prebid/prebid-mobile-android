@@ -9,7 +9,7 @@ To work with Prebid Mobile, you will need access to a Prebid Server. See [this p
 Easily include the Prebid Mobile SDK using Maven. Simply add this line to your gradle dependencies:
 
 ```
-implementation 'org.prebid:prebid-mobile-sdk:2.0.9'
+implementation 'org.prebid:prebid-mobile-sdk:2.1.0'
 ```
 
 ## Build from source
