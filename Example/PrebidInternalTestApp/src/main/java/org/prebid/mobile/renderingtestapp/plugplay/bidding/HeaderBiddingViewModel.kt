@@ -19,22 +19,22 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import org.prebid.mobile.PrebidMobile
+import org.prebid.mobile.LogUtil
+import org.prebid.mobile.configuration.AdUnitConfiguration
 import org.prebid.mobile.renderingtestapp.data.DemoItem
 import org.prebid.mobile.renderingtestapp.data.Tag
-import org.prebid.mobile.renderingtestapp.utils.ConfigurationViewSettings
-import org.prebid.mobile.renderingtestapp.utils.DemoItemProvider
-import org.prebid.mobile.renderingtestapp.utils.GdprHelper
-import org.prebid.mobile.renderingtestapp.utils.SampleCustomRenderer
+import org.prebid.mobile.renderingtestapp.utils.*
 
 class HeaderBiddingViewModel(
         private val integrationCategories: Array<String>,
         private val adCategories: Array<String>,
         private val gdprHelper: GdprHelper
-) : ViewModel() {
+) : ViewModel(), SampleCustomRendererExtraEventHandler {
 
     private var demoItemList: MutableList<DemoItem> = DemoItemProvider.getDemoList()
-    private val sampleCustomRenderer = SampleCustomRenderer()
+    private val sampleCustomRenderer = SampleCustomRenderer().also {
+        it.setPluginEventHandler(this@HeaderBiddingViewModel)
+    }
 
     private var integrationSelectedPosition = 0
     private var adCategorySelectedPosition = 0
@@ -156,5 +156,22 @@ class HeaderBiddingViewModel(
 
     private fun containsSearchQuery(data: String): Boolean {
         return data.lowercase().contains(searchQuery)
+    }
+
+    // By listening the interface you could read from which ad unit came such events
+    override fun onGliding(adUnitConfiguration: AdUnitConfiguration) {
+        LogUtil.debug("sampleCustomRenderer onGliding ${adUnitConfiguration.configId}")
+    }
+
+    override fun onZooming(adUnitConfiguration: AdUnitConfiguration) {
+        LogUtil.debug("sampleCustomRenderer onZooming ${adUnitConfiguration.configId}")
+    }
+
+    override fun onSlinking(adUnitConfiguration: AdUnitConfiguration) {
+        LogUtil.debug("sampleCustomRenderer onSlinking ${adUnitConfiguration.configId}")
+    }
+
+    override fun onImpression(adUnitConfiguration: AdUnitConfiguration) {
+        LogUtil.debug("sampleCustomRenderer onImpression ${adUnitConfiguration.configId}")
     }
 }

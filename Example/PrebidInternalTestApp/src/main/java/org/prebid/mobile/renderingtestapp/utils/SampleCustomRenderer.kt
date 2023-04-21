@@ -29,6 +29,7 @@ import android.widget.ImageButton
 import org.prebid.mobile.api.data.AdFormat
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.PrebidMobileInterstitialControllerInterface
+import org.prebid.mobile.api.rendering.pluginrenderer.PluginExtraEventHandler
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer
 import org.prebid.mobile.configuration.AdUnitConfiguration
 import org.prebid.mobile.rendering.bidding.data.bid.BidResponse
@@ -36,11 +37,18 @@ import org.prebid.mobile.rendering.bidding.interfaces.InterstitialControllerList
 import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener
 
 class SampleCustomRenderer : PrebidMobilePluginRenderer {
+
+    private var pluginExtraEventHandler: SampleCustomRendererExtraEventHandler? = null;
+
     override fun getName(): String = "SampleCustomRenderer"
 
     override fun getVersion(): String = "1.0.0"
 
     override fun getToken(): String? = null
+
+    override fun setPluginEventHandler(pluginExtraEventHandler: PluginExtraEventHandler) {
+        this.pluginExtraEventHandler = pluginExtraEventHandler as? SampleCustomRendererExtraEventHandler
+    }
 
     override fun createBannerAdView(
         context: Context,
@@ -68,6 +76,9 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
                 bannerView.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
+
+        // Propagate events whenever necessary
+        pluginExtraEventHandler?.onSlinking(adUnitConfiguration)
 
         return bannerView
     }

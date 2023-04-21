@@ -34,6 +34,7 @@ public interface PrebidMobilePluginRenderer {
     String getVersion();
     @Nullable
     String getToken();
+    void setPluginEventHandler(PluginExtraEventHandler pluginExtraEventHandler);
 
     // Creates and returns Banner View for a given Bid Response
     // Returns nil in the case of an internal error
