@@ -136,7 +136,7 @@ public class PrebidDisplayView extends FrameLayout {
     };
     public PrebidDisplayView(
             @NonNull Context context,
-            @Nullable DisplayViewListener listener,
+            @NonNull DisplayViewListener listener,
             @NonNull AdUnitConfiguration adUnitConfiguration,
             @NonNull BidResponse response
     ) {
