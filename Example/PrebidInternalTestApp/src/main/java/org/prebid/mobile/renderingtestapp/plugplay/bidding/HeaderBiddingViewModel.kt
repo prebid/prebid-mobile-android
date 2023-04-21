@@ -21,6 +21,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.prebid.mobile.LogUtil
 import org.prebid.mobile.configuration.AdUnitConfiguration
+import org.prebid.mobile.rendering.video.VideoAdEvent
 import org.prebid.mobile.renderingtestapp.data.DemoItem
 import org.prebid.mobile.renderingtestapp.data.Tag
 import org.prebid.mobile.renderingtestapp.utils.*
@@ -159,19 +160,10 @@ class HeaderBiddingViewModel(
     }
 
     // By listening the interface you could read from which ad unit came such events
-    override fun onGliding(adUnitConfiguration: AdUnitConfiguration) {
-        LogUtil.debug("sampleCustomRenderer onGliding ${adUnitConfiguration.configId}")
-    }
-
-    override fun onZooming(adUnitConfiguration: AdUnitConfiguration) {
-        LogUtil.debug("sampleCustomRenderer onZooming ${adUnitConfiguration.configId}")
-    }
-
-    override fun onSlinking(adUnitConfiguration: AdUnitConfiguration) {
-        LogUtil.debug("sampleCustomRenderer onSlinking ${adUnitConfiguration.configId}")
-    }
-
-    override fun onImpression(adUnitConfiguration: AdUnitConfiguration) {
-        LogUtil.debug("sampleCustomRenderer onImpression ${adUnitConfiguration.configId}")
+    override fun onVideoEvent(
+        videoAdEvent: VideoAdEvent,
+        adUnitConfiguration: AdUnitConfiguration
+    ) {
+        LogUtil.debug("sampleCustomRenderer $videoAdEvent ${adUnitConfiguration.configId}")
     }
 }
