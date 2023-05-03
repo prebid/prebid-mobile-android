@@ -21,13 +21,16 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+
 import androidx.annotation.VisibleForTesting;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.utils.helpers.ExternalViewerUtils;
@@ -157,7 +160,7 @@ final class BrowserControls extends TableLayout {
     }
 
     private void init(BrowserControlsEventsListener listener) {
-        UIHandler = new Handler();
+        UIHandler = new Handler(Looper.getMainLooper());
         browserControlsEventsListener = listener;
         if (getContext() != null) {
             TableRow controlsSet = new TableRow(getContext());
