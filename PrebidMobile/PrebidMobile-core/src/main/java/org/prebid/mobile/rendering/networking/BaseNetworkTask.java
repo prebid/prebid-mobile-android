@@ -285,7 +285,10 @@ public class BaseNetworkTask
             try {
                 wr = new DataOutputStream(connection.getOutputStream());
                 if (param.queryParams != null) {
-                    wr.writeBytes(param.queryParams);
+                    byte[] bytes = param.queryParams.getBytes();
+                    for (int i = 0; i < bytes.length; i++) {
+                        wr.writeByte(bytes[i]);
+                    }
                 }
             } finally {
                 if (wr != null) {
