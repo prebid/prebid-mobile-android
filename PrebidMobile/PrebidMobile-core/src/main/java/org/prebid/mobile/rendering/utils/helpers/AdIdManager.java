@@ -19,6 +19,7 @@ package org.prebid.mobile.rendering.utils.helpers;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.VisibleForTesting;
@@ -58,7 +59,7 @@ public class AdIdManager {
                 getAdIdInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 //wait for a max of 3 secs and cancel the task if it's still running.
                 //continue with adIdFetchFailure() where we will just log this as warning
-                Handler handler = new Handler();
+                Handler handler = new Handler(Looper.getMainLooper());
                 handler.postDelayed(() -> {
                     if (getAdIdInfoTask.getStatus() != AsyncTask.Status.FINISHED) {
                         LogUtil.debug(TAG, "Canceling advertising id fetching");
