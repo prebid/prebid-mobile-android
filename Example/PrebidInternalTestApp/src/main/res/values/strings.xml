@@ -81,6 +81,7 @@
 
     <!--In-App Titles-->
     <string name="demo_bidding_in_app_banner_320_50">Banner 320x50 (In-App)</string>
+    <string name="demo_bidding_in_app_banner_320_50_memory_leak_testing">Banner 320x50 (In-App) Memory Leak Testing</string>
     <string name="demo_bidding_in_app_banner_320_50_events">Banner 320x50 Events (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_no_bids">Banner 320x50 [noBids] (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_imp_prebid_random_bid"> Banner 320x50 [Bid - RANDOM noBids, Ad - RESPECTIVE]</string>
