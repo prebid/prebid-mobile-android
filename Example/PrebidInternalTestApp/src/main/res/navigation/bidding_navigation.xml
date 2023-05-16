@@ -439,6 +439,9 @@
             android:id="@+id/action_header_bidding_to_gam_original_banner"
             app:destination="@id/gamOriginalBannerFragment" />
         <action
+            android:id="@+id/action_header_bidding_to_gam_original_banner_memory_leak_testing"
+            app:destination="@id/gamOriginalBannerMemoryLeakTestingFragment" />
+        <action
             android:id="@+id/action_header_bidding_to_gam_original_banner_multiformat"
             app:destination="@id/gamOriginalBannerFragmentMultiformat" />
         <action
@@ -667,6 +670,10 @@
         android:id="@+id/gamOriginalBannerFragment"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalBannerFragment"
         android:label="GamOriginalBannerFragment" />
+    <fragment
+        android:id="@+id/gamOriginalBannerMemoryLeakTestingFragment"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.testing.MemoryLeakTestingOriginalApiBannerFragment"
+        android:label="GamOriginalBannerMemoryLeakTestingFragment" />
     <fragment
         android:id="@+id/gamOriginalBannerFragmentMultiformat"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.gam.original.GamOriginalBannerRandomMultiformatFragment"

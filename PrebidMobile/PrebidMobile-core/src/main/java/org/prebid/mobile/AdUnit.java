@@ -92,6 +92,12 @@ public abstract class AdUnit {
         }
     }
 
+    public void destroy() {
+        if (bidLoader != null) {
+            bidLoader.destroy();
+        }
+    }
+
     public void fetchDemand(@NonNull final OnCompleteListener2 listener) {
         final Map<String, String> keywordsMap = new HashMap<>();
 

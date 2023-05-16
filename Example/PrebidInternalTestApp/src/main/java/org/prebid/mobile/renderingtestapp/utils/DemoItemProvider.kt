@@ -50,6 +50,8 @@ class DemoItemProvider private constructor() {
         private const val gamBannerAction = R.id.action_header_bidding_to_gam_banner
         private const val gamBannerOriginalAction =
             R.id.action_header_bidding_to_gam_original_banner
+        private const val gamBannerOriginalMemoryLeakTestingAction =
+            R.id.action_header_bidding_to_gam_original_banner_memory_leak_testing
         private const val gamBannerOriginalMultiformatAction =
             R.id.action_header_bidding_to_gam_original_banner_multiformat
         private const val gamInterstitialAction = R.id.action_header_bidding_to_gam_interstitial
@@ -102,6 +104,21 @@ class DemoItemProvider private constructor() {
             val gamInterstitialTagList = listOf(Tag.ALL, Tag.ORIGINAL, Tag.INTERSTITIAL, Tag.REMOTE)
             val gamVideoTagList = listOf(Tag.ALL, Tag.ORIGINAL, Tag.VIDEO, Tag.REMOTE)
             val gamNativeTagList = listOf(Tag.ALL, Tag.ORIGINAL, Tag.NATIVE, Tag.REMOTE)
+
+            // TODO: Move down
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_gam_banner_320_50_original_memory_leak_testing),
+                    gamBannerOriginalMemoryLeakTestingAction,
+                    gamBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_320x50,
+                        R.string.adunit_gam_banner_320_50_original,
+                        320,
+                        50
+                    )
+                )
+            )
 
             demoList.add(
                 DemoItem(
