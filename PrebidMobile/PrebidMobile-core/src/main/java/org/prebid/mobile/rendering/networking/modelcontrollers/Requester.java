@@ -59,7 +59,7 @@ public abstract class Requester {
     protected AdUnitConfiguration adConfiguration;
     protected URLBuilder urlBuilder;
     protected ResponseHandler adResponseCallBack;
-    protected AsyncTask networkTask;
+    protected BaseNetworkTask networkTask;
 
     Requester(
             Context context,
@@ -86,7 +86,10 @@ public abstract class Requester {
     public void destroy() {
         if (networkTask != null) {
             networkTask.cancel(true);
+            networkTask.destroy();
         }
+        networkTask = null;
+        adResponseCallBack = null;
     }
 
     protected List<ParameterBuilder> getParameterBuilders() {
@@ -190,8 +193,8 @@ public abstract class Requester {
         params.userAgent = AppInfoManager.getUserAgent();
         params.name = requestName;
 
-        BaseNetworkTask networkTask = new BaseNetworkTask(adResponseCallBack);
-        this.networkTask = networkTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
+        networkTask = new BaseNetworkTask(adResponseCallBack);
+        networkTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, params);
     }
 
 }
