@@ -117,7 +117,7 @@ class DemoItemProvider private constructor() {
                         )
                     ),
                     DemoItem(
-                        getString(R.string.demo_bidding_sdk_testing_memory_leak_rendering_api_interstitial_display),
+                        getString(R.string.demo_bidding_sdk_testing_memory_leak_rendering_api_banner),
                         ppmBannerActionMemoryLeakTesting,
                         listOf(Tag.ALL, Tag.IN_APP, Tag.BANNER, Tag.REMOTE),
                         createBannerBundle(
@@ -143,12 +143,12 @@ class DemoItemProvider private constructor() {
         }
 
         private fun formPbsDemoList() {
-            addSdkTestingExamples()
             addGamOriginalExamples()
             addInAppPbsExamples()
             addGamPbsExamples()
             addAdMobPbsExamples()
             addApplovinMaxPbsExamples()
+            addSdkTestingExamples()
         }
 
         private fun addGamOriginalExamples() {
