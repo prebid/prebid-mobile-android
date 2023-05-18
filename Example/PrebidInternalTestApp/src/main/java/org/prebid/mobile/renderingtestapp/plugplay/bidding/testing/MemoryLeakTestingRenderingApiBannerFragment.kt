@@ -43,7 +43,24 @@ open class MemoryLeakTestingRenderingApiBannerFragment : AdFragment() {
             AdSize(width, height)
         )
         bannerView?.setAutoRefreshDelay(refreshDelay)
-        bannerView?.setBannerListener(MyBannerViewListener())
+
+        // Anonymous listener
+        bannerView?.setBannerListener(object : BannerViewListener {
+
+            override fun onAdLoaded(bannerView: BannerView?) {
+                Log.d("TEST", "Static class listener")
+            }
+
+            override fun onAdDisplayed(bannerView: BannerView?) {}
+            override fun onAdFailed(bannerView: BannerView?, exception: AdException?) {}
+            override fun onAdClicked(bannerView: BannerView?) {}
+            override fun onAdClosed(bannerView: BannerView?) {}
+
+        })
+
+        // Static listener
+//        bannerView?.setBannerListener(MyBannerViewListener())
+
         binding.viewContainer.addView(bannerView)
         return "Testing"
     }
@@ -56,10 +73,10 @@ open class MemoryLeakTestingRenderingApiBannerFragment : AdFragment() {
         super.onDestroyView()
 
         // 1) Call only stop auto-refresh
-        bannerView?.stopRefresh()
+//        bannerView?.stopRefresh()
 
         // 2) Call destroy
-//        bannerView?.destroy()
+        bannerView?.destroy()
     }
 
     private class MyBannerViewListener : BannerViewListener {
@@ -72,6 +89,7 @@ open class MemoryLeakTestingRenderingApiBannerFragment : AdFragment() {
         override fun onAdFailed(bannerView: BannerView?, exception: AdException?) {}
         override fun onAdClicked(bannerView: BannerView?) {}
         override fun onAdClosed(bannerView: BannerView?) {}
+
     }
 
 }

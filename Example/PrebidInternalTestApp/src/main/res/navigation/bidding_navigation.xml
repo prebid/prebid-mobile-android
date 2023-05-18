@@ -72,6 +72,15 @@
             app:popUpTo="@+id/headerBiddingFragment" />
 
         <action
+            android:id="@+id/action_header_bidding_to_interstitial_memory_leak_testing"
+            app:destination="@id/navigation_interstitial_memory_leak_testing"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
             android:id="@+id/action_header_bidding_to_in_app_interstitial_multiformat"
             app:destination="@id/navigation_in_app_interstitial_multiformat"
             app:enterAnim="@anim/nav_default_enter_anim"
@@ -517,6 +526,11 @@
     <fragment
         android:id="@+id/navigation_in_app_interstitial"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmInterstitialFragment"
+        android:label="In-App Interstitial" />
+
+    <fragment
+        android:id="@+id/navigation_interstitial_memory_leak_testing"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.testing.MemoryLeakTestingRenderingApiInterstitialFragment"
         android:label="In-App Interstitial" />
 
     <fragment

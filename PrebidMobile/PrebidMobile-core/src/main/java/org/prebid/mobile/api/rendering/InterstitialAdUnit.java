@@ -169,11 +169,13 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
     }
 
 
+    @Override
     public void destroy() {
         super.destroy();
         if (eventHandler != null) {
             eventHandler.destroy();
         }
+        adUnitEventsListener = null;
     }
 
 

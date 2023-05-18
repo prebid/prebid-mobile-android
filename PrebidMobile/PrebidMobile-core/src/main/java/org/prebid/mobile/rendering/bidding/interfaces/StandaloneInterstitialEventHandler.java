@@ -17,11 +17,13 @@
 package org.prebid.mobile.rendering.bidding.interfaces;
 
 import androidx.annotation.Nullable;
+
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.listeners.InterstitialEventListener;
 
 public class StandaloneInterstitialEventHandler implements InterstitialEventHandler {
 
+    @Nullable
     private InterstitialEventListener interstitialEventListener;
 
     @Override
@@ -33,7 +35,9 @@ public class StandaloneInterstitialEventHandler implements InterstitialEventHand
     public void requestAdWithBid(
             @Nullable Bid bid
     ) {
-        interstitialEventListener.onPrebidSdkWin();
+        if (interstitialEventListener != null) {
+            interstitialEventListener.onPrebidSdkWin();
+        }
     }
 
     @Override
@@ -48,7 +52,7 @@ public class StandaloneInterstitialEventHandler implements InterstitialEventHand
 
     @Override
     public void destroy() {
-
+        interstitialEventListener = null;
     }
 
 }

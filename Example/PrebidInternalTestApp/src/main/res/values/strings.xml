@@ -81,7 +81,6 @@
 
     <!--In-App Titles-->
     <string name="demo_bidding_in_app_banner_320_50">Banner 320x50 (In-App)</string>
-    <string name="demo_bidding_in_app_banner_320_50_memory_leak_testing">Banner 320x50 (In-App) Memory Leak Testing</string>
     <string name="demo_bidding_in_app_banner_320_50_events">Banner 320x50 Events (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_no_bids">Banner 320x50 [noBids] (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_imp_prebid_random_bid"> Banner 320x50 [Bid - RANDOM noBids, Ad - RESPECTIVE]</string>
@@ -143,7 +142,6 @@
     <!--GAM Titles-->
     <string name="demo_bidding_gam_banner_320_50_app_event">Banner 320x50 (GAM) [OK, AppEvent]</string>
     <string name="demo_bidding_gam_banner_320_50_original">Banner 320x50 (GAM Original) [OK, PUC]</string>
-    <string name="demo_bidding_gam_banner_320_50_original_memory_leak_testing">Banner 320x50 Memory Leak Testing (GAM Original) [OK, PUC]</string>
     <string name="demo_bidding_gam_banner_320_50_app_event_with_events_url">Banner 320x50 Events (GAM) [OK, AppEvent]</string>
     <string name="demo_bidding_gam_banner_320_50_gam_ad">Banner 320x50 (GAM) [OK, GAM Ad]</string>
     <string name="demo_bidding_gam_banner_320_50_no_bids">Banner 320x50 (GAM) [noBids, GAM Ad]</string>
@@ -264,6 +262,12 @@
     <string name="demo_bidding_max_native_adapter">Native Ad (MAX) [OK, Adapter]</string>
     <string name="demo_bidding_max_native_adapter_events">Native Ad Events (MAX) [OK, Adapter]</string>
     <string name="demo_bidding_max_native_no_bids">Native Ad (MAX) [noBids, MAX ad]</string>
+
+    <!--SDK Testing-->
+    <string name="demo_bidding_sdk_testing_memory_leak_original_api">SDK Testing: Original API Banner Memory Leak</string>
+    <string name="demo_bidding_sdk_testing_memory_leak_rendering_api_banner">SDK Testing: Rendering API Banner Memory Leak </string>
+    <string name="demo_bidding_sdk_testing_memory_leak_rendering_api_interstitial_display">SDK Testing: Rendering API Display Interstitial Memory Leak</string>
+    <string name="demo_bidding_sdk_testing_memory_leak_rendering_api_interstitial_video">SDK Testing: Rendering API Video Interstitial Memory Leak</string>
 
     <!--GAM AdUnits-->
     <string name="adunit_gam_banner_320_50_app_event">/21808260008/prebid_oxb_320x50_banner</string>
