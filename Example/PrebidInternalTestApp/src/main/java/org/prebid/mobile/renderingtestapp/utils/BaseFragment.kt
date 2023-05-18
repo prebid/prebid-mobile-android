@@ -21,7 +21,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.IdRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
@@ -37,17 +36,22 @@ abstract class BaseFragment : Fragment() {
 
     private var title: String = ""
 
-    protected lateinit var baseBinding: ViewDataBinding
+    protected var baseBinding: ViewDataBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         baseBinding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
-        return baseBinding.root
+        return checkNotNull(baseBinding?.root)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d(TAG, "onViewCreated()")
         super.onViewCreated(view, savedInstanceState)
         initUi(view, savedInstanceState)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        baseBinding = null
     }
 
     abstract fun initUi(view: View, savedInstanceState: Bundle?)

@@ -65,6 +65,17 @@ class HeaderBiddingFragment : BaseFragment() {
         initConfigurationToggleButton()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        integrationCategoriesControl = null
+        adCategoriesControl = null
+
+        viewModel.navigateToDemoExample.removeObservers(this)
+        viewModel.demoItems.removeObservers(this)
+        viewModel.configurationState.removeObservers(this)
+    }
+
     private fun initViewModel() {
         val viewModelFactory = HeaderBiddingViewModelFactory(
             resources.getStringArray(integrationCategoriesArrayId),

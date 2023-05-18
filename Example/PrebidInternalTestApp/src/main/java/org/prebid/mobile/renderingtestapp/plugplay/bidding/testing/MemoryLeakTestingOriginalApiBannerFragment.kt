@@ -71,10 +71,10 @@ open class MemoryLeakTestingOriginalApiBannerFragment : AdFragment() {
         super.onDestroyView()
 
         // 1) Call only stop auto-refresh
-        adUnit?.stopAutoRefresh()
+//        adUnit?.stopAutoRefresh()
 
         // 2) Call destroy
-//        adUnit?.destroy()
+        adUnit?.destroy()
     }
 
 }
