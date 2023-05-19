@@ -57,6 +57,24 @@ public class PrebidMobilePluginRegister {
         return plugins.containsKey(prebidMobilePluginRendererName);
     }
 
+    public void registerEventListener(
+            AdUnitConfiguration adUnitConfiguration,
+            PluginEventListener pluginEventListener,
+            String prebidMobilePluginRendererName
+    ) {
+        if (plugins.containsKey(prebidMobilePluginRendererName)) {
+            plugins.get(prebidMobilePluginRendererName).registerEventListener(pluginEventListener, adUnitConfiguration);
+        } else {
+            LogUtil.debug("PluginRegister", "Skipping plugin renderer with name" + prebidMobilePluginRendererName + ", such key does not exist");
+        }
+    }
+
+    public void unregisterEventListener(AdUnitConfiguration adUnitConfiguration, String prebidMobilePluginRendererName) {
+        if (plugins.containsKey(prebidMobilePluginRendererName)) {
+            plugins.get(prebidMobilePluginRendererName).unregisterEventListener(adUnitConfiguration);
+        }
+    }
+
     // Returns the list of available renderers for the given ad unit for RT request
     public List<String> getRTBListOfRenderersFor(AdUnitConfiguration adUnitConfiguration) {
         List<String> compliantPlugins = new ArrayList<>();

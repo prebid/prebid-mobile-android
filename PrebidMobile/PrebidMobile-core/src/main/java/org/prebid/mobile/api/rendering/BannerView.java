@@ -37,6 +37,8 @@ import org.prebid.mobile.api.data.BannerAdPosition;
 import org.prebid.mobile.api.data.VideoPlacementType;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener;
+import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.R;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
@@ -71,6 +73,8 @@ public class BannerView extends FrameLayout {
     private DisplayView displayView;
     private BidLoader bidLoader;
     private BidResponse bidResponse;
+
+    private String prebidMobilePluginRendererName;
 
     private final ScreenStateReceiver screenStateReceiver = new ScreenStateReceiver();
 
@@ -285,6 +289,10 @@ public class BannerView extends FrameLayout {
             displayView.destroy();
         }
 
+        if (prebidMobilePluginRendererName != null) {
+            PrebidMobilePluginRegister.getInstance().unregisterEventListener(adUnitConfig, prebidMobilePluginRendererName);
+        }
+
         screenStateReceiver.unregister();
     }
 
@@ -315,6 +323,11 @@ public class BannerView extends FrameLayout {
 
     public void setBannerListener(BannerViewListener bannerListener) {
         bannerViewListener = bannerListener;
+    }
+
+    public void setPluginEventListener(PluginEventListener pluginEventListener, String prebidMobilePluginRendererName) {
+        this.prebidMobilePluginRendererName = prebidMobilePluginRendererName;
+        PrebidMobilePluginRegister.getInstance().registerEventListener(adUnitConfig, pluginEventListener, prebidMobilePluginRendererName);
     }
 
     public void setVideoPlacementType(VideoPlacementType videoPlacement) {

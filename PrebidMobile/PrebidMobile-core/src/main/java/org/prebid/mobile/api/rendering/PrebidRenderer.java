@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
+import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener;
 import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRenderer;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.core.BuildConfig;
@@ -52,6 +53,12 @@ public class PrebidRenderer implements PrebidMobilePluginRenderer {
     public String getToken() {
         return null;
     }
+
+    @Override
+    public void registerEventListener(PluginEventListener pluginEventListener, AdUnitConfiguration adUnitConfiguration) {}
+
+    @Override
+    public void unregisterEventListener(AdUnitConfiguration adUnitConfiguration) {}
 
     @Override
     public View createBannerAdView(

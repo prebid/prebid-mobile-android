@@ -34,7 +34,12 @@ public interface PrebidMobilePluginRenderer {
     String getVersion();
     @Nullable
     String getToken();
-    void setPluginEventHandler(PluginExtraEventHandler pluginExtraEventHandler);
+
+    // Register a listener to dispatch your own ad events
+    void registerEventListener(PluginEventListener pluginEventListener, AdUnitConfiguration adUnitConfiguration);
+
+    // Unregister a listener
+    void unregisterEventListener(AdUnitConfiguration adUnitConfiguration);
 
     // Creates and returns Banner View for a given Bid Response
     // Returns nil in the case of an internal error

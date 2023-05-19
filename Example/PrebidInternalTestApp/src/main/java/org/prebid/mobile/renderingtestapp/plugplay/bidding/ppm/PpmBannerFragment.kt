@@ -19,6 +19,7 @@ package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 import android.os.Bundle
 import android.view.View
 import org.prebid.mobile.AdSize
+import org.prebid.mobile.LogUtil
 import org.prebid.mobile.api.exceptions.AdException
 import org.prebid.mobile.api.rendering.BannerView
 import org.prebid.mobile.api.rendering.listeners.BannerViewListener
@@ -28,8 +29,10 @@ import org.prebid.mobile.renderingtestapp.databinding.FragmentBiddingBannerBindi
 import org.prebid.mobile.renderingtestapp.plugplay.config.AdConfiguratorDialogFragment
 import org.prebid.mobile.renderingtestapp.utils.BaseEvents
 import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
+import org.prebid.mobile.renderingtestapp.utils.SampleCustomRenderer
+import org.prebid.mobile.renderingtestapp.utils.SampleCustomRendererEventListener
 
-open class PpmBannerFragment : AdFragment(), BannerViewListener {
+open class PpmBannerFragment : AdFragment(), BannerViewListener, SampleCustomRendererEventListener { // TODO implement PluginEventListener
     private val TAG = PpmBannerFragment::class.java.simpleName
 
     override val layoutRes = R.layout.fragment_bidding_banner
@@ -66,6 +69,7 @@ open class PpmBannerFragment : AdFragment(), BannerViewListener {
         )
         bannerView?.setAutoRefreshDelay(refreshDelay)
         bannerView?.setBannerListener(this)
+        bannerView?.setPluginEventListener(this, SampleCustomRenderer.RENDERER_NAME) // TODO set PluginEventListener
         bannerView?.let { CommandLineArgumentParser.addAdUnitSpecificData(it) }
         binding.viewContainer.addView(bannerView)
         return bannerView
@@ -108,6 +112,22 @@ open class PpmBannerFragment : AdFragment(), BannerViewListener {
         bannerView?.destroy()
     }
 
+    override fun onImpression() {
+        LogUtil.debug("PpmBannerFragment", "onImpression")
+    }
+
+    override fun onUnMute() {
+        LogUtil.debug("PpmBannerFragment", "onUnMute")
+    }
+
+    override fun onMute() {
+        LogUtil.debug("PpmBannerFragment", "onMute")
+    }
+
+    override fun onFullScreen() {
+        LogUtil.debug("PpmBannerFragment", "onFullScreen")
+    }
+
     protected class Events(parentView: View) : BaseEvents(parentView) {
 
         fun loaded(b: Boolean) = enable(R.id.btnAdLoaded, b)
@@ -118,5 +138,4 @@ open class PpmBannerFragment : AdFragment(), BannerViewListener {
         fun displayed(b: Boolean) = enable(R.id.btnAdDisplayed, b)
 
     }
-
 }
