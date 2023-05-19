@@ -35,4 +35,8 @@ public class PluginRenderers extends BaseBid {
         toJSON(jsonObject, "plugin_renderers", this.renderers);
         return jsonObject;
     }
+
+    public List<String> getRenderers() {
+        return renderers;
+    }
 }

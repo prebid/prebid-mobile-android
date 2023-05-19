@@ -831,13 +831,6 @@ public class BasicParameterBuilderTest {
         source.getExt().put(KEY_OM_PARTNER_NAME, OmAdSessionManager.PARTNER_NAME);
         source.getExt().put(KEY_OM_PARTNER_VERSION, OmAdSessionManager.PARTNER_VERSION);
 
-        if (!adConfiguration.isOriginalAdUnit()) {
-            List<String> renderers = new ArrayList<>();
-            renderers.add(PREBID_MOBILE_RENDERER_NAME);
-            PluginRenderers pluginRenderers = new PluginRenderers(renderers);
-            bidRequest.setPluginRenderers(pluginRenderers);
-        }
-
         bidRequest.getUser();
 
         return bidRequest;

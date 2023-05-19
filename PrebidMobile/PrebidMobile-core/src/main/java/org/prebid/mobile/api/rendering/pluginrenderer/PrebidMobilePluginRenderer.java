@@ -31,18 +31,28 @@ import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener;
 public interface PrebidMobilePluginRenderer {
 
     String getName();
+
     String getVersion();
+
     @Nullable
     String getToken();
 
-    // Register a listener to dispatch your own ad events
+    /**
+     * Register a listener related to a specific ad unit config in order to dispatch specific ad events
+     */
     void registerEventListener(PluginEventListener pluginEventListener, AdUnitConfiguration adUnitConfiguration);
 
-    // Unregister a listener
+    /**
+     * Unregister a listener based on an ad unit config
+     */
     void unregisterEventListener(AdUnitConfiguration adUnitConfiguration);
 
-    // Creates and returns Banner View for a given Bid Response
-    // Returns nil in the case of an internal error
+    /**
+     * Creates and returns Banner View for a given Bid Response.
+     * Returns nil in the case of an internal error.
+     * <br>
+     * Don't forget to clean resources in {@link android.view.View#onDetachedFromWindow()}.
+     */
     View createBannerAdView(
             @NonNull Context context,
             @NonNull DisplayViewListener displayViewListener,
@@ -50,8 +60,10 @@ public interface PrebidMobilePluginRenderer {
             @NonNull BidResponse bidResponse
     );
 
-    // Creates and returns an implementation of PrebidMobileInterstitialControllerInterface for a given bid response
-    // Returns nil in the case of an internal error
+    /**
+     * Creates and returns an implementation of PrebidMobileInterstitialControllerInterface for a given bid response
+     * Returns nil in the case of an internal error
+     */
     PrebidMobileInterstitialControllerInterface createInterstitialController(
             @NonNull Context context,
             @NonNull InterstitialControllerListener interstitialControllerListener,
@@ -59,6 +71,8 @@ public interface PrebidMobilePluginRenderer {
             @NonNull BidResponse bidResponse
     );
 
-    // Returns true only if the given ad unit could be renderer by the plugin
+    /**
+     * Returns true only if the given ad unit could be renderer by the plugin
+     */
     boolean isSupportRenderingFor(AdUnitConfiguration adUnitConfiguration);
 }

@@ -19,15 +19,19 @@ package org.prebid.mobile.rendering.mraid.handler;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+
 import androidx.annotation.NonNull;
+
 import org.prebid.mobile.rendering.views.webview.mraid.JSInterface;
 
 public class FetchPropertiesHandler extends Handler {
     @NonNull private final FetchPropertyCallback callback;
 
     public FetchPropertiesHandler(
-        @NonNull
-            FetchPropertyCallback callback) {
+            @NonNull FetchPropertyCallback callback
+    ) {
+        super(Looper.getMainLooper());
+
         this.callback = callback;
     }
 

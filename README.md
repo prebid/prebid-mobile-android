@@ -2,14 +2,15 @@
 
 # Prebid Mobile Android SDK
 
-To work with Prebid Mobile, you will need access to a Prebid Server. See [this page](http://prebid.org/prebid-mobile/prebid-mobile-pbs.html) for options.
+To work with Prebid Mobile, you will need access to a Prebid Server.
+See [this page](https://docs.prebid.org/prebid-server/overview/prebid-server-overview.html) for options.
 
 ## Use Maven?
 
 Easily include the Prebid Mobile SDK using Maven. Simply add this line to your gradle dependencies:
 
 ```
-implementation 'org.prebid:prebid-mobile-sdk:2.0.9'
+implementation 'org.prebid:prebid-mobile-sdk:2.1.0'
 ```
 
 ## Build from source
