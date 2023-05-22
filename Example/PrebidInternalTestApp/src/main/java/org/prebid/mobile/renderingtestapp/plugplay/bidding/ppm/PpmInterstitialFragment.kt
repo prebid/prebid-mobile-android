@@ -26,7 +26,7 @@ import org.prebid.mobile.renderingtestapp.utils.SampleCustomRenderer
 import org.prebid.mobile.renderingtestapp.utils.SampleCustomRendererEventListener
 import java.util.*
 
-open class PpmInterstitialFragment : BaseBidInterstitialFragment(), SampleCustomRendererEventListener {
+open class PpmInterstitialFragment : BaseBidInterstitialFragment(), SampleCustomRendererEventListener { // TODO implement PluginEventListener
     override fun initInterstitialAd(adUnitFormat: AdUnitFormat, adUnitId: String?,
                                     configId: String?, width: Int, height: Int) {
         interstitialAdUnit = if (adUnitFormat == AdUnitFormat.VIDEO) {

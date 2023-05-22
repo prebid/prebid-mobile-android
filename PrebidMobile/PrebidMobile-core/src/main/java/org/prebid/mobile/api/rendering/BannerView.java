@@ -101,8 +101,6 @@ public class BannerView extends FrameLayout {
             if (bannerViewListener != null) {
                 bannerViewListener.onAdDisplayed(BannerView.this);
                 eventHandler.trackImpression();
-                // displayViewListener.onAdDisplayed trigger trackImpression on prebid side.
-                // Does it means that publishers could this data with some monitoring platform?
             }
         }
 
