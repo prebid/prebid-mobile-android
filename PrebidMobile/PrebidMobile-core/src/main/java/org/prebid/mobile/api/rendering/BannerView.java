@@ -289,6 +289,7 @@ public class BannerView extends FrameLayout {
             displayView.destroy();
         }
 
+        // TODO Unregister listener when not needed anymore
         if (prebidMobilePluginRendererName != null) {
             PrebidMobilePluginRegister.getInstance().unregisterEventListener(adUnitConfig, prebidMobilePluginRendererName);
         }

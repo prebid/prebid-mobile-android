@@ -17,13 +17,16 @@
 package org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm
 
 import org.prebid.mobile.AdSize
+import org.prebid.mobile.LogUtil
 import org.prebid.mobile.api.data.AdUnitFormat
 import org.prebid.mobile.api.rendering.InterstitialAdUnit
 import org.prebid.mobile.renderingtestapp.plugplay.bidding.base.BaseBidInterstitialFragment
 import org.prebid.mobile.renderingtestapp.utils.CommandLineArgumentParser
+import org.prebid.mobile.renderingtestapp.utils.SampleCustomRenderer
+import org.prebid.mobile.renderingtestapp.utils.SampleCustomRendererEventListener
 import java.util.*
 
-open class PpmInterstitialFragment : BaseBidInterstitialFragment() {
+open class PpmInterstitialFragment : BaseBidInterstitialFragment(), SampleCustomRendererEventListener {
     override fun initInterstitialAd(adUnitFormat: AdUnitFormat, adUnitId: String?,
                                     configId: String?, width: Int, height: Int) {
         interstitialAdUnit = if (adUnitFormat == AdUnitFormat.VIDEO) {
@@ -36,9 +39,26 @@ open class PpmInterstitialFragment : BaseBidInterstitialFragment() {
             InterstitialAdUnit(requireContext(), configId)
         }
         interstitialAdUnit?.setInterstitialAdUnitListener(this)
+        interstitialAdUnit?.setPluginEventListener(this, SampleCustomRenderer.RENDERER_NAME)  // TODO set PluginEventListener
         interstitialAdUnit?.setMinSizePercentage(AdSize(30, 30))
         interstitialAdUnit?.let {
             CommandLineArgumentParser.addAdUnitSpecificData(it)
         }
+    }
+
+    override fun onImpression() {
+        LogUtil.debug("PpmBannerFragment", "onImpression")
+    }
+
+    override fun onUnMute() {
+        LogUtil.debug("PpmBannerFragment", "onUnMute")
+    }
+
+    override fun onMute() {
+        LogUtil.debug("PpmBannerFragment", "onMute")
+    }
+
+    override fun onFullScreen() {
+        LogUtil.debug("PpmBannerFragment", "onFullScreen")
     }
 }

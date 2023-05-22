@@ -29,6 +29,8 @@ import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdUnitFormat;
 import org.prebid.mobile.api.exceptions.AdException;
 import org.prebid.mobile.api.rendering.listeners.InterstitialAdUnitListener;
+import org.prebid.mobile.api.rendering.pluginrenderer.PluginEventListener;
+import org.prebid.mobile.api.rendering.pluginrenderer.PrebidMobilePluginRegister;
 import org.prebid.mobile.configuration.AdUnitConfiguration;
 import org.prebid.mobile.rendering.bidding.data.bid.Bid;
 import org.prebid.mobile.rendering.bidding.interfaces.InterstitialEventHandler;
@@ -58,6 +60,12 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
      * Interstitial ad units events listener (like onAdLoaded, onAdFailed...)
      */
     @Nullable private InterstitialAdUnitListener adUnitEventsListener;
+
+    /**
+     * Plugin renderer name for a subscribed listener
+     * that is used later to unregister it during onDestroy
+     */
+    @Nullable private String prebidMobilePluginRendererName;
 
     /**
      * Instantiates an HTML InterstitialAdUnit for the given configurationId.
@@ -164,6 +172,11 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         this.adUnitEventsListener = adUnitEventsListener;
     }
 
+    public void setPluginEventListener(PluginEventListener pluginEventListener, String prebidMobilePluginRendererName) {
+        this.prebidMobilePluginRendererName = prebidMobilePluginRendererName;
+        PrebidMobilePluginRegister.getInstance().registerEventListener(adUnitConfig, pluginEventListener, prebidMobilePluginRendererName);
+    }
+
     public void setMinSizePercentage(AdSize minSizePercentage) {
         adUnitConfig.setMinSizePercentage(minSizePercentage);
     }
@@ -173,6 +186,10 @@ public class InterstitialAdUnit extends BaseInterstitialAdUnit {
         super.destroy();
         if (eventHandler != null) {
             eventHandler.destroy();
+        }
+        // TODO Unregister listener when not needed anymore
+        if (prebidMobilePluginRendererName != null) {
+            PrebidMobilePluginRegister.getInstance().unregisterEventListener(adUnitConfig, prebidMobilePluginRendererName);
         }
     }
 

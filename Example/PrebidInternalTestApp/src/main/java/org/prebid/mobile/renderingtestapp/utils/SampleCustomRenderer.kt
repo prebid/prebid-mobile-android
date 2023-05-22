@@ -38,7 +38,7 @@ import org.prebid.mobile.rendering.bidding.listeners.DisplayViewListener
 
 class SampleCustomRenderer : PrebidMobilePluginRenderer {
 
-    private val pluginEventListenerMap = mutableMapOf<AdUnitConfiguration, PluginEventListener>()
+    private val pluginEventListenerMap = mutableMapOf<AdUnitConfiguration, SampleCustomRendererEventListener>()
 
     override fun getName(): String = RENDERER_NAME
 
@@ -82,9 +82,7 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
         })
 
         // TODO Propagate events whenever necessary
-        (pluginEventListenerMap[adUnitConfiguration] as? SampleCustomRendererEventListener)?.let {
-            it.onImpression()
-        }
+        pluginEventListenerMap[adUnitConfiguration]?.onImpression()
 
         return bannerView
     }
@@ -111,6 +109,9 @@ class SampleCustomRenderer : PrebidMobilePluginRenderer {
                     val webView = WebView(context).apply { loadData(bidResponse.winningBid?.adm!!, "text/html", "UTF-8") }
                     alertDialog.setView(webView)
                     interstitialControllerListener.onInterstitialReadyForDisplay()
+
+                    // TODO Propagate events whenever necessary
+                    pluginEventListenerMap[adUnitConfiguration]?.onImpression()
                 }
             }
 
