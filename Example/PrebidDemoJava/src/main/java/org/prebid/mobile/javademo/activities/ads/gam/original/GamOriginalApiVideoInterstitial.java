@@ -24,7 +24,7 @@ import java.util.EnumSet;
 public class GamOriginalApiVideoInterstitial extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-video-interstitial";
-    private static final String CONFIG_ID = "imp-prebid-video-interstitial-320-480-original-api";
+    private static final String CONFIG_ID = "prebid-demo-video-interstitial-320-480-original-api";
 
     private InterstitialAdUnit adUnit;
 

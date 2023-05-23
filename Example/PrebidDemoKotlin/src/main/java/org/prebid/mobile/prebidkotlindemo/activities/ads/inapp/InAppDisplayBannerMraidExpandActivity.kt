@@ -23,7 +23,7 @@ import org.prebid.mobile.prebidkotlindemo.activities.BaseAdActivity
 class InAppDisplayBannerMraidExpandActivity : BaseAdActivity() {
 
     companion object {
-        const val CONFIG_ID = "imp-prebid-mraid-expand-1-part"
+        const val CONFIG_ID = "prebid-demo-mraid-expand-1-part"
         const val WIDTH = 320
         const val HEIGHT = 50
     }

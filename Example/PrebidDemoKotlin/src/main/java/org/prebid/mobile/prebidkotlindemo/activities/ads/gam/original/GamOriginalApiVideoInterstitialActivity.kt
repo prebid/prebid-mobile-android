@@ -17,7 +17,7 @@ class GamOriginalApiVideoInterstitialActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid-demo-app-original-api-video-interstitial"
-        const val CONFIG_ID = "imp-prebid-video-interstitial-320-480-original-api"
+        const val CONFIG_ID = "prebid-demo-video-interstitial-320-480-original-api"
     }
 
     private var adUnit: InterstitialAdUnit? = null

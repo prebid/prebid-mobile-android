@@ -27,7 +27,7 @@ import java.util.*
 class InAppVideoInterstitialMultiFormatActivity : BaseAdActivity() {
 
     companion object {
-        const val CONFIG_ID = "imp-prebid-display-interstitial-320-480-random"
+        const val CONFIG_ID = "prebid-demo-display-interstitial-320-480-random"
     }
 
     private var adUnit: InterstitialAdUnit? = null

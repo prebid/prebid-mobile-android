@@ -26,7 +26,7 @@ import java.util.*
 class InAppVideoInterstitialWithEndCardActivity : BaseAdActivity() {
 
     companion object {
-        const val CONFIG_ID = "imp-prebid-video-interstitial-320-480-with-end-card"
+        const val CONFIG_ID = "prebid-demo-video-interstitial-320-480-with-end-card"
     }
 
     private var adUnit: InterstitialAdUnit? = null

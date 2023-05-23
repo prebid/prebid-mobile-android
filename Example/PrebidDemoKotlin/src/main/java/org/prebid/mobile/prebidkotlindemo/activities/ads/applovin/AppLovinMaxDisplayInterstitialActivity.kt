@@ -30,7 +30,7 @@ class AppLovinMaxDisplayInterstitialActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "393697e649678807"
-        const val CONFIG_ID = "imp-prebid-display-interstitial-320-480"
+        const val CONFIG_ID = "prebid-demo-display-interstitial-320-480"
     }
 
     private var maxInterstitialAd: MaxInterstitialAd? = null
