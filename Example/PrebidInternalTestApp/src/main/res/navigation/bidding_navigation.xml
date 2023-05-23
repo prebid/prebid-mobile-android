@@ -36,6 +36,15 @@
             app:popUpTo="@+id/headerBiddingFragment" />
 
         <action
+            android:id="@+id/action_header_bidding_to_in_app_banner_special_symbols"
+            app:destination="@id/navigation_in_app_banner_special_symbols"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/headerBiddingFragment" />
+
+        <action
             android:id="@+id/action_header_bidding_to_in_app_banner_memory_leak_testing"
             app:destination="@id/navigation_in_app_banner_memory_leak_testing"
             app:enterAnim="@anim/nav_default_enter_anim"
@@ -498,6 +507,11 @@
     <fragment
         android:id="@+id/navigation_in_app_banner"
         android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmBannerFragment"
+        android:label="In-App Banner" />
+
+    <fragment
+        android:id="@+id/navigation_in_app_banner_special_symbols"
+        android:name="org.prebid.mobile.renderingtestapp.plugplay.bidding.ppm.PpmBannerSpecialSymbolsFragment"
         android:label="In-App Banner" />
 
     <fragment
