@@ -31,8 +31,8 @@ class GamOriginalApiMultiformatInterstitialActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid-demo-intestitial-multiformat"
-        const val CONFIG_ID_BANNER = "imp-prebid-display-interstitial-320-480"
-        const val CONFIG_ID_VIDEO = "imp-prebid-video-interstitial-320-480-original-api";
+        const val CONFIG_ID_BANNER = "prebid-demo-display-interstitial-320-480"
+        const val CONFIG_ID_VIDEO = "prebid-demo-video-interstitial-320-480-original-api";
     }
 
     private var adUnit: InterstitialAdUnit? = null

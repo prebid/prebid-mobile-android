@@ -32,7 +32,7 @@ import org.prebid.mobile.rendering.utils.ntv.NativeAdProvider
 class InAppNativeActivity : BaseAdActivity() {
 
     companion object {
-        const val CONFIG_ID = "imp-prebid-banner-native-styles"
+        const val CONFIG_ID = "prebid-demo-banner-native-styles"
     }
 
     private var nativeAdUnit: MediationNativeAdUnit? = null

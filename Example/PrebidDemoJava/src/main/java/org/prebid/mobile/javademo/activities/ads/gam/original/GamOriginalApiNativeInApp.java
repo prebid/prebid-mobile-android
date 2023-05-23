@@ -39,7 +39,7 @@ import java.util.ArrayList;
 public class GamOriginalApiNativeInApp extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/apollo_custom_template_native_ad_unit";
-    private static final String CONFIG_ID = "imp-prebid-banner-native-styles";
+    private static final String CONFIG_ID = "prebid-demo-banner-native-styles";
     private static final String CUSTOM_FORMAT_ID = "11934135";
     private static final String TAG = "GamOriginalNative";
 

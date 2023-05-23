@@ -24,7 +24,7 @@ import java.util.EnumSet;
 public class GamOriginalApiVideoBanner extends BaseAdActivity {
 
     private static final String AD_UNIT_ID = "/21808260008/prebid-demo-original-api-video-banner";
-    private static final String CONFIG_ID = "imp-prebid-video-outstream-original-api";
+    private static final String CONFIG_ID = "prebid-demo-video-outstream-original-api";
     private static final int WIDTH = 300;
     private static final int HEIGHT = 250;
 

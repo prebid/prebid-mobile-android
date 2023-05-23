@@ -26,7 +26,7 @@ import java.util.*
 class InAppDisplayInterstitialActivity : BaseAdActivity() {
 
     companion object {
-        const val CONFIG_ID = "imp-prebid-display-interstitial-320-480"
+        const val CONFIG_ID = "prebid-demo-display-interstitial-320-480"
     }
 
     private var adUnit: InterstitialAdUnit? = null

@@ -31,7 +31,7 @@ class GamOriginalApiDisplayBannerMultiSizeActivity : BaseAdActivity() {
 
     companion object {
         const val AD_UNIT_ID = "/21808260008/prebid_demo_app_original_api_banner_multisize"
-        const val CONFIG_ID = "imp-prebid-banner-multisize"
+        const val CONFIG_ID = "prebid-demo-banner-multisize"
         const val WIDTH = 320
         const val HEIGHT = 50
     }
