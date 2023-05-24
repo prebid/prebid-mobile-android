@@ -17,6 +17,7 @@
 package org.prebid.mobile.rendering.bidding.display;
 
 import android.content.Context;
+
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.api.data.AdFormat;
 import org.prebid.mobile.api.exceptions.AdException;
@@ -37,14 +38,14 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
     private String impressionEventUrl;
 
     private final InterstitialView bidInterstitialView;
-    private final InterstitialControllerListener listener;
+    private InterstitialControllerListener listener;
     private AdFormat adUnitIdentifierType;
 
-    private final InterstitialViewListener interstitialViewListener = new InterstitialViewListener() {
+    private InterstitialViewListener interstitialViewListener = new InterstitialViewListener() {
         @Override
         public void onAdLoaded(
-            InterstitialView interstitialView,
-            AdDetails adDetails
+                InterstitialView interstitialView,
+                AdDetails adDetails
         ) {
             LogUtil.debug(TAG, "onAdLoaded");
             if (listener != null) {
@@ -101,7 +102,9 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
     throws AdException {
         this.listener = listener;
         bidInterstitialView = new InterstitialView(context);
-        bidInterstitialView.setInterstitialViewListener(interstitialViewListener);
+        if (interstitialViewListener != null) {
+            bidInterstitialView.setInterstitialViewListener(interstitialViewListener);
+        }
         bidInterstitialView.setPubBackGroundOpacity(1.0f);
     }
 
@@ -156,6 +159,8 @@ public class InterstitialController implements PrebidMobileInterstitialControlle
 
     public void destroy() {
         bidInterstitialView.destroy();
+        listener = null;
+        interstitialViewListener = null;
     }
 
     private void setRenderingControlSettings(

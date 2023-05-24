@@ -263,6 +263,12 @@
     <string name="demo_bidding_max_native_adapter_events">Native Ad Events (MAX) [OK, Adapter]</string>
     <string name="demo_bidding_max_native_no_bids">Native Ad (MAX) [noBids, MAX ad]</string>
 
+    <!--SDK Testing-->
+    <string name="demo_bidding_sdk_testing_memory_leak_original_api">SDK Testing: Original API Banner Memory Leak</string>
+    <string name="demo_bidding_sdk_testing_memory_leak_rendering_api_banner">SDK Testing: Rendering API Banner Memory Leak </string>
+    <string name="demo_bidding_sdk_testing_memory_leak_rendering_api_interstitial_display">SDK Testing: Rendering API Display Interstitial Memory Leak</string>
+    <string name="demo_bidding_sdk_testing_memory_leak_rendering_api_interstitial_video">SDK Testing: Rendering API Video Interstitial Memory Leak</string>
+
     <!--GAM AdUnits-->
     <string name="adunit_gam_banner_320_50_app_event">/21808260008/prebid_oxb_320x50_banner</string>
     <string name="adunit_gam_banner_320_50_original">/21808260008/prebid_demo_app_original_api_banner</string>

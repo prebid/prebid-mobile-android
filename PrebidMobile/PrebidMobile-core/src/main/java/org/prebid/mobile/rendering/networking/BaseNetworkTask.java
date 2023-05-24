@@ -88,10 +88,12 @@ public class BaseNetworkTask
     protected void onPostExecute(GetUrlResult urlResult) {
         if (urlResult == null) {
             LogUtil.debug(TAG, "URL result is null");
+            destroy();
             return;
         }
         if (responseHandler == null) {
             LogUtil.debug(TAG, "No ResponseHandler on: may be a tracking event");
+            destroy();
             return;
         }
 
@@ -103,6 +105,7 @@ public class BaseNetworkTask
         urlResult.responseTime = delta;
         if (urlResult.getException() != null) {
             ((ResponseHandler) responseHandler).onErrorWithException(urlResult.getException(), delta);
+            destroy();
             return;
         }
 
@@ -110,24 +113,30 @@ public class BaseNetworkTask
         //Ex: <VAST version="2.0"> </VAST> is a wrong response for av calls. So should fail
         if (urlResult.responseString != null && urlResult.responseString.length() < 100 && urlResult.responseString.contains("<VAST")) {
             ((ResponseHandler) responseHandler).onError("Invalid VAST Response: less than 100 characters.", delta);
-        }
-        else {
+        } else {
             ((ResponseHandler) responseHandler).onResponse(urlResult);
         }
+
+        destroy();
     }
 
     @Override
-    protected void onCancelled() {
-        super.onCancelled();
+    protected void onCancelled(GetUrlResult getUrlResult) {
+        super.onCancelled(getUrlResult);
         LogUtil.debug(TAG, "Request cancelled. Disconnecting connection");
-        if (connection instanceof HttpURLConnection) {
-            ((HttpURLConnection) connection).disconnect();
-        }
+        destroy();
     }
 
     @Override
     protected void onProgressUpdate(Integer... progress) {
         super.onProgressUpdate(progress);
+    }
+
+    public void destroy() {
+        responseHandler = null;
+        if (connection instanceof HttpURLConnection) {
+            ((HttpURLConnection) connection).disconnect();
+        }
     }
 
     /*  NOTE THIS GETS OVERRIDDEN IN CHILD CLASS */

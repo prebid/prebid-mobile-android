@@ -122,7 +122,8 @@ public class BannerView extends FrameLayout {
         }
     };
 
-    private final BidRequesterListener bidRequesterListener = new BidRequesterListener() {
+    @Nullable
+    private BidRequesterListener bidRequesterListener = new BidRequesterListener() {
         @Override
         public void onFetchCompleted(BidResponse response) {
             bidResponse = response;
@@ -282,6 +283,7 @@ public class BannerView extends FrameLayout {
         if (displayView != null) {
             displayView.destroy();
         }
+        bidRequesterListener = null;
 
         screenStateReceiver.unregister();
     }
