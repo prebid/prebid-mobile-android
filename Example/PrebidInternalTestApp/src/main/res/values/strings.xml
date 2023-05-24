@@ -89,6 +89,7 @@
     <string name="demo_bidding_in_app_banner_320_50_scrollable">Banner 320x50 Scrollable (In-App)</string>
     <string name="demo_bidding_in_app_banner_320_50_vast">Banner 320x50 (In-App) [Incorrect VAST]</string>
     <string name="demo_bidding_in_app_banner_320_50_deeplink">Banner 320x50 (In-App) [DeepLink+]</string>
+    <string name="demo_bidding_in_app_banner_320_50_special_symbols">Banner 320x50 Special Symbols (In-App)</string>
     <string name="demo_bidding_in_app_banner_layout">Banner 320x50 Layout (In-App)</string>
     <string name="demo_bidding_in_app_banner_multisize">Banner Multisize (In-App)</string>
     <string name="demo_bidding_in_app_banners_and_interstitial">Banners and Interstitial (In-App)</string>

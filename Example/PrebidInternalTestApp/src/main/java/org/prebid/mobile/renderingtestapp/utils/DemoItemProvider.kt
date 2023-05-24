@@ -36,6 +36,7 @@ class DemoItemProvider private constructor() {
         private const val MIN_HEIGHT_PERC = 30
 
         private const val ppmBannerAction = R.id.action_header_bidding_to_in_app_banner
+        private const val ppmBannerSpecialSymbolsAction = R.id.action_header_bidding_to_in_app_banner_special_symbols
         private const val ppmBannerActionMemoryLeakTesting =
             R.id.action_header_bidding_to_in_app_banner_memory_leak_testing
         private const val ppmInterstitialAction = R.id.action_header_bidding_to_in_app_interstitial
@@ -489,6 +490,19 @@ class DemoItemProvider private constructor() {
                     R.id.action_header_bidding_to_in_app_banner_in_layout,
                     ppmBannerTagList,
                     createBannerBundle(null, null, 320, 50)
+                )
+            )
+            demoList.add(
+                DemoItem(
+                    getString(R.string.demo_bidding_in_app_banner_320_50_special_symbols),
+                    ppmBannerSpecialSymbolsAction,
+                    ppmBannerTagList,
+                    createBannerBundle(
+                        R.string.imp_prebid_id_banner_320x50,
+                        null,
+                        320,
+                        50
+                    )
                 )
             )
             demoList.add(

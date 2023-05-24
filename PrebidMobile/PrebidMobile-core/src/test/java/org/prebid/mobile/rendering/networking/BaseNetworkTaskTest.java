@@ -16,11 +16,14 @@
 
 package org.prebid.mobile.rendering.networking;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.prebid.mobile.rendering.networking.BaseNetworkTask.REDIRECT_TASK;
+
 import androidx.test.filters.Suppress;
-import okhttp3.HttpUrl;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.RecordedRequest;
+
 import org.hamcrest.MatcherAssert;
 import org.junit.After;
 import org.junit.Assert;
@@ -30,12 +33,14 @@ import org.junit.runner.RunWith;
 import org.prebid.mobile.PrebidMobile;
 import org.robolectric.RobolectricTestRunner;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.*;
-import static org.prebid.mobile.rendering.networking.BaseNetworkTask.REDIRECT_TASK;
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 
 @RunWith(RobolectricTestRunner.class)
 public class BaseNetworkTaskTest {
@@ -292,11 +297,20 @@ public class BaseNetworkTaskTest {
 
         try {
             baseNetworkTask.execute(params);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         Assert.assertEquals(true, success);
     }
+
+    @Test
+    public void testSpecialSymbols() throws IOException {
+        ByteArrayOutputStream request = new ByteArrayOutputStream();
+
+        BaseNetworkTask.sendRequest("{\"app\":\"天気\"}", request);
+
+        Assert.assertEquals("{\"app\":\"天気\"}", request.toString());
+    }
+
 }

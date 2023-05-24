@@ -19,8 +19,10 @@ package org.prebid.mobile.rendering.networking;
 import android.os.AsyncTask;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import org.apache.http.conn.ConnectTimeoutException;
+import org.jetbrains.annotations.NotNull;
 import org.prebid.mobile.LogUtil;
 import org.prebid.mobile.PrebidMobile;
 import org.prebid.mobile.rendering.loading.FileDownloadTask;
@@ -32,6 +34,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -285,7 +288,7 @@ public class BaseNetworkTask
             try {
                 wr = new DataOutputStream(connection.getOutputStream());
                 if (param.queryParams != null) {
-                    wr.writeBytes(param.queryParams);
+                    sendRequest(param.queryParams, wr);
                 }
             } finally {
                 if (wr != null) {
@@ -299,9 +302,17 @@ public class BaseNetworkTask
         return connection;
     }
 
+    @VisibleForTesting
+    protected static void sendRequest(@NotNull String requestBody, @NotNull OutputStream requestStream) throws IOException {
+        byte[] bytes = requestBody.getBytes();
+        for (byte b : bytes) {
+            requestStream.write(b);
+        }
+    }
+
     private void setCustomHeadersIfAvailable(URLConnection connection) {
-        if(!PrebidMobile.getCustomHeaders().isEmpty()) {
-            for (Map.Entry<String, String> customHeader: PrebidMobile.getCustomHeaders().entrySet()) {
+        if (!PrebidMobile.getCustomHeaders().isEmpty()) {
+            for (Map.Entry<String, String> customHeader : PrebidMobile.getCustomHeaders().entrySet()) {
                 connection.setRequestProperty(customHeader.getKey(), customHeader.getValue());
             }
         }
